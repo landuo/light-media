@@ -1,0 +1,346 @@
+{
+  "items": [
+    40,
+    41
+  ],
+  "fixed_backend_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source_sha256": {
+    "app/core/plugin.py": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+    "app/command.py": "e178d40ba65ee3fdd9fdce9f198f6a4433c8ddd8e3c73496bd843a40a4e7af3f",
+    "app/chain/message.py": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+    "app/helper/interaction.py": "2921d1a9f5931206f8b30fe58d36cc7e502f3e314110e8448680860643ff8457",
+    "app/api/endpoints/message.py": "b635fee943af5d867532133d96550ac840c0dbac847fe5fde2e230c567191bbd"
+  },
+  "frontend_source_sha256": {
+    "src/components/dialog/ShortcutMessageDialog.vue": "78c3a7571db0a9681e3cb030e990b0c4538ab7f5d1884d20f17e7de2a506fa5b",
+    "src/layouts/components/ShortcutBar.vue": "41dc5e29542f460bce0cf80b312799dd6f0ca7b4bd9fe846b5f012228e686f9b"
+  },
+  "mapping": [
+    {
+      "item": "40 discovery/build/menu",
+      "source": [
+        "app/core/plugin.py:844",
+        "app/command.py:156",
+        "app/command.py:269"
+      ],
+      "target": [
+        "internal/app/plugin_original_commands.go",
+        "internal/app/plugin_original_command_register.go"
+      ],
+      "behavior": "Enabled current object get_command; rebuild all in actual load order rather than pid increment; last duplicate name wins; retain declaration event/data, data.action is not method; asynchronous serialized background rebuild before menu cancel; visible menu metadata only; source chain mutation/cancel/force filtered to executable subset; cached registered snapshot set before actual register_commands module dispatch and retained on provider failure. Existing SDK provider, no new message platform."
+    },
+    {
+      "item": "40 text execution",
+      "source": [
+        "app/api/endpoints/message.py:113",
+        "app/chain/message.py:349",
+        "app/command.py:298",
+        "app/command.py:435",
+        "app/command.py:442"
+      ],
+      "target": [
+        "internal/app/plugin_original_command_ingress.go",
+        "internal/commandrouter/router.go",
+        "internal/app/plugin_original_event_queue.go"
+      ],
+      "behavior": "Session-authenticated Web identity; source text/query/body and Python whitespace splitting; CommandExcute observer then declared event broadcast, immutable deep-copied declaration data overlay; missing/case no-op; real callback exception contained and next command works. Source+clone receives declared-event broadcasts as original, rather than forcing command target ownership."
+    },
+    {
+      "item": "41 input scope/matching",
+      "source": [
+        "app/helper/interaction.py:400",
+        "app/helper/interaction.py:498",
+        "app/helper/interaction.py:589",
+        "app/helper/interaction.py:675"
+      ],
+      "target": [
+        "internal/plugininput/manager.go",
+        "internal/app/plugin_original_input.go",
+        "internal/plugins/input_interaction.go"
+      ],
+      "behavior": "in-memory user/channel/source/chat keyed request, random12hex identity, overlapping replacement, candidate wildcard order, TTL min1sec and300sec tombstone grace, expiry equality active, Telegram reply binding/cancel bypass, get/pop/remove/clear; actual SDK identity bound to current instance scope, stale callback denied; JSON snapshot isolation across Go IPC."
+    },
+    {
+      "item": "41 ordinary next reply",
+      "source": [
+        "app/chain/message.py:318",
+        "app/chain/message.py:460"
+      ],
+      "target": [
+        "internal/app/plugin_original_input.go",
+        "internal/app/plugin_original_command_ingress.go"
+      ],
+      "behavior": "Plugin input precedes slash commands; excludes blank/media/CALLBACK text, active reply literal, cancel five source words with PythonUnicode whitespace, actual message.action target/currentinstance/privatefield consumption, ordinary notice through existing host. Expired input sends expiry notice/action then slash continues command, plain reply consumed. Actual cold restart clears input, declarations rebuilt."
+    },
+    {
+      "item": "40/41 user entry",
+      "source": [
+        "src/components/dialog/ShortcutMessageDialog.vue:53",
+        "src/layouts/components/ShortcutBar.vue:131"
+      ],
+      "target": [
+        "web/src/components/ShortcutMessageDialog.vue",
+        "web/src/components/ShortcutTools.vue",
+        "internal/app/plugin_original_command_ingress.go",
+        "internal/app/plugin_original_input.go"
+      ],
+      "behavior": "Source ordinary message popup is implemented without AI. Root actualf37 browser (772.59s) exercised trim/Enter/blank suppression, failed request retaining input then retry, command to actual Go SDK/action0, pending reply to actual callback without incoming history, quit cancel, and cold command restoration.",
+      "evidence_state": "actual browser verified by parent; matrix acceptance remains root decision",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/services40-messages42-final-browser-production.log.gz",
+        "testdata/plugin-module-no-official-auth-20261026/services40-messages42-browser-read-command.json",
+        "testdata/plugin-module-no-official-auth-20261026/services40-messages42-browser-read-reply.json",
+        "testdata/plugin-module-no-official-auth-20261026/services40-messages42-browser-read-cold.json",
+        "testdata/plugin-module-no-official-auth-20261026/services40-messages42-browser-read-enter.json",
+        "testdata/plugin-module-no-official-auth-20261026/services40-messages42-browser-read-blank.json",
+        "testdata/plugin-module-no-official-auth-20261026/services40-messages42-browser-input.png",
+        "testdata/plugin-module-no-official-auth-20261026/services40-messages42-browser-network-failure.png",
+        "testdata/plugin-module-no-official-auth-20261026/services40-messages42-browser-cold.png",
+        "testdata/plugin-module-no-official-auth-20261026/services40-messages42-browser-blank.png"
+      ]
+    }
+  ],
+  "source_oracles": [
+    {
+      "path": "testdata/standard-command-ingress/source-oracle.json",
+      "sha256": "b8464afd22730a9dcdfafb0134c454fe3ac777d05f03be69fe03af9f22b90307",
+      "kind": "fixed source AST, captured dependency outputs"
+    },
+    {
+      "path": "testdata/standard-command-register/oracle-results.json",
+      "sha256": "1282b4e8b0161f36fb694346940ab99411d62615fa8ee7e999c4666e58596a11",
+      "kind": "fixed source AST, captured dependency outputs"
+    },
+    {
+      "path": "testdata/standard-command-media/media-oracle.json",
+      "sha256": "869d6a5d786d139022e71d791004a07b6b759a3c6512644d053443a8e2d201c2",
+      "kind": "fixed source AST, captured dependency outputs"
+    },
+    {
+      "path": "testdata/standard-services/input-oracle.json",
+      "sha256": "63b18e4b07f7126194f8f32cf4c36c6d49266fbd18fc8c6ce8ef08db21af1de0",
+      "kind": "fixed source AST, captured dependency outputs"
+    }
+  ],
+  "evidence": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services40-input-command-tests.jsonl.gz",
+      "kind": "first12 roots passed; source-oracle root failed due test harness absent-vs-absent comparison, not all-green",
+      "root_passes": [
+        "TestOriginalWebCommandActualSDKIngress",
+        "TestOriginalWebCommandTextSourceRules",
+        "TestOriginalWebCommandMediaTextRoutingActualSDK",
+        "TestOriginalCommandMenuProviderActualWorker",
+        "TestOriginalCommandRegisterSourceCommandShapes",
+        "TestOriginalCommandRegisterShapeFixPreservesSubsetAndCancel",
+        "TestOriginalCommandMenuProjection",
+        "TestOriginalCommandRegisterActualWorkers",
+        "TestOriginalInputActualSDKEventErrorDelivery",
+        "TestOriginalInputActualSDKWebConsumptionAndCancellation",
+        "TestOriginalInputActualSDKCloneScopeAndStaleCapability",
+        "TestOriginalInputActualSDKMediaExpiryAndShutdown"
+      ],
+      "failed_roots": [
+        "TestOriginalInputFixedMessageSourceActualSDK",
+        "package"
+      ],
+      "original_work_path": "work/plugin-no-official-auth-20261026/services40-input-command-tests.jsonl",
+      "uncompressed_sha256": "94572eb48421283565abb956c5d258326083f1b874129e67ef03a47ac835680c",
+      "sha256": "bd2b5f2822eaf94fccb4d4e4bdf52213bdb999bb373ab89a24248c2856131672",
+      "compression": "gzip"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services40-input-oracle-repaired-tests.jsonl.gz",
+      "kind": "test harness assumed unconsumed expiry feedback in HTTP body; source sends notice independently; failed and preserved",
+      "root_passes": [],
+      "failed_roots": [
+        "TestOriginalInputFixedMessageSourceActualSDK",
+        "package"
+      ],
+      "original_work_path": "work/plugin-no-official-auth-20261026/services40-input-oracle-repaired-tests.jsonl",
+      "uncompressed_sha256": "16197ee56f87e5ee23452c43640442a80bceadbeb8707865bde325cef7a35dca",
+      "sha256": "e2851ca4a984ba87c9ebe5e9c4541bb692eedce6468097e892e3924ddf38c805",
+      "compression": "gzip"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services40-input-oracle-final-tests.jsonl.gz",
+      "kind": "actual SDK6 fixed source message cases; absentfields compared by presence, notice verified via actual notice.message subscriber",
+      "root_passes": [
+        "TestOriginalInputFixedMessageSourceActualSDK"
+      ],
+      "failed_roots": [],
+      "original_work_path": "work/plugin-no-official-auth-20261026/services40-input-oracle-final-tests.jsonl",
+      "uncompressed_sha256": "7b68d98d8f052245096dc865de5251597bdd7d325d451c95490ecf32602fdcb4",
+      "sha256": "04005815a5a67f17c0f42e42772ff75513231a52acd644fd0685e16f16e933f8",
+      "compression": "gzip"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services40-input-manager-tests.jsonl.gz",
+      "kind": "3 manager roots source matching/expiry/reply/singleconsume/copy",
+      "root_passes": [
+        "TestSourceMatchingReplacementAndOwnership",
+        "TestSourceExpiryBoundaryTombstoneAndPromptReply",
+        "TestSourceSingleConsumptionAndCopyIsolation"
+      ],
+      "failed_roots": [],
+      "original_work_path": "work/plugin-no-official-auth-20261026/services40-input-manager-tests.jsonl",
+      "uncompressed_sha256": "50c726611ed6817a3c1fa498bf21e214d1f93439a0b5b3d53961a4dde5d270fa",
+      "sha256": "a765969c3449746a29c037f5d05205f979488fcd8462a032be8c804219affa91",
+      "compression": "gzip"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-cache-input-race-tests.jsonl.gz",
+      "kind": "4 actualSDK/source cache/input race roots",
+      "root_passes": [
+        "TestOriginalInputFixedMessageSourceActualSDK",
+        "TestOriginalServiceActualSDKAsyncReplacementSource",
+        "TestOriginalServiceActualSDKExpiredFinishDoesNotRevive",
+        "TestOriginalServiceProgressFixedTLRU"
+      ],
+      "failed_roots": [],
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-cache-input-race-tests.jsonl",
+      "uncompressed_sha256": "33fce8026a99a28127f7ebf90b11d8c98e755420ae11475dcbd979dbf9501bfc",
+      "sha256": "b693e9622801fe27b520b79d63c5e7cb2e8dbbea6edca6f825a44ddf32965778",
+      "compression": "gzip"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services40-process-final-linux.log",
+      "kind": "actual Linux cmd/server shared final snapshot, PASS4.22s",
+      "sha256": "3c6a6514d18088f450f5c03c004ee0ffb204711a5c9601b6517d43691519fa38",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services40-process-final-linux.log"
+    }
+  ],
+  "actual_linux": {
+    "binaries": {
+      "server-unified-route-linux": "79d52d45d94d7a13b649303dcdea557ccca30b35921a6abe62f9ae1c2994cd56",
+      "services38-input-final-linux": "d25fbd2f58764a73646744e48def08e706678aeea9ab40dd7e078b38720ca361",
+      "services40-command-linux": "d909b7a58c05dbf473548a7e490a768fb16fc290b237b0efa41169fc14ebe23a",
+      "services40-process-final-linux.test": "eabbec3ffe49e3326b72ba574e44b70156182039fe2507d7ca32c0d1ea94d089"
+    },
+    "register_commands_pid": 2306160,
+    "provider_failure_and_recovery": "real owned HTTP503 then forced204 through current same SDK object; false module normal return accepted",
+    "worker_pids_before_cold": [
+      2306149,
+      2306140
+    ],
+    "worker_pids_after_cold": [
+      2306177,
+      2306183
+    ],
+    "cleanup": "source+clone+provider uninstalled; API404, service registrations0; private cmd/server exited"
+  },
+  "source_scope_review": {
+    "backend_status": "Plugin command/input platform mandatory source paths are mapped and verified within existing Linux/local/single-user Web host and typed Go SDK adaptation. No known remaining platform command/input omission after ordinary user.message restoration and browser closure.",
+    "frontend_status": "Required ordinary ShortcutMessage entry and Web chain verified in parentf37 actual browser772.59s with process/SDK cold recovery; raw evidence linked in final_scope_audit.",
+    "scope_excluded": [
+      "AI branches and workflow commands per user instruction"
+    ],
+    "peripheral_business_not_added": [
+      "No new Telegram or other external message integration; generic pending-key/Telegram-reply identity semantics are source-replayed manager behavior, not transport acceptance.",
+      "No new built-in media selection/preset business. Existing media metadata evidence only proves image/images do not block a textual plugin command and no image request is made."
+    ],
+    "recommendation": "Rows40/41 can be assessed for acceptance against these plugin platform paths and documented process/native adapters. Do not count unrelated media/Telegram business as implemented or add it solely to migrate these two platform items."
+  },
+  "necessary_adaptations": [
+    "existing administrator session/origin protection and API-key scope retained, no MoviePilot JWT/multiuser system",
+    "typed Go metadata and SDK capability handles replace arbitrary Python callable/import references",
+    "SDKget/pop/remove scoped to owning instance as required process capability boundary; not arbitrary foreign globals",
+    "safe Go exception diagnostics and existing system.error/notice path, not Python unrestrictedtracebacks",
+    "Ordinary noncommand Web text now emits source user.message with trusted six fields in actualf37; only media-only or otherwise unmapped non-plugin business routes retain explicit unsupported results.",
+    "Generic input keys retain channel/source/user/chat/reply metadata. A real external message channel requires its existing configured sender; no fabricated Telegram transport or new message system is supplied."
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "merged": false,
+    "deployed": false,
+    "shared_matrix_edited_by_this_agent": false
+  },
+  "archive_root": "testdata/plugin-module-no-official-auth-20261026",
+  "archive_note": "Raw work logs are archived here; .jsonl gzip retains original source hash. Binary receipt JSON only, no compiled binaries committed. Source oracles remain in existing tracked-capable testdata/standard-services and standard-command-* paths.",
+  "target_file_sha256": {
+    "internal/app/plugin_original_command_ingress.go": "de7521c6cff1db082d10865941b2c141260c03a682937f99601e00d93cd5e4bd",
+    "internal/app/plugin_original_command_register.go": "12efab20e317d5ca0b50c3394d913814c4bdcc42957de9848e982477bdeb9dc4",
+    "internal/app/plugin_original_commands.go": "12b96e0d9c882e2c3922f82b2badd04c8adfbe1e2b711b89971340ea0c96d28b",
+    "internal/app/plugin_original_event_queue.go": "c79f31ea6c5d318a9bc899d3f1ca3b47b0eff09d54fa52ad61622a3dc42b6b5e",
+    "internal/app/plugin_original_input.go": "dd2f03f25e26f3852ebfe084c428c7c188c8dc0e9ba8671eebc65aa688914b27",
+    "internal/commandrouter/router.go": "131218f51ee7dcabe8c35bebc4ee02a396495d154b6018699e9e69f5e3478722",
+    "internal/plugininput/manager.go": "88308a80f8e4e07d86bc28fe9d223f0f5068e3a5a926d420af74a8adcbf69a15",
+    "internal/plugins/input_interaction.go": "748073142e9bffebd8f146d9f33d792530632d65bbf3931204c4fbfd41880da0"
+  },
+  "actual_final_invocation": {
+    "working_directory": "/tmp/light-media-plugin-scope-dRZTQ91A",
+    "binary": "./services40-process-final-linux.test",
+    "args": [
+      "-test.run=^TestPluginServicesProductionCLI$",
+      "-test.v"
+    ],
+    "environment": {
+      "PLUGIN_PROCESS_SERVER_BINARY": "$PWD/server-unified-route-linux",
+      "OWNED_INPUT_PROCESS_FIXTURE_BINARY": "$PWD/services38-input-final-linux",
+      "PLUGIN_PROCESS_SERVICE_ASYNC_FIXTURE": "true",
+      "PLUGIN_PROCESS_SERVICE_ASYNC_ORACLE": "$PWD/services38-async-oracle.json",
+      "PLUGIN_PROCESS_SERVICE_INSTANCES_FIXTURE": "true",
+      "PLUGIN_PROCESS_SERVICE_INSTANCES_ORACLE": "$PWD/services38-instances-oracle.json",
+      "PLUGIN_PROCESS_INPUT_COMMAND_FIXTURE": "true",
+      "OWNED_COMMAND_PROCESS_FIXTURE_BINARY": "$PWD/services40-command-linux"
+    },
+    "exit_code": 0,
+    "duration_seconds": 4.22
+  },
+  "prior_source_scope_review_before_web_ui": {
+    "backend_status": "ordinary plugin command and input source paths closed within documented native SDK adaptation; no known backend contract omission after Unicode fix",
+    "frontend_status": "missing required ordinary ShortcutMessage UI entry; rows40/41 cannot be marked acceptance pass yet",
+    "scope_excluded": [
+      "AI message branches",
+      "workflow commands/actions",
+      "new external message integrations",
+      "unrelated built-in business command implementations"
+    ]
+  },
+  "target_file_sha256_snapshot": "79d52d45d94d7a13b649303dcdea557ccca30b35921a6abe62f9ae1c2994cd56 (historical original backend evidence; latest Web path binds separatef37 below)",
+  "final_scope_audit": {
+    "source_scope": [
+      "app/core/plugin.py:844 get_plugin_commands",
+      "app/command.py:156 init_commands",
+      "app/command.py:269 register_commands menu interception/provider",
+      "app/command.py:298 __run_command and435/442 plugin event routing",
+      "app/helper/interaction.py:426-738 complete PluginInputInteractionManager",
+      "app/chain/message.py:318-458 ordinary ingress",
+      "app/chain/message.py:460-589 plugin input before slash command",
+      "app/api/endpoints/message.py:113-148 trusted Web entry",
+      "src/components/dialog/ShortcutMessageDialog.vue:53 ordinary UI submit",
+      "src/layouts/components/ShortcutBar.vue:131 ordinary shortcut"
+    ],
+    "platform_required_covered": [
+      "Current enabled object declarations, full ordered background rebuild, duplicate command winner, hidden/visible menu filtering distinct from executable data, chain mutate/cancel/force, real register_commands provider success/failure/recovery, original command.excute observer then declared event/data/context/args, error containment and cold rebuild.",
+      "Pending create/get/pop/remove, random request identity and overlapping replacement, source-key matching/wildcards/reply binding, min timeout/tombstone/expiry boundary, literal slash reply before commands, five-word cancel and Unicode whitespace, expired slash continuation, message.action exact target and clone isolation, process restart clearing in-memory pending with config/command recovery.",
+      "Actual ordinary Web UI submit/failed retry/empty handling and source callbacks, ordinary user.message fallback without AI, incoming action0 and matched pending reply/cancel skipping history; source shared FIFO defect retained and row42 separately assesses full message presentation."
+    ],
+    "evidence_classification": {
+      "source_replay": "standard-command-ingress/source-oracle.json; standard-command-register/oracle-results.json; standard-command-media/media-oracle.json; standard-services/input-oracle.json plus existing input manager source fixtures. Captured dependency outputs, not original service operation.",
+      "actual_sdk_http": "services40-input-command-tests and input source final/race logs; Web media13-case test is real HTTP→Go SDK, with owned image endpoint hitcount0.",
+      "actual_linux": "79d Linux4.22s includes clone/expiry/menu503→204/cold; f37 events36 actual ordinary user.message3.41s; parentf37 browser772.59s includes text command/pending reply/cancel/cold and actual SDK observers.",
+      "not_claimed": "No external Telegram delivery and no built-in media selection/preset business acceptance."
+    },
+    "latest_web_binary_sha256": "f37e0d1205539e0a44adee61d616af0a7934b33939cbd21e494b42b0e1316d9e",
+    "actual_browser_log": "testdata/plugin-module-no-official-auth-20261026/services40-messages42-final-browser-production.log.gz",
+    "browser_evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/services40-final-scope-archive-manifest.json",
+    "ordinary_user_message_evidence": "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+    "row_status_authority": "docs/plugin-module-parity-matrix.md (root only)"
+  },
+  "latest_web_target_file_sha256": {
+    "internal/app/plugin_original_command_ingress.go": "e9d6f6643d7b870385db9dec13d99c22bcba855c48fa73a96397d70488f9a582",
+    "internal/app/plugin_original_input.go": "dd2f03f25e26f3852ebfe084c428c7c188c8dc0e9ba8671eebc65aa688914b27",
+    "web/src/components/ShortcutMessageDialog.vue": "49d4c95dd76ce73be4e7466c49be3da4b35777544ad116218efb2780b4c33187",
+    "web/src/components/ShortcutTools.vue": "cceae24adff2052c74f2e26c164b26295a4307306d4af4b54a9a836e19b275e6"
+  },
+  "accepted_indices": [
+    40,
+    41
+  ],
+  "complete_within_plugin_platform_scope": true,
+  "root_acceptance": "Original ordinary plugin declarations/rebuild/provider/event and generic input lifecycle plus actual required Web UI verified; source-scoped native process adapters recorded. No external channel or media preset business claimed."
+}

@@ -1,0 +1,24 @@
+// Developer-only execution of the two fixed ServiceView functions.
+import fs from 'node:fs';
+import crypto from 'node:crypto';
+import {createRequire} from 'node:module';
+const require=createRequire(new URL('../../web/package.json',import.meta.url));
+const ts=require('typescript'), {parse}=require('@vue/compiler-sfc');
+const path=process.argv[2]||'/Users/accidia/projects/MoviePilot-Frontend/src/views/system/ServiceView.vue';
+const source=fs.readFileSync(path,'utf8'), script=parse(source).descriptor.scriptSetup.content;
+const tree=ts.createSourceFile('fixed-service.ts',script,ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+const functions=tree.statements.filter(n=>ts.isFunctionDeclaration(n)&&['runCommand','loadSchedulerList'].includes(n.name.text));
+if(functions.length!==2)throw Error('fixed service function inventory changed');
+const compiled=ts.transpileModule(functions.map(n=>n.getText(tree)).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+const requests=[],timers=[],toasts=[], schedulerList={value:[]};
+let resolve;
+const held=new Promise(r=>{resolve=r});
+const api={get(path,options){requests.push({path,options});return path==='system/runscheduler'?held:Promise.resolve([{id:'Demo_tick',status:'正在运行'}]);}};
+const run=new Function('api','schedulerList','setTimeout','$toast','t',compiled+';return runCommand;')(api,schedulerList,(fn,ms)=>{timers.push({fn,ms})},{success:message=>toasts.push(message)},key=>key);
+run('Demo_tick');
+const immediate={requests:structuredClone(requests),timer_ms:timers.map(x=>x.ms),toasts:structuredClone(toasts),list:schedulerList.value};
+timers[0].fn();await Promise.resolve();await Promise.resolve();
+resolve({success:true});
+const output={fixed_commit:'2829e3b08214348f05ff2f5beae644882eccad58',source:'src/views/system/ServiceView.vue',source_sha256:crypto.createHash('sha256').update(source).digest('hex'),kind:'actual fixed source functions with held protocol request; synthetic list values',immediate,after_refresh:{requests,list:schedulerList.value}};
+fs.writeFileSync(new URL('./frontend-oracle.json',import.meta.url),JSON.stringify(output,null,2)+'\n');
+console.log('fixed services frontend: non-awaited request, immediate submission toast, 1000ms list refresh');

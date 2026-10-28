@@ -60,6 +60,13 @@ func TestStandardBusinessEventsActualBatchRefreshErrorDTOAndRetry(t *testing.T) 
 	if _, err := a.saveManagedSite(context.Background(), site); err != nil {
 		t.Fatal(err)
 	}
+	// Fixed SiteChain.cache_site_userdata (SiteUpdated) refreshes once after
+	// creation; the subsequent explicit batch refresh is a separate call.
+	created := requireBusinessEventCount(t, a, ownedEventFixtureID, "site.refreshed", 1)
+	identity := identityRequire(t, a, site.ID)
+	if string(created[0].Data) != fmt.Sprintf(`{"site_id":%d}`, identity.SourceID) {
+		t.Fatal("source SiteUpdated consumer refresh", string(created[0].Data))
+	}
 	if _, err := a.enqueue(context.Background(), "site_refresh", map[string]string{"id": "site_refresh"}, ""); err != nil {
 		t.Fatal(err)
 	}
@@ -70,10 +77,9 @@ func TestStandardBusinessEventsActualBatchRefreshErrorDTOAndRetry(t *testing.T) 
 	if err = a.safeRun(context.Background(), job); pluginErrorCode(err) != "SITE_STATISTICS_REFRESH_FAILED" {
 		t.Fatal("error DTO changed source aggregate failure", err)
 	}
-	events := requireBusinessEventCount(t, a, ownedEventFixtureID, "site.refreshed", 2)
-	identity := identityRequire(t, a, site.ID)
+	events := requireBusinessEventCount(t, a, ownedEventFixtureID, "site.refreshed", 3)
 	want := map[string]bool{fmt.Sprintf(`{"site_id":%d}`, identity.SourceID): true, `{"site_id":"*"}`: true}
-	for _, event := range events {
+	for _, event := range events[1:] {
 		if !want[string(event.Data)] {
 			t.Fatal("unexpected source refresh payload", string(event.Data))
 		}
@@ -83,7 +89,7 @@ func TestStandardBusinessEventsActualBatchRefreshErrorDTOAndRetry(t *testing.T) 
 		t.Fatal("numeric or batch source event missing")
 	}
 	_ = a.safeRun(context.Background(), job)
-	requireBusinessEventCount(t, a, ownedEventFixtureID, "site.refreshed", 2)
+	requireBusinessEventCount(t, a, ownedEventFixtureID, "site.refreshed", 3)
 }
 
 func TestStandardBusinessEventsActualSourceSubscriptionFactRollbackNoEarlyDispatch(t *testing.T) {

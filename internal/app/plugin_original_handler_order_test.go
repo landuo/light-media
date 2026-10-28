@@ -196,13 +196,24 @@ func TestOriginalManifestStartupAndResetActualWorkers(t *testing.T) {
 	clear()
 	a.sendOriginalPluginDataReset(ctx, alpha.PluginID)
 	assertOrderTrace(t, trace, []string{"alpha:reset_first", "alpha:reset_second", "default:event"})
+	// Fixed core/plugin.py:177 and core/event.py:230 retain the decorator
+	// registration and disable its class. Dispatch above proves no invocation.
 	a.pluginOriginalEventsMu.Lock()
+	var stoppedHandlers []originalMutableEventHandler
 	for _, h := range a.pluginOriginalChainHandlers["plugin.data.reset"] {
 		if h.Instance == clone {
-			t.Error("stopped clone handler retained")
+			stoppedHandlers = append(stoppedHandlers, h)
 		}
 	}
 	a.pluginOriginalEventsMu.Unlock()
+	if len(stoppedHandlers) != 2 {
+		t.Fatalf("stop lost source class registrations: %d", len(stoppedHandlers))
+	}
+	for _, h := range stoppedHandlers {
+		if h.Enabled == nil || h.Enabled() {
+			t.Fatal("stopped clone handler is enabled")
+		}
+	}
 	// Failed init is isolated during a complete manager restart; no running
 	// object or reset registration is inferred from the installed flag.
 	configure(beta.PluginID, "beta", true, true, "")

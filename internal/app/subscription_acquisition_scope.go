@@ -26,6 +26,7 @@ type subscriptionAcquisition struct {
 	Options                             releasemeta.Options
 	Candidates                          []Candidate
 	Metas                               []json.RawMessage
+	SelectionContexts                   []json.RawMessage `json:",omitempty"`
 	Steps                               []subscriptionAcquisitionStep
 }
 type subscriptionAcquisitionInput struct {

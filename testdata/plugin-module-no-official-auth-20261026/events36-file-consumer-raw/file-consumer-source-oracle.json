@@ -1,0 +1,612 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed ordinary event consumer functions; storage existence/FileItem and list/remove are controlled I/O boundaries, not physical scrape/delete proof",
+  "source_sha256": {
+    "app/chain/media.py": "daedce70999cc161cd007f5145d007238e4606504c85b6675bb3040dac449caa",
+    "app/chain/download.py": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003"
+  },
+  "scrape": {
+    "source": "app/chain/media.py:1035",
+    "cases": [
+      {
+        "name": "no_event",
+        "input": null,
+        "storage_present": true,
+        "bluray": false,
+        "calls": [],
+        "exception": null
+      },
+      {
+        "name": "missing_fileitem",
+        "input": {},
+        "storage_present": true,
+        "bluray": false,
+        "calls": [],
+        "exception": null
+      },
+      {
+        "name": "missing_storage_item",
+        "input": {
+          "fileitem": {
+            "storage": "local",
+            "path": "/owned/root",
+            "type": "dir"
+          }
+        },
+        "storage_present": false,
+        "bluray": false,
+        "calls": [
+          {
+            "method": "get_item",
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/root",
+              "type": "dir"
+            }
+          }
+        ],
+        "exception": null
+      },
+      {
+        "name": "single_file",
+        "input": {
+          "fileitem": {
+            "storage": "local",
+            "path": "/owned/root/a.mkv",
+            "type": "file"
+          },
+          "mediainfo": {
+            "title": "Owned"
+          },
+          "overwrite": true
+        },
+        "storage_present": true,
+        "bluray": false,
+        "calls": [
+          {
+            "method": "get_item",
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/root/a.mkv",
+              "type": "file"
+            }
+          },
+          {
+            "method": "scrape_metadata",
+            "kwargs": {
+              "fileitem": {
+                "storage": "local",
+                "path": "/owned/root/a.mkv",
+                "type": "file"
+              },
+              "mediainfo": {
+                "title": "Owned"
+              },
+              "init_folder": true,
+              "parent": {
+                "storage": "local",
+                "path": "/owned/root",
+                "type": "dir"
+              },
+              "overwrite": true
+            }
+          }
+        ],
+        "exception": null
+      },
+      {
+        "name": "directory_recursive",
+        "input": {
+          "fileitem": {
+            "storage": "local",
+            "path": "/owned/root",
+            "type": "dir"
+          },
+          "meta": {
+            "name": "Owned"
+          },
+          "mediainfo": {
+            "title": "Owned"
+          }
+        },
+        "storage_present": true,
+        "bluray": false,
+        "calls": [
+          {
+            "method": "get_item",
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/root",
+              "type": "dir"
+            }
+          },
+          {
+            "method": "scrape_metadata",
+            "kwargs": {
+              "fileitem": {
+                "storage": "local",
+                "path": "/owned/root",
+                "type": "dir"
+              },
+              "meta": {
+                "name": "Owned"
+              },
+              "init_folder": true,
+              "mediainfo": {
+                "title": "Owned"
+              },
+              "overwrite": false
+            }
+          }
+        ],
+        "exception": null
+      },
+      {
+        "name": "tree_dedup_order",
+        "input": {
+          "fileitem": {
+            "storage": "local",
+            "path": "/owned/root",
+            "type": "dir"
+          },
+          "file_list": [
+            "/owned/root/z/2.mkv",
+            "/owned/root/a/b/1.mkv",
+            "/owned/root/z/2.mkv",
+            "/owned/root/a/3.mkv"
+          ],
+          "mediainfo": {
+            "title": "Owned"
+          },
+          "overwrite": false
+        },
+        "storage_present": true,
+        "bluray": false,
+        "calls": [
+          {
+            "method": "get_item",
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/root",
+              "type": "dir"
+            }
+          },
+          {
+            "method": "is_bluray_folder",
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/root",
+              "type": "dir"
+            }
+          },
+          {
+            "method": "get_file_item",
+            "storage": "local",
+            "path": "/owned/root"
+          },
+          {
+            "method": "scrape_metadata",
+            "kwargs": {
+              "fileitem": {
+                "storage": "local",
+                "path": "/owned/root",
+                "type": "dir"
+              },
+              "mediainfo": {
+                "title": "Owned"
+              },
+              "init_folder": true,
+              "recursive": false,
+              "overwrite": false
+            }
+          },
+          {
+            "method": "get_file_item",
+            "storage": "local",
+            "path": "/owned/root/a"
+          },
+          {
+            "method": "scrape_metadata",
+            "kwargs": {
+              "fileitem": {
+                "storage": "local",
+                "path": "/owned/root/a",
+                "type": "dir"
+              },
+              "mediainfo": {
+                "title": "Owned"
+              },
+              "init_folder": true,
+              "recursive": false,
+              "overwrite": false
+            }
+          },
+          {
+            "method": "get_file_item",
+            "storage": "local",
+            "path": "/owned/root/z"
+          },
+          {
+            "method": "scrape_metadata",
+            "kwargs": {
+              "fileitem": {
+                "storage": "local",
+                "path": "/owned/root/z",
+                "type": "dir"
+              },
+              "mediainfo": {
+                "title": "Owned"
+              },
+              "init_folder": true,
+              "recursive": false,
+              "overwrite": false
+            }
+          },
+          {
+            "method": "get_file_item",
+            "storage": "local",
+            "path": "/owned/root/a/b"
+          },
+          {
+            "method": "scrape_metadata",
+            "kwargs": {
+              "fileitem": {
+                "storage": "local",
+                "path": "/owned/root/a/b",
+                "type": "dir"
+              },
+              "mediainfo": {
+                "title": "Owned"
+              },
+              "init_folder": true,
+              "recursive": false,
+              "overwrite": false
+            }
+          },
+          {
+            "method": "get_file_item",
+            "storage": "local",
+            "path": "/owned/root/a/3.mkv"
+          },
+          {
+            "method": "scrape_metadata",
+            "kwargs": {
+              "fileitem": {
+                "storage": "local",
+                "path": "/owned/root/a/3.mkv",
+                "type": "file"
+              },
+              "mediainfo": {
+                "title": "Owned"
+              },
+              "init_folder": false,
+              "overwrite": false
+            }
+          },
+          {
+            "method": "get_file_item",
+            "storage": "local",
+            "path": "/owned/root/a/b/1.mkv"
+          },
+          {
+            "method": "scrape_metadata",
+            "kwargs": {
+              "fileitem": {
+                "storage": "local",
+                "path": "/owned/root/a/b/1.mkv",
+                "type": "file"
+              },
+              "mediainfo": {
+                "title": "Owned"
+              },
+              "init_folder": false,
+              "overwrite": false
+            }
+          },
+          {
+            "method": "get_file_item",
+            "storage": "local",
+            "path": "/owned/root/z/2.mkv"
+          },
+          {
+            "method": "scrape_metadata",
+            "kwargs": {
+              "fileitem": {
+                "storage": "local",
+                "path": "/owned/root/z/2.mkv",
+                "type": "file"
+              },
+              "mediainfo": {
+                "title": "Owned"
+              },
+              "init_folder": false,
+              "overwrite": false
+            }
+          }
+        ],
+        "exception": null
+      },
+      {
+        "name": "bluray_root_only",
+        "input": {
+          "fileitem": {
+            "storage": "local",
+            "path": "/owned/root",
+            "type": "dir"
+          },
+          "file_list": [
+            "/owned/root/BDMV/STREAM/00001.m2ts"
+          ],
+          "mediainfo": {
+            "title": "Owned"
+          }
+        },
+        "storage_present": true,
+        "bluray": true,
+        "calls": [
+          {
+            "method": "get_item",
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/root",
+              "type": "dir"
+            }
+          },
+          {
+            "method": "is_bluray_folder",
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/root",
+              "type": "dir"
+            }
+          },
+          {
+            "method": "scrape_metadata",
+            "kwargs": {
+              "fileitem": {
+                "storage": "local",
+                "path": "/owned/root",
+                "type": "dir"
+              },
+              "mediainfo": {
+                "title": "Owned"
+              },
+              "init_folder": true,
+              "recursive": false,
+              "overwrite": false
+            }
+          }
+        ],
+        "exception": null
+      },
+      {
+        "name": "missing_child_continues",
+        "input": {
+          "fileitem": {
+            "storage": "local",
+            "path": "/owned/root",
+            "type": "dir"
+          },
+          "file_list": [
+            "/owned/root/missing/a.mkv",
+            "/owned/root/z.mkv"
+          ]
+        },
+        "storage_present": true,
+        "bluray": false,
+        "calls": [
+          {
+            "method": "get_item",
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/root",
+              "type": "dir"
+            }
+          },
+          {
+            "method": "is_bluray_folder",
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/root",
+              "type": "dir"
+            }
+          },
+          {
+            "method": "get_file_item",
+            "storage": "local",
+            "path": "/owned/root"
+          },
+          {
+            "method": "scrape_metadata",
+            "kwargs": {
+              "fileitem": {
+                "storage": "local",
+                "path": "/owned/root",
+                "type": "dir"
+              },
+              "mediainfo": null,
+              "init_folder": true,
+              "recursive": false,
+              "overwrite": false
+            }
+          },
+          {
+            "method": "get_file_item",
+            "storage": "local",
+            "path": "/owned/root/missing"
+          },
+          {
+            "method": "get_file_item",
+            "storage": "local",
+            "path": "/owned/root/missing/a.mkv"
+          },
+          {
+            "method": "get_file_item",
+            "storage": "local",
+            "path": "/owned/root/z.mkv"
+          },
+          {
+            "method": "scrape_metadata",
+            "kwargs": {
+              "fileitem": {
+                "storage": "local",
+                "path": "/owned/root/z.mkv",
+                "type": "file"
+              },
+              "mediainfo": null,
+              "init_folder": false,
+              "overwrite": false
+            }
+          }
+        ],
+        "exception": null
+      }
+    ]
+  },
+  "deleted": {
+    "source": "app/chain/download.py:1809",
+    "cases": [
+      {
+        "name": "no_event",
+        "input": null,
+        "rows": [],
+        "removal": true,
+        "calls": [],
+        "exception": null
+      },
+      {
+        "name": "src_only",
+        "input": {
+          "src": "/owned/a.mkv"
+        },
+        "rows": [],
+        "removal": true,
+        "calls": [],
+        "exception": null
+      },
+      {
+        "name": "empty_hash",
+        "input": {
+          "hash": ""
+        },
+        "rows": [],
+        "removal": true,
+        "calls": [],
+        "exception": null
+      },
+      {
+        "name": "no_torrents",
+        "input": {
+          "hash": "owned-hash"
+        },
+        "rows": [],
+        "removal": true,
+        "calls": [
+          {
+            "method": "list_torrents",
+            "kwargs": {
+              "hashs": [
+                "owned-hash"
+              ]
+            }
+          }
+        ],
+        "exception": null
+      },
+      {
+        "name": "listed_remove_false_still_publish",
+        "input": {
+          "hash": "owned-hash"
+        },
+        "rows": [
+          {
+            "hash": "owned-hash",
+            "downloader": "Owned downloader"
+          }
+        ],
+        "removal": false,
+        "calls": [
+          {
+            "method": "list_torrents",
+            "kwargs": {
+              "hashs": [
+                "owned-hash"
+              ]
+            }
+          },
+          {
+            "method": "remove_torrents",
+            "kwargs": {
+              "hashs": [
+                "owned-hash"
+              ],
+              "delete_file": false
+            },
+            "returned": false
+          },
+          {
+            "method": "send_event",
+            "event": "download.deleted",
+            "data": {
+              "hash": "owned-hash",
+              "torrents": [
+                {
+                  "hash": "owned-hash",
+                  "downloader": "Owned downloader"
+                }
+              ]
+            }
+          }
+        ],
+        "exception": null
+      },
+      {
+        "name": "listed_remove_true_publish",
+        "input": {
+          "hash": "owned-hash"
+        },
+        "rows": [
+          {
+            "hash": "owned-hash",
+            "downloader": "Owned downloader"
+          }
+        ],
+        "removal": true,
+        "calls": [
+          {
+            "method": "list_torrents",
+            "kwargs": {
+              "hashs": [
+                "owned-hash"
+              ]
+            }
+          },
+          {
+            "method": "remove_torrents",
+            "kwargs": {
+              "hashs": [
+                "owned-hash"
+              ],
+              "delete_file": false
+            },
+            "returned": true
+          },
+          {
+            "method": "send_event",
+            "event": "download.deleted",
+            "data": {
+              "hash": "owned-hash",
+              "torrents": [
+                {
+                  "hash": "owned-hash",
+                  "downloader": "Owned downloader"
+                }
+              ]
+            }
+          }
+        ],
+        "exception": null
+      }
+    ]
+  }
+}

@@ -4,7 +4,7 @@ import {
   computed,
   watch,
   onMounted,
-  onUnmounted,
+  onActivated,
   defineAsyncComponent,
 } from "vue";
 import { VThemeProvider } from "vuetify/components/VThemeProvider";
@@ -16,6 +16,8 @@ import { VIcon } from "vuetify/components/VIcon";
 import { VAlert } from "vuetify/components/VAlert";
 import { VTextField } from "vuetify/components/VTextField";
 import { VCombobox } from "vuetify/components/VCombobox";
+import { VSelect } from "vuetify/components/VSelect";
+import { VInfiniteScroll } from "vuetify/components/VInfiniteScroll";
 import { VDivider } from "vuetify/components/VDivider";
 import {
   VList,
@@ -27,11 +29,15 @@ import Draggable from "vuedraggable";
 import { VDialog } from "vuetify/components/VDialog";
 import { api, errorText, toast } from "../api";
 import type { PluginCard } from "../features/plugin-forms";
+import { pluginMarketList, pluginMarketLabels, pluginMarketRepositoryOptions, type PluginMarketSort } from "../features/plugin-market";
+import { openPluginProject } from '../features/plugin-project';
 import AppIcon from "./AppIcon.vue";
 import PluginManageCard from "./PluginManageCard.vue";
 import PluginFolderCard from "./PluginFolderCard.vue";
 import {
   organizationGrid,
+  normalizePluginFolders,
+  pluginFolderSavePayload,
   copyOrganization,
   folderAppearance,
   folderMembers,
@@ -49,11 +55,34 @@ const emit = defineEmits<{ changed: [] }>();
 const PluginMarketSettingDialog = defineAsyncComponent(
   () => import("./PluginMarketSettingDialog.vue"),
 );
+const PluginVersionHistoryDialog = defineAsyncComponent(
+  () => import("./PluginVersionHistoryDialog.vue"),
+);
+const historyPlugin = ref<PluginCard>();
+const historyShowUpdate = ref(false);
+const PluginSearchDialog = defineAsyncComponent(() => import('./PluginSearchDialog.vue'));
+const searchOpen = ref(false), searchLoading = ref(false), searchError = ref('');
+const searchMarket = ref<PluginCard[]>([]);
+const searchPlugins = computed(() => [...items.value, ...searchMarket.value.filter(card => !items.value.some(item => item.instance_id === card.instance_id))]);
+async function openSearch() {
+  searchOpen.value = true;
+  if (searchLoading.value) return;
+  searchLoading.value = true;
+  searchError.value = '';
+  try {
+    const result = await api('/plugins/market?details=true');
+    if (!Array.isArray(result?.items)) throw new Error('插件市场响应无效');
+    searchMarket.value = result.items.filter((card: PluginCard) => !card.installed);
+    if (result.sources?.some((source: { success: boolean }) => !source.success)) searchError.value = '部分仓库读取失败，搜索结果可能不完整';
+  } catch (e) { searchError.value = errorText(e); }
+  finally { searchLoading.value = false; }
+}
+async function searchSelected(plugin: PluginCard) { searchOpen.value = false; await cardAction('open', plugin); }
 const marketSettings = ref(false);
 async function marketSettingsSaved() {
   marketSettings.value = false;
   market.value = [];
-  await load();
+  await load(true);
 }
 const PluginFolderDialog = defineAsyncComponent(
   () => import("./PluginFolderDialog.vue"),
@@ -81,7 +110,7 @@ async function cloneCreated() {
   installedQuery.value = null;
   runningFilter.value = false;
   updateFilter.value = false;
-  toast("插件分身已创建，默认暂停");
+  toast("插件分身已创建");
   await load();
 }
 function unavailable(plugin: PluginCard): boolean {
@@ -89,9 +118,9 @@ function unavailable(plugin: PluginCard): boolean {
   error.value = plugin.unavailable_reason || "插件暂不可用";
   return true;
 }
-function openPlugin(plugin: PluginCard) {
+async function openPlugin(plugin: PluginCard) {
   if (unavailable(plugin)) return;
-  if (!plugin.installed) return;
+  if (!plugin.installed) { await install(plugin); return; }
   if (plugin.has_page) detail.value = plugin;
   else selected.value = plugin;
 }
@@ -101,6 +130,34 @@ const tab = ref("installed"),
   marketFilterMenu = ref(false),
   items = ref<PluginCard[]>([]),
   market = ref<PluginCard[]>([]);
+const marketFailures = ref<{ repo_url: string; message: string }[]>([]);
+const marketAuthors = ref<string[]>([]), marketLabels = ref<string[]>([]), marketRepositories = ref<string[]>([]);
+const marketSort = ref<PluginMarketSort>('count'), marketStatistics = ref<Record<string, number>>({});
+const marketStatisticsError = ref('');
+const marketLimit = ref(20), marketListVersion = ref(0);
+const marketSortOptions: {title: string; value: PluginMarketSort}[] = [
+  {title:'热度',value:'count'},{title:'名称',value:'name'},{title:'作者',value:'author'},
+  {title:'仓库',value:'repo_url'},{title:'最新',value:'add_time'},
+];
+function selectMarketSort(value: PluginMarketSort) {
+  marketSort.value = value;
+  marketFilterMenu.value = false;
+}
+function submitMarketFilter(event: KeyboardEvent) {
+  if (!event.isComposing) marketFilterMenu.value = false;
+}
+
+const authorOptions = ref<string[]>([]), labelOptions = ref<string[]>([]);
+const repositoryOptions = computed(() => pluginMarketRepositoryOptions(market.value));
+const marketFiltered = computed(() => pluginMarketList(market.value, {
+  name: query.value || '', authors: marketAuthors.value, labels: marketLabels.value, repositories: marketRepositories.value,
+}, marketSort.value, marketStatistics.value));
+watch([query, marketAuthors, marketLabels, marketRepositories, marketSort, market, marketStatistics], () => { marketLimit.value = 20; marketListVersion.value++; }, { deep: true });
+function loadMoreMarket({ done }: { done: (status: 'ok' | 'empty') => void }) {
+  if (marketLimit.value >= marketFiltered.value.length) { done('empty'); return; }
+  marketLimit.value += 20;
+  done('ok');
+}
 const installedQuery = ref<string | null>(null),
   runningFilter = ref(false),
   updateFilter = ref(false),
@@ -122,15 +179,9 @@ const loading = ref(true),
   selected = ref<PluginCard>();
 const confirmation = ref<{
   plugin: PluginCard;
-  action: "reset" | "uninstall" | "repository-update";
+  action: "reset" | "uninstall";
 }>();
-const visible = computed(() =>
-  (tab.value === "installed" ? items.value : market.value).filter((item) =>
-    (item.name + " " + item.description + " " + item.author)
-      .toLowerCase()
-      .includes((query.value || "").toLowerCase()),
-  ),
-);
+const visible = computed(() => marketFiltered.value.slice(0, marketLimit.value));
 const organization = ref<PluginOrganization>({
   revision: 0,
   folders: {},
@@ -151,7 +202,6 @@ const folderError = ref(""),
 let dragged: PluginGridItem | undefined,
   droppedIntoFolder = false,
   loadSerial = 0;
-let timer: ReturnType<typeof setInterval>;
 function rebuildGrid() {
   if (!dragging.value)
     grid.value = organizationGrid(
@@ -185,11 +235,9 @@ watch(tab, () => {
 });
 let loadInFlight: Promise<void> | undefined;
 let reloadRequested = false;
-function pollLoad() {
-  // Polls never invalidate or overlap a slow discovery already in progress.
-  if (!loadInFlight) void load();
-}
-function load(): Promise<void> {
+let marketRefreshRequested = false;
+function load(forceMarket = false): Promise<void> {
+  marketRefreshRequested ||= forceMarket;
   if (loadInFlight) {
     // Explicit actions (including saved sources) require one fresh read after
     // the current request. Discard its old results, but do not amplify requests.
@@ -201,7 +249,9 @@ function load(): Promise<void> {
     try {
       do {
         reloadRequested = false;
-        await loadOnce();
+        const refresh = marketRefreshRequested;
+        marketRefreshRequested = false;
+        await loadOnce(refresh);
       } while (reloadRequested);
     } finally {
       loadInFlight = undefined;
@@ -209,14 +259,11 @@ function load(): Promise<void> {
   })();
   return loadInFlight;
 }
-async function loadOnce() {
+async function loadOnce(forceMarket = false) {
   if (organizing.value || sortMode.value || dragging.value) return;
   const serial = ++loadSerial;
   try {
-    const [installed, groups] = await Promise.all([
-      api("/plugins"),
-      api("/plugins/organization"),
-    ]);
+    const installed = await api("/plugins?state=installed");
     if (
       serial !== loadSerial ||
       organizing.value ||
@@ -232,18 +279,72 @@ async function loadOnce() {
       );
       if (current) selected.value = current;
     }
+    {
+      // Fixed refreshData reads local installed classes first, then the market.
+      const discovered = await api(
+        "/plugins/market?details=true" + (forceMarket ? "&force=true" : ""),
+      );
+      if (serial !== loadSerial) return;
+      if (!Array.isArray(discovered?.items) || !Array.isArray(discovered?.sources))
+        throw new Error("插件市场响应无效");
+      const updates = new Map<string, PluginCard>(
+        discovered.items
+          .filter((plugin: PluginCard) => plugin.installed && plugin.has_update)
+          .map((plugin: PluginCard) => [plugin.instance_id, plugin]),
+      );
+      // Original fetchUninstalledPlugins transfers upgrade metadata to the
+      // installed cards and excludes those cards from the marketplace grid.
+      items.value = items.value.map((plugin) => {
+        const candidate = updates.get(plugin.instance_id);
+        return {
+          ...plugin,
+          has_update: !!candidate,
+          update_blocked_reason: candidate?.update_blocked_reason,
+          ...(candidate
+            ? {
+                repo_url: candidate.repo_url,
+                repository_version: candidate.repository_version,
+              }
+            : {}),
+        };
+      });
+      market.value = discovered.items.filter(
+        (plugin: PluginCard) => !(plugin.installed && plugin.has_update),
+      );
+      // Fixed initOptions retains author/label choices across refreshes;
+      // only repository choices rebuild from the current market list.
+      for (const card of market.value) {
+        if (card.author && !authorOptions.value.includes(card.author)) authorOptions.value.push(card.author);
+        for (const label of pluginMarketLabels(card)) if (!labelOptions.value.includes(label)) labelOptions.value.push(label);
+      }
+      marketFailures.value = discovered.sources
+        .filter((source: { success: boolean }) => source.success !== true)
+        .map((source: { repo_url: string; message?: string }) => ({
+          repo_url: source.repo_url,
+          message: source.message || "仓库读取失败，请刷新重试",
+        }));
+    }
+    loading.value = false;
+    error.value = '';
+      try {
+        const statistics = await api('/plugins/statistic');
+        if (serial !== loadSerial) return;
+        if (!statistics || typeof statistics !== 'object' || Array.isArray(statistics)) throw new Error('插件统计响应无效');
+        marketStatistics.value = statistics;
+        marketStatisticsError.value = '';
+      } catch (e) {
+        if (serial !== loadSerial) return;
+        marketStatisticsError.value = errorText(e);
+      }
+    const groups = await api("/plugins/organization");
+    if (serial !== loadSerial) return;
     if (groups.revision >= organization.value.revision)
-      organization.value = groups;
+      organization.value = { ...groups, folders: normalizePluginFolders(groups.folders) };
     if (
       currentFolder.value &&
       !Object.hasOwn(groups.folders, currentFolder.value)
     )
       currentFolder.value = "";
-    if (tab.value === "market") {
-      const discovered = await api("/plugins/market");
-      if (serial !== loadSerial) return;
-      market.value = discovered;
-    }
     error.value = "";
     emit("changed");
   } catch (e) {
@@ -252,16 +353,30 @@ async function loadOnce() {
     loading.value = false;
   }
 }
-async function persistOrganization(next: PluginOrganization): Promise<boolean> {
+async function persistOrganization(next: PluginOrganization, rollbackOnFailure = false, forceOrder = false): Promise<boolean> {
   if (organizing.value) return false;
   organizing.value = true;
   folderError.value = "";
   error.value = "";
   ++loadSerial;
+  const previous = organization.value;
+  const orderChanged = forceOrder || JSON.stringify(next.order) !== JSON.stringify(previous.order);
+  const foldersChanged = forceOrder || JSON.stringify(next.folders) !== JSON.stringify(previous.folders);
+  // The source view mutates before saving. Create/rename/delete roll back;
+  // sorting, movement and appearance retain the local mutation on failure.
+  organization.value = next;
   try {
-    organization.value = await api("/plugins/organization", next, "PUT");
+    if (orderChanged) {
+      const saved = await api("/plugins/organization", { order: next.order }, "PUT");
+      organization.value.revision = saved.revision;
+    }
+    if (foldersChanged) {
+      const saved = await api("/plugins/organization", { folders: pluginFolderSavePayload(next) }, "PUT");
+      organization.value.revision = saved.revision;
+    }
     return true;
   } catch (e) {
+    if (rollbackOnFailure) organization.value = { ...previous, revision: organization.value.revision };
     error.value = folderError.value = errorText(e);
     return false;
   } finally {
@@ -317,7 +432,7 @@ async function saveFolder(value: { name: string; config: FolderConfig }) {
         plugins: [...folderMembers(next.folders[editor.name])],
       },
     };
-  if (await persistOrganization(next)) {
+  if (await persistOrganization(next, editor.mode !== "appearance")) {
     if (currentFolder.value === editor.name && editor.mode === "rename")
       currentFolder.value = value.name;
     folderEditor.value = undefined;
@@ -336,8 +451,8 @@ async function confirmDeleteFolder() {
     next = copyOrganization(organization.value);
   delete next.folders[name];
 
-  if (await persistOrganization(next)) {
-    if (currentFolder.value === name) currentFolder.value = "";
+  if (currentFolder.value === name) currentFolder.value = "";
+  if (await persistOrganization(next, true)) {
     deleteFolder.value = "";
     toast("文件夹已删除");
   }
@@ -356,13 +471,12 @@ async function endSort() {
   }
   const next = copyOrganization(organization.value);
   if (currentFolder.value) {
-    const current = folderMembers(next.folders[currentFolder.value]);
     const sorted = grid.value
       .filter((item) => item.type === "plugin")
       .map((item) => item.id);
     next.folders[currentFolder.value] = replaceMembers(
       next.folders[currentFolder.value],
-      [...sorted, ...current.filter((id) => !sorted.includes(id))],
+      sorted,
     );
     const order = normalizedPluginOrder(next);
     const folderOrder =
@@ -388,13 +502,7 @@ async function endSort() {
       id: item.id,
       order: index,
     }));
-    const keys = new Set(sorted.map((item) => item.type + ":" + item.id));
-    next.order = [
-      ...sorted,
-      ...normalizedPluginOrder(next)
-        .filter((item) => !keys.has(item.type + ":" + item.id))
-        .map((item, index) => ({ ...item, order: sorted.length + index })),
-    ];
+    next.order = sorted;
     sorted.forEach((item) => {
       if (item.type === "folder")
         next.folders[item.id] = {
@@ -405,7 +513,7 @@ async function endSort() {
     });
   }
   dragged = undefined;
-  await persistOrganization(next);
+  await persistOrganization(next, false, true);
 }
 async function dropToFolder(name: string) {
   if (!sortMode.value || dragged?.type !== "plugin" || organizing.value) return;
@@ -431,7 +539,7 @@ async function cardAction(action: string, plugin: PluginCard) {
     unavailable(plugin)
   )
     return;
-  if (action === "open") openPlugin(plugin);
+  if (action === "open") await openPlugin(plugin);
   else if (action === "detail") detail.value = plugin;
   else if (action === "settings") selected.value = plugin;
   else if (action === "clone" && plugin.installed) cloneSource.value = plugin;
@@ -441,12 +549,26 @@ async function cardAction(action: string, plugin: PluginCard) {
     plugin.repo_url &&
     plugin.repository_version &&
     plugin.has_update &&
-    !plugin.source_instance_id
-  )
-    confirmation.value = { plugin, action };
+    !plugin.update_blocked_reason
+  ) {
+    error.value = '';
+    historyShowUpdate.value = true;
+    historyPlugin.value = plugin;
+  }
   else if (action === "reset" || action === "uninstall")
     confirmation.value = { plugin, action };
   else if (action === "logs") logPlugin.value = plugin;
+  else if (action === "history") {
+    error.value = '';
+    historyShowUpdate.value = false;
+    historyPlugin.value = plugin;
+  }
+  else if (action === 'project') {
+    busy.value = true;
+    try { await openPluginProject(plugin, api); }
+    catch (e) { error.value = errorText(e); }
+    finally { busy.value = false; }
+  }
   else if (action === "install") await install(plugin);
   else if (action === "remove-folder" && currentFolder.value) {
     const next = copyOrganization(organization.value),
@@ -454,7 +576,7 @@ async function cardAction(action: string, plugin: PluginCard) {
     next.folders[name] = replaceMembers(
       next.folders[name],
       folderMembers(next.folders[name]).filter(
-        (id) => id !== plugin.instance_id,
+        (id, index, members) => index !== members.indexOf(plugin.instance_id),
       ),
     );
     if (await persistOrganization(next)) toast("插件已移出文件夹");
@@ -469,13 +591,32 @@ async function install(plugin: PluginCard) {
       plugin_id: plugin.plugin_id,
       ...(plugin.repo_url ? { repo_url: plugin.repo_url } : {}),
     });
-    if (result?.success === false)
-      throw new Error(result.message || "插件安装失败");
+    if (result?.success !== true)
+      throw new Error(result?.message || "插件安装失败");
     toast(plugin.name + "已安装");
     installedQuery.value = null;
     runningFilter.value = false;
     updateFilter.value = false;
     tab.value = "installed";
+    await load();
+  } catch (e) {
+    error.value = errorText(e);
+  } finally {
+    busy.value = false;
+  }
+}
+async function updatePlugin(plugin: PluginCard) {
+  if (busy.value || unavailable(plugin)) return;
+  if (!plugin.installed || !plugin.repo_url || !plugin.repository_version || !plugin.has_update || plugin.update_blocked_reason) return;
+  busy.value = true;
+  error.value = '';
+  try {
+    // Fixed PluginCard.updatePlugin asks the repository for its current latest
+    // release. An explicit historical release_version belongs to the API only.
+    const result = await api('/plugins/install', { plugin_id: plugin.instance_id, repo_url: plugin.repo_url, force: true });
+    if (result?.success !== true) throw new Error(result?.message || '插件更新失败');
+    toast(plugin.name + '已更新');
+    historyPlugin.value = undefined;
     await load();
   } catch (e) {
     error.value = errorText(e);
@@ -490,29 +631,6 @@ async function confirmAction() {
   busy.value = true;
   error.value = "";
   try {
-    if (choice.action === "repository-update") {
-      const plugin = choice.plugin;
-      if (
-        !plugin.installed ||
-        !plugin.repo_url ||
-        !plugin.repository_version ||
-        !plugin.has_update ||
-        plugin.source_instance_id
-      )
-        return;
-      const result = await api("/plugins/install", {
-        plugin_id: plugin.plugin_id,
-        repo_url: plugin.repo_url,
-        force: true,
-        release_version: plugin.repository_version,
-      });
-      if (result?.success === false)
-        throw new Error(result.message || "插件更新失败");
-      toast(plugin.name + "已更新");
-      confirmation.value = undefined;
-      await load();
-      return;
-    }
     const instancePath =
       "/plugins/" + encodeURIComponent(choice.plugin.instance_id);
     const result =
@@ -543,9 +661,13 @@ async function confirmAction() {
 }
 onMounted(() => {
   load();
-  timer = setInterval(pollLoad, 5000);
 });
-onUnmounted(() => clearInterval(timer));
+let activatedCount = 0;
+onActivated(() => {
+  // Fixed useKeepAliveRefresh skips the initial activation and refreshes the
+  // current view on later returns while retaining filters, tab and folder.
+  if (++activatedCount > 1) load();
+});
 </script>
 <template>
   <VThemeProvider theme="light" with-background class="plugin-surface">
@@ -555,6 +677,7 @@ onUnmounted(() => clearInterval(timer));
         ><VTab value="market" prepend-icon="mdi-shopping">插件市场</VTab></VTabs
       >
       <div class="plugin-toolbar-actions">
+        <VBtn variant="text" icon="mdi-magnify" aria-label="搜索插件" :disabled="busy || organizing" @click="openSearch" />
         <VBtn
           v-if="tab === 'market'"
           variant="text"
@@ -591,8 +714,24 @@ onUnmounted(() => clearInterval(timer));
                 density="compact"
                 hide-details
                 clearable
-                @keyup.enter="marketFilterMenu = false"
-              /></div
+                @keyup.enter="submitMarketFilter"
+              />
+              </div>
+              <VDivider class="mt-2" />
+              <VList density="compact" class="px-2 py-1">
+                <VListSubheader>排序</VListSubheader>
+                <VListItem v-for="option in marketSortOptions" :key="option.value" :active="marketSort === option.value" @click="selectMarketSort(option.value)" density="compact">
+                  <VListItemTitle>{{ option.title }}</VListItemTitle>
+                  <template #append><VIcon v-if="marketSort === option.value" icon="mdi-check" color="primary" size="small" /></template>
+                </VListItem>
+              </VList>
+              <VDivider />
+              <div class="px-3 py-2 d-flex flex-column ga-2">
+                <VSelect v-if="authorOptions.length" v-model="marketAuthors" :items="authorOptions" label="作者" multiple chips closable-chips clearable density="compact" variant="outlined" hide-details />
+                <VSelect v-if="labelOptions.length" v-model="marketLabels" :items="labelOptions" label="标签" multiple chips closable-chips clearable density="compact" variant="outlined" hide-details />
+                <VSelect v-if="repositoryOptions.length" v-model="marketRepositories" :items="repositoryOptions" label="仓库" multiple chips closable-chips clearable density="compact" variant="outlined" hide-details />
+              <p v-if="marketStatisticsError" class="text-caption mt-2" role="status">{{ marketStatisticsError }}；{{ Object.keys(marketStatistics).length ? '当前使用上次取得的统计数据。' : '当前保留市场返回顺序。' }}</p>
+              </div
           ></VCard>
         </VMenu>
         <VBtn
@@ -611,7 +750,7 @@ onUnmounted(() => clearInterval(timer));
           icon
           aria-label="刷新插件"
           :disabled="sortMode || organizing"
-          @click="load"
+          @click="load(true)"
           ><AppIcon name="refresh"
         /></VBtn>
         <VBtn
@@ -716,6 +855,21 @@ onUnmounted(() => clearInterval(timer));
       ></VAlert
     >
     <p v-if="error" role="alert" class="error">{{ error }}</p>
+    <VAlert
+      v-if="tab === 'market' && marketFailures.length"
+      type="warning"
+      variant="tonal"
+      class="mb-4"
+      role="alert"
+    >
+      {{ marketFailures.length }} 个仓库读取失败，当前列表可能不完整。
+      <div v-for="source in marketFailures" :key="source.repo_url">
+        {{ source.repo_url }}：{{ source.message }}
+      </div>
+      <VBtn variant="text" :disabled="busy || organizing" @click="load(true)">
+        重新读取仓库
+      </VBtn>
+    </VAlert>
     <p v-if="loading" role="status">正在加载插件…</p>
     <template v-else-if="tab === 'installed'">
       <div v-if="!grid.length" class="empty">
@@ -763,6 +917,7 @@ onUnmounted(() => clearInterval(timer));
             <PluginManageCard
               v-else
               :plugin="element.plugin"
+              :count="marketStatistics[element.plugin.plugin_id]"
               :busy="busy || organizing"
               :sortable="sortMode"
               :in-folder="!!currentFolder"
@@ -772,15 +927,19 @@ onUnmounted(() => clearInterval(timer));
       </Draggable>
     </template>
     <div v-else-if="!visible.length" class="empty">没有匹配的可安装插件</div>
-    <div v-else class="plugin-grid">
+    <VInfiniteScroll v-else :key="marketListVersion" :items="visible" @load="loadMoreMarket">
+    <div class="plugin-grid">
       <PluginManageCard
         v-for="plugin in visible"
         :key="plugin.instance_id"
         :plugin="plugin"
+        :count="marketStatistics[plugin.plugin_id]"
         :busy="busy"
         @action="cardAction"
       />
     </div>
+    <template #empty><span /></template>
+    </VInfiniteScroll>
     <div
       v-if="tab === 'installed' && !currentFolder && !sortMode"
       class="plugin-folder-fab"
@@ -799,6 +958,17 @@ onUnmounted(() => clearInterval(timer));
       v-if="marketSettings"
       @close="marketSettings = false"
       @saved="marketSettingsSaved"
+    />
+    <PluginSearchDialog v-if="searchOpen" :plugins="searchPlugins" :loading="searchLoading" :error="searchError" @close="searchOpen = false" @open="searchSelected" />
+    <PluginVersionHistoryDialog
+      v-if="historyPlugin"
+      :key="historyPlugin.instance_id"
+      :plugin="historyPlugin"
+      :show-update-action="historyShowUpdate"
+      :updating="busy"
+      :update-error="error"
+      @close="historyPlugin = undefined"
+      @update="updatePlugin(historyPlugin)"
     />
     <PluginFolderDialog
       v-if="folderEditor"
@@ -883,19 +1053,13 @@ onUnmounted(() => clearInterval(timer));
       ><VCard v-if="confirmation"
         ><VCardTitle class="plugin-dialog-title"
           >确认{{
-            confirmation.action === "repository-update"
-              ? "更新"
-              : confirmation.action === "reset"
+            confirmation.action === "reset"
                 ? "重置"
                 : "卸载"
           }}</VCardTitle
         ><VCardText class="plugin-dialog-content"
           >{{
-            confirmation.action === "repository-update"
-              ? "从该插件绑定的仓库重新获取 v" +
-                confirmation.plugin.repository_version +
-                "。强制更新在元数据检查通过后会移除现有插件代码，下载或校验失败可能需要重新安装才能在重启后加载，是否继续？"
-              : confirmation.action === "reset"
+            confirmation.action === "reset"
                 ? "重置将清除该插件的配置及运行数据，是否继续？"
                 : "卸载此插件？普通插件的配置及数据通常保留，已加载分身的配置及数据会清理；实际结果以服务端返回为准。"
           }}

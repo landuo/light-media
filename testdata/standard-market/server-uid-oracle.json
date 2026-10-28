@@ -1,0 +1,133 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_path": "app/utils/system.py",
+  "source_sha256": "3477c8585dd955bcb42f7180e5fabaae05c528af8ddb0cbae0935dbdb0c031db",
+  "config_sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+  "version_sha256": "eee2f1420ca9ab7af63226cfaaf4f7eea4de246c2ae422d0a527feff3b5bcb31",
+  "method_source": "def generate_user_unique_id():\n    \"\"\"\n        \u6839\u636e\u4f18\u5148\u7ea7\u4f9d\u6b21\u5c1d\u8bd5\u751f\u6210\u7a33\u5b9a\u552f\u4e00ID\uff1a\n        1. \u6587\u4ef6\u7cfb\u7edf\u552f\u4e00\u6807\u8bc6\u7b26\u3002\n        2. MAC \u5730\u5740\u3002\n        3. \u4e3b\u673a\u540d\u3002\n        \"\"\"\n\n    def get_filesystem_unique_id():\n        \"\"\"\n            \u83b7\u53d6\u6587\u4ef6\u7cfb\u7edf\u7684\u552f\u4e00\u6807\u8bc6\u7b26\u3002\n            \u4f7f\u7528\u6839\u76ee\u5f55\u7684\u8bbe\u5907\u53f7\u548c inode\u3002\n            \"\"\"\n        try:\n            stat_info = os.stat('/')\n            fs_id = f'{stat_info.st_dev}-{stat_info.st_ino}'\n            return hashlib.sha256(fs_id.encode('utf-8')).hexdigest()\n        except Exception as e:\n            print(str(e))\n            return None\n\n    def get_mac_address_id():\n        \"\"\"\n            \u83b7\u53d6\u8bbe\u5907\u7684 MAC \u5730\u5740\u5e76\u751f\u6210\u552f\u4e00\u6807\u8bc6\u7b26\u3002\n            \"\"\"\n        try:\n            mac_address = uuid.getnode()\n            if (mac_address >> 40) % 2:\n                raise ValueError('MAC\u5730\u5740\u53ef\u80fd\u662f\u865a\u62df\u5730\u5740')\n            mac_str = f'{mac_address:012x}'\n            return hashlib.sha256(mac_str.encode('utf-8')).hexdigest()\n        except Exception as e:\n            print(str(e))\n            return None\n    for method in [get_filesystem_unique_id, get_mac_address_id]:\n        unique_id = method()\n        if unique_id:\n            return unique_id\n    return None",
+  "cpu_methods_source": "class SystemUtils:\n\n    @staticmethod\n    def is_aarch64() -> bool:\n        \"\"\"\n        \u5224\u65ad\u662f\u5426\u4e3aARM64\u67b6\u6784\n        \"\"\"\n        return platform.machine().lower() in ('aarch64', 'arm64')\n\n    @staticmethod\n    def is_aarch() -> bool:\n        \"\"\"\n        \u5224\u65ad\u662f\u5426\u4e3aARM32\u67b6\u6784\n        \"\"\"\n        arch_name = platform.machine().lower()\n        return arch_name.startswith(('arm', 'aarch')) and arch_name not in ('aarch64', 'arm64')\n\n    @staticmethod\n    def is_x86_64() -> bool:\n        \"\"\"\n        \u5224\u65ad\u662f\u5426\u4e3aAMD64\u67b6\u6784\n        \"\"\"\n        return platform.machine().lower() in ('amd64', 'x86_64')\n\n    @staticmethod\n    def is_x86_32() -> bool:\n        \"\"\"\n        \u5224\u65ad\u662f\u5426\u4e3aAMD32\u67b6\u6784\n        \"\"\"\n        return platform.machine().lower() in ('i386', 'i686', 'x86', '386', 'x86_32')\n\n    @staticmethod\n    def cpu_arch() -> str:\n        \"\"\"\n        \u83b7\u53d6CPU\u67b6\u6784\n        \"\"\"\n        if SystemUtils.is_x86_64():\n            return 'x86_64'\n        elif SystemUtils.is_x86_32():\n            return 'x86_32'\n        elif SystemUtils.is_aarch64():\n            return 'Arm64'\n        elif SystemUtils.is_aarch():\n            return 'Arm32'\n        else:\n            return platform.machine()",
+  "user_agent_method_source": "def USER_AGENT(self) -> str:\n    \"\"\"\n        \u5168\u5c40\u7528\u6237\u4ee3\u7406\u5b57\u7b26\u4e32\n        \"\"\"\n    return f'{self.PROJECT_NAME}/{APP_VERSION[1:]} ({platform.system()} {platform.release()}; {SystemUtils.cpu_arch()})'",
+  "compatibility_version": "v2.15.7",
+  "project_name": "MoviePilot",
+  "server_default": "https://movie-pilot.org",
+  "share_default": true,
+  "kind": "actual pinned methods/default literals; synthetic filesystem/node/platform boundaries; no physical host identity saved",
+  "cases": [
+    {
+      "kind": "filesystem",
+      "device": 5,
+      "inode": 9,
+      "root_failure": false,
+      "node": null,
+      "uid": "e5fd0517a0387e48ed4c61b9423ba47208ae1c0853c157d35b2cfc049ac62f66",
+      "node_called": false
+    },
+    {
+      "kind": "zero_filesystem",
+      "device": 0,
+      "inode": 0,
+      "root_failure": false,
+      "node": null,
+      "uid": "22841ea360fc3c3676a38502aa9a90a1ae1fbdac1d937746358efe559d349b6f",
+      "node_called": false
+    },
+    {
+      "kind": "fallback_mac",
+      "device": 0,
+      "inode": 0,
+      "root_failure": true,
+      "node": 73588229205,
+      "uid": "a9b2ad6f4919c2ddcc2e04825227372ce079c0fe392d636d293d9f048a2c7926",
+      "node_called": true
+    },
+    {
+      "kind": "fallback_local_mac",
+      "device": 0,
+      "inode": 0,
+      "root_failure": true,
+      "node": 2272611484757,
+      "uid": "14c4a35ee8bc5a2098adebffc7cf0e64bb60d6533906b78ea16e6dce8505d2d7",
+      "node_called": true
+    },
+    {
+      "kind": "reject_multicast",
+      "device": 0,
+      "inode": 0,
+      "root_failure": true,
+      "node": 1173099856981,
+      "uid": null,
+      "node_called": true
+    },
+    {
+      "kind": "both_unavailable",
+      "device": 0,
+      "inode": 0,
+      "root_failure": true,
+      "node": null,
+      "uid": null,
+      "node_called": true
+    }
+  ],
+  "cpu_cases": [
+    {
+      "machine": "x86_64",
+      "arch": "x86_64",
+      "user_agent": "MoviePilot/2.15.7 (Linux owned-test-kernel; x86_64)"
+    },
+    {
+      "machine": "AMD64",
+      "arch": "x86_64",
+      "user_agent": "MoviePilot/2.15.7 (Linux owned-test-kernel; x86_64)"
+    },
+    {
+      "machine": "i386",
+      "arch": "x86_32",
+      "user_agent": "MoviePilot/2.15.7 (Linux owned-test-kernel; x86_32)"
+    },
+    {
+      "machine": "i686",
+      "arch": "x86_32",
+      "user_agent": "MoviePilot/2.15.7 (Linux owned-test-kernel; x86_32)"
+    },
+    {
+      "machine": "x86",
+      "arch": "x86_32",
+      "user_agent": "MoviePilot/2.15.7 (Linux owned-test-kernel; x86_32)"
+    },
+    {
+      "machine": "386",
+      "arch": "x86_32",
+      "user_agent": "MoviePilot/2.15.7 (Linux owned-test-kernel; x86_32)"
+    },
+    {
+      "machine": "x86_32",
+      "arch": "x86_32",
+      "user_agent": "MoviePilot/2.15.7 (Linux owned-test-kernel; x86_32)"
+    },
+    {
+      "machine": "aarch64",
+      "arch": "Arm64",
+      "user_agent": "MoviePilot/2.15.7 (Linux owned-test-kernel; Arm64)"
+    },
+    {
+      "machine": "arm64",
+      "arch": "Arm64",
+      "user_agent": "MoviePilot/2.15.7 (Linux owned-test-kernel; Arm64)"
+    },
+    {
+      "machine": "armv7l",
+      "arch": "Arm32",
+      "user_agent": "MoviePilot/2.15.7 (Linux owned-test-kernel; Arm32)"
+    },
+    {
+      "machine": "AARCH32",
+      "arch": "Arm32",
+      "user_agent": "MoviePilot/2.15.7 (Linux owned-test-kernel; Arm32)"
+    },
+    {
+      "machine": "riscv64",
+      "arch": "riscv64",
+      "user_agent": "MoviePilot/2.15.7 (Linux owned-test-kernel; riscv64)"
+    }
+  ]
+}

@@ -1,0 +1,435 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed full dispatcher and Recommend wrapper; provider callback body controlled with its fixed signature",
+  "sources": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/recommend.py": "fd92c1df2008410519ddf90c7c44b18651bef7b69fa364c56fd0ac313d70c4ea",
+    "app/modules/themoviedb/__init__.py": "383dee3ab7ae88a569b1b772cd86731a64d9f624b384c011338ef55d78ac44d6",
+    "app/utils/object.py": "0fd0161be3084593a9693244e9ea734c5d949cc23a6e8f34349177a5e220dc1c"
+  },
+  "cases": [
+    {
+      "name": "null",
+      "plugin": null,
+      "native_failure": false,
+      "raise_exception": false,
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "state": "success",
+      "output": [
+        {
+          "source": "themoviedb",
+          "tmdb_id": 120,
+          "type": "电影",
+          "title": "core"
+        }
+      ]
+    },
+    {
+      "name": "false",
+      "plugin": false,
+      "native_failure": false,
+      "raise_exception": false,
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "state": "success",
+      "output": []
+    },
+    {
+      "name": "zero",
+      "plugin": 0,
+      "native_failure": false,
+      "raise_exception": false,
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "state": "success",
+      "output": []
+    },
+    {
+      "name": "empty_string",
+      "plugin": "",
+      "native_failure": false,
+      "raise_exception": false,
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "state": "success",
+      "output": []
+    },
+    {
+      "name": "empty_dict",
+      "plugin": {},
+      "native_failure": false,
+      "raise_exception": false,
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "state": "success",
+      "output": []
+    },
+    {
+      "name": "truthy_dict",
+      "plugin": {
+        "title": "bad"
+      },
+      "native_failure": false,
+      "raise_exception": false,
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "state": "error",
+      "output": null
+    },
+    {
+      "name": "empty_list",
+      "plugin": [],
+      "native_failure": false,
+      "raise_exception": false,
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "state": "success",
+      "output": [
+        {
+          "source": "themoviedb",
+          "tmdb_id": 120,
+          "type": "电影",
+          "title": "core"
+        }
+      ]
+    },
+    {
+      "name": "list",
+      "plugin": [
+        {
+          "source": "themoviedb",
+          "tmdb_id": 120,
+          "type": "电影",
+          "title": "plugin"
+        }
+      ],
+      "native_failure": false,
+      "raise_exception": false,
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "state": "success",
+      "output": [
+        {
+          "source": "themoviedb",
+          "tmdb_id": 120,
+          "type": "电影",
+          "title": "plugin"
+        },
+        {
+          "source": "themoviedb",
+          "tmdb_id": 120,
+          "type": "电影",
+          "title": "core"
+        }
+      ]
+    },
+    {
+      "name": "native_fail_with_list",
+      "plugin": [
+        {
+          "source": "themoviedb",
+          "tmdb_id": 120,
+          "type": "电影",
+          "title": "plugin"
+        }
+      ],
+      "native_failure": true,
+      "raise_exception": false,
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "state": "success",
+      "output": [
+        {
+          "source": "themoviedb",
+          "tmdb_id": 120,
+          "type": "电影",
+          "title": "plugin"
+        }
+      ]
+    },
+    {
+      "name": "native_fail_none",
+      "plugin": null,
+      "native_failure": true,
+      "raise_exception": false,
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "state": "success",
+      "output": []
+    },
+    {
+      "name": "raise_native",
+      "plugin": [
+        {
+          "source": "themoviedb",
+          "tmdb_id": 120,
+          "type": "电影",
+          "title": "plugin"
+        }
+      ],
+      "native_failure": true,
+      "raise_exception": true,
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": true
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "page": 2,
+            "raise_exception": true
+          }
+        }
+      ],
+      "state": "error",
+      "output": null
+    },
+    {
+      "name": "raise_plugin",
+      "plugin": null,
+      "native_failure": false,
+      "raise_exception": true,
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": true
+          }
+        }
+      ],
+      "state": "error",
+      "output": null
+    }
+  ]
+}

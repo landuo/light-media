@@ -9,6 +9,12 @@ import (
 // Sole plugin management router. Legacy review/retry/recovery and native
 // per-plugin lifecycle routers are intentionally not reachable here.
 func (a *App) originalManagerHTTP(w http.ResponseWriter, r *http.Request, path string) (any, error) {
+	if originalPluginServerRoute(path, r.Method) {
+		return a.originalPluginServerHTTP(w, r, path)
+	}
+	if originalPluginHistoryRoute(path, r.Method) {
+		return a.originalPluginHistoryHTTP(r, path)
+	}
 	if originalPluginInstallRoute(path, r.Method) {
 		return a.originalPluginInstallHTTP(w, r, path)
 	}
@@ -21,6 +27,15 @@ func (a *App) originalManagerHTTP(w http.ResponseWriter, r *http.Request, path s
 	if path == "markets" {
 		return a.pluginMarketsHTTP(w, r)
 	}
+	if path == "markets/sync-wiki" && r.Method == http.MethodPost {
+		return a.originalMarketWikiHTTP(w, r)
+	}
+	if path == "organization" {
+		return a.pluginOrganizationHTTP(w, r)
+	}
+	if path == "installed" && r.Method == http.MethodGet {
+		return a.originalInstalledPluginIDs(r.Context())
+	}
 	if r.Method != http.MethodGet {
 		instance := strings.Split(path, "/")[0]
 		plugin := instance
@@ -28,23 +43,34 @@ func (a *App) originalManagerHTTP(w http.ResponseWriter, r *http.Request, path s
 			plugin = in.PluginID
 		}
 		if _, _, native := builtin.Lookup(plugin); native {
-			return nil, bad("PLUGIN_ADAPTER_UNAVAILABLE", "插件尚未适配新的标准模块")
+			in, err := a.pluginStore.Installation(r.Context(), instance)
+			if err != nil {
+				return nil, bad("PLUGIN_ADAPTER_UNAVAILABLE", "插件尚未适配新的标准模块")
+			}
+			implementation, err := a.resolvePluginInvocation(r.Context(), in)
+			if err != nil || !implementation.External {
+				return nil, bad("PLUGIN_ADAPTER_UNAVAILABLE", "插件尚未适配新的标准模块")
+			}
 		}
+	}
+	// Static discovery routes precede the generic single-instance config read.
+	if path == "remotes" && r.Method == http.MethodGet {
+		return a.originalPluginRemotes(r.Context(), "")
+	}
+	if (path == "navigation" || path == "sidebar_nav") && r.Method == http.MethodGet {
+		return a.originalPluginSidebarHTTPValue(r.Context(), true)
 	}
 	if originalPluginConfigurationRoute(path, r.Method) {
 		return a.originalPluginConfigurationHTTP(w, r, path)
 	}
 	if path == "" && r.Method == http.MethodGet {
-		return a.pluginCards(r.Context(), false)
+		return a.originalPluginListHTTP(r)
 	}
 	if path == "market" && r.Method == http.MethodGet {
-		return a.pluginCards(r.Context(), true)
+		return a.originalPluginMarketHTTP(r)
 	}
 	if path == "dashboard/meta" && r.Method == http.MethodGet {
 		return a.originalPluginDashboardMetadata(r.Context()), nil
-	}
-	if path == "navigation" && r.Method == http.MethodGet {
-		return a.pluginNavigation(r.Context())
 	}
 	parts := strings.Split(path, "/")
 	if len(parts) == 2 && parts[1] == "frontend" && r.Method == http.MethodGet {
@@ -59,8 +85,12 @@ func (a *App) originalManagerHTTP(w http.ResponseWriter, r *http.Request, path s
 			return nil, &APIError{"PLUGIN_NOT_LOADED", "插件未加载或尚未适配", 404}
 		}
 		object := value.(*originalPluginInstance)
-		ua := r.UserAgent()
-		return a.originalExternalViewHTTP(r.Context(), object, parts[1], r.URL.Query().Get("key"), &ua)
+		var ua *string
+		if _, present := r.Header["User-Agent"]; present {
+			value := r.UserAgent()
+			ua = &value
+		}
+		return a.originalExternalViewHTTP(r.Context(), object, parts[1], r.URL.Query().Get("key"), ua)
 	}
 	return nil, &APIError{"NOT_FOUND", "插件接口不存在", 404}
 }

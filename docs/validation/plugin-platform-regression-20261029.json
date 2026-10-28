@@ -1,0 +1,56 @@
+{
+  "accepted_regression": true,
+  "whole_module_accepted": false,
+  "manifest": "testdata/plugin-module-no-official-auth-20261026/platform-regression-54-20261029/manifest.json",
+  "evidence_type": "actual local App/HTTP/SQLite and separate Go SDK workers; not browser or Linux-process acceptance by itself",
+  "source_expected": "Each existing test refers to fixed source or sealed oracle; no assertion weakened to match implementation.",
+  "results": {
+    "catalog": {
+      "roots": 29,
+      "seconds": 59.546
+    },
+    "platform": {
+      "selected_roots": 413,
+      "initial_passed": 371,
+      "first_timeout_seconds": 602.831,
+      "followup_passed": 40,
+      "followup_seconds": 61.919,
+      "remaining_repair_roots": [
+        "TestOriginalWebMessageCoreHistoryReceiptAuthenticatesColumnsAndTimezone",
+        "TestStandardBusinessEventsActualBatchRefreshErrorDTOAndRetry"
+      ],
+      "repair_related_passed": 5,
+      "repair_seconds": 12.863,
+      "uncovered": []
+    },
+    "sdk": {
+      "root_tests": 192,
+      "seconds": 18.758,
+      "test_skips": [],
+      "note": "internal/sourcejson has no standalone test files; consumers above exercise it."
+    },
+    "frontend": {
+      "tests": 549,
+      "seconds": 6.081924,
+      "superseded_by": "directory-transfer-types55 final556 frontend tests"
+    }
+  },
+  "fixes": [
+    {
+      "location": "cmd/owned-frontend-fixture; cmd/owned-transfer-events-fixture",
+      "cause": "Broad regression inherited outdated fixtures without current Unicode and audio/directory storage behavior.",
+      "fix": "Rebuilt these exact existing fixture sources into new binaries; retained original failures and hash bindings; affected tests passed with production code unchanged."
+    },
+    {
+      "location": "internal/app/plugin_notice_v2_proof.go",
+      "cause": "Encrypted core history was authenticated but redacted public notification fields could be modified without invalidating the stored receipt.",
+      "fix": "Validate the immutable redacted projection while permitting independent Read state. Existing tamper test and related tests/race now pass."
+    },
+    {
+      "location": "internal/app/plugin_standard_business_events_additional_test.go",
+      "cause": "Old test omitted the fixed SiteUpdated consumer refresh introduced and independently accepted earlier.",
+      "fix": "Assert creation contributes exactly one numeric SiteRefreshed; explicit batch adds one numeric and one wildcard; rerunning same job adds none. No production event changed."
+    }
+  ],
+  "binding": "Initial catalog/platform/sdk commands bind to final54-inputs and unchanged input check. Followup only refreshes fixture binaries. Repair binds the two listed changed files; types55 final Linux build includes the repaired production file. Historical evidence is not relabeled as a final full-suite rerun."
+}

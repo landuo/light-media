@@ -1,0 +1,183 @@
+{
+  "whole_indices": [
+    36,
+    37,
+    43
+  ],
+  "accepted_whole_scope": false,
+  "increment_status": "验收通过",
+  "scope": "single selected-main sibling collection modules/inherited metadata, independent native-owned auxiliary history deletion choices and cold recovery; standalone auxiliary redo/retry, directory planning, delete_file consumption and whole transfer scope remain pending",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:2733-2814 actual FileItem key/stem matching",
+    "app/chain/transfer.py:3073-3370 actual sibling collector, filter and complete single-file planner",
+    "app/chain/storage.py:get_parent_item/list_files",
+    "app/chain/__init__.py:run_module",
+    "app/api/endpoints/history.py:221-260 ordinary independent history deletion endpoint; AI redo excluded"
+  ],
+  "target": [
+    "internal/app/plugin_original_transfer_collection.go",
+    "internal/app/source_transfer_sidecars.go",
+    "internal/app/import_plan.go",
+    "internal/app/plugin_original_transfer_related_preview.go",
+    "internal/app/plugin_original_transfer_context.go",
+    "internal/app/plugin_original_transfer_events.go",
+    "internal/app/plugin_original_transfer_intercept.go",
+    "internal/app/plugin_original_transfer_module.go",
+    "internal/app/history_auxiliary.go",
+    "internal/app/history_delete.go",
+    "internal/app/core_download_file_deleted.go"
+  ],
+  "source_replay": {
+    "collector": "testdata/standard-module-host/transfer-collection-source-oracle.json:18 real fixed nested collector + complete single-file planner and ordinary storage dispatch; provider metadata, extension settings, recognition/history are controlled boundaries",
+    "history": "testdata/standard-module-host/transfer-history-delete-source-oracle.json:8 real ordinary endpoint independent four-choice cases for subtitle/audio; in-memory storage/DB boundary, no AI import",
+    "limitations": "Native provider controlled listing order is not APFS/ext4 actual order; terminal provider tuple cases compare exact order. Full directory/bluray/standalone-aux planning not claimed. Source API storage deletion native effect was controlled; delete_file module consumption in history path remains open."
+  },
+  "local": {
+    "collector_sdk": "18 collector +3 related preview actual SDK PASS12.769s; full transfer/history/source extension PASS68.655s",
+    "independent_history": "8 actual three-file choices + changed target + SQL completion write failure/Close/New recovery PASS6.393s",
+    "race": "app400.512s PASS; SDK package compiled with no matching tests (1.967s), not claimed as fresh SDK race execution",
+    "red": "First tests exposed APFS vs controlled native order and test worker missing event build flag; explicit source boundary and worker fixed. First deletion CAS compared reserialized JSON vs actual stored BLOB; fixed transaction rereads/compares typed owner and exact raw payload before delete."
+  },
+  "actual_linux": {
+    "main_sha256": "7e380b3145ef219223214cc6425ef94ffc6d6bd43a4416798678829c5a51d942",
+    "test_sha256": "714736bca27bf06beaa7b0101c133e36c782d717327eecb1a23072d8792ad6b5",
+    "worker_sha256": "b0aacfc34d03d5833c6fe46582fdeb1901f78237d50ef366439a000a200c56fc",
+    "compiler_inputs": [
+      3709,
+      4162
+    ],
+    "changed": [],
+    "cli_seconds": 5.57,
+    "cli": "real cmd/server HTTP/SDK adds five collection scenarios and eight independent auxiliary deletion choices to previous actual execution/preview/cold/uninstall cases",
+    "sdk": "18 collection +10 history cases PASS separately on Linux with real executable workers; used preceding test binary7191b114 (same production/source SDK tests, only later process-observer identity fix differs), not counted as r4 run",
+    "cli_red": "2.35s: observer saw plan imported while job still running and deletion correctly TRANSFER_BUSY. 3.90s: new synthetic ID90001900 collided with prior test; changed owned IDs to90009000; production guards retained."
+  },
+  "actual_browser": {
+    "tab": "IAB60",
+    "gate_seconds": 587.9,
+    "proof": {
+      "passed": true,
+      "kind": "actual Linux cmd/server/real SDK/owned synthetic files + IAB60",
+      "cold_pids": [
+        [
+          81156,
+          81162
+        ],
+        [
+          89201,
+          89208
+        ],
+        [
+          91412,
+          91418
+        ],
+        [
+          95159,
+          95166
+        ]
+      ],
+      "preview_plans": 10,
+      "preview_jobs": 0,
+      "preview_rows": {
+        "source": 3,
+        "collection_false": 1,
+        "collection_clone": 2,
+        "restored": 3,
+        "transfer_veto_failed": 3
+      },
+      "actual_job": [
+        [
+          "job_wqMMfFvshRgQqhtHhuJvN59F",
+          "succeeded"
+        ]
+      ],
+      "actual_assets": 1,
+      "actual_receipts": 3,
+      "actual_callbacks": 3,
+      "history_rows": 3,
+      "source": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module27-ui-tmp/TestPluginServicesProductionCLI3021835837/002/source/OwnedUITransfer.2024.mkv",
+        "inode": 50727880,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "target": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module27-ui-tmp/TestPluginServicesProductionCLI3021835837/002/library/Plugin returned UI target/Actual plugin file.mkv",
+        "inode": 50727880,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "related": [
+        {
+          "input": {
+            "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module27-ui-tmp/TestPluginServicesProductionCLI3021835837/002/source/OwnedUITransfer.2024.zh.srt",
+            "inode": 50727874,
+            "device": 65025,
+            "size": 24,
+            "sha256": "64dbf5f224a79e3fabf60ab04a96e766c25c35a3d179b2fbbd11098e89e609b7"
+          },
+          "target": {
+            "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module27-ui-tmp/TestPluginServicesProductionCLI3021835837/002/library/Plugin returned UI target/Actual plugin related.srt",
+            "inode": 50727874,
+            "device": 65025,
+            "size": 24,
+            "sha256": "64dbf5f224a79e3fabf60ab04a96e766c25c35a3d179b2fbbd11098e89e609b7"
+          }
+        },
+        {
+          "input": {
+            "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module27-ui-tmp/TestPluginServicesProductionCLI3021835837/002/source/OwnedUITransfer.2024.flac",
+            "inode": 50727876,
+            "device": 65025,
+            "size": 22,
+            "sha256": "21842006e19f366fe6059346fde9ce2bb380525353d684dabcd08505ad4f0930"
+          },
+          "target": {
+            "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module27-ui-tmp/TestPluginServicesProductionCLI3021835837/002/library/Plugin returned UI target/Actual plugin related.flac",
+            "inode": 50727876,
+            "device": 65025,
+            "size": 22,
+            "sha256": "21842006e19f366fe6059346fde9ce2bb380525353d684dabcd08505ad4f0930"
+          }
+        }
+      ],
+      "ordinary_execute_events": 6,
+      "executed_plan": "plan_9JLW1GqIJkYlHPXUwFhWaEZk",
+      "collection_module_verified": true,
+      "related_metadata_inherited": true,
+      "independent_subtitle_target_deleted": true,
+      "independent_audio_source_and_target_deleted": true,
+      "remaining_history": 1,
+      "retained_asset_slots": 1,
+      "retained_managed_files": 1,
+      "completed_target_removals": 2,
+      "fourth_cold_pids": [
+        99044,
+        99052
+      ]
+    },
+    "interaction": "actual browser3→1 collection veto→2 clone tuple→3 restored; typed veto3; cold source and transfer-clone paths; actual three hardlinks; existing-target preview; cold3 histories; subtitle target-only deletion→2; audio both deletion→1; fourth cold retains original Cookie/query/main history",
+    "tuple_caller_note": "Fixed browser endpoint sorts its result and rejects a terminal tuple; transfer collector iterates it. Actual file browser rejected fixture tuple as expected; switched only the controlled listing to None for navigation, restored tuple before each transfer preview/execution. No production rule relaxed."
+  },
+  "media_kind": "owned synthetic plaintext mkv/srt/flac, controlled metadata; actual Linux processes/SDK/file I/O and inode/hash, no actual video decoding or external metadata claim",
+  "adaptation": "existing canonical local roots, snapshots, owned published receipt, sealed directory authority, quarantine + durable CAS retained. Auxiliary source/target deletion selects one physical task, retains video asset/slots/other files. Source model attributes carried as JSON FileItem; further full defaults/nullable metadata audit pending. Native filesystem order remains provider-defined. No Python runtime introduced.",
+  "frontend": "127 embedded dist files unchanged from main19 546 tests/build; no fresh frontend test claimed",
+  "cleanup": "actual source+clone uninstall/API404/service registrations empty and TempDir cleanup PASS; IAB60 and tunnel34441 stopped; extra owned SDK input/temp directory removed",
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-collection-history-27-20261028/manifest.json",
+  "remaining": [
+    "standalone auxiliary reorganization/retry and grouped partial registration",
+    "history deletion ordinary delete_file hooks plus concurrent source-use checks for auxiliary plans",
+    "whole-directory/bluray producers and caller-specific filters",
+    "native flags/count/TV/notification/metadata batch",
+    "quality/overwrite returned targets, media_exists/media_files, download tuple/pre-existing hash and complete reverse caller audit"
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

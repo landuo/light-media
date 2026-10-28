@@ -1,0 +1,165 @@
+{
+  "whole_indices": [
+    36,
+    43
+  ],
+  "accepted_whole_scope": false,
+  "increment_status": "验收通过",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": [
+    "app/chain/transfer.py:3588-3661 actual manual task loop",
+    "app/chain/transfer.py:1087-1310 independent callbacks/history/events",
+    "src/components/dialog/ReorganizeDialog.vue:66-78 progress state; target existing queue dialog adaptation"
+  ],
+  "target": [
+    "internal/app/import_run.go",
+    "internal/app/plugin_original_transfer_task_failure.go",
+    "internal/app/plugin_original_transfer_failure.go",
+    "internal/app/plugin_original_transfer_job_result.go",
+    "internal/app/jobs.go",
+    "internal/app/subscription_quality_sidecars.go",
+    "web/src/components/ReorganizeDialog.vue"
+  ],
+  "source_replay": {
+    "cases": 4,
+    "oracle": "testdata/standard-module-host/transfer-task-loop-source-oracle.json",
+    "kind": "Actual pinned AST task loop with controlled handler outcomes; main false, subtitle false, subtitle exception, two false. Not full MoviePilot service."
+  },
+  "adaptations": [
+    "Use existing Go import job and publish/managed-file receipts; failed primary creates no fake video asset or slots; successful extras retain reserved ownership.",
+    "Known failures continue the remaining tasks; unknown publication outcomes retain safety guard and are not blindly replayed.",
+    "Actual callback SQL failure is durably recorded; cold recovery retries only callback bookkeeping, never published physical transfer.",
+    "Existing job detail now projects actual per-file results for the Vue dialog; this does not claim full source progress counter semantics."
+  ],
+  "local": {
+    "partial_cases": "Three actual SDK task rejection matrices plus actual SQL callback failure and cold App/plugin initialization",
+    "regression": "48.563s app race after reflect.DeepEqual sidecar fix; final result projection 7.741s normal and 17.175s race",
+    "frontend": "547 tests PASS and production build PASS; focused 8 tests; exact input hashes archived",
+    "negative_evidence": [
+      "Partial task red calls 2/1/1 instead of 3",
+      "Cold test initially omitted required plugin initialization; corrected fixture",
+      "79.503s regression exposed seven sidecar pointer-address equality failures; fixed value comparisons; 2.173s targeted green",
+      "Actual r2 UI incorrectly showed total 1 / failed 0; r3 projects actual three rows and reactive count",
+      "First UI launch raced upload with Text file busy; waited for complete upload before actual execution"
+    ]
+  },
+  "actual_linux": {
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "binaries": [
+      {
+        "name": "server-platform30-20261027-linux",
+        "sha256": "9c08d77cd416432d6f6fe16f8c82a06e71334f6d7711e7100ba67dfc87e8ae62",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform30-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3714,
+        "changed": [],
+        "elapsed_seconds": 4.18
+      },
+      {
+        "name": "process-platform30-20261027-linux.test",
+        "sha256": "61e262e137f69985ce2ad4bbb1e7707c299c91a12bfb2cf6daadf8e14ca75b20",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform30-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4171,
+        "changed": [],
+        "elapsed_seconds": 7.43
+      }
+    ],
+    "cli_seconds": 9.15,
+    "ui_driver_sha256": "6bc5971af6e31bb5c70de59abfc3fe5ea52bc23d173d4ac4fe606301b421eb0c",
+    "worker_sha256": "376f0e246479b6e4a299bf524d87398aaff31f409b70f66b25a097d41990f6cc"
+  },
+  "actual_browser": {
+    "gate_seconds": 1415.33,
+    "gate_note": "Includes human UI actions/build/restart waits, not latency. UI driver r2 and upgraded server r3; version-distinct failure evidence retained.",
+    "proof": {
+      "passed": true,
+      "pids": [
+        [
+          288792,
+          288798
+        ],
+        [
+          294822,
+          294829
+        ]
+      ],
+      "history_count": 3,
+      "success": 2,
+      "failed": 1,
+      "post_cold_sdk_calls": 0,
+      "files": [
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module30-ui-tmp/TestPluginServicesProductionCLI2836073308/002/source/OwnedUIPartialSummary.2024.mkv",
+          "exists": true,
+          "inode": 184678418,
+          "device": 65025,
+          "size": 18,
+          "sha256": "6f7922c39afb73354161894c9e51d3a4268224a9261e1158640e7cc848e1de63"
+        },
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module30-ui-tmp/TestPluginServicesProductionCLI2836073308/002/source/OwnedUIPartialSummary.2024.zh.srt",
+          "exists": true,
+          "inode": 184678419,
+          "device": 65025,
+          "size": 18,
+          "sha256": "aa225cb16abf3a1e926f22a8486095157e801c6603b00b48b87aa7f227362ef9"
+        },
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module30-ui-tmp/TestPluginServicesProductionCLI2836073308/002/source/OwnedUIPartialSummary.2024.flac",
+          "exists": true,
+          "inode": 184678420,
+          "device": 65025,
+          "size": 19,
+          "sha256": "3f6cc1cc83e7464446f183c1ab22151c274efa4123bf8592eeb8710c2437e1b6"
+        },
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module30-ui-tmp/TestPluginServicesProductionCLI2836073308/002/library/OwnedUIPartialSummary (2024)/OwnedUIPartialSummary (2024).mkv",
+          "exists": true,
+          "inode": 184678418,
+          "device": 65025,
+          "size": 18,
+          "sha256": "6f7922c39afb73354161894c9e51d3a4268224a9261e1158640e7cc848e1de63"
+        },
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module30-ui-tmp/TestPluginServicesProductionCLI2836073308/002/library/OwnedUIPartialSummary (2024)/OwnedUIPartialSummary (2024).flac",
+          "exists": true,
+          "inode": 184678420,
+          "device": 65025,
+          "size": 19,
+          "sha256": "3f6cc1cc83e7464446f183c1ab22151c274efa4123bf8592eeb8710c2437e1b6"
+        }
+      ],
+      "main_sha256": "9c08d77cd416432d6f6fe16f8c82a06e71334f6d7711e7100ba67dfc87e8ae62",
+      "test_sha256": "61e262e137f69985ce2ad4bbb1e7707c299c91a12bfb2cf6daadf8e14ca75b20",
+      "ui_driver_sha256": "6bc5971af6e31bb5c70de59abfc3fe5ea52bc23d173d4ac4fe606301b421eb0c"
+    },
+    "observed": "Real manual dialog hardlink action, source rejects only subtitle; source 3 / clone 2 calls; main and audio same actual inode/device/hash as sources. Form retains error, total 3 failed 1; cold original cookie/query shows 3 histories and zero write calls."
+  },
+  "cleanup": "Actual source+clone uninstall/API404/TempDir cleanup gate passed; IAB64 closed and 34445 tunnel stopped.",
+  "limits": [
+    "Synthetic tiny files and controlled metadata/rejection; no video decoder or remote metadata claim.",
+    "Standalone auxiliary reorganize/retry remains open.",
+    "Partial failures during quality/reorganize old-asset cleanup and subsequent independent ownership remain open.",
+    "Directory/Bluray, full progress/TV/notification/metadata and complete 197-method/199-ordinary-call/81-event audit remain open."
+  ],
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/manifest.json"
+}

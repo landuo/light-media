@@ -1,0 +1,86 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "path": "app/core/plugin.py",
+  "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+  "kind": "actual fixed Python AST; owned JSON inputs; not runtime/browser proof",
+  "cases": [
+    {
+      "input": null,
+      "expected": null
+    },
+    {
+      "input": "",
+      "expected": null
+    },
+    {
+      "input": "  ",
+      "expected": null
+    },
+    {
+      "input": " 工具 ",
+      "expected": "工具"
+    },
+    {
+      "input": "\u001c\u001d test\u001e\u001f",
+      "expected": "test"
+    },
+    {
+      "input": [],
+      "expected": null
+    },
+    {
+      "input": [
+        " 工具 ",
+        "",
+        "开发 ",
+        "\u001c"
+      ],
+      "expected": "工具 开发"
+    },
+    {
+      "input": [
+        null,
+        true,
+        false,
+        0,
+        1,
+        1.0,
+        -0.0,
+        1e+20,
+        1e-05,
+        0.0001,
+        900719925474099312345
+      ],
+      "expected": "None True False 0 1 1.0 -0.0 1e+20 1e-05 0.0001 900719925474099312345"
+    },
+    {
+      "input": [
+        "a\nb",
+        {
+          "z": "a'b\n",
+          "a": [
+            1,
+            null
+          ]
+        },
+        [
+          "x",
+          true
+        ]
+      ],
+      "expected": "a\nb {'z': \"a'b\\n\", 'a': [1, None]} ['x', True]"
+    },
+    {
+      "input": {},
+      "expected": null
+    },
+    {
+      "input": true,
+      "expected": null
+    },
+    {
+      "input": 42,
+      "expected": null
+    }
+  ]
+}

@@ -1,0 +1,554 @@
+{
+  "build": {
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "binaries": [
+      {
+        "name": "server-platform47-20261027-linux",
+        "sha256": "2201c87d7914b44ca24378fb48eb064d11a66f7fc9da12656cecee7058a6a7cd",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform47-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3731,
+        "changed": [],
+        "elapsed_seconds": 4.24
+      },
+      {
+        "name": "process-platform47-20261027-linux.test",
+        "sha256": "49b17ec9c413fbd90d9963449dc4e4bfc3187c63e91e33860fd2fb06bdf1e254",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform47-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4216,
+        "changed": [],
+        "elapsed_seconds": 8.26
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "original": "cmd/owned-transfer-events-fixture/main.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/cmd/owned-transfer-events-fixture/main.go.gz",
+      "sha256": "963a8c42f170be373a841a1a3a5519f4375e6af9d42f8af38546b25a75b28a64",
+      "stored_sha256": "29ed83e4105f417e6085d9fafc00652c40d2f08165ea87f4d7db12d83f1d817c"
+    },
+    {
+      "original": "internal/app/asset_manage.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/internal/app/asset_manage.go.gz",
+      "sha256": "24ccb6abba89493688fbbf47215ca98fad75d94e5a8ab8347851e87a09abe7f7",
+      "stored_sha256": "6f619eb01e3420d4a9c8d5bbde721f47f5c33de29d2c2d57ec500a27c1dbf5c3"
+    },
+    {
+      "original": "internal/app/core_download_file_deleted.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/internal/app/core_download_file_deleted.go.gz",
+      "sha256": "35fb3fe330c583d2cec4c33c3c1a8f76960e19a6c455d19f14bc5aa1b8855d9a",
+      "stored_sha256": "b6c69857684618d4014f0b97722883c600d710238aad65f58f19245d70bbfc70"
+    },
+    {
+      "original": "internal/app/history_auxiliary.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/internal/app/history_auxiliary.go.gz",
+      "sha256": "2a2647d7da46534867fcc14cf1e5bed3b3c1476f38818ad8ec35fde228e27c67",
+      "stored_sha256": "49cc253c6e9bfad3359400da5d1993fecb1a2734d210acc2d739ec644e562389"
+    },
+    {
+      "original": "internal/app/history_delete.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/internal/app/history_delete.go.gz",
+      "sha256": "afc01c03aa56bda9727808a2d0e6308b226a44fcf626b8700c828ec1d36c26f8",
+      "stored_sha256": "2b2b3112c1b151a5d832a1c549845ee4bed6109e85e9abc79e2e89f78831b40b"
+    },
+    {
+      "original": "internal/app/plugin_module_process_transfer_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/internal/app/plugin_module_process_transfer_test.go.gz",
+      "sha256": "d51e5e30bffe9d285eeb94d4cf60f6ff57699a866b4c0f3d788e31fd5e88e0d9",
+      "stored_sha256": "5da9816267e676cd5678b0d6aa9e91f1757f46a1e15d074d33d2f03401a70c9b"
+    },
+    {
+      "original": "internal/app/plugin_original_history_delete.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/internal/app/plugin_original_history_delete.go.gz",
+      "sha256": "d07042e6b249ccf2ec69c98951df08a1351253f5e7c9fa2dff01bfe6f3276154",
+      "stored_sha256": "c1d23660376ce4d9da0c88f94c16acdb26f1b21225fad33c16c39ee18cbab12a"
+    },
+    {
+      "original": "internal/app/plugin_original_history_directory_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/internal/app/plugin_original_history_directory_test.go.gz",
+      "sha256": "d10419c20814f14532eae1541a00374f2801716d729dc7eb31cd83c095f04ca4",
+      "stored_sha256": "4bfd15b6d05592bf8eeb00c0f6caf53f0920f98c9474e6b9fe23496980543b94"
+    },
+    {
+      "original": "internal/app/plugin_original_history_parent.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/internal/app/plugin_original_history_parent.go.gz",
+      "sha256": "ef76cfb9c3dbd5126343735a4eea896feecc4b4ba41a521b94013c0a7b2dee74",
+      "stored_sha256": "fda4af87528cfceadb42af5f5f2f21ebcf29a2f9077eabc87059b4f399f27006"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_bluray_history_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/internal/app/plugin_original_transfer_bluray_history_test.go.gz",
+      "sha256": "98bfec7ac98295f098eb517dafae93a191ef0417ec060ad521075a4995acdf63",
+      "stored_sha256": "f4e4ecdf17ed5a7dfe360e95104d1d8b0d97b378d75cfcdc5b1a061672576b2c"
+    },
+    {
+      "original": "testdata/standard-module-host/generate-history-ordinary-directory-oracle.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/testdata/standard-module-host/generate-history-ordinary-directory-oracle.py.gz",
+      "sha256": "1c0fd51567da6e318fa7cb45f23a383762804cefdc5f14c67092a72bb8dd0dbb",
+      "stored_sha256": "d68fbbf21b173773609362ecdd2041c469513176fd1165901882994b8fe037bc"
+    },
+    {
+      "original": "testdata/standard-module-host/history-ordinary-directory-source-oracle.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/testdata/standard-module-host/history-ordinary-directory-source-oracle.json.gz",
+      "sha256": "bb70fac4de89079bfe43cd9f48a980ef835dabd21e14193ff45a0dbb5d6b7fbe",
+      "stored_sha256": "f12d905c75449fc9ff1116e819b776187ceb745aa340042fbf773b801b7852f5"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/archive-bluray47.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/archive-bluray47.py.gz",
+      "sha256": "796e370407afaa30afe2bd96445625de01d87bf5ce7fb4acf9e794a7abccf7b1",
+      "stored_sha256": "45c11e973f6ac7dd1dcad598c723b2e5093f1a0354433851426f16da60100098"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/cold-cancelled.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/cold-cancelled.dom.txt.gz",
+      "sha256": "0c65dec48071940f38d25f3f4be8a1207ca1d651575bad6c2064aeea3e3ab12a",
+      "stored_sha256": "68319096a10b925558ea88f86ed0d95eb5eb02154033f1937ee0b1556a94f606"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/cold-cancelled.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/cold-cancelled.png",
+      "sha256": "1981c7a79a040482c935168e772d932ca26b440a257fb4eb6e6edab85adc6cf9",
+      "stored_sha256": "1981c7a79a040482c935168e772d932ca26b440a257fb4eb6e6edab85adc6cf9"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/cold-success.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/cold-success.dom.txt.gz",
+      "sha256": "80f25f7257b89b4997351a8513cbd326c859b3969d6e0d3f0ff1eef3c1cae620",
+      "stored_sha256": "c031267bc474571152bba784fcd14e55a98de7e9995615fcf3d3a2297fed453e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/cold-success.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/cold-success.png",
+      "sha256": "ec8a05c53e034ebe51d92bd6d53c7f3a02592568fd48953f115f5631f2997b19",
+      "stored_sha256": "ec8a05c53e034ebe51d92bd6d53c7f3a02592568fd48953f115f5631f2997b19"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/delete-options.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/delete-options.dom.txt.gz",
+      "sha256": "9e5226f1393671b62dbd903104445253bbfb7387c6b9f9f015e909a2a15f2a7a",
+      "stored_sha256": "1a5eb6e4909f2a57f4001fd837f126f6d8d6871ec1196fdd4b775fb96b92b8df"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/delete-options.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/delete-options.png",
+      "sha256": "4582f431b039c03811762f77f68f4e83e8aee00032590c2721f78848ad539f2d",
+      "stored_sha256": "4582f431b039c03811762f77f68f4e83e8aee00032590c2721f78848ad539f2d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/deleted.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/deleted.dom.txt.gz",
+      "sha256": "7d0aa67d3a71004a13f5a30e821366c5a4d5b8f503982c2e50afe2d7c7dd1b1b",
+      "stored_sha256": "3c9f1cca31963dab701b250d3e2fe39889fd1b178f73df045761d1d71091d272"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/deleted.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/deleted.png",
+      "sha256": "ff42a61209bc8e56fcb0d7d44c08c52882a7af6d66d303c3512889fe68dffddb",
+      "stored_sha256": "ff42a61209bc8e56fcb0d7d44c08c52882a7af6d66d303c3512889fe68dffddb"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/history-success.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/history-success.dom.txt.gz",
+      "sha256": "5573b1f70621fcada4a21f36b6b9f334211db5e150620a0af75d1c6abab20283",
+      "stored_sha256": "83c9eff114ea6223b72a6f4aa0e9e1c1a11344d793c13296cfcebab802ddcbb9"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/history-success.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/history-success.png",
+      "sha256": "b609ff7400c4440f7a4b830792125389841319834cb54eb889c889c10efea437",
+      "stored_sha256": "b609ff7400c4440f7a4b830792125389841319834cb54eb889c889c10efea437"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/named-history-before.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/named-history-before.dom.txt.gz",
+      "sha256": "02dd70b028f1828c705d25290bc7e68cd7de22c9d96bdf99319fc5277a99ef89",
+      "stored_sha256": "e76da383f5933333e1ffb55ee84a79557f2cf83e11f83c1e283d301cc6110545"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/named-history-before.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/named-history-before.png",
+      "sha256": "a2f53267259cfa852c45c62fe00905cc3c858fd51b8d0f20d03175e6d5721fce",
+      "stored_sha256": "a2f53267259cfa852c45c62fe00905cc3c858fd51b8d0f20d03175e6d5721fce"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/named-history-deleted.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/named-history-deleted.dom.txt.gz",
+      "sha256": "93faf49b49955f5b92864a8cc1d54fb3e0974d7b3bea8574fb10a9293bf698e4",
+      "stored_sha256": "7af6c642c86f322479e1576075f91cb27e99e19a4652b15f837f8659f5654e3c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/named-history-deleted.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/named-history-deleted.png",
+      "sha256": "62adbaa27d56ae41fcbbd41e7b5ec1acf46f078c76dd79042532d9c335ca1e5c",
+      "stored_sha256": "62adbaa27d56ae41fcbbd41e7b5ec1acf46f078c76dd79042532d9c335ca1e5c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/named-history-root-rejected.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/named-history-root-rejected.dom.txt.gz",
+      "sha256": "0d8eb4cdd0df3e475aead79996b5ccedfcafdeff65075a21c0451a5f38c99e1e",
+      "stored_sha256": "9f7a286646ba51956de0aefa6f7042531b4bd643cafb5716ec54f4177bf92270"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser/named-history-root-rejected.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser/named-history-root-rejected.png",
+      "sha256": "01dedecbb568f76bf38e3f288a8cb08fdfdd114c80d86435bbf468c864fdaca0",
+      "stored_sha256": "01dedecbb568f76bf38e3f288a8cb08fdfdd114c80d86435bbf468c864fdaca0"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser-before-cold.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser-before-cold.json.gz",
+      "sha256": "f64ceb392071359ca80641ca155d111b777c22431dea40c846c6ffeec4b26823",
+      "stored_sha256": "a72f4b8def3c6b92325f87434b1d788984111bc4537dbc1583921c488b8c9636"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser-cleanup.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser-cleanup.json.gz",
+      "sha256": "b352a30e097562f77b8e09f9d3ddd4100566129e473ac74086ca882a76aca467",
+      "stored_sha256": "9c927a445826713dfc04b661abb1db4ecd6dac0358d4a8e3a80b486e5ef7ebeb"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser-cold-cancelled.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser-cold-cancelled.json.gz",
+      "sha256": "23582812140eb92f3e0365e7207f66c426c35ce3fd7a02798b3b1a511e70acae",
+      "stored_sha256": "d20d0064da193925f500ff3d92133e0c6d58155931062fd20d0b8d86e96d90a3"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser-cold-success.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser-cold-success.json.gz",
+      "sha256": "685fd1b1bf50f79d2ad030e8e5afc6a8537c7c6ee018ed4cd590bce93916932a",
+      "stored_sha256": "c4e6d6341a9f3cd138eb676100fc4d7c2413d264864cba7cf1a9e1243b60e024"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser-deleted.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser-deleted.json.gz",
+      "sha256": "965b5adfcd477b4518c7fb7cfaf30a18fbc42111dbe8d0b70fb287f8b0ad1f53",
+      "stored_sha256": "02e62f5a620a2665cf13470da01fede7f4a9d41ad1ea0c6fe3bdf27831d9e338"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser-retry-success.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser-retry-success.json.gz",
+      "sha256": "f75a1a20572aec33d44758d5f3a849d0fdb3913be5b58d7b5da3f7f704ebd252",
+      "stored_sha256": "b260054239c09406fb01a1c184df5a27d872962fd62af84fbf5cfa1b41b2818c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-browser-verdict.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-browser-verdict.json.gz",
+      "sha256": "3dfaaa91c29afbc4869bf051d7af0d017f8500a20b062a9d7e4972b68a22c5cd",
+      "stored_sha256": "64459b9fd0e79910dc1c4b92c82f4f49b28a8e86365b246636bdddd25211a0f0"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-cli-driver.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-cli-driver.log.gz",
+      "sha256": "1ad6823608845715cca6fb5039565e0fdf5b7b26a91246c7487b5b624edb2ad2",
+      "stored_sha256": "a0b9540063953dc61083c8ba5f1f47a38cfac5c865ab94fcb944966bb86173dc"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-cli-evidence/bluray44-cli.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-cli-evidence/bluray44-cli.json.gz",
+      "sha256": "842720f23f461a5579b4a0107fae90afe912b34f6cae85d479b89ef23c1b6bb6",
+      "stored_sha256": "b30c180165cc1f6a0c37c38fb5e9f948b8c485b75c305ec94e07d09a87a579a9"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-cli-evidence/directory-history47-DiscKeepSource.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-cli-evidence/directory-history47-DiscKeepSource.json.gz",
+      "sha256": "784df28276531cb722ee46f15edd31901323913b5dc83bf1fad800ebeec5aa25",
+      "stored_sha256": "7e15d3f931d0ab0e54417fe89fdeaa42ca7ccb7b1251b4cc24bf04ac5b59885e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-cli-evidence/directory-history47-DiscNoMedia.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-cli-evidence/directory-history47-DiscNoMedia.json.gz",
+      "sha256": "9c194f3a9ddcb76f38f055ffc9a74e899ab913f5adaf06b5ffed48e806644a26",
+      "stored_sha256": "b9db90a6d49378b88e60a70102e7bb893676be82afeb9c6ef08e80c905be928c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-cli-evidence/directory-storage46-DiscKeepSource.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-cli-evidence/directory-storage46-DiscKeepSource.json.gz",
+      "sha256": "49a95c8d63712f949e33d9c307dfa04d0605e25a5586b1830da9f427be4611ce",
+      "stored_sha256": "be1c3a6400454e93aa32893a1c6ce68aa2e60b6cba10f094c3faab0f3dcc8ee6"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-cli-evidence/directory-storage46-DiscLate.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-cli-evidence/directory-storage46-DiscLate.json.gz",
+      "sha256": "b9eeb3b9c7c7ac4573f6aa798928a4e62310a91494b16f5f72a3f95fb2a0101a",
+      "stored_sha256": "62f519d9a024ddd37bd7f4ab6293599e9015a552f1a582602310966fd7e0ca53"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-cli-evidence/directory-storage46-DiscNames.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-cli-evidence/directory-storage46-DiscNames.json.gz",
+      "sha256": "523f1852ed8f70fe4a7340720f7c5d5b495328fd3016ad2f28d77e0af63d35ab",
+      "stored_sha256": "0af0d03ebbb674f251f1b15996e5c89e2c0698b7e5a317aaf2224204b1a1170e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-cli-evidence/directory-storage46-DiscNoMedia.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-cli-evidence/directory-storage46-DiscNoMedia.json.gz",
+      "sha256": "e59c039effee5e1097b250e323fb8afce309e23e57e1d881d6ce235e58f8cdf9",
+      "stored_sha256": "f65609496a8e80622a01ee6858d1f2c7623dc701acf1ff2766c6b58b80e0646b"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-cli-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-cli-evidence/events36-service-process.log.gz",
+      "sha256": "023b0b0f7d07d81a3fff634fe8cad4f27103a47c40f3a1e9cfd595b150df4670",
+      "stored_sha256": "486a5ffdb8bd994c46d434e26b195ac98c6266e20e038efbe7a132737814bda4"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-cli.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-cli.log.gz",
+      "sha256": "50343fb3bb282ece4a0a94403fb3ea78b986a125464ed27454b38aa76ceb34fa",
+      "stored_sha256": "c55c7a5d87727e28a06c7e24e385b13b3c41c57f18950b0094d96c15251065ef"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-named-after.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-named-after.json.gz",
+      "sha256": "62f6ead45bcf72b34ca4e7a169aaa36117c05db54cc545b84484955196514a1a",
+      "stored_sha256": "b83fe637fa3f58da679bbf8603d73d6a742e2a73c43f830b84a44bf1c8d6033e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-named-before.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-named-before.json.gz",
+      "sha256": "b54eacf13fca52ae94dd78a86bc07761e5b97d44b492c7eb060ca654a807e42c",
+      "stored_sha256": "8fd4c437973dff9356206f41615e213daf609954a7a37a73f0b41c630c81d1e9"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-named-cold-final.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-named-cold-final.json.gz",
+      "sha256": "5efa5fdc55cdebd9be6c3066f8f8eb0bab20d7d1b16a9eda1c23b537f2e6b3e8",
+      "stored_sha256": "0d60d96d9f0c097c501d4410b0ddad1ca6a33178cb28e9c33512604089ddeaba"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-named-cold.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-named-cold.json.gz",
+      "sha256": "9e16814e484befa43f5499280300e2f9690d81cbd3d5be53a999f838a86fcd05",
+      "stored_sha256": "e1265159f307b69b66a1a6792b43def808f4475fedcbeeb1d110dafac6cce11c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-named-root-restoration.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-named-root-restoration.json.gz",
+      "sha256": "ed516e3e4920a9a10447daf1d2cfd99521d6579840ca6baa74feeb3760432099",
+      "stored_sha256": "768ab854a55ba583862264559847838ee29c4c346c599cf35ff2a3c9615441ba"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-named.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-named.py.gz",
+      "sha256": "fb0cdce03c81f91cc61f9ba675f6e0b87307346fbc64a0961931002124eff848",
+      "stored_sha256": "40e21a72dfc1eb97873fc614763c978ef74e0f7d204f70ccc0ac186514e418a3"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-observe.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-observe.py.gz",
+      "sha256": "3e4b99c07337c2016f11e06aeb180675e283471758bcd0b43dc8b3a11b72ad76",
+      "stored_sha256": "a8162e2db0ee5bd53c6180bffae2bb51b8425ac53c70c737ecd151d8689f37b7"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-restore-named-root.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-restore-named-root.py.gz",
+      "sha256": "cf04f680a99ca38dd5c95e46266c84fc13f1bb6d121d529581f142b0351a5030",
+      "stored_sha256": "14c0c905d3d2115b6625de89f462f55ee0b3e551f0539ccf04c108fc3e27c3ae"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-ui-driver.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-ui-driver.log.gz",
+      "sha256": "20f68ffb52d932dda2e73c8aa54610c7cc1e1dc46c9fac03ea9dad38cc1d2883",
+      "stored_sha256": "8a89d25fc7a577ac416d2eed1af025b7e022d54aecb78cad543245668f366750"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-ui-evidence/bluray44-browser-final.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-ui-evidence/bluray44-browser-final.json.gz",
+      "sha256": "1033919f5a3b007892a00e1bf6b6baca168851677742eef814c0f8bc62384188",
+      "stored_sha256": "d3d729c1cdece78f9e589501dd1852fdedde30d41745bb189ce3ec3e6996660d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-ui-evidence/bluray44-cli.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-ui-evidence/bluray44-cli.json.gz",
+      "sha256": "f93886cfec1f5d01d9b7ed34e952761752cb745f0093e06474ef40fd17dd5f9b",
+      "stored_sha256": "57de49e442af5c6624195bfab7caa15da856cdf470f8d18db26db85bba52a696"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-ui-evidence/directory-history47-DiscKeepSource.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-ui-evidence/directory-history47-DiscKeepSource.json.gz",
+      "sha256": "09e33aca9c20d0b4e8fe5ec9344edde7a2628d1b2f0f443f49df936729a6def7",
+      "stored_sha256": "615ce38ef97c3d093472467b222304c595286d6c4a076f3ea070dca7df53735f"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-ui-evidence/directory-history47-DiscNoMedia.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-ui-evidence/directory-history47-DiscNoMedia.json.gz",
+      "sha256": "2cd42b8f6e38647dc4e282767a4078e4506fd7ead783ccb1bab3eed4cd07960a",
+      "stored_sha256": "00c1c08f380b6b61ec7703e82b9cb62d85757c581e7998ec4ec3f4855a84797a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-ui-evidence/directory-storage46-DiscKeepSource.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-ui-evidence/directory-storage46-DiscKeepSource.json.gz",
+      "sha256": "e51a3088ec3351384443bacddb9cb40d439ea97e2d08efcd8445f43761981306",
+      "stored_sha256": "6e0853da4ece5a540ae6de1d455aee38f89e5996bc3c08b774d6fc1360fd970e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-ui-evidence/directory-storage46-DiscLate.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-ui-evidence/directory-storage46-DiscLate.json.gz",
+      "sha256": "76453a5a7deec684932cc81d31edebfadbe78f834f5dceddfce2ede1f24a9e5c",
+      "stored_sha256": "d5e38ce578771d54761aaf6036e6d1e3a97ddccb6103fc8e9f1fd5c7b3fb5358"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-ui-evidence/directory-storage46-DiscNames.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-ui-evidence/directory-storage46-DiscNames.json.gz",
+      "sha256": "3f54f010782bfa0fd8cf33c5d2fa9138a1079def5f0f78a1022f35ab437b5612",
+      "stored_sha256": "77a6fdaec42794d0bf5b942d6b26bdd98c2f964cc05c070990d1b8cb894fbe29"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-ui-evidence/directory-storage46-DiscNoMedia.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-ui-evidence/directory-storage46-DiscNoMedia.json.gz",
+      "sha256": "a06ece3078853aede6fd5e04f96b2329b5cf1fc62cabf835455beac11f6b0c56",
+      "stored_sha256": "1841df559315f185c6201650b21935ae7809f9eee41bd3b39416dc2e83f177a1"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-ui-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-ui-evidence/events36-service-process.log.gz",
+      "sha256": "8959cf9ddc5bdd9c75af7acefde1f1fd94aaa1f1e5f9cdbefa04f3b8d465140a",
+      "stored_sha256": "14f58b2b1c4ee90edb5969dd49210ea9bbbf931049e34131c5783ccce62a7a81"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-ui-state.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-ui-state.json.gz",
+      "sha256": "b117070eab1f6a6a79cb86be1abd14652830086773cdd9ca29ef666f06d15ff5",
+      "stored_sha256": "626fad21fcbb06c4ba6c94feab7379add30d10178ba75ff1bc093d2c0bd1beca"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray47-ui.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/bluray47-ui.log.gz",
+      "sha256": "032fa64bb2cc2f468973bfd0f5e92f64a597dc1b8e44568364d08d15564061f3",
+      "stored_sha256": "d34b35e13bfe5ef571e403800af96221e3e476cc5c3fb75e22143002b5783575"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/build-platform47.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/build-platform47.py.gz",
+      "sha256": "4d6a1feb015c1b0a202319da803dbba2f1d255fc22739b155c0b48ff26ad44f2",
+      "stored_sha256": "0b22ffeb8525bb17346922a95d522ef67c14af8c2feefb74dc2381533a484339"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-green.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-green.log.gz",
+      "sha256": "ca0695f748c438961f023ea3bea14a61f3a69f12b2b4b2f4fd5d312f46930b00",
+      "stored_sha256": "4195a502944709a91476d02893ba8df292466f9c1d932cf0ad0d29a8afe43e48"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-preflight-evidence/bluray44-cli.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-preflight-evidence/bluray44-cli.json.gz",
+      "sha256": "ebbd1c11ec982cab96b2ecf66dbad0e10e6ac0989e308308e82e3ad33275a4e9",
+      "stored_sha256": "1096fccbcbb5df9a6b790d00c613fa95ccca0082ca06626c029b2e2c22b3c74e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-preflight-evidence/directory-history47-DiscKeepSource.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-preflight-evidence/directory-history47-DiscKeepSource.json.gz",
+      "sha256": "ff01eb277e8e33fe4c6654dd7a9bf10afccb145ce1c3cb181b05d4d1bdb21a8b",
+      "stored_sha256": "638ff134ce36609d91598f4f6aadd8dc22e4829f7205268fe9105ff42410f601"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-preflight-evidence/directory-history47-DiscNoMedia.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-preflight-evidence/directory-history47-DiscNoMedia.json.gz",
+      "sha256": "6699d213190f9197b7b0263f009d13b765865ebe3671c8f6a5d6f4fed1492657",
+      "stored_sha256": "9621ef6671d1ec70ebba443dac7a34c94231661ff463f838cf391d45c89d59c3"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-preflight-evidence/directory-storage46-DiscKeepSource.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-preflight-evidence/directory-storage46-DiscKeepSource.json.gz",
+      "sha256": "bb912af7e2ff473eedb32cf79f420b31656f989e7b36429864cfcdc673e70c2d",
+      "stored_sha256": "243f626751a76e8b2b3fc33759a866440c13f29f73181e71ca9465f2a6242629"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-preflight-evidence/directory-storage46-DiscLate.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-preflight-evidence/directory-storage46-DiscLate.json.gz",
+      "sha256": "e6eb97e272f3c32ec2199677f3eb357d647bb246dddf8e3ddbcf4a29af4408db",
+      "stored_sha256": "24aab1eacd4ad2f147653f1ab3c63f9541a557be0920cb05b813715c950f24ca"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-preflight-evidence/directory-storage46-DiscNames.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-preflight-evidence/directory-storage46-DiscNames.json.gz",
+      "sha256": "202981e24ba08d74bbae3fbfecf9a338a73d1bfe26d91ab1a321e889fa2b7b65",
+      "stored_sha256": "34c716d575fce6f1d12cfa53bd383b0a6ffc913b0f3f53a5a061e4c8c66a0610"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-preflight-evidence/directory-storage46-DiscNoMedia.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-preflight-evidence/directory-storage46-DiscNoMedia.json.gz",
+      "sha256": "35a61451722443bd2ad240959d18e82e80dbc5e000cc8a8288a485dd8f495488",
+      "stored_sha256": "9af0c77014f41924c10e4c0a2d544a2c81aa2ad90726ab8249e799200efbaefa"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-preflight-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-preflight-evidence/events36-service-process.log.gz",
+      "sha256": "209df25291479256b2452b9ccd6f760dc7d4c6d82fb4708996f7e12940b2fb6c",
+      "stored_sha256": "9ecca8d4ea91004061d324eb402de9539308f56891fe31b57b160ed391d523ce"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-preflight.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-preflight.log.gz",
+      "sha256": "cf4c59d6f7b21fd69c6fc28d8e2fd0fc51f63c259b02da2dcb89f636bacb7ebc",
+      "stored_sha256": "6eac1c0633971baa6d0313381a86a291bd4fe827b584e08ec6d9739cac32c50d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-race.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-race.log.gz",
+      "sha256": "b4ba39afa9e78ba435a27521d20ce155efb2b628c1bd0bd61de89c6affe4a9d5",
+      "stored_sha256": "5433ecef8a22a6d7f9b0e958361842c7e6e292e9e35a84927992affc9e919cf0"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-red.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-red.log.gz",
+      "sha256": "54cd29e1589e69dfe5b061b03d007de5b258f60537a1b2b71f38ba97f74af538",
+      "stored_sha256": "b4d7a007e4a1a763af89e131a8cb20921c0cc9a2bc15a23b3ccd1ddcd193f31b"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-related-r2.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-related-r2.log.gz",
+      "sha256": "47e27d5499f2e0d6dff6b79f200571d28b0fb1f9b2a369e0e26e37030ef88640",
+      "stored_sha256": "92644c7e806a6ece67df0bd2c26ea3a37be0a5ac4611048ef1d080d73643b235"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/directory47-related.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/directory47-related.log.gz",
+      "sha256": "1ebad3842adc4e9c400d53916b8c9c94abee8d5663f7cb1179b5b5aa6ad4bab9",
+      "stored_sha256": "f43e5cf6f4417d34c0dc5bc174c09a08d7f16f5c00ab5e5604972194c7459865"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/platform47-result.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/platform47-result.json.gz",
+      "sha256": "0254446cddbbe658595c1f5113863aaa6646f7c847774772c3b531d03ace33ae",
+      "stored_sha256": "799869306e5fea35a164b317d1a67f3c624966e409aab0eb37ab7d7f3e7f8ca5"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/process-platform47-20261027-linux.test.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/process-platform47-20261027-linux.test.inputs.json.gz",
+      "sha256": "27e53fca196202cafdcdf7226aebf1514c01d4f3963fea690ac3dae2b7054b82",
+      "stored_sha256": "dc57e10ec5a33c0c89199c2881829d99c55d23ae0eb936ab6740b4075c18bdfb"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/run-bluray47.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/run-bluray47.py.gz",
+      "sha256": "528498327073357ddbdbe3ec48ea962c1d9e4cdf94d028bc34d2868ff8728b28",
+      "stored_sha256": "01ca1eeb079ff392921627b0ed25633acdf123d16bf5009e58652674115c4f79"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/server-platform47-20261027-linux.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/work/plugin-no-official-auth-20261026/server-platform47-20261027-linux.inputs.json.gz",
+      "sha256": "b30585e3c241af41f591afaf6469eb4c17d9b5265e7312bbc3a41a3227f605ca",
+      "stored_sha256": "dd54ffe2ad672dc319a881e49de6045e34e8a6cc8d0bf7134f522d11544d3cd3"
+    }
+  ]
+}

@@ -1,0 +1,215 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_hashes": {
+    "app/core/config.py": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+    "app/helper/plugin.py": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+    "app/utils/url.py": "0b83efc129ebc3a08e658ae61929e999bee671148680901d5150db8efb9e504b"
+  },
+  "kind": "actual pinned AST; owned tokens and fake request boundaries; not actual networking",
+  "headers": [
+    {
+      "token": "",
+      "pairs": "",
+      "repository": "",
+      "headers": {}
+    },
+    {
+      "token": "owned-default",
+      "pairs": "",
+      "repository": "owner/repo",
+      "headers": {
+        "Authorization": "Bearer owned-default",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+      }
+    },
+    {
+      "token": "owned-default",
+      "pairs": "owner/repo:owned-repo,other/repo:owned-other",
+      "repository": "owner/repo",
+      "headers": {
+        "Authorization": "Bearer owned-repo",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+      }
+    },
+    {
+      "token": "owned-default",
+      "pairs": "owner/repo:owned-first,owner/repo:owned-last",
+      "repository": "owner/repo",
+      "headers": {
+        "Authorization": "Bearer owned-last",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+      }
+    },
+    {
+      "token": "owned-default",
+      "pairs": " owner/repo : owned-spaced ",
+      "repository": "owner/repo",
+      "headers": {
+        "Authorization": "Bearer owned-spaced",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+      }
+    },
+    {
+      "token": "owned-default",
+      "pairs": "owner/repo:bad:discard,other/repo:owned-other",
+      "repository": "owner/repo",
+      "headers": {
+        "Authorization": "Bearer owned-default",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+      }
+    },
+    {
+      "token": "owned-default",
+      "pairs": "owner/repo:owned-repo",
+      "repository": "Owner/repo",
+      "headers": {
+        "Authorization": "Bearer owned-default",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+      }
+    },
+    {
+      "token": "owned-default",
+      "pairs": "owner/repo:owned-repo",
+      "repository": "",
+      "headers": {
+        "Authorization": "Bearer owned-default",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+      }
+    },
+    {
+      "token": "",
+      "pairs": "owner/repo:owned-repo,",
+      "repository": "owner/repo",
+      "headers": {
+        "Authorization": "Bearer owned-repo",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "mirror": "https://owned-mirror.invalid/prefix",
+      "proxy": "http://owned-proxy.invalid",
+      "api": false,
+      "success_on_attempt": 1,
+      "address": "https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+      "attempts": [
+        {
+          "url": "https://owned-mirror.invalid/prefix/https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+          "explicit_proxy": false
+        }
+      ]
+    },
+    {
+      "mirror": "https://owned-mirror.invalid/prefix",
+      "proxy": "http://owned-proxy.invalid",
+      "api": false,
+      "success_on_attempt": 2,
+      "address": "https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+      "attempts": [
+        {
+          "url": "https://owned-mirror.invalid/prefix/https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+          "explicit_proxy": false
+        },
+        {
+          "url": "https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+          "explicit_proxy": true
+        }
+      ]
+    },
+    {
+      "mirror": "https://owned-mirror.invalid/prefix",
+      "proxy": "http://owned-proxy.invalid",
+      "api": false,
+      "success_on_attempt": 3,
+      "address": "https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+      "attempts": [
+        {
+          "url": "https://owned-mirror.invalid/prefix/https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+          "explicit_proxy": false
+        },
+        {
+          "url": "https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+          "explicit_proxy": true
+        },
+        {
+          "url": "https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+          "explicit_proxy": false
+        }
+      ]
+    },
+    {
+      "mirror": "https://owned-mirror.invalid/prefix",
+      "proxy": "http://owned-proxy.invalid",
+      "api": true,
+      "success_on_attempt": 2,
+      "address": "https://api.github.com/repos/owner/repo/releases",
+      "attempts": [
+        {
+          "url": "https://api.github.com/repos/owner/repo/releases",
+          "explicit_proxy": true
+        },
+        {
+          "url": "https://api.github.com/repos/owner/repo/releases",
+          "explicit_proxy": false
+        }
+      ]
+    },
+    {
+      "mirror": "https://owned-mirror.invalid/prefix",
+      "proxy": "",
+      "api": false,
+      "success_on_attempt": 2,
+      "address": "https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+      "attempts": [
+        {
+          "url": "https://owned-mirror.invalid/prefix/https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+          "explicit_proxy": false
+        },
+        {
+          "url": "https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+          "explicit_proxy": false
+        }
+      ]
+    },
+    {
+      "mirror": "",
+      "proxy": "",
+      "api": false,
+      "success_on_attempt": 1,
+      "address": "https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+      "attempts": [
+        {
+          "url": "https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+          "explicit_proxy": false
+        }
+      ]
+    },
+    {
+      "mirror": "owned-mirror.invalid/prefix",
+      "proxy": "",
+      "api": false,
+      "success_on_attempt": 1,
+      "address": "https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+      "attempts": [
+        {
+          "url": "http://owned-mirror.invalid/prefix/https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+          "explicit_proxy": false
+        }
+      ]
+    },
+    {
+      "mirror": "https://owned-mirror.invalid/prefix///",
+      "proxy": "",
+      "api": false,
+      "success_on_attempt": 1,
+      "address": "https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+      "attempts": [
+        {
+          "url": "https://owned-mirror.invalid/prefix///https://raw.githubusercontent.com/owner/repo/main/package.v2.json",
+          "explicit_proxy": false
+        }
+      ]
+    }
+  ]
+}

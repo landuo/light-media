@@ -1,3 +1,7 @@
+import './helpers/plugin-axios-fetch-adapter.mjs';
+import * as sourceOrganization from '../src/features/plugin-organization.ts';
+import * as pluginProject from '../src/features/plugin-project.ts';
+import * as pluginMarket from '../src/features/plugin-market.ts';
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -46,7 +50,7 @@ function fixture(
       const result =
         path === "/plugins/organization"
           ? { revision: 0, folders: {}, order: [] }
-          : path === "/plugins" && installedCards
+          : path === "/plugins?state=installed" && installedCards
             ? installedCards
             : [];
       return {
@@ -68,8 +72,10 @@ function fixture(
       };
     if (name === "../api")
       return { ...apiModule.exports, toast: (text) => toasts.push(text) };
+    if (name === "../features/plugin-market") return pluginMarket;
+    if (name === '../features/plugin-project') return pluginProject;
     if (name === "../features/plugin-organization")
-      return { organizationGrid: () => [] };
+      return { ...sourceOrganization, organizationGrid: () => [] };
     if (
       name.startsWith("vuetify/") ||
       name.endsWith(".vue") ||

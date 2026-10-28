@@ -45,6 +45,7 @@ func TestOriginalChainRegistrationReplacementSnapshot(t *testing.T) {
 	a := newTestApp(t)
 	seen := []string{}
 	secondEnabled := true
+	disableSecond := false
 	add := func(id string, priority int, enabled func() bool, invoke func()) {
 		a.registerOriginalChainHandler("owned.chain", originalMutableEventHandler{ID: id, Instance: id, Priority: priority, Enabled: enabled, Invoke: func(context.Context, *plugins.MutableEvent) error {
 			seen = append(seen, id)
@@ -56,7 +57,11 @@ func TestOriginalChainRegistrationReplacementSnapshot(t *testing.T) {
 	}
 	add("a", 10, nil, nil)
 	add("b", 10, func() bool { return secondEnabled }, nil)
-	add("zero", 0, nil, func() { secondEnabled = false })
+	add("zero", 0, nil, func() {
+		if disableSecond {
+			secondEnabled = false
+		}
+	})
 	add("a", 10, nil, nil)
 	event := &plugins.MutableEvent{Type: "owned.chain", Data: json.RawMessage(`{}`)}
 	if !a.sendOriginalChainEvent(context.Background(), event) {
@@ -66,9 +71,10 @@ func TestOriginalChainRegistrationReplacementSnapshot(t *testing.T) {
 		t.Fatalf("replacement order/enabled snapshot %v", seen)
 	}
 	seen = nil
+	disableSecond = true
 	a.sendOriginalChainEvent(context.Background(), event)
 	if !slices.Equal(seen, []string{"zero", "a"}) {
-		t.Fatalf("next enabled snapshot %v", seen)
+		t.Fatalf("execution-time enablement recheck %v", seen)
 	}
 	for _, id := range []string{"a", "b", "zero"} {
 		a.unregisterOriginalObjectChainHandlers(id)
@@ -290,15 +296,27 @@ func TestOriginalCommandRegisterActualWorkers(t *testing.T) {
 	clear()
 	_, _ = prepare("")
 	assertOrderTrace(t, trace, []string{"mutator:chain_first", "mutator:chain_second", "observer:event"})
+	// Fixed core/plugin.py:177 disables the class; core/event.py:230 keeps
+	// registrations for visualization/reload. A stopped class must be retained
+	// but disabled, never removed just to make this test pass.
 	a.pluginOriginalEventsMu.Lock()
+	var stoppedHandlers []originalMutableEventHandler
 	for _, handlers := range a.pluginOriginalChainHandlers {
 		for _, handler := range handlers {
 			if handler.Instance == clone {
-				t.Error("stopped clone handler retained")
+				stoppedHandlers = append(stoppedHandlers, handler)
 			}
 		}
 	}
 	a.pluginOriginalEventsMu.Unlock()
+	if len(stoppedHandlers) == 0 {
+		t.Fatal("stop removed source-retained class registrations")
+	}
+	for _, handler := range stoppedHandlers {
+		if handler.Enabled == nil || handler.Enabled() {
+			t.Fatal("stopped clone handler is enabled")
+		}
+	}
 	// Failed replacement start must not retain callbacks to a stale object.
 	configure(mutator.PluginID, "mutator", "observe", "", "/owned_register", true, true)
 	if _, err := a.reloadOriginalPlugin(ctx, mutator.PluginID); err != nil {

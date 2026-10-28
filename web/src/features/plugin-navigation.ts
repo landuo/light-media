@@ -15,13 +15,14 @@ export type PluginNavigationItem = {
 // Same cache/retry behavior as the original pluginSidebarNav store. An epoch
 // also prevents a request started before logout from populating a new session.
 export function createPluginNavigation(fetchItems: () => Promise<PluginNavigationItem[]>) {
-  const state = reactive({ items: [] as PluginNavigationItem[], loaded: false });
+  const state = reactive({ items: [] as PluginNavigationItem[], loaded: false, error: '' });
   let inflight: Promise<void> | undefined;
   let epoch = 0;
   function reset() {
     epoch++;
     state.items = [];
     state.loaded = false;
+    state.error = '';
     inflight = undefined;
   }
   function ensure(force = false): Promise<void> {
@@ -33,11 +34,19 @@ export function createPluginNavigation(fetchItems: () => Promise<PluginNavigatio
         try {
           const items = await fetchItems();
           if (current !== epoch) return;
-          state.items = Array.isArray(items) ? items.filter((item) => validPluginInstance(item?.instance_id) && validPluginNavKey(item?.nav_key)) : [];
+          if (!Array.isArray(items)) throw new Error('插件导航返回格式无效');
+          state.items = Array.isArray(items)
+            ? items.filter(
+                (item) =>
+                  validPluginInstance(item?.instance_id) && validPluginNavKey(item?.nav_key),
+              )
+            : [];
           state.loaded = true;
+          state.error = '';
           return;
-        } catch {
+        } catch (error) {
           if (current !== epoch) return;
+          state.error = error instanceof Error ? error.message : '插件导航读取失败';
           if (attempt === 0) await new Promise((resolve) => setTimeout(resolve, 500));
         }
       }
@@ -53,20 +62,30 @@ export function createPluginNavigation(fetchItems: () => Promise<PluginNavigatio
 }
 
 export function validPluginNavKey(value: unknown): value is string {
-  return typeof value === 'string' && !!value && value.length <= 256 &&
-    value !== '.' && value !== '..' && !/[\\/?#\s\u0000-\u001f\u007f]/.test(value);
+  // This is a hash-route value, not an asset or filesystem path. The fixed
+  // backend rejects exactly slash/query/fragment/ASCII space; dots and other
+  // whitespace may still select the AppPage/Page fallback.
+  return typeof value === 'string' && !!value && !/[/?# ]/.test(value);
 }
 export function pluginNavigationTarget(item: PluginNavigationItem) {
   if (!validPluginInstance(item.instance_id) || !validPluginNavKey(item.nav_key))
     throw new Error('插件全页入口无效');
-  return 'plugin-app/' + encodeURIComponent(item.instance_id) + '/' + encodeURIComponent(item.nav_key);
+  return (
+    'plugin-app/' + encodeURIComponent(item.instance_id) + '/' + encodeURIComponent(item.nav_key)
+  );
 }
 export function parsePluginNavigationRoute(route: string) {
   const parts = route.split('/');
-  if (parts.length !== 3 || parts[0] !== 'plugin-app') throw new Error('插件全页入口无效');
+  if (![2, 3].includes(parts.length) || parts[0] !== 'plugin-app')
+    throw new Error('插件全页入口无效');
   let instance: string, navKey: string;
-  try { instance = decodeURIComponent(parts[1]!); navKey = decodeURIComponent(parts[2]!); }
-  catch { throw new Error('插件全页入口无效'); }
-  if (!validPluginInstance(instance) || !validPluginNavKey(navKey)) throw new Error('插件全页入口无效');
+  try {
+    instance = decodeURIComponent(parts[1]!);
+    navKey = parts[2] ? decodeURIComponent(parts[2]) : 'main';
+  } catch {
+    throw new Error('插件全页入口无效');
+  }
+  if (!validPluginInstance(instance) || !validPluginNavKey(navKey))
+    throw new Error('插件全页入口无效');
   return { instance, navKey };
 }

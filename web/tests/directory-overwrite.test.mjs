@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import { parse, compileScript } from '@vue/compiler-sfc';
 import ts from 'typescript';
 import * as vue from 'vue';
+import { loadDirectoryTransferTypes } from '../src/features/directory-transfer-types.ts';
 const { descriptor } = parse(
   readFileSync(new URL('../src/components/DirectoryManager.vue', import.meta.url), 'utf8'),
 );
@@ -27,10 +28,12 @@ async function manager(t, mode, known) {
   };
   const api = async (path, body, method) => {
     calls.push({ path, body, method });
+    if (path === '/directories/transfer-types') return { transtype: { link: '硬链接', copy: '复制', auto: '自动' } };
     return { directories: (body?.directories || [original]).map((config) => ({ config })) };
   };
   const module = { exports: {} };
   new Function('require', 'exports', compiled)((name) => {
+    if (name === '../features/directory-transfer-types') return { loadDirectoryTransferTypes };
     if (name === '../api')
       return {
         api,
@@ -74,7 +77,7 @@ async function manager(t, mode, known) {
       .find((node) => node.type === 'form')
       .props.onSubmit({ preventDefault() {}, stopPropagation() {} });
     await vue.nextTick();
-    return calls.at(-1).body.directories[0];
+    return calls.findLast((call) => call.method === 'PUT').body.directories[0];
   }
   return { calls, overwrite, save, nodes };
 }
@@ -121,7 +124,7 @@ test('adding a native directory uses source None while preserving an existing un
   sources.at(-1).props['onUpdate:modelValue']('/owned/new-download');
   await vue.nextTick();
   await form.save();
-  const saved = form.calls.at(-1).body.directories;
+  const saved = form.calls.findLast((call) => call.method === 'PUT').body.directories;
   assert.equal(saved[0].overwrite_mode_known, false);
   assert.equal(saved[1].overwrite_mode, null);
   assert.equal(saved[1].overwrite_mode_known, true);

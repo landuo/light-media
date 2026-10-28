@@ -57,8 +57,12 @@ func (a *App) saveSubscriptionWordsTx(ctx context.Context, tx *sql.Tx, key strin
 }
 
 func (a *App) subscriptionWords(ctx context.Context, key string) (string, error) {
+	return a.subscriptionWordsFrom(ctx, a.Store.DB, key)
+}
+
+func (a *App) subscriptionWordsFrom(ctx context.Context, q PluginProofReader, key string) (string, error) {
 	var sealed []byte
-	err := a.Store.DB.QueryRowContext(ctx, `SELECT sealed FROM subscription_words WHERE subscription_id=?`, key).Scan(&sealed)
+	err := q.QueryRowContext(ctx, `SELECT sealed FROM subscription_words WHERE subscription_id=?`, key).Scan(&sealed)
 	if errors.Is(err, sql.ErrNoRows) {
 		return "", nil
 	}

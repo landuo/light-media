@@ -1,0 +1,87 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/modules/filemanager/transhandler.py:432-577",
+  "kind": "Execute the pinned native overwrite branch for independent auxiliary tasks.\nControlled classifier returns true for a selected subtitle/audio. The complete\nsource if/else is retained; no statement in the unused main branch is replaced.\n",
+  "cases": [
+    {
+      "kind": "subtitle",
+      "policy": null,
+      "overwrite": true,
+      "classifier_calls": [
+        "subtitle"
+      ]
+    },
+    {
+      "kind": "subtitle",
+      "policy": "never",
+      "overwrite": true,
+      "classifier_calls": [
+        "subtitle"
+      ]
+    },
+    {
+      "kind": "subtitle",
+      "policy": "always",
+      "overwrite": true,
+      "classifier_calls": [
+        "subtitle"
+      ]
+    },
+    {
+      "kind": "subtitle",
+      "policy": "size",
+      "overwrite": true,
+      "classifier_calls": [
+        "subtitle"
+      ]
+    },
+    {
+      "kind": "subtitle",
+      "policy": "latest",
+      "overwrite": true,
+      "classifier_calls": [
+        "subtitle"
+      ]
+    },
+    {
+      "kind": "audio",
+      "policy": null,
+      "overwrite": true,
+      "classifier_calls": [
+        "audio"
+      ]
+    },
+    {
+      "kind": "audio",
+      "policy": "never",
+      "overwrite": true,
+      "classifier_calls": [
+        "audio"
+      ]
+    },
+    {
+      "kind": "audio",
+      "policy": "always",
+      "overwrite": true,
+      "classifier_calls": [
+        "audio"
+      ]
+    },
+    {
+      "kind": "audio",
+      "policy": "size",
+      "overwrite": true,
+      "classifier_calls": [
+        "audio"
+      ]
+    },
+    {
+      "kind": "audio",
+      "policy": "latest",
+      "overwrite": true,
+      "classifier_calls": [
+        "audio"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/chain/transfer.py",
+  "sha256": "1e42c4e69cb6294afe36e3c4aa4bb40cb9356aa017f2e8e9c91b9c928b140b37",
+  "history_selection_source": "if download_history and (not downloader or not download_hash):\n    _downloader = download_history.downloader\n    _download_hash = download_history.download_hash\nelse:\n    _downloader = downloader\n    _download_hash = download_hash",
+  "cases": [
+    {
+      "name": "history",
+      "downloader": "Original provider name",
+      "hash": "history-hash"
+    },
+    {
+      "name": "null_history",
+      "downloader": null,
+      "hash": "history-hash"
+    },
+    {
+      "name": "explicit",
+      "downloader": "Explicit",
+      "hash": "explicit-hash"
+    },
+    {
+      "name": "partial",
+      "downloader": "History",
+      "hash": "history-hash"
+    },
+    {
+      "name": "manual",
+      "downloader": null,
+      "hash": null
+    }
+  ],
+  "callbacks": [
+    {
+      "line": 1153,
+      "event": "EventType.TransferFailed",
+      "fields": {
+        "fileitem": "task.fileitem",
+        "meta": "task.meta",
+        "mediainfo": "task.mediainfo",
+        "transferinfo": "transferinfo",
+        "downloader": "task.downloader",
+        "download_hash": "task.download_hash",
+        "transfer_history_id": "history.id if history else None"
+      }
+    },
+    {
+      "line": 1267,
+      "event": "EventType.TransferComplete",
+      "fields": {
+        "fileitem": "task.fileitem",
+        "meta": "task.meta",
+        "mediainfo": "task.mediainfo",
+        "transferinfo": "transferinfo",
+        "downloader": "task.downloader",
+        "download_hash": "task.download_hash",
+        "transfer_history_id": "history.id if history else None"
+      }
+    },
+    {
+      "line": 1167,
+      "event": "EventType.SubtitleTransferFailed",
+      "fields": {
+        "fileitem": "task.fileitem",
+        "meta": "task.meta",
+        "mediainfo": "task.mediainfo",
+        "transferinfo": "transferinfo",
+        "downloader": "task.downloader",
+        "download_hash": "task.download_hash",
+        "transfer_history_id": "history.id if history else None"
+      }
+    },
+    {
+      "line": 1281,
+      "event": "EventType.SubtitleTransferComplete",
+      "fields": {
+        "fileitem": "task.fileitem",
+        "meta": "task.meta",
+        "mediainfo": "task.mediainfo",
+        "transferinfo": "transferinfo",
+        "downloader": "task.downloader",
+        "download_hash": "task.download_hash",
+        "transfer_history_id": "history.id if history else None"
+      }
+    },
+    {
+      "line": 1181,
+      "event": "EventType.AudioTransferFailed",
+      "fields": {
+        "fileitem": "task.fileitem",
+        "meta": "task.meta",
+        "mediainfo": "task.mediainfo",
+        "transferinfo": "transferinfo",
+        "downloader": "task.downloader",
+        "download_hash": "task.download_hash",
+        "transfer_history_id": "history.id if history else None"
+      }
+    },
+    {
+      "line": 1295,
+      "event": "EventType.AudioTransferComplete",
+      "fields": {
+        "fileitem": "task.fileitem",
+        "meta": "task.meta",
+        "mediainfo": "task.mediainfo",
+        "transferinfo": "transferinfo",
+        "downloader": "task.downloader",
+        "download_hash": "task.download_hash",
+        "transfer_history_id": "history.id if history else None"
+      }
+    }
+  ],
+  "kind": "fixed AST replay; source runtime not started; no Python runtime dependency"
+}

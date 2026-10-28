@@ -1,0 +1,78 @@
+{
+  "accepted": false,
+  "rows": [
+    36,
+    37,
+    43
+  ],
+  "verified_subscope": "ordinary plugin-contributed recommendation/discover source UI; whole rows still unaccepted",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "server_sha256": "af4acf6e99d94fa471e2d7b360b9bdcf81da819f375def4af2f27d230f8b4d12",
+  "source": [
+    "B/app/api/endpoints/recommend.py:source",
+    "B/app/api/endpoints/discover.py:source",
+    "B/app/schemas/event.py:RecommendMediaSource/DiscoverMediaSource",
+    "F/src/pages/recommend.vue:177/onActivated",
+    "F/src/pages/discover.vue:102/onActivated",
+    "F/src/views/discover/ExtraSourceView.vue",
+    "F/src/pages/browse.vue",
+    "F/src/views/discover/MediaCardListView.vue"
+  ],
+  "target": [
+    "internal/app/plugin_original_catalog_sources.go",
+    "web/src/features/plugin-catalog-sources.ts",
+    "web/src/features/recommend.ts",
+    "web/src/features/explore-actions.ts",
+    "web/src/features/explore-media.ts",
+    "web/src/components/Recommend.vue",
+    "web/src/components/RecommendShelf.vue",
+    "web/src/components/RecommendBrowse.vue",
+    "web/src/components/Explore.vue",
+    "web/src/components/ExtraSourceView.vue",
+    "web/src/components/ExploreDetail.vue"
+  ],
+  "source_replay": {
+    "path": "testdata/standard-catalog-extra-ui/source-oracle.json",
+    "kind": "actual fixed TS functions and Vue watcher with owned data",
+    "coverage": "exact API-path/prefix dedup, source enableConfig before extra append including title coupling,5 dependency/watch outcomes and4 getParams cases",
+    "source_bug": "array reference comparison causes actual Vue recursive error after101 updates, captured and retained; target actual SFC matches",
+    "target_tests": "20related +538frontend full/tsc/build, stable code+oracle inputs in platform5-evidence-manifest.json"
+  },
+  "actual_browser": {
+    "kind": "actual IAB renderer + actual independent Linux cmd/server and Go SDK; account/repository/rows synthetic",
+    "source_pid_before": 2628577,
+    "clone_pid_before": 2628583,
+    "source_pid_after_cold": 2665637,
+    "clone_pid_after_cold": 2665643,
+    "checks": [
+      "native menu→recommend; builtin15 disabled and extra2 initially disabled, no SDK feed before explicit selection",
+      "real settings enable onlysource; actual persisted extra api_path key; source firstpage20 /shelf width3184 and correct display fields",
+      "same server/SDK preserved through actual SSH connection loss: UI failed-to-fetch and checked draft remain; native preferences unchanged then successful explicitretry commits",
+      "source+clone separate shelves/markers and PIDs, each actual20 response",
+      "native More link→actual20→scroll30→empty page3 retains30; source SDK captured list/marker/page/title query; return cached shelf without firstpage rewrite",
+      "Explore six real tabs, actual FormRenderer outlined controls; regionCN reaches SDK, genreaction clears dependent region and subsequent SDK query omits it",
+      "clone keeps defaultall and its own20, returnsource preservesaction and results",
+      "real source config feed_fail503 on page2 retains20 with visible retry; configrestore then actual samepage2 retry appends10→30; source/clone PIDs unchanged",
+      "native actual drag owned tabfirst, real server order persisted",
+      "actual main stop/start changes both SDK PIDs, settings and taborder identical; document reload selectsOwnedfirst with20; client filter intentionally reloads defaultall, not claimed cold-persisted",
+      "postcold recommendation both shelves each20 /source-clone identities remain"
+    ]
+  },
+  "necessary_adaptations": [
+    "native ID/api_path/prefix preferences retain existing host storage contract while UI same-title choice matches fixed title-key behavior",
+    "raw MediaInfo preserved in original_media plus ten-field source dedup key, projected to existing MediaCards; opaque identifiers remain id0 and require existing recognition before actions",
+    "same-origin existing Axios transport and existing native error/retry/generation isolation retained per project explicit prior failure-retry requirement; source MediaCardList catch loading bug is not used to remove that existing retry behavior",
+    "source duplicate-prefix navigation deduplicates but raw windows/latest source array and old appended navigation behavior retained",
+    "empty api_path keeps original unfinished loading behavior; no invented provider/business system"
+  ],
+  "excluded_or_unverified": [
+    "opaque detail/resolve/search/subscribe backend not implemented in this sealed main; no such button was clicked or accepted",
+    "remaining native catalog/recognition/filter/download/transfer/storage host chains, ordinary core events and whole36/37/43 are separate",
+    "source/clone gate first0.40s wrong synthetic event replacement expected2; fixture changed to explicit source append and reran same production main",
+    "hold final SSH process exited255 during .done collection; root browser/observer evidence valid but final PASS/uninstall for that hold unconfirmed; separate nohold CLI requested"
+  ],
+  "cleanup": "Root IAB42 closed, viewport reset and tunnel34423 closed. Held SSH exited255, so no held whole-gate PASS is claimed. A separate af4acf nohold gate PASS0.60s verifies real uninstall source2->1->0 and cold; old held DataDir absent/process scan empty. Chrome368189194 close/reset remains blocked by extension UI and is independently recorded.",
+  "evidence_manifest": "testdata/standard-catalog-extra-ui/evidence-manifest.json",
+  "cleanup_supplement": "docs/validation/plugin-catalog-sources-cli-20261027/result.json"
+}

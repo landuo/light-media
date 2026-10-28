@@ -1,0 +1,84 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+  "source": "app/chain/message.py:_handle_message_core",
+  "kind": "actual fixed method bodies; no pending/business interaction and AI off dependency values; not original app runtime",
+  "cases": [
+    {
+      "text": " ordinary \u001cmessage ",
+      "images": null,
+      "events": [
+        {
+          "type": "user.message",
+          "data": {
+            "text": " ordinary \u001cmessage ",
+            "userid": "admin",
+            "channel": "Web",
+            "source": "admin",
+            "chat_id": null,
+            "reply_to_message_id": null
+          }
+        }
+      ],
+      "return": false
+    },
+    {
+      "text": "after failure",
+      "images": null,
+      "events": [
+        {
+          "type": "user.message",
+          "data": {
+            "text": "after failure",
+            "userid": "admin",
+            "channel": "Web",
+            "source": "admin",
+            "chat_id": null,
+            "reply_to_message_id": null
+          }
+        }
+      ],
+      "return": false
+    },
+    {
+      "text": " /noai： ordinary escaped ",
+      "images": null,
+      "events": [
+        {
+          "type": "user.message",
+          "data": {
+            "text": "ordinary escaped",
+            "userid": "admin",
+            "channel": "Web",
+            "source": "admin",
+            "chat_id": null,
+            "reply_to_message_id": null
+          }
+        }
+      ],
+      "return": false
+    },
+    {
+      "text": "ordinary image text",
+      "images": [
+        {
+          "url": "https://owned.invalid/unused.jpg"
+        }
+      ],
+      "events": [
+        {
+          "type": "user.message",
+          "data": {
+            "text": "ordinary image text",
+            "userid": "admin",
+            "channel": "Web",
+            "source": "admin",
+            "chat_id": null,
+            "reply_to_message_id": null
+          }
+        }
+      ],
+      "return": false
+    }
+  ]
+}

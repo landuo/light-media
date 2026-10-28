@@ -8,6 +8,7 @@ import DownloaderManager from './DownloaderManager.vue';
 import DirectoryManager from './DirectoryManager.vue';
 import ApiTokenSettings from './ApiTokenSettings.vue';
 import ProxySettings from './ProxySettings.vue';
+import PluginSystemSettings from './PluginSystemSettings.vue';
 const RuleManager = defineAsyncComponent(() => import('./RuleManager.vue'));
 const ResourceMetadataSettings = defineAsyncComponent(
   () => import('./ResourceMetadataSettings.vue'),
@@ -62,7 +63,10 @@ async function save(section: 'app' | 'tmdb' | 'fnos' | 'site') {
     const c = JSON.parse(JSON.stringify(current));
     delete c.secret_state;
     if (section === 'app') c.app_domain = form.value.app_domain;
-    if (section === 'tmdb') c.tmdb = form.value.tmdb;
+    if (section === 'tmdb') {
+      c.tmdb = form.value.tmdb;
+      c.recognize_plugin_first = form.value.recognize_plugin_first === true;
+    }
     if (section === 'site') {
       c.site_data_refresh_hours = form.value.site_data_refresh_hours;
       c.read_site_messages = form.value.read_site_messages;
@@ -206,6 +210,13 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
             placeholder="与 API Key 二选一"
             label="Access Token"
           />
+          <VSwitch
+            v-model="form.recognize_plugin_first"
+            label="优先使用辅助识别"
+            :disabled="saving"
+            hint="优先使用插件辅助识别影片和剧集"
+            persistent-hint
+          />
         </div>
         <div class="button-row">
           <button class="primary" :disabled="saving" @click="save('tmdb')">保存</button
@@ -214,6 +225,7 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
       </section>
       <section class="panel"><DownloaderManager /></section>
       <section class="panel"><ProxySettings /></section>
+      <PluginSystemSettings />
       <section class="panel">
         <header class="section-heading"><h2>站点选项</h2></header>
         <div class="form-grid">

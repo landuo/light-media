@@ -1,0 +1,77 @@
+{
+  "scope": "36/37 +43 ordinary DownloadFileDeleted core consumer increment, SDK verified; independent production CLI prepared and next shared main pending. MetadataScrape oracle only, not implementation acceptance.",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/download.py:1808 DownloadChain.download_file_deleted",
+    "app/chain/__init__.py:list_torrents/remove_torrents wrappers and ordinary dispatch",
+    "app/chain/media.py:1034 scrape_metadata_event (read-only source audit only)"
+  ],
+  "target": [
+    "internal/app/plugin_original_core_download_file_deleted.go",
+    "internal/app/plugin_original_core_event_consumers.go (preserves root site.updated handlers)",
+    "internal/app/plugin_original_downloader_control.go:originalDownloaderControlValues",
+    "internal/app/core_download_file_deleted.go:publishHistoryDownloadFileDeleted marks only its already-consumed native queue entry",
+    "internal/app/plugin_module_process_download_file_deleted_test.go"
+  ],
+  "behavior": [
+    "SDK ordinary downloadfile.deleted now reaches existing native all-state source list/full DownloaderTorrent projection and keep-data removal. Src-only/empty hash no-op.",
+    "list_torrents exact kwargs: status=None, hashs=[hash],downloader=None,include_all_tags=False; remove_torrents exact kwargs hash list,downloader=None,delete_file=False. False list stops native listing; false removal still emits DownloadDeleted.",
+    "Source/clone observer receives hash/full torrents even if HTTP500 remove fails; source publication is not an ACK. Native exact hash/owned task guard never requests local file deletion.",
+    "Native history-delete producer already enqueues its authenticated existing durable job; mark only its ordinary queue entry coreConsumed to prevent a second deletion. A plugin ordinary event creates no privileged private/domain history deletion receipt."
+  ],
+  "evidence": {
+    "source_download_file_cases": 6,
+    "source_metadata_scrape_cases_audit_only": 8,
+    "sdk_command_roots": [
+      "TestOriginalCoreDownloadFileDeletedActualSDKSource",
+      "TestOriginalCoreDownloadFileDeletedModuleBoundaries",
+      "TestOriginalDownloaderControlActualSDKFixedSource",
+      "TestCoreDownloadFileDeletedActualAddImportHistoryChain"
+    ],
+    "sdk_package_elapsed_seconds": 9.862,
+    "race_package_elapsed_seconds": 17.692,
+    "actual_main_verified": false,
+    "next_main_cli_flags": {
+      "PLUGIN_PROCESS_DOWNLOAD_FILE_DELETED_FIXTURE": "true",
+      "PLUGIN_PROCESS_FILE_CONSUMER_ORACLE": "/tmp/light-media-plugin-scope-dRZTQ91A/file-consumer-source-oracle.json"
+    }
+  },
+  "necessary_adaptations": [
+    "Only configured native backends, application namespace/exact hash/keep-data guards reused. Source default removal selector preserved, native writes cannot act on a foreign task reported by another instance/plugin.",
+    "Ordinary source event observations remain separate from durable native job/domain provenance; no new work queue/compatibility executor is introduced."
+  ],
+  "remaining": [
+    "Prepared main helper still requires actual new cmd/server execution (source/clone→500 false observation→cold no replay→success remove task/retain marker).",
+    "MetadataScrape has no implemented ordinary core consumer yet. Source accepts local FileItem/media/meta/overwrite and directory/BDMV ordering; current native host is existing registered-asset browserScrape/runScrape, not arbitrary unregistered scan/register.",
+    "No whole36/37/43 acceptance is asserted."
+  ],
+  "artifacts": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/events36-file-consumer-raw/file-consumer-source-oracle.json",
+      "sha256": "3f528dd4fa479b1a704d6f18286f76cea47d11c38079e01e0e52b2db67c07acf",
+      "source": "testdata/standard-event-target/file-consumer-source-oracle.json"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/events36-file-consumer-raw/generate-file-consumer-source-oracle.py",
+      "sha256": "87e525ea13587e26df96d2cbbcfb0f0216eb039652a6d2f5b18c8d82bef33baa",
+      "source": "testdata/standard-event-target/generate-file-consumer-source-oracle.py"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/events36-file-consumer-raw/events36-file-consumer-source-replay.log",
+      "sha256": "42a0cf81a92c531753750942dae6846769fef54e75a33a06db40792d2fcc19d3",
+      "source": "work/plugin-no-official-auth-20261026/events36-file-consumer-source-replay.log"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/events36-file-consumer-raw/events36-download-file-consumer-sdk-tests.jsonl.gz",
+      "sha256": "a7dd552236a8281684243755091176dc8326bd6075afdbf56b8ea0c9e4d66b72",
+      "source": "work/plugin-no-official-auth-20261026/events36-download-file-consumer-sdk-tests.jsonl"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/events36-file-consumer-raw/events36-download-file-consumer-race-tests.jsonl.gz",
+      "sha256": "ccb96e84909cae30fc79ee2d37c13355960b6d6b9b1474056393671437518f2e",
+      "source": "work/plugin-no-official-auth-20261026/events36-download-file-consumer-race-tests.jsonl"
+    }
+  ],
+  "platform7_actual_increment": "testdata/plugin-module-no-official-auth-20261026/modules43-platform7-add-file-consumer-result.json",
+  "platform7_note": "Actual Add+FileDeleted2.92s has now passed; category-true/known-media and new UI status reader remain separately bound and not assumed covered by this input."
+}

@@ -1,0 +1,868 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "Pinned ChainBase sync/async recognition request normalization. The outer\nmodule return is None and unrelated external shared-recognition is disabled.\n",
+  "cases": [
+    {
+      "name": "native_id",
+      "method": "recognize_media",
+      "meta": null,
+      "explicit": {
+        "tmdbid": 120
+      },
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": null,
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": null,
+            "tmdbid": 120,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "explicit_type",
+      "method": "recognize_media",
+      "meta": {
+        "type": "电视剧"
+      },
+      "explicit": {
+        "tmdbid": 120,
+        "mtype": "电影"
+      },
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电视剧"
+            },
+            "mtype": "电影",
+            "source": "themoviedb",
+            "mediaid": null,
+            "tmdbid": 120,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "meta_ids",
+      "method": "recognize_media",
+      "meta": {
+        "type": "电视剧",
+        "tmdbid": 120,
+        "doubanid": "130",
+        "media_id": "original-id"
+      },
+      "explicit": {},
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电视剧",
+              "tmdbid": 120,
+              "doubanid": "130",
+              "media_id": "original-id"
+            },
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": "original-id",
+            "tmdbid": 120,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "meta_source_priority",
+      "method": "recognize_media",
+      "meta": {
+        "type": "电影",
+        "media_source": "douban",
+        "doubanid": "130"
+      },
+      "explicit": {
+        "tmdbid": 120
+      },
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电影",
+              "media_source": "douban",
+              "doubanid": "130"
+            },
+            "mtype": "电影",
+            "source": "douban",
+            "mediaid": null,
+            "tmdbid": null,
+            "doubanid": "130",
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "explicit_source",
+      "method": "recognize_media",
+      "meta": {
+        "type": "电视剧",
+        "media_source": "douban",
+        "media_id": "130"
+      },
+      "explicit": {
+        "source": "themoviedb",
+        "mediaid": "120"
+      },
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电视剧",
+              "media_source": "douban",
+              "media_id": "130"
+            },
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": "120",
+            "tmdbid": 120,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "unknown_prefix",
+      "method": "recognize_media",
+      "meta": {
+        "type": "电影",
+        "tmdbid": 120
+      },
+      "explicit": {
+        "source": " Owned ",
+        "mediaid": "opaque /?:id"
+      },
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电影",
+              "tmdbid": 120
+            },
+            "mtype": "电影",
+            "source": "owned",
+            "mediaid": "opaque /?:id",
+            "tmdbid": null,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "zero_fallback",
+      "method": "recognize_media",
+      "meta": {
+        "tmdbid": 121,
+        "media_id": "122"
+      },
+      "explicit": {
+        "tmdbid": 0,
+        "mediaid": 0
+      },
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": {
+              "tmdbid": 121,
+              "media_id": "122"
+            },
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": "122",
+            "tmdbid": 121,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "unicode_id",
+      "method": "recognize_media",
+      "meta": null,
+      "explicit": {
+        "source": "TMDB",
+        "mediaid": "１２３"
+      },
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": null,
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": "１２３",
+            "tmdbid": 123,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "huge_id",
+      "method": "recognize_media",
+      "meta": null,
+      "explicit": {
+        "source": "tmdb",
+        "mediaid": "99999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": null,
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": "99999999999999999999999999999999999999999999999999999999999999999999999999999999",
+            "tmdbid": 99999999999999999999999999999999999999999999999999999999999999999999999999999999,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "super_digit_invalid",
+      "method": "recognize_media",
+      "meta": null,
+      "explicit": {
+        "source": "tmdb",
+        "mediaid": "²"
+      },
+      "calls": [],
+      "state": "ValueError"
+    },
+    {
+      "name": "negative_no_source",
+      "method": "recognize_media",
+      "meta": null,
+      "explicit": {
+        "tmdbid": -1
+      },
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": null,
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": null,
+            "tmdbid": -1,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "float_source_id",
+      "method": "recognize_media",
+      "meta": null,
+      "explicit": {
+        "source": "tmdb",
+        "mediaid": 120.0
+      },
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": null,
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": 120.0,
+            "tmdbid": null,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "episode_group",
+      "method": "recognize_media",
+      "meta": {
+        "type": "电视剧",
+        "episode_group": "meta-group"
+      },
+      "explicit": {
+        "episode_group": "",
+        "cache": false
+      },
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电视剧",
+              "episode_group": "meta-group"
+            },
+            "mtype": "电视剧",
+            "source": null,
+            "mediaid": null,
+            "tmdbid": null,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": "meta-group",
+            "cache": false
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "none_source_type",
+      "method": "recognize_media",
+      "meta": {
+        "type": "电影"
+      },
+      "explicit": {},
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电影"
+            },
+            "mtype": "电影",
+            "source": null,
+            "mediaid": null,
+            "tmdbid": null,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "bool_tmdb",
+      "method": "recognize_media",
+      "meta": null,
+      "explicit": {
+        "tmdbid": true
+      },
+      "calls": [
+        {
+          "method": "recognize_media",
+          "kwargs": {
+            "meta": null,
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": null,
+            "tmdbid": 1,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "native_id",
+      "method": "async_recognize_media",
+      "meta": null,
+      "explicit": {
+        "tmdbid": 120
+      },
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": null,
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": null,
+            "tmdbid": 120,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "explicit_type",
+      "method": "async_recognize_media",
+      "meta": {
+        "type": "电视剧"
+      },
+      "explicit": {
+        "tmdbid": 120,
+        "mtype": "电影"
+      },
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电视剧"
+            },
+            "mtype": "电影",
+            "source": "themoviedb",
+            "mediaid": null,
+            "tmdbid": 120,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "meta_ids",
+      "method": "async_recognize_media",
+      "meta": {
+        "type": "电视剧",
+        "tmdbid": 120,
+        "doubanid": "130",
+        "media_id": "original-id"
+      },
+      "explicit": {},
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电视剧",
+              "tmdbid": 120,
+              "doubanid": "130",
+              "media_id": "original-id"
+            },
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": "original-id",
+            "tmdbid": 120,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "meta_source_priority",
+      "method": "async_recognize_media",
+      "meta": {
+        "type": "电影",
+        "media_source": "douban",
+        "doubanid": "130"
+      },
+      "explicit": {
+        "tmdbid": 120
+      },
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电影",
+              "media_source": "douban",
+              "doubanid": "130"
+            },
+            "mtype": "电影",
+            "source": "douban",
+            "mediaid": null,
+            "tmdbid": null,
+            "doubanid": "130",
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "explicit_source",
+      "method": "async_recognize_media",
+      "meta": {
+        "type": "电视剧",
+        "media_source": "douban",
+        "media_id": "130"
+      },
+      "explicit": {
+        "source": "themoviedb",
+        "mediaid": "120"
+      },
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电视剧",
+              "media_source": "douban",
+              "media_id": "130"
+            },
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": "120",
+            "tmdbid": 120,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "unknown_prefix",
+      "method": "async_recognize_media",
+      "meta": {
+        "type": "电影",
+        "tmdbid": 120
+      },
+      "explicit": {
+        "source": " Owned ",
+        "mediaid": "opaque /?:id"
+      },
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电影",
+              "tmdbid": 120
+            },
+            "mtype": "电影",
+            "source": "owned",
+            "mediaid": "opaque /?:id",
+            "tmdbid": null,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "zero_fallback",
+      "method": "async_recognize_media",
+      "meta": {
+        "tmdbid": 121,
+        "media_id": "122"
+      },
+      "explicit": {
+        "tmdbid": 0,
+        "mediaid": 0
+      },
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": {
+              "tmdbid": 121,
+              "media_id": "122"
+            },
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": "122",
+            "tmdbid": 121,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "unicode_id",
+      "method": "async_recognize_media",
+      "meta": null,
+      "explicit": {
+        "source": "TMDB",
+        "mediaid": "１２３"
+      },
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": null,
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": "１２３",
+            "tmdbid": 123,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "huge_id",
+      "method": "async_recognize_media",
+      "meta": null,
+      "explicit": {
+        "source": "tmdb",
+        "mediaid": "99999999999999999999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": null,
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": "99999999999999999999999999999999999999999999999999999999999999999999999999999999",
+            "tmdbid": 99999999999999999999999999999999999999999999999999999999999999999999999999999999,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "super_digit_invalid",
+      "method": "async_recognize_media",
+      "meta": null,
+      "explicit": {
+        "source": "tmdb",
+        "mediaid": "²"
+      },
+      "calls": [],
+      "state": "ValueError"
+    },
+    {
+      "name": "negative_no_source",
+      "method": "async_recognize_media",
+      "meta": null,
+      "explicit": {
+        "tmdbid": -1
+      },
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": null,
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": null,
+            "tmdbid": -1,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "float_source_id",
+      "method": "async_recognize_media",
+      "meta": null,
+      "explicit": {
+        "source": "tmdb",
+        "mediaid": 120.0
+      },
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": null,
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": 120.0,
+            "tmdbid": null,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "episode_group",
+      "method": "async_recognize_media",
+      "meta": {
+        "type": "电视剧",
+        "episode_group": "meta-group"
+      },
+      "explicit": {
+        "episode_group": "",
+        "cache": false
+      },
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电视剧",
+              "episode_group": "meta-group"
+            },
+            "mtype": "电视剧",
+            "source": null,
+            "mediaid": null,
+            "tmdbid": null,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": "meta-group",
+            "cache": false
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "none_source_type",
+      "method": "async_recognize_media",
+      "meta": {
+        "type": "电影"
+      },
+      "explicit": {},
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": {
+              "type": "电影"
+            },
+            "mtype": "电影",
+            "source": null,
+            "mediaid": null,
+            "tmdbid": null,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    },
+    {
+      "name": "bool_tmdb",
+      "method": "async_recognize_media",
+      "meta": null,
+      "explicit": {
+        "tmdbid": true
+      },
+      "calls": [
+        {
+          "method": "async_recognize_media",
+          "kwargs": {
+            "meta": null,
+            "mtype": null,
+            "source": "themoviedb",
+            "mediaid": null,
+            "tmdbid": 1,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": true
+          }
+        }
+      ],
+      "state": "ok"
+    }
+  ]
+}

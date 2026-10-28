@@ -138,8 +138,15 @@ func (a *App) beginSubscriptionAcquisition(ctx context.Context, j Job, s Subscri
 		if e != nil {
 			return nil, e
 		}
+		if len(c.originalSelectionMeta) > 0 {
+			raw = append([]byte(nil), c.originalSelectionMeta...)
+		}
 		r.Candidates = append(r.Candidates, c)
 		r.Metas = append(r.Metas, raw)
+		r.SelectionContexts = append(r.SelectionContexts, append(json.RawMessage(nil), c.originalSelectionContext...))
+	}
+	if !slices.ContainsFunc(r.SelectionContexts, func(raw json.RawMessage) bool { return len(raw) > 0 && string(raw) != "null" }) {
+		r.SelectionContexts = nil
 	}
 	if e = a.saveAcquisitionTx(ctx, tx, r); e != nil {
 		return nil, e
@@ -221,7 +228,7 @@ func (a *App) acquisitionCandidate(ctx context.Context, r *subscriptionAcquisiti
 	} else if step.Phase == "intent" {
 		req := r.Request
 		req.Episodes = qualityCopyNote(episodes)
-		preview, e := a.previewDownload(ctx, PreviewRequest{SearchRequest: req, sourceMaterial: material, sourceMeta: meta, automaticSeasonPack: c.Resource.ID != "" && r.Subscription.Media.MediaType == "tv", qualitySelection: true, SiteID: c.Resource.SiteID, ResourceID: c.Resource.ID, DownloaderID: r.Subscription.DownloaderID, RootID: subscriptionLegacyRoot(r.Subscription), DirectoryID: r.Subscription.DirectoryID, DownloadPath: r.Subscription.DownloadPath, SubscriptionID: r.Subscription.ID, Revision: r.Subscription.Revision}, true)
+		preview, e := a.previewDownload(ctx, PreviewRequest{SearchRequest: req, sourceContext: c.originalSelectionContext, sourceMaterial: material, sourceMeta: meta, automaticSeasonPack: c.Resource.ID != "" && r.Subscription.Media.MediaType == "tv", qualitySelection: true, SiteID: c.Resource.SiteID, ResourceID: c.Resource.ID, DownloaderID: r.Subscription.DownloaderID, RootID: subscriptionLegacyRoot(r.Subscription), DirectoryID: r.Subscription.DirectoryID, DownloadPath: r.Subscription.DownloadPath, SubscriptionID: r.Subscription.ID, Revision: r.Subscription.Revision}, true)
 		if e != nil {
 			if ctx.Err() != nil {
 				return false, ctx.Err()
@@ -364,6 +371,35 @@ func (a *App) runSubscriptionAcquisition(ctx context.Context, j Job, s Subscript
 	actualEpisodes := map[string][]int{}
 	values := []*acquisitionbatch.Candidate{}
 	for i, c := range r.Candidates {
+		if len(r.SelectionContexts) > 0 {
+			if len(r.SelectionContexts) != len(r.Candidates) {
+				return 0, acquisitionEvidence()
+			}
+			c.originalSelectionContext = append(json.RawMessage(nil), r.SelectionContexts[i]...)
+			if string(c.originalSelectionContext) == "null" {
+				c.originalSelectionContext = nil
+			}
+			if len(c.originalSelectionContext) > 0 {
+				var context originalDownloadContext
+				if e = json.Unmarshal(c.originalSelectionContext, &context); e != nil {
+					return 0, e
+				}
+				if context.AllowedEpisodes != nil {
+					raw, e := json.Marshal(context.AllowedEpisodes)
+					if e != nil {
+						return 0, e
+					}
+					var allowed []int
+					if e = json.Unmarshal(raw, &allowed); e != nil {
+						return 0, e
+					}
+					if allowed == nil {
+						allowed = []int{}
+					}
+					c.originalSelectionAllowed = &allowed
+				}
+			}
+		}
 		meta, e := releasemeta.DecodeMetaObjectState(r.Metas[i])
 		if e != nil {
 			return 0, e
@@ -382,6 +418,13 @@ func (a *App) runSubscriptionAcquisition(ctx context.Context, j Job, s Subscript
 		value := &acquisitionbatch.Candidate{ID: id, Kind: s.Media.MediaType, MediaKey: mediaKey(s.Media), TitleYear: s.Media.Title, Seasons: seasons, Episodes: episodes}
 		if s.Media.MediaType == "tv" && !state.Full() {
 			allowed := qualityCopyNote(selection.AllowedEpisodes)
+			value.AllowedEpisodes = &allowed
+		}
+		if c.originalSelectionAllowed != nil {
+			allowed := append([]int{}, (*c.originalSelectionAllowed)...)
+			if value.AllowedEpisodes != nil {
+				allowed = slices.DeleteFunc(allowed, func(ep int) bool { return !slices.Contains(*value.AllowedEpisodes, ep) })
+			}
 			value.AllowedEpisodes = &allowed
 		}
 		values = append(values, value)

@@ -1,0 +1,327 @@
+{
+  "accepted": true,
+  "complete": true,
+  "scope": "48 lifecycle composite and49 ordinary distinctions only; whole36/37/43/50 remain open",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "guide": "docs/moviepilot-plugin-module-guide-20261025.md:997-1020",
+  "excluded_half": "49 Web-save vs AI-config half: AI excluded by user, ordinary Web save retained and tested",
+  "index48": {
+    "source": "composed source functions already fixed/mapped in unique01-05,11,14-17,28-30; guide has no separate new function",
+    "target": [
+      "plugin_original_install.go",
+      "plugin_original_config.go",
+      "plugin_original_lifecycle.go",
+      "plugin_original_uninstall.go"
+    ],
+    "evidence": [
+      "docs/validation/plugin-module-scoped-20261025.json",
+      "testdata/plugin-module-scoped-20261025/linux-final-gates.log.gz",
+      "testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz",
+      "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "testdata/plugin-module-no-official-auth-20261026/platform10-runtime/manifest.json"
+    ],
+    "actual_browser_sequence": [
+      {
+        "label": "before-ui-save",
+        "installed": [
+          "OwnedStandardFixture"
+        ],
+        "snapshots": {
+          "OwnedStandardFixture": {
+            "version": "1.0",
+            "nonce": 814035,
+            "init_count": 1,
+            "config": {
+              "enabled": false,
+              "key": "source"
+            },
+            "value": "source"
+          }
+        }
+      },
+      {
+        "label": "after-ui-save",
+        "installed": [
+          "OwnedStandardFixture"
+        ],
+        "snapshots": {
+          "OwnedStandardFixture": {
+            "version": "1.0",
+            "nonce": 814035,
+            "init_count": 2,
+            "config": {
+              "enabled": true,
+              "key": "source"
+            },
+            "value": "source"
+          }
+        }
+      },
+      {
+        "label": "after-ui-clone",
+        "installed": [
+          "OwnedStandardFixture",
+          "OwnedStandardFixturebrowser"
+        ],
+        "snapshots": {
+          "OwnedStandardFixture": {
+            "version": "1.0",
+            "nonce": 814035,
+            "init_count": 3,
+            "config": {
+              "enabled": true,
+              "key": "browser-source"
+            },
+            "value": "browser-source"
+          },
+          "OwnedStandardFixturebrowser": {
+            "version": "1.0",
+            "nonce": 816069,
+            "init_count": 1,
+            "config": {
+              "enable": false,
+              "enabled": false,
+              "key": "browser-source"
+            },
+            "value": "browser-source"
+          }
+        }
+      },
+      {
+        "label": "after-ui-update",
+        "installed": [
+          "OwnedStandardFixture",
+          "OwnedStandardFixturebrowser"
+        ],
+        "snapshots": {
+          "OwnedStandardFixture": {
+            "version": "2.0",
+            "nonce": 817250,
+            "init_count": 1,
+            "config": {
+              "enabled": true,
+              "key": "browser-source"
+            },
+            "value": "browser-source"
+          },
+          "OwnedStandardFixturebrowser": {
+            "version": "1.0",
+            "nonce": 816069,
+            "init_count": 2,
+            "config": {
+              "enable": false,
+              "enabled": false,
+              "key": "browser-clone"
+            },
+            "value": "browser-clone"
+          }
+        }
+      },
+      {
+        "label": "after-ui-clone-reset",
+        "installed": [
+          "OwnedStandardFixture",
+          "OwnedStandardFixturebrowser"
+        ],
+        "snapshots": {
+          "OwnedStandardFixture": {
+            "version": "2.0",
+            "nonce": 817250,
+            "init_count": 1,
+            "config": {
+              "enabled": true,
+              "key": "browser-source"
+            },
+            "value": "browser-source"
+          },
+          "OwnedStandardFixturebrowser": {
+            "version": "1.0",
+            "nonce": 817795,
+            "init_count": 1,
+            "config": null,
+            "value": null
+          }
+        }
+      },
+      {
+        "label": "after-ui-clone-uninstall",
+        "installed": [
+          "OwnedStandardFixture"
+        ],
+        "snapshots": {
+          "OwnedStandardFixture": {
+            "version": "2.0",
+            "nonce": 817250,
+            "init_count": 1,
+            "config": {
+              "enabled": true,
+              "key": "browser-source"
+            },
+            "value": "browser-source"
+          }
+        }
+      }
+    ],
+    "actual_cli": "internal/app/plugin_module_process_test.go:414-563, same owned data-dir real cmd/server install/save/same-worker init/clone/new-PID reload/version update/init failure/recovery/cold/reset/uninstall/reinstall",
+    "covered": [
+      "installation obtains code and installed record, creates runtime independent from config/KV",
+      "save preserves same nonce while init_count increases and real clock executes",
+      "clone owns independent code/config/state/KV; source2.0 update leaves clone1.0 same nonce",
+      "reset clears addressed config/KV but retains that code/version and owned file; source remains callable",
+      "uninstall removes addressed API/registration; source reinstall reuses retained config/KV; clone code removal keeps data file"
+    ],
+    "limits": [
+      "Evidence is per exact main/test/worker SHA, not a blanket claim that the entire dirty tree was freshly replayed",
+      "Whole ordinary host coverage36/37/43 and final50 remain open"
+    ],
+    "accepted": true,
+    "source_locations": [
+      "B/app/api/endpoints/plugin.py:740-760 (PluginDataReset→stop→delete config/data→reload)",
+      "B/app/core/plugin.py:install_plugin/reload_plugin/delete_plugin_config/delete_plugin_data",
+      "F/src/components/dialog/PluginConfigDialog.vue reset action"
+    ],
+    "exact_updated_source_reset": {
+      "manifest": "testdata/plugin-module-no-official-auth-20261026/platform10-runtime/manifest.json",
+      "main_sha256": "64532ab633cdbf7449c5300a6e80948d5268b72e0f47a73119df5d0fa56eec07",
+      "test": "internal/app/plugin_module_process_ui3133_test.go:TestPluginUI3133ProductionCLI",
+      "actual_linux_seconds": 752.75,
+      "actual_browser": "IAB47 real reset source2.0, success toast, cold page source2.0/clone1.0; source custom nav removed, clone custom nav kept",
+      "before": {
+        "source_pid": 3799834,
+        "clone_pid": 3799841,
+        "source_version": "2.0",
+        "clone_version": "1.0",
+        "source_rows": 2,
+        "clone_rows": 2
+      },
+      "after": {
+        "source_pid": 3808933,
+        "clone_pid": 3799841,
+        "source_rows": 0,
+        "clone_rows": 2,
+        "clone_config_marker": "clone",
+        "clone_pid_init_config_and_sealed_KV_unchanged": true
+      },
+      "cold": {
+        "source_pid": 3809911,
+        "clone_pid": 3809916,
+        "source_rows": 0,
+        "clone_rows": 2,
+        "source_version": "2.0",
+        "clone_version": "1.0"
+      },
+      "code_and_file": "all five source/clone code file hashes and one owned data file hash per instance unchanged across actual reset and cold restart",
+      "setup_label": "one encrypted config row already written by actual configuration API per instance; one controlled encrypted KV row inserted by observer, not claimed SDK SaveData proof; separate row16/baseline verifies actual SDK writer",
+      "cleanup": "final actual CLI passed uninstall empty metadata/nav/remotes and owned TempDir removal; IAB47 and SSH34428 closed"
+    }
+  },
+  "index49": {
+    "groups": [
+      {
+        "name": "market refresh vs update",
+        "source": [
+          "app/core/plugin.py:get_online_plugins/install_plugin",
+          "Frontend PluginCardListView.vue market and update handlers"
+        ],
+        "target": [
+          "plugin_original_markets.go",
+          "plugin_original_install.go"
+        ],
+        "actual": "06/08 actual market operations retain PID/init/config/KV and no install;09/13 actual code update/version selection + baseline source2.0/clone1.0",
+        "state": "source and separate real-main/browser effects available"
+      },
+      {
+        "name": "form open vs save",
+        "source": [
+          "app/core/plugin.py:get_plugin_form/init_plugin",
+          "app/api/endpoints/plugin.py form/config endpoints",
+          "Frontend PluginConfigDialog.vue"
+        ],
+        "target": [
+          "plugin_original_view_adapter.go",
+          "plugin_original_config.go"
+        ],
+        "actual": "before-ui-save nonce814035 init1; after-ui-save same nonce init2/tick5; form29 real SQL failure/retry and saved model readback",
+        "state": "actual state transitions available"
+      },
+      {
+        "name": "ordinary Web save half",
+        "source": [
+          "app/api/endpoints/plugin.py config save",
+          "app/core/plugin.py:init_plugin"
+        ],
+        "target": [
+          "plugin_original_config.go"
+        ],
+        "actual": "same worker re-init and reread API/commands/services; actual failed init retains written config then recovers",
+        "state": "ordinary half covered; AI half excluded"
+      },
+      {
+        "name": "display sort vs execution priority",
+        "source": [
+          "Frontend PluginCardListView.vue sorting",
+          "app/core/plugin.py class ordering",
+          "app/core/event.py event priority"
+        ],
+        "target": [
+          "plugin_organization_order.go",
+          "plugin_original_registry.go",
+          "plugin_original_events.go",
+          "plugin_original_modules.go"
+        ],
+        "actual": "26/27 actual browser+SQLite order/group changes preserve PID/init/config/KV; actualSDK handler-order test independently verifies class order; ordinary module/event priorities have dedicated proofs",
+        "state": "验收通过：真实浏览器拖动后同一main/SDK立即执行，来源→分身因果事件顺序不变；冷启显示顺序保持",
+        "additional_actual": "platform8 real main1.14s: same main/source+clone, actual organization reverse order saved/readback, same PIDs/init, source→clone→core ordinary module invocation sequence unchanged; archived in resources43-platform8-all.log.gz",
+        "additional_actual_20261028": {
+          "source": [
+            "F/src/views/plugin/PluginCardListView.vue:560",
+            "B/app/core/plugin.py:933",
+            "B/app/core/event.py:139"
+          ],
+          "target": [
+            "internal/app/plugin_organization_order.go",
+            "internal/app/plugin_original_chain_event.go",
+            "internal/app/plugin_original_registry.go",
+            "web/src/components/Plugins.vue"
+          ],
+          "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/download-context-20261028/runtime/manifest.json",
+          "main_sha256": "1cbf98e31c19d1a81c4179dbdc958102de37ea49a1c8e4c140d53b9d6f3556ac",
+          "browser_gate_seconds": 680.1,
+          "actual": "IAB46 moves clone from fourth to first; source/clone PID3745993/3747431 and init9/4 unchanged across drag+real Add; identical event_id with source default input→clone owned-source-marker proves actual order source→clone; cold3757338/3757344 init12/5 and order clone/Input/Inputservice/source; observations15/6 unchanged"
+        }
+      },
+      {
+        "name": "registration vs execution ordinary half",
+        "source": [
+          "app/core/plugin.py capability getters",
+          "app/scheduler.py",
+          "app/api/endpoints/plugin.py custom API",
+          "app/core/event.py"
+        ],
+        "target": [
+          "plugin_original_registry.go",
+          "plugin_original_service_clock.go",
+          "plugin_original_events.go",
+          "plugin_original_modules.go"
+        ],
+        "actual": "35 actual API→SDK/cancel recovery;38/39 real tick/manual→same worker;40/41 real Web command/input;43 specific real host module→SDK only",
+        "state": "ordinary API/clock/event/command examples proven; entire43 remains pending, getters alone prove no execution"
+      }
+    ],
+    "accepted": true,
+    "scope": "five ordinary operation distinctions all backed by fixed source and concrete existing evidence; workflow/AI halves excluded; this does not accept every host module in43"
+  },
+  "recommendation": "48 exact updated-source reset blind spot closed;49 ordinary distinctions accepted;50 remains open until all ordinary host coverage is closed.",
+  "artifacts": {
+    "docs/moviepilot-plugin-module-guide-20261025.md": "35396823350265328b48da5b4814c2d2b915b0d0c69dfc611b6f80245f0d9e15",
+    "testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz": "926f1a39b6cd48a172877d19e040516a916aae4407e491945f6725c4c7046b6b",
+    "testdata/plugin-module-scoped-20261025/linux-final-gates.log.gz": "ec5a038cc1274888e989470a6dae1cf56587058ee653cea18b6842ec6222536a",
+    "internal/app/plugin_module_process_test.go": "1740f25b1267bdba0d28bc71febdb96be8bce69bdf8a53116d9210c60a14b8d7"
+  },
+  "platform8_resource_composite_evidence": "testdata/standard-resource-modules/incremental-parity.json:media_search_filter_increment.platform8_actual_production",
+  "accepted_indices": [
+    48,
+    49
+  ]
+}

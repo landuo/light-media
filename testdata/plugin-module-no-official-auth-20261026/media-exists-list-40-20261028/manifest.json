@@ -1,0 +1,327 @@
+{
+  "kind": "Ordinary media_exists list system-provider ordering",
+  "whole_indices_accepted": false,
+  "binaries": [
+    {
+      "name": "server-platform40-20261027-linux",
+      "sha256": "d55637c010f97e22fa81d56c242392c622608e9ae4eaa152b209155c7c7689ba",
+      "command": [
+        "go",
+        "build",
+        "-trimpath",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform40-20261027-linux",
+        "./cmd/server"
+      ],
+      "inputs": 3722,
+      "changed": [],
+      "elapsed_seconds": 3.86
+    },
+    {
+      "name": "process-platform40-20261027-linux.test",
+      "sha256": "87fc8da6eb5368b50c18ea2b20122f80fb2d068f2a2b0e02b0e2b092f35c165a",
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform40-20261027-linux.test",
+        "./internal/app"
+      ],
+      "inputs": 4191,
+      "changed": [],
+      "elapsed_seconds": 7.51
+    }
+  ],
+  "worker_sha256": "9a1d5c5c35982625a59002d8148c6f2a14ff5b728c82a6e190d9f92b9aa83990",
+  "artifacts": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/internal/app/plugin_module_process_media_exists_test.go.gz",
+      "original": "internal/app/plugin_module_process_media_exists_test.go",
+      "sha256": "e1f909f51721763a9f02b01395d6c8c7d2419978d8a4a65b349562ee83830715",
+      "raw_sha256": "61d21be95ad66a9afabecec8e88a095306532273d019d4a4576e3123a1e2e1e2"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/internal/app/plugin_original_media_exists.go.gz",
+      "original": "internal/app/plugin_original_media_exists.go",
+      "sha256": "83e20a51725b529133d86211ffa34967580e081b3c963188c250069b96a59844",
+      "raw_sha256": "9d3590c7649ee3602ba094df8e1471c7d3330729bc2eb49c91043ca249463d7a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/internal/app/plugin_original_media_exists_dispatch_test.go.gz",
+      "original": "internal/app/plugin_original_media_exists_dispatch_test.go",
+      "sha256": "009b3cf6d11c4bce9590a14abf9624c69a8b3aad6449f8170954bca47d80d883",
+      "raw_sha256": "5e352ac95415b51c67f2679b7cf62df53bf5dbe74bef44e4ed74157cf1250833"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/testdata/standard-module-host/generate-media-exists-dispatch-oracle.py.gz",
+      "original": "testdata/standard-module-host/generate-media-exists-dispatch-oracle.py",
+      "sha256": "fabd3f58456224c534fb47aa585ab1a2ca8e87b7d6fcf413f5ba4c8edb81a473",
+      "raw_sha256": "1374e5ba54677e19e571dc9c678340ea703127acad07cd8975493584aa8f3b87"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/testdata/standard-module-host/media-exists-dispatch-source-oracle.json.gz",
+      "original": "testdata/standard-module-host/media-exists-dispatch-source-oracle.json",
+      "sha256": "143013dab7934d435c762087f4e9527fabeaa88713052ecb9a15889ad6dd3a33",
+      "raw_sha256": "66e20d81ecfad8f2c2894c1d8b6ff6727d78501a70af2a316a19a60842e813c5"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/build-platform40.log.gz",
+      "original": "build-platform40.log",
+      "sha256": "447a1d191cf3b11d620679c60145e890d363dee6f1cdd9fa19bd91ed41a3310f",
+      "raw_sha256": "88dc3cbb3965c3d7b7b8016876526c44d758b6dc126ca5efd6b92ceae8da8818"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/build-platform40.py.gz",
+      "original": "build-platform40.py",
+      "sha256": "3ee2b9fddc2f7bc54a8cdbcdeb11906c13b3322f6fd453daedc91920cd91c6be",
+      "raw_sha256": "adc906093e47f4e4d361b6da0236733e8406cea21d21ebad4a82994adc10e988"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-browser/01-before.dom.txt.gz",
+      "original": "existence40-browser/01-before.dom.txt",
+      "sha256": "d440cebef3091a856e2359490c16fdcbdedde55b831071b675de8b3add18ba04",
+      "raw_sha256": "8529c7ac4b3334d898143b1b12819717783b837c644dfdbc3a8369ebb978fcd6"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-browser/01-before.png.gz",
+      "original": "existence40-browser/01-before.png",
+      "sha256": "f7521da26e07f2b72d08efe1c37ff51c36ee7097fdb3ad7c2983f9808f909036",
+      "raw_sha256": "a4ada56dff3431e45067d49ec09a7cd69c61a2cd10ac34d1422ce8a5a5eed484"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-browser/02-initial-two-of-three.dom.txt.gz",
+      "original": "existence40-browser/02-initial-two-of-three.dom.txt",
+      "sha256": "055724dfdeda6182201d9b86a72506aabfa404249ad374b72980e40f16c8a6e9",
+      "raw_sha256": "7e10b50f445e144ba9cea47753f633e359f8dc02b80f2f827d25c82c810236b7"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-browser/02-initial-two-of-three.png.gz",
+      "original": "existence40-browser/02-initial-two-of-three.png",
+      "sha256": "b2b5736ee4500060bdbe3498ea7fa605f7a899cf7670477ad8f0f57cabe2e2c1",
+      "raw_sha256": "948eabb835aa7e80ce662235f09524a27b59d67b64e75e32fd531fc467ceaf2c"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-browser/03-native-error-notification.dom.txt.gz",
+      "original": "existence40-browser/03-native-error-notification.dom.txt",
+      "sha256": "18d02ae603c029fc820a9d3b1a23ad5891a046620e8164255c8cdda5e04fc09c",
+      "raw_sha256": "e38f0c88c29d69e69f98cb2ad5a25a3169bd8cefc5f4d4180b722dd04c3584bf"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-browser/03-native-error-notification.png.gz",
+      "original": "existence40-browser/03-native-error-notification.png",
+      "sha256": "b2323c92f96ccc3786c3f34e620874ae920f669396aa737737898465bbae3f92",
+      "raw_sha256": "df86f52a18aeb2f23fb9b831f9ffbef610dcbc63758ee9fc43aa9d34de30a40f"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-browser/04-empty-list-zero-of-three.dom.txt.gz",
+      "original": "existence40-browser/04-empty-list-zero-of-three.dom.txt",
+      "sha256": "5cd4b993732258d203eea2861493c00b5ddc6818b3829da6fd2b75d8544ae0e4",
+      "raw_sha256": "936fd810b4cbf4be5df9baadf8dec22fdcc000024a4bdad537079784aa41b79b"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-browser/04-empty-list-zero-of-three.png.gz",
+      "original": "existence40-browser/04-empty-list-zero-of-three.png",
+      "sha256": "a997d23e536258e7b93841360dd5abc744d11b81926578ae9b00be3f048cefd0",
+      "raw_sha256": "3bd8ed65983056da40d3f55026dc1108d6301cf40cccbe044667bd1fd7ae3618"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-browser/05-restored-clone-two-of-three.dom.txt.gz",
+      "original": "existence40-browser/05-restored-clone-two-of-three.dom.txt",
+      "sha256": "10d188b62c4df87c2704f6a1ab4b190f797fc3c6ef58e6b0f4782943bbbd70ee",
+      "raw_sha256": "f092b755f0dcc85bafdee5b49f64557a9527bb12a28ab506240ea3b9fafaf703"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-browser/05-restored-clone-two-of-three.png.gz",
+      "original": "existence40-browser/05-restored-clone-two-of-three.png",
+      "sha256": "6bf43b87b37bb9ec6f92ccf5a8d0a93da668f90b2e0748196f6a9787f7ef70e3",
+      "raw_sha256": "949d8724b74efbc6714cc9016c751456092cb9ea365fe6f7a4c0715acfd963ea"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-browser/06-cold-two-of-three.dom.txt.gz",
+      "original": "existence40-browser/06-cold-two-of-three.dom.txt",
+      "sha256": "0167f9c54d9ce0f768852a67363c0ffba97208d56c08819eadf43db657b94090",
+      "raw_sha256": "d04d03d9401455288c0f29dfa9ca4c98e5d68405c8ebd4388d5bbd1f42c1ff2c"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-browser/06-cold-two-of-three.png.gz",
+      "original": "existence40-browser/06-cold-two-of-three.png",
+      "sha256": "b2b5736ee4500060bdbe3498ea7fa605f7a899cf7670477ad8f0f57cabe2e2c1",
+      "raw_sha256": "948eabb835aa7e80ce662235f09524a27b59d67b64e75e32fd531fc467ceaf2c"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-browser-verdict.json.gz",
+      "original": "existence40-browser-verdict.json",
+      "sha256": "cff7d5f8cce01f730bb7b98fd84a1dbc24bb591f54df6bf4556728c9ed025d5c",
+      "raw_sha256": "00f64077e6948073ddc9a8d04d5171d6fc7166cf5a7749feaf0525e7d2c51ab0"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-cleanup.log.gz",
+      "original": "existence40-cleanup.log",
+      "sha256": "baa7cf688f862dce9e123a5f4e99a624f3efb109ca4fe368b14c0a742e80852c",
+      "raw_sha256": "033c15f5131d719f2f909eac2929e4455d309568cf08ca592ad8ef39f4de42e3"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-cli.log.gz",
+      "original": "existence40-cli.log",
+      "sha256": "fc4d29f0c31da9ba70b8ddf186b2fdbf27caa3e670b743366d51c95c8bca8f2f",
+      "raw_sha256": "4312da0422373ba3ae16a19e34054082eed48981040fc08bc29cfccdd4be8e04"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-green.log.gz",
+      "original": "existence40-green.log",
+      "sha256": "fd3da1a90cd786bed84f33e8855c695a09a2dc446bf0eebdfc90dae56a895681",
+      "raw_sha256": "78e559200f2e054dfcd155fa675fbf15a8962ef91b7d5153c123371f3da29c17"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-observe.py.gz",
+      "original": "existence40-observe.py",
+      "sha256": "bdfb0fd3b9ed4b392d6d52fd899ac1563328f101a18ed603dd095fd6ff2f40c7",
+      "raw_sha256": "fc8f790079afb63b98d38da9f631b8193224533bb19fa7a4057ddeb2d073bd7d"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-race.log.gz",
+      "original": "existence40-race.log",
+      "sha256": "24b6043ed72286c8cb72549767be90bac1a01fb35d686924a98a8d655a3585bc",
+      "raw_sha256": "0671d43cf7112240e2c90a4675ada5bd523ba937544e07ad390b5325f819acb1"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-red.log.gz",
+      "original": "existence40-red.log",
+      "sha256": "d25d2aeb90f2371f1b7ae26685276938696a05323d70151e520425195aed09f3",
+      "raw_sha256": "17a9adf97308d98d303a683c33973e24687701f2e1f258a1c9b1533928b8b2c4"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-browser-before.json.gz",
+      "original": "existence40-runtime/existence40-browser-before.json",
+      "sha256": "453609ec2dd9b637f9abd798ff55c19f54deb6742ea318f5f6c4ce10565730c2",
+      "raw_sha256": "2082a8eb4123c27151d9dfef0ac670a3c33c30473251a1715325ed950f44b696"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-browser-cold-after-page.json.gz",
+      "original": "existence40-runtime/existence40-browser-cold-after-page.json",
+      "sha256": "2804883f720653fb088f41470119ea32f0ace0e9e2e0354e43d402bbaef6cd7b",
+      "raw_sha256": "6f634d508a70f38b45685638891e2033d9641353c336cbd156eaab65c40d133b"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-browser-cold.json.gz",
+      "original": "existence40-runtime/existence40-browser-cold.json",
+      "sha256": "6b42f681172db54b7517990d169bc512080f0c2d968184fab58f05c14f31485f",
+      "raw_sha256": "eb476064c4171eed6c6f4ac44b70b002aeadd0394e36a2df37ae585744eb8327"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-browser-empty-list.json.gz",
+      "original": "existence40-runtime/existence40-browser-empty-list.json",
+      "sha256": "399426d987f6d584409a043f8f0629c793cdf285d345951095470e014a892f8e",
+      "raw_sha256": "72675f9659855d260c0e3cc753f88b858244f1970b9385f84e37e903df6b7e43"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-browser-fault-after.json.gz",
+      "original": "existence40-runtime/existence40-browser-fault-after.json",
+      "sha256": "4a50e873ac7766664d7fa5147985d5bf554b66d93b2c6843fadc35604ad1a62d",
+      "raw_sha256": "06f64aa0fb5622c364e6b8275ec84d1ac77ab9839678a59832251705d61bd5c3"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-browser-fault.json.gz",
+      "original": "existence40-runtime/existence40-browser-fault.json",
+      "sha256": "2281df6c9e3895bbb8524f635d130e656c1c1b90d700da3d2536643960a52dbe",
+      "raw_sha256": "d3b6fcaf2e31002f965dadabbb80806b0a75fc7fc442c44c7f3fcc4b5d0bddcb"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-browser-recover.json.gz",
+      "original": "existence40-runtime/existence40-browser-recover.json",
+      "sha256": "97e25536cff4e47e67c33ccc4b48ababb47d2d180700e420c822b1ecac36ce51",
+      "raw_sha256": "898db970f7b7c3534513d2ee5816ccac401601639b6a5c6c239a8801c039e842"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-browser-restore.json.gz",
+      "original": "existence40-runtime/existence40-browser-restore.json",
+      "sha256": "079b42fc6f772e9b036cc38a4433ea08e710df83a6f956c8fa6cda70bb8a5852",
+      "raw_sha256": "12a8db3ec085a89eba4f2c402acf97edfee7cd2449741f97850cd047a8906c53"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-browser-restored-after.json.gz",
+      "original": "existence40-runtime/existence40-browser-restored-after.json",
+      "sha256": "42810f4345ca1e5925acfca8b584ec0b55f97caf979adbf1de371d2ceb8eb6db",
+      "raw_sha256": "f56a0be479adda7717177ddfb72c93e2ed19505f4b238b084f12ec6a7853e417"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-cli-evidence/events36-service-process.log.gz",
+      "original": "existence40-runtime/existence40-cli-evidence/events36-service-process.log",
+      "sha256": "449e2740e84495e9088ac8c63d3375fe62b6d76abf3558d45baf0159de6e892f",
+      "raw_sha256": "8ceda7ac3562a798dce53441da5727efb747c1a98d10ffe8e52547399b074c41"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-cli-evidence/mediaexists38-cli.json.gz",
+      "original": "existence40-runtime/existence40-cli-evidence/mediaexists38-cli.json",
+      "sha256": "e7589c3efadbb19ebf8feac578f153b6c0f6db1529cb954712cae4426d77dc7b",
+      "raw_sha256": "7c0a514d314b3114631707af47c7969a596af2edb13af2ec8cae6ca73f81d554"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-ui-evidence/events36-service-process.log.gz",
+      "original": "existence40-runtime/existence40-ui-evidence/events36-service-process.log",
+      "sha256": "04926b26fded533a39ae4b3266da98edc6c7c691488018ce510d962162aa10ff",
+      "raw_sha256": "a17da37ff7d2048e2235a7f612d0ed42e6b587da7e6ee8e1079fe3ddc19f6a81"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-ui-evidence/mediaexists38-cli.json.gz",
+      "original": "existence40-runtime/existence40-ui-evidence/mediaexists38-cli.json",
+      "sha256": "515214608d040a90a759cd9c1f92cb2751342aa1fd5cd7f803bffbff9e7f865a",
+      "raw_sha256": "62804ff0c42a8b8be87dfb279ed6fd9ec3fdaaa552250d3a04e0c1b6b1db79fc"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-runtime/existence40-ui-state.json.restart.done.gz",
+      "original": "existence40-runtime/existence40-ui-state.json.restart.done",
+      "sha256": "aa16e8d0e4549ca785accbd813f597c5d718c3161ae9ab15c940315018a95c58",
+      "raw_sha256": "b830bdb98d0336381c87f6af4959778b41b6f7fac0a8142ec35be6c14f506af1"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-ui-state.json.gz",
+      "original": "existence40-ui-state.json",
+      "sha256": "da95e34d190eab8bfa466cdbe05741f56f3cfc9098d3c95dd3b204b78ecc6718",
+      "raw_sha256": "510573a568bec0da15ea9f7745457502dc3f9a5b6361c0d3ef4541f0cd66f9a1"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/existence40-ui.log.gz",
+      "original": "existence40-ui.log",
+      "sha256": "bb5ac8353be8b7b4761cb903aa5c13b30c3b60621b4645dbefbaea70a7553aa6",
+      "raw_sha256": "9ad6ddd3f5bc7de646458e24bfb1a95eb860c52aba1b23b80ca1d8e142bda184"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/platform40-result.json.gz",
+      "original": "platform40-result.json",
+      "sha256": "b55fecb9f2c887ab82d3fdec8dc11156b1337763b8d1d3597c51b6c9469f05e3",
+      "raw_sha256": "5e60b16f61029928f44e0e74591b573159a9ceef30709adb68b20eaee85ce2e7"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/process-platform40-20261027-linux.test.build.log.gz",
+      "original": "process-platform40-20261027-linux.test.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/process-platform40-20261027-linux.test.inputs.json.gz",
+      "original": "process-platform40-20261027-linux.test.inputs.json",
+      "sha256": "8007a8b31580fcc1962fbdc573b6a4701470a493e56ef18e68a4681c1f589fa2",
+      "raw_sha256": "0da0b15622de8eaae5b7ecd39e84863aa41d11a0274497dd3df333af993c011a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/run-existence40.py.gz",
+      "original": "run-existence40.py",
+      "sha256": "d63287e04cd8e13b455604c6262b443bbb0f78d7f7f6ede8eda479566ecef6b6",
+      "raw_sha256": "2bd98ebbe2aabf1b2ace87ca9a55e41924930013a7c1782f9eb0793f04f29710"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/server-platform40-20261027-linux.build.log.gz",
+      "original": "server-platform40-20261027-linux.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/server-platform40-20261027-linux.inputs.json.gz",
+      "original": "server-platform40-20261027-linux.inputs.json",
+      "sha256": "a7e494cca51ff2c305204870b16fdff07494be08c66e63f971fa614d054f7d70",
+      "raw_sha256": "e25b0201054aade2236abc0bdece49b7c804b2ebbb936a343accf2fb1a9f0fde"
+    }
+  ]
+}

@@ -5,6 +5,7 @@ import { parse, compileScript } from '@vue/compiler-sfc';
 import ts from 'typescript';
 import * as vue from 'vue';
 import * as cloneHelpers from '../src/features/plugin-clone.ts';
+import * as forms from '../src/features/plugin-forms.ts';
 
 const colors = JSON.parse(
   readFileSync(new URL('../src/features/plugin-icon-colors.json', import.meta.url)),
@@ -23,6 +24,7 @@ function mount(t, icon) {
   new Function('require', 'exports', compiled)((name) => {
     if (name === 'vue') return vue;
     if (name === '../features/plugin-clone') return cloneHelpers;
+    if (name === '../features/plugin-forms') return forms;
     if (name.endsWith('plugin-icon-colors.json')) return colors;
     if (name.startsWith('vuetify/')) return new Proxy({}, { get: (_, key) => ({ name: key }) });
     throw new Error('Unexpected dependency ' + name);
@@ -114,4 +116,52 @@ test('a failed icon switches both image and cover color to the original fallback
   await vue.nextTick();
   assert.equal(app.image().props.src, '/plugin_icon/' + known[1]);
   assert.ok(app.cover().props.style.background.endsWith(colors[known[1]]));
+});
+
+test('actual card shows only supplied installation statistics and source label chips', (t) => {
+  const app = mount(t, 'plugin.png');
+  const counter = () => app.nodes().find(node => node.props?.class === 'plugin-download-count');
+  assert.equal(counter(), undefined);
+  app.props.count = 0;
+  assert.equal(counter(), undefined);
+  app.props.count = 12345;
+  assert.ok(counter());
+  assert.ok(counter().children.some(node => node.children?.includes('12.3k')));
+  app.props.plugin.plugin_label = ' tools, media , ';
+  const chips = app.nodes().filter(node => node.type?.name === 'VChip');
+  assert.deepEqual(chips.map(node => node.children.default()[0].children), ['tools', 'media']);
+});
+
+test('actual author links allow only HTTP(S) without credentials and retain invalid authors as text', (t) => {
+  const app = mount(t, 'plugin.png');
+  const author = () => app.nodes().find(node => node.props?.class === 'plugin-author');
+  const link = () => author().children.find(node => node.type === 'a');
+  for (const url of ['https://synthetic.invalid/author', 'http://synthetic.invalid/author']) {
+    app.props.plugin.author_url = url;
+    assert.equal(link().props.href, url);
+    assert.equal(link().props.target, '_blank');
+    assert.equal(link().props.rel, 'noopener noreferrer');
+    assert.equal(link().children, 'Fixture');
+  }
+  for (const url of [
+    'javascript:alert(1)',
+    'data:text/html,unsafe',
+    '//synthetic.invalid/author',
+    '/author',
+    'https://user:secret@synthetic.invalid/author',
+    'http://user@synthetic.invalid/author',
+    'https://:secret@synthetic.invalid/author',
+    'https://',
+    '',
+    undefined,
+  ]) {
+    app.props.plugin.author_url = url;
+    assert.equal(link(), undefined, String(url));
+    assert.equal(author().children.find(node => node.type === 'span').children, 'Fixture');
+  }
+  app.props.plugin.author_url = 'https://synthetic.invalid/author';
+  assert.equal(link().props.href, app.props.plugin.author_url);
+  app.props.sortable = true;
+  assert.equal(link(), undefined);
+  assert.equal(author().children.find(node => node.type === 'span').children, 'Fixture');
 });

@@ -96,7 +96,7 @@ func validateQualitySidecarPlan(plan ImportPlan, meta importMetadata, p *quality
 			return bad("QUALITY_SIDECAR_CHANGED", "洗版字幕计划缺少原始封存证明")
 		}
 		for i := range actual {
-			if frozen[i].Sidecar != actual[i] {
+			if !reflect.DeepEqual(frozen[i].Sidecar, actual[i]) {
 				return bad("QUALITY_SIDECAR_CHANGED", "洗版字幕来源或目标已变化")
 			}
 		}
@@ -152,7 +152,7 @@ func (a *App) publishQualitySidecar(ctx context.Context, plan ImportPlan, file P
 	if p.Version == 3 && p.Overwrite != nil {
 		return a.publishDirectoryOverwrite(ctx, key, sidecar.Source, sidecar.Target, plan.RootID, file.Method, sidecar.Snapshot, *p.Overwrite, check)
 	}
-	if index < 0 || index >= len(p.Sidecars[file.ID]) || p.Sidecars[file.ID][index].Sidecar != sidecar {
+	if index < 0 || index >= len(p.Sidecars[file.ID]) || !reflect.DeepEqual(p.Sidecars[file.ID][index].Sidecar, sidecar) {
 		return importReceipt{}, bad("QUALITY_SIDECAR_CHANGED", "洗版字幕封存身份不符")
 	}
 	frozen := p.Sidecars[file.ID][index]

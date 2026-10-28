@@ -77,7 +77,7 @@ func (a *App) initOriginalPluginCommands(requested ...string) {
 			if errors.Is(err, errOriginalCommandRegisterProviderUnavailable) {
 				a.log("WARN", "plugins", "command_registration_unavailable", "命令菜单元数据已准备，核心尚无菜单注册提供方", "", "")
 			} else {
-				a.log("ERROR", "plugins", "command_registration_failed", "命令菜单事件数据无效，注册未完成", "", "")
+				a.log("ERROR", "plugins", "command_registration_failed", "命令菜单处理或提供方执行失败", "", "")
 			}
 		}
 	}()

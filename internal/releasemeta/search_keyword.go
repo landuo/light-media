@@ -19,6 +19,22 @@ type SearchKeyword struct {
 	Season, Episode              *big.Int
 }
 
+// Ordinary source search appends cn2an's low-form season label to TV titles.
+// Reuse the existing numeric renderer rather than maintaining another map.
+func SearchSeasonChinese(number *big.Int) (string, error) {
+	if number == nil {
+		return "", errors.New("ValueError")
+	}
+	text, err := legacyArabicChinese(new(big.Int).Abs(number).String())
+	if err != nil {
+		return "", err
+	}
+	if number.Sign() < 0 {
+		text = "负" + text
+	}
+	return text, nil
+}
+
 func SearchInputKeyword(content string) (SearchKeyword, error) {
 	out := SearchKeyword{Present: content != ""}
 	if content == "" {

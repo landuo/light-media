@@ -1,0 +1,132 @@
+{
+  "accepted_increment": true,
+  "complete": false,
+  "indices": [
+    43
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "mapping": [
+    {
+      "source": [
+        "app/chain/transfer.py:2685-2731",
+        "app/chain/transfer.py:3073-3370,3465-3483",
+        "app/utils/string.py:199-228"
+      ],
+      "behavior": "Directory filtering uses provider FileItem name/size/extension; full main index resolves unique stems, otherwise optional same-media metadata, deduplicates main-led tasks, appends unassociated extras last. Deep-copied metadata is retained for each ordinary file task. Selected single-file sibling behavior remains separate.",
+      "target": [
+        "internal/app/plugin_original_transfer_directory_plan.go",
+        "internal/app/plugin_original_transfer_directory.go",
+        "internal/app/plugin_original_transfer_collection.go:originalImportFileClass",
+        "internal/app/organize_manual.go",
+        "internal/app/physical_directories.go",
+        "internal/app/import_plan.go",
+        "internal/app/plugin_original_transfer_recognition.go"
+      ],
+      "evidence": [
+        "testdata/standard-module-host/transfer-directory-plan-source-oracle.json:10 pinned executable filter/planner cases",
+        "TestOriginalTransferDirectoryPlannerFixedSource",
+        "TestOriginalTransferDirectoryExtrasActualSDK",
+        "TestPluginServicesProductionCLI with PLUGIN_PROCESS_DIRECTORY_PLAN=true",
+        "IAB78 actual UI directory preview4/failure4/restored4/cold8 histories"
+      ]
+    }
+  ],
+  "results": {
+    "source_cases": 10,
+    "related_sdk_seconds": 14.26,
+    "related_race_seconds": 63.841,
+    "linux_cli_seconds": 1.72,
+    "linux_browser_gate_seconds": 322.27,
+    "binaries": [
+      {
+        "name": "server-platform41-20261027-linux",
+        "sha256": "ce12853d669b6f04d9418f9de81482137725548088501f5756a3d85f8b6b6ef5",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform41-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3723,
+        "changed": [],
+        "elapsed_seconds": 3.56
+      },
+      {
+        "name": "process-platform41-20261027-linux.test",
+        "sha256": "098a5f7d4b6b13ac8b4d2555af1183976b0a7fe013d39e25aece4f2bb0363bd8",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform41-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4193,
+        "changed": [],
+        "elapsed_seconds": 7.6
+      }
+    ],
+    "stable_compilation_inputs": [
+      3723,
+      4193
+    ],
+    "browser": {
+      "passed": true,
+      "preview_and_failure_publish_count": 0,
+      "actual_hardlink_count": 4,
+      "stable_failure_to_success_histories": 4,
+      "cold_histories": 8,
+      "pids_before": [
+        685435,
+        685441
+      ],
+      "pids_after": [
+        691108,
+        691115
+      ],
+      "cold_replay_count": 0,
+      "source_and_unselected_preserved": true
+    }
+  },
+  "failures_fixed": [
+    {
+      "evidence": "directory41-preview-duplicate-red.log",
+      "cause": "The ordinary preview still expanded a main sidecar after directory planner had scheduled the same subtitle independently.",
+      "fix": "Use directory-planned marker at both preview and execution sidecar collection."
+    },
+    {
+      "evidence": "directory41-orphan-tv-red.log",
+      "cause": "Actual Linux TV orphan audio fell into a video-only numbering parser when a manual identity was supplied.",
+      "fix": "Retain complete parsed MetaInfoPath metadata for every directory task, including unassociated extras."
+    }
+  ],
+  "adaptations": [
+    "Existing Go file authority/snapshot/publication/receipt and independent job/history are reused; plugin metadata cannot authorize unrelated paths.",
+    "One directory request creates existing per-file jobs under one ordinary transfer batch. The native endpoint preserves existing asynchronous job execution while the frontend waits and reports each result.",
+    "Runtime is all Go; Python only executes pinned ASTs to produce test expectations. Source metadata inputs are controlled in planner replays; actual SDK/main tests run the target path parser.",
+    "UI and backend use the existing frontend bundle from main38r5, unchanged in this increment.",
+    "No workflow/AI/official authentication dependencies added."
+  ],
+  "limits": [
+    "Directory-unit/bluray publication is not claimed by this increment.",
+    "Full ordinary module/event host applicability audit and media_files remain open; count remains42/46.",
+    "This increment verifies directory planning and ordinary existing host behavior, not all manual episode-format/custom-word permutations or external metadata services."
+  ],
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/manifest.json",
+  "cleanup": {
+    "browser78_closed": true,
+    "tunnel34458_stopped": true,
+    "source_and_clone_uninstalled_api404": true,
+    "real_test_process_completed": true
+  },
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "commit": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "uncommitted": true,
+    "pushed": false,
+    "deployed": false
+  }
+}

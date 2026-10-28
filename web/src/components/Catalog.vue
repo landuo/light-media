@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import CatalogRelated from './CatalogRelated.vue';
 import { VSelect } from 'vuetify/components/VSelect';
 import { VInfiniteScroll } from 'vuetify/components/VInfiniteScroll';
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { api, action, go, image, date, ui, label, errorText } from '../api';
 import MediaCards from './MediaCards.vue';
 import { startSearch, useExplicitSearch } from '../features/search-session';
+import { mediaDetailSeasons } from '../features/subscriptions';
 let loadSeq = 0,
   seasonSeq = 0;
 const creditsKind = ref('all'),
@@ -33,6 +35,7 @@ const [routePath, routeQuery] = props.route.split('?'),
   loading = ref(!['search', 'discover'].includes(parts[0]!)),
   error = ref('');
 const visibleResults = computed(() => results.value);
+const detailSeasons = computed(() => mediaDetailSeasons(detail.value));
 const filteredCredits = computed(() =>
   credits.value
     .filter((m) => creditsKind.value === 'all' || m.media_type === creditsKind.value)
@@ -86,8 +89,7 @@ async function load() {
   try {
     if (parts[0] === 'detail') {
       detail.value = await api('/catalog/detail?kind=' + kind.value + '&id=' + parts[2]);
-      season.value =
-        detail.value.seasons?.find((s: any) => s.season_number > 0)?.season_number || 1;
+      season.value = detailSeasons.value.find((s: any) => s.season_number > 0)?.season_number || 1;
       if (kind.value === 'tv') await loadSeason();
     } else if (parts[0] === 'person') {
       [person.value, credits.value] = await Promise.all([
@@ -344,7 +346,7 @@ onUnmounted(() => {
           density="compact"
           aria-label="季度"
           :items="
-            detail.seasons.map((s: any) => ({
+            detailSeasons.map((s: any) => ({
               title: `${s.name} · ${s.episode_count} 集`,
               value: s.season_number,
             }))
@@ -358,8 +360,8 @@ onUnmounted(() => {
         <summary>本季剧集 · 可选集数搜索资源</summary>
         <div class="episode-grid">
           <label
-            v-for="e in seasonData?.episodes || []"
-            :key="e.id"
+            v-for="(e, index) in seasonData?.episodes || []"
+            :key="`${e.season_number}:${e.episode_number}:${index}`"
             :class="['episode-option', { selected: selected.includes(e.episode_number) }]"
             ><input type="checkbox" :value="e.episode_number" v-model="selected" /><span
               ><strong>E{{ String(e.episode_number).padStart(2, '0') }} · {{ e.name }}</strong
@@ -369,34 +371,9 @@ onUnmounted(() => {
         </div>
       </details>
     </section>
-    <section v-if="detail.cast?.length" class="section">
-      <div class="section-heading">
-        <h2>演员阵容</h2>
-        <span class="hint">点击查看人物资料与参演作品</span>
-      </div>
-      <div class="cast-row">
-        <button
-          v-for="p in detail.cast.slice(0, 20)"
-          :key="p.id"
-          class="cast-card"
-          @click="go('person/' + p.id)"
-        >
-          <img
-            v-if="image(p.profile_path, 'w185')"
-            :src="image(p.profile_path, 'w185')"
-            :alt="p.name"
-            loading="lazy"
-          />
-          <div v-else class="cast-placeholder">人</div>
-          <strong>{{ p.name }}</strong
-          ><small>{{ p.character }}</small>
-        </button>
-      </div>
-    </section>
-    <section v-if="detail.recommendations?.length" class="section">
-      <div class="section-heading"><h2>你可能也喜欢</h2></div>
-      <MediaCards :items="detail.recommendations" /></section
-  ></template>
+    <CatalogRelated :key="route + 'credits'" :media="detail" part="credits" />
+    <CatalogRelated :key="route + 'recommendations'" :media="detail" part="recommendations"
+  /></template>
   <template v-else-if="person"
     ><section class="panel person-header">
       <img v-if="image(person.profile_path)" :src="image(person.profile_path)" :alt="person.name" />

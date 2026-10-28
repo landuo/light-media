@@ -1,0 +1,45 @@
+{
+  "kind": "fixed source inspection; runtime oracle STREAM=12 in transfer-bluray-source-oracle.json",
+  "sources": [
+    {
+      "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+      "path": "app/db/transferhistory_oper.py",
+      "sha256": "da1aa87d7d904a5ba9ef08549797674aab2a81702e9ce017f414fd01114e23c7",
+      "sections": [
+        {
+          "start": 227,
+          "end": 261,
+          "text": "    def add_success(self, fileitem: FileItem, mode: str, meta: MetaBase,\n                    mediainfo: MediaInfo, transferinfo: TransferInfo,\n                    downloader: Optional[str] = None, download_hash: Optional[str] = None):\n        \"\"\"\n        新增转移成功历史记录\n        \"\"\"\n        return self.add_force(\n            src=fileitem.path,\n            src_storage=fileitem.storage,\n            src_fileitem=fileitem.model_dump(),\n            dest=transferinfo.target_item.path if transferinfo.target_item else None,\n            dest_storage=transferinfo.target_item.storage if transferinfo.target_item else None,\n            dest_fileitem=transferinfo.target_item.model_dump() if transferinfo.target_item else None,\n            mode=mode,\n            type=mediainfo.type.value,\n            category=mediainfo.category,\n            title=mediainfo.title,\n            year=mediainfo.year,\n            tmdbid=mediainfo.tmdb_id,\n            imdbid=mediainfo.imdb_id,\n            tvdbid=mediainfo.tvdb_id,\n            doubanid=mediainfo.douban_id,\n            bangumiid=mediainfo.bangumi_id,\n            anilistid=mediainfo.anilist_id,\n            media_source=mediainfo.source,\n            media_id=mediainfo.to_dict().get(\"media_id\"),\n            seasons=meta.season,\n            episodes=meta.episode,\n            image=mediainfo.get_poster_image(),\n            downloader=downloader,\n            download_hash=download_hash,\n            status=1,\n            files=transferinfo.file_list\n        )\n"
+        },
+        {
+          "start": 262,
+          "end": 302,
+          "text": "    def add_fail(self, fileitem: FileItem, mode: str, meta: MetaBase, mediainfo: MediaInfo = None,\n                 transferinfo: TransferInfo = None, downloader: Optional[str] = None, download_hash: Optional[str] = None):\n        \"\"\"\n        新增转移失败历史记录\n        \"\"\"\n        if mediainfo and transferinfo:\n            his = self.add_force(\n                src=fileitem.path,\n                src_storage=fileitem.storage,\n                src_fileitem=fileitem.model_dump(),\n                dest=transferinfo.target_item.path if transferinfo.target_item else None,\n                dest_storage=transferinfo.target_item.storage if transferinfo.target_item else None,\n                dest_fileitem=transferinfo.target_item.model_dump() if transferinfo.target_item else None,\n                mode=mode,\n                type=mediainfo.type.value,\n                category=mediainfo.category,\n                title=mediainfo.title or meta.name,\n                year=mediainfo.year or meta.year,\n                tmdbid=mediainfo.tmdb_id,\n                imdbid=mediainfo.imdb_id,\n                tvdbid=mediainfo.tvdb_id,\n                doubanid=mediainfo.douban_id,\n                bangumiid=mediainfo.bangumi_id,\n                anilistid=mediainfo.anilist_id,\n                media_source=mediainfo.source,\n                media_id=mediainfo.to_dict().get(\"media_id\"),\n                seasons=meta.season,\n                episodes=meta.episode,\n                image=mediainfo.get_poster_image(),\n                downloader=downloader,\n                download_hash=download_hash,\n                episode_group=mediainfo.episode_group,\n                status=0,\n                errmsg=transferinfo.message or '未知错误',\n                files=transferinfo.file_list\n            )\n        else:\n            his = self.add_force(\n                title=meta.name,\n                year=meta.year,\n                tmdbid=meta.tmdbid,"
+        }
+      ]
+    },
+    {
+      "commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+      "path": "src/views/reorganize/TransferHistoryView.vue",
+      "sha256": "54de5411360de0843c8d3a9c7d9203375f3f3ed40127e848c969aefc09900b0a",
+      "sections": [
+        {
+          "start": 96,
+          "end": 100,
+          "text": "}\n\nfunction sortBySourceSize(a: TransferHistory, b: TransferHistory) {\n  return (a.src_fileitem?.size ?? 0) - (b.src_fileitem?.size ?? 0)\n}"
+        },
+        {
+          "start": 1049,
+          "end": 1052,
+          "text": "      </template>\n      <template #item.size=\"{ item }\">\n        <small>{{ formatFileSize(item?.src_fileitem?.size || 0) }}</small>\n      </template>"
+        },
+        {
+          "start": 1136,
+          "end": 1139,
+          "text": "      </template>\n      <template #item.size=\"{ item }\">\n        <small>{{ formatFileSize(item?.src_fileitem?.size || 0) }}</small>\n      </template>"
+        }
+      ]
+    }
+  ],
+  "behavior": "History persists task.fileitem; frontend uses src_fileitem.size or 0. Native directory provider mutates only STREAM size; native authority independently freezes all members."
+}

@@ -11,21 +11,31 @@ import (
 func TestOriginalMutableEventDispatchSnapshotAndFailure(t *testing.T) {
 	event := &plugins.MutableEvent{Type: "generic", Data: json.RawMessage(`{}`)}
 	enabled := true
+	lateEnabled := false
 	calls := 0
 	failures := 0
 	handlers := []originalMutableEventHandler{
 		{Invoke: func(context.Context, *plugins.MutableEvent) error {
 			calls++
 			enabled = false
+			lateEnabled = true
 			event.Data = json.RawMessage(`[null,9007199254740993123456789]`)
 			return errors.New("owned failure")
 		}},
-		{Enabled: func() bool { return enabled }, Invoke: func(_ context.Context, got *plugins.MutableEvent) error {
+		{Enabled: func() bool { return enabled }, Invoke: func(context.Context, *plugins.MutableEvent) error {
+			t.Fatal("handler disabled by an earlier callback still ran")
+			return nil
+		}},
+		{Invoke: func(_ context.Context, got *plugins.MutableEvent) error {
 			calls++
 			if string(got.Data) != `[null,9007199254740993123456789]` {
 				t.Fatal("prior mutation lost")
 			}
 			got.Data = json.RawMessage(`null`)
+			return nil
+		}},
+		{Enabled: func() bool { return lateEnabled }, Invoke: func(context.Context, *plugins.MutableEvent) error {
+			t.Fatal("handler excluded from the enabled snapshot ran")
 			return nil
 		}},
 		{Enabled: func() bool { return false }, Invoke: func(context.Context, *plugins.MutableEvent) error { t.Fatal("disabled handler called"); return nil }},

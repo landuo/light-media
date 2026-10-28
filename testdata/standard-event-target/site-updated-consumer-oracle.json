@@ -1,0 +1,826 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "python": "3.14.4 (main, Apr  7 2026, 13:13:20) [Clang 21.0.0 (clang-2100.0.123.102)]",
+  "kind": "actual fixed sync dispatcher, SiteChain refresh/message and event consumer; native IO/DB/message deliveries are counted boundaries",
+  "source_sha256": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/site.py": "06358a8fd070d46ab254015a2f8c7a34f07c35dd240bd2b3fef38cbf219252fa",
+    "app/schemas/site.py": "aa759e3f1348863b109acdecb765c87a14822a14fbf63bab3fc93584d51bfaa6",
+    "app/utils/string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+    "app/utils/object.py": "0fd0161be3084593a9693244e9ea734c5d949cc23a6e8f34349177a5e220dc1c",
+    "app/modules/indexer/__init__.py": "b1ec0525faf43003d6e65ef8851d0c1198ca77fc15c417b156134f9c08f1d7cf"
+  },
+  "domain_cases": [
+    {
+      "input": "",
+      "domain": "",
+      "host": "",
+      "host_error": null
+    },
+    {
+      "input": "example.test",
+      "domain": "example.test",
+      "host": "example",
+      "host_error": null
+    },
+    {
+      "input": "https://a.example.test:8443/path",
+      "domain": "example.test:8443",
+      "host": "example",
+      "host_error": null
+    },
+    {
+      "input": "http://127.0.0.1:43100",
+      "domain": "127.0.0.1:43100",
+      "host": "0",
+      "host_error": null
+    },
+    {
+      "input": "http://localhost:43100",
+      "domain": "localhost:43100",
+      "host": null,
+      "host_error": "IndexError"
+    },
+    {
+      "input": "https://u2.dmhy.org/a",
+      "domain": "u2.dmhy.org",
+      "host": "dmhy",
+      "host_error": null
+    },
+    {
+      "input": "https://a.b.example.test/path",
+      "domain": "a.b.example.test",
+      "host": "example",
+      "host_error": null
+    }
+  ],
+  "cases": [
+    {
+      "name": "none",
+      "plugin_result": null,
+      "native_calls": 1,
+      "trace": [
+        "plugin",
+        "update",
+        "site.refreshed"
+      ],
+      "notices": [],
+      "returned": {
+        "domain": null,
+        "username": "native",
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 80,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": null,
+        "updated_time": null
+      },
+      "exception": null
+    },
+    {
+      "name": "false",
+      "plugin_result": false,
+      "native_calls": 0,
+      "trace": [
+        "plugin"
+      ],
+      "notices": [],
+      "returned": false,
+      "exception": null
+    },
+    {
+      "name": "zero",
+      "plugin_result": 0,
+      "native_calls": 0,
+      "trace": [
+        "plugin"
+      ],
+      "notices": [],
+      "returned": 0,
+      "exception": null
+    },
+    {
+      "name": "empty_dict",
+      "plugin_result": {},
+      "native_calls": 0,
+      "trace": [
+        "plugin"
+      ],
+      "notices": [],
+      "returned": {},
+      "exception": null
+    },
+    {
+      "name": "empty_list",
+      "plugin_result": [],
+      "native_calls": 1,
+      "trace": [
+        "plugin"
+      ],
+      "notices": [],
+      "returned": [],
+      "exception": null
+    },
+    {
+      "name": "nonempty_list",
+      "plugin_result": [
+        1
+      ],
+      "native_calls": 1,
+      "trace": [
+        "plugin"
+      ],
+      "notices": [],
+      "returned": null,
+      "exception": "AttributeError"
+    },
+    {
+      "name": "bad_scalar",
+      "plugin_result": "owned",
+      "native_calls": 0,
+      "trace": [
+        "plugin"
+      ],
+      "notices": [],
+      "returned": null,
+      "exception": "AttributeError"
+    },
+    {
+      "name": "dto",
+      "plugin_result": {
+        "domain": null,
+        "username": "plugin",
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 40,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": null,
+        "updated_time": null
+      },
+      "native_calls": 0,
+      "trace": [
+        "plugin",
+        "update",
+        "site.refreshed"
+      ],
+      "notices": [],
+      "returned": {
+        "domain": null,
+        "username": "plugin",
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 40,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": null,
+        "updated_time": null
+      },
+      "exception": null
+    },
+    {
+      "name": "dto_error",
+      "plugin_result": {
+        "domain": null,
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": "owned parser error",
+        "updated_day": null,
+        "updated_time": null
+      },
+      "native_calls": 0,
+      "trace": [
+        "plugin",
+        "update",
+        "site.refreshed"
+      ],
+      "notices": [],
+      "returned": {
+        "domain": null,
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": "owned parser error",
+        "updated_day": null,
+        "updated_time": null
+      },
+      "exception": null
+    },
+    {
+      "name": "summary_ratio",
+      "plugin_result": {
+        "domain": null,
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.5,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 2,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": null,
+        "updated_time": null
+      },
+      "native_calls": 0,
+      "trace": [
+        "plugin",
+        "update",
+        "site.refreshed",
+        "notice",
+        "notice"
+      ],
+      "notices": [
+        {
+          "mtype": "站点",
+          "title": "站点 Owned site 收到 2 条新消息，请登陆查看",
+          "link": "http://127.0.0.1:43100"
+        },
+        {
+          "mtype": "站点",
+          "title": "【站点分享率低预警】",
+          "text": "站点 Owned site 分享率 0.5，请注意！"
+        }
+      ],
+      "returned": {
+        "domain": null,
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.5,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 2,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": null,
+        "updated_time": null
+      },
+      "exception": null
+    },
+    {
+      "name": "vip_ratio",
+      "plugin_result": {
+        "domain": null,
+        "username": null,
+        "userid": null,
+        "user_level": "VIP",
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.5,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": null,
+        "updated_time": null
+      },
+      "native_calls": 0,
+      "trace": [
+        "plugin",
+        "update",
+        "site.refreshed"
+      ],
+      "notices": [],
+      "returned": {
+        "domain": null,
+        "username": null,
+        "userid": null,
+        "user_level": "VIP",
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.5,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": null,
+        "updated_time": null
+      },
+      "exception": null
+    },
+    {
+      "name": "nullable_dto",
+      "plugin_result": {
+        "domain": null,
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": null,
+        "upload": null,
+        "download": null,
+        "ratio": null,
+        "seeding": null,
+        "leeching": null,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": null,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": null,
+        "updated_time": null
+      },
+      "native_calls": 0,
+      "trace": [
+        "plugin",
+        "update",
+        "site.refreshed"
+      ],
+      "notices": [],
+      "returned": {
+        "domain": null,
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": null,
+        "upload": null,
+        "download": null,
+        "ratio": null,
+        "seeding": null,
+        "leeching": null,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": null,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": null,
+        "updated_time": null
+      },
+      "exception": null
+    },
+    {
+      "name": "arbitrary_seeding_rows",
+      "plugin_result": {
+        "domain": null,
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [
+          null,
+          {
+            "owned": 1
+          },
+          [
+            "x",
+            2,
+            3
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": null,
+        "updated_time": null
+      },
+      "native_calls": 0,
+      "trace": [
+        "plugin",
+        "update",
+        "site.refreshed"
+      ],
+      "notices": [],
+      "returned": {
+        "domain": null,
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [
+          null,
+          {
+            "owned": 1
+          },
+          [
+            "x",
+            2,
+            3
+          ]
+        ],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": null,
+        "updated_time": null
+      },
+      "exception": null
+    },
+    {
+      "name": "message_then_bad_row",
+      "plugin_result": {
+        "domain": null,
+        "username": null,
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 0,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 2,
+        "message_unread_contents": [
+          [
+            "head",
+            "date",
+            "body",
+            "source"
+          ],
+          null
+        ],
+        "err_msg": null,
+        "updated_day": null,
+        "updated_time": null
+      },
+      "native_calls": 0,
+      "trace": [
+        "plugin",
+        "update",
+        "site.refreshed",
+        "notice"
+      ],
+      "notices": [
+        {
+          "source": "source",
+          "mtype": "站点",
+          "title": "【站点 Owned site 消息】",
+          "text": "时间：date\n标题：head\n内容：\nbody",
+          "link": "http://127.0.0.1:43100"
+        }
+      ],
+      "returned": null,
+      "exception": "TypeError"
+    },
+    {
+      "name": "throw",
+      "plugin_result": null,
+      "native_calls": 1,
+      "trace": [
+        "plugin",
+        "error-message",
+        "error-event",
+        "update",
+        "site.refreshed"
+      ],
+      "notices": [],
+      "returned": {
+        "domain": null,
+        "username": "native",
+        "userid": null,
+        "user_level": null,
+        "join_at": null,
+        "bonus": 0.0,
+        "upload": 80,
+        "download": 0,
+        "ratio": 0.0,
+        "seeding": 0,
+        "leeching": 0,
+        "seeding_size": 0,
+        "leeching_size": 0,
+        "seeding_info": [],
+        "message_unread": 0,
+        "message_unread_contents": [],
+        "err_msg": null,
+        "updated_day": null,
+        "updated_time": null
+      },
+      "exception": null
+    }
+  ],
+  "consumer_cases": [
+    {
+      "data": {},
+      "refreshed": [],
+      "exception": null
+    },
+    {
+      "data": {
+        "domain": ""
+      },
+      "refreshed": [],
+      "exception": null
+    },
+    {
+      "data": {
+        "domain": "missing.test"
+      },
+      "refreshed": [],
+      "exception": null
+    },
+    {
+      "data": {
+        "domain": "http://127.0.0.1:43100"
+      },
+      "refreshed": [
+        1
+      ],
+      "exception": null
+    },
+    {
+      "data": {
+        "domain": "127.0.0.1:43100"
+      },
+      "refreshed": [
+        1
+      ],
+      "exception": null
+    },
+    {
+      "data": {
+        "domain": 123
+      },
+      "refreshed": [],
+      "exception": null
+    }
+  ],
+  "native_input": {
+    "domain": null,
+    "username": "native",
+    "userid": null,
+    "user_level": null,
+    "join_at": null,
+    "bonus": 0.0,
+    "upload": 80,
+    "download": 0,
+    "ratio": 0.0,
+    "seeding": 0,
+    "leeching": 0,
+    "seeding_size": 0,
+    "leeching_size": 0,
+    "seeding_info": [],
+    "message_unread": 0,
+    "message_unread_contents": [],
+    "err_msg": null,
+    "updated_day": null,
+    "updated_time": null
+  },
+  "clear_cases": [
+    {
+      "domain": "https://a.foo.test",
+      "fail": null,
+      "deleted": [
+        "site.foo.token",
+        "site.foobar.token"
+      ],
+      "exception": null
+    },
+    {
+      "domain": "https://a.foo.test",
+      "fail": "site.foobar.token",
+      "deleted": [
+        "site.foo.token"
+      ],
+      "exception": "RuntimeError"
+    },
+    {
+      "domain": "http://127.0.0.1:43100",
+      "fail": null,
+      "deleted": [
+        "site.0.token"
+      ],
+      "exception": null
+    },
+    {
+      "domain": "http://localhost:43100",
+      "fail": null,
+      "deleted": [],
+      "exception": "IndexError"
+    },
+    {
+      "domain": "",
+      "fail": null,
+      "deleted": [],
+      "exception": null
+    }
+  ],
+  "favicon_cases": [
+    {
+      "name": "first_head_icon",
+      "page": "<html><head><link rel=\"shortcut icon\" href=\"/owned.ico\"><link rel=\"icon\" href=\"/ignored.ico\"></head><body>x</body></html>",
+      "home_status": 200,
+      "icon_status": 200,
+      "requests": [
+        {
+          "url": "http://127.0.0.1:43100",
+          "timeout": 30
+        },
+        {
+          "url": "http://127.0.0.1:43100/owned.ico",
+          "timeout": 15
+        }
+      ],
+      "chosen": "http://127.0.0.1:43100/owned.ico",
+      "data_base64": "b3duZWQtaWNvbg=="
+    },
+    {
+      "name": "missing_link",
+      "page": "<html><head></head><body>x</body></html>",
+      "home_status": 200,
+      "icon_status": 200,
+      "requests": [
+        {
+          "url": "http://127.0.0.1:43100",
+          "timeout": 30
+        },
+        {
+          "url": "http://127.0.0.1:43100/favicon.ico",
+          "timeout": 15
+        }
+      ],
+      "chosen": "http://127.0.0.1:43100/favicon.ico",
+      "data_base64": "b3duZWQtaWNvbg=="
+    },
+    {
+      "name": "case_sensitive_rel",
+      "page": "<html><head><link rel=\"ICON\" href=\"/ignored.ico\"></head><body>x</body></html>",
+      "home_status": 200,
+      "icon_status": 200,
+      "requests": [
+        {
+          "url": "http://127.0.0.1:43100",
+          "timeout": 30
+        },
+        {
+          "url": "http://127.0.0.1:43100/favicon.ico",
+          "timeout": 15
+        }
+      ],
+      "chosen": "http://127.0.0.1:43100/favicon.ico",
+      "data_base64": "b3duZWQtaWNvbg=="
+    },
+    {
+      "name": "body_ignored",
+      "page": "<html><head></head><body><link rel=\"icon\" href=\"/ignored.ico\"></body></html>",
+      "home_status": 200,
+      "icon_status": 200,
+      "requests": [
+        {
+          "url": "http://127.0.0.1:43100",
+          "timeout": 30
+        },
+        {
+          "url": "http://127.0.0.1:43100/favicon.ico",
+          "timeout": 15
+        }
+      ],
+      "chosen": "http://127.0.0.1:43100/favicon.ico",
+      "data_base64": "b3duZWQtaWNvbg=="
+    },
+    {
+      "name": "home_failure",
+      "page": "<html></html>",
+      "home_status": 503,
+      "icon_status": 200,
+      "requests": [
+        {
+          "url": "http://127.0.0.1:43100",
+          "timeout": 30
+        }
+      ],
+      "chosen": "http://127.0.0.1:43100/favicon.ico",
+      "data_base64": null
+    },
+    {
+      "name": "icon_failure",
+      "page": "<html><head><link rel=\"icon\" href=\"/owned.ico\"></head><body>x</body></html>",
+      "home_status": 200,
+      "icon_status": 404,
+      "requests": [
+        {
+          "url": "http://127.0.0.1:43100",
+          "timeout": 30
+        },
+        {
+          "url": "http://127.0.0.1:43100/owned.ico",
+          "timeout": 15
+        }
+      ],
+      "chosen": "http://127.0.0.1:43100/owned.ico",
+      "data_base64": null
+    },
+    {
+      "name": "foreign_icon",
+      "page": "<html><head><link rel=\"icon\" href=\"https://foreign.example.test/owned.ico\"></head><body>x</body></html>",
+      "home_status": 200,
+      "icon_status": 200,
+      "requests": [
+        {
+          "url": "http://127.0.0.1:43100",
+          "timeout": 30
+        },
+        {
+          "url": "https://foreign.example.test/owned.ico",
+          "timeout": 15
+        }
+      ],
+      "chosen": "https://foreign.example.test/owned.ico",
+      "data_base64": "b3duZWQtaWNvbg=="
+    }
+  ]
+}

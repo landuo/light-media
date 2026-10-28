@@ -1,0 +1,45 @@
+{
+  "kind": "actual cmd/server ordinary event core consumers, downloader list/control, actual Go SDK and owned native HTTP peers; initial reference/subscription/download rows and SQLite failure trigger are synthetic",
+  "server": {
+    "path": "/tmp/light-media-plugin-scope-dRZTQ91A/server-platform5-20261027-linux",
+    "sha256": "af4acf6e99d94fa471e2d7b360b9bdcf81da819f375def4af2f27d230f8b4d12"
+  },
+  "binary": {
+    "path": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-core-process-linux.test",
+    "sha256": "7620cb7e12fafc17aaefea48f485f1f885f09c299a973179a39dacf8889a32c6"
+  },
+  "fixture_sha256": "df8e461c809e6188def1f4a2ecc5573d141f8bd13f4640fc19310bb093d8691e",
+  "environment": {
+    "TMPDIR": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-core-tmp",
+    "PLUGIN_PROCESS_SERVER_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/server-platform5-20261027-linux",
+    "OWNED_INPUT_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/services38-input-final-linux",
+    "OWNED_DOWNLOADER_CONTROL_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/downloader-control-linux",
+    "PLUGIN_PROCESS_DOWNLOADER_CONTROL_FIXTURE": "true",
+    "PLUGIN_PROCESS_DOWNLOADER_LIST_FIXTURE": "true",
+    "PLUGIN_PROCESS_CORE_EVENT_CONSUMERS_FIXTURE": "true",
+    "PLUGIN_PROCESS_CORE_EVENT_ORACLE": "/tmp/light-media-plugin-scope-dRZTQ91A/core-consumer-source-oracle.json",
+    "PLUGIN_PROCESS_SITE_CORE_ORACLE": "/tmp/light-media-plugin-scope-dRZTQ91A/site-deleted-consumer-oracle.json",
+    "OWNED_CORE_EVENT_OBSERVER_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/core-event-observer-linux",
+    "PLUGIN_PROCESS_DOWNLOADER_LIST_ORACLE": "/tmp/light-media-plugin-scope-dRZTQ91A/downloader-list-oracle.json",
+    "PLUGIN_PROCESS_EVENTS36_EVIDENCE_DIR": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-core-evidence"
+  },
+  "command": [
+    "/tmp/light-media-plugin-scope-dRZTQ91A/events36-core-process-linux.test",
+    "-test.v",
+    "-test.run",
+    "^TestPluginServicesProductionCLI$",
+    "-test.timeout",
+    "90s"
+  ],
+  "exit_code": 1,
+  "elapsed_seconds": 1.923,
+  "log_sha256": "95a1a8c2aac2459481f088942636f8596292d9c95ebb9e288a0dd37a8c846f36",
+  "input_sha256": {
+    "core-event-observer-linux": "d73aefad4aabdcbb044aaa456e05d81270332aba6f02cdb63c1116456d44c30e",
+    "services38-input-final-linux": "d25fbd2f58764a73646744e48def08e706678aeea9ab40dd7e078b38720ca361",
+    "downloader-control-linux": "df8e461c809e6188def1f4a2ecc5573d141f8bd13f4640fc19310bb093d8691e",
+    "core-consumer-source-oracle.json": "f956ef64390145e8648005e0a004bd1656dea732cd80a1a0df9fc362e6913659",
+    "site-deleted-consumer-oracle.json": "113ace938784459c9dba9f82ba1a653991bf8ba36c2ced6779389d18e1522297",
+    "downloader-list-oracle.json": "f779ce80f135d51cf77083baa4ef3eba2c2716af21d7da3c7b56014a73a4802b"
+  }
+}

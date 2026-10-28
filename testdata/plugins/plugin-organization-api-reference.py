@@ -1,5 +1,5 @@
 """Read-only installed AST+ASGI reference. No MoviePilot module/config import."""
-import ast, hashlib, json, warnings, copy
+import ast, hashlib, json, warnings, copy, sys
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, List, Optional, Annotated, Union
@@ -7,7 +7,8 @@ from fastapi import APIRouter, FastAPI, Depends, Body
 from fastapi.testclient import TestClient
 from pydantic import BaseModel, Field, model_validator
 warnings.filterwarnings('ignore')
-paths={'plugin':Path('/app/app/api/endpoints/plugin.py'),'user':Path('/app/app/api/endpoints/user.py'),'response':Path('/app/app/schemas/response.py')}
+source_root=Path(sys.argv[1]) if len(sys.argv)>1 else Path('/app')
+paths={key:source_root/path for key,path in {'plugin':'app/api/endpoints/plugin.py','user':'app/api/endpoints/user.py','response':'app/schemas/response.py'}.items()}
 trees={k:ast.parse(p.read_text()) for k,p in paths.items()}
 state={'folders':{},'user':{}}
 class SystemConfigOper:
@@ -24,7 +25,7 @@ ns=dict(Any=Any,List=List,Optional=Optional,Annotated=Annotated,Union=Union,Depe
  get_current_active_superuser_async=admin,get_current_active_user=admin,
  SystemConfigOper=SystemConfigOper,UserConfigOper=UserConfigOper,SystemConfigKey=SimpleNamespace(PluginFolders='folders'),
  LocaleHelper=SimpleNamespace(get_current_locale=lambda:'zh-CN',translate_text=lambda text,locale:text),
- logger=SimpleNamespace(error=lambda *a,**k:None))
+ logger=SimpleNamespace(error=lambda *a,**k:None,info=lambda *a,**k:None,debug=lambda *a,**k:None))
 def execute(nodes):
  exec(compile(ast.fix_missing_locations(ast.Module(body=nodes,type_ignores=[])),'<original-organization-reference>','exec'),ns)
 execute([next(n for n in trees['response'].body if isinstance(n,ast.ClassDef) and n.name=='Response')])
@@ -63,4 +64,24 @@ case('wrong-folders-method','PUT','plugin/folders',{})
 case('wrong-create-method','PUT','plugin/folders/新名字',{})
 case('invalid-folder-body','POST','plugin/folders',[])
 case('invalid-members-body','PUT','plugin/folders/新名字/plugins',{'plugins':['One']})
-print(json.dumps(dict(source_sha256={k:hashlib.sha256(p.read_bytes()).hexdigest() for k,p in paths.items()},scope='Actual installed FastAPI/Pydantic AST with controlled in-memory configuration and synthetic admin; no original app import/config/credentials/network',cases=cases),ensure_ascii=False,separators=(',',':')))
+case('opaque-folders-are-inert-json','POST','plugin/folders',{'../literal':{'plugins':None,'future':False},' ':['../inert'],'ignored':23})
+case('get-opaque-folders','GET','plugin/folders')
+case('nullable-order','POST','user/config/PluginOrder',None)
+case('get-nullable-order','GET','user/config/PluginOrder')
+case('opaque-dictionary-order','POST','user/config/PluginOrder',{'future':False})
+case('get-opaque-order','GET','user/config/PluginOrder')
+case('integer-order','POST','user/config/PluginOrder',2)
+case('get-integer-order','GET','user/config/PluginOrder')
+case('integral-float-order','POST','user/config/PluginOrder',2.0)
+case('get-integral-float-order','GET','user/config/PluginOrder')
+case('zero-float-order','POST','user/config/PluginOrder',0.0)
+case('get-zero-float-order','GET','user/config/PluginOrder')
+for helper in ['_add_clone_to_plugin_folder','_remove_plugin_from_folders']:
+ execute([next(n for n in trees['plugin'].body if isinstance(n,ast.FunctionDef) and n.name==helper)])
+state['folders']={'A':[17,'source',False,'source',{'id':'source'}],'ignored':23}
+membership_cases=[]
+for operation in ['clone','clone','remove']:
+ if operation=='clone': ns['_add_clone_to_plugin_folder']('source','copy')
+ else: ns['_remove_plugin_from_folders']('source')
+ membership_cases.append({'operation':operation,'folders':copy.deepcopy(state['folders'])})
+print(json.dumps(dict(source_sha256={k:hashlib.sha256(p.read_bytes()).hexdigest() for k,p in paths.items()},scope='Actual installed FastAPI/Pydantic AST with controlled in-memory configuration and synthetic admin; no original app import/config/credentials/network',cases=cases,membership_cases=membership_cases),ensure_ascii=False,separators=(',',':')))

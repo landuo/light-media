@@ -1,3 +1,5 @@
+import * as pluginProject from '../src/features/plugin-project.ts';
+import * as pluginMarket from '../src/features/plugin-market.ts';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -51,6 +53,7 @@ async function mount(t, { failSave = false, initialOrganization, installed } = {
     failSave,
   };
   const mounted = [],
+    activated = [],
     unmounted = [],
     module = { exports: {} };
   const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -60,6 +63,7 @@ async function mount(t, { failSave = false, initialOrganization, installed } = {
         return {
           ...vue,
           onMounted: (fn) => mounted.push(fn),
+          onActivated: (fn) => activated.push(fn),
           onUnmounted: (fn) => unmounted.push(fn),
           defineAsyncComponent: () => ({ name: 'AsyncDialog' }),
           withDirectives: (node) => node,
@@ -72,13 +76,15 @@ async function mount(t, { failSave = false, initialOrganization, installed } = {
               body: body === undefined ? undefined : clone(body),
               method,
             });
-            if (path === '/plugins') return installed || ['one', 'two', 'three'].map(plugin);
-            if (path === '/plugins/market') return [];
+            if (path === '/plugins?state=installed') return installed || ['one', 'two', 'three'].map(plugin);
+            if (path.startsWith('/plugins/market?')) return {items: (installed || []).filter(card => card.has_update), sources: []};
+            if (path === '/plugins/statistic') return {};
             if (path === '/plugins/organization') {
               if (method === 'PUT') {
                 if (fixture.failSave) throw new Error('保存失败');
-                assert.equal(body.revision, fixture.organization.revision);
-                fixture.organization = { ...clone(body), revision: body.revision + 1 };
+                if (fixture.failFolders && body.folders) throw new Error('文件夹保存失败');
+                assert.equal(body.revision, undefined, 'source independent writes do not require a revision');
+                fixture.organization = { ...fixture.organization, ...clone(body), revision: fixture.organization.revision + 1 };
               }
               return clone(fixture.organization);
             }
@@ -87,7 +93,9 @@ async function mount(t, { failSave = false, initialOrganization, installed } = {
           toast: (value) => fixture.toasts.push(value),
           errorText: (error) => error.message,
         };
-      if (name === '../features/plugin-organization') return organization;
+      if (name === '../features/plugin-market') return pluginMarket;
+    if (name === '../features/plugin-project') return pluginProject;
+    if (name === '../features/plugin-organization') return organization;
       if (name === 'vuedraggable') return { name: 'Draggable' };
       if (name.startsWith('vuetify/')) return new Proxy({}, { get: (_, key) => ({ name: key }) });
       if (name.endsWith('.vue')) return { name: name.split('/').at(-1).replace('.vue', '') };
@@ -145,6 +153,7 @@ async function mount(t, { failSave = false, initialOrganization, installed } = {
     label,
     button,
     writes,
+    async activate() { for (const fn of activated) await fn(); await flush(); },
     async click(value) {
       const node = label(value);
       assert.ok(node, value);
@@ -173,8 +182,8 @@ test('folder create validates names, preserves both source formats and saves wit
   await app.saveEditor('新增组');
   assert.equal(app.editor(), undefined);
   assert.equal(app.writes().length, 1);
-  assert.deepEqual(app.fixture.organization.folders['旧组'], ['one']);
-  assert.deepEqual(app.fixture.organization.folders['新组'].future, { zero: 0 });
+  assert.deepEqual(organization.folderMembers(app.fixture.organization.folders['旧组']), ['one']);
+  assert.equal(app.fixture.organization.folders['新组'].future, undefined, 'fixed view normalization drops unknown appearance fields');
   assert.equal(app.fixture.organization.folders['新组'].showIcon, false);
   assert.deepEqual(app.fixture.organization.folders['新增组'].plugins, []);
   assert.equal(
@@ -210,10 +219,10 @@ test('rename and appearance keep membership and unknown fields; failed saves ret
   app.fixture.failSave = false;
   await app.saveEditor('改名组', { showIcon: true });
   assert.deepEqual(app.fixture.organization.folders['改名组'].plugins, ['two']);
-  assert.deepEqual(app.fixture.organization.folders['改名组'].future, { zero: 0 });
+  assert.equal(app.fixture.organization.folders['改名组'].future, undefined);
 });
 
-test('actual draggable actions save root order and folder membership once while polling leaves the drag alone', async (t) => {
+test('actual draggable actions save root order and folder membership once without background refresh during dragging', async (t) => {
   const app = await mount(t);
   await app.click('排序插件');
   let draggable = app.component('Draggable');
@@ -221,7 +230,8 @@ test('actual draggable actions save root order and folder membership once while 
   const original = draggable.props.modelValue;
   draggable.props.onStart({ oldIndex: 1 });
   const reads = app.fixture.requests.length;
-  await app.fixture.polls[0]();
+  assert.equal(app.fixture.polls.length, 0);
+  await app.flush();
   assert.equal(app.fixture.requests.length, reads);
   draggable.props['onUpdate:modelValue']([...original].reverse());
   await app.flush();
@@ -237,7 +247,7 @@ test('actual draggable actions save root order and folder membership once while 
   await target.props.onDrop();
   await app.component('Draggable').props.onEnd();
   await app.flush();
-  assert.equal(app.writes().length, 2);
+  assert.equal(app.writes().length, 3);
   assert.deepEqual(app.fixture.organization.folders['新组'].plugins, ['two', 'three']);
   assert.equal(
     app
@@ -263,7 +273,7 @@ test('folder members retain original order, removing one returns it to root and 
   assert.equal(member.props['in-folder'], true);
   await member.props.onAction('remove-folder', member.props.plugin);
   await app.flush();
-  assert.deepEqual(app.fixture.organization.folders['旧组'], []);
+  assert.deepEqual(organization.folderMembers(app.fixture.organization.folders['旧组']), []);
   const back = app
     .nodes()
     .find(
@@ -428,7 +438,7 @@ test('actual installed menu supports name choose/clear, quick-filter precedence,
   assert.equal(app.writes().length, 0, 'filtering never saves the organization or plugin config');
 });
 
-test('installed filters apply inside a folder and polling keeps the selected filters', async (t) => {
+test('installed filters apply inside a folder and keeps the selected filters without periodic refresh', async (t) => {
   const installed = [
     { ...plugin('one'), state: false },
     { ...plugin('two'), state: true },
@@ -447,8 +457,97 @@ test('installed filters apply inside a folder and polling keeps the selected fil
   await app.click('运行中');
   const ids = () => app.component('Draggable')?.props.modelValue.map((item) => item.id) || [];
   assert.deepEqual(ids(), ['two']);
-  await app.fixture.polls[0]();
+  assert.equal(app.fixture.polls.length, 0);
+  await app.flush();
   await app.flush();
   assert.deepEqual(ids(), ['two']);
   assert.equal(app.writes().length, 0);
+});
+
+test('mixed display sort keeps a confirmed user order when the separate folders write fails', async (t) => {
+  const app = await mount(t);
+  await app.click('排序插件');
+  const draggable = app.component('Draggable');
+  draggable.props.onStart({ oldIndex: 1 });
+  draggable.props['onUpdate:modelValue']([...draggable.props.modelValue].reverse());
+  await app.flush();
+  app.fixture.failFolders = true;
+  await app.component('Draggable').props.onEnd();
+  await app.flush();
+  assert.equal(app.writes().length, 2);
+  assert.deepEqual(Object.keys(app.writes()[0].body), ['order']);
+  assert.deepEqual(Object.keys(app.writes()[1].body), ['folders']);
+  assert.deepEqual(app.fixture.organization.order.map(item => item.id), ['旧组', 'three', '新组']);
+  assert.equal(app.fixture.organization.folders['新组'].order, 0);
+  assert.deepEqual(app.fixture.toasts, []);
+});
+
+// Expected values come from executing the seven unmodified functions at the
+// fixed MoviePilot frontend commit, not from the target component above.
+const organizationOracle = JSON.parse(readFileSync(new URL('../../testdata/standard-organization/source-oracle.json', import.meta.url)));
+test('fixed view load/order/quick-filter oracle is preserved', () => {
+  const find=name=>organizationOracle.cases.find(c=>c.name===name);
+  const load=find('legacy-load-defaults');
+  assert.deepEqual(organization.normalizePluginFolders(load.input.folders), load.expected.folders);
+  const order=find('legacy-user-order');
+  assert.deepEqual(organization.normalizedPluginOrder({folders:{},order:order.input.order}),order.expected.order);
+  const filter=find('combined-quick-filters-ignore-query');
+  const result=filter.input.plugins.filter(p=>organization.installedPluginMatches({...plugin(p.id),name:p.plugin_name,state:p.state,has_update:p.has_update},filter.input.query,filter.input));
+  assert.deepEqual(result,filter.expected.result);
+});
+
+test('fixed mixed-sort and filtered-folder-sort oracle reaches actual component writes', async t => {
+  for (const name of ['root-mixed-folder-orders','filtered-folder-sort-drops-hidden-members']) {
+    await t.test(name,async t=>{
+      const sample=organizationOracle.cases.find(c=>c.name===name), input=sample.input;
+      const ids=new Set([...Object.values(input.folders).flatMap(organization.folderMembers),...(input.plugins||[]).map(p=>p.id)]);
+      const app=await mount(t,{initialOrganization:{revision:1,folders:input.folders,order:input.order},installed:[...ids].map(plugin)});
+      if(input.current){app.nodes().find(n=>n.type?.name==='PluginFolderCard'&&n.props.name===input.current).props.onOpen();await app.flush();}
+      await app.click('排序插件');
+      const grid=app.component('Draggable');grid.props.onStart({oldIndex:0});
+      const lookup=new Map(grid.props.modelValue.map(x=>[x.id,x]));
+      grid.props['onUpdate:modelValue']((input.mixed||input.sorted).map(x=>lookup.get(x.id)));
+      await app.flush();await app.component('Draggable').props.onEnd();await app.flush();
+      const calls=app.writes().map(x=>({path:x.body.order?'/user/config/PluginOrder':'plugin/folders',value:x.body.order||x.body.folders}));
+      assert.deepEqual(calls,sample.expected.calls);
+    });
+  }
+});
+
+test('fixed drag membership removes only first duplicate and preserves destination duplicate guard', () => {
+  const sample=organizationOracle.cases.find(c=>c.name==='drop-removes-first-other-membership');
+  const value={revision:1,folders:organization.normalizePluginFolders(sample.input.folders),order:[]};
+  const moved=organization.moveToFolder(value,sample.input.dragged,sample.input.target);
+  assert.deepEqual(moved.folders,sample.expected.folders);
+  assert.throws(()=>organization.moveToFolder(moved,sample.input.dragged,sample.input.target),/已在此/);
+  assert.deepEqual(value.folders.A.plugins,['one','one','two']);
+});
+
+test('fixed second-write failure keeps optimistic folders and already committed order', async t => {
+  const sample=organizationOracle.cases.find(c=>c.name==='root-sort-second-write-fails'), input=sample.input;
+  const app=await mount(t,{initialOrganization:{revision:1,folders:input.folders,order:input.order},installed:input.plugins.map(p=>plugin(p.id))});
+  await app.click('排序插件');const grid=app.component('Draggable');grid.props.onStart({oldIndex:0});
+  const lookup=new Map(grid.props.modelValue.map(x=>[x.id,x]));grid.props['onUpdate:modelValue'](input.mixed.map(x=>lookup.get(x.id)));
+  app.fixture.failFolders=true;await app.flush();await app.component('Draggable').props.onEnd();await app.flush();
+  assert.deepEqual(app.fixture.organization.order,sample.expected.order);
+  for(const name of Object.keys(sample.expected.folders)){
+    const node=app.nodes().find(x=>x.type?.name==='PluginFolderCard'&&x.props.name===name);
+    assert.deepEqual(node.props.config,sample.expected.folders[name]);
+  }
+  assert.equal(app.fixture.organization.folders.A.order,0,'failed folders write did not commit');
+  assert.deepEqual(app.fixture.toasts,[]);
+});
+
+test('fixed keep-alive return retains filters and folder while refreshing once, initial activation and sorting do not refresh', async t=>{
+ const app=await mount(t);const count=app.fixture.requests.length;
+ await app.activate();assert.equal(app.fixture.requests.length,count,'initial activation belongs to mounted load');
+ app.nodes().find(n=>n.type?.name==='PluginFolderCard'&&n.props.name==='旧组').props.onOpen();await app.flush();
+ await app.click('筛选已安装插件');app.label('插件名称').props['onUpdate:modelValue']('one');await app.flush();
+ const reads=app.fixture.requests.length;await app.activate();
+ assert.equal(app.fixture.requests.length,reads+4);
+ assert.deepEqual(app.component('Draggable').props.modelValue.map(x=>x.id),['one']);
+ assert.ok(app.nodes().some(n=>n.children==='旧组'));
+ await app.click('排序插件');const sorting=app.fixture.requests.length;await app.activate();assert.equal(app.fixture.requests.length,sorting);
+ const host=readFileSync(new URL('../src/App.vue',import.meta.url),'utf8');
+ assert.match(host,/<KeepAlive>\s*<Plugins v-if="pageKey === 'plugins'"/);
 });

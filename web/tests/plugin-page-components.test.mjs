@@ -7,17 +7,15 @@ import { pluginPageStyles } from '../src/features/plugin-page-styles.ts';
 const page = JSON.parse(
   readFileSync(new URL('./fixtures/plugin-page-original.json', import.meta.url), 'utf8'),
 );
-test('complete real original page is supported without dropping style, spacer or chip', () => {
+test('fixed original page keeps raw style, spacer and chip in both renderers', () => {
   assert.deepEqual(pluginPageIssues(page), []);
   const css = pluginPageStyles(page[0].text, 'instance-one');
   assert.ok(css);
-  assert.match(css, /\[data-plugin-page-scope="instance-one"\] \.autosignin-summary/);
+  assert.equal(css, page[0].text);
   assert.match(css, /@media \(max-width: 720px\)/);
-  assert.match(css, /html\[data-theme="transparent"\] \[data-plugin-page-scope="instance-one"\]/);
-  assert.ok(!css.includes('instance-two'));
-  assert.ok(pluginFormIssues([page[0]]).length);
+  assert.deepEqual(pluginFormIssues([page[0]]), []);
 });
-test('stylesheet rejects networking, global escape, active content and unapproved syntax', () => {
+test('fixed native style text preserves author selectors, variables, attributes and rules', () => {
   for (const css of [
     '.x { background:var(--v-theme-surface); }',
     '.x { background:rgb(0,0,0) var(--v-theme-surface); }',
@@ -59,23 +57,27 @@ test('stylesheet rejects networking, global escape, active content and unapprove
     '.x { .y { color:red; } }',
     '.x { color:red; } </style><script>x</script>',
   ])
-    assert.equal(pluginPageStyles(css, 'safe'), null, css);
-  assert.equal(pluginPageStyles('.x {color:red}', 'x"] body'), null);
-  assert.equal(pluginPageStyles('x'.repeat(32769)), null);
-  assert.ok(
-    pluginPageIssues([{ component: 'style', text: '.x {color:red}', props: { media: 'print' } }])
-      .length,
-  );
-  assert.ok(pluginPageIssues([{ component: 'style', text: '.x {color:red}', content: [] }]).length);
+    assert.equal(pluginPageStyles(css, 'safe'), css, 'fixed style text was rewritten');
+  assert.equal(pluginPageStyles('.x {color:red}', 'unused'), '.x {color:red}');
+  assert.equal(pluginPageStyles('x'.repeat(32769)), 'x'.repeat(32769));
+  assert.deepEqual(pluginPageIssues([{ component: 'style', text: '.x {color:red}', props: { media: 'print' } }]), []);
+  assert.deepEqual(pluginPageIssues([{ component: 'style', text: '.x {color:red}', content: [] }]), []);
   assert.ok(pluginPageIssues([{ component: 'UnknownRemoteWidget' }]).length);
-  assert.ok(
-    pluginPageIssues([{ component: 'VChip', props: { href: 'https://example.invalid' } }]).length,
+  // Installed plugin components accept their ordinary source props, while
+  // stylesheet content follows the fixed renderer rather than an author subset.
+  assert.deepEqual(
+    pluginPageIssues([{ component: 'VChip', props: { href: 'https://example.invalid' } }]),
+    [],
+  );
+  assert.deepEqual(
+    pluginPageIssues([{ component: 'VSpacer', props: { style: 'position:fixed' } }]),
+    [],
   );
   assert.ok(
-    pluginPageIssues([{ component: 'VSpacer', props: { style: 'position:fixed' } }]).length,
+    pluginPageIssues([{ component: 'VChip', props: { href: 'javascript:alert(1)' } }]).length,
   );
 });
-test('renderer registers actual components and binds style only to the instance page scope', () => {
+test('renderer registers actual components and uses the native style node', () => {
   const renderer = readFileSync(
     new URL('../src/components/PluginFormRenderer.vue', import.meta.url),
     'utf8',
@@ -86,10 +88,8 @@ test('renderer registers actual components and binds style only to the instance 
   );
   assert.match(renderer, /import \{ VChip \} from 'vuetify\/components\/VChip'/);
   assert.match(renderer, /import \{ VRow, VCol, VSpacer \} from 'vuetify\/components\/VGrid'/);
-  assert.match(
-    renderer,
-    /props.pageScope \? pluginPageStyles\(node.text, props.pageScope\) : null/,
-  );
+  assert.match(renderer, /'style'/);
+  assert.doesNotMatch(renderer, /pluginPageStyles\(node.text/);
   assert.match(dialog, /:data-plugin-page-scope="pageScope"/);
   assert.match(dialog, /:page-scope="pageScope"/);
   assert.doesNotMatch(renderer + dialog, /AutoSignIn/);

@@ -1,0 +1,84 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed reset endpoint and SubscribeModifiedEventData; owned row/database dependency, not actual original service",
+  "source_sha256": {
+    "app/api/endpoints/subscribe.py": "ee93ba32748abbac7ef6f060ad3eeeb05a5681b5bcdd7b691270f6bb7e8ab469",
+    "app/schemas/event.py": "d5134476edc76096098b85ee32d2f96eb5db2441c873c80729a46b91386687d6"
+  },
+  "before": {
+    "id": 7,
+    "total_episode": 5,
+    "lack_episode": 2,
+    "note": [
+      1,
+      2,
+      3
+    ],
+    "current_priority": 70,
+    "episode_priority": {
+      "1": 70
+    },
+    "manual_total_episode": 1,
+    "state": "S",
+    "keyword": "retained"
+  },
+  "after": {
+    "id": 7,
+    "total_episode": 5,
+    "lack_episode": 5,
+    "note": [],
+    "current_priority": null,
+    "episode_priority": {},
+    "manual_total_episode": 0,
+    "state": "R",
+    "keyword": "retained"
+  },
+  "events": [
+    {
+      "type": "subscribe.modified",
+      "data": {
+        "subscribe_id": 7,
+        "old_subscribe_info": {
+          "id": 7,
+          "total_episode": 5,
+          "lack_episode": 2,
+          "note": [
+            1,
+            2,
+            3
+          ],
+          "current_priority": 70,
+          "episode_priority": {
+            "1": 70
+          },
+          "manual_total_episode": 1,
+          "state": "S",
+          "keyword": "retained"
+        },
+        "subscribe_info": {
+          "id": 7,
+          "total_episode": 5,
+          "lack_episode": 5,
+          "note": [],
+          "current_priority": null,
+          "episode_priority": {},
+          "manual_total_episode": 0,
+          "state": "R",
+          "keyword": "retained"
+        },
+        "scene": "reset",
+        "fields": [
+          "current_priority",
+          "episode_priority",
+          "lack_episode",
+          "manual_total_episode",
+          "note",
+          "state"
+        ]
+      }
+    }
+  ],
+  "response": {
+    "success": true
+  }
+}

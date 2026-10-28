@@ -1,0 +1,687 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "Actual pinned episode wrapper, endpoint response model and native system\nmodule. Provider responses and ordinary plugin callbacks are owned controls.\n",
+  "cases": [
+    {
+      "name": "null",
+      "plugin": null,
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 0,
+      "output": [
+        {
+          "air_date": null,
+          "episode_number": 1,
+          "episode_type": null,
+          "name": "Owned native episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        }
+      ]
+    },
+    {
+      "name": "false",
+      "plugin": false,
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        }
+      ],
+      "status": 500,
+      "error_count": 0,
+      "output": null
+    },
+    {
+      "name": "zero",
+      "plugin": 0,
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        }
+      ],
+      "status": 500,
+      "error_count": 0,
+      "output": null
+    },
+    {
+      "name": "dict",
+      "plugin": {},
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        }
+      ],
+      "status": 500,
+      "error_count": 0,
+      "output": null
+    },
+    {
+      "name": "list_empty",
+      "plugin": [],
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 0,
+      "output": [
+        {
+          "air_date": null,
+          "episode_number": 1,
+          "episode_type": null,
+          "name": "Owned native episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        }
+      ]
+    },
+    {
+      "name": "list",
+      "plugin": [
+        {
+          "episode_number": "2",
+          "season_number": 0,
+          "name": "Owned plugin episode",
+          "crew": [
+            {
+              "id": "opaque"
+            }
+          ],
+          "unknown_id": 120
+        }
+      ],
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 0,
+      "output": [
+        {
+          "air_date": null,
+          "episode_number": 2,
+          "episode_type": null,
+          "name": "Owned plugin episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [
+            {
+              "id": "opaque"
+            }
+          ],
+          "guest_stars": []
+        },
+        {
+          "air_date": null,
+          "episode_number": 1,
+          "episode_type": null,
+          "name": "Owned native episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        }
+      ]
+    },
+    {
+      "name": "tuple",
+      "plugin": {
+        "__plugin_module_tuple": [
+          {
+            "episode_number": "2",
+            "season_number": 0,
+            "name": "Owned plugin episode",
+            "crew": [
+              {
+                "id": "opaque"
+              }
+            ],
+            "unknown_id": 120
+          }
+        ]
+      },
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 0,
+      "output": [
+        {
+          "air_date": null,
+          "episode_number": 2,
+          "episode_type": null,
+          "name": "Owned plugin episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [
+            {
+              "id": "opaque"
+            }
+          ],
+          "guest_stars": []
+        }
+      ]
+    },
+    {
+      "name": "tuple_empty",
+      "plugin": {
+        "__plugin_module_tuple": []
+      },
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 0,
+      "output": [
+        {
+          "air_date": null,
+          "episode_number": 1,
+          "episode_type": null,
+          "name": "Owned native episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        }
+      ]
+    },
+    {
+      "name": "bad_list",
+      "plugin": [
+        false
+      ],
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0
+          }
+        }
+      ],
+      "status": 500,
+      "error_count": 0,
+      "output": null
+    },
+    {
+      "name": "native_dto_failure",
+      "plugin": null,
+      "native": [
+        {
+          "name": 123
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0
+          }
+        }
+      ],
+      "status": 500,
+      "error_count": 1,
+      "output": null
+    },
+    {
+      "name": "list_native_dto_failure",
+      "plugin": [
+        {
+          "episode_number": "2",
+          "season_number": 0,
+          "name": "Owned plugin episode",
+          "crew": [
+            {
+              "id": "opaque"
+            }
+          ],
+          "unknown_id": 120
+        }
+      ],
+      "native": [
+        {
+          "name": 123
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 1,
+      "output": [
+        {
+          "air_date": null,
+          "episode_number": 2,
+          "episode_type": null,
+          "name": "Owned plugin episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [
+            {
+              "id": "opaque"
+            }
+          ],
+          "guest_stars": []
+        }
+      ]
+    }
+  ],
+  "group_cases": [
+    {
+      "season": 0,
+      "input": [
+        {
+          "order": 0,
+          "episodes": [
+            {
+              "episode_number": 15,
+              "name": "First"
+            },
+            {
+              "episode_number": 3,
+              "name": "Second"
+            }
+          ]
+        },
+        {
+          "order": 1,
+          "episodes": []
+        }
+      ],
+      "output": {
+        "order": 0,
+        "episodes": [
+          {
+            "episode_number": 1,
+            "name": "First"
+          },
+          {
+            "episode_number": 2,
+            "name": "Second"
+          }
+        ]
+      }
+    },
+    {
+      "season": 1,
+      "input": [
+        {
+          "order": 0,
+          "episodes": [
+            {
+              "episode_number": 15,
+              "name": "First"
+            },
+            {
+              "episode_number": 3,
+              "name": "Second"
+            }
+          ]
+        },
+        {
+          "order": 1,
+          "episodes": []
+        }
+      ],
+      "output": {
+        "order": 1,
+        "episodes": []
+      }
+    },
+    {
+      "season": 2,
+      "input": [
+        {
+          "order": 0,
+          "episodes": [
+            {
+              "episode_number": 15,
+              "name": "First"
+            },
+            {
+              "episode_number": 3,
+              "name": "Second"
+            }
+          ]
+        },
+        {
+          "order": 1,
+          "episodes": []
+        }
+      ],
+      "output": {}
+    }
+  ],
+  "dto_cases": [
+    {
+      "input": {},
+      "output": {
+        "air_date": null,
+        "episode_number": null,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      },
+      "status": 200
+    },
+    {
+      "input": {
+        "episode_number": true,
+        "runtime": "12.0",
+        "vote_average": false
+      },
+      "output": {
+        "air_date": null,
+        "episode_number": 1,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": 12,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": 0.0,
+        "crew": [],
+        "guest_stars": []
+      },
+      "status": 200
+    },
+    {
+      "input": {
+        "episode_number": "1e2"
+      },
+      "output": null,
+      "status": 500
+    },
+    {
+      "input": {
+        "episode_number": "1_2"
+      },
+      "output": {
+        "air_date": null,
+        "episode_number": 12,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      },
+      "status": 200
+    },
+    {
+      "input": {
+        "episode_number": "١٢"
+      },
+      "output": null,
+      "status": 500
+    },
+    {
+      "input": {
+        "episode_number": 12.0
+      },
+      "output": {
+        "air_date": null,
+        "episode_number": 12,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      },
+      "status": 200
+    },
+    {
+      "input": {
+        "episode_number": 12.5
+      },
+      "output": null,
+      "status": 500
+    },
+    {
+      "input": {
+        "runtime": "1.00000000000000001"
+      },
+      "output": null,
+      "status": 500
+    },
+    {
+      "input": {
+        "crew": null,
+        "guest_stars": [
+          3
+        ]
+      },
+      "output": {
+        "air_date": null,
+        "episode_number": null,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": null,
+        "guest_stars": [
+          3
+        ]
+      },
+      "status": 200
+    },
+    {
+      "input": null,
+      "output": null,
+      "status": 500
+    }
+  ]
+}

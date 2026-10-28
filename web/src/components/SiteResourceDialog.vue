@@ -58,7 +58,7 @@ function openSelected() {
 }
 function downloadedOne() {
   if (active.value) {
-    downloaded.value[candidateKey(active.value)] = 'planned';
+    downloaded.value[candidateKey(active.value)] = 'accepted';
     selected.value = selected.value.filter((key) => key !== candidateKey(active.value!));
   }
   toast('下载任务已添加');
@@ -250,6 +250,10 @@ onUnmounted(() => {
           queue = [];
         "
         @done="downloadedOne"
+        @error="
+          active = null;
+          queue = [];
+        "
       />
     </div>
   </div>

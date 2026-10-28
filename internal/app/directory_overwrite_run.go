@@ -123,6 +123,38 @@ func (a *App) publishDirectoryOverwrite(ctx context.Context, key, source, target
 	if _, e = a.overwriteDispatcher(ctx); e != nil {
 		return importReceipt{}, e
 	}
+	if active, _ := ctx.Value(originalTransferWriteContextKey{}).(*originalTransferWriteContext); active != nil && op.Decision.DeleteVersions {
+		// The pinned handler removes other versions before TransferIntercept.
+		// A veto therefore still observes those removals. Keep recoverable host
+		// backups, while preserving the source's visible ordering and side effect.
+		removed := []directoryOverwriteTarget{}
+		for _, old := range op.Targets {
+			if old.Path == target {
+				removed = append(removed, old)
+				continue
+			}
+			if e = check(); e != nil {
+				return importReceipt{}, e
+			}
+			deleted, err := a.originalStorageQuarantineVersion(ctx, old)
+			if err != nil {
+				return importReceipt{}, err
+			}
+			if deleted {
+				removed = append(removed, old)
+			}
+		}
+		op.Targets = removed
+		if e = a.saveDirectoryOverwrite(ctx, op); e != nil {
+			return importReceipt{}, e
+		}
+	}
+	if e = a.originalTransferInterceptWrite(ctx, source, target, method, op.Decision.Overwrite); e != nil {
+		return importReceipt{}, e
+	}
+	if e = a.originalCheckTransferTargetAfterIntercept(ctx, target, op.Decision.Overwrite); e != nil {
+		return importReceipt{}, e
+	}
 	restore := func() {
 		for i := len(op.Targets) - 1; i >= 0; i-- {
 			_ = restoreDirectoryOverwrite(op.Targets[i])
@@ -297,10 +329,16 @@ func (a *App) commitDirectoryOverwriteFileTx(ctx context.Context, tx *sql.Tx, id
 			return bad("REVIEW_OVERWRITE_OWNER", "原目标登记已被其他操作修改")
 		}
 		var asset Asset
-		if e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='asset' AND id=?`, owner.AssetID).Scan(&raw); e != nil {
+		e = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='asset' AND id=?`, owner.AssetID).Scan(&raw)
+		if material != nil && errors.Is(e, sql.ErrNoRows) {
+			// Independent extras and successful extras of a rejected main have
+			// real publication ownership without a video inventory row.
+			if e = verifyIndependentExtraOwnerTx(ctx, tx, *owner, op.RootPath); e != nil {
+				return e
+			}
+		} else if e != nil {
 			return e
-		}
-		if json.Unmarshal(raw, &asset) != nil || asset.RootID != op.RootID || material == nil && asset.Path != old.Path {
+		} else if json.Unmarshal(raw, &asset) != nil || asset.RootID != op.RootID || material == nil && asset.Path != old.Path {
 			return bad("REVIEW_OVERWRITE_OWNER", "原整理记录不能匹配覆盖文件")
 		}
 		if material == nil {

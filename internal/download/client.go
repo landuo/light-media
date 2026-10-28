@@ -59,6 +59,9 @@ type Task struct {
 	DownloadSpeed int64    `json:"download_speed"`
 	UploadSpeed   int64    `json:"upload_speed"`
 	Tags          []string `json:"tags"`
+	// SourceTorrent is the ordinary plugin module's DownloaderTorrent model.
+	// Native protocol tasks keep their existing numeric projection unchanged.
+	SourceTorrent json.RawMessage `json:"source_torrent,omitempty"`
 }
 
 type File struct {
@@ -73,6 +76,10 @@ type AddRequest struct {
 	SavePath string   `json:"save_path"`
 	Paused   bool     `json:"paused"`
 	Tags     []string `json:"tags,omitempty"`
+	// The ordinary module checks whether its explicit category is usable.
+	// Other native callers keep their existing AutoCategory mode.
+	SourceCategorySet bool    `json:"-"`
+	SourceCategory    *string `json:"-"`
 }
 
 type AddResult struct {

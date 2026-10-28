@@ -1,0 +1,375 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:1502-1627"
+  ],
+  "boundary": "Replay fixed scrape batching methods with controlled task DTOs and event collector.\nNo light-media implementation participates in expected results. This is source\nreplay, not a running MoviePilot installation; file publication is tested separately.\n",
+  "cases": [
+    {
+      "name": "same-root",
+      "paths": [
+        "a.mkv",
+        "b.mkv"
+      ],
+      "roots": [
+        "/owned/show/",
+        "/owned/show/"
+      ],
+      "lists": [
+        [
+          "/owned/show/a.mkv"
+        ],
+        [
+          "/owned/show/b.mkv"
+        ]
+      ],
+      "enabled": [
+        true,
+        true
+      ],
+      "success": [
+        true,
+        true
+      ],
+      "close_first": true,
+      "counts": [
+        0,
+        1
+      ],
+      "events": [
+        {
+          "meta": {
+            "title": "first"
+          },
+          "mediainfo": {
+            "tmdb_id": 123
+          },
+          "fileitem": {
+            "storage": "local",
+            "path": "/owned/show/",
+            "type": "dir"
+          },
+          "file_list": [
+            "/owned/show/a.mkv",
+            "/owned/show/b.mkv"
+          ],
+          "overwrite": false
+        }
+      ]
+    },
+    {
+      "name": "distinct-roots",
+      "paths": [
+        "a.mkv",
+        "b.mkv"
+      ],
+      "roots": [
+        "/owned/a/",
+        "/owned/b/"
+      ],
+      "lists": [
+        [
+          "/owned/a/a.mkv"
+        ],
+        [
+          "/owned/b/b.mkv"
+        ]
+      ],
+      "enabled": [
+        true,
+        true
+      ],
+      "success": [
+        true,
+        true
+      ],
+      "close_first": true,
+      "counts": [
+        0,
+        2
+      ],
+      "events": [
+        {
+          "meta": {
+            "title": "first"
+          },
+          "mediainfo": {
+            "tmdb_id": 123
+          },
+          "fileitem": {
+            "storage": "local",
+            "path": "/owned/a/",
+            "type": "dir"
+          },
+          "file_list": [
+            "/owned/a/a.mkv"
+          ],
+          "overwrite": false
+        },
+        {
+          "meta": {
+            "title": "later"
+          },
+          "mediainfo": {
+            "tmdb_id": 123
+          },
+          "fileitem": {
+            "storage": "local",
+            "path": "/owned/b/",
+            "type": "dir"
+          },
+          "file_list": [
+            "/owned/b/b.mkv"
+          ],
+          "overwrite": false
+        }
+      ]
+    },
+    {
+      "name": "duplicates-and-empty",
+      "paths": [
+        "a.mkv",
+        "b.mkv"
+      ],
+      "roots": [
+        "/owned/show/",
+        "/owned/show/"
+      ],
+      "lists": [
+        [
+          "/owned/show/a.mkv",
+          "",
+          "/owned/show/a.mkv"
+        ],
+        [
+          "/owned/show/a.mkv",
+          "/owned/show/b.mkv"
+        ]
+      ],
+      "enabled": [
+        true,
+        true
+      ],
+      "success": [
+        true,
+        true
+      ],
+      "close_first": true,
+      "counts": [
+        0,
+        1
+      ],
+      "events": [
+        {
+          "meta": {
+            "title": "first"
+          },
+          "mediainfo": {
+            "tmdb_id": 123
+          },
+          "fileitem": {
+            "storage": "local",
+            "path": "/owned/show/",
+            "type": "dir"
+          },
+          "file_list": [
+            "/owned/show/a.mkv",
+            "/owned/show/b.mkv"
+          ],
+          "overwrite": false
+        }
+      ]
+    },
+    {
+      "name": "failed-last",
+      "paths": [
+        "a.mkv",
+        "b.mkv"
+      ],
+      "roots": [
+        "/owned/show/",
+        "/owned/show/"
+      ],
+      "lists": [
+        [
+          "/owned/show/a.mkv"
+        ],
+        [
+          "/owned/show/b.mkv"
+        ]
+      ],
+      "enabled": [
+        true,
+        true
+      ],
+      "success": [
+        true,
+        false
+      ],
+      "close_first": true,
+      "counts": [
+        0,
+        1
+      ],
+      "events": [
+        {
+          "meta": {
+            "title": "first"
+          },
+          "mediainfo": {
+            "tmdb_id": 123
+          },
+          "fileitem": {
+            "storage": "local",
+            "path": "/owned/show/",
+            "type": "dir"
+          },
+          "file_list": [
+            "/owned/show/a.mkv"
+          ],
+          "overwrite": false
+        }
+      ]
+    },
+    {
+      "name": "disabled-and-subtitle",
+      "paths": [
+        "a.mkv",
+        "b.mkv",
+        "a.srt"
+      ],
+      "roots": [
+        "/owned/show/",
+        "/owned/show/",
+        "/owned/show/"
+      ],
+      "lists": [
+        [
+          "/owned/show/a.mkv"
+        ],
+        [
+          "/owned/show/b.mkv"
+        ],
+        [
+          "/owned/show/a.srt"
+        ]
+      ],
+      "enabled": [
+        true,
+        false,
+        true
+      ],
+      "success": [
+        true,
+        true,
+        true
+      ],
+      "close_first": true,
+      "counts": [
+        0,
+        0,
+        1
+      ],
+      "events": [
+        {
+          "meta": {
+            "title": "first"
+          },
+          "mediainfo": {
+            "tmdb_id": 123
+          },
+          "fileitem": {
+            "storage": "local",
+            "path": "/owned/show/",
+            "type": "dir"
+          },
+          "file_list": [
+            "/owned/show/a.mkv"
+          ],
+          "overwrite": false
+        }
+      ]
+    },
+    {
+      "name": "close-after-finish",
+      "paths": [
+        "a.mkv",
+        "b.mkv"
+      ],
+      "roots": [
+        "/owned/show/",
+        "/owned/show/"
+      ],
+      "lists": [
+        [
+          "/owned/show/a.mkv"
+        ],
+        [
+          "/owned/show/b.mkv"
+        ]
+      ],
+      "enabled": [
+        true,
+        true
+      ],
+      "success": [
+        true,
+        true
+      ],
+      "close_first": false,
+      "counts": [
+        0,
+        0
+      ],
+      "events": [
+        {
+          "meta": {
+            "title": "first"
+          },
+          "mediainfo": {
+            "tmdb_id": 123
+          },
+          "fileitem": {
+            "storage": "local",
+            "path": "/owned/show/",
+            "type": "dir"
+          },
+          "file_list": [
+            "/owned/show/a.mkv",
+            "/owned/show/b.mkv"
+          ],
+          "overwrite": false
+        }
+      ]
+    },
+    {
+      "name": "all-failed",
+      "paths": [
+        "a.mkv",
+        "b.mkv"
+      ],
+      "roots": [
+        "/owned/show/",
+        "/owned/show/"
+      ],
+      "lists": [
+        [],
+        []
+      ],
+      "enabled": [
+        true,
+        true
+      ],
+      "success": [
+        false,
+        false
+      ],
+      "close_first": true,
+      "counts": [
+        0,
+        0
+      ],
+      "events": []
+    }
+  ]
+}

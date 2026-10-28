@@ -81,7 +81,7 @@ func readInstalled(root, codeID string, validate func(plugins.Manifest, string) 
 	// Missing provenance remains compatible with old receipts. A present value
 	// is syntax-checked only, never fetched or used to grant host capabilities.
 	if receipt.RepositoryURL != "" {
-		if _, err = httpURL(receipt.RepositoryURL); err != nil {
+		if err = validateRepositoryURL(receipt.RepositoryURL); err != nil {
 			return bad(err)
 		}
 	}
@@ -91,7 +91,14 @@ func readInstalled(root, codeID string, validate func(plugins.Manifest, string) 
 	if err = validate(receipt.Manifest, receipt.HostContract); err != nil {
 		return bad(err)
 	}
-	files, err := validatePackageFiles(receipt.Manifest, receipt.Files, receipt.SHA256)
+	frontendClass := receipt.Manifest.PluginID
+	if d := receipt.FrontendDerivation; d != nil {
+		if !idPattern.MatchString(d.SourceClass) || !idPattern.MatchString(d.TargetClass) || d.SourceClass == d.TargetClass || receipt.Manifest.Frontend == nil {
+			return bad(errors.New("invalid frontend class derivation"))
+		}
+		frontendClass = d.TargetClass
+	}
+	files, err := validateDerivedPackageFiles(receipt.Manifest, receipt.Files, receipt.SHA256, receipt.FrontendDerivation)
 	if err != nil {
 		return bad(err)
 	}
@@ -125,5 +132,5 @@ func readInstalled(root, codeID string, validate func(plugins.Manifest, string) 
 	if int64(len(b)) > MaxExpandedBytes || digest(b) != strings.ToLower(receipt.SHA256) {
 		return bad(errors.New("installed executable digest mismatch"))
 	}
-	return Acquired{Manifest: receipt.Manifest, ExecutablePath: executable, SHA256: digest(b), HostContract: receipt.HostContract, RepositoryURL: receipt.RepositoryURL, PackageSHA256: packageSHA, Files: files, Command: plugins.Command{Path: executable, Dir: target}}, nil
+	return Acquired{FrontendClass: frontendClass, Manifest: receipt.Manifest, ExecutablePath: executable, SHA256: digest(b), HostContract: receipt.HostContract, RepositoryURL: receipt.RepositoryURL, PackageSHA256: packageSHA, Files: files, Command: plugins.Command{Path: executable, Dir: target}}, nil
 }

@@ -64,11 +64,12 @@ func originalFrontendArchive(t *testing.T, binaryEnv, marker string) (artifacts.
 		t.Fatal(err)
 	}
 	files := map[string][]byte{
-		manifest.Entry:                   worker,
-		"frontend/assets/remoteEntry.js": []byte("let scope;export const init=s=>{scope=s};export const get=async name=>{if(!['./Config','./Page','./Dashboard','./AppPage'].includes(name))throw Error('unknown expose');const vue=(await scope.vue[Object.keys(scope.vue)[0]].get())();const m=await import('./chunk.js');return()=>m.component(vue,name)};\n//" + marker),
-		"frontend/assets/chunk.js":       []byte("export const component=(vue,name)=>({name:'OwnedFrontend',setup(){return()=>vue.h('div',{'data-owned-frontend':name},'" + marker + "')}});"),
-		"frontend/assets/style.css":      []byte(".owned-" + marker + "{color:purple}"),
-		"frontend/assets/font.woff2":     []byte("owned-font-" + marker),
+		manifest.Entry:                                   worker,
+		"frontend/assets/remoteEntry.js":                 []byte("let scope;export const init=s=>{scope=s};export const get=async name=>{if(!['./Config','./Page','./Dashboard','./AppPage'].includes(name))throw Error('unknown expose');const vue=(await scope.vue[Object.keys(scope.vue)[0]].get())();const m=await import('./chunk.js');return()=>m.component(vue,name)};\n//" + marker),
+		"frontend/assets/chunk.js":                       []byte("export const literal=()=>window.MoviePilotAPI.get('plugin/OwnedFrontendFixture/status');export const runtime=()=>{const id='OwnedFront'+'endFixture';return window.MoviePilotAPI.get('plugin/'+id+'/status')};export const component=(vue,name)=>({name:'OwnedFrontend',setup(){return()=>vue.h('div',{'data-owned-frontend':name},'" + marker + "')}});"),
+		"frontend/assets/style.css":                      []byte(".owned-" + marker + "{color:purple}"),
+		"frontend/assets/ownedfrontendfixture-theme.css": []byte(".ownedfrontendfixture { --ownedfrontendfixture-class:17px;color:purple }"),
+		"frontend/assets/font.woff2":                     []byte("owned-font-" + marker),
 	}
 	names := make([]string, 0, len(files))
 	for name := range files {

@@ -588,9 +588,61 @@ func (a *App) siteMessageSourceExistsTx(ctx context.Context, tx *sql.Tx, source 
 	if err != nil {
 		return false, err
 	}
-	var count int
-	e := tx.QueryRowContext(ctx, `SELECT COUNT(*) FROM records WHERE kind='notification' AND CAST(json_extract(payload,'$.source') AS TEXT)=CAST(? AS TEXT)`, arg).Scan(&count)
-	return count > 0, e
+	// Current history encrypts source with its message. Read those same deletable
+	// rows, without a public source index or a permanent dedup reservation.
+	rows, err := tx.QueryContext(ctx, `SELECT payload FROM records WHERE kind IN ('notification','message')`)
+	if err != nil {
+		return false, err
+	}
+	values := []any{}
+	for rows.Next() {
+		var raw []byte
+		var record notificationRecord
+		if err = rows.Scan(&raw); err != nil {
+			break
+		}
+		if err = json.Unmarshal(raw, &record); err != nil {
+			break
+		}
+		value := any(record.Source)
+		if len(record.ProtectedContent) > 0 {
+			var payload originalMessageHistoryPayload
+			if err = a.Store.Unseal(record.ProtectedContent, &payload); err != nil {
+				break
+			}
+			value = payload.Source
+			if len(payload.SourceMessage) > 0 {
+				var fields any
+				fields, err = decodeSourceJSON(payload.SourceMessage)
+				if err != nil {
+					break
+				}
+				value = sourceMap(fields)["source"]
+			}
+		}
+		value, err = siteMessageSourceSQLValue(value)
+		if err != nil {
+			break
+		}
+		values = append(values, value)
+	}
+	if err == nil {
+		err = rows.Err()
+	}
+	rows.Close()
+	if err != nil {
+		return false, err
+	}
+	for _, value := range values {
+		var equal bool
+		if err = tx.QueryRowContext(ctx, `SELECT coalesce(CAST(? AS TEXT)=CAST(? AS TEXT),0)`, value, arg).Scan(&equal); err != nil {
+			return false, err
+		}
+		if equal {
+			return true, nil
+		}
+	}
+	return false, nil
 }
 func siteMessageKnownFailure(e error) string {
 	var validation *notice.ValidationError

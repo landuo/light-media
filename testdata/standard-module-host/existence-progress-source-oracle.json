@@ -1,0 +1,56 @@
+{
+  "commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": "src/components/cards/SubscribeCard.vue:75-80",
+  "body": "\n  const total = props.media?.total_episode || 0\n  if (!total) return 0\n  return Math.min(Math.max(total - (props.media?.lack_episode || 0), 0), total)",
+  "cases": [
+    {
+      "media": {
+        "total_episode": 3,
+        "lack_episode": 1
+      },
+      "result": 2
+    },
+    {
+      "media": {
+        "total_episode": 3,
+        "lack_episode": 3
+      },
+      "result": 0
+    },
+    {
+      "media": {
+        "total_episode": 3,
+        "lack_episode": 0
+      },
+      "result": 3
+    },
+    {
+      "media": {
+        "total_episode": 3,
+        "lack_episode": -1
+      },
+      "result": 3
+    },
+    {
+      "media": {
+        "total_episode": 3,
+        "lack_episode": 5
+      },
+      "result": 0
+    },
+    {
+      "media": {
+        "total_episode": 0,
+        "lack_episode": 0
+      },
+      "result": 0
+    },
+    {
+      "media": {
+        "total_episode": 3,
+        "lack_episode": null
+      },
+      "result": 3
+    }
+  ]
+}

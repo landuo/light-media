@@ -4,6 +4,7 @@ import (
 	"errors"
 	"light-media/internal/catalog"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -17,7 +18,7 @@ func (a *App) catalogExploreAPI(r *http.Request, action string) (any, error) {
 	if action == "explore" {
 		query, err = catalog.ParseExploreQuery(q)
 	} else if action == "explore/detail" || action == "explore/resolve" {
-		if !catalog.ValidExploreIdentity(source, kind, id) {
+		if (kind != "movie" && kind != "tv") || source == "" || id == "" || strings.ContainsAny(source+id, "\x00\r\n") {
 			err = bad("INVALID_EXPLORE_IDENTITY", "请选择有效的来源条目")
 		}
 	} else {
@@ -40,7 +41,15 @@ func (a *App) catalogExploreAPI(r *http.Request, action string) (any, error) {
 	switch action {
 	case "explore":
 		var p catalog.ExplorePage
-		cachedAt, err := a.cached(ctx, query.CacheKey(), time.Hour, &p, func() (any, error) { return explorer.Explore(ctx, query) })
+		method, kwargs := originalCatalogExploreModule(query, r.URL.Query())
+		// Source discovery calls its module boundary on each request. Native
+		// provider caching remains inside this fallback and cannot hide plugins.
+		p, err = a.originalCatalogFeed(ctx, method, kwargs, query.Page, func() (catalog.ExplorePage, error) {
+			var core catalog.ExplorePage
+			_, e := a.cached(ctx, query.CacheKey(), time.Hour, &core, func() (any, error) { return explorer.Explore(ctx, query) })
+			return core, e
+		})
+		cachedAt := time.Now().UTC()
 		if err != nil {
 			return nil, catalogExploreError(err)
 		}
@@ -61,12 +70,10 @@ func (a *App) catalogExploreAPI(r *http.Request, action string) (any, error) {
 			CachedAt time.Time `json:"cached_at"`
 		}{p, cachedAt}, nil
 	case "explore/detail":
-		var m catalog.ExploreMedia
-		_, err := a.cached(ctx, "explore-detail:v1:"+source+":"+kind+":"+id, 12*time.Hour, &m, func() (any, error) { return explorer.Detail(ctx, source, kind, id) })
+		m, err := a.originalCatalogExploreDetail(ctx, source, kind, id, q.Get("title"), q.Get("year"), explorer)
 		return m, catalogExploreError(err)
 	case "explore/resolve":
-		var m catalog.ExploreMedia
-		_, err := a.cached(ctx, "explore-detail:v1:"+source+":"+kind+":"+id, 12*time.Hour, &m, func() (any, error) { return explorer.Detail(ctx, source, kind, id) })
+		m, err := a.originalCatalogExploreDetail(ctx, source, kind, id, q.Get("title"), q.Get("year"), explorer)
 		if err != nil {
 			return nil, catalogExploreError(err)
 		}

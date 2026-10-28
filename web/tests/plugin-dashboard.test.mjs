@@ -89,23 +89,24 @@ test('a successful refresh replaces rows, attributes and width instead of replay
   assert.equal(got.elements[0].text, 'new');
 });
 
-test('source local/server timestamp choice, absent row backfill and legacy enabled flags', () => {
-  const newer = { items: {}, enabled: { SystemProcess: true }, updatedAt: 20 },
-    older = { items: {}, updatedAt: 10 };
-  assert.equal(dashboardPreferredLayout(newer, older).layout, newer);
-  assert.equal(dashboardPreferredLayout(newer, undefined).write, true);
-  assert.deepEqual(dashboardPreferredLayout({ ...newer, updatedAt: 5 }, older), {
-    layout: { ...older, enabled: newer.enabled },
-    write: true,
-  });
-  assert.deepEqual(dashboardPreferredLayout(undefined, { ...older, enabled: {} }), {
-    layout: { ...older, enabled: {} },
-    write: false,
-  });
+test('fixed server layout wins over newer local cache; missing server backfills local', () => {
+  const local = { items: {}, enabled: { SystemProcess: true }, updatedAt: 20 },
+    remote = { items: {}, updatedAt: 10 };
+  assert.deepEqual(dashboardPreferredLayout(local, remote), { layout: remote, write: false });
+  assert.deepEqual(dashboardPreferredLayout(local, undefined), { layout: local, write: true });
+  assert.deepEqual(dashboardPreferredLayout(undefined, remote), { layout: remote, write: false });
   assert.deepEqual(dashboardEnabled({ SystemProcess: 'false', disabled: 0 }), {
     SystemProcess: true,
     disabled: false,
   });
+  assert.equal(
+    dashboardWidget({ id: 'x', key: '', cols: { sm: 2, md: 5 } }, 'tablet', { items: {} }).w,
+    5,
+  );
+  assert.equal(
+    dashboardWidget({ id: 'x', key: '', cols: { sm: 2, md: 8 } }, 'tablet', { items: {} }).w,
+    6,
+  );
 });
 
 test('entering edit mode retains measured automatic height; explicit resize wins and reset restores measured height', () => {

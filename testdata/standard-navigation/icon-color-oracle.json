@@ -1,0 +1,50 @@
+{
+  "fixed_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "kind": "fixed utility AST and actual fixed ColorThief browser 2.6.0 with controlled canvas pixels",
+  "sources": {
+    "src/@core/utils/image.ts": "379f577fb3e18f7bdd0e3261b411e59628926e9d6dcb48c753035c6e53014245",
+    "node_modules/colorthief/dist/color-thief.mjs": "3dada676cf2817953d9ef8b02157bec3501cf927a38d37ea4f5d44360bd32552"
+  },
+  "cases": [
+    {
+      "name": "purple",
+      "rgba": [
+        145,
+        85,
+        253,
+        255
+      ],
+      "expected": "#9155fd"
+    },
+    {
+      "name": "red",
+      "rgba": [
+        255,
+        0,
+        0,
+        255
+      ],
+      "expected": "#ff0000"
+    },
+    {
+      "name": "white",
+      "rgba": [
+        255,
+        255,
+        255,
+        255
+      ],
+      "expected": "#28A9E1"
+    },
+    {
+      "name": "transparent",
+      "rgba": [
+        1,
+        2,
+        3,
+        0
+      ],
+      "expected": "#28A9E1"
+    }
+  ]
+}

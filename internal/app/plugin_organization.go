@@ -6,10 +6,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"errors"
-	"math"
 	"net/http"
-	"strings"
-	"unicode"
 )
 
 // MoviePilot's folders are global, while PluginOrder belongs to the user. This
@@ -23,6 +20,7 @@ type PluginOrganization struct {
 	// (null) from an explicitly saved empty list. Keep that private metadata
 	// while the native UI always receives a usable list.
 	orderPresent bool
+	folderKeys   []string // Python dict insertion order, separate from user display order.
 }
 
 const pluginOrganizationSchema = `CREATE TABLE IF NOT EXISTS plugin_organization(
@@ -49,7 +47,8 @@ func (p *PluginStore) organization(ctx context.Context, db pluginOrganizationRea
 	revision := out.Revision
 	var stored struct {
 		PluginOrganization
-		OrderPresent *bool `json:"order_present"`
+		OrderPresent *bool    `json:"order_present"`
+		FolderKeys   []string `json:"folder_keys"`
 	}
 	if err := json.Unmarshal(raw, &stored); err != nil {
 		return out, err
@@ -58,6 +57,12 @@ func (p *PluginStore) organization(ctx context.Context, db pluginOrganizationRea
 	// All rows created before this field were written by the native complete
 	// organization endpoint, which always explicitly saved Order.
 	out.orderPresent = stored.OrderPresent == nil || *stored.OrderPresent
+	out.folderKeys = stored.FolderKeys
+	if out.folderKeys == nil {
+		var fields map[string]json.RawMessage
+		_ = json.Unmarshal(raw, &fields)
+		out.folderKeys = originalFolderInputKeys(fields["folders"])
+	}
 	out.Revision = revision
 	return out, nil
 }
@@ -66,17 +71,17 @@ func (p *PluginStore) Organization(ctx context.Context) (PluginOrganization, err
 	return p.organization(ctx, p.store.DB)
 }
 
-func pluginFolderMembers(raw json.RawMessage) ([]string, error) {
+func pluginFolderRawMembers(raw json.RawMessage) ([]json.RawMessage, error) {
 	raw = bytes.TrimSpace(raw)
 	if len(raw) == 0 {
 		return nil, bad("INVALID_PLUGIN_FOLDER", "文件夹内容无效")
 	}
-	var members []string
+	var members []json.RawMessage
 	if bytes.TrimSpace(raw)[0] == '[' {
 		if err := json.Unmarshal(raw, &members); err != nil {
 			return nil, bad("INVALID_PLUGIN_FOLDER", "文件夹成员必须是插件编号列表")
 		}
-	} else {
+	} else if bytes.TrimSpace(raw)[0] == '{' {
 		var object map[string]json.RawMessage
 		if json.Unmarshal(raw, &object) != nil || object == nil {
 			return nil, bad("INVALID_PLUGIN_FOLDER", "文件夹必须使用原版列表或对象格式")
@@ -86,6 +91,29 @@ func pluginFolderMembers(raw json.RawMessage) ([]string, error) {
 				return nil, bad("INVALID_PLUGIN_FOLDER", "文件夹成员必须是插件编号列表")
 			}
 		}
+	} else if !json.Valid(raw) {
+		return nil, bad("INVALID_PLUGIN_FOLDER", "文件夹包含无效 JSON")
+	}
+	return members, nil
+}
+
+func originalFolderMemberIs(raw json.RawMessage, id string) bool {
+	var value string
+	return json.Unmarshal(raw, &value) == nil && value == id
+}
+
+func pluginFolderMembers(raw json.RawMessage) ([]string, error) {
+	values, err := pluginFolderRawMembers(raw)
+	if err != nil {
+		return nil, err
+	}
+	members := make([]string, 0, len(values))
+	for _, value := range values {
+		var id string
+		if json.Unmarshal(value, &id) != nil {
+			return nil, bad("INVALID_PLUGIN_FOLDER", "文件夹成员不是插件编号")
+		}
+		members = append(members, id)
 	}
 	return members, nil
 }
@@ -94,76 +122,18 @@ func validatePluginOrganization(in PluginOrganization) error {
 	if in.Folders == nil {
 		return bad("INVALID_PLUGIN_FOLDER", "文件夹配置必须是对象")
 	}
-	seen := make(map[string]bool)
-	for name, value := range in.Folders {
-		if strings.TrimSpace(name) == "" || strings.ContainsFunc(name, unicode.IsControl) {
-			return bad("INVALID_PLUGIN_FOLDER", "文件夹名称不能为空或包含控制字符")
-		}
-		members, err := pluginFolderMembers(value)
-		if err != nil {
-			return err
-		}
-		for _, member := range members {
-			if !pluginStorageID.MatchString(member) {
-				return bad("INVALID_PLUGIN_FOLDER", "文件夹包含无效插件编号")
-			}
-			if _, nested := in.Folders[member]; nested {
-				return bad("INVALID_PLUGIN_FOLDER", "文件夹不能嵌套")
-			}
-			if seen[member] {
-				return bad("INVALID_PLUGIN_FOLDER", "同一插件不能重复加入文件夹")
-			}
-			seen[member] = true
+	// Both source endpoints store configuration JSON, not code/path authority.
+	// In particular the original folders dict has no member/schema validation,
+	// and the user setting accepts list/dict/bool/int/string/null values.
+	for _, value := range in.Folders {
+		if !json.Valid(value) {
+			return bad("INVALID_PLUGIN_FOLDER", "文件夹配置包含无效 JSON")
 		}
 	}
-	var order []json.RawMessage
-	if json.Unmarshal(in.Order, &order) != nil || bytes.Equal(bytes.TrimSpace(in.Order), []byte("null")) {
-		return bad("INVALID_PLUGIN_ORDER", "插件顺序必须是列表")
+	if !json.Valid(in.Order) {
+		return bad("INVALID_PLUGIN_ORDER", "插件顺序包含无效 JSON")
 	}
-	seenOrder := make(map[string]bool)
-	for _, value := range order {
-		var id string
-		if json.Unmarshal(value, &id) == nil {
-			if !pluginStorageID.MatchString(id) {
-				return bad("INVALID_PLUGIN_ORDER", "插件顺序包含无效编号")
-			}
-			id = "plugin:" + id
-		} else {
-			var item struct {
-				ID    string          `json:"id"`
-				Type  string          `json:"type"`
-				Order json.RawMessage `json:"order"`
-			}
-			if json.Unmarshal(value, &item) != nil {
-				return bad("INVALID_PLUGIN_ORDER", "插件顺序项无效")
-			}
-			if item.Type == "" {
-				item.Type = "plugin"
-			}
-			if item.Type != "plugin" && item.Type != "folder" {
-				return bad("INVALID_PLUGIN_ORDER", "插件顺序项无效")
-			}
-			if len(item.Order) > 0 {
-				var numeric float64
-				if json.Unmarshal(item.Order, &numeric) != nil || bytes.Equal(bytes.TrimSpace(item.Order), []byte("null")) || math.IsInf(numeric, 0) || math.IsNaN(numeric) {
-					return bad("INVALID_PLUGIN_ORDER", "插件顺序必须使用有限数值")
-				}
-			}
-			if item.Type == "plugin" && !pluginStorageID.MatchString(item.ID) {
-				return bad("INVALID_PLUGIN_ORDER", "插件顺序包含无效编号")
-			}
-			// Original PluginOrder keeps stale folder entries after deletion or
-			// rename. They are inert display preferences, not a nested folder.
-			if item.Type == "folder" && strings.TrimSpace(item.ID) == "" {
-				return bad("INVALID_PLUGIN_ORDER", "插件顺序包含空文件夹名称")
-			}
-			id = item.Type + ":" + item.ID
-		}
-		if seenOrder[id] {
-			return bad("INVALID_PLUGIN_ORDER", "插件顺序不能包含重复项")
-		}
-		seenOrder[id] = true
-	}
+
 	return nil
 }
 
@@ -179,10 +149,12 @@ func (p *PluginStore) saveOrganizationTx(ctx context.Context, tx *sql.Tx, in Plu
 		return PluginOrganization{}, bad("PLUGIN_REVISION_CONFLICT", "插件文件夹或顺序已在其他页面更改，请刷新后重试")
 	}
 	in.Revision++
+	in.folderKeys = originalFolderKeys(in)
 	raw, err := pluginJSON(struct {
 		PluginOrganization
-		OrderPresent bool `json:"order_present"`
-	}{in, in.orderPresent}, true)
+		OrderPresent bool     `json:"order_present"`
+		FolderKeys   []string `json:"folder_keys"`
+	}{in, in.orderPresent, in.folderKeys}, true)
 	if err != nil {
 		return PluginOrganization{}, err
 	}
@@ -216,15 +188,16 @@ func (p *PluginStore) removeOrganizationMemberTx(ctx context.Context, tx *sql.Tx
 		return err
 	}
 	changed := false
-	for name, value := range organization.Folders {
-		members, err := pluginFolderMembers(value)
+	for _, name := range originalFolderKeys(organization) {
+		value := organization.Folders[name]
+		members, err := pluginFolderRawMembers(value)
 		if err != nil {
 			return err
 		}
-		remaining := make([]string, 0, len(members))
+		remaining := make([]json.RawMessage, 0, len(members))
 		removed := false
 		for _, member := range members {
-			if member == instance {
+			if originalFolderMemberIs(member, instance) && !removed {
 				removed = true
 			} else {
 				remaining = append(remaining, member)
@@ -254,14 +227,46 @@ func (p *PluginStore) removeOrganizationMemberTx(ctx context.Context, tx *sql.Tx
 
 func (a *App) pluginOrganizationHTTP(w http.ResponseWriter, r *http.Request) (any, error) {
 	if r.Method == "GET" {
-		return a.pluginStore.Organization(r.Context())
+		return originalOrganizationHTTPValue(a.pluginStore.Organization(r.Context()))
 	}
 	if r.Method != "PUT" {
 		return nil, &APIError{"NOT_FOUND", "接口不存在", 404}
 	}
-	var in PluginOrganization
+	// The Vue manager consumes one application-envelope projection of the two
+	// original values. Keep it on their existing store/transaction path. A
+	// returned revision is useful for stale-read display protection but is not
+	// an original write precondition. Partial saves touch only the supplied
+	// source value, so editing folders does not overwrite a newer user order.
+	var in struct {
+		Revision int64           `json:"revision"`
+		Folders  json.RawMessage `json:"folders"`
+		Order    json.RawMessage `json:"order"`
+	}
 	if err := decodePluginBody(w, r, &in); err != nil {
 		return nil, err
 	}
-	return a.pluginStore.SaveOrganization(r.Context(), in)
+	var folders map[string]json.RawMessage
+	if len(in.Folders) != 0 && (json.Unmarshal(in.Folders, &folders) != nil || folders == nil) {
+		return nil, bad("INVALID_PLUGIN_FOLDER", "文件夹配置必须是对象")
+	}
+	if len(in.Order) != 0 {
+		var order []json.RawMessage
+		if json.Unmarshal(in.Order, &order) != nil || order == nil {
+			return nil, bad("INVALID_PLUGIN_ORDER", "插件顺序必须是列表")
+		}
+	}
+	if err := a.pluginStore.mutateOrganization(r.Context(), func(current *PluginOrganization) (bool, error) {
+		if len(in.Folders) != 0 {
+			current.Folders = folders
+			current.folderKeys = originalFolderInputKeys(in.Folders)
+		}
+		if len(in.Order) != 0 {
+			current.Order = append(json.RawMessage(nil), in.Order...)
+			current.orderPresent = true
+		}
+		return len(in.Folders) != 0 || len(in.Order) != 0, nil
+	}); err != nil {
+		return nil, err
+	}
+	return originalOrganizationHTTPValue(a.pluginStore.Organization(r.Context()))
 }

@@ -1,0 +1,286 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/storage.py": "9665a00d34931bbfe3b44f916d7b0b5f8cb658b3abc5bc7786d84ab659483719",
+    "app/api/endpoints/storage.py": "c7d818ab46b845f169d026bddbfec5505e33f8b6d6007fa159bfbb8070b3cd70",
+    "app/schemas/file.py": "676486e635bc9d0dfc0e589b514a6627c3330bf961a566c2cd8872b79f74aba0",
+    "app/modules/filemanager/storages/local.py": "fdbe39789b31b508aa35c4e15e273ee4ed19fc92130aa31c33d0b74fc10bfdf4"
+  },
+  "boundary": "Fixed StorageChain dispatcher, endpoint and DTO; controlled provider returns.\n\nThe target native provider exposes only its existing Go operations. The original\nLocalStorage dictionary is recorded separately so this adaptation stays visible.\n",
+  "native_adaptation": {
+    "original": {
+      "copy": "复制",
+      "move": "移动",
+      "link": "硬链接",
+      "softlink": "软链接"
+    },
+    "target": {
+      "link": "硬链接",
+      "copy": "复制",
+      "auto": "自动"
+    }
+  },
+  "cases": [
+    {
+      "name": "native",
+      "plugin": null,
+      "fail": false,
+      "output": {
+        "transtype": {
+          "link": "硬链接",
+          "copy": "复制",
+          "auto": "自动"
+        }
+      },
+      "status": 200,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "storage": "local"
+          }
+        },
+        {
+          "kind": "clone",
+          "kwargs": {
+            "storage": "local"
+          }
+        },
+        {
+          "kind": "native",
+          "kwargs": {
+            "storage": "local"
+          }
+        }
+      ],
+      "error_count": 0
+    },
+    {
+      "name": "override",
+      "plugin": {
+        "copy": "插件复制",
+        "link": "插件硬链接"
+      },
+      "fail": false,
+      "output": {
+        "transtype": {
+          "copy": "插件复制",
+          "link": "插件硬链接"
+        }
+      },
+      "status": 200,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "storage": "local"
+          }
+        }
+      ],
+      "error_count": 0
+    },
+    {
+      "name": "empty_object",
+      "plugin": {},
+      "fail": false,
+      "output": {
+        "transtype": {}
+      },
+      "status": 200,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "storage": "local"
+          }
+        }
+      ],
+      "error_count": 0
+    },
+    {
+      "name": "false",
+      "plugin": false,
+      "fail": false,
+      "output": {
+        "transtype": {}
+      },
+      "status": 200,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "storage": "local"
+          }
+        }
+      ],
+      "error_count": 0
+    },
+    {
+      "name": "empty_list",
+      "plugin": [],
+      "fail": false,
+      "output": {
+        "transtype": {}
+      },
+      "status": 200,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "storage": "local"
+          }
+        },
+        {
+          "kind": "clone",
+          "kwargs": {
+            "storage": "local"
+          }
+        },
+        {
+          "kind": "native",
+          "kwargs": {
+            "storage": "local"
+          }
+        }
+      ],
+      "error_count": 0
+    },
+    {
+      "name": "invalid_list",
+      "plugin": [
+        "bad"
+      ],
+      "fail": false,
+      "output": null,
+      "status": 500,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "storage": "local"
+          }
+        },
+        {
+          "kind": "clone",
+          "kwargs": {
+            "storage": "local"
+          }
+        },
+        {
+          "kind": "native",
+          "kwargs": {
+            "storage": "local"
+          }
+        }
+      ],
+      "error_count": 0
+    },
+    {
+      "name": "empty_tuple",
+      "plugin": {
+        "__plugin_module_tuple": []
+      },
+      "fail": false,
+      "output": {
+        "transtype": {
+          "link": "硬链接",
+          "copy": "复制",
+          "auto": "自动"
+        }
+      },
+      "status": 200,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "storage": "local"
+          }
+        },
+        {
+          "kind": "clone",
+          "kwargs": {
+            "storage": "local"
+          }
+        },
+        {
+          "kind": "native",
+          "kwargs": {
+            "storage": "local"
+          }
+        }
+      ],
+      "error_count": 0
+    },
+    {
+      "name": "invalid_tuple",
+      "plugin": {
+        "__plugin_module_tuple": [
+          "bad"
+        ]
+      },
+      "fail": false,
+      "output": null,
+      "status": 500,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "storage": "local"
+          }
+        }
+      ],
+      "error_count": 0
+    },
+    {
+      "name": "invalid_scalar",
+      "plugin": 9,
+      "fail": false,
+      "output": null,
+      "status": 500,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "storage": "local"
+          }
+        }
+      ],
+      "error_count": 0
+    },
+    {
+      "name": "throw",
+      "plugin": null,
+      "fail": true,
+      "output": {
+        "transtype": {
+          "link": "硬链接",
+          "copy": "复制",
+          "auto": "自动"
+        }
+      },
+      "status": 200,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "storage": "local"
+          }
+        },
+        {
+          "kind": "clone",
+          "kwargs": {
+            "storage": "local"
+          }
+        },
+        {
+          "kind": "native",
+          "kwargs": {
+            "storage": "local"
+          }
+        }
+      ],
+      "error_count": 1
+    }
+  ]
+}

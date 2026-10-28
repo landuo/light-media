@@ -135,18 +135,32 @@ func (w *concurrentWorker) readLoop() {
 			continue
 		}
 		if request.Method == "transport.retire" {
-			var version struct { Version int `json:"version"` }
-			if !identityPattern.MatchString(request.ID) || strings.Contains(request.ID,".") || strictJSON(request.Payload,&version)!=nil || version.Version!=1 {
-				w.finish(failure("invalid_invocation"));return
+			var version struct {
+				Version int `json:"version"`
+			}
+			if !identityPattern.MatchString(request.ID) || strings.Contains(request.ID, ".") || strictJSON(request.Payload, &version) != nil || version.Version != 1 {
+				w.finish(failure("invalid_invocation"))
+				return
 			}
 			w.mu.Lock()
-			if w.stopping || w.retiring || w.calls[request.ID]!=nil {w.mu.Unlock();w.finish(failure("invalid_invocation"));return}
-			w.retiring=true;w.draining=true
-			for _,old:=range w.calls{old.phase.closed.Store(true);old.cancel()}
+			if w.stopping || w.retiring || w.calls[request.ID] != nil {
+				w.mu.Unlock()
+				w.finish(failure("invalid_invocation"))
+				return
+			}
+			w.retiring = true
+			w.draining = true
+			for _, old := range w.calls {
+				old.phase.closed.Store(true)
+				old.cancel()
+			}
 			w.mu.Unlock()
 			// Only this explicit transport-only fence authorizes normal EOF.
 			// No plugin lifecycle Handler is invoked; EOF cancels and joins.
-			if _,err=w.transport.write(Frame{Protocol:ProtocolVersion,ID:request.ID,Type:"result",Identity:w.transport.wire.identity,Result:json.RawMessage(`{"version":1}`)},nil);err!=nil{w.finish(err);return}
+			if _, err = w.transport.write(Frame{Protocol: ProtocolVersion, ID: request.ID, Type: "result", Identity: w.transport.wire.identity, Result: json.RawMessage(`{"version":1}`)}, nil); err != nil {
+				w.finish(err)
+				return
+			}
 			continue
 		}
 		if request.Method == "transport.shutdown" {
@@ -236,7 +250,7 @@ func (w *concurrentWorker) invoke(call *concurrentWorkerCall) {
 	if canceled {
 		reply.Error = &ReplyError{Code: "EXECUTION_CANCELED"}
 	} else if err != nil {
-		reply.Error = &ReplyError{Code: "OPERATION_FAILED"}
+		reply.Error = &ReplyError{Code: workerHandlerFailureCode(err)}
 	} else {
 		if len(result) == 0 {
 			result = json.RawMessage(`null`)

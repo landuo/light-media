@@ -1,0 +1,27 @@
+{
+  "frontend_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "kind": "actual fixed formatFileSize pure function; DownloadingCard applies size || 0",
+  "source_sha256": "a5b3e03cc09f4443616b714e69314a297ac720f0162ebf58a000bcb8045a9362",
+  "cases": [
+    {
+      "input": null,
+      "result": "0.00 B"
+    },
+    {
+      "input": 0,
+      "result": "0.00 B"
+    },
+    {
+      "input": 2048,
+      "result": "2.00 KB"
+    },
+    {
+      "input": -10.5,
+      "result": "-10.50 B"
+    },
+    {
+      "input": 1e+100,
+      "result": "9.094947017729283e+87 TB"
+    }
+  ]
+}

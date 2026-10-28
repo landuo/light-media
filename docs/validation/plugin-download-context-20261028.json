@@ -1,0 +1,106 @@
+{
+  "accepted": false,
+  "whole_indices": [
+    36,
+    37,
+    43
+  ],
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/download.py:824-863",
+    "app/chain/download.py:1019-1028",
+    "app/core/context.py:1138-1181"
+  ],
+  "target": [
+    "internal/app/plugin_original_download_context.go",
+    "internal/app/native_download.go",
+    "internal/app/search_download.go",
+    "internal/app/download_events.go",
+    "internal/app/search_parallel.go",
+    "internal/app/material_store.go",
+    "web/src/components/AddDownloadDialog.vue"
+  ],
+  "evidence_manifests": [
+    "testdata/plugin-module-no-official-auth-20261026/download-context-20261028/runtime/manifest.json",
+    "testdata/plugin-module-no-official-auth-20261026/download-context-20261028/manifest.json"
+  ],
+  "verified": [
+    "fixed source AST9 exact ResourceDownload/DownloadAdded SDK cases7.696s; actual native Add/veto/error/escape/SQL failed commit and accepted repeat",
+    "private full MediaInfo/TorrentInfo search-cache→queue→SDK0.47s with encrypted storage and public projection checks",
+    "broad110.240s and post-integration transfer/download race98.082s",
+    "Linux main1cbf CLI1.83s and browser680.10s; actual independent tasks; failed veto creates no task; restoring same resource creates a task and accepted UI label; cold authenticated UI shows5 owned tasks, source/clone rows15/6 unchanged and new processes3757338/3757344",
+    "literal browser drag reverses source/clone display order, PID/init9/4 unchanged, same event id shows source→clone causal input mutation; organization order survives cold startup"
+  ],
+  "adaptations": [
+    "Existing native manual Add permits unidentified media; its Context.media_info is None until a reliable media identity is available. Full real provider payloads are retained where recognized.",
+    "Existing native preview/material verification and local authorization remain; an event cannot authorize a new downloader, foreign media identity, remote path or library-overlapping path.",
+    "Value snapshots preserve complete source arguments; arbitrary Python heap aliases are outside the Go ABI.",
+    "Native download acceptance/history remains transactional; broadcasts occur after a new accepted commit, no replay on cold startup or accepted repeat; a crash between commit and in-memory event may lose that event.",
+    "Native frozen save paths map its existing directory selection and downloader auto default, rather than introducing a separate source directory business subsystem."
+  ],
+  "failures_retained": [
+    "initial explicit empty selected set wrongly used parsed episode list; fixed against source",
+    "first broad67.198s used stale module test executable; rebuilt current fixture,110.240s green",
+    "first Linux1.46s peer failed to honor hashes filtering; production correctly rejected invalid task; test-only observer r2 fixed, main unchanged"
+  ],
+  "remaining": [
+    "resource.selection pure bridge not yet connected to applicable batch hosts",
+    "full ordinary module/event inventory closure and any remaining applicable branch",
+    "final composite48 and total50 audit"
+  ],
+  "cleanup": "IAB46 closed; extra browser clone uninstalled/API404; parent source+input clones uninstalled/API404; test process completed and owned temporary directories removed; SSH34427 stopped",
+  "selected_context_cold_increment": {
+    "accepted_whole_scope": false,
+    "manifest": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/manifest.json",
+    "source": [
+      "B/app/chain/download.py:785-1028 uses already resolved Context",
+      "B/app/chain/download.py:1193 ResourceSelection prefix",
+      "B/app/chain/tmdb.py:78 sync episodes",
+      "B/app/chain/transfer.py:1958 sync internal episodes",
+      "B/app/chain/subscribe.py:3795 sync subscription files-info"
+    ],
+    "target": [
+      "internal/app/plugin_original_resource_selection.go",
+      "internal/app/search_download.go:previewDownload/runDownload",
+      "internal/app/subscription_quality_check.go",
+      "internal/app/subscription_acquisition_batch.go",
+      "internal/app/http.go:season",
+      "internal/app/plugin_original_catalog_episodes.go"
+    ],
+    "linux": {
+      "main_sha256": "08c519c22d4bc3e69eacf8e801f09e35c11ee235f5ff8b70758e11fd9987de59",
+      "shared_test_sha256": "8e9db186a285c6a16d61b6c0826b84129d116bf25a5ee783679bb115c1cde549",
+      "seconds": 2.91,
+      "passed": true,
+      "actual": "full HTTP subscription create/check→SQLite intent commit ABORT, acquisition generation1 phaseintent→real cmd/server cold generation2 phaseaccepted+completed; exactly one ResourceSelection, actual Add once and DownloadAdded once, old private marker retained, provider removed before cold; owned tasks total4 asserted. Parent services/source+clone uninstalled404/empty registrations and tempdir cleanup passed.",
+      "log_correction": "old test log text says3 native tasks; actual final assertion wantAdds4 and cold acceptance/SDK proof are authoritative; text updated in subsequent test-only change"
+    },
+    "local": "no compact UI media cache and no TMDB credential: actual SDK/real Add cold recovery1.31s; selector whole9+8 host roots7.598s; quality21 and recognition2 baseline plus selection12.959s; sync9/source async11 actual SDK combined17.200s",
+    "failures": "first local runs exposed missing test login, omitted cold initializer, then genuine repeated source recognition; Linux11 exposed preview core media reload, Linux12 showed runDownload media reload via persisted rejected phase, fixed separately. Original compact recognition fixture now supplies full controlled provider required by existing ordinary precheck; production guards not bypassed.",
+    "adaptations": "Existing native acquisition persists selected Meta/full Context to resume before actual Add; Source has no native durable queue. On resume no new search/selection substitutes its frozen inputs, and actual material/site/season/directory/receipt guards still run. Sync internal episodes use exact sync module name and source DTO; absent native async calendar-prewarm business is not invented.",
+    "remaining": [
+      "current integration race after last runDownload frozen-target fix",
+      "download_added ordinary module postprocessing caller",
+      "complete ordinary event/module scope audit"
+    ]
+  },
+  "ordinary_download_added_module": {
+    "whole_scope_accepted": false,
+    "source": [
+      "B/app/chain/download.py:447-470",
+      "B/app/chain/download.py:1014-1018",
+      "B/app/chain/__init__.py:1391-1411"
+    ],
+    "target": [
+      "internal/app/plugin_original_download_added.go",
+      "internal/app/plugin_original_download_context.go",
+      "internal/app/download_events.go",
+      "internal/app/native_download.go",
+      "internal/app/search_download.go"
+    ],
+    "manifest": "testdata/plugin-module-no-official-auth-20261026/post-download-20261028/manifest.json",
+    "actual": "fixed6 queue/closure/dispatcher source cases; actual native SDK10 source/clone/scalar/list/throw/SQL cases7.31s, real held SDK returns acceptance while callback remains blocked0.64s, admission failure preserves accepted task0.66s. Actual Linux3.11s full Context/metainfo bytes→owned peer4 calls(source3/clone1), veto/escape no call, cold no replay/new PIDs3855983/3855998→3856029/3856035, actual peer503 still accepted. Same gate rechecks nonempty quality SQL/cold generation1 intent→2 accepted; total four real Add tasks. All owned plugins uninstalled/API404/TempDir removed.",
+    "current_race": "83.319s for download/selector/post-added/internal seasons actual SDK/owned FS/protocol integration; exact pre-storage source snapshot14",
+    "adaptation": "Existing App background admission/goroutine owns ordinary asynchronous SDK call and shutdown. Serialized full Context and bytes replace shared Python heap identity. Existing material archive reference and frozen path are encrypted; no Python/runtime/new executor or subtitle business added. Only fresh committed accepted fact submits; retry/cold do not repeat. Original tuple layout is retained encrypted; native file path remains the actual daemon-reported file layout, pending explicit tuple-layout branch audit."
+  }
+}

@@ -16,8 +16,8 @@ import (
 // ingress. No HTTP route accepts an event name, action, method, or event data.
 type originalCommandEvent struct {
 	Text    string
-	Channel string
-	Source  string
+	Channel any
+	Source  any
 	User    any
 }
 
@@ -32,7 +32,7 @@ func (a *App) publishOriginalCommandEvent(ctx context.Context, input originalCom
 	if err != nil {
 		return false, err
 	}
-	a.broadcastOriginalPluginEvent(context.WithoutCancel(ctx), "command.excute", raw)
+	a.broadcastOriginalPluginEventCoreState(context.WithoutCancel(ctx), "command.excute", raw, true)
 	return a.dispatchOriginalCommand(ctx, input)
 }
 
@@ -85,7 +85,8 @@ func (a *App) dispatchOriginalCommand(ctx context.Context, input originalCommand
 	return true, nil
 }
 
-// standardWebCommandHTTP restores only the text-command branch of the fixed
+// standardWebCommandHTTP restores ordinary plugin text commands and the
+// ordinary user.message fallback of the fixed
 // MoviePilot POST /api/v1/message/web endpoint. /api/message/web is the native
 // host alias. The common API wrapper has already checked session and origin;
 // the account name is read here, never trusted from request JSON or a header.
@@ -93,6 +94,15 @@ func (a *App) dispatchOriginalCommand(ctx context.Context, input originalCommand
 func (a *App) standardWebCommandHTTP(w http.ResponseWriter, r *http.Request, path string) bool {
 	if path != "message/web" && path != "v1/message/web" {
 		return false
+	}
+	if r.Method == http.MethodGet {
+		result, err := a.originalWebMessageHistory(r)
+		if err != nil {
+			a.writeError(w, r, err)
+		} else {
+			writeJSON(w, r, result)
+		}
+		return true
 	}
 	if r.Method != http.MethodPost {
 		a.writeError(w, r, &APIError{"METHOD_NOT_ALLOWED", "仅支持 POST 文本命令", http.StatusMethodNotAllowed})
@@ -104,6 +114,7 @@ func (a *App) standardWebCommandHTTP(w http.ResponseWriter, r *http.Request, pat
 		return true
 	}
 	text := ""
+	hasMedia := false
 	if values := r.URL.Query()["text"]; len(values) != 0 {
 		text = values[len(values)-1]
 	}
@@ -121,15 +132,38 @@ func (a *App) standardWebCommandHTTP(w http.ResponseWriter, r *http.Request, pat
 		} else if present {
 			text = ""
 		}
+		hasMedia = originalViewJSONTruth(payload["image"]) || originalViewJSONTruth(payload["images"])
 		// The original MessageChain routes slash commands before media/AI
 		// handling. Image metadata never enters CommandExcute or command data;
 		// this text-command bridge neither parses nor retrieves media.
 	}
-	// Other original MessageChain branches are deliberately not reported as
-	// implemented. Unknown slash commands remain a source-compatible no-op.
+	channel := "Web"
+	if consumed, feedback := a.consumeOriginalPluginInput(r.Context(), originalInputMessage{Text: text, User: user, Channel: &channel, Source: &user, Username: &user, HasMedia: hasMedia}); consumed {
+		result := map[string]any{"success": true, "accepted": true}
+		if feedback != "" {
+			result["message"] = feedback
+		}
+		writeJSON(w, r, result)
+		return true
+	}
+	// Source handles a pending plugin input first; only unconsumed ordinary
+	// non-callback text is then persisted with action=0, before command routing.
+	if !strings.HasPrefix(text, "CALLBACK:") {
+		if err := a.saveOriginalIncomingWebMessage(r.Context(), user, text); err != nil {
+			a.writeError(w, r, err)
+			return true
+		}
+	}
+	// Unknown slash commands remain a source-compatible no-op. Ordinary user
+	// messages retain their own broadcast after the pending-input branch.
 	text, commandText := originalWebCommandText(text)
 	if !commandText {
-		a.writeError(w, r, &APIError{"MESSAGE_ROUTE_UNAVAILABLE", "本入口目前仅支持已注册的插件文本命令", http.StatusNotImplemented})
+		if strings.TrimSpace(text) != "" && !strings.HasPrefix(strings.ToLower(text), "/ai") && !strings.HasPrefix(text, "CALLBACK:") {
+			a.emitStandardBusinessEvent(r.Context(), "user.message", map[string]any{"text": text, "userid": user, "channel": "Web", "source": user, "chat_id": nil, "reply_to_message_id": nil})
+			writeJSON(w, r, map[string]bool{"success": true, "accepted": true})
+			return true
+		}
+		a.writeError(w, r, &APIError{"MESSAGE_ROUTE_UNAVAILABLE", "当前消息类型尚未接入", http.StatusNotImplemented})
 		return true
 	}
 	name, _ := commandrouter.Split(text)

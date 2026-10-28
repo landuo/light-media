@@ -1,0 +1,1139 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:1135-1195",
+    "app/chain/transfer.py:1251-1310",
+    "app/db/transferhistory_oper.py:227-319"
+  ],
+  "kind": "Pinned per-task history-before-event callback prefix, ordinary branches only.\nReal Pydantic models and exact add_success/add_fail execute against a controlled\nhistory store. Notification/batch code after this prefix is not claimed here.\n",
+  "cases": [
+    {
+      "kind": "main",
+      "success": true,
+      "null_target": false,
+      "trace": [
+        "history",
+        "transfer.complete"
+      ],
+      "history": {
+        "src": "/owned/source/Task.mkv",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "/owned/source/Task.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "Task.mkv",
+          "basename": null,
+          "extension": "mkv",
+          "size": 23,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": "/owned/library/Task.mkv",
+        "dest_storage": "local",
+        "dest_fileitem": {
+          "path": "/owned/library/Task.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "Task.mkv",
+          "basename": null,
+          "extension": null,
+          "size": 23,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "mode": "link",
+        "type": "电影",
+        "category": null,
+        "title": "Owned",
+        "year": "2024",
+        "tmdbid": 123,
+        "imdbid": null,
+        "tvdbid": null,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": null,
+        "episodes": null,
+        "image": null,
+        "downloader": null,
+        "download_hash": null,
+        "status": 1,
+        "files": [
+          "/owned/source/Task.mkv"
+        ]
+      },
+      "events": [
+        {
+          "type": "transfer.complete",
+          "history_id": 101,
+          "fileitem": {
+            "path": "/owned/source/Task.mkv",
+            "storage": "local",
+            "type": "file",
+            "name": "Task.mkv",
+            "basename": null,
+            "extension": "mkv",
+            "size": 23,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "transferinfo": {
+            "success": true,
+            "fileitem": {
+              "path": "/owned/source/Task.mkv",
+              "storage": "local",
+              "type": "file",
+              "name": "Task.mkv",
+              "basename": null,
+              "extension": "mkv",
+              "size": 23,
+              "modify_time": null,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "target_diritem": null,
+            "target_item": {
+              "path": "/owned/library/Task.mkv",
+              "storage": "local",
+              "type": "file",
+              "name": "Task.mkv",
+              "basename": null,
+              "extension": null,
+              "size": 23,
+              "modify_time": null,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "transfer_type": "link",
+            "file_count": 77,
+            "file_list": [
+              "/owned/source/Task.mkv"
+            ],
+            "file_list_new": [
+              "/owned/library/Task.mkv"
+            ],
+            "total_size": 999,
+            "fail_list": [],
+            "message": null,
+            "need_scrape": false,
+            "need_notify": false
+          }
+        }
+      ],
+      "returned_history_id": 101
+    },
+    {
+      "kind": "main",
+      "success": true,
+      "null_target": true,
+      "trace": [
+        "history",
+        "transfer.complete"
+      ],
+      "history": {
+        "src": "/owned/source/Task.mkv",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "/owned/source/Task.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "Task.mkv",
+          "basename": null,
+          "extension": "mkv",
+          "size": 23,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": null,
+        "dest_storage": null,
+        "dest_fileitem": null,
+        "mode": null,
+        "type": "电影",
+        "category": null,
+        "title": "Owned",
+        "year": "2024",
+        "tmdbid": 123,
+        "imdbid": null,
+        "tvdbid": null,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": null,
+        "episodes": null,
+        "image": null,
+        "downloader": null,
+        "download_hash": null,
+        "status": 1,
+        "files": [
+          "/owned/source/Task.mkv"
+        ]
+      },
+      "events": [
+        {
+          "type": "transfer.complete",
+          "history_id": 101,
+          "fileitem": {
+            "path": "/owned/source/Task.mkv",
+            "storage": "local",
+            "type": "file",
+            "name": "Task.mkv",
+            "basename": null,
+            "extension": "mkv",
+            "size": 23,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "transferinfo": {
+            "success": true,
+            "fileitem": {
+              "path": "/owned/source/Task.mkv",
+              "storage": "local",
+              "type": "file",
+              "name": "Task.mkv",
+              "basename": null,
+              "extension": "mkv",
+              "size": 23,
+              "modify_time": null,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "target_diritem": null,
+            "target_item": null,
+            "transfer_type": null,
+            "file_count": 77,
+            "file_list": [
+              "/owned/source/Task.mkv"
+            ],
+            "file_list_new": [
+              "/owned/library/Task.mkv"
+            ],
+            "total_size": 999,
+            "fail_list": [],
+            "message": null,
+            "need_scrape": false,
+            "need_notify": false
+          }
+        }
+      ],
+      "returned_history_id": 101
+    },
+    {
+      "kind": "main",
+      "success": false,
+      "null_target": true,
+      "trace": [
+        "history",
+        "transfer.failed"
+      ],
+      "history": {
+        "src": "/owned/source/Task.mkv",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "/owned/source/Task.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "Task.mkv",
+          "basename": null,
+          "extension": "mkv",
+          "size": 23,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": null,
+        "dest_storage": null,
+        "dest_fileitem": null,
+        "mode": null,
+        "type": "电影",
+        "category": null,
+        "title": "Owned",
+        "year": "2024",
+        "tmdbid": 123,
+        "imdbid": null,
+        "tvdbid": null,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": null,
+        "episodes": null,
+        "image": null,
+        "downloader": null,
+        "download_hash": null,
+        "episode_group": null,
+        "status": 0,
+        "errmsg": "owned per-task veto",
+        "files": [
+          "/owned/source/Task.mkv"
+        ]
+      },
+      "events": [
+        {
+          "type": "transfer.failed",
+          "history_id": 101,
+          "fileitem": {
+            "path": "/owned/source/Task.mkv",
+            "storage": "local",
+            "type": "file",
+            "name": "Task.mkv",
+            "basename": null,
+            "extension": "mkv",
+            "size": 23,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "transferinfo": {
+            "success": false,
+            "fileitem": {
+              "path": "/owned/source/Task.mkv",
+              "storage": "local",
+              "type": "file",
+              "name": "Task.mkv",
+              "basename": null,
+              "extension": "mkv",
+              "size": 23,
+              "modify_time": null,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "target_diritem": null,
+            "target_item": null,
+            "transfer_type": null,
+            "file_count": 77,
+            "file_list": [
+              "/owned/source/Task.mkv"
+            ],
+            "file_list_new": [
+              "/owned/library/Task.mkv"
+            ],
+            "total_size": 999,
+            "fail_list": [],
+            "message": "owned per-task veto",
+            "need_scrape": false,
+            "need_notify": false
+          }
+        }
+      ],
+      "returned_history_id": 101
+    },
+    {
+      "kind": "subtitle",
+      "success": true,
+      "null_target": false,
+      "trace": [
+        "history",
+        "transfer.subtitle.complete"
+      ],
+      "history": {
+        "src": "/owned/source/Task.srt",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "/owned/source/Task.srt",
+          "storage": "local",
+          "type": "file",
+          "name": "Task.srt",
+          "basename": null,
+          "extension": "srt",
+          "size": 23,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": "/owned/library/Task.srt",
+        "dest_storage": "local",
+        "dest_fileitem": {
+          "path": "/owned/library/Task.srt",
+          "storage": "local",
+          "type": "file",
+          "name": "Task.srt",
+          "basename": null,
+          "extension": null,
+          "size": 23,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "mode": "link",
+        "type": "电影",
+        "category": null,
+        "title": "Owned",
+        "year": "2024",
+        "tmdbid": 123,
+        "imdbid": null,
+        "tvdbid": null,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": null,
+        "episodes": null,
+        "image": null,
+        "downloader": null,
+        "download_hash": null,
+        "status": 1,
+        "files": [
+          "/owned/source/Task.srt"
+        ]
+      },
+      "events": [
+        {
+          "type": "transfer.subtitle.complete",
+          "history_id": 101,
+          "fileitem": {
+            "path": "/owned/source/Task.srt",
+            "storage": "local",
+            "type": "file",
+            "name": "Task.srt",
+            "basename": null,
+            "extension": "srt",
+            "size": 23,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "transferinfo": {
+            "success": true,
+            "fileitem": {
+              "path": "/owned/source/Task.srt",
+              "storage": "local",
+              "type": "file",
+              "name": "Task.srt",
+              "basename": null,
+              "extension": "srt",
+              "size": 23,
+              "modify_time": null,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "target_diritem": null,
+            "target_item": {
+              "path": "/owned/library/Task.srt",
+              "storage": "local",
+              "type": "file",
+              "name": "Task.srt",
+              "basename": null,
+              "extension": null,
+              "size": 23,
+              "modify_time": null,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "transfer_type": "link",
+            "file_count": 77,
+            "file_list": [
+              "/owned/source/Task.srt"
+            ],
+            "file_list_new": [
+              "/owned/library/Task.srt"
+            ],
+            "total_size": 999,
+            "fail_list": [],
+            "message": null,
+            "need_scrape": false,
+            "need_notify": false
+          }
+        }
+      ],
+      "returned_history_id": 101
+    },
+    {
+      "kind": "subtitle",
+      "success": true,
+      "null_target": true,
+      "trace": [
+        "history",
+        "transfer.subtitle.complete"
+      ],
+      "history": {
+        "src": "/owned/source/Task.srt",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "/owned/source/Task.srt",
+          "storage": "local",
+          "type": "file",
+          "name": "Task.srt",
+          "basename": null,
+          "extension": "srt",
+          "size": 23,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": null,
+        "dest_storage": null,
+        "dest_fileitem": null,
+        "mode": null,
+        "type": "电影",
+        "category": null,
+        "title": "Owned",
+        "year": "2024",
+        "tmdbid": 123,
+        "imdbid": null,
+        "tvdbid": null,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": null,
+        "episodes": null,
+        "image": null,
+        "downloader": null,
+        "download_hash": null,
+        "status": 1,
+        "files": [
+          "/owned/source/Task.srt"
+        ]
+      },
+      "events": [
+        {
+          "type": "transfer.subtitle.complete",
+          "history_id": 101,
+          "fileitem": {
+            "path": "/owned/source/Task.srt",
+            "storage": "local",
+            "type": "file",
+            "name": "Task.srt",
+            "basename": null,
+            "extension": "srt",
+            "size": 23,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "transferinfo": {
+            "success": true,
+            "fileitem": {
+              "path": "/owned/source/Task.srt",
+              "storage": "local",
+              "type": "file",
+              "name": "Task.srt",
+              "basename": null,
+              "extension": "srt",
+              "size": 23,
+              "modify_time": null,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "target_diritem": null,
+            "target_item": null,
+            "transfer_type": null,
+            "file_count": 77,
+            "file_list": [
+              "/owned/source/Task.srt"
+            ],
+            "file_list_new": [
+              "/owned/library/Task.srt"
+            ],
+            "total_size": 999,
+            "fail_list": [],
+            "message": null,
+            "need_scrape": false,
+            "need_notify": false
+          }
+        }
+      ],
+      "returned_history_id": 101
+    },
+    {
+      "kind": "subtitle",
+      "success": false,
+      "null_target": true,
+      "trace": [
+        "history",
+        "transfer.subtitle.failed"
+      ],
+      "history": {
+        "src": "/owned/source/Task.srt",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "/owned/source/Task.srt",
+          "storage": "local",
+          "type": "file",
+          "name": "Task.srt",
+          "basename": null,
+          "extension": "srt",
+          "size": 23,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": null,
+        "dest_storage": null,
+        "dest_fileitem": null,
+        "mode": null,
+        "type": "电影",
+        "category": null,
+        "title": "Owned",
+        "year": "2024",
+        "tmdbid": 123,
+        "imdbid": null,
+        "tvdbid": null,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": null,
+        "episodes": null,
+        "image": null,
+        "downloader": null,
+        "download_hash": null,
+        "episode_group": null,
+        "status": 0,
+        "errmsg": "owned per-task veto",
+        "files": [
+          "/owned/source/Task.srt"
+        ]
+      },
+      "events": [
+        {
+          "type": "transfer.subtitle.failed",
+          "history_id": 101,
+          "fileitem": {
+            "path": "/owned/source/Task.srt",
+            "storage": "local",
+            "type": "file",
+            "name": "Task.srt",
+            "basename": null,
+            "extension": "srt",
+            "size": 23,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "transferinfo": {
+            "success": false,
+            "fileitem": {
+              "path": "/owned/source/Task.srt",
+              "storage": "local",
+              "type": "file",
+              "name": "Task.srt",
+              "basename": null,
+              "extension": "srt",
+              "size": 23,
+              "modify_time": null,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "target_diritem": null,
+            "target_item": null,
+            "transfer_type": null,
+            "file_count": 77,
+            "file_list": [
+              "/owned/source/Task.srt"
+            ],
+            "file_list_new": [
+              "/owned/library/Task.srt"
+            ],
+            "total_size": 999,
+            "fail_list": [],
+            "message": "owned per-task veto",
+            "need_scrape": false,
+            "need_notify": false
+          }
+        }
+      ],
+      "returned_history_id": 101
+    },
+    {
+      "kind": "audio",
+      "success": true,
+      "null_target": false,
+      "trace": [
+        "history",
+        "transfer.audio.complete"
+      ],
+      "history": {
+        "src": "/owned/source/Task.flac",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "/owned/source/Task.flac",
+          "storage": "local",
+          "type": "file",
+          "name": "Task.flac",
+          "basename": null,
+          "extension": "flac",
+          "size": 23,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": "/owned/library/Task.flac",
+        "dest_storage": "local",
+        "dest_fileitem": {
+          "path": "/owned/library/Task.flac",
+          "storage": "local",
+          "type": "file",
+          "name": "Task.flac",
+          "basename": null,
+          "extension": null,
+          "size": 23,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "mode": "link",
+        "type": "电影",
+        "category": null,
+        "title": "Owned",
+        "year": "2024",
+        "tmdbid": 123,
+        "imdbid": null,
+        "tvdbid": null,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": null,
+        "episodes": null,
+        "image": null,
+        "downloader": null,
+        "download_hash": null,
+        "status": 1,
+        "files": [
+          "/owned/source/Task.flac"
+        ]
+      },
+      "events": [
+        {
+          "type": "transfer.audio.complete",
+          "history_id": 101,
+          "fileitem": {
+            "path": "/owned/source/Task.flac",
+            "storage": "local",
+            "type": "file",
+            "name": "Task.flac",
+            "basename": null,
+            "extension": "flac",
+            "size": 23,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "transferinfo": {
+            "success": true,
+            "fileitem": {
+              "path": "/owned/source/Task.flac",
+              "storage": "local",
+              "type": "file",
+              "name": "Task.flac",
+              "basename": null,
+              "extension": "flac",
+              "size": 23,
+              "modify_time": null,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "target_diritem": null,
+            "target_item": {
+              "path": "/owned/library/Task.flac",
+              "storage": "local",
+              "type": "file",
+              "name": "Task.flac",
+              "basename": null,
+              "extension": null,
+              "size": 23,
+              "modify_time": null,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "transfer_type": "link",
+            "file_count": 77,
+            "file_list": [
+              "/owned/source/Task.flac"
+            ],
+            "file_list_new": [
+              "/owned/library/Task.flac"
+            ],
+            "total_size": 999,
+            "fail_list": [],
+            "message": null,
+            "need_scrape": false,
+            "need_notify": false
+          }
+        }
+      ],
+      "returned_history_id": 101
+    },
+    {
+      "kind": "audio",
+      "success": true,
+      "null_target": true,
+      "trace": [
+        "history",
+        "transfer.audio.complete"
+      ],
+      "history": {
+        "src": "/owned/source/Task.flac",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "/owned/source/Task.flac",
+          "storage": "local",
+          "type": "file",
+          "name": "Task.flac",
+          "basename": null,
+          "extension": "flac",
+          "size": 23,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": null,
+        "dest_storage": null,
+        "dest_fileitem": null,
+        "mode": null,
+        "type": "电影",
+        "category": null,
+        "title": "Owned",
+        "year": "2024",
+        "tmdbid": 123,
+        "imdbid": null,
+        "tvdbid": null,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": null,
+        "episodes": null,
+        "image": null,
+        "downloader": null,
+        "download_hash": null,
+        "status": 1,
+        "files": [
+          "/owned/source/Task.flac"
+        ]
+      },
+      "events": [
+        {
+          "type": "transfer.audio.complete",
+          "history_id": 101,
+          "fileitem": {
+            "path": "/owned/source/Task.flac",
+            "storage": "local",
+            "type": "file",
+            "name": "Task.flac",
+            "basename": null,
+            "extension": "flac",
+            "size": 23,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "transferinfo": {
+            "success": true,
+            "fileitem": {
+              "path": "/owned/source/Task.flac",
+              "storage": "local",
+              "type": "file",
+              "name": "Task.flac",
+              "basename": null,
+              "extension": "flac",
+              "size": 23,
+              "modify_time": null,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "target_diritem": null,
+            "target_item": null,
+            "transfer_type": null,
+            "file_count": 77,
+            "file_list": [
+              "/owned/source/Task.flac"
+            ],
+            "file_list_new": [
+              "/owned/library/Task.flac"
+            ],
+            "total_size": 999,
+            "fail_list": [],
+            "message": null,
+            "need_scrape": false,
+            "need_notify": false
+          }
+        }
+      ],
+      "returned_history_id": 101
+    },
+    {
+      "kind": "audio",
+      "success": false,
+      "null_target": true,
+      "trace": [
+        "history",
+        "transfer.audio.failed"
+      ],
+      "history": {
+        "src": "/owned/source/Task.flac",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "/owned/source/Task.flac",
+          "storage": "local",
+          "type": "file",
+          "name": "Task.flac",
+          "basename": null,
+          "extension": "flac",
+          "size": 23,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": null,
+        "dest_storage": null,
+        "dest_fileitem": null,
+        "mode": null,
+        "type": "电影",
+        "category": null,
+        "title": "Owned",
+        "year": "2024",
+        "tmdbid": 123,
+        "imdbid": null,
+        "tvdbid": null,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": null,
+        "episodes": null,
+        "image": null,
+        "downloader": null,
+        "download_hash": null,
+        "episode_group": null,
+        "status": 0,
+        "errmsg": "owned per-task veto",
+        "files": [
+          "/owned/source/Task.flac"
+        ]
+      },
+      "events": [
+        {
+          "type": "transfer.audio.failed",
+          "history_id": 101,
+          "fileitem": {
+            "path": "/owned/source/Task.flac",
+            "storage": "local",
+            "type": "file",
+            "name": "Task.flac",
+            "basename": null,
+            "extension": "flac",
+            "size": 23,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "transferinfo": {
+            "success": false,
+            "fileitem": {
+              "path": "/owned/source/Task.flac",
+              "storage": "local",
+              "type": "file",
+              "name": "Task.flac",
+              "basename": null,
+              "extension": "flac",
+              "size": 23,
+              "modify_time": null,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "target_diritem": null,
+            "target_item": null,
+            "transfer_type": null,
+            "file_count": 77,
+            "file_list": [
+              "/owned/source/Task.flac"
+            ],
+            "file_list_new": [
+              "/owned/library/Task.flac"
+            ],
+            "total_size": 999,
+            "fail_list": [],
+            "message": "owned per-task veto",
+            "need_scrape": false,
+            "need_notify": false
+          }
+        }
+      ],
+      "returned_history_id": 101
+    }
+  ]
+}

@@ -25,6 +25,7 @@ type subscriptionCompletionOrdinaryBasis struct {
 	Season                       int
 	Targets, AcceptedEpisodes    []int
 	Inventory                    []subscriptionCompletionInventory
+	Existence                    *originalSubscriptionExistence `json:",omitempty"`
 }
 type subscriptionCompletionInventory struct {
 	Asset        Asset
@@ -45,39 +46,72 @@ func ordinaryCompletionTargets(s Subscription) []int {
 }
 
 func (a *App) refreshOrdinaryCompletionScope(ctx context.Context, s Subscription) (Subscription, error) {
-	if s.BestVersion || s.Media.MediaType != "tv" {
-		return s, nil
+	updated, _, err := a.refreshOrdinaryCompletionScopeResolved(ctx, s)
+	return updated, err
+}
+
+func (a *App) refreshOrdinaryCompletionScopeResolved(ctx context.Context, s Subscription) (Subscription, *standardSubscriptionRecognition, error) {
+	if s.BestVersion {
+		return s, nil, nil
 	}
-	season, e := a.season(ctx, s.Media.ID, s.Season)
+	if s.Media.MediaType != "tv" {
+		resolved, err := a.resolveOriginalSubscriptionExistence(ctx, s, nil)
+		return s, resolved, err
+	}
+	resolved, e := a.resolveStandardSubscriptionRecognition(ctx, s, nil)
 	if e != nil {
-		return s, e
+		return s, nil, e
 	}
 	state := subscriptionQualityState(s)
 	if !s.ManualTotalEpisode {
-		for _, episode := range season.Episodes {
-			state.TotalEpisode = max(state.TotalEpisode, episode.EpisodeNumber)
+		current, e := a.refreshStandardSubscriptionEpisodesResolved(ctx, s, 0, resolved)
+		if e != nil {
+			return s, nil, e
+		}
+		if current != 0 {
+			state = state.ChangeTotal(a.resolveStandardSubscriptionTotalDecreaseResolved(ctx, s, current, resolved))
 		}
 	}
-	missing := 0
-	for _, episode := range state.Targets() {
-		var count int
-		if e = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=?`, mediaKey(s.Media), s.Season, episode).Scan(&count); e != nil {
-			return s, e
-		}
-		if count == 0 && !slices.Contains(state.Note, episode) {
-			missing++
-		}
+	resolved, e = a.resolveOriginalSubscriptionExistence(ctx, s, resolved)
+	if e != nil {
+		return s, nil, e
 	}
-	state = state.Progress(missing)
+	metadataUpdatedAt := ""
+	if state.TotalEpisode != s.TotalEpisodes {
+		// Fixed __prepare_total_episode_change_fields uses the old lack plus
+		// the total delta, clamped at zero; it does not replace it with a new
+		// inventory-derived count while applying the metadata change.
+		metadataUpdatedAt = now()
+	} else {
+		confirmed, err := resolved.Existence.episodes(s)
+		if err != nil {
+			return s, nil, err
+		}
+		missing := 0
+		for _, episode := range state.Targets() {
+			var count int
+			if resolved.Existence != nil {
+				if slices.Contains(confirmed, episode) {
+					count = 1
+				}
+			} else if e = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM asset_slots WHERE media_key=? AND season=? AND episode=?`, mediaKey(s.Media), s.Season, episode).Scan(&count); e != nil {
+				return s, nil, e
+			}
+			if count == 0 && !slices.Contains(state.Note, episode) {
+				missing++
+			}
+		}
+		state = state.Progress(missing)
+	}
 	if !reflect.DeepEqual(state, subscriptionQualityState(s)) {
-		if e = a.storeQualityProgress(ctx, s, state); e != nil {
-			return s, e
+		if e = a.storeQualityProgress(ctx, s, state, metadataUpdatedAt); e != nil {
+			return s, nil, e
 		}
 		if e = a.Store.Get(ctx, "subscription", s.ID, &s); e != nil {
-			return s, e
+			return s, nil, e
 		}
 	}
-	return s, nil
+	return s, resolved, nil
 }
 
 func ordinaryAcceptedEpisodes(s Subscription, accepted []subscriptionCompletionAccepted) ([]int, error) {
@@ -105,6 +139,10 @@ func ordinaryAcceptedEpisodes(s Subscription, accepted []subscriptionCompletionA
 }
 
 func (a *App) ordinaryCompletionBasis(ctx context.Context, q qualityReader, s Subscription, accepted []subscriptionCompletionAccepted) (*subscriptionCompletionOrdinaryBasis, bool, error) {
+	return a.ordinaryCompletionBasisWithExistence(ctx, q, s, accepted, nil)
+}
+
+func (a *App) ordinaryCompletionBasisWithExistence(ctx context.Context, q qualityReader, s Subscription, accepted []subscriptionCompletionAccepted, existence *originalSubscriptionExistence) (*subscriptionCompletionOrdinaryBasis, bool, error) {
 	if s.BestVersion || s.State != "active" || s.SourceState == "P" {
 		return nil, false, nil
 	}
@@ -117,6 +155,19 @@ func (a *App) ordinaryCompletionBasis(ctx context.Context, q qualityReader, s Su
 		return nil, false, e
 	}
 	basis := &subscriptionCompletionOrdinaryBasis{Version: 1, SubscriptionSHA: tokenHash(string(mustCleanSeedJSON(s))), AcceptedSHA: tokenHash(string(mustCleanSeedJSON(accepted))), MediaKey: mediaKey(s.Media), Season: s.Season, Targets: targets, AcceptedEpisodes: downloaded, Inventory: []subscriptionCompletionInventory{}}
+	if existence != nil {
+		confirmed, err := existence.episodes(s)
+		if err != nil {
+			return nil, false, err
+		}
+		basis.Version, basis.Existence = 2, existence
+		for _, ep := range targets {
+			if !slices.Contains(downloaded, ep) && !slices.Contains(confirmed, ep) {
+				return nil, false, nil
+			}
+		}
+		return basis, true, nil
+	}
 	seen := map[string]int{}
 	for _, ep := range targets {
 		if slices.Contains(downloaded, ep) {
@@ -198,7 +249,7 @@ func (p *PluginStore) validateOrdinaryCompletionInput(ctx context.Context, q sub
 		return completionEvidenceError()
 	}
 	basis := r.Input.Ordinary
-	if r.Input.Version != 2 || basis == nil || basis.Version != 1 || basis.SubscriptionSHA != tokenHash(string(mustCleanSeedJSON(s))) || basis.AcceptedSHA != r.Identity.AcceptedSHA || basis.MediaKey != mediaKey(s.Media) || basis.Season != s.Season || !reflect.DeepEqual(basis.Targets, ordinaryCompletionTargets(s)) || len(basis.Targets) == 0 {
+	if r.Input.Version != 2 || basis == nil || (basis.Version != 1 && basis.Version != 2) || basis.SubscriptionSHA != tokenHash(string(mustCleanSeedJSON(s))) || basis.AcceptedSHA != r.Identity.AcceptedSHA || basis.MediaKey != mediaKey(s.Media) || basis.Season != s.Season || !reflect.DeepEqual(basis.Targets, ordinaryCompletionTargets(s)) || len(basis.Targets) == 0 {
 		return completionEvidenceError()
 	}
 	sealed, e := p.readSubscriptionCompletionSealed(ctx, q, "subscription_completion_ordinary", r.Identity.ID)
@@ -207,6 +258,24 @@ func (p *PluginStore) validateOrdinaryCompletionInput(ctx context.Context, q sub
 	}
 	downloaded, e := ordinaryAcceptedEpisodes(s, r.Input.Accepted)
 	if e != nil || !reflect.DeepEqual(downloaded, basis.AcceptedEpisodes) {
+		return completionEvidenceError()
+	}
+	if basis.Version == 2 {
+		if basis.Existence == nil || len(basis.Inventory) != 0 {
+			return completionEvidenceError()
+		}
+		confirmed, err := basis.Existence.episodes(s)
+		if err != nil {
+			return completionEvidenceError()
+		}
+		for _, ep := range basis.Targets {
+			if !slices.Contains(downloaded, ep) && !slices.Contains(confirmed, ep) {
+				return completionEvidenceError()
+			}
+		}
+		return nil
+	}
+	if basis.Existence != nil {
 		return completionEvidenceError()
 	}
 	covered := append([]int{}, downloaded...)

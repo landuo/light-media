@@ -1,0 +1,311 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/api/endpoints/history.py:221-260",
+  "kind": "Pinned ordinary history deletion endpoint; owned in-memory DB/storage\nboundaries record exactly which independent file is selected and in what order.\nNo AI redo endpoint is imported or executed.\n",
+  "cases": [
+    {
+      "kind": "subtitle",
+      "delete_source": false,
+      "delete_target": false,
+      "result": {
+        "success": true
+      },
+      "trace": [
+        {
+          "action": "delete_history",
+          "id": 73
+        }
+      ]
+    },
+    {
+      "kind": "subtitle",
+      "delete_source": false,
+      "delete_target": true,
+      "result": {
+        "success": true
+      },
+      "trace": [
+        {
+          "action": "delete_file",
+          "path": "/owned/library/Main.srt"
+        },
+        {
+          "action": "delete_history",
+          "id": 73
+        }
+      ]
+    },
+    {
+      "kind": "subtitle",
+      "delete_source": true,
+      "delete_target": false,
+      "result": {
+        "success": true
+      },
+      "trace": [
+        {
+          "action": "delete_file",
+          "path": "/owned/source/Main.srt"
+        },
+        {
+          "action": "delete_download_file",
+          "path": "/owned/source/Main.srt"
+        },
+        {
+          "action": "event",
+          "event": "download.file.deleted",
+          "payload": {
+            "src": "/owned/source/Main.srt",
+            "hash": null
+          }
+        },
+        {
+          "action": "delete_history",
+          "id": 73
+        }
+      ]
+    },
+    {
+      "kind": "subtitle",
+      "delete_source": true,
+      "delete_target": true,
+      "result": {
+        "success": true
+      },
+      "trace": [
+        {
+          "action": "delete_file",
+          "path": "/owned/library/Main.srt"
+        },
+        {
+          "action": "delete_file",
+          "path": "/owned/source/Main.srt"
+        },
+        {
+          "action": "delete_download_file",
+          "path": "/owned/source/Main.srt"
+        },
+        {
+          "action": "event",
+          "event": "download.file.deleted",
+          "payload": {
+            "src": "/owned/source/Main.srt",
+            "hash": null
+          }
+        },
+        {
+          "action": "delete_history",
+          "id": 73
+        }
+      ]
+    },
+    {
+      "kind": "audio",
+      "delete_source": false,
+      "delete_target": false,
+      "result": {
+        "success": true
+      },
+      "trace": [
+        {
+          "action": "delete_history",
+          "id": 73
+        }
+      ]
+    },
+    {
+      "kind": "audio",
+      "delete_source": false,
+      "delete_target": true,
+      "result": {
+        "success": true
+      },
+      "trace": [
+        {
+          "action": "delete_file",
+          "path": "/owned/library/Main.flac"
+        },
+        {
+          "action": "delete_history",
+          "id": 73
+        }
+      ]
+    },
+    {
+      "kind": "audio",
+      "delete_source": true,
+      "delete_target": false,
+      "result": {
+        "success": true
+      },
+      "trace": [
+        {
+          "action": "delete_file",
+          "path": "/owned/source/Main.flac"
+        },
+        {
+          "action": "delete_download_file",
+          "path": "/owned/source/Main.flac"
+        },
+        {
+          "action": "event",
+          "event": "download.file.deleted",
+          "payload": {
+            "src": "/owned/source/Main.flac",
+            "hash": null
+          }
+        },
+        {
+          "action": "delete_history",
+          "id": 73
+        }
+      ]
+    },
+    {
+      "kind": "audio",
+      "delete_source": true,
+      "delete_target": true,
+      "result": {
+        "success": true
+      },
+      "trace": [
+        {
+          "action": "delete_file",
+          "path": "/owned/library/Main.flac"
+        },
+        {
+          "action": "delete_file",
+          "path": "/owned/source/Main.flac"
+        },
+        {
+          "action": "delete_download_file",
+          "path": "/owned/source/Main.flac"
+        },
+        {
+          "action": "event",
+          "event": "download.file.deleted",
+          "payload": {
+            "src": "/owned/source/Main.flac",
+            "hash": null
+          }
+        },
+        {
+          "action": "delete_history",
+          "id": 73
+        }
+      ]
+    }
+  ],
+  "failure_cases": [
+    {
+      "delete_source": false,
+      "delete_target": true,
+      "source_return": true,
+      "target_return": false,
+      "result": {
+        "success": true
+      },
+      "trace": [
+        {
+          "action": "delete_file",
+          "path": "/owned/library/Main.srt"
+        },
+        {
+          "action": "delete_history",
+          "id": 73
+        }
+      ]
+    },
+    {
+      "delete_source": true,
+      "delete_target": false,
+      "source_return": false,
+      "target_return": true,
+      "result": {
+        "success": false,
+        "message": "/owned/source/Main.srt 删除失败"
+      },
+      "trace": [
+        {
+          "action": "delete_file",
+          "path": "/owned/source/Main.srt"
+        }
+      ]
+    },
+    {
+      "delete_source": true,
+      "delete_target": true,
+      "source_return": true,
+      "target_return": false,
+      "result": {
+        "success": true
+      },
+      "trace": [
+        {
+          "action": "delete_file",
+          "path": "/owned/library/Main.srt"
+        },
+        {
+          "action": "delete_file",
+          "path": "/owned/source/Main.srt"
+        },
+        {
+          "action": "delete_download_file",
+          "path": "/owned/source/Main.srt"
+        },
+        {
+          "action": "event",
+          "event": "download.file.deleted",
+          "payload": {
+            "src": "/owned/source/Main.srt",
+            "hash": null
+          }
+        },
+        {
+          "action": "delete_history",
+          "id": 73
+        }
+      ]
+    },
+    {
+      "delete_source": true,
+      "delete_target": true,
+      "source_return": false,
+      "target_return": true,
+      "result": {
+        "success": false,
+        "message": "/owned/source/Main.srt 删除失败"
+      },
+      "trace": [
+        {
+          "action": "delete_file",
+          "path": "/owned/library/Main.srt"
+        },
+        {
+          "action": "delete_file",
+          "path": "/owned/source/Main.srt"
+        }
+      ]
+    },
+    {
+      "delete_source": true,
+      "delete_target": true,
+      "source_return": false,
+      "target_return": false,
+      "result": {
+        "success": false,
+        "message": "/owned/source/Main.srt 删除失败"
+      },
+      "trace": [
+        {
+          "action": "delete_file",
+          "path": "/owned/library/Main.srt"
+        },
+        {
+          "action": "delete_file",
+          "path": "/owned/source/Main.srt"
+        }
+      ]
+    }
+  ]
+}

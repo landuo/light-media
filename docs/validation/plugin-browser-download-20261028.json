@@ -1,0 +1,97 @@
+{
+  "accepted_increment": true,
+  "whole_indices_accepted": false,
+  "indices": [
+    43
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/storage.py download_file",
+    "app/modules/filemanager/__init__.py download_file",
+    "app/modules/filemanager/storages/local.py download",
+    "app/api/endpoints/storage.py download,image"
+  ],
+  "targets": [
+    "internal/app/plugin_original_browser_download.go",
+    "internal/app/file_content.go",
+    "internal/app/plugin_original_browser_download_test.go",
+    "internal/app/plugin_module_process_browser_download_test.go",
+    "internal/app/plugin_module_process_services_test.go"
+  ],
+  "behavior": [
+    "Existing authenticated file detail/image GET invokes download_file with full FileItem and path:null; source/clone ordering, None/list/scalar/exception and native return follow fixed dispatcher.",
+    "Actual returned local bytes drive both browser image and download; stopped/removed modules disappear and native content resumes.",
+    "Existing path/root/symlink/regular-file guards apply to requested and returned paths."
+  ],
+  "evidence": {
+    "source_cases": 16,
+    "source_boundary": "fixed AST; Starlette1.3.1 response adapter explicitly development-only",
+    "actual_sdk_seconds": 2.351,
+    "related_seconds": 20.503,
+    "race_seconds": 63.123,
+    "linux_cli_seconds": 1.83,
+    "linux_browser_gate_seconds": 312.29,
+    "browser": "IAB89: Native.png73B preview decodes clone2x3; download81B hash equals override; sourceFalse500 produces broken0x0 image after reload, clone not called; restore2x3; cold changedPIDs0replay then2x3 eachone; files unchanged; uninstall404/native73B restored.",
+    "manifest": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/manifest.json",
+    "build": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform50-20261027-linux",
+          "sha256": "93734d99571f4995ca6767c69eb383772ab491c826e19fd67089ec29e86d1bd2",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform50-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3734,
+          "changed": [],
+          "elapsed_seconds": 4.51
+        },
+        {
+          "name": "process-platform50-20261027-linux.test",
+          "sha256": "941265e01d8efaa450d2ce2e35cc822b7d63f06266c3dcbfc48cd390455ef686",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform50-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4224,
+          "changed": [],
+          "elapsed_seconds": 8.6
+        }
+      ]
+    }
+  },
+  "adaptations": [
+    "Go IPC serializes Python Path as an absolute UTF8 JSON string. No Python runtime dependency.",
+    "Existing GET file content route is shared by image and download, retains requested filename, content type, Range and auth. Source POST download falsey returns Response(success=False) while image returns500; native GET returns500 for falsey to avoid downloading a success-status error payload.",
+    "Existing allowed-root and no-symlink regular-file safety boundary remains; plugin override may return another allowed file but cannot expand access.",
+    "No frontend changes: browser memory cache can reuse old same-URL image until reload; cache hit not counted as module execution. Actual refresh/retry and server counters are separately captured."
+  ],
+  "failures_explained": [
+    "Initial SDK oracle test converted JSON null to an empty Go string/path; corrected fixture mapping only, original production path check was correct.",
+    "First SSH runner invocation preceded upload completion and exited missing script; subsequent launch after completed upload passed, no server failure."
+  ],
+  "remaining": [
+    "43:197methods/199ordinarycallsite final host applicability and coverage reconciliation",
+    "50:final scope evidence audit"
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

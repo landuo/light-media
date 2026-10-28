@@ -1,0 +1,496 @@
+{
+  "kind": "Per-file ordinary transfer continuation after known failure, partial publication ownership and callback-only cold recovery",
+  "whole_indices_accepted": false,
+  "main_sha256": "9c08d77cd416432d6f6fe16f8c82a06e71334f6d7711e7100ba67dfc87e8ae62",
+  "test_sha256": "61e262e137f69985ce2ad4bbb1e7707c299c91a12bfb2cf6daadf8e14ca75b20",
+  "ui_driver_sha256": "6bc5971af6e31bb5c70de59abfc3fe5ea52bc23d173d4ac4fe606301b421eb0c",
+  "worker_sha256": "376f0e246479b6e4a299bf524d87398aaff31f409b70f66b25a097d41990f6cc",
+  "linux_cli_seconds": 9.15,
+  "linux_browser_gate_seconds": 1415.33,
+  "browser_gate_includes_human_actions_and_build_restart_waits": true,
+  "artifacts": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/build-platform30.py.gz",
+      "original": "build-platform30.py",
+      "sha256": "9e254c48fd9bad66a2697e24f66c9ca0cee34c88b65cba3d70a00e6ff9f5c5b3",
+      "raw_sha256": "34f75de9b627e2bc81976281c87de2aa9335f8837bcbeab777b867da0ff58411",
+      "bytes": 1168
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser/01-two-partial-groups.dom.txt.gz",
+      "original": "partial30-browser/01-two-partial-groups.dom.txt",
+      "sha256": "fee15171dd16e1cdefb915138c865fe17c3828fed0ec2feb6317aa3ad10949a9",
+      "raw_sha256": "f6131232fcd798620c315d1134b2bda3f2a3807360df0d052eee181ff8ee6b54",
+      "bytes": 1583
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser/01-two-partial-groups.png",
+      "original": "partial30-browser/01-two-partial-groups.png",
+      "sha256": "4c04d7132266aff59f9f8be0ad6903d2c09a915ded7b6d2e263f32fe59bb71b6",
+      "raw_sha256": "4c04d7132266aff59f9f8be0ad6903d2c09a915ded7b6d2e263f32fe59bb71b6",
+      "bytes": 66580
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser/02-no-identity-failure.dom.txt.gz",
+      "original": "partial30-browser/02-no-identity-failure.dom.txt",
+      "sha256": "08e86c1161ce3fb71d85e7d6a5f700d5ae753756760274ba8838b82cd3c89650",
+      "raw_sha256": "3723c4c97ac457e9c061f1fcaf799c8c652008a6a6e88a345625da763724ce65",
+      "bytes": 1631
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser/02-no-identity-failure.png",
+      "original": "partial30-browser/02-no-identity-failure.png",
+      "sha256": "751c9ece756ff78107a3e0cf1fecbd29a488ec97339bd59c50ea1c8ed05fc187",
+      "raw_sha256": "751c9ece756ff78107a3e0cf1fecbd29a488ec97339bd59c50ea1c8ed05fc187",
+      "bytes": 54507
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser/03-partial-error-wrong-summary.dom.txt.gz",
+      "original": "partial30-browser/03-partial-error-wrong-summary.dom.txt",
+      "sha256": "a56b99a679cf26259487366d0fde905578c8e93c96a74babb90ca6238fca8e66",
+      "raw_sha256": "dbfb6d30afe108ab9460783a1b878d535f3d69647f3551ec4436c4bc2f7c0430",
+      "bytes": 1686
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser/03-partial-error-wrong-summary.png",
+      "original": "partial30-browser/03-partial-error-wrong-summary.png",
+      "sha256": "e0477cea333a30bad91b3db08974605cde11079274b009f819077941d43bdd6b",
+      "raw_sha256": "e0477cea333a30bad91b3db08974605cde11079274b009f819077941d43bdd6b",
+      "bytes": 60108
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser/04-partial-correct-summary.dom.txt.gz",
+      "original": "partial30-browser/04-partial-correct-summary.dom.txt",
+      "sha256": "66ac6990728681bb7c2a69ed9df3c94037cfb0626152223f59a0975e2d5b03b7",
+      "raw_sha256": "834051afb5baf47ada380ddbe9839017b4c2469e815f1c6cb23efbd0937e4dc2",
+      "bytes": 1702
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser/04-partial-correct-summary.png",
+      "original": "partial30-browser/04-partial-correct-summary.png",
+      "sha256": "f4b493b68bd694c81fa05c0d27e58f554dbc470e68860457dc96f6712d494991",
+      "raw_sha256": "f4b493b68bd694c81fa05c0d27e58f554dbc470e68860457dc96f6712d494991",
+      "bytes": 64176
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser/05-partial-correct-summary-bottom.dom.txt.gz",
+      "original": "partial30-browser/05-partial-correct-summary-bottom.dom.txt",
+      "sha256": "66ac6990728681bb7c2a69ed9df3c94037cfb0626152223f59a0975e2d5b03b7",
+      "raw_sha256": "834051afb5baf47ada380ddbe9839017b4c2469e815f1c6cb23efbd0937e4dc2",
+      "bytes": 1702
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser/05-partial-correct-summary-bottom.png",
+      "original": "partial30-browser/05-partial-correct-summary-bottom.png",
+      "sha256": "d63fbff028c237921615f2ce126950dc33f8f415717f67456ef66aaeff87530d",
+      "raw_sha256": "d63fbff028c237921615f2ce126950dc33f8f415717f67456ef66aaeff87530d",
+      "bytes": 63005
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser/06-cold-three-independent-histories.dom.txt.gz",
+      "original": "partial30-browser/06-cold-three-independent-histories.dom.txt",
+      "sha256": "b9d23d2d0c98dfe9cd16684ea837752ad40caa9abff631d18f579aa59fde8e4c",
+      "raw_sha256": "58d20324d9339dc2e67d543da4e7a5d32a6e0cd6b20618260b67af10142b80a9",
+      "bytes": 1429
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser/06-cold-three-independent-histories.png",
+      "original": "partial30-browser/06-cold-three-independent-histories.png",
+      "sha256": "1d87011fe69b024b414c9046ae87d8f7955777e5000140cb16132d042a9083aa",
+      "raw_sha256": "1d87011fe69b024b414c9046ae87d8f7955777e5000140cb16132d042a9083aa",
+      "bytes": 64791
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser-summary-cold.json.gz",
+      "original": "partial30-browser-summary-cold.json",
+      "sha256": "e154ea313e96abe6c9ed20c10380e0364db4757cbfc5fe1172061f8e1778b9e5",
+      "raw_sha256": "c11c21539b6023ec2573190349eed064b3a11f1f3d2617331a866de8116f3bb1",
+      "bytes": 20722
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser-summary-executed.json.gz",
+      "original": "partial30-browser-summary-executed.json",
+      "sha256": "9aba2a523ea15c8c4784da7a5b228872ebd39d55323c9062f5dd135d5aa93a3c",
+      "raw_sha256": "9bf0528ad790c1433c9789e89421066557284756d5e95cfb32796e26df4df11a",
+      "bytes": 25452
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-browser-verdict.json.gz",
+      "original": "partial30-browser-verdict.json",
+      "sha256": "c3834990afde5df6f84944a9afcd8a0d60fc15bfaf2975386f0b4489922a45b4",
+      "raw_sha256": "138c20e69c418b70090bdc242ff4bc50fca7624f7c8f9403f3ffc8c30fff5a71",
+      "bytes": 667
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-callback-r2.log.gz",
+      "original": "partial30-callback-r2.log",
+      "sha256": "94274732c0cc74d34b011dc0204fe7f6546e73897413aa2634909dcde8bcd1f9",
+      "raw_sha256": "54dc6092e4d14ce866b595692ad4756d5a1f5f81f21e12ce7431c978bc684203",
+      "bytes": 57
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-cold-r2.log.gz",
+      "original": "partial30-cold-r2.log",
+      "sha256": "7a1ef8d31eaf127d0ced78b50f433c74049d5dd7035d7d2e01609cbd302d31cc",
+      "raw_sha256": "f3d7b4c796ede3ed05e68c069aadcdd5df391eb6d2adbb2a39253b4d6a736511",
+      "bytes": 57
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-cold.log.gz",
+      "original": "partial30-cold.log",
+      "sha256": "f604748ec481a65444f40a80cf4700c0a7e7ce2f490a58094bf937de17eba681",
+      "raw_sha256": "3b3abba40dbf1fcaed6ae02459f6a65ca80400d2a93709a029c97943836aa783",
+      "bytes": 2841
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-front-build.log.gz",
+      "original": "partial30-front-build.log",
+      "sha256": "49d1412cd16f7b3366079036c4bf73749da72789701051dd61fc5c74bfd44f90",
+      "raw_sha256": "042bcb5c6c865778374b7a097d6665010ca4f227dbe89558103abb00e6bdadb6",
+      "bytes": 2865
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-front-focused-r2.log.gz",
+      "original": "partial30-front-focused-r2.log",
+      "sha256": "ace7542e814c773d8d5767cd730a23d519eeffec00f98e07ca79c0108e55e673",
+      "raw_sha256": "d1cdff5d22c0372e2aea09cc358297f5b968177d289ac2bfd7f6e5759bc5f895",
+      "bytes": 836
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-front-focused-r3.log.gz",
+      "original": "partial30-front-focused-r3.log",
+      "sha256": "8cacc1b07c263cf48cf2b413ea4a018c93f7defb87a26b54a66c8337d60d53ab",
+      "raw_sha256": "c51c8a3f6a73cf8c6857e14968cda3d5e7d7fa615909529fee6aa0bcf015bf8b",
+      "bytes": 506
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-front-focused.log.gz",
+      "original": "partial30-front-focused.log",
+      "sha256": "0aa887b3e22c80529a99af16e0f755e56d62e4aa0e95af252863ca1fd56d765e",
+      "raw_sha256": "861f2ee80ec2ae111abf79f50f7cef31db7a11d1657cc56fa40b61bedbab74df",
+      "bytes": 835
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-front-full.log.gz",
+      "original": "partial30-front-full.log",
+      "sha256": "13523ef287ca8179a1239783e1709c03c02d52ee13ecad86722c146c89e10eb4",
+      "raw_sha256": "7c9b07ccbc9ad341022eabd7b3ff55d6211faefc9d53f58c78b6f4470842fff1",
+      "bytes": 19372
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-front-inputs.json.gz",
+      "original": "partial30-front-inputs.json",
+      "sha256": "c51e24a2d3d8773dada2199137e9479a150240d8ea3767242126cc37415e6d54",
+      "raw_sha256": "88aa829010c13dc1d0799051ead876b32ea0ccca4b62fd98e16d45431f1bb9c4",
+      "bytes": 18368
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-job-projection.log.gz",
+      "original": "partial30-job-projection.log",
+      "sha256": "329f4a4f6556c1355052c08e17bbf248cad7a45119e9c3d561015f6b81260b27",
+      "raw_sha256": "a9dd42639ee08739e82f5149794e17a68684876de1f00c984ab1c895961d6b1a",
+      "bytes": 57
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-job-race.log.gz",
+      "original": "partial30-job-race.log",
+      "sha256": "02812c89185bf6e19b90fc15c4ed7133cf9707e5c22ad95d6c875c54c15b98d0",
+      "raw_sha256": "d0709b14a1a08e28a75d2eb3847bd7e72b9d697a4e8d4e02f82caaa20afcda5a",
+      "bytes": 58
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-linux-cli-final.log.gz",
+      "original": "partial30-linux-cli-final.log",
+      "sha256": "7b7dc11aaa38ac6c61d6dc53ad2c95467d282050f8e468db39e2b644f86ffca2",
+      "raw_sha256": "44613baae08cea0760a6cd25077db13f8e225a7e64830f2a13b9e686b3a58663",
+      "bytes": 594
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-linux-cli-r1.log.gz",
+      "original": "partial30-linux-cli-r1.log",
+      "sha256": "4f3d8fb292073608b017ddd43bc9a3240bd831407a516ddc5880b9b7a052c94c",
+      "raw_sha256": "1658b2c3ed868df6e7c056a4e9525b010455c4097746105b51af850a9c2b912f",
+      "bytes": 589
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-linux-ui-upload-race.log.gz",
+      "original": "partial30-linux-ui-upload-race.log",
+      "sha256": "bab672bff762bcec9b81f7af0821ecd63de9916c13974e00d467ab8b90a7c526",
+      "raw_sha256": "b0e6df1b187bebc7906182fcf35d7b363051e19ff41e094ddc746e0fd455f0bb",
+      "bytes": 676
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-linux-ui.log.gz",
+      "original": "partial30-linux-ui.log",
+      "sha256": "c39c96995150970a51ce07ca774f83b8f28b99b30461ea188812569c45c1002c",
+      "raw_sha256": "fb8ee4a6d1378a18dd7224badd9b2dddffe5617331afe658078c51d7b9b5e914",
+      "bytes": 614
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-observe.py.gz",
+      "original": "partial30-observe.py",
+      "sha256": "e50ab63d8a20e699d3ba3fe4492674d4793069497e0473c0b80adab40297a83d",
+      "raw_sha256": "da1f065af5087df83905edee6d20597f8df7a3ad2ce48cd75dbf0d460a23f688",
+      "bytes": 1623
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-quality-r2.log.gz",
+      "original": "partial30-quality-r2.log",
+      "sha256": "4c6cf3cae1912fcce5413ee14f6d8a6a01e2e9072b16e47827c6538fd38a3df4",
+      "raw_sha256": "0c5aa7c4ec9b7c16a9fec4ec5420fce436f0a39147c36bf19a64e1b731585f1b",
+      "bytes": 57
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-r1.log.gz",
+      "original": "partial30-r1.log",
+      "sha256": "f210753af6bae3c58d996747b42d90ad08198dab1945f163b0053599f4371a6d",
+      "raw_sha256": "79f63dabb94aee00b39057aab6fa91ed46ec3a91631fb703283ad9084865dd0f",
+      "bytes": 57
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-race.log.gz",
+      "original": "partial30-race.log",
+      "sha256": "c163bc66a14140a398e6cd064e91f7ce36f09f0ae5c7119bdd4503a7b46cd57a",
+      "raw_sha256": "02549722fb9966c3c73d73994920a50cb064872e9d9fe160f4e11f9a28723902",
+      "bytes": 58
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-red.log.gz",
+      "original": "partial30-red.log",
+      "sha256": "4b2a4ec155385c8df266b2a8e3c78517790feeb7f4b091dc108210df5cf488c7",
+      "raw_sha256": "0f93de3868a06c527ba927f80e96fd832398e7723d1dd4389f0f2f7380f95bc2",
+      "bytes": 1806
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-regression.log.gz",
+      "original": "partial30-regression.log",
+      "sha256": "01ad842834d70f457c11aae74d6381d1bb39d68a9096b3a0c8f0e69eb4824faf",
+      "raw_sha256": "e03c6c581832523c2e5151ba7305c6c57d6cf96df9dc6044788b999cd3d4f192",
+      "bytes": 65920
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/partial30-browser-active.json.gz",
+      "original": "partial30-runtime/partial30-browser-active.json",
+      "sha256": "17275a9fe24346d9b13f2fe4582b6f8da8299d3e3b74c7dbb79570057042335b",
+      "raw_sha256": "5c5e5dd354b3ab1650b72f97cd6335fe9d88a28f0383b68db186e97c3aa9e5d5",
+      "bytes": 2095
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/partial30-browser-cold-before-summary.json.gz",
+      "original": "partial30-runtime/partial30-browser-cold-before-summary.json",
+      "sha256": "94a674fa599438e671bd441e656e571d4ec1febe7c2f162ea38b999359260378",
+      "raw_sha256": "6a2cc1a199802462feab9f20da887b8c4e63a7111a300e4987aa32582951b1dc",
+      "bytes": 21041
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/partial30-browser-executed.json.gz",
+      "original": "partial30-runtime/partial30-browser-executed.json",
+      "sha256": "d65faa661735f60f6a7d9220bf1400058bbbf5c63e218c1dc5369450f9dac0b1",
+      "raw_sha256": "0ada23bb11fe388dd4f6d19c6afc1f9115e6e95de57302d77b45f90d7b2ab246",
+      "bytes": 23681
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/partial30-browser-prepare-summary.json.gz",
+      "original": "partial30-runtime/partial30-browser-prepare-summary.json",
+      "sha256": "30a2c1c12a0f9824d9dd316343d32c0cfadaf32c9b9d182936637301eb161d59",
+      "raw_sha256": "740f6332f96585249e6829d2cfc8874358d63ef6469a9b6c914fd16ef9d9588a",
+      "bytes": 18721
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/partial30-browser-prepare.json.gz",
+      "original": "partial30-runtime/partial30-browser-prepare.json",
+      "sha256": "fc636788f38d8209484e8ee42fee8c1f1aaf58958ab7e10bdfd82f76be71736d",
+      "raw_sha256": "32ab8dc06d776cf125dbb293906605507ebafe0096cb28b22b357e2837974fc0",
+      "bytes": 17991
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/partial30-browser-summary-cold.json.gz",
+      "original": "partial30-runtime/partial30-browser-summary-cold.json",
+      "sha256": "e154ea313e96abe6c9ed20c10380e0364db4757cbfc5fe1172061f8e1778b9e5",
+      "raw_sha256": "c11c21539b6023ec2573190349eed064b3a11f1f3d2617331a866de8116f3bb1",
+      "bytes": 20722
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/partial30-browser-summary-executed.json.gz",
+      "original": "partial30-runtime/partial30-browser-summary-executed.json",
+      "sha256": "9aba2a523ea15c8c4784da7a5b228872ebd39d55323c9062f5dd135d5aa93a3c",
+      "raw_sha256": "9bf0528ad790c1433c9789e89421066557284756d5e95cfb32796e26df4df11a",
+      "bytes": 25452
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/transfer-module30-cli-evidence/events36-service-process.log.gz",
+      "original": "partial30-runtime/transfer-module30-cli-evidence/events36-service-process.log",
+      "sha256": "fb30f5b34ffb1249612aca2c36f0bfd07d3c7a96f183104b7a314dd324be9ea0",
+      "raw_sha256": "40e4da73ca583ec4c63d3456e3aab1118f1e57e0226ff41c8957e78cc5e1ee94",
+      "bytes": 23601
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/transfer-module30-cli-evidence/transfer-module-real-main.json.gz",
+      "original": "partial30-runtime/transfer-module30-cli-evidence/transfer-module-real-main.json",
+      "sha256": "770b225de3d783cf97392887a90e1b44e4ff54efc2fcf2df72ddb0398945768c",
+      "raw_sha256": "d830c276c4b581b1a621a60335cfc11533a510df5f2923593e77ad78e7a16fb7",
+      "bytes": 92651
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/transfer-module30-cli-final-evidence/events36-service-process.log.gz",
+      "original": "partial30-runtime/transfer-module30-cli-final-evidence/events36-service-process.log",
+      "sha256": "07e249ebe089a2dfe301c5fd15e7a3803ac6b9ba6f92aa7ffd100204b0058d8f",
+      "raw_sha256": "4429b31ec6dc58297127c85bf873ca35a31f9b480f7c7b504163017a3f6b251d",
+      "bytes": 23603
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/transfer-module30-cli-final-evidence/transfer-module-real-main.json.gz",
+      "original": "partial30-runtime/transfer-module30-cli-final-evidence/transfer-module-real-main.json",
+      "sha256": "61da999276a3450bc16c57cfa220dacde7b1b2350495ac1cbcb0d86195bad48a",
+      "raw_sha256": "1f5c6395ade9d0a78a8753115dc63ec1db7e97f7c34741e28b1f2d7f25ccb17d",
+      "bytes": 92822
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/transfer-module30-cli-final.log.gz",
+      "original": "partial30-runtime/transfer-module30-cli-final.log",
+      "sha256": "7936d7bcae95a37fe6a58d7d1a1df624f96c1e5540f1b18db97a56460405eaa9",
+      "raw_sha256": "d124d76d77e1b11c410b0b2724566ac5a5d6bda9914832bbaea7a4e7196195cb",
+      "bytes": 389
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/transfer-module30-cli.log.gz",
+      "original": "partial30-runtime/transfer-module30-cli.log",
+      "sha256": "112214216b3fc989dd3d40c92c2d648c0abdd8646d60fe40fea06b7aa1139574",
+      "raw_sha256": "51bd37dcd4d5c6223d8b68c0017bc37650ef51e268f5c57d75a1fdfc7147ca2f",
+      "bytes": 390
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/transfer-module30-ui-evidence/events36-service-process.log.gz",
+      "original": "partial30-runtime/transfer-module30-ui-evidence/events36-service-process.log",
+      "sha256": "e867d3d31bdb0f3c75d6c523fa7f21fb04d57954e79a02e53beae02fcc3134db",
+      "raw_sha256": "e3e6238441f1917e4abbaf2b89393be626d202be7bcd801f96887217586a5794",
+      "bytes": 25608
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/transfer-module30-ui-evidence/transfer-module-real-main.json.gz",
+      "original": "partial30-runtime/transfer-module30-ui-evidence/transfer-module-real-main.json",
+      "sha256": "547d90d7515cd796b0be933d305347742251560eeca75020dc52892de94ea5af",
+      "raw_sha256": "28291e3c532de78c7cbeeb9b4c1e9bf72cc21fbad2639e6dd31cd3b1a572f886",
+      "bytes": 92392
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/transfer-module30-ui-state.json.gz",
+      "original": "partial30-runtime/transfer-module30-ui-state.json",
+      "sha256": "54ce17030f52b865e4a9b72d066f245ce9ad59c6c45dafad4adc4944cda4ca42",
+      "raw_sha256": "9c6bc65942994736c68c7298f6d2a86425403c4c0cf5348b73474d00eb56fb86",
+      "bytes": 1972
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/partial30-runtime/transfer-module30-ui.log.gz",
+      "original": "partial30-runtime/transfer-module30-ui.log",
+      "sha256": "8c85800026b907bb075c0db7ac729d0d51077c308eb30de20110fa6c0d4d9e98",
+      "raw_sha256": "a9c36d83d90b284cbe291791077f5f611cbc066e056e26215440016a46c3ae39",
+      "bytes": 414
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/platform30-build-console.log.gz",
+      "original": "platform30-build-console.log",
+      "sha256": "fbed34aff40ad56703221a9447e3410d14abb8dce3fd83bf76649b6f99642e9b",
+      "raw_sha256": "674dc8488ac12006b680871ed6b1abadaa517fdc8846becc3b87614ce0794d1e",
+      "bytes": 346
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/platform30-build-console.log.r1.gz",
+      "original": "platform30-build-console.log.r1",
+      "sha256": "c97e9b00394a134f7964ce15fc500ad41988343272ea8e9c0d4c4134a060ee96",
+      "raw_sha256": "dd970820080aa260d98575a40a6d22405efcf51c3d58554f8a08340faf941b44",
+      "bytes": 349
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/platform30-build-console.log.r2.gz",
+      "original": "platform30-build-console.log.r2",
+      "sha256": "a63c1cbea34fdd3bfd4ad3d1c5a82eee2b9af130302477259efd5c2dfe787529",
+      "raw_sha256": "1906a8a61c22f19fe372fdc2901e6e22392c27d31e8155d8aa278789b4551695",
+      "bytes": 349
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/platform30-result.json.gz",
+      "original": "platform30-result.json",
+      "sha256": "c03cb681249ed8d82276b5e9daacc24b2549aac72a89c16680280d3de6f810db",
+      "raw_sha256": "402b943ec83e71dc449ec7f5373a134bbd86881103257ae36a728cbd0d0b9701",
+      "bytes": 475
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/platform30-result.json.r1.gz",
+      "original": "platform30-result.json.r1",
+      "sha256": "b8b8a7c813d9a8727a51a0aa20d016ab8553e4590af1bf12a6da31231845b71f",
+      "raw_sha256": "6b7fb9a548a515dfce4bda1f1fe03e65ed8070c2f69a3668b7b49263eb28491d",
+      "bytes": 476
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/platform30-result.json.r2.gz",
+      "original": "platform30-result.json.r2",
+      "sha256": "6eb815c4d99187c967f67b3305cda3c3cf2e69906215bff94a974d36662fcfcd",
+      "raw_sha256": "5ad6cf51f24f52b18e2e07acf306fe3e3c72967cedd27da11b42bc769f283dde",
+      "bytes": 476
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/process-platform30-20261027-linux.test.inputs.json.gz",
+      "original": "process-platform30-20261027-linux.test.inputs.json",
+      "sha256": "6b61918312bf87570c6137b81397ecb5778eeaa236f915804b879953c937822d",
+      "raw_sha256": "05831483f20c0585e8b73f2d7188ab2ddd090ec53ab62354a12668f1c544d1a3",
+      "bytes": 193790
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/process-platform30-20261027-linux.test.inputs.json.r1.gz",
+      "original": "process-platform30-20261027-linux.test.inputs.json.r1",
+      "sha256": "b63b1e155279b36f07bc6e89cf10f4c7c27979535ff9c25cf194b92e56b7d270",
+      "raw_sha256": "c5d69814e0b01cb6935e640da952d67b143c1631e61ecfb912fece7276c32df8",
+      "bytes": 193716
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/process-platform30-20261027-linux.test.inputs.json.r2.gz",
+      "original": "process-platform30-20261027-linux.test.inputs.json.r2",
+      "sha256": "973a392599ef3b9079f13b7c69616b865ed8e049f1e336a459deb841c30f50db",
+      "raw_sha256": "fdb9fd7be54deb11cfe28c6c2c61fef03faafcf750ab4ef8bcb254dc1895bee2",
+      "bytes": 193718
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/run-transfer-module30.py.gz",
+      "original": "run-transfer-module30.py",
+      "sha256": "5b605736c0ead8681e338c6f069e5ef4faa4a9b40257a204fd07868fb2846d0f",
+      "raw_sha256": "9d80f4f173381624a666aaa06c5181394918e8dedc332e0b27d5de3d10957221",
+      "bytes": 700
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/server-platform30-20261027-linux.build.log.gz",
+      "original": "server-platform30-20261027-linux.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/server-platform30-20261027-linux.inputs.json.gz",
+      "original": "server-platform30-20261027-linux.inputs.json",
+      "sha256": "dc06bce66088a3536d465cda5d15ba2b9d41490dd04a36579ee69834a4503151",
+      "raw_sha256": "da281973fc8b62598600d6774ec698c906abe1d4c7d34dcb4f181d142b2beff6",
+      "bytes": 172485
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/server-platform30-20261027-linux.inputs.json.r1.gz",
+      "original": "server-platform30-20261027-linux.inputs.json.r1",
+      "sha256": "24ec1397f4f0d75cc926cbf0164aa96fab31cd6d620ac2d711663d18e222fc30",
+      "raw_sha256": "c7c463300326df4741a37cb0c167df121c1b7f7ed642c90443f17fa49f66616c",
+      "bytes": 172415
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/server-platform30-20261027-linux.inputs.json.r2.gz",
+      "original": "server-platform30-20261027-linux.inputs.json.r2",
+      "sha256": "b9253b0c4fd0cedfd7f1d4b1c65f68b495bc0bb5b2459e032393166c6bc3a924",
+      "raw_sha256": "ed737f392c52bf94534a0594025306c2205045aa83f1a8cede85c99492b3988d",
+      "bytes": 172415
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-partial-30-20261028/verify-partial30-proof.py.gz",
+      "original": "verify-partial30-proof.py",
+      "sha256": "6d646d29015ccf7ce2d880048313214b5db9b52b7395851cd53eb4e4f111fa96",
+      "raw_sha256": "9af3b6bd7322834fac806a438915acc5ada69b2365639ec56f7b69cc45c17b9f",
+      "bytes": 960
+    }
+  ]
+}

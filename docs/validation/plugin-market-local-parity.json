@@ -1,0 +1,294 @@
+{
+  "date": "2026-10-25",
+  "scope": "G11 source/version/refresh behavior and partial G12 Go local artifact adaptation; not a whole framework acceptance",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/helper/plugin.py": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+    "app/core/plugin.py": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+    "app/core/cache.py": "fbcd0a557be024741891b539321fd06d09e0025c15f699d3bfdab5cebec2a91d",
+    "app/core/config.py": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+    "app/utils/string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a"
+  },
+  "app_normal": {
+    "log": "work/plugin-module-20261025/market/normal-local-final.jsonl",
+    "log_sha256": "faa03080ac65fd8d5054eb28939a8f0156f705447f79a50b5b0ca67088a6d01e",
+    "root_tests": [
+      "TestOriginalLocalRepositoryActualInstallWatchCloneAndFailure",
+      "TestOriginalLocalRepositoryClosedAdmissionDoesNotReload",
+      "TestOriginalLocalRepositorySettingsFailureAndStaleFullSave",
+      "TestOriginalMarketPrimaryReinstallWithLiveClone",
+      "TestOriginalMarketVersionAndSourceOracle",
+      "TestOriginalMarketHTTPHighestVersionCacheRefreshAndActualUpgrade",
+      "TestOriginalMarketConcurrentRefreshJoinsAndWaiterCancellation",
+      "TestPluginOriginalMarketSourcesPersistenceDiscoveryAndActualCards"
+    ],
+    "root_passed": 8,
+    "failed_events": 0,
+    "skipped_events": 0
+  },
+  "app_dual_end_race": {
+    "log": "work/plugin-module-20261025/market/race-local-final-v2.jsonl",
+    "log_sha256": "8e5ad7d0e1a298e57bb7399b6cd23d4d701c839176ae6da4a708683b55f7a3d4",
+    "root_tests": [
+      "TestOriginalLocalRepositoryActualInstallWatchCloneAndFailure",
+      "TestOriginalLocalRepositoryClosedAdmissionDoesNotReload",
+      "TestOriginalLocalRepositorySettingsFailureAndStaleFullSave",
+      "TestOriginalMarketPrimaryReinstallWithLiveClone",
+      "TestOriginalMarketVersionAndSourceOracle",
+      "TestOriginalMarketHTTPHighestVersionCacheRefreshAndActualUpgrade",
+      "TestOriginalMarketConcurrentRefreshJoinsAndWaiterCancellation",
+      "TestPluginOriginalMarketSourcesPersistenceDiscoveryAndActualCards"
+    ],
+    "root_passed": 8,
+    "failed_events": 0,
+    "skipped_events": 0
+  },
+  "artifacts_race": {
+    "log": "work/plugin-module-20261025/market/artifacts-race-final.jsonl",
+    "log_sha256": "e6a72ef03a879a843672f8d47ed6fe1772c6e683f13cf3555957f636f71846bc",
+    "root_tests": [
+      "TestAcquireInertPayloadNeverExecuted",
+      "TestPreflightPreservesOldEvenForce",
+      "TestPrepareFailureRestorationMatchesOriginal",
+      "TestOldRemovedBeforeHTTPPayload",
+      "TestZIPPathsAndTypes",
+      "TestZIPAndTARSuccess",
+      "TestTARRejectsLinksAndSize",
+      "TestRootAndInstalledSymlinkRejected",
+      "TestDownloadBoundsAndCancellation",
+      "TestOptionalPersistentBackup",
+      "TestCloneInstalledCopiesIndependentCodeAndExactReceipt",
+      "TestCloneInstalledRejectsExistingAndUnsafeTargets",
+      "TestCloneInstalledFailureRemovesOnlyNewTarget",
+      "TestDiscoverActualIdentityCurrentAndHistoryMetadataOnly",
+      "TestDiscoverRejectsInvalidCurrentWithoutPayload",
+      "TestDiscoverStrictParserRejectsPythonHTMLAndTrailingData",
+      "TestFrontendPackageAcquireReadAndClone",
+      "TestFrontendPackageMetadataAndContentRejections",
+      "TestFrontendInstalledTamperAndPathRejections",
+      "TestFrontendContentIdentityIncludesFullGraphAndVersion",
+      "TestFrontendReadSerializedWithAcquireAndClone",
+      "TestInspectCompatibleIgnoresReleaseWithoutChangingFilesOrFetchingArtifact",
+      "TestInspectCompatibleRejectsCurrentIncompatibilityWithoutMutation",
+      "TestReadInstalledValidatesBytesAndAuthority",
+      "TestReadInstalledDoesNotCreateMissingRoot",
+      "TestReadInstalledCloneDirectoryUsesTrustedBusinessIdentity",
+      "TestLocalArtifactDiscoveryAcquireCloneAndDetachedProvenance",
+      "TestLocalArtifactUntrustedRootsAndTraversalRejectedBeforeMutation",
+      "TestLocalArtifactBrokenPublicationRestoresInstalledCode",
+      "TestLocalArtifactFingerprintTracksIndexAndPayloadPublication",
+      "TestRepositoryProvenanceSurvivesReopenAndClone",
+      "TestReceiptRepositoryURLBackwardCompatibilityAndValidation"
+    ],
+    "root_passed": 32,
+    "failed_events": 0,
+    "skipped_events": 0
+  },
+  "frontend": {
+    "command": "node --experimental-transform-types --disable-warning=ExperimentalWarning --test tests/*.test.mjs",
+    "log": "work/plugin-module-20261025/market/frontend-full-final.txt",
+    "log_sha256": "651a29615d56db3fe2157eaa60403fd41cc345e625c084a194752ed28ffbcd7a",
+    "passed": 405,
+    "failed": 0,
+    "skipped": 0
+  },
+  "vet": {
+    "command": "go vet -p 2 ./internal/plugins/artifacts ./internal/app",
+    "exit_code": 0
+  },
+  "source_oracle": {
+    "comparisons": 17,
+    "merges": 9,
+    "generator": "testdata/standard-market/generate_oracle.py",
+    "runtime_python_dependency": false
+  },
+  "tested_source_sha256": {
+    "internal/app/plugin_original_market_cache.go": "eb7455f2016ff068efb2825df82f0a51b4f37dd7fe49a8f843948e2be74a8b5f",
+    "internal/app/plugin_original_markets.go": "b0f7f4a73df69d2b769390906a12e63749234e2871f5451cbe6c5d4e1c296be2",
+    "internal/app/plugin_original_local_repositories.go": "a520daa950c3b89bc5ad0a21fcbfb55763aae1b86188600f73a9d81da1a77b95",
+    "internal/app/plugin_original_local_repositories_test.go": "c96ffeb59ebd3fe8051d8bf3a6e81fde4297800c45638fadfb73264d48c94ce4",
+    "internal/app/plugin_original_market_parity_test.go": "d109246da3c7a85db65bca7ead2c752a0f3cba469d8e5ab7cc9b01431f67acf9",
+    "internal/plugins/artifacts/local.go": "ee7b266cf7694f7228dd9e9399da4dedfd981528c3cbba49db06851e290cd44f",
+    "internal/plugins/artifacts/local_test.go": "01a6f0fc456e636e9fbc3ba6ad6936bd5d8fdb51729b25a64404ce948afdb65b",
+    "internal/plugins/artifacts/acquire.go": "a70ed99109e3757de87ea35b9d432d7652220564890a016f064fd09bbeb6a4e8",
+    "internal/plugins/artifacts/discover.go": "c578ab24ba6e5d7c15a998676ab84ee7d7e4be8601532ac639f327f82d643297",
+    "internal/plugins/artifacts/inspect.go": "47f0cbb6b39edc9aba0f2a4edbdb0905a273611632eeb56c547f9cff150875fe",
+    "internal/plugins/artifacts/installed.go": "d5e1896da88d0643c12caa735b74fb6957bce0d35f497ee63a49f6edbb3c793b",
+    "web/src/components/Plugins.vue": "22a0b5a04cd9b93d695b8c5186d88686754cecc09555acfe1e9995e778bb4f3b",
+    "web/src/components/PluginMarketSettingDialog.vue": "1017cc6f37fee20131cb8c137b242ba2ec4eeaee3b874e21de45cbbec64066de",
+    "web/tests/plugin-action-feedback.test.mjs": "ba300fd8dbd38014603d0c3adccda18af1ad8b45a8a7196de9fc234b42f82d6c",
+    "web/tests/plugin-market-settings.test.mjs": "966dc06be7710837ab827828ca1dee576a22569fc744c54b9229588bf60aac7b",
+    "web/tests/plugin-clone.test.mjs": "b2422f369dd3b6ecc0043c9c01a12a7373f6d4edeb00e3e1118997ac97375033",
+    "web/tests/plugin-clone-feedback.test.mjs": "12155a10088cd7b582fbabd66d8ed1dea716a64df61eb11d69f534a39efab654",
+    "testdata/standard-market/market-oracle.json": "03ca85f5791f506721e8a8d7c26caec596dc7aa523c94d5307a9583a7003e4f7"
+  },
+  "owned_fixture_binaries": [
+    {
+      "name": "standard-v1",
+      "sha256": "de067274dcaca85fc40419544738aea571ae077e3c71c07feec5c7cc804e703e",
+      "buildinfo": [
+        "\tpath\tlight-media/cmd/owned-standard-fixture",
+        "\tmod\tlight-media\tv0.0.0-20261024163548-7fc62635bc4a+dirty\t",
+        "\tbuild\t-buildmode=exe",
+        "\tbuild\t-compiler=gc",
+        "\tbuild\tCGO_ENABLED=1",
+        "\tbuild\tCGO_CFLAGS=",
+        "\tbuild\tCGO_CPPFLAGS=",
+        "\tbuild\tCGO_CXXFLAGS=",
+        "\tbuild\tCGO_LDFLAGS=",
+        "\tbuild\tGOARCH=arm64",
+        "\tbuild\tGOOS=darwin",
+        "\tbuild\tGOARM64=v8.0",
+        "\tbuild\tvcs=git",
+        "\tbuild\tvcs.revision=7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+        "\tbuild\tvcs.time=2026-10-24T16:35:48Z",
+        "\tbuild\tvcs.modified=true"
+      ]
+    },
+    {
+      "name": "standard-v2",
+      "sha256": "4b43ac8e0f936a7a70e13b3def2f4b417602a50e184c31e5a0cf68b8bc769e96",
+      "buildinfo": [
+        "\tpath\tlight-media/cmd/owned-standard-fixture",
+        "\tmod\tlight-media\tv0.0.0-20261024163548-7fc62635bc4a+dirty\t",
+        "\tbuild\t-buildmode=exe",
+        "\tbuild\t-compiler=gc",
+        "\tbuild\t-ldflags=\"-X main.fixtureVersion=2.0\"",
+        "\tbuild\tCGO_ENABLED=1",
+        "\tbuild\tCGO_CFLAGS=",
+        "\tbuild\tCGO_CPPFLAGS=",
+        "\tbuild\tCGO_CXXFLAGS=",
+        "\tbuild\tCGO_LDFLAGS=",
+        "\tbuild\tGOARCH=arm64",
+        "\tbuild\tGOOS=darwin",
+        "\tbuild\tGOARM64=v8.0",
+        "\tbuild\tvcs=git",
+        "\tbuild\tvcs.revision=7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+        "\tbuild\tvcs.time=2026-10-24T16:35:48Z",
+        "\tbuild\tvcs.modified=true"
+      ]
+    },
+    {
+      "name": "standard-v1-race",
+      "sha256": "3d3f6cfc5449124dcd1524fc2d67278765659dbb1d48f92f8fb821b331de4d00",
+      "buildinfo": [
+        "\tpath\tlight-media/cmd/owned-standard-fixture",
+        "\tmod\tlight-media\tv0.0.0-20261024163548-7fc62635bc4a+dirty\t",
+        "\tbuild\t-buildmode=exe",
+        "\tbuild\t-compiler=gc",
+        "\tbuild\t-race=true",
+        "\tbuild\tCGO_ENABLED=1",
+        "\tbuild\tCGO_CFLAGS=",
+        "\tbuild\tCGO_CPPFLAGS=",
+        "\tbuild\tCGO_CXXFLAGS=",
+        "\tbuild\tCGO_LDFLAGS=",
+        "\tbuild\tGOARCH=arm64",
+        "\tbuild\tGOOS=darwin",
+        "\tbuild\tGOARM64=v8.0",
+        "\tbuild\tvcs=git",
+        "\tbuild\tvcs.revision=7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+        "\tbuild\tvcs.time=2026-10-24T16:35:48Z",
+        "\tbuild\tvcs.modified=true"
+      ]
+    },
+    {
+      "name": "standard-v2-race",
+      "sha256": "eba35a68bd1e9bc2904010c0d8387271e9e84823c56a1b8f64a12698ba7a6da8",
+      "buildinfo": [
+        "\tpath\tlight-media/cmd/owned-standard-fixture",
+        "\tmod\tlight-media\tv0.0.0-20261024163548-7fc62635bc4a+dirty\t",
+        "\tbuild\t-buildmode=exe",
+        "\tbuild\t-compiler=gc",
+        "\tbuild\t-ldflags=\"-X main.fixtureVersion=2.0\"",
+        "\tbuild\t-race=true",
+        "\tbuild\tCGO_ENABLED=1",
+        "\tbuild\tCGO_CFLAGS=",
+        "\tbuild\tCGO_CPPFLAGS=",
+        "\tbuild\tCGO_CXXFLAGS=",
+        "\tbuild\tCGO_LDFLAGS=",
+        "\tbuild\tGOARCH=arm64",
+        "\tbuild\tGOOS=darwin",
+        "\tbuild\tGOARM64=v8.0",
+        "\tbuild\tvcs=git",
+        "\tbuild\tvcs.revision=7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+        "\tbuild\tvcs.time=2026-10-24T16:35:48Z",
+        "\tbuild\tvcs.modified=true"
+      ]
+    },
+    {
+      "name": "module-v1",
+      "sha256": "6533f9b918fb927ed041a88100fb70690ab1465546f006d084559abe29c004d8",
+      "buildinfo": [
+        "\tpath\tlight-media/cmd/owned-module-fixture",
+        "\tmod\tlight-media\tv0.0.0-20261024163548-7fc62635bc4a+dirty\t",
+        "\tbuild\t-buildmode=exe",
+        "\tbuild\t-compiler=gc",
+        "\tbuild\tCGO_ENABLED=1",
+        "\tbuild\tCGO_CFLAGS=",
+        "\tbuild\tCGO_CPPFLAGS=",
+        "\tbuild\tCGO_CXXFLAGS=",
+        "\tbuild\tCGO_LDFLAGS=",
+        "\tbuild\tGOARCH=arm64",
+        "\tbuild\tGOOS=darwin",
+        "\tbuild\tGOARM64=v8.0",
+        "\tbuild\tvcs=git",
+        "\tbuild\tvcs.revision=7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+        "\tbuild\tvcs.time=2026-10-24T16:35:48Z",
+        "\tbuild\tvcs.modified=true"
+      ]
+    },
+    {
+      "name": "module-v1-race",
+      "sha256": "839d9e7f82e9c65af47ebe6b11cff66f0989ff9f101d4446493d923d14d91c52",
+      "buildinfo": [
+        "\tpath\tlight-media/cmd/owned-module-fixture",
+        "\tmod\tlight-media\tv0.0.0-20261024163548-7fc62635bc4a+dirty\t",
+        "\tbuild\t-buildmode=exe",
+        "\tbuild\t-compiler=gc",
+        "\tbuild\t-race=true",
+        "\tbuild\tCGO_ENABLED=1",
+        "\tbuild\tCGO_CFLAGS=",
+        "\tbuild\tCGO_CPPFLAGS=",
+        "\tbuild\tCGO_CXXFLAGS=",
+        "\tbuild\tCGO_LDFLAGS=",
+        "\tbuild\tGOARCH=arm64",
+        "\tbuild\tGOOS=darwin",
+        "\tbuild\tGOARM64=v8.0",
+        "\tbuild\tvcs=git",
+        "\tbuild\tvcs.revision=7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+        "\tbuild\tvcs.time=2026-10-24T16:35:48Z",
+        "\tbuild\tvcs.modified=true"
+      ]
+    }
+  ],
+  "execution_boundary": [
+    "Actual self-owned Go worker processes and isolated HTTP/filesystem tests; no production or original MoviePilot writes.",
+    "Local change tests invoke the production scanner; one-second periodic loop is wired but no long-running soak is claimed.",
+    "Artifact unit tests include inert payload bytes, separate from App actual-worker tests.",
+    "Source files across the parent task remain uncommitted; these hashes identify this focused batch, not final parent-wide same-byte acceptance."
+  ],
+  "retained_prior_failures": [
+    {
+      "case": "macOS default temporary directory",
+      "cause": "/var symlink hit existing safe-root guard",
+      "resolution": "canonical TMPDIR inside task work directory; no production safety relaxation"
+    },
+    {
+      "log": "work/plugin-module-20261025/market/race-local-final.jsonl",
+      "cause": "test sealed shutdown admission before later uninstall request, correctly receiving APP_STOPPING",
+      "resolution": "isolated closed-admission check into its own test, final8 roots pass"
+    },
+    {
+      "log": "work/plugin-module-20261025/market/clear-local-before.txt",
+      "cause": "old nonempty remote-list guard blocked removing the last local-only root",
+      "resolution": "explicit existing-local-source removal allowed and executed in final UI tests"
+    }
+  ],
+  "remaining": [
+    "G12 Python package/source loading, original runtime-directory Python watch and federated build directory sync are not translated; Go rebuild plus index publication required.",
+    "G11 complete historical-version/backup/restore manager UI still requires separate acceptance.",
+    "G13 sync implementation and proof belong to sibling batch.",
+    "G27 original histories/statistics/ratings/telemetry providers remain absent.",
+    "No23 original plugin business rewrites or external provider live validation claimed."
+  ]
+}

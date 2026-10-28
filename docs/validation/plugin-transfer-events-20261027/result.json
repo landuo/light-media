@@ -1,0 +1,55 @@
+{
+  "accepted": false,
+  "whole_indices": [
+    36,
+    37,
+    43
+  ],
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:2003-2046",
+    "app/modules/filemanager/transhandler.py:354-416",
+    "app/modules/filemanager/transhandler.py:474-578",
+    "app/modules/filemanager/transhandler.py:1021-1094",
+    "app/modules/filemanager/transhandler.py:1221-1285",
+    "app/chain/transfer.py:1153-1197",
+    "app/chain/transfer.py:1267-1310",
+    "app/modules/filemanager/storages/local.py:46-72"
+  ],
+  "target": [
+    "internal/app/plugin_original_transfer_context.go",
+    "internal/app/plugin_original_transfer_rename.go",
+    "internal/app/plugin_original_transfer_intercept.go",
+    "internal/app/plugin_original_transfer_storage.go",
+    "internal/app/plugin_original_transfer_events.go",
+    "internal/app/import_plan.go",
+    "internal/app/import_run.go",
+    "internal/app/directory_overwrite.go",
+    "internal/app/directory_overwrite_run.go",
+    "internal/plugins/storage_operation.go"
+  ],
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-events-20261027/manifest.json",
+  "verified": {
+    "source_replay": "Python3.12 actual fixed rename caller12, interception caller8, LocalStorage DTO7; callback/storage protocol boundaries labelled in oracle",
+    "real_sdk_and_owned_filesystem": "34 scenarios final17.227s PASS; rename12, intercept8, native preview/write/history8, local selected provider6",
+    "not_actual_linux_main_yet": false,
+    "additional": "Latest3 source/SDK/real files with complete call order:9 local storage cases6.146s PASS; auxiliary4 real material paths3.769s; committed-history cleanup failure/retry1.383s; actual import\u2192one inherited core metadata job/event and real NFO with no API credential2.749s. Earlier race64.837s precedes the last auxiliary/metadata/cleanup changes and is not attributed to them.",
+    "platform8_linux": "actual cmd/server54e6c370 + worker375fe0c7 + observer87412e34: CLI2.10s PASS, browser gate258.53s PASS; initial shared699e fixture failed1.31s by reusing media identity across unrelated pending cases; preserved red; production guards unchanged",
+    "platform8_browser": "IAB45 actual file manager\u2192manual preview BrowserClone target\u2192immediate hardlink\u2192history success; source+target same device65025/inode46156715/sha2560c14fddb\u2026; source/clone SDK3705436/3705454\u21923709954/3709959, observations53/13 unchanged by cold startup, history6 rows recovered"
+  },
+  "adaptations": [
+    "Native host naming formats are passed as actual configured templates through the existing source TemplateHelper builder; MoviePilot default format is not silently claimed to be this host default.",
+    "Existing immutable preview plans freeze the computed target; real write retains authorization and snapshots.",
+    "Ordinary local StorageBase object becomes a concrete current-instance SDK method descriptor, not a generic Python heap or callable registry. Path is logical target; PublicationPath is guarded host staging path, verified before atomic publication.",
+    "Source local link/copy must produce real expected inode/bytes. False/error and true-without-file never produce host success.",
+    "Native history has stable string IDs and bundles auxiliary materials; auxiliary ordinary events use None when there is no independent history row. Existing job retries can keep visible overall status pending while committed file_status is error.",
+    "Latest-version backup/recovery retains native durable safeguards; source-visible version removal must precede interceptor. Latest3 source/SDK/actual-files call ordering passed6.146s; broader actual main applicability remains explicit.",
+    "The existing host bundles related media in one asset/history transaction. It emits individual auxiliary failure with None history plus the containing native operation failure when an auxiliary prevents that commit; successful auxiliary events follow actual material registration. Native subtitle/track suffix policy remains after the ordinary rename callback."
+  ],
+  "remaining": [
+    "Final current-tree download event/full-context integration Linux+browser; existing transfer gate is bound to main54e6c370",
+    "Final post-integration source/native/race gates and event inventory mapping",
+    "Directory/bluray transfer caller applicability and exact source ordering audit; do not claim unimplemented host branches"
+  ],
+  "runtime_evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json"
+}

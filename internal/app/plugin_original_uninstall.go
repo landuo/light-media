@@ -21,7 +21,11 @@ func (a *App) originalPluginUninstallHTTP(r *http.Request, path string) (any, er
 	instance := strings.Split(path, "/")[0]
 	a.pluginOriginalOperationMu.Lock()
 	defer a.pluginOriginalOperationMu.Unlock()
-	if _, err := a.Store.DB.ExecContext(ctx, `UPDATE plugin_installations SET installed=0 WHERE instance_id=?`, instance); err != nil {
+	if !a.admitOriginalBackground() {
+		return nil, &APIError{"APP_STOPPING", "服务正在停止", http.StatusServiceUnavailable}
+	}
+	defer a.wg.Done()
+	if err := a.setOriginalPluginInstalled(ctx, instance, false); err != nil {
 		return nil, err
 	}
 	a.pluginRegisteredAPIs.Delete(instance)
@@ -59,7 +63,7 @@ func (a *App) originalPluginUninstallHTTP(r *http.Request, path string) (any, er
 				// and stops the object, while the retained code may load again later.
 				a.log("ERROR", "plugins", "remove_code_failed", "删除插件分身代码别名失败", "", "")
 			} else {
-				a.pluginOriginalClasses.Delete(instance)
+				a.forgetOriginalPluginClass(instance)
 			}
 		}
 	}

@@ -1,14 +1,14 @@
 <script setup lang="ts">
+import CatalogRelated from './CatalogRelated.vue';
 import { onMounted, ref } from 'vue';
 import { VBtn } from 'vuetify/components/VBtn';
 import { VProgressCircular } from 'vuetify/components/VProgressCircular';
-import { api, errorText, go } from '../api';
-import { exploreImage } from '../features/explore-media';
+import { api, errorText } from '../api';
+import { exploreImage, parseExploreDetailRoute } from '../features/explore-media';
 import ExploreActions from './ExploreActions.vue';
-import MediaCards from './MediaCards.vue';
 
 const props = defineProps<{ route: string }>();
-const [, source, kind, sourceId] = props.route.split('?')[0]!.split('/');
+const { source, kind, sourceId, title, year } = parseExploreDetailRoute(props.route);
 const media = ref<any>(null),
   loading = ref(true),
   error = ref('');
@@ -24,6 +24,8 @@ async function load() {
   error.value = '';
   try {
     const query = new URLSearchParams({ source: source!, kind: kind!, source_id: sourceId! });
+    if (title != null) query.set('title', title);
+    if (year != null) query.set('year', year);
     media.value =
       source === 'themoviedb'
         ? {
@@ -97,35 +99,13 @@ onMounted(load);
           >
         </div>
         <p class="hint">
-          {{ sources[source!] }} {{ sourceId }}
+          {{ sources[source!] || source }} {{ sourceId }}
           <span v-if="media.release_date"> · {{ media.release_date }}</span>
         </p>
       </div>
     </section>
-    <section v-if="media.cast?.length" class="panel">
-      <h3>演员</h3>
-      <div class="explore-cast">
-        <button
-          v-for="(person, index) in media.cast"
-          :key="person.id || person.name + index"
-          :disabled="source !== 'themoviedb' || !person.id"
-          @click="go('person/' + person.id)"
-        >
-          <img
-            v-if="exploreImage(media, person.profile_path)"
-            :src="exploreImage(media, person.profile_path)"
-            :alt="person.name"
-            loading="lazy"
-          />
-          <strong>{{ person.name }}</strong
-          ><small>{{ person.character }}</small>
-        </button>
-      </div>
-    </section>
-    <section v-if="media.recommendations?.length" class="explore-related">
-      <h3>相关推荐</h3>
-      <MediaCards :items="media.recommendations" quick-actions original-actions />
-    </section>
+    <CatalogRelated :key="route + 'credits'" :media="media" part="credits" />
+    <CatalogRelated :key="route + 'recommendations'" :media="media" part="recommendations" />
   </template>
   <ExploreActions ref="actions" />
 </template>

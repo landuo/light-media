@@ -1,3 +1,7 @@
+import * as sourceOrganization from '../src/features/plugin-organization.ts';
+import * as pluginProject from '../src/features/plugin-project.ts';
+import * as pluginMarket from '../src/features/plugin-market.ts';
+import * as pluginRemoteContract from '../src/features/plugin-remote-contract.ts';
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -41,12 +45,12 @@ function fixture(
     apiModule.exports,
     async (path, options) => {
       requests.push({ path, ...options });
-      if (path === "/plugins/market" && marketFetch) return marketFetch();
+      if (path.startsWith("/plugins/market?") && marketFetch) return marketFetch();
       const reading = options.method === "GET";
       const result =
         path === "/plugins/organization"
           ? { revision: 0, folders: {}, order: [] }
-          : path === "/plugins" && installedCards
+          : path === "/plugins?state=installed" && installedCards
             ? installedCards
             : [];
       return {
@@ -68,8 +72,10 @@ function fixture(
       };
     if (name === "../api")
       return { ...apiModule.exports, toast: (text) => toasts.push(text) };
+    if (name === "../features/plugin-market") return pluginMarket;
+    if (name === '../features/plugin-project') return pluginProject;
     if (name === "../features/plugin-organization")
-      return { organizationGrid: () => [] };
+      return { ...sourceOrganization, organizationGrid: () => [] };
     if (
       name.startsWith("vuetify/") ||
       name.endsWith(".vue") ||
@@ -103,7 +109,7 @@ function cloneFixture(data, { status = 200, pending } = {}) {
     },
   );
   const helpers = { exports: {} };
-  new Function('require', 'exports', transpile(readFileSync(new URL('../src/features/plugin-clone.ts', import.meta.url), 'utf8')))(() => ({ appBasePath: () => '' }), helpers.exports);
+  new Function('require', 'exports', transpile(readFileSync(new URL('../src/features/plugin-clone.ts', import.meta.url), 'utf8')))((name) => name.endsWith('plugin-remote-contract.ts') ? pluginRemoteContract : { appBasePath: () => '' }, helpers.exports);
   const { descriptor: clone } = parse(readFileSync(new URL('../src/components/PluginCloneDialog.vue', import.meta.url), 'utf8'));
   const mod = { exports: {} };
   new Function('require', 'exports', transpile(compileScript(clone, { id: 'Clone' }).content))((name) => {
@@ -156,8 +162,8 @@ test('clone pending duplicate submit sends only one request', async () => {
 test('source market card is not filtered by an installed clone sharing plugin_id', async (t) => {
   const clone = { ...plugin, instance_id: 'OwnedFixtureqa1', source_instance_id: 'OwnedFixture', installed: true };
   const source = { ...plugin, instance_id: 'OwnedFixture', installed: false, description: '', author: '' };
-  const f = fixture({}, { installedCards: [clone], marketFetch: async () => ({ ok: true, status: 200, json: async () => ({ data: [source] }) }) });
+  const f = fixture({}, { installedCards: [clone], marketFetch: async () => ({ ok: true, status: 200, json: async () => ({ data: { items: [source], sources: [] } }) }) });
   t.after(f.stop); f.state.tab.value = 'market'; await vue.nextTick(); await f.state.load();
-  assert.deepEqual(f.state.items.value, [clone]); assert.deepEqual(f.state.market.value, [source]);
+  assert.deepEqual(f.state.items.value, [{ ...clone, has_update: false, update_blocked_reason: undefined }]); assert.deepEqual(f.state.market.value, [source]);
   assert.deepEqual(f.state.visible.value, [source]);
 });

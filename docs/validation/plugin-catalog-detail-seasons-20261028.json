@@ -1,0 +1,92 @@
+{
+  "accepted_increment": true,
+  "whole_indices_accepted": false,
+  "indices": [
+    43
+  ],
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": [
+    "src/views/discover/MediaDetailView.vue:273-280",
+    "app/schemas/context.py:139",
+    "src/components/dialog/SubscribeEditDialog.vue"
+  ],
+  "targets": [
+    "web/src/features/subscriptions.ts",
+    "web/src/components/Catalog.vue",
+    "web/src/components/Subscriptions.vue",
+    "web/tests/subscriptions.test.mjs",
+    "internal/app/plugin_module_process_catalog_seasons_test.go"
+  ],
+  "behavior": [
+    "Use recognized original_media.season_info for the existing detail selector and subscription total, retaining raw dictionaries; sort numbered seasons ascending, zero last exactly as fixed computed function.",
+    "Null and empty original season_info stay empty; only older native records without original season_info use compact seasons. No second seasons-module call from detail."
+  ],
+  "evidence": {
+    "source_frontend_cases": 6,
+    "frontend_tests": 13,
+    "web_build": "vue-tsc and production build passed",
+    "linux_cli_seconds": 2.09,
+    "linux_browser_gate_seconds": 470.66,
+    "browser": "IAB92 source plugin raw order0,2,1 rendered1,2,0 with3/8/1 counts; select2 -> actual async_tmdb_episodes season2 -> subscription form season2,total8. Source episode False returned500 and disabled subscription; actual retry after valid empty tuple restored. Null original seasons shows no data; restore + real cold has new PIDs, zero recognition/episodes, browser then exactly1 each and sorted rows restored. No subscription submission.",
+    "build": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform53-20261027-linux",
+          "sha256": "658171bbb1b1e6a7cac9ebf03f48311c98852ca0952d8e6e2dc5e0c9eb51d2d8",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform53-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3745,
+          "changed": [],
+          "elapsed_seconds": 2.08
+        },
+        {
+          "name": "process-platform53-20261027-linux.test",
+          "sha256": "0f467b69e623526a65605ed21df79a25477c3722748144e2120c922556d56aa1",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform53-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4239,
+          "changed": [],
+          "elapsed_seconds": 8.21
+        }
+      ]
+    },
+    "manifest": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/manifest.json"
+  },
+  "adaptations": [
+    "Retain existing target VSelect and subscription form rather than adding the entire source media detail business page; plugin fields and sorting match fixed source.",
+    "Original raw MediaInfo and compact target fields coexist; UI reads authoritative raw seasons where available. Old record compatibility remains.",
+    "Provider is an owned Go SDK plugin; no live external media provider involved."
+  ],
+  "failures_explained": [
+    "First UI fixture assumed episode False was an empty result. Fixed-source episode oracle specifies500, and UI correctly refused subscription. Changed only owned fixture config through authenticated PUT to explicit empty tuple; retained initial error snapshot and source expectation.",
+    "First login selector used macOS accessibility label rather than actual DOM duplicated label; refreshed DOM and selected exact existing label."
+  ],
+  "remaining": [
+    "43:197 method/231 direct call source audit and boundary classification",
+    "50:final evidence audit"
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

@@ -9,6 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"light-media/internal/media/words"
+	"math/big"
 	"net"
 	"net/http"
 	"os"
@@ -27,6 +28,9 @@ import (
 
 type App struct {
 	pluginOriginalBase               originalBaseState
+	pluginOriginalMarkets            originalMarketCache
+	pluginOriginalInput              originalPluginInputRuntime
+	pluginOriginalNotice             originalNoticeRuntime
 	pluginImplementationMu           sync.RWMutex
 	pluginOriginalInitializingRuns   sync.Map
 	pluginOriginalEventsMu           sync.Mutex
@@ -40,13 +44,24 @@ type App struct {
 	pluginOriginalRegisteredCommands map[string]json.RawMessage
 	pluginOriginalServicesMu         sync.Mutex
 	pluginOriginalBackground         originalBackgroundAdmission
+	pluginOriginalUserUID            atomic.Pointer[string]
 	pluginOriginalDirectJobs         originalDirectJobs
 	pluginRegisteredAPIs             sync.Map // Exact instance routes refreshed by original register_plugin_api.
 	pluginOriginalClasses            sync.Map // Original _plugins: imported compiled class, independent of running and installed.
+	pluginOriginalClassOrder         []string // guarded by pluginOriginalRunningMu; source _plugins insertion order
 	pluginSubmittedObjects           sync.Map // Exact objects held by accepted asynchronous calls, including failed init.
 	pluginRunningInstances           sync.Map // Original _running_plugins: successful initialized call objects, not business enable state.
 	systemMessages                   systemMessageRuntime
-	bigMemoryMode                    bool // Trusted startup option; not worker or plugin configuration.
+	bigMemoryMode                    bool               // Trusted startup option; not worker or plugin configuration.
+	safeMode                         bool               // Recovery startup skips automatic plugin and background execution.
+	pluginDeveloperMode              bool               // Immutable DEV startup option, scoped to plugin local monitoring.
+	pluginMarketOverride             *[]string          // Immutable process environment override; never persisted by the settings UI.
+	pluginLogRotation                *PluginLogRotation // Source ordinary log environment overrides, fixed for this process.
+	resourceSearchPages              *big.Int           // Trusted ordinary SEARCH_RESOURCE_PAGES, normalized at main startup.
+	originalSearchKeywordMu          sync.Mutex
+	originalSearchKeywordNext        time.Time
+	originalSearchKeywordOverflow    bool
+	mediaSearchConfiguration         *MediaSearchConfiguration
 	transferExtensions               nativeTransferExtensionRuntime
 	subscriptionStats                subscriptionStatsRuntime
 	recognitionMu                    sync.Mutex
@@ -74,6 +89,7 @@ type App struct {
 	activeWrites                     int
 	logMu                            sync.Mutex
 	authMu                           sync.Mutex
+	pluginOriginalAuth               originalAuthRuntime
 	authAttempts                     map[string][]time.Time
 	jobWake                          chan struct{}
 	wg                               sync.WaitGroup
@@ -90,6 +106,7 @@ type App struct {
 	// Serialize original endpoint operations separately from live SDK calls.
 	// Shutdown may join workers and must not hold a callback snapshot lock.
 	pluginOriginalOperationMu sync.Mutex
+	pluginOriginalBroadcast   originalBroadcastRuntime
 	pluginLifecycleMu         sync.Mutex
 	pluginStore               *PluginStore
 	pluginWake                chan struct{}
@@ -98,9 +115,15 @@ type App struct {
 }
 
 type Options struct {
-	BigMemoryMode bool // Original BIG_MEMORY_MODE pool selection, fixed for this App lifetime.
-	DataDir       string
-	Web           http.Handler
+	PluginLogRotation     *PluginLogRotation
+	ResourceSearchPages   *big.Int
+	MediaSearch           *MediaSearchConfiguration
+	PluginDeveloperMode   bool      // Original DEV: plugin monitoring only; no other business debug switches.
+	BigMemoryMode         bool      // Original BIG_MEMORY_MODE pool selection, fixed for this App lifetime.
+	SafeMode              bool      // Management remains available without automatic background tasks.
+	PluginMarketsOverride *[]string // nil means no process override; an empty list is an explicit empty override.
+	DataDir               string
+	Web                   http.Handler
 }
 
 const appVersion = "0.4.18"
@@ -118,7 +141,19 @@ func New(opts Options) (*App, error) {
 	if e != nil {
 		return nil, e
 	}
-	a := &App{bigMemoryMode: opts.BigMemoryMode, RestartRequested: make(chan struct{}, 1), Store: s, Dir: opts.DataDir, web: opts.Web, control: "running", authAttempts: map[string][]time.Time{}, jobWake: make(chan struct{}, 1), materials: map[string][]byte{}}
+	a := &App{pluginDeveloperMode: opts.PluginDeveloperMode, bigMemoryMode: opts.BigMemoryMode, safeMode: opts.SafeMode, RestartRequested: make(chan struct{}, 1), Store: s, Dir: opts.DataDir, web: opts.Web, control: "running", authAttempts: map[string][]time.Time{}, jobWake: make(chan struct{}, 1), materials: map[string][]byte{}}
+	a.pluginLogRotation = clonePluginLogRotation(opts.PluginLogRotation)
+	a.mediaSearchConfiguration = cloneMediaSearchConfiguration(opts.MediaSearch)
+	if a.mediaSearchConfiguration == nil {
+		a.mediaSearchConfiguration, _ = MediaSearchEnvironment(os.LookupEnv)
+	}
+	if opts.ResourceSearchPages != nil {
+		a.resourceSearchPages = new(big.Int).Set(opts.ResourceSearchPages)
+	}
+	if opts.PluginMarketsOverride != nil {
+		sources := append([]string{}, (*opts.PluginMarketsOverride)...)
+		a.pluginMarketOverride = &sources
+	}
 	var raw []byte
 	e = s.DB.QueryRow(`SELECT payload FROM records WHERE kind='config' AND id='main'`).Scan(&raw)
 	if e == nil {
@@ -193,8 +228,19 @@ func New(opts Options) (*App, error) {
 func (a *App) Start(parent context.Context) {
 	ctx, cancel := context.WithCancel(parent)
 	a.cancel = cancel
+	if a.safeMode {
+		a.log("INFO", "runtime", "safe_mode", "安全模式已启动：跳过插件加载、定时任务、监控和自动同步，管理接口仍可使用", "", "")
+		return
+	}
+	if err := a.restoreOriginalPluginCode(ctx); err != nil {
+		a.log("ERROR", "plugins", "code_restore_failed", "恢复插件代码备份失败，继续加载现有插件", "", "")
+	}
+	a.initializeOriginalCommonService(time.Now())
 	if err := a.initializeOriginalPlugins(ctx); err != nil {
 		a.log("ERROR", "plugins", "initialize_failed", "恢复插件初始化失败，请查看插件执行记录", "", "")
+	}
+	if err := a.recoverOriginalScrapeBatches(ctx); err != nil {
+		a.log("ERROR", "import", "scrape_batch_recovery_failed", "整理刮削批次恢复失败，请检查任务状态", "", "")
 	}
 	for i := 0; i < 2; i++ {
 		a.wg.Add(1)
@@ -204,6 +250,15 @@ func (a *App) Start(parent context.Context) {
 	go func() { defer a.wg.Done(); a.scheduler(ctx) }()
 	a.wg.Add(1)
 	go func() { defer a.wg.Done(); a.runOriginalPluginScheduler(ctx) }()
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.runOriginalLocalRepositoryWatcher(ctx) }()
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.runOriginalMarketRefresh(ctx) }()
+	a.wg.Add(1)
+	go func() { defer a.wg.Done(); a.runOriginalNoticeQueue(ctx) }()
+	if a.admitOriginalBackground() {
+		go func() { defer a.wg.Done(); a.synchronizeOriginalPluginsAtStartup(ctx) }()
+	}
 	a.log("INFO", "runtime", "started", "服务已启动", "", "")
 	a.controlMu.Lock()
 	initialControl := a.control
@@ -212,12 +267,23 @@ func (a *App) Start(parent context.Context) {
 }
 func (a *App) Close() error {
 	a.closeOriginalBackgroundAdmission()
-	a.closeOriginalSessions()
-	a.stopOriginalUnpublishedSubmissions(context.Background(), "")
-	a.systemMessages.close()
 	if a.cancel != nil {
 		a.cancel()
 	}
+	a.pluginOriginalInput.clear()
+	a.stopOriginalNoticeQueue()
+	// Join any package update before closing its loaded object. Both automatic
+	// synchronizers recheck sealed admission under this same operation lock.
+	a.pluginOriginalOperationMu.Lock()
+	if !a.safeMode {
+		if err := a.backupOriginalPluginCode(context.Background()); err != nil {
+			a.log("ERROR", "plugins", "code_backup_failed", "备份插件代码失败，继续停止插件", "", "")
+		}
+	}
+	a.closeOriginalSessions()
+	a.pluginOriginalOperationMu.Unlock()
+	a.stopOriginalUnpublishedSubmissions(context.Background(), "")
+	a.systemMessages.close()
 	a.stopSubscriptionStatistics()
 	a.wg.Wait()
 	a.closeSubscriptionStatisticsHTTP()
@@ -241,6 +307,13 @@ func (a *App) Settings() Settings {
 	b, _ := json.Marshal(a.config)
 	var c Settings
 	_ = json.Unmarshal(b, &c)
+	if c.PluginServerURL == nil {
+		value := originalPluginDefaultServerURL(os.LookupEnv)
+		c.PluginServerURL = &value
+	}
+	if a.pluginMarketOverride != nil {
+		c.PluginMarkets = append([]string{}, (*a.pluginMarketOverride)...)
+	}
 	return c
 }
 func (a *App) saveSettings(ctx context.Context, c Settings) error {
@@ -252,6 +325,11 @@ func (a *App) saveSettings(ctx context.Context, c Settings) error {
 // Callers hold settingsMu. The existing download/import lock order also binds
 // plugin site changes to the same publication boundary as all other settings.
 func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect func(context.Context, *sql.Tx, *Settings) error) error {
+	if a.pluginMarketOverride != nil {
+		a.cfgMu.RLock()
+		c.PluginMarkets = append([]string(nil), a.config.PluginMarkets...)
+		a.cfgMu.RUnlock()
+	}
 	if err := normalizeProxySettings(&c); err != nil {
 		return err
 	}
@@ -327,6 +405,7 @@ func (a *App) saveSettingsWithEffect(ctx context.Context, c Settings, effect fun
 	a.config = c
 	a.cfgMu.Unlock()
 	a.emitStandardSiteDeletions(ctx, previous, c)
+	a.emitStandardPluginSettingsChanged(ctx, previous, a.Settings())
 	a.log("INFO", "settings", "updated", "连接和路径设置已更新", "", "")
 	return nil
 }
@@ -383,6 +462,12 @@ var urlPattern = regexp.MustCompile(`(?i)https?://[^\s"<>]+`)
 func cleanWithSettings(s string, c Settings) string {
 	secrets := []string{c.TMDB.APIKey, c.TMDB.AccessToken, c.FNOS.Password, c.APIToken}
 	secrets = append(secrets, proxySecrets(c.ProxyHost)...)
+	secrets = append(secrets, c.GitHubToken, c.RepoGitHubToken)
+	for _, pair := range strings.Split(c.RepoGitHubToken, ",") {
+		if parts := strings.Split(pair, ":"); len(parts) == 2 {
+			secrets = append(secrets, strings.TrimSpace(parts[1]))
+		}
+	}
 	for _, x := range c.Sites {
 		secrets = append(secrets, x.Cookie, x.APIKey, x.Token, x.RSS, string(x.Note))
 	}

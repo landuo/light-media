@@ -1,0 +1,54 @@
+{
+  "version": "3.11.3",
+  "kind": "actual IntervalTrigger/CronTrigger with controlled uniform draw; native Go RNG sequences differ, uniform algorithm preserved",
+  "source_sha256": {
+    "interval": "462a85cdebf3bd16d9399ebe543e890ec6641826b5bf45b054c8d2fdfa6f80a2",
+    "cron": "7db9005edf83f8345d3072a36d4fdb4b184aefc92de75329ebfa9248eafac064"
+  },
+  "cases": [
+    {
+      "name": "interval-jitter-advances-previous",
+      "kind": "interval",
+      "jitter": 4,
+      "draw": 0.25,
+      "start": "2026-10-26T00:00:00+00:00",
+      "end": null,
+      "times": [
+        "2026-10-26T00:00:01+00:00",
+        "2026-10-26T00:00:12+00:00"
+      ]
+    },
+    {
+      "name": "cron-jitter-retains-calendar",
+      "kind": "cron",
+      "jitter": 4,
+      "draw": 0.25,
+      "start": "2026-10-26T00:00:00+00:00",
+      "end": null,
+      "times": [
+        "2026-10-26T00:00:01+00:00",
+        "2026-10-26T00:00:11+00:00"
+      ]
+    },
+    {
+      "name": "interval-jitter-end-exhausted",
+      "kind": "interval",
+      "jitter": 4,
+      "draw": 0.25,
+      "start": "2026-10-26T00:00:00+00:00",
+      "end": "2026-10-26T00:00:00.500000+00:00",
+      "times": []
+    },
+    {
+      "name": "cron-jitter-clips-end",
+      "kind": "cron",
+      "jitter": 4,
+      "draw": 0.25,
+      "start": "2026-10-26T00:00:00+00:00",
+      "end": "2026-10-26T00:00:00.500000+00:00",
+      "times": [
+        "2026-10-26T00:00:00.500000+00:00"
+      ]
+    }
+  ]
+}

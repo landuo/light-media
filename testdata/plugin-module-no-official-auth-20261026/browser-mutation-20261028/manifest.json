@@ -1,0 +1,311 @@
+{
+  "date": "2026-10-28",
+  "kind": "fixed AST/real Source local filesystem replay27; actual Go SDK/files; race; actual Linux server and IAB49",
+  "main": {
+    "name": "server-platform16-20261027-linux",
+    "sha256": "9edd841c0e8e27afa5c025ace84e912c2b5780ba1e0d90612af06b9b1dd811a8",
+    "command": [
+      "go",
+      "build",
+      "-trimpath",
+      "-o",
+      "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform16-20261027-linux",
+      "./cmd/server"
+    ],
+    "inputs": 3696,
+    "changed": [],
+    "elapsed_seconds": 3.81
+  },
+  "test": {
+    "name": "process-platform16r2-20261027-linux.test",
+    "sha256": "2dcec468b5291cda5333823316843d12e36ed952c3c85b56d4721b0bd6453e6b",
+    "command": [
+      "go",
+      "test",
+      "-c",
+      "-o",
+      "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform16r2-20261027-linux.test",
+      "./internal/app"
+    ],
+    "inputs": 4137,
+    "changed": [],
+    "elapsed_seconds": 6.57
+  },
+  "worker_sha256": "845c97a07a1d02bfc0309393e234894376b3f30ef3cab263aca8607ad8688540",
+  "local27_seconds": 17.143,
+  "race_seconds": 64.291,
+  "linux_cli_seconds": 1.97,
+  "linux_browser_seconds": 423.57,
+  "artifacts": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/local/browser-mutation-files-race.log.gz",
+      "sha256": "567f3f25c99ba63fbb7e37dbc2841af9bdde90a6fb22a327260c273ddf549b54",
+      "raw_sha256": "ce7a5f2928c258eaa01f798551da4b8fad3d7da7007b5788ff91c2ad8dab7424"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/local/browser-mutation-source-local.log.gz",
+      "sha256": "1ae78533883fbbf58e688ec8591247fd8fae5af01982a6e04a3506e89d9a4c18",
+      "raw_sha256": "b1fe43d3cf322c5971efee2eb3b499981d43795b5e3b144675c11236c4ce29bd"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/clone-renamed.txt.gz",
+      "sha256": "2136e411fc99e103233aa0100cbfc1d71c61f58b853f7ba0b8b06b2baa5fcd5b",
+      "raw_sha256": "31538b5fe626af25a5f1410495a8a035222a68c0c11a9df0d35b58423408fda8"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/cold-refresh.txt.gz",
+      "sha256": "f864c23dcc4b9a42ddd2a0ceeb33227f01bca779024a4299e9ad0e286fc5e084",
+      "raw_sha256": "c48fdcdc9b532db2857eb83b5160975aa83d8b504a3ac99c953b96f3cf219331"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/cold-renamed.png",
+      "sha256": "8d1e62e5ee17b83b9555eafb46450fbed76ce3a81173ba3fceb481b2f3945d6d",
+      "raw_sha256": "8d1e62e5ee17b83b9555eafb46450fbed76ce3a81173ba3fceb481b2f3945d6d"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/cold-renamed.txt.gz",
+      "sha256": "e3ec688f2d7723dfb2190dce93c62898f108e8ed4a0929adc12345a863ac29d5",
+      "raw_sha256": "33f36ff55325acd7285383f1b3c399c793150b4f85274fe3cba5a2ddb33e2df9"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/created.png",
+      "sha256": "63f1e7cbc28ef00ffe1457975d2b751c7f494f0c89d0e17692ac3ac32f847abe",
+      "raw_sha256": "63f1e7cbc28ef00ffe1457975d2b751c7f494f0c89d0e17692ac3ac32f847abe"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/created.txt.gz",
+      "sha256": "a946bb774488b127339b3c71aeff709ef35bd6326014c01eb35dc0db1a6e766e",
+      "raw_sha256": "223fa6d789652e9d384db69b49a59a6f9f76b0534e415b862f5ad630800eceaf"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/delete-confirm.txt.gz",
+      "sha256": "9653b9d0181a74a5c8dc7291620f10b09d58bf41858010e6c2e5dd222aa59812",
+      "raw_sha256": "9a29359373d337298083fcaaf5f2a1b71a62b845ebf1837f9c6a1fc0c22c9d89"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/deleted.png",
+      "sha256": "c099bfb3223e52c56d06d477f703e32c550f54a0252f3e61e9dbcd9c490eb800",
+      "raw_sha256": "c099bfb3223e52c56d06d477f703e32c550f54a0252f3e61e9dbcd9c490eb800"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/deleted.txt.gz",
+      "sha256": "8936aaea8f76c3ad89af636563489d7de96da341be564554eba93bd7b8b9f05c",
+      "raw_sha256": "f5db38f57566028452ed547ceb547478e497c30e14316d9cc9f8f75ab583c836"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/failure.png",
+      "sha256": "9fb7f91807ebddeb1301aacbad29907bc56f2f9234fdb5e8c057318cc47965ae",
+      "raw_sha256": "9fb7f91807ebddeb1301aacbad29907bc56f2f9234fdb5e8c057318cc47965ae"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/failure.txt.gz",
+      "sha256": "a8a95501cfcd08505011457e68c9b6f930eeee50695350b6b74b04ffc709bdca",
+      "raw_sha256": "9afa1add4f204fd754d032c3c05da1f0f275824265420af9deaabb84c6ed2e72"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/initial.txt.gz",
+      "sha256": "bb09623898fdcfdc6039ebdb755d0607f8d2d7c51b5adee346190e103bcd5172",
+      "raw_sha256": "a9ffe1918eb3d8864221fa3a21f8e808c4b92fd3fa8591971cd004a3049cc78c"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/recovered.png",
+      "sha256": "94e65f4837ee585e6bdb58223d8f64f18a73f1b7884fcc5f394572a6c32f0e18",
+      "raw_sha256": "94e65f4837ee585e6bdb58223d8f64f18a73f1b7884fcc5f394572a6c32f0e18"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/recovered.txt.gz",
+      "sha256": "84706cd46875cde1e154804d253c3c1e43bb539faed9cd3fe5256572616b7f51",
+      "raw_sha256": "3635e3832bf480d635dfc4af74ed6100184ee112e3318aa12ba55c4a92299faf"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser/renamed.txt.gz",
+      "sha256": "552e3ae2d26d97904f7a6ac63c192b70fab8b571708a0b5cae1c62e11224a3a4",
+      "raw_sha256": "7cda3b128159c13a074c43e884e9999b1fcd917bcd7ee60864d8404c9372342e"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/local/browser-mutation16-observe.py.gz",
+      "sha256": "d92c7b17a3a69efdff23733d9dc2260b58d13a2f7b435166b963d2f71f3a96b7",
+      "raw_sha256": "1cf0f740ab760eb42294bfe53380b1e6a07f9e1dc07d0461802c8936cb920464"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-browser-assertions.json.gz",
+      "sha256": "2da14c1f519bd894317d0e4149380a98f9973d353bd184e6b45fed2dacd03e5f",
+      "raw_sha256": "39782b38cb322f23c060bdf5e61c8d87ff32c0614a5350def25a2a5d5b0957a0"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-cli-evidence/events36-service-process.log.gz",
+      "sha256": "fc55524227115ed8a7756cfef105c0e4449994cc8576c8a58ee490d72535b1c1",
+      "raw_sha256": "17d2d82961c6dbb98e37eebd9ec63364aad8af486f645c05e6d7cfccacc1c543"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-cli-r2-evidence/browser-mutation-real-main.json.gz",
+      "sha256": "67e8b4afaaefc37d1a5e20167ba09fc17c93934273c3ea5b5f42da450a34ae36",
+      "raw_sha256": "2c0cb96b502754bc77482725a7304ea4a24a7e5e1226004289eada90942c25a5"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-cli-r2-evidence/browser-storage-real-main.json.gz",
+      "sha256": "2fa0c7d58f764ac241c7fcb07c6a1719a60ec9bbbe96b4435b11cf4122878216",
+      "raw_sha256": "6e9ca5445442d19499398e74a82f10ee1fa9d401eae87bcda37df387212c0e5f"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-cli-r2-evidence/events36-service-process.log.gz",
+      "sha256": "4891e280b70b5e7cd71c8e84b8dc18d4e2ace414e71a76a95a0df522bad04ff3",
+      "raw_sha256": "347f25617acb8387342731b66f3fa37eefbccc73a4af2982ed21a3687490ca76"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-cli-r2.log.gz",
+      "sha256": "eab76aaea0ac67c8733b02107b6de2a205ff6d518ebf468e226d332e9fa11c7e",
+      "raw_sha256": "2f8c365be55b16fc49e51765c8cbb5cada53ab6ebde757a6ec54a9dc3f670f58"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-cli.log.gz",
+      "sha256": "125990dcd3efde006a069c87ee683f261a9bd2ca74630a8c0e8109fa63f39952",
+      "raw_sha256": "da1861591ca01b314ca204e25f81f24bfa49e4b0449c13c9ec61234f98717e24"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-observe.py.gz",
+      "sha256": "d92c7b17a3a69efdff23733d9dc2260b58d13a2f7b435166b963d2f71f3a96b7",
+      "raw_sha256": "1cf0f740ab760eb42294bfe53380b1e6a07f9e1dc07d0461802c8936cb920464"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-observed-clone-renamed.json.gz",
+      "sha256": "436bb7b5ad70b7074d5ef3669337abfc25d451db21d688c6de69652d1b2e5de7",
+      "raw_sha256": "a3b889baf3196b0b9bb6c1e69a4b21f8c2e4d7c9aaab542649bcb2de08b35027"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-observed-clone.json.gz",
+      "sha256": "6cf3e66bce855e9af40d016088cef6e196ef6c1b9d7fc1b7f724f9f76368ac9e",
+      "raw_sha256": "e1ce654b6e77c676b70e4ad4868ca610bc4c61c5e85c9113d9b2e6defaef158e"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-observed-cold-before-ui.json.gz",
+      "sha256": "bc8441bc78cf1085ba573a85be972f38cf48ceb3d52c46a621cf6dbd31d4016f",
+      "raw_sha256": "e2fb07724d50736d8f577a4d3a28d21ea59fc07374c80356ff7042f63fcdabb1"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-observed-cold-renamed.json.gz",
+      "sha256": "89a4071db0a232d96ffdb9c98aa1afdb79ac7bc5946163a15a782854ef312f4e",
+      "raw_sha256": "1790f47ce8bb3be5387a67372a2048b2e00f2fe8a6d8265edb3baf65f991fc14"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-observed-created.json.gz",
+      "sha256": "4a4e6a90b57d5ba7dff7d2dad6cb3191cef7018659d53b33eb5634e779a628bc",
+      "raw_sha256": "e492d70684c3c33101aec3ae53df4330818342dfdacb39ed54e0fbba99834943"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-observed-deleted.json.gz",
+      "sha256": "b02902f3b54dca11a4a3a07292b88350bd62ac29f56022c3e8dea49de65a15da",
+      "raw_sha256": "9fab482662550ad23e31b3f67dfa2509431f3b81e6dda64e1076fb6b4a08a3f2"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-observed-fail.json.gz",
+      "sha256": "37210c1b88069bf2bbeb728c488b291dfe3d908dba5e5328dfd868c3890c63db",
+      "raw_sha256": "b4cb17519c7c158ed56328ec8457d73cc0c794f2e4f83ce09b8cd350c410e119"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-observed-failed-readback.json.gz",
+      "sha256": "ecbf9bb0c52aa3dbec2ec2003fe45ec3573c9a333e1b5ff24bc43d282294b910",
+      "raw_sha256": "0a1153ab1654e7bfbfa69d1c2a412a7cceda37cbaa718b89f7f3e6b4be97cfc5"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-observed-recovered.json.gz",
+      "sha256": "281641ccd5a901835c66d93124326057afedb410e647eeb3d2a96c82f960093d",
+      "raw_sha256": "d695796eb0dac487a49a9f6df737c1ec9ddc41187b28041866e05c27fd6fb38d"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-observed-renamed.json.gz",
+      "sha256": "13be9af8da6fca0bf4e9aab1ce0b22134474cb9ae43125c4aec5e1000bb27c38",
+      "raw_sha256": "42affe7a73259147cca3d74be0e5161c56786dfdf33151e66a799ee478494442"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-observed-restore.json.gz",
+      "sha256": "ec0641fa506ca7da0f2d617e69d3e922569b3c835c8cb6d2e69fd0fbd3e8cf7c",
+      "raw_sha256": "33fb99f232579e961dcc7051d9dd99bff6679c9abdcbf034daa57a9e92637ae7"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-ui-evidence/browser-mutation-real-main.json.gz",
+      "sha256": "b33a08dab59d7a511d3d1ea94196de19eb9f3721027b6b73a51f0ff7775583d9",
+      "raw_sha256": "612a2074584508fbc9d3eecdfe2efc353d6b021d7f5f8ebaf74e374c55a7d598"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-ui-evidence/browser-storage-real-main.json.gz",
+      "sha256": "35f59e8a2f0f294c5398c83d019c2cb9609dcd42807f2055e2d2bef1688102d1",
+      "raw_sha256": "1c4e921b0de15def322863356cd3f9a6a792121955dd36117ca738d46c8188a7"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-ui-evidence/events36-service-process.log.gz",
+      "sha256": "e682b1f415d97498f90d97ccd217405add6a007ffb65ef9f954bb3d2732eb56b",
+      "raw_sha256": "50f2109e819e819f8f8e0d057f74e3544ebded0e2ac6340c003085c6fb2e7955"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-ui-state.json.gz",
+      "sha256": "c8713d59a620919cb6899490705e18bc4edebfc2c18127b46148453240b822ca",
+      "raw_sha256": "82dc466a628faeb962dd1b3ccfe82373b40bd6ba3f90d000d67db89792b1df8f"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-ui-state.json.done.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-ui-state.json.restart.done.gz",
+      "sha256": "8daad50dc94975f4c7da7bc961e4f9348a7a0607db1768eed6ba841a479e86ca",
+      "raw_sha256": "9bb2e99b63ac23910360b0d832fd4c44b123894957eee4d2d6733719346c2dd3"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/browser-mutation16-ui.log.gz",
+      "sha256": "e6ef6d3d48b616c67171673df541edc14385c7eff0006b06fd2fba3f1cb8d2d0",
+      "raw_sha256": "df8b93d1822982d27a5e6c04fde7a2fb3f03af6a9a525e3cb479f304e8890390"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/local/build-platform16.py.gz",
+      "sha256": "a929ea0f269c049409dc85389c1ebed66e7c8e186fec4ffc215bc907877d223d",
+      "raw_sha256": "7334aeab292f84c8bedf11cb41c7281690870f07e16c30ce8367578dbbf2efb5"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/local/build-platform16r2.py.gz",
+      "sha256": "786f841c0f29cba2ce18baa160cdb144028274dea93e46d1e6fa96bff5fb4bd8",
+      "raw_sha256": "d3a8d9303fcad5735ad01600e0b7f32b893f5f602a9e9ddd5492004667ce7b88"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/local/platform16-result.json.gz",
+      "sha256": "9826602b269e250538930e0f5e07bd5091af98bc582dd287e248e8c3fd555d07",
+      "raw_sha256": "8a4377c3d1d75f7ae9e3e840df6015317df56bac4825c96bcd5a91858d633474"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/local/platform16r2-result.json.gz",
+      "sha256": "743fc18fc2a7290287c6ee142793a9be228d05b1e62128de278a7da078a0a1a5",
+      "raw_sha256": "cae15998951fa9ba379c1b0660bf7d6011906bfaf9a3f22186e6b9cba18fad2f"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/local/process-platform16-20261027-linux.test.inputs.json.gz",
+      "sha256": "ebf04162203835bee9d053f6effc483179e5d112785efa4f76160735a1212f1e",
+      "raw_sha256": "3467e699964d21ab4f5ccbecb20f814a64dc5ac5d0ecc25121f38a68b92e58f9"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/local/process-platform16r2-20261027-linux.test.inputs.json.gz",
+      "sha256": "a51e41beaacc8dfe39b961868feb526fb7ec0f046f361c4828e4ecc8ffc0ea10",
+      "raw_sha256": "303eb728fd99029263d6a4008df4ea2c2093b9c802892bdacf9005df0c32385f"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/local/run-browser-mutation16.py.gz",
+      "sha256": "74715be1a992bf0836394bf28b86358e564885bba7e5921e81f78b85f52b4a49",
+      "raw_sha256": "9f83b6b0fa10d88e9ce6d766493e490d616ec5becd2a3c4de4626fa0d04f9f24"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/local/run-browser-mutation16r2.py.gz",
+      "sha256": "3116c102ec8af83553826428e8b1fda9401f860af3efb74d50a7fb32f649bd77",
+      "raw_sha256": "6b06e7e9e268eb07d461fb934032fa21e26a09552c22969fdffbc685bb5341c2"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/local/server-platform16-20261027-linux.inputs.json.gz",
+      "sha256": "5150778ed30cc921d7c7d3b5ff52fd2b97cac3628c4625eb48d7a7b238554bbc",
+      "raw_sha256": "93af030eb1a12d7da54f612cda9654c31858c65c612f01e4a8eb2295c4fc80c3"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/local/verify-browser-mutation16-proof.py.gz",
+      "sha256": "1e4b7fd880820a307bfb6ff5dd9a71474ac3d525ae4983c246d1b46ceb8d6f26",
+      "raw_sha256": "7a691f8803471d1432e34488aea5b6d1a6649c4aca5d88b1a1729e2d3e917515"
+    }
+  ]
+}

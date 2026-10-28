@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"testing"
 )
@@ -33,5 +34,20 @@ func TestOriginalDashboardMetadataActualSDKCustomCloneName(t *testing.T) {
 	want = append(want, map[string]any{"id": cloneID, "name": customName, "key": ""})
 	for i := 0; i < 3; i++ {
 		ownedDashboardMetadataRead(t, a, cookie, want, ownedDashboardMetadataObservation{source, 1, 0}, ownedDashboardMetadataObservation{clone, 1, 0})
+	}
+}
+
+func TestOriginalDashboardDirectActualSDKCustomCloneName(t *testing.T) {
+	a, cookie, _ := ownedDashboardMetadataFixture(t, "default")
+	r := callTest(t, a.Handler(), http.MethodPost, "/api/plugins/"+ownedStandardFixtureID+"/clone", `{"suffix":"Named","name":"Owned custom dashboard twin"}`, cookie, "")
+	assertOriginalRegistrySuccess(t, r.Code, r.Body.Bytes())
+	cloneID := ownedStandardFixtureID + "named"
+	ownedDashboardMetadataSave(t, a, cookie, cloneID, `{"enabled":true}`, http.StatusOK)
+	r = callTest(t, a.Handler(), "GET", "/api/plugins/"+cloneID+"/dashboard?key=summary", "", cookie, "")
+	var response struct {
+		Data struct{ ID, Name, Key string }
+	}
+	if r.Code != 200 || json.Unmarshal(r.Body.Bytes(), &response) != nil || response.Data.ID != cloneID || response.Data.Name != "Owned custom dashboard twin" || response.Data.Key != "summary" {
+		t.Fatal("fixed get_plugin_dashboard clone display identity", r.Code, r.Body.String())
 	}
 }

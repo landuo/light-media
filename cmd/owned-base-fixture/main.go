@@ -13,27 +13,38 @@ import (
 	"light-media/internal/plugins"
 )
 
+var fixtureProcessAPI = ""
+
 type plan struct {
-	Target *string         `json:"target"`
-	Config json.RawMessage `json:"config"`
-	Key    string          `json:"key"`
-	Value  json.RawMessage `json:"value"`
-	Delete *string         `json:"delete"`
+	Target       *string         `json:"target"`
+	Config       json.RawMessage `json:"config"`
+	Key          string          `json:"key"`
+	Value        json.RawMessage `json:"value"`
+	Delete       *string         `json:"delete"`
+	RepeatConfig bool            `json:"repeat_config"`
 }
 
 type object struct {
-	mu          sync.Mutex
-	initCount   int
-	initInput   json.RawMessage
-	initAfter   json.RawMessage
-	planResult  *bool
-	previous    plugins.HostCaller
-	staleDenied bool
+	mu           sync.Mutex
+	initCount    int
+	initInput    json.RawMessage
+	initAfter    json.RawMessage
+	planResult   *bool
+	previous     plugins.HostCaller
+	staleDenied  bool
+	repeatResult *bool
+	events       []plugins.MutableEvent
 }
 
 func manifest() plugins.Manifest {
-	return plugins.Manifest{SchemaVersion: 1, PluginID: "OwnedBaseFixture", Name: "Owned base fixture", Version: "1.0", Runtime: "go-executable", Entry: "owned-base-fixture", HostAPIMin: 1, HostAPIMax: 1,
-		Methods: []string{"invoke", "init", "get_state", "get_service", "get_command", "get_api", "snapshot", "stop"}, Capabilities: plugins.BaseMethods()}
+	m := plugins.Manifest{SchemaVersion: 1, PluginID: "OwnedBaseFixture", Name: "Owned base fixture", Version: "1.0", Runtime: "go-executable", Entry: "owned-base-fixture", HostAPIMin: 1, HostAPIMax: 1,
+		Methods: []string{"invoke", "init", "get_state", "get_service", "get_command", "get_api", "snapshot", "instance_metadata", "metadata_raw", "stop"}, Capabilities: plugins.BaseMethods()}
+	if fixtureProcessAPI != "" {
+		m.Methods = append(m.Methods, "http", "event")
+		m.Events = []string{"config.updated"}
+		m.APIs = []plugins.HTTPAPI{{Key: "snapshot", Path: "/snapshot", Methods: []string{"GET"}, Auth: "apikey"}}
+	}
+	return m
 }
 
 func targetArgs(target *string) []string {
@@ -58,6 +69,14 @@ func (o *object) handle(ctx context.Context, method string, raw json.RawMessage,
 	}
 	o.previous = host
 	base := plugins.Base{Host: host}
+	var httpRequest *plugins.HTTPRequest
+	if method == "http" && fixtureProcessAPI != "" {
+		var request plugins.HTTPRequest
+		if json.Unmarshal(raw, &request) != nil || request.Key != "snapshot" || request.Method != "GET" {
+			return nil, errors.New("invalid owned Base HTTP request")
+		}
+		httpRequest, method = &request, "snapshot"
+	}
 	if method == "invoke" {
 		var inv plugins.Invocation
 		if err := json.Unmarshal(raw, &inv); err != nil {
@@ -74,6 +93,26 @@ func (o *object) handle(ctx context.Context, method string, raw json.RawMessage,
 		}
 	}
 	switch method {
+	case "event":
+		var event plugins.MutableEvent
+		if fixtureProcessAPI == "" || json.Unmarshal(raw, &event) != nil || event.Type != "config.updated" {
+			return nil, errors.New("invalid owned Base event")
+		}
+		o.events = append(o.events, event)
+		return json.RawMessage(`null`), nil
+	case "instance_metadata":
+		metadata, err := base.GetInstanceMetadata(ctx)
+		if err != nil {
+			return nil, err
+		}
+		name, err := base.GetName(ctx)
+		if err != nil {
+			return nil, err
+		}
+		return json.Marshal(map[string]any{"metadata": metadata, "name": name, "pid": os.Getpid(), "stale_denied": o.staleDenied})
+	case "metadata_raw":
+		_, err := host(ctx, plugins.BaseGetInstanceMetadata, raw)
+		return json.Marshal(map[string]bool{"denied": err != nil})
 	case "init":
 		if len(raw) == 0 {
 			raw = json.RawMessage("null")
@@ -95,6 +134,12 @@ func (o *object) handle(ctx context.Context, method string, raw json.RawMessage,
 					return nil, err
 				}
 				o.planResult = changed
+				if p.RepeatConfig {
+					o.repeatResult, err = base.UpdateConfig(ctx, p.Config, target...)
+					if err != nil {
+						return nil, err
+					}
+				}
 			}
 			after, err := base.GetConfig(ctx, target...)
 			if err != nil {
@@ -127,31 +172,49 @@ func (o *object) handle(ctx context.Context, method string, raw json.RawMessage,
 		if _, err := base.GetConfig(ctx); err != nil {
 			return nil, err
 		}
-		return json.RawMessage(`false`), nil
+		return json.Marshal(fixtureProcessAPI != "")
 	case "get_service", "get_command", "get_api":
 		if _, err := base.GetConfig(ctx); err != nil {
 			return nil, err
 		}
+		if method == "get_api" && fixtureProcessAPI != "" {
+			return json.Marshal(manifest().APIs)
+		}
 		return json.RawMessage(`[]`), nil
 	case "snapshot":
-		config, err := base.GetConfig(ctx)
+		var target []string
+		if httpRequest != nil {
+			if value := plugins.LastQuery(httpRequest.Query, "target"); value != "" {
+				target = []string{value}
+			}
+		}
+		config, err := base.GetConfig(ctx, target...)
 		if err != nil {
 			return nil, err
 		}
 		key := "shared"
-		value, err := base.GetData(ctx, &key)
+		value, err := base.GetData(ctx, &key, target...)
 		if err != nil {
 			return nil, err
 		}
-		rows, err := base.GetData(ctx, nil)
+		rows, err := base.GetData(ctx, nil, target...)
 		if err != nil {
 			return nil, err
 		}
-		path, err := base.GetDataPath(ctx)
+		path, err := base.GetDataPath(ctx, target...)
 		if err != nil {
 			return nil, err
 		}
-		return json.Marshal(map[string]any{"init_count": o.initCount, "init_input": o.initInput, "init_after": o.initAfter, "update_result": o.planResult, "config": config, "value": value, "rows": rows, "path": path, "stale_denied": o.staleDenied})
+		result := map[string]any{"init_count": o.initCount, "init_input": o.initInput, "init_after": o.initAfter, "update_result": o.planResult, "config": config, "value": value, "rows": rows, "path": path, "stale_denied": o.staleDenied}
+		if fixtureProcessAPI != "" {
+			result["repeat_result"] = o.repeatResult
+			result["events"] = o.events
+		}
+		body, err := json.Marshal(result)
+		if err != nil || httpRequest == nil {
+			return body, err
+		}
+		return json.Marshal(plugins.HTTPResponse{Status: 200, Body: body, Headers: map[string]string{"Content-Type": "application/json"}})
 	case "stop":
 		// Fresh stop callback must work even though the retained prior call failed.
 		if err := base.SaveData(ctx, "owned_stop", map[string]any{"stale_denied": o.staleDenied, "init_count": o.initCount}); err != nil {

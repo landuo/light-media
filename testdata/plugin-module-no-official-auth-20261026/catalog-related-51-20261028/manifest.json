@@ -1,0 +1,386 @@
+{
+  "build": {
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "binaries": [
+      {
+        "name": "server-platform51-20261027-linux",
+        "sha256": "2ba788460beca28231006df531221cb3669ff5d1b291ab2d6d93c2012aff6827",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform51-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3744,
+        "changed": [],
+        "elapsed_seconds": 5.04
+      },
+      {
+        "name": "process-platform51-20261027-linux.test",
+        "sha256": "b51df3781c422ec3131a1c7d9d4d47fe747c08272931f54d6ac921a7e45228a5",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform51-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4236,
+        "changed": [],
+        "elapsed_seconds": 8.58
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "original": "internal/app/http.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/internal/app/http.go.gz",
+      "sha256": "329b103493b3130bee830f296fa7ef128f7ccfaecf54b7e2492759301f81100a",
+      "stored_sha256": "e86e34fbe626a54aacc4260ed9a4cb7a26e03b7ea6408f80cbd561986333b050"
+    },
+    {
+      "original": "internal/app/plugin_module_process_catalog_related_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/internal/app/plugin_module_process_catalog_related_test.go.gz",
+      "sha256": "2e53a8bfc3a684862deb8e1a8a634fa8a883ff8ba6fd35bdab6afb3a8de9497e",
+      "stored_sha256": "c0a4331ff456af8a6914c0545b9d34c5642c930a480308e8ab58b5fde868e73d"
+    },
+    {
+      "original": "internal/app/plugin_module_process_services_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/internal/app/plugin_module_process_services_test.go.gz",
+      "sha256": "fa2275926e451b5d120deeb3b39518dfaceb6196ba176c34ade471f0c6f9e9cb",
+      "stored_sha256": "e492639e3b182f3476640877281596817b879c4176fcff8652cdc9e620a897c0"
+    },
+    {
+      "original": "internal/app/plugin_original_catalog_related.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/internal/app/plugin_original_catalog_related.go.gz",
+      "sha256": "0059192ed5b0f71924d665ab48317788b6efef83d960c1a300e615833d86754f",
+      "stored_sha256": "482ff969d832b76e1836d3d4a63f5a01e65f26c67c3e7abca30a21130fbdcd26"
+    },
+    {
+      "original": "internal/app/plugin_original_catalog_related_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/internal/app/plugin_original_catalog_related_test.go.gz",
+      "sha256": "2f785772246827d8935cbd98d9aa86b18b4bd9c266e833a562a2d015545b5656",
+      "stored_sha256": "3fcf99ab7c15c74e4018ac5ac933c91ee049cc136343abcfe48cba30f05e4275"
+    },
+    {
+      "original": "testdata/standard-catalog-modules/generate_related_oracle.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/testdata/standard-catalog-modules/generate_related_oracle.py.gz",
+      "sha256": "06df8d82ea1fd4f3e1823936a0357469491fedc08f97ef18fe4eb84874a9ced3",
+      "stored_sha256": "d91cb3000743b45abcc4080f976655caf1190efdd7a47c20f4c1fabd45d589bd"
+    },
+    {
+      "original": "testdata/standard-catalog-modules/related-source-oracle.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/testdata/standard-catalog-modules/related-source-oracle.json.gz",
+      "sha256": "17ab371300b2361df67ed0d5f55b2732a2f58ce36b01ff138daf035f5a39d0c9",
+      "stored_sha256": "1461b35b1d4793f74d9564d3a115718778c9df71f653fe02558171b3ba1dd201"
+    },
+    {
+      "original": "web/src/components/Catalog.vue",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/web/src/components/Catalog.vue.gz",
+      "sha256": "2ef759efa8c830127298bcfbc3fe43f52d703c032bfc07127d5e178e96f36bd6",
+      "stored_sha256": "8c29756e5273c6dd802e0a71e290cfea311386bb6321817bcd9384f8bf1a3c00"
+    },
+    {
+      "original": "web/src/components/CatalogRelated.vue",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/web/src/components/CatalogRelated.vue.gz",
+      "sha256": "aa3f363593bc3e6f0230617f0c19a8da322d9fba41160b404811241497ffe68f",
+      "stored_sha256": "294eeb2ad29f78a515679ba5fe1558f0ffc6eb22c9240cd5c19f6a1e26989f0e"
+    },
+    {
+      "original": "web/src/components/ExploreDetail.vue",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/web/src/components/ExploreDetail.vue.gz",
+      "sha256": "edfac2869a5cb84a4f419a33b493210ef587ee1900e330527743f41ac282c707",
+      "stored_sha256": "2426439421c140f1e4cbf45cadbbfb772ed08b3b085ec6af41e93bd46df1d40b"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/archive-related51.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/archive-related51.py.gz",
+      "sha256": "9f70249a9833f7b0bcbf87fa19ed1da72ca781e0b82d8965f27e619647a6ac19",
+      "stored_sha256": "a4807b9b98ea0a12c02489f3cec3a56cc5b19ec2f47631e86ade82ea328f2705"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/build-platform51.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/build-platform51.py.gz",
+      "sha256": "e7e7a34c73ac19887a5c2449e329e23e9aa7bc0cc1f51c169bafc5da1b04359f",
+      "stored_sha256": "94662f380825265305f4e19610c8be2d1b195bfd72a107afe1423b252fbb82f6"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/platform51-result.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/platform51-result.json.gz",
+      "sha256": "424f5dd5718b52c9d5f93077b50b6a761f7c31979223ee44efdf2904a91b1558",
+      "stored_sha256": "e68a6c8f50659da339517a6bc2c3710791b1d2e083fe33cb11e3f9726b762edd"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/process-platform51-20261027-linux.test.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/process-platform51-20261027-linux.test.inputs.json.gz",
+      "sha256": "48ab1655da4a35a32d140cc3d0d5f2355c858b32dbc1475b39836a5340073547",
+      "stored_sha256": "3737e332bfa0dba9552b59b606781ffb60a673766d0e8c04a94cad55cbaf8f90"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-browser/both-restored.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-browser/both-restored.dom.txt.gz",
+      "sha256": "3a96ad8deb407c4c2818f02ca669196ac214f92d531dd14a34e29fd55923acdb",
+      "stored_sha256": "0384d9510f2f81449e36aedcc0378dfa803c771de4a93652b074f64d24a9632d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-browser/both-restored.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-browser/both-restored.png",
+      "sha256": "971d5ed74fdf335d34b3ca8b85152ea32fb10d16763f3412dd0de69350c9c5c0",
+      "stored_sha256": "971d5ed74fdf335d34b3ca8b85152ea32fb10d16763f3412dd0de69350c9c5c0"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-browser/cold-explore-recognized-id.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-browser/cold-explore-recognized-id.dom.txt.gz",
+      "sha256": "0ce7e88a51d822cb5fd41b7130c5382b964d0ea79f9c8ac20eceece26ad6fe54",
+      "stored_sha256": "d2e32c29a43160013e7406d33091e9aa8ee98b2bad70ff63bfbd9123092149f4"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-browser/cold-explore-recognized-id.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-browser/cold-explore-recognized-id.png",
+      "sha256": "94798b1f9fc1f05aba83c0355a5afac16dda07979fbc14db288f6ec4fef454e0",
+      "stored_sha256": "94798b1f9fc1f05aba83c0355a5afac16dda07979fbc14db288f6ec4fef454e0"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-browser/credits-retry-only.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-browser/credits-retry-only.dom.txt.gz",
+      "sha256": "8bb9066021b69f7343f3a4ba7aca546819b4bcafcb2e5b183c64068a23c2aa79",
+      "stored_sha256": "28a59c95f433d64d717d4eee6bf9d0204587a06f57eb702bcbdef45fa84a93f5"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-browser/credits-retry-only.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-browser/credits-retry-only.png",
+      "sha256": "b6b01d37e6c7cb6ba9caf660aab3185c08415ad36cc663283e4a397f805f1ecd",
+      "stored_sha256": "b6b01d37e6c7cb6ba9caf660aab3185c08415ad36cc663283e4a397f805f1ecd"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-browser/independent-errors-retain-detail.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-browser/independent-errors-retain-detail.dom.txt.gz",
+      "sha256": "b60cd33abc13a6a9de437a58da02516d5b0a8da6d457eadc4640e279695b1cca",
+      "stored_sha256": "a64d187ff264f376fe87f6b53fe37a23989244d0c971227d911dd127ec6c5f4a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-browser/independent-errors-retain-detail.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-browser/independent-errors-retain-detail.png",
+      "sha256": "f23bccef3bda453233b2cd3341bf9a34ba48b74ed9dfd4589f9fe5b1f0c1fc27",
+      "stored_sha256": "f23bccef3bda453233b2cd3341bf9a34ba48b74ed9dfd4589f9fe5b1f0c1fc27"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-browser/ordered-clone-native.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-browser/ordered-clone-native.dom.txt.gz",
+      "sha256": "3a96ad8deb407c4c2818f02ca669196ac214f92d531dd14a34e29fd55923acdb",
+      "stored_sha256": "0384d9510f2f81449e36aedcc0378dfa803c771de4a93652b074f64d24a9632d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-browser/ordered-clone-native.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-browser/ordered-clone-native.png",
+      "sha256": "971d5ed74fdf335d34b3ca8b85152ea32fb10d16763f3412dd0de69350c9c5c0",
+      "stored_sha256": "971d5ed74fdf335d34b3ca8b85152ea32fb10d16763f3412dd0de69350c9c5c0"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-check.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-check.log.gz",
+      "sha256": "9a3ee68f961e1b3b50ffcc229764cc1a6068d0df1740b02ec037e039c06d5db1",
+      "stored_sha256": "d43db4e180653985756b1e1c2b192e605f75375047571daee3386a980be838fc"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-format.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-format.log.gz",
+      "sha256": "9e517af2ff1c94719fac06abecb527fb98a795f4f2b1efc8a2e5f7ad54319d28",
+      "stored_sha256": "b96bf6d61276204ebd7b3af475cce4e4c6398a03392bee8b4d2a419372e2226b"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-observe.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-observe.py.gz",
+      "sha256": "d04ccd9652784eb4829c40dc86dfe27de4d3f957e213d6ad9c5a098f141acd0c",
+      "stored_sha256": "03b9372135772f440bf64b30a4cd6170fc10fa78173df2dc8551c4a478209cf4"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-oracle-r2.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-oracle-r2.log.gz",
+      "sha256": "e81e009960d9fff08f969390636551eec9577ed93de9f40b65b627eacbd49499",
+      "stored_sha256": "ee68cb27985de1321bfffdc4e214b6736e121704c4c00bbb0ef7846e3cba0d1c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-oracle.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-oracle.log.gz",
+      "sha256": "0b139cde80642e5074bd16ad5d1d382542a9ec582c24dea67543ea990055407d",
+      "stored_sha256": "6817db0153108942dc41e23b9c3e819755f747038d65163aa40342b134d09d54"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-race.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-race.log.gz",
+      "sha256": "90f2505612b8771ded2007161568248db5037aa008aab7a71c056ede652e3d83",
+      "stored_sha256": "a96d6157f763488fbdb26aec1072207bf11b1c7f1e480d23f1bdea071b37685c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-related-r2.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-related-r2.log.gz",
+      "sha256": "887683ad51f3e896848dd5e1c16748431ed03180bbd77b3aab3742271affc68f",
+      "stored_sha256": "a7c8305f12ea011c7dfdbe3041d81bbad7605e5edaca47c531c9f4c18b3e1519"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-related.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-related.log.gz",
+      "sha256": "d113dddc6d14d75bd6e335505f37299b7061515c1cead119383c0cf5b5ad592d",
+      "stored_sha256": "55d4c95d5f2d815ac087244f7b35ffbd411042dd8a1580cfb5b3085ea445a44d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-browser-cold.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-browser-cold.json.gz",
+      "sha256": "d4301bb8be4dc22e126200c7cdc694c4ae41464a3d764d72af15038d2316c759",
+      "stored_sha256": "299cdc89571e6e13c9adb1b5b0bb2838a21351a1e906085a36bf6a4631db3a3c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-browser-failed.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-browser-failed.json.gz",
+      "sha256": "bc0e43df505f6a026e74e788e660509b06cf0e440c9204f9a896505680c7ad83",
+      "stored_sha256": "db654dfc4d04e20caaea4ef1da5c69e7a025f571f13d2f60e178f998a54dae8c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-browser-final.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-browser-final.json.gz",
+      "sha256": "99ce10351ff7649f48ddbf394772245624afe34cb21e80b8435fa9c6a3ed3713",
+      "stored_sha256": "f48621f4e0e13c8a9c169db5940bc5cdd97a7e437e5f05b61a99e84dc86db723"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-browser-invalid.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-browser-invalid.json.gz",
+      "sha256": "a639fc907fe38179747d99e4dc19218d42fe858ceb9fa75f8c03553124910b19",
+      "stored_sha256": "52333eec6f6bde5d4d7ecc9eaf0fadc8e69431bb1d7345dc472d15f0d521f3be"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-browser-loaded.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-browser-loaded.json.gz",
+      "sha256": "816fb65c4e6dc09668843d3fb4f7799a1367a2d7c93462c90ca700084516db65",
+      "stored_sha256": "71bf6102f92f26e4617c867a242af45d3780d1620a4c55bf38d99ff7a1e3ac19"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-browser-restore.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-browser-restore.json.gz",
+      "sha256": "1b96fb52735390fda8ae3d1db53728bb50078de90cc0dc02bf48874741802977",
+      "stored_sha256": "0d5e7405962ae43a4c8fcd543fe6151b50505275965883931da5197251d881e5"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-browser-restored.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-browser-restored.json.gz",
+      "sha256": "a97ca663498aaf4017f125da3bd7e39d01dec9496699ae86c5962d70979b2e71",
+      "stored_sha256": "22f6e1ca353d1602fb04e1b018259cd5dae43e6e43165c081227aeb95978c0cc"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-cleanup.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-cleanup.json.gz",
+      "sha256": "c5b846f91088b702ed926fbc743b0891c15af9711a8bb035795d01d7c564ac4e",
+      "stored_sha256": "6921de7608e2333140e31c5d48a702322367a5488013b539c70852c803cd6b9c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-cli-evidence/catalog-related51-proof.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-cli-evidence/catalog-related51-proof.json.gz",
+      "sha256": "8f63780cdc3c9d30296a0b7aec2bea203a337d5b5e74b81503387158aa8daba2",
+      "stored_sha256": "4be2bf57c3cfb7f80144fd9358a58704efef1c289c700c5144d029783d003b68"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-cli-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-cli-evidence/events36-service-process.log.gz",
+      "sha256": "f3c191707fae4901c43a1fb748ea3a0d5f9978c0c51ee9563db6f0ebfab8071a",
+      "stored_sha256": "06ab444f0bc6d1d952c2bb2f64aff929780d80631d302f3727c530ca09ad3fca"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-cli.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-cli.log.gz",
+      "sha256": "5c310d2334f65d747662c79df44dbc70c1953e9090afd1968ef6fb1b4adcd0c0",
+      "stored_sha256": "eed1d1cd8a4056d52b48d6e4228992ab6994aa357ddff3f8659fc07df51a97d0"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-observe.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-observe.py.gz",
+      "sha256": "d04ccd9652784eb4829c40dc86dfe27de4d3f957e213d6ad9c5a098f141acd0c",
+      "stored_sha256": "03b9372135772f440bf64b30a4cd6170fc10fa78173df2dc8551c4a478209cf4"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-ui-evidence/catalog-related51-proof.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-ui-evidence/catalog-related51-proof.json.gz",
+      "sha256": "cfb8bce9a3ba1615862a245bf65bade5bbc2c59b30b929875fbeddfb5330bb18",
+      "stored_sha256": "f2b08e48d7d16dd582e048e3c5b4f50ed022a2b972432500b3016de75653d544"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-ui-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-ui-evidence/events36-service-process.log.gz",
+      "sha256": "07422bd1efca77d648cbb7c0e6d0ec63a4a062e0366da995ad571659dbb9ae90",
+      "stored_sha256": "038b782e0986246a47f73a5c6074fe593ccc685162498d59f3dad5350ccc3869"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-ui-state.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-ui-state.json.gz",
+      "sha256": "f1d7ee513a4b141b60763f62a9ff24ae52a3527d918dbceb84296ebba3b946f1",
+      "stored_sha256": "aa80ac520a053ddf8bf3ebec4922e12a2c8a14a80efec311635b46a157e43f24"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-ui-state.json.done",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-ui-state.json.done.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-ui-state.json.restart.done",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-ui-state.json.restart.done.gz",
+      "sha256": "965372edb5db360c8fee9a884e0aa6f376f5e748590a3a5404258d10de0aed7b",
+      "stored_sha256": "455044c7874501e81a62d957c07d56fd0a9eb84d6805e2f9c878988c016a9d94"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-remote/related51-ui.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-remote/related51-ui.log.gz",
+      "sha256": "4241d278ac2a4074b5670227937c57161ef51d176211166f3092975e935cbff0",
+      "stored_sha256": "369181a734d4b9b05d19b827f770781d0a98f49cb058dada18d07cb0991f9060"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-sdk.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-sdk.log.gz",
+      "sha256": "b6e345ec1c53ce0057b737d8c0a98f8efa0b9f97b422038a423a24e32c9e7406",
+      "stored_sha256": "e2ab9ef661430de57ed85f48148bf01b164a5e1c2a3214751167aa15aa7e3f26"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-source-front.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-source-front.json.gz",
+      "sha256": "5bd2565f528f47637cb4580e242340da8a2f009f8e697a0425d47f72fc2fcc80",
+      "stored_sha256": "99d4566128f69c9e33286ecf92ab4482cb5ae057bdd8785a2a35596247bae793"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-web-build.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-web-build.log.gz",
+      "sha256": "1dc9283958cbf71d111ae5ca4db0845788be40035f6aa7dcd8de267d983ae47e",
+      "stored_sha256": "4ecb0e95d200d43bb0f144717988dee7932e2ca628a738c3e0139a369e681bae"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-web-inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-web-inputs.json.gz",
+      "sha256": "8fd9ae58b40ac7e08576efcb44d0907b9b2da12e138670fe9e48166d27308315",
+      "stored_sha256": "575e884624a61879ac016ccec57c6d811ffbc420424aa7ac54b5335769cb7a7c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/related51-web-tests.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/related51-web-tests.log.gz",
+      "sha256": "f55abcbf2dbd9bf753dd8d8e3a9d35919a4d2d136eebdc08a46920544c506fcd",
+      "stored_sha256": "eba705a6939ede6aef05c799000f52e0e2cb85d24d43169397c344f8ac00425a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/run-related51.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/run-related51.py.gz",
+      "sha256": "8c75ab29506c857b8f00dce804559376eaf6c7194883246e240ed2e3801e919b",
+      "stored_sha256": "dc65bc66fe0f0f66577c7d401607a733cf8fc09f79d447f775c1c7588e1f0046"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/server-platform51-20261027-linux.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/work/plugin-no-official-auth-20261026/server-platform51-20261027-linux.inputs.json.gz",
+      "sha256": "f68c4ffa55f7da33d8bf9a89b90f12fb1c0df013a10b9c1044e7c156b7fb45bf",
+      "stored_sha256": "2ed502a552830d187e1a56f47471b16a6ca1eb55ca1883511de417df3cec77e0"
+    }
+  ]
+}

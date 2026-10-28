@@ -1,0 +1,85 @@
+{
+  "item": 35,
+  "accepted": true,
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "server_sha256": "0afb9d33c9c04a0c160319fe04b1e6175fcce17bb703afdc19d89786a9a6b6b7",
+  "kind": "actual Linux cmd/server + actual Go SDK + root-owned real browser; test plugin/repository/credentials synthetic",
+  "source_mapping": {
+    "app/core/plugin.py:873": "actual get_api declaration and object lifecycle",
+    "app/api/endpoints/plugin.py:130-221": "per-instance v1/v2 registration/auth/replace/removal",
+    "app/api/endpoints/plugin.py:764-837": "verified code-file MIME/inline/path/error/8KiB stream",
+    "src/api/index.ts": "actual global Axios callable/request/config/response.data semantics",
+    "src/utils/requestOptimizer.ts": "automatic AbortController request cancellation on navigation; existing ordinary plugin API subset"
+  },
+  "target": [
+    "internal/app/plugin_original_api_methods.go",
+    "internal/app/plugin_custom_api.go",
+    "internal/app/plugin_original_static_http.go",
+    "internal/app/plugin_original_session.go",
+    "internal/plugins/api.go",
+    "web/src/features/plugin-remote-api.ts",
+    "web/src/App.vue"
+  ],
+  "actual_linux_gate": {
+    "result": "PASS1479.27s",
+    "log": "evidence/api35-r3-browser-hold.log.gz",
+    "coverage": [
+      "v1/v2/default/anonymous/bear/key/Cookie",
+      "path/query/body/header/raw/binary/204/503/file streaming",
+      "config save/init/call/state preservation",
+      "clone/grandclone derived JS/CSS/file identity and isolation",
+      "real version2 update/cold recovery",
+      "250ms cancellation drains legacy serial exchange8s; same PID/init/config and descriptor/page200",
+      "post-browser primary uninstall: API404, authorized retained code stream200 with exactv2 bytes; valid clone uninstall: API404+physically removed code stream404; owned cleanup"
+    ]
+  },
+  "actual_browser_r3": {
+    "request_id": "2694.78",
+    "network": "net::ERR_ABORTED canceled=true",
+    "navigation": "actual App dashboard navigation then back, page recovered",
+    "clone_pid": 2528604,
+    "init_count": 1,
+    "config_marker": "clone",
+    "calls_before": 5,
+    "calls_after": 7,
+    "visible_auto_record": "rejected Error signal aborted",
+    "proof": [
+      "evidence/api35-r3-navigation-events.json.gz",
+      "evidence/api35-r3-before-cancel.json.gz",
+      "evidence/api35-r3-after-cancel.json.gz",
+      "evidence/api35-r3-cancel-recovered.png"
+    ]
+  },
+  "prior_binary_evidence": [
+    {
+      "archive": "../plugin-api35-axios-f37-20261027/result.json",
+      "coverage": "real browser Axios callable/request/sameorigin absolute/baseURL/peer/host,200 false/error resolve,anonymous,binary5/raw26/204/503,file4282103byte digest,cold/newdocument"
+    },
+    {
+      "archive": "../plugin-api35-derived-21cb-20261027/result.json",
+      "coverage": "central clone literal/global/runtime distinction,CSS17px/folders/order raw wire/AppPage fallback; serial cancellation failure was actual and remains archived"
+    }
+  ],
+  "necessary_adaptations": [
+    "Compiled Go endpoint declarations and explicit JSON/base64 IPC; no Python runtime/Response object compatibility",
+    "Existing single-user HttpOnly Cookie substitutes browser JWT; absolute sameorigin accepted, cross-origin/redirect credential transport rejected",
+    "Verified immutable code root and host receipt excluded from static serving; config/data outside code root",
+    "Legacy serial admitted RPC drains under existing runner/application bounds after one browser caller cancels; concurrent per-call cancellation unchanged"
+  ],
+  "remaining": [],
+  "cleanup": "root closed API browser/tunnel; .done written; final gate exited0, primary code200/API404 and valid-clone code404/API404 verified; owned temp/process cleanup",
+  "evidence_manifest": "evidence-manifest.json",
+  "wording_correction": {
+    "date": "2026-10-27",
+    "reason": "clarify earlier generic removal404 wording; no product change",
+    "source": "B/app/api/endpoints/plugin.py:764-837 and993-1038",
+    "target_test": "internal/app/plugin_module_process_api35_test.go:445-454",
+    "compiled_test_sha256": "c9d9c63326aa6f7d5e119c98b2236fd5f1b795a260b4047b8648e4b9a6fe98a7",
+    "compiled_test_contains_primary_retained_stream_failure_assertion": true,
+    "actual_gate": "PASS1479.27s in api35-r3-browser-hold.log; final statement at original test line455 after both retained-primary and removed-clone assertions",
+    "primary_after_uninstall": "authenticated code-file stream200 with bytes==v2.worker; registered API404; verified physical code retained",
+    "valid_clone_after_uninstall": "physical copied code removed, code-file404 and registered API404",
+    "invalid_class_clone": "source preserves code/config because no registered class; separately verified by row15 suffix gate"
+  }
+}

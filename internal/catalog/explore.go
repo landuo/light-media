@@ -2,6 +2,7 @@ package catalog
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"math"
 	"net/url"
@@ -14,8 +15,9 @@ import (
 // A Douban or Bangumi result always has Media.ID == 0 until explicitly resolved.
 type ExploreMedia struct {
 	Media
-	Source   string `json:"source"`
-	SourceID string `json:"source_id"`
+	Source        string          `json:"source"`
+	SourceID      string          `json:"source_id"`
+	OriginalMedia json.RawMessage `json:"original_media,omitempty"`
 }
 
 type ExplorePage struct {

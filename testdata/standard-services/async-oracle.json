@@ -1,0 +1,148 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/scheduler.py:808,959,975",
+  "source_sha256": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+  "kind": "actual fixed coroutine start/run/finish methods, controlled awaits and progress storage dependency; not the original app service",
+  "result": {
+    "returned_before_business_release": true,
+    "initial": {
+      "enable": true,
+      "value": 37,
+      "text": "running",
+      "data": {
+        "name": "Old",
+        "provider": "owned",
+        "status": "running",
+        "started_at": "fixed-started"
+      }
+    },
+    "after_old_completion": {
+      "current_running": false,
+      "old_running": true,
+      "progress": {
+        "enable": false,
+        "value": 51,
+        "text": "New \u6267\u884c\u5931\u8d25",
+        "data": {
+          "name": "New",
+          "provider": "new-provider",
+          "status": "failed",
+          "started_at": "fixed-started",
+          "id": "owned",
+          "success": false,
+          "finished_at": "fixed-finished",
+          "error": "owned service failure"
+        }
+      }
+    },
+    "after_new_completion": {
+      "current_running": false,
+      "progress": {
+        "enable": false,
+        "value": 100,
+        "text": "New \u6267\u884c\u5b8c\u6210",
+        "data": {
+          "name": "New",
+          "provider": "new-provider",
+          "status": "success",
+          "started_at": "fixed-started",
+          "id": "owned",
+          "success": true,
+          "finished_at": "fixed-finished",
+          "error": null
+        }
+      }
+    }
+  },
+  "argument_cases": [
+    {
+      "input": null,
+      "calls": [
+        {}
+      ],
+      "errors": []
+    },
+    {
+      "input": {
+        "mode": "owned",
+        "progress": 37
+      },
+      "calls": [
+        {
+          "mode": "owned",
+          "progress": 37
+        }
+      ],
+      "errors": []
+    },
+    {
+      "input": [
+        [
+          "a",
+          0
+        ],
+        [
+          "a",
+          2
+        ],
+        [
+          "b",
+          null
+        ]
+      ],
+      "calls": [
+        {
+          "a": 2,
+          "b": null
+        }
+      ],
+      "errors": []
+    },
+    {
+      "input": "invalid",
+      "calls": [],
+      "errors": [
+        "ValueError"
+      ]
+    },
+    {
+      "input": [
+        [
+          1,
+          "invalid"
+        ]
+      ],
+      "calls": [],
+      "errors": [
+        "TypeError"
+      ]
+    },
+    {
+      "input": [
+        "ab",
+        "cd"
+      ],
+      "calls": [
+        {
+          "a": "b",
+          "c": "d"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "input": [
+        {
+          "a": 1,
+          "b": 2
+        }
+      ],
+      "calls": [
+        {
+          "a": "b"
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

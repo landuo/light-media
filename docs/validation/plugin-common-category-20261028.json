@@ -1,0 +1,101 @@
+{
+  "accepted_increment": true,
+  "whole_indices_accepted": false,
+  "indices": [
+    43
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": [
+    "app/chain/__init__.py:298-490,2014-2019 media_category actual None/list/scalar dispatcher",
+    "app/api/endpoints/media.py:325-330 falsey -> {}; dict response model rejects nonempty list",
+    "src/views/setting/AccountSettingRule.vue:53 actual rule category load",
+    "app/scheduler.py:468-472,653-661 common timer 10 minutes;1392-1458 list",
+    "app/chain/__init__.py:2039-2043 scheduler_job void wrapper"
+  ],
+  "targets": [
+    "internal/app/plugin_original_media_categories.go",
+    "internal/app/priority_rules_settings.go",
+    "internal/app/plugin_original_common_scheduler.go",
+    "internal/app/plugin_original_direct_dispatch.go",
+    "internal/app/plugin_original_service_progress.go",
+    "internal/app/runtime.go",
+    "internal/app/plugin_original_common_scheduler_test.go",
+    "internal/app/plugin_original_media_categories_test.go",
+    "internal/app/plugin_module_process_common_categories_test.go",
+    "internal/app/plugin_module_process_services_test.go"
+  ],
+  "behavior": [
+    "Existing rules GET asks media_category before native policy; None/list/terminal/error behavior follows source; plugin calls run without settings mutex to allow host reads. Classifying a media title is unchanged.",
+    "Common scheduler_job registers once per actual server start with 10-minute initial/next interval, uses existing scheduler admission/progress/manual API, and discovers enabled plugin/clone modules at execution. Plugin stop/reload never removes system timer.",
+    "Wrapper discards provider result like source; false cuts provider sequence but is not a scheduler failure. Running system row stays in clock order with remaining time, unlike separately extracted running plugin rows."
+  ],
+  "evidence": {
+    "source_category_cases": 8,
+    "source_common_cases": 5,
+    "real_sdk_seconds": 4.314,
+    "related_seconds": 22.806,
+    "race_seconds": 48.266,
+    "linux_cli_seconds": 601.73,
+    "actual_first_clock_seconds": 600.187825653,
+    "linux_browser_gate_seconds": 375.06,
+    "browser": "IAB88 real Linux service: clone category select/save; invalid list500 visible error; retry restores saved group; manual source/clone each1; real cold newPIDs and no replay, saved category and timer recovered; uninstall404/ownedTempDir removed.",
+    "manifest": "testdata/plugin-module-no-official-auth-20261026/common-category-49-20261028/manifest.json",
+    "build": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform49-20261027-linux",
+          "sha256": "5a6602aee11b9e3afa279052e983ba92ceb53f0837d197b2ad83d3858e636723",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform49-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3733,
+          "changed": [],
+          "elapsed_seconds": 4.42
+        },
+        {
+          "name": "process-platform49-20261027-linux.test",
+          "sha256": "178e9e4db49c2114d16a880eb2ca704777887aec711fbe5e4f3f8e1b78addcc1",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform49-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4221,
+          "changed": [],
+          "elapsed_seconds": 8.32
+        }
+      ]
+    }
+  },
+  "adaptations": [
+    "Source category endpoint is represented in existing /settings/rules response; same dict result/errors consumed by native rule editor. No new category-policy business editor is introduced.",
+    "Go service uses existing 100ms scheduler and interval trigger; one system job entry, no workflow/AI extension or new scheduler framework. Source UTC-independent 10-minute duration retained.",
+    "SDK tests use a backdated anchor solely to exercise the existing ticker quickly; separate actual Linux process waited600.1878seconds without clock injection.",
+    "SDK errors retain Go error diagnostics; arbitrary Python exception tracebacks are not fabricated."
+  ],
+  "remaining": [
+    "43: full197methods/199ordinarycallsite applicability audit; identified file detail download/image download_file native entry remains unwired.",
+    "50: final scope evidence audit after43 closes."
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

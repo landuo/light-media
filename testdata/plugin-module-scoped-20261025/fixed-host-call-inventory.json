@@ -1,0 +1,1745 @@
+{
+  "backend_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "chain_source_sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+  "module_calls": [
+    {
+      "host_function": "start_message_processing_status",
+      "module_method": "mark_message_processing_started",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:146"
+    },
+    {
+      "host_function": "finish_message_processing_status",
+      "module_method": "mark_message_processing_finished",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:184"
+    },
+    {
+      "host_function": "_update_local_recognize_cache",
+      "module_method": "update_recognize_cache",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:555"
+    },
+    {
+      "host_function": "_async_update_local_recognize_cache",
+      "module_method": "async_update_recognize_cache",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:571"
+    },
+    {
+      "host_function": "recognize_media",
+      "module_method": "recognize_media",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:703"
+    },
+    {
+      "host_function": "recognize_media",
+      "module_method": "recognize_media",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:728"
+    },
+    {
+      "host_function": "async_recognize_media",
+      "module_method": "async_recognize_media",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:813"
+    },
+    {
+      "host_function": "async_recognize_media",
+      "module_method": "async_recognize_media",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:838"
+    },
+    {
+      "host_function": "match_doubaninfo",
+      "module_method": "match_doubaninfo",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:875"
+    },
+    {
+      "host_function": "async_match_doubaninfo",
+      "module_method": "async_match_doubaninfo",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:903"
+    },
+    {
+      "host_function": "match_tmdbinfo",
+      "module_method": "match_tmdbinfo",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:927"
+    },
+    {
+      "host_function": "async_match_tmdbinfo",
+      "module_method": "async_match_tmdbinfo",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:945"
+    },
+    {
+      "host_function": "obtain_images",
+      "module_method": "obtain_images",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:955"
+    },
+    {
+      "host_function": "async_obtain_images",
+      "module_method": "async_obtain_images",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:963"
+    },
+    {
+      "host_function": "obtain_specific_image",
+      "module_method": "obtain_specific_image",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:983"
+    },
+    {
+      "host_function": "douban_info",
+      "module_method": "douban_info",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1006"
+    },
+    {
+      "host_function": "async_douban_info",
+      "module_method": "async_douban_info",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1026"
+    },
+    {
+      "host_function": "tvdb_info",
+      "module_method": "tvdb_info",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1039"
+    },
+    {
+      "host_function": "tmdb_info",
+      "module_method": "tmdb_info",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1051"
+    },
+    {
+      "host_function": "async_tmdb_info",
+      "module_method": "async_tmdb_info",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1063"
+    },
+    {
+      "host_function": "bangumi_info",
+      "module_method": "bangumi_info",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1073"
+    },
+    {
+      "host_function": "async_bangumi_info",
+      "module_method": "async_bangumi_info",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1081"
+    },
+    {
+      "host_function": "message_parser",
+      "module_method": "message_parser",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1097"
+    },
+    {
+      "host_function": "webhook_parser",
+      "module_method": "webhook_parser",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1111"
+    },
+    {
+      "host_function": "search_medias",
+      "module_method": "search_medias",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1122"
+    },
+    {
+      "host_function": "async_search_medias",
+      "module_method": "async_search_medias",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1133"
+    },
+    {
+      "host_function": "search_persons",
+      "module_method": "search_persons",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1146"
+    },
+    {
+      "host_function": "async_search_persons",
+      "module_method": "async_search_persons",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1157"
+    },
+    {
+      "host_function": "search_collections",
+      "module_method": "search_collections",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1170"
+    },
+    {
+      "host_function": "async_search_collections",
+      "module_method": "async_search_collections",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1181"
+    },
+    {
+      "host_function": "get_search_page_size",
+      "module_method": "get_search_page_size",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1193"
+    },
+    {
+      "host_function": "search_torrents",
+      "module_method": "search_torrents",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1212"
+    },
+    {
+      "host_function": "search_subtitles",
+      "module_method": "search_subtitles",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1229"
+    },
+    {
+      "host_function": "async_search_torrents",
+      "module_method": "async_search_torrents",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1248"
+    },
+    {
+      "host_function": "async_worker_search_site",
+      "module_method": "async_worker_search_site",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1270"
+    },
+    {
+      "host_function": "async_search_subtitles",
+      "module_method": "async_search_subtitles",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1288"
+    },
+    {
+      "host_function": "refresh_torrents",
+      "module_method": "refresh_torrents",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1307"
+    },
+    {
+      "host_function": "async_refresh_torrents",
+      "module_method": "async_refresh_torrents",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1326"
+    },
+    {
+      "host_function": "filter_torrents",
+      "module_method": "filter_torrents",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1343"
+    },
+    {
+      "host_function": "download",
+      "module_method": "download",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1371"
+    },
+    {
+      "host_function": "download_added",
+      "module_method": "download_added",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1395"
+    },
+    {
+      "host_function": "list_torrents",
+      "module_method": "list_torrents",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1417"
+    },
+    {
+      "host_function": "transfer",
+      "module_method": "transfer",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1460"
+    },
+    {
+      "host_function": "transfer_completed",
+      "module_method": "transfer_completed",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1484"
+    },
+    {
+      "host_function": "remove_torrents",
+      "module_method": "remove_torrents",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1499"
+    },
+    {
+      "host_function": "start_torrents",
+      "module_method": "start_torrents",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1515"
+    },
+    {
+      "host_function": "stop_torrents",
+      "module_method": "stop_torrents",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1526"
+    },
+    {
+      "host_function": "set_torrents_tag",
+      "module_method": "set_torrents_tag",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1538"
+    },
+    {
+      "host_function": "update_torrent",
+      "module_method": "update_torrent",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1565"
+    },
+    {
+      "host_function": "get_torrent_trackers",
+      "module_method": "get_torrent_trackers",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1589"
+    },
+    {
+      "host_function": "torrent_files",
+      "module_method": "torrent_files",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1604"
+    },
+    {
+      "host_function": "media_exists",
+      "module_method": "media_exists",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1619"
+    },
+    {
+      "host_function": "media_files",
+      "module_method": "media_files",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1629"
+    },
+    {
+      "host_function": "delete_message",
+      "module_method": "delete_message",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1918"
+    },
+    {
+      "host_function": "edit_message",
+      "module_method": "edit_message",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1964"
+    },
+    {
+      "host_function": "send_direct_message",
+      "module_method": "send_direct_message",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1983"
+    },
+    {
+      "host_function": "finalize_message",
+      "module_method": "finalize_message",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:1996"
+    },
+    {
+      "host_function": "metadata_img",
+      "module_method": "metadata_img",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:2010"
+    },
+    {
+      "host_function": "media_category",
+      "module_method": "media_category",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:2019"
+    },
+    {
+      "host_function": "category_config",
+      "module_method": "load_category_config",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:2025"
+    },
+    {
+      "host_function": "save_category_config",
+      "module_method": "save_category_config",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:2031"
+    },
+    {
+      "host_function": "register_commands",
+      "module_method": "register_commands",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:2037"
+    },
+    {
+      "host_function": "scheduler_job",
+      "module_method": "scheduler_job",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:2043"
+    },
+    {
+      "host_function": "clear_cache",
+      "module_method": "clear_cache",
+      "dynamic_expression": null,
+      "source": "app/chain/__init__.py:2049"
+    },
+    {
+      "host_function": "info",
+      "module_method": "anilist_info",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:20"
+    },
+    {
+      "host_function": "async_info",
+      "module_method": "async_anilist_info",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:29"
+    },
+    {
+      "host_function": "trending",
+      "module_method": "anilist_trending",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:37"
+    },
+    {
+      "host_function": "async_trending",
+      "module_method": "async_anilist_trending",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:45"
+    },
+    {
+      "host_function": "popular_this_season",
+      "module_method": "anilist_popular_this_season",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:55"
+    },
+    {
+      "host_function": "async_popular_this_season",
+      "module_method": "async_anilist_popular_this_season",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:67"
+    },
+    {
+      "host_function": "discover",
+      "module_method": "anilist_discover",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:77"
+    },
+    {
+      "host_function": "async_discover",
+      "module_method": "async_anilist_discover",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:85"
+    },
+    {
+      "host_function": "credits",
+      "module_method": "anilist_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:95"
+    },
+    {
+      "host_function": "async_credits",
+      "module_method": "async_anilist_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:107"
+    },
+    {
+      "host_function": "recommendations",
+      "module_method": "anilist_recommendations",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:119"
+    },
+    {
+      "host_function": "async_recommendations",
+      "module_method": "async_anilist_recommendations",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:131"
+    },
+    {
+      "host_function": "person_detail",
+      "module_method": "anilist_person_detail",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:144"
+    },
+    {
+      "host_function": "async_person_detail",
+      "module_method": "async_anilist_person_detail",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:152"
+    },
+    {
+      "host_function": "person_credits",
+      "module_method": "anilist_person_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:164"
+    },
+    {
+      "host_function": "async_person_credits",
+      "module_method": "async_anilist_person_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/anilist.py:176"
+    },
+    {
+      "host_function": "calendar",
+      "module_method": "bangumi_calendar",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:17"
+    },
+    {
+      "host_function": "discover",
+      "module_method": "bangumi_discover",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:23"
+    },
+    {
+      "host_function": "bangumi_info",
+      "module_method": "bangumi_info",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:31"
+    },
+    {
+      "host_function": "bangumi_credits",
+      "module_method": "bangumi_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:38"
+    },
+    {
+      "host_function": "bangumi_recommend",
+      "module_method": "bangumi_recommend",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:45"
+    },
+    {
+      "host_function": "person_detail",
+      "module_method": "bangumi_person_detail",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:52"
+    },
+    {
+      "host_function": "person_credits",
+      "module_method": "bangumi_person_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:59"
+    },
+    {
+      "host_function": "async_calendar",
+      "module_method": "async_bangumi_calendar",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:65"
+    },
+    {
+      "host_function": "async_discover",
+      "module_method": "async_bangumi_discover",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:71"
+    },
+    {
+      "host_function": "async_bangumi_info",
+      "module_method": "async_bangumi_info",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:79"
+    },
+    {
+      "host_function": "async_bangumi_credits",
+      "module_method": "async_bangumi_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:86"
+    },
+    {
+      "host_function": "async_bangumi_recommend",
+      "module_method": "async_bangumi_recommend",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:93"
+    },
+    {
+      "host_function": "async_person_detail",
+      "module_method": "async_bangumi_person_detail",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:100"
+    },
+    {
+      "host_function": "async_person_credits",
+      "module_method": "async_bangumi_person_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/bangumi.py:107"
+    },
+    {
+      "host_function": "media_statistic",
+      "module_method": "media_statistic",
+      "dynamic_expression": null,
+      "source": "app/chain/dashboard.py:15"
+    },
+    {
+      "host_function": "downloader_info",
+      "module_method": "downloader_info",
+      "dynamic_expression": null,
+      "source": "app/chain/dashboard.py:21"
+    },
+    {
+      "host_function": "person_detail",
+      "module_method": "douban_person_detail",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:19"
+    },
+    {
+      "host_function": "person_credits",
+      "module_method": "douban_person_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:27"
+    },
+    {
+      "host_function": "movie_top250",
+      "module_method": "movie_top250",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:35"
+    },
+    {
+      "host_function": "movie_showing",
+      "module_method": "movie_showing",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:41"
+    },
+    {
+      "host_function": "tv_weekly_chinese",
+      "module_method": "tv_weekly_chinese",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:47"
+    },
+    {
+      "host_function": "tv_weekly_global",
+      "module_method": "tv_weekly_global",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:53"
+    },
+    {
+      "host_function": "douban_discover",
+      "module_method": "douban_discover",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:66"
+    },
+    {
+      "host_function": "tv_animation",
+      "module_method": "tv_animation",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:73"
+    },
+    {
+      "host_function": "movie_hot",
+      "module_method": "movie_hot",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:79"
+    },
+    {
+      "host_function": "tv_hot",
+      "module_method": "tv_hot",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:85"
+    },
+    {
+      "host_function": "movie_credits",
+      "module_method": "douban_movie_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:92"
+    },
+    {
+      "host_function": "tv_credits",
+      "module_method": "douban_tv_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:99"
+    },
+    {
+      "host_function": "movie_recommend",
+      "module_method": "douban_movie_recommend",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:106"
+    },
+    {
+      "host_function": "tv_recommend",
+      "module_method": "douban_tv_recommend",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:113"
+    },
+    {
+      "host_function": "async_person_detail",
+      "module_method": "async_douban_person_detail",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:120"
+    },
+    {
+      "host_function": "async_person_credits",
+      "module_method": "async_douban_person_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:128"
+    },
+    {
+      "host_function": "async_movie_top250",
+      "module_method": "async_movie_top250",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:137"
+    },
+    {
+      "host_function": "async_movie_showing",
+      "module_method": "async_movie_showing",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:144"
+    },
+    {
+      "host_function": "async_tv_weekly_chinese",
+      "module_method": "async_tv_weekly_chinese",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:151"
+    },
+    {
+      "host_function": "async_tv_weekly_global",
+      "module_method": "async_tv_weekly_global",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:158"
+    },
+    {
+      "host_function": "async_douban_discover",
+      "module_method": "async_douban_discover",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:171"
+    },
+    {
+      "host_function": "async_tv_animation",
+      "module_method": "async_tv_animation",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:179"
+    },
+    {
+      "host_function": "async_movie_hot",
+      "module_method": "async_movie_hot",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:186"
+    },
+    {
+      "host_function": "async_tv_hot",
+      "module_method": "async_tv_hot",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:193"
+    },
+    {
+      "host_function": "async_movie_credits",
+      "module_method": "async_douban_movie_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:200"
+    },
+    {
+      "host_function": "async_tv_credits",
+      "module_method": "async_douban_tv_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:207"
+    },
+    {
+      "host_function": "async_movie_recommend",
+      "module_method": "async_douban_movie_recommend",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:214"
+    },
+    {
+      "host_function": "async_tv_recommend",
+      "module_method": "async_douban_tv_recommend",
+      "dynamic_expression": null,
+      "source": "app/chain/douban.py:221"
+    },
+    {
+      "host_function": "metadata_nfo",
+      "module_method": "metadata_nfo",
+      "dynamic_expression": null,
+      "source": "app/chain/media.py:524"
+    },
+    {
+      "host_function": "librarys",
+      "module_method": "mediaserver_librarys",
+      "dynamic_expression": null,
+      "source": "app/chain/mediaserver.py:66"
+    },
+    {
+      "host_function": "items",
+      "module_method": "mediaserver_items",
+      "dynamic_expression": null,
+      "source": "app/chain/mediaserver.py:113"
+    },
+    {
+      "host_function": "items_count",
+      "module_method": "mediaserver_items_count",
+      "dynamic_expression": null,
+      "source": "app/chain/mediaserver.py:124"
+    },
+    {
+      "host_function": "media_count",
+      "module_method": "media_statistic",
+      "dynamic_expression": null,
+      "source": "app/chain/mediaserver.py:137"
+    },
+    {
+      "host_function": "iteminfo",
+      "module_method": "mediaserver_iteminfo",
+      "dynamic_expression": null,
+      "source": "app/chain/mediaserver.py:149"
+    },
+    {
+      "host_function": "episodes",
+      "module_method": "mediaserver_tv_episodes",
+      "dynamic_expression": null,
+      "source": "app/chain/mediaserver.py:155"
+    },
+    {
+      "host_function": "playing",
+      "module_method": "mediaserver_playing",
+      "dynamic_expression": null,
+      "source": "app/chain/mediaserver.py:163"
+    },
+    {
+      "host_function": "latest",
+      "module_method": "mediaserver_latest",
+      "dynamic_expression": null,
+      "source": "app/chain/mediaserver.py:177"
+    },
+    {
+      "host_function": "get_latest_wallpapers",
+      "module_method": "mediaserver_latest_images",
+      "dynamic_expression": null,
+      "source": "app/chain/mediaserver.py:190"
+    },
+    {
+      "host_function": "get_play_url",
+      "module_method": "mediaserver_play_url",
+      "dynamic_expression": null,
+      "source": "app/chain/mediaserver.py:215"
+    },
+    {
+      "host_function": "get_season_episode_ids",
+      "module_method": "mediaserver_season_episode_ids",
+      "dynamic_expression": null,
+      "source": "app/chain/mediaserver.py:227"
+    },
+    {
+      "host_function": "get_image_cookies",
+      "module_method": "mediaserver_image_cookies",
+      "dynamic_expression": null,
+      "source": "app/chain/mediaserver.py:241"
+    },
+    {
+      "host_function": "_transcribe_audio_refs",
+      "module_method": "download_telegram_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1582"
+    },
+    {
+      "host_function": "_transcribe_audio_refs",
+      "module_method": "download_telegram_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1588"
+    },
+    {
+      "host_function": "_transcribe_audio_refs",
+      "module_method": "download_wechat_media_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1593"
+    },
+    {
+      "host_function": "_transcribe_audio_refs",
+      "module_method": "download_wechat_media_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1600"
+    },
+    {
+      "host_function": "_transcribe_audio_refs",
+      "module_method": "download_slack_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1609"
+    },
+    {
+      "host_function": "_transcribe_audio_refs",
+      "module_method": "download_discord_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1616"
+    },
+    {
+      "host_function": "_transcribe_audio_refs",
+      "module_method": "download_qq_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1623"
+    },
+    {
+      "host_function": "_transcribe_audio_refs",
+      "module_method": "download_vocechat_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1630"
+    },
+    {
+      "host_function": "_transcribe_audio_refs",
+      "module_method": "download_synologychat_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1639"
+    },
+    {
+      "host_function": "_transcribe_audio_refs",
+      "module_method": "download_feishu_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1650"
+    },
+    {
+      "host_function": "_download_attachments_to_data_urls",
+      "module_method": "download_telegram_file_to_base64",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1735"
+    },
+    {
+      "host_function": "_download_attachments_to_data_urls",
+      "module_method": "download_wechat_image_to_data_url",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1749"
+    },
+    {
+      "host_function": "_download_attachments_to_data_urls",
+      "module_method": "download_feishu_image_to_data_url",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1757"
+    },
+    {
+      "host_function": "_download_attachments_to_data_urls",
+      "module_method": "download_slack_file_to_data_url",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1765"
+    },
+    {
+      "host_function": "_download_attachments_to_data_urls",
+      "module_method": "download_vocechat_image_to_data_url",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1773"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_telegram_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1903"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_telegram_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1908"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_wechat_media_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1912"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_wechat_media_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1916"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_wechat_image_to_data_url",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1920"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_wechat_image_to_data_url",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1925"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_wechat_media_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1934"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_feishu_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1938"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_slack_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1942"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_discord_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1946"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_qq_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1950"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_vocechat_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1954"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_synologychat_file_bytes",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1958"
+    },
+    {
+      "host_function": "_download_message_file_bytes",
+      "module_method": "download_slack_file_to_data_url",
+      "dynamic_expression": null,
+      "source": "app/chain/message.py:1963"
+    },
+    {
+      "host_function": "async_tmdb_movies",
+      "module_method": "async_tmdb_discover",
+      "dynamic_expression": null,
+      "source": "app/chain/recommend.py:321"
+    },
+    {
+      "host_function": "async_tmdb_tvs",
+      "module_method": "async_tmdb_discover",
+      "dynamic_expression": null,
+      "source": "app/chain/recommend.py:349"
+    },
+    {
+      "host_function": "async_tmdb_trending",
+      "module_method": "async_tmdb_trending",
+      "dynamic_expression": null,
+      "source": "app/chain/recommend.py:370"
+    },
+    {
+      "host_function": "async_bangumi_calendar",
+      "module_method": "async_bangumi_calendar",
+      "dynamic_expression": null,
+      "source": "app/chain/recommend.py:383"
+    },
+    {
+      "host_function": "async_douban_movie_showing",
+      "module_method": "async_movie_showing",
+      "dynamic_expression": null,
+      "source": "app/chain/recommend.py:392"
+    },
+    {
+      "host_function": "async_douban_movies",
+      "module_method": "async_douban_discover",
+      "dynamic_expression": null,
+      "source": "app/chain/recommend.py:402"
+    },
+    {
+      "host_function": "async_douban_tvs",
+      "module_method": "async_douban_discover",
+      "dynamic_expression": null,
+      "source": "app/chain/recommend.py:413"
+    },
+    {
+      "host_function": "async_douban_movie_top250",
+      "module_method": "async_movie_top250",
+      "dynamic_expression": null,
+      "source": "app/chain/recommend.py:423"
+    },
+    {
+      "host_function": "async_douban_tv_weekly_chinese",
+      "module_method": "async_tv_weekly_chinese",
+      "dynamic_expression": null,
+      "source": "app/chain/recommend.py:432"
+    },
+    {
+      "host_function": "async_douban_tv_weekly_global",
+      "module_method": "async_tv_weekly_global",
+      "dynamic_expression": null,
+      "source": "app/chain/recommend.py:441"
+    },
+    {
+      "host_function": "async_douban_tv_animation",
+      "module_method": "async_tv_animation",
+      "dynamic_expression": null,
+      "source": "app/chain/recommend.py:450"
+    },
+    {
+      "host_function": "async_douban_movie_hot",
+      "module_method": "async_movie_hot",
+      "dynamic_expression": null,
+      "source": "app/chain/recommend.py:459"
+    },
+    {
+      "host_function": "async_douban_tv_hot",
+      "module_method": "async_tv_hot",
+      "dynamic_expression": null,
+      "source": "app/chain/recommend.py:468"
+    },
+    {
+      "host_function": "__search_all_sites",
+      "module_method": "batch_search_torrents",
+      "dynamic_expression": null,
+      "source": "app/chain/search.py:1992"
+    },
+    {
+      "host_function": "__async_search_all_sites",
+      "module_method": "async_batch_search_torrents",
+      "dynamic_expression": null,
+      "source": "app/chain/search.py:2145"
+    },
+    {
+      "host_function": "refresh_userdata",
+      "module_method": "refresh_userdata",
+      "dynamic_expression": null,
+      "source": "app/chain/site.py:72"
+    },
+    {
+      "host_function": "save_config",
+      "module_method": "save_config",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:20"
+    },
+    {
+      "host_function": "reset_config",
+      "module_method": "reset_config",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:26"
+    },
+    {
+      "host_function": "generate_qrcode",
+      "module_method": "generate_qrcode",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:32"
+    },
+    {
+      "host_function": "generate_auth_url",
+      "module_method": "generate_auth_url",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:38"
+    },
+    {
+      "host_function": "check_login",
+      "module_method": "check_login",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:44"
+    },
+    {
+      "host_function": "list_files",
+      "module_method": "list_files",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:50"
+    },
+    {
+      "host_function": "any_files",
+      "module_method": "any_files",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:56"
+    },
+    {
+      "host_function": "create_folder",
+      "module_method": "create_folder",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:62"
+    },
+    {
+      "host_function": "get_folder",
+      "module_method": "get_folder",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:68"
+    },
+    {
+      "host_function": "download_file",
+      "module_method": "download_file",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:76"
+    },
+    {
+      "host_function": "upload_file",
+      "module_method": "upload_file",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:86"
+    },
+    {
+      "host_function": "delete_file",
+      "module_method": "delete_file",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:92"
+    },
+    {
+      "host_function": "rename_file",
+      "module_method": "rename_file",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:98"
+    },
+    {
+      "host_function": "get_file_item",
+      "module_method": "get_file_item",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:116"
+    },
+    {
+      "host_function": "get_parent_item",
+      "module_method": "get_parent_item",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:122"
+    },
+    {
+      "host_function": "snapshot_storage",
+      "module_method": "snapshot_storage",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:133"
+    },
+    {
+      "host_function": "storage_usage",
+      "module_method": "storage_usage",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:140"
+    },
+    {
+      "host_function": "support_transtype",
+      "module_method": "support_transtype",
+      "dynamic_expression": null,
+      "source": "app/chain/storage.py:146"
+    },
+    {
+      "host_function": "tmdb_discover",
+      "module_method": "tmdb_discover",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:38"
+    },
+    {
+      "host_function": "tmdb_trending",
+      "module_method": "tmdb_trending",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:55"
+    },
+    {
+      "host_function": "tmdb_collection",
+      "module_method": "tmdb_collection",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:62"
+    },
+    {
+      "host_function": "tmdb_seasons",
+      "module_method": "tmdb_seasons",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:69"
+    },
+    {
+      "host_function": "tmdb_group_seasons",
+      "module_method": "tmdb_group_seasons",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:76"
+    },
+    {
+      "host_function": "tmdb_episodes",
+      "module_method": "tmdb_episodes",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:85"
+    },
+    {
+      "host_function": "movie_similar",
+      "module_method": "tmdb_movie_similar",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:92"
+    },
+    {
+      "host_function": "tv_similar",
+      "module_method": "tmdb_tv_similar",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:99"
+    },
+    {
+      "host_function": "movie_recommend",
+      "module_method": "tmdb_movie_recommend",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:106"
+    },
+    {
+      "host_function": "tv_recommend",
+      "module_method": "tmdb_tv_recommend",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:113"
+    },
+    {
+      "host_function": "movie_credits",
+      "module_method": "tmdb_movie_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:121"
+    },
+    {
+      "host_function": "tv_credits",
+      "module_method": "tmdb_tv_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:129"
+    },
+    {
+      "host_function": "person_detail",
+      "module_method": "tmdb_person_detail",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:136"
+    },
+    {
+      "host_function": "person_credits",
+      "module_method": "tmdb_person_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:144"
+    },
+    {
+      "host_function": "async_tmdb_discover",
+      "module_method": "async_tmdb_discover",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:192"
+    },
+    {
+      "host_function": "async_tmdb_trending",
+      "module_method": "async_tmdb_trending",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:209"
+    },
+    {
+      "host_function": "async_tmdb_collection",
+      "module_method": "async_tmdb_collection",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:216"
+    },
+    {
+      "host_function": "async_tmdb_seasons",
+      "module_method": "async_tmdb_seasons",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:223"
+    },
+    {
+      "host_function": "async_tmdb_group_seasons",
+      "module_method": "async_tmdb_group_seasons",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:230"
+    },
+    {
+      "host_function": "async_tmdb_episodes",
+      "module_method": "async_tmdb_episodes",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:240"
+    },
+    {
+      "host_function": "async_movie_similar",
+      "module_method": "async_tmdb_movie_similar",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:248"
+    },
+    {
+      "host_function": "async_tv_similar",
+      "module_method": "async_tmdb_tv_similar",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:255"
+    },
+    {
+      "host_function": "async_movie_recommend",
+      "module_method": "async_tmdb_movie_recommend",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:262"
+    },
+    {
+      "host_function": "async_tv_recommend",
+      "module_method": "async_tmdb_tv_recommend",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:269"
+    },
+    {
+      "host_function": "async_movie_credits",
+      "module_method": "async_tmdb_movie_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:277"
+    },
+    {
+      "host_function": "async_tv_credits",
+      "module_method": "async_tmdb_tv_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:285"
+    },
+    {
+      "host_function": "async_person_detail",
+      "module_method": "async_tmdb_person_detail",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:292"
+    },
+    {
+      "host_function": "async_person_credits",
+      "module_method": "async_tmdb_person_credits",
+      "dynamic_expression": null,
+      "source": "app/chain/tmdb.py:300"
+    },
+    {
+      "host_function": "recommend_name",
+      "module_method": "recommend_name",
+      "dynamic_expression": null,
+      "source": "app/chain/transfer.py:2083"
+    },
+    {
+      "host_function": "get_tvdbid_by_name",
+      "module_method": "search_tvdb",
+      "dynamic_expression": null,
+      "source": "app/chain/tvdb.py:12"
+    },
+    {
+      "host_function": "auxiliary_authenticate",
+      "module_method": "user_authenticate",
+      "dynamic_expression": null,
+      "source": "app/chain/user.py:155"
+    }
+  ],
+  "event_types": [
+    {
+      "kind": "EventType",
+      "name": "PluginReload",
+      "value": "plugin.reload",
+      "source": "app/schemas/types.py:65",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "PluginAction",
+      "value": "plugin.action",
+      "source": "app/schemas/types.py:67",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "PluginTriggered",
+      "value": "plugin.triggered",
+      "source": "app/schemas/types.py:69",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "CommandExcute",
+      "value": "command.excute",
+      "source": "app/schemas/types.py:71",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "SiteDeleted",
+      "value": "site.deleted",
+      "source": "app/schemas/types.py:73",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "SiteUpdated",
+      "value": "site.updated",
+      "source": "app/schemas/types.py:75",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "SiteRefreshed",
+      "value": "site.refreshed",
+      "source": "app/schemas/types.py:77",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "TransferComplete",
+      "value": "transfer.complete",
+      "source": "app/schemas/types.py:79",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "TransferFailed",
+      "value": "transfer.failed",
+      "source": "app/schemas/types.py:81",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "SubtitleTransferComplete",
+      "value": "transfer.subtitle.complete",
+      "source": "app/schemas/types.py:83",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "SubtitleTransferFailed",
+      "value": "transfer.subtitle.failed",
+      "source": "app/schemas/types.py:85",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "AudioTransferComplete",
+      "value": "transfer.audio.complete",
+      "source": "app/schemas/types.py:87",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "AudioTransferFailed",
+      "value": "transfer.audio.failed",
+      "source": "app/schemas/types.py:89",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "DownloadAdded",
+      "value": "download.added",
+      "source": "app/schemas/types.py:91",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "HistoryDeleted",
+      "value": "history.deleted",
+      "source": "app/schemas/types.py:93",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "DownloadFileDeleted",
+      "value": "downloadfile.deleted",
+      "source": "app/schemas/types.py:95",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "DownloadDeleted",
+      "value": "download.deleted",
+      "source": "app/schemas/types.py:97",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "UserMessage",
+      "value": "user.message",
+      "source": "app/schemas/types.py:99",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "WebhookMessage",
+      "value": "webhook.message",
+      "source": "app/schemas/types.py:101",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "NoticeMessage",
+      "value": "notice.message",
+      "source": "app/schemas/types.py:103",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "SubscribeAdded",
+      "value": "subscribe.added",
+      "source": "app/schemas/types.py:105",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "SubscribeModified",
+      "value": "subscribe.modified",
+      "source": "app/schemas/types.py:107",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "SubscribeDeleted",
+      "value": "subscribe.deleted",
+      "source": "app/schemas/types.py:109",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "SubscribeComplete",
+      "value": "subscribe.complete",
+      "source": "app/schemas/types.py:111",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "SystemError",
+      "value": "system.error",
+      "source": "app/schemas/types.py:113",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "MetadataScrape",
+      "value": "metadata.scrape",
+      "source": "app/schemas/types.py:115",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "ModuleReload",
+      "value": "module.reload",
+      "source": "app/schemas/types.py:117",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "ConfigChanged",
+      "value": "config.updated",
+      "source": "app/schemas/types.py:119",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "MessageAction",
+      "value": "message.action",
+      "source": "app/schemas/types.py:121",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "EventType",
+      "name": "WorkflowExecute",
+      "value": "workflow.execute",
+      "source": "app/schemas/types.py:123",
+      "excluded_by_user": true
+    },
+    {
+      "kind": "EventType",
+      "name": "AgentTokensUsage",
+      "value": "agent.tokens.usage",
+      "source": "app/schemas/types.py:125",
+      "excluded_by_user": true
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "PluginDataReset",
+      "value": "plugin.data.reset",
+      "source": "app/schemas/types.py:167",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "NameRecognize",
+      "value": "name.recognize",
+      "source": "app/schemas/types.py:169",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "AuthVerification",
+      "value": "auth.verification",
+      "source": "app/schemas/types.py:171",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "AuthIntercept",
+      "value": "auth.intercept",
+      "source": "app/schemas/types.py:173",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "CommandRegister",
+      "value": "command.register",
+      "source": "app/schemas/types.py:175",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "TransferRename",
+      "value": "transfer.rename",
+      "source": "app/schemas/types.py:177",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "TransferRenameBuild",
+      "value": "transfer.rename.build",
+      "source": "app/schemas/types.py:179",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "TransferIntercept",
+      "value": "transfer.intercept",
+      "source": "app/schemas/types.py:181",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "TransferOverwriteCheck",
+      "value": "transfer.overwrite.check",
+      "source": "app/schemas/types.py:183",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "ResourceSelection",
+      "value": "resource.selection",
+      "source": "app/schemas/types.py:185",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "ResourceDownload",
+      "value": "resource.download",
+      "source": "app/schemas/types.py:187",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "DiscoverSource",
+      "value": "discover.source",
+      "source": "app/schemas/types.py:189",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "MediaRecognizeConvert",
+      "value": "media.recognize.convert",
+      "source": "app/schemas/types.py:191",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "RecommendSource",
+      "value": "recommend.source",
+      "source": "app/schemas/types.py:193",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "WorkflowExecution",
+      "value": "workflow.execution",
+      "source": "app/schemas/types.py:195",
+      "excluded_by_user": true
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "StorageOperSelection",
+      "value": "storage.operation",
+      "source": "app/schemas/types.py:197",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "AgentLLMProvider",
+      "value": "agent.llm.provider",
+      "source": "app/schemas/types.py:199",
+      "excluded_by_user": true
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "SubscribeEpisodesRefresh",
+      "value": "subscribe.episodes.refresh",
+      "source": "app/schemas/types.py:201",
+      "excluded_by_user": false
+    },
+    {
+      "kind": "ChainEventType",
+      "name": "SubscribeCompletionCheck",
+      "value": "subscribe.completion.check",
+      "source": "app/schemas/types.py:203",
+      "excluded_by_user": false
+    }
+  ],
+  "note": "Source inventory only; acceptance status is solely in docs/plugin-module-parity-matrix.md. Do not count method names as implemented host integrations. Dynamic dispatch is retained with a null method and source expression, not guessed."
+}

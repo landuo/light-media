@@ -202,7 +202,11 @@ func pluginJSONLimit(value any, object bool, limit int) (json.RawMessage, error)
 
 var pluginStorageDigest = regexp.MustCompile(`^[a-f0-9]{64}$`)
 
-var pluginStorageID = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9_.-]{0,95}$`)
+type pluginStorageIdentifier struct{}
+
+func (pluginStorageIdentifier) MatchString(value string) bool { return plugins.ValidInstanceID(value) }
+
+var pluginStorageID pluginStorageIdentifier
 
 const pluginValueLimit = 1 << 20
 

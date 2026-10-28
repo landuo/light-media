@@ -1,0 +1,132 @@
+{
+  "whole_indices": [
+    36,
+    37,
+    43
+  ],
+  "accepted_whole_scope": false,
+  "increment_status": "验收通过",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:1251-1279 successful callback stores and broadcasts returned TransferInfo",
+    "app/chain/transfer.py:1391-1408 target-dir fallback uses returned directory/item/file_list_new",
+    "app/db/transferhistory_oper.py:227-261 add_success consumes target_item.path/storage/model directly"
+  ],
+  "target": [
+    "internal/app/plugin_original_transfer_module.go:originalTransferModulePublish verifies actual returned destination within existing root, source snapshot, actual size/inode/copy SHA",
+    "internal/app/plugin_original_transfer_target.go:adoptOriginalTransferTarget atomically transitions existing sealed plan/native-directory authority/publication receipt; unknown commit never overwritten by generic failure persistence",
+    "internal/app/import_run.go refreshed actual file and in-place status before asset/sidecar/history/callback consumption",
+    "internal/app/plugin_original_transfer_events.go provided source model no longer probes/derives native template root before callback"
+  ],
+  "source_replay": {
+    "script": "testdata/standard-module-host/generate-transfer-target-oracle.py",
+    "output": "testdata/standard-module-host/transfer-target-source-oracle.json",
+    "cases": 2,
+    "kind": "exact fixed ordinary success history/broadcast statements + actual add_success + target-dir method, owned physical link/copy and controlled history backend/media fields; no AI branch executed"
+  },
+  "local": {
+    "source_history_link_copy": "actual SDK tests consume fixed source history destination/ordinary event; physical content/inodes/method verified",
+    "SQL_target_transition_failure": "real SQLite BEFORE UPDATE abort when target changes; old plan+authority+planned receipt remain, encrypted actual result retained; same job retries/adopts without second module call",
+    "cold_asset_commit_failure": "real asset INSERT abort after returned-target adoption→Close/New/initialize/new SDK PID→reclaim exact job→adopt published returned target without SDK replay→single completion and registration",
+    "extra_host_guards": "unowned local target required; paths outside authorized root and existing managed ownership rejected without claiming asset; these are Go existing host safety adaptations, not asserted source rejection behavior",
+    "red_green": "transfer-target-local-r1.log actual completion absent (8.646s total); corrected provided-model consumption and event suffix; r2 total8.115s pass",
+    "source_cold_integrity_regression": "transfer-target-source-cold.log 5.111s tests PASS",
+    "expanded_race": "transfer-target-race.log 170.066s tests PASS, 184.413s wall"
+  },
+  "actual_linux": {
+    "main_sha256": "90f1d0052dc8589d965cfc5a445a7658fec2c4b3345ff5e99f18eca77b3a2534",
+    "test_sha256": "9c41ecbc25facd54aa47808a7414da1ed2b9ce17726799b54613ae5de8667582",
+    "worker_sha256": "fe806697d860f57de8792a812a152161238e4c3f6c560fcf979d2672b1cf2cd7",
+    "compiler_inputs": [
+      3700,
+      4145
+    ],
+    "changed_during_build": [],
+    "cli_seconds": 2.06,
+    "cases": "previous six execution + source real link and None→clone real copy to different returned targets, exact history/bytes/unused native target, five manual-preview branches, cold/no replay/uninstall/API404"
+  },
+  "actual_browser": {
+    "tab": "IAB55",
+    "gate_seconds": 666.7,
+    "passed": true,
+    "proof": {
+      "passed": true,
+      "kind": "actual Linux cmd/server + real SDK + owned filesystem + IAB55",
+      "cold_pids": [
+        [
+          4074332,
+          4074338
+        ],
+        [
+          4083080,
+          4083094
+        ],
+        [
+          4086383,
+          4086388
+        ],
+        [
+          4089402,
+          4089408
+        ]
+      ],
+      "preview_plans": 7,
+      "preview_jobs": 0,
+      "actual_job": [
+        [
+          "job_wr-EsYhp3fMSSL16dPjgyWlx",
+          "succeeded"
+        ]
+      ],
+      "actual_assets": 1,
+      "actual_receipts": 1,
+      "clone_preview_directory_exists": false,
+      "target": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module22-ui-tmp/TestPluginServicesProductionCLI3425432016/002/library/Plugin returned UI target/Actual plugin file.mkv",
+        "inode": 48420269,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "source": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module22-ui-tmp/TestPluginServicesProductionCLI3425432016/002/source/OwnedUITransfer.2024.mkv",
+        "inode": 48420269,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "executed_plan": "plan_544Pq5nU6Yd4sHv0U3o5LvAJ",
+      "preview_complete_callbacks": 0,
+      "ordinary_execute_complete_callbacks": 2
+    },
+    "assertion": "verify-transfer-target22-proof.py additionally asserts returned target differs from frozen native target and native target does not exist",
+    "scenarios": [
+      "source model preview points to actual plugin-chosen path; no publication",
+      "false retains form; real cold/new Source+clone/no replay, same form recovers Source path",
+      "None→clone independent hypothetical path, another cold and config recovery",
+      "restore Source→actual execute preview=false closes popup; actual custom target inode48420269/hashad439c25/device65025 identical to source, one asset/receipt",
+      "existing target preview no new callback/job; third cold/login/query/one successful history keeps actual custom path"
+    ]
+  },
+  "front": "all 130 compiler-selected web embed input hashes unchanged from main19 546-test/build snapshot; no new frontend execution claimed",
+  "adaptations": [
+    "Use existing Go plan/asset/history/ordinary job machinery, no new transfer engine. Target mapping stays within original authorized local root, preserves identity/source/method and unrelated ownership.",
+    "TransferInfo retains real returned destination for callback and history; Go hardlink string representation remains native hardlink vs source link.",
+    "Actual outcome is captured encrypted before adoption. SQL rollback/restart resumes the captured outcome; no blind replay after a provider writes.",
+    "A source plugin cannot claim an existing managed file under a new owner merely by returning success. Those effects remain reviewable and are not rolled back by moving real user files."
+  ],
+  "remaining": [
+    "Execution naming-event precedence still needs deferring from executable plan preparation into the native provider branch.",
+    "Quality retarget currently returns REVIEW_PLUGIN_TRANSFER_TARGET because existing replacement/overwrite proof binds old asset targets; complete legitimate quality/overwrite consumption still pending.",
+    "Full TransferInfo nested validation/counts/mode/nullability/history consumption, TV/full episodes and auxiliary high-level tasks remain open.",
+    "media_exists/media_files, directory-unit/bluray, metadata batch aggregation, download tuple/preexisting hash ordering and whole ordinary module/event audit remain open."
+  ],
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-target-22-20261028/manifest.json",
+  "cleanup": "IAB55 closed; actual uninstall/API404+owned TempDir cleanup PASS; SSH34436 stopped. No old service modified.",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

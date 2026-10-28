@@ -1,0 +1,178 @@
+{
+  "whole_indices": [
+    36,
+    37,
+    43
+  ],
+  "accepted_whole_scope": false,
+  "increment_status": "验收通过",
+  "scope": "canonical related FileItem constructor, native callback notify/scrape flags and asset-state consumption, auxiliary-source active-use protection with a real held SDK task; entire platform still pending",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/schemas/file.py:FileURI/FileItem (same fixed45 TransferInfo/FileItem source oracle)",
+    "app/modules/filemanager/__init__.py:415-541 native transfer flag selection",
+    "app/chain/transfer.py:3196-3339 FileItem siblings + related metadata",
+    "app/api/endpoints/history.py:221-260 independent file deletion; existing Go safety guard retained"
+  ],
+  "target": [
+    "internal/plugins/file_item.go:NewModuleFileItem",
+    "internal/app/plugin_original_transfer_collection.go:originalTransferFrozenItem",
+    "internal/app/plugin_original_transfer_native_flags.go",
+    "internal/app/plugin_original_transfer_module.go",
+    "internal/app/plugin_original_transfer_callback.go",
+    "internal/app/import_run.go:wantsScrape and asset.ScrapeState",
+    "internal/app/history_delete.go:guardHistorySourceInUse before lock and physical-removal recheck"
+  ],
+  "source_replay": {
+    "flags": "testdata/standard-module-host/transfer-native-flags-source-oracle.json:15 actual fixed FileManager.transfer + Pydantic directory constructor, real temporary input paths, native handler capture boundary only; explicit path and directory default/false/true/null × scrape None/False/True",
+    "fileitem": "12 FileItem constructor subcases from fixed transfer-info-source-oracle.json; defaults/nullable/coercion/error/finite JSON; UseNumber retained in assertions",
+    "not_claimed": "No original concurrent source-removal protection was invented as MoviePilot behavior. This preserves the existing Go host file-safety invariant while adding auxiliary tasks. Full metadata scrape batches and notification consumers still open."
+  },
+  "local": {
+    "source_busy_red": "4 actual second preview/execute queued jobs with provider filename alias borrow same subtitle; original source deletion wrongly succeeded in queued/running/retry_wait/waiting_paused:4.862s FAIL preserved",
+    "busy_green": "actual active-jobs query over primary files and frozen sidecars:11.918s deletion/history regressions PASS",
+    "fileitem_and_sdk": "constructor 0.471s then exact12 and flags SDK3.233s app/1.618s SDK; collection/history18.048s PASS",
+    "normal": "full transfer/history/source-extension app116.567s/SDK1.074s PASS",
+    "race": "focused callback/native/constructor/collection/history app81.868s/SDK2.136s PASS; following pre-lock rejection fix busy/deletion race16.955s PASS",
+    "harness_correction": "First constructor test omitted JSON tags for validation_error/wire_error, fixed; strengthened UseNumber to avoid masking large integer differences."
+  },
+  "actual_linux": {
+    "main_sha256": "1bb35d860ec94ab25a0efa8732d1f1dc840ff2d7d69916ddcebd75a7c5a1b529",
+    "test_sha256": "d662b0aa955e641919da3924502897d761a50215566d3932d340061ec7e3da86",
+    "worker_sha256": "376f0e246479b6e4a299bf524d87398aaff31f409b70f66b25a097d41990f6cc",
+    "compiler_inputs": [
+      3710,
+      4164
+    ],
+    "changed": [],
+    "cli_seconds": 6.13,
+    "cli": "adds native unspecified/false and plugin need_scrape=false actual asset/event consumption; actual second alias plan enters held executable SDK transfer, deletion HTTP400 FILE_IN_USE retains both files, release completes real task; old execution/preview/deletion/cold/uninstall cases still pass",
+    "red": "r1 maine29c820d/test8da797ff actual25.69s failed: runImport held importMu during RPC; history deletion waited for same lock before occupation query, HTTP client timed out. Fixed fail-fast read before waiting for lock, keep guarded physical recheck. r1 evidence retained."
+  },
+  "actual_browser": {
+    "tab": "IAB61",
+    "gate_seconds": 1110.67,
+    "gate_note": "includes manual browser operation/wait time, not server request latency",
+    "proof": {
+      "passed": true,
+      "kind": "actual Linux cmd/server + IAB61 synthetic owned native files",
+      "preview_plans": 3,
+      "preview_jobs": 0,
+      "actual_jobs": [
+        [
+          "job_rBLCae_uTTqyNknhWcBhjxEX",
+          "succeeded"
+        ]
+      ],
+      "actual_receipts": 3,
+      "native_module_calls": 0,
+      "native_callbacks": 3,
+      "ordinary_events": 6,
+      "notification_flags": false,
+      "scrape_flags": false,
+      "scrape_state": "skipped",
+      "scrape_jobs": 0,
+      "fileitem_fields": 15,
+      "related_metadata_inherited": true,
+      "source": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module28-ui-tmp/TestPluginServicesProductionCLI171255891/002/source/OwnedUITransfer.2024.mkv",
+        "inode": 132592093,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "target": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module28-ui-tmp/TestPluginServicesProductionCLI171255891/002/library/Owned high-level UI (2024)/Owned high-level UI (2024).mkv",
+        "inode": 132592093,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "related": [
+        [
+          {
+            "input": {
+              "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module28-ui-tmp/TestPluginServicesProductionCLI171255891/002/source/OwnedUITransfer.2024.zh.srt",
+              "inode": 132592091,
+              "device": 65025,
+              "size": 24,
+              "sha256": "64dbf5f224a79e3fabf60ab04a96e766c25c35a3d179b2fbbd11098e89e609b7"
+            },
+            "target": null
+          },
+          {
+            "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module28-ui-tmp/TestPluginServicesProductionCLI171255891/002/library/Owned high-level UI (2024)/Owned high-level UI (2024).default.chi.zh-cn.srt",
+            "inode": 132592091,
+            "device": 65025,
+            "size": 24,
+            "sha256": "64dbf5f224a79e3fabf60ab04a96e766c25c35a3d179b2fbbd11098e89e609b7"
+          }
+        ],
+        [
+          {
+            "input": {
+              "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module28-ui-tmp/TestPluginServicesProductionCLI171255891/002/source/OwnedUITransfer.2024.flac",
+              "inode": 132592092,
+              "device": 65025,
+              "size": 22,
+              "sha256": "21842006e19f366fe6059346fde9ce2bb380525353d684dabcd08505ad4f0930"
+            },
+            "target": null
+          },
+          {
+            "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module28-ui-tmp/TestPluginServicesProductionCLI171255891/002/library/Owned high-level UI (2024)/Owned high-level UI (2024).flac",
+            "inode": 132592092,
+            "device": 65025,
+            "size": 22,
+            "sha256": "21842006e19f366fe6059346fde9ce2bb380525353d684dabcd08505ad4f0930"
+          }
+        ]
+      ],
+      "cold_pids": [
+        [
+          131419,
+          131426
+        ],
+        [
+          136610,
+          136617
+        ],
+        [
+          138456,
+          138462
+        ]
+      ],
+      "held_real_job": "job_LOowtBvGD-1a0Q_7NJUBJFHC",
+      "held_source_and_target_preserved": true,
+      "held_history_not_hidden": true,
+      "third_cold_pids": [
+        151104,
+        151110
+      ],
+      "failed_delete_not_replayed_after_cold": true
+    },
+    "interaction": "no transfer override in source/clone; native3 preview, cold same form3, actual3 hardlinks, original Cookie/query cold3 history; separate real held task and actual delete-both click immediately rejected, 0 deleted/1 failed retained selected after sort; release succeeds and later cold preserves all files/does not replay failed deletion",
+    "error_ui": "confirmation closes; visible0/1 failure summary/cause and selected failed row remain. No claim that the confirmation dialog stays open.",
+    "media_kind": "owned synthetic plaintext mkv/srt/flac and controlled full metadata; real Linux/SDK/file IO, not real video decoding or external metadata lookup"
+  },
+  "frontend": "127 embedded dist files unchanged from main19 546 frontend tests/build, no fresh frontend test claimed",
+  "adaptations": [
+    "JSON FileItem constructor complements defaults without authorizing a path or replacing physical snapshot",
+    "existing Go canonical root/snapshot/receipt/quarantine and concurrent source-use safeguards remain",
+    "native directory NULL flags retained; no Python runtime introduced"
+  ],
+  "cleanup": "actual source+clone uninstall/API404/no registrations/TempDir cleanup PASS; IAB61 and tunnel34442 stopped; all current tests complete",
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-native-flags-28-20261028/manifest.json",
+  "remaining": [
+    "history delete_file module consumption and standalone aux redo/retry",
+    "grouped partial registration, complete counter/TV/notification/metadata batch consumers",
+    "directory/bluray and caller-specific filters",
+    "quality/overwrite returned targets, media_exists/files, download tuple/hash, complete ordinary reverse-caller audit"
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

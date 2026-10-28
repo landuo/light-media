@@ -1,0 +1,566 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed ChainBase download wrapper/dispatch/signature plus exact DownloadChain.download_single result assignment/unpack; native core tuple and binary input are owned boundaries, not actual Add evidence",
+  "source_sha256": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/utils/object.py": "0fd0161be3084593a9693244e9ea734c5d949cc23a6e8f34349177a5e220dc1c",
+    "app/chain/download.py": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003"
+  },
+  "cases": [
+    {
+      "name": "null_core",
+      "plugin_result": null,
+      "plugin_failure": false,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "returned": {
+        "__plugin_module_tuple": [
+          "Owned downloader",
+          "0123456789012345678901234567890123456789",
+          "Original",
+          ""
+        ]
+      },
+      "caller_hash": "0123456789012345678901234567890123456789",
+      "caller_error": "",
+      "accepted": true,
+      "exception": null
+    },
+    {
+      "name": "tuple_terminal",
+      "plugin_result": {
+        "__plugin_module_tuple": [
+          "Owned downloader",
+          "0123456789012345678901234567890123456789",
+          "Original",
+          ""
+        ]
+      },
+      "plugin_failure": false,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "returned": {
+        "__plugin_module_tuple": [
+          "Owned downloader",
+          "0123456789012345678901234567890123456789",
+          "Original",
+          ""
+        ]
+      },
+      "caller_hash": "0123456789012345678901234567890123456789",
+      "caller_error": "",
+      "accepted": true,
+      "exception": null
+    },
+    {
+      "name": "tuple_declined",
+      "plugin_result": {
+        "__plugin_module_tuple": [
+          null,
+          null,
+          null,
+          "owned declined"
+        ]
+      },
+      "plugin_failure": false,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "returned": {
+        "__plugin_module_tuple": [
+          null,
+          null,
+          null,
+          "owned declined"
+        ]
+      },
+      "caller_hash": null,
+      "caller_error": "owned declined",
+      "accepted": false,
+      "exception": null
+    },
+    {
+      "name": "false_terminal",
+      "plugin_result": false,
+      "plugin_failure": false,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "returned": false,
+      "caller_hash": null,
+      "caller_error": "未找到下载器",
+      "accepted": false,
+      "exception": null
+    },
+    {
+      "name": "empty_list_after_core",
+      "plugin_result": [],
+      "plugin_failure": false,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "returned": [],
+      "caller_hash": null,
+      "caller_error": "未找到下载器",
+      "accepted": false,
+      "exception": null
+    },
+    {
+      "name": "four_list_after_core",
+      "plugin_result": [
+        "Owned downloader",
+        "0123456789012345678901234567890123456789",
+        "Original",
+        ""
+      ],
+      "plugin_failure": false,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "returned": [
+        "Owned downloader",
+        "0123456789012345678901234567890123456789",
+        "Original",
+        ""
+      ],
+      "caller_hash": "0123456789012345678901234567890123456789",
+      "caller_error": "",
+      "accepted": true,
+      "exception": null
+    },
+    {
+      "name": "malformed_list_after_core",
+      "plugin_result": [
+        "owned"
+      ],
+      "plugin_failure": false,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "returned": [
+        "owned"
+      ],
+      "caller_hash": null,
+      "caller_error": null,
+      "accepted": false,
+      "exception": "ValueError"
+    },
+    {
+      "name": "true_not_unpackable",
+      "plugin_result": true,
+      "plugin_failure": false,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "returned": true,
+      "caller_hash": null,
+      "caller_error": null,
+      "accepted": false,
+      "exception": "TypeError"
+    },
+    {
+      "name": "all_null_tuple_core",
+      "plugin_result": {
+        "__plugin_module_tuple": [
+          null,
+          null,
+          null,
+          null
+        ]
+      },
+      "plugin_failure": false,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "returned": {
+        "__plugin_module_tuple": [
+          "Owned downloader",
+          "0123456789012345678901234567890123456789",
+          "Original",
+          ""
+        ]
+      },
+      "caller_hash": "0123456789012345678901234567890123456789",
+      "caller_error": "",
+      "accepted": true,
+      "exception": null
+    },
+    {
+      "name": "plugin_exception_core",
+      "plugin_result": null,
+      "plugin_failure": true,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [
+        "plugin"
+      ],
+      "returned": {
+        "__plugin_module_tuple": [
+          "Owned downloader",
+          "0123456789012345678901234567890123456789",
+          "Original",
+          ""
+        ]
+      },
+      "caller_hash": "0123456789012345678901234567890123456789",
+      "caller_error": "",
+      "accepted": true,
+      "exception": null
+    },
+    {
+      "name": "list_core_exception",
+      "plugin_result": [
+        "Owned downloader",
+        "0123456789012345678901234567890123456789",
+        "Original",
+        ""
+      ],
+      "plugin_failure": false,
+      "core_failure": true,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "content": {
+              "__plugin_module_bytes": "b3duZWQA/w=="
+            },
+            "download_dir": "/owned/downloads",
+            "cookie": "owned-cookie",
+            "episodes": [
+              2,
+              4
+            ],
+            "category": "华语电视剧",
+            "label": null,
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [
+        "system"
+      ],
+      "returned": [
+        "Owned downloader",
+        "0123456789012345678901234567890123456789",
+        "Original",
+        ""
+      ],
+      "caller_hash": "0123456789012345678901234567890123456789",
+      "caller_error": "",
+      "accepted": true,
+      "exception": null
+    }
+  ]
+}

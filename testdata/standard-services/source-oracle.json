@@ -1,0 +1,104 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/scheduler.py:1393",
+  "source_sha256": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+  "timer_source_sha256": "1a0e24db0a766a8717f9351eac24d54e60cfdaef86bc23c76e762df86206fca1",
+  "kind": "fixed AST projection; controlled clock/list dependencies, not runtime scheduler execution",
+  "cases": [
+    {
+      "name": "waiting-by-time",
+      "definitions": [
+        {
+          "id": "OwnedInput_a-slow",
+          "delay": 7200
+        },
+        {
+          "id": "OwnedInput_z-fast",
+          "delay": 3600
+        },
+        {
+          "id": "OwnedInput_running",
+          "delay": 10800
+        }
+      ],
+      "active": false,
+      "expected": [
+        {
+          "id": "OwnedInput_z-fast",
+          "status": "\u7b49\u5f85",
+          "next_run": "1\u5c0f\u65f6"
+        },
+        {
+          "id": "OwnedInput_a-slow",
+          "status": "\u7b49\u5f85",
+          "next_run": "2\u5c0f\u65f6"
+        },
+        {
+          "id": "OwnedInput_running",
+          "status": "\u7b49\u5f85",
+          "next_run": "3\u5c0f\u65f6"
+        }
+      ]
+    },
+    {
+      "name": "running-first-next-time-null",
+      "definitions": [
+        {
+          "id": "OwnedInput_a-slow",
+          "delay": 7200
+        },
+        {
+          "id": "OwnedInput_z-fast",
+          "delay": 3600
+        },
+        {
+          "id": "OwnedInput_running",
+          "delay": 10800
+        }
+      ],
+      "active": true,
+      "expected": [
+        {
+          "id": "OwnedInput_running",
+          "status": "\u6b63\u5728\u8fd0\u884c",
+          "next_run": null
+        },
+        {
+          "id": "OwnedInput_z-fast",
+          "status": "\u7b49\u5f85",
+          "next_run": "1\u5c0f\u65f6"
+        },
+        {
+          "id": "OwnedInput_a-slow",
+          "status": "\u7b49\u5f85",
+          "next_run": "2\u5c0f\u65f6"
+        }
+      ]
+    }
+  ],
+  "paused_cases": [
+    {
+      "name": "single-paused",
+      "delays": [
+        null
+      ],
+      "error": null,
+      "expected": [
+        {
+          "id": "OwnedInput_0",
+          "status": "\u7b49\u5f85",
+          "next_run": ""
+        }
+      ]
+    },
+    {
+      "name": "paused-mixed-sort-error",
+      "delays": [
+        null,
+        3600
+      ],
+      "error": "TypeError",
+      "expected": null
+    }
+  ]
+}

@@ -1,0 +1,69 @@
+{
+  "source": {
+    "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "path": "app/log.py",
+    "sha256": "f79dd36510403966a3989fbbfcc315eedde943bee6665693d4f7bd1c5a4c8ad6",
+    "function": "LoggerManager.__get_caller"
+  },
+  "kind": "fixed source walk with synthetic frames; native Go context is a process-boundary adaptation",
+  "cases": [
+    {
+      "name": "synchronous-host-helper",
+      "frames": [
+        "/app/app/helper/message.py",
+        "/app/app/chain/__init__.py",
+        "/app/app/plugins/ownednotice/__init__.py"
+      ],
+      "frame_failure": false,
+      "expected": [
+        "message.py",
+        "ownednotice"
+      ]
+    },
+    {
+      "name": "clone-host-helper",
+      "frames": [
+        "/app/app/helper/message.py",
+        "/app/app/plugins/ownednoticelogs/__init__.py"
+      ],
+      "frame_failure": false,
+      "expected": [
+        "message.py",
+        "ownednoticelogs"
+      ]
+    },
+    {
+      "name": "background-host",
+      "frames": [
+        "/app/app/helper/message.py",
+        "/app/app/main.py"
+      ],
+      "frame_failure": false,
+      "expected": [
+        "message.py",
+        null
+      ]
+    },
+    {
+      "name": "outside-program-stops-walk",
+      "frames": [
+        "/stdlib/threading.py",
+        "/app/app/plugins/ownednotice/__init__.py"
+      ],
+      "frame_failure": false,
+      "expected": [
+        "threading.py",
+        null
+      ]
+    },
+    {
+      "name": "unavailable-frame",
+      "frames": [],
+      "frame_failure": true,
+      "expected": [
+        "log.py",
+        null
+      ]
+    }
+  ]
+}

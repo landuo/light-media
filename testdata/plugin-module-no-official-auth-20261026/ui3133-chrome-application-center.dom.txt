@@ -1,0 +1,25 @@
+- banner:
+  - button "返回":
+  - search:
+    - button "搜索影视":
+    - textbox "搜索电影、剧集":
+      - /placeholder: 搜索电影、剧集…
+  - button "用户界面设置":
+  - button "捷径":
+  - button "通知中心":
+  - button "退出登录":
+- main
+- navigation "应用导航":
+  - link "首页":
+    - /url: "#dashboard"
+    - generic: 首页
+  - link "推荐":
+    - /url: "#discover"
+    - generic: 推荐
+  - link "探索":
+    - /url: "#explore"
+    - generic: 探索
+  - link "更多" [active]:
+    - /url: "#apps"
+    - generic: 更多
+- status

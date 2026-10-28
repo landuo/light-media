@@ -69,7 +69,6 @@ test('sidebar full-page route preserves the chosen clone and source nav key', ()
     'plugin-app/SeedRescue2/main',
   );
   for (const item of [
-    { plugin_id: 'AnySource', instance_id: 'clone', nav_key: '.' },
     { plugin_id: 'SeedRescue', instance_id: '../other', nav_key: 'main' },
     { plugin_id: 'SeedRescue', instance_id: 'SeedRescue', nav_key: '../../settings' },
   ])
@@ -79,7 +78,21 @@ test('sidebar full-page route preserves the chosen clone and source nav key', ()
 test('arbitrary standard source and non-main nav key survive route round trip', () => {
   const item = { plugin_id: 'clone', instance_id: 'UnlistedSource.clone', nav_key: '任务:archive' };
   const route = pluginNavigationTarget(item);
-  assert.deepEqual(parsePluginNavigationRoute(route), { instance: item.instance_id, navKey: item.nav_key });
-  for (const route of ['plugin-app/a', 'plugin-app/a/b/c', 'plugin-app/%/main', 'plugin-app/a/%2fother', 'plugin-app/a/..'])
+  assert.deepEqual(parsePluginNavigationRoute(route), {
+    instance: item.instance_id,
+    navKey: item.nav_key,
+  });
+  for (const route of ['plugin-app/a/b/c', 'plugin-app/%/main', 'plugin-app/a/%2fother'])
     assert.throws(() => parsePluginNavigationRoute(route));
+});
+
+test('fixed hash route retains dot/tab keys and optional main AppPage entry', () => {
+  for (const key of ['.', '..', 'my\ttool', 'my\\tool']) {
+    const route = pluginNavigationTarget({ instance_id: 'Owned', nav_key: key });
+    assert.deepEqual(parsePluginNavigationRoute(route), { instance: 'Owned', navKey: key });
+  }
+  assert.deepEqual(parsePluginNavigationRoute('plugin-app/Owned'), {
+    instance: 'Owned',
+    navKey: 'main',
+  });
 });

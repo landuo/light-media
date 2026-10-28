@@ -2,7 +2,8 @@
 import { VTextField } from 'vuetify/components/VTextField';
 import { VSelect } from 'vuetify/components/VSelect';
 import AppIcon from './AppIcon.vue';
-import { onMounted, ref } from 'vue';
+import { nextTick, onMounted, ref } from 'vue';
+import { loadDirectoryTransferTypes } from '../features/directory-transfer-types';
 import { api, action, clone, errorText, refreshSettings, toast } from '../api';
 import PathPicker from './PathPicker.vue';
 defineEmits<{ organize: [paths: string[]] }>();
@@ -20,6 +21,18 @@ function rows(result: any) {
       (row.config || row).enabled === false ? 'none' : (row.config || row).monitor_type || 'none',
     _key: String(++serial),
   }));
+  directories.value.forEach(loadTypes);
+}
+async function loadTypes(directory: any) {
+  directory._typesError = '';
+  directory._typesLoading = true;
+  try {
+    await loadDirectoryTransferTypes(directory, () => api('/directories/transfer-types'), nextTick);
+  } catch (e) {
+    directory._typesError = errorText(e);
+  } finally {
+    directory._typesLoading = false;
+  }
 }
 async function load() {
   loading.value = true;
@@ -54,6 +67,7 @@ function add() {
     library_type_folder: false,
   });
   expanded.value.push(key);
+  loadTypes(directories.value[directories.value.length - 1]);
 }
 function toggle(key: string) {
   expanded.value = expanded.value.includes(key)
@@ -81,6 +95,10 @@ async function save() {
   if (invalid) {
     if (!expanded.value.includes(invalid._key)) expanded.value.push(invalid._key);
     toast('请填写目录别名、资源目录和媒体库目录', true);
+    return;
+  }
+  if (directories.value.some((directory) => directory.monitor_type !== 'none' && !directory.mode)) {
+    toast('没有可用的整理方式，请先重新查询', true);
     return;
   }
   if (
@@ -193,12 +211,14 @@ onMounted(load);
               <VSelect
                 v-model="directory.mode"
                 label="整理方式"
-                :items="[
-                  { title: '硬链接', value: 'hardlink' },
-                  { title: '复制', value: 'copy' },
-                  { title: '自动', value: 'auto' },
-                ]"
+                :items="directory._transferTypes || []"
+                :loading="directory._typesLoading"
+                no-data-text="没有可用的整理方式"
               />
+              <p v-if="directory._typesError" class="error-box span-two">
+                {{ directory._typesError }}
+                <button type="button" @click="loadTypes(directory)">重新查询</button>
+              </p>
               <VSelect
                 v-model="directory.overwrite_mode"
                 @update:model-value="directory.overwrite_mode_known = true"

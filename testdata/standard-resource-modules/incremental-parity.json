@@ -1,0 +1,949 @@
+{
+  "accepted": false,
+  "complete": false,
+  "scope": "43 incremental site-card browse host, not other search/batch/filter hosts or whole43",
+  "backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/api/endpoints/site.py:396-420",
+    "app/chain/torrents.py:418-435",
+    "app/chain/__init__.py:async_refresh_torrents/async_run_module"
+  ],
+  "target": [
+    "internal/app/resource_search.go:browseManagedSiteResources",
+    "internal/app/plugin_original_resource_search.go:originalBrowseSiteResources",
+    "internal/app/plugin_original_modules.go:invokeOriginalPluginModuleGroups",
+    "internal/sites/client.go:Resource.ModuleSourceFields"
+  ],
+  "source_oracle": "testdata/standard-resource-modules/source-oracle.json",
+  "source_boundary": "actual fixed dispatcher/wrapper/browse/endpoint tail and TorrentInfo dataclass; controlled indexer registry and core network response",
+  "verification": [
+    {
+      "kind": "source replay",
+      "cases": 8,
+      "result": "PASS"
+    },
+    {
+      "kind": "actual isolated SDK + native HTTP owned host, in-process application",
+      "roots": 2,
+      "result": "PASS"
+    },
+    {
+      "kind": "race regression includes new actual SDK/HTTP roots and existing modules/site browse",
+      "roots": 8,
+      "result": "PASS",
+      "seconds": 23.517
+    },
+    {
+      "kind": "existing actual MTeam private snapshot, identity, promotion and redirect regression",
+      "roots": 4,
+      "result": "PASS",
+      "seconds": 0.537
+    }
+  ],
+  "necessary_adaptations": [
+    "existing POST /api/sites/manage/{id}/resources and SearchOutput/UI statuses retained; native page2 maps fixed page1, cat=None because host has no current category control",
+    "native authenticated numeric site identity and saved config supply the site dict; known mTorrent parser reused; opaque compiled SitesHelper generated indexer DSL is not reconstructed or claimed source-equivalent",
+    "complete SDK source TorrentInfo retained privately only in fresh operation; no Python runtime or public source enclosure/cookies",
+    "native existing configured site protocols require a nonempty title and same-origin positive numeric resource identity; source rows outside those typed protocol boundaries fail explicitly; fractional/out-of-range integer fields are not silently rounded",
+    "native resource details URL is reconstructed without enclosure/passkey; actual download still reacquires and verifies real material, plugin metadata is not material evidence",
+    "core native query errors remain native site status/partial results rather than claiming every Python object/exception shape equivalence"
+  ],
+  "remaining": [
+    "media-specific final browser observation",
+    "full source download Context receipt bridge and other module groups tracked in whole43; no whole43 acceptance"
+  ],
+  "artifacts": {
+    "testdata/standard-resource-modules/evidence/modules43-resource-browse-source-replay.log.gz": "39590091b937e2dd01f238655d44e8368fe8bf7083ed44fac8f9ef9e45c8e2f1",
+    "testdata/standard-resource-modules/evidence/modules43-resource-browse-source-sdk-final-tests.jsonl.gz": "0b721c74f3d9b213b7ab13767d6fb1ada4c558aedb29be60ef5d097d4fe513cc",
+    "testdata/standard-resource-modules/evidence/modules43-resource-browse-final-race-tests.jsonl.gz": "9dfb30fcdfff61d736977b47c5eea1bb57625f98c53e622d850a139587e9cda5",
+    "testdata/standard-resource-modules/evidence/modules43-sites-resource-privacy-tests.jsonl.gz": "0866eb66b5da7aafc6ae75d07fca37e26b0399b6368a9017a611ccd35b766cfa",
+    "testdata/standard-resource-modules/evidence/modules43-resource-browse-initial-compile.log.gz": "9fdfe1fc1bd27edf8ba07dce4c716f16e223383b8d687f2fe88f70c770d70496",
+    "testdata/standard-resource-modules/evidence/resources43-production-cli.log.gz": "3cb1c2dd179941e7ea91451f875c78ffeb4801a0b88fe0fd866abacbeb7a7302",
+    "testdata/standard-resource-modules/evidence/resources43-production-main.log.gz": "6f0d8d0d53aaf98e770797af1cd6cb3225433a3edc1dfbc7920fb64eeeee540e",
+    "testdata/standard-resource-modules/evidence/modules43-resource-process-linux-final-build.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "testdata/standard-resource-modules/evidence/modules43-resource-stream-source-replay.log.gz": "2702a7880366c1528fbb16ad0c6f64f0eacbb5f0c69e207f43850a2f5da77cc4",
+    "testdata/standard-resource-modules/evidence/modules43-resource-config-source-replay.log.gz": "ef3ed2c1eacbee09c95e5d29ab04393c201d6edc0ea28ba818bb244bcf754e01",
+    "testdata/standard-resource-modules/evidence/modules43-resource-stream-source-sdk-tests.jsonl.gz": "87e3e20489f160f44ed38be9a3e4023d55b37d55df27aa4ad4fb6c93ff6053ab",
+    "testdata/standard-resource-modules/evidence/modules43-resource-stream-source-sdk-final-tests.jsonl.gz": "63674a10fd655175d84188ee8c9418e6da67b2e95b8d60d6a32bbed9c78cd3e1",
+    "testdata/standard-resource-modules/evidence/modules43-resource-stream-final-race-tests.jsonl.gz": "2b89ea5d4a8010651a178500da175751f184f604ad0503f56aa9618d62594d62",
+    "testdata/standard-resource-modules/evidence/modules43-resource-stream-settings-final-tests.jsonl.gz": "ded03951bf4c7e5e7cf7695821690ee6039eddbcfa4e52a1b9ca6c6aae5f92da",
+    "testdata/standard-resource-modules/evidence/modules43-resource-settings-http-final-race-tests.jsonl.gz": "fd8394d503041be9851e4f66c5446a5d3767e4b0a10bceeb93ec10ac50777afa",
+    "testdata/standard-resource-modules/evidence/modules43-resource-stream-overflow-final-race-tests.jsonl.gz": "748f3978084a53bb22228bec6f9a7fa953e4d56f13ea933ea1084bbf2c3fe51a",
+    "testdata/standard-resource-modules/evidence/modules43-resource-current-source-settings-sdk-tests.jsonl.gz": "2f162547e197301f86c059b16afbdc959661487a362891e2e98fa7e20bb91b45",
+    "testdata/standard-resource-modules/evidence/modules43-resource-current-inputs.json.gz": "58029327a83af3c4f9b9ee6e57b8694a27b354fe9c3e67bb8a5ed967c28714fd",
+    "testdata/standard-resource-modules/evidence/modules43-resource-batch-source-replay.log.gz": "9b7691f266f623e58d2289264168fda5a567eed72459e98c0d53861ca3be5f46",
+    "testdata/standard-resource-modules/evidence/modules43-resource-batch-source-sdk-tests.jsonl.gz": "c3a20929a5a2a39031742f9d000c5637ffcd491962143e339b830470f69ea497",
+    "testdata/standard-resource-modules/evidence/modules43-resource-batch-existing-regression-tests.jsonl.gz": "445145e8a2bede720986576d5ca043e3cbcb20de4758f97abf71816c20724976",
+    "testdata/standard-resource-modules/evidence/modules43-resource-batch-final-race-tests.jsonl.gz": "1aacfa68face7df431ad13d2788d6e3ea03a7238c338b3210f9dff8f9c040534",
+    "testdata/standard-resource-modules/evidence/modules43-resource-batch-actual-coverage-final-race-tests.jsonl.gz": "6636188707cf0e00c5809c9d1dce38399ae7af93c46352b4f59b8226061ca5fe",
+    "testdata/standard-resource-modules/evidence/modules43-resource-batch-fallback-source-tests.jsonl.gz": "00513a7ca397cdc115188443f6e8968b456cf7c34c3d428a85e26a6cce931c9d",
+    "testdata/standard-resource-modules/evidence/resources43-browser-initial-dom.txt.gz": "8e34be89adba762771bd6dac80103dd05f170c32600f8bf91eee4d4dd3d61315",
+    "testdata/standard-resource-modules/evidence/resources43-browser-initial.png": "2f7708dc2cbb3362ea9af92766b8c8944424a63b4aefc9247b114c5592c8cdaa",
+    "testdata/standard-resource-modules/evidence/resources43-browser-owned-keyword-dom.txt.gz": "262b8fbca51b5933e66f29cef55f49c1914f4f4750b1bfde84b0b4da27aac55e",
+    "testdata/standard-resource-modules/evidence/resources43-browser-restored-dom.txt.gz": "82b9be6a978f1aa8044bad81382863e274ab24c81989eba1874d2e48cc96d2cc",
+    "testdata/standard-resource-modules/evidence/resources43-browser-restored.png": "60f93d8d75acbe200fa505e5c917c05b77237e8f2c92c571ac1bfa39f94c54ba",
+    "testdata/standard-resource-modules/evidence/resources43-browser-throw-dom.txt.gz": "4afdaac4f0d79cce7a3202001b87df810ce67281cbd8037058a5aaa79ce2a073",
+    "testdata/standard-resource-modules/evidence/resources43-browser-throw.png": "107cf63bb3157202441e89fa55f6f35285ed83969aa2af72583099fc04896d45",
+    "testdata/standard-resource-modules/evidence/resources43-clean-normal-dom.txt.gz": "7b9cceca484e77d1722748a56a7d30a042a0073b1abc6660002c76141c4f998b",
+    "testdata/standard-resource-modules/evidence/resources43-clean-normal.png": "aeefda6b09cbea5a68bd1770d415ec42c96745bbfce3552594b7e05a2c65bffa",
+    "testdata/standard-resource-modules/evidence/resources43-clean-restore-tool.json.gz": "9f13165f2ad887a895a104485f9475a6794c2000f932decaa24c77bee8bdf834",
+    "testdata/standard-resource-modules/evidence/resources43-clean-restored-dom.txt.gz": "c547a34cfdc487476a241103f80ff5fc1c796d77680255babc7c2345eb6fab0d",
+    "testdata/standard-resource-modules/evidence/resources43-clean-restored.png": "97768a824465325e0f3d7ba194535a8247c914d57dd7c2939efdc19cddbbc2df",
+    "testdata/standard-resource-modules/evidence/resources43-clean-throw-dom.txt.gz": "d337c38784577b03d2699101bb32a0cd57f078f0a5a97a285ff6789f119d0bb3",
+    "testdata/standard-resource-modules/evidence/resources43-clean-throw-tool.json.gz": "2924668540729768a73a0a8940bef349ce0d792705f138bbcb36b774ec1b3a4c",
+    "testdata/standard-resource-modules/evidence/resources43-clean-throw.png": "49224ef2022c12bcbb95210db93e15c36d8c190399c6d98b0466f1d519238f3b",
+    "testdata/standard-resource-modules/evidence/resources43-platform4b-clean-production-cli.log.gz": "38078c5fd067b453e11b98cdc0c494f19f9700ac602980f99efd5456d45620b3",
+    "testdata/standard-resource-modules/evidence/resources43-platform4b-clean-production-main.log.gz": "a4ab13b18f48642758b17e96b3fd204c0de27e0b6bed84d785a22b0486051b36",
+    "testdata/standard-resource-modules/evidence/resources43-platform4b-production-cli-red.log.gz": "983338c4751874452815f2c0a27a7551690a7011a22937c07ff787638bdd0f5d",
+    "testdata/standard-resource-modules/evidence/resources43-platform4b-production-main-red.log.gz": "eb3ed0d9b44a49a10342f24a2a9e90018743b9bc47465483bf4b53287375bc03",
+    "testdata/standard-resource-modules/evidence/site-indexer-boundary-4b-source-oracle.json.gz": "d863e903ede88ae80a1b2c12ad13ef313c53da74fa5219ec6c40a116573bf4e5",
+    "testdata/standard-resource-modules/evidence/modules43-title-filter-source-sdk-tests.jsonl.gz": "b343731e441447a25c3121c954e80322c1cf96701f406f2f0695c7597b9149c4",
+    "testdata/standard-resource-modules/evidence/modules43-title-filter-clone-source-sdk-tests.jsonl.gz": "69acfcedd416c6f91f5606ace2cdb30c470961997aaa57664d9f30e859530609",
+    "testdata/standard-resource-modules/evidence/modules43-title-filter-http-source-sdk-tests.jsonl.gz": "91cd8913516a20457b0750df77f04ac26b1ba19e961f5231c897a57353dba1ad",
+    "testdata/standard-resource-modules/evidence/modules43-title-filter-final-race-tests.jsonl.gz": "3da85a2b54923717004ac7b7965261c0795a14b1fafda5f12ebb09a70fd42c64",
+    "testdata/standard-resource-modules/evidence/modules43-title-dispatcher-preserved-tests.jsonl.gz": "e7aea13a6f922d1c352f8cd3e77d2bcdc97acbf8f63cc0eaf9b8e6055e9b3d2b",
+    "testdata/standard-resource-modules/evidence/modules43-resource-indexer-domain-consumer-replay.log.gz": "ad0b8fcafb358a4b28dc852dfd388f3ddab606e4f68afe9a77b5689427c0920d",
+    "testdata/standard-resource-modules/evidence/modules43-resource-filter-source-replay.log.gz": "2951e6a5259daa5c75c03575ae37f19893ab1636f95a4ccb744c6d5692a4db57",
+    "testdata/standard-resource-modules/evidence/modules43-title-filter-state-identity-source-sdk-tests.jsonl.gz": "bae2979ef7232726548d1b2a6b6ea3f716f78e9fb908231f538884c7c1ad0b1a",
+    "testdata/standard-resource-modules/evidence/modules43-title-filter-state-identity-source-sdk-final-tests.jsonl.gz": "1905fe95a3384b1aca4970710a6c795fb91eaa345df01a64857468dbce93d358",
+    "testdata/standard-resource-modules/evidence/modules43-domain-filter-resource-final-regression.jsonl.gz": "2d97accfaf6b9dda314052d7522be3b9704f134d85d7fc754d7c56681094b54d",
+    "testdata/standard-resource-modules/evidence/modules43-filter-linux-build.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+  },
+  "actual_production": {
+    "result": "PASS",
+    "elapsed_seconds": 0.56,
+    "server": {
+      "path": "/tmp/light-media-plugin-scope-dRZTQ91A/server-platform3-20261027-linux",
+      "sha256": "0afb9d33c9c04a0c160319fe04b1e6175fcce17bb703afdc19d89786a9a6b6b7"
+    },
+    "test_binary_sha256": "13837bec329aaaf3dea1ae2240f8a6bc8e401367b1d93de0f1a57f7778f86a99",
+    "worker_sha256": "540f80a1f759643f0d64dba5c080c4a00525239d7a62764ac13977b667f4a34b",
+    "test": "TestPluginSiteResourceModulesProductionCLI",
+    "main_pids": [
+      2526733,
+      2526760
+    ],
+    "source_pid": 2526743,
+    "clone_pids": [
+      2526755,
+      2526776
+    ],
+    "effects": [
+      "real install/configure and exact async_refresh_torrents four kwargs/site identity/page",
+      "actual getter discovery once; source+clone+native list accumulation",
+      "source false stops subsequent clone and native HTTP",
+      "source SDK failure swallowed then clone+native continue",
+      "disabled source leaves independent clone active",
+      "real cold main/new SDK retains clone config; ordinary native cookie remains valid",
+      "actual clone and source uninstall restore native-only real site HTTP",
+      "public HTTP response excludes credential/enclosure/private complete model"
+    ],
+    "cleanup": "both plugins uninstalled and main/workers stopped, owned t.TempDir cleaned; no browser hold started"
+  },
+  "keyword_sse_increment": {
+    "state": "implemented and verified by source/SDK/native HTTP/race plus actual platform4b main; browser ordinary site dialog independently verified",
+    "source": [
+      "app/api/endpoints/search.py:475-493",
+      "app/chain/search.py:2254-2458",
+      "app/chain/__init__.py:1252-1275",
+      "app/chain/__init__.py:1185-1195",
+      "app/core/config.py:367,723-902"
+    ],
+    "target": [
+      "internal/app/plugin_original_resource_stream.go",
+      "internal/app/resource_search.go:searchResources streaming branch",
+      "internal/app/runtime.go:Options.ResourceSearchPages trusted cloned setting",
+      "cmd/server/main.go:ResourceSearchPagesEnvironment"
+    ],
+    "oracles": [
+      "testdata/standard-resource-modules/stream-source-oracle.json",
+      "testdata/standard-resource-modules/configuration-source-oracle.json"
+    ],
+    "source_cases": {
+      "worker": 8,
+      "capacity_and_pagination": 7,
+      "helper_config": 7,
+      "settings_converter_validator": 11,
+      "oversized_page_builder": 1,
+      "owned_production_core_rows": 1
+    },
+    "verification": [
+      {
+        "kind": "actual SDK + authenticated SSE owned native HTTP + existing discovery/search concurrency race",
+        "roots": 16,
+        "seconds": 47.119,
+        "result": "PASS"
+      },
+      {
+        "kind": "new normalized startup setting/actual SSE/real concurrency race",
+        "roots": 3,
+        "seconds": 4.831,
+        "result": "PASS"
+      },
+      {
+        "kind": "source oversized list-range error before provider calls, race",
+        "result": "PASS"
+      },
+      {
+        "kind": "current exact input hashes and complete7case capacity/settings11/HTTP followup",
+        "file": "modules43-resource-current-source-settings-sdk-tests.jsonl",
+        "result": "PASS"
+      }
+    ],
+    "config_behavior": "Source Settings generic Python int conversion precedes Pydantic: invalid values and2.0 become default1; unicode/underscore integers normalize; _get_search_resource_pages clamps0/negative to1; normalized settings are captured at startup, no new page/framework",
+    "adaptations": [
+      "existing native SSE progress/status/sort and per-site concurrency/guard behavior retained; source title keyword worker5kwargs and page-capacity2kwargs called independently",
+      "source parser page capacity fallback100 verified for existing ordinary SiteSpider and mTorrent; no unrelated parser business registry added",
+      "environment normalization diagnostics withhold raw values and use one structured WARN instead of source raw-value ERROR/WARN messages",
+      "JSON model/typed protocol limitations remain same as browse, no public private source fields or material claims"
+    ],
+    "rejected_assumption": "Initial bare Pydantic parser/fatal approach was corrected before any server artifact: complete fixed Settings converter+validator proves default fallback and native implementation now follows it. Counterexamples are retained in configuration-source-oracle.json",
+    "remaining": [
+      "media-specific SSE search caller and non-SSE/filter remaining scopes tracked separately; no whole43 claim"
+    ]
+  },
+  "nonstream_batch_readonly_oracle": {
+    "path": "testdata/standard-resource-modules/batch-source-oracle.json",
+    "state": "8 actual fixed source cases, not native implementation proof",
+    "critical_behavior": "dict result bypasses native; false/non-dict causes legacy fallback; plugin list executes native batch then discards non-dict and repeats native via legacy; numeric map keys require explicit JSON typed-ID adaptation"
+  },
+  "nonstream_batch_increment": {
+    "state": "implemented and verified by source/SDK/native non-SSE HTTP/race and platform4b main",
+    "source": [
+      "app/api/endpoints/search.py:496-515",
+      "app/chain/search.py:2087-2252",
+      "app/chain/__init__.py:1233-1250"
+    ],
+    "target": [
+      "internal/app/plugin_original_resource_batch.go",
+      "internal/app/resource_search.go:searchResources non-stream branch",
+      "internal/app/search_parallel.go:attach selected ordered site snapshot",
+      "internal/app/search_download.go:SearchRequest private resourceBatch"
+    ],
+    "source_oracle": "testdata/standard-resource-modules/batch-source-oracle.json",
+    "source_cases": 8,
+    "additional_legacy_case": "false batch falls back to actual plugin async_search_torrents +native core list; exact4 kwargs, independent SDK callable",
+    "verification": [
+      {
+        "kind": "actual source8case SDK/native HTTP and keyword existing host regression",
+        "result": "PASS",
+        "file": "modules43-resource-batch-source-sdk-tests.jsonl"
+      },
+      {
+        "kind": "missing batch SDK/HTTP/legacy source branches race",
+        "roots": 3,
+        "seconds": 14.284,
+        "result": "PASS",
+        "file": "modules43-resource-batch-actual-coverage-final-race-tests.jsonl"
+      },
+      {
+        "kind": "real fast-site-before-slow concurrency race only",
+        "roots": 1,
+        "seconds": 3.823,
+        "result": "PASS",
+        "file": "modules43-resource-batch-final-race-tests.jsonl"
+      }
+    ],
+    "adaptations": [
+      "Source numeric map keys use canonical decimal-string SDK DTO keys bound to actual authenticated native SourceID; arbitrary Python string-vs-int key equivalence is not claimed",
+      "Actual native site selection/order, HTTP request guards/limits/timeouts and existing result policy/sort/progress remain in searchSites, private per-operation lazy batch does not add an engine/framework",
+      "Source list batch result executes native batch then resets and repeats via async_search_torrents exactly; explicit source list/dictionary semantics are preserved",
+      "Existing native site diagnostics remain visible on source core failure rather than claiming all source arbitrary object/error forms"
+    ],
+    "remaining": [
+      "media-specific search caller and filter_torrents separate pending hosts"
+    ]
+  },
+  "coverage_correction": {
+    "file": "modules43-resource-batch-final-race-tests.jsonl",
+    "finding": "initial regex ended with$ after prefix alternatives and matched only exact concurrency root; its output was not accepted as batch race proof",
+    "fixed_command": "go test -race -json ./internal/app -run ^TestOriginalResourceBatch -count=1",
+    "actual_passed": "3 roots14.284s; dedicated legacy fallback also separately passed; sets overlap and are not added as acceptance count"
+  },
+  "platform4b_actual_production": {
+    "result": "PASS",
+    "elapsed_seconds": 495.83,
+    "server_sha256": "e1844415fefe9f39854c10addf5f87108421457a11115f2eed8ad559de3ba40b",
+    "process_test_sha256": "1b5dbc210c4ce6373f7b0fd754b25ef745ac4197cbdf7bf6b63030cda324c827",
+    "worker_sha256": "720aef1c949fa6efe8dd1d5d067a4f2567fd8473e60e1364624ca79b12c33d9c",
+    "config": "SEARCH_RESOURCE_PAGES=2; STREAM_GATE/BATCH_GATE=true; actual fixed source oracle DTOs and owned real HTTP2-row source; unchanged test fixture assertions",
+    "main_pids": [
+      2592866,
+      2592893
+    ],
+    "source_pid": 2592877,
+    "clone_pids": [
+      2592887,
+      2592909
+    ],
+    "effects": [
+      "independent actual cmd/server install/configure, source exact4kwargs discovery once and clone order",
+      "source scalarfalse stops clone/native; source method throw continues actual clone/native; source disabled retained through actual main cold restart",
+      "authenticated native resource SSE: exact async_worker_search_site5kwargs plus get_search_page_size2kwargs twice, real sourceHTTP2 requests/6 rows",
+      "authenticated non-SSE batch: plugin dictionary exact4kwargs bypasses core 1 row/0HTTP; plugin empty list performs core batch then legacy fallback repeat/reset 2 rows/2HTTP",
+      "actual uninstall source+clone restores native-only query, workers/main stopped"
+    ],
+    "browser": [
+      "real sites card resource dialog clone+2 native rows; real FREE/size/seeders metadata",
+      "real config helper complete original cfg retained only memory; throw saved/readback exact, close/reopen shows 2 native rows and no artificial error; restore exact cfg reopens clone+2 native",
+      "only empty query in clean final run; details/download not exercised; no material/download evidence claimed"
+    ],
+    "cleanup": "done received; actual source/clone uninstalled; main/SDK stopped and test TempDir removed; configuration helper closed/discarded memory backup; root tabs/tunnel closed, viewport reset",
+    "files": [
+      "testdata/standard-resource-modules/evidence/resources43-browser-initial-dom.txt.gz",
+      "testdata/standard-resource-modules/evidence/resources43-browser-initial.png",
+      "testdata/standard-resource-modules/evidence/resources43-browser-owned-keyword-dom.txt.gz",
+      "testdata/standard-resource-modules/evidence/resources43-browser-restored-dom.txt.gz",
+      "testdata/standard-resource-modules/evidence/resources43-browser-restored.png",
+      "testdata/standard-resource-modules/evidence/resources43-browser-throw-dom.txt.gz",
+      "testdata/standard-resource-modules/evidence/resources43-browser-throw.png",
+      "testdata/standard-resource-modules/evidence/resources43-clean-normal-dom.txt.gz",
+      "testdata/standard-resource-modules/evidence/resources43-clean-normal.png",
+      "testdata/standard-resource-modules/evidence/resources43-clean-restore-tool.json.gz",
+      "testdata/standard-resource-modules/evidence/resources43-clean-restored-dom.txt.gz",
+      "testdata/standard-resource-modules/evidence/resources43-clean-restored.png",
+      "testdata/standard-resource-modules/evidence/resources43-clean-throw-dom.txt.gz",
+      "testdata/standard-resource-modules/evidence/resources43-clean-throw-tool.json.gz",
+      "testdata/standard-resource-modules/evidence/resources43-clean-throw.png",
+      "testdata/standard-resource-modules/evidence/resources43-platform4b-clean-production-cli.log.gz",
+      "testdata/standard-resource-modules/evidence/resources43-platform4b-clean-production-main.log.gz",
+      "testdata/standard-resource-modules/evidence/resources43-platform4b-production-cli-red.log.gz",
+      "testdata/standard-resource-modules/evidence/resources43-platform4b-production-main-red.log.gz"
+    ]
+  },
+  "failed_browser_attempt": {
+    "result": "FAIL",
+    "elapsed_seconds": 535.13,
+    "file": "resources43-platform4b-production-cli-red.log.gz",
+    "cause": "root submitted one nonempty owned browser query before controlled source restriction arrived; owned NexusHTTP fixture expected empty browse keyword, logged test.Error. Production returned actual results; neither fixture assertion nor application was changed to hide failure. Source mutation/restore observations retained as red-run candidate only.",
+    "recovery": "new isolated data dir/main/SDK run, identical main/worker/test bytes and assertions; empty-query normal→throw→restore browser495.83s completedPASS"
+  },
+  "indexer_domain_correction": {
+    "old_scope": "4b adapter copied native DB hostname into module indexer.domain; compiled SitesHelper dictionary was explicitly owned boundary, so prior evidence was not full indexer implementation proof",
+    "source_consumer": "fixed SiteSpider.__init__:86-91 and URL concatenation:218/238; MTorrentSpider.__init__:66-71 consume full HTTP base from indexer.domain",
+    "resolution": "use existing configured BaseURL for module indexer.domain; DB site.domain and chain lookup-domain remain separate",
+    "state": "implemented; fixed consumer/source replay, actual SDK and platform6 independent main exact kwargs verified",
+    "oracle": "testdata/standard-resource-modules/indexer-domain-source-oracle.json"
+  },
+  "title_filter_increment": {
+    "state": "implemented; fixed source/actual SDK/native HTTP/state identity/race and independent Linux main verified; media-specific callers pending",
+    "source": [
+      "app/chain/__init__.py:1330-1349",
+      "app/chain/search.py:991-1012",
+      "app/modules/filter/__init__.py:148-191",
+      "app/helper/rule.py:34-48"
+    ],
+    "target": [
+      "internal/plugins/title_torrent_filter.go",
+      "internal/app/plugin_original_title_filter_state.go",
+      "internal/app/plugin_original_title_filter.go",
+      "internal/app/plugin_original_modules.go:invokeOriginalPluginModuleGroupsWithTitleFilter",
+      "internal/app/priority_rules.go:apply/applyNative",
+      "internal/priorityrules/filter.go:HasApplicableGroups"
+    ],
+    "contract": "testdata/standard-resource-modules/title-filter-contract.md",
+    "source_oracle": "testdata/standard-resource-modules/filter-source-oracle.json",
+    "source_cases": {
+      "primary": 13,
+      "source_clone": 2,
+      "two_equal_but_distinct_models": 3
+    },
+    "verification": {
+      "race_roots": 11,
+      "race_seconds": 45.262,
+      "race_file": "modules43-title-filter-final-race-tests.jsonl",
+      "actual_host": "real SDK and existing native rule engine with copy0/core100 vs alias100*2; failure mutation77 preserved; authenticated keyword HTTP native2rows→copy4/alias4/failed2; no private attrs/ref in JSON",
+      "state_identity": "real SDK + explicitly owned identity core boundary proves input-list self-extension and actual pointer sharing/copy separation; not replacement for real native rule/HTTP tests",
+      "actual_main": "platform6_filter_domain_actual_production"
+    },
+    "adaptations": [
+      "per-call concrete TorrentInfo/list IDs and explicit return-input-list marker carry IPC identities; copying equal fields never implies same object",
+      "existing event commit-before-failure principle reused; ordinary module exception/rate-limit order retained; no new dispatcher registry/framework or Python heap",
+      "existing native public API uses validated configured-site numeric resource identities and safe DTOs; unknown source fields remain private, unsupported native values fail explicitly",
+      "title kwargs mediainfo is None; no claim of media-specific arbitrary model mutation at this stage"
+    ],
+    "remaining": [
+      "media-specific search/filter callers and native raw TorrentInfo field provenance not inferred complete from title tests"
+    ],
+    "failures_retained": [
+      {
+        "file": "modules43-title-filter-state-identity-source-sdk-tests.jsonl.gz",
+        "cause": "parallel services write window: native_download references sourceDownloadName before new Go file discovery; peer completed file, no title code relaxation"
+      },
+      {
+        "file": "modules43-title-filter-state-identity-source-sdk-final-tests.jsonl.gz",
+        "cause": "parallel API test write window left strings import temporarily unused; peer completed test, no title code relaxation"
+      }
+    ],
+    "linux_test_sha256": "7e0d3ada2882d1a6963e5e1b9122f6397a111a27875de7b270966779a1e302a5",
+    "linux_worker_sha256": "0600190fc752f39dacab15a2b4f01da66e8af887406f4306c25cfb3534924ea7"
+  },
+  "latest_source_host_regression": {
+    "result": "PASS",
+    "roots": 17,
+    "seconds": 31.994,
+    "file": "modules43-domain-filter-resource-final-regression.jsonl.gz",
+    "scope": "corrected indexer.domain HTTP base, resource browse/stream/batch, title mutable filter source/ref/copy/failure/full field state, recognize caller and existing priority behavior; overlapping sets are not summed"
+  },
+  "platform6_filter_domain_actual_production": {
+    "type": "actual Linux independent cmd/server, real SDK executables and owned NexusPHP HTTP replay; no browser in this gate",
+    "main_sha256": "f4ca053ca84407bb9e3c097d0803e76516da44f6892e4bd665ea8c914a060df3",
+    "worker_sha256": "0600190fc752f39dacab15a2b4f01da66e8af887406f4306c25cfb3534924ea7",
+    "test_sha256": "7e0d3ada2882d1a6963e5e1b9122f6397a111a27875de7b270966779a1e302a5",
+    "seconds": 0.7,
+    "result": "PASS",
+    "main_pids": [
+      2703076,
+      2703104
+    ],
+    "source_sdk_pid": 2703087,
+    "clone_sdk_pids": [
+      2703098,
+      2703121
+    ],
+    "checks": [
+      "exact full HTTP origin in indexer.domain and source kwargs",
+      "SSE2pages6rows, independent worker and capacity wrappers each page",
+      "batch map1row/0nativeHTTP vs emptylist reset/fallback2rows/2HTTP",
+      "real priority rule revision/save, copy_equal4rows pri0x2/100x2, input alias4rows100, mutation before callback failure retained77/0",
+      "source/clone stop, cold recovery, uninstall/native fallback and public credential/ref isolation"
+    ],
+    "cleanup": "normal gate uninstall/stop and t.TempDir cleanup completed",
+    "evidence": [
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-platform6-filter-production-cli.log.gz",
+        "sha256": "254cd8890192490d09435a3d8bb63dc8ddb81409269b5d78661639bb41c62898",
+        "raw_sha256": "fa9a68cce4cd6436a859de318b62ef56ad7779f39a67408f7e4285ad3f7926fe",
+        "bytes": 1913
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-platform6-filter-production-main.log.gz",
+        "sha256": "fd9906ce9dd8b76f7f08b5768ca54705db529c4a61633fdc5b05b1704d76fe2d",
+        "raw_sha256": "24714127c164c2f1c36517395972a3cd18d14ac597dd91f181dc5bea8d5a1c45",
+        "bytes": 26358
+      }
+    ]
+  },
+  "latest_incremental_artifacts": [
+    {
+      "path": "testdata/standard-resource-modules/evidence/resources43-platform6-filter-production-cli.log.gz",
+      "sha256": "254cd8890192490d09435a3d8bb63dc8ddb81409269b5d78661639bb41c62898",
+      "raw_sha256": "fa9a68cce4cd6436a859de318b62ef56ad7779f39a67408f7e4285ad3f7926fe",
+      "bytes": 1913
+    },
+    {
+      "path": "testdata/standard-resource-modules/evidence/resources43-platform6-filter-production-main.log.gz",
+      "sha256": "fd9906ce9dd8b76f7f08b5768ca54705db529c4a61633fdc5b05b1704d76fe2d",
+      "raw_sha256": "24714127c164c2f1c36517395972a3cd18d14ac597dd91f181dc5bea8d5a1c45",
+      "bytes": 26358
+    },
+    {
+      "path": "testdata/standard-resource-modules/evidence/modules43-domain-filter-resource-final-regression.jsonl.gz",
+      "sha256": "2d97accfaf6b9dda314052d7522be3b9704f134d85d7fc754d7c56681094b54d",
+      "raw_sha256": "36cb75a373dae128d6d75c8b3805664526f7ffd1fa806332d908019ee76e27b9",
+      "bytes": 394723
+    },
+    {
+      "path": "testdata/standard-resource-modules/evidence/modules43-title-filter-final-race-tests.jsonl.gz",
+      "sha256": "3da85a2b54923717004ac7b7965261c0795a14b1fafda5f12ebb09a70fd42c64",
+      "raw_sha256": "ff07e62442791641d9c0728f7f077d54da4c21a3c740d944d7af59db8c83c787",
+      "bytes": 217567
+    },
+    {
+      "path": "testdata/standard-resource-modules/evidence/resources43-bytes-source-sdk-tests.jsonl.gz",
+      "sha256": "dacac344d73dfc5fcd4eca078b3c2dc62967953875b4351e83ee16b24211fa63",
+      "raw_sha256": "e7d7e76b8477ee9c3e5d68d855ba74cc03ee3461a1d68f369850489f52685d83",
+      "bytes": 25551
+    },
+    {
+      "path": "testdata/standard-resource-modules/evidence/resources43-bytes-source-oracle.log.gz",
+      "sha256": "7defa2a563c930a15b9be61557e362a8764807c85734f32291c29979352da6ec",
+      "raw_sha256": "562d6bc37ce4f80bd243dbe64838d3408499de98d5bc25229374e066cc337eaf",
+      "bytes": 240
+    }
+  ],
+  "typed_bytes_increment": {
+    "source_oracle": "testdata/standard-resource-modules/bytes-source-oracle.json",
+    "cases": 6,
+    "sdk_root": "TestOriginalResourceBytesActualSDKSource",
+    "sdk_seconds": 2.29,
+    "actual_main_gate": "TestPluginSiteResourceModulesProductionCLI, PLUGIN_RESOURCE_BYTES_GATE=true plus existing stream/batch/filter gates",
+    "main_sha256": "f4ca053ca84407bb9e3c097d0803e76516da44f6892e4bd665ea8c914a060df3",
+    "worker_sha256": "0600190fc752f39dacab15a2b4f01da66e8af887406f4306c25cfb3534924ea7",
+    "test_sha256": "81d45018820a7309bed9da4cb05b8f5b0b470e423040083ef63ed95d039f0fb0",
+    "result": "PASS",
+    "seconds": 0.85,
+    "main_pids": [
+      2711365,
+      2711393
+    ],
+    "source_sdk_pid": 2711376,
+    "clone_sdk_pids": [
+      2711388,
+      2711409
+    ],
+    "checks": [
+      "empty bytes remain terminal scalar; no None/core fallback",
+      "browse empty bytes→empty, full bytes→explicit failed site, neither performs native HTTP",
+      "both batch bytes take fixed legacy fallback then actual native1HTTP/2rows",
+      "title empty bytes→empty after siteHTTP; full bytes remain source scalar then native typed projection returns400, not fake models"
+    ],
+    "adaptations": [
+      "Source title caller returns truthy bytes unprojected; native typed Candidate endpoint rejects unsupported byte resource results explicitly. This is consumer boundary validation, not a source title exception.",
+      "Reserved base64 envelope retains exact bytes across all-Go SDK JSON; no Python runtime."
+    ],
+    "cleanup": "uninstall/cold check/normal stop and t.TempDir cleanup completed",
+    "artifacts": [
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-platform6-bytes-production-cli.log.gz",
+        "sha256": "0cdd7194a237fda66a7ff30b8e6122d96711ccd7462d33ab8d442a9ead689205",
+        "raw_sha256": "3baf852731b96c0d7b96f42cad745b59113a3e19df1765ffce86936671d40a7d",
+        "bytes": 3118
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-platform6-bytes-production-main.log.gz",
+        "sha256": "7b129f44aef0a7da2f4d35cdb176f4edd73b146d73029d0f16639998e0d54ad3",
+        "raw_sha256": "1629c6fd85e87eafb30df8307da2f2fa9bc33d763518f11e70aca4b90d58d125",
+        "bytes": 35134
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-bytes-source-sdk-tests.jsonl.gz",
+        "sha256": "dacac344d73dfc5fcd4eca078b3c2dc62967953875b4351e83ee16b24211fa63",
+        "raw_sha256": "e7d7e76b8477ee9c3e5d68d855ba74cc03ee3461a1d68f369850489f52685d83",
+        "bytes": 25551
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-bytes-source-oracle.log.gz",
+        "sha256": "7defa2a563c930a15b9be61557e362a8764807c85734f32291c29979352da6ec",
+        "raw_sha256": "562d6bc37ce4f80bd243dbe64838d3408499de98d5bc25229374e066cc337eaf",
+        "bytes": 240
+      }
+    ]
+  },
+  "media_search_filter_increment": {
+    "state": "implemented and fixed-source/SDK/App/native HTTP/race plus platform8 separate main validated for ordinary resource/title/media search; final UI media observation and full download-context handoff separately tracked",
+    "source": [
+      "app/chain/search.py:991-1304 (title/media grouping and final dedup)",
+      "app/chain/search.py:1334-1578 (sync/async media process and keyword order)",
+      "app/chain/search.py:1936-2435 (sync batch/async batch/SSE worker + legacy fallbacks)",
+      "app/chain/__init__.py:637-842 (recognize wrapper identity/cache/None)",
+      "app/core/config.py:359-365 (ordinary name/interval defaults)",
+      "app/utils/limit.py:446-499 (monotonic reservation)",
+      "app/chain/subscribe.py:1376-1420 (one full selected-site/missing scope process per subscription)",
+      "app/core/context.py:1115 MediaInfo.clear (exact live clear; public serializer separately differs)"
+    ],
+    "target": [
+      "internal/app/plugin_original_media_resource_search.go",
+      "internal/app/plugin_original_media_filter.go",
+      "internal/app/plugin_original_resource_batch.go",
+      "internal/app/plugin_original_resource_stream.go",
+      "internal/app/plugin_original_title_filter_state.go",
+      "internal/plugins/title_torrent_filter.go",
+      "internal/plugins/media_info.go (shared with image bridge)",
+      "internal/app/search_download.go:search/targetMedia",
+      "internal/app/search_parallel.go",
+      "internal/app/priority_rules.go",
+      "internal/app/subscription_runtime.go (pass existing TV recognition)",
+      "internal/app/subscription_quality_check.go (actual subscription caller)",
+      "internal/app/plugin_original_media_search_settings.go",
+      "cmd/server/main.go:MediaSearchEnvironment once at startup",
+      "internal/app/subscription_runtime.go:checkSubscription shared result + actual candidate owner"
+    ],
+    "oracles": [
+      "media-search-source-oracle.json",
+      "media-filter-source-oracle.json",
+      "media-query-sequence-source-oracle.json",
+      "media-stream-timing-source-oracle.json",
+      "media-search-configuration-source-oracle.json",
+      "subscription-search-scope-source-oracle.json"
+    ],
+    "verified": {
+      "media_method_kwargs": 5,
+      "keyword_plans": 4,
+      "media_filter_site_identity_mutation": 10,
+      "process_query_sequences": 4,
+      "source_SDK_HTTP_combined_seconds": 8.371,
+      "query_sequence_SDK_seconds": 1.31,
+      "actual_HTTP_callers": [
+        "authenticated Web media search",
+        "actual SSE media search",
+        "Go actual sync subscription callee with real SDK; not independent cmd/server job proof"
+      ],
+      "final_media_race": {
+        "roots": 19,
+        "seconds": 43.168,
+        "raw": "resources43-media-final2-race-tests.jsonl"
+      },
+      "subscription_scope_source_and_sdk": {
+        "cases": 3,
+        "seconds": 1.91,
+        "raw": "resources43-subscription-shared-scope-sdk-tests.jsonl"
+      },
+      "subscription_actual_two_site_two_episode": {
+        "seconds": 1.33,
+        "actual_sdk_batch": 1,
+        "actual_sdk_recognition": 1,
+        "owned_native_qb_adds": 2,
+        "raw": "resources43-subscription-shared-download-final-tests.jsonl"
+      },
+      "subscription_scope_race": {
+        "roots": 3,
+        "seconds": 8.884,
+        "raw": "resources43-subscription-shared-final-race-tests.jsonl"
+      },
+      "config12_and_shared_scope_final": {
+        "roots": 3,
+        "seconds": 2.635,
+        "result": "PASS",
+        "raw": "resources43-media-final-config12-green-tests.jsonl",
+        "scope": "page Settings12cases plus shared3source-scope and actual two-site/two-episode native Add; separate media config24/reservation7/frozen options already included in19-root race43.168s"
+      }
+    },
+    "adaptations": [
+      "same concrete TorrentInfo list/ref codec now has optional shared ModuleMediaInfo.Fields; pointer replacement does not imply mutation of caller object",
+      "computed MediaInfo properties reuse existing source model; live private provider JSON restored after public serializer hides it",
+      "existing guarded site clients, collector, priority engine, decision/candidate projection and cache retained; ordinary source query order and raw-hit stopping are module caller sequence",
+      "per-site MediaInfo commits serialized by existing process runner, original input order and model identity membership preserved; not an arbitrary Python heap",
+      "native candidate decisions retain explicit rejected/confirmation fields; source Context matching and native decision DTO projection must be mapped explicitly, not claimed full unrelated search business migration",
+      "ordinary subscription native download admission consumes one all-selected-site/all-missing search snapshot; candidate Resource.SiteID remains authoritative, and preview for a multi-episode candidate uses only current missing and not-yet-scheduled episodes",
+      "source.live source/media_id None are retained while read-only title_year/detail_link are recomputed; public serializer inferred source/ID/prefix is deliberately not inserted into the live plugin model",
+      "only concrete documented TorrentInfo/list refs and optional MediaInfo are transported; no implicit cross-field Python heap alias inference"
+    ],
+    "remaining": [
+      "browser media-specific selection/SSE initial/final mutation observation not yet performed; prior real site-card browse browser4b remains valid for its scope",
+      "complete private MediaInfo/TorrentInfo through cached preview/download Context receipt remains owned by services, not replaced by compact media",
+      "source ordinary wrappers with no existing native business host are explicitly mapped in resource-host-audit; no unused stub/new subtitle or spider-cache subsystem added",
+      "explicit concrete model/list references are proven; arbitrary nested Python heap aliases are not claimed; whole43 ownership/remaining groups stay open"
+    ],
+    "failures_retained": [
+      "first owned Core **kwargs-only signature incorrectly selected ChainBase one-argument transform, then corrected to actual multi-parameter provider boundary before accepting media caller oracle",
+      "duplicate source origin / unsupported127.0.0.2 owned second-site material rejected; final source input uses distinct allowed127.0.0.1 port, no safety validation loosened",
+      "owned recognized []byte accidentally encoded base64 in config; diagnostic proved projection difference, fixed explicit json.RawMessage, assertions retained",
+      "temporary peer compilation windows retained separately",
+      "platform7 CLI first0.54s failed because test json.Unmarshal merged a new RPC into the previous non-nil kwargs map; reset only that observer map and retained all exact contract assertions, same main/worker final0.77s passed",
+      "actual HTTP fast-site red exposed once-buffered media search; real source timing oracle plus true progressive collector fix passed before next-page/site responses",
+      "new scope test first materials lacked required SourceState R and old precheck tests lacked fresh full metadata; corrected owned new material only, old unrelated missing-provider failures not labeled green",
+      "peer metadata helper/test and root transfer CLI compilation edit windows retained as not-executed probes, no product pass inferred",
+      "new actual Settings C0 sample exposed nil-Options environment fallback skipping generic Settings.strip; fallback now reuses ResourceSearchPagesEnvironment, red then final12-source-case green; trusted main already used startup-normalized option"
+    ],
+    "artifacts": [
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-host-source-final2-tests.jsonl.gz",
+        "sha256": "2640b37ca04912d3b4ebd5b2732eecf3b763a3c2f0fd5678e78ff26209d1daf1",
+        "raw_sha256": "89539e3482f94b441106911c9235c09ea15272d2c82aa731ec95200f2696ab12"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-filter-source-sdk-tests.jsonl.gz",
+        "sha256": "9dbbb0668c97a11be81db200ea8b22c8ebdb15f8df2420d560b6c1e5e022a713",
+        "raw_sha256": "88145a7dd7bb057c4200635a80c549b3d5f6d5b8a2d926dcdc197f7f5a190ae6"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-filter-source-sdk-final-tests.jsonl.gz",
+        "sha256": "d962c9577cc69e7695f2eaffc0d436356e7eec44cfa2ba40025c30def069dcc0",
+        "raw_sha256": "dba4c09b201c4ebd019b14fab4d1f8bf9761bc95eec82199acaec4fe80a4d53f"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-filter-source-sdk-origin-final-tests.jsonl.gz",
+        "sha256": "3d4f6e5b83d2e76523f4ddf87b352330753be745d159fdc45cfccb4ee7ad4712",
+        "raw_sha256": "844b09dd3202c064cbd95c85a09ff21b5bbccae0e60d7db39cdee9b5b388dbbc"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-query-sequence-sdk-final-tests.jsonl.gz",
+        "sha256": "da091fdff9c99333e91feb4436e553b86921594ae7129c8b6c9770ffb45e853f",
+        "raw_sha256": "be977cce0d51b668f7764f5ef376d75d4575e7bd5ee18ff189e0fd7cdbd790af"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-query-sequence-sdk-diagnostic-tests.jsonl.gz",
+        "sha256": "daced60ddabdf5eccb08b095d851bbbfa33dddbc7088c2de439576891279da57",
+        "raw_sha256": "c822e6e80caecce963088ab8e46efa56b8c65cb280c8a931ed4d7653290997b8"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-query-sequence-sdk-raw-final-tests.jsonl.gz",
+        "sha256": "2f98b046691047fef02ba550f049081f9173f0baa0d27eafd497ee8b43e8b4e9",
+        "raw_sha256": "50d676593631031d5a0e96e966bbe2f11fc8167b5e8ab9165c8d2b83cc64ff55"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-seal-compile.log.gz",
+        "sha256": "e8ea9fb342b5cacc6602e51e99fadeeaecf434e8bdd97f1a73fde6d0a1c34f4c",
+        "raw_sha256": "ad589a3f80205389704f2d890d0541b9fcc1046734f95f34f1a2ce88a50922de"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-platform7-media-production-cli.log.gz",
+        "sha256": "161945de297f9c99c31858e60fab5ee15b7109f6648d481328986e7a134ab332",
+        "raw_sha256": "b3d46e3f0b24bc25b9351ee783f4f5a28e6490ef1a6d39de4e82d22145dd3bcb"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-platform7-media-final-production-cli.log.gz",
+        "sha256": "794c3559c835b182db96a0444a4e63855e9fef0b614282d51e09484dc4f306d9",
+        "raw_sha256": "03c8c36ace7422645938c5a2d3b486a950b0e74bce2bdcfd1adc704f3aa4882a"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-platform7-media-red-production-main.log.gz",
+        "sha256": "beac80d39854751d2c0e020107616038a3e23ab9cb58020c80837505957da2b9",
+        "raw_sha256": "4ee9d4ead874fd9f493f8d8ccf4d30ca8bd6224cef56af7485f65ea8aa7ed030"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-platform7-media-final-production-main.log.gz",
+        "sha256": "41a08187ef3e992b9262a6af9014ab5de90215bee68680b3f7d2c9b4df458ac6",
+        "raw_sha256": "49b5ac2d1f4d58d9f42e450ee2a92ad378bee58ded08dba0cfb4f492056b07a0"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-source-private-dedup-regression-tests.jsonl.gz",
+        "sha256": "5d5f7334c1fc7f3ff341f11096461ceb4aba8502270fd074a6f422a6c24c1011",
+        "raw_sha256": "c738d8a8be328daee33f0344727f75341d776eec088e60f5609e1a89719226a2"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-query-frames-final-tests.jsonl.gz",
+        "sha256": "53ca979475f9a5b4f2ee72b0088731c9c9b2fbbbc3698a8dec5201ac48bdf9ac",
+        "raw_sha256": "95db6950399190a43968716909f6a8d282a1c97c3ed258281047a845f4687f9f"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-fast-site-red-tests.jsonl.gz",
+        "sha256": "623667299dd1f80c6030f96cd2b8a7473e1120104dfa60519d09dc503a3e0b2c",
+        "raw_sha256": "dabb6f388b556f759a03b3c5dcd7c2a85bd4907af789d9e1019119e03d5d6eb8"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-fast-site-green-tests.jsonl.gz",
+        "sha256": "b62308512852c6d2955369b30f99b04409ff99d376426155ffa47a4c2bdafd24",
+        "raw_sha256": "3027efd062d914781fe12b41e46f6c35662f60e48413c616705fbb2ee16f4bbe"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-source-live-progress-settings-tests.jsonl.gz",
+        "sha256": "7c81cb57eae5c7c17b9d4ad0c1ee1128deef01eada0c21d5e4e8a0105212f858",
+        "raw_sha256": "f6a820c4bae7374a0990376a824af7bd9d249d84c3dc6443fc16cab37b3068a9"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-search-configuration-tests.jsonl.gz",
+        "sha256": "f95dcd38c9045adb7f38f5f0eb4a0dce755a96e739a21751be7820bf9bf304ab",
+        "raw_sha256": "48f00596bb4f10ae2c7ca2288c2839e64a30c9126e4ab0ce715a65253f68d24f"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-stream-page-host-tests.jsonl.gz",
+        "sha256": "9b1dad511e7e5c8d216dbd8ec6a53e310fee8c074deedcf2d9242111fece610a",
+        "raw_sha256": "5fc770e2578f5630472593117042c1973c148933dcb7cd6facb164b8e78e3a85"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-clear-caller-tests.jsonl.gz",
+        "sha256": "a1b9b70ee84ef32b7bbc586e24c62d3041891765d61a94da2b75451aa4911acc",
+        "raw_sha256": "a6f2983556053c8c9eb2eba9ed3e6f1e498bf91c52100acf6a51ff90fffe9afb"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-final-race-tests.jsonl.gz",
+        "sha256": "c3b27f66f2cd08862c93bc1e99875ebd4e38de0e40feed3cee736d924b59a600",
+        "raw_sha256": "8d5b2b65ec8c5a6aef27ed132d8c5461ade6c98530b5d90f5a8e2f7b7b795ff2"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-final2-race-tests.jsonl.gz",
+        "sha256": "100d95c9aef52cc75dbd30614a76870a540860dfe57317196b0e589a3feaa1ab",
+        "raw_sha256": "c98506f357ddcb9f9bf62434d265bb86e89caee2c494530b5aa7843614ba48ca"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-subscription-shared-scope-tests.jsonl.gz",
+        "sha256": "97320d2f8fb8f7dfa3d4bbfa31be5bff8834b30b15fce3901bf2257331947b4b",
+        "raw_sha256": "1745db699a9b7d5a11f9d2deaa7cfa57e3e5e9dbbbf8a6df4b100179ec29c741"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-subscription-shared-scope-final-tests.jsonl.gz",
+        "sha256": "467bb9c01e9f8e5ae11d1c7fd8246e53846c30cb804c525eba7cf2cd03d06b06",
+        "raw_sha256": "f47461645dccec91a956c93cafec38d58d5a4123e4b428598e9bdbdb50b4069f"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-subscription-shared-scope-sdk-tests.jsonl.gz",
+        "sha256": "6c7b213800c4f4fb1ab6dc8fc34fdfa64c817536cb5895d31fba3c143c4236fc",
+        "raw_sha256": "7cff9a43de1ec37f83c2baa07877317b49ad0125bc9207995213c0f5c43d608d"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-subscription-shared-download-tests.jsonl.gz",
+        "sha256": "4878bf6668cf3f3ca55738383a0e37266e7c28ebe4b833a46ca0cb1edb097eb4",
+        "raw_sha256": "a10ea961e41b5ff4512dc4d02be38adbc5d26a85d70e34580db58c3bbbf9a7ad"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-subscription-shared-download-final-tests.jsonl.gz",
+        "sha256": "f41fe45ab4da97999d19841637a710ab1db333b648a0ffb5493e0cafb8394241",
+        "raw_sha256": "7fd17e462b9fdc4c1470abc1ce22bc543604de1cf9431d5bb64efd28fa6975f7"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-subscription-shared-final-race-tests.jsonl.gz",
+        "sha256": "c8401eecd63663eea6145876a9a6297c21e3bf62c85d0deb8e76ce4d0d2c7188",
+        "raw_sha256": "1f0b430253e377b977b0f0627474968cd639e00a8f749e6a38813c3e9345e03b"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-final-config12-tests.jsonl.gz",
+        "sha256": "43c788371476736190eacbdcae4ddddc0ff2ec62fa8de16f612ad9fcbf36df75",
+        "raw_sha256": "fe46d37ea97971967b82bb5f9fc49a9cddc6b5e9313e6fb689eccfa840953a55"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-final-config12-green-tests.jsonl.gz",
+        "sha256": "3353fd8c1ffcd21410c48975648c3a8812644f5d31d37140cda3f8a620027854",
+        "raw_sha256": "4a406e092eea3b073c13a23f24d2a854083240c964540d4082fbe0db8012b41e"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-process-gates-compile.log.gz",
+        "sha256": "2c431e238b9f0c7e097a0c1b79a360803fd4db2360012e6b0f63f444e609dc95",
+        "raw_sha256": "346ddbd6b07b92cf6515f7d3a666b6f4758ea571ffbc11fbfaacf9efd62c41c8"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-main7-progress-red.log.gz",
+        "sha256": "20ccd6e9a757c5880babf335d8020f9817cd668f9332f1acea8fc21733664542",
+        "raw_sha256": "911cc2c82d1a05d5cbaabd8cf2eb07aa18993aade4e3d2b43bf3a4ae9cc54aab"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-main7-subscription-scope-red.log.gz",
+        "sha256": "666e4a8623c779e47e54efd2e9f44db5851e303c60b9d9fa5b0beb5d179d374c",
+        "raw_sha256": "28c0ff23e8d1c6fa3d3676d2477c330cba653684633434a1c3e0bf2e3c9b2a70"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-main7-scope-fixed-material-red.log.gz",
+        "sha256": "eb96e5feac5c6b9d0422392237dd2f2a14cdc9fec65558dcecaea8185eedae74",
+        "raw_sha256": "9feba97fbeb815f206fdbe0df58167e4724e61678812c0ce93414212c06a58f8"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-main7-scope-source-control.log.gz",
+        "sha256": "b1787b693849ebc807c4cf3fb2e9db3a128cb9dccc35b246a40ce15d4d6cadad",
+        "raw_sha256": "3ebdc6afe3dae012fee90a1c4fc2eade31f7624c58be84bcdf2ae80c7b2375fc"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-main7-scope-source-control-result.json.gz",
+        "sha256": "5ee4d2e504b1b9fd1dbda953c54175927cda5fe3fdeed19c59eeab5a5bfb3fc4",
+        "raw_sha256": "e6a037ead90f8c770e8389ace5530c229f241fae6d1ee09392f46f0c06d354c2"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-main7-scope-source-control-main.log.gz",
+        "sha256": "94d1dbe2ed1ecac51214f2c4da05a1f02549d5684697103f1399d7b2e7d67217",
+        "raw_sha256": "3c4c0e17de41c4b1d44e7d537ac139af3b39bc3d30c03cc096ac357204266242"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-media-process-observer-final-compile.log.gz",
+        "sha256": "4cdc115e871bb8a3f0ae8769f7b2775a46f3163eee89003515b6b86e63bfba2b",
+        "raw_sha256": "3f1d16aa2311ee99c8a72351e098fc49846527f43b0eeb2d4485e0649cd56704"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-platform8-all.log.gz",
+        "sha256": "d4d6e3ade2a7e623c84592635d5d6b5644d03e4ea5f6895a016fcca623163110",
+        "raw_sha256": "858c1e454de5658e85c1266d5aa2c8a626eed6b2ced53da4bd0906350c572ebb"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-platform8-all-result.json.gz",
+        "sha256": "18ca8be60616c0a0778af14dcd218bc92f608b875b3f383381f133aa8663c9be",
+        "raw_sha256": "c0b1a236ee2066836cfb37e5b9010f6c1aab3294a2e313465ff966f1cdffdea3"
+      },
+      {
+        "path": "testdata/standard-resource-modules/evidence/resources43-platform8-all-production-main.log.gz",
+        "sha256": "fb4d41ec6f3edd2716706220e2d000e73962b8a0d2ceaa4a475703632257eac2",
+        "raw_sha256": "a0a5321cdf5f4fcfda824efa6b8a4fec4fa178c8713f87c45bc9c3bab10584a6"
+      }
+    ],
+    "platform7_actual_production": {
+      "result": "PASS",
+      "seconds": 0.77,
+      "server_sha256": "3c4ac9f59b5c99f612d32c25d320ad088c9cf76468586955b5d229b3d8d11e91",
+      "worker_sha256": "0380f4cdc705dd3eba79135d6a48d72d3eb72ac6a600def206a13f69c1235cba",
+      "test_binary_sha256": "2fa4702b60bc4efd4035edbd332fa1a8d8d06c9cabbefc887cdfd1855a158baa",
+      "main_pids": [
+        2771364,
+        2771392
+      ],
+      "source_sdk_pid": 2771374,
+      "clone_pids": [
+        2771386,
+        2771408
+      ],
+      "media": {
+        "web_rows": 1,
+        "web_native_http": 0,
+        "sse_rows": 3,
+        "sse_native_http": 1
+      },
+      "excludes": [
+        "post7 progressive first-page timing",
+        "post7 source live IDs normalization/clear and ordinary shared scope",
+        "subscription full job module hooks"
+      ],
+      "cleanup": "plugins uninstalled, main/workers stopped, isolated t.TempDir cleaned"
+    },
+    "current_code_sha256": {
+      "internal/app/plugin_original_media_stream_page_timing_test.go": "97d3a9f3fda0614139e7d6bbd608bf24b8ea558b18ec5a1070c97c302dde7086",
+      "internal/app/plugin_original_media_resource_search_test.go": "17afd4e7aadbc90a3abff032aedf8365e1ac165ab635e175766e7d23ddb6ad52",
+      "internal/app/plugin_original_media_stream_timing_test.go": "3307eed1b341a407022df8162011d5f6ee697fd44c7d479e16a7da5cbd30306f",
+      "internal/app/plugin_original_media_search_settings_test.go": "72f4ec2375361e3ff85783a38d0806b1a0313aa9ff3bd78f4261b2399b29783e",
+      "internal/app/plugin_original_media_filter.go": "0d6c85e3eda3e2eb5f13516e1bf422397d41e7dc67114806b12ab08fa4a927a2",
+      "internal/app/plugin_original_media_query_sequence_test.go": "16b5671212a7624d193c9e95897c6f37cd4a836c6cb12aeed2505ff50a53ce1b",
+      "internal/app/plugin_original_media_search_settings.go": "6b297cd7f024424d5a1f44f301410e3976dde1063ae011c86f3eccf1bd1683a7",
+      "internal/app/plugin_original_media_resource_search.go": "78e27504a4b0d5c052b1201558d8fa60bc7476aa07977cc998786515659aca02",
+      "internal/app/plugin_original_media_filter_test.go": "4968aad44f0f041ad6655bef03ba795535353776c03eccd661ec04d537dd75fb",
+      "internal/app/subscription_runtime.go": "777dba97f3a6ad1120486e22e30248f6b046b069c27a1a27e12edbcc0d5383cf",
+      "internal/app/plugin_original_subscription_search_scope_test.go": "3fa411f1b41c6754a60e2e458e80725480e665819fa075c6c9fbe6b8dd448964",
+      "internal/app/search_parallel.go": "095afe693d2f70906ef8c143bf4d856885048c9479f8a4cdd3c92b16c254e673",
+      "internal/app/plugin_original_resource_batch.go": "b31a779553501845792f4fd4259817dfeadcd4872efc249d364724cf4f179e45",
+      "internal/app/plugin_original_resource_stream.go": "13dbc654bf810ad04f13a0e181614547f984773f0f8683109b9dfc2535bf646c",
+      "internal/app/plugin_original_title_filter_state.go": "1446647231f9656f7e2606be6894ede6e90948f0b31c2f5d2c83e00f1fe27539",
+      "internal/plugins/title_torrent_filter.go": "107b116e28d688a01cfef2e154e081d9a2bcfde25f697f49a65302389304e6d2",
+      "internal/app/plugin_module_process_resource_search_test.go": "fe4c6d7d02557d16b2acd418a9592854e1feb7a948532e543eaa9e1bd531f24b",
+      "internal/app/plugin_module_process_resource_subscription_test.go": "319a5f63351c3ae85d66bd89e6544c32fd7ce8075776e7e674f71d1485372050"
+    },
+    "prepared_main_gates": {
+      "progressive": "PLUGIN_MEDIA_PROGRESS_GATE=true",
+      "subscription_shared_scope": "PLUGIN_MEDIA_SUBSCRIPTION_SCOPE_GATE=true",
+      "main": "platform8 all three flags actually passed1.14s, source main54e6/sharedtest699e/worker29c; future edits require fresh binding",
+      "compile": "resources43-media-process-gates-compile.log exit0, no selected test executed by that compile probe",
+      "display_order": "PLUGIN_RESOURCE_DISPLAY_ORDER_GATE=true actual persisted reverse card order vs actual source→clone call ordering, same PIDs/init",
+      "launcher": "testdata/standard-resource-modules/run_owned_cli.py --root <owned path> --server <next main> --test <new shared test after observer fix> --prefix <owned evidence> --progress --subscription-scope --display-order"
+    },
+    "main7_progress_control": {
+      "result": "expected red",
+      "seconds": 3.52,
+      "server_sha256": "3c4ac9f59b5c99f612d32c25d320ad088c9cf76468586955b5d229b3d8d11e91",
+      "test_sha256": "09693ee92b8b0595b741bafb6cb0366bf4e6e15019784ac1e621541a9beef2d4",
+      "worker_sha256": "29c1ed7145e37454abc6300352a68e02b522e268af04913169cc260fbaf628b3",
+      "observation": "actual second native response stayed blocked and first two rows did not cross independent main SSE listener; context3s deadline; prior Web1/SSE3 final rows passed",
+      "file": "resources43-main7-progress-red.log"
+    },
+    "failed_scope_harness_preconditions": [
+      "initial second ID sorted before first and changed trusted numeric source identity: existing projection correctly rejected mismatched owned origin; only test ID corrected to zsecond",
+      "second enabled site contaminated pre-existing single-site SSE phases: keep owned second disabled until actual sites API scope setup, then restore disabled",
+      "GET jobs/{id} returns data.job (jobView), not data bare Job: native job actually completed, old observer timed out; fixed observer requires exact real job ID and state",
+      "actual sites save triggers ordinary icon/userdata HTTP; secondary fixture now returns explicit404 for these paths and fails only unexpected torrent search, no fake stats/success and no source sideeffect disabled"
+    ],
+    "platform8_actual_production": {
+      "exit_code": 0,
+      "flags": {
+        "progress": true,
+        "subscription_scope": true,
+        "display_order": true
+      },
+      "artifacts": {
+        "main": "54e6c370d98a2fded5ee8ff896fb1c448d546ece82d59affe3567f851e5da54f",
+        "test": "699ec8604cfdc072eae7e0f38ee5da529cf44dab3ddf9e4236bcdadc96129986",
+        "worker": "29c1ed7145e37454abc6300352a68e02b522e268af04913169cc260fbaf628b3"
+      },
+      "log": "/tmp/light-media-plugin-scope-dRZTQ91A/resources43-platform8-all.log",
+      "log_sha256": "858c1e454de5658e85c1266d5aa2c8a626eed6b2ced53da4bd0906350c572ebb",
+      "classification": "actual separate production cmd/server + real owned SDK processes + controlled native HTTP/repository; not old service or real tracker/downloader credentials",
+      "result": "PASS",
+      "seconds": 1.14,
+      "main_pids": [
+        2877178,
+        2877223
+      ],
+      "source_sdk_pids": [
+        2877188,
+        2877206
+      ],
+      "clone_pids": [
+        2877217,
+        2877239
+      ],
+      "effects": [
+        "prior browse/SSE/batch/typed bytes/title alias/filter/clone/scalar failure/native fallback/cold/uninstall gates all pass",
+        "media Web source raw hit1/nativeHTTP0 and media SSE3/nativeHTTP1 exact async recognition10kwargs/cachetrue/metaNone/requestedIDNone",
+        "actual first two native page0 candidates arrive across independent main SSE listener before blocked native page1 response is released; final source dedup2/nativeHTTP2/capacity2calls",
+        "actual HTTP source-created two-episode/two-site subscription check job succeeds; one sync recognize and one sync batch scope; native search HTTP0; same persisted episode target retained",
+        "actual durable card order reversed clone before source, module output remains source then clone then core, both PIDs/init counts unchanged"
+      ],
+      "cleanup": "plugins uninstalled, all three owned main epochs/workers stopped, t.TempDir removed; no browser hold/tunnel opened",
+      "boundary": "site save really invokes icon/userdata core; owned secondary returns explicit404 for those ordinary requests, no fake data/success; only torrent search is forbidden by terminal batch"
+    }
+  },
+  "resource_host_audit": "testdata/standard-resource-modules/resource-host-audit-20261027.json",
+  "composite48_49_audit": "docs/validation/plugin-composite48-49-evidence-audit-20261027.json"
+}

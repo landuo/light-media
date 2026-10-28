@@ -1,0 +1,327 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual outer async_run_module, exact wrapper and system method, actual Pydantic DTO; provider controlled",
+  "sources": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/tmdb.py": "ed0d8a8e1a5e3c02ddf0594ef26b54180e4b36f33dce350f68a8ffc0a6dc6a6f",
+    "app/utils/object.py": "0fd0161be3084593a9693244e9ea734c5d949cc23a6e8f34349177a5e220dc1c",
+    "app/modules/themoviedb/__init__.py": "383dee3ab7ae88a569b1b772cd86731a64d9f624b384c011338ef55d78ac44d6",
+    "app/schemas/context.py": "4450abd267664ddef80c52889ca9fe9bade48ff473161d162c539836e0a7cc6e"
+  },
+  "cases": [
+    {
+      "name": "null",
+      "plugin": null,
+      "provider": {
+        "id": 120,
+        "name": "Owned provider"
+      },
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "person_id": 120
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "person_id": 120
+          }
+        }
+      ],
+      "http_status": 200,
+      "output": {
+        "source": "themoviedb",
+        "id": 120,
+        "type": 1,
+        "name": "Owned provider",
+        "character": null,
+        "images": {},
+        "profile_path": null,
+        "gender": null,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": null,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    },
+    {
+      "name": "false",
+      "plugin": false,
+      "provider": {
+        "id": 120,
+        "name": "Owned provider"
+      },
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "person_id": 120
+          }
+        }
+      ],
+      "http_status": 500,
+      "output": null
+    },
+    {
+      "name": "zero",
+      "plugin": 0,
+      "provider": {
+        "id": 120,
+        "name": "Owned provider"
+      },
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "person_id": 120
+          }
+        }
+      ],
+      "http_status": 500,
+      "output": null
+    },
+    {
+      "name": "integer",
+      "plugin": 9,
+      "provider": {
+        "id": 9,
+        "name": "wrong called"
+      },
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "person_id": 120
+          }
+        }
+      ],
+      "http_status": 500,
+      "output": null
+    },
+    {
+      "name": "empty_string",
+      "plugin": "",
+      "provider": {},
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "person_id": 120
+          }
+        }
+      ],
+      "http_status": 500,
+      "output": null
+    },
+    {
+      "name": "empty_dict",
+      "plugin": {},
+      "provider": {},
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "person_id": 120
+          }
+        }
+      ],
+      "http_status": 200,
+      "output": {
+        "source": null,
+        "id": null,
+        "type": 1,
+        "name": null,
+        "character": null,
+        "images": {},
+        "profile_path": null,
+        "gender": null,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": null,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    },
+    {
+      "name": "empty_list",
+      "plugin": [],
+      "provider": {
+        "id": 120,
+        "name": "Owned provider"
+      },
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "person_id": 120
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "person_id": 120
+          }
+        }
+      ],
+      "http_status": 500,
+      "output": null
+    },
+    {
+      "name": "list",
+      "plugin": [
+        {
+          "id": 121,
+          "name": "Owned list"
+        }
+      ],
+      "provider": {
+        "id": 120,
+        "name": "Owned provider"
+      },
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "person_id": 120
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "person_id": 120
+          }
+        }
+      ],
+      "http_status": 500,
+      "output": null
+    },
+    {
+      "name": "model",
+      "plugin": {
+        "id": 122,
+        "name": "Owned plugin"
+      },
+      "provider": {},
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "person_id": 120
+          }
+        }
+      ],
+      "http_status": 200,
+      "output": {
+        "source": null,
+        "id": 122,
+        "type": 1,
+        "name": "Owned plugin",
+        "character": null,
+        "images": {},
+        "profile_path": null,
+        "gender": null,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": null,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    },
+    {
+      "name": "provider_empty",
+      "plugin": null,
+      "provider": {},
+      "calls": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "person_id": 120
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "person_id": 120
+          }
+        }
+      ],
+      "http_status": 200,
+      "output": {
+        "source": null,
+        "id": null,
+        "type": 1,
+        "name": null,
+        "character": null,
+        "images": {},
+        "profile_path": null,
+        "gender": null,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": null,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,1667 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "boundary": "Pinned detail-card endpoints/wrappers/async dispatcher/MediaPerson and MediaInfo.\nRegistry and native provider returns are controlled. No remote service/runtime.\n",
+  "source_sha256": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/tmdb.py": "ed0d8a8e1a5e3c02ddf0594ef26b54180e4b36f33dce350f68a8ffc0a6dc6a6f",
+    "app/chain/douban.py": "e9cb834d6edbc713eb3a66307486b8612cb2b9c093e8a7a85ec2eba5f57a588e",
+    "app/chain/bangumi.py": "0e2f31aa2cbe8187f651a5f1322a1d2902a2ded856c15804bcbaf48f9cc8cf7f",
+    "app/api/endpoints/tmdb.py": "db2f6266357b1384418cc914edec5f59a17ddd5e75433771fa2f4c7e3885c976",
+    "app/api/endpoints/douban.py": "3183b463292e65dab2819af48cd5b0015a0f71805453f358776131c5fe6126f0",
+    "app/api/endpoints/bangumi.py": "0812a71330ef62d1a2dd4dc1af4b22f755cb4ce7a29aab9a866b2553ecbac0de",
+    "app/schemas/context.py": "4450abd267664ddef80c52889ca9fe9bade48ff473161d162c539836e0a7cc6e"
+  },
+  "cases": [
+    {
+      "source": "themoviedb",
+      "kind": "movie",
+      "part": "credits",
+      "name": "none",
+      "method": "async_tmdb_movie_credits",
+      "plugin": null,
+      "fail": false,
+      "status": 200,
+      "output": [
+        {
+          "source": "tmdb",
+          "id": 120,
+          "type": 1,
+          "name": "native actor",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        }
+      ],
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        },
+        {
+          "kind": "clone",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        },
+        {
+          "kind": "native",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        }
+      ]
+    },
+    {
+      "source": "themoviedb",
+      "kind": "movie",
+      "part": "credits",
+      "name": "list",
+      "method": "async_tmdb_movie_credits",
+      "plugin": [
+        {
+          "id": 122,
+          "name": "plugin actor"
+        }
+      ],
+      "fail": false,
+      "status": 200,
+      "output": [
+        {
+          "source": null,
+          "id": 122,
+          "type": 1,
+          "name": "plugin actor",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": "tmdb",
+          "id": 120,
+          "type": 1,
+          "name": "native actor",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        }
+      ],
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        },
+        {
+          "kind": "clone",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        },
+        {
+          "kind": "native",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        }
+      ]
+    },
+    {
+      "source": "themoviedb",
+      "kind": "movie",
+      "part": "credits",
+      "name": "empty_list",
+      "method": "async_tmdb_movie_credits",
+      "plugin": [],
+      "fail": false,
+      "status": 200,
+      "output": [
+        {
+          "source": "tmdb",
+          "id": 120,
+          "type": 1,
+          "name": "native actor",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        }
+      ],
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        },
+        {
+          "kind": "clone",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        },
+        {
+          "kind": "native",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        }
+      ]
+    },
+    {
+      "source": "themoviedb",
+      "kind": "movie",
+      "part": "credits",
+      "name": "false",
+      "method": "async_tmdb_movie_credits",
+      "plugin": false,
+      "fail": false,
+      "status": 200,
+      "output": [],
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        }
+      ]
+    },
+    {
+      "source": "themoviedb",
+      "kind": "movie",
+      "part": "credits",
+      "name": "dict",
+      "method": "async_tmdb_movie_credits",
+      "plugin": {},
+      "fail": false,
+      "status": 200,
+      "output": [],
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        }
+      ]
+    },
+    {
+      "source": "themoviedb",
+      "kind": "movie",
+      "part": "credits",
+      "name": "invalid",
+      "method": "async_tmdb_movie_credits",
+      "plugin": 9,
+      "fail": false,
+      "status": 500,
+      "output": null,
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        }
+      ]
+    },
+    {
+      "source": "themoviedb",
+      "kind": "movie",
+      "part": "credits",
+      "name": "throw",
+      "method": "async_tmdb_movie_credits",
+      "plugin": null,
+      "fail": true,
+      "status": 200,
+      "output": [
+        {
+          "source": "tmdb",
+          "id": 120,
+          "type": 1,
+          "name": "native actor",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        }
+      ],
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        },
+        {
+          "kind": "clone",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        },
+        {
+          "kind": "native",
+          "method": "async_tmdb_movie_credits",
+          "kwargs": {
+            "tmdbid": 120,
+            "page": 1
+          }
+        }
+      ]
+    },
+    {
+      "source": "themoviedb",
+      "kind": "tv",
+      "part": "recommendations",
+      "name": "none",
+      "method": "async_tmdb_tv_recommend",
+      "plugin": null,
+      "fail": false,
+      "status": 200,
+      "output": [
+        {
+          "source": "themoviedb",
+          "media_id": "120",
+          "scrape_source": null,
+          "type": "电影",
+          "title": "native recommended",
+          "en_title": null,
+          "hk_title": null,
+          "tw_title": null,
+          "sg_title": null,
+          "year": "2026",
+          "season": null,
+          "tmdb_id": 120,
+          "imdb_id": null,
+          "tvdb_id": null,
+          "douban_id": null,
+          "bangumi_id": null,
+          "anilist_id": null,
+          "anidb_id": null,
+          "collection_id": null,
+          "original_language": null,
+          "original_title": null,
+          "release_date": null,
+          "backdrop_path": null,
+          "poster_path": null,
+          "logo_path": null,
+          "vote_average": null,
+          "overview": null,
+          "genre_ids": [],
+          "names": [],
+          "seasons": {},
+          "season_info": [],
+          "season_years": {},
+          "category": "",
+          "tmdb_info": null,
+          "douban_info": null,
+          "bangumi_info": null,
+          "anilist_info": null,
+          "directors": [],
+          "actors": [],
+          "adult": false,
+          "created_by": [],
+          "episode_run_time": [],
+          "genres": [],
+          "first_air_date": null,
+          "homepage": null,
+          "languages": [],
+          "last_air_date": null,
+          "networks": [],
+          "number_of_episodes": null,
+          "number_of_seasons": null,
+          "origin_country": [],
+          "original_name": null,
+          "production_companies": [],
+          "production_countries": [],
+          "spoken_languages": [],
+          "release_dates": [],
+          "status": null,
+          "tagline": null,
+          "vote_count": null,
+          "popularity": null,
+          "runtime": null,
+          "next_episode_to_air": {},
+          "content_rating": null,
+          "episode_groups": [],
+          "episode_group": null,
+          "detail_link": "https://www.themoviedb.org/movie/120",
+          "title_year": "native recommended (2026)",
+          "mediaid_prefix": "themoviedb"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_tmdb_tv_recommend",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "clone",
+          "method": "async_tmdb_tv_recommend",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "native",
+          "method": "async_tmdb_tv_recommend",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ]
+    },
+    {
+      "source": "themoviedb",
+      "kind": "tv",
+      "part": "recommendations",
+      "name": "false",
+      "method": "async_tmdb_tv_recommend",
+      "plugin": false,
+      "fail": false,
+      "status": 200,
+      "output": [],
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_tmdb_tv_recommend",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ]
+    },
+    {
+      "source": "themoviedb",
+      "kind": "tv",
+      "part": "recommendations",
+      "name": "list",
+      "method": "async_tmdb_tv_recommend",
+      "plugin": [
+        {
+          "source": "themoviedb",
+          "tmdb_id": 123,
+          "type": "电影",
+          "title": "plugin recommended",
+          "year": "2026"
+        }
+      ],
+      "fail": false,
+      "status": 200,
+      "output": [
+        {
+          "source": "themoviedb",
+          "media_id": "123",
+          "scrape_source": null,
+          "type": "电影",
+          "title": "plugin recommended",
+          "en_title": null,
+          "hk_title": null,
+          "tw_title": null,
+          "sg_title": null,
+          "year": "2026",
+          "season": null,
+          "tmdb_id": 123,
+          "imdb_id": null,
+          "tvdb_id": null,
+          "douban_id": null,
+          "bangumi_id": null,
+          "anilist_id": null,
+          "anidb_id": null,
+          "collection_id": null,
+          "original_language": null,
+          "original_title": null,
+          "release_date": null,
+          "backdrop_path": null,
+          "poster_path": null,
+          "logo_path": null,
+          "vote_average": null,
+          "overview": null,
+          "genre_ids": [],
+          "names": [],
+          "seasons": {},
+          "season_info": [],
+          "season_years": {},
+          "category": "",
+          "tmdb_info": null,
+          "douban_info": null,
+          "bangumi_info": null,
+          "anilist_info": null,
+          "directors": [],
+          "actors": [],
+          "adult": false,
+          "created_by": [],
+          "episode_run_time": [],
+          "genres": [],
+          "first_air_date": null,
+          "homepage": null,
+          "languages": [],
+          "last_air_date": null,
+          "networks": [],
+          "number_of_episodes": null,
+          "number_of_seasons": null,
+          "origin_country": [],
+          "original_name": null,
+          "production_companies": [],
+          "production_countries": [],
+          "spoken_languages": [],
+          "release_dates": [],
+          "status": null,
+          "tagline": null,
+          "vote_count": null,
+          "popularity": null,
+          "runtime": null,
+          "next_episode_to_air": {},
+          "content_rating": null,
+          "episode_groups": [],
+          "episode_group": null,
+          "detail_link": "https://www.themoviedb.org/movie/123",
+          "title_year": "plugin recommended (2026)",
+          "mediaid_prefix": "themoviedb"
+        },
+        {
+          "source": "themoviedb",
+          "media_id": "120",
+          "scrape_source": null,
+          "type": "电影",
+          "title": "native recommended",
+          "en_title": null,
+          "hk_title": null,
+          "tw_title": null,
+          "sg_title": null,
+          "year": "2026",
+          "season": null,
+          "tmdb_id": 120,
+          "imdb_id": null,
+          "tvdb_id": null,
+          "douban_id": null,
+          "bangumi_id": null,
+          "anilist_id": null,
+          "anidb_id": null,
+          "collection_id": null,
+          "original_language": null,
+          "original_title": null,
+          "release_date": null,
+          "backdrop_path": null,
+          "poster_path": null,
+          "logo_path": null,
+          "vote_average": null,
+          "overview": null,
+          "genre_ids": [],
+          "names": [],
+          "seasons": {},
+          "season_info": [],
+          "season_years": {},
+          "category": "",
+          "tmdb_info": null,
+          "douban_info": null,
+          "bangumi_info": null,
+          "anilist_info": null,
+          "directors": [],
+          "actors": [],
+          "adult": false,
+          "created_by": [],
+          "episode_run_time": [],
+          "genres": [],
+          "first_air_date": null,
+          "homepage": null,
+          "languages": [],
+          "last_air_date": null,
+          "networks": [],
+          "number_of_episodes": null,
+          "number_of_seasons": null,
+          "origin_country": [],
+          "original_name": null,
+          "production_companies": [],
+          "production_countries": [],
+          "spoken_languages": [],
+          "release_dates": [],
+          "status": null,
+          "tagline": null,
+          "vote_count": null,
+          "popularity": null,
+          "runtime": null,
+          "next_episode_to_air": {},
+          "content_rating": null,
+          "episode_groups": [],
+          "episode_group": null,
+          "detail_link": "https://www.themoviedb.org/movie/120",
+          "title_year": "native recommended (2026)",
+          "mediaid_prefix": "themoviedb"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_tmdb_tv_recommend",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "clone",
+          "method": "async_tmdb_tv_recommend",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "native",
+          "method": "async_tmdb_tv_recommend",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ]
+    },
+    {
+      "source": "themoviedb",
+      "kind": "tv",
+      "part": "recommendations",
+      "name": "invalid",
+      "method": "async_tmdb_tv_recommend",
+      "plugin": 9,
+      "fail": false,
+      "status": 500,
+      "output": null,
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_tmdb_tv_recommend",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ]
+    },
+    {
+      "source": "douban",
+      "kind": "tv",
+      "part": "credits",
+      "name": "false",
+      "method": "async_douban_tv_credits",
+      "plugin": false,
+      "fail": false,
+      "status": 500,
+      "output": null,
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_douban_tv_credits",
+          "kwargs": {
+            "doubanid": "120"
+          }
+        }
+      ]
+    },
+    {
+      "source": "douban",
+      "kind": "movie",
+      "part": "credits",
+      "name": "none",
+      "method": "async_douban_movie_credits",
+      "plugin": null,
+      "fail": false,
+      "status": 200,
+      "output": [
+        {
+          "source": "douban",
+          "id": 120,
+          "type": 1,
+          "name": "native actor",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        }
+      ],
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_douban_movie_credits",
+          "kwargs": {
+            "doubanid": "120"
+          }
+        },
+        {
+          "kind": "clone",
+          "method": "async_douban_movie_credits",
+          "kwargs": {
+            "doubanid": "120"
+          }
+        },
+        {
+          "kind": "native",
+          "method": "async_douban_movie_credits",
+          "kwargs": {
+            "doubanid": "120"
+          }
+        }
+      ]
+    },
+    {
+      "source": "douban",
+      "kind": "movie",
+      "part": "recommendations",
+      "name": "none",
+      "method": "async_douban_movie_recommend",
+      "plugin": null,
+      "fail": false,
+      "status": 200,
+      "output": [
+        {
+          "source": "themoviedb",
+          "media_id": "120",
+          "scrape_source": null,
+          "type": "电影",
+          "title": "native recommended",
+          "en_title": null,
+          "hk_title": null,
+          "tw_title": null,
+          "sg_title": null,
+          "year": "2026",
+          "season": null,
+          "tmdb_id": 120,
+          "imdb_id": null,
+          "tvdb_id": null,
+          "douban_id": null,
+          "bangumi_id": null,
+          "anilist_id": null,
+          "anidb_id": null,
+          "collection_id": null,
+          "original_language": null,
+          "original_title": null,
+          "release_date": null,
+          "backdrop_path": null,
+          "poster_path": null,
+          "logo_path": null,
+          "vote_average": null,
+          "overview": null,
+          "genre_ids": [],
+          "names": [],
+          "seasons": {},
+          "season_info": [],
+          "season_years": {},
+          "category": "",
+          "tmdb_info": null,
+          "douban_info": null,
+          "bangumi_info": null,
+          "anilist_info": null,
+          "directors": [],
+          "actors": [],
+          "adult": false,
+          "created_by": [],
+          "episode_run_time": [],
+          "genres": [],
+          "first_air_date": null,
+          "homepage": null,
+          "languages": [],
+          "last_air_date": null,
+          "networks": [],
+          "number_of_episodes": null,
+          "number_of_seasons": null,
+          "origin_country": [],
+          "original_name": null,
+          "production_companies": [],
+          "production_countries": [],
+          "spoken_languages": [],
+          "release_dates": [],
+          "status": null,
+          "tagline": null,
+          "vote_count": null,
+          "popularity": null,
+          "runtime": null,
+          "next_episode_to_air": {},
+          "content_rating": null,
+          "episode_groups": [],
+          "episode_group": null,
+          "detail_link": "https://www.themoviedb.org/movie/120",
+          "title_year": "native recommended (2026)",
+          "mediaid_prefix": "themoviedb"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_douban_movie_recommend",
+          "kwargs": {
+            "doubanid": "120"
+          }
+        },
+        {
+          "kind": "clone",
+          "method": "async_douban_movie_recommend",
+          "kwargs": {
+            "doubanid": "120"
+          }
+        },
+        {
+          "kind": "native",
+          "method": "async_douban_movie_recommend",
+          "kwargs": {
+            "doubanid": "120"
+          }
+        }
+      ]
+    },
+    {
+      "source": "bangumi",
+      "kind": "tv",
+      "part": "credits",
+      "name": "list",
+      "method": "async_bangumi_credits",
+      "plugin": [
+        {
+          "id": 200,
+          "name": "plugin 0"
+        },
+        {
+          "id": 201,
+          "name": "plugin 1"
+        },
+        {
+          "id": 202,
+          "name": "plugin 2"
+        },
+        {
+          "id": 203,
+          "name": "plugin 3"
+        },
+        {
+          "id": 204,
+          "name": "plugin 4"
+        },
+        {
+          "id": 205,
+          "name": "plugin 5"
+        },
+        {
+          "id": 206,
+          "name": "plugin 6"
+        },
+        {
+          "id": 207,
+          "name": "plugin 7"
+        },
+        {
+          "id": 208,
+          "name": "plugin 8"
+        },
+        {
+          "id": 209,
+          "name": "plugin 9"
+        },
+        {
+          "id": 210,
+          "name": "plugin 10"
+        },
+        {
+          "id": 211,
+          "name": "plugin 11"
+        },
+        {
+          "id": 212,
+          "name": "plugin 12"
+        },
+        {
+          "id": 213,
+          "name": "plugin 13"
+        },
+        {
+          "id": 214,
+          "name": "plugin 14"
+        },
+        {
+          "id": 215,
+          "name": "plugin 15"
+        },
+        {
+          "id": 216,
+          "name": "plugin 16"
+        },
+        {
+          "id": 217,
+          "name": "plugin 17"
+        },
+        {
+          "id": 218,
+          "name": "plugin 18"
+        },
+        {
+          "id": 219,
+          "name": "plugin 19"
+        },
+        {
+          "id": 220,
+          "name": "plugin 20"
+        },
+        {
+          "id": 221,
+          "name": "plugin 21"
+        },
+        {
+          "id": 222,
+          "name": "plugin 22"
+        },
+        {
+          "id": 223,
+          "name": "plugin 23"
+        },
+        {
+          "id": 224,
+          "name": "plugin 24"
+        }
+      ],
+      "fail": false,
+      "status": 200,
+      "output": [
+        {
+          "source": null,
+          "id": 200,
+          "type": 1,
+          "name": "plugin 0",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 201,
+          "type": 1,
+          "name": "plugin 1",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 202,
+          "type": 1,
+          "name": "plugin 2",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 203,
+          "type": 1,
+          "name": "plugin 3",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 204,
+          "type": 1,
+          "name": "plugin 4",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 205,
+          "type": 1,
+          "name": "plugin 5",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 206,
+          "type": 1,
+          "name": "plugin 6",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 207,
+          "type": 1,
+          "name": "plugin 7",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 208,
+          "type": 1,
+          "name": "plugin 8",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 209,
+          "type": 1,
+          "name": "plugin 9",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 210,
+          "type": 1,
+          "name": "plugin 10",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 211,
+          "type": 1,
+          "name": "plugin 11",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 212,
+          "type": 1,
+          "name": "plugin 12",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 213,
+          "type": 1,
+          "name": "plugin 13",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 214,
+          "type": 1,
+          "name": "plugin 14",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 215,
+          "type": 1,
+          "name": "plugin 15",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 216,
+          "type": 1,
+          "name": "plugin 16",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 217,
+          "type": 1,
+          "name": "plugin 17",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 218,
+          "type": 1,
+          "name": "plugin 18",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        },
+        {
+          "source": null,
+          "id": 219,
+          "type": 1,
+          "name": "plugin 19",
+          "character": null,
+          "images": {},
+          "profile_path": null,
+          "gender": null,
+          "original_name": null,
+          "credit_id": null,
+          "also_known_as": [],
+          "birthday": null,
+          "deathday": null,
+          "imdb_id": null,
+          "known_for_department": null,
+          "place_of_birth": null,
+          "popularity": null,
+          "biography": null,
+          "roles": [],
+          "title": null,
+          "url": null,
+          "avatar": null,
+          "latin_name": null,
+          "career": [],
+          "relation": null
+        }
+      ],
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_bangumi_credits",
+          "kwargs": {
+            "bangumiid": 120
+          }
+        },
+        {
+          "kind": "clone",
+          "method": "async_bangumi_credits",
+          "kwargs": {
+            "bangumiid": 120
+          }
+        },
+        {
+          "kind": "native",
+          "method": "async_bangumi_credits",
+          "kwargs": {
+            "bangumiid": 120
+          }
+        }
+      ]
+    },
+    {
+      "source": "bangumi",
+      "kind": "tv",
+      "part": "recommendations",
+      "name": "none",
+      "method": "async_bangumi_recommend",
+      "plugin": null,
+      "fail": false,
+      "status": 200,
+      "output": [
+        {
+          "source": "themoviedb",
+          "media_id": "120",
+          "scrape_source": null,
+          "type": "电影",
+          "title": "native recommended",
+          "en_title": null,
+          "hk_title": null,
+          "tw_title": null,
+          "sg_title": null,
+          "year": "2026",
+          "season": null,
+          "tmdb_id": 120,
+          "imdb_id": null,
+          "tvdb_id": null,
+          "douban_id": null,
+          "bangumi_id": null,
+          "anilist_id": null,
+          "anidb_id": null,
+          "collection_id": null,
+          "original_language": null,
+          "original_title": null,
+          "release_date": null,
+          "backdrop_path": null,
+          "poster_path": null,
+          "logo_path": null,
+          "vote_average": null,
+          "overview": null,
+          "genre_ids": [],
+          "names": [],
+          "seasons": {},
+          "season_info": [],
+          "season_years": {},
+          "category": "",
+          "tmdb_info": null,
+          "douban_info": null,
+          "bangumi_info": null,
+          "anilist_info": null,
+          "directors": [],
+          "actors": [],
+          "adult": false,
+          "created_by": [],
+          "episode_run_time": [],
+          "genres": [],
+          "first_air_date": null,
+          "homepage": null,
+          "languages": [],
+          "last_air_date": null,
+          "networks": [],
+          "number_of_episodes": null,
+          "number_of_seasons": null,
+          "origin_country": [],
+          "original_name": null,
+          "production_companies": [],
+          "production_countries": [],
+          "spoken_languages": [],
+          "release_dates": [],
+          "status": null,
+          "tagline": null,
+          "vote_count": null,
+          "popularity": null,
+          "runtime": null,
+          "next_episode_to_air": {},
+          "content_rating": null,
+          "episode_groups": [],
+          "episode_group": null,
+          "detail_link": "https://www.themoviedb.org/movie/120",
+          "title_year": "native recommended (2026)",
+          "mediaid_prefix": "themoviedb"
+        }
+      ],
+      "calls": [
+        {
+          "kind": "source",
+          "method": "async_bangumi_recommend",
+          "kwargs": {
+            "bangumiid": 120
+          }
+        },
+        {
+          "kind": "clone",
+          "method": "async_bangumi_recommend",
+          "kwargs": {
+            "bangumiid": 120
+          }
+        },
+        {
+          "kind": "native",
+          "method": "async_bangumi_recommend",
+          "kwargs": {
+            "bangumiid": 120
+          }
+        }
+      ]
+    }
+  ]
+}

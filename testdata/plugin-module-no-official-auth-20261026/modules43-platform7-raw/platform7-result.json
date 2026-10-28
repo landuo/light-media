@@ -1,0 +1,40 @@
+{
+  "go_version": "go version go1.26.2 darwin/arm64",
+  "environment": {
+    "GOOS": "linux",
+    "GOARCH": "amd64",
+    "CGO_ENABLED": "0"
+  },
+  "binaries": [
+    {
+      "name": "server-platform7-20261027-linux",
+      "sha256": "3c4ac9f59b5c99f612d32c25d320ad088c9cf76468586955b5d229b3d8d11e91",
+      "command": [
+        "go",
+        "build",
+        "-trimpath",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform7-20261027-linux",
+        "./cmd/server"
+      ],
+      "inputs": 3659,
+      "changed": [],
+      "elapsed_seconds": 4.49
+    },
+    {
+      "name": "process-platform7-20261027-linux.test",
+      "sha256": "3a37de24c520bdbb94335d9213133a9f3721f9d4c6cd46829248223c63e33be8",
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform7-20261027-linux.test",
+        "./internal/app"
+      ],
+      "inputs": 4060,
+      "changed": [],
+      "elapsed_seconds": 6.12
+    }
+  ]
+}

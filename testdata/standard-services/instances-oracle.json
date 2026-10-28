@@ -1,0 +1,33 @@
+{
+  "version": "3.11.3",
+  "kind": "actual APScheduler ManualScheduler + real ThreadPoolExecutor held callables, same timer ID replaced while old executor instance lives; no original/user service",
+  "source_sha256": {
+    "scheduler": "a27afd46e62c402a2b5bd7e4f0a017c08259dc680245a65dfa3f79c66ad52d2b"
+  },
+  "cases": [
+    {
+      "maximum": 1,
+      "observed_while_old_held": {
+        "old": true,
+        "new": false,
+        "active": 1
+      },
+      "calls": {
+        "old": 1,
+        "new": 0
+      }
+    },
+    {
+      "maximum": 2,
+      "observed_while_old_held": {
+        "old": true,
+        "new": true,
+        "active": 2
+      },
+      "calls": {
+        "old": 1,
+        "new": 1
+      }
+    }
+  ]
+}

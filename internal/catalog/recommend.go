@@ -156,6 +156,15 @@ type recommendBangumiMedia struct {
 }
 
 func (e *Explorer) recommendBangumiCalendar(ctx context.Context, page int) (ExplorePage, error) {
+	return e.recommendBangumiCalendarRange(ctx, page, 30)
+}
+
+// BangumiCalendarModule exposes the same existing provider result before the
+// source RecommendChain slices its combined plugin+system list.
+func (e *Explorer) BangumiCalendarModule(ctx context.Context) (ExplorePage, error) {
+	return e.recommendBangumiCalendarRange(ctx, 1, 0)
+}
+func (e *Explorer) recommendBangumiCalendarRange(ctx context.Context, page, count int) (ExplorePage, error) {
 	var raw []struct {
 		Weekday struct {
 			ID int `json:"id"`
@@ -178,7 +187,10 @@ func (e *Explorer) recommendBangumiCalendar(ctx context.Context, page int) (Expl
 		}
 		items = append(items, day.Items...)
 	}
-	total, count := len(items), 30
+	total := len(items)
+	if count == 0 {
+		count = max(1, total)
+	}
 	start := min((page-1)*count, total)
 	end := min(start+count, total)
 	p := explorePagination(ExploreQuery{Page: page, Count: count}, end-start, &total)

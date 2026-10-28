@@ -28,31 +28,44 @@ func (c *Client) SourceInformation(ctx context.Context, kind string, id int64, f
 	if e := c.get(ctx, kind+"/"+strconv.FormatInt(id, 10), url.Values{"append_to_response": {appendFields}}, &raw); e != nil {
 		return nil, Media{}, e
 	}
+	media, err := c.ProjectSourceInformation(kind, id, raw, fields)
+	if err != nil {
+		return nil, Media{}, err
+	}
+	return raw, media, nil
+}
+
+// ProjectSourceInformation reuses the normal native decoder for a full source
+// response already returned by a trusted plugin. It performs no network call.
+func (c *Client) ProjectSourceInformation(kind string, id int64, raw json.RawMessage, fields []string) (Media, error) {
+	if !kindOK(kind) || !validID(id) {
+		return Media{}, &Error{Code: "invalid_input"}
+	}
 	var wire wireMedia
 	if decode(raw, &wire) != nil || wire.ID != id || wire.MediaType != "" && wire.MediaType != kind {
-		return nil, Media{}, &Error{Code: "invalid_response"}
+		return Media{}, &Error{Code: "invalid_response"}
 	}
 	// The original source append list has no recommendations. Do not apply
 	// the UI detail endpoint's unrelated recommendation-presence contract.
 	media, e := c.media(wire, kind, false)
 	if e != nil {
-		return nil, Media{}, e
+		return Media{}, e
 	}
 	media.CategoryMetadataKnown = true
 	media.IMDbID, media.Aliases, e = c.searchIdentities(wire, kind, media.Title, media.OriginalTitle)
 	if e != nil {
-		return nil, Media{}, e
+		return Media{}, e
 	}
 	if wire.Credits != nil {
 		media.Cast, e = c.cast(wire.Credits.Cast)
 		if e != nil {
-			return nil, Media{}, e
+			return Media{}, e
 		}
 	}
 	media.Seasons = append([]SeasonSummary{}, wire.Seasons...)
 	media.CategoryFields, e = c.categoryFields(raw, fields)
 	if e != nil {
-		return nil, Media{}, e
+		return Media{}, e
 	}
-	return raw, media, nil
+	return media, nil
 }

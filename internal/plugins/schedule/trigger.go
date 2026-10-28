@@ -2,27 +2,31 @@ package schedule
 
 import (
 	"errors"
+	"math"
+	"math/rand"
 	"time"
 )
 
 // Spec is a trigger definition, not an execution grant. The host binds every
 // registration to the actual instance, revision, action and permitted inputs.
 type Spec struct {
-	Kind       string      `json:"kind"`
-	Timezone   string      `json:"timezone"`
-	Cron       string      `json:"cron,omitempty"`
-	Fields     *CronFields `json:"fields,omitempty"`
-	IntervalMS int64       `json:"interval_ms,omitempty"`
-	RunAt      string      `json:"run_at,omitempty"`
-	StartAt    string      `json:"start_at,omitempty"`
-	EndAt      string      `json:"end_at,omitempty"`
+	Kind          string      `json:"kind"`
+	Timezone      string      `json:"timezone"`
+	Cron          string      `json:"cron,omitempty"`
+	Fields        *CronFields `json:"fields,omitempty"`
+	IntervalMS    int64       `json:"interval_ms,omitempty"`
+	RunAt         string      `json:"run_at,omitempty"`
+	StartAt       string      `json:"start_at,omitempty"`
+	EndAt         string      `json:"end_at,omitempty"`
+	JitterSeconds float64     `json:"jitter,omitempty"`
 }
 
 type Trigger struct {
-	spec       Spec
-	cron       *Cron
-	start, end time.Time
-	runAt      time.Time
+	spec         Spec
+	cron         *Cron
+	start, end   time.Time
+	runAt        time.Time
+	jitterRandom func() float64
 }
 
 var errTrigger = errors.New("invalid plugin schedule trigger")
@@ -40,7 +44,10 @@ func New(spec Spec, anchor time.Time) (*Trigger, error) {
 	if _, err := time.LoadLocation(spec.Timezone); err != nil {
 		return nil, errTrigger
 	}
-	t := &Trigger{spec: spec}
+	if math.IsNaN(spec.JitterSeconds) || math.IsInf(spec.JitterSeconds, 0) || math.Abs(spec.JitterSeconds) > float64(math.MaxInt64)/float64(time.Second) {
+		return nil, errTrigger
+	}
+	t := &Trigger{spec: spec, jitterRandom: rand.Float64}
 	readTime := func(raw string) (time.Time, error) {
 		if len(raw) > 64 {
 			return time.Time{}, errTrigger
@@ -99,7 +106,7 @@ func New(spec Spec, anchor time.Time) (*Trigger, error) {
 			t.spec.StartAt = FormatTime(t.start)
 		}
 	case "date":
-		if spec.Cron != "" || spec.Fields != nil || spec.IntervalMS != 0 || spec.RunAt == "" || spec.StartAt != "" || spec.EndAt != "" {
+		if spec.Cron != "" || spec.Fields != nil || spec.IntervalMS != 0 || spec.RunAt == "" || spec.StartAt != "" || spec.EndAt != "" || spec.JitterSeconds != 0 {
 			return nil, errTrigger
 		}
 		t.runAt, err = readTime(spec.RunAt)
@@ -149,7 +156,14 @@ func (t *Trigger) First(at time.Time) time.Time {
 		elapsed := count * t.spec.IntervalMS
 		next = time.Unix(t.start.Unix()+elapsed/1000, int64(t.start.Nanosecond())+elapsed%1000*int64(time.Millisecond)).UTC()
 	}
-	if !next.IsZero() && (next.Year() > 9999 || (!t.end.IsZero() && next.After(t.end))) {
+	if next.IsZero() || next.Year() > 9999 || (!t.end.IsZero() && next.After(t.end)) {
+		return time.Time{}
+	}
+	next = t.withJitter(next)
+	if t.spec.Kind == "cron" && !t.end.IsZero() && next.After(t.end) {
+		next = t.end
+	}
+	if t.spec.Kind == "interval" && !t.end.IsZero() && next.After(t.end) {
 		return time.Time{}
 	}
 	return next.UTC()
@@ -159,5 +173,22 @@ func (t *Trigger) Next(previous time.Time) time.Time {
 	if t.spec.Kind == "date" {
 		return time.Time{}
 	}
+	if t.spec.Kind == "interval" {
+		next := t.withJitter(previous.Add(time.Duration(t.spec.IntervalMS) * time.Millisecond))
+		if next.Year() > 9999 || (!t.end.IsZero() && next.After(t.end)) {
+			return time.Time{}
+		}
+		return next
+	}
 	return t.First(previous.Add(time.Nanosecond))
+}
+
+// APScheduler uses uniform(0,jitter); timedelta/fromtimestamp round the result
+// to microseconds. The host's RNG is native Go, with the same uniform mapping.
+func (t *Trigger) withJitter(at time.Time) time.Time {
+	if t.spec.JitterSeconds == 0 {
+		return at
+	}
+	micros := math.RoundToEven(t.jitterRandom() * t.spec.JitterSeconds * 1e6)
+	return at.Add(time.Duration(micros) * time.Microsecond)
 }

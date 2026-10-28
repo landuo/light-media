@@ -1,0 +1,31 @@
+✖ device profile changes preserve shared visible widgets before and after remote geometry loads (99.042291ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 503.256125
+
+✖ failing tests:
+
+test at web/tests/plugin-dashboard-profile.test.mjs:12:1
+✖ device profile changes preserve shared visible widgets before and after remote geometry loads (99.042291ms)
+  AssertionError [ERR_ASSERTION]: shared enabled choices must survive immediate cached geometry
+  
+  0 !== 2
+  
+      at TestContext.<anonymous> (file:///Users/accidia/projects/light-media/web/tests/plugin-dashboard-profile.test.mjs:41:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1201:25)
+      at Test.start (node:internal/test_runner/test:1096:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -26,6 +26,7 @@ type historyDownloadIdentity struct {
 }
 
 type historyDownloadFileFact struct {
+	DirectoryRetained                  bool `json:"DirectoryRetained,omitempty"`
 	Version                            int
 	ID, HistoryID, PlanID, FileID, Src string
 	Snapshot                           importSnapshot
@@ -84,14 +85,8 @@ func (a *App) historyDownloadIdentity(ctx context.Context, item transferHistoryI
 	if err := a.Store.Get(ctx, "import_plan", item.PlanID, &plan); err != nil {
 		return out, err
 	}
-	var selected *PlanFile
-	for i := range plan.Files {
-		if plan.Files[i].ID == item.executionFileID() {
-			selected = &plan.Files[i]
-			break
-		}
-	}
-	if selected == nil || selected.Source != item.Source {
+	selected, _, _, err := a.historyPlannedFile(ctx, plan, item)
+	if err != nil || selected.Source != item.Source {
 		return out, coreDeleteInvalid()
 	}
 	if plan.IntentID == "" {
@@ -130,14 +125,17 @@ func (a *App) publishHistoryDownloadFileDeleted(ctx context.Context, item transf
 	} else if err != nil {
 		return err
 	}
-	if removal.State != "completed" || !removal.File.Deleted || removal.File.Path != item.Source || removal.HistoryID != item.executionFileID() {
+	if !removal.succeeded() || removal.File.Path != item.Source || removal.HistoryID != item.executionFileID() {
 		return coreDeleteInvalid()
 	}
 	identity, err := a.historyDownloadIdentity(ctx, item)
 	if err != nil {
 		return err
 	}
-	fact := historyDownloadFileFact{Version: 1, HistoryID: item.ID, PlanID: item.PlanID, FileID: item.executionFileID(), Src: item.Source, Snapshot: removal.File.Snapshot, Identity: identity, SettingsDigest: coreDeleteSettingsDigest(a.Settings())}
+	// The fixed endpoint publishes after a successful directory no-op too.
+	// Keep that fact distinct from physical deletion; downloader ownership
+	// checks and delete_file=False remain unchanged.
+	fact := historyDownloadFileFact{Version: 1, HistoryID: item.ID, PlanID: item.PlanID, FileID: item.executionFileID(), Src: item.Source, Snapshot: removal.File.Snapshot, Identity: identity, SettingsDigest: coreDeleteSettingsDigest(a.Settings()), DirectoryRetained: removal.File.DirectoryRetained}
 	stableFact := fact
 	stableFact.SettingsDigest = ""
 	stable, _ := json.Marshal(stableFact)
@@ -216,7 +214,7 @@ func (a *App) publishHistoryDownloadFileDeleted(ctx context.Context, item transf
 	if err = tx.Commit(); err != nil {
 		return err
 	}
-	a.emitStandardBusinessEvent(ctx, "downloadfile.deleted", map[string]any{"src": fact.Src, "hash": fact.Identity.Hash})
+	a.emitStandardBusinessEventCoreState(ctx, "downloadfile.deleted", map[string]any{"src": fact.Src, "hash": fact.Identity.Hash}, true)
 	select {
 	case a.jobWake <- struct{}{}:
 	default:
@@ -293,7 +291,7 @@ func (p *PluginStore) historyDownloadFileFact(ctx context.Context, q pluginRemov
 		return f, err
 	}
 	var removal historySourceRemoval
-	if json.Unmarshal(removalRaw, &removal) != nil || removal.HistoryID != f.FileID || removal.State != "completed" || !removal.File.Deleted || removal.File.Snapshot != f.Snapshot || removal.File.Path != f.Src {
+	if json.Unmarshal(removalRaw, &removal) != nil || removal.HistoryID != f.FileID || !removal.succeeded() || removal.File.DirectoryRetained != f.DirectoryRetained || removal.File.Snapshot != f.Snapshot || removal.File.Path != f.Src {
 		return f, coreDeleteInvalid()
 	}
 	if f.Identity.Hash != "" {

@@ -1,4 +1,5 @@
 import { appBasePath } from '../base-path.ts';
+import { validPluginInstance } from './plugin-remote-contract.ts';
 import type { PluginCard } from './plugin-forms';
 
 export type PluginCloneRequest = {
@@ -71,12 +72,12 @@ export function pluginCloneErrors(
   value: PluginCloneRequest,
 ): Partial<Record<keyof PluginCloneRequest, string>> {
   const errors: Partial<Record<keyof PluginCloneRequest, string>> = {};
-  if (!/^[A-Za-z0-9][A-Za-z0-9_.-]{0,95}$/.test(source.instance_id))
+  if (!validPluginInstance(source.instance_id))
     errors.suffix = '来源实例编号无效，请刷新插件列表';
   else if (!/^[A-Za-z0-9]{1,20}$/.test(value.suffix))
     errors.suffix = '分身后缀须为 1 至 20 位字母或数字';
-  else if (pluginCloneInstanceId(source, value.suffix).length > 96)
-    errors.suffix = '完整分身编号不能超过 96 个字符，请缩短后缀';
+  else if (new TextEncoder().encode(pluginCloneInstanceId(source, value.suffix)).length > 255)
+    errors.suffix = '完整分身编号不能超过 255 个 UTF-8 字节，请缩短后缀';
   const encoder = new TextEncoder();
   for (const [key, label, limit] of [
     ['name', '名称', 256],

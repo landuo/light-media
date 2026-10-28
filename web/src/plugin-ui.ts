@@ -1,14 +1,14 @@
 import { createVuetify } from 'vuetify';
 import { aliases } from 'vuetify/iconsets/mdi';
 import { h } from 'vue';
-import { Icon, addCollection } from '@iconify/vue/offline';
+import { Icon, addCollection } from '@iconify/vue';
 import mdiIcons from './assets/material-design-icons.json';
 import './assets/plugin-utilities.css';
 import './assets/plugin-dialogs.css';
 import { pluginRemoteComponents } from './plugin-remote-components';
 
-// Original forms supply icon names, rather than SVG path data. Bundle the
-// original MDI shapes locally so every declared field icon works offline.
+// Match the reference Iconify provider: bundled icons render locally and
+// runtime plugin names use Iconify's ordinary collection loading.
 addCollection(mdiIcons);
 addCollection(mdiIcons, 'mdi-');
 

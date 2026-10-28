@@ -64,8 +64,16 @@ and null data, and does not mutate declared nested data. Unknown command names
 and case mismatches retain the original no-op behavior. Explicit `/noai` text
 escape and the original case-insensitive `/ai` prefix classification are kept.
 
-AI, image-only, ordinary message, and unimplemented built-in command branches
-return explicit 501 rather than claim to have performed those actions. Slash
+The current scoped migration also restores the ordinary text fallback as
+`user.message`, with the fixed `text`, `userid`, `channel`, `source`, `chat_id`,
+and `reply_to_message_id` fields. An actual pending input still takes precedence.
+Its fixed-source replay is `../standard-subscription-events/user-message-oracle.json`.
+The earlier bounded-stage assertion that ordinary text must return 501 is
+withdrawn; its actual red overlay evidence is retained in the current validation
+artifacts as `events36-retired-user-message-red-tests.jsonl`.
+
+AI, image-only and unimplemented built-in command branches return explicit 501.
+Slash
 commands may include image metadata: as in the original command branch, only
 text and trusted identity enter CommandExcute. This bridge does not parse image
 metadata, retrieve media URLs, or implement media business behavior.
@@ -99,14 +107,14 @@ The old standard fixture and its E2E test now use HTTP -> declared event -> actu
 event handler instead of directly invoking action as a method. Existing interval,
 same-object, Base, clone, reset, close/stop, and zero-queue assertions remain.
 
-Go/Node execution and remote mutation are prohibited in this work stage. No
-compiled-product test pass is claimed here. Build the two fixture binaries and
-set `OWNED_STANDARD_FIXTURE_BINARY` / `OWNED_COMMAND_INGRESS_FIXTURE_BINARY` when
-the parent integration stage is authorized to run Go. Relevant tests:
+The earlier analysis-stage execution restriction is historical and superseded
+by the user's authorized development/acceptance task. Actual Go SDK and Linux
+cmd/server evidence is recorded separately in
+`../plugin-module-no-official-auth-20261026/services40-result.json` and the
+current ordinary-event increment artifacts. Relevant original ingress tests:
 
 - `TestOriginalWebCommandActualSDKIngress`
 - `TestOriginalWebCommandTextSourceRules`
 - `TestOriginalStandardDirectModuleEndToEnd`
 
-The shared `http.go` attachment is supplied as `http.go.integration.patch` in the
-work directory, not edited in any shared or frozen source tree.
+The shared HTTP attachment is integrated in the current target working tree.

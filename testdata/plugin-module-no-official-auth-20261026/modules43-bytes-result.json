@@ -1,0 +1,23 @@
+{
+  "scope": "ordinary Go SDK bytes module-value increment; not full download Add implementation",
+  "source": "app/chain/__init__.py:198-206 valid-empty check and298-369 plugin scalar/list dispatch; app/chain/download.py:909-922 caller truth",
+  "target": [
+    "internal/plugins/module_bytes.go",
+    "internal/app/plugin_original_module_values.go",
+    "internal/app/plugin_original_downloader_control.go",
+    "internal/app/plugin_original_downloader_list.go"
+  ],
+  "behavior": "Explicit one-key base64 envelope retains bytes identity across JSON. Empty bytes terminate dispatch but evaluate false at business caller; JSON strings/path strings and ordinary arrays remain distinct.",
+  "verification": {
+    "sdk_log": "modules43-bytes-sdk-tests.jsonl.gz",
+    "control_source_cases": 12,
+    "list_source_cases": 11,
+    "actual_sdk_package_seconds": 11.028,
+    "codec_package_seconds": 0.884
+  },
+  "main_binding": "later than platform5; actual bytes branch must bind next main; ordinary control/list earlier cases preserve their prior evidence",
+  "remaining": [
+    "download7kw/4tuple helper compiled but not connected to actual Add; no claim of download/download_added/full Context or transfer/storage parity.",
+    "Next production main should exercise empty/full bytes through real SDK in existing controls/list."
+  ]
+}

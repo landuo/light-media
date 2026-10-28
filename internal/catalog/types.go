@@ -1,7 +1,10 @@
 // Package catalog is the application's read-only TMDB metadata client.
 package catalog
 
-import "time"
+import (
+	"encoding/json"
+	"time"
+)
 
 // Credentials are held in memory only. Configure exactly one authentication
 // method; the client never chooses a credential or a different API host itself.
@@ -96,16 +99,17 @@ type Season struct {
 }
 
 type Episode struct {
-	ID            int64        `json:"id"`
-	SeasonNumber  int          `json:"season_number"`
-	EpisodeNumber int          `json:"episode_number"`
-	Name          string       `json:"name"`
-	Overview      string       `json:"overview"`
-	AirDate       string       `json:"air_date"`
-	StillPath     string       `json:"still_path"`
-	VoteAverage   float64      `json:"vote_average"`
-	Runtime       int          `json:"runtime"`
-	GuestStars    []CastMember `json:"guest_stars"`
+	OriginalEpisode json.RawMessage `json:"original_episode,omitempty"`
+	ID              int64           `json:"id"`
+	SeasonNumber    int             `json:"season_number"`
+	EpisodeNumber   int             `json:"episode_number"`
+	Name            string          `json:"name"`
+	Overview        string          `json:"overview"`
+	AirDate         string          `json:"air_date"`
+	StillPath       string          `json:"still_path"`
+	VoteAverage     float64         `json:"vote_average"`
+	Runtime         int             `json:"runtime"`
+	GuestStars      []CastMember    `json:"guest_stars"`
 }
 
 type Person struct {

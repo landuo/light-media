@@ -1,0 +1,391 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": {
+    "app/chain/download.py": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/schemas/mediaserver.py": "250a4c0d703af9d05b8a3b5508444339edab473c9f535ee7a86f81f954db0ebd",
+    "app/schemas/types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1"
+  },
+  "boundary": "Replay the pinned ordinary DownloadChain existence decision and DTO schema.\nControlled media-server lookup and provider result; no light-media code is used.\n",
+  "cases": [
+    {
+      "name": "movie-none",
+      "kind": "movie",
+      "result": null,
+      "totals": {},
+      "season": 1,
+      "satisfied": false,
+      "missing": {},
+      "error": null,
+      "calls": [
+        {
+          "method": "media_exists",
+          "itemid": null,
+          "server": null,
+          "same_media": true
+        }
+      ]
+    },
+    {
+      "name": "movie-false",
+      "kind": "movie",
+      "result": false,
+      "totals": {},
+      "season": 1,
+      "satisfied": false,
+      "missing": {},
+      "error": null,
+      "calls": [
+        {
+          "method": "media_exists",
+          "itemid": null,
+          "server": null,
+          "same_media": true
+        }
+      ]
+    },
+    {
+      "name": "movie-present",
+      "kind": "movie",
+      "result": {
+        "type": "电影"
+      },
+      "totals": {},
+      "season": 1,
+      "satisfied": true,
+      "missing": {},
+      "error": null,
+      "calls": [
+        {
+          "method": "media_exists",
+          "itemid": null,
+          "server": null,
+          "same_media": true
+        }
+      ]
+    },
+    {
+      "name": "tv-none",
+      "kind": "tv",
+      "result": null,
+      "totals": {},
+      "season": 1,
+      "satisfied": false,
+      "missing": {
+        "900043": {
+          "1": {
+            "season": 1,
+            "episodes": [],
+            "total_episode": 3,
+            "start_episode": 1,
+            "require_complete_coverage": false
+          }
+        }
+      },
+      "error": null,
+      "calls": [
+        {
+          "method": "media_exists",
+          "itemid": null,
+          "server": null,
+          "same_media": true
+        }
+      ]
+    },
+    {
+      "name": "tv-false",
+      "kind": "tv",
+      "result": false,
+      "totals": {},
+      "season": 1,
+      "satisfied": false,
+      "missing": {
+        "900043": {
+          "1": {
+            "season": 1,
+            "episodes": [],
+            "total_episode": 3,
+            "start_episode": 1,
+            "require_complete_coverage": false
+          }
+        }
+      },
+      "error": null,
+      "calls": [
+        {
+          "method": "media_exists",
+          "itemid": null,
+          "server": null,
+          "same_media": true
+        }
+      ]
+    },
+    {
+      "name": "tv-partial",
+      "kind": "tv",
+      "result": {
+        "seasons": {
+          "1": [
+            1,
+            3
+          ]
+        }
+      },
+      "totals": {},
+      "season": 1,
+      "satisfied": false,
+      "missing": {
+        "900043": {
+          "1": {
+            "season": 1,
+            "episodes": [
+              2
+            ],
+            "total_episode": 3,
+            "start_episode": 2,
+            "require_complete_coverage": false
+          }
+        }
+      },
+      "error": null,
+      "calls": [
+        {
+          "method": "media_exists",
+          "itemid": null,
+          "server": null,
+          "same_media": true
+        }
+      ]
+    },
+    {
+      "name": "tv-complete",
+      "kind": "tv",
+      "result": {
+        "seasons": {
+          "1": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "totals": {},
+      "season": 1,
+      "satisfied": true,
+      "missing": {},
+      "error": null,
+      "calls": [
+        {
+          "method": "media_exists",
+          "itemid": null,
+          "server": null,
+          "same_media": true
+        }
+      ]
+    },
+    {
+      "name": "tv-empty-season",
+      "kind": "tv",
+      "result": {
+        "seasons": {
+          "1": []
+        }
+      },
+      "totals": {},
+      "season": 1,
+      "satisfied": false,
+      "missing": {
+        "900043": {
+          "1": {
+            "season": 1,
+            "episodes": [],
+            "total_episode": 3,
+            "start_episode": 1,
+            "require_complete_coverage": false
+          }
+        }
+      },
+      "error": null,
+      "calls": [
+        {
+          "method": "media_exists",
+          "itemid": null,
+          "server": null,
+          "same_media": true
+        }
+      ]
+    },
+    {
+      "name": "tv-other-season",
+      "kind": "tv",
+      "result": {
+        "seasons": {
+          "2": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "totals": {},
+      "season": 1,
+      "satisfied": false,
+      "missing": {
+        "900043": {
+          "1": {
+            "season": 1,
+            "episodes": [],
+            "total_episode": 3,
+            "start_episode": 1,
+            "require_complete_coverage": false
+          }
+        }
+      },
+      "error": null,
+      "calls": [
+        {
+          "method": "media_exists",
+          "itemid": null,
+          "server": null,
+          "same_media": true
+        }
+      ]
+    },
+    {
+      "name": "tv-custom-total",
+      "kind": "tv",
+      "result": {
+        "seasons": {
+          "1": [
+            1,
+            3
+          ]
+        }
+      },
+      "totals": {
+        "1": 5
+      },
+      "season": 1,
+      "satisfied": false,
+      "missing": {
+        "900043": {
+          "1": {
+            "season": 1,
+            "episodes": [
+              2,
+              4,
+              5
+            ],
+            "total_episode": 5,
+            "start_episode": 2,
+            "require_complete_coverage": false
+          }
+        }
+      },
+      "error": null,
+      "calls": [
+        {
+          "method": "media_exists",
+          "itemid": null,
+          "server": null,
+          "same_media": true
+        }
+      ]
+    },
+    {
+      "name": "tv-numeric-equality",
+      "kind": "tv",
+      "result": {
+        "seasons": {
+          "1": [
+            true,
+            2.0,
+            "3"
+          ]
+        }
+      },
+      "totals": {},
+      "season": 1,
+      "satisfied": false,
+      "missing": {
+        "900043": {
+          "1": {
+            "season": 1,
+            "episodes": [
+              3
+            ],
+            "total_episode": 3,
+            "start_episode": 3,
+            "require_complete_coverage": false
+          }
+        }
+      },
+      "error": null,
+      "calls": [
+        {
+          "method": "media_exists",
+          "itemid": null,
+          "server": null,
+          "same_media": true
+        }
+      ]
+    },
+    {
+      "name": "tv-null-seasons",
+      "kind": "tv",
+      "result": {
+        "seasons": null
+      },
+      "totals": {},
+      "season": 1,
+      "satisfied": null,
+      "missing": null,
+      "error": "AttributeError",
+      "calls": [
+        {
+          "method": "media_exists",
+          "itemid": null,
+          "server": null,
+          "same_media": true
+        }
+      ]
+    },
+    {
+      "name": "tv-season-zero",
+      "kind": "tv",
+      "result": {
+        "seasons": {
+          "0": [
+            1,
+            3
+          ]
+        }
+      },
+      "totals": {},
+      "season": 0,
+      "satisfied": false,
+      "missing": {
+        "900043": {
+          "0": {
+            "season": 0,
+            "episodes": [
+              2
+            ],
+            "total_episode": 3,
+            "start_episode": 2,
+            "require_complete_coverage": false
+          }
+        }
+      },
+      "error": null,
+      "calls": [
+        {
+          "method": "media_exists",
+          "itemid": null,
+          "server": null,
+          "same_media": true
+        }
+      ]
+    }
+  ]
+}

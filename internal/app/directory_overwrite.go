@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"light-media/internal/fileextensions"
+	"light-media/internal/plugins"
 	"light-media/internal/transferextensions"
 	"light-media/internal/transferoverwrite"
 )
@@ -72,23 +73,34 @@ func (a *App) guardDirectoryOverwritePolicy(ctx context.Context, p importOverwri
 	return nil
 }
 func (a *App) overwriteDispatcher(ctx context.Context) (transferoverwrite.Dispatch, error) {
-	rows, e := a.Store.DB.QueryContext(ctx, `SELECT plugin_id,version FROM plugin_installations WHERE installed=1 ORDER BY instance_id`)
-	if e != nil {
-		return nil, e
+	if err := ctx.Err(); err != nil {
+		return nil, err
 	}
-	defer rows.Close()
-	installed := []transferoverwrite.Installation{}
-	for rows.Next() {
-		var i transferoverwrite.Installation
-		if e = rows.Scan(&i.ID, &i.Version); e != nil {
-			return nil, e
+	// The platform now has the real ordinary event registry. An installation
+	// allowlist cannot stand in for dispatch: new plugins and clones participate
+	// with their current enabled state and source mutation/error semantics.
+	return func(ctx context.Context, input transferoverwrite.Event) (*transferoverwrite.Event, error) {
+		raw, err := json.Marshal(input)
+		if err != nil {
+			return nil, err
 		}
-		installed = append(installed, i)
-	}
-	if e = rows.Err(); e != nil {
-		return nil, e
-	}
-	return transferoverwrite.AuditedDispatcher(installed)
+		event := &plugins.MutableEvent{Type: transferoverwrite.EventType, Data: raw}
+		if !a.sendOriginalChainEvent(ctx, event) || !originalBaseJSONTruthy(event.Data) {
+			return nil, nil
+		}
+		// Only these output fields are read by the source caller. Changes to
+		// target_path, fileitem or transfer_type do not authorize another write.
+		var result struct {
+			Overwrite  *bool    `json:"overwrite"`
+			SourceSize *big.Int `json:"source_size"`
+			TargetSize *big.Int `json:"target_size"`
+			Reason     string   `json:"reason"`
+		}
+		if err := json.Unmarshal(event.Data, &result); err != nil {
+			return nil, bad("PLUGIN_EVENT_INVALID", "整理覆盖事件返回的字段无效")
+		}
+		return &transferoverwrite.Event{Overwrite: result.Overwrite, SourceSize: result.SourceSize, TargetSize: result.TargetSize, Reason: result.Reason}, nil
+	}, nil
 }
 func overwriteFileItem(path string, stamp importSnapshot) transferoverwrite.FileItem {
 	when := time.Unix(0, stamp.ModNS)
@@ -173,6 +185,7 @@ func (a *App) readDirectoryOverwrite(ctx context.Context, key, source, target, r
 	op.ExtensionInputSHA = observed.Handler.InputSHA
 	input := transferoverwrite.Input{Policy: policy.Policy, Source: overwriteFileItem(source, stamp), TargetKnown: true, TargetPath: target, TargetStorage: "local", TransferType: map[string]string{"hardlink": "link", "copy": "copy"}[method], Extra: handler.Extra(transferextensions.PathFile(source))}
 	targetStamp, e := snapshotPath(target)
+	actualTargetExists := e == nil
 	if e == nil {
 		item := overwriteFileItem(target, targetStamp)
 		input.Target = &item
@@ -187,6 +200,21 @@ func (a *App) readDirectoryOverwrite(ctx context.Context, key, source, target, r
 		}
 	}
 	dispatch, e := a.overwriteDispatcher(ctx)
+	if pair := originalTransferStorageFromContext(ctx); pair != nil && pair.Target != nil {
+		raw, err := pair.Target.call(ctx, "get_item_strict", nil, target, nil, "")
+		if err != nil {
+			return op, bad("PLUGIN_STORAGE_QUERY", "无法确认插件目标文件状态，未覆盖："+target)
+		}
+		if originalModuleResultTruthy(raw) {
+			var item transferoverwrite.FileItem
+			if json.Unmarshal(raw, &item) != nil {
+				return op, bad("PLUGIN_STORAGE_INVALID", "插件目标文件信息无效")
+			}
+			input.Target = &item
+		} else {
+			input.Target = nil
+		}
+	}
 	if e != nil {
 		return op, e
 	}
@@ -198,7 +226,7 @@ func (a *App) readDirectoryOverwrite(ctx context.Context, key, source, target, r
 		return op, bad("TRANSFER_OVERWRITE_DENIED", op.Decision.Reason)
 	}
 	paths := []string{}
-	if input.Target != nil && op.Decision.Overwrite {
+	if actualTargetExists && input.Target != nil && op.Decision.Overwrite {
 		paths = append(paths, target)
 	}
 	if op.Decision.DeleteVersions || !policy.Policy.Known && !input.Extra && input.Target == nil {
@@ -263,6 +291,9 @@ func (a *App) directoryOverwriteLatestCandidates(ctx context.Context, target str
 	want, e := a.overwritePathIdentity(ctx, target, snapshot)
 	if e != nil {
 		return nil, e
+	}
+	if paths, used, err := a.originalStorageLatestCandidates(ctx, target, snapshot, want, classifier); used {
+		return paths, err
 	}
 	dir, e := importDir(filepath.Dir(target), false)
 	if errors.Is(e, os.ErrNotExist) {

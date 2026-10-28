@@ -24,12 +24,16 @@ func TestCatalogExplorePreferencesPersistDeduplicateAndComplete(t *testing.T) {
 	if err != nil || !reflect.DeepEqual(got.TabOrder, want) {
 		t.Fatalf("persisted=%+v err=%v", got, err)
 	}
-	if _, err = a.saveCatalogExplorePreferences(ctx, ExplorePreferences{TabOrder: []string{"unknown"}}); err == nil {
-		t.Fatal("unknown source accepted")
+	// Plugin prefixes are source-owned opaque strings and can be temporarily
+	// absent. Fixed user/config/DiscoverTabOrder retains those keys.
+	want = append([]string{"owned:ordinary"}, want...)
+	got, err = a.saveCatalogExplorePreferences(ctx, ExplorePreferences{TabOrder: want})
+	if err != nil || !reflect.DeepEqual(got.TabOrder, want) {
+		t.Fatal("plugin prefix not accepted/preserved", err)
 	}
 	got, err = reader.catalogExplorePreferences(ctx)
 	if err != nil || !reflect.DeepEqual(got.TabOrder, want) {
-		t.Fatal("invalid update replaced preference")
+		t.Fatal("plugin prefix lost across facade", err)
 	}
 	got, err = a.saveCatalogExplorePreferences(ctx, ExplorePreferences{})
 	if err != nil || !reflect.DeepEqual(got.TabOrder, defaults) {

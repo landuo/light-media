@@ -12,26 +12,33 @@ import (
 	"time"
 
 	"light-media/internal/catalog"
+	"light-media/internal/decision"
 	"light-media/internal/media"
 	"light-media/internal/priorityrules"
 	"light-media/internal/sites"
 )
 
 type priorityFilter struct {
-	engine    *priorityrules.Engine
-	names     []string
-	media     *priorityrules.Media
-	siteNames map[string]string
+	engine      *priorityrules.Engine
+	names       []string
+	media       *priorityrules.Media
+	siteNames   map[string]string
+	policy      Policy
+	sourceMedia *sourceMediaInformation
+	target      *decision.Target
 }
 
 func (a *App) preparePriorityFilter(ctx context.Context, in SearchRequest, settings Settings) (priorityFilter, error) {
-	filter := priorityFilter{}
+	filter := priorityFilter{policy: in.Policy, sourceMedia: in.originalSearchInfo, target: in.priorityTarget}
 	if err := validateSubscriptionPolicy(in.Policy); err != nil {
 		return filter, err
 	}
 	config := settings.PriorityRules
 	if config == nil {
-		return filter, nil
+		if len(in.Policy.FilterGroups) == 0 {
+			return filter, nil
+		}
+		config = &priorityrules.Configuration{}
 	}
 	filter.names = append([]string{}, in.Policy.FilterGroups...)
 	if len(filter.names) == 0 {
@@ -54,6 +61,10 @@ func (a *App) preparePriorityFilter(ctx context.Context, in SearchRequest, setti
 		filter.siteNames[site.ID] = site.Name
 	}
 	if in.priorityMedia != nil {
+		if filter.sourceMedia != nil {
+			filter.media, err = originalPrioritySourceMedia(filter.sourceMedia.MediaInfo)
+			return filter, err
+		}
 		identity := *in.priorityMedia
 		var category *string
 		for _, group := range config.Groups {
@@ -104,6 +115,16 @@ func priorityMedia(identity catalog.Media, category *string) *priorityrules.Medi
 	return &priorityrules.Media{Type: typeName, Category: category, Attributes: attributes}
 }
 func (filter priorityFilter) apply(ctx context.Context, a *App, out SearchOutput) (SearchOutput, error) {
+	if filter.engine != nil && filter.sourceMedia != nil && len(filter.names) > 0 && len(out.Candidates) > 0 {
+		return a.originalMediaFilterResources(ctx, filter, out)
+	}
+	if filter.engine != nil && filter.media == nil && len(filter.names) > 0 && len(out.Candidates) > 0 {
+		return a.originalTitleFilterResources(ctx, filter, out)
+	}
+	return filter.applyNative(ctx, a, out)
+}
+
+func (filter priorityFilter) applyNative(ctx context.Context, a *App, out SearchOutput) (SearchOutput, error) {
 	if filter.engine == nil {
 		return out, nil
 	}
@@ -127,6 +148,23 @@ func (filter priorityFilter) apply(ctx context.Context, a *App, out SearchOutput
 		// words, independently of the candidate's local MetaInfo. Sorting below
 		// uses that selected local context; these are deliberately separate scopes.
 		torrents[i] = priorityrules.Torrent{Title: resource.Title, Description: description, Labels: resource.Labels, Size: resource.Size, Seeders: resource.Seeders, DownloadFactor: resource.DownloadFactor, AgeMinutes: age, Priority: resource.PriorityOrder, SiteName: filter.siteNames[resource.SiteID], EpisodeResolver: func() (int, error) { return a.priorityEpisodeCount(resource) }}
+		if model := candidate.originalFilterModel; model != nil {
+			raw, err := model.sourceJSON()
+			if err != nil {
+				return out, err
+			}
+			value, err := decodeSourceJSON(raw)
+			if err != nil || sourceMap(value) == nil {
+				return out, originalResourceProjectionError()
+			}
+			fields := sourceMap(value)
+			torrents[i].Fields = fields
+			torrents[i].SiteName = sourceText(fields["site_name"])
+			torrents[i].Description = nil
+			if text, ok := fields["description"].(string); ok {
+				torrents[i].Description = &text
+			}
+		}
 	}
 	matches, err := filter.engine.Filter(ctx, filter.names, torrents, filter.media)
 	if err != nil {
@@ -147,6 +185,14 @@ func (filter priorityFilter) apply(ctx context.Context, a *App, out SearchOutput
 	for _, match := range matches {
 		candidate := out.Candidates[match.Index]
 		candidate.Resource.PriorityOrder = match.Priority
+		if model := candidate.originalFilterModel; model != nil {
+			var fields map[string]json.RawMessage
+			if json.Unmarshal(model.value, &fields) != nil || fields == nil {
+				return out, originalResourceProjectionError()
+			}
+			fields["pri_order"], _ = json.Marshal(match.Priority)
+			model.value, _ = json.Marshal(fields)
+		}
 		filtered = append(filtered, candidate)
 	}
 	out.Candidates = filtered

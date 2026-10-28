@@ -427,5 +427,53 @@
   ],
   "invalid_binding_rejected": true,
   "disable_after_submission_skips_at_execution": true,
+  "chain_enabled_snapshot_rechecked_before_each_handler": true,
+  "chain_later_falsey_mutation_preserved": true,
+  "constructor_cases": [
+    {
+      "input_json": "null",
+      "data": {}
+    },
+    {
+      "input_json": "false",
+      "data": {}
+    },
+    {
+      "input_json": "0",
+      "data": {}
+    },
+    {
+      "input_json": "-0.0",
+      "data": {}
+    },
+    {
+      "input_json": "1e-10000",
+      "data": {}
+    },
+    {
+      "input_json": "\"\"",
+      "data": {}
+    },
+    {
+      "input_json": "[]",
+      "data": {}
+    },
+    {
+      "input_json": "{}",
+      "data": {}
+    },
+    {
+      "input_json": "9007199254740993123456789",
+      "data": 9007199254740993123456789
+    },
+    {
+      "input_json": "[false]",
+      "data": [
+        false
+      ]
+    }
+  ],
+  "queued_callback_resolves_current_class": true,
+  "unloaded_callback_is_noop": true,
   "scope": "Pinned Python method execution with owned scheduler stubs; not a Go or IPC test."
 }

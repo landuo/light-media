@@ -16,12 +16,16 @@ import (
 )
 
 type assetRemovalFile struct {
-	Path        string         `json:"path"`
-	Snapshot    importSnapshot `json:"snapshot"`
-	Kind        string         `json:"kind"`
-	Deleted     bool           `json:"deleted"`
-	Quarantine  string         `json:"quarantine,omitempty"`
-	Quarantined bool           `json:"quarantined,omitempty"`
+	DirectoryRetained       bool           `json:"directory_retained,omitempty"`
+	DirectoryParentOnly     bool           `json:"directory_parent_only,omitempty"`
+	DirectoryRemovalStarted bool           `json:"directory_removal_started,omitempty"`
+	SourceOperation         string         `json:"source_operation,omitempty"`
+	Path                    string         `json:"path"`
+	Snapshot                importSnapshot `json:"snapshot"`
+	Kind                    string         `json:"kind"`
+	Deleted                 bool           `json:"deleted"`
+	Quarantine              string         `json:"quarantine,omitempty"`
+	Quarantined             bool           `json:"quarantined,omitempty"`
 }
 type assetRemovalPreview struct {
 	ID       string             `json:"preview_id"`
@@ -62,7 +66,12 @@ func (a *App) assetAPI(w http.ResponseWriter, r *http.Request, p string) (any, e
 	case "sync", "fnos-sync":
 		return a.enqueue(ctx, "fnos_sync", map[string]string{"id": asset.ID}, id("wf_"))
 	case "remove-preview":
-		return a.previewAssetRemoval(ctx, asset)
+		preview, err := a.previewAssetRemoval(ctx, asset)
+		preview.Files = append([]assetRemovalFile(nil), preview.Files...)
+		for index := range preview.Files {
+			preview.Files[index].SourceOperation = ""
+		}
+		return preview, err
 	case "remove":
 		var in struct {
 			PreviewID   string `json:"preview_id"`
@@ -340,15 +349,15 @@ func removalLocation(file assetRemovalFile) (string, error) {
 		return "", bad("REVIEW_MANAGED_FILE", "删除暂存收据无效")
 	}
 	quarantine := filepath.Join(filepath.Dir(file.Path), file.Quarantine)
-	if current, err := snapshotPath(quarantine); err == nil {
-		if current != file.Snapshot {
+	if current, err := snapshotTransferPath(quarantine); err == nil {
+		if current != file.Snapshot && !(file.DirectoryRemovalStarted && file.Snapshot.Directory != "" && current.Directory != "" && sameInode(current, file.Snapshot)) {
 			return "", bad("REVIEW_MANAGED_FILE", "删除暂存文件指纹不符")
 		}
 		return "quarantine", nil
 	} else if !os.IsNotExist(err) {
 		return "", bad("REVIEW_MANAGED_FILE", "删除暂存路径不可安全访问")
 	}
-	current, err := snapshotPath(file.Path)
+	current, err := snapshotTransferPath(file.Path)
 	if err == nil && current == file.Snapshot {
 		return "source", nil
 	}

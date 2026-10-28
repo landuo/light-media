@@ -1,0 +1,171 @@
+{
+  "commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "path": "src/components/cards/DirectoryCard.vue",
+  "sha256": "a63d51a3787cc0b665659888322372284b6ad3b0c0ee479f4eff769ed2fd1f6a",
+  "start_line": 129,
+  "code": "\"use strict\";\nasync function loadTransferTypeItems() {\n    // 参数不全时不查询\n    if (!props.directory.library_storage || !props.directory.storage)\n        return;\n    try {\n        // 下载器储存整理方法\n        const storage_res = await api.get(`storage/transtype/${props.directory.storage}`);\n        const storage_transtype = storage_res.transtype;\n        // 媒体库储存整理方法\n        const library_storage_res = await api.get(`storage/transtype/${props.directory.library_storage}`);\n        const library_storage_transtype = library_storage_res.transtype;\n        // 为空终止\n        if (!library_storage_transtype || !storage_transtype)\n            return;\n        // 取并集\n        const transtype = {};\n        Object.keys(storage_transtype).forEach(key => {\n            if (key in library_storage_transtype) {\n                transtype[key] = storage_transtype[key];\n            }\n        });\n        // 非空时设置整理方式下拉字典\n        if (transtype && Object.keys(transtype).length > 0) {\n            transferTypeItems.value = Object.keys(transtype).map(key => ({\n                title: transtype[key],\n                value: key,\n            }));\n            // 如果整理方式下拉字典不为空，且当前值不在新的transferTypeItems里，则设置整理方式为第一个\n            if (transferTypeItems.value.length > 0 &&\n                !transferTypeItems.value.find(item => item.value === props.directory.transfer_type)) {\n                nextTick(() => {\n                    props.directory.transfer_type = transferTypeItems.value[0].value;\n                });\n            }\n            // 如果整理方式下拉字典为空，清空整理方式\n            if (transferTypeItems.value.length === 0) {\n                props.directory.transfer_type = '';\n            }\n        }\n        else {\n            // 无可用整理方式，清除已选值\n            transferTypeItems.value = [];\n            props.directory.transfer_type = '';\n        }\n    }\n    catch (e) {\n        console.log(e);\n    }\n}\n",
+  "cases": [
+    {
+      "input": {
+        "name": "intersection_and_source_order",
+        "mode": "auto",
+        "source": {
+          "copy": "来源复制",
+          "link": "来源硬链"
+        },
+        "destination": {
+          "link": "目的硬链",
+          "copy": "目的复制"
+        }
+      },
+      "calls": [
+        "storage/transtype/local",
+        "storage/transtype/local"
+      ],
+      "errors": 0,
+      "beforeTick": "auto",
+      "mode": "copy",
+      "items": [
+        {
+          "title": "来源复制",
+          "value": "copy"
+        },
+        {
+          "title": "来源硬链",
+          "value": "link"
+        }
+      ],
+      "ticks": 1
+    },
+    {
+      "input": {
+        "name": "keep_current",
+        "mode": "link",
+        "source": {
+          "copy": "复制",
+          "link": "硬链"
+        },
+        "destination": {
+          "link": "目的硬链",
+          "copy": "目的复制"
+        }
+      },
+      "calls": [
+        "storage/transtype/local",
+        "storage/transtype/local"
+      ],
+      "errors": 0,
+      "beforeTick": "link",
+      "mode": "link",
+      "items": [
+        {
+          "title": "复制",
+          "value": "copy"
+        },
+        {
+          "title": "硬链",
+          "value": "link"
+        }
+      ],
+      "ticks": 0
+    },
+    {
+      "input": {
+        "name": "empty_clear",
+        "mode": "link",
+        "source": {
+          "copy": "复制"
+        },
+        "destination": {
+          "link": "硬链"
+        }
+      },
+      "calls": [
+        "storage/transtype/local",
+        "storage/transtype/local"
+      ],
+      "errors": 0,
+      "beforeTick": "",
+      "mode": "",
+      "items": [],
+      "ticks": 0
+    },
+    {
+      "input": {
+        "name": "null_preserves",
+        "mode": "link",
+        "source": null,
+        "destination": {
+          "copy": "复制"
+        }
+      },
+      "calls": [
+        "storage/transtype/local",
+        "storage/transtype/local"
+      ],
+      "errors": 0,
+      "beforeTick": "link",
+      "mode": "link",
+      "items": [
+        {
+          "title": "已有硬链",
+          "value": "link"
+        }
+      ],
+      "ticks": 0
+    },
+    {
+      "input": {
+        "name": "second_failure_preserves",
+        "mode": "link",
+        "source": {
+          "copy": "复制"
+        },
+        "destination": {
+          "copy": "复制"
+        },
+        "fail": 2
+      },
+      "calls": [
+        "storage/transtype/local",
+        "storage/transtype/local"
+      ],
+      "errors": 1,
+      "beforeTick": "link",
+      "mode": "link",
+      "items": [
+        {
+          "title": "已有硬链",
+          "value": "link"
+        }
+      ],
+      "ticks": 0
+    },
+    {
+      "input": {
+        "name": "first_failure_preserves",
+        "mode": "link",
+        "source": {
+          "copy": "复制"
+        },
+        "destination": {
+          "copy": "复制"
+        },
+        "fail": 1
+      },
+      "calls": [
+        "storage/transtype/local"
+      ],
+      "errors": 1,
+      "beforeTick": "link",
+      "mode": "link",
+      "items": [
+        {
+          "title": "已有硬链",
+          "value": "link"
+        }
+      ],
+      "ticks": 0
+    }
+  ]
+}

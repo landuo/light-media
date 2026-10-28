@@ -1,0 +1,199 @@
+{
+  "accepted_increment": true,
+  "complete": false,
+  "indices": [
+    36,
+    37,
+    43
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "mapping": [
+    {
+      "source": [
+        "app/chain/transfer.py:661-673,1338,1427-1474,1888,3679",
+        "app/chain/__init__.py:1402-1424,1478-1484"
+      ],
+      "behavior": "After physical callbacks, require every registered task to be finished (failed also counts), query the whole torrent using string hashs plus downloader name and status=None/include_all_tags=False; empty/unknown/incomplete progress suppresses marking. Recheck tasks after the query before calling transfer_completed. Retry completed but untagged history without republishing files.",
+      "target": [
+        "internal/app/plugin_original_transfer_completed.go",
+        "internal/app/job_completion.go:finishJob",
+        "internal/app/search_download.go:pollDownloads"
+      ],
+      "evidence": [
+        "transfer-completed-source-oracle.json:11 source guard cases",
+        "TestOriginalTransferCompletedFixedSourceProgress",
+        "TestOriginalTransferCompletedActualImportSDK",
+        "TestOriginalTransferCompletedPendingAndNewTask",
+        "completed42r3-cli-evidence/completed42-cli.json",
+        "completed42r3-browser-verdict.json"
+      ]
+    },
+    {
+      "source": [
+        "app/modules/qbittorrent/__init__.py:455-465",
+        "app/modules/transmission/__init__.py:454-472",
+        "app/modules/qbittorrent/qbittorrent.py:336-347",
+        "app/modules/transmission/transmission.py:168-201"
+      ],
+      "behavior": "None/list continues into the native provider; False or another scalar ends dispatch. QB adds the organized tag; TR reads/trims existing labels and writes their union with the tag. Protocol write errors are logged and swallowed by the source helper, without SystemError. Source wrapper ignores the native helper return value.",
+      "target": [
+        "internal/app/plugin_original_transfer_completed.go:originalTransferDownloaderModule",
+        "internal/download/native.go:SetTorrentTags"
+      ],
+      "evidence": [
+        "transfer-completed-source-oracle.json:4 native wrappers +4 actual protocol helpers",
+        "TestOriginalTransferCompletedActualImportSDK:11 scenarios including SDK list/tuple, native partial/failure/restore and TR duplicate labels",
+        "Linux source False/clone False/None native tag cases"
+      ]
+    },
+    {
+      "source": [
+        "app/chain/transfer.py:1630-1635,1697-1770",
+        "existing target generation/cancellation and recoverable publication contract"
+      ],
+      "behavior": "Known native cancellation after plugin fallback is a stopped execution, not a frozen physical failure. Resume the existing native publisher under the new job generation; keep the prior plugin decision and all ownership guards. Unknown plugin results and explicit plugin refusal remain frozen.",
+      "target": [
+        "internal/app/import_run.go:OriginalNativeInterrupted",
+        "internal/app/plugin_original_transfer_module.go:originalTransferModulePublish",
+        "internal/app/plugin_original_transfer_target.go:transitionOriginalTransferTargetAt"
+      ],
+      "evidence": [
+        "IAB79 failed retry with no target (red)",
+        "TestOriginalTransferCompletedCancelledNativeResume",
+        "IAB80 and IAB81 cancelled -> actual cold restart -> UI retry -> real same-inode hardlink -> second cold restart with zero invocation replay"
+      ]
+    }
+  ],
+  "results": {
+    "final_build": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform42r3-20261027-linux",
+          "sha256": "6a883147fdb13963b59613bbde4f61e589083a24921666673a1385266a4e3ff0",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform42r3-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3724,
+          "changed": [],
+          "elapsed_seconds": 3.69
+        },
+        {
+          "name": "process-platform42r3-20261027-linux.test",
+          "sha256": "75d475ef7db4774bd8fa0eec495be263a34f42092d435f1f3f9da3085669d52f",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform42r3-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4196,
+          "changed": [],
+          "elapsed_seconds": 7.71
+        }
+      ]
+    },
+    "related_seconds": 6.823,
+    "final_focused_race_seconds": 23.517,
+    "unchanged_cancellation_target_and_module_regression_race_seconds": 106.768,
+    "linux_cli_seconds": 2.11,
+    "linux_browser_gate_seconds": 238.07,
+    "browser": {
+      "pass": true,
+      "variant": "completed42r3",
+      "source_pids": [
+        750744,
+        751706,
+        751706,
+        754328
+      ],
+      "clone_pids": [
+        750751,
+        751713,
+        751713,
+        754342
+      ],
+      "history_count": 4,
+      "real_hardlink": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/completed42r3-ui-tmp/TestPluginServicesProductionCLI986687999/002/library/Completion3 (2024)/Completion3 (2024).mkv",
+        "size": 22,
+        "inode": 40006212,
+        "device": 65025,
+        "sha256": "3c1dbf595fb5dab4d49eb6e00c5b240b935dc1d4da445ec64e5b87fa484ddb37"
+      },
+      "tag_writes": 2,
+      "cold_cancelled_to_ui_retry": true,
+      "plugin_execution_replay": false,
+      "cold_success_replay": false
+    },
+    "older_versions": {
+      "main42": "76bb98cb: CLI2.06s pass, IAB79/240.15s failed cancellation retry; not current success evidence",
+      "main42r2": "2e3eecc1: CLI2.17s, IAB80/383.34s pass; protocol catch/label refinement is only in r3"
+    }
+  },
+  "failures_fixed": [
+    {
+      "evidence": "completed42-ui-red.log; completed42-browser-after-retry.json",
+      "cause": "Cancelled native fallback was frozen as failed TransferInfo and generated a physical failure callback, so retry returned the old cancellation.",
+      "fix": "Persist only the known native interruption flag, resume native publication without replaying plugins, and do not emit a physical callback from an invalidated execution."
+    },
+    {
+      "evidence": "completed42-local-r1.log",
+      "cause": "Test setup changed an already sealed preview to add intent identity. Production rejected the changed authority correctly.",
+      "fix": "Generate a fresh real preview with intent identity; do not weaken the plan seal."
+    }
+  ],
+  "adaptations": [
+    "Native persistent jobs replace the source in-memory job view. Check existing nonterminal import jobs by their owned torrent hash; cancelled jobs correspond to removed source tasks. One native grouped job waits for committed callbacks of its selected files before the completion check.",
+    "Download selection uses the configured native downloader ID internally, then passes its source-facing name to both ordinary module wrappers. Only configured enabled peers with an unchanged destination snapshot and actual task ownership can receive native tag writes.",
+    "TR native ownership read failure stops mutation rather than overwriting unknown labels; source protocol helper can proceed after returning an empty tag list. This retains the existing target ownership guard.",
+    "TR set iteration order is undefined in Python; Go preserves first occurrence after trimming/deduplication. Compare label sets for wire order neutrality.",
+    "Post-commit completion runs before broadcasting the closed scrape batch; the existing transaction commits tasks and prepares the native scrape job before external HTTP effects. File/history ownership remains transactional.",
+    "Downloaded intents and byte fixtures are explicit synthetic setup. SDK/Main invocations, HTTP protocol effects, file links, SQLite state, browser actions and cold processes are real. No real user download, external metadata account or old MoviePilot service is used.",
+    "Python is only a test-time fixed-source oracle; runtime remains Go. Existing frontend bundle is unchanged and covered by each actual compiler embed input manifest."
+  ],
+  "limits": [
+    "Whole36/37/43/50 remain open. Directory-unit/bluray, source event downloader-name fields and final 197-method/199-call/81-event host applicability audit are not claimed.",
+    "TR/error wire paths are real SDK+owned protocol replay; the production Linux/browser workflow uses the owned qB peer."
+  ],
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-completed-42-20261028/manifest.json",
+  "cleanup": {
+    "iab79_80_81_closed": true,
+    "tunnels34459_34460_34461_stopped": true,
+    "final_source_clone_uninstalled_api404": true,
+    "final_test_process_completed": true,
+    "owned_data_removed": [
+      {
+        "run": "completed42",
+        "owned_data_and_files_removed": true
+      },
+      {
+        "run": "completed42r2",
+        "owned_data_and_files_removed": true
+      },
+      {
+        "run": "completed42r3",
+        "owned_data_and_files_removed": true
+      }
+    ]
+  },
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "uncommitted": true,
+    "pushed": false,
+    "deployed": false
+  }
+}

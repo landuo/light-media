@@ -33,8 +33,11 @@ func TestPublicPluginServicesAuthAndCrossSiteGETGuard(t *testing.T) {
 			t.Fatal("cross-site GET executor accepted", header, w.Code, w.Body.String())
 		}
 	}
-	if w := callTest(t, h, "GET", "/api/v1/system/runscheduler?jobid=missing", "", cookie, ""); w.Code != 400 || !strings.Contains(w.Body.String(), "PLUGIN_SERVICE_NOT_FOUND") {
-		t.Fatal("arbitrary command admitted", w.Code, w.Body.String())
+	if w := callTest(t, h, "GET", "/api/v1/system/runscheduler?jobid=missing", "", cookie, ""); w.Code != 200 || !strings.Contains(w.Body.String(), `"success":true`) {
+		t.Fatal("original missing-service no-op response changed", w.Code, w.Body.String())
+	}
+	if w := callTest(t, h, "POST", "/api/plugins/services/run", `{"instance_id":"missing","service_id":"missing"}`, cookie, ""); w.Code != 400 || !strings.Contains(w.Body.String(), "PLUGIN_SERVICE_NOT_FOUND") {
+		t.Fatal("native service endpoint lost explicit missing-service response", w.Code, w.Body.String())
 	}
 }
 

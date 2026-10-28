@@ -1,26 +1,30 @@
-// Owned protocol fixture only. No message-provider or business-plugin logic.
+// Owned protocol fixture. Its optional menu provider posts only to a test sink.
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"light-media/internal/plugins"
+	"net/http"
 	"os"
 	"strconv"
 	"sync"
+	"time"
 )
 
 var pluginID = "OwnedCommandMutator"
 var priority = "0"
 var shorthand = "false"
+var eventType = "command.register"
 
 func manifest() plugins.Manifest {
 	p, _ := strconv.Atoi(priority)
 	m := plugins.Manifest{SchemaVersion: 1, PluginID: pluginID, Name: "Owned command registration fixture", Version: "1.0", Runtime: "go-executable", Entry: "owned-command-register-fixture", HostAPIMin: 1, HostAPIMax: 1,
-		Methods: []string{"init", "get_state", "get_service", "get_command", "get_api", "get_render_mode", "get_form", "get_page", "get_dashboard", "get_sidebar_nav", "event", "chain_first", "chain_second", "close", "stop_service", "stop"}, Capabilities: plugins.BaseMethods(),
-		Events: []string{"command.register"}, ChainHandlers: []plugins.ChainHandler{{Event: "command.register", Method: "chain_first", Priority: &p}, {Event: "command.register", Method: "chain_second", Priority: &p}}}
+		Methods: []string{"init", "get_state", "get_service", "get_command", "get_api", "get_render_mode", "get_form", "get_page", "get_dashboard", "get_sidebar_nav", "get_module", "recognize_media", "async_recognize_media", "register_menu", "event", "chain_first", "chain_second", "close", "stop_service", "stop"}, Capabilities: plugins.BaseMethods(),
+		Events: []string{eventType}, ChainHandlers: []plugins.ChainHandler{{Event: eventType, Method: "chain_first", Priority: &p}, {Event: eventType, Method: "chain_second", Priority: &p}}}
 	if shorthand == "true" {
 		m.ChainHandlers = nil
 	}
@@ -28,13 +32,21 @@ func manifest() plugins.Manifest {
 }
 
 type options struct {
-	Enabled  bool   `json:"enabled"`
-	Trace    string `json:"trace_path"`
-	Label    string `json:"label"`
-	Mode     string `json:"mode"`
-	Source   string `json:"source"`
-	Command  string `json:"command"`
-	FailInit bool   `json:"fail_init"`
+	Enabled           bool            `json:"enabled"`
+	Trace             string          `json:"trace_path"`
+	TraceDeclarations bool            `json:"trace_declarations"`
+	Label             string          `json:"label"`
+	Mode              string          `json:"mode"`
+	Source            string          `json:"source"`
+	Reason            string          `json:"reason"`
+	Command           string          `json:"command"`
+	FailInit          bool            `json:"fail_init"`
+	Provider          bool            `json:"provider"`
+	Endpoint          string          `json:"endpoint"`
+	MenuResult        json.RawMessage `json:"menu_result"`
+	TotalEpisode      *int            `json:"total_episode"`
+	EpisodesUpdated   bool            `json:"episodes_updated"`
+	RecognizeMedia    json.RawMessage `json:"recognize_media"`
 }
 type fixture struct{ mu sync.Mutex }
 
@@ -83,11 +95,17 @@ func (f *fixture) handle(ctx context.Context, method string, raw json.RawMessage
 			if err := json.Unmarshal(event.Data, &data); err != nil {
 				return nil, err
 			}
+			if o.Reason != "" {
+				data["reason"], _ = json.Marshal(o.Reason)
+			}
 			if o.Source != "" {
 				data["source"], _ = json.Marshal(o.Source)
 			}
 			switch o.Mode {
-			case "cancel":
+			case "episodes", "episodes_error":
+				data["updated"], _ = json.Marshal(o.EpisodesUpdated)
+				data["total_episode"], _ = json.Marshal(o.TotalEpisode)
+			case "cancel", "cancel_error", "cancel_panic":
 				data["cancel"] = json.RawMessage(`true`)
 			case "empty":
 				data["commands"] = json.RawMessage(`{}`)
@@ -108,17 +126,57 @@ func (f *fixture) handle(ctx context.Context, method string, raw json.RawMessage
 				data["commands"], _ = json.Marshal(commands)
 			}
 			event.Data, _ = json.Marshal(data)
-			if o.Mode == "mutate_error" {
+			if o.Mode == "mutate_error" || o.Mode == "cancel_error" || o.Mode == "episodes_error" {
 				return nil, errors.New("owned failure after mutation")
 			}
-			if o.Mode == "mutate_panic" {
+			if o.Mode == "mutate_panic" || o.Mode == "cancel_panic" {
 				panic("owned panic after mutation")
 			}
 			return json.RawMessage(`{"cancel":true}`), nil
 		})
 	case "get_state":
 		return json.Marshal(o.Enabled)
+	case "get_module":
+		if len(o.RecognizeMedia) > 0 {
+			return json.RawMessage(`{"recognize_media":"recognize_media","async_recognize_media":"async_recognize_media"}`), nil
+		}
+		if o.Provider {
+			return json.RawMessage(`{"register_commands":"register_menu"}`), nil
+		}
+		return json.RawMessage(`{}`), nil
+	case "recognize_media", "async_recognize_media":
+		if err = record(); err != nil {
+			return nil, err
+		}
+		return o.RecognizeMedia, nil
+	case "register_menu":
+		body, err := json.Marshal(map[string]any{"pid": os.Getpid(), "input": raw})
+		if err != nil {
+			return nil, err
+		}
+		request, err := http.NewRequestWithContext(ctx, http.MethodPost, o.Endpoint, bytes.NewReader(body))
+		if err != nil {
+			return nil, err
+		}
+		request.Header.Set("Content-Type", "application/json")
+		response, err := (&http.Client{Timeout: 5 * time.Second}).Do(request)
+		if err != nil {
+			return nil, err
+		}
+		_ = response.Body.Close()
+		if response.StatusCode != http.StatusNoContent {
+			return nil, errors.New("owned menu receiver rejected request")
+		}
+		if len(o.MenuResult) > 0 {
+			return o.MenuResult, nil
+		}
+		return json.RawMessage(`null`), nil
 	case "get_command":
+		if o.TraceDeclarations {
+			if err = record(); err != nil {
+				return nil, err
+			}
+		}
 		name := o.Command
 		if name == "" {
 			name = "/owned_register"
@@ -133,7 +191,14 @@ func (f *fixture) handle(ctx context.Context, method string, raw json.RawMessage
 		return json.RawMessage(`[[],{}]`), nil
 	case "get_dashboard":
 		return json.RawMessage(`[{},{},[]]`), nil
-	case "get_service", "get_api", "get_page", "get_sidebar_nav":
+	case "get_service":
+		if o.TraceDeclarations {
+			if err = record(); err != nil {
+				return nil, err
+			}
+		}
+		return json.RawMessage(`[]`), nil
+	case "get_api", "get_page", "get_sidebar_nav":
 		return json.RawMessage(`[]`), nil
 	case "close", "stop_service", "stop":
 		return json.RawMessage(`null`), nil

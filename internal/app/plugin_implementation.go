@@ -13,7 +13,7 @@ import (
 )
 
 // This contract has no host capabilities. Repository metadata never grants a
-// native owner operation or relaxes an existing compiled business version pin.
+// native owner operation, including when its ID matches a legacy catalog item.
 const pluginPureSDKContract = "light-media.sdk-pure/v1"
 const pluginBaseSDKContract = "light-media.sdk-base/v1"
 const pluginResourcesSDKContract = "light-media.sdk-resources/v1"
@@ -39,9 +39,6 @@ func validatePluginArtifactContract(m plugins.Manifest, contract string) error {
 			return bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "插件宿主能力不属于已知契约")
 		}
 	}
-	if _, _, native := builtin.Lookup(m.PluginID); native {
-		return bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "不能用独立制品替换未匹配的已编译业务宿主")
-	}
 	for _, method := range []string{"init", "get_state", "get_service", "get_command", "stop"} {
 		if !slices.Contains(m.Methods, method) {
 			return bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "插件制品缺少实例生命周期方法")
@@ -54,13 +51,22 @@ func (a *App) pluginPackageRoot() string { return filepath.Join(a.Dir, "plugin-p
 // resolvePluginImplementation is shared by lifecycle and execution. A present
 // but invalid artifact is an error, never a reason to silently run other code.
 func (a *App) resolvePluginImplementation(ctx context.Context, in PluginInstallation) (pluginImplementation, error) {
-	_ = ctx
+	metadata, metadataErr := a.pluginStore.instanceMetadata(ctx, a.Store.DB, in.InstanceID)
+	if metadataErr != nil {
+		return pluginImplementation{}, metadataErr
+	}
+	if metadata.SourceInstanceID != "" && !plugins.OriginalPluginClassLoadable(in.InstanceID) {
+		return pluginImplementation{}, bad("PLUGIN_CLASS_IMPORT_FAILED", "复制的插件类无法按原实例名称导入")
+	}
 	_, codeErr := os.Lstat(filepath.Join(a.pluginPackageRoot(), in.InstanceID))
 	codePresent := codeErr == nil
 	if codeErr != nil && !errors.Is(codeErr, os.ErrNotExist) {
 		return pluginImplementation{}, codeErr
 	}
 	acquired, err := artifacts.ReadInstalled(a.pluginPackageRoot(), in.InstanceID, validatePluginArtifactContract)
+	if err == nil && acquired.Manifest.Frontend != nil && in.InstanceID != in.PluginID && acquired.FrontendClass != in.InstanceID {
+		acquired, err = artifacts.DeriveInstalledFrontend(ctx, a.pluginPackageRoot(), in.InstanceID, validatePluginArtifactContract)
+	}
 	if err == nil {
 		if acquired.Manifest.PluginID != in.PluginID || acquired.Manifest.Version != in.Version {
 			return pluginImplementation{}, bad("PLUGIN_IMPLEMENTATION_MISMATCH", "实例与实际插件制品版本不一致")
@@ -98,7 +104,7 @@ func (a *App) resolvePluginInvocation(ctx context.Context, in PluginInstallation
 		loaded := object.session != nil
 		object.sessionMu.Unlock()
 		if loaded {
-			return pluginImplementation{Manifest: object.manifest, PackageSHA256: object.frontendPackageSHA256, External: true, HostContract: object.hostContract}, nil
+			return pluginImplementation{Manifest: object.manifest, PackageSHA256: object.frontendPackageHash(), External: true, HostContract: object.hostContract}, nil
 		}
 	}
 	return a.resolvePluginImplementation(ctx, in)

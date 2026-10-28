@@ -7,8 +7,6 @@ import (
 	"path/filepath"
 
 	"light-media/internal/download"
-
-	"golang.org/x/sys/unix"
 )
 
 type historyDeleteRequest struct {
@@ -23,6 +21,11 @@ type historySourceRemoval struct {
 	State     string           `json:"state"`
 }
 
+func (r historySourceRemoval) succeeded() bool {
+	return r.State == "completed" && r.File.Deleted && !r.File.DirectoryRetained ||
+		r.State == "retained" && r.File.DirectoryRetained && !r.File.Deleted && r.File.Snapshot.Directory != ""
+}
+
 // History is a projection of durable import plans. Removing a list entry must
 // never erase the plan or its recovery/audit records.
 func (a *App) deleteTransferHistory(ctx context.Context, item transferHistoryItem, in historyDeleteRequest) (any, error) {
@@ -34,6 +37,12 @@ func (a *App) deleteTransferHistory(ctx context.Context, item transferHistoryIte
 		return nil, bad("HISTORY_CHANGED", "整理记录已更新，请刷新后重新确认删除")
 	}
 	if in.DeleteSource {
+		// A running transfer may hold importMu while waiting for an external
+		// storage module. Reject its frozen sources before waiting for that
+		// lock; the physical-removal path checks again under the lock.
+		if err := a.guardHistorySourceInUse(ctx, item); err != nil {
+			return nil, err
+		}
 		a.downloadMu.Lock()
 		defer a.downloadMu.Unlock()
 	}
@@ -59,6 +68,9 @@ func (a *App) deleteTransferHistory(ctx context.Context, item transferHistoryIte
 		if e := a.removeHistoricalTarget(ctx, item); e != nil {
 			return nil, e
 		}
+		if e := a.completeHistoricalParentCleanup(ctx, item, false); e != nil && !originalHistoryDeleteRejected(e) {
+			return nil, e
+		}
 	}
 	if in.DeleteSource && sourceExists {
 		if e := a.removeHistorySource(ctx, item, sourceSnapshot); e != nil {
@@ -66,6 +78,9 @@ func (a *App) deleteTransferHistory(ctx context.Context, item transferHistoryIte
 		}
 	}
 	if in.DeleteSource {
+		if e := a.completeHistoricalParentCleanup(ctx, item, true); e != nil {
+			return nil, e
+		}
 		if e := a.publishHistoryDownloadFileDeleted(ctx, item); e != nil {
 			return nil, e
 		}
@@ -81,53 +96,15 @@ func (a *App) deleteTransferHistory(ctx context.Context, item transferHistoryIte
 }
 
 func (a *App) removeHistoricalTarget(ctx context.Context, item transferHistoryItem) error {
-	_, statErr := snapshotPath(item.Target)
-	if statErr != nil && !errors.Is(statErr, os.ErrNotExist) {
-		return statErr
-	}
 	var plan ImportPlan
 	if e := a.Store.Get(ctx, "import_plan", item.PlanID, &plan); e != nil {
 		return e
 	}
-	var historical PlanFile
-	for _, file := range plan.Files {
-		if file.ID == item.executionFileID() {
-			historical = file
-			break
-		}
-	}
-	if historical.AssetID == "" {
-		if errors.Is(statErr, os.ErrNotExist) {
-			return nil
-		}
-		return bad("HISTORY_TARGET_UNMANAGED", "此历史没有可核验的目标资产，不能删除目标文件")
-	}
-	var owned managedFile
-	ownedErr := a.Store.Get(ctx, "managed_file", tokenHash(item.Target), &owned)
-	if ownedErr == nil && (owned.Kind != "video" || historical.Target != item.Target || historical.AssetID != owned.AssetID ||
-		owned.RootID != plan.RootID || owned.SourceSnapshot != planSnapshot(historical)) {
-		return bad("HISTORY_TARGET_CHANGED", "此路径已由其他整理结果接管，不能按旧历史删除")
-	}
-	if ownedErr != nil && statErr == nil {
-		return bad("HISTORY_TARGET_UNMANAGED", "目标文件没有可核验的整理归属，不能从历史中删除")
-	}
-	var asset Asset
-	if e := a.Store.Get(ctx, "asset", historical.AssetID, &asset); e != nil {
-		return e
-	}
-	if asset.Path != item.Target || asset.RootID != plan.RootID {
-		return bad("HISTORY_TARGET_CHANGED", "目标资产路径已变化，请重新核对")
-	}
-	if asset.State == "removed" && errors.Is(statErr, os.ErrNotExist) {
-		return nil
-	}
-	// A stopped asset removal may already have moved the video into its frozen
-	// quarantine. Resume its receipt even when the visible target is absent.
-	preview, e := a.previewAssetRemoval(ctx, asset)
+	historical, auxiliary, receiptKey, e := a.historyPlannedFile(ctx, plan, item)
 	if e != nil {
 		return e
 	}
-	return a.removeAsset(ctx, asset.ID, preview.ID, true, false)
+	return a.removeHistoricalPublishedTarget(ctx, item, plan, historical, receiptKey, auxiliary)
 }
 
 func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryItem) (importSnapshot, bool, error) {
@@ -141,14 +118,12 @@ func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryI
 	if _, e := a.historyDownloadIdentity(ctx, item); e != nil {
 		return importSnapshot{}, false, e
 	}
-	var expected importSnapshot
-	for _, file := range plan.Files {
-		if file.ID == item.executionFileID() {
-			expected = planSnapshot(file)
-			break
-		}
+	file, _, _, e := a.historyPlannedFile(ctx, plan, item)
+	if e != nil {
+		return importSnapshot{}, false, e
 	}
-	actual, e := snapshotPath(item.Source)
+	expected := planSnapshot(file)
+	actual, e := snapshotTransferPath(item.Source)
 	if errors.Is(e, os.ErrNotExist) {
 		var receipt historySourceRemoval
 		if a.Store.Get(ctx, "history_source_removal", item.executionFileID(), &receipt) == nil {
@@ -165,6 +140,9 @@ func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryI
 				}
 				return expected, true, nil
 			}
+			if receipt.State != "completed" {
+				return expected, true, nil
+			}
 		}
 		return importSnapshot{}, false, nil
 	}
@@ -177,14 +155,26 @@ func (a *App) historySourceForRemoval(ctx context.Context, item transferHistoryI
 	if e = a.guardHistoryDownloaderSource(ctx, item); e != nil {
 		return importSnapshot{}, false, e
 	}
-	var busy int
-	if e = a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records r,json_each(r.payload,'$.files') f WHERE r.kind='import_plan' AND r.id!=? AND json_extract(r.payload,'$.state') IN ('queued','running') AND json_extract(f.value,'$.source')=?`, item.PlanID, item.Source).Scan(&busy); e != nil {
+	if e = a.guardHistorySourceInUse(ctx, item); e != nil {
 		return importSnapshot{}, false, e
 	}
-	if busy > 0 {
-		return importSnapshot{}, false, bad("FILE_IN_USE", "其他整理任务正在使用源文件")
-	}
 	return actual, true, nil
+}
+
+func (a *App) guardHistorySourceInUse(ctx context.Context, item transferHistoryItem) error {
+	var busy int
+	if e := a.Store.DB.QueryRowContext(ctx, `SELECT COUNT(*) FROM records r
+ LEFT JOIN records m ON m.kind='import_meta' AND m.id=r.id
+ WHERE r.kind='import_plan' AND r.id!=?
+ AND EXISTS(SELECT 1 FROM jobs j WHERE j.kind='import' AND json_extract(j.payload,'$.id')=r.id AND j.state IN ('queued','running','retry_wait','waiting_paused'))
+ AND (EXISTS(SELECT 1 FROM json_each(r.payload,'$.files') f WHERE json_extract(f.value,'$.source')=?)
+ OR EXISTS(SELECT 1 FROM json_each(m.payload,'$.sidecars') g,json_each(g.value) s WHERE json_extract(s.value,'$.source')=?))`, item.PlanID, item.Source, item.Source).Scan(&busy); e != nil {
+		return e
+	}
+	if busy > 0 {
+		return bad("FILE_IN_USE", "其他整理任务正在使用源文件")
+	}
+	return nil
 }
 
 // Downloaders no longer need configured save paths: their actual task paths
@@ -257,10 +247,27 @@ func (a *App) removeHistorySource(ctx context.Context, item transferHistoryItem,
 		return e
 	}
 	if location == "source" {
+		frozen, err := a.originalHistoryFrozenItem(ctx, item, true)
+		if err != nil {
+			return err
+		}
+		if e = a.originalHistoryStorageDelete(ctx, &receipt.File, parent, func() error { return a.Store.Put(ctx, "history_source_removal", item.executionFileID(), receipt) }, frozen); e != nil {
+			return e
+		}
+		if receipt.File.DirectoryRetained {
+			receipt.State = "retained"
+			return a.Store.Put(ctx, "history_source_removal", item.executionFileID(), receipt)
+		}
+		location, e = removalLocation(receipt.File)
+		if e != nil {
+			return e
+		}
+	}
+	if location == "source" {
 		if e = importRenameExclusive(int(parent.Fd()), name, receipt.File.Quarantine); e != nil {
 			return e
 		}
-		actual, e = snapshotPath(filepath.Join(filepath.Dir(item.Source), receipt.File.Quarantine))
+		actual, e = snapshotTransferPath(filepath.Join(filepath.Dir(item.Source), receipt.File.Quarantine))
 		if e != nil || actual != expected {
 			_ = importRenameExclusive(int(parent.Fd()), receipt.File.Quarantine, name)
 			_ = parent.Sync()
@@ -271,12 +278,17 @@ func (a *App) removeHistorySource(ctx context.Context, item transferHistoryItem,
 		}
 	}
 	if location != "gone" {
+		if e = parent.Sync(); e != nil {
+			return e
+		}
 		receipt.File.Quarantined = true
 		if e = a.Store.Put(ctx, "history_source_removal", item.executionFileID(), receipt); e != nil {
 			return e
 		}
-		if e = unix.Unlinkat(int(parent.Fd()), receipt.File.Quarantine, 0); e != nil {
-			_ = importRenameExclusive(int(parent.Fd()), receipt.File.Quarantine, name)
+		if e = a.removeHistoryQuarantine(ctx, &receipt.File, parent, func() error { return a.Store.Put(ctx, "history_source_removal", item.executionFileID(), receipt) }); e != nil {
+			if !receipt.File.DirectoryRemovalStarted {
+				_ = importRenameExclusive(int(parent.Fd()), receipt.File.Quarantine, name)
+			}
 			return e
 		}
 	}

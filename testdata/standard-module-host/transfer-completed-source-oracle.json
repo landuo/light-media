@@ -1,0 +1,283 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:661-673,1338,1427-1474,1888,3679",
+    "app/modules/qbittorrent/__init__.py:455-465",
+    "app/modules/transmission/__init__.py:454-472",
+    "app/modules/qbittorrent/qbittorrent.py:336-347",
+    "app/modules/transmission/transmission.py:168-201"
+  ],
+  "cases": [
+    {
+      "name": "no_history",
+      "history": false,
+      "progress": [
+        100
+      ],
+      "trace": [],
+      "marked": false
+    },
+    {
+      "name": "empty_hash",
+      "hash": "",
+      "progress": [
+        100
+      ],
+      "trace": [],
+      "marked": false
+    },
+    {
+      "name": "unfinished_task",
+      "done": [
+        false
+      ],
+      "progress": [
+        100
+      ],
+      "trace": [
+        "tasks_done"
+      ],
+      "marked": false
+    },
+    {
+      "name": "empty_result",
+      "progress": [],
+      "trace": [
+        "tasks_done",
+        {
+          "list_torrents": {
+            "hashs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "downloader": "Owned completion"
+          }
+        }
+      ],
+      "marked": false
+    },
+    {
+      "name": "partial_download",
+      "progress": [
+        99.99
+      ],
+      "trace": [
+        "tasks_done",
+        {
+          "list_torrents": {
+            "hashs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "downloader": "Owned completion"
+          }
+        }
+      ],
+      "marked": false
+    },
+    {
+      "name": "null_progress",
+      "progress": [
+        null
+      ],
+      "trace": [
+        "tasks_done",
+        {
+          "list_torrents": {
+            "hashs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "downloader": "Owned completion"
+          }
+        }
+      ],
+      "marked": false
+    },
+    {
+      "name": "mixed_progress",
+      "progress": [
+        100,
+        50
+      ],
+      "trace": [
+        "tasks_done",
+        {
+          "list_torrents": {
+            "hashs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "downloader": "Owned completion"
+          }
+        }
+      ],
+      "marked": false
+    },
+    {
+      "name": "query_error",
+      "progress": [
+        100
+      ],
+      "query_error": true,
+      "trace": [
+        "tasks_done",
+        {
+          "list_torrents": {
+            "hashs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "downloader": "Owned completion"
+          }
+        }
+      ],
+      "marked": false
+    },
+    {
+      "name": "new_task_during_query",
+      "done": [
+        true,
+        false
+      ],
+      "progress": [
+        100
+      ],
+      "trace": [
+        "tasks_done",
+        {
+          "list_torrents": {
+            "hashs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "downloader": "Owned completion"
+          }
+        },
+        "tasks_done"
+      ],
+      "marked": false
+    },
+    {
+      "name": "all_successful",
+      "progress": [
+        100
+      ],
+      "trace": [
+        "tasks_done",
+        {
+          "list_torrents": {
+            "hashs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "downloader": "Owned completion"
+          }
+        },
+        "tasks_done",
+        {
+          "transfer_completed": {
+            "hashs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "downloader": "Owned completion"
+          }
+        }
+      ],
+      "marked": true
+    },
+    {
+      "name": "all_failed_but_done",
+      "progress": [
+        100,
+        101
+      ],
+      "trace": [
+        "tasks_done",
+        {
+          "list_torrents": {
+            "hashs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "downloader": "Owned completion"
+          }
+        },
+        "tasks_done",
+        {
+          "transfer_completed": {
+            "hashs": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "downloader": "Owned completion"
+          }
+        }
+      ],
+      "marked": true
+    }
+  ],
+  "native": [
+    {
+      "kind": "qbittorrent",
+      "present": false,
+      "trace": [],
+      "result": null
+    },
+    {
+      "kind": "qbittorrent",
+      "present": true,
+      "trace": [
+        {
+          "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "tags": [
+            "已整理"
+          ]
+        }
+      ],
+      "result": null
+    },
+    {
+      "kind": "transmission",
+      "present": false,
+      "trace": [],
+      "result": null
+    },
+    {
+      "kind": "transmission",
+      "present": true,
+      "trace": [
+        {
+          "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "tags": [
+            "light-media",
+            "kept",
+            "已整理"
+          ]
+        }
+      ],
+      "result": null
+    }
+  ],
+  "helpers": [
+    {
+      "kind": "qbittorrent",
+      "fail": false,
+      "writes": [
+        {
+          "tags": [
+            "已整理"
+          ],
+          "torrent_hashes": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "logs": 0,
+      "result": null,
+      "raised": false
+    },
+    {
+      "kind": "qbittorrent",
+      "fail": true,
+      "writes": [],
+      "logs": 1,
+      "result": null,
+      "raised": false
+    },
+    {
+      "kind": "transmission",
+      "fail": false,
+      "writes": [
+        {
+          "labels": [
+            "kept",
+            "light-media",
+            "已整理"
+          ],
+          "ids": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "logs": 0,
+      "result": true,
+      "raised": false
+    },
+    {
+      "kind": "transmission",
+      "fail": true,
+      "writes": [],
+      "logs": 1,
+      "result": false,
+      "raised": false
+    }
+  ]
+}

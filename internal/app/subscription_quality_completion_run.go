@@ -14,36 +14,6 @@ import (
 )
 
 type subscriptionCompletionCheckEvent struct{ Subscribe, MediaInfo, Meta json.RawMessage }
-type subscriptionCompletionHandler struct {
-	Source string
-	Handle func(context.Context, subscriptionCompletionCheckEvent) (subscriptionCompletionCheckResult, error)
-}
-
-// Current 23 installed sources (76 Python files, recursively parsed) register
-// no SubscribeCompletionCheck consumer. This is a synchronous dispatch point:
-// a future port adds its trusted Go handler here, before history/deletion.
-// Evidence: installed-completion-handlers.json SHA423ce6ec60a7839a77986261511e1826c1c539671ab3671d87ed29a38d12ffce.
-func subscriptionCompletionHandlers() []subscriptionCompletionHandler {
-	return []subscriptionCompletionHandler{}
-}
-func sendSubscriptionCompletionCheck(ctx context.Context, input subscriptionCompletionCheckEvent) (subscriptionCompletionCheckResult, error) {
-	out := subscriptionCompletionCheckResult{Event: "subscribe.completion.check", Consumers: []string{}}
-	for _, handler := range subscriptionCompletionHandlers() {
-		if ctx.Err() != nil {
-			return out, ctx.Err()
-		}
-		result, e := handler.Handle(ctx, input)
-		if e != nil {
-			return out, e
-		}
-		out.Consumers = append(out.Consumers, handler.Source)
-		if result.Cancel {
-			out.Cancel, out.Source, out.Reason = true, result.Source, result.Reason
-			return out, nil
-		}
-	}
-	return out, nil
-}
 
 func (a *App) enqueueSubscriptionCompletionPreparationTx(ctx context.Context, tx *sql.Tx, in Intent) error {
 	if in.SubscriptionID == "" {
@@ -175,9 +145,10 @@ func (a *App) prepareSubscriptionCompletion(ctx context.Context, j Job, key stri
 	if s.BestVersion && !subscriptionQualityState(s).Complete() {
 		return nil
 	}
+	var resolved *standardSubscriptionRecognition
 	if !s.BestVersion {
 		var e error
-		s, e = a.refreshOrdinaryCompletionScope(ctx, s)
+		s, resolved, e = a.refreshOrdinaryCompletionScopeResolved(ctx, s)
 		if e != nil {
 			return e
 		}
@@ -189,7 +160,7 @@ func (a *App) prepareSubscriptionCompletion(ctx context.Context, j Job, key stri
 	var basis *subscriptionCompletionOrdinaryBasis
 	if !s.BestVersion {
 		var complete bool
-		basis, complete, e = a.ordinaryCompletionBasis(ctx, a.Store.DB, s, accepted)
+		basis, complete, e = a.ordinaryCompletionBasisWithExistence(ctx, a.Store.DB, s, accepted, originalExistenceFromRecognition(resolved))
 		if e != nil || !complete {
 			return e
 		}
@@ -198,14 +169,14 @@ func (a *App) prepareSubscriptionCompletion(ctx context.Context, j Job, key stri
 	if e != nil {
 		return e
 	}
-	source, e := a.buildSubscriptionCompletionBusiness(ctx, s, subscribe)
+	source, e := a.buildSubscriptionCompletionBusinessResolved(ctx, s, subscribe, resolved)
 	if e != nil {
 		return e
 	} // Missing source MediaInfo/Notice never deletes a row.
 	if !bytes.Equal(source.Subscription, mustCleanSeedJSON(s)) || !bytes.Equal(source.Subscribe, subscribe) {
 		return completionEvidenceError()
 	}
-	check, e := sendSubscriptionCompletionCheck(ctx, subscriptionCompletionCheckEvent{Subscribe: source.Subscribe, MediaInfo: source.MediaInfo, Meta: source.Meta})
+	check, e := a.sendStandardSubscriptionCompletionCheck(ctx, subscriptionCompletionCheckEvent{Subscribe: source.Subscribe, MediaInfo: source.MediaInfo, Meta: source.Meta})
 	if e != nil {
 		return e
 	}
@@ -244,7 +215,7 @@ func (a *App) prepareSubscriptionCompletion(ctx context.Context, j Job, key stri
 		return completionEvidenceError()
 	}
 	if basis != nil {
-		fresh, complete, e := a.ordinaryCompletionBasis(ctx, tx, current, actual)
+		fresh, complete, e := a.ordinaryCompletionBasisWithExistence(ctx, tx, current, actual, originalExistenceFromRecognition(resolved))
 		if e != nil {
 			return e
 		}
@@ -326,6 +297,11 @@ func (a *App) runSubscriptionCompletion(ctx context.Context, j Job, key string) 
 	if e != nil {
 		return e
 	}
+	// Reuse the existing statistics worker lock so a newly committed child
+	// cannot execute its HTTP call before the source's complete event has
+	// been submitted. Acquire before the SQL connection, as that worker does.
+	a.subscriptionStats.mu.Lock()
+	defer a.subscriptionStats.mu.Unlock()
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
 		return e
@@ -360,7 +336,15 @@ func (a *App) runSubscriptionCompletion(ctx context.Context, j Job, key string) 
 	if e = a.writeQualitySealedTx(ctx, tx, "subscription_completion", key, current); e != nil {
 		return e
 	}
-	return tx.Commit()
+
+	if e = tx.Commit(); e != nil {
+		return e
+	}
+	// The source emits only after history/delete and post_message returned.
+	// Reuse the actual frozen full source objects, never reconstruct MediaInfo
+	// from a compact catalog row or replay this notification from the outbox.
+	a.emitStandardBusinessEvent(ctx, "subscribe.complete", payload)
+	return nil
 }
 func sourceSubscriptionMediaKey(raw json.RawMessage) string {
 	var row struct {

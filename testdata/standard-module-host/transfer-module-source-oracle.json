@@ -1,0 +1,625 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/__init__.py:1425-1477",
+    "app/modules/filemanager/__init__.py:415-541",
+    "app/chain/transfer.py:2042-2064",
+    "app/schemas/transfer.py:TransferInfo"
+  ],
+  "kind": "Pinned ChainBase.transfer/dispatcher/FileManagerModule.transfer and task result consumption.\nOnly TransHandler/storage providers and installed plugin callbacks are controlled;\nsource FileManager validation, model defaults, argument forwarding and callback\nbranches run unchanged. Effects use real disposable local files.\n",
+  "cases": [
+    {
+      "name": "none",
+      "kind": "raw",
+      "plugin": null,
+      "effect": false,
+      "throws": false,
+      "result": [
+        true,
+        null
+      ],
+      "exception": null,
+      "callbacks": [
+        "TransferInfo"
+      ],
+      "target_exists": true,
+      "same_inode": true,
+      "native_calls": 1,
+      "trace": [
+        {
+          "role": "plugin",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "library_category_folder",
+            "library_type_folder",
+            "mediainfo",
+            "meta",
+            "preview",
+            "scrape",
+            "source_oper",
+            "target_directory",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ],
+          "transfer_type": "link",
+          "preview": false
+        },
+        {
+          "role": "native_handler",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "in_meta",
+            "mediainfo",
+            "need_notify",
+            "need_rename",
+            "need_scrape",
+            "overwrite_mode",
+            "preview",
+            "source_oper",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "name": "false",
+      "kind": "raw",
+      "plugin": false,
+      "effect": false,
+      "throws": false,
+      "result": [
+        false,
+        "文件整理模块运行失败"
+      ],
+      "exception": null,
+      "callbacks": [],
+      "target_exists": false,
+      "same_inode": false,
+      "native_calls": 0,
+      "trace": [
+        {
+          "role": "plugin",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "library_category_folder",
+            "library_type_folder",
+            "mediainfo",
+            "meta",
+            "preview",
+            "scrape",
+            "source_oper",
+            "target_directory",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ],
+          "transfer_type": "link",
+          "preview": false
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "name": "empty_list",
+      "kind": "raw",
+      "plugin": [],
+      "effect": false,
+      "throws": false,
+      "result": [
+        false,
+        "文件整理模块运行失败"
+      ],
+      "exception": null,
+      "callbacks": [],
+      "target_exists": true,
+      "same_inode": true,
+      "native_calls": 1,
+      "trace": [
+        {
+          "role": "plugin",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "library_category_folder",
+            "library_type_folder",
+            "mediainfo",
+            "meta",
+            "preview",
+            "scrape",
+            "source_oper",
+            "target_directory",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ],
+          "transfer_type": "link",
+          "preview": false
+        },
+        {
+          "role": "native_handler",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "in_meta",
+            "mediainfo",
+            "need_notify",
+            "need_rename",
+            "need_scrape",
+            "overwrite_mode",
+            "preview",
+            "source_oper",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "name": "list",
+      "kind": "raw",
+      "plugin": [
+        "plugin"
+      ],
+      "effect": false,
+      "throws": false,
+      "result": null,
+      "exception": "AttributeError",
+      "callbacks": [
+        "list"
+      ],
+      "target_exists": true,
+      "same_inode": true,
+      "native_calls": 1,
+      "trace": [
+        {
+          "role": "plugin",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "library_category_folder",
+            "library_type_folder",
+            "mediainfo",
+            "meta",
+            "preview",
+            "scrape",
+            "source_oper",
+            "target_directory",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ],
+          "transfer_type": "link",
+          "preview": false
+        },
+        {
+          "role": "native_handler",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "in_meta",
+            "mediainfo",
+            "need_notify",
+            "need_rename",
+            "need_scrape",
+            "overwrite_mode",
+            "preview",
+            "source_oper",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "name": "empty_dict",
+      "kind": "raw",
+      "plugin": {},
+      "effect": false,
+      "throws": false,
+      "result": [
+        false,
+        "文件整理模块运行失败"
+      ],
+      "exception": null,
+      "callbacks": [],
+      "target_exists": false,
+      "same_inode": false,
+      "native_calls": 0,
+      "trace": [
+        {
+          "role": "plugin",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "library_category_folder",
+            "library_type_folder",
+            "mediainfo",
+            "meta",
+            "preview",
+            "scrape",
+            "source_oper",
+            "target_directory",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ],
+          "transfer_type": "link",
+          "preview": false
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "name": "dict_success",
+      "kind": "raw",
+      "plugin": {
+        "success": true
+      },
+      "effect": false,
+      "throws": false,
+      "result": null,
+      "exception": "AttributeError",
+      "callbacks": [
+        "dict"
+      ],
+      "target_exists": false,
+      "same_inode": false,
+      "native_calls": 0,
+      "trace": [
+        {
+          "role": "plugin",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "library_category_folder",
+            "library_type_folder",
+            "mediainfo",
+            "meta",
+            "preview",
+            "scrape",
+            "source_oper",
+            "target_directory",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ],
+          "transfer_type": "link",
+          "preview": false
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "name": "model_false",
+      "kind": "model",
+      "plugin": {
+        "__plugin_transfer_info": {
+          "success": false,
+          "message": "owned veto"
+        }
+      },
+      "effect": false,
+      "throws": false,
+      "result": [
+        false,
+        "owned veto"
+      ],
+      "exception": null,
+      "callbacks": [
+        "TransferInfo"
+      ],
+      "target_exists": false,
+      "same_inode": false,
+      "native_calls": 0,
+      "trace": [
+        {
+          "role": "plugin",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "library_category_folder",
+            "library_type_folder",
+            "mediainfo",
+            "meta",
+            "preview",
+            "scrape",
+            "source_oper",
+            "target_directory",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ],
+          "transfer_type": "link",
+          "preview": false
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "name": "model_true_without_effect",
+      "kind": "model",
+      "plugin": {
+        "__plugin_transfer_info": {
+          "success": true
+        }
+      },
+      "effect": false,
+      "throws": false,
+      "result": [
+        true,
+        null
+      ],
+      "exception": null,
+      "callbacks": [
+        "TransferInfo"
+      ],
+      "target_exists": false,
+      "same_inode": false,
+      "native_calls": 0,
+      "trace": [
+        {
+          "role": "plugin",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "library_category_folder",
+            "library_type_folder",
+            "mediainfo",
+            "meta",
+            "preview",
+            "scrape",
+            "source_oper",
+            "target_directory",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ],
+          "transfer_type": "link",
+          "preview": false
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "name": "model_true_effect",
+      "kind": "model",
+      "plugin": {
+        "__plugin_transfer_info": {
+          "success": true
+        }
+      },
+      "effect": true,
+      "throws": false,
+      "result": [
+        true,
+        null
+      ],
+      "exception": null,
+      "callbacks": [
+        "TransferInfo"
+      ],
+      "target_exists": true,
+      "same_inode": true,
+      "native_calls": 0,
+      "trace": [
+        {
+          "role": "plugin",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "library_category_folder",
+            "library_type_folder",
+            "mediainfo",
+            "meta",
+            "preview",
+            "scrape",
+            "source_oper",
+            "target_directory",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ],
+          "transfer_type": "link",
+          "preview": false
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "name": "model_false_effect",
+      "kind": "model",
+      "plugin": {
+        "__plugin_transfer_info": {
+          "success": false,
+          "message": "owned veto after effect"
+        }
+      },
+      "effect": true,
+      "throws": false,
+      "result": [
+        false,
+        "owned veto after effect"
+      ],
+      "exception": null,
+      "callbacks": [
+        "TransferInfo"
+      ],
+      "target_exists": true,
+      "same_inode": true,
+      "native_calls": 0,
+      "trace": [
+        {
+          "role": "plugin",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "library_category_folder",
+            "library_type_folder",
+            "mediainfo",
+            "meta",
+            "preview",
+            "scrape",
+            "source_oper",
+            "target_directory",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ],
+          "transfer_type": "link",
+          "preview": false
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "name": "throw",
+      "kind": "raw",
+      "plugin": null,
+      "effect": false,
+      "throws": true,
+      "result": [
+        true,
+        null
+      ],
+      "exception": null,
+      "callbacks": [
+        "TransferInfo"
+      ],
+      "target_exists": true,
+      "same_inode": true,
+      "native_calls": 1,
+      "trace": [
+        {
+          "role": "plugin",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "library_category_folder",
+            "library_type_folder",
+            "mediainfo",
+            "meta",
+            "preview",
+            "scrape",
+            "source_oper",
+            "target_directory",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ],
+          "transfer_type": "link",
+          "preview": false
+        },
+        {
+          "role": "native_handler",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "in_meta",
+            "mediainfo",
+            "need_notify",
+            "need_rename",
+            "need_scrape",
+            "overwrite_mode",
+            "preview",
+            "source_oper",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ]
+        }
+      ],
+      "error_titles": [
+        "Owned 发生了错误"
+      ]
+    },
+    {
+      "name": "throw_after_effect",
+      "kind": "raw",
+      "plugin": null,
+      "effect": true,
+      "throws": true,
+      "result": [
+        false,
+        "owned existing target"
+      ],
+      "exception": null,
+      "callbacks": [
+        "TransferInfo"
+      ],
+      "target_exists": true,
+      "same_inode": true,
+      "native_calls": 1,
+      "trace": [
+        {
+          "role": "plugin",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "library_category_folder",
+            "library_type_folder",
+            "mediainfo",
+            "meta",
+            "preview",
+            "scrape",
+            "source_oper",
+            "target_directory",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ],
+          "transfer_type": "link",
+          "preview": false
+        },
+        {
+          "role": "native_handler",
+          "keys": [
+            "episodes_info",
+            "fileitem",
+            "in_meta",
+            "mediainfo",
+            "need_notify",
+            "need_rename",
+            "need_scrape",
+            "overwrite_mode",
+            "preview",
+            "source_oper",
+            "target_oper",
+            "target_path",
+            "target_storage",
+            "transfer_type"
+          ]
+        }
+      ],
+      "error_titles": [
+        "Owned 发生了错误"
+      ]
+    }
+  ]
+}

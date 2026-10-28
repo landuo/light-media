@@ -1,0 +1,232 @@
+[
+  [
+    {
+      "component": "VCard",
+      "content": [
+        {
+          "component": "style",
+          "props": {
+            "media": "screen"
+          },
+          "text": "/* owned fixed-render CSS probe */\n@media (min-width: 300px) { .owned-html-wrapper > .v-card > b { --owned-probe: rgb(33, 150, 243); color: var(--owned-probe); transform: translateX(3px); padding-block: 5px; } }"
+        },
+        {
+          "component": "VCardTitle",
+          "text": "Owned recursive configuration"
+        },
+        {
+          "component": "VCardText",
+          "content": [
+            {
+              "component": "VRow",
+              "content": [
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 6
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "enabled",
+                        "label": "Enabled"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 6
+                  },
+                  "content": [
+                    {
+                      "component": "VTextField",
+                      "props": {
+                        "model": "key",
+                        "label": "Owned value"
+                      },
+                      "slots": {
+                        "prepend": {
+                          "component": "span",
+                          "text": "Key prefix"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 6
+                  },
+                  "content": [
+                    {
+                      "component": "VSwitch",
+                      "props": {
+                        "model": "gate",
+                        "label": "Show details"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 6
+                  },
+                  "content": [
+                    {
+                      "component": "VTextField",
+                      "props": {
+                        "model": "notes",
+                        "label": "caption",
+                        "show": "{{ gate }}"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 6
+                  },
+                  "content": [
+                    {
+                      "component": "VTextField",
+                      "props": {
+                        "model": "中文 标题",
+                        "label": "Owned literal field"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 6
+                  },
+                  "content": [
+                    {
+                      "component": "VTextField",
+                      "props": {
+                        "model": "total",
+                        "label": "Owned counter",
+                        "readonly": true
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 6
+                  },
+                  "content": [
+                    {
+                      "component": "VBtn",
+                      "text": "Increment owned counter",
+                      "props": {
+                        "color": "primary",
+                        "onClick": "(function(){ return e => { model.total += 1 } })()"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12
+                  },
+                  "content": [
+                    {
+                      "component": "VAceEditor",
+                      "props": {
+                        "modelvalue": "editor_content",
+                        "lang": "yaml",
+                        "theme": "monokai",
+                        "style": "height: 100px",
+                        "options": {
+                          "fontSize": 14,
+                          "tabSize": 4,
+                          "useWorker": false
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12
+                  },
+                  "content": [
+                    {
+                      "component": "VCard",
+                      "props": {
+                        "class": "owned-html-wrapper"
+                      },
+                      "html": "<b>Owned rich inner</b>"
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12
+                  },
+                  "content": [
+                    {
+                      "component": "VCard",
+                      "text": 0,
+                      "content": [
+                        {
+                          "component": "span",
+                          "text": "Owned zero text fallback"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "component": "VCol",
+                  "props": {
+                    "cols": 12
+                  },
+                  "content": [
+                    {
+                      "component": "div",
+                      "props": {
+                        "class": "owned-runtime-utility opacity-20 text-decoration-overline"
+                      },
+                      "text": "Owned runtime utility"
+                    },
+                    {
+                      "component": "VIcon",
+                      "props": {
+                        "icon": "mdi-zodiac-aquarius",
+                        "class": "owned-runtime-icon",
+                        "aria-label": "Owned runtime icon"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  {
+    "enabled": false,
+    "key": "rich-default",
+    "gate": true,
+    "notes": "owned notes",
+    "total": 3,
+    "caption": "Owned notes",
+    "editor_content": "owned: true\n",
+    "中文 标题": "原版字段"
+  }
+]

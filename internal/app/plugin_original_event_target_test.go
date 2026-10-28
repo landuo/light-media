@@ -55,10 +55,21 @@ func TestOriginalBroadcastEventTargetSourceValues(t *testing.T) {
 			}
 		})
 	}
-	for _, raw := range []string{`{"big":9007199254740993}`, `null`, `false`, `0`, `[]`, `[9007199254740993]`, `"scalar"`} {
+	for _, raw := range []string{`{"big":9007199254740993}`, `[9007199254740993]`, `"scalar"`} {
 		clean, target, restricted, err := originalBroadcastEventData("message.action", json.RawMessage(raw))
 		if err != nil || target != "" || restricted || string(clean) != raw {
 			t.Fatal("unrelated payload rewritten", raw, string(clean), target, restricted, err)
+		}
+	}
+	for _, raw := range []string{"", " \t\n", `null`, `false`, `0`, `-0`, `0.0`, `1e-10000`, `[]`, `{}`, `""`} {
+		clean, target, restricted, err := originalBroadcastEventData("message.action", json.RawMessage(raw))
+		if err != nil || target != "" || restricted || string(clean) != `{}` {
+			t.Fatal("Event constructor did not apply event_data or {}", raw, string(clean), target, restricted, err)
+		}
+	}
+	for _, raw := range []string{`{`, `not JSON`, `null true`} {
+		if _, _, _, err := originalBroadcastEventData("message.action", json.RawMessage(raw)); err == nil {
+			t.Fatal("malformed event data accepted", raw)
 		}
 	}
 }

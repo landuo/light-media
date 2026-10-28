@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineAsyncComponent } from 'vue';
+import { ref, onMounted, defineAsyncComponent } from 'vue';
 import { useDisplay } from 'vuetify';
 import { VThemeProvider } from 'vuetify/components/VThemeProvider';
 import { VMenu } from 'vuetify/components/VMenu';
@@ -8,14 +8,25 @@ import { VCard, VCardItem, VCardTitle, VCardText } from 'vuetify/components/VCar
 import { VBtn } from 'vuetify/components/VBtn';
 import { VIcon } from 'vuetify/components/VIcon';
 import { VDivider } from 'vuetify/components/VDivider';
+import { pluginMessageShortcut } from '../features/plugin-web-message';
+const ShortcutMessageDialog = defineAsyncComponent(() => import('./ShortcutMessageDialog.vue'));
 const PluginServices = defineAsyncComponent(() => import('./PluginServices.vue'));
 const menu = ref(false),
   services = ref(false),
+  messages = ref(false),
   display = useDisplay();
 function openServices() {
   menu.value = false;
   services.value = true;
 }
+function openMessageDialog() {
+  menu.value = false;
+  messages.value = true;
+}
+defineExpose({ openMessageDialog });
+onMounted(() => {
+  if (pluginMessageShortcut(window.location.href)) openMessageDialog();
+});
 </script>
 <template>
   <VThemeProvider theme="light" class="plugin-surface shortcut-tools">
@@ -59,9 +70,26 @@ function openServices() {
               <div class="shortcut-subtitle">定时服务</div>
             </div></VCard
           >
+          <VCard
+            flat
+            hover
+            class="shortcut-tool"
+            role="button"
+            tabindex="0"
+            @click="openMessageDialog"
+            @keydown.enter.prevent="openMessageDialog"
+            @keydown.space.prevent="openMessageDialog"
+          >
+            <VIcon color="primary" icon="mdi-message" size="24" />
+            <div>
+              <div class="shortcut-name">消息</div>
+              <div class="shortcut-subtitle">消息中心</div>
+            </div>
+          </VCard>
         </div>
       </VCard>
     </VMenu>
+    <ShortcutMessageDialog v-if="messages" v-model="messages" @close="messages = false" />
     <VDialog
       v-if="services"
       v-model="services"

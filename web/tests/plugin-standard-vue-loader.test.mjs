@@ -1,3 +1,4 @@
+import './helpers/plugin-axios-fetch-adapter.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, writeFileSync, rmSync } from 'node:fs';
@@ -6,21 +7,42 @@ import { join, dirname } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import * as Vue from 'vue';
 import * as Vuetify from 'vuetify';
-import { createPluginRemoteLoader, pluginRemoteSharedScope } from '../src/features/plugin-federation.ts';
+import {
+  createPluginRemoteLoader,
+  pluginRemoteSharedScope,
+} from '../src/features/plugin-federation.ts';
 import { parsePluginFrontendDescriptor } from '../src/features/plugin-remote-contract.ts';
 import { createPluginRemoteAPI, remotePluginAPIPath } from '../src/features/plugin-remote-api.ts';
 
 const digest = 'a'.repeat(64);
 function descriptor(instance = 'Fixture.clone', version = '1.0', sha = digest) {
-  return { instance_id: instance, plugin_id: 'NotAHostBuiltin', version,
-    package_sha256: sha, contract: 'light-media.vue-federation/v1',
-    exposes: ['Config', 'Page', 'Dashboard', 'AppPage'], shared: ['vue', 'vuetify'],
+  return {
+    instance_id: instance,
+    plugin_id: 'NotAHostBuiltin',
+    version,
+    package_sha256: sha,
+    contract: 'light-media.vue-federation/v1',
+    exposes: ['Config', 'Page', 'Dashboard', 'AppPage'],
+    shared: ['vue', 'vuetify'],
     api_contract: 'light-media.plugin-api/v1',
-    entry_path: '/plugins/' + instance + '/frontend/' + sha + '/assets/remoteEntry.js' };
+    entry_path: '/plugins/' + instance + '/frontend/' + sha + '/assets/remoteEntry.js',
+  };
 }
 const response = (data, status = 200) => new Response(JSON.stringify({ data }), { status });
-const deferred = () => { let resolve, reject; const promise = new Promise((yes, no) => { resolve = yes; reject = no; }); return { promise, resolve, reject }; };
-const entry = () => ({ init() {}, async get(name) { return () => ({ name, setup: () => ({ fixture: true }) }); } });
+const deferred = () => {
+  let resolve, reject;
+  const promise = new Promise((yes, no) => {
+    resolve = yes;
+    reject = no;
+  });
+  return { promise, resolve, reject };
+};
+const entry = () => ({
+  init() {},
+  async get(name) {
+    return () => ({ name, setup: () => ({ fixture: true }) });
+  },
+});
 
 test('actual JavaScript federation graph resolves all four exports under instance/digest with shared host modules', async (t) => {
   const root = mkdtempSync(join(tmpdir(), 'standard-vue-graph-'));
@@ -30,23 +52,38 @@ test('actual JavaScript federation graph resolves all four exports under instanc
   mkdirSync(dirname(path), { recursive: true });
   writeFileSync(join(root, 'package.json'), JSON.stringify({ type: 'module' }));
   writeFileSync(join(dirname(path), 'style.css'), '.fixture { color: inherit; }');
-  writeFileSync(join(dirname(path), 'component.js'), `export function make(name, vue, css) {
+  writeFileSync(
+    join(dirname(path), 'component.js'),
+    `export function make(name, vue, css) {
     return vue.defineComponent({ name, props: ['api', 'initialConfig', 'navKey', 'config'],
       setup(props) { return { observedNavKey: props.navKey, css, count: vue.ref(0) }; } });
-  }`);
-  writeFileSync(path, `import { make } from './component.js'; let scope;
+  }`,
+  );
+  writeFileSync(
+    path,
+    `import { make } from './component.js'; let scope;
     export function init(value) { scope = value; }
     export async function get(name) {
       const versions = Object.values(scope.vue); const vue = (await versions[0].get())();
       return () => make(name.slice(2), vue, new URL('./style.css', import.meta.url).href);
-    }`);
-  const calls = [], imports = [];
+    }`,
+  );
+  const calls = [],
+    imports = [];
   const load = createPluginRemoteLoader({
-    fetcher: async (url, options) => { calls.push({ url, options }); return response(meta); },
-    importEntry: async (url) => { imports.push(url); return import(pathToFileURL(join(root, url.slice('/api/'.length))).href); },
+    fetcher: async (url, options) => {
+      calls.push({ url, options });
+      return response(meta);
+    },
+    importEntry: async (url) => {
+      imports.push(url);
+      return import(pathToFileURL(join(root, url.slice('/api/'.length))).href);
+    },
   });
   for (const name of meta.exposes) {
-    const { component, descriptor: loaded } = await load(meta.instance_id, name, { version: '1.0' });
+    const { component, descriptor: loaded } = await load(meta.instance_id, name, {
+      version: '1.0',
+    });
     const state = component.setup({ navKey: 'not-main' });
     assert.equal(component.name, name);
     assert.equal(state.observedNavKey, 'not-main');
@@ -66,10 +103,20 @@ test('actual JavaScript federation graph resolves all four exports under instanc
 
 test('unsupported or malformed descriptors fail before any module import', async () => {
   const invalid = [
-    { instance_id: 'other' }, { plugin_id: '../other' }, { version: '' }, { package_sha256: 'x' },
-    { contract: 'unknown/v2' }, { api_contract: 'unknown/v2' }, { exposes: ['Page'] },
-    { exposes: ['Config', 'Config'] }, { exposes: { Config: './Config' } }, { exposes: ['Unknown'] },
-    { shared: [] }, { shared: ['vuetify'] }, { shared: ['vue', 'react'] }, { shared: ['vue', 'vue'] },
+    { instance_id: 'other' },
+    { plugin_id: '../other' },
+    { version: '' },
+    { package_sha256: 'x' },
+    { contract: 'unknown/v2' },
+    { api_contract: 'unknown/v2' },
+    { exposes: ['Page'] },
+    { exposes: ['Config', 'Config'] },
+    { exposes: { Config: './Config' } },
+    { exposes: ['Unknown'] },
+    { shared: [] },
+    { shared: ['vuetify'] },
+    { shared: ['vue', 'react'] },
+    { shared: ['vue', 'vue'] },
     { entry_path: 'https://evil.test/remoteEntry.js' },
     { entry_path: descriptor().entry_path + '?package=other' },
     { entry_path: descriptor().entry_path.replace(digest, 'b'.repeat(64)) },
@@ -79,18 +126,34 @@ test('unsupported or malformed descriptors fail before any module import', async
   ];
   for (const changes of invalid) {
     let imports = 0;
-    const load = createPluginRemoteLoader({ fetcher: async () => response({ ...descriptor(), ...changes }), importEntry: async () => { imports++; return entry(); } });
+    const load = createPluginRemoteLoader({
+      fetcher: async () => response({ ...descriptor(), ...changes }),
+      importEntry: async () => {
+        imports++;
+        return entry();
+      },
+    });
     await assert.rejects(load('Fixture.clone', 'Config'));
     assert.equal(imports, 0, JSON.stringify(changes));
   }
-  const nested = descriptor(); nested.entry_path = nested.entry_path.replace('/assets/', '/assets/build/');
-  assert.equal(parsePluginFrontendDescriptor(nested, nested.instance_id, 'Config').entry_path, nested.entry_path);
+  const nested = descriptor();
+  nested.entry_path = nested.entry_path.replace('/assets/', '/assets/build/');
+  assert.equal(
+    parsePluginFrontendDescriptor(nested, nested.instance_id, 'Config').entry_path,
+    nested.entry_path,
+  );
 });
 
 test('updated package and distinct clones use separate immutable entry graphs; stale versions fail closed', async () => {
   let meta = descriptor();
   const imports = [];
-  const load = createPluginRemoteLoader({ fetcher: async () => response(meta), importEntry: async (url) => { imports.push(url); return entry(); } });
+  const load = createPluginRemoteLoader({
+    fetcher: async () => response(meta),
+    importEntry: async (url) => {
+      imports.push(url);
+      return entry();
+    },
+  });
   const first = await load(meta.instance_id, 'Page', { version: '1.0' });
   meta = descriptor('Fixture.clone', '2.0', 'b'.repeat(64));
   await assert.rejects(load(meta.instance_id, 'Page', { version: '1.0' }), /版本已变化/);
@@ -108,73 +171,255 @@ test('proxy base path is honored without changing descriptor source identity', a
   globalThis.location = { pathname: '/light-media/' };
   const calls = [];
   try {
-    const load = createPluginRemoteLoader({ fetcher: async (url) => { calls.push(url); return response(descriptor()); }, importEntry: async (url) => { calls.push(url); return entry(); } });
+    const load = createPluginRemoteLoader({
+      fetcher: async (url) => {
+        calls.push(url);
+        return response(descriptor());
+      },
+      importEntry: async (url) => {
+        calls.push(url);
+        return entry();
+      },
+    });
     const result = await load('Fixture.clone', 'Page');
     assert.equal(calls[0], '/light-media/api/plugins/Fixture.clone/frontend');
     assert.equal(calls[1], '/light-media/api' + descriptor().entry_path);
     assert.equal(result.descriptor.plugin_id, 'NotAHostBuiltin');
-  } finally { if (previous === undefined) delete globalThis.location; else globalThis.location = previous; }
+  } finally {
+    if (previous === undefined) delete globalThis.location;
+    else globalThis.location = previous;
+  }
 });
 
 test('concurrent consumers share one initialized entry but cancel independently', async () => {
-  const pending = deferred(); let imports = 0, initialized = 0, factories = 0;
-  const load = createPluginRemoteLoader({ fetcher: async () => response(descriptor()), importEntry: async () => { imports++; return pending.promise; } });
+  const pending = deferred();
+  let imports = 0,
+    initialized = 0,
+    factories = 0;
+  const load = createPluginRemoteLoader({
+    fetcher: async () => response(descriptor()),
+    importEntry: async () => {
+      imports++;
+      return pending.promise;
+    },
+  });
   const controller = new AbortController();
   const first = load('Fixture.clone', 'Config', { signal: controller.signal });
   const rejected = assert.rejects(first, { name: 'AbortError' });
   const second = load('Fixture.clone', 'Page');
   await new Promise(setImmediate);
   controller.abort();
-  pending.resolve({ init() { initialized++; }, async get() { return () => { factories++; return { setup() {} }; }; } });
-  await rejected; await second;
-  assert.equal(imports, 1); assert.equal(initialized, 1); assert.equal(factories, 1);
+  pending.resolve({
+    init() {
+      initialized++;
+    },
+    async get() {
+      return () => {
+        factories++;
+        return { setup() {} };
+      };
+    },
+  });
+  await rejected;
+  await second;
+  assert.equal(imports, 1);
+  assert.equal(initialized, 1);
+  assert.equal(factories, 1);
 });
 
 test('cancel before metadata and after get prevents late component factory execution', async () => {
   for (const stage of ['metadata', 'get']) {
-    const pending = deferred(), controller = new AbortController(); let factories = 0, imports = 0;
+    const pending = deferred(),
+      controller = new AbortController();
+    let factories = 0,
+      imports = 0;
     const load = createPluginRemoteLoader({
-      fetcher: async () => stage === 'metadata' ? pending.promise : response(descriptor()),
-      importEntry: async () => { imports++; return { init() {}, async get() { await pending.promise; return () => { factories++; return {}; }; } }; },
+      fetcher: async () => (stage === 'metadata' ? pending.promise : response(descriptor())),
+      importEntry: async () => {
+        imports++;
+        return {
+          init() {},
+          async get() {
+            await pending.promise;
+            return () => {
+              factories++;
+              return {};
+            };
+          },
+        };
+      },
     });
     const running = load('Fixture.clone', 'Config', { signal: controller.signal });
     const rejected = assert.rejects(running, { name: 'AbortError' });
-    await new Promise(setImmediate); controller.abort(); await rejected;
-    pending.resolve(response(descriptor())); await new Promise(setImmediate);
-    assert.equal(factories, 0); if (stage === 'metadata') assert.equal(imports, 0);
+    await new Promise(setImmediate);
+    controller.abort();
+    await rejected;
+    pending.resolve(response(descriptor()));
+    await new Promise(setImmediate);
+    assert.equal(factories, 0);
+    if (stage === 'metadata') assert.equal(imports, 0);
   }
 });
 
-test('timeout does not publish a late factory and failed initialization can retry', async () => {
-  const pending = deferred(); let factories = 0;
-  const load = createPluginRemoteLoader({ timeoutMs: 5, fetcher: async () => response(descriptor()), importEntry: async () => pending.promise });
+test('timeout does not publish a late factory and failed initialization automatically rediscovers once', async () => {
+  const pending = deferred();
+  let factories = 0;
+  const load = createPluginRemoteLoader({
+    timeoutMs: 5,
+    fetcher: async () => response(descriptor()),
+    importEntry: async () => pending.promise,
+  });
   await assert.rejects(load('Fixture.clone', 'Config'), /超时/);
-  pending.resolve({ init() {}, async get() { return () => { factories++; return {}; }; } });
-  await new Promise(setImmediate); assert.equal(factories, 0);
+  pending.resolve({
+    init() {},
+    async get() {
+      return () => {
+        factories++;
+        return {};
+      };
+    },
+  });
+  await new Promise(setImmediate);
+  assert.equal(factories, 0);
   let attempts = 0;
-  const retry = createPluginRemoteLoader({ fetcher: async () => response(descriptor()), importEntry: async () => { attempts++; if (attempts === 1) throw new Error('fixture import failed'); return entry(); } });
-  await assert.rejects(retry('Fixture.clone', 'Config'), /fixture import failed/);
-  await retry('Fixture.clone', 'Config'); assert.equal(attempts, 2);
+  const retry = createPluginRemoteLoader({
+    fetcher: async () => response(descriptor()),
+    importEntry: async () => {
+      attempts++;
+      if (attempts === 1) throw new Error('fixture import failed');
+      return entry();
+    },
+  });
+  await retry('Fixture.clone', 'Config');
+  assert.equal(attempts, 2);
 });
 
-for (const [label, module] of [['entry', {}], ['factory', { init() {}, get: async () => 4 }], ['component', { init() {}, get: async () => () => null }]]) {
+test('failed component export retries discovery and entry initialization once, but never beyond two attempts', async () => {
+  let reads = 0,
+    imports = 0,
+    initialized = 0;
+  const load = createPluginRemoteLoader({
+    fetcher: async () => {
+      reads++;
+      return response(descriptor());
+    },
+    importEntry: async () => {
+      imports++;
+      const attempt = imports;
+      return {
+        init() {
+          initialized++;
+        },
+        async get() {
+          if (attempt === 1) throw new Error('stale registration');
+          return () => ({ setup() {} });
+        },
+      };
+    },
+  });
+  await load('Fixture.clone', 'Page');
+  assert.equal(reads, 2);
+  assert.equal(imports, 2);
+  assert.equal(initialized, 2);
+  let failures = 0;
+  const rejected = createPluginRemoteLoader({
+    fetcher: async () => response(descriptor()),
+    importEntry: async () => {
+      failures++;
+      throw new Error('owned unavailable');
+    },
+  });
+  await assert.rejects(rejected('Fixture.clone', 'Page'), /owned unavailable/);
+  assert.equal(failures, 2);
+});
+
+for (const [label, module] of [
+  ['entry', {}],
+  ['factory', { init() {}, get: async () => 4 }],
+  ['component', { init() {}, get: async () => () => null }],
+]) {
   test('invalid federation ' + label + ' is an explicit error', async () => {
-    const load = createPluginRemoteLoader({ fetcher: async () => response(descriptor()), importEntry: async () => module });
+    const load = createPluginRemoteLoader({
+      fetcher: async () => response(descriptor()),
+      importEntry: async () => module,
+    });
     await assert.rejects(load('Fixture.clone', 'Config'), /无效/);
   });
 }
 
-test('generic API leaves method authorization to backend, preserves refusal, binds clone and never injects credentials', async () => {
-  const previous = globalThis.fetch; const calls = [], controller = new AbortController(); let changed = 0;
-  globalThis.fetch = async (url, options) => { calls.push({ url, options }); return new Response(JSON.stringify({ error: { message: 'route denied' } }), { status: 403 }); };
+test('generic API leaves method authorization to backend, preserves refusal, preserves identity and never injects credentials', async () => {
+  const previous = globalThis.fetch;
+  const calls = [],
+    controller = new AbortController();
+  let changed = 0;
+  globalThis.fetch = async (url, options) => {
+    calls.push({ url, options });
+    return new Response(JSON.stringify({ error: { message: 'route denied' } }), { status: 403 });
+  };
   try {
-    const api = createPluginRemoteAPI('NotAHostBuiltin', 'Fixture.clone', controller.signal, () => changed++);
-    await assert.rejects(api.patch('plugin/NotAHostBuiltin/custom/42', { enabled: true }), /route denied/);
-    assert.equal(changed, 0); assert.equal(calls[0].url, '/api/plugins/Fixture.clone/api/custom/42');
-    assert.deepEqual(calls[0].options.headers, { 'Content-Type': 'application/json' });
+    const api = createPluginRemoteAPI(
+      'NotAHostBuiltin',
+      'Fixture.clone',
+      controller.signal,
+      () => changed++,
+    );
+    await assert.rejects(
+      api.patch('plugin/NotAHostBuiltin/custom/42', { enabled: true }),
+      /403/,
+    );
+    assert.equal(changed, 0);
+    assert.equal(calls[0].url, '/api/v1/plugin/NotAHostBuiltin/custom/42');
+    assert.equal(calls[0].options.headers.get('Content-Type'),'application/json');
+    assert.equal(calls[0].options.headers.get('Accept'),'application/json, text/plain, */*');
     assert.equal(calls[0].options.signal, controller.signal);
     assert.equal(calls[0].options.redirect, 'error');
-    for (const path of ['plugin/Other/x', '/api/plugins/Other/api/x', 'https://evil.test/x', 'plugin/NotAHostBuiltin/%2e%2e/x', 'plugin/NotAHostBuiltin/%252e%252e/x', 'plugin/NotAHostBuiltin/x%2Fy', 'plugin/NotAHostBuiltin/x//y', 'plugin/NotAHostBuiltin/x#fragment'])
+    assert.equal(remotePluginAPIPath('NotAHostBuiltin', 'Fixture.clone', 'plugin/Other/x', 'GET'), '/v1/plugin/Other/x');
+    for (const path of ['https://evil.test/x', '//evil.test/x'])
       assert.throws(() => remotePluginAPIPath('NotAHostBuiltin', 'Fixture.clone', path, 'GET'));
-  } finally { globalThis.fetch = previous; }
+  } finally {
+    globalThis.fetch = previous;
+  }
+});
+
+test('standard ESM namespace and transpiled default exports unwrap before component validation', async () => {
+  const definition = { name: 'DefaultPage', setup() {} };
+  for (const module of [
+    { __esModule: true, default: definition },
+    { [Symbol.toStringTag]: 'Module', default: definition },
+    definition,
+  ]) {
+    const load = createPluginRemoteLoader({
+      fetcher: async () => response(descriptor()),
+      importEntry: async () => ({ init() {}, get: async () => () => module }),
+    });
+    const result = await load('Fixture.clone', 'Page');
+    assert.equal(result.component, definition);
+  }
+  const missing = createPluginRemoteLoader({
+    fetcher: async () => response(descriptor()),
+    importEntry: async () => ({ init() {}, get: async () => () => ({ __esModule: true }) }),
+  });
+  await assert.rejects(missing('Fixture.clone', 'Page'), /组件无效/);
+});
+
+
+test('Unicode and 97-byte API clone identities retain exact percent-encoded graph ownership', () => {
+ for (const instance of ['Fixture备份', 'Fixturei\u0307copy', 'Fixture'+'a'.repeat(90)]) {
+  const meta=descriptor(instance);
+  meta.entry_path='/plugins/'+encodeURIComponent(instance)+'/frontend/'+digest+'/assets/remoteEntry.js';
+  assert.equal(parsePluginFrontendDescriptor(meta,instance,'Config').instance_id,instance);
+ }
+ const meta=descriptor('Fixture备份');
+ meta.entry_path='/plugins/Fixture备份/frontend/'+digest+'/assets/remoteEntry.js';
+ assert.throws(()=>parsePluginFrontendDescriptor(meta,meta.instance_id,'Config'),/入口/);
+});
+
+
+test('physical clone ID punctuation is decoded exactly inside the pinned owner path',()=>{
+ for (const id of ['Fixture💫','Fixture!','Fixturea?b','Fixturea#b','Fixturea%b','Fixturea:b',"Fixturea'b",'Fixturea"b','Fixturea+b','Fixturea;b']) {
+  const meta=descriptor(id);meta.entry_path='/plugins/'+encodeURIComponent(id)+'/frontend/'+digest+'/assets/remoteEntry.js';
+  assert.equal(parsePluginFrontendDescriptor(meta,id,'Config').instance_id,id);
+  meta.entry_path=meta.entry_path.replace(encodeURIComponent(id),encodeURIComponent(id+'other'));
+  assert.throws(()=>parsePluginFrontendDescriptor(meta,id,'Config'),/入口/);
+ }
 });

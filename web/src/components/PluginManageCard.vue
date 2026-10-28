@@ -5,7 +5,8 @@ import { VBtn } from "vuetify/components/VBtn";
 import { VMenu } from "vuetify/components/VMenu";
 import { VList, VListItem } from "vuetify/components/VList";
 import { VIcon } from "vuetify/components/VIcon";
-import type { PluginCard } from "../features/plugin-forms";
+import { VChip } from "vuetify/components/VChip";
+import { validPluginLink, type PluginCard } from "../features/plugin-forms";
 import iconColors from "../features/plugin-icon-colors.json";
 import { safePluginIcon } from "../features/plugin-clone";
 
@@ -14,6 +15,7 @@ const props = defineProps<{
   busy?: boolean;
   sortable?: boolean;
   inFolder?: boolean;
+  count?: number;
 }>();
 const emit = defineEmits<{ action: [action: string, plugin: PluginCard] }>();
 const iconFailed = ref(false);
@@ -22,6 +24,8 @@ const sourceIconName = computed(() => sourceIcon.value.split("/").at(-1) || "");
 const displayVersion = computed(
   () => props.plugin.display_version ?? props.plugin.version,
 );
+const labels = computed(() => (props.plugin.plugin_label || '').split(',').map(label => label.trim()).filter(Boolean));
+const downloadCount = computed(() => props.count && props.count >= 1000 ? (props.count / 1000).toFixed(1) + 'k' : props.count?.toLocaleString() || '0');
 const iconName = computed(() => {
   const name = sourceIconName.value;
   return !iconFailed.value &&
@@ -91,14 +95,16 @@ watch(sourceIcon, () => {
             />
           </div>
         </div>
+        <div v-if="labels.length" class="plugin-card-labels"><VChip v-for="label in labels" :key="label" size="x-small" variant="tonal" color="info" class="mr-1">{{ label }}</VChip></div>
       </div>
       <p v-if="plugin.available === false" role="status" class="pa-3 mb-0">
         {{ plugin.unavailable_reason || "插件暂不可用" }}
       </p>
+      <p v-else-if="plugin.has_update && plugin.update_blocked_reason" role="status" class="pa-3 mb-0">{{ plugin.update_blocked_reason }}</p>
       <VCardText class="plugin-card-footer">
         <div class="plugin-author">
           <VIcon class="author-avatar" icon="mdi-github" size="20" />
-          <span v-if="sortable">{{ plugin.author }}</span>
+          <span v-if="sortable || !validPluginLink(plugin.author_url)">{{ plugin.author }}</span>
           <a
             v-else
             :href="plugin.author_url"
@@ -108,6 +114,7 @@ watch(sourceIcon, () => {
             >{{ plugin.author }}</a
           >
         </div>
+        <span v-if="count" class="plugin-download-count"><VIcon size="small" icon="mdi-download" />{{ downloadCount }}</span>
         <VBtn
           v-if="!plugin.installed"
           size="small"
@@ -168,13 +175,12 @@ watch(sourceIcon, () => {
               v-if="
                 plugin.has_update &&
                 plugin.repo_url &&
-                plugin.repository_version &&
-                !plugin.source_instance_id
+                plugin.repository_version
               "
               :title="'更新至 v' + plugin.repository_version"
               prepend-icon="mdi-update"
-              :disabled="plugin.available === false"
-              @click="emit('action', 'repository-update', plugin)"
+              :disabled="plugin.available === false || !!plugin.update_blocked_reason"
+              @click="!plugin.update_blocked_reason && emit('action', 'repository-update', plugin)"
             />
             <VListItem
               title="重置"
@@ -194,6 +200,12 @@ watch(sourceIcon, () => {
               prepend-icon="mdi-file-document-outline"
               @click="emit('action', 'logs', plugin)"
             />
+            <VListItem
+              title="版本历史"
+              prepend-icon="mdi-history"
+              @click="emit('action', 'history', plugin)"
+            />
+            <VListItem title="项目主页" prepend-icon="mdi-home-outline" @click="emit('action', 'project', plugin)" />
           </VList>
         </VMenu>
       </VCardText>
@@ -241,6 +253,10 @@ watch(sourceIcon, () => {
   height: 108px;
   color: #fff;
 }
+.plugin-card-cover:has(.plugin-card-labels) { height: 128px; }
+.plugin-card-cover:has(.plugin-card-labels) .plugin-card-description > span { -webkit-line-clamp: 2; line-clamp: 2; }
+.plugin-card-labels { padding: 0 16px 8px; white-space: nowrap; overflow: hidden; }
+.plugin-download-count { display: inline-flex; align-items: center; flex-shrink: 0; gap: 4px; font-size: 12px; }
 .plugin-card-title {
   padding: 12px 16px 0;
   height: 36px;

@@ -1,13 +1,18 @@
 import { pluginPageStyles } from './plugin-page-styles.ts';
+import { pluginJSONComponents } from './plugin-json-components.ts';
 import type { PluginRuntimeSupport } from './plugin-runtime-support';
 export type PluginFormNode = {
   component: string;
   props?: Record<string, any>;
   content?: PluginFormNode[];
   text?: string | number | null;
+  html?: string;
+  slots?: Record<string, PluginFormNode | PluginFormNode[]>;
+  events?: Record<string, { api: string; method: string; params?: Record<string, unknown> }>;
 };
 
 const supported = new Set([
+  ...pluginJSONComponents,
   'VForm',
   'VDivider',
   'VSubheader',
@@ -31,6 +36,30 @@ const supported = new Set([
   'span',
   'u',
 ]);
+for (const tag of [
+  'div',
+  'p',
+  'b',
+  'strong',
+  'em',
+  'i',
+  'small',
+  'br',
+  'ul',
+  'ol',
+  'li',
+  'pre',
+  'code',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'label',
+  'section',
+  'article',
+  'style',
+])
+  supported.add(tag as any);
 const tableElements = new Set([
   'style',
   'VSpacer',
@@ -51,47 +80,6 @@ const tableElements = new Set([
   'VImg',
   'VApexChart',
 ]);
-const plainTextComponents = new Set(['span', 'u']);
-const plainTextStyles = new Set([
-  'color',
-  'fontWeight',
-  'fontStyle',
-  'fontSize',
-  'textDecoration',
-  'whiteSpace',
-  'margin',
-  'marginLeft',
-  'marginRight',
-]);
-function validPlainTextStyle(value: unknown): boolean {
-  return (
-    !!value &&
-    typeof value === 'object' &&
-    !Array.isArray(value) &&
-    Object.entries(value).every(
-      ([key, v]) =>
-        plainTextStyles.has(key) &&
-        ((typeof v === 'number' && Number.isFinite(v) && Math.abs(v) <= 10000) ||
-          (typeof v === 'string' && /^[#A-Za-z0-9 .,%\-]{0,80}$/.test(v))),
-    )
-  );
-}
-function validPlainTextProps(props: Record<string, any>): boolean {
-  return Object.entries(props).every(([key, value]) =>
-    key === 'class'
-      ? typeof value === 'string' && /^[A-Za-z0-9_ -]{0,256}$/.test(value)
-      : key === 'title'
-        ? typeof value === 'string' && value.length <= 2048
-        : key === 'style' && validPlainTextStyle(value),
-  );
-}
-function plainTextProps(props: Record<string, any>): Record<string, any> {
-  return Object.fromEntries(
-    Object.entries(props).filter(([key, value]) => validPlainTextProps({ [key]: value })),
-  );
-}
-
-const modelKey = /^[A-Za-z_][A-Za-z0-9_.-]{0,255}$/;
 
 // The installed Lark form declares exactly this password visibility action.
 // Translate that one native behavior; no server-provided JavaScript executes.
@@ -109,28 +97,57 @@ function passwordVisible(model: Record<string, any>): boolean {
   return Object.hasOwn(model, 'app_secret_visible') && !!value;
 }
 
-function validModelKey(value: any): value is string {
+function validModelKey(value: unknown): boolean {
+  // These are literal JSON object keys, not paths or JavaScript identifiers.
+  // Prevent prototype mutation while preserving Unicode, punctuation and the
+  // source's ordinary scalar-to-property-key conversion.
   return (
-    typeof value === 'string' &&
-    modelKey.test(value) &&
-    !value.split('.').some((key) => ['__proto__', 'constructor', 'prototype'].includes(key))
+    (value === null || ['string', 'number', 'boolean'].includes(typeof value)) &&
+    !['__proto__', 'constructor', 'prototype'].includes(String(value))
   );
 }
 
-function visibilityModelKey(value: unknown): string | null {
-  if (typeof value !== 'string') return null;
-  const match = /^\{\{\s*([A-Za-z_][A-Za-z0-9_]*)\s*\}\}$/.exec(value);
-  return match && validModelKey(match[1]) ? match[1] : null;
+function possibleLinkModelKey(value: unknown): boolean {
+  // A bare model alias is resolved and URL-checked again by pluginFieldProps.
+  // An invalid URL/scheme must not become an alias merely because object keys
+  // can contain punctuation.
+  return typeof value === 'string' && validModelKey(value) && !/[:/\\?#\u0000-\u001f]/u.test(value);
 }
 
-// A single literal model key, not expression evaluation or property traversal.
-// Hiding a field never deletes or rewrites its saved value.
+
+const isExpression = (value: unknown): value is string =>
+  typeof value === 'string' && value.startsWith('{{') && value.endsWith('}}');
+const expressionText = (value: string) => (isExpression(value) ? value.slice(2, -2).trim() : value);
+function expression(value: string, model: Record<string, any>) {
+  // Installed plugin code is trusted just like its Vue federation component.
+  // The original JSON form supports expressions against its own draft model.
+  return new Function('model', `with(model) { return (${expressionText(value)}) }`)(model);
+}
+function validExpression(value: unknown) {
+  if (typeof value !== 'string') return false;
+  try {
+    new Function('model', `with(model) { return (${expressionText(value)}) }`);
+    return true;
+  } catch {
+    return false;
+  }
+}
+function validEventFunction(value: unknown): value is string {
+  // The source invokes a parenthesized expression as an event function. This
+  // also supports a factory expression returning a function, not only a
+  // function/arrow literal at the beginning of the string.
+  return typeof value === 'string' && validExpression(value);
+}
+
+// Fixed show/v-show evaluates the expression against the draft. Missing names
+// raise ReferenceError; they must not silently hide a malformed plugin field.
 export function pluginNodeVisible(props: Record<string, any>, model: Record<string, any>): boolean {
-  if (!Object.hasOwn(props, 'show')) return true;
-  const key = visibilityModelKey(props.show);
-  if (!key) return false;
-  const current = model[key]; // Track an initially absent reactive key.
-  return Object.hasOwn(model, key) && !!current;
+  if (!Object.hasOwn(props, 'show') && !Object.hasOwn(props, 'v-show')) return true;
+  const value = Object.hasOwn(props, 'show') ? props.show : props['v-show'];
+  // The source requires a string here; preserve its ordinary JS exception for
+  // an invalid supplied value instead of coercing it into a visibility flag.
+  const code = value.startsWith('{{') && value.endsWith('}}') ? value.slice(2, -2).trim() : value;
+  return !!new Function('model', `with(model) { return ${code} }`)(model);
 }
 
 export function validPluginLink(value: unknown): value is string {
@@ -171,60 +188,70 @@ function pluginRenderIssues(
       continue;
     }
     if (
-      node.component === 'VSubheader' &&
-      !Object.entries(node.props || {}).every(
-        ([key, value]) => key === 'text' && typeof value === 'string' && value.length <= 2048,
-      )
-    )
-      issues.push('插件小标题属性无效');
-    if (node.component === 'VSpacer' && Object.keys(node.props || {}).length)
-      issues.push('插件间隔组件属性无效');
-    if (
-      node.component === 'VChip' &&
-      !Object.entries(node.props || {}).every(
-        ([key, value]) =>
-          ['color', 'size', 'variant', 'prepend-icon', 'append-icon'].includes(key) &&
-          typeof value === 'string' &&
-          /^[A-Za-z0-9_-]{1,64}$/.test(value),
-      )
-    )
-      issues.push('插件标签组件属性无效');
-    if (
       node.component === 'style' &&
-      (pluginPageStyles(node.text) === null ||
-        Object.keys(node.props || {}).length ||
-        node.content !== undefined)
+      pluginPageStyles(node.text) === null
     )
-      issues.push('插件页面样式不在安全展示范围内');
-    if (plainTextComponents.has(node.component) && !validPlainTextProps(node.props || {}))
-      issues.push('插件文本组件属性无效');
+      issues.push('插件样式文本格式无效');
     const passwordAction = originalPasswordAction(node.props || {});
     for (const [key, value] of Object.entries(node.props || {})) {
-      if (key === 'show' && visibilityModelKey(value)) {
+      if (page && !['innerHTML', 'outerHTML', 'srcdoc'].includes(key)) {
+        // Page/Dashboard v-bind uses literal props, not FormRender bindings.
+        continue;
+      } else if (key.startsWith('on') && typeof value !== 'string') {
+        continue;
+      } else if (['show', 'v-show'].includes(key) && validExpression(value)) {
         continue;
       } else if (passwordAction && Object.hasOwn(larkPasswordAction, key) && key !== 'model') {
         continue;
-      } else if (['model', 'modelvalue', 'v-model'].includes(key)) {
+      } else if (
+        ['model', 'modelvalue', 'v-model'].includes(key) ||
+        key.startsWith('model:') ||
+        key.startsWith('v-model:')
+      ) {
         if (!validModelKey(value)) issues.push('插件表单字段名无效');
+      } else if (
+        (key.startsWith('on') && validEventFunction(value)) ||
+        (isExpression(value) && validExpression(value))
+      ) {
+        continue;
       } else if (
         key.startsWith('on') ||
         ['innerHTML', 'outerHTML', 'srcdoc'].includes(key) ||
-        key.includes('show') ||
+        ['show', 'v-show'].includes(key) ||
         (typeof value === 'string' && value.includes('{{'))
       ) {
-        issues.push('此插件的动态表单行为尚未移植');
+        issues.push('插件动态属性或事件格式无效');
       }
     }
-    if ('html' in node || 'slots' in node) issues.push('此插件的富文本或插槽行为尚未移植');
-    if (node.component === 'a' && !validPluginLink(node.props?.href))
+    if (node.html !== undefined && typeof node.html !== 'string') issues.push('插件富文本格式无效');
+    if (node.slots)
+      for (const slot of Object.values(node.slots))
+        issues.push(
+          ...pluginRenderIssues(Array.isArray(slot) ? slot : [slot], page, depth + 1, budget),
+        );
+    if (node.events)
+      for (const [name, event] of Object.entries(node.events))
+        if (
+          !/^[A-Za-z][\w:-]*$/.test(name) ||
+          !event ||
+          typeof event.api !== 'string' ||
+          typeof event.method !== 'string'
+        )
+          issues.push('插件页面事件格式无效');
+    if (
+      (node.component === 'a' || Object.hasOwn(node.props || {}, 'href')) &&
+      !validPluginLink(node.props?.href) &&
+      !(isExpression(node.props?.href) && validExpression(node.props?.href)) &&
+      !possibleLinkModelKey(node.props?.href)
+    )
       issues.push('插件链接地址无效');
     if (
       node.component === 'VImg' &&
-      !/^\/plugin_icon\/[A-Za-z0-9_.-]+\.png$/.test(node.props?.src || '')
+      !/^\/plugin_icon\/[A-Za-z0-9_.-]+\.png$/.test(node.props?.src || '') &&
+      !validPluginLink(node.props?.src) &&
+      !isExpression(node.props?.src)
     )
       issues.push('插件图片地址无效');
-    if (node.component === 'VApexChart' && !validPluginPieChart(node.props || {}))
-      issues.push('插件图表结构无效或尚未移植');
     if (node.content) issues.push(...pluginRenderIssues(node.content, page, depth + 1, budget));
   }
   return [...new Set(issues)];
@@ -281,13 +308,21 @@ export function pluginFieldProps(
   model: Record<string, any>,
   component?: string,
 ) {
-  if (component && plainTextComponents.has(component)) return plainTextProps(props);
   const bound: Record<string, any> = {};
   const passwordAction = originalPasswordAction(props);
   for (const [key, value] of Object.entries(props)) {
-    if (['model', 'modelvalue', 'v-model'].includes(key)) {
+    if (
+      ['model', 'modelvalue', 'v-model'].includes(key) ||
+      key.startsWith('model:') ||
+      key.startsWith('v-model:')
+    ) {
       if (!validModelKey(value)) continue;
-      const name = key === 'modelvalue' ? 'value' : 'modelValue';
+      const name = key.includes(':')
+        ? key.split(':')[1]
+        : key === 'modelvalue'
+          ? 'value'
+          : 'modelValue';
+      if (!validModelKey(name)) continue;
       // Original dotted names are literal dictionary keys, never property
       // traversal. A missing key must not resolve an inherited object member.
       const current = model[value]; // Track missing reactive keys before the own-key check.
@@ -303,13 +338,24 @@ export function pluginFieldProps(
       bound[key] = () => {
         model.app_secret_visible = !passwordVisible(model);
       };
+    } else if (['show', 'v-show'].includes(key)) {
+      if (!bound.style) bound.style = {};
+      bound.style.display = pluginNodeVisible({ [key]: value }, model) ? '' : 'none';
+    } else if (key.startsWith('on') && validEventFunction(value)) {
+      bound[key] = (event: unknown) =>
+        new Function('model', 'event', `with(model) { return (${value})(event) }`)(model, event);
     } else if (
       !key.startsWith('on') &&
-      !key.includes('show') &&
-      (key !== 'href' || validPluginLink(value)) &&
+      !['show', 'v-show'].includes(key) &&
       !['innerHTML', 'outerHTML', 'srcdoc'].includes(key)
     ) {
-      bound[key] = value;
+      const resolved = isExpression(value)
+        ? expression(value, model)
+        : typeof value === 'string' && Object.hasOwn(model, value)
+          ? model[value]
+          : value;
+      if (key === 'href' && !validPluginLink(resolved)) continue;
+      bound[key] = resolved;
     }
   }
   return bound;
@@ -329,6 +375,8 @@ export type PluginCard = {
   source_instance_id?: string;
   author: string;
   author_url: string;
+  plugin_label?: string;
+  add_time?: number;
   installed: boolean;
   state: boolean;
   has_update?: boolean;

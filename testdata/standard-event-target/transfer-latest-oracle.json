@@ -1,0 +1,69 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "kind": "actual fixed functions/Pydantic and real owned filesystem; naming-root/parsed identity counted boundaries, not full discovery/runtime",
+  "source_sha256": {
+    "app/schemas/file.py": "676486e635bc9d0dfc0e589b514a6627c3330bf961a566c2cd8872b79f74aba0",
+    "app/schemas/event.py": "d5134476edc76096098b85ee32d2f96eb5db2441c873c80729a46b91386687d6",
+    "app/schemas/transfer.py": "b0c1e7bdc15d5041094d1be9050de5a279a5f5651bbfc32de85a001ecb56b2bd",
+    "app/modules/filemanager/transhandler.py": "48948f9137ae68ac2f0cf4c1235dd3db6327cc9d66ff7490c17a5657504d5e36",
+    "app/modules/filemanager/storages/local.py": "fdbe39789b31b508aa35c4e15e273ee4ed19fc92130aa31c33d0b74fc10bfdf4"
+  },
+  "cases": [
+    {
+      "name": "normal",
+      "calls": [
+        "get_folder",
+        "get_item_strict",
+        "get_item",
+        "list",
+        "delete",
+        "transfer.intercept",
+        "get_item",
+        "link"
+      ],
+      "success": true,
+      "old_exists": false,
+      "new_exists": true,
+      "source_exists": true,
+      "subtitle_exists": true,
+      "message": null
+    },
+    {
+      "name": "cancel",
+      "calls": [
+        "get_folder",
+        "get_item_strict",
+        "get_item",
+        "list",
+        "delete",
+        "transfer.intercept"
+      ],
+      "success": false,
+      "old_exists": false,
+      "new_exists": false,
+      "source_exists": true,
+      "subtitle_exists": true,
+      "message": "latest veto"
+    },
+    {
+      "name": "delete-false",
+      "calls": [
+        "get_folder",
+        "get_item_strict",
+        "get_item",
+        "list",
+        "delete",
+        "transfer.intercept",
+        "get_item",
+        "link"
+      ],
+      "success": true,
+      "old_exists": true,
+      "new_exists": true,
+      "source_exists": true,
+      "subtitle_exists": true,
+      "message": null
+    }
+  ]
+}

@@ -245,11 +245,11 @@ func (p *PluginStore) commitPluginMessage(ctx context.Context, tx *sql.Tx, opera
 	return nil
 }
 
-// The former native MessageChain adapter is removed. Until a standard sender
-// is adapted, ordinary core delivery reports unavailability without selecting
-// a transport, constructing an old owner, or pretending to have sent.
+// The existing core Router has already rendered, recorded and accepted this
+// exact call. Execute its standard plugin module directly; routing it again
+// would duplicate history/notice.message and lose the accepted queue identity.
 func (a *App) sendPluginMessageModules(ctx context.Context, q pluginNoticeQueueEntry) (int, error) {
-	return 0, bad("PLUGIN_ADAPTER_UNAVAILABLE", "消息发送插件尚未适配新的标准模块")
+	return a.sendOriginalNoticeModulesCount(ctx, q.Call)
 }
 func (a *App) attemptPluginMessage(ctx context.Context, id string) error {
 	release, err := a.pluginStore.noticeLock(ctx, "queue/"+id)

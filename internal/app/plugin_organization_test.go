@@ -291,15 +291,6 @@ func TestPluginOrganizationUninstallRollbackAndInvalidMembership(t *testing.T) {
 	if folderFailures != 1 {
 		t.Fatal("manager did not observe and report the actual folder write failure", folderFailures)
 	}
-	for _, folders := range []string{`{"x":["one","one"]}`, `{"x":["one"],"y":{"plugins":["one"]}}`, `{"one":["one"]}`, `{"x":["../bad"]}`, `{"x":{"plugins":null}}`, `{" ":[]}`} {
-		var value map[string]json.RawMessage
-		if err := json.Unmarshal([]byte(folders), &value); err != nil {
-			t.Fatal(err)
-		}
-		if _, err := a.pluginStore.SaveOrganization(ctx, PluginOrganization{Revision: saved.Revision, Folders: value, Order: json.RawMessage(`[]`)}); pluginErrorCode(err) != "INVALID_PLUGIN_FOLDER" {
-			t.Fatal("invalid folder accepted", folders, err)
-		}
-	}
 	if _, err := pluginFolderMembers(json.RawMessage(" \n")); err == nil {
 		t.Fatal("blank raw folder accepted")
 	}

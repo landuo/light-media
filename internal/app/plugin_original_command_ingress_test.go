@@ -119,7 +119,7 @@ func TestOriginalWebCommandActualSDKIngress(t *testing.T) {
 		{"query key is not Web authentication", "/api/v1/message/web?apikey=owned-only&token=owned-only", `{"text":"/owned_command"}`, "", "", nil, 401},
 		{"cross-origin", "/api/v1/message/web", `{"text":"/owned_command"}`, "https://elsewhere.invalid", "", cookie, 403},
 		{"cross-site", "/api/message/web", `{"text":"/owned_command"}`, "", "cross-site", cookie, 403},
-		{"non-command not fabricated", "/api/message/web", `{"text":"hello"}`, "", "", cookie, 501},
+		{"ordinary text publishes UserMessage", "/api/message/web", `{"text":"hello"}`, "", "", cookie, 200},
 		{"AI branch not fabricated", "/api/message/web", `{"text":"/AI question"}`, "", "", cookie, 501},
 		{"preset not fabricated", "/api/message/web", `{"text":"/restart"}`, "", "", cookie, 501},
 		{"arbitrary event not accepted", "/api/message/web", `{"event":"owned.command","data":{"action":"not_a_method"}}`, "", "", cookie, 501},

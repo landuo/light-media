@@ -9,8 +9,8 @@ import (
 	"light-media/internal/plugins"
 )
 
-// This is a real missing core dependency, not a success-shaped provider stub.
-// No channel menu API, provider delivery or business plugin is introduced here.
+// A menu declaration is not a channel provider. Keep the missing dependency
+// visible when no enabled, loaded plugin actually implements register_commands.
 var errOriginalCommandRegisterProviderUnavailable = errors.New("core register_commands provider unavailable")
 
 // The decision describes only preparation of outward menu metadata. It never
@@ -47,9 +47,8 @@ func originalCommandMenuMetadata(commands map[string]map[string]any) (map[string
 
 // Caller holds pluginOriginalCommandsMu, just like Command's initialization
 // lock. The executable map has already been rebuilt and is never edited here.
-// Source command.py 179-221 sets _registered_commands before calling the core
-// provider. We keep the same selected snapshot, while returning an explicit
-// missing-dependency error rather than claiming any downstream registration.
+// Source command.py 179-221 sets _registered_commands before invoking
+// ChainBase.register_commands. A failed provider does not roll back that snapshot.
 func (a *App) prepareOriginalCommandRegistration(ctx context.Context, pid string) (originalCommandRegisterDecision, error) {
 	initial, executable := originalCommandMenuMetadata(a.pluginOriginalCommands)
 	data, _ := json.Marshal(map[string]any{"commands": initial, "origin": "CommandChain", "service": nil, "cancel": false, "source": "未知拦截源"})
@@ -105,5 +104,20 @@ func (a *App) prepareOriginalCommandRegistration(ctx context.Context, pid string
 		return decision, nil
 	}
 	a.pluginOriginalRegisteredCommands = filtered
-	return decision, errOriginalCommandRegisterProviderUnavailable
+	kwargs, err := json.Marshal(map[string]any{"commands": filtered})
+	if err != nil {
+		return decision, err
+	}
+	var attempts originalModuleAttempts
+	_, err = a.invokeOriginalPluginModulesObserved(ctx, "register_commands", nil, json.RawMessage(`[]`), kwargs, &attempts)
+	if err != nil {
+		return decision, err
+	}
+	if attempts.Failed > 0 {
+		return decision, bad("PLUGIN_COMMAND_REGISTRATION_FAILED", "命令菜单提供方执行失败")
+	}
+	if attempts.Called == 0 {
+		return decision, errOriginalCommandRegisterProviderUnavailable
+	}
+	return decision, nil
 }

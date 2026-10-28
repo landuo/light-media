@@ -17,14 +17,25 @@ type fixture struct {
 	mu sync.Mutex
 }
 
+var fixtureProcessAPI = ""
+var extraEvent = ""
+
 func manifest() plugins.Manifest {
-	return plugins.Manifest{
+	m := plugins.Manifest{
 		SchemaVersion: 1, PluginID: "OwnedEventFixture", Name: "Owned event fixture", Version: "1.0",
 		Runtime: "go-executable", Entry: "owned-event-fixture", HostAPIMin: 1, HostAPIMax: 1,
 		Methods:      []string{"init", "get_state", "get_service", "get_command", "get_api", "get_render_mode", "get_form", "get_page", "get_dashboard", "get_sidebar_nav", "event", "close", "stop_service", "stop"},
 		Capabilities: plugins.BaseMethods(),
-		Events:       []string{"download.added", "subscribe.added", "site.refreshed", "site.deleted", "site.updated", "transfer.complete", "downloadfile.deleted", "download.deleted"},
+		Events:       []string{"download.added", "subscribe.added", "subscribe.modified", "subscribe.deleted", "subscribe.complete", "site.refreshed", "site.deleted", "site.updated", "transfer.complete", "downloadfile.deleted", "download.deleted", "config.updated"},
 	}
+	if extraEvent != "" {
+		m.Events = append(m.Events, extraEvent)
+	}
+	if fixtureProcessAPI != "" {
+		m.Methods = append(m.Methods, "http")
+		m.APIs = []plugins.HTTPAPI{{Key: "events", Path: "/events", Methods: []string{"GET"}, Auth: "apikey"}}
+	}
+	return m
 }
 
 func (f *fixture) handle(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
@@ -55,8 +66,31 @@ func (f *fixture) handle(ctx context.Context, method string, raw json.RawMessage
 		return json.RawMessage(`[[], {"enabled":false}]`), nil
 	case "get_dashboard":
 		return json.RawMessage(`[{},{},[]]`), nil
-	case "get_service", "get_command", "get_api", "get_page", "get_sidebar_nav":
+	case "get_api":
+		if fixtureProcessAPI != "" {
+			return json.Marshal(manifest().APIs)
+		}
 		return json.RawMessage(`[]`), nil
+	case "get_service", "get_command", "get_page", "get_sidebar_nav":
+		return json.RawMessage(`[]`), nil
+	case "http":
+		var request plugins.HTTPRequest
+		if fixtureProcessAPI == "" || json.Unmarshal(raw, &request) != nil || request.Key != "events" || request.Method != "GET" {
+			return nil, errors.New("unsupported owned event API")
+		}
+		key := "events"
+		events, err := base.GetData(ctx, &key)
+		if err != nil {
+			return nil, err
+		}
+		if len(events) == 0 || string(events) == "null" {
+			events = json.RawMessage(`[]`)
+		}
+		body, err := json.Marshal(map[string]any{"events": events, "nonce": os.Getpid()})
+		if err != nil {
+			return nil, err
+		}
+		return json.Marshal(plugins.HTTPResponse{Status: 200, Body: body, Headers: map[string]string{"Content-Type": "application/json"}})
 	case "event":
 		var event struct {
 			Type string          `json:"type"`

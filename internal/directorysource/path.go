@@ -7,6 +7,13 @@ type sourcePath struct {
 	parts  []string
 }
 
+// PathString is the fixed pathlib lexical rendering. It preserves parent
+// components; filesystem authority and traversal checks belong to the caller.
+func PathString(raw string) string {
+	p, _ := parsePath(raw)
+	return p.String()
+}
+
 func parsePath(raw any) (sourcePath, error) {
 	s, ok := raw.(string)
 	if !ok {

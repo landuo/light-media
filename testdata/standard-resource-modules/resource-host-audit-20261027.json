@@ -1,0 +1,237 @@
+{
+  "accepted": false,
+  "complete": false,
+  "scope": "supplement to unique row43 inventory; read source/direct+reverse callers after resource implementation, no whole43 state change",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "inventory_sha256": "bdcc5603166cba7d1ea33bf1cad36ee3a2dbebfa7a31802c43b755dfc70e2172",
+  "inventory_count": 231,
+  "ordinary_resource_module_names": [
+    "get_search_page_size",
+    "search_torrents",
+    "async_search_torrents",
+    "async_worker_search_site",
+    "refresh_torrents",
+    "async_refresh_torrents",
+    "filter_torrents",
+    "batch_search_torrents",
+    "async_batch_search_torrents",
+    "search_subtitles",
+    "async_search_subtitles"
+  ],
+  "items": [
+    {
+      "module_method": "get_search_page_size",
+      "source_calls": [
+        "app/chain/__init__.py:1193"
+      ],
+      "source_wrapper_functions": [
+        "get_search_page_size"
+      ],
+      "target": [
+        "plugin_original_resource_stream.go:originalResourceSearchContinues"
+      ],
+      "caller": [
+        "keyword SSE each page",
+        "media SSE each page",
+        "sync/async batch pages"
+      ],
+      "state": "fixed source+SDK/native HTTP/race and platform8 separate main1.14s: first2 rows precede blocked next response, final source dedup2, capacity2calls/nativeHTTP2; title/media kwargs and old legacy branches also proven"
+    },
+    {
+      "module_method": "search_torrents",
+      "source_calls": [
+        "app/chain/__init__.py:1212"
+      ],
+      "source_wrapper_functions": [
+        "search_torrents"
+      ],
+      "target": [
+        "plugin_original_resource_batch.go:run sync legacy",
+        "plugin_original_media_resource_search.go:run auto"
+      ],
+      "caller": [
+        "ordinary subscription shared-scope media search sync fallback"
+      ],
+      "state": "fixed source+SDK/App/native fresh materials and Add2 proven; platform8 real HTTP create→check job sync recognize1+batch1 full two-site/two-episode scope1.14s passed"
+    },
+    {
+      "module_method": "async_search_torrents",
+      "source_calls": [
+        "app/chain/__init__.py:1248"
+      ],
+      "source_wrapper_functions": [
+        "async_search_torrents"
+      ],
+      "target": [
+        "plugin_original_resource_batch.go:run async legacy"
+      ],
+      "caller": [
+        "keyword non-SSE legacy",
+        "Web media non-SSE legacy"
+      ],
+      "state": "source+SDK+HTTP+platform4b/6/7 main keyword fallback verified"
+    },
+    {
+      "module_method": "async_worker_search_site",
+      "source_calls": [
+        "app/chain/__init__.py:1270"
+      ],
+      "source_wrapper_functions": [
+        "async_worker_search_site"
+      ],
+      "target": [
+        "plugin_original_resource_stream.go:originalStreamResourceSite",
+        "plugin_original_media_resource_search.go:run streaming"
+      ],
+      "caller": [
+        "keyword SSE",
+        "Web media SSE"
+      ],
+      "state": "fixed source+SDK/native HTTP/race and platform8 separate main1.14s: first2 rows precede blocked next response, final source dedup2, capacity2calls/nativeHTTP2; title/media kwargs and old legacy branches also proven"
+    },
+    {
+      "module_method": "refresh_torrents",
+      "source_calls": [
+        "app/chain/__init__.py:1307"
+      ],
+      "source_wrapper_functions": [
+        "refresh_torrents"
+      ],
+      "target": [],
+      "caller": [],
+      "state": "no corresponding existing native sync spider-refresh cache host; source-only TorrentsChain.refresh spider path invokes browse pages0/1",
+      "source_consumers": [
+        "app/chain/torrents.py:401-416 browse",
+        "app/chain/torrents.py:549-565 refresh spider"
+      ],
+      "adaptation": "native site-card is the source async_browse caller and must not incorrectly dispatch this sync method; no new spider/RSS cache business subsystem or unused stub is added"
+    },
+    {
+      "module_method": "async_refresh_torrents",
+      "source_calls": [
+        "app/chain/__init__.py:1326"
+      ],
+      "source_wrapper_functions": [
+        "async_refresh_torrents"
+      ],
+      "target": [
+        "plugin_original_resource_search.go:originalBrowseSiteResources",
+        "resource_search.go:browseManagedSiteResources"
+      ],
+      "caller": [
+        "GET /api/sites/{id}/resources native site-card"
+      ],
+      "source_consumers": [
+        "app/api/endpoints/site.py:411",
+        "app/chain/torrents.py:418-432"
+      ],
+      "state": "source+SDK+HTTP+real main/browser4b and subsequent6/7 regressions; source+clone/failure/disable/cold/uninstall verified"
+    },
+    {
+      "module_method": "filter_torrents",
+      "source_calls": [
+        "app/chain/__init__.py:1343"
+      ],
+      "source_wrapper_functions": [
+        "filter_torrents"
+      ],
+      "target": [
+        "plugin_original_title_filter.go:runOriginalTorrentFilterState",
+        "plugin_original_media_filter.go:applyOriginalMediaTorrentFilter",
+        "priority_rules.go:apply"
+      ],
+      "caller": [
+        "keyword title search with selected groups",
+        "Web/sync media search with real full MediaInfo",
+        "ordinary/quality subscription existing priority stage"
+      ],
+      "source_consumers": [
+        "app/chain/search.py:991-1011 title",
+        "app/chain/search.py:1118-1132 media per-site",
+        "app/chain/subscribe.py:2023 cached RSS candidate",
+        "app/api/endpoints/system.py:1144 rule-test"
+      ],
+      "state": "source alias/copy/failure mutation/clear+SDK+HTTP+race verified; native subscriptions use active search, not a separate cached RSS consumer; native system rule-test endpoint absent",
+      "adaptation": "concrete TorrentInfo model/list aliases + optional MediaInfo snapshots are explicit IPC; do not infer object identity from equal JSON; native Candidate decisions and guarded material projection retained; private full source download receipt handed to services"
+    },
+    {
+      "module_method": "batch_search_torrents",
+      "source_calls": [
+        "app/chain/search.py:1992"
+      ],
+      "source_wrapper_functions": [
+        "__search_all_sites"
+      ],
+      "target": [
+        "plugin_original_resource_batch.go:dispatch/run sync",
+        "plugin_original_media_resource_search.go:run auto",
+        "subscription_runtime.go:checkSubscription sharedRequest"
+      ],
+      "caller": [
+        "ordinary/quality native subscription check a.search auto=true"
+      ],
+      "state": "fixed source+SDK/App/native fresh materials and Add2 proven; platform8 real HTTP create→check job sync recognize1+batch1 full two-site/two-episode scope1.14s passed"
+    },
+    {
+      "module_method": "async_batch_search_torrents",
+      "source_calls": [
+        "app/chain/search.py:2145"
+      ],
+      "source_wrapper_functions": [
+        "__async_search_all_sites"
+      ],
+      "target": [
+        "plugin_original_resource_batch.go:dispatch/run",
+        "resource_search.go:searchResources",
+        "plugin_original_media_resource_search.go:run web"
+      ],
+      "caller": [
+        "keyword non-SSE",
+        "Web media non-SSE"
+      ],
+      "state": "fixed source+SDK+HTTP+platform4b/6/7 real main; list executes native then legacy repeats by source, terminal dict no core"
+    },
+    {
+      "module_method": "search_subtitles",
+      "source_calls": [
+        "app/chain/__init__.py:1229"
+      ],
+      "source_wrapper_functions": [
+        "search_subtitles"
+      ],
+      "target": [],
+      "caller": [],
+      "state": "fixed ChainBase wrapper exists; no ordinary direct caller in fixed app beyond its declaration, and no native subtitle-search host",
+      "adaptation": "ordinary subtitle file discovery/transfer remains existing local storage functionality; do not misclassify it as AI, and do not invent a subtitle-search business system"
+    },
+    {
+      "module_method": "async_search_subtitles",
+      "source_calls": [
+        "app/chain/__init__.py:1288"
+      ],
+      "source_wrapper_functions": [
+        "async_search_subtitles"
+      ],
+      "target": [],
+      "caller": [],
+      "source_consumers": [
+        "app/chain/search.py:2490,2604",
+        "app/api/endpoints/search.py:528-594"
+      ],
+      "state": "fixed ordinary subtitle-search HTTP/media callers exist; no corresponding existing native subtitle-search API/configured subtitle-site parser",
+      "adaptation": "source ordinary functionality is identified explicitly; user restricts this work to plugin platform plus existing host capabilities, so do not add a new subtitle-search business stack or unused hook shell"
+    }
+  ],
+  "remaining": [
+    "media-specific browser initial/final stream observation pending; site-card real browser evidence retained for its separate scope",
+    "full private MediaInfo/TorrentInfo through cached preview/download context: services owner implementing, not replaced by compact Media",
+    "native safe projection rejects unknown/unowned source site/material references; compiled SitesHelper parser metadata is not invented",
+    "source arbitrary nested object aliases cannot be inferred from JSON equality; only concrete documented refs/model mutation contracts accepted"
+  ],
+  "related_owners": {
+    "catalog recognized/provider cache and media search_medias/person/collections": "plugin_api_35",
+    "downloader list/control/content/Add/fullContext and local storage/transfer": "plugin_services_38_39",
+    "site_userdata/clear/favicon ordinary consumers": "root"
+  },
+  "evidence": "testdata/standard-resource-modules/incremental-parity.json"
+}

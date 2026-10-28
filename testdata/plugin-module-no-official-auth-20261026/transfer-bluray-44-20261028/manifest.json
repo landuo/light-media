@@ -1,0 +1,944 @@
+{
+  "build": {
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "binaries": [
+      {
+        "name": "server-platform44r3-20261027-linux",
+        "sha256": "5b719fad90a7e0929e95b9bd3acf1e2fa3abd3cf61f136ee887d05eebb451ee3",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform44r3-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3730,
+        "changed": [],
+        "elapsed_seconds": 4.42
+      },
+      {
+        "name": "process-platform44r3-20261027-linux.test",
+        "sha256": "77c5c107e3687e4f85d64c549eeb9d8222bcb70501e1b17302df6cc04ccb3132",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform44r3-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4212,
+        "changed": [],
+        "elapsed_seconds": 8.55
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "original": "cmd/owned-module-override/directory.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/cmd/owned-module-override/directory.go.gz",
+      "sha256": "21f7fcf5c8096028489e8ccf123224fee4226828d76de043ec08be3da9198820",
+      "stored_sha256": "7d9262c86c64dd925caded7591138b62c8bf045f0daca5158c11f58fa9d60120"
+    },
+    {
+      "original": "cmd/owned-module-override/main.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/cmd/owned-module-override/main.go.gz",
+      "sha256": "fb1e0d4940bf3e5f048ef18e08c3cea24b0fa8d78b17ff5813f2cfc7efb3f396",
+      "stored_sha256": "bd505ace751ad40be96678fc6afbcf27f507683149067fff492a0805b973fe64"
+    },
+    {
+      "original": "cmd/owned-transfer-events-fixture/storage.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/cmd/owned-transfer-events-fixture/storage.go.gz",
+      "sha256": "534aa4c8dbe237eda649afcb985607dbb3fddad0009d16e546741833df2410ea",
+      "stored_sha256": "e6dddc0d86d969f13c73e6c5874d41a44cdfc85faaa264e36dc4304d82ed573f"
+    },
+    {
+      "original": "internal/app/asset_manage.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/asset_manage.go.gz",
+      "sha256": "e7a9f1415d05b0a557cd8503b612602f53e865a46d930e6c8e2b4a6bb886b80d",
+      "stored_sha256": "b53b78aa06a55b82744c9728b67b610383d07b569ae3338a9ffd98bde93eb51d"
+    },
+    {
+      "original": "internal/app/history_auxiliary.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/history_auxiliary.go.gz",
+      "sha256": "a586ccc3bbd8b6b7a43c79931d7303c4687cd2fc31ecbde67f3010700f5692b1",
+      "stored_sha256": "2faf493da5f227be30d1a3cc0f165f71263a22e8426b2597c379689159bc1d0e"
+    },
+    {
+      "original": "internal/app/history_delete.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/history_delete.go.gz",
+      "sha256": "0563101d710fe8881324f7538178d24d32d41c83aabfda9e54d60da770c8f7ae",
+      "stored_sha256": "772b54069ee1971f94a0c11777da9636422d4f78aef9f84bde89808b1b302664"
+    },
+    {
+      "original": "internal/app/import_fs.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/import_fs.go.gz",
+      "sha256": "3c183a4725874accee4922ee1d9d46ca1ab147f12e25deb6a8d529562b30f918",
+      "stored_sha256": "317e75354986ce29d5905f77704f5705dfa7301a5e3aa88a4835f4c76f50ce34"
+    },
+    {
+      "original": "internal/app/import_plan.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/import_plan.go.gz",
+      "sha256": "338c16d6644356db4837c470e9f4b3e97b7bc3292a281b73caab2906576d5d90",
+      "stored_sha256": "ef6918e83aeb426cc4474a5da43bff2e5227c918e653d5256703ab4ac0ef3742"
+    },
+    {
+      "original": "internal/app/import_reorganize.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/import_reorganize.go.gz",
+      "sha256": "6d450b809ba9d3bb0e859de5738c5c2da5e94366c8710f46bdff4d7b7e1c734a",
+      "stored_sha256": "d6450bb102df9c2d74f98dec6d4d85f5a6b8fae2d8bee5b95492879c73bb8768"
+    },
+    {
+      "original": "internal/app/import_run.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/import_run.go.gz",
+      "sha256": "442a52df0e48e9f3265a05cee72dad614307f882987abd20890b71a457c1416e",
+      "stored_sha256": "61714a9afe688d9400f50d52e5005f712ad96e92d7cc4bfcf407032f7963b7bd"
+    },
+    {
+      "original": "internal/app/organize_manual.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/organize_manual.go.gz",
+      "sha256": "e2d842e134a8713b0bb917651f44c1ec244aedbce3eec163b1e762b2a8eb796f",
+      "stored_sha256": "8a328abed766cbb5bb344b207b5aed3b6bd0e8bbdf43072bae221b120a15faab"
+    },
+    {
+      "original": "internal/app/plugin_module_process_bluray_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_module_process_bluray_test.go.gz",
+      "sha256": "3c740ae5577f595b16c01ee4494d788c02c8845a219d55ff19a51bb4e81867a9",
+      "stored_sha256": "65ef31ad3777c350bc4548f792dac65749c4f227851549ac38d4d8769c947dbe"
+    },
+    {
+      "original": "internal/app/plugin_module_process_services_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_module_process_services_test.go.gz",
+      "sha256": "57319f779857c332bd1cb7b5df6925014765c8311522cd69dd4e194afcfd1243",
+      "stored_sha256": "73b12e4596cc0ae098f4b4989d99cb4b3675fde581a458190fc87e885c5e2a50"
+    },
+    {
+      "original": "internal/app/plugin_original_browser_mutation.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_browser_mutation.go.gz",
+      "sha256": "f2310869c3a3c6a588d2cb90ab02bdcabdb40fdfe1d98fb68cc140eee8928352",
+      "stored_sha256": "9e0452153d23cb2339f8a70aecfd26b3cd5d860b63ba7805fca202adfeda30bc"
+    },
+    {
+      "original": "internal/app/plugin_original_history_delete.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_history_delete.go.gz",
+      "sha256": "480c43a1de74bf67c14c0d447db7b6e0c80a93d659173e1db14058d52958248a",
+      "stored_sha256": "a87cfab20b44901a6288022224504a8bb9779d148613d1944c06183b4963ef23"
+    },
+    {
+      "original": "internal/app/plugin_original_history_directory.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_history_directory.go.gz",
+      "sha256": "19476a2af110ce71ae2c26422b0122b216f4e3bd9722bc66efb0a150409d4868",
+      "stored_sha256": "788d6581ff23f962c35232763e3af2617e8588941756a6ba5cf5635f58102eb9"
+    },
+    {
+      "original": "internal/app/plugin_original_history_parent.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_history_parent.go.gz",
+      "sha256": "aa1b17b66d25a2320d18a8e4487bf95b2b2c8dda713d2d82cc3413a8dbd4e065",
+      "stored_sha256": "c9555c5e0d695be9e6a443ec057e448a9556d5223d794b89098c2c774fa4436f"
+    },
+    {
+      "original": "internal/app/plugin_original_history_reorganize.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_history_reorganize.go.gz",
+      "sha256": "8d3bcfd7f45094e1159d6a21541bd52af9a0b565e8bba73bb6bdd3f61036ad11",
+      "stored_sha256": "cdca73c6e05be6d13c0d9d37423d553a7d0e679b51a196435d23a19f49aa0b03"
+    },
+    {
+      "original": "internal/app/plugin_original_metadata_storage.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_metadata_storage.go.gz",
+      "sha256": "c25d5fc89d4f74b5724f7e760c2b4940842f4e647d34e38e9e263dbcbd96e2bc",
+      "stored_sha256": "15642b9cb8b782f54b6265c478bff04191153c62a3a5cfa0ef731b24fceb00d4"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_bluray_history_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_bluray_history_test.go.gz",
+      "sha256": "bfe07d714a40061646a81ee410c4a51208ce1b607fe3111fd4ccf568db61873e",
+      "stored_sha256": "c37a144b5b91b57e2133efc169ffeec4e3384a3f49c4d2a7a026fe1c7d975455"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_bluray_intercept_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_bluray_intercept_test.go.gz",
+      "sha256": "021682dc56fcb860ad77afce300d20d5517c88487ad5e192ac968f18f59ed455",
+      "stored_sha256": "89632b8d1376d1ca227de1ea069b3e4887ebd8bcc61b39074c3d5d0b3d6ddc68"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_bluray_provider_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_bluray_provider_test.go.gz",
+      "sha256": "755abc70df3793ad21b7200757f24624deb11106cb6f1c8ba34cb45019796107",
+      "stored_sha256": "3cdd9e9b4ef94138fdb2150b442c7c8c14bba61d1e0cac68bde03defc9ff1267"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_bluray_recovery_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_bluray_recovery_test.go.gz",
+      "sha256": "455e3241283dbea95a0f8c67c3ac42033726a84f778365291d18620352dfbe06",
+      "stored_sha256": "eb59b010c7c277d4f087e43088f7c746c1232b6c4bcb9d9d7625d8efeb794e42"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_bluray_storage_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_bluray_storage_test.go.gz",
+      "sha256": "8b774e13209f90e35849da26150799194092d2f6a8bf26f8429451a9fdca0f8a",
+      "stored_sha256": "53a87cd8b5fe401b693e7af1624c951086a9d3ae239d24af7fadcf09cadaec9b"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_bluray_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_bluray_test.go.gz",
+      "sha256": "bada5d630cca012fb4ee7d2c6a89cbae4351b3bf89d0a91e8777c318c2801f11",
+      "stored_sha256": "a9e863247bf1353ec9166c13083edf939773e7b109839c38557efdc428a3d6aa"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_bluray_tv_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_bluray_tv_test.go.gz",
+      "sha256": "0f8a03a64512332ee64c984cae6468d3851b991a4115cb8d4a79691755228e98",
+      "stored_sha256": "42e2fb7563ab70b87cbf8dadfc4476663f0d11cfbfeae555164906d61700d524"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_callback.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_callback.go.gz",
+      "sha256": "fa7d1a530ce6ae491b17732902a2cbd0775d5c2a124aea576be1467a9909bfb8",
+      "stored_sha256": "2807ba2685926d18a77ae32722ae3cfff691cec3dbe022a8356ad4d82ac29518"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_collection.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_collection.go.gz",
+      "sha256": "4947e2c23748ae72a346540b276eb863d866b43e49a06638014379dddf7c034f",
+      "stored_sha256": "88c4ba60c7006721652a0140944a90f5e9b8ed7d1c71cd146641edbeaa110d02"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_context.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_context.go.gz",
+      "sha256": "f6a596b87b9b769dd9d97bbb684ee6921bd8228a7e8cfc0b7f3c308f488ad968",
+      "stored_sha256": "a4d8cec326eb10f2010fc5d27de114ff2075c923e2ddbd94494d7e438729a5c5"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_directory.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_directory.go.gz",
+      "sha256": "37dcd32be1ffebca46e7011d2603ddc544f89f76d6aaba6596d558dcd6b0caf9",
+      "stored_sha256": "a257bcc517985c98ae6b9524261be92dee98a5350a8f45293e0d292904360db6"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_directory_naming.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_directory_naming.go.gz",
+      "sha256": "8b51f0491ce6402f4be5e1a078b04074c14a1ea52033b7f2e5ce9f0f4d06b7f4",
+      "stored_sha256": "dd7dd0f790b7ff55f3e55ab1df9e9cd99b5ef5613fe767923f442cdf78d73245"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_directory_plan.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_directory_plan.go.gz",
+      "sha256": "da9ea5ff2dbc6f3d5bb2144763832e11239c664afbb9b3b472b87e91b9d04cbd",
+      "stored_sha256": "e4e8f7ce1456752383cc6c9a62b4d7d1ccaa47e4a2890848d6115dac151b783e"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_directory_plan_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_directory_plan_test.go.gz",
+      "sha256": "090f25d4e5731848d92be1a53acf84cf275d65986bda91d8ec1e8f390d2406b7",
+      "stored_sha256": "487c8e15b556b01e65e8e46171409877234026efff2f3c2309c854311ae89309"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_directory_publish.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_directory_publish.go.gz",
+      "sha256": "8590e6de444cfe74a4edf8366892bcf1073346118f2c3b3a0cac27bfadfbd924",
+      "stored_sha256": "3231b639255455503e0752fa16180b1612dcb5bdd70a49ed1bc22108283bdcd6"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_directory_result.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_directory_result.go.gz",
+      "sha256": "e702702fb65c87acfe5314e7e49577002349e8b68bb6acae2b4f52e260a2c9e0",
+      "stored_sha256": "ffa7583cd0bde583a2f6a57182f16417b2df6a531725b941e3d611bc207e4d5a"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_directory_snapshot.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_directory_snapshot.go.gz",
+      "sha256": "3d006248246de2b41356ad7ee62e66f89d85e56b91cbe83432ccdd9e0649c429",
+      "stored_sha256": "28b9dd9e53870650e776e93265476206d19aacea10ce84841db033046d4c22d1"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_directory_snapshot_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_directory_snapshot_test.go.gz",
+      "sha256": "579f62d8da115d6744221a8272110e49098af8e734fd430f671f492b3545f753",
+      "stored_sha256": "992e5d21318f095111becd10a910d917ae51afae8b239307e2b954aa5b2f8cc9"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_directory_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_directory_test.go.gz",
+      "sha256": "6dffa8a174809cc0006df0db26a250aab613dcb093d07c1931fe68030f968176",
+      "stored_sha256": "b30240abed01d47cc4df992efccb791f83b2035e678a1ae6c7bb45880a38dbf7"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_directory_verify.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_directory_verify.go.gz",
+      "sha256": "5ed882cb37feb65ee10d37492ca71a385d85af463211a713c8ac11eeef3d6998",
+      "stored_sha256": "0399971dd2527384316fed69177ea186cde542271eae39cbb16628a5996ce8d4"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_events.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_events.go.gz",
+      "sha256": "9a871ff9f601463003bf923d82022d6fc925a315d5db5609f86d70e6aa01dc2f",
+      "stored_sha256": "641a35a20ae14d49bcc212d1c6e32fa545bedbf351caa16cceefa6a6eea08f69"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_intercept.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_intercept.go.gz",
+      "sha256": "d6180bbedaa2e250b677dc161deb2410b1ee00dd509a98a7107576184f2b8f6e",
+      "stored_sha256": "badd065bb5c521e71673882edc29efe6354c11a787d152819231e11307e2f1c1"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_module.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/plugin_original_transfer_module.go.gz",
+      "sha256": "30fb1f2958125c3b4a9635dea9dda2c6913d1ae1048167fec42b556669fb1fdc",
+      "stored_sha256": "6267a0e45c4e621731811c07dd56f056b434b5170f3ddb487eea524f92e445c7"
+    },
+    {
+      "original": "internal/app/transfer_history.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/transfer_history.go.gz",
+      "sha256": "bb15129f62778cf5a99d9d1ec9a1910d4761d3c979c9f7f0b31003c9aaf58a0e",
+      "stored_sha256": "6cc01eb997c7b51d4c3371fb594a3293ca1ca73e47a7e571fbf5f0f535bafbb2"
+    },
+    {
+      "original": "internal/app/types.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/internal/app/types.go.gz",
+      "sha256": "63692751870a69c57f79b83fab6858994356f63260a0f5f562062fe9e4474457",
+      "stored_sha256": "fa429acc01d200812abc535783899606fb01c69a2944cdb615245f8f162fbf43"
+    },
+    {
+      "original": "testdata/standard-module-host/generate-history-bluray-oracle.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/testdata/standard-module-host/generate-history-bluray-oracle.py.gz",
+      "sha256": "497d9b0eac2f09d54e8b4d8c43e905724f38b854cb909fe888a4d208d7356aa7",
+      "stored_sha256": "604daab3ae485ad90f21f011972afdf5ee4cd64c29ff3a4eba1b7cf1f02a86c1"
+    },
+    {
+      "original": "testdata/standard-module-host/generate-transfer-bluray-oracle.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/testdata/standard-module-host/generate-transfer-bluray-oracle.py.gz",
+      "sha256": "d9a8015f0fcd1078d229236bbec559443b004f90fb70b8b8f2eb0f8ded711fb1",
+      "stored_sha256": "69f7e0646e01b7f65071aa1ed4a672bf153634e668f27e51bc505786879022cc"
+    },
+    {
+      "original": "testdata/standard-module-host/history-bluray-source-oracle.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/testdata/standard-module-host/history-bluray-source-oracle.json.gz",
+      "sha256": "a0f6d88980d890661e77af6de339cd2ac5b389493df619ca27246f497c50f301",
+      "stored_sha256": "1848a609aa0bacdc0b479fb9b35e9c91d58972030b73011ab5265c2399852a29"
+    },
+    {
+      "original": "testdata/standard-module-host/transfer-bluray-history-size-source.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/testdata/standard-module-host/transfer-bluray-history-size-source.json.gz",
+      "sha256": "9b4638dce840bbb7432ac304f1bcf7aff0b8e3e68aa1c91b899e4aca745e3668",
+      "stored_sha256": "82949f61dc48be6c5a9830beb3486cf0f74846d4c3b5615ff87737d4ebf590a5"
+    },
+    {
+      "original": "testdata/standard-module-host/transfer-bluray-source-oracle.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/testdata/standard-module-host/transfer-bluray-source-oracle.json.gz",
+      "sha256": "de56aedc41237938c5b4b66b6bee31ab43a4727dc073114b9f008cdbeca01348",
+      "stored_sha256": "66f4a1022bef30bf975c260bd431c37c7c4043c701ef57bc75d956d29a5b327a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/archive-bluray44.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/archive-bluray44.py.gz",
+      "sha256": "fe632e882d237dc58e7347308b064d17626ef537c8ad13fafbe9fa07d67b44bd",
+      "stored_sha256": "ca0b1c1422d30ab148f986197d357a64fc04d04fd6b121cba5e26eeca4ae5604"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-build.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-build.log.gz",
+      "sha256": "20ebeeb550d3fecd05c8f34058602c1f2f05f64d92a840b359feeb054396d23a",
+      "stored_sha256": "1c3cd4c9bb1ca68ed058e384c5c70a23ca4aa386d2e9e91992755c8b58d1cd5a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-cli-driver.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-cli-driver.log.gz",
+      "sha256": "eafa5667580cf48e2c4c9bb2bd9722f1125c2b8aeca9cea00ad13a589fbd14b3",
+      "stored_sha256": "9078251b2189142cd245499e9fcab7a9f8dcc02b6e9462394332242621d25503"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-cold-intercept-r2.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-cold-intercept-r2.log.gz",
+      "sha256": "a07f22a01de878893418d46b4555cb5eaf5f5bbdadd80e8dc6515e94d119a57f",
+      "stored_sha256": "b1d825af7d02d9d68f678977cf074d42fd3f118a9266fe07af024fea2fa2a619"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-cold-intercept.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-cold-intercept.log.gz",
+      "sha256": "f96c2b0848bf418e786f5b27e05d5b64b0e4288b3bbd104c123ac54b927dd2ee",
+      "stored_sha256": "c9bf96528784014d5d20529f1af80b61770c83ba67dfa3594d97e0784fea90ce"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-history-r2.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-history-r2.log.gz",
+      "sha256": "0434b1b79920a3f3e208dc2beb0cb8d05dc53aaa49e1e5c5d209085d38144b79",
+      "stored_sha256": "3178dc3cda06b25fd8ca332e25be11fa320995376fb55e438bae465f91a16372"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-history-r3.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-history-r3.log.gz",
+      "sha256": "447ab9989b072e8f71b6af78d79a73277c4867f5e3a4e2e2b114713cf320d0cb",
+      "stored_sha256": "ec64aef00031ae934e6966aafcce9891617738d5230f8bc1c90e842fdeefd084"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-history-r4.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-history-r4.log.gz",
+      "sha256": "88c26980a3a0f1f04c1eaf012e478c75f29074656726061cc91cd1d3efc76a36",
+      "stored_sha256": "85eea4ffa0f5e0d130c0bf8babc88eb470d02f858d0b6a3ff200a330b76eed4f"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-history-related.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-history-related.log.gz",
+      "sha256": "afb438f27ed7fbe162e6350179cdb4b03e2550356005e4601b2924faecac3181",
+      "stored_sha256": "cbc77ae5ffebe27ef7bd9d470098c098e34ce0add14a5a07b5817b6a678d3277"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-history-source.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-history-source.log.gz",
+      "sha256": "e2fa8af96889bc4e5babd45596dbd776bbb656465ec92409fe08e9062c5bb7f3",
+      "stored_sha256": "2ac3109b02ceb3c955cd70595df66b48a51cb9f3c30df9faecafcd989de15c0a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-history.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-history.log.gz",
+      "sha256": "eb8dcde2b64e364cafaee9c1c2c49a1bfb500842665fe7366d05ac0188618b09",
+      "stored_sha256": "f468949c3046a5cab6a6d278e7aaf10b2397d1dc8c0f9f6466b021992cad89ed"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-local-r2.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-local-r2.log.gz",
+      "sha256": "4583a27475cf93274d4fdb004276765e607aa8d75467696ead5b4b86c6c0f009",
+      "stored_sha256": "8fbd5a0210eb98da9b0f6596554f7360e0a4434826e2c6b2809eec0a4fc36459"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-local-r3.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-local-r3.log.gz",
+      "sha256": "6cdbd7eb1452c4bbfce6698cfa316b798600ba1b87a3bdec6e11223ce9ce4bd9",
+      "stored_sha256": "b31085d52543a43b082b8f28ac17727eba4e23f4ead67a52d26338595a498b3c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-local.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-local.log.gz",
+      "sha256": "90204264628e89905f66421a7ec62e53896cb53e4144dc159f4842d52d44b061",
+      "stored_sha256": "db098a1643f6a309076130d19fe2a62c8ac397c37b7c4123381e2a70e89bd61b"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-preview-build.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-preview-build.log.gz",
+      "sha256": "c1b4003e83fe7dcc8cbfe751a59dc23580d8d3877f65e69b814dfddbc29e63a0",
+      "stored_sha256": "fdba5770da28fa9523d8b1214901917283cb67d47885111b4ef09f11e28ddb59"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-preview-r2.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-preview-r2.log.gz",
+      "sha256": "708f307fa4c201d0a63bdf13a95947b81af6a24a2490bf802d6657b7625e9d05",
+      "stored_sha256": "72592ad5fd01d5bdeecbfd1a8507d30094d1309624c148bc83738ca47517248a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-preview.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-preview.log.gz",
+      "sha256": "f97c6a2f585bf7e0765db08d0c63cbc7c1dbe77b194bcb607c8b9f0c752a9e2b",
+      "stored_sha256": "32eb889bff5c2f7302f380e38b3119b19e28a362a344e384dfec31167968df42"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-provider.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-provider.log.gz",
+      "sha256": "269698dd6161355e8a7397b3fcd140b1b77438d33f78cf78825f5450cd5c7dbf",
+      "stored_sha256": "9d54e456801bf0c3e5c25f3b1e78647a62dcea18148f9f0ab64d9b15f1d37b68"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-publish-build.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-publish-build.log.gz",
+      "sha256": "e3516e94b9bf885e751f0973452792ab8058f0c94975404dfce947b94c2e4f15",
+      "stored_sha256": "b3b41b21acf5ce3675af0d8b0aeef5df628681507040d98480a56863772e90a1"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-publish-r2.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-publish-r2.log.gz",
+      "sha256": "ea87f1a09499f783ef02771a364e69aa6087144d325023eeabd702927139d1d6",
+      "stored_sha256": "0f1819204d9c08d5c201cb06cefc6b6020c6d4c15f8f974a61f565796d1311f2"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-publish-r3.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-publish-r3.log.gz",
+      "sha256": "32231409c27be16585e87afa6a8dedcd136cc5f79186bdbc4751efd47c86968e",
+      "stored_sha256": "b5c23ebb8d3e61f039fd33737864cc6333f48cdf7eb4895966fb676fe43cce57"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-publish.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-publish.log.gz",
+      "sha256": "8e3c7ecfa50895166c92b97ef417c3a2367a55ab8ab0a3d1ef02ef7a38938ca5",
+      "stored_sha256": "a5ec6519e84a93a4e6ea9ce0f92e92dfd2f382515e92821ae4cacb7e1cc54315"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-race-r2.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-race-r2.log.gz",
+      "sha256": "71c29d867985927b03339c978a0f5b2625437323dfcd6c66f43178a9ff2e672c",
+      "stored_sha256": "d015a1168e143c9cd2d11e523fa749adef6d156af6f1a1b9ca9c4da6be0d931a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-race-r3.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-race-r3.log.gz",
+      "sha256": "f601e89fdaff800ed1cfb29f1e331a88e014df1692b645ad03303343b75876f9",
+      "stored_sha256": "24226f373e6196d0db87beb291558d0ef8d5cac8129780409582436c8ee04c9f"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-race.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-race.log.gz",
+      "sha256": "8c6c6eee997b3149deeb805f4466c33f37476dd5402d03e176c42032c629dc85",
+      "stored_sha256": "20c51dac461e7b05a869cdd40a099077168d489ba421cebf91fa0be93963a407"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-recovery.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-recovery.log.gz",
+      "sha256": "aa0e72333f057ac91e5f17fd32ea580bf43adc2d14e0e89dac3e1fb20bee3e04",
+      "stored_sha256": "d3b76aaae61c8f0eab90416fa84712f91fcc9e582bf3dc108d9c342bf7e8e55f"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-related-first.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-related-first.log.gz",
+      "sha256": "81a2cceb934e486a093544e66979358ef894ec28a388e07ccd0b7c08670fc0a6",
+      "stored_sha256": "fbc43c612df2f864389ca187c915d1c99668a408bcf4d99e6d94bb61adc7b4ec"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-reorganize.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-reorganize.log.gz",
+      "sha256": "8db4f76d83eb8c29b94e941632503c4cbb77d8ff76d7b8a652b2dce731ab2a97",
+      "stored_sha256": "8acae7586f6de780f19a1f5ccbfc751a4a71938f5aea5fcb1679cf3a7f9c9171"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-snapshot.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-snapshot.log.gz",
+      "sha256": "4f3ed1cf90b2d5c08bcf3f143535440c10d20509328442829f1d930dd0780d2f",
+      "stored_sha256": "24e1d1ab06fef63100486dda9ac40e291fb138a09d9d7a1c09a1b34dd762953c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-source-oracle-r2.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-source-oracle-r2.log.gz",
+      "sha256": "8ae29f455120832c86530aa4a87370771270a9fe72e6b87fb9d3682878596195",
+      "stored_sha256": "2cc065e15dd3e65bcaa5c3d3e86c42730547e6d1c9e11e495e5ea4e1ac218cb8"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-source-oracle.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-source-oracle.log.gz",
+      "sha256": "bcb7498335ee18e64212fd75d2ac937c9cdb359465576b9b8599be7fb4309587",
+      "stored_sha256": "2d50038ac4b55fa13df1ab0ed1f2c7e7eccf4af838cd1675fc209b23733cfcca"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-storage-r2.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-storage-r2.log.gz",
+      "sha256": "1b8c173f7c1412d440c5b7c7a7eb25a8799aa694b10971b2c3dd61c492b650c7",
+      "stored_sha256": "bfc89751f549514604bc623d07c9f96a939f0279b9909f37416fb0c2033dc797"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44-tv.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44-tv.log.gz",
+      "sha256": "e1d047cdfaf1f8cc1cdb3960d4f3f5f689c79b726c0c0e11a956b4086682ad1d",
+      "stored_sha256": "2a7718edf6c78dae91b4dad284d34a1489f905037bdc167cb32269c21f58076d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser/01-cold-cancelled.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser/01-cold-cancelled.dom.txt.gz",
+      "sha256": "c1debc50dd2e5e4b3a098ed5ee5b01f385a6bc4fd06bfe7bc8b58580ac139c68",
+      "stored_sha256": "d51045127540c09610beeea4957550c9f281e318e7cac4e6f5e48345d109511f"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser/01-cold-cancelled.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser/01-cold-cancelled.png",
+      "sha256": "78c1ec0b4b0c78de356b36288b9937b0ca696f627a882d9523f4383a3ba6fd8f",
+      "stored_sha256": "78c1ec0b4b0c78de356b36288b9937b0ca696f627a882d9523f4383a3ba6fd8f"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser/02-retry-success.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser/02-retry-success.dom.txt.gz",
+      "sha256": "dc60f2116a287a8457366b553acba71283c8331e8e14300cfddc61b5155e33f2",
+      "stored_sha256": "ba965652dc7c7f7ac99ae80e0fedb0d27ee28d2e00f568c68cdcfae11b7ff170"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser/02-retry-success.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser/02-retry-success.png",
+      "sha256": "53969324331352e148913be6ffa9f839de60f3743ead95bb31841ec538dce7ea",
+      "stored_sha256": "53969324331352e148913be6ffa9f839de60f3743ead95bb31841ec538dce7ea"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser/03-history-size-difference.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser/03-history-size-difference.dom.txt.gz",
+      "sha256": "45ded59a8bd6aad973e96d398bd3b0fe870e4b558541abdba977b2fa3638ceca",
+      "stored_sha256": "512485ea44a2f746ef2561556565bf27be672ffe99a6744bc26dca1c693e30b3"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser/03-history-size-difference.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser/03-history-size-difference.png",
+      "sha256": "870af28e626565faed7eaca08f8676bad006be6ff2b4bf032d8a22b3fa8380ec",
+      "stored_sha256": "870af28e626565faed7eaca08f8676bad006be6ff2b4bf032d8a22b3fa8380ec"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser/04-delete-options.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser/04-delete-options.dom.txt.gz",
+      "sha256": "aa0ebd202c80e76ce1d8058fe3bcd06a7351b115843bc2407c0d27861769a73d",
+      "stored_sha256": "47c9f0cc391ca93c22eae0e2f573691ad63bb0a02f3f277a6ffb647f821266b7"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser/04-delete-options.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser/04-delete-options.png",
+      "sha256": "73b4a013073e2f832083c13ddaeeaf3e16fcd54245cd334ec845234aa2ae94dc",
+      "stored_sha256": "73b4a013073e2f832083c13ddaeeaf3e16fcd54245cd334ec845234aa2ae94dc"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser/05-deleted.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser/05-deleted.dom.txt.gz",
+      "sha256": "a51a3e7546c1b86b16083fa3a1eff71a5750c93fa7c63e3283c1565a2cbb41b9",
+      "stored_sha256": "1e01b39fee1e953379e25b365a36e9bf62e6d2ca759b2b2434aacedaa8b89e94"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser/05-deleted.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser/05-deleted.png",
+      "sha256": "09875eabc7e41d9d2df2da702c70eb1475ce1149df35e479c60b12fdcbdef633",
+      "stored_sha256": "09875eabc7e41d9d2df2da702c70eb1475ce1149df35e479c60b12fdcbdef633"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser-before-cold.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser-before-cold.json.gz",
+      "sha256": "5e72b0d925dc892b9ebdc5c3caf2d7a3dd710db20326bb96974746ec03a304c1",
+      "stored_sha256": "b72cffe8b00a41c8725b9c85f44bd51c3d9029df8fcd7e7af7058e3a3510c3f3"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser-cold-cancelled.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser-cold-cancelled.json.gz",
+      "sha256": "8f7cc8fd7a3e9b1f7208405f23302dcbbf96ebeb6014a2701725f737abca466d",
+      "stored_sha256": "d4b4a8f054476e8fbabe5032c00e4dbe4f2cf5b33f169fbc4d19b31d468aaee6"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser-cold-success.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser-cold-success.json.gz",
+      "sha256": "a6468e63e48eedb62775c4dc737d0c2eafaff45ff7aa8b67f15284bdbc207aaa",
+      "stored_sha256": "f50947d70d080b71d6428b31127a169c5464c7a59317a94a34bbd553df574f42"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser-deleted.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser-deleted.json.gz",
+      "sha256": "3713823adda65d01564ae2e89e905a82810a0e05803397163b4bedef4be98447",
+      "stored_sha256": "81289bb83e21a94d73b4a6de92df063abce604c5d5894a95b7b41ded4dcb0196"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-browser-retry-success.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-browser-retry-success.json.gz",
+      "sha256": "8895cce62ce6500ee651fae51be0c1eeadf41ba19ee2d53c7e9f72c2961e9c83",
+      "stored_sha256": "258c848410fb968ddd28e280bda8099e2a0899ba45172c9455f834a12c414d3a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-build.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-build.log.gz",
+      "sha256": "43e7529438d5a584ed949faa4bcce72d3a0406479b9116aa509361ba7779c822",
+      "stored_sha256": "f004764e274a64cd9b435b97de6557349485a90d18beb36e3b0bb9ef9cac8d0b"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-cli-driver.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-cli-driver.log.gz",
+      "sha256": "26e3a1f1314e52c1ef8ed169f637373f30f5c8cc9f2930f2d5fd56d579c46201",
+      "stored_sha256": "e75da2875d1d3f7910513febeff9d288e4091510a39b973e60a24f9f0643855d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-cli-evidence/bluray44-cli.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-cli-evidence/bluray44-cli.json.gz",
+      "sha256": "3aa438bb3a6077981d22412940e7f83f832e67ad66b8e1bb0c7a168ce87b398e",
+      "stored_sha256": "7f108ab0d657c09acd854ebd9dadb80af244222a42502859aa46882febc5d01b"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-cli-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-cli-evidence/events36-service-process.log.gz",
+      "sha256": "70636154b897461124e5dc8bc0a62eff444abacaa56e1583aea3b68056027566",
+      "stored_sha256": "eb284dcf1439064fb80a77c8e1136f666caf76ac6ec4e60ef9b3157693e3bc49"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-observe.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-observe.py.gz",
+      "sha256": "1a797856062706b3bdf6438c132bdca9c2c9f5bd6328d7104ec94cd40a96b3f5",
+      "stored_sha256": "f58e96742ff61838e56b40b78241bde435ec732c07e559f658f36e030578d59e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-ui-driver.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-ui-driver.log.gz",
+      "sha256": "4161a381cbae9753d93699748af5e76d5bcd833b7ab074db6f04384a84a040f6",
+      "stored_sha256": "dd0124d7f2e33ecd9d83a1728ad2ecc64e166e2e8378de309d78874d1573e25c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-ui-evidence/bluray44-browser-final.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-ui-evidence/bluray44-browser-final.json.gz",
+      "sha256": "00d0888b2b39e6ddb6e10e0baa54a91e9a95e5e12c975041d27604ffe6ff74c2",
+      "stored_sha256": "f269eac94bbdaeb9577fdcfc2b24ccf398877ca9c142f719395069a236725b4c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-ui-evidence/bluray44-cli.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-ui-evidence/bluray44-cli.json.gz",
+      "sha256": "1ae36c2494ef0f7fb24f715e5280a8cb6b16193529c4cb595ab4a446fc3262c0",
+      "stored_sha256": "03e313ca2f809ecf403570c2cfeb2b43a54060ae28422fac4b0051524ea38e3a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-ui-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-ui-evidence/events36-service-process.log.gz",
+      "sha256": "855e3183212bd4bc311b698f54eeede43d2a65a1a45979011d1e24cf19c2cd49",
+      "stored_sha256": "b3885b7079788cc8ef1bbabbd8c4c09781b4ce5ce97247af55a751b8bb9a9c58"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r2-ui-state.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r2-ui-state.json.gz",
+      "sha256": "d220f04258ad289d44093e6d2e58fedb562cc46893ddf67ef2f8fd1b5f3d8dc4",
+      "stored_sha256": "0fffc8a6a61afccc5611109fb9727308bea5d0bbb98e5aa0c3686af165ae7fe1"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser/01-cold-cancelled.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser/01-cold-cancelled.dom.txt.gz",
+      "sha256": "379d04bbc4cb1df29eac54f366220fbb888cc386d5a198f3e7b247ad681053b5",
+      "stored_sha256": "9ef48efc35752eb45db841974c337522fa0b35050bb93eee0e7b80378a5e3531"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser/01-cold-cancelled.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser/01-cold-cancelled.png",
+      "sha256": "8eb75e5b05e4956fe4a9be4c5f63f2a9603f02782611fcf799253c3d037194aa",
+      "stored_sha256": "8eb75e5b05e4956fe4a9be4c5f63f2a9603f02782611fcf799253c3d037194aa"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser/02-retry-success.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser/02-retry-success.dom.txt.gz",
+      "sha256": "9df53d87426556b5d156cf873303b33a093f7343dad41908b8ceb2af383cc334",
+      "stored_sha256": "8ccde342d278630c79fb15683eb29265d222c01023438c61ec390ccbaad9d1fd"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser/02-retry-success.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser/02-retry-success.png",
+      "sha256": "f356d8e7f8602c6d646b9d748631f57ab58a87ad44ae218e95fb22a378dda678",
+      "stored_sha256": "f356d8e7f8602c6d646b9d748631f57ab58a87ad44ae218e95fb22a378dda678"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser/03-stream-size-19.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser/03-stream-size-19.dom.txt.gz",
+      "sha256": "053c6892d23485660e326fbacb7a97037d7d3ffcddaa0ee182eecf794a2ca13f",
+      "stored_sha256": "70d80aacfbeea7519ae6a5bb3a6940497fa02c1ab71401b7e38156e15ba73558"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser/03-stream-size-19.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser/03-stream-size-19.png",
+      "sha256": "391206870132f512ec1c4b6a6739face54c1f20cbe94287c3645dbeada808ecf",
+      "stored_sha256": "391206870132f512ec1c4b6a6739face54c1f20cbe94287c3645dbeada808ecf"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser/04-cold-history.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser/04-cold-history.dom.txt.gz",
+      "sha256": "1178e48e59ed3f29518c9827dda248d02397f0a72a50720d6856b37cd92ce175",
+      "stored_sha256": "beb11f20d128566e1fb2babdc2242a9b83b5c9894e24deae077286ac6f7d9d00"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser/04-cold-history.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser/04-cold-history.png",
+      "sha256": "49a0297a10cc00bc0355443ec6a711c6debc4447f72a90065975c8538b64ac29",
+      "stored_sha256": "49a0297a10cc00bc0355443ec6a711c6debc4447f72a90065975c8538b64ac29"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser/05-delete-options.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser/05-delete-options.dom.txt.gz",
+      "sha256": "3916893ea7cf66650cfaa3ecbe3dd35bcc163351d616b7af139b10ce78c9a615",
+      "stored_sha256": "16346e6fe812c7c4548cc07d5630d6e6ab36b5fdf889e8a2cb3d0dd716984249"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser/05-delete-options.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser/05-delete-options.png",
+      "sha256": "c6c480075e8093ef13b7dc0af1b213788059b00845539d4ad5dcd88086d67b4e",
+      "stored_sha256": "c6c480075e8093ef13b7dc0af1b213788059b00845539d4ad5dcd88086d67b4e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser/06-deleted.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser/06-deleted.dom.txt.gz",
+      "sha256": "fd46891353f9ea88d25b3ceba55696b042ddb47b25c3740f463f5c35dfb8db5f",
+      "stored_sha256": "323d2a92263951cc37d8acb00ec3535fbfe8bd6dee4e0eb923662438b2ef562e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser/06-deleted.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser/06-deleted.png",
+      "sha256": "fa67b78078ef8558023228a3124adc3d2b4e2f7ca7b38c94bde4ab09e2992beb",
+      "stored_sha256": "fa67b78078ef8558023228a3124adc3d2b4e2f7ca7b38c94bde4ab09e2992beb"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser-before-cold.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser-before-cold.json.gz",
+      "sha256": "d31e05c95f8c49784aac3a280f0f39212508e5deb8f4863827d747dd592d8a68",
+      "stored_sha256": "b4d4855f0b1842f4857231cb22c5584c454ce652ecf387fc4f0c9ebef5f06924"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser-cold-cancelled.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser-cold-cancelled.json.gz",
+      "sha256": "f40650d4ffecacc49940093f34f5501559b9e1028a810ee1f6da7782936a1a64",
+      "stored_sha256": "201747ad3f450b6836cc3d22c71c8770c7879d8c107c2a199fd6bd8e47b8b1d1"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser-cold-success.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser-cold-success.json.gz",
+      "sha256": "c6c14466fefaae141fc748140fc9d76fb3d6843ff3f2bc3406c3ddacdd006b72",
+      "stored_sha256": "7f92b65728d952bf3f28f77906dbbb32d4a51e5304e401e184844ae469f1f4b7"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser-deleted.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser-deleted.json.gz",
+      "sha256": "f35bcdd10b3ff78603070a30af1c83095893655710d1718e426f4b6e924a82dd",
+      "stored_sha256": "d0b19cb40be6985c70e8d5ec70b738d599c7c32518f573e2e3d2fd637a4098d7"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser-retry-success.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser-retry-success.json.gz",
+      "sha256": "fcdb79c6188d273178b3107ee1204789f37f682766c5ba1fa79c3daf4955fb3a",
+      "stored_sha256": "435e7973f3bb8ded98ad279a2c3cef155bf4d3d7317b14efd76c7f7b16925e22"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-browser-verdict.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-browser-verdict.json.gz",
+      "sha256": "f9d8a3299b7c300ecbefec7b66e01be674dc95de0bc3e15fa33024122129fc5b",
+      "stored_sha256": "245a7040ffa03e09af7b96922eb195175c6cdd006f647345da0e9c2f2e4578c4"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-build.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-build.log.gz",
+      "sha256": "e5de51ecccd2f7779030708d5cabc49c3716c98fc83420193e17802fef3841a6",
+      "stored_sha256": "745e15fe98677bce2c198c83d2025615fd5676148d16b26cc16148f108c1af87"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-cli-driver.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-cli-driver.log.gz",
+      "sha256": "ff73d24f965c01c2ff4a3311f45856733a01f08a7ca55831a9dc6f3318346dd7",
+      "stored_sha256": "6f7d15228810ee0fe3b550164e05ef23bd42fa8cfa9343243f8dd3da059625f4"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-cli-evidence/bluray44-cli.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-cli-evidence/bluray44-cli.json.gz",
+      "sha256": "e47460cebda0745093e7f2288f28adf104d824e2fcabe4ec2f2f4ffedf768d53",
+      "stored_sha256": "40ca74d3f6b486d7101e65d3afe19a0c9968e158a03d80bb7e808b9b4a8166e4"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-cli-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-cli-evidence/events36-service-process.log.gz",
+      "sha256": "1df1f3495122b0d8939cf023c9ab251105a65db4ce1c30844b0c2d3dfed8fd22",
+      "stored_sha256": "9a1d6037984ec0cd697e78e6876c357f6b41ac7fabf76ed760fb292f48a90d1b"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-observe.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-observe.py.gz",
+      "sha256": "b671b4c7687da59ef9c1a85ebaf53a82875aac8413c56a5e0a5e0cf3d4dd1480",
+      "stored_sha256": "8521b1eadf8a1aa74515a902eefbe75154df4d99f7d2ad48f32098b54167ebfb"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-ui-driver.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-ui-driver.log.gz",
+      "sha256": "e22dc80d6d724bdf98e65680e3e27ef59fcdaeb1aa4c18fae898bcee2c26e705",
+      "stored_sha256": "84fc3b58483d215ec67650ee070b9141e0a6b0ef1343902955d9eea63af24695"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-ui-evidence/bluray44-browser-final.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-ui-evidence/bluray44-browser-final.json.gz",
+      "sha256": "08dba56e3c2dd24a72b0bda54c534c338b6df1202bbf10b0e18521a7fe87160d",
+      "stored_sha256": "2a21b90c328d4c0f414eb6ab7ee931f8b49944b9b0c3dc2e7142aee48757bba7"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-ui-evidence/bluray44-cli.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-ui-evidence/bluray44-cli.json.gz",
+      "sha256": "a62a0bb38ac548f33eb62f3b0bc8fde9372a0eb38eedd7f0ce4649fff8603c89",
+      "stored_sha256": "c3019bf8ef8c39409669ecefd3b0ddd0e98ad1e6ad4b387e62c461479991b915"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-ui-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-ui-evidence/events36-service-process.log.gz",
+      "sha256": "088765db0b0158a24dad4b0e5400cd3c6e4d13b6fd12068a780dafd687673cf1",
+      "stored_sha256": "edb67e53ed15c75ed483b15b0ca617c23494a0c4758d3c559aa196f812537b46"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/bluray44r3-ui-state.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/bluray44r3-ui-state.json.gz",
+      "sha256": "d63d90c2981ea92bd28ad62a4bba1c29f8433ca9e3cd280e7002ab2d250ee2e0",
+      "stored_sha256": "21e46bf7f556b66746958b44d6d06a17ef92d0ca43aa66f8327d7e3116bebb20"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/build-platform44.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/build-platform44.py.gz",
+      "sha256": "85b50b5b43700ef7f1ea36d054ecb52b4962f06a3fedd25c22551a820e6ea1de",
+      "stored_sha256": "c40697afa53eb51845952ff177735bd2fc051beaffad33e999b7aed6de7c54f4"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/build-platform44r2.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/build-platform44r2.py.gz",
+      "sha256": "6a1bd0fffaf6c7d7c45d4b2f1a59357e8b3b3accab5db55194e6642b76d7134d",
+      "stored_sha256": "1acf13ac453623ddb7532ca5e50566823b58c33a21e760d6e2c22dec1cb81ce5"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/build-platform44r3.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/build-platform44r3.py.gz",
+      "sha256": "f6598e0ebce3f63119cd63807c374667f39f868a243dce02a0fc8f31fb474fc9",
+      "stored_sha256": "d32a19b268122d223e52d568170d813109ca93cbb88ee246911286169d2d33c7"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/platform44-result.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/platform44-result.json.gz",
+      "sha256": "765b16506013f4107dff111f6f0b26f9be762dc9605de69a43bc899b0cda965a",
+      "stored_sha256": "559835b6123cd0fc4149bb5ed88c6293ae595c81cc9af2de419cc5114cb22e60"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/platform44r2-result.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/platform44r2-result.json.gz",
+      "sha256": "c97e6ba66f3f65c85c1ae9b23f8b46c176aac4d70e099c7f34934e3b1742f700",
+      "stored_sha256": "a29d8718461d46347a8ba0630c41b40a90d6fb164a5ac1f489610bc292a51272"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/platform44r3-result.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/platform44r3-result.json.gz",
+      "sha256": "b1964ef8445263c13cd13036cef358f94c6d9d83b07946f016ede87e5795a608",
+      "stored_sha256": "c4afcf0a8ef747c6f272b8fa93eb50a87998a4cb4a25171acc4338fe50617e33"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/process-platform44-20261027-linux.test.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/process-platform44-20261027-linux.test.inputs.json.gz",
+      "sha256": "0f913fb7241bc18543bea95b7e118a90999907f8f723454182214f20a34578cd",
+      "stored_sha256": "e0934d9fb3956b48e13f8a453d3cf8566d86f6890b4d866f445245b9d4dd28e1"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/process-platform44r2-20261027-linux.test.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/process-platform44r2-20261027-linux.test.inputs.json.gz",
+      "sha256": "783305a4b190190274a4595d1318895e44355a698e5d44b7b11dc72a822f936a",
+      "stored_sha256": "42301d327cecda158a7cc28417a2cb577172e704caf4bcdbd8ec3ab663f9aba0"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/process-platform44r3-20261027-linux.test.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/process-platform44r3-20261027-linux.test.inputs.json.gz",
+      "sha256": "80a1deef34bf87af0f8d303b0097b30b12faa845c9da67f3eb4724fe85e5d5ec",
+      "stored_sha256": "a331dabbd1724ec3689a409d0201c4efa6205dab206acaa2bb1c8f1727e67746"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/run-bluray44.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/run-bluray44.py.gz",
+      "sha256": "1a54a3ad3cf74cae0463ec8ea3be82b67c5b7773ae5f0a5ff80e4d56e26f9c42",
+      "stored_sha256": "a5037f4de5ae1d7aa7a4750a02b77e9614320e3f56085f3002d4b8b87aa330f0"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/run-bluray44r2.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/run-bluray44r2.py.gz",
+      "sha256": "6a2b3fd46d67f69f9b088c3838753de831fb24fbaefbf3c9955296ea4e67ef1f",
+      "stored_sha256": "f1e974c418e90ba4c46432e4c4696f302900a887d44b552f0a34b30418ecd07d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/run-bluray44r3.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/run-bluray44r3.py.gz",
+      "sha256": "c084370e710a5f03a176df5eeb7ba9e4f07cc543512c6065ebad19800a25ab4c",
+      "stored_sha256": "ed5ab8bdfe23e8ac742a5dae6866f19eb9c662ba42fb1d027afff3c37065d022"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/server-platform44-20261027-linux.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/server-platform44-20261027-linux.inputs.json.gz",
+      "sha256": "3b9ad507873115d1ccc8307b307bac33186e67173fa2767c50aca7088f098939",
+      "stored_sha256": "ded363749af1e20685790d162076bab7e089dd9ff86b849b93de511888c0a526"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/server-platform44r2-20261027-linux.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/server-platform44r2-20261027-linux.inputs.json.gz",
+      "sha256": "35b7321e43cb22ac650a9977178e561b2f8e7b4da974107d92c8866f338eafe8",
+      "stored_sha256": "8d8bd2e47f41fdb3a571fc92e5b746138dd7f542fc5ba9d7ff47bac13130a58a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/server-platform44r3-20261027-linux.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/work/plugin-no-official-auth-20261026/server-platform44r3-20261027-linux.inputs.json.gz",
+      "sha256": "5fce289b26f7a77509b544292942d52f9ed6836b038ff221992ae453618de914",
+      "stored_sha256": "47b04705c094ceb9fa3c74cfbdcf6ebb7f8af5fe7152a60f0485fbc3d220d33e"
+    }
+  ]
+}

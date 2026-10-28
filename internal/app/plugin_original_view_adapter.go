@@ -27,13 +27,30 @@ func (p *originalPluginInstance) originalViewRenderMode(ctx context.Context) (mo
 	}
 	var parts []json.RawMessage
 	if json.Unmarshal(raw, &parts) != nil || len(parts) != 2 || json.Unmarshal(parts[0], &mode) != nil || json.Unmarshal(parts[1], &dist) != nil {
-		return "", "", true, bad("PLUGIN_VIEW_FAILED", "插件渲染模式返回格式无效")
+		return "", "", true, &APIError{"PLUGIN_VIEW_FAILED", "插件渲染模式返回格式无效", 500}
 	}
 	return mode, dist, true, nil
 }
 
 func (p *originalPluginInstance) originalViewDashboard(ctx context.Context, key string, userAgent *string) (json.RawMessage, bool, error) {
-	input, err := json.Marshal(map[string]any{"key": key, "user_agent": userAgent})
+	args := map[string]any{"key": key, "user_agent": userAgent}
+	if p != nil && p.manifest.DashboardParameters != nil {
+		parameters := *p.manifest.DashboardParameters
+		args = map[string]any{}
+		if len(parameters) > 0 {
+			if !slices.Contains(parameters, "user_agent") {
+				return nil, true, &APIError{"PLUGIN_VIEW_FAILED", "插件仪表板方法不接受 user_agent 参数", 500}
+			}
+			args["user_agent"] = userAgent
+		}
+		if len(parameters) > 1 {
+			if !slices.Contains(parameters, "key") {
+				return nil, true, &APIError{"PLUGIN_VIEW_FAILED", "插件仪表板方法不接受 key 参数", 500}
+			}
+			args["key"] = key
+		}
+	}
+	input, err := json.Marshal(args)
 	if err != nil {
 		return nil, p != nil && p.external, err
 	}

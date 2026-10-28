@@ -47,6 +47,17 @@ func main() {
 		case "set_mode":
 			return json.RawMessage("null"), json.Unmarshal(raw, &mode)
 		case "get_api":
+			if mode == "mixed_types" {
+				return json.RawMessage(`[{"key":"before","path":"/before","methods":["GET"]},{"key":"broken","path":"/broken","methods":7},{"key":"broken_query","path":"/broken_query","methods":["GET"],"query":"bad"},{"key":"after","path":"/after","methods":["PATCH"]}]`), nil
+			}
+			if mode == "mixed" {
+				return json.Marshal([]plugins.HTTPAPI{
+					{Key: "before", Path: "/before", Methods: []string{"GET"}},
+					{Path: "/broken", Methods: []string{"GET"}},
+					{Key: "after", Path: "/after", Methods: []string{"PATCH"}},
+					{Key: "before", Path: "/collision", Methods: []string{"GET"}},
+				})
+			}
 			if mode == "error" {
 				return nil, errors.New("actual getter error")
 			}

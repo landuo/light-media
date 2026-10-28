@@ -1,0 +1,61 @@
+{
+  "kind": "actual Linux cmd/server and Go SDK gates; owned initial data/protocol preparation distinguished in tests",
+  "server": {
+    "path": "/tmp/light-media-plugin-scope-dRZTQ91A/server-integrated-20261027-linux",
+    "sha256": "f37e0d1205539e0a44adee61d616af0a7934b33939cbd21e494b42b0e1316d9e"
+  },
+  "test_binary": {
+    "path": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-process-linux.test",
+    "sha256": "b2757a59e10c88a94a9f91e1b412ed4be27f0ea360101530c5557beced8b3b28"
+  },
+  "environment": {
+    "TMPDIR": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-tmp",
+    "PLUGIN_PROCESS_SERVER_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/server-integrated-20261027-linux",
+    "OWNED_INPUT_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/services38-input-final-linux",
+    "OWNED_INPUT_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/services38-input-final-linux",
+    "OWNED_EPISODES_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-episodes-linux",
+    "OWNED_EPISODES_REFRESH_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-episodes-linux",
+    "OWNED_COMPLETION_CHECK_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-completion-check-linux",
+    "OWNED_NOTICE_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-notice-linux",
+    "OWNED_NOTICE_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-notice-linux",
+    "OWNED_USER_MESSAGE_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-user-message-linux",
+    "PLUGIN_PROCESS_SUBSCRIPTION_ORDINARY_FIXTURE": "true",
+    "PLUGIN_PROCESS_SUBSCRIPTION_NOTICE_FIXTURE": "true",
+    "PLUGIN_PROCESS_USER_MESSAGE_FIXTURE": "true",
+    "PLUGIN_PROCESS_SYNC_RECOGNIZE_ORACLE": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-recognize-source-oracle.json",
+    "PLUGIN_PROCESS_ASYNC_RECOGNIZE_ORACLE": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-async-recognize-source-oracle.json",
+    "PLUGIN_PROCESS_EVENTS36_EVIDENCE_DIR": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-evidence"
+  },
+  "runs": [
+    {
+      "test": "TestPluginServicesProductionCLI",
+      "command": [
+        "/tmp/light-media-plugin-scope-dRZTQ91A/events36-process-linux.test",
+        "-test.v",
+        "-test.run",
+        "^TestPluginServicesProductionCLI$",
+        "-test.timeout",
+        "90s"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.485,
+      "log": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-ordinary-linux.log",
+      "log_sha256": "b37b0b5e98a0377729409f0544ff0f221895f5b2cb9f90547ec4f9fb77c1d50e"
+    },
+    {
+      "test": "TestPluginSubscriptionCompletionProductionCLI",
+      "command": [
+        "/tmp/light-media-plugin-scope-dRZTQ91A/events36-process-linux.test",
+        "-test.v",
+        "-test.run",
+        "^TestPluginSubscriptionCompletionProductionCLI$",
+        "-test.timeout",
+        "90s"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.935,
+      "log": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-completion-linux.log",
+      "log_sha256": "618e91744bb264b4986d9c2875e18a6c047b674a64ba158647ff96a45ee07f75"
+    }
+  ]
+}

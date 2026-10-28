@@ -1,0 +1,532 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "kind": "actual fixed caller/Pydantic models/Jinja2; callback registry is counted mutation-safe boundary, not full core execution",
+  "source_sha256": {
+    "app/schemas/file.py": "676486e635bc9d0dfc0e589b514a6627c3330bf961a566c2cd8872b79f74aba0",
+    "app/schemas/event.py": "d5134476edc76096098b85ee32d2f96eb5db2441c873c80729a46b91386687d6",
+    "app/modules/filemanager/transhandler.py": "48948f9137ae68ac2f0cf4c1235dd3db6327cc9d66ff7490c17a5657504d5e36"
+  },
+  "cases": [
+    {
+      "name": "unchanged",
+      "template": "{{ title }} ({{ year }})/{{ title }}.mkv",
+      "variables": {
+        "title": "Owned",
+        "year": 2026
+      },
+      "base": "/owned-target",
+      "source": "/owned-source/old.mkv",
+      "patches": {
+        "transfer.rename.build": {},
+        "transfer.rename": {}
+      },
+      "fail": {
+        "transfer.rename.build": false,
+        "transfer.rename": false
+      },
+      "events": [
+        {
+          "type": "transfer.rename.build",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null
+          }
+        },
+        {
+          "type": "transfer.rename",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "path": "/owned-target",
+            "render_str": "Owned (2026)/Owned.mkv",
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null,
+            "updated": false,
+            "updated_str": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "errors": [],
+      "result": "/owned-target/Owned (2026)/Owned.mkv"
+    },
+    {
+      "name": "build_context",
+      "template": "{{ title }} ({{ year }})/{{ title }}.mkv",
+      "variables": {
+        "title": "Owned",
+        "year": 2026
+      },
+      "base": "/owned-target",
+      "source": "/owned-source/old.mkv",
+      "patches": {
+        "transfer.rename.build": {
+          "rename_dict": {
+            "title": "Changed",
+            "year": 2027
+          }
+        },
+        "transfer.rename": {}
+      },
+      "fail": {
+        "transfer.rename.build": false,
+        "transfer.rename": false
+      },
+      "events": [
+        {
+          "type": "transfer.rename.build",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null
+          }
+        },
+        {
+          "type": "transfer.rename",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Changed",
+              "year": 2027
+            },
+            "path": "/owned-target",
+            "render_str": "Changed (2027)/Changed.mkv",
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null,
+            "updated": false,
+            "updated_str": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "errors": [],
+      "result": "/owned-target/Changed (2027)/Changed.mkv"
+    },
+    {
+      "name": "template_input_ignored",
+      "template": "{{ title }} ({{ year }})/{{ title }}.mkv",
+      "variables": {
+        "title": "Owned",
+        "year": 2026
+      },
+      "base": "/owned-target",
+      "source": "/owned-source/old.mkv",
+      "patches": {
+        "transfer.rename.build": {
+          "template_string": "ignored"
+        },
+        "transfer.rename": {}
+      },
+      "fail": {
+        "transfer.rename.build": false,
+        "transfer.rename": false
+      },
+      "events": [
+        {
+          "type": "transfer.rename.build",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null
+          }
+        },
+        {
+          "type": "transfer.rename",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "path": "/owned-target",
+            "render_str": "Owned (2026)/Owned.mkv",
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null,
+            "updated": false,
+            "updated_str": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "errors": [],
+      "result": "/owned-target/Owned (2026)/Owned.mkv"
+    },
+    {
+      "name": "updated_false",
+      "template": "{{ title }} ({{ year }})/{{ title }}.mkv",
+      "variables": {
+        "title": "Owned",
+        "year": 2026
+      },
+      "base": "/owned-target",
+      "source": "/owned-source/old.mkv",
+      "patches": {
+        "transfer.rename.build": {},
+        "transfer.rename": {
+          "updated": false,
+          "updated_str": "ignored"
+        }
+      },
+      "fail": {
+        "transfer.rename.build": false,
+        "transfer.rename": false
+      },
+      "events": [
+        {
+          "type": "transfer.rename.build",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null
+          }
+        },
+        {
+          "type": "transfer.rename",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "path": "/owned-target",
+            "render_str": "Owned (2026)/Owned.mkv",
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null,
+            "updated": false,
+            "updated_str": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "errors": [],
+      "result": "/owned-target/Owned (2026)/Owned.mkv"
+    },
+    {
+      "name": "updated_empty",
+      "template": "{{ title }} ({{ year }})/{{ title }}.mkv",
+      "variables": {
+        "title": "Owned",
+        "year": 2026
+      },
+      "base": "/owned-target",
+      "source": "/owned-source/old.mkv",
+      "patches": {
+        "transfer.rename.build": {},
+        "transfer.rename": {
+          "updated": true,
+          "updated_str": ""
+        }
+      },
+      "fail": {
+        "transfer.rename.build": false,
+        "transfer.rename": false
+      },
+      "events": [
+        {
+          "type": "transfer.rename.build",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null
+          }
+        },
+        {
+          "type": "transfer.rename",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "path": "/owned-target",
+            "render_str": "Owned (2026)/Owned.mkv",
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null,
+            "updated": false,
+            "updated_str": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "errors": [],
+      "result": "/owned-target/Owned (2026)/Owned.mkv"
+    },
+    {
+      "name": "updated_true",
+      "template": "{{ title }} ({{ year }})/{{ title }}.mkv",
+      "variables": {
+        "title": "Owned",
+        "year": 2026
+      },
+      "base": "/owned-target",
+      "source": "/owned-source/old.mkv",
+      "patches": {
+        "transfer.rename.build": {},
+        "transfer.rename": {
+          "updated": true,
+          "updated_str": "Changed.mkv"
+        }
+      },
+      "fail": {
+        "transfer.rename.build": false,
+        "transfer.rename": false
+      },
+      "events": [
+        {
+          "type": "transfer.rename.build",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null
+          }
+        },
+        {
+          "type": "transfer.rename",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "path": "/owned-target",
+            "render_str": "Owned (2026)/Owned.mkv",
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null,
+            "updated": false,
+            "updated_str": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "errors": [],
+      "result": "/owned-target/Changed.mkv"
+    },
+    {
+      "name": "absolute_updated",
+      "template": "{{ title }} ({{ year }})/{{ title }}.mkv",
+      "variables": {
+        "title": "Owned",
+        "year": 2026
+      },
+      "base": "/owned-target",
+      "source": "/owned-source/old.mkv",
+      "patches": {
+        "transfer.rename.build": {},
+        "transfer.rename": {
+          "updated": true,
+          "updated_str": "/owned-outside.mkv"
+        }
+      },
+      "fail": {
+        "transfer.rename.build": false,
+        "transfer.rename": false
+      },
+      "events": [
+        {
+          "type": "transfer.rename.build",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null
+          }
+        },
+        {
+          "type": "transfer.rename",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "path": "/owned-target",
+            "render_str": "Owned (2026)/Owned.mkv",
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null,
+            "updated": false,
+            "updated_str": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "errors": [],
+      "result": "/owned-outside.mkv"
+    },
+    {
+      "name": "build_error_after_mutation",
+      "template": "{{ title }} ({{ year }})/{{ title }}.mkv",
+      "variables": {
+        "title": "Owned",
+        "year": 2026
+      },
+      "base": "/owned-target",
+      "source": "/owned-source/old.mkv",
+      "patches": {
+        "transfer.rename.build": {
+          "rename_dict": {
+            "title": "Before failure",
+            "year": 2026
+          }
+        },
+        "transfer.rename": {}
+      },
+      "fail": {
+        "transfer.rename.build": true,
+        "transfer.rename": false
+      },
+      "events": [
+        {
+          "type": "transfer.rename.build",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null
+          }
+        },
+        {
+          "type": "transfer.rename",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Before failure",
+              "year": 2026
+            },
+            "path": "/owned-target",
+            "render_str": "Before failure (2026)/Before failure.mkv",
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null,
+            "updated": false,
+            "updated_str": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "errors": [
+        "transfer.rename.build"
+      ],
+      "result": "/owned-target/Before failure (2026)/Before failure.mkv"
+    },
+    {
+      "name": "rename_error_after_mutation",
+      "template": "{{ title }} ({{ year }})/{{ title }}.mkv",
+      "variables": {
+        "title": "Owned",
+        "year": 2026
+      },
+      "base": "/owned-target",
+      "source": "/owned-source/old.mkv",
+      "patches": {
+        "transfer.rename.build": {},
+        "transfer.rename": {
+          "updated": true,
+          "updated_str": "Before failure.mkv"
+        }
+      },
+      "fail": {
+        "transfer.rename.build": false,
+        "transfer.rename": true
+      },
+      "events": [
+        {
+          "type": "transfer.rename.build",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null
+          }
+        },
+        {
+          "type": "transfer.rename",
+          "input": {
+            "template_string": "{{ title }} ({{ year }})/{{ title }}.mkv",
+            "rename_dict": {
+              "title": "Owned",
+              "year": 2026
+            },
+            "path": "/owned-target",
+            "render_str": "Owned (2026)/Owned.mkv",
+            "source_path": "/owned-source/old.mkv",
+            "source_item": null,
+            "updated": false,
+            "updated_str": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "errors": [
+        "transfer.rename"
+      ],
+      "result": "/owned-target/Before failure.mkv"
+    },
+    {
+      "name": "path-9",
+      "template": "",
+      "variables": {},
+      "base": null,
+      "source": null,
+      "patches": {},
+      "fail": {},
+      "result": "."
+    },
+    {
+      "name": "path-10",
+      "template": "sub/../Owned.mkv",
+      "variables": {},
+      "base": null,
+      "source": null,
+      "patches": {},
+      "fail": {},
+      "result": "sub/../Owned.mkv"
+    },
+    {
+      "name": "path-11",
+      "template": "/absolute.mkv",
+      "variables": {},
+      "base": "/base",
+      "source": null,
+      "patches": {},
+      "fail": {},
+      "result": "/absolute.mkv"
+    }
+  ]
+}

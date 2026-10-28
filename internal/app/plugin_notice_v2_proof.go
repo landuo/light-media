@@ -1,9 +1,11 @@
 package app
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"regexp"
+	"time"
 
 	"light-media/internal/notice"
 	seedhost "light-media/internal/plugins/cleaninvalidseed/host"
@@ -69,9 +71,39 @@ func (p *PluginStore) validateNoticeBusinessV2Steps(ctx context.Context, q plugi
 			if e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='notification' AND id=?`, saved.History.ID).Scan(&raw); e != nil {
 				return seedhost.ErrUnsafe
 			}
-			var current Notification
-			if cleanupJournalStrict(raw, &current) != nil {
+			var record notificationRecord
+			if cleanupJournalStrict(raw, &record) != nil {
 				return seedhost.ErrUnsafe
+			}
+			current := record.Notification
+			if len(record.ProtectedContent) > 0 {
+				var plaintext json.RawMessage
+				if p.store.Unseal(record.ProtectedContent, &plaintext) != nil {
+					return seedhost.ErrUnsafe
+				}
+				var protected originalMessageHistoryPayload
+				if cleanupJournalStrict(plaintext, &protected) != nil || protected.UTCOffset < -86400 || protected.UTCOffset > 86400 || protected.ID != record.ID || protected.CreatedAt != record.CreatedAt {
+					return seedhost.ErrUnsafe
+				}
+				original := protected.Notification
+				projection := Notification{ID: original.ID, CreatedAt: original.CreatedAt, Read: record.Read}
+				if !bytes.Equal(mustCleanSeedJSON(record.Notification), mustCleanSeedJSON(projection)) {
+					return seedhost.ErrUnsafe
+				}
+				original.Read = false
+				if saved.Digest != p.noticeID("business-history-value", original) {
+					return seedhost.ErrUnsafe
+				}
+				stamp, err := time.Parse(time.RFC3339Nano, original.CreatedAt)
+				if err != nil {
+					return seedhost.ErrUnsafe
+				}
+				registeredAt := stamp.In(time.FixedZone("recorded", protected.UTCOffset)).Format("2006-01-02 15:04:05")
+				columns, err := originalMessageHistoryColumns(rendered.Snapshot.Fields, registeredAt)
+				if err != nil || !bytes.Equal(columns, protected.SourceMessage) || record.SourceRegisteredAt != registeredAt {
+					return seedhost.ErrUnsafe
+				}
+				current = protected.Notification
 			}
 			current.Read = false
 			if saved.Digest != p.noticeID("business-history-value", current) {

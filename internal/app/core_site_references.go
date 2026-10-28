@@ -55,14 +55,19 @@ func (a *App) pruneDeletedCoreSiteReferencesTx(ctx context.Context, tx *sql.Tx, 
 		return err
 	}
 	for _, sub := range changed {
-		if err := txPut(ctx, tx, "subscription", sub.ID, sub); err != nil {
-			return err
-		}
-		if _, err := tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), sub.ID); err != nil {
+		if err := writePrunedCoreSubscriptionSiteTx(ctx, tx, sub); err != nil {
 			return err
 		}
 	}
 	return nil
+}
+
+func writePrunedCoreSubscriptionSiteTx(ctx context.Context, tx *sql.Tx, sub Subscription) error {
+	if err := txPut(ctx, tx, "subscription", sub.ID, sub); err != nil {
+		return err
+	}
+	_, err := tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,lease_until=0,updated_at=? WHERE kind='subscription' AND json_extract(payload,'$.id')=? AND state IN ('queued','running','retry_wait','waiting_paused')`, now(), sub.ID)
+	return err
 }
 
 func removeCoreSiteReference(values []string, id string) ([]string, bool) {

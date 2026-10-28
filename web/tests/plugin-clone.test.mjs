@@ -7,6 +7,9 @@ import * as vue from 'vue';
 import { APIError, errorText } from '../src/api.ts';
 import * as cloneHelpers from '../src/features/plugin-clone.ts';
 import * as organization from '../src/features/plugin-organization.ts';
+import * as marketHelpers from '../src/features/plugin-market.ts';
+import * as projectHelpers from '../src/features/plugin-project.ts';
+import * as forms from '../src/features/plugin-forms.ts';
 
 const { emptyPluginClone, pluginCloneErrors, pluginCloneInstanceId, safePluginIcon } = cloneHelpers;
 const plugin = (overrides = {}) => ({
@@ -41,8 +44,8 @@ test('clone identity uses the complete instance ID and lowercases only the suffi
     {},
   );
   assert.match(
-    pluginCloneErrors(plugin({ instance_id: 'x'.repeat(96) }), validForm({ suffix: 'A' })).suffix,
-    /96/,
+    pluginCloneErrors(plugin({ instance_id: 'x'.repeat(255) }), validForm({ suffix: 'A' })).suffix,
+    /255/,
   );
   assert.match(pluginCloneErrors(plugin({ instance_id: '' }), validForm()).suffix, /来源实例/);
   assert.match(
@@ -197,6 +200,9 @@ async function mount(t, name, { props = {}, api, emit, desktop = true } = {}) {
           readFileSync(new URL('../src/features/plugin-icon-colors.json', import.meta.url)),
         );
       if (dependency === '../features/plugin-organization') return organization;
+      if (dependency === '../features/plugin-market') return marketHelpers;
+      if (dependency === '../features/plugin-project') return projectHelpers;
+      if (dependency === '../features/plugin-forms') return forms;
       if (dependency === 'vuetify') return { useDisplay: () => ({ mdAndUp: vue.ref(desktop) }) };
       if (dependency.startsWith('vuetify/'))
         return new Proxy({}, { get: (_, key) => ({ name: key }) });
@@ -297,7 +303,8 @@ test('clone dialog has five editable fields, inherited placeholders, responsive 
   assert.match(dialog.text(dialog.component('VCard')), /SeedRescue2copya/);
   assert.match(dialog.text(dialog.component('VCard')), /仅复制配置/);
   assert.match(dialog.text(dialog.component('VCard')), /不复制历史记录及运行数据/);
-  assert.match(dialog.text(dialog.component('VCard')), /默认暂停，不会自动执行/);
+  assert.match(dialog.text(dialog.component('VCard')), /来源配置非空时关闭 enable、enabled/);
+  assert.match(dialog.text(dialog.component('VCard')), /来源配置为空时按插件默认值初始化，可能自动启用/);
   const mobile = await mount(t, 'PluginCloneDialog', {
     props: { plugin: plugin() },
     desktop: false,
@@ -336,11 +343,11 @@ test('invalid suffix, total ID length, version and icon never reach transport', 
   assert.ok(dialog.label('分身图标').props['error-messages']);
   assert.equal(dialog.requests.length, 0);
   const tooLong = await mount(t, 'PluginCloneDialog', {
-    props: { plugin: plugin({ instance_id: 'x'.repeat(96) }) },
+    props: { plugin: plugin({ instance_id: 'x'.repeat(255) }) },
   });
   await tooLong.set('分身后缀', 'a');
   await tooLong.submit();
-  assert.match(tooLong.label('分身后缀').props['error-messages'], /96/);
+  assert.match(tooLong.label('分身后缀').props['error-messages'], /255/);
   assert.equal(tooLong.requests.length, 0);
 });
 
@@ -509,15 +516,17 @@ test('market/uninstalled or sortable cards have no clone menu', async (t) => {
   }
 });
 
-test('actual card-to-dialog flow creates once, refreshes both reads and keeps the source folder without an organization write', async (t) => {
+test('actual card-to-dialog flow creates once, refreshes lists and statistics and keeps the source folder without an organization write', async (t) => {
   const source = plugin({ state: true });
   let installed = [source];
   let groups = { revision: 1, folders: { 原文件夹: [source.instance_id] }, order: [] };
   const allRequests = [];
   const api = async (path, body, method) => {
     allRequests.push({ path, body, method });
-    if (path === '/plugins') return [...installed];
+    if (path === '/plugins?state=installed') return [...installed];
     if (path === '/plugins/organization' && !body) return structuredClone(groups);
+    if (path === '/plugins/statistic') return {};
+    if (path.startsWith('/plugins/market?')) return { items: [], sources: [] };
     if (path === '/plugins/SeedRescue2/clone') {
       const result = resultFor(source, body);
       installed.push(
@@ -571,7 +580,7 @@ test('actual card-to-dialog flow creates once, refreshes both reads and keeps th
   assert.equal(app.component('PluginCloneDialog'), undefined);
   assert.deepEqual(
     allRequests.slice(readsBefore).map((row) => row.path),
-    ['/plugins/SeedRescue2/clone', '/plugins', '/plugins/organization'],
+    ['/plugins/SeedRescue2/clone', '/plugins?state=installed', '/plugins/market?details=true', '/plugins/statistic', '/plugins/organization'],
   );
   assert.equal(allRequests.filter((row) => row.body).length, 1);
   assert.deepEqual(allRequests.find((row) => row.body).body, validForm());
@@ -590,7 +599,7 @@ test('actual card-to-dialog flow creates once, refreshes both reads and keeps th
           node.props?.class === 'plugin-folder-breadcrumb' && app.text(node).includes('原文件夹'),
       ),
   );
-  assert.equal(app.toasts.at(-1), '插件分身已创建，默认暂停');
+  assert.equal(app.toasts.at(-1), '插件分身已创建');
 });
 
 test('creation remains successful when the subsequent list refresh fails and never posts a second clone', async (t) => {
@@ -603,7 +612,7 @@ test('creation remains successful when the subsequent list refresh fails and nev
       created = true;
       return resultFor(source, body);
     }
-    if (path === '/plugins') {
+    if (path === '/plugins?state=installed') {
       if (created) throw new APIError('READ_FAILED', '刷新失败，请稍后刷新列表', 'refresh-19');
       return [source];
     }
@@ -625,221 +634,154 @@ test('creation remains successful when the subsequent list refresh fails and nev
   await dialog.flush();
   await app.flush();
   assert.equal(app.component('PluginCloneDialog'), undefined);
-  assert.equal(app.toasts.at(-1), '插件分身已创建，默认暂停');
+  assert.equal(app.toasts.at(-1), '插件分身已创建');
   assert.match(
     app.text(app.nodes().find((node) => node.props?.role === 'alert')),
     /刷新失败.*refresh-19/,
   );
   await dialog.submit();
-  await app.polls[0]();
+  assert.equal(app.polls.length, 0);
+  await app.flush();
   assert.equal(writes.length, 1);
 });
 
-test('update menu exists only for an executable compiled offer, not a display version', async (t) => {
-  for (const values of [{}, { has_update: true }, { update: { target_version: '1.3' } }]) {
-    const card = await mount(t, 'PluginManageCard', { props: { plugin: plugin(values) } });
-    assert.equal(
-      card
-        .nodes()
-        .find((n) => n.type?.name === 'VListItem' && String(n.props.title).startsWith('更新至')),
-      undefined,
-    );
+const repositoryOffer = (overrides = {}) => plugin({
+  plugin_id: 'OwnedFixture', instance_id: 'OwnedFixture', version: '1.0',
+  has_update: true, repo_url: 'https://owned.invalid/index.json', repository_version: '2.0',
+  available: true, ...overrides,
+});
+function updateDialog(app) {
+  return app.component('PluginVersionHistoryDialog');
+}
+function installedAPI(source, updateResult = { success: true }) {
+  return async (path) => {
+    if (path === '/plugins?state=installed') return [source];
+    if (path === '/plugins/organization') return { revision: 1, folders: {}, order: [] };
+    if (path === '/plugins/install') return updateResult;
+    throw new Error('Unexpected request ' + path);
+  };
+}
+
+test('update menu requires an exact repository candidate and never treats display version as an update', async (t) => {
+  for (const source of [
+    plugin(), plugin({ has_update: true }),
+    plugin({ update: { target_version: '2.0' } }),
+    repositoryOffer({ source_instance_id: 'OwnedFixtureSource', has_update: false }),
+  ]) {
+    const card = await mount(t, 'PluginManageCard', { props: { plugin: source } });
+    assert.equal(card.nodes().find((n) => n.type?.name === 'VListItem' && String(n.props.title).startsWith('更新至')), undefined);
   }
-  const blocked = await mount(t, 'PluginManageCard', {
-    props: { plugin: plugin({ update_blocked_reason: '存在未确认的一次性操作' }) },
-  });
-  const blockedItem = blocked
-    .nodes()
-    .find((n) => n.type?.name === 'VListItem' && String(n.props.title).startsWith('更新暂不可用'));
-  assert.ok(blockedItem);
-  assert.equal(blockedItem.props.disabled, ''); // compiled Boolean attribute; Vuetify coerces it to true
-  assert.match(blockedItem.props.title, /一次性操作/);
-  const source = plugin({
-    display_version: 'display-99',
-    has_update: true,
-    update: { from_version: '1.2', target_version: '1.3', generation: 4, revision: 7 },
-  });
+  const source = repositoryOffer({ display_version: 'display-99' });
   const card = await mount(t, 'PluginManageCard', { props: { plugin: source } });
-  const item = card
-    .nodes()
-    .find((n) => n.type?.name === 'VListItem' && n.props.title === '更新至 v1.3');
+  const item = card.nodes().find((n) => n.type?.name === 'VListItem' && n.props.title === '更新至 v2.0');
   assert.ok(item);
   item.props.onClick();
-  assert.equal(card.events[0][1], 'update');
+  assert.equal(card.events[0][1], 'repository-update');
   assert.equal(card.events[0][2].instance_id, source.instance_id);
+  const clone = repositoryOffer({ source_instance_id: 'OwnedFixtureSource', instance_id: 'OwnedFixtureqa1' });
+  const cloneCard = await mount(t, 'PluginManageCard', { props: { plugin: clone } });
+  cloneCard.nodes().find((n) => n.type?.name === 'VListItem' && n.props.title === '更新至 v2.0').props.onClick();
+  assert.equal(cloneCard.events[0][1], 'repository-update');
+  assert.equal(cloneCard.events[0][2].instance_id, 'OwnedFixtureqa1');
+  const unavailable = await mount(t, 'PluginManageCard', { props: { plugin: repositoryOffer({ available: false }) } });
+  assert.equal(unavailable.nodes().find((n) => n.type?.name === 'VListItem' && n.props.title === '更新至 v2.0').props.disabled, true);
 });
 
-test('update confirmation sends the captured instance snapshot and does not claim initialization passed', async (t) => {
-  const offer = { from_version: '1.2', target_version: '1.3', generation: 4, revision: 7 };
-  const source = plugin({
-    plugin_id: 'CategoryEditor',
-    instance_id: 'CategoryEditorcopy',
-    version: '1.2',
-    has_update: true,
-    update: offer,
-  });
-  let migrated = false;
-  const api = async (path, body) => {
-    if (path === '/plugins')
-      return [
-        migrated ? { ...source, version: '1.3', has_update: false, update: undefined } : source,
-      ];
-    if (path === '/plugins/organization') return { revision: 1, folders: {}, order: [] };
-    if (path === '/plugins/CategoryEditorcopy/update') {
-      migrated = true;
-      return { migration_committed: true, initialization: { id: 'owned-run', state: 'pending' } };
-    }
-    throw new Error('Unexpected request ' + path);
-  };
-  const app = await mount(t, 'Plugins', { api });
-  await app.component('PluginManageCard').props.onAction('update', source);
+test('pinned update action opens history, closes without writes, then updates latest without a second confirmation', async (t) => {
+  const source = repositoryOffer({ display_version: 'display-only' });
+  const app = await mount(t, 'Plugins', { api: installedAPI(source) });
+  await app.component('PluginManageCard').props.onAction('repository-update', source);
   await app.flush();
-  const updateDialog = () =>
-    app
-      .nodes()
-      .find(
-        (n) =>
-          n.type?.name === 'VDialog' &&
-          (n.props.modelValue ?? n.props['model-value']) === true &&
-          app.text(n).includes('迁移提交与初始化执行结果分别记录'),
-      );
-  const updateButton = (label) =>
-    app.nodes(updateDialog()).find((n) => n.type?.name === 'VBtn' && app.text(n).trim() === label);
-  assert.ok(updateDialog());
-  await updateButton('取消').props.onClick();
+  assert.ok(updateDialog(app));
+  assert.equal(updateDialog(app).props['show-update-action'], true);
+  assert.equal(app.nodes().some((node) => node.type?.name === 'VCardTitle' && app.text(node) === '确认更新'), false);
+  await updateDialog(app).props.onClose();
   await app.flush();
   assert.equal(app.requests.filter((r) => r.body).length, 0);
-  await app.component('PluginManageCard').props.onAction('update', source);
+  await app.component('PluginManageCard').props.onAction('repository-update', source);
   await app.flush();
-  await updateButton('确认').props.onClick();
-  await app.flush();
-  const writes = app.requests.filter((r) => r.body);
-  assert.equal(writes.length, 1);
-  assert.equal(writes[0].path, '/plugins/CategoryEditorcopy/update');
-  assert.deepEqual(writes[0].body, offer);
-  assert.equal(app.toasts.at(-1), '内置版本迁移已提交，初始化结果请查看执行记录');
-});
-
-test('review-required migration points to current settings without claiming execution', async (t) => {
-  const offer = { from_version: '1.2', target_version: '1.3', generation: 4, revision: 7 };
-  const source = plugin({
-    plugin_id: 'CategoryEditor',
-    instance_id: 'CategoryEditorcopy',
-    version: '1.2',
-    has_update: true,
-    update: offer,
-  });
-  let migrated = false;
-  const api = async (path, body) => {
-    if (path === '/plugins')
-      return [
-        migrated ? { ...source, version: '1.3', has_update: false, update: undefined } : source,
-      ];
-    if (path === '/plugins/organization') return { revision: 1, folders: {}, order: [] };
-    if (path === '/plugins/CategoryEditorcopy/update') {
-      migrated = true;
-      return { migration_committed: true, review_pending: true };
-    }
-    throw new Error('Unexpected request ' + path);
-  };
-  const app = await mount(t, 'Plugins', { api });
-  await app.component('PluginManageCard').props.onAction('update', source);
-  await app.flush();
-  const updateDialog = () =>
-    app
-      .nodes()
-      .find(
-        (n) =>
-          n.type?.name === 'VDialog' &&
-          (n.props.modelValue ?? n.props['model-value']) === true &&
-          app.text(n).includes('迁移提交与初始化执行结果分别记录'),
-      );
-  const updateButton = (label) =>
-    app.nodes(updateDialog()).find((n) => n.type?.name === 'VBtn' && app.text(n).trim() === label);
-  assert.ok(updateDialog());
-  await updateButton('取消').props.onClick();
-  await app.flush();
-  assert.equal(app.requests.filter((r) => r.body).length, 0);
-  await app.component('PluginManageCard').props.onAction('update', source);
-  await app.flush();
-  await updateButton('确认').props.onClick();
+  await updateDialog(app).props.onUpdate();
   await app.flush();
   const writes = app.requests.filter((r) => r.body);
-  assert.equal(writes.length, 1);
-  assert.equal(writes[0].path, '/plugins/CategoryEditorcopy/update');
-  assert.deepEqual(writes[0].body, offer);
-  assert.equal(app.toasts.at(-1), '版本已迁移，尚未执行；请打开当前实例设置核对并保存');
+  assert.deepEqual(writes, [{ path: '/plugins/install', body: {
+    plugin_id: source.plugin_id, repo_url: source.repo_url, force: true,
+  }, method: undefined }]);
+  assert.equal(app.toasts.at(-1), source.name + '已更新');
+  assert.equal(updateDialog(app), undefined);
 });
 
-test('pending update review has an actionable settings entry scoped to the exact clone', async (t) => {
-  const source = plugin({ instance_id: 'CategoryEditorreviewcopy', update_review_pending: true });
+test('incompatible catalog update remains disabled while installed settings stay usable', async (t) => {
+  const source = repositoryOffer({ update_blocked_reason: '当前仓库版本不支持本机平台' });
   const card = await mount(t, 'PluginManageCard', { props: { plugin: source } });
-  const item = card
-    .nodes()
-    .find(
-      (n) => n.type?.name === 'VListItem' && n.props.title === '更新已迁移，打开设置确认执行意图',
-    );
+  const update = card.nodes().find((n) => n.type?.name === 'VListItem' && n.props.title === '更新至 v2.0');
+  const settings = card.nodes().find((n) => n.type?.name === 'VListItem' && n.props.title === '设置');
+  assert.equal(update.props.disabled, true);
+  assert.notEqual(settings.props.disabled, true);
+  update.props.onClick();
+  assert.deepEqual(card.events, []);
+  assert.match(card.text(card.nodes()), /当前仓库版本不支持本机平台/);
+  const app = await mount(t, 'Plugins', { api: installedAPI(source) });
+  await app.component('PluginManageCard').props.onAction('repository-update', source);
+  await app.flush();
+  assert.equal(updateDialog(app), undefined);
+  assert.equal(app.requests.filter((r) => r.body).length, 0);
+});
+
+test('retired migration envelopes cannot claim a repository update succeeded', async (t) => {
+  const source = repositoryOffer();
+  for (const result of [{ migration_committed: true, review_pending: true }, {}, { success: false, message: '制品校验失败' }]) {
+    const app = await mount(t, 'Plugins', { api: installedAPI(source, result) });
+    await app.component('PluginManageCard').props.onAction('repository-update', source);
+    await app.flush();
+    await updateDialog(app).props.onUpdate();
+    await app.flush();
+    assert.ok(updateDialog(app));
+    assert.match(updateDialog(app).props['update-error'], /制品校验失败|插件更新失败/);
+    assert.deepEqual(app.toasts, []);
+    assert.equal(app.requests.filter((r) => r.body).length, 1);
+  }
+});
+
+test('clone settings keep the exact instance and ignore retired review metadata', async (t) => {
+  const source = plugin({ instance_id: 'OwnedFixturecopy', source_instance_id: 'OwnedFixture', update_review_pending: true });
+  const card = await mount(t, 'PluginManageCard', { props: { plugin: source } });
+  const item = card.nodes().find((n) => n.type?.name === 'VListItem' && n.props.title === '设置');
   assert.ok(item);
-  assert.notEqual(item.props.disabled, true);
   item.props.onClick();
   assert.equal(card.events[0][1], 'settings');
   assert.equal(card.events[0][2].instance_id, source.instance_id);
+  const app = await mount(t, 'Plugins', { api: installedAPI(source) });
+  await app.component('PluginManageCard').props.onAction('settings', source);
+  await app.flush();
+  assert.equal(app.component('PluginConfigDialog').props.plugin.instance_id, source.instance_id);
+  assert.equal(app.requests.filter((r) => r.body).length, 0);
 });
 
-test('retained clone restore action is cold and uses the exact instance snapshot', async (t) => {
-  const snapshot = { version: '1.3', generation: 3, revision: 7 };
+test('retired restore and update actions cannot submit stale clone review snapshots', async (t) => {
   const retained = plugin({
-    plugin_id: 'CategoryEditor',
-    instance_id: 'CategoryEditorheldcopy',
-    installed: false,
-    restore_review: snapshot,
-    update_review_pending: true,
+    instance_id: 'OwnedFixtureheldcopy', source_instance_id: 'OwnedFixture', installed: false,
+    restore_review: { version: '1.0', generation: 3, revision: 7 }, update_review_pending: true,
+    available: false, unavailable_reason: '插件代码不可用或标准契约不匹配',
+  });
+  const app = await mount(t, 'Plugins', { api: installedAPI(retained) });
+  const onAction = app.component('PluginManageCard').props.onAction;
+  await onAction('restore-reviewed', retained);
+  await onAction('update', retained);
+  await onAction('install', retained);
+  await app.flush();
+  assert.equal(app.requests.filter((r) => r.body).length, 0);
+  assert.deepEqual(app.toasts, []);
+});
+
+test('unavailable retained code disables ordinary install with actual code availability reason', async (t) => {
+  const retained = plugin({
+    installed: false, available: false, unavailable_reason: '插件代码不可用或标准契约不匹配',
+    update_review_pending: true, restore_review_blocked_reason: 'retired migration field',
   });
   const card = await mount(t, 'PluginManageCard', { props: { plugin: retained } });
-  const button = card
-    .nodes()
-    .find((n) => n.type?.name === 'VBtn' && card.text(n).trim() === '恢复为待确认');
-  assert.ok(button);
-  button.props.onClick({ stopPropagation() {} });
-  assert.equal(card.events[0][1], 'restore-reviewed');
-  assert.equal(card.events[0][2].instance_id, retained.instance_id);
-  let restored = false;
-  const api = async (path, body) => {
-    if (path === '/plugins')
-      return restored ? [{ ...retained, installed: true, restore_review: undefined }] : [retained];
-    if (path === '/plugins/organization') return { revision: 1, folders: {}, order: [] };
-    if (path === '/plugins/CategoryEditorheldcopy/restore-reviewed') {
-      restored = true;
-      return { restored: true, review_pending: true };
-    }
-    throw new Error('Unexpected request ' + path);
-  };
-  const app = await mount(t, 'Plugins', { api });
-  await app.component('PluginManageCard').props.onAction('install', retained);
-  assert.equal(app.requests.filter((r) => r.body).length, 0);
-  await app.component('PluginManageCard').props.onAction('restore-reviewed', retained);
-  await app.flush();
-  const writes = app.requests.filter((r) => r.body);
-  assert.equal(writes.length, 1);
-  assert.equal(writes[0].path, '/plugins/CategoryEditorheldcopy/restore-reviewed');
-  assert.deepEqual(writes[0].body, snapshot);
-  assert.match(app.toasts.at(-1), /已恢复为待确认，尚未执行/);
-});
-
-test('unavailable retained version cannot fall through to ordinary install', async (t) => {
-  const card = await mount(t, 'PluginManageCard', {
-    props: {
-      plugin: plugin({
-        installed: false,
-        update_review_pending: true,
-        restore_review_blocked_reason: '当前程序未包含此保留版本',
-      }),
-    },
-  });
-  const button = card
-    .nodes()
-    .find((n) => n.type?.name === 'VBtn' && card.text(n).trim() === '恢复暂不可用');
+  const button = card.nodes().find((n) => n.type?.name === 'VBtn' && card.text(n).trim() === '安装');
   assert.ok(button);
   assert.equal(button.props.disabled, true);
-  assert.equal(button.props.title, '当前程序未包含此保留版本');
+  assert.equal(button.props.title, retained.unavailable_reason);
+  assert.equal(card.nodes().find((n) => n.type?.name === 'VBtn' && card.text(n).includes('恢复')), undefined);
 });

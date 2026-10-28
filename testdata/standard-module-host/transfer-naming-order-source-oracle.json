@@ -1,0 +1,153 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:2004-2064",
+    "app/chain/__init__.py:1425-1477",
+    "app/modules/filemanager/__init__.py:415-541",
+    "app/modules/filemanager/transhandler.py:1221-1290"
+  ],
+  "kind": "Pinned storage selection -> transfer dispatch -> actual native naming.\nRuns the exact __handle_transfer statements, dispatcher and FileManager wrapper,\nand the exact get_rename_path with real Pydantic events/Jinja2. Native copying\nand the plugin callback are owned physical boundaries; no old service runs.\n",
+  "cases": [
+    {
+      "name": "model_true_effect",
+      "trace": [
+        "storage.operation",
+        "storage.operation",
+        "plugin"
+      ],
+      "native_calls": 0,
+      "result": [
+        true,
+        null
+      ],
+      "native_target_exists": false,
+      "plugin_target_exists": true
+    },
+    {
+      "name": "false",
+      "trace": [
+        "storage.operation",
+        "storage.operation",
+        "plugin"
+      ],
+      "native_calls": 0,
+      "result": [
+        false,
+        "文件整理模块运行失败"
+      ],
+      "native_target_exists": false,
+      "plugin_target_exists": false
+    },
+    {
+      "name": "none",
+      "trace": [
+        "storage.operation",
+        "storage.operation",
+        "plugin",
+        "transfer.rename.build",
+        "transfer.rename"
+      ],
+      "native_calls": 1,
+      "result": [
+        true,
+        null
+      ],
+      "native_target_exists": true,
+      "plugin_target_exists": false
+    },
+    {
+      "name": "model_true_effect_subtitle",
+      "trace": [
+        "storage.operation",
+        "storage.operation",
+        "plugin"
+      ],
+      "native_calls": 0,
+      "result": [
+        true,
+        null
+      ],
+      "native_target_exists": false,
+      "plugin_target_exists": true
+    },
+    {
+      "name": "false_subtitle",
+      "trace": [
+        "storage.operation",
+        "storage.operation",
+        "plugin"
+      ],
+      "native_calls": 0,
+      "result": [
+        false,
+        "文件整理模块运行失败"
+      ],
+      "native_target_exists": false,
+      "plugin_target_exists": false
+    },
+    {
+      "name": "none_subtitle",
+      "trace": [
+        "storage.operation",
+        "storage.operation",
+        "plugin",
+        "transfer.rename.build",
+        "transfer.rename"
+      ],
+      "native_calls": 1,
+      "result": [
+        true,
+        null
+      ],
+      "native_target_exists": true,
+      "plugin_target_exists": false
+    },
+    {
+      "name": "model_true_effect_audio",
+      "trace": [
+        "storage.operation",
+        "storage.operation",
+        "plugin"
+      ],
+      "native_calls": 0,
+      "result": [
+        true,
+        null
+      ],
+      "native_target_exists": false,
+      "plugin_target_exists": true
+    },
+    {
+      "name": "false_audio",
+      "trace": [
+        "storage.operation",
+        "storage.operation",
+        "plugin"
+      ],
+      "native_calls": 0,
+      "result": [
+        false,
+        "文件整理模块运行失败"
+      ],
+      "native_target_exists": false,
+      "plugin_target_exists": false
+    },
+    {
+      "name": "none_audio",
+      "trace": [
+        "storage.operation",
+        "storage.operation",
+        "plugin",
+        "transfer.rename.build",
+        "transfer.rename"
+      ],
+      "native_calls": 1,
+      "result": [
+        true,
+        null
+      ],
+      "native_target_exists": true,
+      "plugin_target_exists": false
+    }
+  ]
+}

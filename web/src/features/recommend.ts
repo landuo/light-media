@@ -4,7 +4,8 @@ export type RecommendCategory = 'all' | 'movie' | 'tv' | 'anime' | 'rankings';
 export interface RecommendSource {
   id: string;
   title: string;
-  category: Exclude<RecommendCategory, 'all'>;
+  category: string;
+  api_path?: string;
 }
 export const recommendCategories: { id: RecommendCategory; title: string; icon: string }[] = [
   { id: 'all', title: '全部', icon: 'mdi-filmstrip-box-multiple' },
@@ -15,7 +16,21 @@ export const recommendCategories: { id: RecommendCategory; title: string; icon: 
 ];
 
 export function recommendEnabled(sources: RecommendSource[], saved: Record<string, boolean> = {}) {
-  return Object.fromEntries(sources.map((source) => [source.id, saved[source.id] !== false]));
+  // The fixed UI keys display choices by title. Keep the existing host IDs on
+  // the wire, while same-title rows still share the original display choice.
+  const byTitle = new Map<string, boolean>();
+  for (const source of sources)
+    byTitle.set(source.title, byTitle.get(source.title) || false || !source.api_path);
+  const restored = new Set<string>();
+  for (const source of sources) {
+    if (typeof saved[source.id] === 'boolean' && !restored.has(source.title)) {
+      byTitle.set(source.title, saved[source.id]!);
+      restored.add(source.title);
+    }
+  }
+  return Object.fromEntries(
+    sources.map((source) => [source.id, byTitle.get(source.title) === true]),
+  );
 }
 
 export function recommendSourceVisible(
@@ -35,7 +50,10 @@ export function recommendBrowseRoute(source: RecommendSource) {
     'recommend-browse/' +
     encodeURIComponent(source.id) +
     '?' +
-    new URLSearchParams({ title: source.title })
+    new URLSearchParams({
+      title: source.title,
+      ...(source.api_path ? { api_path: source.api_path } : {}),
+    })
   );
 }
 
@@ -47,7 +65,12 @@ export function recommendBrowseSource(route: string) {
   } catch {
     // An invalid route must not be turned into a different source identifier.
   }
-  return { id, title: new URLSearchParams(query).get('title') || '' };
+  const params = new URLSearchParams(query);
+  return {
+    id,
+    title: params.get('title') || '',
+    ...(params.has('api_path') ? { api_path: params.get('api_path')! } : {}),
+  };
 }
 
 // A shelf requests its first page once, including empty responses. Only its retry

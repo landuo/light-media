@@ -1,0 +1,59 @@
+{
+  "item": 43,
+  "accepted": false,
+  "scope": "existing catalog person-detail host only; remaining catalog and other ordinary module hosts parent-owned",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": {
+    "app/api/endpoints/tmdb.py:175-183": "person response_model=MediaPerson and async_person_detail",
+    "app/chain/tmdb.py:287-292": "async_run_module async_tmdb_person_detail person_id kwargs",
+    "app/schemas/context.py MediaPerson": "25 nullable/default/full metadata fields, actual Pydantic validation oracle",
+    "app/chain/__init__.py async_run_module": "None/list accumulation/nonNone terminal/exception continuation"
+  },
+  "targets": [
+    "internal/app/http.go catalogAPI person",
+    "internal/app/plugin_original_catalog_person.go",
+    "internal/app/plugin_original_catalog_person_defaults.go"
+  ],
+  "source_replay": {
+    "wrapper_scenarios": 70,
+    "DTO_validations": 54,
+    "person_DTO_cases": 18,
+    "fixtures": [
+      "testdata/standard-catalog-modules/source-oracle.json",
+      "testdata/standard-catalog-modules/model-source-oracle.json"
+    ]
+  },
+  "target_actual_sdk_HTTP": "2 roots PASS1.891s; actual Go SDK + app HTTP; native TMDB is controlled protocol response, not external live TMDB",
+  "actual_production_linux": {
+    "server_sha256": "e1844415fefe9f39854c10addf5f87108421457a11115f2eed8ad559de3ba40b",
+    "test_sha256": "1b31e67586894d9447385760b9c8bd25c88c4d8f14818e5a31bdb32490f0aaf7",
+    "fixture_sha256": "540f80a1f759643f0d64dba5c080c4a00525239d7a62764ac13977b667f4a34b",
+    "result": "PASS0.64s",
+    "source_pid": 2579520,
+    "clone_pid": 2579531,
+    "source_cold_pid": 2579546,
+    "clone_cold_pid": 2579552,
+    "coverage": [
+      "real authenticated catalog/person dispatch",
+      "actual async module args[]/kwargs person_id120 and wrong sync/personsearch not invoked",
+      "full source DTO fields/defaults and empty{} terminal",
+      "HTTP500 for false source result",
+      "source None continues to own clone actual callback/result",
+      "cold restore distinct processes and configuration",
+      "clone uninstall preserves source host, final uninstall cleanup"
+    ]
+  },
+  "necessary_adaptations": [
+    "Actual Go SDK JSON DTO preserves source person response defaults/nulls/extra known metadata; compact native provider remains unchanged on fallback",
+    "Provider caching is inside native fallback, never outside plugin discovery/dispatch",
+    "JSON0 and0.0 lexemes compare by exact numeric value without rounding arbitrary source integers"
+  ],
+  "failures_explained": [
+    "Initial DTO oracle test compared json.Number lexemes 0 vs0.0 rather than numeric value; assertion corrected using existing source numeric equality, production was unchanged. Failed log retained."
+  ],
+  "remaining": [
+    "Other existing catalog Search/detail/season/person credits/recommend/explore modules and ordinary source/name/convert events",
+    "Real browser Person display remains combined with eventual catalog UI extension acceptance"
+  ],
+  "evidence_manifest": "evidence-manifest.json"
+}

@@ -1,0 +1,974 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/schemas/transfer.py:TransferInfo",
+    "app/schemas/file.py:FileURI/FileItem"
+  ],
+  "kind": "Actual pinned TransferInfo and nested FileItem constructor/coercion/defaults.\nNo storage or service is replaced or run. Non-finite floats are separately\nclassified when they cannot be encoded as standard JSON for the Go SDK wire.\n",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "cases": [
+    {
+      "name": "defaults",
+      "input": {},
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "explicit_nulls",
+      "input": {
+        "fileitem": null,
+        "target_item": null,
+        "target_diritem": null,
+        "file_count": null,
+        "total_size": null,
+        "file_list": null,
+        "file_list_new": null,
+        "fail_list": null,
+        "message": null,
+        "transfer_type": null,
+        "need_notify": null,
+        "need_scrape": null
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": null,
+        "file_list": null,
+        "file_list_new": null,
+        "total_size": null,
+        "fail_list": null,
+        "message": null,
+        "need_scrape": null,
+        "need_notify": null
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "bool_words",
+      "input": {
+        "success": "YES",
+        "need_notify": "off",
+        "need_scrape": "true"
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": true,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "bool_numbers",
+      "input": {
+        "success": 1,
+        "need_notify": 0.0,
+        "need_scrape": 1.0
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": true,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "bad_success_null",
+      "input": {
+        "success": null
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "bad_success_two",
+      "input": {
+        "success": 2
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "bad_bool_space",
+      "input": {
+        "need_scrape": " true "
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "bad_bool_object",
+      "input": {
+        "need_notify": {}
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "integer_strings",
+      "input": {
+        "file_count": "2.0",
+        "total_size": "1_024"
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 2,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 1024,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "integer_bool",
+      "input": {
+        "file_count": true,
+        "total_size": false
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 1,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "integer_float",
+      "input": {
+        "file_count": 2.0,
+        "total_size": 0.0
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 2,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "integer_big",
+      "input": {
+        "total_size": 1267650600228229401496703205376
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 1267650600228229401496703205376,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "integer_huge_float",
+      "input": {
+        "total_size": 1e+100
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "bad_integer_fraction",
+      "input": {
+        "file_count": 1.5
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "bad_integer_exponent_string",
+      "input": {
+        "file_count": "2e3"
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "bad_integer_object",
+      "input": {
+        "file_count": {}
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "negative_integers",
+      "input": {
+        "file_count": -2,
+        "total_size": -1
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": -2,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": -1,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "lists_any_values",
+      "input": {
+        "file_list": [
+          null,
+          true,
+          3,
+          {
+            "path": "opaque"
+          }
+        ],
+        "file_list_new": [],
+        "fail_list": [
+          "owned"
+        ]
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [
+          null,
+          true,
+          3,
+          {
+            "path": "opaque"
+          }
+        ],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [
+          "owned"
+        ],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "bad_list_dict",
+      "input": {
+        "file_list": {}
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "bad_list_text",
+      "input": {
+        "file_list_new": "owned"
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "message_text",
+      "input": {
+        "message": "Owned 中文\nmessage",
+        "transfer_type": "link"
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": "link",
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": "Owned 中文\nmessage",
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "bad_message_number",
+      "input": {
+        "message": 123
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "bad_type_bool",
+      "input": {
+        "transfer_type": false
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "empty_items",
+      "input": {
+        "fileitem": {},
+        "target_item": {},
+        "target_diritem": {}
+      },
+      "output": {
+        "success": true,
+        "fileitem": {
+          "path": "/",
+          "storage": "local",
+          "type": null,
+          "name": null,
+          "basename": null,
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_diritem": {
+          "path": "/",
+          "storage": "local",
+          "type": null,
+          "name": null,
+          "basename": null,
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_item": {
+          "path": "/",
+          "storage": "local",
+          "type": null,
+          "name": null,
+          "basename": null,
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "item_defaults",
+      "input": {
+        "target_item": {
+          "path": "/owned/Target.mkv",
+          "type": "file",
+          "name": "Target.mkv"
+        }
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": {
+          "path": "/owned/Target.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "Target.mkv",
+          "basename": null,
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "item_coercions",
+      "input": {
+        "fileitem": {
+          "path": "/owned/Source.mkv",
+          "size": "12.0",
+          "modify_time": "42.5",
+          "children": [
+            null,
+            {
+              "unknown": "retained child"
+            }
+          ],
+          "unknown": "discarded"
+        },
+        "unknown": "discarded"
+      },
+      "output": {
+        "success": true,
+        "fileitem": {
+          "path": "/owned/Source.mkv",
+          "storage": "local",
+          "type": null,
+          "name": null,
+          "basename": null,
+          "extension": null,
+          "size": 12,
+          "modify_time": 42.5,
+          "children": [
+            null,
+            {
+              "unknown": "retained child"
+            }
+          ],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "item_nulls",
+      "input": {
+        "target_item": {
+          "path": null,
+          "storage": null,
+          "size": null,
+          "modify_time": null,
+          "children": null
+        }
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": {
+          "path": null,
+          "storage": null,
+          "type": null,
+          "name": null,
+          "basename": null,
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": null,
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "item_integer_bool_float_time",
+      "input": {
+        "fileitem": {
+          "size": true,
+          "modify_time": false
+        }
+      },
+      "output": {
+        "success": true,
+        "fileitem": {
+          "path": "/",
+          "storage": "local",
+          "type": null,
+          "name": null,
+          "basename": null,
+          "extension": null,
+          "size": 1,
+          "modify_time": 0.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "item_bad_fraction",
+      "input": {
+        "fileitem": {
+          "size": 2.5
+        }
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "item_bad_path_number",
+      "input": {
+        "target_item": {
+          "path": 123
+        }
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "item_bad_storage_bool",
+      "input": {
+        "target_item": {
+          "storage": false
+        }
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "item_bad_children_dict",
+      "input": {
+        "fileitem": {
+          "children": {}
+        }
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "item_bad_object_list",
+      "input": {
+        "target_item": []
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "item_float_underscore",
+      "input": {
+        "fileitem": {
+          "modify_time": "1_024.5"
+        }
+      },
+      "output": {
+        "success": true,
+        "fileitem": {
+          "path": "/",
+          "storage": "local",
+          "type": null,
+          "name": null,
+          "basename": null,
+          "extension": null,
+          "size": null,
+          "modify_time": 1024.5,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "item_float_hex",
+      "input": {
+        "fileitem": {
+          "modify_time": "0x1p2"
+        }
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "item_nonfinite",
+      "input": {
+        "fileitem": {
+          "modify_time": "Infinity"
+        }
+      },
+      "output": null,
+      "validation_error": null,
+      "wire_error": "nonfinite_standard_json"
+    },
+    {
+      "name": "float_below_i64_max",
+      "input": {
+        "total_size": 9.223372036854775e+18
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 9223372036854774784,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "float_at_i64_max",
+      "input": {
+        "total_size": 9.223372036854776e+18
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "float_at_i64_min",
+      "input": {
+        "total_size": -9.223372036854776e+18
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "float_below_i64_min",
+      "input": {
+        "total_size": -9.223372036854778e+18
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "float_at_u64",
+      "input": {
+        "total_size": 1.8446744073709552e+19
+      },
+      "output": null,
+      "validation_error": "ValidationError",
+      "wire_error": null
+    },
+    {
+      "name": "string_big_zero_decimal",
+      "input": {
+        "total_size": "1267650600228229401496703205376.0"
+      },
+      "output": {
+        "success": true,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 1267650600228229401496703205376,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "bad_float_underscore_decimal",
+      "input": {
+        "fileitem": {
+          "modify_time": "1._0"
+        }
+      },
+      "output": {
+        "success": true,
+        "fileitem": {
+          "path": "/",
+          "storage": "local",
+          "type": null,
+          "name": null,
+          "basename": null,
+          "extension": null,
+          "size": null,
+          "modify_time": 1.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "float_zero_underflow",
+      "input": {
+        "fileitem": {
+          "modify_time": "1e-999"
+        }
+      },
+      "output": {
+        "success": true,
+        "fileitem": {
+          "path": "/",
+          "storage": "local",
+          "type": null,
+          "name": null,
+          "basename": null,
+          "extension": null,
+          "size": null,
+          "modify_time": 0.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    },
+    {
+      "name": "veto",
+      "input": {
+        "success": false,
+        "message": "owned constructor veto",
+        "need_scrape": null
+      },
+      "output": {
+        "success": false,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": "owned constructor veto",
+        "need_scrape": null,
+        "need_notify": false
+      },
+      "validation_error": null,
+      "wire_error": null
+    }
+  ]
+}

@@ -25,7 +25,7 @@ func (m Manifest) validateChainHandlers() error {
 	seen := map[string]bool{}
 	for _, h := range m.ChainHandlers {
 		key := h.Event + "/" + h.Method
-		if !methodPattern.MatchString(h.Event) || !methodPattern.MatchString(h.Method) || !slices.Contains(m.Methods, h.Method) || seen[key] {
+		if !(EventQuery{Kind: ChainEventKind, Type: h.Event}).Valid() || !methodPattern.MatchString(h.Method) || !slices.Contains(m.Methods, h.Method) || seen[key] {
 			return failure("invalid_manifest")
 		}
 		seen[key] = true

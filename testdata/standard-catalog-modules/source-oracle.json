@@ -1,0 +1,2144 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed ordinary Chain wrapper AST; module transport/provider return controlled, no old host/network",
+  "sources": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/tmdb.py": "ed0d8a8e1a5e3c02ddf0594ef26b54180e4b36f33dce350f68a8ffc0a6dc6a6f",
+    "app/chain/bangumi.py": "0e2f31aa2cbe8187f651a5f1322a1d2902a2ded856c15804bcbaf48f9cc8cf7f",
+    "app/chain/douban.py": "e9cb834d6edbc713eb3a66307486b8612cb2b9c093e8a7a85ec2eba5f57a588e",
+    "app/chain/anilist.py": "a5aa58e49dcb6ac98b64a3fecec40548129b5a1612874fa59b6ad0ed2a214f4b",
+    "app/chain/recommend.py": "fd92c1df2008410519ddf90c7c44b18651bef7b69fa364c56fd0ac313d70c4ea"
+  },
+  "cases": [
+    {
+      "name": "FixedBase.search_medias",
+      "class": "FixedBase",
+      "wrapper": "search_medias",
+      "input": {
+        "meta": {
+          "name": "Owned",
+          "type": "电视剧",
+          "begin_season": 2,
+          "year": "2026"
+        },
+        "source": null
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "search_medias",
+          "args": [],
+          "kwargs": {
+            "meta": {
+              "name": "Owned",
+              "type": "电视剧",
+              "begin_season": 2,
+              "year": "2026"
+            },
+            "source": null
+          }
+        }
+      ],
+      "output": false
+    },
+    {
+      "name": "FixedBase.search_persons",
+      "class": "FixedBase",
+      "wrapper": "search_persons",
+      "input": {
+        "name": "Owned",
+        "source": null
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "search_persons",
+          "args": [],
+          "kwargs": {
+            "name": "Owned",
+            "source": null
+          }
+        }
+      ],
+      "output": false
+    },
+    {
+      "name": "FixedBase.tmdb_info",
+      "class": "FixedBase",
+      "wrapper": "tmdb_info",
+      "input": {
+        "tmdbid": 110,
+        "mtype": "电视剧",
+        "season": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "tmdb_info",
+          "args": [],
+          "kwargs": {
+            "tmdbid": 110,
+            "mtype": "电视剧",
+            "season": 2
+          }
+        }
+      ],
+      "output": false
+    },
+    {
+      "name": "TmdbChain.tmdb_seasons",
+      "class": "TmdbChain",
+      "wrapper": "tmdb_seasons",
+      "input": {
+        "tmdbid": 110
+      },
+      "returned": [
+        {
+          "owned": 1
+        }
+      ],
+      "calls": [
+        {
+          "method": "tmdb_seasons",
+          "args": [],
+          "kwargs": {
+            "tmdbid": 110
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        }
+      ]
+    },
+    {
+      "name": "TmdbChain.tmdb_episodes",
+      "class": "TmdbChain",
+      "wrapper": "tmdb_episodes",
+      "input": {
+        "tmdbid": 110,
+        "season": 2,
+        "episode_group": null
+      },
+      "returned": [
+        {
+          "owned": 1
+        }
+      ],
+      "calls": [
+        {
+          "method": "tmdb_episodes",
+          "args": [],
+          "kwargs": {
+            "tmdbid": 110,
+            "season": 2,
+            "episode_group": null
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        }
+      ]
+    },
+    {
+      "name": "TmdbChain.person_detail",
+      "class": "TmdbChain",
+      "wrapper": "person_detail",
+      "input": {
+        "person_id": 120
+      },
+      "returned": [
+        {
+          "owned": 1
+        }
+      ],
+      "calls": [
+        {
+          "method": "tmdb_person_detail",
+          "args": [],
+          "kwargs": {
+            "person_id": 120
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        }
+      ]
+    },
+    {
+      "name": "TmdbChain.person_credits",
+      "class": "TmdbChain",
+      "wrapper": "person_credits",
+      "input": {
+        "person_id": 120,
+        "page": 3
+      },
+      "returned": [
+        {
+          "owned": 1
+        }
+      ],
+      "calls": [
+        {
+          "method": "tmdb_person_credits",
+          "args": [],
+          "kwargs": {
+            "person_id": 120,
+            "page": 3
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        }
+      ]
+    },
+    {
+      "name": "TmdbChain.tmdb_trending",
+      "class": "TmdbChain",
+      "wrapper": "tmdb_trending",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        }
+      ],
+      "calls": [
+        {
+          "method": "tmdb_trending",
+          "args": [],
+          "kwargs": {
+            "page": 2
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        }
+      ]
+    },
+    {
+      "name": "TmdbChain.tmdb_discover",
+      "class": "TmdbChain",
+      "wrapper": "tmdb_discover",
+      "input": {
+        "mtype": "电影",
+        "sort_by": "popularity.desc",
+        "with_genres": "",
+        "with_original_language": "",
+        "with_keywords": "",
+        "with_watch_providers": "",
+        "vote_average": 0.0,
+        "vote_count": 0,
+        "release_date": "",
+        "page": 2
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "tmdb_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "BangumiChain.discover",
+      "class": "BangumiChain",
+      "wrapper": "discover",
+      "input": {
+        "type": 2,
+        "cat": null,
+        "sort": "rank",
+        "year": null,
+        "limit": 30,
+        "offset": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "bangumi_discover",
+          "args": [],
+          "kwargs": {
+            "type": 2,
+            "cat": null,
+            "sort": "rank",
+            "year": null,
+            "limit": 30,
+            "offset": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.movie_showing",
+      "class": "DoubanChain",
+      "wrapper": "movie_showing",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "movie_showing",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.movie_top250",
+      "class": "DoubanChain",
+      "wrapper": "movie_top250",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "movie_top250",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.tv_weekly_chinese",
+      "class": "DoubanChain",
+      "wrapper": "tv_weekly_chinese",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "tv_weekly_chinese",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.tv_weekly_global",
+      "class": "DoubanChain",
+      "wrapper": "tv_weekly_global",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "tv_weekly_global",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.tv_animation",
+      "class": "DoubanChain",
+      "wrapper": "tv_animation",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "tv_animation",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.movie_hot",
+      "class": "DoubanChain",
+      "wrapper": "movie_hot",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "movie_hot",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.tv_hot",
+      "class": "DoubanChain",
+      "wrapper": "tv_hot",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "tv_hot",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.douban_discover",
+      "class": "DoubanChain",
+      "wrapper": "douban_discover",
+      "input": {
+        "mtype": "电视剧",
+        "sort": "R",
+        "tags": "",
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "douban_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电视剧",
+            "sort": "R",
+            "tags": "",
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "AniListChain.trending",
+      "class": "AniListChain",
+      "wrapper": "trending",
+      "input": {
+        "page": 2,
+        "count": 20
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "anilist_trending",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 20
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "AniListChain.popular_this_season",
+      "class": "AniListChain",
+      "wrapper": "popular_this_season",
+      "input": {
+        "page": 2,
+        "count": 20
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "anilist_popular_this_season",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 20
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "AniListChain.discover",
+      "class": "AniListChain",
+      "wrapper": "discover",
+      "input": {
+        "page": 2,
+        "count": 20,
+        "media_format": "TV",
+        "season": null
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "anilist_discover",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 20,
+            "media_format": "TV",
+            "season": null
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "AniListChain.info",
+      "class": "AniListChain",
+      "wrapper": "info",
+      "input": {
+        "anilist_id": 200
+      },
+      "returned": null,
+      "calls": [
+        {
+          "method": "anilist_info",
+          "args": [],
+          "kwargs": {
+            "anilist_id": 200
+          }
+        }
+      ],
+      "output": null
+    },
+    {
+      "name": "FixedBase.async_search_medias",
+      "class": "FixedBase",
+      "wrapper": "async_search_medias",
+      "input": {
+        "meta": {
+          "name": "Owned",
+          "type": "电视剧",
+          "begin_season": 2,
+          "year": "2026"
+        },
+        "source": null
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_search_medias",
+          "args": [],
+          "kwargs": {
+            "meta": {
+              "name": "Owned",
+              "type": "电视剧",
+              "begin_season": 2,
+              "year": "2026"
+            },
+            "source": null
+          }
+        }
+      ],
+      "output": false
+    },
+    {
+      "name": "FixedBase.async_search_persons",
+      "class": "FixedBase",
+      "wrapper": "async_search_persons",
+      "input": {
+        "name": "Owned",
+        "source": null
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_search_persons",
+          "args": [],
+          "kwargs": {
+            "name": "Owned",
+            "source": null
+          }
+        }
+      ],
+      "output": false
+    },
+    {
+      "name": "FixedBase.async_tmdb_info",
+      "class": "FixedBase",
+      "wrapper": "async_tmdb_info",
+      "input": {
+        "tmdbid": 110,
+        "mtype": "电视剧",
+        "season": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_tmdb_info",
+          "args": [],
+          "kwargs": {
+            "tmdbid": 110,
+            "mtype": "电视剧",
+            "season": 2
+          }
+        }
+      ],
+      "output": false
+    },
+    {
+      "name": "TmdbChain.async_tmdb_seasons",
+      "class": "TmdbChain",
+      "wrapper": "async_tmdb_seasons",
+      "input": {
+        "tmdbid": 110
+      },
+      "returned": [
+        {
+          "owned": 1
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_tmdb_seasons",
+          "args": [],
+          "kwargs": {
+            "tmdbid": 110
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        }
+      ]
+    },
+    {
+      "name": "TmdbChain.async_tmdb_episodes",
+      "class": "TmdbChain",
+      "wrapper": "async_tmdb_episodes",
+      "input": {
+        "tmdbid": 110,
+        "season": 2,
+        "episode_group": null
+      },
+      "returned": [
+        {
+          "owned": 1
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_tmdb_episodes",
+          "args": [],
+          "kwargs": {
+            "tmdbid": 110,
+            "season": 2,
+            "episode_group": null
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        }
+      ]
+    },
+    {
+      "name": "TmdbChain.async_person_detail",
+      "class": "TmdbChain",
+      "wrapper": "async_person_detail",
+      "input": {
+        "person_id": 120
+      },
+      "returned": [
+        {
+          "owned": 1
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_tmdb_person_detail",
+          "args": [],
+          "kwargs": {
+            "person_id": 120
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        }
+      ]
+    },
+    {
+      "name": "TmdbChain.async_person_credits",
+      "class": "TmdbChain",
+      "wrapper": "async_person_credits",
+      "input": {
+        "person_id": 120,
+        "page": 3
+      },
+      "returned": [
+        {
+          "owned": 1
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_tmdb_person_credits",
+          "args": [],
+          "kwargs": {
+            "person_id": 120,
+            "page": 3
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        }
+      ]
+    },
+    {
+      "name": "TmdbChain.async_tmdb_trending",
+      "class": "TmdbChain",
+      "wrapper": "async_tmdb_trending",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_tmdb_trending",
+          "args": [],
+          "kwargs": {
+            "page": 2
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        }
+      ]
+    },
+    {
+      "name": "TmdbChain.async_tmdb_discover",
+      "class": "TmdbChain",
+      "wrapper": "async_tmdb_discover",
+      "input": {
+        "mtype": "电影",
+        "sort_by": "popularity.desc",
+        "with_genres": "",
+        "with_original_language": "",
+        "with_keywords": "",
+        "with_watch_providers": "",
+        "vote_average": 0.0,
+        "vote_count": 0,
+        "release_date": "",
+        "page": 2
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "async_tmdb_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "BangumiChain.async_discover",
+      "class": "BangumiChain",
+      "wrapper": "async_discover",
+      "input": {
+        "type": 2,
+        "cat": null,
+        "sort": "rank",
+        "year": null,
+        "limit": 30,
+        "offset": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "async_bangumi_discover",
+          "args": [],
+          "kwargs": {
+            "type": 2,
+            "cat": null,
+            "sort": "rank",
+            "year": null,
+            "limit": 30,
+            "offset": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.async_movie_showing",
+      "class": "DoubanChain",
+      "wrapper": "async_movie_showing",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "async_movie_showing",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.async_movie_top250",
+      "class": "DoubanChain",
+      "wrapper": "async_movie_top250",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "async_movie_top250",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.async_tv_weekly_chinese",
+      "class": "DoubanChain",
+      "wrapper": "async_tv_weekly_chinese",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "async_tv_weekly_chinese",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.async_tv_weekly_global",
+      "class": "DoubanChain",
+      "wrapper": "async_tv_weekly_global",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "async_tv_weekly_global",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.async_tv_animation",
+      "class": "DoubanChain",
+      "wrapper": "async_tv_animation",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "async_tv_animation",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.async_movie_hot",
+      "class": "DoubanChain",
+      "wrapper": "async_movie_hot",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "async_movie_hot",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.async_tv_hot",
+      "class": "DoubanChain",
+      "wrapper": "async_tv_hot",
+      "input": {
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "async_tv_hot",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "DoubanChain.async_douban_discover",
+      "class": "DoubanChain",
+      "wrapper": "async_douban_discover",
+      "input": {
+        "mtype": "电视剧",
+        "sort": "R",
+        "tags": "",
+        "page": 2,
+        "count": 30
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "async_douban_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电视剧",
+            "sort": "R",
+            "tags": "",
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "AniListChain.async_trending",
+      "class": "AniListChain",
+      "wrapper": "async_trending",
+      "input": {
+        "page": 2,
+        "count": 20
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_anilist_trending",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 20
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "AniListChain.async_popular_this_season",
+      "class": "AniListChain",
+      "wrapper": "async_popular_this_season",
+      "input": {
+        "page": 2,
+        "count": 20
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_anilist_popular_this_season",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 20
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "AniListChain.async_discover",
+      "class": "AniListChain",
+      "wrapper": "async_discover",
+      "input": {
+        "page": 2,
+        "count": 20,
+        "media_format": "TV",
+        "season": null
+      },
+      "returned": [],
+      "calls": [
+        {
+          "method": "async_anilist_discover",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 20,
+            "media_format": "TV",
+            "season": null
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "AniListChain.async_info",
+      "class": "AniListChain",
+      "wrapper": "async_info",
+      "input": {
+        "anilist_id": 200
+      },
+      "returned": null,
+      "calls": [
+        {
+          "method": "async_anilist_info",
+          "args": [],
+          "kwargs": {
+            "anilist_id": 200
+          }
+        }
+      ],
+      "output": null
+    },
+    {
+      "name": "RecommendChain.async_tmdb_movies",
+      "class": "RecommendChain",
+      "wrapper": "async_tmdb_movies",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_tmdb_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ]
+    },
+    {
+      "name": "async_tmdb_movies-falsey",
+      "class": "RecommendChain",
+      "wrapper": "async_tmdb_movies",
+      "input": {
+        "page": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_tmdb_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "RecommendChain.async_tmdb_tvs",
+      "class": "RecommendChain",
+      "wrapper": "async_tmdb_tvs",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_tmdb_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电视剧",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "zh|en|ja|ko",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ]
+    },
+    {
+      "name": "async_tmdb_tvs-falsey",
+      "class": "RecommendChain",
+      "wrapper": "async_tmdb_tvs",
+      "input": {
+        "page": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_tmdb_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电视剧",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "zh|en|ja|ko",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "RecommendChain.async_tmdb_trending",
+      "class": "RecommendChain",
+      "wrapper": "async_tmdb_trending",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_tmdb_trending",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ]
+    },
+    {
+      "name": "async_tmdb_trending-falsey",
+      "class": "RecommendChain",
+      "wrapper": "async_tmdb_trending",
+      "input": {
+        "page": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_tmdb_trending",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "raise_exception": false
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "RecommendChain.async_bangumi_calendar",
+      "class": "RecommendChain",
+      "wrapper": "async_bangumi_calendar",
+      "input": {
+        "page": 2,
+        "count": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_bangumi_calendar",
+          "args": [],
+          "kwargs": {}
+        }
+      ],
+      "output": [
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        }
+      ]
+    },
+    {
+      "name": "async_bangumi_calendar-falsey",
+      "class": "RecommendChain",
+      "wrapper": "async_bangumi_calendar",
+      "input": {
+        "page": 2,
+        "count": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_bangumi_calendar",
+          "args": [],
+          "kwargs": {}
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "RecommendChain.async_douban_movie_showing",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_movie_showing",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_movie_showing",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ]
+    },
+    {
+      "name": "async_douban_movie_showing-falsey",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_movie_showing",
+      "input": {
+        "page": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_movie_showing",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "RecommendChain.async_douban_movies",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_movies",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_douban_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort": "R",
+            "tags": "",
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ]
+    },
+    {
+      "name": "async_douban_movies-falsey",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_movies",
+      "input": {
+        "page": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_douban_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort": "R",
+            "tags": "",
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "RecommendChain.async_douban_tvs",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_tvs",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_douban_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电视剧",
+            "sort": "R",
+            "tags": "",
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ]
+    },
+    {
+      "name": "async_douban_tvs-falsey",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_tvs",
+      "input": {
+        "page": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_douban_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电视剧",
+            "sort": "R",
+            "tags": "",
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "RecommendChain.async_douban_movie_top250",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_movie_top250",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_movie_top250",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ]
+    },
+    {
+      "name": "async_douban_movie_top250-falsey",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_movie_top250",
+      "input": {
+        "page": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_movie_top250",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "RecommendChain.async_douban_tv_weekly_chinese",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_tv_weekly_chinese",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_tv_weekly_chinese",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ]
+    },
+    {
+      "name": "async_douban_tv_weekly_chinese-falsey",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_tv_weekly_chinese",
+      "input": {
+        "page": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_tv_weekly_chinese",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "RecommendChain.async_douban_tv_weekly_global",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_tv_weekly_global",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_tv_weekly_global",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ]
+    },
+    {
+      "name": "async_douban_tv_weekly_global-falsey",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_tv_weekly_global",
+      "input": {
+        "page": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_tv_weekly_global",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "RecommendChain.async_douban_tv_animation",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_tv_animation",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_tv_animation",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ]
+    },
+    {
+      "name": "async_douban_tv_animation-falsey",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_tv_animation",
+      "input": {
+        "page": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_tv_animation",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "RecommendChain.async_douban_movie_hot",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_movie_hot",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_movie_hot",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ]
+    },
+    {
+      "name": "async_douban_movie_hot-falsey",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_movie_hot",
+      "input": {
+        "page": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_movie_hot",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    },
+    {
+      "name": "RecommendChain.async_douban_tv_hot",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_tv_hot",
+      "input": {
+        "page": 2
+      },
+      "returned": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ],
+      "calls": [
+        {
+          "method": "async_tv_hot",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": [
+        {
+          "owned": 1
+        },
+        {
+          "owned": 2
+        },
+        {
+          "owned": 3
+        },
+        {
+          "owned": 4
+        },
+        {
+          "owned": 5
+        },
+        {
+          "owned": 6
+        }
+      ]
+    },
+    {
+      "name": "async_douban_tv_hot-falsey",
+      "class": "RecommendChain",
+      "wrapper": "async_douban_tv_hot",
+      "input": {
+        "page": 2
+      },
+      "returned": false,
+      "calls": [
+        {
+          "method": "async_tv_hot",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ],
+      "output": []
+    }
+  ]
+}

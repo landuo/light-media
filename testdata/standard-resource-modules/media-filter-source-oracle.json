@@ -1,0 +1,1923 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/chain/search.py": "2b04f6d246ea2573081cb72039a78acefb81cd7c895603e0433bab7dc7e7a528",
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/torrents.py": "6c2833fc9a87e9d57881fcdef760d131dd1d36acbc9d5de3d7279cdbd0d96a47",
+    "app/core/context.py": "70a088bd54c748ab44ec467e6a1f1fc5bb5368f818bb16288eca0d15cf98877e",
+    "app/utils/object.py": "0fd0161be3084593a9693244e9ea734c5d949cc23a6e8f34349177a5e220dc1c",
+    "app/schemas/types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+    "app/api/endpoints/site.py": "c352a148fd418f7eb6c91f490d8db4319c91c6ac2d68b920b35b525d1d8372a8"
+  },
+  "kind": "actual pinned __parse_result prefix through parallel site filter, ChainBase dispatcher, actual TorrentInfo/MediaInfo classes; native core input-list boundary, not downstream match/sort acceptance",
+  "cases": [
+    {
+      "sites": 1,
+      "mode": "same_input_alias",
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        },
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "input_model_refs": [
+        0,
+        0
+      ],
+      "media_after": {
+        "title": "Owned media",
+        "category": "Owned original category"
+      },
+      "observations": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 1,
+                "site_name": "Owned resource site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sites": 1,
+      "mode": "copy_equal",
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        },
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "input_model_refs": [
+        null,
+        0
+      ],
+      "media_after": {
+        "title": "Owned media",
+        "category": "Owned original category"
+      },
+      "observations": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 1,
+                "site_name": "Owned resource site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sites": 1,
+      "mode": "copy_container",
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        },
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "input_model_refs": [
+        0,
+        0
+      ],
+      "media_after": {
+        "title": "Owned media",
+        "category": "Owned original category"
+      },
+      "observations": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 1,
+                "site_name": "Owned resource site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sites": 1,
+      "mode": "false",
+      "returned": [],
+      "input_model_refs": [],
+      "media_after": {
+        "title": "Owned media",
+        "category": "Owned original category"
+      },
+      "observations": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 1,
+                "site_name": "Owned resource site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sites": 1,
+      "mode": "media_mutate_then_fail",
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 77,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "input_model_refs": [
+        0
+      ],
+      "media_after": {
+        "title": "Changed before error",
+        "category": "Changed category"
+      },
+      "observations": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 1,
+                "site_name": "Owned resource site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sites": 2,
+      "mode": "same_input_alias",
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        },
+        {
+          "site": 2,
+          "site_name": "Owned second site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "input_model_refs": [
+        0,
+        1
+      ],
+      "media_after": {
+        "title": "Owned media",
+        "category": "Owned original category"
+      },
+      "observations": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 1,
+                "site_name": "Owned resource site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        },
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 2,
+                "site_name": "Owned second site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sites": 2,
+      "mode": "copy_equal",
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        },
+        {
+          "site": 2,
+          "site_name": "Owned second site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "input_model_refs": [
+        0,
+        1
+      ],
+      "media_after": {
+        "title": "Owned media",
+        "category": "Owned original category"
+      },
+      "observations": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 1,
+                "site_name": "Owned resource site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        },
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 2,
+                "site_name": "Owned second site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sites": 2,
+      "mode": "copy_container",
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        },
+        {
+          "site": 2,
+          "site_name": "Owned second site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "input_model_refs": [
+        0,
+        1
+      ],
+      "media_after": {
+        "title": "Owned media",
+        "category": "Owned original category"
+      },
+      "observations": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 1,
+                "site_name": "Owned resource site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        },
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 2,
+                "site_name": "Owned second site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sites": 2,
+      "mode": "false",
+      "returned": [],
+      "input_model_refs": [],
+      "media_after": {
+        "title": "Owned media",
+        "category": "Owned original category"
+      },
+      "observations": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 1,
+                "site_name": "Owned resource site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        },
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 2,
+                "site_name": "Owned second site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "sites": 2,
+      "mode": "media_mutate_then_fail",
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 77,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        },
+        {
+          "site": 2,
+          "site_name": "Owned second site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 77,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "input_model_refs": [
+        0,
+        1
+      ],
+      "media_after": {
+        "title": "Changed before error",
+        "category": "Changed category"
+      },
+      "observations": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 1,
+                "site_name": "Owned resource site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Owned media",
+              "category": "Owned original category"
+            }
+          }
+        },
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "rule_groups": [
+              "owned-rule"
+            ],
+            "torrent_list": [
+              {
+                "site": 2,
+                "site_name": "Owned second site",
+                "site_cookie": null,
+                "site_ua": null,
+                "site_proxy": false,
+                "site_order": 0,
+                "site_downloader": null,
+                "title": "Owned core resource",
+                "description": null,
+                "imdbid": null,
+                "enclosure": null,
+                "page_url": "http://127.0.0.1:43100/details.php?id=22",
+                "size": 2048,
+                "seeders": 2,
+                "peers": 0,
+                "grabs": 0,
+                "pubdate": null,
+                "date_elapsed": null,
+                "freedate": null,
+                "uploadvolumefactor": 1,
+                "downloadvolumefactor": 1,
+                "hit_and_run": false,
+                "labels": [],
+                "pri_order": 0,
+                "category": null,
+                "volume_factor": "普通",
+                "freedate_diff": ""
+              }
+            ],
+            "mediainfo": {
+              "title": "Changed before error",
+              "category": "Changed category"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "target_state": "media-specific DTO/host pending; titleNone evidence cannot accept these cases",
+  "production_model": {
+    "kind": "actual fixed MediaInfo default model with explicit owned fields, computed descriptors and retained live provider data",
+    "public": {
+      "source": "themoviedb",
+      "media_id": "900043",
+      "scrape_source": null,
+      "type": "电影",
+      "title": "Owned keyword",
+      "en_title": null,
+      "hk_title": null,
+      "tw_title": null,
+      "sg_title": null,
+      "year": "2026",
+      "season": null,
+      "tmdb_id": 900043,
+      "imdb_id": null,
+      "tvdb_id": null,
+      "douban_id": null,
+      "bangumi_id": null,
+      "anilist_id": null,
+      "anidb_id": null,
+      "collection_id": null,
+      "original_language": null,
+      "original_title": "Owned original",
+      "release_date": "2026-01-01",
+      "backdrop_path": null,
+      "poster_path": null,
+      "logo_path": null,
+      "vote_average": null,
+      "overview": null,
+      "genre_ids": [],
+      "names": [
+        "Owned keyword"
+      ],
+      "seasons": {},
+      "season_info": [],
+      "season_years": {},
+      "category": "",
+      "tmdb_info": null,
+      "douban_info": null,
+      "bangumi_info": null,
+      "anilist_info": null,
+      "directors": [],
+      "actors": [],
+      "adult": false,
+      "created_by": [],
+      "episode_run_time": [],
+      "genres": [],
+      "first_air_date": null,
+      "homepage": null,
+      "languages": [],
+      "last_air_date": null,
+      "networks": [],
+      "number_of_episodes": null,
+      "number_of_seasons": null,
+      "origin_country": [],
+      "original_name": null,
+      "production_companies": [],
+      "production_countries": [],
+      "spoken_languages": [],
+      "release_dates": [],
+      "status": null,
+      "tagline": null,
+      "vote_count": null,
+      "popularity": null,
+      "runtime": null,
+      "next_episode_to_air": {},
+      "content_rating": null,
+      "episode_groups": [],
+      "episode_group": null,
+      "recognize_cache_hit": true,
+      "detail_link": "https://www.themoviedb.org/movie/900043",
+      "title_year": "Owned keyword (2026)",
+      "mediaid_prefix": "themoviedb"
+    },
+    "module_input": {
+      "source": "themoviedb",
+      "media_id": null,
+      "scrape_source": null,
+      "type": "电影",
+      "title": "Owned keyword",
+      "en_title": null,
+      "hk_title": null,
+      "tw_title": null,
+      "sg_title": null,
+      "year": "2026",
+      "season": null,
+      "tmdb_id": 900043,
+      "imdb_id": null,
+      "tvdb_id": null,
+      "douban_id": null,
+      "bangumi_id": null,
+      "anilist_id": null,
+      "anidb_id": null,
+      "collection_id": null,
+      "original_language": null,
+      "original_title": "Owned original",
+      "release_date": "2026-01-01",
+      "backdrop_path": null,
+      "poster_path": null,
+      "logo_path": null,
+      "vote_average": null,
+      "overview": null,
+      "genre_ids": [],
+      "names": [
+        "Owned keyword"
+      ],
+      "seasons": {},
+      "season_info": [],
+      "season_years": {},
+      "category": "",
+      "tmdb_info": {
+        "id": 900043,
+        "title": "Owned keyword",
+        "original_title": "Owned original",
+        "release_date": "2026-01-01",
+        "genres": [],
+        "credits": {
+          "cast": [],
+          "crew": []
+        },
+        "external_ids": {}
+      },
+      "douban_info": {},
+      "bangumi_info": {},
+      "anilist_info": {},
+      "directors": [],
+      "actors": [],
+      "adult": false,
+      "created_by": [],
+      "episode_run_time": [],
+      "genres": [],
+      "first_air_date": null,
+      "homepage": null,
+      "languages": [],
+      "last_air_date": null,
+      "networks": [],
+      "number_of_episodes": null,
+      "number_of_seasons": null,
+      "origin_country": [],
+      "original_name": null,
+      "production_companies": [],
+      "production_countries": [],
+      "spoken_languages": [],
+      "release_dates": [],
+      "status": null,
+      "tagline": null,
+      "vote_count": null,
+      "popularity": null,
+      "runtime": null,
+      "next_episode_to_air": {},
+      "content_rating": null,
+      "episode_groups": [],
+      "episode_group": null,
+      "recognize_cache_hit": true,
+      "detail_link": "https://www.themoviedb.org/movie/900043",
+      "title_year": "Owned keyword (2026)"
+    }
+  },
+  "production_clear": {
+    "source": "themoviedb",
+    "media_id": null,
+    "scrape_source": null,
+    "type": "电影",
+    "title": "Owned keyword",
+    "en_title": null,
+    "hk_title": null,
+    "tw_title": null,
+    "sg_title": null,
+    "year": "2026",
+    "season": null,
+    "tmdb_id": 900043,
+    "imdb_id": null,
+    "tvdb_id": null,
+    "douban_id": null,
+    "bangumi_id": null,
+    "anilist_id": null,
+    "anidb_id": null,
+    "collection_id": null,
+    "original_language": null,
+    "original_title": "Owned original",
+    "release_date": "2026-01-01",
+    "backdrop_path": null,
+    "poster_path": null,
+    "logo_path": null,
+    "vote_average": null,
+    "overview": null,
+    "genre_ids": [],
+    "names": [],
+    "seasons": {},
+    "season_info": [],
+    "season_years": {},
+    "category": "",
+    "tmdb_info": {},
+    "douban_info": {},
+    "bangumi_info": {},
+    "anilist_info": {},
+    "directors": [],
+    "actors": [],
+    "adult": false,
+    "created_by": [],
+    "episode_run_time": [],
+    "genres": [],
+    "first_air_date": null,
+    "homepage": null,
+    "languages": [],
+    "last_air_date": null,
+    "networks": [],
+    "number_of_episodes": null,
+    "number_of_seasons": null,
+    "origin_country": [],
+    "original_name": null,
+    "production_companies": [],
+    "production_countries": [],
+    "spoken_languages": [],
+    "release_dates": [],
+    "status": null,
+    "tagline": null,
+    "vote_count": null,
+    "popularity": null,
+    "runtime": null,
+    "next_episode_to_air": {},
+    "content_rating": null,
+    "episode_groups": [],
+    "episode_group": null,
+    "recognize_cache_hit": true,
+    "detail_link": "https://www.themoviedb.org/movie/900043",
+    "title_year": "Owned keyword (2026)"
+  },
+  "production_mutated_clear": {
+    "source": "themoviedb",
+    "media_id": null,
+    "scrape_source": null,
+    "type": "电影",
+    "title": "Changed before error",
+    "en_title": null,
+    "hk_title": null,
+    "tw_title": null,
+    "sg_title": null,
+    "year": "2026",
+    "season": null,
+    "tmdb_id": 900043,
+    "imdb_id": null,
+    "tvdb_id": null,
+    "douban_id": null,
+    "bangumi_id": null,
+    "anilist_id": null,
+    "anidb_id": null,
+    "collection_id": null,
+    "original_language": null,
+    "original_title": "Owned original",
+    "release_date": "2026-01-01",
+    "backdrop_path": null,
+    "poster_path": null,
+    "logo_path": null,
+    "vote_average": null,
+    "overview": null,
+    "genre_ids": [],
+    "names": [],
+    "seasons": {},
+    "season_info": [],
+    "season_years": {},
+    "category": "Changed category",
+    "tmdb_info": {},
+    "douban_info": {},
+    "bangumi_info": {},
+    "anilist_info": {},
+    "directors": [],
+    "actors": [],
+    "adult": false,
+    "created_by": [],
+    "episode_run_time": [],
+    "genres": [],
+    "first_air_date": null,
+    "homepage": null,
+    "languages": [],
+    "last_air_date": null,
+    "networks": [],
+    "number_of_episodes": null,
+    "number_of_seasons": null,
+    "origin_country": [],
+    "original_name": null,
+    "production_companies": [],
+    "production_countries": [],
+    "spoken_languages": [],
+    "release_dates": [],
+    "status": null,
+    "tagline": null,
+    "vote_count": null,
+    "popularity": null,
+    "runtime": null,
+    "next_episode_to_air": {},
+    "content_rating": null,
+    "episode_groups": [],
+    "episode_group": null,
+    "recognize_cache_hit": true,
+    "detail_link": "https://www.themoviedb.org/movie/900043",
+    "title_year": "Changed before error (2026)"
+  },
+  "production_nil_source": {
+    "public": {
+      "source": "themoviedb",
+      "media_id": "900043",
+      "scrape_source": null,
+      "type": "电影",
+      "title": "Owned keyword",
+      "en_title": null,
+      "hk_title": null,
+      "tw_title": null,
+      "sg_title": null,
+      "year": "2026",
+      "season": null,
+      "tmdb_id": 900043,
+      "imdb_id": null,
+      "tvdb_id": null,
+      "douban_id": null,
+      "bangumi_id": null,
+      "anilist_id": null,
+      "anidb_id": null,
+      "collection_id": null,
+      "original_language": null,
+      "original_title": "Owned original",
+      "release_date": "2026-01-01",
+      "backdrop_path": null,
+      "poster_path": null,
+      "logo_path": null,
+      "vote_average": null,
+      "overview": null,
+      "genre_ids": [],
+      "names": [
+        "Owned keyword"
+      ],
+      "seasons": {},
+      "season_info": [],
+      "season_years": {},
+      "category": "",
+      "tmdb_info": null,
+      "douban_info": null,
+      "bangumi_info": null,
+      "anilist_info": null,
+      "directors": [],
+      "actors": [],
+      "adult": false,
+      "created_by": [],
+      "episode_run_time": [],
+      "genres": [],
+      "first_air_date": null,
+      "homepage": null,
+      "languages": [],
+      "last_air_date": null,
+      "networks": [],
+      "number_of_episodes": null,
+      "number_of_seasons": null,
+      "origin_country": [],
+      "original_name": null,
+      "production_companies": [],
+      "production_countries": [],
+      "spoken_languages": [],
+      "release_dates": [],
+      "status": null,
+      "tagline": null,
+      "vote_count": null,
+      "popularity": null,
+      "runtime": null,
+      "next_episode_to_air": {},
+      "content_rating": null,
+      "episode_groups": [],
+      "episode_group": null,
+      "recognize_cache_hit": true,
+      "detail_link": "https://www.themoviedb.org/movie/900043",
+      "title_year": "Owned keyword (2026)",
+      "mediaid_prefix": "themoviedb"
+    },
+    "module_input": {
+      "source": null,
+      "media_id": null,
+      "scrape_source": null,
+      "type": "电影",
+      "title": "Owned keyword",
+      "en_title": null,
+      "hk_title": null,
+      "tw_title": null,
+      "sg_title": null,
+      "year": "2026",
+      "season": null,
+      "tmdb_id": 900043,
+      "imdb_id": null,
+      "tvdb_id": null,
+      "douban_id": null,
+      "bangumi_id": null,
+      "anilist_id": null,
+      "anidb_id": null,
+      "collection_id": null,
+      "original_language": null,
+      "original_title": "Owned original",
+      "release_date": "2026-01-01",
+      "backdrop_path": null,
+      "poster_path": null,
+      "logo_path": null,
+      "vote_average": null,
+      "overview": null,
+      "genre_ids": [],
+      "names": [
+        "Owned keyword"
+      ],
+      "seasons": {},
+      "season_info": [],
+      "season_years": {},
+      "category": "",
+      "tmdb_info": {
+        "id": 900043,
+        "title": "Owned keyword",
+        "original_title": "Owned original",
+        "release_date": "2026-01-01",
+        "genres": [],
+        "credits": {
+          "cast": [],
+          "crew": []
+        },
+        "external_ids": {}
+      },
+      "douban_info": {},
+      "bangumi_info": {},
+      "anilist_info": {},
+      "directors": [],
+      "actors": [],
+      "adult": false,
+      "created_by": [],
+      "episode_run_time": [],
+      "genres": [],
+      "first_air_date": null,
+      "homepage": null,
+      "languages": [],
+      "last_air_date": null,
+      "networks": [],
+      "number_of_episodes": null,
+      "number_of_seasons": null,
+      "origin_country": [],
+      "original_name": null,
+      "production_companies": [],
+      "production_countries": [],
+      "spoken_languages": [],
+      "release_dates": [],
+      "status": null,
+      "tagline": null,
+      "vote_count": null,
+      "popularity": null,
+      "runtime": null,
+      "next_episode_to_air": {},
+      "content_rating": null,
+      "episode_groups": [],
+      "episode_group": null,
+      "recognize_cache_hit": true,
+      "detail_link": "https://www.themoviedb.org/movie/900043",
+      "title_year": "Owned keyword (2026)"
+    }
+  },
+  "dedup_cases": [
+    {
+      "name": "last_value_first_position",
+      "input": [
+        {
+          "tag": "high",
+          "torrent": {
+            "site": 1,
+            "site_name": "Owned resource site",
+            "site_cookie": null,
+            "site_ua": null,
+            "site_proxy": false,
+            "site_order": 0,
+            "site_downloader": null,
+            "title": "Owned core resource",
+            "description": null,
+            "imdbid": null,
+            "enclosure": null,
+            "page_url": "http://127.0.0.1:43100/details.php?id=22",
+            "size": 2048,
+            "seeders": 2,
+            "peers": 0,
+            "grabs": 0,
+            "pubdate": null,
+            "date_elapsed": null,
+            "freedate": null,
+            "uploadvolumefactor": 1,
+            "downloadvolumefactor": 1,
+            "hit_and_run": false,
+            "labels": [],
+            "pri_order": 0,
+            "category": null,
+            "volume_factor": "普通",
+            "freedate_diff": ""
+          }
+        },
+        {
+          "tag": "low",
+          "torrent": {
+            "site": 1,
+            "site_name": "Owned resource site",
+            "site_cookie": null,
+            "site_ua": null,
+            "site_proxy": false,
+            "site_order": 0,
+            "site_downloader": null,
+            "title": "Owned core resource",
+            "description": null,
+            "imdbid": null,
+            "enclosure": null,
+            "page_url": "http://127.0.0.1:43100/details.php?id=22",
+            "size": 2048,
+            "seeders": 2,
+            "peers": 0,
+            "grabs": 0,
+            "pubdate": null,
+            "date_elapsed": null,
+            "freedate": null,
+            "uploadvolumefactor": 1,
+            "downloadvolumefactor": 1,
+            "hit_and_run": false,
+            "labels": [],
+            "pri_order": 0,
+            "category": null,
+            "volume_factor": "普通",
+            "freedate_diff": ""
+          }
+        }
+      ],
+      "returned_tags": [
+        "low"
+      ]
+    },
+    {
+      "name": "description_distinct",
+      "input": [
+        {
+          "tag": "first",
+          "torrent": {
+            "site": 1,
+            "site_name": "Owned resource site",
+            "site_cookie": null,
+            "site_ua": null,
+            "site_proxy": false,
+            "site_order": 0,
+            "site_downloader": null,
+            "title": "Owned core resource",
+            "description": "first",
+            "imdbid": null,
+            "enclosure": null,
+            "page_url": "http://127.0.0.1:43100/details.php?id=22",
+            "size": 2048,
+            "seeders": 2,
+            "peers": 0,
+            "grabs": 0,
+            "pubdate": null,
+            "date_elapsed": null,
+            "freedate": null,
+            "uploadvolumefactor": 1,
+            "downloadvolumefactor": 1,
+            "hit_and_run": false,
+            "labels": [],
+            "pri_order": 0,
+            "category": null,
+            "volume_factor": "普通",
+            "freedate_diff": ""
+          }
+        },
+        {
+          "tag": "second",
+          "torrent": {
+            "site": 1,
+            "site_name": "Owned resource site",
+            "site_cookie": null,
+            "site_ua": null,
+            "site_proxy": false,
+            "site_order": 0,
+            "site_downloader": null,
+            "title": "Owned core resource",
+            "description": "second",
+            "imdbid": null,
+            "enclosure": null,
+            "page_url": "http://127.0.0.1:43100/details.php?id=22",
+            "size": 2048,
+            "seeders": 2,
+            "peers": 0,
+            "grabs": 0,
+            "pubdate": null,
+            "date_elapsed": null,
+            "freedate": null,
+            "uploadvolumefactor": 1,
+            "downloadvolumefactor": 1,
+            "hit_and_run": false,
+            "labels": [],
+            "pri_order": 0,
+            "category": null,
+            "volume_factor": "普通",
+            "freedate_diff": ""
+          }
+        }
+      ],
+      "returned_tags": [
+        "first",
+        "second"
+      ]
+    },
+    {
+      "name": "source_None_string_collision",
+      "input": [
+        {
+          "tag": "nil",
+          "torrent": {
+            "site": 1,
+            "site_name": "Owned resource site",
+            "site_cookie": null,
+            "site_ua": null,
+            "site_proxy": false,
+            "site_order": 0,
+            "site_downloader": null,
+            "title": "Owned core resource",
+            "description": null,
+            "imdbid": null,
+            "enclosure": null,
+            "page_url": "http://127.0.0.1:43100/details.php?id=22",
+            "size": 2048,
+            "seeders": 2,
+            "peers": 0,
+            "grabs": 0,
+            "pubdate": null,
+            "date_elapsed": null,
+            "freedate": null,
+            "uploadvolumefactor": 1,
+            "downloadvolumefactor": 1,
+            "hit_and_run": false,
+            "labels": [],
+            "pri_order": 0,
+            "category": null,
+            "volume_factor": "普通",
+            "freedate_diff": ""
+          }
+        },
+        {
+          "tag": "text",
+          "torrent": {
+            "site": 1,
+            "site_name": "Owned resource site",
+            "site_cookie": null,
+            "site_ua": null,
+            "site_proxy": false,
+            "site_order": 0,
+            "site_downloader": null,
+            "title": "Owned core resource",
+            "description": "None",
+            "imdbid": null,
+            "enclosure": null,
+            "page_url": "http://127.0.0.1:43100/details.php?id=22",
+            "size": 2048,
+            "seeders": 2,
+            "peers": 0,
+            "grabs": 0,
+            "pubdate": null,
+            "date_elapsed": null,
+            "freedate": null,
+            "uploadvolumefactor": 1,
+            "downloadvolumefactor": 1,
+            "hit_and_run": false,
+            "labels": [],
+            "pri_order": 0,
+            "category": null,
+            "volume_factor": "普通",
+            "freedate_diff": ""
+          }
+        }
+      ],
+      "returned_tags": [
+        "text"
+      ]
+    }
+  ]
+}

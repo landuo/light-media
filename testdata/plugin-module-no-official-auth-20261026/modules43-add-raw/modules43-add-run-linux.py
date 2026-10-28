@@ -1,0 +1,9 @@
+import hashlib,json,os,pathlib,subprocess,time,sys
+root=pathlib.Path('/tmp/light-media-plugin-scope-dRZTQ91A');server=root/'server-modules43-add-linux';binary=root/(sys.argv[1] if len(sys.argv)>1 else 'process-modules43-add-linux.test')
+added={'TMPDIR':str(root/'modules43-add-tmp'),'PLUGIN_PROCESS_SERVER_BINARY':str(server),'OWNED_INPUT_PROCESS_FIXTURE_BINARY':str(root/'services38-input-final-linux'),'OWNED_DOWNLOADER_CONTROL_PROCESS_FIXTURE_BINARY':str(root/'downloader-control-linux'),'PLUGIN_PROCESS_DOWNLOADER_ADD_FIXTURE':'true','PLUGIN_PROCESS_DOWNLOADER_ADD_ORACLE':str(root/'downloader-add-oracle.json'),'PLUGIN_PROCESS_EVENTS36_EVIDENCE_DIR':str(root/'modules43-add-evidence')}
+env=os.environ|added;(root/'modules43-add-tmp').mkdir(exist_ok=True)
+cmd=[str(binary),'-test.v','-test.run','^TestPluginServicesProductionCLI$','-test.timeout','90s'];log=root/'modules43-add-linux.log';start=time.monotonic()
+with log.open('w')as out:r=subprocess.run(cmd,env=env,cwd=root,stdout=out,stderr=subprocess.STDOUT)
+receipt={'kind':'actual cmd/server POST /downloads/add and persistent job, actual Go SDK download provider, owned native HTTP peers and independent task readback; protocol peer is synthetic, not a real qBittorrent service','server':{'path':str(server),'sha256':hashlib.sha256(server.read_bytes()).hexdigest()},'binary':{'path':str(binary),'sha256':hashlib.sha256(binary.read_bytes()).hexdigest()},'environment':added,'command':cmd,'exit_code':r.returncode,'elapsed_seconds':round(time.monotonic()-start,3),'log_sha256':hashlib.sha256(log.read_bytes()).hexdigest()}
+receipt['input_sha256']={name:hashlib.sha256((root/name).read_bytes()).hexdigest() for name in ['services38-input-final-linux','downloader-control-linux','downloader-add-oracle.json']}
+(root/'modules43-add-cli-receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt),flush=True);print(log.read_text()[-8000:],flush=True);raise SystemExit(r.returncode)

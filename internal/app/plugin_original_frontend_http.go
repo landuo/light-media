@@ -26,15 +26,21 @@ func (a *App) serveOriginalPluginFrontend(w http.ResponseWriter, r *http.Request
 		a.writeError(w, r, &APIError{code, message, status})
 		return true
 	}
-	// This explicit check also protects direct use of the helper in future routes.
+	// Authentication-provider declarations grant only this verified package's
+	// frontend directory. Management APIs remain behind the normal session gate.
+	var anonymous *originalFrontendDescriptor
 	if !a.authenticated(r) {
-		return fail("UNAUTHORIZED", "请先登录", 401)
+		var err error
+		anonymous, err = a.originalAuthFrontend(r.Context(), parts[0])
+		if err != nil {
+			return fail("UNAUTHORIZED", "请先登录", 401)
+		}
 	}
 	if r.Method != http.MethodGet && r.Method != http.MethodHead {
 		w.Header().Set("Allow", "GET, HEAD")
 		return fail("METHOD_NOT_ALLOWED", "插件静态资源仅支持读取", 405)
 	}
-	if path.Clean(r.URL.Path) != r.URL.Path || strings.ContainsAny(r.URL.Path, "\\%\x00\r\n") || r.URL.RawPath != "" || r.URL.RawQuery != "" || !pluginStorageID.MatchString(parts[0]) {
+	if path.Clean(r.URL.Path) != r.URL.Path || strings.ContainsAny(r.URL.Path, "\\\x00\r\n") || r.URL.RawQuery != "" || !pluginStorageID.MatchString(parts[0]) {
 		return fail("INVALID_PLUGIN_FRONTEND_PATH", "插件界面路径无效", 400)
 	}
 	instance := parts[0]
@@ -49,6 +55,10 @@ func (a *App) serveOriginalPluginFrontend(w http.ResponseWriter, r *http.Request
 		a.pluginImplementationMu.RUnlock()
 		a.writeError(w, r, err)
 		return true
+	}
+	if anonymous != nil && anonymous.PackageSHA256 != installed.PackageSHA256 {
+		a.pluginImplementationMu.RUnlock()
+		return fail("PLUGIN_FRONTEND_STALE", "插件界面版本已变化，请重新加载", 409)
 	}
 	if alias {
 		descriptor := frontendDescriptor(instance, installed)

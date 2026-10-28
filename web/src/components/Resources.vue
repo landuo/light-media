@@ -237,7 +237,7 @@ function closeDownload() {
 function downloadAdded() {
   if (activeCandidate.value) {
     const key = candidateKey(activeCandidate.value);
-    downloaded.value[key] = 'planned';
+    downloaded.value[key] = 'accepted';
     selected.value = selected.value.filter((v) => v !== key);
   }
   toast('下载任务已添加');
@@ -468,6 +468,7 @@ onUnmounted(() => {
     :media="media"
     @close="closeDownload"
     @done="downloadAdded"
+    @error="closeDownload"
   />
 </template>
 <style scoped>

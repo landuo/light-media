@@ -1,3 +1,4 @@
+import './helpers/plugin-axios-fetch-adapter.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
@@ -9,7 +10,7 @@ import * as forms from '../src/features/plugin-forms.ts';
 import * as runtimeSupport from '../src/features/plugin-runtime-support.ts';
 import * as navigation from '../src/features/plugin-navigation.ts';
 import * as remoteAPI from '../src/features/plugin-remote-api.ts';
-import { createPluginRemoteLoader } from '../src/features/plugin-federation.ts';
+import { createPluginRemoteLoader, loadPluginAppRemote } from '../src/features/plugin-federation.ts';
 
 const names = ['PluginConfigDialog', 'PluginDataDialog', 'PluginDashboardWidget', 'PluginAppPage'];
 const plugin = { plugin_id: 'Standard.clone', instance_id: 'Standard.clone', installed: true, available: true, name: 'Fixture', version: '2.0' };
@@ -23,7 +24,7 @@ const propsFor = (name) => name === 'PluginAppPage' ? { route: 'plugin-app/Stand
   : { plugin: { ...plugin } };
 const deferred = () => { let resolve; const promise = new Promise((r) => resolve = r); return { promise, resolve }; };
 function fixture(name, { descriptor = meta, navKey = 'archive', getEntry, getForm, props = propsFor(name) } = {}) {
-  const events = [], calls = [], mounted = [], unmounted = [], imported = [];
+  const events = [], calls = [], mounted = [], unmounted = [], imported = [], started = [];
   const fetcher = async (url, options = {}) => {
     calls.push({ url, options });
     let data;
@@ -32,7 +33,7 @@ function fixture(name, { descriptor = meta, navKey = 'archive', getEntry, getFor
     else if (url.endsWith('/frontend')) data = descriptor;
     else if (url.endsWith('/form')) data = getForm ? await getForm() : { render_mode: 'vue', conf: [], model: { draft: 'retained' } };
     else if (url.endsWith('/page')) data = { render_mode: 'vue' };
-    else if (url.includes('/api/status')) return new Response(JSON.stringify({ success: true, data: { bound: true } }));
+    else if (url.endsWith('/status')) return new Response(JSON.stringify({ success: true, data: { bound: true } }));
     else throw new Error('unexpected request: ' + url);
     return new Response(JSON.stringify({ data }));
   };
@@ -48,14 +49,14 @@ function fixture(name, { descriptor = meta, navKey = 'archive', getEntry, getFor
   }).outputText;
   const module = { exports: {} };
   new Function('require', 'exports', code)((path) => {
-    if (path === 'vue') return { ...Vue, useId: () => 'fixture', onMounted: (callback) => mounted.push(callback), onUnmounted: (callback) => unmounted.push(callback) };
+    if (path === 'vue') return { ...Vue, useId: () => 'fixture', onMounted: (callback) => mounted.push(callback), onUnmounted: (callback) => unmounted.push(callback), watch(source,callback,options){return Vue.watch(source,(...args)=>{const pending=callback(...args);if(pending?.then)started.push(pending);return pending},options)} };
     if (path === 'vuetify') return { useDisplay: () => ({ mdAndUp: Vue.ref(true) }) };
     if (path === '../api') return realAPI;
     if (path === '../features/plugin-forms') return forms;
     if (path === '../features/plugin-runtime-support') return runtimeSupport;
     if (path === '../features/plugin-navigation') return navigation;
     if (path === '../features/plugin-remote-api') return remoteAPI;
-    if (path === '../features/plugin-federation') return { loadPluginRemote: load };
+    if (path === '../features/plugin-federation') return { loadPluginRemote: load, loadPluginAppRemote: (instance, key, options) => loadPluginAppRemote(instance, key, options, load) };
     if (path.startsWith('vuetify/') || path.endsWith('.vue')) return {};
     throw new Error('unexpected component import: ' + path);
   }, module.exports);
@@ -64,7 +65,7 @@ function fixture(name, { descriptor = meta, navKey = 'archive', getEntry, getFor
   const previous = globalThis.fetch; globalThis.fetch = fetcher;
   let stopped = false;
   function stop() { if (stopped) return; stopped = true; for (const callback of unmounted) callback(); scope.stop(); globalThis.fetch = previous; }
-  return { state, calls, events, imported, stop, unmount: () => unmounted.forEach((callback) => callback()), mount: () => Promise.all(mounted.map((callback) => callback())), sfc };
+  return { state, calls, events, imported, stop, unmount: () => unmounted.forEach((callback) => callback()), mount: async () => {await Promise.all(mounted.map((callback) => callback()));await Vue.nextTick();await Promise.all(started);await new Promise(setImmediate)}, sfc };
 }
 
 for (const name of names) {
@@ -73,14 +74,14 @@ for (const name of names) {
     assert.equal(f.state.error.value, '');
     assert.ok(f.state.remote.value);
     assert.equal(f.imported[0], '/api' + meta.entry_path);
-    await f.state.remoteAPI.value.get('plugin/StandardSource/status');
+    await f.state.remoteAPI.value.get('plugin/Standard.clone/status');
     const apiCall = f.calls.at(-1);
-    assert.equal(apiCall.url, '/api/plugins/Standard.clone/api/status');
+    assert.equal(apiCall.url, '/api/v1/plugin/Standard.clone/status');
     assert.equal(apiCall.options.credentials, 'same-origin');
-    assert.equal(apiCall.options.headers.Authorization, undefined);
+    assert.equal(apiCall.options.headers.get('Authorization'), undefined);
     if (name === 'PluginAppPage') {
       assert.equal(f.state.navKey.value, 'archive');
-      assert.equal(f.state.pluginID.value, 'StandardSource');
+      assert.equal(f.state.pluginID.value, 'Standard.clone');
     }
     if (name === 'PluginConfigDialog') assert.equal(f.state.model.value.draft, 'retained');
     assert.deepEqual(compileTemplate({ source: f.sfc.template.content, filename: name + '.vue', id: name }).errors, []);
@@ -94,7 +95,9 @@ for (const name of names) {
     await running;
     assert.equal(f.state.remote.value, undefined);
     assert.equal(f.state.error.value, '');
-    const metadata = f.calls.find((item) => item.url.endsWith('/frontend'));
+    // AppPage may already have completed the absent AppPage<Key> candidate;
+    // the active candidate is the final descriptor request.
+    const metadata = f.calls.filter((item) => item.url.endsWith('/frontend')).at(-1);
     assert.equal(metadata.options.signal.aborted, true);
   });
   test('actual ' + name + ' SFC exposes loader errors instead of a fake success component', async (t) => {
@@ -106,10 +109,11 @@ for (const name of names) {
   });
 }
 
-test('actual AppPage rejects unregistered nav_key before importing an otherwise valid module', async (t) => {
+test('fixed AppPage directly loads a URL even when the sidebar declares a different nav key', async (t) => {
   const f = fixture('PluginAppPage', { navKey: 'main' }); t.after(f.stop); await f.mount();
-  assert.match(f.state.error.value, /未声明此全页入口/);
-  assert.equal(f.imported.length, 0);
+  assert.equal(f.state.error.value, '');assert.ok(f.state.remote.value);
+  assert.equal(f.state.navKey.value,'archive');assert.equal(f.imported.length,1);
+  assert.ok(!f.calls.some(x=>x.url==='/api/plugins/navigation'),'sidebar controls menu placement, not AppPage loading');
 });
 test('actual Config never imports after a cancelled form request; unknown schema fails explicitly', async (t) => {
   const pending = deferred(); const f = fixture('PluginConfigDialog', { getForm: () => pending.promise });

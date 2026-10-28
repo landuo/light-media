@@ -1,0 +1,1550 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+  "classification": "Pinned batch_download ResourceSelection construction and not-None consumption.\nStops before TorrentHelper.sort_torrents; sorting/material/history remain host\nboundaries, not fake successful downloads. The actual Context/Pydantic classes\nare used, with explicitly controlled MetaInfo/MediaInfo/TorrentInfo values.\n",
+  "source_sha256": {
+    "app/chain/download.py": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+    "app/schemas/event.py": "d5134476edc76096098b85ee32d2f96eb5db2441c873c80729a46b91386687d6",
+    "app/core/context.py": "70a088bd54c748ab44ec467e6a1f1fc5bb5368f818bb16288eca0d15cf98877e"
+  },
+  "cases": [
+    {
+      "name": "unchanged",
+      "patch": {},
+      "fail": false,
+      "input": [
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "events": [
+        {
+          "type": "resource.selection",
+          "input": {
+            "contexts": [
+              {
+                "meta_info": {
+                  "org_string": "Owned 1",
+                  "episode_list": [
+                    1
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 1
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 1",
+                  "enclosure": "https://owned.invalid/download?id=1"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              },
+              {
+                "meta_info": {
+                  "org_string": "Owned 2",
+                  "episode_list": [
+                    2
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 2
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 2",
+                  "enclosure": "https://owned.invalid/download?id=2"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              }
+            ],
+            "downloader": null,
+            "origin": "Subscribe|owned",
+            "updated": false,
+            "updated_contexts": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "result": [
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "false_updated",
+      "patch": {
+        "updated": false,
+        "updated_contexts": []
+      },
+      "fail": false,
+      "input": [
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "events": [
+        {
+          "type": "resource.selection",
+          "input": {
+            "contexts": [
+              {
+                "meta_info": {
+                  "org_string": "Owned 1",
+                  "episode_list": [
+                    1
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 1
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 1",
+                  "enclosure": "https://owned.invalid/download?id=1"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              },
+              {
+                "meta_info": {
+                  "org_string": "Owned 2",
+                  "episode_list": [
+                    2
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 2
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 2",
+                  "enclosure": "https://owned.invalid/download?id=2"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              }
+            ],
+            "downloader": null,
+            "origin": "Subscribe|owned",
+            "updated": false,
+            "updated_contexts": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "result": [
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "true_none",
+      "patch": {
+        "updated": true,
+        "updated_contexts": null
+      },
+      "fail": false,
+      "input": [
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "events": [
+        {
+          "type": "resource.selection",
+          "input": {
+            "contexts": [
+              {
+                "meta_info": {
+                  "org_string": "Owned 1",
+                  "episode_list": [
+                    1
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 1
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 1",
+                  "enclosure": "https://owned.invalid/download?id=1"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              },
+              {
+                "meta_info": {
+                  "org_string": "Owned 2",
+                  "episode_list": [
+                    2
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 2
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 2",
+                  "enclosure": "https://owned.invalid/download?id=2"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              }
+            ],
+            "downloader": null,
+            "origin": "Subscribe|owned",
+            "updated": false,
+            "updated_contexts": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "result": [
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "true_empty",
+      "patch": {
+        "updated": true,
+        "updated_contexts": []
+      },
+      "fail": false,
+      "input": [
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "events": [
+        {
+          "type": "resource.selection",
+          "input": {
+            "contexts": [
+              {
+                "meta_info": {
+                  "org_string": "Owned 1",
+                  "episode_list": [
+                    1
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 1
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 1",
+                  "enclosure": "https://owned.invalid/download?id=1"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              },
+              {
+                "meta_info": {
+                  "org_string": "Owned 2",
+                  "episode_list": [
+                    2
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 2
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 2",
+                  "enclosure": "https://owned.invalid/download?id=2"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              }
+            ],
+            "downloader": null,
+            "origin": "Subscribe|owned",
+            "updated": false,
+            "updated_contexts": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "result": [],
+      "error": null
+    },
+    {
+      "name": "reverse",
+      "patch": {
+        "updated": true,
+        "updated_contexts": [
+          {
+            "meta_info": {
+              "org_string": "Owned 2",
+              "episode_list": [
+                2
+              ]
+            },
+            "media_info": {
+              "tmdb_id": 123,
+              "tmdb_info": {
+                "private": 2
+              }
+            },
+            "torrent_info": {
+              "site": 1,
+              "title": "Owned 2",
+              "enclosure": "https://owned.invalid/download?id=2"
+            },
+            "media_recognize_fail_count": 0,
+            "resource_source": "search",
+            "match_source": "unknown",
+            "candidate_recognized": false,
+            "media_info_is_target": false,
+            "allowed_episodes": null,
+            "confirmed_full_coverage": false
+          },
+          {
+            "meta_info": {
+              "org_string": "Owned 1",
+              "episode_list": [
+                1
+              ]
+            },
+            "media_info": {
+              "tmdb_id": 123,
+              "tmdb_info": {
+                "private": 1
+              }
+            },
+            "torrent_info": {
+              "site": 1,
+              "title": "Owned 1",
+              "enclosure": "https://owned.invalid/download?id=1"
+            },
+            "media_recognize_fail_count": 0,
+            "resource_source": "search",
+            "match_source": "unknown",
+            "candidate_recognized": false,
+            "media_info_is_target": false,
+            "allowed_episodes": null,
+            "confirmed_full_coverage": false
+          }
+        ]
+      },
+      "fail": false,
+      "input": [
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "events": [
+        {
+          "type": "resource.selection",
+          "input": {
+            "contexts": [
+              {
+                "meta_info": {
+                  "org_string": "Owned 1",
+                  "episode_list": [
+                    1
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 1
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 1",
+                  "enclosure": "https://owned.invalid/download?id=1"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              },
+              {
+                "meta_info": {
+                  "org_string": "Owned 2",
+                  "episode_list": [
+                    2
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 2
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 2",
+                  "enclosure": "https://owned.invalid/download?id=2"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              }
+            ],
+            "downloader": null,
+            "origin": "Subscribe|owned",
+            "updated": false,
+            "updated_contexts": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "result": [
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "replace",
+      "patch": {
+        "updated": true,
+        "updated_contexts": [
+          {
+            "meta_info": {
+              "org_string": "Owned 3",
+              "episode_list": [
+                3
+              ]
+            },
+            "media_info": {
+              "tmdb_id": 123,
+              "tmdb_info": {
+                "private": 3
+              }
+            },
+            "torrent_info": {
+              "site": 1,
+              "title": "Owned 3",
+              "enclosure": "https://owned.invalid/download?id=3"
+            },
+            "media_recognize_fail_count": 0,
+            "resource_source": "search",
+            "match_source": "unknown",
+            "candidate_recognized": false,
+            "media_info_is_target": false,
+            "allowed_episodes": null,
+            "confirmed_full_coverage": false
+          }
+        ]
+      },
+      "fail": false,
+      "input": [
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "events": [
+        {
+          "type": "resource.selection",
+          "input": {
+            "contexts": [
+              {
+                "meta_info": {
+                  "org_string": "Owned 1",
+                  "episode_list": [
+                    1
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 1
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 1",
+                  "enclosure": "https://owned.invalid/download?id=1"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              },
+              {
+                "meta_info": {
+                  "org_string": "Owned 2",
+                  "episode_list": [
+                    2
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 2
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 2",
+                  "enclosure": "https://owned.invalid/download?id=2"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              }
+            ],
+            "downloader": null,
+            "origin": "Subscribe|owned",
+            "updated": false,
+            "updated_contexts": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "result": [
+        {
+          "meta_info": {
+            "org_string": "Owned 3",
+            "episode_list": [
+              3
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 3
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 3",
+            "enclosure": "https://owned.invalid/download?id=3"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "ignored_input",
+      "patch": {
+        "contexts": []
+      },
+      "fail": false,
+      "input": [
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "events": [
+        {
+          "type": "resource.selection",
+          "input": {
+            "contexts": [
+              {
+                "meta_info": {
+                  "org_string": "Owned 1",
+                  "episode_list": [
+                    1
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 1
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 1",
+                  "enclosure": "https://owned.invalid/download?id=1"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              },
+              {
+                "meta_info": {
+                  "org_string": "Owned 2",
+                  "episode_list": [
+                    2
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 2
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 2",
+                  "enclosure": "https://owned.invalid/download?id=2"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              }
+            ],
+            "downloader": null,
+            "origin": "Subscribe|owned",
+            "updated": false,
+            "updated_contexts": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "result": [
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "mutate_before_error",
+      "patch": {
+        "updated": true,
+        "updated_contexts": []
+      },
+      "fail": true,
+      "input": [
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "events": [
+        {
+          "type": "resource.selection",
+          "input": {
+            "contexts": [
+              {
+                "meta_info": {
+                  "org_string": "Owned 1",
+                  "episode_list": [
+                    1
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 1
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 1",
+                  "enclosure": "https://owned.invalid/download?id=1"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              },
+              {
+                "meta_info": {
+                  "org_string": "Owned 2",
+                  "episode_list": [
+                    2
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 2
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 2",
+                  "enclosure": "https://owned.invalid/download?id=2"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              }
+            ],
+            "downloader": null,
+            "origin": "Subscribe|owned",
+            "updated": false,
+            "updated_contexts": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "result": [],
+      "error": null
+    },
+    {
+      "name": "invalid_scalar",
+      "patch": {
+        "updated": true,
+        "updated_contexts": 42
+      },
+      "fail": false,
+      "input": [
+        {
+          "meta_info": {
+            "org_string": "Owned 1",
+            "episode_list": [
+              1
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 1
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 1",
+            "enclosure": "https://owned.invalid/download?id=1"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        },
+        {
+          "meta_info": {
+            "org_string": "Owned 2",
+            "episode_list": [
+              2
+            ]
+          },
+          "media_info": {
+            "tmdb_id": 123,
+            "tmdb_info": {
+              "private": 2
+            }
+          },
+          "torrent_info": {
+            "site": 1,
+            "title": "Owned 2",
+            "enclosure": "https://owned.invalid/download?id=2"
+          },
+          "media_recognize_fail_count": 0,
+          "resource_source": "search",
+          "match_source": "unknown",
+          "candidate_recognized": false,
+          "media_info_is_target": false,
+          "allowed_episodes": null,
+          "confirmed_full_coverage": false
+        }
+      ],
+      "events": [
+        {
+          "type": "resource.selection",
+          "input": {
+            "contexts": [
+              {
+                "meta_info": {
+                  "org_string": "Owned 1",
+                  "episode_list": [
+                    1
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 1
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 1",
+                  "enclosure": "https://owned.invalid/download?id=1"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              },
+              {
+                "meta_info": {
+                  "org_string": "Owned 2",
+                  "episode_list": [
+                    2
+                  ]
+                },
+                "media_info": {
+                  "tmdb_id": 123,
+                  "tmdb_info": {
+                    "private": 2
+                  }
+                },
+                "torrent_info": {
+                  "site": 1,
+                  "title": "Owned 2",
+                  "enclosure": "https://owned.invalid/download?id=2"
+                },
+                "media_recognize_fail_count": 0,
+                "resource_source": "search",
+                "match_source": "unknown",
+                "candidate_recognized": false,
+                "media_info_is_target": false,
+                "allowed_episodes": null,
+                "confirmed_full_coverage": false
+              }
+            ],
+            "downloader": null,
+            "origin": "Subscribe|owned",
+            "updated": false,
+            "updated_contexts": null,
+            "source": "未知拦截源"
+          }
+        }
+      ],
+      "result": null,
+      "error": "TypeError"
+    }
+  ]
+}

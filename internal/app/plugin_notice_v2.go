@@ -243,7 +243,12 @@ func (a *App) runNoticeBusinessV2(ctx context.Context, initial pluginNoticeRoute
 					return nil, e
 				}
 				n := Notification{Source: source, ID: "notice_" + a.pluginStore.noticeID("business-history", r.ID, ordinal), Title: a.clean(title), Message: a.clean(message), MType: mtype, Link: link, CreatedAt: a.pluginStore.noticeNow().UTC().Format(time.RFC3339Nano)}
-				if e = txPut(ctx, tx, "notification", n.ID, n); e != nil {
+				record, e := a.originalMessageHistoryRecord(n, fields)
+				if e != nil {
+					return nil, e
+				}
+				record.Notification = Notification{ID: n.ID, CreatedAt: n.CreatedAt, Read: n.Read}
+				if e = txPut(ctx, tx, "notification", n.ID, record); e != nil {
 					return nil, e
 				}
 				saved := pluginNoticeV2History{History: n, Digest: a.pluginStore.noticeID("business-history-value", n)}

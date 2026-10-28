@@ -2,14 +2,16 @@ package app
 
 import (
 	"archive/zip"
-	"bufio"
+	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
+	"golang.org/x/sys/unix"
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 )
@@ -48,19 +50,7 @@ func (a *App) pluginLogHTTP(w http.ResponseWriter, r *http.Request, path string)
 	copyURL.RawQuery = q.Encode()
 	copyRequest.URL = &copyURL
 	if len(parts) == 2 {
-		// Capture the stream boundary before reading disk. Later events may also
-		// occur in the history page; stable log IDs let the client deduplicate.
-		a.logs.mu.Lock()
-		resume := fmt.Sprintf("%s:%d", a.logs.boot, a.logs.seq)
-		a.logs.mu.Unlock()
-		filters := logQuery(copyRequest)
-		if filters["from"] == "" {
-			filters["from"] = "0001-01-01T00:00:00Z"
-		}
-		if filters["limit"] == "" {
-			filters["limit"] = "50"
-		}
-		page, err := a.queryLogs(r.Context(), filters)
+		page, resume, err := a.readPluginProjectionHistory(r.Context(), instance)
 		if err != nil {
 			a.writeError(w, r, err)
 		} else {
@@ -68,9 +58,14 @@ func (a *App) pluginLogHTTP(w http.ResponseWriter, r *http.Request, path string)
 		}
 		return true
 	}
+
 	switch parts[2] {
 	case "stream":
-		a.streamLogs(w, copyRequest)
+		if _, _, err := a.readPluginProjectionHistory(r.Context(), instance); err != nil {
+			a.writeError(w, r, err)
+		} else {
+			a.streamLogs(w, copyRequest)
+		}
 	case "file", "download":
 		a.servePluginLogFile(w, r, instance, parts[2] == "download")
 	default:
@@ -93,80 +88,112 @@ func (a *App) pluginLogTemp() (*os.File, error) {
 	return f, nil
 }
 
-const pluginLogSnapshotLimit int64 = 1 << 30 // Matches the logging settings' maximum retained bytes.
+const pluginLogSnapshotLimit int64 = 1 << 30
 
-func (a *App) collectPluginLogSnapshot(ctx context.Context, instance string) (*os.File, error) {
-	f, err := a.pluginLogTemp()
-	if err != nil {
-		return nil, bad("PLUGIN_LOG_EXPORT_UNAVAILABLE", "无法准备插件日志，请检查存储")
-	}
-	success := false
-	defer func() {
-		if !success {
-			_ = f.Close()
-		}
-	}()
-	q := map[string]string{"plugin_instance_id": instance, "from": "0001-01-01T00:00:00Z", "to": now(), "limit": "500"}
-	encoder := json.NewEncoder(f)
-	for {
-		if ctx.Err() != nil {
-			return nil, ctx.Err()
-		}
-		page, err := a.queryLogs(ctx, q)
-		if err != nil {
-			return nil, err
-		}
-		if page.historyGap {
-			return nil, &APIError{"PLUGIN_LOG_HISTORY_CHANGED", "日志在读取时发生轮转清理或存在损坏，请重新下载", http.StatusConflict}
-		}
-		for _, entry := range page.Entries {
-			if err := encoder.Encode(entry); err != nil {
-				return nil, bad("PLUGIN_LOG_EXPORT_UNAVAILABLE", "插件日志暂存失败，请检查存储")
-			}
-		}
-		stat, err := f.Stat()
-		if err != nil || stat.Size() > pluginLogSnapshotLimit {
-			return nil, bad("PLUGIN_LOG_EXPORT_TOO_LARGE", "插件日志超过导出限额，未截断返回")
-		}
-		if page.Complete {
-			break
-		}
-		if page.NextCursor == "" || page.NextCursor == q["cursor"] {
-			return nil, bad("PLUGIN_LOG_EXPORT_UNAVAILABLE", "插件日志读取未能继续，请重新下载")
-		}
-		q["cursor"] = page.NextCursor
-	}
-	if _, err := f.Seek(0, io.SeekStart); err != nil {
-		return nil, err
-	}
-	success = true
-	return f, nil
-}
-
-func pluginLogText(entry map[string]any) string {
-	value := func(key string) string {
-		if entry[key] == nil {
-			return ""
-		}
-		return fmt.Sprint(entry[key])
-	}
-	level := value("level")
-	if level == "WARN" {
-		level = "WARNING"
-	}
-	text := fmt.Sprintf("%s: [%s] %s - %s", level, value("time"), value("module"), value("message"))
-	if code := value("error_code"); code != "" {
-		text += " [" + code + "]"
-	}
-	return text
-}
-
+// Retained source files remain independent ZIP entries. Selection is current
+// first, then backup modification time descending, limited to ten in total.
 func (a *App) preparePluginLogFile(ctx context.Context, instance string, compressed bool) (*os.File, string, error) {
-	snapshot, err := a.collectPluginLogSnapshot(ctx, instance)
+	if err := ctx.Err(); err != nil {
+		return nil, "", err
+	}
+	flushCtx, cancel := context.WithTimeout(ctx, time.Second)
+	flushed := a.logs.flush(flushCtx)
+	cancel()
+	if !flushed {
+		return nil, "", bad("PLUGIN_LOG_HISTORY_CHANGED", "日志仍在写入，请重试")
+	}
+	leaf, err := pluginProjectionName(instance)
 	if err != nil {
 		return nil, "", err
 	}
-	defer snapshot.Close()
+	type snapshot struct {
+		name  string
+		file  *os.File
+		size  int64
+		mtime time.Time
+		mode  os.FileMode
+	}
+	selected := []snapshot{}
+	defer func() {
+		for _, item := range selected {
+			item.file.Close()
+		}
+	}()
+	capture := func() error {
+		a.logs.fileMu.Lock()
+		defer a.logs.fileMu.Unlock()
+		dir, err := a.pluginProjectionDirectory(false)
+		if err != nil {
+			return pluginProjectionReadError(err)
+		}
+		defer unix.Close(dir)
+		current, err := pluginProjectionOpen(dir, leaf, unix.O_RDONLY)
+		if err == nil {
+			info, e := current.Stat()
+			if e != nil {
+				current.Close()
+				return e
+			}
+			selected = append(selected, snapshot{leaf, current, info.Size(), info.ModTime(), info.Mode()})
+		} else if !compressed || !errors.Is(err, unix.ENOENT) {
+			return pluginProjectionReadError(err)
+		}
+		if !compressed {
+			return nil
+		}
+		entries, err := os.ReadDir(filepath.Join(a.Dir, "logs", "plugins"))
+		if err != nil {
+			return pluginProjectionReadError(err)
+		}
+		backups := []snapshot{}
+		defer func() {
+			for _, item := range backups {
+				item.file.Close()
+			}
+		}()
+		for _, entry := range entries {
+			if !strings.HasPrefix(entry.Name(), leaf+".") {
+				continue
+			}
+			var st unix.Stat_t
+			if err := unix.Fstatat(dir, entry.Name(), &st, unix.AT_SYMLINK_NOFOLLOW); err != nil {
+				return err
+			}
+			if st.Mode&unix.S_IFMT == unix.S_IFLNK {
+				return pluginProjectionReadError(unix.ELOOP)
+			}
+			if st.Mode&unix.S_IFMT != unix.S_IFREG {
+				continue
+			}
+			f, err := pluginProjectionOpen(dir, entry.Name(), unix.O_RDONLY)
+			if err != nil {
+				return pluginProjectionReadError(err)
+			}
+			info, err := f.Stat()
+			if err != nil {
+				f.Close()
+				return err
+			}
+			backups = append(backups, snapshot{entry.Name(), f, info.Size(), info.ModTime(), info.Mode()})
+		}
+		sort.SliceStable(backups, func(i, j int) bool { return backups[i].mtime.After(backups[j].mtime) })
+		remaining := pluginProjectionDownloadFiles - len(selected)
+		if len(backups) > remaining {
+			for _, b := range backups[remaining:] {
+				b.file.Close()
+			}
+			backups = backups[:remaining]
+		}
+		selected = append(selected, backups...)
+		backups = nil
+		if len(selected) == 0 {
+			return &APIError{"NOT_FOUND", "插件日志不存在", 404}
+		}
+		return nil
+	}
+	if err = capture(); err != nil {
+		return nil, "", err
+	}
 	out, err := a.pluginLogTemp()
 	if err != nil {
 		return nil, "", err
@@ -174,76 +201,58 @@ func (a *App) preparePluginLogFile(ctx context.Context, instance string, compres
 	success := false
 	defer func() {
 		if !success {
-			_ = out.Close()
+			out.Close()
 		}
 	}()
-	name := strings.ToLower(instance) + ".log"
-	var target io.Writer = out
-	var archive *zip.Writer
+	name := leaf
 	if compressed {
-		archive = zip.NewWriter(out)
-		defer func() {
-			if archive != nil {
-				_ = archive.Close()
-			}
-		}()
-		stem := strings.ToLower(instance) + "-logs-" + time.Now().Format("20060102-150405")
-		name = stem + ".zip"
-		target, err = archive.Create(stem + "/" + strings.ToLower(instance) + ".log")
-		if err != nil {
-			return nil, "", err
-		}
-	}
-	write := func(raw []byte) error {
-		if ctx.Err() != nil {
-			return ctx.Err()
-		}
-		var entry map[string]any
-		if json.Unmarshal(raw, &entry) != nil {
-			return errors.New("invalid prepared log record")
-		}
-		_, err := fmt.Fprintln(target, pluginLogText(entry))
-		return err
-	}
-	if compressed {
-		// History pages are newest first. Reverse the private bounded spool for
-		// a chronological log inside the archive, without retaining all rows.
-		stat, err := snapshot.Stat()
-		if err != nil {
-			return nil, "", err
-		}
-		var scanned int64
-		reader := reverseLogReader{file: snapshot, End: stat.Size(), scanned: &scanned, ctx: ctx}
-		for {
-			scanned = 0 // A single record is bounded; the complete spool already has a byte limit.
-			reader.deadline = time.Now().Add(2 * time.Second)
-			raw, badLine, err := reader.next()
-			if err == io.EOF {
-				break
-			}
-			if err != nil || badLine {
-				return nil, "", errors.New("prepared log record unavailable")
-			}
-			if err := write(raw); err != nil {
+		name = strings.TrimSuffix(leaf, ".log") + "-logs-" + time.Now().Format("20060102-150405") + ".zip"
+		stem := strings.TrimSuffix(name, ".zip")
+		archive := zip.NewWriter(out)
+		for _, item := range selected {
+			if err := ctx.Err(); err != nil {
+				archive.Close()
 				return nil, "", err
+			}
+			at := item.mtime.Local()
+			if at.Year() < 1980 || at.Year() > 2107 {
+				archive.Close()
+				return nil, "", errors.New("plugin log ZIP timestamp outside supported range")
+			}
+			header := &zip.FileHeader{Name: stem + "/" + item.name, Method: zip.Deflate, Modified: at.Truncate(2 * time.Second)}
+			header.SetMode(item.mode)
+			writer, err := archive.CreateHeader(header)
+			if err != nil {
+				archive.Close()
+				return nil, "", err
+			}
+			n, err := io.Copy(writer, io.NewSectionReader(item.file, 0, item.size))
+			if err != nil || n != item.size {
+				archive.Close()
+				return nil, "", bad("PLUGIN_LOG_HISTORY_CHANGED", "日志在读取时变化，请重试")
 			}
 		}
 		if err := archive.Close(); err != nil {
 			return nil, "", err
 		}
-		archive = nil
 	} else {
-		// Original full-text window displays the latest line first.
-		scanner := bufio.NewScanner(snapshot)
-		scanner.Buffer(make([]byte, 4096), logRecordLimit+1)
-		for scanner.Scan() {
-			if err := write(scanner.Bytes()); err != nil {
-				return nil, "", err
-			}
+		if selected[0].size > pluginLogSnapshotLimit {
+			return nil, "", bad("PLUGIN_LOG_EXPORT_TOO_LARGE", "插件日志超过导出限额")
 		}
-		if err := scanner.Err(); err != nil {
+		raw, err := io.ReadAll(io.NewSectionReader(selected[0].file, 0, selected[0].size))
+		if err != nil || int64(len(raw)) != selected[0].size {
+			return nil, "", bad("PLUGIN_LOG_HISTORY_CHANGED", "日志在读取时变化，请重试")
+		}
+		lines := bytes.Split(raw, []byte("\n"))
+		for i, j := 0, len(lines)-1; i < j; i, j = i+1, j-1 {
+			lines[i], lines[j] = lines[j], lines[i]
+		}
+		if _, err = out.Write(bytes.Join(lines, []byte("\n"))); err != nil {
 			return nil, "", err
 		}
+	}
+	if err := ctx.Err(); err != nil {
+		return nil, "", err
 	}
 	if _, err := out.Seek(0, io.SeekStart); err != nil {
 		return nil, "", err
@@ -273,6 +282,9 @@ func (a *App) servePluginLogFile(w http.ResponseWriter, r *http.Request, instanc
 	}
 	defer f.Close()
 	w.Header().Set("Cache-Control", "no-store")
+	if a.logs.pluginProjectionLegacyGap {
+		w.Header().Set("X-Plugin-Log-Legacy-Gap", "true")
+	}
 	w.Header().Set("X-Content-Type-Options", "nosniff")
 	w.Header().Set("Content-Security-Policy", "default-src 'none'; sandbox")
 	if compressed {

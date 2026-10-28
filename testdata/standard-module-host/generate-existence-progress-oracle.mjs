@@ -1,0 +1,10 @@
+import {execFileSync} from 'node:child_process';
+import {writeFileSync} from 'node:fs';
+const commit='2829e3b08214348f05ff2f5beae644882eccad58';
+const source=execFileSync('git',['-C','/Users/accidia/projects/MoviePilot-Frontend','show',commit+':src/components/cards/SubscribeCard.vue'],{encoding:'utf8'});
+const body=source.match(/const downloadedEpisode = computed\(\(\) => \{([\s\S]*?)\n\}\)/)?.[1];
+if(!body)throw new Error('fixed source computed not found');
+const evaluate=Function('props',body);
+const cases=[{total_episode:3,lack_episode:1},{total_episode:3,lack_episode:3},{total_episode:3,lack_episode:0},{total_episode:3,lack_episode:-1},{total_episode:3,lack_episode:5},{total_episode:0,lack_episode:0},{total_episode:3,lack_episode:null}].map(media=>({media,result:evaluate({media})}));
+writeFileSync(new URL('existence-progress-source-oracle.json',import.meta.url),JSON.stringify({commit,source:'src/components/cards/SubscribeCard.vue:75-80',body,cases},null,2)+'\n');
+console.log(cases.length,'fixed source progress cases');

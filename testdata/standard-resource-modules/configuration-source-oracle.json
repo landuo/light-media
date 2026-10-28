@@ -1,0 +1,157 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual selected ConfigModel int/default + actual Settings generic converter/validator/update_env_config under dev Pydantic2.13.4; owned env-present/log sink boundaries, no source file/service changed; not full original application",
+  "source_sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+  "pydantic": "2.13.4",
+  "default": 1,
+  "inputs": [
+    {
+      "raw": "0",
+      "accepted": true,
+      "integer": "0",
+      "pages": "1",
+      "normalized": false,
+      "diagnostics": []
+    },
+    {
+      "raw": "-3",
+      "accepted": true,
+      "integer": "-3",
+      "pages": "1",
+      "normalized": false,
+      "diagnostics": []
+    },
+    {
+      "raw": " 2 ",
+      "accepted": true,
+      "integer": "2",
+      "pages": "2",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "raw": "2.0",
+      "accepted": true,
+      "integer": "1",
+      "pages": "1",
+      "normalized": true,
+      "diagnostics": [
+        "ERROR",
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "raw": "2.",
+      "accepted": true,
+      "integer": "1",
+      "pages": "1",
+      "normalized": true,
+      "diagnostics": [
+        "ERROR",
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "raw": "1_0",
+      "accepted": true,
+      "integer": "10",
+      "pages": "10",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "raw": "1e0",
+      "accepted": true,
+      "integer": "1",
+      "pages": "1",
+      "normalized": true,
+      "diagnostics": [
+        "ERROR",
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "raw": "bad",
+      "accepted": true,
+      "integer": "1",
+      "pages": "1",
+      "normalized": true,
+      "diagnostics": [
+        "ERROR",
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "raw": "",
+      "accepted": true,
+      "integer": "1",
+      "pages": "1",
+      "normalized": true,
+      "diagnostics": [
+        "ERROR",
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "raw": "２",
+      "accepted": true,
+      "integer": "2",
+      "pages": "2",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "raw": "9223372036854775808123",
+      "accepted": true,
+      "integer": "9223372036854775808123",
+      "pages": "9223372036854775808123",
+      "normalized": false,
+      "diagnostics": []
+    },
+    {
+      "raw": "\u001c2\u001c",
+      "accepted": true,
+      "integer": "2",
+      "pages": "2",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    }
+  ],
+  "rejected_intermediate_assumption": {
+    "reason": "Bare Pydantic field is not the actual Settings caller; converter/validator must run first. Intermediate native fatal/coercion code was corrected before any main artifact/gate.",
+    "counterexamples": [
+      {
+        "raw": "2.0",
+        "bare_pydantic": "2",
+        "actual_settings": "1"
+      },
+      {
+        "raw": "bad",
+        "bare_pydantic": null,
+        "actual_settings": "1"
+      },
+      {
+        "raw": "２",
+        "bare_pydantic": null,
+        "actual_settings": "2"
+      }
+    ]
+  }
+}

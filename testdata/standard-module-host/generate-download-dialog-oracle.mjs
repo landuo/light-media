@@ -1,0 +1,31 @@
+import { execFileSync } from 'node:child_process';
+import { writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import vm from 'node:vm';
+import ts from '../../web/node_modules/typescript/lib/typescript.js';
+const root='/Users/accidia/projects/MoviePilot-Frontend';
+const commit='2829e3b08214348f05ff2f5beae644882eccad58';
+const read=(path)=>execFileSync('git',['-C',root,'show',commit+':'+path],{encoding:'utf8'});
+const dialog=read('src/components/dialog/AddDownloadDialog.vue');
+const card=read('src/components/cards/TorrentCard.vue');
+const script=(source)=>source.match(/<script[^>]*>([\s\S]*?)<\/script>/)[1];
+const tree=ts.createSourceFile('source.ts',script(dialog),ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+const fn=tree.statements.find(n=>ts.isFunctionDeclaration(n)&&n.name?.text==='addDownload');
+if(!fn)throw Error('fixed source addDownload missing');
+const cardTree=ts.createSourceFile('card.ts',script(card),ts.ScriptTarget.Latest,true,ts.ScriptKind.TS);
+let closeOn;
+const walk=(node)=>{if(ts.isCallExpression(node)&&node.expression.getText(cardTree)==='openSharedDialog'&&node.arguments[0]?.getText(cardTree)==='AddDownloadDialog')closeOn=vm.runInNewContext('('+node.arguments[3].getText(cardTree)+')').closeOn;ts.forEachChild(node,walk)};
+walk(cardTree);
+if(!closeOn?.includes('error'))throw Error('fixed parent closeOn error missing');
+const cases=[];
+for(const mode of ['success','business_failure','transport_failure']) {
+ const calls=[],emits=[],toasts=[];
+ const loading={value:false};
+ const context=vm.createContext({loading,props:{torrent:{enclosure:'owned-torrent'},media:null},selectedDownloader:{value:null},selectedDirectory:{value:null},tmdbid:{value:null},doubanId:{value:null},startNProgress(){},doneNProgress(){},console:{error(){}},t:(key,args)=>({key,args}),$toast:{success:(v)=>toasts.push({type:'success',value:v}),error:(v)=>toasts.push({type:'error',value:v})},emit:(name,value)=>emits.push({name,value}),api:{post:async(endpoint,payload)=>{calls.push({endpoint,payload,loading:loading.value});if(mode==='transport_failure')throw Error('owned network failure');return{success:mode==='success',message:'owned rejected'}}}});
+ vm.runInContext(ts.transpileModule(fn.getText(tree),{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.None}}).outputText,context);
+ await context.addDownload();
+ cases.push({mode,calls,emits,toasts,loading_after:loading.value,parent_closed:emits.some(e=>closeOn.includes(e.name)),marked_downloaded:emits.some(e=>e.name==='done')});
+}
+const result={source_commit:commit,kind:'actual fixed addDownload function and TorrentCard openSharedDialog closeOn; API and toast I/O controlled. Pending HTTP promise is adapted by waiting for the native persisted result.',source_sha256:{'src/components/dialog/AddDownloadDialog.vue':createHash('sha256').update(dialog).digest('hex'),'src/components/cards/TorrentCard.vue':createHash('sha256').update(card).digest('hex')},parent_close_on:closeOn,cases};
+writeFileSync(new URL('download-dialog-source-oracle.json',import.meta.url),JSON.stringify(result,null,2)+'\n');
+process.stdout.write('fixed AddDownloadDialog/parent cases '+cases.length+'\n');

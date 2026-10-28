@@ -1,0 +1,603 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "accepted": true,
+  "complete": true,
+  "matrix_rows": [
+    42
+  ],
+  "scope": "ordinary Web text ingress, encrypted source message history and existing core notice to ordinary plugin sender; no AI/workflow, no separate user FIFO, no external channels or business systems",
+  "source_mapping": [
+    {
+      "source": [
+        "B/app/api/endpoints/message.py:113-170",
+        "B/app/db/message_oper.py:20-70",
+        "B/app/db/models/message.py:79"
+      ],
+      "behavior": "GET page1/count20, ignored size, all channels reg_time DESC/id DESC, nullable source columns; POST trusted logged-in account",
+      "target": [
+        "plugin_original_web_history.go:originalWebMessageHistory",
+        "plugin_original_web_history.go:originalMessageHistoryColumns",
+        "plugin_original_command_ingress.go:standardWebCommandHTTP"
+      ]
+    },
+    {
+      "source": [
+        "B/app/chain/message.py:212-243",
+        "B/app/chain/message.py:1170-1198"
+      ],
+      "behavior": "pending plugin input consumes before action0 history; ordinary noncallback writes once before command/user.message",
+      "target": [
+        "plugin_original_command_ingress.go:standardWebCommandHTTP",
+        "plugin_original_web_history.go:saveOriginalIncomingWebMessage"
+      ]
+    },
+    {
+      "source": [
+        "B/app/chain/__init__.py:1631-1744",
+        "B/app/helper/message.py:710-763",
+        "B/app/chain/__init__.py:298-330"
+      ],
+      "behavior": "history→NoticeMessage→queue→post_message callback; module errors swallowed and later modules continue, default raise_exception absent",
+      "target": [
+        "plugin_original_notice.go:postOriginalPluginMessage",
+        "plugin_notice_v2.go:runRouteBusinessV2",
+        "plugin_notice_delivery.go:sendPluginMessageModules/attemptPluginMessage",
+        "plugin_original_notice.go:sendOriginalNoticeModulesCount",
+        "plugin_original_modules.go:invokeOriginalPluginModulesObserved"
+      ]
+    }
+  ],
+  "source_defect_preserved": {
+    "source": [
+      "B/app/helper/message.py:829-862",
+      "B/app/api/endpoints/system.py:929",
+      "F/src/views/system/MessageView.vue:252"
+    ],
+    "facts": [
+      "put(role=user) drops it",
+      "get(role) ignores role and consumes common system/plugin FIFO",
+      "save_history=false ordinary Web prompts have no dedicated user stream/history visibility"
+    ],
+    "native_adaptation": "existing single App/system FIFO consumer remains; new message history reader never consumes it; no local user echo or fake prompt record"
+  },
+  "native_adaptations": [
+    "source numeric message ID uses stable SQLite generic-record rowid; gaps can include other record kinds, preserving identity/order without new history schema",
+    "source columns are protected in existing Store encryption; sent notification projection and core receipt stay intact; incoming history uses message kind and does not increment sent-notification center",
+    "nonsecret source reg_time index retains saved-local-time sort even after another process TZ; strict core receipt authenticates it with private source columns and stored UTC offset",
+    "typed native invalid ciphertext/history fails closed; legacy records without source payload project their retained native fields, without invented original nullable data",
+    "native core durable notice ledger preserves existing no-resend recovery; adapted sender failures record actual called/failed facts and are consumed by existing attemptPluginMessage, without changing successful create/complete return"
+  ],
+  "verification": {
+    "source_replay": "testdata/standard-web-message/source-oracle.json; actual pinned AST methods with owned SQLite/protocol boundaries, not whole old application or old service",
+    "final_race": {
+      "file": "work/plugin-no-official-auth-20261026/messages42-history-timestamp-final-race-tests.jsonl",
+      "roots": [
+        "TestOriginalWebMessageCoreHistoryReceiptAuthenticatesColumnsAndTimezone",
+        "TestOriginalWebMessageHistoryUsesFixedPaginationAndStableIdentity",
+        "TestOriginalWebMessageHistoryOrdersPersistedSourceLocalTime",
+        "TestOriginalWebMessageActualSDKHistoryAndInvisibleNoHistoryPrompt",
+        "TestOriginalWebMessageActualSDKInputBeforeIncomingHistory"
+      ],
+      "root_count": 5,
+      "failed": [],
+      "package_elapsed_seconds": [
+        19.237
+      ]
+    },
+    "module_notice_source_add_regression": {
+      "file": "work/plugin-no-official-auth-20261026/messages42-module-notice-sourceadd-final-tests.jsonl",
+      "roots": [
+        "TestPluginNoticeQueueActualResultCASAndSourceChanges",
+        "TestPluginNoticeQueueUsesExplicitReloadedWindowSnapshot",
+        "TestOriginalModulesRegistryActualClonesLifecycle",
+        "TestOriginalModulesJSONAggregationActualWorkers",
+        "TestOriginalModulesRateLimitPreservesWorkerAndSkipsSystemError",
+        "TestOriginalModulesFailureAndBindingIsolation",
+        "TestOriginalModulesMissingDeclarationBeforeState",
+        "TestOriginalNoticeActualSDKRoutesEventsHistoryAndModuleDelivery",
+        "TestOriginalNoticeQueuedAfterCallerEndsAndExplicitUserBypassesWindow",
+        "TestOriginalNoticeHistoricalNativeFirstAndReplayUnavailable",
+        "TestOriginalNoticeDefaultSenderRejectsInvalidAndMissingProvider",
+        "TestOriginalModuleRecognizeActualSDKSourceOracle",
+        "TestUISubscriptionActualLargeSourceMetadataPreservesCompleteOriginAndNotice",
+        "TestUISubscriptionSourceFactoryPreservesOriginalLocalsAndFullProvider",
+        "TestUISubscriptionActualSaveDefaultNoticeAddedColdAndDuplicateBeforeAwaitStats",
+        "TestUISubscriptionActualAuthenticatedAPIAndExistingAddPreserveCreation",
+        "TestUISubscriptionActualSaveReceiptFailureRollsBackAndRecovers",
+        "TestUISubscriptionDisabledStatisticsCompletesWithoutAsyncHTTPOrJSON",
+        "TestUISubscriptionAuthenticatedAPIAwaitsActualAsyncStatistics",
+        "TestUISubscriptionCloseWaitsActualAsyncReceiptBeforeDatabaseClosure"
+      ],
+      "root_count": 20,
+      "failed": [],
+      "package_elapsed_seconds": [
+        25.693
+      ]
+    },
+    "catalog_regression": {
+      "file": "work/plugin-no-official-auth-20261026/modules43-catalog-final-tests.jsonl",
+      "roots": [
+        "TestGenericCategoryFieldsFollowOriginalValueSemantics",
+        "TestGenericCategoryFieldsPersistRequestedAbsentAndRedactCredentials",
+        "TestCategoryPythonRepresentationRejectsDepthAndPreservesUnicodePrintability",
+        "TestCategoryNumericCredentialEchoCannotEnterCachedIntegers",
+        "TestDetailPreservesCategoryMetadataAndCacheRoundTrip",
+        "TestFreshPartialCategoryMetadataCountsAsRefreshedDetail",
+        "TestOldCachedCategoryMetadataStillNeedsOneDetailRefresh",
+        "TestSearchMetadataNeverCertifiesCompleteDetail",
+        "TestInvalidCategoryMetadataIsRejected",
+        "TestCategoryCountryNamesUseProviderTextSanitization",
+        "TestSearchEscapingNormalizationAndPeopleFiltering",
+        "TestConfiguredTokenNeverSentAsQuery",
+        "TestInvalidParametersNeverMakeRequest",
+        "TestRedirectNeverForwardsCredentials",
+        "TestBusinessErrorsAndUnsafeResponses",
+        "TestTransportErrorDoesNotExposeRequestOrCause",
+        "TestRateLimitCooldownAndCanceledContext",
+        "TestLimiterWaitRespectsContext",
+        "TestAniListExploreQueryOriginalFilters",
+        "TestAniListExploreFallbackTranslationPaginationAndIdentity",
+        "TestAniListDetailSourceIdentityAndBusinessErrors",
+        "TestAniListTranslationUnavailablePreservesNativeTitle",
+        "TestAniListFuzzyDates",
+        "TestExploreResolveOnlyUniqueTitleYearAndType",
+        "TestExploreResolveIMDbUsesExactExternalNamespace",
+        "TestExploreTMDBFilterMappingAndPagination",
+        "TestExploreRejectsInvalidFiltersBeforeRequest",
+        "TestExploreDoubanRawCountDeterminesPaginationAndPreservesIdentity",
+        "TestExploreBangumiCategoryZeroAndLastPage",
+        "TestExploreBangumiClearedSortIsDistinctFromMissingSort",
+        "TestExploreProviderErrorsAndDetailIDMismatch",
+        "TestExploreImageOriginsCannotBecomeArbitraryFetches",
+        "TestDetailAppendedIMDbAndRegionalAliases",
+        "TestSearchIdentityMismatchAndInvalidIMDbRejected",
+        "TestAliasesAreBoundedAndUnsafeValuesSkipped",
+        "TestSearchCardsDoNotClaimExternalIdentity",
+        "TestDetailRecommendationsCastAndEnglishFallback",
+        "TestFallbackCannotChangeSourceIdentity",
+        "TestDetailFailsWrongIDOrMissingAppendedData",
+        "TestSeasonPreservesEpisodeIDDateAndSpecials",
+        "TestSeasonRejectsDuplicateOrForeignEpisode",
+        "TestPersonBiographyFallbackAndCreditRoleMerge",
+        "TestUntrustedImagesAndCredentialEchoAreRemoved",
+        "TestRecommendSourcesOriginalOrderAndIndependentCopy",
+        "TestRecommendRejectsUnknownSourcesAndInvalidPagesBeforeRequest",
+        "TestRecommendTMDBOriginalRoutesLanguageUnionAndIdentity",
+        "TestRecommendDoubanNativeCollectionRoutingAndPagination",
+        "TestRecommendDoubanLatestUsesNativeReleaseSort",
+        "TestRecommendBangumiCalendarFlattensPagesAndKeepsNativeIdentity",
+        "TestRecommendAniListNativeFeedAndSeasonBoundaries",
+        "TestRecommendAniListSeasonUsesShanghaiDay",
+        "TestRecommendNativeBusinessErrorsNeverBecomeEmptySuccess",
+        "TestRecommendNativePaginationUsesRawCountAndStopsAtBound",
+        "TestSourceInformationUsesOriginalAppendListAndFullResponse",
+        "TestSourceNamesActualFixedAST",
+        "TestOriginalMessageSearchYearBranchesUseActualHTTP",
+        "TestOriginalMessageSearchMultiDoesNotApplyTypedContainment"
+      ],
+      "root_count": 57,
+      "failed": [],
+      "package_elapsed_seconds": [
+        0.999
+      ]
+    },
+    "recognize_sdk_source_cases": {
+      "file": "work/plugin-no-official-auth-20261026/modules43-recognize-sdk-source-tests.jsonl",
+      "roots": [
+        "TestSourceInformationUsesOriginalAppendListAndFullResponse",
+        "TestOriginalModuleRecognizeActualSDKSourceOracle"
+      ],
+      "root_count": 2,
+      "failed": [],
+      "package_elapsed_seconds": [
+        0.82,
+        4.34
+      ]
+    }
+  },
+  "failed_attempts_retained": [
+    {
+      "file": "messages42-history-source-tests.jsonl",
+      "cause": "owned SDK sender fixture endpoint was empty; corrected fixture to actual owned HTTP204 sink; no production boundary weakened"
+    },
+    {
+      "file": "messages42-history-proof-tests.jsonl",
+      "cause": "owned core create fixture left statistics sharing undefined; seeded its own original settings share=false; no external statistics call"
+    },
+    {
+      "file": "messages42-history-final-race-tests.jsonl",
+      "cause": "test changed process-global time.Local while App background logs ran; replay now seeds a prior-process protected timestamp instead, production unchanged for this race"
+    },
+    {
+      "production_bug": "new encrypted private source history initially rejected by prior strict bare-Notification receipt validator",
+      "fix": "strictly authenticate encrypted source columns, public projection, recorded UTC offset/time index against accepted route snapshot; no timeout increase or swallowed integrity error"
+    },
+    {
+      "file": "modules43-sync-caller-provider-boundaries-race-tests.jsonl",
+      "cause": "new test assumed encrypted delivery diagnostics were clear SQL columns; now authenticates actual private ledger via existing readPluginMessage; no production change"
+    }
+  ],
+  "code_sha256": {
+    "internal/app/plugin_original_web_history.go": "5861f4d6c6a847d4e6f4365ac80f0715eb3991863d0c3bc752b98de23fe7f8db",
+    "internal/app/plugin_original_command_ingress.go": "e9d6f6643d7b870385db9dec13d99c22bcba855c48fa73a96397d70488f9a582",
+    "internal/app/notifications.go": "f3aee23f0914f650dc5f2be2f547e70676936b68eedb3862e11aff55264630d7",
+    "internal/app/plugin_original_notice.go": "925353cde3d3326e66ce4e6b3f74f835fa1728efab8266ca8dc983493c551569",
+    "internal/app/plugin_notice_v2.go": "520895b0f602696676bb10cc1bfd65e81ab044739c3b6be29318fb8e111d67b5",
+    "internal/app/plugin_notice_v2_proof.go": "38641287fc5ea8b00c90e198728f88a4248b27c4ce58b5b6f0a2ba9b7dac95e6",
+    "internal/app/plugin_notice_delivery.go": "8ca86b5f5259919a6904ce5d24a6990e78bd611a23cfcf7062ecb5956c623d15",
+    "internal/app/plugin_original_recognize_override.go": "e2b723feed528fb643f6a5703a674042c23a992119b356e460564a3a46596098",
+    "internal/app/core_business_source_facts.go": "2b37dbdf33c25296d248b697cb7d4d9bce09396f079c984b6e6cce0d6cf5bcdc",
+    "internal/catalog/source_information.go": "d96c1a33aafd11a4666121f11b5cfda13d17dab958df3c7d4ace15fff8c0c3cf",
+    "internal/app/plugin_module_process_web_messages_test.go": "e7f4f3be49119ba1e1d15df6389499a9e91823de00a0edf62a3ffcc2aa09a22b",
+    "internal/app/plugin_original_web_history_test.go": "96c161e5c353e1a29f27adb9a0f9e9bfe56d43e653dc6b2483de826d17e1c6c6",
+    "internal/app/plugin_original_web_history_proof_test.go": "5c3866cccb6f0abf2b265c0a356a2a1628041c9191637eb430ee76d1ee14a5f9"
+  },
+  "archived_artifacts": {
+    "testdata/standard-web-message/evidence/messages42-source-replay.log.gz": {
+      "sha256": "23ed578d9d04c42242ba9e65abb80836eab24550028f2f045f43998f2a8022f7",
+      "bytes": 98
+    },
+    "testdata/standard-web-message/evidence/messages42-source-replay-final.log.gz": {
+      "sha256": "3a2015bbfe8758a351bb6db4369a46881a5a3c24280a136545168e01c3bc97dc",
+      "bytes": 104
+    },
+    "testdata/standard-web-message/evidence/messages42-history-source-tests.jsonl.gz": {
+      "sha256": "88817042d380e64de59c274330f3c62a24b5fcdd2988f61c39aa16b29d8ddff1",
+      "bytes": 9346
+    },
+    "testdata/standard-web-message/evidence/messages42-history-source-final-tests.jsonl.gz": {
+      "sha256": "269d3614ca1728bcd8ef854d416059f4114f618998e476bb0010f75d13c0c4df",
+      "bytes": 20767
+    },
+    "testdata/standard-web-message/evidence/messages42-history-proof-tests.jsonl.gz": {
+      "sha256": "c81fa9b4d4f0d904b6ca8d535ab683c403395016b63d71566734883620d9d4fa",
+      "bytes": 1422
+    },
+    "testdata/standard-web-message/evidence/messages42-history-proof-final-tests.jsonl.gz": {
+      "sha256": "ce5ab3adc59e73cbbe3e26c86ccd902414b9942f6dd256b0ed354dae09cf7d08",
+      "bytes": 1250
+    },
+    "testdata/standard-web-message/evidence/messages42-history-final-race-tests.jsonl.gz": {
+      "sha256": "f3f504c9714b18f55c36de2f0bd300f976b182e37510b2e6b3ec309a26b4664c",
+      "bytes": 4228
+    },
+    "testdata/standard-web-message/evidence/messages42-history-timestamp-final-race-tests.jsonl.gz": {
+      "sha256": "6d71b396d1ab605618c13d6ad8a676f0ecde5f7005634a1380b001afdcd35dfc",
+      "bytes": 3975
+    },
+    "testdata/standard-web-message/evidence/messages42-module-notice-sourceadd-final-tests.jsonl.gz": {
+      "sha256": "d5e86a035c566525a35d37d339dfbcd043a3dbd5132083b655a358634a9df13b",
+      "bytes": 20426
+    },
+    "testdata/standard-web-message/evidence/modules43-catalog-final-tests.jsonl.gz": {
+      "sha256": "fb98b1e53c99e8a646c7e21377775b7e1083f76411744768f0495f85072a3a50",
+      "bytes": 8187
+    },
+    "testdata/standard-web-message/evidence/modules43-recognize-sdk-source-tests.jsonl.gz": {
+      "sha256": "f5abb6c47a76d13774b87315b540c060cb5d23034d2e355dbaf519a84578f777",
+      "bytes": 5048
+    },
+    "testdata/standard-web-message/evidence/modules43-core-notice-initial-tests.jsonl.gz": {
+      "sha256": "66dd27fdc70db9e75a7b0aafe97b99718c5ec2106ae7aa277912141cd06af3df",
+      "bytes": 3700
+    },
+    "testdata/standard-web-message/evidence/messages42-process-compile.log.gz": {
+      "sha256": "16ef9ef552bb9f2f1ec8048cdf9ac934a66b4ee8026770ba904db2eeb0a9c5b9",
+      "bytes": 106
+    },
+    "testdata/standard-web-message/evidence/messages42-process-linux-build.log.gz": {
+      "sha256": "623fbc45695bef3160c084e69b9f59bf64333e5a61570e95b5f3644ac2b8f7d3",
+      "bytes": 55
+    }
+  },
+  "remaining": [],
+  "production_gate": {
+    "test": "TestPluginWebMessagesProductionCLI",
+    "test_binary": "work/plugin-no-official-auth-20261026/messages42-process-linux.test",
+    "test_binary_sha256": "c6fd03398f6cf53155375cc444b049555f279b8e22b726d56c824a39e4540e91",
+    "environment": [
+      "PLUGIN_PROCESS_SERVER_BINARY",
+      "OWNED_WEB_INPUT_BINARY",
+      "OWNED_WEB_NOTICE_BINARY",
+      "OWNED_WEB_CALLER_BINARY"
+    ],
+    "browser_opt_in": "PLUGIN_PROCESS_WEB_BROWSER_STATE; .input/.emit/.restart/.done controlled request files",
+    "remote_test_binary": "messages42-final-process-linux.test"
+  },
+  "final_incremental_regression": {
+    "roots": 32,
+    "seconds": 35.737,
+    "result": "PASS",
+    "file": "testdata/standard-module-host/evidence/messages42-modules43-true-callers-final-regression-tests.jsonl.gz",
+    "scope": "current42 history/input/notice receipt and provider0 core/API consumption; sync/async source20cases +actualasyncadd andsynccompletion callers +originalsourceadd/completion+servicesprecheck/create; collections overlap earlier results"
+  },
+  "async_caller_race": {
+    "roots": 1,
+    "seconds": 4.64,
+    "result": "PASS",
+    "file": "testdata/standard-module-host/evidence/modules43-async-caller-final-race-tests.jsonl.gz"
+  },
+  "final_extra_artifacts": {
+    "testdata/standard-module-host/evidence/messages42-modules43-async-final-regression-tests.jsonl.gz": "b104f4009329bcada9bdc9be44a9d8a02b63d9c4b1a643a1b17a69071f88f082",
+    "testdata/standard-module-host/evidence/modules43-async-caller-final-race-tests.jsonl.gz": "d87a96d72d00e5414682e07eda8bc5b74ef191a12cd2496ebf7fada4865c26a9",
+    "testdata/standard-module-host/evidence/messages42-process-linux-final-build.log.gz": "d7f27e94104642031bf9215a34bab1c826cad0ec3a87d024b9d448f79168918b",
+    "testdata/standard-module-host/modules43-host-call-audit.json.gz": "a3b79181a05dbea9e3fc038ca0c64eedaec1882408e35bfc605baebe577ebfbe",
+    "testdata/standard-module-host/modules43-download-transfer-storage-handoff.json.gz": "3740c75c6db8c6c35320498558357449828f3073fb4ffdbc1ffa51b8844f80b7",
+    "testdata/standard-module-host/evidence/modules43-true-sync-callers-source-tests.jsonl.gz": "844b89c248c823cc6e118a76d4cddd1f6afe45968f7b162f84b91b03258cffa6",
+    "testdata/standard-module-host/evidence/modules43-async-sync-callers-source-replay.log.gz": "aff83ee95b807a13a9fc506701ffc0e3af10076e5cb7787d5c994d4ee59b7afc",
+    "testdata/standard-module-host/evidence/modules43-sync-caller-provider-boundaries-race-tests.jsonl.gz": "4d78e92f426db7291d4d823e3b2200d76f9755811580438893a046975b93d18f",
+    "testdata/standard-module-host/evidence/modules43-sync-caller-provider-boundaries-final-race-tests.jsonl.gz": "fdddd674c297f527f561653cc94d26d138f7a1aa7ba3f834937f09287b622628",
+    "testdata/standard-module-host/evidence/messages42-modules43-true-callers-final-regression-tests.jsonl.gz": "1fae4e481368123b2d6e4c8c5213d5cbabf7b8730c90a61448fcf044d2b088fe"
+  },
+  "sync_caller_and_missing_provider_race": {
+    "roots": 2,
+    "seconds": 7.449,
+    "result": "PASS",
+    "file": "testdata/standard-module-host/evidence/modules43-sync-caller-provider-boundaries-final-race-tests.jsonl.gz"
+  },
+  "acceptance_recommendation": "验收通过",
+  "acceptance_owner": "root verified source/target/actual evidence and accepted row42 only",
+  "related_rows": [
+    40,
+    41,
+    43
+  ],
+  "acceptance_scope": "ordinary plugin SDK/core notifications, source routing/window/history/real module delivery and required ordinary Web history/rendering; no new channel business, AI/workflow or user FIFO",
+  "related_outstanding": [
+    "whole43 remaining catalog/resource/downloader/transfer/local storage consumers and current prepare duplicate recognition are separately incomplete",
+    "whole40/41 source host/preset/media interaction scope audit remains root decision; this report does not accept entire rows from one message card"
+  ],
+  "production_verification": {
+    "server_sha256": "f37e0d1205539e0a44adee61d616af0a7934b33939cbd21e494b42b0e1316d9e",
+    "inputs": 3636,
+    "input_drift_during_build": [],
+    "linux_arch": "linux-amd64 CGO0",
+    "cli": {
+      "seconds": 0.78,
+      "main_pids": [
+        2422140,
+        2422171
+      ],
+      "input_worker_pids": [
+        2422151,
+        2422181
+      ],
+      "result": "PASS",
+      "file": "testdata/standard-web-message/evidence/messages42-final-cli-production.log.gz",
+      "verified": [
+        "actual cmd/server cookie-auth command/input/cancel -> actual separate SDK",
+        "stored/hidden/failed SDK notifications -> actual owned HTTP204 receiver",
+        "history-before-failed-delivery and no forged save_historyFalse records",
+        "shared ignored-role FIFO inspected once without a second production UI consumer",
+        "real cold main/SDK, stable history IDs, no completed notice resend, anonymous401"
+      ]
+    },
+    "browser": {
+      "seconds": 772.59,
+      "result": "PASS",
+      "file": "testdata/standard-web-message/evidence/messages42-final-browser-production.log.gz",
+      "ui_driver": "root actual IAB, real f37 embedded UI and actual separately compiled SDK; screenshots/AX/DOM/HTTP readbacks archived",
+      "verified": [
+        "trimmed /owned -> real plugin.action + action0, pending next reply -> actual input_text with no action0, quit actualcancel, blank nochange",
+        "stop actual owned main -> send draft/error preserved -> start actual main and successful retry",
+        "history initial20 -> actual HTTP failure preserves20; pinned source no error slot hides button, close/reopen recovers; append actual30 then empty",
+        "ordinary SVG natural90x60, Markdown strong, actual link new tabs; Notification extra note ignored in source and API note{}",
+        "cold Cookie/shortcut URL/history30 stable IDs -> newSDK events JSONnull -> Enter adds31; blank retains31, no replay"
+      ],
+      "history_counts": {
+        "before_cold": 30,
+        "after_cold": 30,
+        "after_enter": 31,
+        "after_blank": 31
+      },
+      "cold_sdk_pids": [
+        2442274,
+        2444722
+      ],
+      "cleanup": "all owned fixtures uninstalled, server/test exited, root closed tabs32/33/34 and tunnel95023/resetviewport"
+    }
+  },
+  "note_exact_source_behavior": {
+    "source": [
+      "B/app/schemas/message.py:207-260",
+      "B/app/plugins/__init__.py:328-341",
+      "B/app/chain/__init__.py:1664",
+      "B/app/db/message_oper.py:20-70"
+    ],
+    "oracle": "testdata/standard-web-message/note-source-oracle.json",
+    "runtime": "development-only Pydantic2.13.4 executes pinned AST; not a claim of full old service/runtime",
+    "verified": "Notification has no note field, base post_message ignores note, history default{}; separate history DTO accepts note. Actual SDK regression2.783s and browser note{} agree. No production change was made to force unsupported Notification note through.",
+    "component_note": "testdata/standard-web-message/evidence/messages42-note-component-synthetic.log.gz; actual Vue mount of fixed source MessageCard and target dialog, owned synthetic history input/Vuetify slots, identical note title/subtitle output; component-synthetic, not actual SDK note sending"
+  },
+  "pagination_producer": {
+    "count": 23,
+    "prefix": "Owned older-",
+    "method": "23 actual separate SDK caller -> host post_message module -> owned recipient required204, each response requiredattempted1/failed0; no SQL seed or mock host",
+    "evidence": "testdata/standard-web-message/evidence/messages42-pagination-sdk-production.json.gz",
+    "caveat": "exact response buffers were not persisted because post-producer readback initially called startswith on nullable title; all23 response checks had already completed. Corrected only readback, did not resend. No direct receiver counter/packet observation claimed."
+  },
+  "read_only_helper": {
+    "file": "testdata/standard-web-message/verify_browser.py",
+    "tested": "independent owned f37 main gate42.83s PASS, cookie-only history/events read, credentials/cookie memory-only, no config token reveal or business mutation; completed .done and uninstalled/stopped",
+    "usage": "python3 verify_browser.py --state /tmp/light-media-plugin-scope-dRZTQ91A/messages42-browser-state.json --phase after-command --previous before.json --out after-command.json",
+    "caveat": "same-source recipient aggregate receipts included only when their origin matches; receiver has no read API; script never probes POST-only recipient, never consumes SSE, SDK null event list retained in raw output"
+  },
+  "browser_expectation_corrections": [
+    "parallel real23 SDK deliveries mean all-history equality is invalid for input reply check; actual reply input_text was delivered and produced no action0",
+    "new cold worker has nil events -> JSONnull, not[]; raw data preserved; observer count treats null aszero",
+    "source VInfiniteScroll has no error slot; Vuetify3.7.3 renderSide line181 returns missing error slot, so recovery is close/reopen rather than invented retry button",
+    "IAB tab inventory delayed; actual link tabs33/34 were later observed and closed; initial no-tab assumption corrected",
+    "progress message total33 was a reporting typo; actual producer JSON/browser readbacks both30; no real rows changed"
+  ],
+  "code_sha256_at_f37": {
+    "internal/app/plugin_original_web_history.go": "5861f4d6c6a847d4e6f4365ac80f0715eb3991863d0c3bc752b98de23fe7f8db",
+    "internal/app/plugin_original_command_ingress.go": "e9d6f6643d7b870385db9dec13d99c22bcba855c48fa73a96397d70488f9a582",
+    "internal/app/notifications.go": "f3aee23f0914f650dc5f2be2f547e70676936b68eedb3862e11aff55264630d7",
+    "internal/app/plugin_original_notice.go": "925353cde3d3326e66ce4e6b3f74f835fa1728efab8266ca8dc983493c551569",
+    "internal/app/plugin_notice_v2.go": "520895b0f602696676bb10cc1bfd65e81ab044739c3b6be29318fb8e111d67b5",
+    "internal/app/plugin_notice_v2_proof.go": "38641287fc5ea8b00c90e198728f88a4248b27c4ce58b5b6f0a2ba9b7dac95e6",
+    "internal/app/plugin_notice_delivery.go": "8ca86b5f5259919a6904ce5d24a6990e78bd611a23cfcf7062ecb5956c623d15",
+    "internal/app/plugin_original_recognize_override.go": "e2b723feed528fb643f6a5703a674042c23a992119b356e460564a3a46596098",
+    "internal/app/core_business_source_facts.go": "2b37dbdf33c25296d248b697cb7d4d9bce09396f079c984b6e6cce0d6cf5bcdc",
+    "internal/catalog/source_information.go": "d96c1a33aafd11a4666121f11b5cfda13d17dab958df3c7d4ace15fff8c0c3cf"
+  },
+  "later_tests_only": [
+    "note-source-oracle and actual SDK note assertion added after f37; production Notification/reader unchanged, actual browser verifies same branch"
+  ],
+  "browser_and_production_artifacts": {
+    "testdata/standard-web-message/evidence/messages42-browser-input.ax.txt.gz": {
+      "sha256": "72e336011867bf189393a868297b6a5cc9f1c73164892ebf1bce095258afd658",
+      "bytes": 463
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-network-failure.png": {
+      "sha256": "3a6b2e222798d6dc7543b51b0ed13c504b3d5989e16c77e7fafe6834f26f0723",
+      "bytes": 34602
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-read-cold.json.gz": {
+      "sha256": "66fb58bdd800325ddca03e27cc64dd644f2bf4fdc2599e741c670954b8c52766",
+      "bytes": 893
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-cold.png": {
+      "sha256": "0d0eccf75b77e20c978d5e41f9c95274e774a0ae28cbef5c142a29384fe1af31",
+      "bytes": 40203
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-initial.png": {
+      "sha256": "cb0fbce27637269c2b32ea8eaa4cebeffe0823eb8d94da2e866a87cebdc05e0a",
+      "bytes": 32048
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-network-failure.ax.txt.gz": {
+      "sha256": "a60f5844c92d6123b3a00cb239ffcd0ea20de1539ae34f1a2365be801d63aed2",
+      "bytes": 503
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-input.png": {
+      "sha256": "067a8cfbb8a5aea2ddc27e9097524fa7e031e7d54d307c4c4d4668e733d34257",
+      "bytes": 31877
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-state-readback.json.gz": {
+      "sha256": "e324767f2606a1d11dc4e81e410f00065b442bd0bede0ef0e31079bacdc53513",
+      "bytes": 785
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-read-before-cold.json.gz": {
+      "sha256": "223da1112664fc179402ab8440179bf07f9ba798f6843c7cd82c702598177627",
+      "bytes": 906
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-read-command.json.gz": {
+      "sha256": "49ded6b91f6572fe168a50239ff876117afaddb79e95afe6690bcfac343edc21",
+      "bytes": 884
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-cover.png": {
+      "sha256": "32f7c9ebf24ceb5d3148c511f92aafee2767db1ead7c9e5bfe367654060aaab9",
+      "bytes": 35438
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-page1.json.gz": {
+      "sha256": "35650fd1380c53ae2a9935f55057aca5dca34d56c4abe7df143500242630a7fe",
+      "bytes": 155
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-pagination-failure.ax.txt.gz": {
+      "sha256": "76543cb30da89f019d7dc084e60bad4809851ddc98d73a31e3cba2668f153e40",
+      "bytes": 677
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-link.png": {
+      "sha256": "dc2e331ee8c1c5d8f667b54a7a5f890c7e72340963b3891810e224c556886e40",
+      "bytes": 25039
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-read-reply.json.gz": {
+      "sha256": "bca7425638dec4bb23b75456fb95457201620624294876a55195cbb08b33e133",
+      "bytes": 897
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-empty.png": {
+      "sha256": "88c34e0c2ee3d12d9f55a26086c7c309a20a846017118dd66f1b17642e209ad7",
+      "bytes": 39529
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-blank.png": {
+      "sha256": "89ea2088c51634af6be367978a2d7cf05aa8850d6f51060d93a9a9d5b7208ef4",
+      "bytes": 41158
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-cold.ax.txt.gz": {
+      "sha256": "c97425a9ba34ec2afd4f168e15566cccf3931d90d3989567ea9ae5732bd9e06e",
+      "bytes": 730
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-read-blank.json.gz": {
+      "sha256": "2c1789e29cda21d80f61b7953f2c2a830728a01b4b13e7100f4237468004047a",
+      "bytes": 1007
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-pagination-failure.png": {
+      "sha256": "9610752594d8d1e67d230ccf5d596d0b93bab5eea05db1f7b3d0bdf6ef0641a8",
+      "bytes": 40279
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-read-enter.json.gz": {
+      "sha256": "f00014a35949c102d0ec8f0a9d9423ede139a7f20030bfebb86d9141becf2fd7",
+      "bytes": 1007
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-empty.ax.txt.gz": {
+      "sha256": "b34f9e0203d0925fb2948eeeebb747d0642d9470b6992bb308940752998d1aa3",
+      "bytes": 343
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-initial.ax.txt.gz": {
+      "sha256": "a53fb3059027fb4b7776b786909580e2b814f5fb44f59908e86811b26441dc87",
+      "bytes": 483
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-cover.ax.txt.gz": {
+      "sha256": "425dd2e4c8f8b54188de9bc05c2dc1afa8b1c42ac125e1e3ffee0bef58b045da",
+      "bytes": 578
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-all-history.json.gz": {
+      "sha256": "65a24f22f3a71ab0ab1b03c3202a92058284c733d55399f9a6fa75f0bd06f4f2",
+      "bytes": 516
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-link.ax.txt.gz": {
+      "sha256": "3c0629931f0f3292ff1c0c475115d0f1acb0d51e4fab90fb4b681458d4d5b31a",
+      "bytes": 219
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-read-reply-full.json.gz": {
+      "sha256": "931591ab709d9dd5b02a42595bb34e7698d2ef5ecb957e1bc517e9e62442ef3d",
+      "bytes": 1229
+    },
+    "testdata/standard-web-message/evidence/messages42-browser-blank.ax.txt.gz": {
+      "sha256": "76840d37c6b829d7e32bdac6373749801220da1ee276ac750dfc6c10726c35de",
+      "bytes": 374
+    },
+    "testdata/standard-web-message/evidence/messages42-final-cli-production.log.gz": {
+      "sha256": "1ccb8ea25b1b2abe6fd34d9fb6114ff33707d8af646e9efc0846cc0b8f98bee3",
+      "bytes": 407
+    },
+    "testdata/standard-web-message/evidence/messages42-final-browser-production.log.gz": {
+      "sha256": "9762e62e90822635f297d3ec888133e9032b15a617cc05108ee01c9fd2703eca",
+      "bytes": 455
+    },
+    "testdata/standard-web-message/evidence/messages42-pagination-sdk-production.json.gz": {
+      "sha256": "f773486ada4821ff40b57e231b4dc8560ec8a3abb2ea46ed9a3c52e32d6fea0d",
+      "bytes": 731
+    },
+    "testdata/standard-web-message/evidence/messages42-readonly-after-pagination.json.gz": {
+      "sha256": "e0320aea2349ba0bdad92057cdcd61f7bfeb4e134e603762536851af196ea0c4",
+      "bytes": 1661
+    },
+    "testdata/standard-web-message/evidence/messages42-readonly-validation-output.json.gz": {
+      "sha256": "e22f6744d2833ef345f469e97e2b053a1f0170152f314b1cd7bb3d0fa15a8571",
+      "bytes": 653
+    },
+    "testdata/standard-web-message/evidence/messages42-readonly-helper-production.log.gz": {
+      "sha256": "f75401aa6e5c8a723f1aabdd45cc3748251bc91958c7d3ab2adf86575f0f868a",
+      "bytes": 454
+    },
+    "testdata/standard-web-message/evidence/messages42-note-source-replay.log.gz": {
+      "sha256": "859bc71649b9002f88437ed5ae73d850112b92bfc0a2558389bd5ea752a02f12",
+      "bytes": 128
+    },
+    "testdata/standard-web-message/evidence/messages42-note-actual-sdk-source-tests.jsonl.gz": {
+      "sha256": "140876a5e339802000d71cc8395d32a032d2e99af6d9b44283b37fa0f78deed1",
+      "bytes": 1092
+    },
+    "testdata/standard-web-message/evidence/messages42-note-component-synthetic.log.gz": {
+      "sha256": "186e5f1c531795a40a7ee5d035f8ab834e6ec4bb951990c213e41e8aa132f604",
+      "bytes": 221
+    },
+    "testdata/standard-web-message/evidence/integrated-20261027-build-result.json.gz": {
+      "sha256": "9d6e2fed79180c6dd59f132ded32e591692323fa36be399bf0ee408104a62800",
+      "bytes": 667
+    }
+  },
+  "verification_boundary": "normal Linux main, source AST/protocol replay, actual SDK/HTTP and component-synthetic evidence are labeled separately; owned repositories/accounts/recipients are synthetic fixtures, not real external Telegram/Slack/etc channel validation"
+}

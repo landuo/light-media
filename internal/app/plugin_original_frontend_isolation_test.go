@@ -34,7 +34,7 @@ func TestPluginOriginalFrontendCloneUpgradeSameVersionAndForceFailure(t *testing
 	a.wg.Wait()
 	sourceBefore := originalFrontendReadDescriptor(t, a, cookie, source)
 	cloneBefore := originalFrontendReadDescriptor(t, a, cookie, clone)
-	if cloneBefore.PluginID != source || cloneBefore.Version != "1.0" || cloneBefore.PackageSHA256 != sourceBefore.PackageSHA256 || cloneBefore.EntryPath == sourceBefore.EntryPath {
+	if cloneBefore.PluginID != source || cloneBefore.Version != "1.0" || cloneBefore.PackageSHA256 == sourceBefore.PackageSHA256 || cloneBefore.EntryPath == sourceBefore.EntryPath {
 		t.Fatal("clone UI confused display version or shared URL")
 	}
 	cloneBytes := callTest(t, a.Handler(), "GET", "/api"+cloneBefore.EntryPath, "", cookie, "").Body.Bytes()

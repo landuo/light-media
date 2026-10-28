@@ -21,6 +21,10 @@ import { VProgressCircular } from 'vuetify/components/VProgressCircular';
 import { api, errorText } from '../api';
 import RecommendShelf from './RecommendShelf.vue';
 import {
+  appendExtraRecommendations,
+  type ExtraRecommendSource,
+} from '../features/plugin-catalog-sources';
+import {
   recommendCategories,
   recommendEnabled,
   recommendSourceVisible,
@@ -60,17 +64,37 @@ async function loadSettings() {
   loadError.value = '';
   try {
     const [catalog, saved] = await Promise.all([
-      api<{ sources: RecommendSource[] }>('/catalog/recommend/sources'),
+      api<{ sources: RecommendSource[]; extra_sources?: ExtraRecommendSource[] }>(
+        '/catalog/recommend/sources',
+      ),
       api<{ enabled: Record<string, boolean> }>('/catalog/recommend/preferences'),
     ]);
     if (token !== generation) return;
-    sources.value = catalog.sources || [];
+    sources.value = appendExtraRecommendations(
+      sources.value.length ? sources.value : catalog.sources || [],
+      catalog.extra_sources || [],
+    );
     preferences.enabled = recommendEnabled(sources.value, saved.enabled);
     loaded.value = true;
   } catch (error) {
     if (token === generation) loadError.value = errorText(error);
   } finally {
     if (token === generation) loading.value = false;
+  }
+}
+async function loadExtraSources() {
+  try {
+    const catalog = await api<{
+      sources: RecommendSource[];
+      extra_sources?: ExtraRecommendSource[];
+    }>('/catalog/recommend/sources');
+    sources.value = appendExtraRecommendations(
+      sources.value.length ? sources.value : catalog.sources || [],
+      catalog.extra_sources || [],
+    );
+    preferences.enabled = recommendEnabled(sources.value, preferences.enabled);
+  } catch (error) {
+    loadError.value = errorText(error);
   }
 }
 function openSettings() {
@@ -80,6 +104,10 @@ function openSettings() {
 }
 function setAll(enabled: boolean) {
   draft.value = Object.fromEntries(sources.value.map((source) => [source.id, enabled]));
+}
+function toggleDraft(source: RecommendSource) {
+  const enabled = !draft.value[source.id];
+  for (const row of sources.value) if (row.title === source.title) draft.value[row.id] = enabled;
 }
 async function save() {
   const saved = await saveRecommendPreferences(
@@ -114,6 +142,7 @@ onMounted(() => {
 });
 onActivated(() => {
   activated.value = true;
+  void loadExtraSources();
   void locateHeader();
   if (wasDeactivated) void nextTick(() => window.scrollTo({ top: lastScroll, behavior: 'auto' }));
 });
@@ -195,7 +224,7 @@ onUnmounted(() => {
               role="checkbox"
               :aria-checked="draft[source.id]"
               :disabled="preferences.saving"
-              @click="draft[source.id] = !draft[source.id]"
+              @click="toggleDraft(source)"
             >
               <VIcon
                 :icon="draft[source.id] ? 'mdi-check-circle' : 'mdi-circle-outline'"

@@ -1,0 +1,29 @@
+{
+  "accepted": false,
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "server_sha256": "21cbbd9b0200631bb6720e94b47f910c326674ec81ceda2b4013f139f4e96243",
+  "browser_kind": "actual Linux production app and actual browser; plugin/credentials synthetic",
+  "verified": [
+    "central clone JS/CSS/file identities and actual17px CSS",
+    "literal global API uses clone PID2476622; runtime-built source and peer API use source PID2476615",
+    "original folders/PluginOrder raw wire and HTTP200businessfalse preserved",
+    "AppPage customname→AppPage→Page actual fallback"
+  ],
+  "actual_failure": {
+    "trigger": "global no-explicit-signal slow GET started; actual App navigation within1s aborts request; browser CDP net::ERR_ABORTED canceled=true",
+    "effect": "serial RPC context cancellation permanently aborts loaded clone SDK; descriptor/page500 execution_canceled, clone state502; source object remains200/init1",
+    "hold_result": "FAIL738.08s at post-browser clone state502, no pass claim",
+    "independent_production_reproduction": "same21cb production binary, new independent CLI dir;250ms HTTP cancellation then clone state502;FAIL1.43s",
+    "first_slow_attempt": "8s naturally fulfilled between tool calls; excluded as abort evidence",
+    "root_cause": "original module adapter forwarded single HTTP context to generic legacy serial exchange; that transport intentionally destroys an interrupted persistent session",
+    "fix_scope": "original_session.go shields only admitted serial RPC from one caller cancel, drains response under existing bounded runner/application stop; concurrent SDK cancellation contract unchanged; no implicit process restart/init",
+    "status": "implemented locally;7actual SDK roots PASS7.421s; next production binary and real App navigation recovery still required"
+  },
+  "cleanup": "root captured failure then.done;tab37/tunnel55712 closed;test exited1 and owned process/temp cleanup ran",
+  "remaining": [
+    "next-main automatic serial cancellation→same PID/init/config + descriptor/page recovery + actual UI return",
+    "browser refresh/cold read of derived class metadata on next accepted main"
+  ],
+  "evidence_manifest": "evidence-manifest.json"
+}

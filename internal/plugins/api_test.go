@@ -63,3 +63,42 @@ func TestPluginHTTPDeclarationsPathsAndTransport(t *testing.T) {
 		t.Fatal("query order changed")
 	}
 }
+
+func TestPluginHTTPBodylessStatuses(t *testing.T) {
+	// The fixed frontend and FastAPI Response permit a successful no-content
+	// callback. Other empty JSON bodies still fail before being sent to a client.
+	for _, status := range []int{204, 304} {
+		if err := (HTTPResponse{Status: status}).Validate(); err != nil {
+			t.Fatal("bodyless response rejected", status, err)
+		}
+	}
+	if err := (HTTPResponse{Status: 200}).Validate(); err == nil {
+		t.Fatal("empty JSON success accepted")
+	}
+}
+
+func TestPluginHTTPBinaryAndDownloadMetadata(t *testing.T) {
+	raw := []byte{0xff, 0, 1, 0xfe, 10}
+	response := HTTPResponse{Status: 200, Body: raw, Headers: map[string]string{"Content-Type": "application/octet-stream", "Content-Disposition": `attachment; filename="owned.bin"`, "ETag": `"owned"`}}
+	if err := response.Validate(); err != nil {
+		t.Fatal("ordinary binary download rejected", err)
+	}
+	encoded, err := json.Marshal(response)
+	var decoded HTTPResponse
+	if err != nil || json.Unmarshal(encoded, &decoded) != nil || !bytes.Equal(decoded.Body, raw) {
+		t.Fatal("binary bytes changed across existing IPC", err)
+	}
+	response.Headers["Content-Type"] = "text/plain"
+	if response.Validate() == nil {
+		t.Fatal("invalid UTF8 text accepted")
+	}
+	response.Headers["Content-Type"] = "application/octet-stream\nX-Unsafe: header"
+	if response.Validate() == nil {
+		t.Fatal("invalid MIME accepted")
+	}
+	response.Headers["Content-Type"] = "application/octet-stream"
+	response.Headers["Content-Disposition"] = "arbitrary; filename=x"
+	if response.Validate() == nil {
+		t.Fatal("invalid download disposition accepted")
+	}
+}

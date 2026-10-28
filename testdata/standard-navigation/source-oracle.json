@@ -1,0 +1,287 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/core/plugin.py:1133",
+  "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+  "kind": "fixed manager AST; synthetic owned plugin objects",
+  "cases": [
+    {
+      "name": "defaults-and-filter",
+      "raw": "[null,{},\"bad\",{\"key\":\"  details  \"},{\"nav_key\":\"bad/path\"},{\"nav_key\":\"bad key\"}]",
+      "expected": [
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "details",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        }
+      ]
+    },
+    {
+      "name": "python-strings-and-unicode-int",
+      "raw": "[{\"nav_key\":true,\"order\":\"  +١_٢  \",\"title\":[1],\"icon\":{\"x\":2}},{\"nav_key\":[true,null],\"order\":-2.9},{\"nav_key\":\"zero\",\"order\":false}]",
+      "expected": [
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "zero",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "True",
+          "title": [
+            1
+          ],
+          "icon": {
+            "x": 2
+          },
+          "section": "system",
+          "permission": null,
+          "order": 12
+        }
+      ]
+    },
+    {
+      "name": "hash-keys-not-asset-paths",
+      "raw": "[{\"nav_key\":\".\"},{\"nav_key\":\"..\"},{\"nav_key\":\"my\\ttool\"},{\"nav_key\":\"my\\\\tool\"},{\"nav_key\":\"a?b\"},{\"nav_key\":\"a#b\"}]",
+      "expected": [
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": ".",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "..",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "my\ttool",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "my\\tool",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        }
+      ]
+    },
+    {
+      "name": "section-permission-order",
+      "raw": "[{\"nav_key\":\"system\",\"section\":\"invalid\",\"permission\":true,\"order\":\"bad\"},{\"nav_key\":\"start\",\"section\":\"START\",\"permission\":\"admin\",\"order\":true},{\"nav_key\":\"lower\",\"section\":\"discovery\",\"permission\":\"search\",\"order\":\"1_000\"}]",
+      "expected": [
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "lower",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "discovery",
+          "permission": "search",
+          "order": 1000
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "start",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "start",
+          "permission": "admin",
+          "order": 1
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "system",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        }
+      ]
+    },
+    {
+      "name": "huge-integer",
+      "raw": "[{\"nav_key\":\"big\",\"order\":900719925474099312345},{\"nav_key\":\"before\",\"order\":900719925474099312344}]",
+      "expected": [
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "before",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 900719925474099312344
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "big",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 900719925474099312345
+        }
+      ]
+    },
+    {
+      "name": "partial-overflow-boundary",
+      "raw": "[{\"nav_key\":\"first\"},{\"nav_key\":\"overflow\",\"order\":1e1000},{\"nav_key\":\"never\"}]",
+      "expected": [
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "first",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        }
+      ]
+    },
+    {
+      "name": "dict-is-iterable-but-not-rows",
+      "raw": "{\"nav_key\":\"ignored\"}",
+      "expected": []
+    },
+    {
+      "name": "truthy-noniterable-is-caught",
+      "raw": "true",
+      "expected": []
+    }
+  ],
+  "render_cases": [
+    {
+      "name": "one-member",
+      "input": [
+        "vue"
+      ],
+      "expected": {
+        "rows": null,
+        "error": "ValueError"
+      },
+      "strict_go_pair": false,
+      "adaptation": null
+    },
+    {
+      "name": "three-members",
+      "input": [
+        "vue",
+        "assets",
+        "extra"
+      ],
+      "expected": {
+        "rows": null,
+        "error": "ValueError"
+      },
+      "strict_go_pair": false,
+      "adaptation": null
+    },
+    {
+      "name": "null",
+      "input": null,
+      "expected": {
+        "rows": null,
+        "error": "TypeError"
+      },
+      "strict_go_pair": false,
+      "adaptation": null
+    },
+    {
+      "name": "two-character-string",
+      "input": "ab",
+      "expected": {
+        "rows": [],
+        "error": null
+      },
+      "strict_go_pair": false,
+      "adaptation": "Go SDK get_render_mode declares a two-string JSON pair; arbitrary Python iterable/non-string pairs cannot satisfy that typed protocol"
+    },
+    {
+      "name": "nonstring-mode",
+      "input": [
+        false,
+        7
+      ],
+      "expected": {
+        "rows": [],
+        "error": null
+      },
+      "strict_go_pair": false,
+      "adaptation": "Go SDK get_render_mode declares a two-string JSON pair; arbitrary Python iterable/non-string pairs cannot satisfy that typed protocol"
+    },
+    {
+      "name": "nonstring-root",
+      "input": [
+        "vue",
+        7
+      ],
+      "expected": {
+        "rows": null,
+        "error": "AttributeError"
+      },
+      "strict_go_pair": false,
+      "adaptation": null
+    },
+    {
+      "name": "two-key-dictionary",
+      "input": {
+        "vue": "x",
+        "root": "y"
+      },
+      "expected": {
+        "rows": [
+          {
+            "id": "Owned",
+            "url": "/plugin/file/owned/root/remoteEntry.js",
+            "name": "Owned"
+          }
+        ],
+        "error": null
+      },
+      "strict_go_pair": false,
+      "adaptation": "Go SDK get_render_mode declares a two-string JSON pair; arbitrary Python iterable/non-string pairs cannot satisfy that typed protocol"
+    },
+    {
+      "name": "normal-pair",
+      "input": [
+        "vue",
+        "assets"
+      ],
+      "expected": {
+        "rows": [
+          {
+            "id": "Owned",
+            "url": "/plugin/file/owned/assets/remoteEntry.js",
+            "name": "Owned"
+          }
+        ],
+        "error": null
+      },
+      "strict_go_pair": true,
+      "adaptation": null
+    }
+  ]
+}

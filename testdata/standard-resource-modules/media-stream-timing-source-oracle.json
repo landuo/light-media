@@ -1,0 +1,54 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/chain/search.py": "2b04f6d246ea2573081cb72039a78acefb81cd7c895603e0433bab7dc7e7a528",
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/torrents.py": "6c2833fc9a87e9d57881fcdef760d131dd1d36acbc9d5de3d7279cdbd0d96a47",
+    "app/core/context.py": "70a088bd54c748ab44ec467e6a1f1fc5bb5368f818bb16288eca0d15cf98877e",
+    "app/utils/object.py": "0fd0161be3084593a9693244e9ea734c5d949cc23a6e8f34349177a5e220dc1c",
+    "app/schemas/types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+    "app/api/endpoints/site.py": "c352a148fd418f7eb6c91f490d8db4319c91c6ac2d68b920b35b525d1d8372a8"
+  },
+  "kind": "actual pinned media SSE site caller/wrappers/dispatcher; owned two native network responses coordinated by events",
+  "result": {
+    "first_append": {
+      "site_id": 2,
+      "count": 1,
+      "finished": 1,
+      "total": 2,
+      "slow_released": false
+    },
+    "remaining_append_sites": [
+      1
+    ],
+    "calls": [
+      {
+        "method": "async_worker_search_site",
+        "site": 1
+      },
+      {
+        "method": "async_worker_search_site",
+        "site": 2
+      },
+      {
+        "method": "get_search_page_size",
+        "site": 2
+      },
+      {
+        "method": "get_search_page_size",
+        "site": 1
+      }
+    ]
+  },
+  "pages": {
+    "first_append": {
+      "page": 0,
+      "count": 1,
+      "total": 2,
+      "next_page_released": false
+    },
+    "remaining_pages": [
+      1
+    ]
+  }
+}

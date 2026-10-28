@@ -1,0 +1,447 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/tmdb.py:78",
+    "app/chain/__init__.py:470",
+    "app/modules/themoviedb/__init__.py:972",
+    "app/chain/transfer.py:1958",
+    "app/chain/subscribe.py:3795"
+  ],
+  "kind": "Pinned synchronous TmdbChain/ChainBase/provider stage for native internal season consumers.\nOnly registries, plugin callbacks and network response are controlled. Python is\nan offline oracle and is not a runtime dependency of the Go application.\n",
+  "cases": [
+    {
+      "name": "none",
+      "plugin": null,
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode",
+          "id": 1201
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0
+          }
+        }
+      ],
+      "result": [
+        {
+          "air_date": null,
+          "episode_number": 1,
+          "episode_type": null,
+          "name": "Owned native episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        }
+      ],
+      "error_count": 0,
+      "typed_projection": [
+        {
+          "air_date": null,
+          "episode_number": 1,
+          "episode_type": null,
+          "name": "Owned native episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        }
+      ],
+      "typed_sequence_valid": true
+    },
+    {
+      "name": "false",
+      "plugin": false,
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode",
+          "id": 1201
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        }
+      ],
+      "result": false,
+      "error_count": 0,
+      "typed_projection": null,
+      "typed_sequence_valid": false
+    },
+    {
+      "name": "zero",
+      "plugin": 0,
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode",
+          "id": 1201
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        }
+      ],
+      "result": 0,
+      "error_count": 0,
+      "typed_projection": null,
+      "typed_sequence_valid": false
+    },
+    {
+      "name": "dict",
+      "plugin": {},
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode",
+          "id": 1201
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        }
+      ],
+      "result": {},
+      "error_count": 0,
+      "typed_projection": null,
+      "typed_sequence_valid": false
+    },
+    {
+      "name": "list_empty",
+      "plugin": [],
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode",
+          "id": 1201
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0
+          }
+        }
+      ],
+      "result": [
+        {
+          "air_date": null,
+          "episode_number": 1,
+          "episode_type": null,
+          "name": "Owned native episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        }
+      ],
+      "error_count": 0,
+      "typed_projection": [
+        {
+          "air_date": null,
+          "episode_number": 1,
+          "episode_type": null,
+          "name": "Owned native episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        }
+      ],
+      "typed_sequence_valid": true
+    },
+    {
+      "name": "list",
+      "plugin": [
+        {
+          "episode_number": 2,
+          "season_number": 0,
+          "name": "Owned sync plugin episode"
+        }
+      ],
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode",
+          "id": 1201
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0
+          }
+        }
+      ],
+      "result": [
+        {
+          "episode_number": 2,
+          "season_number": 0,
+          "name": "Owned sync plugin episode"
+        },
+        {
+          "air_date": null,
+          "episode_number": 1,
+          "episode_type": null,
+          "name": "Owned native episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        }
+      ],
+      "error_count": 0,
+      "typed_projection": [
+        {
+          "air_date": null,
+          "episode_number": 2,
+          "episode_type": null,
+          "name": "Owned sync plugin episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        },
+        {
+          "air_date": null,
+          "episode_number": 1,
+          "episode_type": null,
+          "name": "Owned native episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        }
+      ],
+      "typed_sequence_valid": true
+    },
+    {
+      "name": "tuple",
+      "plugin": {
+        "__plugin_module_tuple": [
+          {
+            "episode_number": 2,
+            "season_number": 0,
+            "name": "Owned sync plugin episode"
+          }
+        ]
+      },
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode",
+          "id": 1201
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        }
+      ],
+      "result": {
+        "__plugin_module_tuple": [
+          {
+            "episode_number": 2,
+            "season_number": 0,
+            "name": "Owned sync plugin episode"
+          }
+        ]
+      },
+      "error_count": 0,
+      "typed_projection": [
+        {
+          "air_date": null,
+          "episode_number": 2,
+          "episode_type": null,
+          "name": "Owned sync plugin episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        }
+      ],
+      "typed_sequence_valid": true
+    },
+    {
+      "name": "tuple_empty",
+      "plugin": {
+        "__plugin_module_tuple": []
+      },
+      "native": [
+        {
+          "episode_number": 1,
+          "season_number": 0,
+          "name": "Owned native episode",
+          "id": 1201
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0
+          }
+        }
+      ],
+      "result": [
+        {
+          "air_date": null,
+          "episode_number": 1,
+          "episode_type": null,
+          "name": "Owned native episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        }
+      ],
+      "error_count": 0,
+      "typed_projection": [
+        {
+          "air_date": null,
+          "episode_number": 1,
+          "episode_type": null,
+          "name": "Owned native episode",
+          "overview": null,
+          "runtime": null,
+          "season_number": 0,
+          "still_path": null,
+          "vote_average": null,
+          "crew": [],
+          "guest_stars": []
+        }
+      ],
+      "typed_sequence_valid": true
+    },
+    {
+      "name": "native_bad",
+      "plugin": null,
+      "native": [
+        {
+          "name": 123
+        }
+      ],
+      "calls": [
+        {
+          "kind": "plugin",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0,
+            "episode_group": null
+          }
+        },
+        {
+          "kind": "provider",
+          "kwargs": {
+            "tmdbid": 120,
+            "season": 0
+          }
+        }
+      ],
+      "result": null,
+      "error_count": 1,
+      "typed_projection": null,
+      "typed_sequence_valid": false
+    }
+  ]
+}

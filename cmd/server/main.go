@@ -20,10 +20,11 @@ import (
 
 func main() {
 	var addr, dir string
-	var bootstrap bool
+	var bootstrap, safe bool
 	flag.StringVar(&addr, "listen", "127.0.0.1:3120", "HTTP listen address")
 	flag.StringVar(&dir, "data-dir", "./data", "local data directory")
 	flag.BoolVar(&bootstrap, "bootstrap-stdin", false, "one-time encrypted configuration and administrator bootstrap from stdin")
+	flag.BoolVar(&safe, "safe", false, "start management without plugins, schedulers, monitors or automatic synchronization")
 	flag.Parse()
 	absolute, e := filepath.Abs(dir)
 	if e != nil {
@@ -46,13 +47,37 @@ func main() {
 	if e != nil {
 		fatal("invalid_big_memory_mode")
 	}
+	safeEnv, e := safeMode(os.LookupEnv)
+	if e != nil {
+		fatal("invalid_safe_mode")
+	}
+	developer, e := startupBoolean(os.LookupEnv, "DEV")
+	if e != nil {
+		fatal("invalid_plugin_developer_mode")
+	}
+	logRotation, e := app.PluginLogRotationEnvironment(os.LookupEnv)
+	if e != nil {
+		fatal("invalid_plugin_log_rotation")
+	}
+	searchPages, normalizedSearchPages := app.ResourceSearchPagesEnvironment(os.LookupEnv)
+	mediaSearch, normalizedMediaSearch := app.MediaSearchEnvironment(os.LookupEnv)
+	if normalizedMediaSearch {
+		fmt.Fprintln(os.Stderr, `{"level":"WARN","event":"media_search_environment_normalized"}`)
+	}
+	if normalizedSearchPages {
+		// Source Settings reports conversion/fallback. Keep the diagnostic while
+		// withholding raw environment values from this host's structured output.
+		fmt.Fprintln(os.Stderr, `{"level":"WARN","event":"resource_search_pages_normalized"}`)
+	}
+	safe = safe || safeEnv
+	markets := pluginMarketEnvironment(os.LookupEnv)
 	parent, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
 	for {
 		if e = applyRestore(absolute); e != nil {
 			fatal(e.Error())
 		}
-		a, e := app.New(app.Options{DataDir: absolute, Web: web.Handler(), BigMemoryMode: large})
+		a, e := app.New(app.Options{DataDir: absolute, Web: web.Handler(), BigMemoryMode: large, SafeMode: safe, PluginMarketsOverride: markets, PluginDeveloperMode: developer, PluginLogRotation: logRotation, ResourceSearchPages: searchPages, MediaSearch: mediaSearch})
 		if e != nil {
 			fatal(e.Error())
 		}
@@ -111,7 +136,18 @@ func fatal(message string) { fmt.Fprintln(os.Stderr, message); os.Exit(1) }
 // Pydantic bool strings accepted by the original core/config.py setting. An
 // invalid startup value is rejected; plugin HTTP payloads cannot change pools.
 func bigMemoryMode(lookup func(string) (string, bool)) (bool, error) {
-	s, ok := lookup("BIG_MEMORY_MODE")
+	return startupBoolean(lookup, "BIG_MEMORY_MODE")
+}
+
+func safeMode(lookup func(string) (string, bool)) (bool, error) {
+	if _, present := lookup("LIGHT_MEDIA_SAFE_MODE"); present {
+		return startupBoolean(lookup, "LIGHT_MEDIA_SAFE_MODE")
+	}
+	return startupBoolean(lookup, "MOVIEPILOT_SAFE_MODE")
+}
+
+func startupBoolean(lookup func(string) (string, bool), name string) (bool, error) {
+	s, ok := lookup(name)
 	if !ok {
 		return false, nil
 	}
@@ -122,4 +158,18 @@ func bigMemoryMode(lookup func(string) (string, bool)) (bool, error) {
 		return false, nil
 	}
 	return false, strconv.ErrSyntax
+}
+
+func pluginMarketEnvironment(lookup func(string) (string, bool)) *[]string {
+	raw, present := lookup("PLUGIN_MARKET")
+	if !present {
+		return nil
+	}
+	sources := []string{}
+	for _, value := range strings.Split(raw, ",") {
+		if value = strings.TrimSpace(value); value != "" {
+			sources = append(sources, value)
+		}
+	}
+	return &sources
 }

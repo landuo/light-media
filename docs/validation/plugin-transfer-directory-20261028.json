@@ -1,0 +1,124 @@
+{
+  "accepted_increment": true,
+  "complete": false,
+  "indices": [
+    36,
+    37,
+    43
+  ],
+  "scope": "Selected refresh and recursive storage module collection in existing manual organization; ordinary files only for publication. Whole indices remain 42/46.",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "mapping": [
+    {
+      "source": [
+        "app/chain/transfer.py:2393-2478",
+        "app/chain/storage.py:106-116,161-168",
+        "app/chain/__init__.py:298-470"
+      ],
+      "behavior": "Selected get_file_item refresh once; False stops; None dispatches next/native; directory list_files(recursion=false), tuple terminal/list merge; recursion retains child DTO and provider order; BDMV/CERTIFICATE or STREAM parent resolve as one directory candidate.",
+      "target": [
+        "internal/app/plugin_original_transfer_directory.go",
+        "internal/app/plugin_original_transfer_single_extra.go",
+        "internal/app/plugin_original_transfer_collection.go",
+        "internal/app/import_plan.go",
+        "internal/app/organize_manual.go"
+      ],
+      "evidence": [
+        "testdata/standard-module-host/transfer-directory-source-oracle.json:12 actual fixed-source collector cases",
+        "TestOriginalTransferDirectoryCollectorFixedSourceActualSDK",
+        "TestOriginalTransferDirectoryUsesStorageHost",
+        "TestPluginServicesProductionCLI:verifyOwnedProductionDirectoryCollector",
+        "IAB76:preview/refusal/recovery/publication/cold"
+      ]
+    }
+  ],
+  "results": {
+    "fixed_source_cases": 12,
+    "actual_sdk_seconds": 12.574,
+    "related_seconds": 22.79,
+    "related_race_seconds": 67.376,
+    "linux_cli_seconds": 1.67,
+    "linux_browser_gate_seconds": 346.31,
+    "compiler_inputs": [
+      3722,
+      4190
+    ],
+    "inputs_changed": [],
+    "binaries": [
+      {
+        "name": "server-platform39-20261027-linux",
+        "sha256": "eea22407908c775f56614378b6505568d872793761410666efc19944ec5b15cb",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform39-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3722,
+        "changed": [],
+        "elapsed_seconds": 3.71
+      },
+      {
+        "name": "process-platform39-20261027-linux.test",
+        "sha256": "71a2c3e1722c443c9bf759c4fbf092388921aa8bd30cb2e478f1c514872b94eb",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform39-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4190,
+        "changed": [],
+        "elapsed_seconds": 7.41
+      }
+    ],
+    "browser": {
+      "passed": true,
+      "source_clone_pids_before": [
+        626259,
+        626265
+      ],
+      "source_clone_pids_after": [
+        632227,
+        632232
+      ],
+      "actual_hardlinks": 2,
+      "unselected_unchanged": true,
+      "cold_replay": 0,
+      "failure_retains_form": true,
+      "preview_order": "nested E02 then root E01",
+      "browser_tab": 76,
+      "synthetic_inputs": "owned metadata/FileItem providers and generated 22-byte files",
+      "main_sha256": "eea22407908c775f56614378b6505568d872793761410666efc19944ec5b15cb"
+    },
+    "cleanup": "Actual uninstall/API404/TempDir removed, IAB76 closed and SSH34456 stopped."
+  },
+  "adaptations": [
+    "Reuse existing real local guarded snapshot/publication/history/job/cold-recovery pipeline. Provider FileItem metadata is retained, without granting filesystem authority.",
+    "Existing depth16/20000 directory traversal and 2000 selected media bounds remain. Child paths must be direct children of the observed local directory; cyclic/unrelated provider paths are rejected.",
+    "Native filesystem iteration is a local provider boundary; no host sorting of terminal provider order. Directory sibling listings are reused during existing preview/planning instead of issuing fresh per-video get_parent_item/list_files.",
+    "Screenshots contain original JPEG bytes with historical .png filename; alongside DOM and actual HTTP/filesystem proofs. Frontend unchanged; browser executes this actual Linux main and its embedded bundle."
+  ],
+  "red_green": [
+    "Initial actual SDK source get_file_item=False bypassed extension and native scan still returned a real file; reproduced and fixed.",
+    "Screenshot helper initially failed because evidence directory did not exist; created only evidence directory and captured again. This was not an application failure."
+  ],
+  "remaining": [
+    "Blu-ray directory candidate recognition is proven; directory-unit publication/history/ordinary callbacks are NOT implemented or accepted. Existing snapshot guard rejects a directory; never claim stream-file splitting as parity.",
+    "Full directory planner standalone extras, multiple-main ambiguity, metadata match and DTO field filtering remain to be checked/implemented.",
+    "Full existing-host applicability and ordinary event audit; media_exists list-result native ordering; media_files absent native host classification.",
+    "Whole36/37/43/50 remain unaccepted."
+  ],
+  "artifact_manifest": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/manifest.json",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

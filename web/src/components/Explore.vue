@@ -24,6 +24,11 @@ import Draggable from 'vuedraggable';
 import { api, errorText, toast } from '../api';
 import MediaCards from './MediaCards.vue';
 import ExploreFilters from './ExploreFilters.vue';
+import ExtraSourceView from './ExtraSourceView.vue';
+import {
+  appendExtraDiscoverSources,
+  type ExtraDiscoverSource,
+} from '../features/plugin-catalog-sources';
 import {
   createExploreFilters,
   exploreQuery,
@@ -51,10 +56,20 @@ function savedOrder() {
     return normalizeExploreOrder();
   }
 }
-const order = ref(savedOrder());
-const activeTab = ref<ExploreSource>(order.value[0]!);
+const order = ref<string[]>(savedOrder());
+const extraSources = ref<ExtraDiscoverSource[]>([]);
+const extraTabs = ref<ExtraDiscoverSource[]>([]);
+const activeTab = ref<string>(order.value[0]!);
+const availableTabs = computed(() => [
+  ...exploreSources,
+  ...extraTabs.value.map((source) => ({
+    id: source.mediaid_prefix,
+    name: source.name,
+    color: 'primary',
+  })),
+]);
 const tabs = computed(() =>
-  order.value.map((id) => exploreSources.find((source) => source.id === id)!),
+  order.value.map((id) => availableTabs.value.find((source) => source.id === id)!).filter(Boolean),
 );
 const filters = reactive({
   themoviedb: createExploreFilters('themoviedb'),
@@ -79,15 +94,59 @@ const selectedTab = ref(false),
   savingOrder = ref(false);
 let wasDeactivated = false,
   lastScroll = 0;
+function setExtraSources(rows: ExtraDiscoverSource[]) {
+  // Fixed discover.vue keeps appended navigation entries, while its windows
+  // render the latest raw extra-source array, including duplicate prefixes.
+  extraSources.value = rows;
+  extraTabs.value = extraTabs.value.concat(
+    appendExtraDiscoverSources(
+      [
+        ...exploreSources.map((source) => source.id),
+        ...extraTabs.value.map((source) => source.mediaid_prefix),
+      ],
+      rows,
+    ),
+  );
+}
 async function loadOrder() {
   try {
-    const preferences = await api<{ tab_order: string[] }>('/catalog/explore/preferences');
-    if (orderTouched.value || selectedTab.value || !preferences.tab_order?.length) return;
-    order.value = normalizeExploreOrder(preferences.tab_order);
-    activeTab.value = order.value[0]!;
+    const [preferences, catalog] = await Promise.all([
+      api<{ tab_order: string[] }>('/catalog/explore/preferences'),
+      api<{ extra_sources: ExtraDiscoverSource[] }>('/catalog/explore/sources').catch((error) => {
+        toast('插件探索来源读取失败：' + errorText(error), true);
+        return { extra_sources: [] };
+      }),
+    ]);
+    setExtraSources(catalog.extra_sources || []);
+    const available = availableTabs.value.map((source) => source.id);
+    let preferred: string[] = order.value;
+    if (!orderTouched.value && !selectedTab.value) {
+      try {
+        const saved: unknown = JSON.parse(localStorage.getItem(orderKey) || '[]');
+        if (Array.isArray(saved)) preferred = saved.filter((id) => typeof id === 'string');
+      } catch {
+        /* use current order */
+      }
+      if (preferences.tab_order?.length) preferred = preferences.tab_order;
+    }
+    order.value = [...new Set([...preferred.filter((id) => available.includes(id)), ...available])];
+    if (!orderTouched.value && !selectedTab.value) activeTab.value = order.value[0]!;
     rememberOrder();
   } catch (error) {
     toast('标签顺序读取失败：' + errorText(error), true);
+  }
+}
+async function loadExtraSources() {
+  try {
+    const catalog = await api<{ extra_sources: ExtraDiscoverSource[] }>('/catalog/explore/sources');
+    setExtraSources(catalog.extra_sources || []);
+    const available = availableTabs.value.map((source) => source.id);
+    order.value = [
+      ...new Set([...order.value.filter((id) => available.includes(id)), ...available]),
+    ];
+    if (!order.value.includes(activeTab.value)) activeTab.value = order.value[0]!;
+  } catch (error) {
+    toast('插件探索来源读取失败：' + errorText(error), true);
   }
 }
 function rememberOrder() {
@@ -166,6 +225,7 @@ onMounted(() => {
 });
 onActivated(() => {
   activated.value = true;
+  void loadExtraSources();
   void locateHeader();
   if (wasDeactivated) void nextTick(() => window.scrollTo({ top: lastScroll, behavior: 'auto' }));
 });
@@ -251,6 +311,18 @@ onUnmounted(() => {
             没有找到数据
           </div>
         </VInfiniteScroll>
+      </VWindowItem>
+      <VWindowItem
+        v-for="source in extraSources"
+        :key="source.mediaid_prefix"
+        :value="source.mediaid_prefix"
+        :transition="false"
+        :reverse-transition="false"
+      >
+        <ExtraSourceView
+          :source="source"
+          :active="visible && activeTab === source.mediaid_prefix"
+        />
       </VWindowItem>
     </VWindow>
     <VDialog

@@ -1,0 +1,546 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/utils/object.py": "0fd0161be3084593a9693244e9ea734c5d949cc23a6e8f34349177a5e220dc1c",
+    "app/utils/media.py": "1b1931d0d392ea7a8893a70068af583945a52bdddc892353e3892f06cd2084ed",
+    "app/chain/subscribe.py": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab"
+  },
+  "kind": "actual fixed async ChainBase dispatcher/recognition plus async_add prefix; owned model/provider/MetaInfo parser outputs, no old runtime/service",
+  "cases": [
+    {
+      "name": "null",
+      "plugin_result": null,
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "tmdbid": 900043,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": false
+          }
+        },
+        {
+          "kind": "core",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "tmdbid": 900043,
+            "episode_group": null,
+            "cache": false,
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null
+          }
+        }
+      ],
+      "returned": {
+        "source": "themoviedb",
+        "tmdb_id": 900043,
+        "type": "电影",
+        "title": "owned core recognition",
+        "year": "2026",
+        "recognize_cache_hit": true,
+        "tmdb_info": {
+          "id": 900043,
+          "title": "owned TMDB projection",
+          "release_date": "2026-01-01",
+          "poster_path": "/owned.jpg",
+          "overview": "owned provider"
+        },
+        "original_title": "owned original",
+        "overview": "owned override overview"
+      },
+      "error": null,
+      "error_roles": []
+    },
+    {
+      "name": "false",
+      "plugin_result": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "tmdbid": 900043,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": false
+          }
+        }
+      ],
+      "returned": null,
+      "error": null,
+      "error_roles": []
+    },
+    {
+      "name": "zero",
+      "plugin_result": 0,
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "tmdbid": 900043,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": false
+          }
+        }
+      ],
+      "returned": null,
+      "error": null,
+      "error_roles": []
+    },
+    {
+      "name": "empty_dict",
+      "plugin_result": {},
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "tmdbid": 900043,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": false
+          }
+        }
+      ],
+      "returned": null,
+      "error": null,
+      "error_roles": []
+    },
+    {
+      "name": "model",
+      "plugin_result": {
+        "source": "themoviedb",
+        "tmdb_id": 900043,
+        "type": "电影",
+        "title": "owned override recognition",
+        "year": "2026",
+        "recognize_cache_hit": true,
+        "tmdb_info": {
+          "id": 900043,
+          "title": "owned TMDB projection",
+          "release_date": "2026-01-01",
+          "poster_path": "/owned.jpg",
+          "overview": "owned provider"
+        },
+        "original_title": "owned original",
+        "overview": "owned override overview"
+      },
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "tmdbid": 900043,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": false
+          }
+        }
+      ],
+      "returned": {
+        "source": "themoviedb",
+        "tmdb_id": 900043,
+        "type": "电影",
+        "title": "owned override recognition",
+        "year": "2026",
+        "recognize_cache_hit": true,
+        "tmdb_info": {
+          "id": 900043,
+          "title": "owned TMDB projection",
+          "release_date": "2026-01-01",
+          "poster_path": "/owned.jpg",
+          "overview": "owned provider"
+        },
+        "original_title": "owned original",
+        "overview": "owned override overview"
+      },
+      "error": null,
+      "error_roles": []
+    },
+    {
+      "name": "model_without_provider",
+      "plugin_result": {
+        "source": "themoviedb",
+        "tmdb_id": 900043,
+        "type": "电影",
+        "title": "owned override recognition",
+        "year": "2026",
+        "recognize_cache_hit": true,
+        "original_title": "owned original",
+        "overview": "owned override overview"
+      },
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "tmdbid": 900043,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": false
+          }
+        }
+      ],
+      "returned": {
+        "source": "themoviedb",
+        "tmdb_id": 900043,
+        "type": "电影",
+        "title": "owned override recognition",
+        "year": "2026",
+        "recognize_cache_hit": true,
+        "original_title": "owned original",
+        "overview": "owned override overview"
+      },
+      "error": null,
+      "error_roles": []
+    },
+    {
+      "name": "empty_list",
+      "plugin_result": [],
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "tmdbid": 900043,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": false
+          }
+        },
+        {
+          "kind": "core",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "tmdbid": 900043,
+            "episode_group": null,
+            "cache": false,
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null
+          }
+        }
+      ],
+      "returned": null,
+      "error": null,
+      "error_roles": []
+    },
+    {
+      "name": "list_model",
+      "plugin_result": [
+        {
+          "source": "themoviedb",
+          "tmdb_id": 900043,
+          "type": "电影",
+          "title": "owned override recognition",
+          "year": "2026",
+          "recognize_cache_hit": true,
+          "tmdb_info": {
+            "id": 900043,
+            "title": "owned TMDB projection",
+            "release_date": "2026-01-01",
+            "poster_path": "/owned.jpg",
+            "overview": "owned provider"
+          },
+          "original_title": "owned original",
+          "overview": "owned override overview"
+        }
+      ],
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "tmdbid": 900043,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": false
+          }
+        },
+        {
+          "kind": "core",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "tmdbid": 900043,
+            "episode_group": null,
+            "cache": false,
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null
+          }
+        }
+      ],
+      "returned": null,
+      "error": "AttributeError",
+      "error_roles": []
+    },
+    {
+      "name": "all_none_tuple",
+      "plugin_result": [
+        null,
+        null
+      ],
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "tmdbid": 900043,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": false
+          }
+        },
+        {
+          "kind": "core",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "tmdbid": 900043,
+            "episode_group": null,
+            "cache": false,
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null
+          }
+        }
+      ],
+      "returned": {
+        "source": "themoviedb",
+        "tmdb_id": 900043,
+        "type": "电影",
+        "title": "owned core recognition",
+        "year": "2026",
+        "recognize_cache_hit": true,
+        "tmdb_info": {
+          "id": 900043,
+          "title": "owned TMDB projection",
+          "release_date": "2026-01-01",
+          "poster_path": "/owned.jpg",
+          "overview": "owned provider"
+        },
+        "original_title": "owned original",
+        "overview": "owned override overview"
+      },
+      "error": null,
+      "error_roles": []
+    },
+    {
+      "name": "failure",
+      "plugin_result": null,
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "tmdbid": 900043,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "episode_group": null,
+            "cache": false
+          }
+        },
+        {
+          "kind": "core",
+          "method": "async_recognize_media",
+          "args": [],
+          "kwargs": {
+            "meta": null,
+            "mtype": "电影",
+            "tmdbid": 900043,
+            "episode_group": null,
+            "cache": false,
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null
+          }
+        }
+      ],
+      "returned": {
+        "source": "themoviedb",
+        "tmdb_id": 900043,
+        "type": "电影",
+        "title": "owned core recognition",
+        "year": "2026",
+        "recognize_cache_hit": true,
+        "tmdb_info": {
+          "id": 900043,
+          "title": "owned TMDB projection",
+          "release_date": "2026-01-01",
+          "poster_path": "/owned.jpg",
+          "overview": "owned provider"
+        },
+        "original_title": "owned original",
+        "overview": "owned override overview"
+      },
+      "error": null,
+      "error_roles": [
+        "plugin"
+      ]
+    }
+  ],
+  "caller_prefix": {
+    "source": "app/chain/subscribe.py:1076-1133",
+    "meta_parser_boundary": "owned MetaInfo initial org_string only; source statements add year/type/season; existing native full MetaInfo separately validated",
+    "recognize_method": "async_recognize_media",
+    "kwargs": {
+      "meta": {
+        "org_string": "Owned async source",
+        "year": "2026",
+        "type": "电视剧",
+        "begin_season": 2
+      },
+      "mtype": "电视剧",
+      "source": "themoviedb",
+      "mediaid": "900043",
+      "tmdbid": 900043,
+      "doubanid": null,
+      "bangumiid": null,
+      "anilistid": null,
+      "episode_group": null,
+      "cache": false
+    }
+  },
+  "sync_subscription_caller": {
+    "source": [
+      "app/chain/subscribe.py:54-92",
+      "app/chain/subscribe.py:1378-1384"
+    ],
+    "record": {
+      "name": "Owned sync source S03",
+      "year": null,
+      "season": 2,
+      "type": "电视剧",
+      "tmdbid": 900043,
+      "doubanid": "owned-legacy-id",
+      "bangumiid": null,
+      "anilistid": null,
+      "media_source": "themoviedb",
+      "media_id": "900043",
+      "episode_group": "owned-episode-group",
+      "best_version": false,
+      "username": null
+    },
+    "kwargs": {
+      "meta": {
+        "org_string": "Owned sync source S03",
+        "year": null,
+        "begin_season": 2,
+        "type": "电视剧",
+        "tmdbid": 900043,
+        "doubanid": "owned-legacy-id",
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043"
+      },
+      "mtype": "电视剧",
+      "source": "themoviedb",
+      "mediaid": "900043",
+      "tmdbid": 900043,
+      "doubanid": null,
+      "bangumiid": null,
+      "anilistid": null,
+      "episode_group": "owned-episode-group",
+      "cache": false
+    },
+    "method": "recognize_media",
+    "meta_parser_boundary": "owned MetaInfo initial org_string only; source build_subscribe_meta assignments + exact recognition call and ChainBase normalize are executed"
+  }
+}

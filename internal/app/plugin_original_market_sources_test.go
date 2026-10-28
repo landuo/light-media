@@ -156,8 +156,19 @@ func TestPluginOriginalMarketSourcesPersistenceDiscoveryAndActualCards(t *testin
 	if !ok || card.Name != manifest.Name || card.Version != "1.0" || card.RepositoryURL != server.URL+"/good" || card.Installed {
 		t.Fatalf("actual external discovery metadata incorrect: %+v", card)
 	}
-	if _, ok = find(market, badManifest.PluginID); ok {
-		t.Fatal("unsupported contract advertised as installable")
+	if blocked, exists := find(market, badManifest.PluginID); !exists || blocked.Available || blocked.UnavailableReason == "" || blocked.Name != badManifest.Name {
+		t.Fatal("incompatible metadata must remain visible and explicitly not installable", blocked)
+	}
+	unsupportedBody, _ := json.Marshal(map[string]any{"plugin_id": badManifest.PluginID, "repo_url": server.URL + "/unsupported"})
+	rejected := callTest(t, a.Handler(), "POST", "/api/plugins/install", string(unsupportedBody), cookie, "")
+	var rejectedResult struct {
+		Data struct {
+			Success bool   `json:"success"`
+			Message string `json:"message"`
+		} `json:"data"`
+	}
+	if rejected.Code != 200 || json.Unmarshal(rejected.Body.Bytes(), &rejectedResult) != nil || rejectedResult.Data.Success || rejectedResult.Data.Message == "" {
+		t.Fatal("unsupported contract installation was not rejected", rejected.Body.String())
 	}
 	if downloads.Load() != 0 {
 		t.Fatal("market discovery downloaded executable")
@@ -173,8 +184,8 @@ func TestPluginOriginalMarketSourcesPersistenceDiscoveryAndActualCards(t *testin
 	r = callTest(t, a.Handler(), "PUT", "/api/plugins/"+manifest.PluginID, `{"enabled":true,"marker":"loaded-state"}`, cookie, "")
 	assertOriginalRegistrySuccess(t, r.Code, r.Body.Bytes())
 	a.wg.Wait()
-	card, ok = find(readCards("/api/plugins"), manifest.PluginID)
-	if !ok || !card.Installed || !card.State || card.RepositoryURL != server.URL+"/good" || card.Version != "1.0" {
+	card, ok = find(readCards("/api/plugins?state=installed"), manifest.PluginID)
+	if !ok || !card.Installed || !card.State || card.RepositoryURL != "" || card.Version != "1.0" {
 		t.Fatalf("actual installed card wrong: %+v", card)
 	}
 	// Changing stored config alone must not change already-loaded get_state.
@@ -183,7 +194,7 @@ func TestPluginOriginalMarketSourcesPersistenceDiscoveryAndActualCards(t *testin
 		t.Fatal(err)
 	}
 	retainedStoreSaveConfig(t, a, manifest.PluginID, map[string]any{"enabled": false})
-	card, ok = find(readCards("/api/plugins"), manifest.PluginID)
+	card, ok = find(readCards("/api/plugins?state=installed"), manifest.PluginID)
 	if !ok || !card.State {
 		t.Fatal("card guessed state from current DB instead of actual object")
 	}

@@ -1,0 +1,286 @@
+{
+  "index": 47,
+  "complete": true,
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "mapping": [
+    {
+      "source": "B/app/core/plugin.py:1092-1140; api/endpoints/auth.py:23-51",
+      "target": "plugin_original_auth.go; plugin_original_auth_frontend.go; plugin_original_frontend_http.go",
+      "behavior": "Loaded enabled snapshot, get_state-before-getter, only getter errors isolated, render errors propagate; raw provider values/setdefault preserve falsey. Skip invalid rows before display metadata read. Anonymous frontend uses unfiltered declared provider registry and immutable exact package graph; login summary filters truthy enabled."
+    },
+    {
+      "source": "B/app/core/auth.py:17-113",
+      "target": "plugin_original_auth_ticket.go",
+      "behavior": "Random32 URL-safe ticket; strict >120s IEEE754 wall clock, create cleans before insertion (transient1025), consume pops before cleanup, timestamp stable order including same-float clock nanoseconds. Mutex guarantees one successful consume."
+    },
+    {
+      "source": "B/app/api/endpoints/auth.py:54-73; F/src/pages/login.vue provider/modal/events",
+      "target": "plugin_original_auth_ticket.go; App.vue; features/plugin-auth.ts; owned auth UI",
+      "behavior": "Real protected single-admin Cookie session after exchange; consume-before-user lookup, pending ticket still valid after disable, no revalidation on exchange, no persisted in-memory ticket after cold process; anonymous Vue AuthPage closes/forwards error/success through actual exchange."
+    }
+  ],
+  "changes_this_round": [
+    "Display-name metadata loaded only after valid nonempty provider row (real SDK + deliberately unavailable local metadata table).",
+    "Source IEEE754 wall-time rounding retained at modern epoch for TTL and oldest-ticket ordering.",
+    "Independent real production CLI gate for anonymous complete asset graph, HMAC proof, host mint/exchange, real Cookie/protectedAPI, replay/concurrent-one, config/source/clone/cold recovery and actual121second expiry."
+  ],
+  "checks": {
+    "auth47-source-final-host-tests.jsonl": {
+      "sha256": "abbd2ae256193ee180d6bb8dec88a9bbc90c113a6464df89547e6286abf99a7b",
+      "roots": {
+        "pass": 11,
+        "fail": 0,
+        "skip": 0
+      },
+      "packages": {
+        "light-media/internal/app": {
+          "action": "pass",
+          "seconds": 7.389
+        }
+      }
+    },
+    "auth47-projection-final-host-tests.jsonl": {
+      "sha256": "cd4aa6af3c402d6f4fd51a740c85b2442bdedbea31a109a7a49e9029270d3300",
+      "roots": {
+        "pass": 18,
+        "fail": 0,
+        "skip": 1
+      },
+      "packages": {
+        "light-media/internal/app": {
+          "action": "pass",
+          "seconds": 12.47
+        }
+      }
+    },
+    "auth47-production-linux.log": {
+      "sha256": "cad02aa7c1b76dd6c2b15e6401213c5dece607562d0aa0efa008c5dedb7544f8"
+    },
+    "auth47-production-real-ttl-linux.log": {
+      "sha256": "e1f3d9ec39d939a0a950d10f70759d7210dfd9c432f60e077d9af2b7558dce59"
+    },
+    "auth47-final-production-linux.log": {
+      "sha256": "3c136d71cccb8a64748ca8aa4f16a35726cc338bb7898f9fa809a23231cba05d",
+      "result": "PASS",
+      "seconds": 1.26,
+      "server_sha256": "cfc9189e0afe81d8c94e834d93f11b58c62758c5a26229e4cd231008225fa288",
+      "test_sha256": "38acc100520730a335c24e053caae83e84c9eeb0cbcad035680405571656ae0c",
+      "pids": {
+        "source": [
+          2275457,
+          2275556
+        ],
+        "clone": [
+          2275497,
+          2275561
+        ]
+      },
+      "kind": "actual production Linux cmd/server + separate owned Go SDK processes/HTTP repository; synthetic data only; fixture uninstall/server stop successful"
+    }
+  },
+  "production_real_ttl": {
+    "kind": "Actual wall-clock wait and independent production cmd/server + Go SDK; owned synthetic proof/identity, no external provider",
+    "seconds": 122.25,
+    "wait_seconds": 121,
+    "result": "PASS",
+    "source_pid": [
+      2209528,
+      2212139
+    ],
+    "clone_pid": [
+      2209629,
+      2212144
+    ]
+  },
+  "historical_binaries": {
+    "auth47-server-linux": "9a51d5d728210187ef24a0a92b783b2678053bae84821dce00fff12cfd9a475b",
+    "auth47-worker-linux": "1b3a42bc22194bd52e18ae6c4cae2d5a921e9cb876e1d56cfebf25d4b73c4fb5",
+    "auth47-process-linux.test": "16fb23b093d69a8b6399cc74fc7d79b3b1321c17d6694d3ee071e5e67f1d4b21"
+  },
+  "source_oracle_sha256": "923c4da7f69b2c31dc9ba68a63c8ceec8b248858d2ad751eceee7adb2c5eef55",
+  "adaptations": [
+    "Existing single admin(id1),7day HttpOnly Cookie and data/request_id envelope replace original multiuser/JWT/passkey/permissions; official licensing excluded by user22. No fake passkey/provider/user framework.",
+    "Typed cross-process mint requires active current concurrent SDK invocation, actual declared provider and existing admin; original trusted Python helper lacks these extra host boundary checks. Exchange keeps original consume/no-provider-revalidation semantics.",
+    "Go typed protocol/error code omits arbitrary Python objects/tracebacks. Synthetic HMAC fixture tests platform identity handoff and source/clone asset isolation, not real third-party authentication."
+  ],
+  "remaining": [],
+  "browser_hold": {
+    "test": "TestPluginAuthProductionCLI",
+    "environment": [
+      "PLUGIN_PROCESS_SERVER_BINARY",
+      "OWNED_AUTH_PROCESS_BINARY",
+      "PLUGIN_PROCESS_AUTH_UI_ROOT",
+      "PLUGIN_PROCESS_AUTH_BROWSER_STATE"
+    ],
+    "state_contents": "origin/repository/data_dir only; no token",
+    "control_suffixes": [
+      ".disable-source → .disable-source.done",
+      ".restart → .restart.done",
+      ".done → fixture uninstall/server shutdown"
+    ],
+    "deadline_minutes": 35
+  },
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "old_service_modified": false
+  },
+  "fixed_source_rerun": {
+    "artifact": "auth47-fixed-source-replay.json",
+    "sha256": "923c4da7f69b2c31dc9ba68a63c8ceec8b248858d2ad751eceee7adb2c5eef55",
+    "result": "actual fixed AST replay exactly equals current durable source-oracle.json"
+  },
+  "production_current": {
+    "server": "server-unified-linux",
+    "server_sha256": "cfc9189e0afe81d8c94e834d93f11b58c62758c5a26229e4cd231008225fa288",
+    "test": "logs34-final-process-linux.test",
+    "test_sha256": "38acc100520730a335c24e053caae83e84c9eeb0cbcad035680405571656ae0c",
+    "old_service_modified": false,
+    "agent_owned_cli_processes_running": false
+  },
+  "accepted": true,
+  "browser": {
+    "server_sha256": "79d52d45d94d7a13b649303dcdea557ccca30b35921a6abe62f9ae1c2994cd56",
+    "production_log": "auth47-final-browser-production.log",
+    "seconds": 403.41,
+    "result": "PASS",
+    "actual_operations": [
+      "Anonymous source provider and complete3-asset federation graph",
+      "Owned HMAC refusal retains anonymous status and visible error; valid event exchanges ticket and loads protected plugin manager with real Cookie",
+      "Cold restart plus reload keeps real authenticated Cookie and protected plugin manager",
+      "Logout; actual source disable then refresh leaves only clone provider; clone authentication succeeds with source stopped/clone enabled"
+    ],
+    "cleanup": "Test.done uninstalled source/clone and stopped server; root confirmed browser tab29 and tunnel90477 closed",
+    "not_claimed": "No real third-party identity provider or user credential used."
+  },
+  "final_diagnostic_delta": {
+    "target": "plugin_original_auth.go:originalObjectAuthProviders",
+    "description": "Getter failure during trusted auth.ticket.create now logs using existing caller context; anonymous provider discovery stays global. Added after browser build; authentication success/UI behavior unchanged.",
+    "check": "logs34-final-resource-auth-context.jsonl",
+    "result": "PASS",
+    "kind": "actual independent source/clone SDK callbacks + anonymous provider HTTP, local host"
+  },
+  "archived_evidence": {
+    "auth47-source-final-host-tests.jsonl": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-source-final-host-tests.jsonl.gz",
+      "original_sha256": "abbd2ae256193ee180d6bb8dec88a9bbc90c113a6464df89547e6286abf99a7b",
+      "archived_sha256": "6b421079c27537351bdca7a90cac6bf58488d7f7eceeacb4d49db38d4418af6e"
+    },
+    "auth47-projection-final-host-tests.jsonl": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-projection-final-host-tests.jsonl.gz",
+      "original_sha256": "cd4aa6af3c402d6f4fd51a740c85b2442bdedbea31a109a7a49e9029270d3300",
+      "archived_sha256": "d71d71d8295239fa48d3613bb83bedab3ea9c28cdca98dd8d37eb789463c9386"
+    },
+    "auth47-production-real-ttl-linux.log": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-production-real-ttl-linux.log.gz",
+      "original_sha256": "e1f3d9ec39d939a0a950d10f70759d7210dfd9c432f60e077d9af2b7558dce59",
+      "archived_sha256": "6c249b28522e5c98aca73e8e3d6fbd624f85a45c51dda5462c568ed8a0332f33"
+    },
+    "auth47-final-production-linux.log": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-final-production-linux.log.gz",
+      "original_sha256": "3c136d71cccb8a64748ca8aa4f16a35726cc338bb7898f9fa809a23231cba05d",
+      "archived_sha256": "8705ca03cc7b778d5f69160b6b8f115bc189384ed782d49bab616ffcf51a3352"
+    },
+    "auth47-final-browser-production.log": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-final-browser-production.log.gz",
+      "original_sha256": "6f8436ffabefcf1b31b992da587389abe600c7f419dadea0c88507fa791a4f87",
+      "archived_sha256": "1e6a466461ecc63a29a99af59fa34e5c452412935dc6a613d8f6e5b8b2ce752c"
+    },
+    "auth47-fixed-source-replay.json": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-fixed-source-replay.json.gz",
+      "original_sha256": "923c4da7f69b2c31dc9ba68a63c8ceec8b248858d2ad751eceee7adb2c5eef55",
+      "archived_sha256": "9f27def05ed8b212e2f07b1691628fc75cfb1ffb0ce7ee31d6d8bf40dc8066bb"
+    },
+    "logs34-final-resource-auth-context.jsonl": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-resource-auth-context.jsonl.gz",
+      "original_sha256": "3822cb187b0c8709c0dc2716bfdedda272db23a763000d3f330dc6c9e4e0b376",
+      "archived_sha256": "274df44e8a9274780a1faf3686bb84afab9b1f9ca58c415257d9542edec85998"
+    },
+    "auth47-browser-source-initial.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-source-initial.ax.txt.gz",
+      "original_sha256": "3b4505b2c023183256a67b9907c67a3eceef2acc18fc3cbdcfdae7ca2ce85f00",
+      "archived_sha256": "90498bee78b87239e439a67c9ed7993ddf88fd580f92ef1191435d3d052db3d1"
+    },
+    "auth47-browser-protected.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-protected.ax.txt.gz",
+      "original_sha256": "7edba2579c6dd7183fcff3fa56e2dfd4e1fa6f1ef33c77d309e2477f4f0e5a0a",
+      "archived_sha256": "21166a283e98cdde38a25dcb63bd41045f979afdf63c1f52be5b44b5e4ebc9d3"
+    },
+    "auth47-browser-protected.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-protected.png",
+      "original_sha256": "2b2fb835e213e2fcf296db7d394bed71acd40484d16c0862eb07f905b2eb40b2",
+      "archived_sha256": "2b2fb835e213e2fcf296db7d394bed71acd40484d16c0862eb07f905b2eb40b2"
+    },
+    "auth47-browser-rejected.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-rejected.png",
+      "original_sha256": "faf040bb9430b9066545a16eef0102e5cfb0c79a2254d99f14857959cfd6c1fa",
+      "archived_sha256": "faf040bb9430b9066545a16eef0102e5cfb0c79a2254d99f14857959cfd6c1fa"
+    },
+    "auth47-browser-rejected.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-rejected.ax.txt.gz",
+      "original_sha256": "24dafec94c1ff3ee06a9ea78915725345f768e8222ce465a42796fa5910f5d4c",
+      "archived_sha256": "07c4c81c228cf45c6ee419d48a0a3f8097a91bb1406c657cb265854ad33efb8e"
+    },
+    "auth47-browser-disabled-source.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-disabled-source.png",
+      "original_sha256": "62c6b22b635af3ebc9fddec1352c7f801d992ef3da3649362588cd5c69f3c2d9",
+      "archived_sha256": "62c6b22b635af3ebc9fddec1352c7f801d992ef3da3649362588cd5c69f3c2d9"
+    },
+    "auth47-browser-cold-cookie.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-cold-cookie.ax.txt.gz",
+      "original_sha256": "39944d3b902125713509819a12d2f919556d797999d522eca674569640c72781",
+      "archived_sha256": "5f6a283fb2c65c953326b756b0c883b7462bdc712c4398aad7c484a055dc818f"
+    },
+    "auth47-browser-accepted.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-accepted.png",
+      "original_sha256": "bcd2824fc5a2dac9c46cc755d3bfcd201329841c39341a5329f92adb6625045d",
+      "archived_sha256": "bcd2824fc5a2dac9c46cc755d3bfcd201329841c39341a5329f92adb6625045d"
+    },
+    "auth47-browser-disabled-source.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-disabled-source.ax.txt.gz",
+      "original_sha256": "4a8ca8a275db298cd082f547cd650c0f7c9bd0da849dfb98c60e5cb7aa53db4b",
+      "archived_sha256": "23273ec136c9e8853338779e508173eb119ff25f91baa1b83fef3f57dff5eba2"
+    },
+    "auth47-browser-clone-accepted.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-clone-accepted.png",
+      "original_sha256": "61f90c6f284de174312be0943453ac82de4a094fc3e6b0b171ae53c9f9dd3007",
+      "archived_sha256": "61f90c6f284de174312be0943453ac82de4a094fc3e6b0b171ae53c9f9dd3007"
+    },
+    "auth47-browser-accepted.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-accepted.ax.txt.gz",
+      "original_sha256": "704020e910bd885f9191573abed405aa4b0f71f35a80617fa2f9294dccb4cc9d",
+      "archived_sha256": "0ed26d5a92da9e38679ff6185f195861544322ce5c41ad67bc3ce1c2ea9a53dd"
+    },
+    "auth47-browser-clone-accepted.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-clone-accepted.ax.txt.gz",
+      "original_sha256": "a8ee8cf878c7f60796a557ba5ac636c478c68073624e313e9784bbb33436d2e0",
+      "archived_sha256": "350da768ca30ef300ca4434fa138401bca5a43c9d632b4bee91bf5e58d66eefb"
+    },
+    "auth47-browser-source-initial.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-source-initial.png",
+      "original_sha256": "2b8e8d9874fff1d1eff34ba9e60d100a952bef70cb9d981dffb8a3fdbd868bd6",
+      "archived_sha256": "2b8e8d9874fff1d1eff34ba9e60d100a952bef70cb9d981dffb8a3fdbd868bd6"
+    },
+    "auth47-browser-disable-readback.log": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-disable-readback.log.gz",
+      "original_sha256": "22bd5dcb93730907f7eb02b99ff59ff4a3f964fbe3989e243a65f406fae6a054",
+      "archived_sha256": "ec3342204f69f3eeac2b3ceeadbadc78fdebf22a12c6a3f328f27f614665856d"
+    },
+    "auth47-browser-cold-readback.json": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-cold-readback.json.gz",
+      "original_sha256": "c691b07ad8a3c10b63fedbbfe4a5e655239c6649d39fc8168384aa8fe2a8ba40",
+      "archived_sha256": "bb0258fe02f3b2f02a66a4f7eb8624aa8b13c4ff72ede8b1736868cf984fc349"
+    },
+    "auth47-browser-cold-cookie.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/auth47-browser-cold-cookie.png",
+      "original_sha256": "17f60382dedfa750b7a3530f1c52a930359af773372d54b2839fb40652dac9c2",
+      "archived_sha256": "17f60382dedfa750b7a3530f1c52a930359af773372d54b2839fb40652dac9c2"
+    }
+  },
+  "durable_source_oracle": {
+    "path": "testdata/standard-auth/source-oracle.json",
+    "sha256": "923c4da7f69b2c31dc9ba68a63c8ceec8b248858d2ad751eceee7adb2c5eef55"
+  }
+}

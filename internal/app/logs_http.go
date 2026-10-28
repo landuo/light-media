@@ -221,8 +221,26 @@ func (a *App) streamLogs(w http.ResponseWriter, r *http.Request) {
 			if !ok {
 				break
 			}
+			if filters["plugin_instance_id"] != "" {
+				a.logs.fileMu.Lock()
+				written := a.logs.pluginProjectionSequence
+				a.logs.fileMu.Unlock()
+				if entry.Seq > written {
+					break
+				}
+			}
 			var v map[string]any
 			if json.Unmarshal(entry.Data, &v) == nil && logMatches(v, filters) {
+				if filters["plugin_instance_id"] != "" {
+					a.logs.fileMu.Lock()
+					failed := a.logs.pluginProjectionFailures[entry.Seq]
+					a.logs.fileMu.Unlock()
+					if failed {
+						send("gap", "", map[string]string{"reason": "plugin_file_write_failed", "resume_id": fmt.Sprintf("%s:%d", a.logs.boot, entry.Seq)})
+						return
+					}
+					v["raw"] = pluginProjectionText(v)
+				}
 				if !send("", fmt.Sprintf("%s:%d", a.logs.boot, entry.Seq), v) {
 					return
 				}

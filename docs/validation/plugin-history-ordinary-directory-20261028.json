@@ -1,0 +1,163 @@
+{
+  "accepted_increment": true,
+  "whole_indices_accepted": false,
+  "indices": [
+    36,
+    37,
+    43
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": [
+    "app/chain/storage.py:171-235 directory is_bluray test then ordinary any_files identity-False cleanup; associated root stop; get_parent_item after actual deletion",
+    "app/api/endpoints/history.py:222-260 target false ignored; source false fails; source true including retained directory publishes DownloadFileDeleted then deletes history",
+    "app/chain/download.py:1808-1827 nonempty hash may remove downloader task with delete_file=False"
+  ],
+  "targets": [
+    "internal/app/asset_manage.go",
+    "internal/app/history_delete.go",
+    "internal/app/history_auxiliary.go",
+    "internal/app/core_download_file_deleted.go",
+    "internal/app/plugin_original_history_delete.go",
+    "internal/app/plugin_original_history_parent.go",
+    "internal/app/plugin_original_history_directory_test.go",
+    "internal/app/plugin_original_transfer_bluray_history_test.go",
+    "internal/app/plugin_module_process_transfer_test.go",
+    "cmd/owned-transfer-events-fixture/main.go"
+  ],
+  "behavior": [
+    "Ordinary non-Blu-ray directories remain when any_files is not exact False; configuration roots stop before any_files. Empty-of-media directories invoke delete_file then continue with their parent.",
+    "Explicit retained source/target journal state never claims physical deletion; target asset/managed_file stays when file is retained.",
+    "Successful retained source produces ordinary downloadfile.deleted with original src/hash. Sealed source fact distinguishes retained-directory success; existing ownership/accepted hash checks remain. New optional fact field omits false to preserve legacy MAC serialization.",
+    "Real Linux ordinary media directory retained and history hidden through browser; original inode/size/hash still same after two cold starts.",
+    "Real Linux API configured-media-extensions exclude synthetic m2ts => named directory physically deleted; source kept. Source retained by test get_file_item false => history deleted and ordinary event observed in actual clone.",
+    "Existing browser cancelled Blu-ray retry/cold/NFO/history/target-delete behavior remains verified on same main."
+  ],
+  "evidence": {
+    "fixed_storage_cases": 4,
+    "local_related_seconds": 17.57,
+    "race_seconds": 60.268,
+    "local_real_process_seconds": 9.87,
+    "linux_cli_seconds": 4.33,
+    "linux_browser_seconds": 317.77,
+    "browser": {
+      "pass": true,
+      "iab": 87,
+      "pids": {
+        "before-cold": [
+          950218,
+          950224
+        ],
+        "cold-cancelled": [
+          954344,
+          954349
+        ],
+        "retry-success": [
+          954344,
+          954349
+        ],
+        "cold-success": [
+          955803,
+          955811
+        ],
+        "deleted": [
+          955803,
+          955811
+        ]
+      },
+      "named_retained_members": [
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/bluray47-ui-tmp/TestPluginServicesProductionCLI611527141/002/library/DiscNames/BluRay/Streams/feature.m2ts",
+          "size": 12,
+          "inode": 48420270,
+          "device": 65025,
+          "sha256": "6698cead706f56ee37d1d6a907fe9acd8efd46bae9df4bc50198185c9d0d989e"
+        },
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/bluray47-ui-tmp/TestPluginServicesProductionCLI611527141/002/library/DiscNames/BluRay/index-custom.bdmv",
+          "size": 11,
+          "inode": 46156712,
+          "device": 65025,
+          "sha256": "5cf542f20ae9488881599d22a89a26330094234b718c48cdd861d32d00dce198"
+        }
+      ],
+      "movie_nfo": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/bluray47-ui-tmp/TestPluginServicesProductionCLI611527141/003/library/UIBluray/UIBluray (2024)/UIBluray (2024).nfo",
+        "size": 62,
+        "inode": 77763164,
+        "device": 65025,
+        "sha256": "54767c5abe5882fbfb11733ff72fc1fa08f2247b921761d7f5cff61e22ab48f8"
+      },
+      "cleanup": {
+        "paths": {
+          "/tmp/light-media-plugin-scope-dRZTQ91A/bluray47-ui-tmp/TestPluginServicesProductionCLI611527141/001": false,
+          "/tmp/light-media-plugin-scope-dRZTQ91A/bluray47-ui-tmp/TestPluginServicesProductionCLI611527141/003/source/UIBluray.2024.BluRay": false,
+          "/tmp/light-media-plugin-scope-dRZTQ91A/bluray47-ui-tmp/TestPluginServicesProductionCLI611527141/003/library/UIBluray/UIBluray (2024)": false,
+          "/tmp/light-media-plugin-scope-dRZTQ91A/bluray47-ui-tmp/TestPluginServicesProductionCLI611527141/002/source/DiscNames.2024.BluRay": false,
+          "/tmp/light-media-plugin-scope-dRZTQ91A/bluray47-ui-tmp/TestPluginServicesProductionCLI611527141/002/library/DiscNames": false
+        }
+      }
+    },
+    "build": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform47-20261027-linux",
+          "sha256": "2201c87d7914b44ca24378fb48eb064d11a66f7fc9da12656cecee7058a6a7cd",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform47-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3731,
+          "changed": [],
+          "elapsed_seconds": 4.24
+        },
+        {
+          "name": "process-platform47-20261027-linux.test",
+          "sha256": "49b17ec9c413fbd90d9963449dc4e4bfc3187c63e91e33860fd2fb06bdf1e254",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform47-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4216,
+          "changed": [],
+          "elapsed_seconds": 8.26
+        }
+      ]
+    },
+    "manifest": "testdata/plugin-module-no-official-auth-20261026/history-ordinary-directory-47-20261028/manifest.json"
+  },
+  "adaptations": [
+    "Existing local path/snapshot/downloader ownership protections remain. No new business system or Python runtime.",
+    "Controlled media extensions and false get_file_item are explicit test inputs to exercise original branches; synthetic files/test plugins run in a real Linux service.",
+    "The ordinary source event name is preserved even when the source directory remains, as the fixed endpoint does. Private receipt records retained state rather than pretending physical deletion."
+  ],
+  "red": [
+    "Actual ordinary-directory SDK rejected before any_files.",
+    "First integrated source-retained test rejected by previous Deleted-only source fact guard; fixed distinct retained success and cold verified.",
+    "First browser named history action correctly rejected root removed by next independent acceptance fixture. Restored the same owned original root in test settings; next browser action passed. Product root guard unchanged. Screenshot and root restoration evidence retained."
+  ],
+  "remaining": [
+    "Whole36/37/43/50 await ordinary197methods/199directcalls/81events applicability audit and any uncovered actual host gaps."
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

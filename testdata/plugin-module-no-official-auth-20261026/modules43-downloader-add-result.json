@@ -1,0 +1,125 @@
+{
+  "scope": "43 increment: seven-argument download provider dispatch and existing Native/Intent Add host boundary. This does not accept whole43 or remaining ResourceDownload/download_added/DownloadAdded contracts.",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/__init__.py:225,298,372,470,1350 ordinary empty/dispatch/download wrapper",
+    "app/utils/object.py:check_signature",
+    "app/chain/download.py:909-921 exact four-value result caller"
+  ],
+  "target": [
+    "internal/app/plugin_original_download.go:originalDownload,verifyOriginalDownloadTask",
+    "internal/app/native_download.go:addNativeDownload,runNativeDownload",
+    "internal/app/search_download.go:previewDownload,confirmDownload,runDownload",
+    "internal/app/types.go:Intent.SourceDownloader,SourceModuleStarted,DownloadPreview.SourceDownloader"
+  ],
+  "implemented_verified": [
+    "Actual seven kwargs: binary content exact bytes via narrow typed envelope, local download_dir POSIX path, site cookie, selected episodes or None, known-media category, label None at current host, original automatic None versus explicit downloader display name preserved preview→intent.",
+    "Provider tuple terminates; source None/all-None tuple or exception falls through. Plugin lists still run actual native Add and post-Add force/selection receipt before the caller evaluates/unpacks the list; [] reports failure even after real native Add/force.",
+    "Caller rejection/malformed result/empty hash produce structured failure, not invented success. Module tuple can only be accepted after actual selected native downloader independently observes the frozen metainfo hash and destination; pure override cannot mint the private one-use Add receipt.",
+    "External plugin call is marked only for declared download provider on the existing persisted attempt. An unsubmitted attempt is reviewed, not automatically re-invoked on job retry/cold recovery. A fresh explicit Add after failure remains a new attempt.",
+    "Existing native Add/force/selected-episode/private receipts and original post_add commit-failure state remain intact; source/clone provider order and separate PIDs use the ordinary platform clone implementation."
+  ],
+  "verification": {
+    "source_oracle": {
+      "path": "testdata/standard-module-host/downloader-add-oracle.json",
+      "cases": 11,
+      "kind": "actual fixed ChainBase wrapper/dispatcher/signature plus exact DownloadChain result assignment/unpack; core tuple controlled, not real Add"
+    },
+    "sdk": {
+      "final_log": "modules43-add-raw/modules43-download-final-sdk-tests.jsonl.gz",
+      "elapsed_seconds": 7.266,
+      "roots": [
+        "TestOriginalDownloadActualSDKFixedSource (11 source cases)",
+        "TestOriginalDownloadNativeHostActualSDKAndProtocol (5 branches)",
+        "TestOriginalDownloadIntentHostActualSDKAndProtocol (3 branches)",
+        "TestSourceEpisodeSelectionThroughActualIntentWorkerAndColdReceipts",
+        "TestSourcePostAddActualWorkerForceUnknownAndAtomicColdRecovery"
+      ]
+    },
+    "actual_main": {
+      "kind": "actual cmd/server POST /downloads/add and persistent job, actual Go SDK download provider, owned native HTTP peers and independent task readback; protocol peer is synthetic, not a real qBittorrent service",
+      "server": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/server-modules43-add-linux",
+        "sha256": "05f123d93f48567c4d86bbd662f1204b1104eac02a687b9b756fa618eb81e5a2"
+      },
+      "binary": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/process-modules43-add3-linux.test",
+        "sha256": "ab048a1803c03703355b8c4357e10f9a54bdddcb645c2aca8701f2990f00bfd3"
+      },
+      "environment": {
+        "TMPDIR": "/tmp/light-media-plugin-scope-dRZTQ91A/modules43-add-tmp",
+        "PLUGIN_PROCESS_SERVER_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/server-modules43-add-linux",
+        "OWNED_INPUT_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/services38-input-final-linux",
+        "OWNED_DOWNLOADER_CONTROL_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/downloader-control-linux",
+        "PLUGIN_PROCESS_DOWNLOADER_ADD_FIXTURE": "true",
+        "PLUGIN_PROCESS_DOWNLOADER_ADD_ORACLE": "/tmp/light-media-plugin-scope-dRZTQ91A/downloader-add-oracle.json",
+        "PLUGIN_PROCESS_EVENTS36_EVIDENCE_DIR": "/tmp/light-media-plugin-scope-dRZTQ91A/modules43-add-evidence"
+      },
+      "command": [
+        "/tmp/light-media-plugin-scope-dRZTQ91A/process-modules43-add3-linux.test",
+        "-test.v",
+        "-test.run",
+        "^TestPluginServicesProductionCLI$",
+        "-test.timeout",
+        "90s"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 2.33,
+      "log_sha256": "659df2cb8041f2dbd1ef5eee92980ee5b281dcd6a61d6b890739c912f804bb72",
+      "input_sha256": {
+        "services38-input-final-linux": "d25fbd2f58764a73646744e48def08e706678aeea9ab40dd7e078b38720ca361",
+        "downloader-control-linux": "df8e461c809e6188def1f4a2ecc5573d141f8bd13f4640fc19310bb093d8691e",
+        "downloader-add-oracle.json": "ddf7555cc51b56ef6a5caebcad14ac03863399fe288d3aca2dd26bf8fa716bab"
+      }
+    },
+    "actual_test_elapsed_seconds": 2.15,
+    "actual_sdk_pids": [
+      2737466,
+      2737479
+    ],
+    "actual_branches": [
+      "POST /api/downloads/add→persisted native job→real SDK→owned provider protocol creates actual peer task→independent host readback, native Add0",
+      "false provider makes no task/Add; [] makes real Add+force then failed, still-visible same hash task survives cold without retry/acceptance",
+      "callback throw falls through native Add/force",
+      "source None proceeds into separately configured clone tuple; each provider+1 callback, distinct PIDs, native Add0",
+      "ordinary plugin source/clone uninstall, APIs404 and services removed; actual main and peers stopped"
+    ]
+  },
+  "necessary_adaptations": [
+    "Go JSON/process boundary explicitly encodes bytes and tuples, preserving empty bytes versus None and list-versus-tuple behavior; no Python runtime.",
+    "Existing native namespace/frozen material/path guard remains. A tuple with no real matching selected native task is rejected; source itself trusts its backend module return.",
+    "Queued jobs have no source call-stack recovery. Once a declared download callback crossed its boundary, an uncommitted result is left for review rather than replaying a possible external mutation. No workflow/executor/compatibility framework was introduced.",
+    "Current Native dialog permits unknown optional media identity by explicit existing user requirement. Its kwargs category is None; an existing known-media Intent passes the actual category and source cookie."
+  ],
+  "remaining_known_contracts": [
+    "ResourceDownload full Context/interception and the source download_added module + download.added broadcast ordering are not connected by this increment. Existing private download.accepted facts do not substitute for them.",
+    "The source four-tuple downloader/layout fields remain in the in-memory raw result but are not yet applied to native history path/layout or alternate configured downloader association; this cannot be claimed equivalent.",
+    "Native core Add still uses the existing fixed ownership tag, frozen Original content layout and existing AutoTMM/flags. Full source category/label backend side effects outside current host fields still require scope review/implementation.",
+    "No fresh browser evidence of the existing Add dialog or the earlier new full source-torrent card is claimed here. No new front-end code was changed."
+  ],
+  "failures_preserved": [
+    {
+      "log": "modules43-add-raw/modules43-download-hook-regression-tests.jsonl.gz",
+      "cause": "Initial hook put original post_add local receipt failure into reconcile_pending; product fix preserves original post_add boundary; original cold recovery tests then pass."
+    },
+    {
+      "log": "modules43-add-raw/modules43-add-first-linux-driver.log",
+      "elapsed_seconds": 1.609,
+      "cause": "Test incorrectly assumed PUT configuration resets the live fixture callback counter. Actual jobs each called once; fixed test to compare per-call baseline deltas, production unchanged."
+    },
+    {
+      "log": "modules43-add-raw/modules43-add2-linux-driver.log",
+      "elapsed_seconds": 2.29,
+      "result": "PASS",
+      "coverage_limit": "Failed row survived cold and no new effects, but peer had already switched hash. Final 2.15s gate puts cold immediately after [] and asserts same task still visible."
+    }
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false,
+    "old_services_modified": false,
+    "whole43_accepted": false
+  }
+}

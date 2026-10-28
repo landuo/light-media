@@ -1,0 +1,306 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:3538-3667",
+    "app/chain/transfer.py:3687-3697",
+    "app/modules/filemanager/transhandler.py:389-419"
+  ],
+  "kind": "Pinned three-task manual preview loop, callback and fallback rows.\nThe main/subtitle/audio task set is supplied at the collection boundary; the\nexact do_transfer loop/summary, dispatch, FileManager and native preview branch\nexecute. Collection's own list_files override wiring is audited separately.\n",
+  "cases": [
+    {
+      "name": "native",
+      "result": [
+        true,
+        {
+          "summary": {
+            "total": 3,
+            "success": 3,
+            "failed": 0
+          },
+          "items": [
+            {
+              "source": "{root}/source/Owned.2024.mkv",
+              "target": "{root}/library/Owned (2024)/Owned (2024).mkv",
+              "target_dir": "{root}/library/Owned (2024)",
+              "success": true,
+              "message": null,
+              "type": "电影",
+              "title": "Owned (2024)",
+              "season": null,
+              "episode": null,
+              "episode_end": null,
+              "part": null,
+              "org_string": "Owned.2024.mkv",
+              "apply_words": [],
+              "resource_team": null,
+              "customization": null
+            },
+            {
+              "source": "{root}/source/Owned.2024.zh.srt",
+              "target": "{root}/library/Owned (2024)/Owned (2024).default.chi.zh-cn.srt",
+              "target_dir": "{root}/library/Owned (2024)",
+              "success": true,
+              "message": null,
+              "type": "电影",
+              "title": "Owned (2024)",
+              "season": null,
+              "episode": null,
+              "episode_end": null,
+              "part": null,
+              "org_string": "Owned.2024.zh.srt",
+              "apply_words": [],
+              "resource_team": null,
+              "customization": null
+            },
+            {
+              "source": "{root}/source/Owned.2024.flac",
+              "target": "{root}/library/Owned (2024)/Owned (2024).flac",
+              "target_dir": "{root}/library/Owned (2024)",
+              "success": true,
+              "message": null,
+              "type": "电影",
+              "title": "Owned (2024)",
+              "season": null,
+              "episode": null,
+              "episode_end": null,
+              "part": null,
+              "org_string": "Owned.2024.flac",
+              "apply_words": [],
+              "resource_team": null,
+              "customization": null
+            }
+          ],
+          "message": ""
+        }
+      ],
+      "trace": [
+        {
+          "source": "{root}/source/Owned.2024.mkv",
+          "kind": "plugin",
+          "preview": true
+        },
+        {
+          "source": "{root}/source/Owned.2024.mkv",
+          "kind": "native_preview"
+        },
+        {
+          "source": "{root}/source/Owned.2024.zh.srt",
+          "kind": "plugin",
+          "preview": true
+        },
+        {
+          "source": "{root}/source/Owned.2024.zh.srt",
+          "kind": "native_preview"
+        },
+        {
+          "source": "{root}/source/Owned.2024.flac",
+          "kind": "plugin",
+          "preview": true
+        },
+        {
+          "source": "{root}/source/Owned.2024.flac",
+          "kind": "native_preview"
+        }
+      ],
+      "unchanged": [
+        "preexisting target",
+        "preexisting target",
+        "preexisting target"
+      ]
+    },
+    {
+      "name": "raw-false-subtitle",
+      "result": [
+        false,
+        {
+          "summary": {
+            "total": 3,
+            "success": 2,
+            "failed": 1
+          },
+          "items": [
+            {
+              "source": "{root}/source/Owned.2024.mkv",
+              "target": "{root}/library/Owned (2024)/Owned (2024).mkv",
+              "target_dir": "{root}/library/Owned (2024)",
+              "success": true,
+              "message": null,
+              "type": "电影",
+              "title": "Owned (2024)",
+              "season": null,
+              "episode": null,
+              "episode_end": null,
+              "part": null,
+              "org_string": "Owned.2024.mkv",
+              "apply_words": [],
+              "resource_team": null,
+              "customization": null
+            },
+            {
+              "source": "{root}/source/Owned.2024.zh.srt",
+              "target": null,
+              "target_dir": null,
+              "success": false,
+              "message": "文件整理模块运行失败",
+              "type": null,
+              "title": null,
+              "season": null,
+              "episode": null,
+              "episode_end": null,
+              "part": null,
+              "org_string": "Owned.2024.zh.srt",
+              "apply_words": [],
+              "resource_team": null,
+              "customization": null
+            },
+            {
+              "source": "{root}/source/Owned.2024.flac",
+              "target": "{root}/library/Owned (2024)/Owned (2024).flac",
+              "target_dir": "{root}/library/Owned (2024)",
+              "success": true,
+              "message": null,
+              "type": "电影",
+              "title": "Owned (2024)",
+              "season": null,
+              "episode": null,
+              "episode_end": null,
+              "part": null,
+              "org_string": "Owned.2024.flac",
+              "apply_words": [],
+              "resource_team": null,
+              "customization": null
+            }
+          ],
+          "message": "Owned.2024.zh.srt 文件整理模块运行失败"
+        }
+      ],
+      "trace": [
+        {
+          "source": "{root}/source/Owned.2024.mkv",
+          "kind": "plugin",
+          "preview": true
+        },
+        {
+          "source": "{root}/source/Owned.2024.mkv",
+          "kind": "native_preview"
+        },
+        {
+          "source": "{root}/source/Owned.2024.zh.srt",
+          "kind": "plugin",
+          "preview": true
+        },
+        {
+          "source": "{root}/source/Owned.2024.flac",
+          "kind": "plugin",
+          "preview": true
+        },
+        {
+          "source": "{root}/source/Owned.2024.flac",
+          "kind": "native_preview"
+        }
+      ],
+      "unchanged": [
+        "preexisting target",
+        "preexisting target",
+        "preexisting target"
+      ]
+    },
+    {
+      "name": "typed-veto-subtitle",
+      "result": [
+        false,
+        {
+          "summary": {
+            "total": 3,
+            "success": 2,
+            "failed": 1
+          },
+          "items": [
+            {
+              "source": "{root}/source/Owned.2024.mkv",
+              "target": "{root}/library/Owned (2024)/Owned (2024).mkv",
+              "target_dir": "{root}/library/Owned (2024)",
+              "success": true,
+              "message": null,
+              "type": "电影",
+              "title": "Owned (2024)",
+              "season": null,
+              "episode": null,
+              "episode_end": null,
+              "part": null,
+              "org_string": "Owned.2024.mkv",
+              "apply_words": [],
+              "resource_team": null,
+              "customization": null
+            },
+            {
+              "source": "{root}/source/Owned.2024.zh.srt",
+              "target": null,
+              "target_dir": null,
+              "success": false,
+              "message": "owned subtitle veto",
+              "type": "电影",
+              "title": "Owned (2024)",
+              "season": null,
+              "episode": null,
+              "episode_end": null,
+              "part": null,
+              "org_string": "Owned.2024.zh.srt",
+              "apply_words": [],
+              "resource_team": null,
+              "customization": null
+            },
+            {
+              "source": "{root}/source/Owned.2024.flac",
+              "target": "{root}/library/Owned (2024)/Owned (2024).flac",
+              "target_dir": "{root}/library/Owned (2024)",
+              "success": true,
+              "message": null,
+              "type": "电影",
+              "title": "Owned (2024)",
+              "season": null,
+              "episode": null,
+              "episode_end": null,
+              "part": null,
+              "org_string": "Owned.2024.flac",
+              "apply_words": [],
+              "resource_team": null,
+              "customization": null
+            }
+          ],
+          "message": "Owned.2024.zh.srt owned subtitle veto"
+        }
+      ],
+      "trace": [
+        {
+          "source": "{root}/source/Owned.2024.mkv",
+          "kind": "plugin",
+          "preview": true
+        },
+        {
+          "source": "{root}/source/Owned.2024.mkv",
+          "kind": "native_preview"
+        },
+        {
+          "source": "{root}/source/Owned.2024.zh.srt",
+          "kind": "plugin",
+          "preview": true
+        },
+        {
+          "source": "{root}/source/Owned.2024.flac",
+          "kind": "plugin",
+          "preview": true
+        },
+        {
+          "source": "{root}/source/Owned.2024.flac",
+          "kind": "native_preview"
+        }
+      ],
+      "unchanged": [
+        "preexisting target",
+        "preexisting target",
+        "preexisting target"
+      ]
+    }
+  ]
+}

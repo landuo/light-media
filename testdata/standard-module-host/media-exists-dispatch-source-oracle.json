@@ -1,0 +1,230 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/__init__.py:298-470,1606-1621",
+    "app/chain/download.py:1586-1725"
+  ],
+  "boundary": "Pinned existence caller plus actual None/list/terminal system dispatcher.\nNative inventory and plugin values are owned dependencies; native errors run\nthe fixed system error handler before the caller consumes the retained list.\n",
+  "cases": [
+    {
+      "name": "movie-[]-False",
+      "kind": "movie",
+      "plugin": [],
+      "native_error": false,
+      "calls": [
+        "plugin",
+        "native"
+      ],
+      "messages": [],
+      "system_errors": 0,
+      "satisfied": false,
+      "missing": {},
+      "error": null
+    },
+    {
+      "name": "movie-[]-True",
+      "kind": "movie",
+      "plugin": [],
+      "native_error": true,
+      "calls": [
+        "plugin",
+        "native"
+      ],
+      "messages": [
+        {
+          "title": "文件整理发生了错误",
+          "message": "owned inventory unavailable",
+          "role": "system"
+        }
+      ],
+      "system_errors": 1,
+      "satisfied": false,
+      "missing": {},
+      "error": null
+    },
+    {
+      "name": "movie-[false]-False",
+      "kind": "movie",
+      "plugin": [
+        false
+      ],
+      "native_error": false,
+      "calls": [
+        "plugin",
+        "native"
+      ],
+      "messages": [],
+      "system_errors": 0,
+      "satisfied": true,
+      "missing": {},
+      "error": null
+    },
+    {
+      "name": "movie-[false]-True",
+      "kind": "movie",
+      "plugin": [
+        false
+      ],
+      "native_error": true,
+      "calls": [
+        "plugin",
+        "native"
+      ],
+      "messages": [
+        {
+          "title": "文件整理发生了错误",
+          "message": "owned inventory unavailable",
+          "role": "system"
+        }
+      ],
+      "system_errors": 1,
+      "satisfied": true,
+      "missing": {},
+      "error": null
+    },
+    {
+      "name": "tv-[]-False",
+      "kind": "tv",
+      "plugin": [],
+      "native_error": false,
+      "calls": [
+        "plugin",
+        "native"
+      ],
+      "messages": [],
+      "system_errors": 0,
+      "satisfied": false,
+      "missing": {
+        "900043": {
+          "1": {
+            "season": 1,
+            "episodes": [],
+            "total_episode": 3,
+            "start_episode": 1,
+            "require_complete_coverage": false
+          }
+        }
+      },
+      "error": null
+    },
+    {
+      "name": "tv-[]-True",
+      "kind": "tv",
+      "plugin": [],
+      "native_error": true,
+      "calls": [
+        "plugin",
+        "native"
+      ],
+      "messages": [
+        {
+          "title": "文件整理发生了错误",
+          "message": "owned inventory unavailable",
+          "role": "system"
+        }
+      ],
+      "system_errors": 1,
+      "satisfied": false,
+      "missing": {
+        "900043": {
+          "1": {
+            "season": 1,
+            "episodes": [],
+            "total_episode": 3,
+            "start_episode": 1,
+            "require_complete_coverage": false
+          }
+        }
+      },
+      "error": null
+    },
+    {
+      "name": "tv-[false]-False",
+      "kind": "tv",
+      "plugin": [
+        false
+      ],
+      "native_error": false,
+      "calls": [
+        "plugin",
+        "native"
+      ],
+      "messages": [],
+      "system_errors": 0,
+      "satisfied": null,
+      "missing": null,
+      "error": "AttributeError"
+    },
+    {
+      "name": "tv-[false]-True",
+      "kind": "tv",
+      "plugin": [
+        false
+      ],
+      "native_error": true,
+      "calls": [
+        "plugin",
+        "native"
+      ],
+      "messages": [
+        {
+          "title": "文件整理发生了错误",
+          "message": "owned inventory unavailable",
+          "role": "system"
+        }
+      ],
+      "system_errors": 1,
+      "satisfied": null,
+      "missing": null,
+      "error": "AttributeError"
+    },
+    {
+      "name": "tv-false-False",
+      "kind": "tv",
+      "plugin": false,
+      "native_error": false,
+      "calls": [
+        "plugin"
+      ],
+      "messages": [],
+      "system_errors": 0,
+      "satisfied": false,
+      "missing": {
+        "900043": {
+          "1": {
+            "season": 1,
+            "episodes": [],
+            "total_episode": 3,
+            "start_episode": 1,
+            "require_complete_coverage": false
+          }
+        }
+      },
+      "error": null
+    },
+    {
+      "name": "tv-false-True",
+      "kind": "tv",
+      "plugin": false,
+      "native_error": true,
+      "calls": [
+        "plugin"
+      ],
+      "messages": [],
+      "system_errors": 0,
+      "satisfied": false,
+      "missing": {
+        "900043": {
+          "1": {
+            "season": 1,
+            "episodes": [],
+            "total_episode": 3,
+            "start_episode": 1,
+            "require_complete_coverage": false
+          }
+        }
+      },
+      "error": null
+    }
+  ]
+}

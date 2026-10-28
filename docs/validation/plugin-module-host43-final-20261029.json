@@ -1,0 +1,39 @@
+{
+  "accepted": true,
+  "index": 43,
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "full_audit": "testdata/standard-module-host/modules56-final-host-audit.json.gz",
+  "audit_sha256": "e420f9b5b2f09c423083a29dd377a53d7bf930554fa6447b263860135bbb1dd2",
+  "manifest": "testdata/plugin-module-no-official-auth-20261026/host-audit-56-20261029/manifest.json",
+  "counts": {
+    "direct_call_scopes": {
+      "outside_existing_business_host": 116,
+      "existing_host": 83,
+      "excluded_by_user": 32
+    },
+    "method_scopes": {
+      "existing_host": 68,
+      "outside_existing_business_host": 113,
+      "excluded_by_user": 16
+    },
+    "indirect_existing_host": 1
+  },
+  "ordinary_existing_host_methods_with_actual_evidence": 69,
+  "source_files_rechecked": 529,
+  "direct_calls_rechecked": 231,
+  "indirect_callbacks_rechecked": 1,
+  "unresolved": [],
+  "scope_decisions": "All197 distinct direct methods and all231 sites retained.68 existing-host methods plus indirectpost_message have source→target→actual evidence. Other methods retain explicit caller/guard/business boundaries under the user instruction to avoid adding other business systems. AI-only callers are separately excluded by user.",
+  "regression": "docs/validation/plugin-platform-regression-20261029.json",
+  "last_runtime": "docs/validation/plugin-directory-transfer-types-20261029.json",
+  "remaining": [
+    "50 final evidence/hash/cleanup audit"
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

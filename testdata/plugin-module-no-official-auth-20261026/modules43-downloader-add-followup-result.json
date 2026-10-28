@@ -1,0 +1,76 @@
+{
+  "scope": "Add follow-up, later than actual server05f123; implemented and SDK/protocol verified, actual next shared main pending",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/modules/qbittorrent/qbittorrent.py:401 add_torrent, category check452-479",
+    "app/chain/download.py:909 downloader or _site_downloader expression"
+  ],
+  "target": [
+    "internal/download/client.go:AddRequest.SourceCategorySet/SourceCategory",
+    "internal/download/qbittorrent.go:qbAdd",
+    "internal/app/plugin_original_download.go:originalDownloadSelection and options into native core callback",
+    "internal/app/native_download.go:addNativeDownload/runNativeDownload",
+    "internal/app/search_download.go:previewDownload/runDownload"
+  ],
+  "verified": [
+    "Actual fixed qB function3 cases→real multipart/independent actual task readback: category truthy AND AutoCategory sets autoTMM=true and sends category, otherwise category absent and autoTMM=false. Legacy native caller without source mode keeps existing flags.",
+    "Existing Native/Intent actual SDK+protocol branches with AutoCategory=true: unknown Native category disables autoTMM, known Intent passes 华语电影 and enables autoTMM.",
+    "Actual fixed download_single expression3 cases: explicit selection wins, otherwise site downloader wins, otherwise None. Resolve existing native IDs/display names and freeze both real ID and SDK display choice in Native/Preview/Intent; no new UI/business."
+  ],
+  "evidence": {
+    "source_category_oracle_cases": 3,
+    "source_selection_oracle_cases": 3,
+    "source_protocol_command": [
+      "go",
+      "test",
+      "./internal/download",
+      "-run",
+      "^(TestSourceQbCategoryActualSourceAndProtocol|TestQBitTorrentAPIKeyAndOriginalAddOptions)$",
+      "-count=1"
+    ],
+    "source_protocol_elapsed_seconds": 0.353,
+    "sdk_roots": 6,
+    "sdk_package_elapsed_seconds": 7.356,
+    "actual_main_verified": false
+  },
+  "whole43_accepted": false,
+  "artifacts": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/modules43-add-followup-raw/modules43-download-category-sdk-tests.jsonl.gz",
+      "sha256": "622aa5e0fb1f86facf710862dcd8d7e4210d4a887c4e03b9d82bec8010d49c2c",
+      "source": "work/plugin-no-official-auth-20261026/modules43-download-category-sdk-tests.jsonl"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/modules43-add-followup-raw/modules43-download-selection-category-sdk-tests.jsonl.gz",
+      "sha256": "5ecf69fc52dc57300e450c7e08906d01001f9b2decfa0dc61fcdda658d8df671",
+      "source": "work/plugin-no-official-auth-20261026/modules43-download-selection-category-sdk-tests.jsonl"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/modules43-add-followup-raw/modules43-add-obsolete-binaries-cleanup.json",
+      "sha256": "cedb72db943e35d459f0e23dfad23f5c8a267ffd177abb5e8a3a247d99f67e51",
+      "source": "work/plugin-no-official-auth-20261026/modules43-add-obsolete-binaries-cleanup.json"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/modules43-add-followup-raw/downloader-add-oracle.json",
+      "sha256": "8efa6c0efe30d64f9761550dbb00c987a413b5986cb9d27af5a78602738d47b0",
+      "source": "testdata/standard-module-host/downloader-add-oracle.json"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/modules43-add-followup-raw/generate-downloader-add-oracle.py",
+      "sha256": "89002e2b947c3a0da4c1e06fe891f1669e086959ed094d40bc43ea19b3eac547",
+      "source": "testdata/standard-module-host/generate-downloader-add-oracle.py"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/modules43-add-followup-raw/category-source-oracle.json",
+      "sha256": "df79dc9975bf4e6ae982266f546af2559af295c1f4ab13520e8d654d4da44e1d",
+      "source": "internal/download/testdata/category-source-oracle.json"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/modules43-add-followup-raw/generate-category-source-oracle.py",
+      "sha256": "98e9675a5ebcd3eadce4b8a131520a3941ba2b989edb92025215ecfc833986e4",
+      "source": "internal/download/testdata/generate-category-source-oracle.py"
+    }
+  ],
+  "platform7_actual_increment": "testdata/plugin-module-no-official-auth-20261026/modules43-platform7-add-file-consumer-result.json",
+  "platform7_note": "Actual Add+FileDeleted2.92s has now passed; category-true/known-media and new UI status reader remain separately bound and not assumed covered by this input."
+}

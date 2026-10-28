@@ -1,0 +1,336 @@
+{
+  "fixed_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "kind": "fixed frontend function replay; controlled API/storage/time",
+  "sources": {
+    "pages/dashboard.vue": "a6fc3edf8937653b0d3f83e98b3fed44641de205beef226b661493dd4fd41c76",
+    "composables/useRecentPlugins.ts": "f6b4b2242e146aa95fd602539614549b326256b217642a5cb69243a8c81a19d8"
+  },
+  "cases": [
+    {
+      "input": {
+        "name": "valid-server-always-wins",
+        "local": {
+          "items": {
+            "old": {
+              "w": 2
+            }
+          },
+          "updatedAt": 99
+        },
+        "remote": {
+          "items": {
+            "server": {
+              "w": 6
+            }
+          },
+          "updatedAt": 1
+        }
+      },
+      "expected": {
+        "value": {
+          "items": {
+            "server": {
+              "w": 6
+            }
+          },
+          "updatedAt": 1
+        },
+        "calls": [
+          {
+            "read": true,
+            "path": "/user/config/remote"
+          }
+        ],
+        "stored": {
+          "items": {
+            "server": {
+              "w": 6
+            }
+          },
+          "updatedAt": 1
+        }
+      }
+    },
+    {
+      "input": {
+        "name": "absent-server-backfills-local",
+        "local": {
+          "items": {
+            "local": {
+              "w": 4
+            }
+          }
+        },
+        "remote": null
+      },
+      "expected": {
+        "value": {
+          "items": {
+            "local": {
+              "w": 4
+            }
+          }
+        },
+        "calls": [
+          {
+            "read": true,
+            "path": "/user/config/remote"
+          },
+          {
+            "path": "/user/config/remote",
+            "value": {
+              "items": {
+                "local": {
+                  "w": 4
+                }
+              }
+            }
+          }
+        ],
+        "stored": {
+          "items": {
+            "local": {
+              "w": 4
+            }
+          }
+        }
+      }
+    },
+    {
+      "input": {
+        "name": "missing-server-and-local",
+        "remote": null
+      },
+      "expected": {
+        "value": null,
+        "calls": [
+          {
+            "read": true,
+            "path": "/user/config/remote"
+          }
+        ],
+        "stored": null
+      }
+    },
+    {
+      "input": {
+        "name": "server-read-failure-keeps-local",
+        "local": {
+          "items": {}
+        },
+        "failRead": true
+      },
+      "expected": {
+        "value": {
+          "items": {}
+        },
+        "calls": [
+          {
+            "read": true,
+            "path": "/user/config/remote"
+          }
+        ],
+        "stored": {
+          "items": {}
+        }
+      }
+    },
+    {
+      "input": {
+        "name": "backfill-failure-keeps-local",
+        "local": {
+          "items": {}
+        },
+        "remote": null,
+        "failWrite": true
+      },
+      "expected": {
+        "value": {
+          "items": {}
+        },
+        "calls": [
+          {
+            "read": true,
+            "path": "/user/config/remote"
+          },
+          {
+            "path": "/user/config/remote",
+            "value": {
+              "items": {}
+            }
+          }
+        ],
+        "stored": {
+          "items": {}
+        }
+      }
+    }
+  ],
+  "saves": [
+    {
+      "fail": "",
+      "expected": {
+        "calls": [
+          "local:enable",
+          "local:order",
+          "remote:enable",
+          "remote:order",
+          "meta",
+          "close"
+        ],
+        "storage": {
+          "enable": {
+            "Owned:one": true
+          },
+          "order": [
+            {
+              "id": "Owned",
+              "key": "one"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fail": "enable",
+      "expected": {
+        "calls": [
+          "local:enable",
+          "local:order",
+          "remote:enable",
+          "meta",
+          "close"
+        ],
+        "storage": {
+          "enable": {
+            "Owned:one": true
+          },
+          "order": [
+            {
+              "id": "Owned",
+              "key": "one"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "fail": "order",
+      "expected": {
+        "calls": [
+          "local:enable",
+          "local:order",
+          "remote:enable",
+          "remote:order",
+          "meta",
+          "close"
+        ],
+        "storage": {
+          "enable": {
+            "Owned:one": true
+          },
+          "order": [
+            {
+              "id": "Owned",
+              "key": "one"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "recent": {
+    "remembered": [
+      {
+        "id": "b",
+        "plugin_name": "b",
+        "has_page": true,
+        "state": false,
+        "plugin_id": "b",
+        "access_time": 5
+      },
+      {
+        "id": "d",
+        "plugin_name": "d",
+        "has_page": true,
+        "state": false,
+        "plugin_id": "d",
+        "access_time": 4
+      },
+      {
+        "id": "c",
+        "plugin_name": "c",
+        "has_page": true,
+        "state": false,
+        "plugin_id": "c",
+        "access_time": 3
+      }
+    ],
+    "loaded": [
+      {
+        "id": "high",
+        "plugin_name": "high",
+        "has_page": true
+      },
+      {
+        "id": "mid",
+        "plugin_name": "mid",
+        "has_page": true
+      },
+      {
+        "id": "four",
+        "plugin_name": "four",
+        "has_page": true
+      },
+      {
+        "id": "low",
+        "plugin_name": "low",
+        "has_page": true
+      }
+    ]
+  },
+  "layout": {
+    "resizes": [
+      {
+        "name": "width-only-retains-auto-height",
+        "begin": 8,
+        "end": 8,
+        "expected": [
+          "notify",
+          "notify",
+          {
+            "persist": false
+          }
+        ]
+      },
+      {
+        "name": "height-resize-locks-height",
+        "begin": 8,
+        "end": 11,
+        "expected": [
+          "notify",
+          "notify",
+          {
+            "persist": "Owned:summary"
+          }
+        ]
+      }
+    ],
+    "reset": {
+      "calls": [
+        {
+          "save": {}
+        },
+        {
+          "remove": [
+            false,
+            false
+          ]
+        },
+        "sync"
+      ],
+      "editing": false,
+      "items": {}
+    }
+  }
+}

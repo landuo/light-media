@@ -1,0 +1,79 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/scheduler.py": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d"
+  },
+  "boundary": "Fixed common scheduler registration and ChainBase wrapper/dispatch.\nClock registration arguments and the void wrapper are actual AST; only provider functions are owned.\n",
+  "clock": [
+    {
+      "args": [
+        "Scheduler.start",
+        "interval"
+      ],
+      "kwargs": {
+        "id": "scheduler_job",
+        "name": "公共定时服务",
+        "minutes": 10,
+        "kwargs": {
+          "job_id": "scheduler_job"
+        }
+      }
+    }
+  ],
+  "cases": [
+    {
+      "name": "none",
+      "plugin": null,
+      "fail": false,
+      "result": null,
+      "calls": [
+        "source",
+        "clone"
+      ],
+      "messages": 0
+    },
+    {
+      "name": "false",
+      "plugin": false,
+      "fail": false,
+      "result": null,
+      "calls": [
+        "source"
+      ],
+      "messages": 0
+    },
+    {
+      "name": "list",
+      "plugin": [],
+      "fail": false,
+      "result": null,
+      "calls": [
+        "source",
+        "clone"
+      ],
+      "messages": 0
+    },
+    {
+      "name": "object",
+      "plugin": {},
+      "fail": false,
+      "result": null,
+      "calls": [
+        "source"
+      ],
+      "messages": 0
+    },
+    {
+      "name": "throw",
+      "plugin": null,
+      "fail": true,
+      "result": null,
+      "calls": [
+        "source",
+        "clone"
+      ],
+      "messages": 1
+    }
+  ]
+}

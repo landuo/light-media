@@ -15,64 +15,86 @@ import (
 
 	"light-media/internal/catalog"
 	"light-media/internal/media"
+	"light-media/internal/plugins"
+	"light-media/internal/releasemeta"
 	"light-media/internal/transferextensions"
 )
 
 type ImportFileRequest struct {
-	Path            string `json:"path"`
-	Season          int    `json:"season"`
-	SeasonExplicit  bool   `json:"season_explicit,omitempty"`
-	SourceEpisodeID int64  `json:"source_episode_id,omitempty"`
-	Episodes        []int  `json:"episodes"`
-	Part            string `json:"part,omitempty"`
+	originalItem         *plugins.ModuleFileItem
+	originalResolvedMeta *releasemeta.MetaObject
+	originalMetadataPath string
+	Path                 string `json:"path"`
+	Season               int    `json:"season"`
+	SeasonExplicit       bool   `json:"season_explicit,omitempty"`
+	SourceEpisodeID      int64  `json:"source_episode_id,omitempty"`
+	Episodes             []int  `json:"episodes"`
+	Part                 string `json:"part,omitempty"`
 }
 
 type ImportRequest struct {
-	directoryRule      *DirectoryRule
-	directorySelection *nativeDirectorySelection
-	qualityReplacement bool
-	HistorySource      string              `json:"-"`
-	Manual             bool                `json:"-"`
-	ReorganizeAssetID  string              `json:"-"`
-	Renaming           *bool               `json:"renaming,omitempty"`
-	Scraping           *bool               `json:"scraping,omitempty"`
-	LibraryTypeFolder  *bool               `json:"library_type_folder,omitempty"`
-	MediaType          string              `json:"media_type"`
-	TMDBID             int64               `json:"tmdb_id"`
-	RootID             string              `json:"root_id"`
-	TargetPath         string              `json:"target_path,omitempty"`
-	Mode               string              `json:"mode"`
-	IntentID           string              `json:"intent_id"`
-	WorkflowID         string              `json:"workflow_id"`
-	Files              []ImportFileRequest `json:"files"`
-	Mappings           []media.MappingRule `json:"mappings"`
+	originalDirectoryPlanned  bool
+	originalDirectoryListings map[string][]map[string]any
+	originalSingleHistory     bool
+	originalResolvedMedia     json.RawMessage
+	originalModulePreview     bool
+	directoryRule             *DirectoryRule
+	directorySelection        *nativeDirectorySelection
+	qualityReplacement        bool
+	HistorySource             string              `json:"-"`
+	Manual                    bool                `json:"-"`
+	ReorganizeAssetID         string              `json:"-"`
+	Renaming                  *bool               `json:"renaming,omitempty"`
+	Scraping                  *bool               `json:"scraping,omitempty"`
+	LibraryTypeFolder         *bool               `json:"library_type_folder,omitempty"`
+	MediaType                 string              `json:"media_type"`
+	TMDBID                    int64               `json:"tmdb_id"`
+	RootID                    string              `json:"root_id"`
+	TargetPath                string              `json:"target_path,omitempty"`
+	Mode                      string              `json:"mode"`
+	IntentID                  string              `json:"intent_id"`
+	WorkflowID                string              `json:"workflow_id"`
+	Files                     []ImportFileRequest `json:"files"`
+	Mappings                  []media.MappingRule `json:"mappings"`
 }
 
 type importSidecar struct {
-	Kind     string         `json:"kind,omitempty"`
-	Source   string         `json:"source"`
-	Target   string         `json:"target"`
-	Snapshot importSnapshot `json:"snapshot"`
+	Item       *plugins.ModuleFileItem      `json:"original_fileitem,omitempty"`
+	NamingBase string                       `json:"original_naming_base,omitempty"`
+	Original   *originalTransferFileContext `json:"original_transfer,omitempty"`
+	Kind       string                       `json:"kind,omitempty"`
+	Source     string                       `json:"source"`
+	Target     string                       `json:"target"`
+	Snapshot   importSnapshot               `json:"snapshot"`
 }
 
 type importMetadata struct {
-	ExtensionInputSHA string                     `json:"extension_input_sha,omitempty"`
-	Overwrite         *importOverwritePolicy     `json:"overwrite,omitempty"`
-	Reorganize        *importReorganize          `json:"reorganize,omitempty"`
-	RootPath          string                     `json:"root_path"`
-	Methods           map[string]string          `json:"methods"`
-	Episodes          map[string]catalog.Episode `json:"episodes"`
-	Sidecars          map[string][]importSidecar `json:"sidecars"`
+	OriginalPreview     bool                                   `json:"original_preview,omitempty"`
+	OriginalNamingBases map[string]string                      `json:"original_naming_bases,omitempty"`
+	OriginalTransfer    map[string]originalTransferFileContext `json:"original_transfer,omitempty"`
+	ExtensionInputSHA   string                                 `json:"extension_input_sha,omitempty"`
+	Overwrite           *importOverwritePolicy                 `json:"overwrite,omitempty"`
+	Reorganize          *importReorganize                      `json:"reorganize,omitempty"`
+	RootPath            string                                 `json:"root_path"`
+	Methods             map[string]string                      `json:"methods"`
+	Episodes            map[string]catalog.Episode             `json:"episodes"`
+	Sidecars            map[string][]importSidecar             `json:"sidecars"`
 }
 
 type importScanFile struct {
-	Path           string               `json:"path"`
-	Size           int64                `json:"size"`
-	Parsed         media.ParseResult    `json:"parsed"`
-	InferredMedia  *importInferredMedia `json:"inferred_media,omitempty"`
-	Numbering      *media.Numbering     `json:"numbering,omitempty"`
-	IdentitySource string               `json:"identity_source,omitempty"`
-	IdentityReason string               `json:"identity_reason,omitempty"`
+	originalResolvedMeta      *releasemeta.MetaObject
+	originalDirectoryPlanned  bool
+	originalItem              *plugins.ModuleFileItem
+	originalDirectoryListings map[string][]map[string]any
+	originalMetadataPath      string
+	materialKind              string
+	Path                      string               `json:"path"`
+	Size                      int64                `json:"size"`
+	Parsed                    media.ParseResult    `json:"parsed"`
+	InferredMedia             *importInferredMedia `json:"inferred_media,omitempty"`
+	Numbering                 *media.Numbering     `json:"numbering,omitempty"`
+	IdentitySource            string               `json:"identity_source,omitempty"`
+	IdentityReason            string               `json:"identity_reason,omitempty"`
 }
 
 type importInferredMedia struct {
@@ -188,6 +210,9 @@ func (a *App) scanFiles(ctx context.Context, directory string, recursive bool) (
 }
 
 func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportPlan, error) {
+	if request.originalDirectoryListings != nil {
+		ctx = context.WithValue(ctx, originalTransferDirectoryListingsKey{}, request.originalDirectoryListings)
+	}
 	var prepareErr error
 	ctx, extensions, prepareErr := a.observeTransferExtensions(ctx)
 	if prepareErr != nil {
@@ -228,7 +253,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	}
 	rootInfo, err := rootDir.Stat()
 	availableSpace, spaceErr := importAvailableSpace(rootDir)
-	if spaceErr == nil {
+	if spaceErr == nil && !request.originalModulePreview {
 		if ctx.Err() != nil {
 			spaceErr = ctx.Err()
 		} else {
@@ -251,7 +276,17 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	if !ok {
 		return ImportPlan{}, bad("INVALID_ROOT", "无法确定目标文件系统")
 	}
-	identity, err := a.media(ctx, request.MediaType, request.TMDBID)
+	var identity catalog.Media
+	var originalMedia json.RawMessage
+	if len(request.originalResolvedMedia) > 0 {
+		complete, e := a.originalRecognitionProjection(catalog.Media{ID: request.TMDBID, MediaType: request.MediaType}, request.originalResolvedMedia)
+		identity, originalMedia, err = complete.Media, complete.MediaInfo, e
+	} else if a.originalTransferHasHandlers() {
+		complete, e := a.sourceRecognizeTMDBMedia(ctx, catalog.Media{ID: request.TMDBID, MediaType: request.MediaType})
+		identity, originalMedia, err = complete.Media, complete.MediaInfo, e
+	} else {
+		identity, err = a.media(ctx, request.MediaType, request.TMDBID)
+	}
 	if err != nil {
 		return ImportPlan{}, err
 	}
@@ -285,6 +320,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 	plan.SpaceAvailable = availableSpace
 	plan.Warnings = []string{"空间是视频、字幕及有上限的刮削图片的保守预估；实际写入前仍会复核可用空间。"}
 	meta := importMetadata{RootPath: root.Path, Methods: map[string]string{}, Episodes: map[string]catalog.Episode{}, Sidecars: map[string][]importSidecar{}}
+	meta.OriginalPreview = request.originalModulePreview
 	meta.Reorganize = reorganize
 	meta.ExtensionInputSHA = extensions.InputSHA
 	policy, policyErr := a.resolveImportOverwrite(ctx, request)
@@ -307,8 +343,16 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		if len([]rune(file.Part)) > 64 || importName(file.Part) != file.Part {
 			block("Part 必须是有效的文件名片段，不能包含路径或特殊控制字符")
 		}
-		video, _ := classifier.Media(transferextensions.PathFile(file.Source))
-		if !a.importSourceAllowed(file.Source, request.Manual) || !video || seenSources[file.Source] {
+		class := originalImportFileClass(requested)
+		video, _ := classifier.Media(class)
+		if request.Manual && !video {
+			if classifier.Subtitle(class) {
+				file.MaterialKind = "subtitle"
+			} else if classifier.Audio(class) {
+				file.MaterialKind = "audio"
+			}
+		}
+		if !a.importSourceAllowed(file.Source, request.Manual) || !video && file.MaterialKind == "" || seenSources[file.Source] {
 			block("源路径未获允许、不是视频或重复选择")
 		} else if !request.Manual {
 			for _, configured := range a.Settings().Roots {
@@ -324,17 +368,18 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			}
 		}
 		if file.Status == "ready" {
-			locked, e := snapshotPath(file.Source)
+			locked, e := snapshotTransferPath(file.Source)
 			if e != nil {
 				block("源文件不可访问、包含符号链接或不是普通文件")
 			} else {
 				file.Device, file.Inode, file.Size, file.ModNS = locked.Device, locked.Inode, locked.Size, locked.ModNS
+				file.DirectoryDigest = locked.Directory
 				inodeKey := fmt.Sprintf("%d:%d", locked.Device, locked.Inode)
 				if seenSourceInodes[inodeKey] {
 					block("同一个源 inode 被重复选择，不能冒充不同影片或季集")
 				}
 				seenSourceInodes[inodeKey] = true
-				if locked.Size <= 0 {
+				if locked.Size <= 0 && locked.Directory == "" {
 					block("空视频文件不能整理")
 				}
 			}
@@ -342,7 +387,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		if request.MediaType == "movie" {
 			file.Season = 0
 			file.Episodes = nil
-		} else if file.Status == "ready" {
+		} else if file.Status == "ready" && file.DirectoryDigest == "" {
 			explicitSeason := requested.SeasonExplicit
 			nfoEpisodeID := requested.SourceEpisodeID
 			if inferred, numbering, reason := a.importNFOEvidence(file.Source); reason == "" && inferred != nil && inferred.Type == "tv" && inferred.ID == identity.ID && numbering != nil && numbering.Season != nil && len(numbering.Episodes) == 1 && len(file.Episodes) == 0 {
@@ -410,7 +455,10 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					if file.Status != "ready" {
 						break
 					}
-					if episode.SeasonNumber == file.Season && episode.EpisodeNumber == file.Episodes[0] && episode.ID > 0 {
+					// Fixed TmdbEpisode intentionally has no provider episode ID.
+					// A validated original module DTO establishes season/episode
+					// membership without inventing a native TMDB episode identity.
+					if episode.SeasonNumber == file.Season && episode.EpisodeNumber == file.Episodes[0] && (episode.ID > 0 || len(episode.OriginalEpisode) > 0) {
 						if nfoEpisodeID > 0 && episode.ID != nfoEpisodeID {
 							block("NFO 单集来源 ID 与 TMDB 季集不符，需人工核对")
 							break
@@ -445,7 +493,9 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			}
 			targetDir := filepath.Join(baseDir, folder)
 			if request.MediaType == "tv" {
-				base = fmt.Sprintf("%s S%02dE%02d", title, file.Season, file.Episodes[0])
+				if file.DirectoryDigest == "" {
+					base = fmt.Sprintf("%s S%02dE%02d", title, file.Season, file.Episodes[0])
+				}
 				targetDir = filepath.Join(targetDir, fmt.Sprintf("Season %d", file.Season))
 			}
 			if file.Part != "" {
@@ -456,6 +506,83 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				// MoviePilot keeps the original basename directly in the destination
 				// when smart naming is off, without title or Season subdirectories.
 				file.Target = filepath.Join(baseDir, filepath.Base(file.Source))
+			}
+			if a.originalTransferHasHandlers() || file.MaterialKind != "" || requested.originalResolvedMeta != nil {
+				metadataFile := file
+				if requested.originalMetadataPath != "" {
+					metadataFile.Source = requested.originalMetadataPath
+				}
+				original, e := a.originalTransferContextWithMedia(ctx, identity, metadataFile, originalMedia, requested.originalResolvedMeta)
+				if e != nil {
+					return ImportPlan{}, e
+				}
+				if requested.originalItem != nil {
+					original.Item = requested.originalItem.Clone()
+				}
+				if meta.OriginalTransfer == nil {
+					meta.OriginalTransfer = map[string]originalTransferFileContext{}
+				}
+				if season, exists := seasons[file.Season]; exists {
+					rows := make([]map[string]any, 0, len(season.Episodes))
+					for _, episode := range season.Episodes {
+						raw := episode.OriginalEpisode
+						if len(raw) == 0 {
+							raw, _ = json.Marshal(episode)
+						}
+						row, e := originalCatalogEpisodeProjection(raw)
+						if e != nil {
+							return ImportPlan{}, e
+						}
+						rows = append(rows, row)
+					}
+					original.Episodes, _ = json.Marshal(rows)
+				}
+				meta.OriginalTransfer[file.ID] = original
+				if importBool(request.Renaming, true) && !request.originalModulePreview {
+					var episodes []catalog.Episode
+					if season, exists := seasons[file.Season]; exists {
+						episodes = season.Episodes
+					}
+					file.Target, e = a.originalTransferNativeRename(ctx, identity, file, baseDir, original, episodes, false)
+					if e != nil {
+						return ImportPlan{}, e
+					}
+					if meta.OriginalNamingBases == nil {
+						meta.OriginalNamingBases = map[string]string{}
+					}
+					meta.OriginalNamingBases[file.ID] = baseDir
+				}
+			}
+			if request.originalModulePreview && (a.originalTransferHasHandlers() || file.MaterialKind != "" || file.DirectoryDigest != "") {
+				file.Method = request.Mode
+				if file.Method == "auto" {
+					file.Method = "hardlink"
+					if file.Device != uint64(rootStat.Dev) {
+						file.Method = "copy"
+					}
+				}
+				meta.Methods[file.ID] = file.Method
+				var episodes []catalog.Episode
+				if season, exists := seasons[file.Season]; exists {
+					episodes = season.Episodes
+				}
+				preview, callback, e := a.originalTransferModulePreview(ctx, plan, file, meta, request.directorySelection, baseDir, episodes)
+				file.Target, file.OriginalPreviewCallback = preview, callback
+				if e != nil {
+					block(e.Error())
+				}
+				// The manual source plans related files as separate tasks. Their
+				// preview callbacks never probe target existence or publish files.
+				plan.Files = append(plan.Files, file)
+				if file.MaterialKind != "" || request.originalDirectoryPlanned {
+					continue
+				}
+				related, e := a.originalTransferRelatedPreview(ctx, plan, file, &meta, request.directorySelection, baseDir, episodes)
+				if e != nil {
+					return ImportPlan{}, e
+				}
+				plan.Files = append(plan.Files, related...)
+				continue
 			}
 			inPlace := reorganize != nil && file.Target == reorganize.Asset.Path
 			if !within(root.Path, file.Target) || file.Source == file.Target && !inPlace || seenTargets[file.Target] {
@@ -485,12 +612,12 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			}
 			if _, e := os.Lstat(file.Target); e == nil {
 				if qualityOwner != nil && file.Status == "ready" {
-					stamp, inspectErr := snapshotPath(file.Target)
+					stamp, inspectErr := snapshotTransferPath(file.Target)
 					if inspectErr != nil || stamp != qualityOwner.Video.Snapshot {
 						block("洗版原视频在预览时已变化")
 					}
 				} else if inPlace {
-					actual, inspectErr := snapshotPath(file.Target)
+					actual, inspectErr := snapshotTransferPath(file.Target)
 					if inspectErr != nil || actual != reorganize.Video.Snapshot {
 						block("原整理目标已被外部修改，不能原位重新整理")
 					}
@@ -499,7 +626,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					e = a.assetAtPath(ctx, file.Target, &existing)
 					var ownership managedFile
 					ownershipErr := a.Store.Get(ctx, "managed_file", tokenHash(file.Target), &ownership)
-					actual, targetErr := snapshotPath(file.Target)
+					actual, targetErr := snapshotTransferPath(file.Target)
 					if e == nil && mediaKey(existing.Media) == mediaKey(identity) && existing.RootID == root.ID && existing.SourcePath == file.Source && (existing.State == "present" || existing.State == "external") && ownershipErr == nil && ownership.RootID == root.ID && ownership.Kind == "video" && ownership.AssetID == existing.ID && ownership.SourceSnapshot == planSnapshot(file) && targetErr == nil && ownership.Snapshot == actual {
 						file.Status = "already_imported"
 						file.AssetID = existing.ID
@@ -512,7 +639,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 			} else if !os.IsNotExist(e) {
 				block("无法检查目标冲突")
 			}
-			if file.Status == "ready" {
+			if file.Status == "ready" && file.MaterialKind == "" {
 				for _, episode := range importEpisodes(file.Episodes) {
 					slot := fmt.Sprintf("%d:%d", file.Season, episode)
 					if seenSlots[slot] {
@@ -539,7 +666,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 					}
 				}
 			}
-			if file.Status == "ready" && !inPlace {
+			if file.Status == "ready" && !inPlace && file.MaterialKind == "" && !request.originalDirectoryPlanned {
 				var sidecars []importSidecar
 				var e error
 				if meta.Overwrite != nil {
@@ -550,6 +677,33 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				if e != nil {
 					block("字幕旁车不可访问或发生冲突")
 				} else {
+					if original, ok := meta.OriginalTransfer[file.ID]; ok {
+						for i := range sidecars {
+							extra := file
+							extra.Source, extra.Target, extra.Size = sidecars[i].Source, sidecars[i].Target, sidecars[i].Snapshot.Size
+							// The pinned planner deep-copies the main task metadata for
+							// an associated extra; it does not parse the extra's name.
+							projection := original
+							projection.Item = sidecars[i].Item
+							sidecars[i].Original = &projection
+							if importBool(request.Renaming, true) {
+								var episodes []catalog.Episode
+								if season, exists := seasons[file.Season]; exists {
+									episodes = season.Episodes
+								}
+								path, e := a.originalTransferNativeRename(ctx, identity, extra, baseDir, projection, episodes, false)
+								if e != nil {
+									return ImportPlan{}, e
+								}
+								sidecars[i].NamingBase = baseDir
+								sidecars[i].Target = path
+								if !within(root.Path, sidecars[i].Target) || sidecars[i].Target == sidecars[i].Source || seenTargets[sidecars[i].Target] {
+									return ImportPlan{}, bad("INVALID_TARGET", "插件附加文件命名重复、重叠或逃逸")
+								}
+								seenTargets[sidecars[i].Target] = true
+							}
+						}
+					}
 					meta.Sidecars[file.ID] = sidecars
 				}
 			}
@@ -557,7 +711,7 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 		plan.Files = append(plan.Files, file)
 	}
 	plan.SpaceNeeded = importSpaceEstimate(plan, meta)
-	if plan.SpaceNeeded > plan.SpaceAvailable {
+	if plan.SpaceNeeded > plan.SpaceAvailable && !request.originalModulePreview {
 		plan.Warnings = append(plan.Warnings, "当前可用空间不足，不能执行此计划")
 		for index := range plan.Files {
 			if plan.Files[index].Status == "ready" {

@@ -1,0 +1,46 @@
+{
+  "accepted_whole_scope": false,
+  "whole_indices": [
+    43
+  ],
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/storage.py:45-49",
+    "app/chain/__init__.py:470",
+    "app/modules/filemanager/__init__.py:220-253",
+    "app/api/endpoints/storage.py:90-115",
+    "app/schemas/file.py:FileItem",
+    "app/utils/string.py:1000-1013"
+  ],
+  "target": [
+    "internal/app/plugin_original_browser_storage.go",
+    "internal/app/plugin_original_browser_natural.go",
+    "internal/app/plugin_original_metadata_storage.go",
+    "internal/app/file_manager.go:browserList/browserListResult",
+    "internal/app/import_fs.go:importDir"
+  ],
+  "manifest": "testdata/plugin-module-no-official-auth-20261026/browser-storage-20261028/manifest.json",
+  "source_replay": "9 actual StorageChain/dispatcher/core-list/endpoint+FileItem cases and7 exact natural keys; tuple truthy .sort failure retained, None/list/empty/throw/native failure not conflated. Pydantic forward-ref harness initially rejected before execution, fixed model_rebuild; not counted as original behavior.",
+  "local": "actual HTTP/SDK9 and natural-key7 plus existing metadata/path regression8.303s; file-browser/manual transfer extended regression14.362s. Initial target failure400 on OS read permission compared to source500 preserved; importDir now retains OS cause while public path guards remain, module caller reports source system error only for OS permission.",
+  "actual_linux": "real main15 CLI1.64s list/scalar/tuple/throw/path rejection/source+clone/cold/uninstall passed; IAB48 final617.32s passed. Source/clone3878864/3878869→3889462/3889468; actual module calls before UI cold refresh0/0→1/1; old browser Cookie accepted, native owned25bytes hash unchanged. Source/clone uninstalledAPI404/native-only list and parent services cleanup/TempDir removal passed.",
+  "actual_browser": [
+    "File2/source +File3/clone+File10/actual file sorted2,3,10",
+    "File?.mkv filters2/3 and clears back toall",
+    "source false: explicit error with request ID and zero rows; source module3→4 while clone3 unchanged",
+    "source None: real refresh restores only clone3/native10; restore source brings2/3/10",
+    "cold restart then actual same-page refresh preserves all rows with new source/clone PIDs and one SDK call each"
+  ],
+  "adaptations": [
+    "Existing local authorized browser roots and direct-child paths stay authoritative; module rows cannot expand path access or grant a filesystem write. Remote storage is excluded by the Linux/local scope.",
+    "The native browser keeps its row/root envelope and directory-first presentation; source natural name keys use pinned CPython lower/decimal semantics while existing controls retain their native sort directions.",
+    "Module scalar/tuple invalid results retain source endpoint failure, with an actionable native error message. Native hard path protections remain errors rather than being hidden as an empty list.",
+    "No Python runtime dependency. Offline source replay uses Python3.12.13 and the existing controlled reference venv, not the production runtime. JSON values replace arbitrary shared Python heap objects.",
+    "Read metadata may describe a currently absent physical file; UI can show/select it, but actual backend file operations still require current filesystem facts. Do not claim the existing checkbox is disabled by protected metadata."
+  ],
+  "remaining": [
+    "StorageChain write operations at file-management entry points are not yet wired",
+    "High-level transfer override and other ordinary host/module audit remain open",
+    "Current storage source changes still require race verification",
+    "Core error display title currently adds an extra 模块 compared with fixed FileManagerModule.get_name; identified for next correction, not silently treated as equivalent"
+  ]
+}

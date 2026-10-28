@@ -3,6 +3,7 @@
 package artifacts
 
 import (
+	"bytes"
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
@@ -34,14 +35,20 @@ const (
 // repository webpage. An empty ReleaseVersion selects the explicitly indexed
 // CurrentVersion; it never falls back from a requested release or platform.
 type Request struct {
+	PreserveUnchangedRuntime                                bool `json:"-"` // Trusted local watcher: stage same-worker resource changes before in-place publication.
+	DeveloperLocalWatch                                     bool // Trusted host DEV watcher only; never an HTTP/metadata authority. SDK/platform/hash checks still apply.
 	Root, RepositoryURL, PluginID, ReleaseVersion, Platform string
+	LocalRoots                                              []string // trusted configured directories, never supplied by repository metadata
 	Force                                                   bool
-	RefreshBackup                                           bool // trusted App runtime mode, corresponding to original Docker-only refresh
+	RefreshBackup                                           bool   // trusted App runtime mode, corresponding to original Docker-only refresh
+	BackupRoot                                              string // trusted persistent code directory; defaults to Root/.backups
 	// Validate is a required trusted-host gate, run before any installed tree
 	// changes. A nil gate is rejected; the caller must supply an explicit policy.
 	Validate func(plugins.Manifest, string) error
 }
 type Acquired struct {
+	FrontendClass                        string // Actual class spelling in frontend content, independently of the compiled worker identity.
+	RuntimePreserved                     bool   `json:"-"` // This acquisition retained the runtime directory and executable inode.
 	Manifest                             plugins.Manifest
 	ExecutablePath, SHA256, HostContract string
 	PackageSHA256                        string // complete immutable package identity; empty for legacy worker-only packages
@@ -51,10 +58,17 @@ type Acquired struct {
 	BackupWarning                        string // post-success backup refresh failure is nonfatal
 }
 type Index struct {
-	SchemaVersion  int       `json:"schema_version"`
-	PluginID       string    `json:"plugin_id"`
-	CurrentVersion string    `json:"current_version"`
-	Releases       []Release `json:"releases"`
+	SystemVersion  json.RawMessage   `json:"system_version,omitempty"`
+	Level          *int              `json:"level,omitempty"`
+	PublicKey      string            `json:"key,omitempty"`
+	SchemaVersion  int               `json:"schema_version"`
+	PluginID       string            `json:"plugin_id"`
+	CurrentVersion string            `json:"current_version"`
+	Releases       []Release         `json:"releases"`
+	History        map[string]string `json:"history,omitempty"` // author-written notes, not evidence of an installable release
+	HistoryJSON    json.RawMessage   `json:"-"`                 // preserve the author's displayed key order
+	Label          string            `json:"plugin_label,omitempty"`
+	AddTime        int               `json:"add_time,omitempty"` // author-supplied listing order, not an invented installation timestamp
 }
 type Release struct {
 	Version   string           `json:"version"`
@@ -85,7 +99,12 @@ func (e *StageError) Error() string { return fmt.Sprintf("plugin acquisition %s:
 func (e *StageError) Unwrap() error { return e.Err }
 
 var operationMu sync.Mutex
-var idPattern = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_.-]{0,127}$`)
+
+type installedIdentifier struct{}
+
+func (installedIdentifier) MatchString(value string) bool { return plugins.ValidInstanceID(value) }
+
+var idPattern installedIdentifier
 var platformPattern = regexp.MustCompile(`^[a-z0-9]+-[a-z0-9]+$`)
 
 func Acquire(ctx context.Context, req Request, client *http.Client) (Acquired, error) {
@@ -116,9 +135,17 @@ func Acquire(ctx context.Context, req Request, client *http.Client) (Acquired, e
 	if err = safeExistingTree(target); err != nil {
 		return pre(err)
 	}
+	preserveRuntime := false
+	if req.PreserveUnchangedRuntime && IsLocalRepository(req.RepositoryURL) {
+		if installed, readErr := readInstalled(root, req.PluginID, req.Validate); readErr == nil && installed.HostContract == artifact.HostContract && strings.EqualFold(installed.SHA256, artifact.ExecutableSHA256) {
+			before, _ := json.Marshal(installed.Manifest)
+			after, _ := json.Marshal(release.Manifest)
+			preserveRuntime = bytes.Equal(before, after)
+		}
+	}
 	// Original install flow: backup, remove old code, THEN download/prepare.
 	backup := ""
-	if !req.Force {
+	if !req.Force && !preserveRuntime {
 		if _, statErr := os.Lstat(target); statErr == nil {
 			backup, err = os.MkdirTemp(root, ".backup-")
 			if err != nil {
@@ -133,6 +160,13 @@ func Acquire(ctx context.Context, req Request, client *http.Client) (Acquired, e
 		}
 	}
 	fail := func(stage string, cause error) (Acquired, error) {
+		if preserveRuntime {
+			var resourceError *StageError
+			if errors.As(cause, &resourceError) && resourceError.RecoveryPath != "" {
+				return Acquired{}, resourceError
+			}
+			return Acquired{}, &StageError{Stage: stage, Err: cause}
+		}
 		cleanupErr := os.RemoveAll(target)
 		restored := false
 		if backup != "" && cleanupErr == nil {
@@ -148,10 +182,21 @@ func Acquire(ctx context.Context, req Request, client *http.Client) (Acquired, e
 		}
 		return Acquired{}, &StageError{Stage: stage, Restored: restored, RecoveryPath: recoveryPath, Err: errors.Join(cause, cleanupErr)}
 	}
-	if err = os.RemoveAll(target); err != nil {
-		return fail("remove", err)
+	if !preserveRuntime {
+		if err = os.RemoveAll(target); err != nil {
+			return fail("remove", err)
+		}
 	}
-	payload, err := download(ctx, client, artifact.URL, artifact.Size)
+	var payload []byte
+	if IsLocalRepository(req.RepositoryURL) {
+		localRoot, rootErr := trustedLocalRoot(req.RepositoryURL, req.LocalRoots)
+		if rootErr != nil {
+			return fail("prepare", rootErr)
+		}
+		payload, err = readLocalFile(ctx, localRoot, artifact.URL, artifact.Size)
+	} else {
+		payload, err = download(ctx, client, artifact.URL, artifact.Size)
+	}
 	if err != nil {
 		return fail("prepare", err)
 	}
@@ -209,7 +254,12 @@ func Acquire(ctx context.Context, req Request, client *http.Client) (Acquired, e
 	if err = ctx.Err(); err != nil {
 		return fail("prepare", err)
 	}
-	if err = os.Rename(stage, target); err != nil {
+	if preserveRuntime {
+		err = publishResourcesInPlace(ctx, root, req.PluginID, filepath.Base(stage), release.Manifest.Entry, func() error { _, err := readInstalled(root, req.PluginID, req.Validate); return err }, nil)
+	} else {
+		err = os.Rename(stage, target)
+	}
+	if err != nil {
 		return fail("prepare", err)
 	}
 	if backup != "" {
@@ -217,18 +267,29 @@ func Acquire(ctx context.Context, req Request, client *http.Client) (Acquired, e
 	}
 	warning := ""
 	if req.RefreshBackup {
-		if err := refreshBackup(root, req.PluginID, target); err != nil {
+		backupRoot := req.BackupRoot
+		if backupRoot == "" {
+			backupRoot = filepath.Join(root, ".backups")
+		}
+		if err := backupInstalled(root, backupRoot, req.PluginID, true, req.Validate); err != nil {
 			warning = err.Error()
 		}
 	}
 	executable = filepath.Join(target, filepath.FromSlash(release.Manifest.Entry))
-	return Acquired{BackupWarning: warning, Manifest: release.Manifest, ExecutablePath: executable, SHA256: digest(data), HostContract: artifact.HostContract, RepositoryURL: req.RepositoryURL, PackageSHA256: packageSHA, Files: artifact.Files, Command: plugins.Command{Path: executable, Dir: target}}, nil
+	return Acquired{FrontendClass: release.Manifest.PluginID, RuntimePreserved: preserveRuntime, BackupWarning: warning, Manifest: release.Manifest, ExecutablePath: executable, SHA256: digest(data), HostContract: artifact.HostContract, RepositoryURL: req.RepositoryURL, PackageSHA256: packageSHA, Files: artifact.Files, Command: plugins.Command{Path: executable, Dir: target}}, nil
 }
 
 func selectArtifact(index Index, req Request) (Release, Artifact, error) {
 	bad := func(s string) (Release, Artifact, error) { return Release{}, Artifact{}, errors.New(s) }
 	if index.SchemaVersion != 1 || index.PluginID != req.PluginID {
 		return bad("index schema or plugin identity mismatch")
+	}
+	// Fixed install checks the latest declaration only for current installs;
+	// an explicitly selected older Release bypasses that current-only range.
+	if (!req.DeveloperLocalWatch || !IsLocalRepository(req.RepositoryURL)) && (req.ReleaseVersion == "" || req.ReleaseVersion == index.CurrentVersion || IsLocalRepository(req.RepositoryURL)) {
+		if compatible, message := CheckSystemVersion(index.SystemVersion, MoviePilotCompatibilityVersion); !compatible {
+			return bad(message)
+		}
 	}
 	version := req.ReleaseVersion
 	if version == "" {
@@ -292,7 +353,11 @@ func selectArtifact(index Index, req Request) (Release, Artifact, error) {
 		return Release{}, Artifact{}, err
 	}
 	a.Files = files
-	if _, err := httpURL(a.URL); err != nil {
+	if IsLocalRepository(req.RepositoryURL) {
+		if !safeName(a.URL) {
+			return bad("local artifact requires a relative path within its repository")
+		}
+	} else if _, err := httpURL(a.URL); err != nil {
 		return Release{}, Artifact{}, err
 	}
 	return r, a, nil
@@ -304,6 +369,10 @@ func httpURL(raw string) (*url.URL, error) {
 	}
 	return u, nil
 }
+
+type downloadStatusError struct{ Code int }
+
+func (e *downloadStatusError) Error() string { return fmt.Sprintf("HTTP status %d", e.Code) }
 func download(ctx context.Context, client *http.Client, raw string, limit int64) ([]byte, error) {
 	if _, err := httpURL(raw); err != nil {
 		return nil, err
@@ -331,18 +400,26 @@ func download(ctx context.Context, client *http.Client, raw string, limit int64)
 	}
 	resp, err := clone.Do(req)
 	if err != nil {
-		return nil, err
+		if ctx.Err() != nil {
+			return nil, ctx.Err()
+		}
+		// net/http errors can include signed query URLs or remote parser text.
+		// Installation failures are public API messages; do not echo either.
+		return nil, errors.New("artifact request failed")
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("HTTP status %d", resp.StatusCode)
+		return nil, &downloadStatusError{Code: resp.StatusCode}
 	}
 	if resp.ContentLength > limit {
 		return nil, errors.New("download exceeds size bound")
 	}
 	data, err := io.ReadAll(io.LimitReader(resp.Body, limit+1))
 	if err != nil {
-		return nil, err
+		if ctx.Err() != nil {
+			return nil, ctx.Err()
+		}
+		return nil, errors.New("artifact response read failed")
 	}
 	if int64(len(data)) > limit {
 		return nil, errors.New("download exceeds size bound")

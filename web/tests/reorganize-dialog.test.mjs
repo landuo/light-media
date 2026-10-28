@@ -110,8 +110,73 @@ function openDialog(t, initial = {}, options = {}) {
       await vue.nextTick();
       return requests.at(-1).body;
     },
+    async organize() {
+      await nodes()
+        .find((node) => node.type === 'button' && renderedText(node).includes('立即整理'))
+        .props.onClick();
+      await vue.nextTick();
+    },
   };
 }
+
+test('pinned per-task failure keeps successful siblings and updates the rendered summary', async (t) => {
+  const oracle = JSON.parse(
+    readFileSync(
+      new URL(
+        '../../testdata/standard-module-host/transfer-task-loop-source-oracle.json',
+        import.meta.url,
+      ),
+      'utf8',
+    ),
+  );
+  const sample = oracle.cases.find((item) => item.name === 'subtitle_false');
+  const items = sample.outcomes.map((success, index) => ({
+    source: ['/owned/Owned.mkv', '/owned/Owned.srt', '/owned/Owned.flac'][index],
+    target: success ? ['/library/Owned.mkv', '', '/library/Owned.flac'][index] : '',
+    job_id: 'actual-group-job',
+    status: success ? 'success' : 'failed',
+    error: success ? '' : 'owned rejection',
+  }));
+  const dialog = openDialog(
+    t,
+    {},
+    {
+      api: async (path) => {
+        if (path === '/files/organize')
+          return {
+            items: [{ source: items[0].source, job_id: 'actual-group-job', status: 'queued' }],
+            total: 1,
+            submitted: 1,
+            failed: 0,
+          };
+        if (path === '/jobs/actual-group-job')
+          return {
+            job: { state: 'failed', error_message: 'owned rejection' },
+            transfer: { items, total: 3, failed: sample.failed },
+          };
+        throw new Error('unexpected request ' + path);
+      },
+    },
+  );
+  await dialog.organize();
+  const panel = dialog.nodes().find((node) => node.props?.class === 'organize-preview');
+  const text = renderedText(panel).replace(/\s+/g, ' ');
+  assert.match(text, /总数 3 · 失败 1/);
+  assert.ok(text.includes('/library/Owned.mkv'));
+  assert.ok(text.includes('/library/Owned.flac'));
+  assert.equal(
+    dialog
+      .nodes()
+      .filter(
+        (node) =>
+          node.props?.class === 'preview-failure' &&
+          renderedText(node).trim() === 'owned rejection',
+      ).length,
+    1,
+    'only the rejected subtitle has a row error',
+  );
+  assert.equal(dialog.requests.length, 2, 'one submission and actual job poll');
+});
 
 test('manual target can be edited and cleared without changing storage, mode, or explicit switches', async (t) => {
   const dialog = openDialog(t);

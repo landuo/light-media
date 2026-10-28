@@ -20,7 +20,12 @@ import (
 )
 
 type SearchRequest struct {
+	resourceBatch        *originalResourceBatchSearch
+	mediaModuleSearch    *originalMediaResourceSearch
+	originalSearchInfo   *sourceMediaInformation
+	originalSubscription *Subscription
 	priorityMedia        *catalog.Media
+	priorityTarget       *decision.Target
 	prioritySubscription bool
 	VerifiedSeasonPack   bool                `json:"verified_season_pack,omitempty"`
 	WorkflowID           string              `json:"workflow_id"`
@@ -37,6 +42,7 @@ type SearchRequest struct {
 	EpisodeDates         map[int]string      `json:"episode_dates"`
 }
 type PreviewRequest struct {
+	sourceContext     json.RawMessage
 	sourceSeasons     []SearchRequest
 	sourceSeasonBasis json.RawMessage
 	sourceMaterial    string
@@ -233,6 +239,10 @@ func (a *App) target(ctx context.Context, in SearchRequest, auto bool) (decision
 	if e != nil {
 		return decision.Target{}, e
 	}
+	return a.targetMedia(ctx, in, auto, m)
+}
+
+func (a *App) targetMedia(ctx context.Context, in SearchRequest, auto bool, m catalog.Media) (decision.Target, error) {
 	t := decision.Target{Media: m, Season: in.Season, Episodes: in.Episodes, Mappings: in.Mappings, Auto: auto, AllowEarly: in.AllowEarly}
 	if m.MediaType == "tv" {
 		if in.Season < 1 {
@@ -288,14 +298,33 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 		return SearchOutput{}, e
 	}
 	in.Policy.FilterParams = snapshotAdditionalFilter(in.Policy.FilterParams).params
-	t, e := a.target(ctx, in, auto)
+	moduleSearch, e := a.prepareOriginalMediaResourceSearch(ctx, in, auto)
+	if e != nil {
+		return SearchOutput{}, e
+	}
+	if moduleSearch != nil && moduleSearch.originalInformation != nil {
+		defer func() { *moduleSearch.originalInformation = moduleSearch.information }()
+	}
+	var t decision.Target
+	if moduleSearch == nil {
+		t, e = a.target(ctx, in, auto)
+	} else {
+		t, e = a.targetMedia(ctx, in, auto, moduleSearch.information.Media)
+		in.mediaModuleSearch = moduleSearch
+		in.originalSearchInfo = &moduleSearch.information
+		in.Page = 1 // Source media process uses the ordinary default page0.
+	}
 	if e != nil {
 		return SearchOutput{}, e
 	}
 	in.priorityMedia = &t.Media
+	in.priorityTarget = &t
 	in.prioritySubscription = auto
 	out := SearchOutput{Candidates: []Candidate{}, Sites: []SiteStatus{}, WorkflowID: a.workflow(ctx, in.WorkflowID, t.Media), CachedAt: now()}
 	out, e = a.searchSites(ctx, in, out, func(siteCtx context.Context, s SiteConfig) siteSearchOutput {
+		if moduleSearch != nil {
+			return a.originalMediaResourceSiteOutput(siteCtx, s, in, t, out.WorkflowID, moduleSearch)
+		}
 		var result sites.SearchResult
 		queries := map[string]string{}
 		successfulQueries := 0
@@ -345,6 +374,12 @@ func (a *App) search(ctx context.Context, in SearchRequest, auto bool) (SearchOu
 	if e != nil {
 		return out, e
 	}
+	if moduleSearch != nil && len(out.Candidates) > 0 {
+		moduleSearch.information.MediaInfo, e = originalClearMediaSearchInformation(moduleSearch.information.MediaInfo)
+		if e != nil {
+			return out, e
+		}
+	}
 	a.saveDecision(ctx, out, t.Media)
 	return out, nil
 }
@@ -371,7 +406,24 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 			return DownloadPreview{}, bad("QUALITY_CONTEXT_CHANGED", "洗版订阅已变化")
 		}
 	}
-	t, e := a.target(ctx, in.SearchRequest, auto)
+	var selectedContext *originalDownloadContext
+	var t decision.Target
+	if len(in.sourceContext) > 0 {
+		selectedContext = &originalDownloadContext{}
+		if e = json.Unmarshal(in.sourceContext, selectedContext); e != nil {
+			return DownloadPreview{}, e
+		}
+		// batch_download already resolved this private, identity-checked source
+		// Context. Reusing its media avoids a second provider call before the
+		// actual material/path checks, including after durable batch recovery.
+		info, err := a.originalRecognitionProjection(catalog.Media{ID: in.TMDBID, MediaType: in.MediaType}, selectedContext.Media)
+		if err != nil {
+			return DownloadPreview{}, err
+		}
+		t, e = a.targetMedia(ctx, in.SearchRequest, auto, info.Media)
+	} else {
+		t, e = a.target(ctx, in.SearchRequest, auto)
+	}
 	if e != nil {
 		return DownloadPreview{}, e
 	}
@@ -393,7 +445,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	if e != nil {
 		return DownloadPreview{}, e
 	}
-	d, e := a.downloader(in.DownloaderID)
+	d, sourceChoice, e := a.originalDownloadSelection(in.DownloaderID, site)
 	if e != nil {
 		return DownloadPreview{}, e
 	}
@@ -469,6 +521,7 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 	}
 	p := DownloadPreview{WorkflowID: a.workflow(ctx, in.WorkflowID, t.Media), Request: in.SearchRequest, ID: id("preview_"), Media: t.Media, Season: in.Season, Episodes: in.Episodes, SiteID: site.ID, ResourceID: in.ResourceID, ResourceTitle: fresh.Title, DownloaderID: d.ID, RootID: destination.Root, DirectoryID: destination.Rule.ID, DownloadPath: destination.Path, DirectorySnapshot: destination.Snapshot, Hash: material.Hash, Files: []string{}, TotalBytes: material.TotalBytes, CreatedAt: now(), ExpiresAt: time.Now().Add(10 * time.Minute).UTC().Format(time.RFC3339Nano), Policy: in.Policy, SubscriptionID: in.SubscriptionID, Revision: in.Revision, Auto: auto, Warnings: choice.Reasons, NeedsConfirmation: choice.NeedsConfirmation}
 	p.DownloaderSnapshot = downloaderSnapshot(d)
+	p.SourceDownloader = sourceChoice
 	p.SelectedEpisodes = append([]int(nil), in.selectedEpisodes...)
 	seasonProof, e := a.prepareDownloadSeasonProof(ctx, &p, in.sourceSeasons, material, fresh, in.sourceSeasonBasis)
 	if e != nil {
@@ -598,6 +651,20 @@ func (a *App) previewDownload(ctx context.Context, in PreviewRequest, auto bool)
 		}
 		sourceContext.SourceMeta = append(json.RawMessage(nil), in.sourceMeta...)
 	}
+	if selectedContext != nil {
+		sourceContext.Original = selectedContext
+	} else {
+		contextResource, originalMedia, contextErr := a.originalCachedDownloadInputs(ctx, fresh, p.Media)
+		if contextErr != nil {
+			return p, contextErr
+		}
+		if in.originalSearchInfo != nil {
+			originalMedia = in.originalSearchInfo.MediaInfo
+		}
+		if e = a.completeOriginalDownloadContext(ctx, &sourceContext, Candidate{Resource: contextResource}, p.Media, originalMedia); e != nil {
+			return p, e
+		}
+	}
 	previewTx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
 		return p, e
@@ -676,6 +743,7 @@ func (a *App) confirmDownload(ctx context.Context, key string, acceptExtra bool)
 	intent.SeasonScopeSHA = p.SeasonScopeSHA
 	intent.ImportMode = p.ImportMode
 	intent.SourcePostAddVersion = 1
+	intent.SourceDownloader = append(json.RawMessage(nil), p.SourceDownloader...)
 	intent.SelectedEpisodes = append([]int(nil), p.SelectedEpisodes...)
 	intent.DirectoryID, intent.DownloadPath, intent.DirectorySnapshot = p.DirectoryID, p.DownloadPath, p.DirectorySnapshot
 	intent.DownloaderSnapshot = p.DownloaderSnapshot
@@ -753,6 +821,9 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 			return nil
 		}
 		return a.guardSourceEpisodeReceipt(ctx, in)
+	}
+	if in.SourceModuleStarted {
+		return bad("REVIEW_PLUGIN_DOWNLOAD_UNCONFIRMED", "下载插件已调用，结果尚未提交，请核对原任务后重新添加")
 	}
 	if in.SourcePostAddVersion == 1 && in.State == "post_add" {
 		return a.resumeSourcePostAdd(ctx, in, j)
@@ -880,7 +951,20 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 			request.EpisodeDates[episode.EpisodeNumber] = date
 		}
 	}
-	target, e := a.target(ctx, request, in.Auto)
+	frozen, e := a.loadDownloadContext(ctx, "intent", in.ID, in.Hash)
+	if e != nil {
+		return e
+	}
+	var target decision.Target
+	if frozen != nil && frozen.Original != nil && len(frozen.Original.Media) > 0 && string(frozen.Original.Media) != "null" {
+		information, err := a.originalRecognitionProjection(in.Media, frozen.Original.Media)
+		if err != nil {
+			return err
+		}
+		target, e = a.targetMedia(ctx, request, in.Auto, information.Media)
+	} else {
+		target, e = a.target(ctx, request, in.Auto)
+	}
 	if e != nil {
 		return e
 	}
@@ -1001,10 +1085,46 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	if e != nil {
 		return e
 	}
-	if frozen, err := a.loadDownloadContext(ctx, "intent", in.ID, in.Hash); err != nil {
-		return err
-	} else if frozen != nil {
+	if frozen != nil {
 		sourceContext.SourceMeta = append(json.RawMessage(nil), frozen.SourceMeta...)
+		sourceContext.Original = frozen.Original
+	}
+	if sourceContext.Original == nil {
+		if e = a.completeOriginalDownloadContext(ctx, &sourceContext, Candidate{Resource: sourceResource}, in.Media, nil); e != nil {
+			return e
+		}
+	}
+	origin := "Manual"
+	if in.SubscriptionAcquisition != "" {
+		acquisition, err := a.readAcquisition(ctx, a.Store.DB, in.SubscriptionAcquisition)
+		if err != nil {
+			return err
+		}
+		origin = acquisition.Source
+	} else if in.SubscriptionID != "" {
+		var subscription Subscription
+		if e = a.Store.Get(ctx, "subscription", in.SubscriptionID, &subscription); e != nil {
+			return e
+		}
+		raw, err := a.subscriptionSourceProjection(ctx, subscription)
+		if err != nil {
+			return err
+		}
+		origin, e = subscriptionAcquisitionSource(raw)
+		if e != nil {
+			return e
+		}
+	}
+	var eventSelection []int
+	if len(in.SelectedEpisodes) > 0 {
+		eventSelection = in.SelectedEpisodes
+	}
+	in.DownloadPath, e = a.originalResourceDownload(ctx, &sourceContext, effectiveIntentDownloadPath(in, d), eventSelection, origin, in.SourceDownloader, client)
+	if e != nil {
+		return e
+	}
+	if e = a.guardIntentDirectory(ctx, in, false); e != nil {
+		return e
 	}
 	release, e := a.beginWrite()
 	if e != nil {
@@ -1016,14 +1136,52 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	}
 	in.State = "submitting"
 	in.UpdatedAt = now()
+	sourceContext.OriginalDownloadDir, sourceContext.OriginalMaterialRef = effectiveIntentDownloadPath(in, d), in.MaterialRef
 	if e = a.stageIntentDownload(ctx, in, sourceContext); e != nil {
 		return e
 	}
 	if e := a.guardAcquisitionChild(ctx, j, in); e != nil {
 		return e
 	}
-	result, e := client.Add(ctx, download.AddRequest{Torrent: torrent, SavePath: effectiveIntentDownloadPath(in, d), Paused: len(in.SelectedEpisodes) > 0, Tags: []string{"light-media"}})
+	requestAdd := download.AddRequest{Torrent: torrent, SavePath: effectiveIntentDownloadPath(in, d), Paused: len(in.SelectedEpisodes) > 0, Tags: []string{"light-media"}}
+	var episodes any
+	if len(in.SelectedEpisodes) > 0 {
+		episodes = in.SelectedEpisodes
+	}
+	var postAddErr error
+	category, categorySet := originalDownloadContextCategory(&sourceContext)
+	module, e := a.originalDownload(ctx, d, requestAdd, originalDownloadOptions{Category: category, CategorySet: categorySet, Cookie: site.Cookie, Episodes: episodes, Downloader: in.SourceDownloader, Media: &in.Media, BeforeInvoke: func() error {
+		in.SourceModuleStarted = true
+		return a.Store.Put(ctx, "intent", in.ID, in)
+	}}, func(options originalDownloadOptions) (download.AddResult, error) {
+		if in.SourceModuleStarted || options.CategorySet {
+			requestAdd.SourceCategorySet = true
+			if category, ok := options.Category.(string); ok {
+				requestAdd.SourceCategory = &category
+			}
+		}
+		result, addErr := client.Add(ctx, requestAdd)
+		if addErr != nil {
+			return result, addErr
+		}
+		in.Hash = result.Hash
+		in.State, in.UpdatedAt = "post_add", now()
+		if postAddErr = a.Store.Put(ctx, "intent", in.ID, in); postAddErr == nil {
+			ctx, postAddErr = a.applySourceIntentPostAdd(ctx, client, result, in)
+		}
+		return result, postAddErr
+	})
+	if postAddErr != nil {
+		return postAddErr
+	}
 	if e != nil {
+		if module.Declared {
+			in.State, in.Error, in.UpdatedAt = "failed", a.clean(e.Error()), now()
+			if saveErr := a.Store.Put(ctx, "intent", in.ID, in); saveErr != nil {
+				return saveErr
+			}
+			return jobErr("REVIEW_PLUGIN_DOWNLOAD_FAILED", e)
+		}
 		if download.MutationNotStarted(e) || download.MutationRejected(e) {
 			in.State, in.Error, in.UpdatedAt = "planned", a.clean(e.Error()), now()
 			if saveErr := a.Store.Put(ctx, "intent", in.ID, in); saveErr != nil {
@@ -1036,14 +1194,16 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 		_ = a.Store.Put(ctx, "intent", in.ID, in)
 		return jobErr("DOWNLOAD_RECONCILE_PENDING", e)
 	}
-	in.Hash = result.Hash
-	in.State, in.UpdatedAt = "post_add", now()
-	if e = a.Store.Put(ctx, "intent", in.ID, in); e != nil {
-		return e
-	}
-	ctx, e = a.applySourceIntentPostAdd(ctx, client, result, in)
-	if e != nil {
-		return e
+	result := module.Added
+	if module.Override {
+		if e = verifyOriginalDownloadTask(ctx, client, in.Hash, result.Hash, requestAdd.SavePath); e != nil {
+			return e
+		}
+		if !module.CoreAccepted {
+			// The module owns its post-Add work. Observe its real task just as
+			// the pre-existing-hash branch does; never synthesize an Add receipt.
+			ctx = withSourcePostAddExistingHash(ctx, in)
+		}
 	}
 	in.State = "accepted"
 	in.Hash = result.Hash
@@ -1053,7 +1213,9 @@ func (a *App) runDownload(ctx context.Context, j Job, key string) error {
 	delete(a.materials, in.PreviewID)
 	a.materialMu.Unlock()
 	a.event(ctx, j, "INFO", "downloads", "accepted", "下载器已接收，后续按稳定Hash跟踪")
-	return a.acceptDownload(ctx, in, j)
+	sourceContext.OriginalDownloader = module.Downloader
+	sourceContext.OriginalLayout = module.Layout
+	return a.acceptDownloadWithContext(ctx, in, j, &sourceContext)
 }
 func sameHash(a, b string) bool {
 	a = strings.ToLower(a)
@@ -1068,6 +1230,14 @@ func actualSizePolicy(size int64, p Policy) error {
 	return nil
 }
 func (a *App) downloadList(ctx context.Context, selected ...string) (any, error) {
+	selector := ""
+	if len(selected) > 0 {
+		selector = selected[0]
+	}
+	moduleRows, useCore, e := a.originalDownloadingTorrents(ctx, selector)
+	if e != nil {
+		return nil, e
+	}
 	intents, e := a.Store.List(ctx, "intent", 200, 0)
 	if e != nil {
 		return nil, e
@@ -1080,24 +1250,35 @@ func (a *App) downloadList(ctx context.Context, selected ...string) (any, error)
 		if !downloaderEnabled(d) {
 			continue
 		}
-		c, e := download.New(d.Config)
+		owned, e := a.downloaderTaskOwnership(ctx, d.ID)
 		entry := map[string]any{"id": d.ID, "name": d.Name, "tasks": []download.Task{}}
 		if e == nil {
-			var owned downloaderTaskOwnership
-			owned, e = a.downloaderTaskOwnership(ctx, d.ID)
-			if e == nil {
+			visible := []download.Task{}
+			for _, row := range moduleRows {
+				task, match, err := originalDownloadingTask(row, d, selector != "")
+				if err != nil {
+					return nil, err
+				}
+				if match && owned.contains(task) {
+					visible = append(visible, task)
+				}
+			}
+			if useCore {
+				var c *download.Client
+				c, e = download.New(d.Config)
 				var tasks []download.Task
-				tasks, e = c.ListDownloading(ctx)
 				if e == nil {
-					visible := []download.Task{}
+					tasks, e = c.ListDownloading(ctx)
+				}
+				if e == nil {
 					for _, task := range tasks {
 						if owned.contains(task) {
 							visible = append(visible, task)
 						}
 					}
-					entry["tasks"] = visible
 				}
 			}
+			entry["tasks"] = visible
 		}
 		if e != nil {
 			entry["error"] = a.clean(e.Error())
@@ -1130,6 +1311,7 @@ func (a *App) downloadAction(ctx context.Context, key, action string) error {
 	default:
 		return bad("INVALID_ACTION", "未知下载操作")
 	}
+	var moduleErr error
 	if action == "remove_keep_data" {
 		tasks, err := c.List(ctx)
 		if err != nil {
@@ -1144,13 +1326,20 @@ func (a *App) downloadAction(ctx context.Context, key, action string) error {
 			}
 		}
 		if found {
-			if e = c.Control(ctx, in.Hash, action); e != nil {
-				return e
+			var applied bool
+			applied, moduleErr = a.originalDownloaderControl(ctx, d, in.Hash, action, func() error {
+				return c.Control(ctx, in.Hash, action)
+			})
+			if moduleErr != nil && !applied {
+				return moduleErr
 			}
 		}
 	} else {
-		if e = c.Control(ctx, in.Hash, action); e != nil {
-			return e
+		_, moduleErr = a.originalDownloaderControl(ctx, d, in.Hash, action, func() error {
+			return c.Control(ctx, in.Hash, action)
+		})
+		if moduleErr != nil {
+			return moduleErr
 		}
 	}
 	if action == "remove_keep_data" {
@@ -1170,10 +1359,13 @@ func (a *App) downloadAction(ctx context.Context, key, action string) error {
 		if _, e = tx.ExecContext(ctx, `UPDATE jobs SET state='cancelled',generation=generation+1,updated_at=? WHERE kind IN ('download','lark_download') AND json_extract(payload,'$.id')=? AND state IN ('queued','retry_wait','waiting_paused')`, now(), in.ID); e != nil {
 			return e
 		}
-		return tx.Commit()
+		if e = tx.Commit(); e != nil {
+			return e
+		}
+		return moduleErr
 	}
 	a.log("INFO", "downloads", action, "管理员操作下载任务", in.WorkflowID, "")
-	return nil
+	return moduleErr
 }
 func (a *App) pollDownloads(ctx context.Context) error {
 	a.downloadMu.Lock()
@@ -1189,7 +1381,7 @@ func (a *App) pollDownloads(ctx context.Context) error {
 			continue
 		}
 		switch in.State {
-		case "accepted", "downloading", "downloaded", "reconcile_pending":
+		case "accepted", "downloading", "downloaded", "reconcile_pending", "imported":
 			byInstance[in.DownloaderID] = append(byInstance[in.DownloaderID], in)
 		}
 	}
@@ -1221,6 +1413,20 @@ func (a *App) pollDownloads(ctx context.Context) error {
 			for _, t := range tasks {
 				if !sameHash(t.Hash, in.Hash) {
 					continue
+				}
+				if in.State == "imported" {
+					// Pinned TransferChain's all-history-hit fallback retries an
+					// untagged completed torrent without republishing its files.
+					marked := false
+					for _, tag := range t.Tags {
+						marked = marked || strings.TrimSpace(tag) == "已整理"
+					}
+					if !marked && t.Progress >= 1 && !a.paused() {
+						if err := a.markOriginalTorrentCompleted(ctx, in); err != nil {
+							a.log("WARN", "imports", "torrent_completion_check_failed", a.clean(err.Error()), in.WorkflowID, "")
+						}
+					}
+					break
 				}
 				latest, terminal, err := a.saveIntentProgress(ctx, in.ID, t)
 				if err != nil {

@@ -61,6 +61,11 @@ func statisticData(snapshot siteSnapshot, site SiteConfig) (statistic.Data, erro
 		data.Upload, data.Download = ptr(dto.Upload), ptr(dto.Download)
 		data.Ratio, data.Bonus = &dto.Ratio, &dto.Bonus
 		data.Seeding, data.SeedingSize = ptr(dto.Seeding), ptr(dto.SeedingSize)
+		for key, field := range map[string]**float64{"upload": &data.Upload, "download": &data.Download, "ratio": &data.Ratio, "bonus": &data.Bonus, "seeding": &data.Seeding, "seeding_size": &data.SeedingSize} {
+			if dto.SourceFieldNull(key) {
+				*field = nil
+			}
+		}
 		if dto.Error != nil {
 			data.Error = *dto.Error
 		}

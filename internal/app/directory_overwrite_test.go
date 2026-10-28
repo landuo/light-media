@@ -373,15 +373,23 @@ func TestDirectoryOverwritePolicyAndUnknownPluginAreNotDefaulted(t *testing.T) {
 				}
 			}
 			j := overwriteStart(t, a, p)
-			if e := a.runImport(context.Background(), j, p.ID, nil); e == nil {
-				t.Fatal("unknown or changed evidence became permission", r)
+			// An installed but unloaded class registers no source handler. The
+			// actual registry replaces the old pre-platform audited allowlist;
+			// the explicitly configured always policy still applies in that case.
+			wantError := change != "unknown-plugin"
+			if e := a.runImport(context.Background(), j, p.ID, nil); (e != nil) != wantError {
+				t.Fatal("source registry or changed target facts differ", r, e)
 			}
 			if b, _ := os.ReadFile(input); string(b) != "new" {
 				t.Fatal("source changed")
 			}
 			if change == "policy" || change == "unknown-plugin" {
-				if b, _ := os.ReadFile(p.Files[0].Target); string(b) != "original" {
-					t.Fatal("existing target changed")
+				want := "original"
+				if change == "unknown-plugin" {
+					want = "new"
+				}
+				if b, _ := os.ReadFile(p.Files[0].Target); string(b) != want {
+					t.Fatal("existing target result differs from source registry")
 				}
 			}
 		})

@@ -1,0 +1,107 @@
+{
+  "scope": "Incremental ordinary precheck/prepare correction, unique row36/37 status remains root matrix",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/subscribe.py:4102-4170",
+    "app/chain/subscribe.py:4250-4303",
+    "app/chain/subscribe.py:1378-1384",
+    "app/chain/subscribe.py:1602-1616",
+    "app/chain/subscribe.py:2806-2855"
+  ],
+  "target": [
+    "internal/app/plugin_standard_subscription_recognition.go",
+    "internal/app/plugin_standard_subscription_decrease.go",
+    "internal/app/plugin_standard_subscription_episodes.go",
+    "internal/app/subscription_completion_ordinary.go",
+    "internal/app/subscription_quality_check.go",
+    "internal/app/subscription_quality_completion_run.go",
+    "internal/app/core_business_source_facts.go"
+  ],
+  "behavior": {
+    "decrease": "The source candidate may lower the obsolete old total; highest confirmed episode in old range limits the decrease, while unaccepted reservations are not confirmations. Existing host source note and library slots are reused; no new inventory business.",
+    "persist": "Reuse existing source-backed State.ChangeTotal: lack=max(old_lack+new_total-old_total,0), and metadata total change records source last_update via native LastCheck; it is not replaced by a newly recomputed count during that metadata mutation.",
+    "recognition": "recognize_media is an independent ordinary extension even without episodes listener. One preparation resolves full Meta/MediaInfo once, and forwards that exact snapshot to episodes/check/notice instead of invoking the plugin again."
+  },
+  "source_oracle": "testdata/standard-subscription-events/decrease-oracle.json",
+  "source_oracle_kind": "9 actual fixed decrease/prepare cases with controlled missing-inventory response boundary, plus AST proof that refresh/finish accept previously recognized Meta/MediaInfo; no original application/service operation.",
+  "server": {
+    "path": "/tmp/light-media-plugin-scope-dRZTQ91A/server-platform2-20261027-linux",
+    "sha256": "21cbbd9b0200631bb6720e94b47f910c326674ec81ceda2b4013f139f4e96243"
+  },
+  "test_binary": {
+    "path": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-decrease-process-linux.test",
+    "sha256": "656ea72f00a45e7fee410456c3257e32236c8c1de6e9cdf145a64c5ddb3d6128"
+  },
+  "actual_runs": [
+    {
+      "test": "TestPluginServicesProductionCLI",
+      "command": [
+        "/tmp/light-media-plugin-scope-dRZTQ91A/events36-decrease-process-linux.test",
+        "-test.v",
+        "-test.run",
+        "^TestPluginServicesProductionCLI$",
+        "-test.timeout",
+        "90s"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.092,
+      "log": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-decrease-ordinary-linux.log",
+      "log_sha256": "05675ff0fa1dc19b715c385bdaed82c3ec20a0ad21b05e26709a64553f078371"
+    },
+    {
+      "test": "TestPluginSubscriptionCompletionProductionCLI",
+      "command": [
+        "/tmp/light-media-plugin-scope-dRZTQ91A/events36-decrease-process-linux.test",
+        "-test.v",
+        "-test.run",
+        "^TestPluginSubscriptionCompletionProductionCLI$",
+        "-test.timeout",
+        "90s"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.841,
+      "log": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-decrease-completion-linux.log",
+      "log_sha256": "6401906fd7ced4e9da30e3946291c4f2280a5945b41fce009e7b2f34fdf66300"
+    }
+  ],
+  "actual_claims": [
+    "Owned synthetic initial total12/note10/lack11 -> actual native check provider5/override8 produces total10/lack9; actual reset clears note and next check produces total8/lack8; cold retains8.",
+    "Owned in-process site/torrent/Client.Add/SQL preparation makes real accepted TV material; actual cmd/server first preparation veto, next explicit check/new preparation finish, committed history/delete precedes real standard SDK source/clone HTTP1/1 and Complete. Each preparation recognizes once; entire three native operations have3 recognition calls, with cold PID2485721->2485769 no replay/resend.",
+    "Actual old normal create/notice/user.message/service host gates also passed on this main; their narrower earlierf37 receipts are retained separately."
+  ],
+  "raw_evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/events36-decrease-archive-manifest.json",
+  "verification": {
+    "source_sdk": "7 roots passed on final input; decrease9 subcases, actual no-listener SDK3 subcases including lack floor, actual accepted TV preparation and sync/async caller regressions",
+    "race": "3 new roots passed, no race diagnostic",
+    "actual_linux_test_elapsed_seconds": [
+      4.0,
+      1.77
+    ]
+  },
+  "failures_retained": [
+    {
+      "path": "events36-decrease-initial-regression.jsonl.gz",
+      "reason": "An old TV protocol test only had compact metadata/no credential; after faithfully restoring ordinary recognition it correctly failed. Test now uses existing owned full-metadata protocol input, no production fallback fabricated."
+    },
+    {
+      "path": "events36-decrease-source-sdk-tests.jsonl.gz",
+      "reason": "Source-aware delta revealed synthetic all-missing input had lack=nil, whose source result is0, but test expected8. Set correct synthetic initial lack12; source floor1 case remains and passes0.",
+      "production_change": "none for fixture correction"
+    },
+    {
+      "path": "events36-decrease-ordinary-linux-first.log.gz",
+      "reason": "Earlier owned no-downloader check remainedretry_wait and existing JOB_EXISTS correctly rejected duplicate. Only that owned old job generation was cancelled during stopped-server initial-condition preparation; no admission guard relaxed."
+    }
+  ],
+  "necessary_adaptations": [
+    "Source no_exists dictionary/model lookup is represented by this existing explicit-TMDB host typed source-note/library-slot scope; source malformed dictionary/type cases are replayed, not a new native parser/extension. A synthetic SQL slot in source test is not physical inventory acceptance.",
+    "Existing native durable check/preparation operations remain separate host operations; the per-preparation snapshot is local and not a new persistent recognition cache or workflow engine.",
+    "Only the ordinary branch is accepted here; best-version decrease internals and absent external provider/business operations are not claimed."
+  ],
+  "remaining": [
+    "Independent source refresh scene has no existing native host operation; do not add a new refresh business.",
+    "Source non-TMDB media-key recognize-convert fallback has no mapped explicit-TMDB native callsite.",
+    "Known source default TV create lack=total versus native initialnil still needs narrow existing-host correction and next-binary proof; this21cb main does not claim that later change."
+  ],
+  "cleanup": "Both owned CLI gates ended; cmd/server/SDK workers stopped, t.TempDir data cleaned; no browserhold; code remains uncommitted/unpushed ondev/plugins-continuation"
+}

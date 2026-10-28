@@ -1,0 +1,325 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed source endpoints plus actual Pydantic source models; EventManager delivery controlled",
+  "sources": {
+    "app/schemas/event.py": "d5134476edc76096098b85ee32d2f96eb5db2441c873c80729a46b91386687d6",
+    "app/api/endpoints/recommend.py": "f4b754f6de839fa67c99e53cea2195760eaaf9b179248d85d53c77c1b5dda92e",
+    "app/api/endpoints/discover.py": "34f443f1c372a0149a4629c7d1222723d46c981980f14c9c9d29c123dc8a97ae"
+  },
+  "cases": [
+    {
+      "kind": "recommend",
+      "name": "no-subscriber",
+      "deliver": false,
+      "mutation": null,
+      "event_type": "recommend.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": [],
+      "state": "valid",
+      "output": []
+    },
+    {
+      "kind": "recommend",
+      "name": "unchanged",
+      "deliver": true,
+      "mutation": null,
+      "event_type": "recommend.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": [],
+      "state": "valid",
+      "output": []
+    },
+    {
+      "kind": "recommend",
+      "name": "appended",
+      "deliver": true,
+      "mutation": [
+        {
+          "name": "Owned ordinary recommendations",
+          "api_path": "plugin/OwnedCatalogFixture/feed?list=ordinary",
+          "type": "电影"
+        }
+      ],
+      "event_type": "recommend.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": [
+        {
+          "name": "Owned ordinary recommendations",
+          "api_path": "plugin/OwnedCatalogFixture/feed?list=ordinary",
+          "type": "电影"
+        }
+      ],
+      "state": "valid",
+      "output": [
+        {
+          "name": "Owned ordinary recommendations",
+          "api_path": "plugin/OwnedCatalogFixture/feed?list=ordinary",
+          "type": "电影"
+        }
+      ]
+    },
+    {
+      "kind": "recommend",
+      "name": "empty",
+      "deliver": true,
+      "mutation": [],
+      "event_type": "recommend.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": [],
+      "state": "valid",
+      "output": []
+    },
+    {
+      "kind": "recommend",
+      "name": "falsey",
+      "deliver": true,
+      "mutation": false,
+      "event_type": "recommend.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": [],
+      "state": "valid",
+      "output": []
+    },
+    {
+      "kind": "recommend",
+      "name": "invalid-truthy",
+      "deliver": true,
+      "mutation": true,
+      "event_type": "recommend.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": true,
+      "state": "response-invalid",
+      "output": null
+    },
+    {
+      "kind": "recommend",
+      "name": "default-fields",
+      "deliver": true,
+      "mutation": [
+        {
+          "name": "Owned ordinary recommendations",
+          "api_path": "plugin/OwnedCatalogFixture/feed?list=ordinary",
+          "type": "电影"
+        }
+      ],
+      "event_type": "recommend.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": [
+        {
+          "name": "Owned ordinary recommendations",
+          "api_path": "plugin/OwnedCatalogFixture/feed?list=ordinary",
+          "type": "电影"
+        }
+      ],
+      "state": "valid",
+      "output": [
+        {
+          "name": "Owned ordinary recommendations",
+          "api_path": "plugin/OwnedCatalogFixture/feed?list=ordinary",
+          "type": "电影"
+        }
+      ]
+    },
+    {
+      "kind": "discover",
+      "name": "no-subscriber",
+      "deliver": false,
+      "mutation": null,
+      "event_type": "discover.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": [],
+      "state": "valid",
+      "output": []
+    },
+    {
+      "kind": "discover",
+      "name": "unchanged",
+      "deliver": true,
+      "mutation": null,
+      "event_type": "discover.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": [],
+      "state": "valid",
+      "output": []
+    },
+    {
+      "kind": "discover",
+      "name": "appended",
+      "deliver": true,
+      "mutation": [
+        {
+          "name": "Owned ordinary discover",
+          "mediaid_prefix": "owned",
+          "api_path": "plugin/OwnedCatalogFixture/feed",
+          "filter_params": {
+            "type": "电影",
+            "genre": "all",
+            "region": null
+          },
+          "filter_ui": [
+            {
+              "component": "VTextField",
+              "props": {
+                "model": "genre",
+                "label": "Owned genre"
+              }
+            }
+          ],
+          "depends": {
+            "region": [
+              "genre"
+            ]
+          }
+        }
+      ],
+      "event_type": "discover.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": [
+        {
+          "name": "Owned ordinary discover",
+          "mediaid_prefix": "owned",
+          "api_path": "plugin/OwnedCatalogFixture/feed",
+          "filter_params": {
+            "type": "电影",
+            "genre": "all",
+            "region": null
+          },
+          "filter_ui": [
+            {
+              "component": "VTextField",
+              "props": {
+                "model": "genre",
+                "label": "Owned genre"
+              }
+            }
+          ],
+          "depends": {
+            "region": [
+              "genre"
+            ]
+          }
+        }
+      ],
+      "state": "valid",
+      "output": [
+        {
+          "name": "Owned ordinary discover",
+          "mediaid_prefix": "owned",
+          "api_path": "plugin/OwnedCatalogFixture/feed",
+          "filter_params": {
+            "type": "电影",
+            "genre": "all",
+            "region": null
+          },
+          "filter_ui": [
+            {
+              "component": "VTextField",
+              "props": {
+                "model": "genre",
+                "label": "Owned genre"
+              }
+            }
+          ],
+          "depends": {
+            "region": [
+              "genre"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "kind": "discover",
+      "name": "empty",
+      "deliver": true,
+      "mutation": [],
+      "event_type": "discover.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": [],
+      "state": "valid",
+      "output": []
+    },
+    {
+      "kind": "discover",
+      "name": "falsey",
+      "deliver": true,
+      "mutation": false,
+      "event_type": "discover.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": [],
+      "state": "valid",
+      "output": []
+    },
+    {
+      "kind": "discover",
+      "name": "invalid-truthy",
+      "deliver": true,
+      "mutation": true,
+      "event_type": "discover.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": true,
+      "state": "response-invalid",
+      "output": null
+    },
+    {
+      "kind": "discover",
+      "name": "default-fields",
+      "deliver": true,
+      "mutation": [
+        {
+          "name": "Owned ordinary discover",
+          "mediaid_prefix": "owned",
+          "api_path": "plugin/OwnedCatalogFixture/feed"
+        }
+      ],
+      "event_type": "discover.source",
+      "event_input": {
+        "extra_sources": []
+      },
+      "returned": [
+        {
+          "name": "Owned ordinary discover",
+          "mediaid_prefix": "owned",
+          "api_path": "plugin/OwnedCatalogFixture/feed"
+        }
+      ],
+      "state": "valid",
+      "output": [
+        {
+          "name": "Owned ordinary discover",
+          "mediaid_prefix": "owned",
+          "api_path": "plugin/OwnedCatalogFixture/feed",
+          "filter_params": null,
+          "filter_ui": [],
+          "depends": null
+        }
+      ]
+    }
+  ]
+}

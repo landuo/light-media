@@ -1,0 +1,167 @@
+{
+  "accepted_increment": true,
+  "whole_module_complete": false,
+  "scope": "36/37/43 automatic manual transfer recognition increment",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": [
+    "app/chain/transfer.py:1782-1857",
+    "app/chain/media.py:723-779",
+    "app/chain/transfer.py:3020-3070,3459-3507",
+    "src/components/dialog/ReorganizeDialog.vue (fixed source shared automatic media selection; current target uses existing stack)"
+  ],
+  "target": [
+    "internal/app/physical_directories.go:prepareManualImport",
+    "internal/app/plugin_original_transfer_recognition.go:originalManualTransferIdentity/originalTransferObtainImages",
+    "internal/app/import_plan.go:ImportFileRequest.originalResolvedMeta / previewImport",
+    "internal/app/plugin_original_transfer_context.go:originalTransferContextWithMedia",
+    "internal/app/plugin_original_transfer_retry.go:shared image enrichment"
+  ],
+  "behavior": "Automatic manual transfers invoke synchronous recognize_media then obtain_images once per new preview/operation; preserve live image changes and NameRecognize-mutated metadata into the transfer task. False recognition stops before images and physical transfer. Existing native path is reused when no relevant plugin handler exists.",
+  "source_replay": "Six pinned recognition-prefix/MediaChain executions in testdata/standard-module-host/transfer-auto-recognition-source-oracle.json. Automatic success/missing bind this increment; preloaded and download-history branches are reference cases, not newly claimed full-host coverage.",
+  "actual_tests": {
+    "red": "auto34-red.log actual SDK recognition count remained unchanged and old native path failed for unconfigured TMDB",
+    "sdk_green_seconds": 3.228,
+    "regression_seconds": 10.634,
+    "race_seconds": 36.654,
+    "tests": [
+      "TestOriginalAutomaticManualRecognitionActualSDK",
+      "TestOriginalAutomaticManualNameEventRetainsMetadata",
+      "related manual identification/organize/single-extra/retry regression"
+    ],
+    "linux_cli_seconds": 11.21,
+    "linux_browser_gate_seconds": 334.18,
+    "production_cases": [
+      "AutomaticMissing34",
+      "AutomaticMain34",
+      "AutomaticSubtitle34",
+      "AutomaticAudio34",
+      "SingleExtraCold"
+    ],
+    "assertions": "Authenticated real host manual endpoint; source false stops clone; source None continues clone recognition; preview and actual each one recognize/images, actual selected-file hardlink, stable failed→success history, cold no replay."
+  },
+  "browser": "IAB68 actual file selection→automatic type/empty disabled TMDB ID→preview recognition failure→actual failure with form retained→restore provider→same-form preview total3/failed0→actual success closes dialog→history shows three successful hardlinks→cold reload preserves three rows and original session.",
+  "build": {
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "binaries": [
+      {
+        "name": "server-platform34-20261027-linux",
+        "sha256": "413d8551a357d10925b2b1eb64d2b25e983592f590bff28e1aa1923a23478a65",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform34-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3718,
+        "changed": [],
+        "elapsed_seconds": 3.76
+      },
+      {
+        "name": "process-platform34-20261027-linux.test",
+        "sha256": "5e37b38c674e9372ee16a4ae0ce0c3494bd456b87eec1540ad0dca7c39567e46",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform34-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4178,
+        "changed": [],
+        "elapsed_seconds": 7.32
+      }
+    ]
+  },
+  "worker_sha256": "376f0e246479b6e4a299bf524d87398aaff31f409b70f66b25a097d41990f6cc",
+  "browser_verdict": {
+    "passed": true,
+    "kind": "Actual Linux server and browser actions with synthetic owned files and SDK media",
+    "pids": [
+      [
+        387479,
+        387486
+      ],
+      [
+        394608,
+        394615
+      ]
+    ],
+    "stable_primary_history_id": "file_ItnTWRaGoWqky7aQXNkFjVEL",
+    "success_histories": 3,
+    "cold_write_calls": 0,
+    "files": [
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module34-ui-tmp/TestPluginServicesProductionCLI245183884/002/source/OwnedUITransfer.2024.mkv",
+        "inode": 71661397,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module34-ui-tmp/TestPluginServicesProductionCLI245183884/002/library/Plugin returned UI target/Actual plugin file.mkv",
+        "inode": 71661397,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module34-ui-tmp/TestPluginServicesProductionCLI245183884/002/source/OwnedUITransfer.2024.zh.srt",
+        "inode": 71661395,
+        "device": 65025,
+        "size": 24,
+        "sha256": "64dbf5f224a79e3fabf60ab04a96e766c25c35a3d179b2fbbd11098e89e609b7"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module34-ui-tmp/TestPluginServicesProductionCLI245183884/002/source/OwnedUITransfer.2024.flac",
+        "inode": 71661396,
+        "device": 65025,
+        "size": 22,
+        "sha256": "21842006e19f366fe6059346fde9ce2bb380525353d684dabcd08505ad4f0930"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module34-ui-tmp/TestPluginServicesProductionCLI245183884/002/library/Plugin returned UI target/Actual plugin related.srt",
+        "inode": 71661395,
+        "device": 65025,
+        "size": 24,
+        "sha256": "64dbf5f224a79e3fabf60ab04a96e766c25c35a3d179b2fbbd11098e89e609b7"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module34-ui-tmp/TestPluginServicesProductionCLI245183884/002/library/Plugin returned UI target/Actual plugin related.flac",
+        "inode": 71661396,
+        "device": 65025,
+        "size": 22,
+        "sha256": "21842006e19f366fe6059346fde9ce2bb380525353d684dabcd08505ad4f0930"
+      }
+    ]
+  },
+  "manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-auto-recognition-34-20261028/manifest.json",
+  "limitations": [
+    "Synthetic tiny files and controlled SDK results; real Linux Go host/plugin/HTTP/browser/filesystem/persistence.",
+    "Existing host still requires a verifiable TMDB identity and its path/ownership/numbering constraints. No new non-TMDB import subsystem.",
+    "No-plugin native identity and NFO checks retained; this increment covers manual automatic recognition, not every directory/download-history recognition branch.",
+    "Frontend unchanged; no claim of a new full frontend test/build beyond previously bound main30.",
+    "Successful-main historical cleanup, generic directory/bluray and remaining ordinary host/event audit remain pending."
+  ],
+  "cleanup": "Actual uninstall both instances/API404/TempDir PASS; IAB68 closed,34449 tunnel stopped; connection-refused during restart/shutdown is not a failed product result.",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  },
+  "test_setup_corrections": [
+    "Observer initially expected nonexistent success key after a completed PUT; corrected to read actual snapshot and verify business effects.",
+    "Existing transfer-only tuple-list fixture was removed from browser config to use its ordinary native directory listing. No product contract was changed.",
+    "Proof directory created after first screenshot-save ENOENT; final six screenshots/DOMs saved."
+  ]
+}

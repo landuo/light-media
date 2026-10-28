@@ -74,6 +74,36 @@ export const folderGradients = [
   'linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(63, 81, 181, 0.7) 0%, rgba(156, 39, 176, 0.8) 100%)',
 ];
 
+// Fixed loadPluginFolders converts both stored formats into the same view
+// object. Only these source fields survive a browser read/edit/save cycle.
+export function normalizePluginFolders(folders: Record<string, FolderValue>): Record<string, FolderConfig> {
+  return Object.fromEntries(Object.entries(folders).flatMap(([name, raw], index) => {
+    if (!raw || typeof raw !== 'object') return [];
+    const value = Array.isArray(raw) ? {} : raw;
+    return [[name, {
+      plugins: Array.isArray(raw) ? raw : value.plugins || [],
+      order: value.order ?? index,
+      icon: value.icon || folderIcons[0],
+      color: value.color || folderColors[0],
+      gradient: value.gradient || folderGradients[0],
+      background: value.background || '',
+      showIcon: value.showIcon !== undefined ? value.showIcon : true,
+    }]];
+  }));
+}
+
+// savePluginFolders persists folder-only positions, while PluginOrder retains
+// the separate positions shared with ungrouped plugins.
+export function pluginFolderSavePayload(value: PluginOrganization): Record<string, FolderValue> {
+  const global = new Map(normalizedPluginOrder(value).map(item => [item.type + ':' + item.id, item.order]));
+  const names = Object.keys(value.folders).sort((a, b) =>
+    (global.get('folder:' + a) ?? folderAppearance(value.folders[a]).order ?? 999) -
+    (global.get('folder:' + b) ?? folderAppearance(value.folders[b]).order ?? 999));
+  return Object.fromEntries(Object.entries(value.folders).map(([name, raw]) => [name, {
+    ...folderAppearance(raw), plugins: folderMembers(raw), order: names.indexOf(name),
+  }]));
+}
+
 export function folderMembers(value: FolderValue | undefined): string[] {
   return Array.isArray(value) ? value : value?.plugins || [];
 }
@@ -156,7 +186,7 @@ export function moveToFolder(
   for (const name of Object.keys(next.folders))
     next.folders[name] = replaceMembers(
       next.folders[name],
-      folderMembers(next.folders[name]).filter((id) => id !== pluginID),
+      folderMembers(next.folders[name]).filter((id, index, members) => index !== members.indexOf(pluginID)),
     );
   next.folders[folder] = replaceMembers(next.folders[folder], [
     ...folderMembers(next.folders[folder]),

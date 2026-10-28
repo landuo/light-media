@@ -1,0 +1,1600 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed non-SSE SearchChain async batch caller + exact fallback worker wrappers/dispatcher; actual source TorrentInfo models; owned indexer/network/progress boundaries",
+  "source_sha256": {
+    "app/chain/search.py": "2b04f6d246ea2573081cb72039a78acefb81cd7c895603e0433bab7dc7e7a528",
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/torrents.py": "6c2833fc9a87e9d57881fcdef760d131dd1d36acbc9d5de3d7279cdbd0d96a47",
+    "app/core/context.py": "70a088bd54c748ab44ec467e6a1f1fc5bb5368f818bb16288eca0d15cf98877e",
+    "app/utils/object.py": "0fd0161be3084593a9693244e9ea734c5d949cc23a6e8f34349177a5e220dc1c",
+    "app/schemas/types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+    "app/api/endpoints/site.py": "c352a148fd418f7eb6c91f490d8db4319c91c6ac2d68b920b35b525d1d8372a8"
+  },
+  "cases": [
+    {
+      "name": "none",
+      "plugin_result": null,
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_batch_search_torrents",
+          "args": [],
+          "kwargs": {
+            "sites": [
+              {
+                "id": 1,
+                "name": "Owned resource site",
+                "domain": "http://127.0.0.1:43100",
+                "url": "http://127.0.0.1:43100",
+                "cookie": "owned-site-cookie",
+                "ua": "Owned-UA",
+                "apikey": null,
+                "token": null,
+                "rss": null,
+                "proxy": 0,
+                "render": 0,
+                "public": 0,
+                "pri": 1,
+                "downloader": null,
+                "filter": null,
+                "note": null,
+                "limit_interval": 0,
+                "limit_count": 0,
+                "limit_seconds": 0,
+                "timeout": 15,
+                "is_active": true
+              }
+            ],
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "async_batch_search_torrents",
+          "kwargs": {
+            "sites": [
+              {
+                "id": 1,
+                "name": "Owned resource site",
+                "domain": "http://127.0.0.1:43100",
+                "url": "http://127.0.0.1:43100",
+                "cookie": "owned-site-cookie",
+                "ua": "Owned-UA",
+                "apikey": null,
+                "token": null,
+                "rss": null,
+                "proxy": 0,
+                "render": 0,
+                "public": 0,
+                "pri": 1,
+                "downloader": null,
+                "filter": null,
+                "note": null,
+                "limit_interval": 0,
+                "limit_count": 0,
+                "limit_seconds": 0,
+                "timeout": 15,
+                "is_active": true
+              }
+            ],
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "get_search_page_size",
+          "kwargs": {
+            "site": {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            },
+            "keyword": "Owned keyword"
+          }
+        }
+      ],
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "empty_dict",
+      "plugin_result": {},
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_batch_search_torrents",
+          "args": [],
+          "kwargs": {
+            "sites": [
+              {
+                "id": 1,
+                "name": "Owned resource site",
+                "domain": "http://127.0.0.1:43100",
+                "url": "http://127.0.0.1:43100",
+                "cookie": "owned-site-cookie",
+                "ua": "Owned-UA",
+                "apikey": null,
+                "token": null,
+                "rss": null,
+                "proxy": 0,
+                "render": 0,
+                "public": 0,
+                "pri": 1,
+                "downloader": null,
+                "filter": null,
+                "note": null,
+                "limit_interval": 0,
+                "limit_count": 0,
+                "limit_seconds": 0,
+                "timeout": 15,
+                "is_active": true
+              }
+            ],
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "get_search_page_size",
+          "kwargs": {
+            "site": {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            },
+            "keyword": "Owned keyword"
+          }
+        }
+      ],
+      "returned": [],
+      "error": null
+    },
+    {
+      "name": "plugin_dict",
+      "plugin_result": {
+        "1": [
+          {
+            "site": 1,
+            "site_name": "Owned resource site",
+            "site_cookie": "owned-plugin-secret",
+            "site_ua": "Owned-UA",
+            "site_proxy": false,
+            "site_order": 0,
+            "site_downloader": null,
+            "title": "Owned plugin resource",
+            "description": null,
+            "imdbid": null,
+            "enclosure": "http://127.0.0.1:43100/download.php?id=11&passkey=owned-private-material",
+            "page_url": "http://127.0.0.1:43100/details.php?id=11",
+            "size": 1024,
+            "seeders": 3,
+            "peers": 2,
+            "grabs": 0,
+            "pubdate": null,
+            "date_elapsed": null,
+            "freedate": null,
+            "uploadvolumefactor": 1,
+            "downloadvolumefactor": 0,
+            "hit_and_run": false,
+            "labels": [
+              "owned-label"
+            ],
+            "pri_order": 0,
+            "category": null,
+            "volume_factor": "免费",
+            "freedate_diff": ""
+          }
+        ]
+      },
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_batch_search_torrents",
+          "args": [],
+          "kwargs": {
+            "sites": [
+              {
+                "id": 1,
+                "name": "Owned resource site",
+                "domain": "http://127.0.0.1:43100",
+                "url": "http://127.0.0.1:43100",
+                "cookie": "owned-site-cookie",
+                "ua": "Owned-UA",
+                "apikey": null,
+                "token": null,
+                "rss": null,
+                "proxy": 0,
+                "render": 0,
+                "public": 0,
+                "pri": 1,
+                "downloader": null,
+                "filter": null,
+                "note": null,
+                "limit_interval": 0,
+                "limit_count": 0,
+                "limit_seconds": 0,
+                "timeout": 15,
+                "is_active": true
+              }
+            ],
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "get_search_page_size",
+          "kwargs": {
+            "site": {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            },
+            "keyword": "Owned keyword"
+          }
+        }
+      ],
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": "owned-plugin-secret",
+          "site_ua": "Owned-UA",
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned plugin resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": "http://127.0.0.1:43100/download.php?id=11&passkey=owned-private-material",
+          "page_url": "http://127.0.0.1:43100/details.php?id=11",
+          "size": 1024,
+          "seeders": 3,
+          "peers": 2,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 0,
+          "hit_and_run": false,
+          "labels": [
+            "owned-label"
+          ],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "免费",
+          "freedate_diff": ""
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "empty_list",
+      "plugin_result": [],
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_batch_search_torrents",
+          "args": [],
+          "kwargs": {
+            "sites": [
+              {
+                "id": 1,
+                "name": "Owned resource site",
+                "domain": "http://127.0.0.1:43100",
+                "url": "http://127.0.0.1:43100",
+                "cookie": "owned-site-cookie",
+                "ua": "Owned-UA",
+                "apikey": null,
+                "token": null,
+                "rss": null,
+                "proxy": 0,
+                "render": 0,
+                "public": 0,
+                "pri": 1,
+                "downloader": null,
+                "filter": null,
+                "note": null,
+                "limit_interval": 0,
+                "limit_count": 0,
+                "limit_seconds": 0,
+                "timeout": 15,
+                "is_active": true
+              }
+            ],
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "async_batch_search_torrents",
+          "kwargs": {
+            "sites": [
+              {
+                "id": 1,
+                "name": "Owned resource site",
+                "domain": "http://127.0.0.1:43100",
+                "url": "http://127.0.0.1:43100",
+                "cookie": "owned-site-cookie",
+                "ua": "Owned-UA",
+                "apikey": null,
+                "token": null,
+                "rss": null,
+                "proxy": 0,
+                "render": 0,
+                "public": 0,
+                "pri": 1,
+                "downloader": null,
+                "filter": null,
+                "note": null,
+                "limit_interval": 0,
+                "limit_count": 0,
+                "limit_seconds": 0,
+                "timeout": 15,
+                "is_active": true
+              }
+            ],
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "async_search_torrents",
+          "kwargs": {
+            "site": {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            },
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "get_search_page_size",
+          "kwargs": {
+            "site": {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            },
+            "keyword": "Owned keyword"
+          }
+        }
+      ],
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "plugin_list",
+      "plugin_result": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": "owned-plugin-secret",
+          "site_ua": "Owned-UA",
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned plugin resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": "http://127.0.0.1:43100/download.php?id=11&passkey=owned-private-material",
+          "page_url": "http://127.0.0.1:43100/details.php?id=11",
+          "size": 1024,
+          "seeders": 3,
+          "peers": 2,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 0,
+          "hit_and_run": false,
+          "labels": [
+            "owned-label"
+          ],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "免费",
+          "freedate_diff": ""
+        }
+      ],
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_batch_search_torrents",
+          "args": [],
+          "kwargs": {
+            "sites": [
+              {
+                "id": 1,
+                "name": "Owned resource site",
+                "domain": "http://127.0.0.1:43100",
+                "url": "http://127.0.0.1:43100",
+                "cookie": "owned-site-cookie",
+                "ua": "Owned-UA",
+                "apikey": null,
+                "token": null,
+                "rss": null,
+                "proxy": 0,
+                "render": 0,
+                "public": 0,
+                "pri": 1,
+                "downloader": null,
+                "filter": null,
+                "note": null,
+                "limit_interval": 0,
+                "limit_count": 0,
+                "limit_seconds": 0,
+                "timeout": 15,
+                "is_active": true
+              }
+            ],
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "async_batch_search_torrents",
+          "kwargs": {
+            "sites": [
+              {
+                "id": 1,
+                "name": "Owned resource site",
+                "domain": "http://127.0.0.1:43100",
+                "url": "http://127.0.0.1:43100",
+                "cookie": "owned-site-cookie",
+                "ua": "Owned-UA",
+                "apikey": null,
+                "token": null,
+                "rss": null,
+                "proxy": 0,
+                "render": 0,
+                "public": 0,
+                "pri": 1,
+                "downloader": null,
+                "filter": null,
+                "note": null,
+                "limit_interval": 0,
+                "limit_count": 0,
+                "limit_seconds": 0,
+                "timeout": 15,
+                "is_active": true
+              }
+            ],
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "async_search_torrents",
+          "kwargs": {
+            "site": {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            },
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "get_search_page_size",
+          "kwargs": {
+            "site": {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            },
+            "keyword": "Owned keyword"
+          }
+        }
+      ],
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "false",
+      "plugin_result": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_batch_search_torrents",
+          "args": [],
+          "kwargs": {
+            "sites": [
+              {
+                "id": 1,
+                "name": "Owned resource site",
+                "domain": "http://127.0.0.1:43100",
+                "url": "http://127.0.0.1:43100",
+                "cookie": "owned-site-cookie",
+                "ua": "Owned-UA",
+                "apikey": null,
+                "token": null,
+                "rss": null,
+                "proxy": 0,
+                "render": 0,
+                "public": 0,
+                "pri": 1,
+                "downloader": null,
+                "filter": null,
+                "note": null,
+                "limit_interval": 0,
+                "limit_count": 0,
+                "limit_seconds": 0,
+                "timeout": 15,
+                "is_active": true
+              }
+            ],
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "async_search_torrents",
+          "kwargs": {
+            "site": {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            },
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "get_search_page_size",
+          "kwargs": {
+            "site": {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            },
+            "keyword": "Owned keyword"
+          }
+        }
+      ],
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "bad_scalar",
+      "plugin_result": "owned bad scalar",
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_batch_search_torrents",
+          "args": [],
+          "kwargs": {
+            "sites": [
+              {
+                "id": 1,
+                "name": "Owned resource site",
+                "domain": "http://127.0.0.1:43100",
+                "url": "http://127.0.0.1:43100",
+                "cookie": "owned-site-cookie",
+                "ua": "Owned-UA",
+                "apikey": null,
+                "token": null,
+                "rss": null,
+                "proxy": 0,
+                "render": 0,
+                "public": 0,
+                "pri": 1,
+                "downloader": null,
+                "filter": null,
+                "note": null,
+                "limit_interval": 0,
+                "limit_count": 0,
+                "limit_seconds": 0,
+                "timeout": 15,
+                "is_active": true
+              }
+            ],
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "async_search_torrents",
+          "kwargs": {
+            "site": {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            },
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "get_search_page_size",
+          "kwargs": {
+            "site": {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            },
+            "keyword": "Owned keyword"
+          }
+        }
+      ],
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "error": null
+    },
+    {
+      "name": "failed",
+      "plugin_result": null,
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_batch_search_torrents",
+          "args": [],
+          "kwargs": {
+            "sites": [
+              {
+                "id": 1,
+                "name": "Owned resource site",
+                "domain": "http://127.0.0.1:43100",
+                "url": "http://127.0.0.1:43100",
+                "cookie": "owned-site-cookie",
+                "ua": "Owned-UA",
+                "apikey": null,
+                "token": null,
+                "rss": null,
+                "proxy": 0,
+                "render": 0,
+                "public": 0,
+                "pri": 1,
+                "downloader": null,
+                "filter": null,
+                "note": null,
+                "limit_interval": 0,
+                "limit_count": 0,
+                "limit_seconds": 0,
+                "timeout": 15,
+                "is_active": true
+              }
+            ],
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "async_batch_search_torrents",
+          "kwargs": {
+            "sites": [
+              {
+                "id": 1,
+                "name": "Owned resource site",
+                "domain": "http://127.0.0.1:43100",
+                "url": "http://127.0.0.1:43100",
+                "cookie": "owned-site-cookie",
+                "ua": "Owned-UA",
+                "apikey": null,
+                "token": null,
+                "rss": null,
+                "proxy": 0,
+                "render": 0,
+                "public": 0,
+                "pri": 1,
+                "downloader": null,
+                "filter": null,
+                "note": null,
+                "limit_interval": 0,
+                "limit_count": 0,
+                "limit_seconds": 0,
+                "timeout": 15,
+                "is_active": true
+              }
+            ],
+            "keyword": "Owned keyword",
+            "mtype": null,
+            "page": 1
+          }
+        },
+        {
+          "kind": "core",
+          "method": "get_search_page_size",
+          "kwargs": {
+            "site": {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            },
+            "keyword": "Owned keyword"
+          }
+        }
+      ],
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "error": null
+    }
+  ],
+  "production_empty_list": {
+    "plugin_result": [],
+    "core_rows": 2,
+    "observations": [
+      {
+        "kind": "plugin",
+        "method": "async_batch_search_torrents",
+        "args": [],
+        "kwargs": {
+          "sites": [
+            {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            }
+          ],
+          "keyword": "Owned keyword",
+          "mtype": null,
+          "page": 1
+        }
+      },
+      {
+        "kind": "core",
+        "method": "async_batch_search_torrents",
+        "kwargs": {
+          "sites": [
+            {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            }
+          ],
+          "keyword": "Owned keyword",
+          "mtype": null,
+          "page": 1
+        }
+      },
+      {
+        "kind": "core",
+        "method": "async_search_torrents",
+        "kwargs": {
+          "site": {
+            "id": 1,
+            "name": "Owned resource site",
+            "domain": "http://127.0.0.1:43100",
+            "url": "http://127.0.0.1:43100",
+            "cookie": "owned-site-cookie",
+            "ua": "Owned-UA",
+            "apikey": null,
+            "token": null,
+            "rss": null,
+            "proxy": 0,
+            "render": 0,
+            "public": 0,
+            "pri": 1,
+            "downloader": null,
+            "filter": null,
+            "note": null,
+            "limit_interval": 0,
+            "limit_count": 0,
+            "limit_seconds": 0,
+            "timeout": 15,
+            "is_active": true
+          },
+          "keyword": "Owned keyword",
+          "mtype": null,
+          "page": 1
+        }
+      },
+      {
+        "kind": "core",
+        "method": "get_search_page_size",
+        "kwargs": {
+          "site": {
+            "id": 1,
+            "name": "Owned resource site",
+            "domain": "http://127.0.0.1:43100",
+            "url": "http://127.0.0.1:43100",
+            "cookie": "owned-site-cookie",
+            "ua": "Owned-UA",
+            "apikey": null,
+            "token": null,
+            "rss": null,
+            "proxy": 0,
+            "render": 0,
+            "public": 0,
+            "pri": 1,
+            "downloader": null,
+            "filter": null,
+            "note": null,
+            "limit_interval": 0,
+            "limit_count": 0,
+            "limit_seconds": 0,
+            "timeout": 15,
+            "is_active": true
+          },
+          "keyword": "Owned keyword"
+        }
+      }
+    ],
+    "returned": [
+      {
+        "site": 1,
+        "site_name": "Owned resource site",
+        "site_cookie": null,
+        "site_ua": null,
+        "site_proxy": false,
+        "site_order": 0,
+        "site_downloader": null,
+        "title": "Owned core resource",
+        "description": null,
+        "imdbid": null,
+        "enclosure": null,
+        "page_url": "http://127.0.0.1:43100/details.php?id=22",
+        "size": 2048,
+        "seeders": 2,
+        "peers": 0,
+        "grabs": 0,
+        "pubdate": null,
+        "date_elapsed": null,
+        "freedate": null,
+        "uploadvolumefactor": 1,
+        "downloadvolumefactor": 1,
+        "hit_and_run": false,
+        "labels": [],
+        "pri_order": 0,
+        "category": null,
+        "volume_factor": "普通",
+        "freedate_diff": ""
+      },
+      {
+        "site": 1,
+        "site_name": "Owned resource site",
+        "site_cookie": null,
+        "site_ua": null,
+        "site_proxy": false,
+        "site_order": 0,
+        "site_downloader": null,
+        "title": "Owned core resource",
+        "description": null,
+        "imdbid": null,
+        "enclosure": null,
+        "page_url": "http://127.0.0.1:43100/details.php?id=22",
+        "size": 2048,
+        "seeders": 2,
+        "peers": 0,
+        "grabs": 0,
+        "pubdate": null,
+        "date_elapsed": null,
+        "freedate": null,
+        "uploadvolumefactor": 1,
+        "downloadvolumefactor": 1,
+        "hit_and_run": false,
+        "labels": [],
+        "pri_order": 0,
+        "category": null,
+        "volume_factor": "普通",
+        "freedate_diff": ""
+      }
+    ]
+  },
+  "legacy_override": {
+    "plugin_batch": false,
+    "plugin_legacy": [
+      {
+        "site": 1,
+        "site_name": "Owned resource site",
+        "site_cookie": "owned-plugin-secret",
+        "site_ua": "Owned-UA",
+        "site_proxy": false,
+        "site_order": 0,
+        "site_downloader": null,
+        "title": "Owned plugin resource",
+        "description": null,
+        "imdbid": null,
+        "enclosure": "http://127.0.0.1:43100/download.php?id=11&passkey=owned-private-material",
+        "page_url": "http://127.0.0.1:43100/details.php?id=11",
+        "size": 1024,
+        "seeders": 3,
+        "peers": 2,
+        "grabs": 0,
+        "pubdate": null,
+        "date_elapsed": null,
+        "freedate": null,
+        "uploadvolumefactor": 1,
+        "downloadvolumefactor": 0,
+        "hit_and_run": false,
+        "labels": [
+          "owned-label"
+        ],
+        "pri_order": 0,
+        "category": null,
+        "volume_factor": "免费",
+        "freedate_diff": ""
+      }
+    ],
+    "core_rows": 2,
+    "observations": [
+      {
+        "kind": "plugin",
+        "method": "async_batch_search_torrents",
+        "args": [],
+        "kwargs": {
+          "sites": [
+            {
+              "id": 1,
+              "name": "Owned resource site",
+              "domain": "http://127.0.0.1:43100",
+              "url": "http://127.0.0.1:43100",
+              "cookie": "owned-site-cookie",
+              "ua": "Owned-UA",
+              "apikey": null,
+              "token": null,
+              "rss": null,
+              "proxy": 0,
+              "render": 0,
+              "public": 0,
+              "pri": 1,
+              "downloader": null,
+              "filter": null,
+              "note": null,
+              "limit_interval": 0,
+              "limit_count": 0,
+              "limit_seconds": 0,
+              "timeout": 15,
+              "is_active": true
+            }
+          ],
+          "keyword": "Owned keyword",
+          "mtype": null,
+          "page": 1
+        }
+      },
+      {
+        "kind": "plugin",
+        "method": "async_search_torrents",
+        "args": [],
+        "kwargs": {
+          "site": {
+            "id": 1,
+            "name": "Owned resource site",
+            "domain": "http://127.0.0.1:43100",
+            "url": "http://127.0.0.1:43100",
+            "cookie": "owned-site-cookie",
+            "ua": "Owned-UA",
+            "apikey": null,
+            "token": null,
+            "rss": null,
+            "proxy": 0,
+            "render": 0,
+            "public": 0,
+            "pri": 1,
+            "downloader": null,
+            "filter": null,
+            "note": null,
+            "limit_interval": 0,
+            "limit_count": 0,
+            "limit_seconds": 0,
+            "timeout": 15,
+            "is_active": true
+          },
+          "keyword": "Owned keyword",
+          "mtype": null,
+          "page": 1
+        }
+      },
+      {
+        "kind": "core",
+        "method": "async_search_torrents",
+        "kwargs": {
+          "site": {
+            "id": 1,
+            "name": "Owned resource site",
+            "domain": "http://127.0.0.1:43100",
+            "url": "http://127.0.0.1:43100",
+            "cookie": "owned-site-cookie",
+            "ua": "Owned-UA",
+            "apikey": null,
+            "token": null,
+            "rss": null,
+            "proxy": 0,
+            "render": 0,
+            "public": 0,
+            "pri": 1,
+            "downloader": null,
+            "filter": null,
+            "note": null,
+            "limit_interval": 0,
+            "limit_count": 0,
+            "limit_seconds": 0,
+            "timeout": 15,
+            "is_active": true
+          },
+          "keyword": "Owned keyword",
+          "mtype": null,
+          "page": 1
+        }
+      },
+      {
+        "kind": "core",
+        "method": "get_search_page_size",
+        "kwargs": {
+          "site": {
+            "id": 1,
+            "name": "Owned resource site",
+            "domain": "http://127.0.0.1:43100",
+            "url": "http://127.0.0.1:43100",
+            "cookie": "owned-site-cookie",
+            "ua": "Owned-UA",
+            "apikey": null,
+            "token": null,
+            "rss": null,
+            "proxy": 0,
+            "render": 0,
+            "public": 0,
+            "pri": 1,
+            "downloader": null,
+            "filter": null,
+            "note": null,
+            "limit_interval": 0,
+            "limit_count": 0,
+            "limit_seconds": 0,
+            "timeout": 15,
+            "is_active": true
+          },
+          "keyword": "Owned keyword"
+        }
+      }
+    ],
+    "returned": [
+      {
+        "site": 1,
+        "site_name": "Owned resource site",
+        "site_cookie": "owned-plugin-secret",
+        "site_ua": "Owned-UA",
+        "site_proxy": false,
+        "site_order": 0,
+        "site_downloader": null,
+        "title": "Owned plugin resource",
+        "description": null,
+        "imdbid": null,
+        "enclosure": "http://127.0.0.1:43100/download.php?id=11&passkey=owned-private-material",
+        "page_url": "http://127.0.0.1:43100/details.php?id=11",
+        "size": 1024,
+        "seeders": 3,
+        "peers": 2,
+        "grabs": 0,
+        "pubdate": null,
+        "date_elapsed": null,
+        "freedate": null,
+        "uploadvolumefactor": 1,
+        "downloadvolumefactor": 0,
+        "hit_and_run": false,
+        "labels": [
+          "owned-label"
+        ],
+        "pri_order": 0,
+        "category": null,
+        "volume_factor": "免费",
+        "freedate_diff": ""
+      },
+      {
+        "site": 1,
+        "site_name": "Owned resource site",
+        "site_cookie": null,
+        "site_ua": null,
+        "site_proxy": false,
+        "site_order": 0,
+        "site_downloader": null,
+        "title": "Owned core resource",
+        "description": null,
+        "imdbid": null,
+        "enclosure": null,
+        "page_url": "http://127.0.0.1:43100/details.php?id=22",
+        "size": 2048,
+        "seeders": 2,
+        "peers": 0,
+        "grabs": 0,
+        "pubdate": null,
+        "date_elapsed": null,
+        "freedate": null,
+        "uploadvolumefactor": 1,
+        "downloadvolumefactor": 1,
+        "hit_and_run": false,
+        "labels": [],
+        "pri_order": 0,
+        "category": null,
+        "volume_factor": "普通",
+        "freedate_diff": ""
+      },
+      {
+        "site": 1,
+        "site_name": "Owned resource site",
+        "site_cookie": null,
+        "site_ua": null,
+        "site_proxy": false,
+        "site_order": 0,
+        "site_downloader": null,
+        "title": "Owned core resource",
+        "description": null,
+        "imdbid": null,
+        "enclosure": null,
+        "page_url": "http://127.0.0.1:43100/details.php?id=22",
+        "size": 2048,
+        "seeders": 2,
+        "peers": 0,
+        "grabs": 0,
+        "pubdate": null,
+        "date_elapsed": null,
+        "freedate": null,
+        "uploadvolumefactor": 1,
+        "downloadvolumefactor": 1,
+        "hit_and_run": false,
+        "labels": [],
+        "pri_order": 0,
+        "category": null,
+        "volume_factor": "普通",
+        "freedate_diff": ""
+      }
+    ]
+  },
+  "transport_boundary": "Python numeric site map keys become decimal-string JSON keys; Go SDK batch DTO must explicitly interpret those as authenticated numeric source site IDs, not arbitrary string-key equivalence",
+  "current_target_state": "source oracle + incremental native implementation evidence, independent next-main gate pending"
+}

@@ -64,7 +64,10 @@ func (a *App) initOriginalLoadedPlugin(ctx context.Context, instance string) err
 	if err := object.init(ctx); err != nil {
 		return err
 	}
-	return a.updateOriginalPluginEventState(ctx, object)
+	if err := a.updateOriginalPluginEventState(ctx, object); err != nil {
+		return err
+	}
+	return nil
 }
 
 // The source-sized snapshot contract belongs to a trusted imported class and
@@ -106,6 +109,10 @@ func (a *App) originalPluginConfigurationHTTP(w http.ResponseWriter, r *http.Req
 	ctx := context.WithoutCancel(r.Context())
 	a.pluginOriginalOperationMu.Lock()
 	defer a.pluginOriginalOperationMu.Unlock()
+	if !a.admitOriginalBackground() {
+		return nil, &APIError{"APP_STOPPING", "服务正在停止", http.StatusServiceUnavailable}
+	}
+	defer a.wg.Done()
 	var err error
 	if r.Method == http.MethodPut {
 		raw, err := json.Marshal(config)

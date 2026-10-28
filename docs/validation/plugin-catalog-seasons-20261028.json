@@ -1,0 +1,105 @@
+{
+  "accepted_increment": true,
+  "whole_indices_accepted": false,
+  "indices": [
+    43
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": [
+    "app/modules/themoviedb/__init__.py:1340-1352",
+    "app/chain/tmdb.py:216-230",
+    "app/api/endpoints/tmdb.py:70-83",
+    "app/api/endpoints/media.py:360-420",
+    "app/schemas/tmdb.py:TmdbSeason",
+    "src/components/dialog/SubscribeSeasonDialog.vue:95-110"
+  ],
+  "targets": [
+    "internal/app/plugin_original_catalog_seasons.go",
+    "internal/app/http.go",
+    "internal/app/plugin_original_catalog_seasons_test.go",
+    "internal/app/plugin_module_process_catalog_seasons_test.go",
+    "internal/app/plugin_module_process_services_test.go",
+    "web/src/components/MultiSeasonSubscribe.vue",
+    "web/src/components/Subscriptions.vue"
+  ],
+  "behavior": [
+    "Multi-season dialog fetches ordinary async_tmdb_seasons on opening. Native cache is inside fallback; source/clone None/list accumulation, false terminal, tuple conversion and exception continuation retained.",
+    "Exact seven nullable TmdbSeason fields preserve missing/null versus explicit empty string. Native missing/null season numbers filtered; zero remains.",
+    "The selection entry stays available for a TV series even when native recognition only has one season, allowing plugin-added seasons. Error remains in dialog with retry and disabled confirmation."
+  ],
+  "evidence": {
+    "source_cases": 12,
+    "actual_sdk_initial_seconds": 3.697,
+    "final_all_catalog_seconds": 36.071,
+    "final_seasons_race_seconds": 6.078,
+    "web_tests": 12,
+    "web_build": "vue-tsc and production build passed",
+    "linux_cli_cases": 9,
+    "linux_cli_seconds": 2.08,
+    "linux_browser_gate_seconds": 529.02,
+    "browser": "IAB91 actual clone season2/season0/native1 ordering and 8/1/3 counts, selecting clone raises selected count to2; source9 fails with disabled confirmation while clone is not called; retry restores3 rows without new recognition; actual cold newPIDs0replay then browser calls each source/clone once; uninstall404 restores native only. No subscription submitted in this module-list acceptance.",
+    "manifest": "testdata/plugin-module-no-official-auth-20261026/catalog-seasons-52-20261028/manifest.json",
+    "build": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform52r2-20261027-linux",
+          "sha256": "b586db581602d4ee2bac062216aa9b887dc70b535cc7c28418e35fe088d96843",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform52r2-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3745,
+          "changed": [],
+          "elapsed_seconds": 0.81
+        },
+        {
+          "name": "process-platform52r2-20261027-linux.test",
+          "sha256": "e2653f196ae4ed5c072d9691539b7035dd7c5fbdd1a4b2d5dd7f23b594e8c536",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform52r2-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4239,
+          "changed": [],
+          "elapsed_seconds": 7.96
+        }
+      ]
+    }
+  },
+  "adaptations": [
+    "Existing native /catalog/seasons route and response data envelope used; original module name/kwargs and DTO maintained.",
+    "Provider evidence uses controlled existing raw source-detail cache; SDK/main/browser are real processes. No live TMDB service claim.",
+    "Native source-detail cache is read as ProviderInfo.seasons to preserve full source DTO instead of lossy compact SeasonSummary.",
+    "Existing target selected-season editor and explicit retry remain; no external business writes from fixture."
+  ],
+  "failures_explained": [
+    "Initial compile collided with existing season projection name; renamed new helper only.",
+    "Initial actual Linux main52 found absent native fields became empty strings through compact SeasonSummary. Fixed production fallback to raw ProviderInfo and added real HTTP missing/null/explicit-empty regression; retained both red CLI/UI outputs.",
+    "Broader catalog regression requires existing catalog-opaque worker with four event handlers; final related run used that fixture."
+  ],
+  "remaining": [
+    "43:full197 method/199 ordinary source-call audit",
+    "50:final scope evidence audit"
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

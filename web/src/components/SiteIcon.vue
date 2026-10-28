@@ -2,13 +2,25 @@
 import { computed, ref, watch } from 'vue';
 import { defaultIcon, siteIconURL } from '../features/site-icons';
 
-const props = defineProps<{ url: string; name: string }>();
+const props = defineProps<{ url: string; name: string; cached?: string }>();
 const failed = ref(false);
-const source = computed(() => (failed.value ? defaultIcon : siteIconURL(props.url)));
+const cachedFailed = ref(false);
+const source = computed(() =>
+  props.cached && !cachedFailed.value
+    ? props.cached
+    : failed.value
+      ? defaultIcon
+      : siteIconURL(props.url),
+);
+function imageFailed() {
+  if (props.cached && !cachedFailed.value) cachedFailed.value = true;
+  else failed.value = true;
+}
 watch(
-  () => props.url,
+  () => [props.url, props.cached],
   () => {
     failed.value = false;
+    cachedFailed.value = false;
   },
 );
 </script>
@@ -22,7 +34,7 @@ watch(
     loading="lazy"
     decoding="async"
     referrerpolicy="no-referrer"
-    @error="failed = true"
+    @error="imageFailed"
   />
 </template>
 <style scoped>

@@ -1,5 +1,11 @@
 # Standard event target filtering
 
+2026-10-25 follow-up: execution-time enablement, falsey Event construction and
+current-class resolution after reload are now corrected and locally verified;
+see [event execution parity](plugin-event-execution-parity.md). The initial
+stage's evidence limits below are historical, not a statement that these new
+tests have not run.
+
 This focused change preserves MoviePilot's pinned EventManager behavior at
 8a83efeacd3e26b82be495e17d50146e31c96a60, app/core/event.py:433–496:
 

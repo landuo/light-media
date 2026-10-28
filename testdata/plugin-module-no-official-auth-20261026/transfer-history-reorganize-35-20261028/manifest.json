@@ -1,0 +1,643 @@
+{
+  "kind": "Selected main history reorganization and native callback target projection",
+  "whole_indices_accepted": false,
+  "main_sha256": "cf3e2a3f585f8a5f614dc5d4ad208e4dc30f85e56cb7ce0747aa12088fd55eee",
+  "test_sha256": "ca60184cae7ba4311117dbb1ddd945437135117df4d5a4f6348e0b5eb89e25d7",
+  "ui_driver_sha256": "ca60184cae7ba4311117dbb1ddd945437135117df4d5a4f6348e0b5eb89e25d7",
+  "worker_sha256": "376f0e246479b6e4a299bf524d87398aaff31f409b70f66b25a097d41990f6cc",
+  "linux_cli_seconds": 12.59,
+  "linux_browser_gate_seconds": 219.24,
+  "browser_gate_includes_human_actions_and_build_restart_waits": true,
+  "artifacts": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/build-platform35.py.gz",
+      "original": "build-platform35.py",
+      "sha256": "aafcd0d744cacb5481a5ba7957d6bdc56e755fa2f3591406087d0339d7f1d85f",
+      "raw_sha256": "b8945871f28fd3e09e6af336eb5157f932d9f03d58b8ebab8f853c392a182c7c",
+      "bytes": 1168
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/build-platform35r2.py.gz",
+      "original": "build-platform35r2.py",
+      "sha256": "ba45b488dda49eb7d81d3616ae0b72c11ddb292210f964141c948d91748899c7",
+      "raw_sha256": "0fb8a6bc0fefc888006ce927c325c9f02886e0d3923e7deef2673414bea69fd8",
+      "bytes": 1170
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/platform35-build-output.log.gz",
+      "original": "platform35-build-output.log",
+      "sha256": "98b5903ed1d952af19ca20ebdaa53092c1bb2b9ac396494d25b32a51bad12f1e",
+      "raw_sha256": "29af24e4634a093e1fe91a27e57eefd91ff9874cc68555f5a084c13d97c79d1e",
+      "bytes": 346
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/platform35-build-red.log.gz",
+      "original": "platform35-build-red.log",
+      "sha256": "b4639ae9b9fb58f6ba08f35010283d37d4b1ad6ed486e0ace4e61f458bed73fb",
+      "raw_sha256": "3efe54bf11f21f194b2d72aa3f2867b80565a44a2901e2dde60192e75082bdd3",
+      "bytes": 96
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/platform35-result.json.gz",
+      "original": "platform35-result.json",
+      "sha256": "c0beb9929dcb7269dab138fe3e38a0d1c70408b0858a898f82eb187579c5f42f",
+      "raw_sha256": "f34e5991dd7d41fd7b5aabc7f5b2f1b1b2392bfefec05542a56badc764add5dc",
+      "bytes": 476
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/platform35r2-build-output.log.gz",
+      "original": "platform35r2-build-output.log",
+      "sha256": "a400410261e94cca0c71480e3ba7b3fd731428f20e4ab4fdbec80a3ae95aebe7",
+      "raw_sha256": "3a627caf064935d50a8497a3a8ad1bd5290bcbd3553d333a2f7dbba48a041d27",
+      "bytes": 344
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/platform35r2-result.json.gz",
+      "original": "platform35r2-result.json",
+      "sha256": "996d19969a30583ebb30520a9324a91567985efdc26c8dfb350eba461513aa7e",
+      "raw_sha256": "f100115146f1e25232fb36e14389768c13e5f4c3270c3bee03841cdcb12580db",
+      "bytes": 472
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/process-platform35-20261027-linux.test.inputs.json.gz",
+      "original": "process-platform35-20261027-linux.test.inputs.json",
+      "sha256": "96117293aed6fad62109c538e7c2ef8c4be6fd76be4dbc1f552ab807c3a212f3",
+      "raw_sha256": "f1b0880848689f350166859b01a4bfed7cdad349bdaf8e750ec4658f61764c7b",
+      "bytes": 194229
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/process-platform35r2-20261027-linux.test.inputs.json.gz",
+      "original": "process-platform35r2-20261027-linux.test.inputs.json",
+      "sha256": "8715fcae5c254163240b698ded3966ed2a4eceb881337045bfcf6b2263d66577",
+      "raw_sha256": "38bfbe331c6a0bb4c6d3ac0d7d1616993761ad0556bcfe8c2dc689cbab5ae8c9",
+      "bytes": 194232
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-browser/01-original-three-history.dom.txt.gz",
+      "original": "reorganize35-browser/01-original-three-history.dom.txt",
+      "sha256": "32a8ed4e74844bd0227ac5496823b7c5884e7407e59bf878ce6116ef74d4a603",
+      "raw_sha256": "fbec5063e58dcc38bd5582f80e85e789dba74287b131683e9c074a20536411a9",
+      "bytes": 1418
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-browser/01-original-three-history.png",
+      "original": "reorganize35-browser/01-original-three-history.png",
+      "sha256": "260daf562ffe780368573a11b9e6b5e1b67ec34ac792225c325e9906c78d750b",
+      "raw_sha256": "260daf562ffe780368573a11b9e6b5e1b67ec34ac792225c325e9906c78d750b",
+      "bytes": 64134
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-browser/02-preview-three-no-write.dom.txt.gz",
+      "original": "reorganize35-browser/02-preview-three-no-write.dom.txt",
+      "sha256": "1c60481ee67e505d7755fdf530d712ccc42dc29a5c8f6e77747bac51cbc1b958",
+      "raw_sha256": "bc2d5bbbcdb9e60efa2e4f3d5947c2b511cb52562b95b6b81fb77acfbceb4000",
+      "bytes": 2161
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-browser/02-preview-three-no-write.png",
+      "original": "reorganize35-browser/02-preview-three-no-write.png",
+      "sha256": "6bd24188eb8792b95ca9e0a7232453c76276a3f77c4556c88fd6e2dd703146e3",
+      "raw_sha256": "6bd24188eb8792b95ca9e0a7232453c76276a3f77c4556c88fd6e2dd703146e3",
+      "bytes": 68344
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-browser/03-delete-false-retained-form.dom.txt.gz",
+      "original": "reorganize35-browser/03-delete-false-retained-form.dom.txt",
+      "sha256": "cda9d393985c1de3099d1a1eb832d00367e0d3f93455d58e07091a125052d268",
+      "raw_sha256": "40bee6fe6c58665d51c1e691310022d951b381407bf1356a420e6a236d2de7ec",
+      "bytes": 2093
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-browser/03-delete-false-retained-form.png",
+      "original": "reorganize35-browser/03-delete-false-retained-form.png",
+      "sha256": "ba78543e78278c7f475e65f659e6fcddcf130bef54c61c06c203173d20de03db",
+      "raw_sha256": "ba78543e78278c7f475e65f659e6fcddcf130bef54c61c06c203173d20de03db",
+      "bytes": 53308
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-browser/04-cold-recovered-preview.dom.txt.gz",
+      "original": "reorganize35-browser/04-cold-recovered-preview.dom.txt",
+      "sha256": "1c60481ee67e505d7755fdf530d712ccc42dc29a5c8f6e77747bac51cbc1b958",
+      "raw_sha256": "bc2d5bbbcdb9e60efa2e4f3d5947c2b511cb52562b95b6b81fb77acfbceb4000",
+      "bytes": 2161
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-browser/04-cold-recovered-preview.png",
+      "original": "reorganize35-browser/04-cold-recovered-preview.png",
+      "sha256": "6bd24188eb8792b95ca9e0a7232453c76276a3f77c4556c88fd6e2dd703146e3",
+      "raw_sha256": "6bd24188eb8792b95ca9e0a7232453c76276a3f77c4556c88fd6e2dd703146e3",
+      "bytes": 68344
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-browser/05-red-native-history-empty-target.dom.txt.gz",
+      "original": "reorganize35-browser/05-red-native-history-empty-target.dom.txt",
+      "sha256": "6f23ab3d0a3180504eb4280ec243b30e22632a6ad8d9a1b463977c3421160b43",
+      "raw_sha256": "bd1cb59ce5affaef3287a21ab59bc12e7b9b7a6909d0c92ee8f9988398fdae9a",
+      "bytes": 1331
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-browser/05-red-native-history-empty-target.png",
+      "original": "reorganize35-browser/05-red-native-history-empty-target.png",
+      "sha256": "7fff4b9ad32cdf10559ada4b1d1266bf078e891987a3375252549ac5c89669ad",
+      "raw_sha256": "7fff4b9ad32cdf10559ada4b1d1266bf078e891987a3375252549ac5c89669ad",
+      "bytes": 66915
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-browser-first-result.log.gz",
+      "original": "reorganize35-browser-first-result.log",
+      "sha256": "38b2e3879dab75e53df4499b8bc2706a904be982770b90b22857577eb33ab6d8",
+      "raw_sha256": "07acf8d94f75679a468dc282d9ee2f86eb1e88b967eaf37700c4bb0dd0d3f574",
+      "bytes": 2349
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-browser-verdict.json.gz",
+      "original": "reorganize35-browser-verdict.json",
+      "sha256": "33389d26f7a83ede6ec9a97130ea542249235ead51d273ffaefa6b02652805cb",
+      "raw_sha256": "016d8ac0a26e6685d8fae0e2982c02b9a69c6cf5f1d409a02de65097738ea9b9",
+      "bytes": 790
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-cases-r2.log.gz",
+      "original": "reorganize35-cases-r2.log",
+      "sha256": "ed6a0aac24acd05c9a963918eba6121a81e920e6b1b346e135193e01a5268597",
+      "raw_sha256": "a79103882f24419d1f8ec868b28e9e4bb468cf79c79fb6995eeaa9fcd6eb03a4",
+      "bytes": 57
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-cases.log.gz",
+      "original": "reorganize35-cases.log",
+      "sha256": "84e4e2b865812fe7c2a417b66e74ec6287b4f42eccc15af23abd97140faceb79",
+      "raw_sha256": "acbf46d1cbe74ae05b7287533d89c29d9bf9a154bd1160e6444be2a96414d989",
+      "bytes": 3119
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-fault-green.log.gz",
+      "original": "reorganize35-fault-green.log",
+      "sha256": "6f3f85320792052b1f7dec4055e701ea38baa809abb25fe222b1747a0035bcb4",
+      "raw_sha256": "700885044944884d7446a59cee42c30cd5052e28c7f4cd568f1cf960dd79c2d9",
+      "bytes": 57
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-fault-red.log.gz",
+      "original": "reorganize35-fault-red.log",
+      "sha256": "2ac281c29097edd481d0b78a7229cffaf634657129dbddf1d43647d87693ddd2",
+      "raw_sha256": "69dce766457ca7e8b4d37b0adb551da519c1627127efa97aced0efd8a5ad1200",
+      "bytes": 1567
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-green.log.gz",
+      "original": "reorganize35-green.log",
+      "sha256": "4d33a37d777404ace7a7659f85c474eaa95692a621bb307d2dbd5d0c6ce3813e",
+      "raw_sha256": "2fcb53a8c655df6dda6dccb9db8c9806757e8e1ed6731bb2afff4d8e196c6f1b",
+      "bytes": 57
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-linux-cli.log.gz",
+      "original": "reorganize35-linux-cli.log",
+      "sha256": "f652e766759f6911595dc76bd2f6f3156e63963e6213e9ee3f695bfda4420be5",
+      "raw_sha256": "be52aaa3fc99e3ffc6a68e91e3801af2f7ec84f2836af40f271fb1dd7c13aa2e",
+      "bytes": 590
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-linux-ui.log.gz",
+      "original": "reorganize35-linux-ui.log",
+      "sha256": "5a0583e454497d1c9f52bcb65aee94748b7d5afe52355e49ceb85120622d7666",
+      "raw_sha256": "6b1a49b71934b47f3421131eb5e72fd88f8261df2b6de64d700ae3a84d13c57c",
+      "bytes": 611
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-native-history-green.log.gz",
+      "original": "reorganize35-native-history-green.log",
+      "sha256": "4ebfc7fa18c8b3b53e5bc8f91c7609f718997fbecb1efdb216abbc05cf313e01",
+      "raw_sha256": "ac1490566ec80a0b397f0e2518f38dd0b0d8385a2b098c6d473d9307e5c86e8b",
+      "bytes": 7894
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-native-history-red.log.gz",
+      "original": "reorganize35-native-history-red.log",
+      "sha256": "81b40dc360f6a620b9ba5753925aa12e14c29a63eba9eee44f58e584b587a945",
+      "raw_sha256": "3eddbcca2ba6ec837d629e1f50e386ff2f0fbdc73f12a5e00b03190fd56197fe",
+      "bytes": 2607
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-observe.py.gz",
+      "original": "reorganize35-observe.py",
+      "sha256": "b6835432a1484f05e3936a87fab8b3c21210d6b179c72d5a0eaaa11f08e0684a",
+      "raw_sha256": "14192c0133f5552c8418030b9172482e622eeec5d99c0bd7103dd4f3471a9e7b",
+      "bytes": 1365
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-race.log.gz",
+      "original": "reorganize35-race.log",
+      "sha256": "e7c3581de44f9ea864c3559c05db0bcbd4495502388b4585878421916d712abd",
+      "raw_sha256": "89e139cea205195186e008a139b52952034aa9d5d97d2a5c86078ee0994cf0ce",
+      "bytes": 59
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-red.log.gz",
+      "original": "reorganize35-red.log",
+      "sha256": "9e3afdfe9069c775ab5483a99042cf714e88711e0e9b224260961432ae98f1fc",
+      "raw_sha256": "a6164a7a6b1ea8e271a2a29ee5e42c1057ceb9d323cd9c59cbe145e65b971564",
+      "bytes": 1202
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-regression-r2.log.gz",
+      "original": "reorganize35-regression-r2.log",
+      "sha256": "f4a7c981dd26261cbfd76e62b552326cfcb7814922657c57e31b5c426590f24b",
+      "raw_sha256": "11aafcc61b60b19d9e59f05bcd0fa0bdb6620414217a6a47b6d93f2a52c4e0bf",
+      "bytes": 58
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-regression.log.gz",
+      "original": "reorganize35-regression.log",
+      "sha256": "155aab29e071a63b62d4028289e270248a0f53e2d8b5b7774e39cc886bded642",
+      "raw_sha256": "2df00e1173bf63cd3a57af3c4c61c3e19ef81ced76f56f56c44721254ad9460e",
+      "bytes": 41273
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35-browser-cold-before-retry.json.gz",
+      "original": "reorganize35-runtime/reorganize35-browser-cold-before-retry.json",
+      "sha256": "33c9ac0402853b9560ea4f3ba8e1c60d4c05924d4c4ff49adb6ba0741660d401",
+      "raw_sha256": "924e842ec4249790d2c63c9e4067c26d65fb14811890178cc67084715f05c9df",
+      "bytes": 3522
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35-browser-complete.json.gz",
+      "original": "reorganize35-runtime/reorganize35-browser-complete.json",
+      "sha256": "de247edb315e76e3e109c44a9bdfa34d0c2fe90ddc2bd0e1ddee74a82554c9c6",
+      "raw_sha256": "516dd1e430ac518fea95a8a5cf336071098e05010d27e7a7070c26bf8be647e5",
+      "bytes": 7976
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35-browser-fail.json.gz",
+      "original": "reorganize35-runtime/reorganize35-browser-fail.json",
+      "sha256": "c1092c652f538ec98b2bbab32edf6462406aebe3fead5f2bd755a60acf32b3f6",
+      "raw_sha256": "d4697f892f9cbc0f93ab7f899aa9be523ae82cffa36c8558ce7eeb85e6ad0736",
+      "bytes": 6020
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35-browser-preview.json.gz",
+      "original": "reorganize35-runtime/reorganize35-browser-preview.json",
+      "sha256": "14325ba85832e2b4ea1f24cdb3ef6b7ca6f0fb8b5f48de526dff4d9d856aba4c",
+      "raw_sha256": "096fa99acb067ef79845e7e4ac9e67a83dff09192292a97799361d0cef455dc1",
+      "bytes": 4872
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35-browser-rejected.json.gz",
+      "original": "reorganize35-runtime/reorganize35-browser-rejected.json",
+      "sha256": "bd0df3602481b3a2503d2f261e657e3d4356bced44e526a6a48a65977b201547",
+      "raw_sha256": "38f82232b3b3540ce92f88b2321ea51a9dbb22711f639e4b0aa85db2160fee27",
+      "bytes": 7918
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35-browser-restore.json.gz",
+      "original": "reorganize35-runtime/reorganize35-browser-restore.json",
+      "sha256": "b12ceacfcafad3210633e7c7255b164ab1b711971ae8dfc86a9cf8a94c9ec699",
+      "raw_sha256": "96c4a67a6e9e3fe17c437d1bb079dec8335169e02faf5142b63262703fc348d4",
+      "bytes": 7914
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35-browser-setup.json.gz",
+      "original": "reorganize35-runtime/reorganize35-browser-setup.json",
+      "sha256": "e3fb99ad30fe81274086c64ed55ad0bf9877f5705f719b0a1e5b8a0aa86d0dbf",
+      "raw_sha256": "4ea7ef0fbe406be8685679bef8b168bf4d78cbe891a0a2ec8adb093a522055e5",
+      "bytes": 6026
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35r2-browser-cold-before-retry.json.gz",
+      "original": "reorganize35-runtime/reorganize35r2-browser-cold-before-retry.json",
+      "sha256": "d6fb63f73216bcf693909d7be785c829f6872ab6b55b1ce61af4e9fa1e79e80d",
+      "raw_sha256": "fcdec0a166c9af1e22ef3af09653aafb449c2396354a3dff711d4ff05e034f6b",
+      "bytes": 3535
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35r2-browser-cold-reloaded.json.gz",
+      "original": "reorganize35-runtime/reorganize35r2-browser-cold-reloaded.json",
+      "sha256": "28afcf16e9870ede05ebab1d9d280dbd26149a1755814cdd124101092fea40e0",
+      "raw_sha256": "96f7d57e47f795810d360d8da5600af435af21d2d9ce43acc97a5fe79944ed38",
+      "bytes": 3911
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35r2-browser-cold.json.gz",
+      "original": "reorganize35-runtime/reorganize35r2-browser-cold.json",
+      "sha256": "27c8533d0927d8b998604b41b7c70a72204e8c5c8c7ba19bbf5986c9b88d244f",
+      "raw_sha256": "4b4972ba086455c0f347bc712657413e08cf1f4d8f77fa7339480a2460a7e856",
+      "bytes": 3890
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35r2-browser-complete.json.gz",
+      "original": "reorganize35-runtime/reorganize35r2-browser-complete.json",
+      "sha256": "62b06f3343e9871630054602f8fd10636813b37cb821b98dc129d7f574984b66",
+      "raw_sha256": "0e3d6fcbdf0bf495327d1461013ebd26edb8d802c72e2bf94bd09148205e1194",
+      "bytes": 7978
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35r2-browser-fail.json.gz",
+      "original": "reorganize35-runtime/reorganize35r2-browser-fail.json",
+      "sha256": "b2ea2b0ab03145bc3cec7df058c40d69e9e936c57a97d6bd7eea3357e9d31b51",
+      "raw_sha256": "e0bbb9693e5f723d07c3caa101fec894f3d71f28a78f6fa0f579e938d46e027b",
+      "bytes": 6026
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35r2-browser-preview.json.gz",
+      "original": "reorganize35-runtime/reorganize35r2-browser-preview.json",
+      "sha256": "6b7926623a40f6dd03a9e0194e25a265bddc8ffafa74c0e722acdcf927cb8885",
+      "raw_sha256": "6be3d5654a1c3691f585958a635722674db494afa957d75c83cfd0dface7bd3f",
+      "bytes": 4884
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35r2-browser-rejected.json.gz",
+      "original": "reorganize35-runtime/reorganize35r2-browser-rejected.json",
+      "sha256": "e25e0c7d3855c44ee2f508ec025a3e115324c6d25c9349821c188ee38fe6f599",
+      "raw_sha256": "48733e3e16aec8d68962b6438f931c67aefd3117fa2deb6d616069b5b51e5d48",
+      "bytes": 7931
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35r2-browser-restore.json.gz",
+      "original": "reorganize35-runtime/reorganize35r2-browser-restore.json",
+      "sha256": "00a10bc5472570148747786ec23b2772ab652c7e8a2c5e515b6b0c8b3d303ab0",
+      "raw_sha256": "5be5f134d152f3988a2e6c009255afadd95fa45d6c0595f8a905236a0c4eb39a",
+      "bytes": 7927
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/reorganize35r2-browser-setup.json.gz",
+      "original": "reorganize35-runtime/reorganize35r2-browser-setup.json",
+      "sha256": "78300d7354333ca12bc6270909acb8cd59d2f3e7518a303ec4ee3d89b08f1eeb",
+      "raw_sha256": "934085c01529a19aed8a032a34ced84a74cbd01f0a3e4205733f157855fb726b",
+      "bytes": 6032
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35-cli-evidence/events36-service-process.log.gz",
+      "original": "reorganize35-runtime/transfer-module35-cli-evidence/events36-service-process.log",
+      "sha256": "19104056337dbc389c3655a0f6aafa64dadc2dde9232a82f30277d01f98def5f",
+      "raw_sha256": "a3c3bf9ca60fb1c3a2124d55014164bffb298555f87d9103476dee01dde8feaa",
+      "bytes": 28505
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35-cli-evidence/transfer-module-real-main.json.gz",
+      "original": "reorganize35-runtime/transfer-module35-cli-evidence/transfer-module-real-main.json",
+      "sha256": "0cd48f3ff6010e04ce6780909e98ecf2433c991a97898ca28761531c4652ab6e",
+      "raw_sha256": "462ed1ec38e552a0d377f6cedf8a5a8c05dc7a97cd445ee6f0de33b36591196e",
+      "bytes": 134659
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35-cli.log.gz",
+      "original": "reorganize35-runtime/transfer-module35-cli.log",
+      "sha256": "6a3999ad24d23e725a690858670119d585c69bb8c6a7c366ce44001226728a85",
+      "raw_sha256": "77b3f18429b3a8a34947906b865e66e51285828de3b706be16b92f2bb170ced6",
+      "bytes": 390
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35-ui-evidence/events36-service-process.log.gz",
+      "original": "reorganize35-runtime/transfer-module35-ui-evidence/events36-service-process.log",
+      "sha256": "240e0701cd7f447a81ced920a81c0f4b4455ab71f46667ccb5bc181e332a669d",
+      "raw_sha256": "6f937e485b2b76d1be7dd42d7ba6956584342faf846e78a488ae09e165061517",
+      "bytes": 30421
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35-ui-evidence/transfer-module-real-main.json.gz",
+      "original": "reorganize35-runtime/transfer-module35-ui-evidence/transfer-module-real-main.json",
+      "sha256": "5c3efd01c533d20bb574174704cf33c41e599ba776a81730364a4916124389e9",
+      "raw_sha256": "548d89029150a313643a6fc4d3f82868fba2c5aff10b3fc6f0a44be9d9d211ce",
+      "bytes": 133831
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35-ui-state.json.gz",
+      "original": "reorganize35-runtime/transfer-module35-ui-state.json",
+      "sha256": "e468ec5a6a414312c8e3b4fb38219c34ce3529adaff72ad105888c97d98d42d9",
+      "raw_sha256": "3f6a5ac65c1836e43af8f43aa0dfbb8539bccacd68bb67c1367559d7415bec35",
+      "bytes": 1994
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35-ui.log.gz",
+      "original": "reorganize35-runtime/transfer-module35-ui.log",
+      "sha256": "08ff499c91693fe47459eb219f515ad4c7b53e5d7f6b5969481535b81a82a671",
+      "raw_sha256": "aa02f73051227ebb4c98777eadba75712bdb824c239017eb83c0cc2ac833ad6b",
+      "bytes": 413
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35r2-cli-evidence/events36-service-process.log.gz",
+      "original": "reorganize35-runtime/transfer-module35r2-cli-evidence/events36-service-process.log",
+      "sha256": "634401846847892774552f1fea09b1e0fe4a1cedfa0684254ca74013d6e50ea7",
+      "raw_sha256": "843e06314901f6ab805c0da4b5f6be9dec6bc837b91da0c9d29feb56f1ebe4db",
+      "bytes": 28438
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35r2-cli-evidence/transfer-module-real-main.json.gz",
+      "original": "reorganize35-runtime/transfer-module35r2-cli-evidence/transfer-module-real-main.json",
+      "sha256": "8def525547b097a0b8c38c0192861f7f99f9dbff75db1a48a2ada43946f60f4d",
+      "raw_sha256": "089c469e0d63968159f2efc5cacea0d7aa85160d878ca5c194d1d2573d52b22f",
+      "bytes": 134953
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35r2-cli.log.gz",
+      "original": "reorganize35-runtime/transfer-module35r2-cli.log",
+      "sha256": "594cbd99bda5a8ff0e1d6aa3d43efff5fa26f1b33e49972346d2071a1ade736c",
+      "raw_sha256": "a7c64a4881f3f255fa83e1039fd6734005fff244bc6fcbcd90c32dc7d14b1eeb",
+      "bytes": 390
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35r2-ui-evidence/events36-service-process.log.gz",
+      "original": "reorganize35-runtime/transfer-module35r2-ui-evidence/events36-service-process.log",
+      "sha256": "3d66868c5817c9081df5119e52565e0b249ad3455ea83a034ba60b961558e851",
+      "raw_sha256": "3fb5a8c955901afbf1b8626e0665e6cf4d7a29afe48359cb984af23e669d05fa",
+      "bytes": 30772
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35r2-ui-evidence/transfer-module-real-main.json.gz",
+      "original": "reorganize35-runtime/transfer-module35r2-ui-evidence/transfer-module-real-main.json",
+      "sha256": "e9b42cde671c296c85a859bbd01315c38f48a8b9bd20ebfd15b3aac1467f13c8",
+      "raw_sha256": "6cffc831f08caedc6b6deeff9dacb691c39a9dc600f818d1850a27e65dfda145",
+      "bytes": 134994
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35r2-ui-state.json.gz",
+      "original": "reorganize35-runtime/transfer-module35r2-ui-state.json",
+      "sha256": "b5ca62b15c9afc576661ce8dd778fd77f9d23203e67f38a0779f80a4a63f73a5",
+      "raw_sha256": "1808157e5f7a84e9ad186901f13fd8b275b99331de5b19537f91097212d7e4a8",
+      "bytes": 1995
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35-runtime/transfer-module35r2-ui.log.gz",
+      "original": "reorganize35-runtime/transfer-module35r2-ui.log",
+      "sha256": "5e1106df65a31227e18a2ed2c156894a79639723e1904b08ad47fb3bbb2f353f",
+      "raw_sha256": "68b3eae0ee634972c1ba84cf78d2c0f870367d9d4f237e77a31f2e6d49d5887d",
+      "bytes": 413
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-browser/01-original-three-history.dom.txt.gz",
+      "original": "reorganize35r2-browser/01-original-three-history.dom.txt",
+      "sha256": "9b34d491a7bdb458e3cdeaeb28806d467dec401a118541344d622f8c5158746f",
+      "raw_sha256": "44299d25fc78212a4e83fdccf63bc04f133bb3ad325c905f8cd795f94c098568",
+      "bytes": 1419
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-browser/01-original-three-history.png",
+      "original": "reorganize35r2-browser/01-original-three-history.png",
+      "sha256": "3dbc931576099dca66487cec5c5bc1e2f948de524b404ea37521a920afda1663",
+      "raw_sha256": "3dbc931576099dca66487cec5c5bc1e2f948de524b404ea37521a920afda1663",
+      "bytes": 64589
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-browser/02-preview-no-write.dom.txt.gz",
+      "original": "reorganize35r2-browser/02-preview-no-write.dom.txt",
+      "sha256": "45cf7bb40d8b9da900ad5042c8e4df8f97d3134be709c1ca87a31ac3e21ba8df",
+      "raw_sha256": "16d7e03590ded801f00d559253b64babe276cca08612b42d2ad76d9cbc92c902",
+      "bytes": 2161
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-browser/02-preview-no-write.png",
+      "original": "reorganize35r2-browser/02-preview-no-write.png",
+      "sha256": "ac1cd49c6d6e221b7b6e2bce00fd2b71abda57a205a12a4b2ce75f4a8c22a9b1",
+      "raw_sha256": "ac1cd49c6d6e221b7b6e2bce00fd2b71abda57a205a12a4b2ce75f4a8c22a9b1",
+      "bytes": 68842
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-browser/03-delete-false-retained-form.dom.txt.gz",
+      "original": "reorganize35r2-browser/03-delete-false-retained-form.dom.txt",
+      "sha256": "d1cad24f20f9b49046a98f81b68d4d7af96503250622a18a5ab045a8e384da9c",
+      "raw_sha256": "4dd8f7831d95092a93028206cf9981d62102d491f03857f57322c87a6101c68b",
+      "bytes": 2093
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-browser/03-delete-false-retained-form.png",
+      "original": "reorganize35r2-browser/03-delete-false-retained-form.png",
+      "sha256": "295df2542a85904487cf6a25493a5efec5c072c261eb3f7ff5a64b053ee3b950",
+      "raw_sha256": "295df2542a85904487cf6a25493a5efec5c072c261eb3f7ff5a64b053ee3b950",
+      "bytes": 53458
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-browser/04-cold-recovered-preview.dom.txt.gz",
+      "original": "reorganize35r2-browser/04-cold-recovered-preview.dom.txt",
+      "sha256": "45cf7bb40d8b9da900ad5042c8e4df8f97d3134be709c1ca87a31ac3e21ba8df",
+      "raw_sha256": "16d7e03590ded801f00d559253b64babe276cca08612b42d2ad76d9cbc92c902",
+      "bytes": 2161
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-browser/04-cold-recovered-preview.png",
+      "original": "reorganize35r2-browser/04-cold-recovered-preview.png",
+      "sha256": "ac1cd49c6d6e221b7b6e2bce00fd2b71abda57a205a12a4b2ce75f4a8c22a9b1",
+      "raw_sha256": "ac1cd49c6d6e221b7b6e2bce00fd2b71abda57a205a12a4b2ce75f4a8c22a9b1",
+      "bytes": 68842
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-browser/05-three-success-with-targets.dom.txt.gz",
+      "original": "reorganize35r2-browser/05-three-success-with-targets.dom.txt",
+      "sha256": "06ce833bc4f64f540042dd5c5da66dc3acca423046c507336415a53727f95366",
+      "raw_sha256": "65871569ad1870935b0be4e188f20e12427a81b5b0f10111f680a36c93402a7d",
+      "bytes": 1413
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-browser/05-three-success-with-targets.png",
+      "original": "reorganize35r2-browser/05-three-success-with-targets.png",
+      "sha256": "a44fde17ab08f490f49e6f79a82e1428563e7d90ae1c0c030eb432682f9f1a77",
+      "raw_sha256": "a44fde17ab08f490f49e6f79a82e1428563e7d90ae1c0c030eb432682f9f1a77",
+      "bytes": 64545
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-browser/06-cold-three-success-with-targets.dom.txt.gz",
+      "original": "reorganize35r2-browser/06-cold-three-success-with-targets.dom.txt",
+      "sha256": "06ce833bc4f64f540042dd5c5da66dc3acca423046c507336415a53727f95366",
+      "raw_sha256": "65871569ad1870935b0be4e188f20e12427a81b5b0f10111f680a36c93402a7d",
+      "bytes": 1413
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-browser/06-cold-three-success-with-targets.png",
+      "original": "reorganize35r2-browser/06-cold-three-success-with-targets.png",
+      "sha256": "e009bf143760f3367cee085f6578f87285df961aa0342d8b8eea55ad38e267da",
+      "raw_sha256": "e009bf143760f3367cee085f6578f87285df961aa0342d8b8eea55ad38e267da",
+      "bytes": 63274
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-commit-race.log.gz",
+      "original": "reorganize35r2-commit-race.log",
+      "sha256": "35055fad4a41598e49a7edfa53c45e8a0f0413c42399b685a002b591267c18db",
+      "raw_sha256": "baf7edce47fa83bd82dff453476b66f0d2554a3c61da5461cd8e1b94e00cea8d",
+      "bytes": 57
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-linux-cli.log.gz",
+      "original": "reorganize35r2-linux-cli.log",
+      "sha256": "0e83c5b8deb985f8e64b11c20a4172f20d08feff8bed839dba1441af354c34aa",
+      "raw_sha256": "ce288220b94f4df4ce11a4ec94f09cc3726605722fdf017089ec335264f22ee7",
+      "bytes": 590
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-linux-ui.log.gz",
+      "original": "reorganize35r2-linux-ui.log",
+      "sha256": "267e3feba2da10af2632aa029474be4453a0bd3146861cf3832d24f79d74fdd0",
+      "raw_sha256": "df6260610a10507f54f66d148018164f1274fade29f4a3aedd110b333c768cf5",
+      "bytes": 613
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-observe.py.gz",
+      "original": "reorganize35r2-observe.py",
+      "sha256": "8594d80d87d8f381026000b6a56e9e0dc5c00950539044e82bcfbd8b618e07e2",
+      "raw_sha256": "bcffbd510768813de97b8f475c1d8cd64404f23d060f97eb2bf98e0e7bc18843",
+      "bytes": 1367
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-race-final.log.gz",
+      "original": "reorganize35r2-race-final.log",
+      "sha256": "a684d2758e7fd8dfb229e6ef43437eadd9f8095b984968cb356d3e5abe0f3eb0",
+      "raw_sha256": "205d82dec9d82769884aedfb8945faea57613e201170b4b0f5aec3724d7d356e",
+      "bytes": 58
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/reorganize35r2-race.log.gz",
+      "original": "reorganize35r2-race.log",
+      "sha256": "6ffff86b72016d540a74abce67038574aac9111751cf01d6a11c9bdb1a28a541",
+      "raw_sha256": "36efcdd69bea8806c368e15b1e0a707b18f6788b95282d7809d48c9c214b5f6f",
+      "bytes": 10252
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/run-transfer-module35.py.gz",
+      "original": "run-transfer-module35.py",
+      "sha256": "2cbab6b7ddce58c79a2fe0b6ebb6f3959d046eb78aaebfcb6abd911949410e8a",
+      "raw_sha256": "a8ef99b28670564ad24d771a0864dbc6d05f71bbe948c5cda7accfe9bc5eeaa0",
+      "bytes": 701
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/run-transfer-module35r2.py.gz",
+      "original": "run-transfer-module35r2.py",
+      "sha256": "e99a7cb7e8f8ada9300c8aae27bc903b259365be846127177b4d8228bd396acb",
+      "raw_sha256": "e1caf29d5b84afc0828d1ec8e24435644e14a01afc9cd7c1b95ff624f14129be",
+      "bytes": 702
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/server-platform35-20261027-linux.build.log.gz",
+      "original": "server-platform35-20261027-linux.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/server-platform35-20261027-linux.inputs.json.gz",
+      "original": "server-platform35-20261027-linux.inputs.json",
+      "sha256": "0539d9b2000a9d0286fe5ef048e88433ed0df1eaa08cdc50aec66a60e83b8c4c",
+      "raw_sha256": "6021c68eb35e00ab9638ad643a08391d4ce0b087534a97f856cd36da7f5d9212",
+      "bytes": 172715
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/server-platform35r2-20261027-linux.build.log.gz",
+      "original": "server-platform35r2-20261027-linux.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/server-platform35r2-20261027-linux.inputs.json.gz",
+      "original": "server-platform35r2-20261027-linux.inputs.json",
+      "sha256": "984700aa6066ff85b2d65170b21a45808c7918c0a3e05264193ab319f9402b2e",
+      "raw_sha256": "5e4705571936308db2f4b530d17e568d27dbbc8b63f45a7bd7c25b2d9755ef31",
+      "bytes": 172716
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/verify-reorganize35-proof.py.gz",
+      "original": "verify-reorganize35-proof.py",
+      "sha256": "c90de97222eb40d36c344ecbfa010d3bfb587f5f54a4c26fdfa1394489ebb863",
+      "raw_sha256": "970f09473ba88bd65039c5b0cfe33730b58dbbb83ee6c2ac30f907daaeb658ff",
+      "bytes": 1202
+    }
+  ]
+}

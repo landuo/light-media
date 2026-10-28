@@ -135,6 +135,9 @@ func (a *App) parseManualImportFile(file ImportFileRequest) media.ParseResult {
 	return a.parseManualImportFileContext(context.Background(), file)
 }
 func (a *App) parseManualImportFileContext(ctx context.Context, file ImportFileRequest) media.ParseResult {
+	if file.originalMetadataPath != "" {
+		file.Path = file.originalMetadataPath
+	}
 	return parseManualImportName(file, a.prepareRecognitionTitleContext(ctx, filepath.Base(file.Path)))
 }
 func (a *App) evaluateResource(resource sites.Resource, target decision.Target, policy decision.Policy) decision.Decision {

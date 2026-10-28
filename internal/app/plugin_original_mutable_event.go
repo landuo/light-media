@@ -12,6 +12,8 @@ import (
 type originalMutableEventHandler struct {
 	ID       string
 	Instance string
+	Method   string
+	object   *originalPluginInstance
 	Priority int
 	Enabled  func() bool
 	Invoke   func(context.Context, *plugins.MutableEvent) error
@@ -22,8 +24,8 @@ func invokeOriginalMutableEvent(ctx context.Context, object *originalPluginInsta
 	if err != nil {
 		return err
 	}
-	result, err := object.callOriginalMethod(ctx, method, raw)
-	if err != nil {
+	result, invoked, err := object.callOriginalEventMethod(ctx, method, raw)
+	if err != nil || !invoked {
 		return err
 	}
 	next, failed, present, err := plugins.DecodeMutableEventSnapshot(result.Result)
@@ -42,8 +44,10 @@ func invokeOriginalMutableEvent(ctx context.Context, object *originalPluginInsta
 
 // dispatchOriginalMutableEvent preserves the supplied registry order. Callers
 // take their registry snapshot under its own lock before entering. All enabled
-// decisions are collected before any invocation, and failures never stop the
-// remaining selected handlers. A valid shared event mutation is not rolled back.
+// decisions are collected before any invocation. Like __safe_invoke_handler,
+// each selected handler is checked again when its turn arrives; disabling a
+// later subscriber during an earlier callback prevents that later invocation.
+// Failures never stop remaining handlers or roll back a valid event mutation.
 func dispatchOriginalMutableEvent(ctx context.Context, handlers []originalMutableEventHandler, event *plugins.MutableEvent, onError func(error)) bool {
 	enabled := make([]originalMutableEventHandler, 0, len(handlers))
 	for _, handler := range handlers {
@@ -52,6 +56,9 @@ func dispatchOriginalMutableEvent(ctx context.Context, handlers []originalMutabl
 		}
 	}
 	for _, handler := range enabled {
+		if handler.Enabled != nil && !handler.Enabled() {
+			continue
+		}
 		if err := handler.Invoke(ctx, event); err != nil && onError != nil {
 			onError(err)
 		}

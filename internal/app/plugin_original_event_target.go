@@ -15,6 +15,11 @@ import (
 // RawMessage values keep exact integers and nested values without float64 loss.
 // Neither the caller's bytes nor nested dictionaries are modified here.
 func originalBroadcastEventData(event string, data json.RawMessage) (json.RawMessage, string, bool, error) {
+	var err error
+	data, err = originalNewEventData(data)
+	if err != nil {
+		return nil, "", false, err
+	}
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 || trimmed[0] != '{' {
 		return data, "", false, nil
@@ -40,6 +45,21 @@ func originalBroadcastEventData(event string, data json.RawMessage) (json.RawMes
 	}
 	name, restricted, err := originalBroadcastTarget(target)
 	return clean, name, restricted, err
+}
+
+// Event.__init__ uses event_data or {}. Normalize only when creating an event;
+// a chain handler's subsequent falsey mutation is preserved for later handlers.
+func originalNewEventData(data json.RawMessage) (json.RawMessage, error) {
+	if len(bytes.TrimSpace(data)) == 0 {
+		return json.RawMessage(`{}`), nil
+	}
+	if !json.Valid(data) {
+		return nil, errors.New("invalid event data")
+	}
+	if !originalBaseJSONTruthy(data) {
+		return json.RawMessage(`{}`), nil
+	}
+	return data, nil
 }
 
 // The source tests Python truthiness before str(target). Only strings, True,

@@ -1,0 +1,138 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "scope": "36/37/43 auxiliary overwrite increment only",
+  "accepted_increment": true,
+  "whole_module_complete": false,
+  "source": "app/modules/filemanager/transhandler.py:432-577: auxiliary tasks always overwrite, no preceding video success dependency; app/chain/transfer.py:3588-3661: independent task continuation",
+  "target": [
+    "internal/app/directory_overwrite_run.go:commitDirectoryOverwriteFileTx",
+    "internal/app/directory_overwrite_extra_owner.go:verifyIndependentExtraOwnerTx"
+  ],
+  "adaptation": "If the old video asset is absent, retain the real auxiliary managed_file and validate matching published receipt, source/target snapshots, original plan/media/root/owner and exact primary or sidecar receipt key. Do not invent video assets. Existing atomic quarantine and SQL registration recovery remain.",
+  "source_replay": {
+    "file": "testdata/standard-module-host/transfer-extra-overwrite-source-oracle.json",
+    "cases": 10,
+    "kind": "Complete pinned if/else AST, controlled extra classifier, all five policy values for subtitle/audio; unused main branch retained."
+  },
+  "actual_sdk": {
+    "test": "TestOriginalExtraReplacementWithoutVideoAsset",
+    "red": "extra-replace32-red.log: both independent and main-rejected subtitle fail with sql no rows",
+    "green_seconds": 2.335,
+    "sql_failure_cold_seconds": 3.503,
+    "behavior": "Actual hardlink overwrite, changed-source proof rejection, genuine managed_file SQL abort after physical publication, Close/New and register-only completion without another SDK write; no video assets.",
+    "race_seconds": 40.533,
+    "race_scope": "ExtraReplacement, SingleExtra, Partial, DirectoryOverwrite"
+  },
+  "linux": {
+    "cli_seconds": 9.83,
+    "browser_gate_seconds": 284.11,
+    "driver_test": "TestPluginServicesProductionCLI",
+    "behavior": "Actual standalone subtitle/audio and main-rejected subtitle second overwrites, distinct new source and exact old target, hardlink proofs, cold records and no SDK replay. IAB66 selected fresh37B subtitle over previously owned target, preview leaves old inode/owner, explicit execute replaces then cold37B success."
+  },
+  "build": {
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "binaries": [
+      {
+        "name": "server-platform32-20261027-linux",
+        "sha256": "73f6fdf116e66544e7bfd66676d2c1db998e49c30dae6a1db3769b121b249242",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform32-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3717,
+        "changed": [],
+        "elapsed_seconds": 4.2
+      },
+      {
+        "name": "process-platform32-20261027-linux.test",
+        "sha256": "4b56a9d485fb74662b7565e135fe9dd4775c4d53fa27d0dd5efc48972d4c776a",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform32-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4176,
+        "changed": [],
+        "elapsed_seconds": 7.45
+      }
+    ]
+  },
+  "worker_sha256": "376f0e246479b6e4a299bf524d87398aaff31f409b70f66b25a097d41990f6cc",
+  "browser_verdict": {
+    "passed": true,
+    "preview_preserves_old_file_and_owner": true,
+    "old_source_preserved": true,
+    "new_target_is_actual_hardlink": true,
+    "no_video_asset_or_main_file": true,
+    "pids": [
+      [
+        352278,
+        352285
+      ],
+      [
+        356729,
+        356736
+      ]
+    ],
+    "old_target_inode": 111636896,
+    "new_target_inode": 14682314,
+    "cold_write_calls": 0,
+    "files": [
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module32-ui-tmp/TestPluginServicesProductionCLI496974685/002/source/browser32/SingleExtraSubtitle.2024.zh.srt",
+        "exists": true,
+        "inode": 14682314,
+        "device": 65025,
+        "size": 37,
+        "sha256": "c59827049d85ba319ca4dff5b1f151ae4ce213ff9a05c1e01c74ed9309055f9c"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module32-ui-tmp/TestPluginServicesProductionCLI496974685/002/source/replacement/SingleExtraSubtitle.2024.zh.srt",
+        "exists": true,
+        "inode": 111636896,
+        "device": 65025,
+        "size": 30,
+        "sha256": "90280c2f0f67a5210d6bb472777f48b854d0fadd4457b647694bc54c360cb98f"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module32-ui-tmp/TestPluginServicesProductionCLI496974685/002/library/SingleExtraSubtitle (2024)/SingleExtraSubtitle (2024).default.chi.zh-cn.srt",
+        "exists": true,
+        "inode": 14682314,
+        "device": 65025,
+        "size": 37,
+        "sha256": "c59827049d85ba319ca4dff5b1f151ae4ce213ff9a05c1e01c74ed9309055f9c"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module32-ui-tmp/TestPluginServicesProductionCLI496974685/002/library/SingleExtraSubtitle (2024)/SingleExtraSubtitle (2024).mkv",
+        "exists": false
+      }
+    ]
+  },
+  "manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-extra-replace-32-20261028/manifest.json",
+  "limitations": [
+    "Tiny media bytes and SDK return values are synthetic inputs; Linux app/plugin processes, HTTP/UI, SQLite, hardlinks and cold recovery are real.",
+    "Quality/reorganization partial-failure cleanup and full host/event audit remain pending. This increment does not close43/36/37.",
+    "First oracle extraction needed a function wrapper for original return statements; corrected before recording source results."
+  ],
+  "cleanup": "Actual source/clone uninstall and API404, owned TempDir cleanup PASS; IAB66 and34447 stopped.",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

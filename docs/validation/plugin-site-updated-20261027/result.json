@@ -1,0 +1,102 @@
+{
+  "accepted": false,
+  "rows": [
+    36,
+    37,
+    43
+  ],
+  "verified_subscope": [
+    "SiteUpdated three concrete ordinary core consumers",
+    "refresh_userdata module-before-native bridge",
+    "native cache/icon adapters and source-shaped messages"
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": {
+    "app/chain/site.py:66-126": "module -> userdata DB -> SiteRefreshed -> ordered unread messages/dedup -> ratio warning",
+    "app/chain/site.py:377-411": "homepage/first head icon/fallback/URL+base64",
+    "app/chain/site.py:590-680": "three independently registered asynchronous consumers",
+    "app/utils/string.py:293-350": "literal special-domain and split host/domain behavior",
+    "app/schemas/site.py:SiteUserData": "nullable model defaults and arbitrary seeding/message list rows"
+  },
+  "target": [
+    "internal/app/plugin_original_core_event_consumers.go",
+    "internal/app/plugin_original_core_site_updated.go",
+    "internal/app/plugin_original_core_site_data_clear.go",
+    "internal/app/plugin_original_core_site_icon.go",
+    "internal/app/plugin_original_site_userdata.go",
+    "internal/app/site_manage.go",
+    "internal/app/site_message_collection.go",
+    "internal/app/site_statistics.go",
+    "internal/sites/userdata.go",
+    "internal/sites/favicon.go",
+    "web/src/components/SiteIcon.vue",
+    "web/src/components/SiteManager.vue"
+  ],
+  "source_replay": {
+    "kind": "actual fixed AST dispatcher/consumer/model functions; counted native DB/network/message boundaries",
+    "python": "3.14 reference-only venv; clone/static separate reports use fixed3.12",
+    "pydantic": "2.13.4",
+    "lxml": "6.0.2",
+    "cases": {
+      "refresh": 15,
+      "consumer": 6,
+      "domain": 7,
+      "clear": 5,
+      "favicon": 7
+    },
+    "oracle": "testdata/standard-event-target/site-updated-consumer-oracle.json"
+  },
+  "actual_linux": {
+    "kind": "real production cmd/server and compiled SDK processes with owned synthetic HTTP peers/data",
+    "server_sha256": "3c4ac9f59b5c99f612d32c25d320ad088c9cf76468586955b5d229b3d8d11e91",
+    "test_sha256": "6200fcc35af5d60867a49daa7d0f5a504876bb0ec08096f189da2d4760078f92",
+    "module_worker_sha256": "b4d10621d0b8cf1a25cac55a019e9de2de67838d904bd12fde0e85d04557cc33",
+    "result": "PASS291.77s, includes real browser hold",
+    "source_clone_pids_before": [
+      2775009,
+      2775021
+    ],
+    "source_clone_pids_cold": [
+      2775048,
+      2775054
+    ],
+    "coverage": [
+      "Event.Send sourceNone -> cloneDTO, native account persist upload99, five ordered notices",
+      "sourceFalse cuts clone/native and leaves prior account data",
+      "actual SQL INSERT ABORT preserves99/no notice, reported system.error; remove fault ->500 and one notice",
+      "cold SDK PIDs/config/data and no notice replay; next event clone99; actual uninstall",
+      "browser cached owned icon URL naturalWidth/Height1, account99B and global statistics",
+      "browser-requested real main restart2775026->2778837, Cookie/UI/stat99/icon1x1 restore"
+    ],
+    "raw_main_log": "test t.TempDir process.log was cleaned; CLI assertions/PID record/browser artifacts retained, not claimed as archived full HTTP log"
+  },
+  "necessary_adaptations": [
+    "Linux single-user encrypted Go state/SDK DTOs; no Python in backend runtime",
+    "source generic site.* temporary caches map to existing credential-failure cooldown, by fixed host/prefix and per-key commit; account history and credentials preserved; no generic SystemConfig framework",
+    "icons reuse existing guarded site client and compatibility global UA; no cookies to foreign icon origin; 1MiB content bound; chosen URL/content encrypted, browser uses authenticated owned route and existing fallback",
+    "existing per-site request lock/rate guard remains for icon/native parser; no extra background executor, workflow or replay receipts",
+    "JSON module data model explicitly represents nullable SiteUserData and arbitrary source list rows; none/list/scalar dispatch behavior remains source-derived"
+  ],
+  "failures_retained": [
+    "untyped native source boundary made ObjectUtils accept list: rejected oracle; actual source dict annotation restored",
+    "initial native DTO empty domain/day vs source None and encrypted-history source lookup mismatch exposed and corrected",
+    "initial cache fixture used unsupported nexus loopback; switched existing approved ubits fixture, kept production guard",
+    "URL base has source path empty but actual HTTP path slash: assertion normalized request path",
+    "frontend direct node invocation omitted existing experimental-transform-types; reran project flags",
+    "first Linux observer tried OpenStore on running owned DataDir: correct flock rejection; test-only direct SQLite observer and memory key used, product lock unchanged"
+  ],
+  "remaining": [
+    "whole36/37/43 inventory/callchain coverage not accepted by this supplement",
+    "native refresh jobs/module message override and remaining ordinary events continue separately"
+  ],
+  "cleanup": "IAB43 closed; own tunnel34424 stopped; final CLI exited0 and owned test temp directory removed. Unrelated old Chrome368189194 remains extension-blocked as previously recorded.",
+  "evidence_manifest": "evidence-manifest.json",
+  "delivery": "dev/plugins-continuation dirty worktree only; uncommitted/unpushed/undeployed",
+  "platform9_increment": {
+    "passed": true,
+    "duration_seconds": 1.9,
+    "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/platform9-initial-runtime/manifest.json",
+    "source_clone_sdk_pid": "3739971/3739983→3740010/3740016",
+    "verified": "account99→SQL rollback99→recovery500→cold99;notices+5; real new main includes encrypted receipt fix"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/chain/system.py": "4522008f452ce98c1089c07fde49431f7a1a2ddb55609176c2f03701cdf05472",
+    "app/helper/plugin.py": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba"
+  },
+  "kind": "actual fixed methods with owned temporary filesystem and Docker/reset/dependency boundaries; not actual Docker runtime acceptance",
+  "cases": [
+    {
+      "kind": "initial_backup",
+      "live": "one",
+      "backup_exists": true,
+      "backup": "one"
+    },
+    {
+      "kind": "shutdown_skips_existing_backup",
+      "live": "two",
+      "backup_exists": true,
+      "backup": "one"
+    },
+    {
+      "kind": "install_refresh_replaces_backup",
+      "live": "two",
+      "backup_exists": true,
+      "backup": "two"
+    },
+    {
+      "kind": "reset_restores_then_consumes_backup",
+      "live": "two",
+      "backup_exists": false,
+      "backup": null
+    },
+    {
+      "kind": "ordinary_start_consumes_without_restore",
+      "live": "four",
+      "backup_exists": false,
+      "backup": null
+    }
+  ]
+}

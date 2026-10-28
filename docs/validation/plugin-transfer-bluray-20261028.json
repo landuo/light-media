@@ -1,0 +1,175 @@
+{
+  "accepted_increment": true,
+  "whole_indices_accepted": false,
+  "indices": [
+    36,
+    37,
+    43
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": [
+    "app/modules/filemanager/transhandler.py:216-313,890-1008: directory as one task, STREAM size, counters zero, recursion order, partial prefix and intercept after root creation",
+    "app/chain/storage.py:148-159,171-235: Blu-ray recognition and directory history deletion, repeated missing-self checks",
+    "app/db/transferhistory_oper.py:227-302: persist source FileItem",
+    "src/views/reorganize/TransferHistoryView.vue:99,1051,1138: source FileItem size or zero"
+  ],
+  "targets": [
+    "internal/app/types.go",
+    "internal/app/import_fs.go",
+    "internal/app/import_plan.go",
+    "internal/app/import_run.go",
+    "internal/app/import_reorganize.go",
+    "internal/app/organize_manual.go",
+    "internal/app/transfer_history.go",
+    "internal/app/history_delete.go",
+    "internal/app/history_auxiliary.go",
+    "internal/app/asset_manage.go",
+    "internal/app/plugin_original_history_delete.go",
+    "internal/app/plugin_original_history_directory.go",
+    "internal/app/plugin_original_history_parent.go",
+    "internal/app/plugin_original_history_reorganize.go",
+    "internal/app/plugin_original_browser_mutation.go",
+    "internal/app/plugin_original_metadata_storage.go",
+    "internal/app/plugin_original_transfer_callback.go",
+    "internal/app/plugin_original_transfer_collection.go",
+    "internal/app/plugin_original_transfer_context.go",
+    "internal/app/plugin_original_transfer_directory.go",
+    "internal/app/plugin_original_transfer_events.go",
+    "internal/app/plugin_original_transfer_intercept.go",
+    "internal/app/plugin_original_transfer_module.go",
+    "internal/app/plugin_module_process_bluray_test.go",
+    "internal/app/plugin_module_process_services_test.go",
+    "cmd/owned-module-override/main.go",
+    "cmd/owned-module-override/directory.go",
+    "cmd/owned-transfer-events-fixture/storage.go"
+  ],
+  "behavior": [
+    "Whole-directory frozen member authority and one transfer module invocation; source/clone native fallback and terminal copy with returned target",
+    "Per-file existing guarded publication and selected-storage traversal in original order; empty children omitted; partial failures preserve successful prefix",
+    "Directory intercept sees null meta/empty options after target root exists; source changes and foreign target members rejected",
+    "Original TV Season/Disc naming without invented episode; directory ordinary completion/failure result fields",
+    "Cancellation resumes native member receipts after cold reinitialization without provider replay; independently verified plugin copy bytes and hardlink inodes",
+    "History target/source/both deletion and explicit reorganize reuse existing ownership and sealed storage deletion journal; SQL completion failure cold recovery",
+    "History shows STREAM bytes independently of full native tree authority; raw Source FileItems preserved for callbacks"
+  ],
+  "evidence": {
+    "source": "6 fixed TransHandler AST directory cases + 8 disc names; 2 StorageChain AST deletion cases; fixed backend/frontend size source excerpts",
+    "local_seconds": 16.206,
+    "race_seconds": 101.907,
+    "linux_cli_seconds": 1.86,
+    "linux_browser_seconds": 226.21,
+    "browser": {
+      "pass": true,
+      "iab": 84,
+      "pids": {
+        "before-cold": [
+          846503,
+          846509
+        ],
+        "cold-cancelled": [
+          847947,
+          847955
+        ],
+        "retry-success": [
+          847947,
+          847955
+        ],
+        "cold-success": [
+          850176,
+          850183
+        ],
+        "deleted": [
+          850176,
+          850183
+        ]
+      },
+      "members": [
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/bluray44r3-ui-tmp/TestPluginServicesProductionCLI496200791/002/library/UIBluray/UIBluray (2024)/BDMV/STREAM/00001.m2ts",
+          "size": 19,
+          "inode": 199237375,
+          "device": 65025,
+          "sha256": "ead023166d01f02d7d5a2cda3912e287b267f071cbc0b093eaa84569ada6d65b"
+        },
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/bluray44r3-ui-tmp/TestPluginServicesProductionCLI496200791/002/library/UIBluray/UIBluray (2024)/BDMV/index.bdmv",
+          "size": 18,
+          "inode": 197174148,
+          "device": 65025,
+          "sha256": "b71eee80f4975df3034de2e44220530a49011a075414c8983eea975066be275b"
+        }
+      ],
+      "history_stream_size": 19,
+      "physical_total_size": 37,
+      "cold_transfer_replay": 0,
+      "cleanup": "IAB83/84 closed, SSH34463/34464 stopped; final gate uninstall/API404; owned app/source/target paths checked absent after completion"
+    },
+    "build": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform44r3-20261027-linux",
+          "sha256": "5b719fad90a7e0929e95b9bd3acf1e2fa3abd3cf61f136ee887d05eebb451ee3",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform44r3-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3730,
+          "changed": [],
+          "elapsed_seconds": 4.42
+        },
+        {
+          "name": "process-platform44r3-20261027-linux.test",
+          "sha256": "77c5c107e3687e4f85d64c549eeb9d8222bcb70501e1b17302df6cc04ccb3132",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform44r3-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4212,
+          "changed": [],
+          "elapsed_seconds": 8.55
+        }
+      ]
+    },
+    "manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-44-20261028/manifest.json"
+  },
+  "necessary_adaptations": [
+    "Local Go native directory snapshots bind all members and refuse symlinks/unknown target members, preserving existing native ownership safety. Aggregate tree size is authority only; frontend history uses Source STREAM size.",
+    "Physical files publish through existing staged receipts, with per-member and parent recovery; copied content is checked before asset registration. Source recursive order and successful prefix are retained.",
+    "No Python runtime: Python AST oracle scripts are development evidence only. No workflow/AI/authentication subsystem added."
+  ],
+  "red": [
+    "First directory preview rejected trailing-slash FileItem paths; corrected before final validation.",
+    "Linux main44 rejected a terminal provider directory preview with trailing slash; corrected and rebuilt.",
+    "Fixed source reinspection replaced pre-enumerating all files with recursive publication in provider order; actual selected storage late-list failure now retains the prior two files.",
+    "IAB83 exposed history total-tree bytes (37) instead of STREAM bytes (19); final main44r3/IAB84 verifies 19.",
+    "Acceptance-only fixture corrections: directory provider FileItem.Type, list FileItem argument, existing test login, cold initializeOriginalPlugins; red logs retained."
+  ],
+  "limits": [
+    "Tests use synthetic discs/metadata and owned SDK plugins; production Linux cmd/server, files/SQLite, actual subprocesses, browser clicks and cold restarts are real.",
+    "This increment explicitly disables scraping. Directory scraping and managed tree authority after metadata writes require further validation.",
+    "Custom storage FileItem name/path differences and exact late-list failure DTO fields remain audit items; no whole directory/module completion claim.",
+    "Whole36/37/43/50 and complete ordinary method/event applicability audit remain open."
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

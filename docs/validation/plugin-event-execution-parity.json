@@ -1,0 +1,115 @@
+{
+  "scope": "G21/G22 focused local execution parity; not full framework acceptance",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_event_git_blob": "9186902a9f42f1021dea7cf5e15f15775d236deb",
+  "git_base": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+  "working_tree": true,
+  "platform": "darwin-arm64",
+  "go_version": "go1.26.2",
+  "both_app_and_worker_race_instrumented": true,
+  "source_oracle": "testdata/standard-event-target/source-oracle.json",
+  "file_sha256": {
+    "internal/app/plugin_original_event_call.go": "1df447b629702cdebf58fb684debe1b40ebb3ff4a7baa32c0e6f8de74e00ec81",
+    "internal/app/plugin_original_event_execution_test.go": "12e20daffeec0cffe06a85cc414f43311739d272d1ea0aa5c8b91c908ef9bf7a",
+    "internal/app/plugin_original_direct_dispatch.go": "852615ccbcfab60a9db1109646806e974a943ff65e2c1c09e1d400ef1c584edb",
+    "internal/app/plugin_original_mutable_event.go": "b339b2b81f444e4dc923177e3ca62f9ddbb013cd1b7705eac85e270f7383104a",
+    "internal/app/plugin_original_mutable_event_test.go": "0cada428ac1bcb0aa5707fa99113a9450ff1272ca9b3c9b136ac2735de58cfe4",
+    "internal/app/plugin_original_event_target.go": "08b8ecd3cc0cf38b3be749042681870ad9be9217dfa84439e456b5d32f20fdc6",
+    "internal/app/plugin_original_event_target_test.go": "f6d9fd90ce5e043f9096abedfe91abafcfc30e8c1db93b8ec83684af8f38f67f",
+    "internal/app/plugin_original_chain_event.go": "8849375b5940d74499ce27cf464664605a22827d615e1be96a8a430d6cd97409",
+    "internal/app/plugin_original_command_register_test.go": "1352676fb85614297ab3e04620e6f53d7db85d3dabbbbb1cff6adfe56b34ac64",
+    "testdata/standard-event-target/target_oracle.py": "b14b7c29e23844125d88cde0d2bcd3003305093f7c9eb201e1e83e612c6d8908",
+    "testdata/standard-event-target/source-oracle.json": "8e0b36bce52048598eaae99aa9c22b2219f33e3b3ee1f6e9a18898cc0f01c2dc"
+  },
+  "runs": {
+    "normal-final.jsonl": {
+      "sha256": "0ccbe23f881f3b74e905709e95e2d059acaeb3003a46e3f329109bc00cf7e0b9",
+      "roots": {
+        "pass": [
+          "TestOriginalChainRegistrationReplacementSnapshot",
+          "TestOriginalBroadcastActualSDKRechecksExecutionEnablement",
+          "TestOriginalChainActualSDKSkipsSubscriberDisabledByEarlierHandler",
+          "TestOriginalBroadcastActualSDKEventConstructor",
+          "TestOriginalBroadcastActualSDKResolvesReloadedClass",
+          "TestOriginalQueuedEventClassIdentityRejectsUnrelatedReplacement",
+          "TestOriginalChainActualSDKResolvesReloadedSubscriber",
+          "TestOriginalEventTargetActualSDKCommandsClonesAndIsolation",
+          "TestOriginalBroadcastEventTargetSourceValues",
+          "TestOriginalMutableEventDispatchSnapshotAndFailure"
+        ],
+        "fail": [],
+        "skip": []
+      },
+      "package_terminal": [
+        {
+          "Time": "2026-10-25T02:25:32.635986+08:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 6.9399999999999995
+        }
+      ]
+    },
+    "race-final.jsonl": {
+      "sha256": "d533bcbed29aa5afc3b8e45cea7806412c73b6ee8c1347236662272e2c9e4b6d",
+      "roots": {
+        "pass": [
+          "TestOriginalChainRegistrationReplacementSnapshot",
+          "TestOriginalBroadcastActualSDKRechecksExecutionEnablement",
+          "TestOriginalChainActualSDKSkipsSubscriberDisabledByEarlierHandler",
+          "TestOriginalBroadcastActualSDKEventConstructor",
+          "TestOriginalBroadcastActualSDKResolvesReloadedClass",
+          "TestOriginalQueuedEventClassIdentityRejectsUnrelatedReplacement",
+          "TestOriginalChainActualSDKResolvesReloadedSubscriber",
+          "TestOriginalEventTargetActualSDKCommandsClonesAndIsolation",
+          "TestOriginalBroadcastEventTargetSourceValues",
+          "TestOriginalMutableEventDispatchSnapshotAndFailure"
+        ],
+        "fail": [],
+        "skip": []
+      },
+      "package_terminal": [
+        {
+          "Time": "2026-10-25T02:26:12.002086+08:00",
+          "Action": "pass",
+          "Package": "light-media/internal/app",
+          "Elapsed": 39.871
+        }
+      ]
+    },
+    "normal.jsonl": {
+      "sha256": "66ab6f5f3a1866040ab78e39a271f6ed3364aa7136da7fc4f9ce7687a7a70233",
+      "roots": {
+        "pass": [
+          "TestOriginalBroadcastEventTargetSourceValues",
+          "TestOriginalMutableEventDispatchSnapshotAndFailure"
+        ],
+        "fail": [
+          "TestOriginalBroadcastActualSDKRechecksExecutionEnablement",
+          "TestOriginalChainActualSDKSkipsSubscriberDisabledByEarlierHandler",
+          "TestOriginalBroadcastActualSDKEventConstructor",
+          "TestOriginalEventTargetActualSDKCommandsClonesAndIsolation"
+        ],
+        "skip": []
+      },
+      "package_terminal": [
+        {
+          "Time": "2026-10-25T02:20:26.581588+08:00",
+          "Action": "fail",
+          "Package": "light-media/internal/app",
+          "Elapsed": 2.059
+        }
+      ]
+    }
+  },
+  "preserved_initial_failures": [
+    "Existing Darwin syscall.Mkdirat/Openat compile failure; parent fixed portable calls.",
+    "Default Mac temporary directory has a symlink ancestor; actual artifact installs rejected unsafe root ancestor. Canonical work TMPDIR used without relaxing production checks."
+  ],
+  "remaining": [
+    "Source error MessageHelper/system.error text/traceback contract",
+    "Python nested-reference sharing",
+    "Original broadcast priority-queue consumer policy",
+    "Global/module subscriber ecosystem",
+    "Full module and production browser/business acceptance"
+  ]
+}

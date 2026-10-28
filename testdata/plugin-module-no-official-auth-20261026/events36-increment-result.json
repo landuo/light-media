@@ -1,0 +1,186 @@
+{
+  "scope": "Incremental evidence for ordinary plugin host events in rows 36/37, plus real core notice/module callers; not whole-row or project acceptance",
+  "unique_status_authority": "docs/plugin-module-parity-matrix.md",
+  "source_backend_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "server": {
+    "path": "/tmp/light-media-plugin-scope-dRZTQ91A/server-integrated-20261027-linux",
+    "sha256": "f37e0d1205539e0a44adee61d616af0a7934b33939cbd21e494b42b0e1316d9e"
+  },
+  "test_binary": {
+    "path": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-process-linux.test",
+    "sha256": "b2757a59e10c88a94a9f91e1b412ed4be27f0ea360101530c5557beced8b3b28"
+  },
+  "actual_cli_runs": [
+    {
+      "test": "TestPluginServicesProductionCLI",
+      "command": [
+        "/tmp/light-media-plugin-scope-dRZTQ91A/events36-process-linux.test",
+        "-test.v",
+        "-test.run",
+        "^TestPluginServicesProductionCLI$",
+        "-test.timeout",
+        "90s"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 3.485,
+      "log": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-ordinary-linux.log",
+      "log_sha256": "b37b0b5e98a0377729409f0544ff0f221895f5b2cb9f90547ec4f9fb77c1d50e"
+    },
+    {
+      "test": "TestPluginSubscriptionCompletionProductionCLI",
+      "command": [
+        "/tmp/light-media-plugin-scope-dRZTQ91A/events36-process-linux.test",
+        "-test.v",
+        "-test.run",
+        "^TestPluginSubscriptionCompletionProductionCLI$",
+        "-test.timeout",
+        "90s"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.935,
+      "log": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-completion-linux.log",
+      "log_sha256": "618e91744bb264b4986d9c2875e18a6c047b674a64ba158647ff96a45ee07f75"
+    }
+  ],
+  "mapping": [
+    {
+      "source": [
+        "app/chain/subscribe.py:1177-1182",
+        "app/chain/subscribe.py:4191-4253",
+        "app/chain/subscribe.py:4269-4276"
+      ],
+      "target": [
+        "internal/app/plugin_standard_subscription_episodes.go",
+        "internal/app/subscription_add_source.go",
+        "internal/app/subscription_completion_ordinary.go"
+      ],
+      "behavior": "Actual create/precheck chain callback receives source IDs/full MediaInfo/defaults/scene; updated truthy total raises provider5 to8; mutation survives callback exception and is persisted in real native host. Async create and sync precheck names, full MetaInfo,10 recognition kwargs/cachefalse are separately replay-derived and asserted.",
+      "evidence": [
+        "events36-precheck-sdk-trace.jsonl.gz",
+        "events36-create-sdk-trace.jsonl.gz",
+        "events36-ordinary-linux.log.gz",
+        "testdata/standard-subscription-events/episodes-oracle.json",
+        "testdata/standard-module-host/recognize-source-oracle.json",
+        "testdata/standard-module-host/async-recognize-source-oracle.json"
+      ]
+    },
+    {
+      "source": [
+        "app/api/endpoints/subscribe.py:317-355"
+      ],
+      "target": [
+        "internal/app/plugin_standard_subscription_reset.go",
+        "internal/app/http.go:413"
+      ],
+      "behavior": "Existing native POST reset changes exact source six runtime fields; committed full old/new snapshot and scene reset reach source/clone; rollback test emits nothing; cold state persists and in-memory event observations are not replayed.",
+      "evidence": [
+        "events36-reset-OwnedInput.json",
+        "events36-reset-OwnedInputservice.json",
+        "events36-final-sync-source-sdk-tests.jsonl.gz",
+        "testdata/standard-subscription-events/reset-oracle.json"
+      ]
+    },
+    {
+      "source": [
+        "app/api/endpoints/message.py:113-148",
+        "app/chain/message.py:447-458"
+      ],
+      "target": [
+        "internal/app/plugin_original_command_ingress.go"
+      ],
+      "behavior": "Noncommand ordinary Web text emits trusted six source fields, including explicit no-AI escape and text accompanying image metadata without retrieval; source callback fails after real Base SaveData while clone and later messages still receive actual events.",
+      "evidence": [
+        "events36-user-message-OwnedEventFixture.json",
+        "events36-user-message-OwnedEventFixtureuser.json",
+        "events36-ordinary-linux.log.gz",
+        "testdata/standard-subscription-events/user-message-oracle.json"
+      ]
+    },
+    {
+      "source": [
+        "app/chain/subscribe.py:2813-2855"
+      ],
+      "target": [
+        "internal/app/subscription_quality_completion_run.go",
+        "internal/app/core_business_source_facts.go",
+        "internal/app/plugin_notice_delivery.go",
+        "internal/app/plugin_original_notice.go"
+      ],
+      "behavior": "An actual accepted download is prepared by the owned in-process site/torrent/Client.Add/SQL protocol flow; actual cmd/server consumes veto before history/delete/notice; subsequent real check ignores ordinary return value, commits history/delete then actual SDK source+clone HTTP1/1 and Complete callbacks once; readonly SQL at HTTP sink proves order, cold PID2430528 to2430577 does not replay/resend. This is actual completion acceptance, not cmd/server download submission acceptance.",
+      "evidence": [
+        "events36-completion-sdk-trace.jsonl.gz",
+        "events36-complete-OwnedInput.json",
+        "events36-complete-OwnedInputcomplete.json",
+        "events36-completion-linux.log.gz"
+      ]
+    },
+    {
+      "source": [
+        "app/chain/subscribe.py:1242-1259",
+        "app/chain/__init__.py:1631-1645"
+      ],
+      "target": [
+        "internal/app/subscription_add_source.go",
+        "internal/app/plugin_notice_delivery.go",
+        "internal/app/plugin_original_notice.go"
+      ],
+      "behavior": "Three actual native subscription POST creates consume plugin full MediaInfo/episodes and freeze original ProviderInfo; core notice reaches real source/clone HTTP recipients2/3. Middle source sender throws but clone/Added proceed; next source recovers. Known original sharing=false avoids external statistics; cold restart does not resend.",
+      "evidence": [
+        "events36-create-notice-deliveries.json",
+        "events36-added-OwnedInput.json",
+        "events36-added-OwnedInputservice.json",
+        "events36-ordinary-linux.log.gz"
+      ]
+    }
+  ],
+  "necessary_adaptations": [
+    "Go SDK executes and awaits ordinary source async declarations without Python runtime or coroutine framework.",
+    "Native subscription identity remains stable string rather than source SQL integer, and reset reuses existing native POST /api/subscriptions/<id>/reset routing.",
+    "Typed native catalog projection retains existing IMDb namespace validation (tt followed by7-10 digits); source full model strings remain frozen separately. The owned initial6-digit fixture was rejected and changed to a valid7-digit synthetic ID, with red evidence retained.",
+    "Only Linux/local/single-user ordinary host operations are used; no AI/workflow or new provider/business system was added."
+  ],
+  "failures_retained": [
+    {
+      "evidence": "events36-ordinary-first-linux.log.gz",
+      "reason": "Test read native subscriptions data as array; actual existing wire is data.items. Corrected test decoder only."
+    },
+    {
+      "evidence": "events36-ordinary-second-linux.log.gz",
+      "reason": "Owned upstream fixture supplied invalid6-digit IMDb ID; existing compact decoder correctly rejected. Fixed synthetic material to7-digit IDs and proper source image-domain host text, no production relaxation."
+    },
+    {
+      "evidence": "events36-retired-user-message-red-tests.jsonl.gz",
+      "reason": "Previously invented bounded noncommand501 assertion deliberately replayed red against fixed ordinary UserMessage semantics; current source-derived behavior restored."
+    },
+    {
+      "evidence": [
+        "events36-subscription-increment-race-tests.jsonl.gz",
+        "events36-create-race-diagnostic-tests.jsonl.gz"
+      ],
+      "reason": "Logs42 notificationRecord gained protected_content but old strict proof decoded bare Notification. Logs agent precisely fixed decrypt/digest/rendered-source proof; final race4 passed. These failures are not claimed as passes."
+    }
+  ],
+  "remaining_boundaries": [
+    {
+      "source": "app/chain/subscribe.py:4102-4170,4269-4303",
+      "target": "internal/app/subscription_completion_ordinary.go:65",
+      "state": "Next implementation: native precheck retains max(old,current), so fixed source decrease/confirmed-highest logic and one recognition per preparation still require port/verification. Currentf37 evidence does not claim them."
+    },
+    {
+      "source": "app/chain/subscribe.py:2159-2166",
+      "state": "Independent metadata refresh scene has no matching existing native host operation; no new subscription refresh business created."
+    },
+    {
+      "source": "fixed ordinary SubscribeMediaRecognizeConvert sync/async fallback sites",
+      "state": "Non-TMDB media-key fallback has no mapped explicit-TMDB native callsite; retained pending full36/37 source audit."
+    }
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "commit": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "changes": "local uncommitted only",
+    "pushed": false,
+    "deployed": false,
+    "test_services": "Two test gates exited normally; child cmd/server and SDK processes stopped by cleanup; t.TempDir data removed; no browser hold"
+  }
+}

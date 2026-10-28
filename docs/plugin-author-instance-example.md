@@ -1,5 +1,7 @@
 # Plugin author guide: instance-aware business code
 
+> Historical guide for the older compiled builtin framework. For a new installable Go executable plugin on the rebuilt platform, use [the current test-plugin quickstart](plugin-test-quickstart.md). Its SDK, local repository and package installation steps supersede this document's builtin registration instructions.
+
 Current API reference: framework commit `e1fd711e`. This guide describes real
 compiled APIs, not a dynamically loaded third-party plugin SDK. Linux and local
 storage are the supported deployment scope. Normal network-backed business

@@ -80,13 +80,24 @@ type TMDBConfig struct {
 }
 type Settings struct {
 	PluginMarkets               []string                     `json:"plugin_markets"`
+	PluginLocalRepoPaths        []string                     `json:"plugin_local_repo_paths"`
+	PluginAutoReload            bool                         `json:"plugin_auto_reload"`
+	GitHubProxy                 string                       `json:"github_proxy,omitempty"`
+	GitHubToken                 string                       `json:"github_token,omitempty"`
+	RepoGitHubToken             string                       `json:"repo_github_token,omitempty"`
+	PluginServerURL             *string                      `json:"plugin_server_url,omitempty"`
+	PluginStatisticShare        *bool                        `json:"plugin_statistic_share,omitempty"`
 	RMTMediaExt                 json.RawMessage              `json:"rmt_mediaext,omitempty"`
 	RMTSubExt                   json.RawMessage              `json:"rmt_subext,omitempty"`
 	RMTAudioExt                 json.RawMessage              `json:"rmt_audioext,omitempty"`
+	DownloadTmpExt              json.RawMessage              `json:"download_tmpext,omitempty"`
+	DefaultSub                  json.RawMessage              `json:"default_sub,omitempty"`
 	DefaultMovieSubscribeConfig json.RawMessage              `json:"default_movie_subscribe_config,omitempty"`
 	DefaultTVSubscribeConfig    json.RawMessage              `json:"default_tv_subscribe_config,omitempty"`
 	AppDomain                   string                       `json:"app_domain,omitempty"`
 	TMDBImageDomain             string                       `json:"tmdb_image_domain,omitempty"`
+	RecognizePluginFirst        bool                         `json:"recognize_plugin_first"`
+	SearchSource                *string                      `json:"search_source,omitempty"`
 	AutoDownloadUser            string                       `json:"auto_download_user,omitempty"`
 	ProxyHost                   string                       `json:"proxy_host,omitempty"`
 	ClearProxyHost              bool                         `json:"clear_proxy_host,omitempty"`
@@ -192,41 +203,43 @@ type Subscription struct {
 	CreatedAt          string              `json:"created_at"`
 }
 type Intent struct {
-	SeasonScopeSHA          string        `json:"season_scope_sha,omitempty"`
-	SubscriptionAcquisition string        `json:"subscription_acquisition,omitempty"`
-	SourcePostAddVersion    int           `json:"source_post_add_version,omitempty"`
-	LarkInbox               string        `json:"lark_inbox,omitempty"`
-	SelectedEpisodes        []int         `json:"selected_episodes,omitempty"`
-	DirectoryID             string        `json:"directory_id"`
-	DownloadPath            string        `json:"download_path"`
-	DirectorySnapshot       string        `json:"directory_snapshot,omitempty"`
-	MaterialRef             string        `json:"material_ref,omitempty"`
-	MaterialState           string        `json:"material_state"`
-	Purpose                 string        `json:"purpose"`
-	DownloaderSnapshot      string        `json:"downloader_snapshot"`
-	ImportMode              string        `json:"import_mode"`
-	Request                 SearchRequest `json:"request"`
-	ID                      string        `json:"id"`
-	WorkflowID              string        `json:"workflow_id"`
-	Media                   catalog.Media `json:"media"`
-	Season                  int           `json:"season"`
-	Episodes                []int         `json:"episodes"`
-	SiteID                  string        `json:"site_id"`
-	ResourceID              string        `json:"resource_id"`
-	ResourceTitle           string        `json:"resource_title"`
-	DownloaderID            string        `json:"downloader_id"`
-	RootID                  string        `json:"root_id"`
-	Hash                    string        `json:"hash"`
-	State                   string        `json:"state"`
-	Progress                float64       `json:"progress"`
-	Error                   string        `json:"error"`
-	SubscriptionID          string        `json:"subscription_id"`
-	SubscriptionRevision    int           `json:"subscription_revision"`
-	Auto                    bool          `json:"auto"`
-	CreatedAt               string        `json:"created_at"`
-	UpdatedAt               string        `json:"updated_at"`
-	ImportPlanID            string        `json:"import_plan_id"`
-	PreviewID               string        `json:"preview_id"`
+	SourceModuleStarted     bool            `json:"source_module_started,omitempty"`
+	SourceDownloader        json.RawMessage `json:"source_downloader,omitempty"`
+	SeasonScopeSHA          string          `json:"season_scope_sha,omitempty"`
+	SubscriptionAcquisition string          `json:"subscription_acquisition,omitempty"`
+	SourcePostAddVersion    int             `json:"source_post_add_version,omitempty"`
+	LarkInbox               string          `json:"lark_inbox,omitempty"`
+	SelectedEpisodes        []int           `json:"selected_episodes,omitempty"`
+	DirectoryID             string          `json:"directory_id"`
+	DownloadPath            string          `json:"download_path"`
+	DirectorySnapshot       string          `json:"directory_snapshot,omitempty"`
+	MaterialRef             string          `json:"material_ref,omitempty"`
+	MaterialState           string          `json:"material_state"`
+	Purpose                 string          `json:"purpose"`
+	DownloaderSnapshot      string          `json:"downloader_snapshot"`
+	ImportMode              string          `json:"import_mode"`
+	Request                 SearchRequest   `json:"request"`
+	ID                      string          `json:"id"`
+	WorkflowID              string          `json:"workflow_id"`
+	Media                   catalog.Media   `json:"media"`
+	Season                  int             `json:"season"`
+	Episodes                []int           `json:"episodes"`
+	SiteID                  string          `json:"site_id"`
+	ResourceID              string          `json:"resource_id"`
+	ResourceTitle           string          `json:"resource_title"`
+	DownloaderID            string          `json:"downloader_id"`
+	RootID                  string          `json:"root_id"`
+	Hash                    string          `json:"hash"`
+	State                   string          `json:"state"`
+	Progress                float64         `json:"progress"`
+	Error                   string          `json:"error"`
+	SubscriptionID          string          `json:"subscription_id"`
+	SubscriptionRevision    int             `json:"subscription_revision"`
+	Auto                    bool            `json:"auto"`
+	CreatedAt               string          `json:"created_at"`
+	UpdatedAt               string          `json:"updated_at"`
+	ImportPlanID            string          `json:"import_plan_id"`
+	PreviewID               string          `json:"preview_id"`
 }
 type Asset struct {
 	Part                string        `json:"part,omitempty"`
@@ -253,21 +266,26 @@ type Asset struct {
 	MissingSeenAt       string        `json:"missing_seen_at"`
 }
 type PlanFile struct {
-	HistorySource string `json:"history_source,omitempty"`
-	Part          string `json:"part,omitempty"`
-	Method        string `json:"method"`
-	ID            string `json:"id"`
-	Source        string `json:"source"`
-	Target        string `json:"target"`
-	Size          int64  `json:"size"`
-	ModNS         int64  `json:"mod_ns"`
-	Device        uint64 `json:"device"`
-	Inode         uint64 `json:"inode"`
-	Season        int    `json:"season"`
-	Episodes      []int  `json:"episodes"`
-	Status        string `json:"status"`
-	Reason        string `json:"reason"`
-	AssetID       string `json:"asset_id"`
+	DirectoryDigest         string `json:"directory_digest,omitempty"`
+	MaterialKind            string `json:"material_kind,omitempty"`
+	OriginalPreviewCallback bool   `json:"original_preview_callback,omitempty"`
+	OriginalTransferHistory bool   `json:"original_transfer_history,omitempty"`
+	ParentFileID            string `json:"parent_file_id,omitempty"`
+	HistorySource           string `json:"history_source,omitempty"`
+	Part                    string `json:"part,omitempty"`
+	Method                  string `json:"method"`
+	ID                      string `json:"id"`
+	Source                  string `json:"source"`
+	Target                  string `json:"target"`
+	Size                    int64  `json:"size"`
+	ModNS                   int64  `json:"mod_ns"`
+	Device                  uint64 `json:"device"`
+	Inode                   uint64 `json:"inode"`
+	Season                  int    `json:"season"`
+	Episodes                []int  `json:"episodes"`
+	Status                  string `json:"status"`
+	Reason                  string `json:"reason"`
+	AssetID                 string `json:"asset_id"`
 }
 type ImportPlan struct {
 	DirectorySourceVersion int           `json:"directory_source_version,omitempty"`
@@ -317,12 +335,16 @@ type Event struct {
 	Message    string `json:"message"`
 }
 type Candidate struct {
-	NeedsConfirmation bool           `json:"needs_confirmation"`
-	Resource          sites.Resource `json:"resource"`
-	Accepted          bool           `json:"accepted"`
-	Reasons           []string       `json:"reasons"`
-	Season            int            `json:"season"`
-	Episodes          []int          `json:"episodes"`
+	originalSelectionContext json.RawMessage
+	originalSelectionMeta    json.RawMessage
+	originalSelectionAllowed *[]int
+	originalFilterModel      *originalTitleFilterModel
+	NeedsConfirmation        bool           `json:"needs_confirmation"`
+	Resource                 sites.Resource `json:"resource"`
+	Accepted                 bool           `json:"accepted"`
+	Reasons                  []string       `json:"reasons"`
+	Season                   int            `json:"season"`
+	Episodes                 []int          `json:"episodes"`
 }
 type SearchOutput struct {
 	Candidates []Candidate  `json:"candidates"`
@@ -338,38 +360,39 @@ type SiteStatus struct {
 	ElapsedMS int64  `json:"elapsed_ms"`
 }
 type DownloadPreview struct {
-	SeasonScopeSHA     string        `json:"season_scope_sha,omitempty"`
-	SelectedEpisodes   []int         `json:"selected_episodes,omitempty"`
-	DirectoryID        string        `json:"directory_id"`
-	DownloadPath       string        `json:"download_path"`
-	DirectorySnapshot  string        `json:"directory_snapshot,omitempty"`
-	MaterialRef        string        `json:"material_ref,omitempty"`
-	MaterialState      string        `json:"material_state"`
-	DownloaderSnapshot string        `json:"downloader_snapshot"`
-	ImportMode         string        `json:"import_mode"`
-	WorkflowID         string        `json:"workflow_id"`
-	Request            SearchRequest `json:"request"`
-	Warnings           []string      `json:"warnings"`
-	NeedsConfirmation  bool          `json:"needs_confirmation"`
-	ID                 string        `json:"id"`
-	Media              catalog.Media `json:"media"`
-	Season             int           `json:"season"`
-	Episodes           []int         `json:"episodes"`
-	SiteID             string        `json:"site_id"`
-	ResourceID         string        `json:"resource_id"`
-	ResourceTitle      string        `json:"resource_title"`
-	DownloaderID       string        `json:"downloader_id"`
-	RootID             string        `json:"root_id"`
-	Hash               string        `json:"hash"`
-	Files              []string      `json:"files"`
-	TotalBytes         int64         `json:"total_bytes"`
-	ExtraFiles         bool          `json:"extra_files"`
-	CreatedAt          string        `json:"created_at"`
-	ExpiresAt          string        `json:"expires_at"`
-	Policy             Policy        `json:"policy"`
-	SubscriptionID     string        `json:"subscription_id"`
-	Revision           int           `json:"revision"`
-	Auto               bool          `json:"auto"`
+	SourceDownloader   json.RawMessage `json:"source_downloader,omitempty"`
+	SeasonScopeSHA     string          `json:"season_scope_sha,omitempty"`
+	SelectedEpisodes   []int           `json:"selected_episodes,omitempty"`
+	DirectoryID        string          `json:"directory_id"`
+	DownloadPath       string          `json:"download_path"`
+	DirectorySnapshot  string          `json:"directory_snapshot,omitempty"`
+	MaterialRef        string          `json:"material_ref,omitempty"`
+	MaterialState      string          `json:"material_state"`
+	DownloaderSnapshot string          `json:"downloader_snapshot"`
+	ImportMode         string          `json:"import_mode"`
+	WorkflowID         string          `json:"workflow_id"`
+	Request            SearchRequest   `json:"request"`
+	Warnings           []string        `json:"warnings"`
+	NeedsConfirmation  bool            `json:"needs_confirmation"`
+	ID                 string          `json:"id"`
+	Media              catalog.Media   `json:"media"`
+	Season             int             `json:"season"`
+	Episodes           []int           `json:"episodes"`
+	SiteID             string          `json:"site_id"`
+	ResourceID         string          `json:"resource_id"`
+	ResourceTitle      string          `json:"resource_title"`
+	DownloaderID       string          `json:"downloader_id"`
+	RootID             string          `json:"root_id"`
+	Hash               string          `json:"hash"`
+	Files              []string        `json:"files"`
+	TotalBytes         int64           `json:"total_bytes"`
+	ExtraFiles         bool            `json:"extra_files"`
+	CreatedAt          string          `json:"created_at"`
+	ExpiresAt          string          `json:"expires_at"`
+	Policy             Policy          `json:"policy"`
+	SubscriptionID     string          `json:"subscription_id"`
+	Revision           int             `json:"revision"`
+	Auto               bool            `json:"auto"`
 }
 
 func mediaKey(m catalog.Media) string       { return fmt.Sprintf("%s:%d", m.MediaType, m.ID) }

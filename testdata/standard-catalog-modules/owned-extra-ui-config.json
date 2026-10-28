@@ -1,0 +1,19 @@
+{
+  "enabled": true,
+  "modules": {},
+  "event_mutations": {
+    "recommend.source": {
+      "extra_sources": [
+        {"name": "Owned ordinary recommendations", "api_path": "plugin/OwnedModuleOverride/feed?list=ordinary", "type": "电影"}
+      ]
+    },
+    "discover.source": {
+      "extra_sources": [
+        {"name": "Owned ordinary discover", "mediaid_prefix": "owned", "api_path": "plugin/OwnedModuleOverride/feed", "filter_params": {"genre":"all","region":null}, "filter_ui": [{"component":"VTextField","props":{"model":"genre","label":"Owned genre"}},{"component":"VTextField","props":{"model":"region","label":"Owned region"}}], "depends":{"region":["genre"]}}
+      ]
+    }
+  },
+  "feed": [
+    {"source":"owned","mediaid_prefix":"owned","media_id":"opaque id:/?value=1","type":"电影","title":"Owned opaque ordinary item","year":"2026","vote_average":8.2,"overview":"Owned synthetic catalog item; no business provider or AI."}
+  ]
+}

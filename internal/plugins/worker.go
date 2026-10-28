@@ -52,7 +52,7 @@ func serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 	if err != nil {
 		return err
 	}
-	if first.Protocol != ProtocolVersion || first.Type != "call" || first.Method != "handshake" || first.PluginID != manifest.PluginID || first.Version != manifest.Version || !identityPattern.MatchString(first.InstanceID) {
+	if first.Protocol != ProtocolVersion || first.Type != "call" || first.Method != "handshake" || first.PluginID != manifest.PluginID || first.Version != manifest.Version || !ValidInstanceID(first.InstanceID) {
 		return failure("handshake_mismatch")
 	}
 	var hello struct {
@@ -181,7 +181,7 @@ func serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 		}
 		reply := Frame{Protocol: ProtocolVersion, ID: request.ID, Type: "result", Identity: s.identity}
 		if handleErr != nil {
-			reply.Error = &ReplyError{Code: "OPERATION_FAILED"}
+			reply.Error = &ReplyError{Code: workerHandlerFailureCode(handleErr)}
 		} else {
 			if len(result) == 0 {
 				result = json.RawMessage("null")

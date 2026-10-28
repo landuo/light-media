@@ -38,7 +38,7 @@ test('complete original AutoBackup form supports subtitle and six exact visibili
   model.webdav_enabled = false;
   assert.equal(model.webdav_password, 'synthetic-value');
 });
-test('visibility uses own literal model keys only and never evaluates expressions', () => {
+test('visibility preserves fixed with-model JavaScript truthiness and missing-name errors', () => {
   for (const [value, expected] of [
     [false, false],
     [0, false],
@@ -56,22 +56,16 @@ test('visibility uses own literal model keys only and never evaluates expression
   const model = Object.create({ inherited: true });
   model['plain_key'] = true;
   assert.equal(pluginNodeVisible({ show: '{{ plain_key }}' }, model), true);
-  assert.equal(pluginNodeVisible({ show: '{{ inherited }}' }, model), false);
-  assert.equal(pluginNodeVisible({ show: '{{ missing }}' }, model), false);
+  assert.equal(pluginNodeVisible({ show: '{{ inherited }}' }, model), true); // Fixed with(model) reads inherited names.
+  assert.throws(() => pluginNodeVisible({ show: '{{ missing }}' }, model), ReferenceError);
   assert.equal(pluginNodeVisible({}, model), true);
-  for (const show of [
-    '{{!enabled}}',
-    '{{a || b}}',
-    '{{a()}}',
-    '{{constructor}}',
-    '{{a.__proto__}}',
-    '{{a[b]}}',
-    '{{model.other}}',
-    '{{a-b}}',
-    'true',
-    true,
-  ]) {
-    assert.equal(pluginNodeVisible({ show }, model), false);
+  const draft = { enabled: false, a: 3, b: 2, other: true };
+  for (const show of ['{{!enabled}}', '{{a || b}}', '{{model.other}}', '{{a-b}}', 'true']) {
+    assert.equal(pluginNodeVisible({ show }, draft), true);
+    assert.deepEqual(pluginFormIssues([{ component: 'VRow', props: { show } }]), []);
+  }
+  assert.throws(() => pluginNodeVisible({ show: '{{missing + 1}}' }, draft), /missing/);
+  for (const show of ['{{a + }}', true]) {
     assert.ok(pluginFormIssues([{ component: 'VRow', props: { show } }]).length);
   }
   assert.ok(
@@ -86,9 +80,7 @@ test('renderer maps subtitle to actual Vuetify and applies visibility without a 
   );
   assert.match(source, /VSubheader: VListSubheader/);
   assert.match(source, /bound.title = bound.text/);
-  assert.match(
-    source,
-    /display: pluginNodeVisible\(node.props \|\| \{\}, props.model\) \? '' : 'none'/,
-  );
+  assert.equal(pluginFieldProps({ show: '{{ visible }}' }, { visible: false }).style.display, 'none');
+  assert.equal(pluginFieldProps({ show: '{{ visible }}', style: { color: 'red' } }, { visible: false }).style.display, undefined, 'fixed source later style overwrites earlier show style');
   assert.doesNotMatch(source, /AutoBackup|webdav_enabled/);
 });

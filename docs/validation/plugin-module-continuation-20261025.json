@@ -1,0 +1,187 @@
+{
+  "schema": "light-media.plugin-module-continuation/v1",
+  "complete_moviepilot_parity": false,
+  "git": {
+    "branch": "dev/plugins-continuation",
+    "base": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false
+  },
+  "source": {
+    "changed_code_files": 71,
+    "manifest_sha256": "84d1117e323c90bb2754274eb4683a2e0ec1ff2718014687faa4a372350736d7",
+    "original_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60"
+  },
+  "checks": {
+    "normal_combined": {
+      "phase": "tests",
+      "mode": "normal",
+      "exit": 0,
+      "packages": [
+        "./internal/app",
+        "./internal/plugins",
+        "./internal/plugins/artifacts",
+        "./internal/plugins/schedule",
+        "./web"
+      ],
+      "roots": {
+        "pass": 858,
+        "fail": 0,
+        "skip": 2
+      },
+      "failed": [],
+      "skipped": [
+        "light-media/internal/app:TestIsolatedDownloadersRealTransferAndImport",
+        "light-media/internal/app:TestIsolatedFNOSProductWorkflow"
+      ]
+    },
+    "final_agent_tool_cache": {
+      "ordinary_roots": 7,
+      "race_roots": 7,
+      "skip": 0,
+      "report": "plugin-agent-tool-cache-parity.json"
+    },
+    "web": {
+      "tests": 407,
+      "pass": 407,
+      "fail": 0,
+      "skip": 0,
+      "typecheck": 0,
+      "production_build": 0,
+      "build_files": 123,
+      "build_manifest_sha256": "3d79465fd2f63e4c3900aca095531c81fac846cd150752a0ec1705548d69b223",
+      "logs": [
+        "work/plugin-module-20261025/web-final-reviewed-tests.log",
+        "work/plugin-module-20261025/web-final-reviewed-build.log"
+      ]
+    },
+    "go_vet_all_exit": 0,
+    "go_compile_all_exit": 0,
+    "linux_amd64_server_build_exit": 0,
+    "race_combined": {
+      "status": "intentionally interrupted",
+      "summary": {
+        "phase": "tests",
+        "mode": "race",
+        "exit": 1,
+        "packages": [
+          "./internal/app",
+          "./internal/plugins",
+          "./internal/plugins/artifacts",
+          "./internal/plugins/schedule",
+          "./web"
+        ],
+        "roots": {
+          "pass": 512,
+          "fail": 0,
+          "skip": 2
+        },
+        "failed": [],
+        "skipped": [
+          "light-media/internal/app:TestIsolatedDownloadersRealTransferAndImport",
+          "light-media/internal/app:TestIsolatedFNOSProductWorkflow"
+        ]
+      },
+      "reason": "Focus final App race verification on all 133 plugin manager and organization roots; broad run had no failed test roots before interruption. This exit=1 is not counted as a passing full App race run."
+    },
+    "normal_combined_note": "The broad ordinary run compiled before the final G17 cache-copy correction. All 7 extension roots passed ordinary and race after that correction; final manager race gate uses frozen Go code.",
+    "final_sdk_artifacts_schedule_web_race": {
+      "light-media/internal/plugins": {
+        "roots": {
+          "pass": 99,
+          "fail": 0,
+          "skip": 0
+        },
+        "result": "pass",
+        "elapsed_seconds": 140.651
+      },
+      "light-media/internal/plugins/artifacts": {
+        "roots": {
+          "pass": 32,
+          "fail": 0,
+          "skip": 0
+        },
+        "result": "pass",
+        "elapsed_seconds": 1.721
+      },
+      "light-media/internal/plugins/schedule": {
+        "roots": {
+          "pass": 4,
+          "fail": 0,
+          "skip": 0
+        },
+        "result": "pass",
+        "elapsed_seconds": 1.436
+      },
+      "light-media/web": {
+        "roots": {
+          "pass": 1,
+          "fail": 0,
+          "skip": 0
+        },
+        "result": "pass",
+        "elapsed_seconds": 1.413
+      }
+    },
+    "race_buildinfo": {
+      "actual_fixture_binaries": 37,
+      "each_verified_race": true,
+      "metadata": "work/plugin-module-20261025/final-race/buildinfo-all.json"
+    },
+    "final_app_framework_race": {
+      "exit": 0,
+      "roots": {
+        "pass": 133,
+        "fail": 0,
+        "skip": 0
+      },
+      "failed": [],
+      "scope": "all 133 Test roots in plugin_original*_test.go and plugin_organization_ui_http_test.go",
+      "elapsed_seconds": 736.709
+    }
+  },
+  "browser": {
+    "surface": "actual production Vue build and independently compiled synthetic authentication plugin",
+    "success": [
+      "provider appears while logged out",
+      "actual remote ESM AuthPage loads anonymously",
+      "bad proof rejects and keeps login UI",
+      "valid proof mints ticket and exchanges real cookie session",
+      "protected plugin manager opens",
+      "refresh preserves session",
+      "logout restores login UI",
+      "create folder persists after page reload",
+      "local repository settings fields and default-disabled reload visible",
+      "enabled clone uses source-prefixed API to mint ticket while source disabled; real cookie login and logout succeeded"
+    ],
+    "real_identity_provider_tested": false,
+    "production_service_tested": false
+  },
+  "limits": [
+    "No production NAS/downloader operations; 2 real integration roots skipped.",
+    "G16/G17 provide registries and bridges, not complete workflow/Agent engines.",
+    "Core auth remains single-admin cookie, not original JWT/passkey/multiuser.",
+    "Original full errors/tracebacks, licensing, notifications, marketplace telemetry/history and rich core event producers remain incomplete.",
+    "23 installed Python business plugins have not been accepted as rewritten/migrated by these framework tests."
+  ],
+  "evidence_directory": "work/plugin-module-20261025",
+  "cleanup": {
+    "test_processes_remaining": 0,
+    "compiled_files_removed_final": 37,
+    "temporary_directories_removed_final": 3,
+    "raw_logs_source_oracles_screenshots_and_reproduction_commands_preserved": true,
+    "records": [
+      "work/plugin-module-20261025/cleanup-first.json",
+      "work/plugin-module-20261025/cleanup-final.json"
+    ]
+  },
+  "final_review": {
+    "findings": 2,
+    "priority": "P2",
+    "fixed": [
+      "Preserve source plugin ID in clone AuthPage API and bind both known aliases to same instance.",
+      "Offer provider refresh/retry after immutable frontend version changes."
+    ],
+    "regression_checks": "407 full frontend tests passed; repeated reviewer check found no new P1/P2; actual clone browser login passed."
+  }
+}

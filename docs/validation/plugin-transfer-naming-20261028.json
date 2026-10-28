@@ -1,0 +1,134 @@
+{
+  "whole_indices": [
+    36,
+    37,
+    43
+  ],
+  "accepted_whole_scope": false,
+  "increment_status": "验收通过",
+  "scope": "primary-file native naming precedence only; auxiliary names/independent modules/history remain pending",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:2004-2064 source/target storage selection precedes self.transfer",
+    "app/chain/__init__.py:1425-1477 transfer wrapper enters ordinary dispatcher",
+    "app/modules/filemanager/__init__.py:415-541 native provider enters TransHandler",
+    "app/modules/filemanager/transhandler.py:1221-1290 actual build/render/rename event order",
+    "app/chain/transfer.py:3299-3368 and manual_transfer sync_extra_files=True: related subtitle/audio are separate TransferTasks, not implicit native-only copies"
+  ],
+  "target": [
+    "internal/app/import_plan.go OriginalNamingBases + pure default naming without ordinary events in executable preparation",
+    "internal/app/plugin_original_transfer_rename.go observe=false only for pure preparation; normal explicit/native calls dispatch both events",
+    "internal/app/plugin_original_transfer_naming.go resolveOriginalNativeTransferName only from native provider; OriginalNamingResolved prevents replay after physical publication",
+    "internal/app/plugin_original_transfer_target.go planned and published phases reuse concrete sealed target transition; original method/root/source/identity retained",
+    "internal/app/import_run.go actual native closure resolves deferred name then invokes existing folder/publication path",
+    "internal/app/plugin_original_transfer_module.go native TransferInfo consumes actual receipt.Target after native naming"
+  ],
+  "source_replay": {
+    "script": "testdata/standard-module-host/generate-transfer-naming-order-oracle.py",
+    "output": "testdata/standard-module-host/transfer-naming-order-source-oracle.json",
+    "cases": 3,
+    "kind": "exact pinned storage selection/transfer caller, dispatcher, FileManager, get_rename_path with real Pydantic event models/Jinja2; native physical link and plugin values controlled, no old service",
+    "environment": "existing reference-python/static-venv: Python3.12, Jinja2 3.1.6, Pydantic2.14.1; first source-oracle venv lacked Jinja2, reused existing reference environment; missing Callable namespace corrected, no runtime Go dependency introduced"
+  },
+  "local": {
+    "strict_actual_sdk": "TestOriginalTransferExecutionNamesOnlyNativeFallback compares full fixed AST trace to actual Go SDK: storage2→module; only None native fallback adds rename.build+rename and physically writes event path",
+    "initial_red": "transfer-naming-local-r1.log 18.639s tests: old aux/latest observers read stale pre-execution target",
+    "corrected_observers": "host/aux/latest explicitly assert fixed rename event literal destination from the actual stored execution plan. Old rename-before-storage expected list was corrected using pinned source order; not a relaxed assertion.",
+    "transfer_suite": "transfer-naming-all-r1.log 37.811s PASS",
+    "expanded_race": "transfer-naming-race-r1.log 179.301s tests,193.655s wall PASS",
+    "full_source_and_cold": "transfer-naming-full-source-cold.log 8.855s tests,22.611s wall PASS. Real asset INSERT abort after native naming/publication→Close/New/initialize/new SDK PID→exact job reclaim→registration without module/name replay; transient storage descriptors are reacquired.",
+    "post_build_refinement": "New exact-AST naming oracle and native cold test added/run locally after actual Linux test binary build. Current production inputs compared to main23 compiler manifest and all unchanged."
+  },
+  "actual_linux": {
+    "main_sha256": "a9600c89db7ff0594b8e1ef738f7ca0858db1fef425a6ae18e56eaec3af47a94",
+    "test_sha256": "05e77686299eb289e0e3aeef2e4778416e27039386f671aaa26991192f3eb6bf",
+    "worker_sha256": "fe806697d860f57de8792a812a152161238e4c3f6c560fcf979d2672b1cf2cd7",
+    "compiler_inputs": [
+      3701,
+      4147
+    ],
+    "changes_during_build": [],
+    "cli_seconds": 2.21,
+    "cases": "7 execution dispatch outcomes (including real native None fallback: four counted chain calls; terminal providers: exactly two storage calls), 2 returned-target source/clone physical cases, 5 manual preview branches, cold/uninstall/API404"
+  },
+  "actual_browser": {
+    "tab": "IAB56",
+    "gate_seconds": 331.14,
+    "passed": true,
+    "proof": {
+      "passed": true,
+      "kind": "actual Linux cmd/server + real SDK + owned filesystem + IAB56",
+      "cold_pids": [
+        [
+          4109494,
+          4109501
+        ],
+        [
+          4112901,
+          4112907
+        ],
+        [
+          4115532,
+          4115538
+        ],
+        [
+          4119566,
+          4119572
+        ]
+      ],
+      "preview_plans": 7,
+      "preview_jobs": 0,
+      "actual_job": [
+        [
+          "job_2E1qlj05Hc44mx406Lk2AXcN",
+          "succeeded"
+        ]
+      ],
+      "actual_assets": 1,
+      "actual_receipts": 1,
+      "clone_preview_directory_exists": false,
+      "target": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module23-ui-tmp/TestPluginServicesProductionCLI2043953176/002/library/Plugin returned UI target/Actual plugin file.mkv",
+        "inode": 101082760,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "source": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module23-ui-tmp/TestPluginServicesProductionCLI2043953176/002/source/OwnedUITransfer.2024.mkv",
+        "inode": 101082760,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "executed_plan": "plan_3N-9kf3-SSTnNWnTtPghIvZp",
+      "preview_complete_callbacks": 0,
+      "ordinary_execute_complete_callbacks": 2
+    },
+    "additional_assertions": [
+      "executable preparation source and clone each have zero transfer_chain_event calls before first explicit preview",
+      "actual terminal module execute advances transfer_chain_event exactly two from restore baseline; last event is storage.operation, proving no native rename event",
+      "native frozen target differs from actual returned target and remains absent"
+    ],
+    "recovery": "source/clone PIDs4109494/4109501→4112901/4112907→4115532/4115538→4119566/4119572; source/target device65025/inode101082760/26bytes/hashad439c25 unchanged across preview/restart; one actual asset/receipt/history and two completion observers"
+  },
+  "front": "130 compiler web embed inputs equal to main19 546 tests/build snapshot; no new frontend test run claimed",
+  "adaptations": [
+    "Existing Go executable preparation still freezes a safe default path, while ordinary native name events occur only when native execution is selected. Explicit source preview uses its separate existing manual request flag and same module/native order.",
+    "Native name changes reuse existing authorized-root plan/authority/receipt transaction before physical publication. Published native receipts recover their path without rerunning name handlers; cold storage descriptors are reacquired because live worker objects do not survive restart.",
+    "Existing native naming templates and user-specific category/path/preview layout boundaries remain. No workflow/AI code or empty extension framework added."
+  ],
+  "remaining": [
+    "Auxiliary preparation still invokes naming and native auxiliary publication lacks independent high-level transfer dispatch/source per-task history. Fixed manual source builds separate related-file TransferTasks, so this is a real open gap.",
+    "Full TransferInfo nested validation/counts/mode/nullability and TV episodes/history behavior, legitimate quality/overwrite target transition remain unverified.",
+    "media_exists/media_files, directory-unit/bluray, metadata batch aggregation, download tuple/preexisting hash ordering and complete ordinary module/event audit remain open."
+  ],
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-naming-23-20261028/manifest.json",
+  "cleanup": "IAB56 closed; actual source+clone uninstall/API404/test TempDir cleanup PASS; SSH34437 stopped. No running root test service from this snapshot.",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

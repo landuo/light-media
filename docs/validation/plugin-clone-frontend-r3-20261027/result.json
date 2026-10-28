@@ -1,0 +1,64 @@
+{
+  "items": [
+    14,
+    15,
+    31
+  ],
+  "accepted": "frontend derivation behavior only; parent owns whole-row acceptance",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": {
+    "app/core/plugin.py:2044": "clone maps hard-coded dist to frontend derivation before initialize",
+    "app/core/plugin.py:2145-2192": "literal JS and CSS replacements, root filename rename",
+    "testdata/standard-market/local-reload-actions-oracle.json": "actual fixed watcher ready frontend sync-only vs backend reload",
+    "testdata/standard-clone-frontend/source-oracle.json": "9 actual fixed-source file trees including source rename/case bugs"
+  },
+  "targets": [
+    "internal/plugins/artifacts/clone_frontend.go",
+    "internal/plugins/artifacts/frontend.go",
+    "internal/plugins/artifacts/installed.go",
+    "internal/app/plugin_instances.go",
+    "internal/app/plugin_original_install.go",
+    "internal/app/plugin_implementation.go"
+  ],
+  "server_sha256": "0afb9d33c9c04a0c160319fe04b1e6175fcce17bb703afdc19d89786a9a6b6b7",
+  "actual_linux_cli": [
+    {
+      "mode": "auto=true DEV=false",
+      "elapsed_seconds": 10.07,
+      "source_pid": 2566154,
+      "source_init_count": 2,
+      "clone_pid": 2566169,
+      "exact_clone_pid_before_update": 2566589,
+      "exact_clone_pid_after_update": 2566601,
+      "exact_clone_pid_cold": 2566640,
+      "log": "evidence/clone-front-process-false.log.gz"
+    },
+    {
+      "mode": "auto=false DEV=true startup environment",
+      "elapsed_seconds": 10.11,
+      "source_pid": 2566994,
+      "source_init_count": 2,
+      "clone_pid": 2567005,
+      "exact_clone_pid_before_update": 2567475,
+      "exact_clone_pid_after_update": 2567609,
+      "exact_clone_pid_cold": 2567663,
+      "log": "evidence/clone-front-process-true.log.gz"
+    }
+  ],
+  "coverage": [
+    "actual cmd/server App.Start1s ticker; verified ZIP+independent actualSDK",
+    "source resources advance content hash without changing SDK PID/init/config/cwd inode, clone old resources/literal/CSS remain independent",
+    "actual version2 source backend reload leaves clone old SDK/code/config unchanged",
+    "corrupt source publication reports real local_reload_failed then valid resource recovery preserves object",
+    "cold source/clone read derived inventory/pin/class resources and distinct newPIDs/init1",
+    "exact-class clone manual force update2.0 replaces only cloneSDK, retains config/marker and sourcePID",
+    "exact clone frontend-only resource publication preserves actualPID/init/config/source; literal API/CSS class/file name remain clone, runtime-built Source remains unchanged",
+    "invalid exact clone publication increments actual failure log while valid graph/PID preserved; recovery advances contentpin",
+    "exact clone cold restart preserves derived class/pin/2.0/config with newPID/init1, source/clone uninstall actual success"
+  ],
+  "necessary_adaptation": "Go immutable compiled worker is never rewritten; explicit validated frontend Root maps source dist, actual frontend class receipt supplies clone-of-clone source identity. Exact-ID updated Go class declaration is retained. Generic low-level CloneInstalled physical copy remains unchanged.",
+  "actual_browser": "35 platform2 literal/global clone PID/runtime source/CSS17px previously proved; r3 automatic+real browser cancel recovery and fresh loaded derived Page bound in ../plugin-api35-r3-20261027/result.json; 31-33 UI remainder parent-owned",
+  "cleanup": "both actual independent CLI runs exited0 and stopped server/SDK/owned temp data; no existing service touched",
+  "remaining_for_frontend_derivation": [],
+  "evidence_manifest": "evidence-manifest.json"
+}

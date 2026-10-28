@@ -1,4 +1,4 @@
-import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import postcss from 'postcss';
@@ -6,29 +6,15 @@ import { format, resolveConfig } from 'prettier';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const sourcePath = path.join(root, 'node_modules/vuetify/lib/styles/main.css');
-let corpus = '';
-async function scan(directory) {
-  for (const entry of await readdir(directory, { withFileTypes: true })) {
-    const name = path.join(directory, entry.name);
-    if (entry.isDirectory()) await scan(name);
-    else if (
-      (/\.(vue|ts|go)$/.test(name) ||
-        (name.includes('/frontend/assets/') && name.endsWith('.js'))) &&
-      !name.endsWith('_test.go')
-    )
-      corpus += '\n' + (await readFile(name, 'utf8'));
-  }
-}
-await scan(path.join(root, 'src'));
-await scan(path.join(root, '../internal/plugins'));
 const tree = postcss.parse(await readFile(sourcePath, 'utf8'));
 const scope = ':where(.plugin-surface, .plugin-dialog-surface, .plugin-log-surface)';
 let rules = 0;
 tree.walkRules((rule) => {
   const classes = [...rule.selector.matchAll(/\.([A-Za-z_][A-Za-z0-9_-]*)/g)].map((m) => m[1]);
-  // Keep the installed component version's actual utility declarations; no
-  // element resets, global theme defaults, unrelated selectors or new palette.
-  if (!classes.length || !classes.some((name) => corpus.includes(name))) {
+  // Installed plugins supply classes at runtime. The reference includes the
+  // whole Vuetify stylesheet, so a build-time source scan loses valid utilities.
+  // Scope class rules to plugin surfaces without adding global element resets.
+  if (!classes.length) {
     rule.remove();
     return;
   }
@@ -50,7 +36,7 @@ tree.walkComments((comment) => comment.remove());
 const license = await readFile(path.join(root, 'node_modules/vuetify/LICENSE.md'), 'utf8');
 const destination = path.join(root, 'src/assets/plugin-utilities.css');
 const output = await format(
-  `/*! Generated from Vuetify 3.7.3 main.css; used utilities scoped to plugin surfaces.\n${license}\n*/\n${tree.toString()}\n`,
+  `/*! Generated from Vuetify 3.7.3 main.css; class utilities scoped to plugin surfaces.\n${license}\n*/\n${tree.toString()}\n`,
   { ...(await resolveConfig(destination)), parser: 'css' },
 );
 let previous = '';

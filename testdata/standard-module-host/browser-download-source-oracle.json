@@ -1,0 +1,244 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/storage.py": "9665a00d34931bbfe3b44f916d7b0b5f8cb658b3abc5bc7786d84ab659483719",
+    "app/modules/filemanager/__init__.py": "7a02d0f0107b76465a9f2c2ef99731e2f39aa11dee3b6a01d2c3dfbc6d7dd9ab",
+    "app/modules/filemanager/storages/local.py": "fdbe39789b31b508aa35c4e15e273ee4ed19fc92130aa31c33d0b74fc10bfdf4",
+    "app/api/endpoints/storage.py": "c7d818ab46b845f169d026bddbfec5505e33f8b6d6007fa159bfbb8070b3cd70",
+    "app/schemas/file.py": "676486e635bc9d0dfc0e589b514a6627c3330bf961a566c2cd8872b79f74aba0",
+    "app/schemas/response.py": "0afd53be12ee3a6f513e74e10c98344b0d9f66e01c250e66a74ccee604bc1970"
+  },
+  "boundary": "Fixed StorageChain download wrapper, dispatcher, FileManager and LocalStorage,\nplus download/image endpoint AST. Owned temporary bytes and plugin values.\nStarlette response adapter is a development boundary with recorded version.\n",
+  "starlette_adapter_version": "1.3.1",
+  "cases": [
+    {
+      "action": "download",
+      "name": "none",
+      "plugin": null,
+      "fail": false,
+      "calls": [
+        "source",
+        "clone",
+        "native"
+      ],
+      "body": "owned native content",
+      "success": null,
+      "error": null,
+      "messages": 0
+    },
+    {
+      "action": "download",
+      "name": "override",
+      "plugin": "override.txt",
+      "fail": false,
+      "calls": [
+        "source"
+      ],
+      "body": "owned plugin content",
+      "success": null,
+      "error": null,
+      "messages": 0
+    },
+    {
+      "action": "download",
+      "name": "false",
+      "plugin": false,
+      "fail": false,
+      "calls": [
+        "source"
+      ],
+      "body": null,
+      "success": false,
+      "error": null,
+      "messages": 0
+    },
+    {
+      "action": "download",
+      "name": "empty_list",
+      "plugin": [],
+      "fail": false,
+      "calls": [
+        "source",
+        "clone",
+        "native"
+      ],
+      "body": null,
+      "success": false,
+      "error": null,
+      "messages": 0
+    },
+    {
+      "action": "download",
+      "name": "list",
+      "plugin": [
+        "bad"
+      ],
+      "fail": false,
+      "calls": [
+        "source",
+        "clone",
+        "native"
+      ],
+      "body": null,
+      "success": null,
+      "error": "TypeError",
+      "messages": 0
+    },
+    {
+      "action": "download",
+      "name": "dict",
+      "plugin": {},
+      "fail": false,
+      "calls": [
+        "source"
+      ],
+      "body": null,
+      "success": false,
+      "error": null,
+      "messages": 0
+    },
+    {
+      "action": "download",
+      "name": "throw",
+      "plugin": null,
+      "fail": true,
+      "calls": [
+        "source",
+        "clone",
+        "native"
+      ],
+      "body": "owned native content",
+      "success": null,
+      "error": null,
+      "messages": 1
+    },
+    {
+      "action": "download",
+      "name": "missing",
+      "plugin": "missing.txt",
+      "fail": false,
+      "calls": [
+        "source"
+      ],
+      "body": null,
+      "success": null,
+      "error": "RuntimeError",
+      "messages": 0
+    },
+    {
+      "action": "image",
+      "name": "none",
+      "plugin": null,
+      "fail": false,
+      "calls": [
+        "source",
+        "clone",
+        "native"
+      ],
+      "body": "owned native content",
+      "success": null,
+      "error": null,
+      "messages": 0
+    },
+    {
+      "action": "image",
+      "name": "override",
+      "plugin": "override.txt",
+      "fail": false,
+      "calls": [
+        "source"
+      ],
+      "body": "owned plugin content",
+      "success": null,
+      "error": null,
+      "messages": 0
+    },
+    {
+      "action": "image",
+      "name": "false",
+      "plugin": false,
+      "fail": false,
+      "calls": [
+        "source"
+      ],
+      "body": null,
+      "success": null,
+      "error": "HTTPException",
+      "messages": 0
+    },
+    {
+      "action": "image",
+      "name": "empty_list",
+      "plugin": [],
+      "fail": false,
+      "calls": [
+        "source",
+        "clone",
+        "native"
+      ],
+      "body": null,
+      "success": null,
+      "error": "HTTPException",
+      "messages": 0
+    },
+    {
+      "action": "image",
+      "name": "list",
+      "plugin": [
+        "bad"
+      ],
+      "fail": false,
+      "calls": [
+        "source",
+        "clone",
+        "native"
+      ],
+      "body": null,
+      "success": null,
+      "error": "AttributeError",
+      "messages": 0
+    },
+    {
+      "action": "image",
+      "name": "dict",
+      "plugin": {},
+      "fail": false,
+      "calls": [
+        "source"
+      ],
+      "body": null,
+      "success": null,
+      "error": "HTTPException",
+      "messages": 0
+    },
+    {
+      "action": "image",
+      "name": "throw",
+      "plugin": null,
+      "fail": true,
+      "calls": [
+        "source",
+        "clone",
+        "native"
+      ],
+      "body": "owned native content",
+      "success": null,
+      "error": null,
+      "messages": 1
+    },
+    {
+      "action": "image",
+      "name": "missing",
+      "plugin": "missing.txt",
+      "fail": false,
+      "calls": [
+        "source"
+      ],
+      "body": null,
+      "success": null,
+      "error": "FileNotFoundError",
+      "messages": 0
+    }
+  ]
+}

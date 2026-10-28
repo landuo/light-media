@@ -70,12 +70,16 @@ func applySubscriptionQualityState(s *Subscription, old Subscription, in Subscri
 // Origin remains an immutable creation fact. Runtime quality reads its original
 // username without changing its ciphertext, hash, original note or defaults.
 func (a *App) subscriptionQualitySourceState(ctx context.Context, s Subscription) (subscriptionquality.State, error) {
+	return a.subscriptionQualitySourceStateFrom(ctx, a.Store.DB, s)
+}
+
+func (a *App) subscriptionQualitySourceStateFrom(ctx context.Context, q PluginProofReader, s Subscription) (subscriptionquality.State, error) {
 	state := subscriptionQualityState(s)
 	if s.SourceContextSHA == "" {
 		return state, nil
 	}
 	var sealed []byte
-	if e := a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='source_subscription_origin' AND id=?`, s.ID).Scan(&sealed); e != nil {
+	if e := q.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind='source_subscription_origin' AND id=?`, s.ID).Scan(&sealed); e != nil {
 		return state, e
 	}
 	raw, e := a.pluginStore.unseal("source_subscription_origin", "system", s.ID, sealed)

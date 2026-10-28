@@ -1,0 +1,60 @@
+{
+  "kind": "actual Linux acceptance SDK test artifacts",
+  "started_at": "2026-10-27T01:59:36+0800",
+  "artifacts": [
+    {
+      "path": "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/events36-episodes-linux",
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/events36-episodes-linux",
+        "-ldflags",
+        "-X main.pluginID=OwnedEpisodesRefresh -X main.eventType=subscribe.episodes.refresh",
+        "./cmd/owned-command-register-fixture"
+      ],
+      "sha256": "295d01c64851fefb50a7dba113e61c73bcb1377ca70257b7dbe4a2bc5705bbb5",
+      "size": 9512989
+    },
+    {
+      "path": "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/events36-completion-check-linux",
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/events36-completion-check-linux",
+        "-ldflags",
+        "-X main.pluginID=OwnedCompletionCheck -X main.eventType=subscribe.completion.check",
+        "./cmd/owned-command-register-fixture"
+      ],
+      "sha256": "c40b13978c03f3db422e9d00e042e8f1808291236ea9170aed94923de37cfedf",
+      "size": 9512989
+    },
+    {
+      "path": "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/events36-notice-linux",
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/events36-notice-linux",
+        "./cmd/owned-notice-fixture"
+      ],
+      "sha256": "50c2e4d83815a4a05f4d286a6eef533d1055423b70f2a9951e2e51a461b524a6",
+      "size": 9495964
+    },
+    {
+      "path": "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/events36-user-message-linux",
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/events36-user-message-linux",
+        "-ldflags",
+        "-X main.extraEvent=user.message -X main.fixtureProcessAPI=true",
+        "./cmd/owned-event-fixture"
+      ],
+      "sha256": "6f59e469cb9077cd7a6b25bde971108bfbbb5cd4be360fc3522150adf224cf33",
+      "size": 4278805
+    }
+  ]
+}

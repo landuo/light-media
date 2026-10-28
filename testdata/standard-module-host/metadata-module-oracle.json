@@ -1,0 +1,1097 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "Fixed NFO wrapper/dispatcher/_save_file and system-only metadata_img.\n\nOnly plugin/core return values, MediaInfo fields and storage.upload_file are\ncontrolled boundaries. _save_file really creates/writes/reads a temporary file.\n",
+  "source_sha256": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/media.py": "daedce70999cc161cd007f5145d007238e4606504c85b6675bb3040dac449caa",
+    "app/utils/object.py": "0fd0161be3084593a9693244e9ea734c5d949cc23a6e8f34349177a5e220dc1c",
+    "app/chain/storage.py": "9665a00d34931bbfe3b44f916d7b0b5f8cb658b3abc5bc7786d84ab659483719"
+  },
+  "meta": {
+    "isfile": false,
+    "title": "Synthetic Film 2024",
+    "org_string": "Synthetic Film 2024",
+    "subtitle": null,
+    "type": "未知",
+    "cn_name": null,
+    "en_name": "Synthetic Film",
+    "original_name": "Synthetic Film",
+    "year": "2024",
+    "total_season": 0,
+    "begin_season": null,
+    "end_season": null,
+    "total_episode": 0,
+    "begin_episode": null,
+    "end_episode": null,
+    "part": null,
+    "resource_type": null,
+    "resource_effect": null,
+    "resource_pix": null,
+    "resource_team": null,
+    "customization": null,
+    "web_source": null,
+    "video_encode": null,
+    "video_bit": null,
+    "audio_encode": null,
+    "apply_words": [],
+    "tmdbid": null,
+    "doubanid": null,
+    "media_source": null,
+    "media_id": null,
+    "episode_group": null,
+    "fps": null,
+    "season_episode": "",
+    "edition": "",
+    "name": "Synthetic Film",
+    "episode_list": []
+  },
+  "information": {
+    "type": "电影",
+    "title": "Owned metadata",
+    "tmdb_id": 900043,
+    "tmdb_info": {},
+    "douban_info": {},
+    "bangumi_info": {},
+    "anilist_info": {}
+  },
+  "cases": [
+    {
+      "name": "none_core",
+      "plugin_result": null,
+      "result": "owned native core NFO",
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "meta": {
+              "isfile": false,
+              "title": "Synthetic Film 2024",
+              "org_string": "Synthetic Film 2024",
+              "subtitle": null,
+              "type": "未知",
+              "cn_name": null,
+              "en_name": "Synthetic Film",
+              "original_name": "Synthetic Film",
+              "year": "2024",
+              "total_season": 0,
+              "begin_season": null,
+              "end_season": null,
+              "total_episode": 0,
+              "begin_episode": null,
+              "end_episode": null,
+              "part": null,
+              "resource_type": null,
+              "resource_effect": null,
+              "resource_pix": null,
+              "resource_team": null,
+              "customization": null,
+              "web_source": null,
+              "video_encode": null,
+              "video_bit": null,
+              "audio_encode": null,
+              "apply_words": [],
+              "tmdbid": null,
+              "doubanid": null,
+              "media_source": null,
+              "media_id": null,
+              "episode_group": null,
+              "fps": null,
+              "season_episode": "",
+              "edition": "",
+              "name": "Synthetic Film",
+              "episode_list": []
+            },
+            "mediainfo": {
+              "type": "电影",
+              "title": "Owned metadata",
+              "tmdb_id": 900043,
+              "tmdb_info": {},
+              "douban_info": {},
+              "bangumi_info": {},
+              "anilist_info": {}
+            },
+            "season": null,
+            "episode": null
+          }
+        },
+        {
+          "role": "core",
+          "kwargs": {
+            "meta": {
+              "isfile": false,
+              "title": "Synthetic Film 2024",
+              "org_string": "Synthetic Film 2024",
+              "subtitle": null,
+              "type": "未知",
+              "cn_name": null,
+              "en_name": "Synthetic Film",
+              "original_name": "Synthetic Film",
+              "year": "2024",
+              "total_season": 0,
+              "begin_season": null,
+              "end_season": null,
+              "total_episode": 0,
+              "begin_episode": null,
+              "end_episode": null,
+              "part": null,
+              "resource_type": null,
+              "resource_effect": null,
+              "resource_pix": null,
+              "resource_team": null,
+              "customization": null,
+              "web_source": null,
+              "video_encode": null,
+              "video_bit": null,
+              "audio_encode": null,
+              "apply_words": [],
+              "tmdbid": null,
+              "doubanid": null,
+              "media_source": null,
+              "media_id": null,
+              "episode_group": null,
+              "fps": null,
+              "season_episode": "",
+              "edition": "",
+              "name": "Synthetic Film",
+              "episode_list": []
+            },
+            "mediainfo": {
+              "type": "电影",
+              "title": "Owned metadata",
+              "tmdb_id": 900043,
+              "tmdb_info": {},
+              "douban_info": {},
+              "bangumi_info": {},
+              "anilist_info": {}
+            },
+            "season": null,
+            "episode": null
+          }
+        }
+      ],
+      "saved": [
+        {
+          "__plugin_module_bytes": "b3duZWQgbmF0aXZlIGNvcmUgTkZP"
+        }
+      ],
+      "exception": null
+    },
+    {
+      "name": "bytes_terminal",
+      "plugin_result": {
+        "__plugin_module_bytes": "b3duZWQA/w=="
+      },
+      "result": {
+        "__plugin_module_bytes": "b3duZWQA/w=="
+      },
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "meta": {
+              "isfile": false,
+              "title": "Synthetic Film 2024",
+              "org_string": "Synthetic Film 2024",
+              "subtitle": null,
+              "type": "未知",
+              "cn_name": null,
+              "en_name": "Synthetic Film",
+              "original_name": "Synthetic Film",
+              "year": "2024",
+              "total_season": 0,
+              "begin_season": null,
+              "end_season": null,
+              "total_episode": 0,
+              "begin_episode": null,
+              "end_episode": null,
+              "part": null,
+              "resource_type": null,
+              "resource_effect": null,
+              "resource_pix": null,
+              "resource_team": null,
+              "customization": null,
+              "web_source": null,
+              "video_encode": null,
+              "video_bit": null,
+              "audio_encode": null,
+              "apply_words": [],
+              "tmdbid": null,
+              "doubanid": null,
+              "media_source": null,
+              "media_id": null,
+              "episode_group": null,
+              "fps": null,
+              "season_episode": "",
+              "edition": "",
+              "name": "Synthetic Film",
+              "episode_list": []
+            },
+            "mediainfo": {
+              "type": "电影",
+              "title": "Owned metadata",
+              "tmdb_id": 900043,
+              "tmdb_info": {},
+              "douban_info": {},
+              "bangumi_info": {},
+              "anilist_info": {}
+            },
+            "season": null,
+            "episode": null
+          }
+        }
+      ],
+      "saved": [
+        {
+          "__plugin_module_bytes": "b3duZWQA/w=="
+        }
+      ],
+      "exception": null
+    },
+    {
+      "name": "empty_bytes_terminal",
+      "plugin_result": {
+        "__plugin_module_bytes": ""
+      },
+      "result": {
+        "__plugin_module_bytes": ""
+      },
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "meta": {
+              "isfile": false,
+              "title": "Synthetic Film 2024",
+              "org_string": "Synthetic Film 2024",
+              "subtitle": null,
+              "type": "未知",
+              "cn_name": null,
+              "en_name": "Synthetic Film",
+              "original_name": "Synthetic Film",
+              "year": "2024",
+              "total_season": 0,
+              "begin_season": null,
+              "end_season": null,
+              "total_episode": 0,
+              "begin_episode": null,
+              "end_episode": null,
+              "part": null,
+              "resource_type": null,
+              "resource_effect": null,
+              "resource_pix": null,
+              "resource_team": null,
+              "customization": null,
+              "web_source": null,
+              "video_encode": null,
+              "video_bit": null,
+              "audio_encode": null,
+              "apply_words": [],
+              "tmdbid": null,
+              "doubanid": null,
+              "media_source": null,
+              "media_id": null,
+              "episode_group": null,
+              "fps": null,
+              "season_episode": "",
+              "edition": "",
+              "name": "Synthetic Film",
+              "episode_list": []
+            },
+            "mediainfo": {
+              "type": "电影",
+              "title": "Owned metadata",
+              "tmdb_id": 900043,
+              "tmdb_info": {},
+              "douban_info": {},
+              "bangumi_info": {},
+              "anilist_info": {}
+            },
+            "season": null,
+            "episode": null
+          }
+        }
+      ],
+      "saved": [],
+      "exception": null
+    },
+    {
+      "name": "false_terminal",
+      "plugin_result": false,
+      "result": false,
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "meta": {
+              "isfile": false,
+              "title": "Synthetic Film 2024",
+              "org_string": "Synthetic Film 2024",
+              "subtitle": null,
+              "type": "未知",
+              "cn_name": null,
+              "en_name": "Synthetic Film",
+              "original_name": "Synthetic Film",
+              "year": "2024",
+              "total_season": 0,
+              "begin_season": null,
+              "end_season": null,
+              "total_episode": 0,
+              "begin_episode": null,
+              "end_episode": null,
+              "part": null,
+              "resource_type": null,
+              "resource_effect": null,
+              "resource_pix": null,
+              "resource_team": null,
+              "customization": null,
+              "web_source": null,
+              "video_encode": null,
+              "video_bit": null,
+              "audio_encode": null,
+              "apply_words": [],
+              "tmdbid": null,
+              "doubanid": null,
+              "media_source": null,
+              "media_id": null,
+              "episode_group": null,
+              "fps": null,
+              "season_episode": "",
+              "edition": "",
+              "name": "Synthetic Film",
+              "episode_list": []
+            },
+            "mediainfo": {
+              "type": "电影",
+              "title": "Owned metadata",
+              "tmdb_id": 900043,
+              "tmdb_info": {},
+              "douban_info": {},
+              "bangumi_info": {},
+              "anilist_info": {}
+            },
+            "season": null,
+            "episode": null
+          }
+        }
+      ],
+      "saved": [],
+      "exception": null
+    },
+    {
+      "name": "empty_list_core",
+      "plugin_result": [],
+      "result": [],
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "meta": {
+              "isfile": false,
+              "title": "Synthetic Film 2024",
+              "org_string": "Synthetic Film 2024",
+              "subtitle": null,
+              "type": "未知",
+              "cn_name": null,
+              "en_name": "Synthetic Film",
+              "original_name": "Synthetic Film",
+              "year": "2024",
+              "total_season": 0,
+              "begin_season": null,
+              "end_season": null,
+              "total_episode": 0,
+              "begin_episode": null,
+              "end_episode": null,
+              "part": null,
+              "resource_type": null,
+              "resource_effect": null,
+              "resource_pix": null,
+              "resource_team": null,
+              "customization": null,
+              "web_source": null,
+              "video_encode": null,
+              "video_bit": null,
+              "audio_encode": null,
+              "apply_words": [],
+              "tmdbid": null,
+              "doubanid": null,
+              "media_source": null,
+              "media_id": null,
+              "episode_group": null,
+              "fps": null,
+              "season_episode": "",
+              "edition": "",
+              "name": "Synthetic Film",
+              "episode_list": []
+            },
+            "mediainfo": {
+              "type": "电影",
+              "title": "Owned metadata",
+              "tmdb_id": 900043,
+              "tmdb_info": {},
+              "douban_info": {},
+              "bangumi_info": {},
+              "anilist_info": {}
+            },
+            "season": null,
+            "episode": null
+          }
+        },
+        {
+          "role": "core",
+          "kwargs": {
+            "meta": {
+              "isfile": false,
+              "title": "Synthetic Film 2024",
+              "org_string": "Synthetic Film 2024",
+              "subtitle": null,
+              "type": "未知",
+              "cn_name": null,
+              "en_name": "Synthetic Film",
+              "original_name": "Synthetic Film",
+              "year": "2024",
+              "total_season": 0,
+              "begin_season": null,
+              "end_season": null,
+              "total_episode": 0,
+              "begin_episode": null,
+              "end_episode": null,
+              "part": null,
+              "resource_type": null,
+              "resource_effect": null,
+              "resource_pix": null,
+              "resource_team": null,
+              "customization": null,
+              "web_source": null,
+              "video_encode": null,
+              "video_bit": null,
+              "audio_encode": null,
+              "apply_words": [],
+              "tmdbid": null,
+              "doubanid": null,
+              "media_source": null,
+              "media_id": null,
+              "episode_group": null,
+              "fps": null,
+              "season_episode": "",
+              "edition": "",
+              "name": "Synthetic Film",
+              "episode_list": []
+            },
+            "mediainfo": {
+              "type": "电影",
+              "title": "Owned metadata",
+              "tmdb_id": 900043,
+              "tmdb_info": {},
+              "douban_info": {},
+              "bangumi_info": {},
+              "anilist_info": {}
+            },
+            "season": null,
+            "episode": null
+          }
+        }
+      ],
+      "saved": [],
+      "exception": null
+    },
+    {
+      "name": "truthy_list_invalid",
+      "plugin_result": [
+        "owned"
+      ],
+      "result": [
+        "owned"
+      ],
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "meta": {
+              "isfile": false,
+              "title": "Synthetic Film 2024",
+              "org_string": "Synthetic Film 2024",
+              "subtitle": null,
+              "type": "未知",
+              "cn_name": null,
+              "en_name": "Synthetic Film",
+              "original_name": "Synthetic Film",
+              "year": "2024",
+              "total_season": 0,
+              "begin_season": null,
+              "end_season": null,
+              "total_episode": 0,
+              "begin_episode": null,
+              "end_episode": null,
+              "part": null,
+              "resource_type": null,
+              "resource_effect": null,
+              "resource_pix": null,
+              "resource_team": null,
+              "customization": null,
+              "web_source": null,
+              "video_encode": null,
+              "video_bit": null,
+              "audio_encode": null,
+              "apply_words": [],
+              "tmdbid": null,
+              "doubanid": null,
+              "media_source": null,
+              "media_id": null,
+              "episode_group": null,
+              "fps": null,
+              "season_episode": "",
+              "edition": "",
+              "name": "Synthetic Film",
+              "episode_list": []
+            },
+            "mediainfo": {
+              "type": "电影",
+              "title": "Owned metadata",
+              "tmdb_id": 900043,
+              "tmdb_info": {},
+              "douban_info": {},
+              "bangumi_info": {},
+              "anilist_info": {}
+            },
+            "season": null,
+            "episode": null
+          }
+        },
+        {
+          "role": "core",
+          "kwargs": {
+            "meta": {
+              "isfile": false,
+              "title": "Synthetic Film 2024",
+              "org_string": "Synthetic Film 2024",
+              "subtitle": null,
+              "type": "未知",
+              "cn_name": null,
+              "en_name": "Synthetic Film",
+              "original_name": "Synthetic Film",
+              "year": "2024",
+              "total_season": 0,
+              "begin_season": null,
+              "end_season": null,
+              "total_episode": 0,
+              "begin_episode": null,
+              "end_episode": null,
+              "part": null,
+              "resource_type": null,
+              "resource_effect": null,
+              "resource_pix": null,
+              "resource_team": null,
+              "customization": null,
+              "web_source": null,
+              "video_encode": null,
+              "video_bit": null,
+              "audio_encode": null,
+              "apply_words": [],
+              "tmdbid": null,
+              "doubanid": null,
+              "media_source": null,
+              "media_id": null,
+              "episode_group": null,
+              "fps": null,
+              "season_episode": "",
+              "edition": "",
+              "name": "Synthetic Film",
+              "episode_list": []
+            },
+            "mediainfo": {
+              "type": "电影",
+              "title": "Owned metadata",
+              "tmdb_id": 900043,
+              "tmdb_info": {},
+              "douban_info": {},
+              "bangumi_info": {},
+              "anilist_info": {}
+            },
+            "season": null,
+            "episode": null
+          }
+        }
+      ],
+      "saved": [],
+      "exception": "AttributeError"
+    },
+    {
+      "name": "tuple_invalid",
+      "plugin_result": {
+        "__plugin_module_tuple": [
+          "owned"
+        ]
+      },
+      "result": {
+        "__plugin_module_tuple": [
+          "owned"
+        ]
+      },
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "meta": {
+              "isfile": false,
+              "title": "Synthetic Film 2024",
+              "org_string": "Synthetic Film 2024",
+              "subtitle": null,
+              "type": "未知",
+              "cn_name": null,
+              "en_name": "Synthetic Film",
+              "original_name": "Synthetic Film",
+              "year": "2024",
+              "total_season": 0,
+              "begin_season": null,
+              "end_season": null,
+              "total_episode": 0,
+              "begin_episode": null,
+              "end_episode": null,
+              "part": null,
+              "resource_type": null,
+              "resource_effect": null,
+              "resource_pix": null,
+              "resource_team": null,
+              "customization": null,
+              "web_source": null,
+              "video_encode": null,
+              "video_bit": null,
+              "audio_encode": null,
+              "apply_words": [],
+              "tmdbid": null,
+              "doubanid": null,
+              "media_source": null,
+              "media_id": null,
+              "episode_group": null,
+              "fps": null,
+              "season_episode": "",
+              "edition": "",
+              "name": "Synthetic Film",
+              "episode_list": []
+            },
+            "mediainfo": {
+              "type": "电影",
+              "title": "Owned metadata",
+              "tmdb_id": 900043,
+              "tmdb_info": {},
+              "douban_info": {},
+              "bangumi_info": {},
+              "anilist_info": {}
+            },
+            "season": null,
+            "episode": null
+          }
+        }
+      ],
+      "saved": [],
+      "exception": "AttributeError"
+    },
+    {
+      "name": "text_terminal",
+      "plugin_result": "<movie>Owned 中文</movie>",
+      "result": "<movie>Owned 中文</movie>",
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "meta": {
+              "isfile": false,
+              "title": "Synthetic Film 2024",
+              "org_string": "Synthetic Film 2024",
+              "subtitle": null,
+              "type": "未知",
+              "cn_name": null,
+              "en_name": "Synthetic Film",
+              "original_name": "Synthetic Film",
+              "year": "2024",
+              "total_season": 0,
+              "begin_season": null,
+              "end_season": null,
+              "total_episode": 0,
+              "begin_episode": null,
+              "end_episode": null,
+              "part": null,
+              "resource_type": null,
+              "resource_effect": null,
+              "resource_pix": null,
+              "resource_team": null,
+              "customization": null,
+              "web_source": null,
+              "video_encode": null,
+              "video_bit": null,
+              "audio_encode": null,
+              "apply_words": [],
+              "tmdbid": null,
+              "doubanid": null,
+              "media_source": null,
+              "media_id": null,
+              "episode_group": null,
+              "fps": null,
+              "season_episode": "",
+              "edition": "",
+              "name": "Synthetic Film",
+              "episode_list": []
+            },
+            "mediainfo": {
+              "type": "电影",
+              "title": "Owned metadata",
+              "tmdb_id": 900043,
+              "tmdb_info": {},
+              "douban_info": {},
+              "bangumi_info": {},
+              "anilist_info": {}
+            },
+            "season": null,
+            "episode": null
+          }
+        }
+      ],
+      "saved": [
+        {
+          "__plugin_module_bytes": "PG1vdmllPk93bmVkIOS4reaWhzwvbW92aWU+"
+        }
+      ],
+      "exception": null
+    }
+  ],
+  "metadata_img": {
+    "plugin_calls": 0,
+    "system_calls": [
+      {
+        "priority": 0,
+        "kwargs": {
+          "mediainfo": {
+            "type": "电影",
+            "title": "Owned metadata",
+            "tmdb_id": 900043,
+            "tmdb_info": {},
+            "douban_info": {},
+            "bangumi_info": {},
+            "anilist_info": {}
+          },
+          "season": null,
+          "episode": null
+        }
+      },
+      {
+        "priority": 1,
+        "kwargs": {
+          "mediainfo": {
+            "type": "电影",
+            "title": "Owned metadata",
+            "tmdb_id": 900043,
+            "tmdb_info": {},
+            "douban_info": {},
+            "bangumi_info": {},
+            "anilist_info": {}
+          },
+          "season": null,
+          "episode": null
+        }
+      },
+      {
+        "priority": 2,
+        "kwargs": {
+          "mediainfo": {
+            "type": "电影",
+            "title": "Owned metadata",
+            "tmdb_id": 900043,
+            "tmdb_info": {},
+            "douban_info": {},
+            "bangumi_info": {},
+            "anilist_info": {}
+          },
+          "season": null,
+          "episode": null
+        }
+      }
+    ],
+    "merged": {
+      "poster.jpg": "first",
+      "banner.jpg": "third"
+    }
+  },
+  "storage": [
+    {
+      "name": "get_none_core",
+      "method": "get_file_item",
+      "kwargs": {
+        "storage": "local",
+        "path": "/owned"
+      },
+      "plugin_result": null,
+      "core_result": {
+        "storage": "local",
+        "path": "/owned/",
+        "type": "dir",
+        "name": "owned"
+      },
+      "returned": {
+        "storage": "local",
+        "path": "/owned/",
+        "type": "dir",
+        "name": "owned"
+      },
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "storage": "local",
+            "path": "/owned"
+          }
+        },
+        {
+          "role": "core",
+          "kwargs": {
+            "storage": "local",
+            "path": "/owned"
+          }
+        }
+      ]
+    },
+    {
+      "name": "parent_false_terminal",
+      "method": "get_parent_item",
+      "kwargs": {
+        "fileitem": {
+          "storage": "local",
+          "path": "/owned/",
+          "type": "dir",
+          "name": "owned"
+        }
+      },
+      "plugin_result": false,
+      "core_result": {
+        "storage": "local",
+        "path": "/owned/",
+        "type": "dir",
+        "name": "owned"
+      },
+      "returned": false,
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/",
+              "type": "dir",
+              "name": "owned"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "get_list_ignores_core_scalar",
+      "method": "get_file_item",
+      "kwargs": {
+        "storage": "local",
+        "path": "/owned"
+      },
+      "plugin_result": [],
+      "core_result": {
+        "storage": "local",
+        "path": "/owned/",
+        "type": "dir",
+        "name": "owned"
+      },
+      "returned": [],
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "storage": "local",
+            "path": "/owned"
+          }
+        },
+        {
+          "role": "core",
+          "kwargs": {
+            "storage": "local",
+            "path": "/owned"
+          }
+        }
+      ]
+    },
+    {
+      "name": "list_accumulates_native_list",
+      "method": "list_files",
+      "kwargs": {
+        "fileitem": {
+          "storage": "local",
+          "path": "/owned/",
+          "type": "dir",
+          "name": "owned"
+        },
+        "recursion": false
+      },
+      "plugin_result": [
+        {
+          "storage": "local",
+          "path": "/owned/film.nfo",
+          "type": "file",
+          "name": "film.nfo"
+        }
+      ],
+      "core_result": [
+        {
+          "storage": "local",
+          "path": "/owned/",
+          "type": "dir",
+          "name": "owned"
+        }
+      ],
+      "returned": [
+        {
+          "storage": "local",
+          "path": "/owned/film.nfo",
+          "type": "file",
+          "name": "film.nfo"
+        },
+        {
+          "storage": "local",
+          "path": "/owned/",
+          "type": "dir",
+          "name": "owned"
+        }
+      ],
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/",
+              "type": "dir",
+              "name": "owned"
+            },
+            "recursion": false
+          }
+        },
+        {
+          "role": "core",
+          "kwargs": {
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/",
+              "type": "dir",
+              "name": "owned"
+            },
+            "recursion": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "upload_false_terminal",
+      "method": "upload_file",
+      "kwargs": {
+        "fileitem": {
+          "storage": "local",
+          "path": "/owned/",
+          "type": "dir",
+          "name": "owned"
+        },
+        "path": "/tmp/owned.nfo",
+        "new_name": "film.nfo"
+      },
+      "plugin_result": false,
+      "core_result": {
+        "storage": "local",
+        "path": "/owned/film.nfo",
+        "type": "file",
+        "name": "film.nfo"
+      },
+      "returned": false,
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/",
+              "type": "dir",
+              "name": "owned"
+            },
+            "path": "/tmp/owned.nfo",
+            "new_name": "film.nfo"
+          }
+        }
+      ]
+    },
+    {
+      "name": "upload_list_runs_native",
+      "method": "upload_file",
+      "kwargs": {
+        "fileitem": {
+          "storage": "local",
+          "path": "/owned/",
+          "type": "dir",
+          "name": "owned"
+        },
+        "path": "/tmp/owned.nfo",
+        "new_name": "film.nfo"
+      },
+      "plugin_result": [],
+      "core_result": {
+        "storage": "local",
+        "path": "/owned/film.nfo",
+        "type": "file",
+        "name": "film.nfo"
+      },
+      "returned": [],
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/",
+              "type": "dir",
+              "name": "owned"
+            },
+            "path": "/tmp/owned.nfo",
+            "new_name": "film.nfo"
+          }
+        },
+        {
+          "role": "core",
+          "kwargs": {
+            "fileitem": {
+              "storage": "local",
+              "path": "/owned/",
+              "type": "dir",
+              "name": "owned"
+            },
+            "path": "/tmp/owned.nfo",
+            "new_name": "film.nfo"
+          }
+        }
+      ]
+    }
+  ],
+  "existence_cases": [
+    {
+      "exists": true,
+      "overwrite": false,
+      "calls": []
+    },
+    {
+      "exists": true,
+      "overwrite": true,
+      "calls": [
+        "nfo",
+        "save"
+      ]
+    },
+    {
+      "exists": false,
+      "overwrite": false,
+      "calls": [
+        "nfo",
+        "save"
+      ]
+    }
+  ]
+}

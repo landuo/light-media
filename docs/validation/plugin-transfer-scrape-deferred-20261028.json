@@ -1,0 +1,158 @@
+{
+  "accepted_increment": true,
+  "complete": false,
+  "indices": [
+    36,
+    37,
+    43
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "scope": "Carry ordinary metadata.scrape through existing non-SingleHistory reorganization and legacy v2 quality cleanup. No new business plugin or workflow; whole indices remain 42/46.",
+  "mapping": [
+    {
+      "source": [
+        "app/chain/transfer.py:1502-1627",
+        "app/chain/transfer.py:2067",
+        "app/chain/transfer.py:2989",
+        "app/chain/transfer.py:3540"
+      ],
+      "behavior": "Register only successful targets; wait for all registered work, including failed tails; disabled scrape does not register; flush once after completion. Explicit terminal retry is a new attempt, not replay of a completed batch.",
+      "target": [
+        "internal/app/plugin_original_scrape_batch.go",
+        "internal/app/import_run.go:675",
+        "internal/app/import_reorganize.go:284",
+        "internal/app/subscription_quality_replace.go:641",
+        "internal/app/job_completion.go",
+        "internal/app/jobs.go:335"
+      ],
+      "evidence": [
+        "testdata/standard-module-host/scrape-batch-source-oracle.json:7 fixed-method replay cases",
+        "TestOriginalScrapeDeferredReorganization:10 actual SDK/file/SQLite/cold cases",
+        "TestPluginServicesProductionCLI:actual main manual reorganization and persisted legacy cleanup recovery",
+        "IAB73/verify-scrape37-proof.py"
+      ]
+    },
+    {
+      "source": [
+        "app/chain/transfer.py:1550-1627"
+      ],
+      "behavior": "Original metadata objects retain integer values while accumulated and emitted.",
+      "target": [
+        "internal/app/jobs.go:15",
+        "internal/app/plugin_original_scrape_batch.go:35",
+        "internal/app/plugin_original_scrape_deferred_test.go:11"
+      ],
+      "evidence": [
+        "TestOriginalScrapeRetryPreservesSourceNumbers:9007199254740993 and 9223372036854775807 preserved through actual queue, retry and deferred context; host trace fields preserved",
+        "scrape37r4-race.log:red rounded integer",
+        "scrape37r5-race.log and scrape37r5-linux-deferred.log:green"
+      ]
+    }
+  ],
+  "evidence_types": {
+    "source_replay": "Fixed Python batch methods with controlled dependencies; no production Python runtime.",
+    "actual_host": "Linux cmd/server and real SDK source+clone; owned synthetic media and provider NFO XML; actual hardlinks, histories, cleanup and native NFO writes.",
+    "legacy": "Synthetic persisted v2 sealed receipt created with actual old/new owned files while main is stopped; subsequent cleanup, event, NFO and cold recovery run in the production binary. Not a new download/quality acquisition test.",
+    "faults": "Actual SQLite ABORT during post-file cleanup registration and authenticated HTTP job retry; changed source; disabled scrape; cold pending recovery.",
+    "browser": "IAB73 on r2 main: preview1/0; False yields failure and retained form; restore and cold same form; success closes dialog, stable three history IDs; second cold and zero writes. Loading screenshot04 is not counted;05/06 are loaded."
+  },
+  "results": {
+    "final_main_sha256": "bcfe8f8f06444850c9acbea1199996c35982888d2a3e8a37815167350d670fa5",
+    "final_test_sha256": "fe0b7c7d1b3fff87efc511f3433b6475517e3abb8f775ce527b9102f208e32af",
+    "browser_main_sha256": "b5d8183a1d1cbe5c00ae8b5d42d365922a2d846b052e59cc0822416f1cbcf125",
+    "worker_sha256": "f936431fa60b136fdb4a547ddf41ab0f0608044049e0c002050847b602c20c73",
+    "compiler_inputs": [
+      3720,
+      4184
+    ],
+    "inputs_changed": [],
+    "final_cli_seconds": 2.7,
+    "final_race_seconds": 68.346,
+    "browser": {
+      "passed": true,
+      "kind": "Actual Linux main and IAB73 managed-file reorganization with owned SDK",
+      "history_ids": [
+        "file_3ZF5SNfH6MZo993FfrE6Ct8T",
+        "file_mNWES_Dutou8vegn5W3yzwGg",
+        "file_nt5Prisw-SQbJ05dXwew6XuR"
+      ],
+      "target_files": [
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/scrape37r2-ui-tmp/TestPluginServicesProductionCLI3269929387/002/library/ScrapeBatchUI/ScrapeBatchsuccess (2024)/tvshow.nfo",
+          "size": 63,
+          "inode": 73434133,
+          "device": 65025,
+          "sha256": "fd13b68eaa5b39291f8a814cd9b2c0db022cf8b1feaca6c8a6127bf20d82b12a"
+        },
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/scrape37r2-ui-tmp/TestPluginServicesProductionCLI3269929387/002/library/ScrapeBatchUI/ScrapeBatchsuccess (2024)/Season 1/ScrapeBatchsuccess S01E02.mkv",
+          "size": 21,
+          "inode": 113379233,
+          "device": 65025,
+          "sha256": "b344b390788bfcf3882e0d3d65242421b0c9d7fed8e761e156e58eab5a22605f"
+        },
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/scrape37r2-ui-tmp/TestPluginServicesProductionCLI3269929387/002/library/ScrapeBatchUI/ScrapeBatchsuccess (2024)/Season 1/season.nfo",
+          "size": 63,
+          "inode": 76213798,
+          "device": 65025,
+          "sha256": "fd13b68eaa5b39291f8a814cd9b2c0db022cf8b1feaca6c8a6127bf20d82b12a"
+        },
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/scrape37r2-ui-tmp/TestPluginServicesProductionCLI3269929387/002/library/ScrapeBatchUI/ScrapeBatchsuccess (2024)/Season 1/ScrapeBatchsuccess S01E02.nfo",
+          "size": 63,
+          "inode": 76213800,
+          "device": 65025,
+          "sha256": "fd13b68eaa5b39291f8a814cd9b2c0db022cf8b1feaca6c8a6127bf20d82b12a"
+        }
+      ],
+      "pids": [
+        [
+          520886,
+          520892
+        ],
+        [
+          525599,
+          525605
+        ],
+        [
+          528807,
+          528814
+        ]
+      ],
+      "metadata_events_per_instance": 1,
+      "scrape_jobs_per_root": 1,
+      "old_video_removed": true,
+      "download_sources_unchanged": 3,
+      "cold_write_replay": 0,
+      "linux_cli_seconds": 2.09,
+      "linux_browser_gate_seconds": 452.77
+    },
+    "uninstall_api404_and_tempdir_cleanup": true
+  },
+  "adaptations": [
+    "Source transfer completion is inline; target existing reorganization/legacy cleanup jobs finish publication later. Those jobs remain part of the same ordinary scrape pending set. Targets register only in their successful cleanup transaction.",
+    "Existing durable jobs and records recover pending work; explicit retry of a terminal flushed batch starts a fresh closed batch so previous successful targets are not replayed. Automatic retry_wait remains pending.",
+    "Core scrape is persisted before ordinary observer broadcast. The existing documented crash window after commit may lose an ephemeral observer notification; it does not replay completed notifications or core writes.",
+    "No media-server/TMDB live service claimed. Browser r2 predates the JSON-number-only fix and synthetic legacy test setup correction; final r5 runs actual production CLI and Linux SDK after those changes. No new frontend implementation or full frontend test claimed."
+  ],
+  "red_green": [
+    "r1 browser found missing cleanup sql no rows when transfer returned False. Added mainSucceeded guard; r2 real rejected/retry flow passed. r1 gate315.82s only completed cleanup and is not accepted UI.",
+    "r3 synthetic legacy receipt used a narrow old root for its new path; real host correctly rejected it. Fixture now binds new files to the existing authorized broad root. No safety guard relaxed.",
+    "r4 numeric regression found enqueueTx decoded JSON into float64 before retry. RawMessage envelopes now preserve numbers as well as trace fields. Final race and Linux precision cases pass.",
+    "Initial retry test used API-key credentials against cookie-only job endpoint; corrected to actual administrator session, no product-auth change."
+  ],
+  "remaining": [
+    "media_exists/media_files existing host callers, directory-unit/Blu-ray and complete ordinary module/event audit",
+    "Whole indices36/37/43/50 remain unaccepted; no change to42/46"
+  ],
+  "artifact_manifest": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/manifest.json",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

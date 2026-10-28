@@ -1,0 +1,84 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/api/endpoints/transfer.py:299-320",
+    "app/chain/transfer.py:3389-3394"
+  ],
+  "boundary": "Run fixed ordinary manual-history source/cleanup branches, with controlled\nhistory and storage boundaries. The selected AST statements are unmodified;\nthis is source replay, not a running MoviePilot installation.\n",
+  "cases": [
+    {
+      "name": "success-hardlink",
+      "source": [
+        "/owned/source.mkv"
+      ],
+      "trace": [
+        {
+          "method": "delete_media_file",
+          "path": "/owned/target.mkv"
+        }
+      ],
+      "result": "continue"
+    },
+    {
+      "name": "success-move",
+      "source": [
+        "/owned/target.mkv"
+      ],
+      "trace": [],
+      "result": "continue"
+    },
+    {
+      "name": "failed-move",
+      "source": [
+        "/owned/source.mkv"
+      ],
+      "trace": [
+        {
+          "method": "delete_media_file",
+          "path": "/owned/target.mkv"
+        }
+      ],
+      "result": "continue"
+    },
+    {
+      "name": "preview",
+      "source": [
+        "/owned/source.mkv"
+      ],
+      "trace": [],
+      "result": "continue"
+    },
+    {
+      "name": "reorganize",
+      "source": [
+        "/owned/source.mkv"
+      ],
+      "trace": [],
+      "result": "continue"
+    },
+    {
+      "name": "no-files",
+      "source": [
+        "/owned/source.mkv"
+      ],
+      "trace": [],
+      "result": "continue"
+    },
+    {
+      "name": "delete-false",
+      "source": [
+        "/owned/source.mkv"
+      ],
+      "trace": [
+        {
+          "method": "delete_media_file",
+          "path": "/owned/target.mkv"
+        }
+      ],
+      "result": [
+        false,
+        "/owned/target.mkv 删除失败"
+      ]
+    }
+  ]
+}

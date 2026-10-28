@@ -18,6 +18,7 @@ import (
 	"time"
 
 	"light-media/internal/download"
+	"light-media/internal/plugins"
 
 	"golang.org/x/sys/unix"
 )
@@ -31,13 +32,14 @@ type browserRoot struct {
 	Kind string `json:"kind"`
 }
 type browserEntry struct {
-	Name      string `json:"name"`
-	Path      string `json:"path"`
-	Type      string `json:"type"`
-	Size      int64  `json:"size"`
-	Modified  string `json:"modified"`
-	Video     bool   `json:"video"`
-	Protected string `json:"protected,omitempty"`
+	sourceNatural []originalBrowserNaturalPart
+	Name          string `json:"name"`
+	Path          string `json:"path"`
+	Type          string `json:"type"`
+	Size          int64  `json:"size"`
+	Modified      string `json:"modified"`
+	Video         bool   `json:"video"`
+	Protected     string `json:"protected,omitempty"`
 }
 type browserStamp struct {
 	Path   string `json:"path"`
@@ -48,21 +50,25 @@ type browserStamp struct {
 	Mode   uint32 `json:"mode"`
 }
 type browserOperationItem struct {
-	Source   string         `json:"source"`
-	Target   string         `json:"target"`
-	Manifest []browserStamp `json:"manifest"`
-	Done     bool           `json:"done"`
+	OriginalFileItem    *plugins.ModuleFileItem `json:"original_fileitem,omitempty"`
+	SourceModuleStarted bool                    `json:"source_module_started,omitempty"`
+	Unrecoverable       bool                    `json:"unrecoverable,omitempty"`
+	Source              string                  `json:"source"`
+	Target              string                  `json:"target"`
+	Manifest            []browserStamp          `json:"manifest"`
+	Done                bool                    `json:"done"`
 }
 type browserOperation struct {
-	ID        string                 `json:"id"`
-	Root      browserRoot            `json:"root"`
-	Action    string                 `json:"action"`
-	Items     []browserOperationItem `json:"items"`
-	Parent    browserStamp           `json:"parent"`
-	State     string                 `json:"state"`
-	CreatedAt string                 `json:"created_at"`
-	ExpiresAt string                 `json:"expires_at"`
-	Warnings  []string               `json:"warnings"`
+	ModuleError *APIError              `json:"module_error,omitempty"`
+	ID          string                 `json:"id"`
+	Root        browserRoot            `json:"root"`
+	Action      string                 `json:"action"`
+	Items       []browserOperationItem `json:"items"`
+	Parent      browserStamp           `json:"parent"`
+	State       string                 `json:"state"`
+	CreatedAt   string                 `json:"created_at"`
+	ExpiresAt   string                 `json:"expires_at"`
+	Warnings    []string               `json:"warnings"`
 }
 type browserOperationRequest struct {
 	Action string   `json:"action"`
@@ -241,6 +247,12 @@ func (a *App) browserList(ctx context.Context, rootID, path, sorting, order stri
 	if e != nil {
 		return nil, e
 	}
+	if entries, truncated, handled, err := a.originalBrowserStorageList(ctx, path, display); handled {
+		if err != nil {
+			return nil, err
+		}
+		return browserListResult(root, path, sorting, order, entries, truncated), nil
+	}
 	f, e := importDir(path, false)
 	if e != nil {
 		return nil, e
@@ -281,7 +293,7 @@ func (a *App) browserList(ctx context.Context, rootID, path, sorting, order stri
 				protected = a.browserStaticProtection(name)
 			}
 			video, _ := display.Media(transferextensions.PathFile(name))
-			entries = append(entries, browserEntry{item.Name(), name, kind, info.Size(), info.ModTime().UTC().Format(time.RFC3339), video, protected})
+			entries = append(entries, browserEntry{Name: item.Name(), Path: name, Type: kind, Size: info.Size(), Modified: info.ModTime().UTC().Format(time.RFC3339), Video: video, Protected: protected})
 		}
 		if truncated || err == io.EOF {
 			break
@@ -290,6 +302,9 @@ func (a *App) browserList(ctx context.Context, rootID, path, sorting, order stri
 			return nil, err
 		}
 	}
+	return browserListResult(root, path, sorting, order, entries, truncated), nil
+}
+func browserListResult(root browserRoot, path, sorting, order string, entries []browserEntry, truncated bool) any {
 	if sorting != "time" && sorting != "size" {
 		sorting = "name"
 	}
@@ -299,6 +314,13 @@ func (a *App) browserList(ctx context.Context, rootID, path, sorting, order stri
 			return a.Type == "dir"
 		}
 		less := strings.ToLower(a.Name) < strings.ToLower(b.Name)
+		if sorting == "name" && a.sourceNatural != nil && b.sourceNatural != nil {
+			compared := originalBrowserNaturalCompare(a.sourceNatural, b.sourceNatural)
+			if order == "desc" {
+				return compared > 0
+			}
+			return compared < 0
+		}
 		if sorting == "time" && a.Modified != b.Modified {
 			less = a.Modified < b.Modified
 		}
@@ -314,7 +336,7 @@ func (a *App) browserList(ctx context.Context, rootID, path, sorting, order stri
 	if path != root.Path {
 		parent = filepath.Dir(path)
 	}
-	return map[string]any{"root": root, "path": path, "parent": parent, "items": entries, "truncated": truncated}, nil
+	return map[string]any{"root": root, "path": path, "parent": parent, "items": entries, "truncated": truncated}
 }
 func (a *App) browserScan(ctx context.Context, paths []string, recursive bool) (any, error) {
 	if len(paths) == 0 || len(paths) > 200 {
@@ -753,6 +775,10 @@ func (a *App) confirmBrowserOperation(ctx context.Context, id string) (browserOp
 	if plan.State == "completed" {
 		return plan, nil
 	}
+	if plan.ModuleError != nil {
+		plan.ModuleError.Status = 400
+		return plan, plan.ModuleError
+	}
 	if plan.State == "restored" {
 		return plan, bad("FILE_PREVIEW_CONSUMED", "该删除已恢复，请重新预览操作")
 	}
@@ -859,15 +885,24 @@ func (a *App) confirmBrowserOperation(ctx context.Context, id string) (browserOp
 				return plan, bad("FILE_SNAPSHOT_CHANGED", "文件在执行前已变化，请刷新核对")
 			}
 		}
-		if plan.Action == "mkdir" {
-			e = unix.Mkdirat(int(parent.Fd()), filepath.Base(item.Target), 0750)
-		} else {
-			e = importRenameExclusive(int(parent.Fd()), filepath.Base(item.Source), filepath.Base(item.Target))
+		if item.SourceModuleStarted {
+			return plan, bad("REVIEW_PLUGIN_FILE_OPERATION", "文件插件已调用，尚无可核对的完成记录，请刷新实际文件后重新操作")
 		}
-		if e != nil {
+		done, operationErr := a.originalBrowserMutation(ctx, &plan, item, parent, func() error {
+			item.SourceModuleStarted = true
+			return a.Store.Put(ctx, "file_operation", plan.ID, plan)
+		})
+		if operationErr != nil {
+			item.Done = done
 			plan.State = "partial"
+			if item.SourceModuleStarted {
+				var api *APIError
+				if errors.As(operationErr, &api) {
+					plan.ModuleError = api
+				}
+			}
 			_ = a.Store.Put(ctx, "file_operation", plan.ID, plan)
-			return plan, bad("FILE_OPERATION_FAILED", "文件操作未全部完成，已完成项目被保留，请刷新核对")
+			return plan, operationErr
 		}
 		item.Done = true
 		_ = unix.Fsync(int(parent.Fd()))
@@ -974,6 +1009,9 @@ func (a *App) restoreBrowserOperation(ctx context.Context, id string) (browserOp
 		return plan, bad("FILE_PARENT_CHANGED", "原父目录已变化，不能自动恢复")
 	}
 	for _, item := range plan.Items {
+		if item.Unrecoverable {
+			return plan, bad("FILE_RESTORE_UNAVAILABLE", "存储插件已直接删除该文件，没有可恢复的本地副本")
+		}
 		if e = a.browserMutationAllowed(ctx, item.Source); e != nil {
 			return plan, e
 		}

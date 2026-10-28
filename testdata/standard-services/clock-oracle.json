@@ -1,0 +1,102 @@
+{
+  "version": "3.11.3",
+  "kind": "actual APScheduler process_jobs + executor run_job; fixed local clock and owned callable, no thread/network",
+  "source_sha256": {
+    "scheduler": "a27afd46e62c402a2b5bd7e4f0a017c08259dc680245a65dfa3f79c66ad52d2b",
+    "executor": "0ae83658a46170920624ff7411fb23aca5085e5a31fdacead1f9ff4b399c2ed1"
+  },
+  "elapsed_seconds": 3.5,
+  "interval_ms": 1000,
+  "cases": [
+    {
+      "name": "default-coalesced",
+      "options": {},
+      "calls": 1,
+      "error": null
+    },
+    {
+      "name": "uncoalesced-unlimited",
+      "options": {
+        "coalesce": false,
+        "misfire_grace_time": null
+      },
+      "calls": 4,
+      "error": null
+    },
+    {
+      "name": "uncoalesced-default-grace",
+      "options": {
+        "coalesce": false
+      },
+      "calls": 1,
+      "error": null
+    },
+    {
+      "name": "invalid-zero-grace",
+      "options": {
+        "misfire_grace_time": 0
+      },
+      "calls": 0,
+      "error": "TypeError"
+    },
+    {
+      "name": "invalid-max-instances",
+      "options": {
+        "max_instances": 0
+      },
+      "calls": 0,
+      "error": "TypeError"
+    },
+    {
+      "name": "paused-next-time",
+      "options": {
+        "next_run_time": null
+      },
+      "calls": 0,
+      "error": null
+    },
+    {
+      "name": "unknown-executor-drops-clock",
+      "options": {
+        "executor": "missing"
+      },
+      "calls": 0,
+      "error": null
+    },
+    {
+      "name": "constructed-trigger-ignores-extra",
+      "options": {
+        "ignored_trigger_field": "owned"
+      },
+      "calls": 1,
+      "error": null
+    }
+  ],
+  "next_run_cases": [
+    {
+      "input": null,
+      "output": null,
+      "error": null
+    },
+    {
+      "input": "2026-1-2 3:4:5.1Z",
+      "output": "2026-01-02T03:04:05.000001+00:00",
+      "error": null
+    },
+    {
+      "input": "2026-10-26",
+      "output": "2026-10-25T16:00:00+00:00",
+      "error": null
+    },
+    {
+      "input": "2026-02-30",
+      "output": null,
+      "error": "ValueError"
+    },
+    {
+      "input": false,
+      "output": null,
+      "error": "TypeError"
+    }
+  ]
+}

@@ -1,0 +1,416 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed ChainBase control wrappers/dispatcher/ObjectUtils signature check; owned plugin and native-core outputs, API bool truth derived from fixed download endpoints",
+  "source_sha256": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/utils/object.py": "0fd0161be3084593a9693244e9ea734c5d949cc23a6e8f34349177a5e220dc1c",
+    "app/api/endpoints/download.py": "ff8f310ddd669cfb26ae2857efb6f9d11d991a5bf8364e72632ce2eefaaeeadb"
+  },
+  "cases": [
+    {
+      "name": "null_core",
+      "action": "start",
+      "method": "start_torrents",
+      "plugin_result": null,
+      "plugin_failure": false,
+      "core_result": true,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "errors": [],
+      "returned": true,
+      "success": true
+    },
+    {
+      "name": "false_terminal",
+      "action": "pause",
+      "method": "stop_torrents",
+      "plugin_result": false,
+      "plugin_failure": false,
+      "core_result": true,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "errors": [],
+      "returned": false,
+      "success": false
+    },
+    {
+      "name": "empty_dict_terminal",
+      "action": "remove_keep_data",
+      "method": "remove_torrents",
+      "plugin_result": {},
+      "plugin_failure": false,
+      "core_result": true,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "delete_file": false,
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "errors": [],
+      "returned": {},
+      "success": false
+    },
+    {
+      "name": "empty_list_ignores_core_bool",
+      "action": "remove_with_data",
+      "method": "remove_torrents",
+      "plugin_result": [],
+      "plugin_failure": false,
+      "core_result": true,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "delete_file": true,
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "delete_file": true,
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "errors": [],
+      "returned": [],
+      "success": false
+    },
+    {
+      "name": "list_core_exception",
+      "action": "pause",
+      "method": "stop_torrents",
+      "plugin_result": [
+        "owned"
+      ],
+      "plugin_failure": false,
+      "core_result": true,
+      "core_failure": true,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [
+        "system"
+      ],
+      "errors": [
+        {
+          "type": "module",
+          "module_id": "Qbittorrent",
+          "module_name": "Qbittorrent",
+          "module_method": "stop_torrents"
+        }
+      ],
+      "returned": [
+        "owned"
+      ],
+      "success": true
+    },
+    {
+      "name": "plugin_exception_core",
+      "action": "start",
+      "method": "start_torrents",
+      "plugin_result": null,
+      "plugin_failure": true,
+      "core_result": true,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [
+        "plugin"
+      ],
+      "errors": [
+        {
+          "type": "plugin",
+          "plugin_id": "OwnedModuleOverride",
+          "plugin_name": "Owned module override",
+          "plugin_method": "start_torrents"
+        }
+      ],
+      "returned": true,
+      "success": true
+    },
+    {
+      "name": "all_null_tuple_core",
+      "action": "pause",
+      "method": "stop_torrents",
+      "plugin_result": {
+        "__plugin_module_tuple": [
+          null,
+          null
+        ]
+      },
+      "plugin_failure": false,
+      "core_result": true,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "errors": [],
+      "returned": true,
+      "success": true
+    },
+    {
+      "name": "true_terminal",
+      "action": "start",
+      "method": "start_torrents",
+      "plugin_result": true,
+      "plugin_failure": false,
+      "core_result": true,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "errors": [],
+      "returned": true,
+      "success": true
+    },
+    {
+      "name": "null_core_rejected",
+      "action": "pause",
+      "method": "stop_torrents",
+      "plugin_result": null,
+      "plugin_failure": false,
+      "core_result": false,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "errors": [],
+      "returned": false,
+      "success": false
+    },
+    {
+      "name": "list_core_rejected",
+      "action": "pause",
+      "method": "stop_torrents",
+      "plugin_result": [
+        "owned"
+      ],
+      "plugin_failure": false,
+      "core_result": false,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "errors": [],
+      "returned": [
+        "owned"
+      ],
+      "success": true
+    },
+    {
+      "name": "empty_bytes_terminal",
+      "action": "pause",
+      "method": "stop_torrents",
+      "plugin_result": {
+        "__plugin_module_bytes": ""
+      },
+      "plugin_failure": false,
+      "core_result": true,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "errors": [],
+      "returned": {
+        "__plugin_module_bytes": ""
+      },
+      "success": false
+    },
+    {
+      "name": "bytes_terminal",
+      "action": "start",
+      "method": "start_torrents",
+      "plugin_result": {
+        "__plugin_module_bytes": "b3duZWQ="
+      },
+      "plugin_failure": false,
+      "core_result": true,
+      "core_failure": false,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "hashs": [
+              "0123456789012345678901234567890123456789"
+            ],
+            "downloader": "Owned downloader"
+          }
+        }
+      ],
+      "roles": [],
+      "errors": [],
+      "returned": {
+        "__plugin_module_bytes": "b3duZWQ="
+      },
+      "success": true
+    }
+  ]
+}

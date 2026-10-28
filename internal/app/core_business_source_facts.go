@@ -190,6 +190,10 @@ func (a *App) guardSourceSubscriptionMutationTx(ctx context.Context, tx *sql.Tx,
 }
 
 func (a *App) sourceRecognizeTMDBMedia(ctx context.Context, input catalog.Media) (sourceMediaInformation, error) {
+	return a.originalRecognizeTMDBMedia(ctx, input, func() (sourceMediaInformation, error) { return a.sourceRecognizeTMDBCore(ctx, input) })
+}
+
+func (a *App) sourceRecognizeTMDBCore(ctx context.Context, input catalog.Media) (sourceMediaInformation, error) {
 	policy, e := loadMediaCategoryPolicy(a.Dir)
 	if e != nil {
 		return sourceMediaInformation{}, e
@@ -211,14 +215,17 @@ func (a *App) sourceRecognizeTMDBMedia(ctx context.Context, input catalog.Media)
 }
 
 func (a *App) buildSubscriptionCompletionBusiness(ctx context.Context, s Subscription, subscribe json.RawMessage) (subscriptionCompletionSource, error) {
+	return a.buildSubscriptionCompletionBusinessResolved(ctx, s, subscribe, nil)
+}
+
+func (a *App) buildSubscriptionCompletionBusinessResolved(ctx context.Context, s Subscription, subscribe json.RawMessage, resolved *standardSubscriptionRecognition) (subscriptionCompletionSource, error) {
 	var out subscriptionCompletionSource
 	value, e := decodeSourceJSON(subscribe)
 	if e != nil || sourceMap(value) == nil {
 		return out, notice.ErrTemplateDependency
 	}
 	source := sourceMap(value)
-	name, ok := source["name"].(string)
-	if !ok {
+	if _, ok := source["name"].(string); !ok {
 		return out, notice.ErrTemplateDependency
 	}
 	for _, key := range []string{"year", "season", "type", "tmdbid", "doubanid", "bangumiid", "anilistid", "media_source", "media_id", "best_version", "username"} {
@@ -241,35 +248,13 @@ func (a *App) buildSubscriptionCompletionBusiness(ctx context.Context, s Subscri
 	if provider := sourceText(source["media_source"]); provider != "" && provider != "themoviedb" {
 		return out, notice.ErrTemplateDependency
 	}
-	options, e := a.globalRecognitionOptions(ctx)
-	if e != nil {
-		return out, e
-	}
-	parser, e := releasemeta.NewMetaInfoParser(releasemeta.MetaInfoEnvironment{Options: options})
-	if e != nil {
-		return out, e
-	}
-	meta, e := parser.ParseTitle(name, nil, nil)
-	if e != nil {
-		return out, e
-	}
-	// Original build_subscribe_meta overwrites even None, preserving source
-	// username and provider IDs independently from recognition's attributes.
-	for target, key := range map[string]string{"year": "year", "begin_season": "season", "type": "type", "tmdbid": "tmdbid", "doubanid": "doubanid", "bangumiid": "bangumiid", "anilistid": "anilistid", "media_source": "media_source", "media_id": "media_id"} {
-		v, e := noticeV2NormalizeNumberValues(source[key])
+	if resolved == nil {
+		resolved, e = a.resolveStandardSubscriptionRecognition(ctx, s, subscribe)
 		if e != nil {
 			return out, e
 		}
-		meta.Set(target, v)
 	}
-	encodedMeta, e := meta.EncodeState()
-	if e != nil {
-		return out, e
-	}
-	recognized, e := a.sourceRecognizeTMDBMedia(ctx, s.Media)
-	if e != nil {
-		return out, e
-	}
+	encodedMeta, recognized := resolved.Meta, resolved.Information
 	mi, e := decodeSourceJSON(recognized.MediaInfo)
 	if e != nil {
 		return out, e
@@ -430,9 +415,9 @@ func sourceTMDBMediaInfo(raw json.RawMessage, kind, domain, category string) (js
 		return nil, bad("SOURCE_MEDIA_PROJECTION_UNSUPPORTED", "未获取原TMDB媒体详情")
 	}
 	info := sourceMap(value)
-	mediaType, titleKey, originalKey, dateKey := "电影", "title", "original_title", "release_date"
+	mediaType, titleKey, originalKey := "电影", "title", "original_title"
 	if kind == "tv" {
-		mediaType, titleKey, originalKey, dateKey = "电视剧", "name", "original_name", "first_air_date"
+		mediaType, titleKey, originalKey = "电视剧", "name", "original_name"
 	}
 	info["media_type"] = mediaType
 	genres := []any{}
@@ -512,111 +497,30 @@ func sourceTMDBMediaInfo(raw json.RawMessage, kind, domain, category string) (js
 	if !sourceSubscriptionTruth(info["content_rating"]) {
 		info["content_rating"] = ratings["US"]
 	}
-	defaults, e := decodeSourceJSON(sourceMediaInfoDefaults)
+	if !sourceSubscriptionTruth(info["id"]) {
+		return nil, bad("SOURCE_MEDIA_PROJECTION_UNSUPPORTED", "原TMDB媒体详情缺少身份")
+	}
+	encoded, e := json.Marshal(info)
 	if e != nil {
 		return nil, e
 	}
-	m := sourceMap(defaults)
-	m["source"], m["tmdb_info"], m["type"], m["tmdb_id"] = "themoviedb", info, mediaType, info["id"]
-	if !sourceSubscriptionTruth(m["tmdb_id"]) {
-		return nil, bad("SOURCE_MEDIA_PROJECTION_UNSUPPORTED", "原TMDB媒体详情缺少身份")
+	model, e := sourceTMDBMediaModel(encoded, kind, domain, category)
+	if e != nil {
+		return nil, e
 	}
-	if external := sourceMap(info["external_ids"]); len(external) > 0 {
-		m["tvdb_id"], m["imdb_id"] = external["tvdb_id"], external["imdb_id"]
+	value, e = decodeSourceJSON(model)
+	if e != nil {
+		return nil, e
 	}
-	m["collection_id"], m["overview"], m["genre_ids"], m["original_language"] = info["collection_id"], info["overview"], genres, info["original_language"]
-	m["en_title"], m["hk_title"], m["tw_title"], m["sg_title"] = enTitle, info["hk_title"], info["tw_title"], info["sg_title"]
-	m["vote_average"] = json.Number("0")
-	if sourceSubscriptionTruth(info["vote_average"]) {
-		n, e := strconv.ParseFloat(fmt.Sprint(info["vote_average"]), 64)
-		if e != nil {
-			return nil, bad("SOURCE_MEDIA_PROJECTION_UNSUPPORTED", "原TMDB评分字段类型无法使用")
-		}
-		m["vote_average"] = json.Number(strconv.FormatFloat(n, 'f', 1, 64))
-	}
-	m["title"], m["original_title"], m["release_date"] = info[titleKey], info[originalKey], info[dateKey]
-	if date := sourceText(m["release_date"]); date != "" {
-		m["year"] = date[:min(4, len(date))]
-	}
-	if kind == "movie" {
-		m["release_dates"] = []any{}
-		for _, row := range releases {
-			item := sourceMap(row)
-			for _, date := range sourceRows(item["release_dates"]) {
-				d := sourceMap(date)
-				if sourceSubscriptionTruth(d["release_date"]) {
-					m["release_dates"] = append(m["release_dates"].([]any), map[string]any{"date": d["release_date"], "iso_code": item["iso_3166_1"], "note": d["note"], "type": d["type"]})
-				}
-			}
-		}
-	} else {
-		if seasons := sourceRows(info["seasons"]); len(seasons) > 0 {
-			m["season_info"] = seasons
-			for _, row := range seasons {
-				season := sourceMap(row)
-				if season["season_number"] == nil {
-					continue
-				}
-				count, e := strconv.Atoi(fmt.Sprint(season["episode_count"]))
-				if e != nil || count < 0 || count > 10000 {
-					return nil, bad("SOURCE_MEDIA_PROJECTION_UNSUPPORTED", "原TMDB季集详情无法使用")
-				}
-				episodes := []any{}
-				for ep := 1; ep <= count; ep++ {
-					episodes = append(episodes, ep)
-				}
-				key := fmt.Sprint(season["season_number"])
-				sourceMap(m["seasons"])[key] = episodes
-				if date := sourceText(season["air_date"]); date != "" {
-					sourceMap(m["season_years"])[key] = date[:min(4, len(date))]
-				}
-			}
-		}
-		if group := sourceMap(info["episode_groups"]); len(group) > 0 {
-			m["episode_groups"] = sourceRows(group["results"])
-			delete(info, "episode_groups")
-		}
-	}
-	for _, key := range []string{"poster_path", "backdrop_path"} {
-		if sourceSubscriptionTruth(info[key]) {
-			m[key], e = sourceImagePath(info[key], domain)
-			if e != nil {
-				return nil, e
-			}
-		}
-	}
-	m["directors"], m["actors"] = []any{}, []any{}
-	credits := sourceMap(info["credits"])
-	for _, row := range sourceRows(credits["cast"]) {
-		if sourceMap(row)["known_for_department"] == "Acting" {
-			m["actors"] = append(m["actors"].([]any), row)
-		}
-	}
-	for _, row := range sourceRows(credits["crew"]) {
-		job := sourceMap(row)["job"]
-		if job == "Director" || job == "Writer" || job == "Editor" || job == "Producer" {
-			m["directors"] = append(m["directors"].([]any), row)
-		}
-	}
-	m["names"] = names
-	for key, value := range info {
-		current, exists := m[key]
-		if exists && sourceSubscriptionTruth(value) && !sourceSubscriptionTruth(current) && (current == nil || sourceJSONType(current) == sourceJSONType(value)) {
-			m[key] = value
-		}
-	}
-	m["category"] = category
-	m["title_year"] = sourceText(m["title"])
-	if sourceSubscriptionTruth(m["title"]) && sourceSubscriptionTruth(m["year"]) {
-		m["title_year"] = fmt.Sprint(m["title"]) + " (" + fmt.Sprint(m["year"]) + ")"
-	}
-	m["poster"], m["backdrop"] = "", ""
+	fields := sourceMap(value)
+	fields["recognize_cache_hit"] = false
+	fields["poster"], fields["backdrop"] = "", ""
 	for target, source := range map[string]string{"poster": "poster_path", "backdrop": "backdrop_path"} {
-		if path, ok := m[source].(string); ok && path != "" {
-			m[target] = strings.ReplaceAll(path, "original", "w500")
+		if path, ok := fields[source].(string); ok && path != "" {
+			fields[target] = strings.ReplaceAll(path, "original", "w500")
 		}
 	}
-	return mustCleanSeedJSON(m), nil
+	return mustCleanSeedJSON(fields), nil
 }
 
 func sourceJSONType(value any) string {

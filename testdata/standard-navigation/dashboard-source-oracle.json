@@ -1,0 +1,591 @@
+{
+  "defaults": {
+    "id": null,
+    "plugin_name": null,
+    "plugin_desc": null,
+    "plugin_icon": null,
+    "plugin_version": null,
+    "plugin_label": null,
+    "plugin_author": null,
+    "author_url": null,
+    "plugin_config_prefix": null,
+    "plugin_order": 0,
+    "auth_level": 0,
+    "installed": false,
+    "state": false,
+    "has_page": false,
+    "has_update": false,
+    "system_version_compatible": true,
+    "system_version_message": null,
+    "system_version": null,
+    "release": false,
+    "is_local": false,
+    "repo_url": null,
+    "install_count": 0,
+    "history": {},
+    "add_time": 0,
+    "plugin_public_key": null,
+    "name": null,
+    "key": null,
+    "render_mode": "vuetify",
+    "attrs": {},
+    "cols": {},
+    "elements": []
+  },
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "fixed manager+PluginDashboard schema AST with actual Pydantic; synthetic callback; complete source DTO including inherited defaults",
+  "pydantic": "2.13.4",
+  "sources": {
+    "app/core/plugin.py": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+    "app/schemas/plugin.py": "d57a96c4ab5ec4525ce56e40dccffa93da719626449ed9bf7be80f47809e0f1a",
+    "requirements.in": "060c85ee9a2023df9216f255b0a8deac5771b304ef2705950f694045be99aab1"
+  },
+  "cases": [
+    {
+      "name": "normal",
+      "input": [
+        {
+          "md": 8
+        },
+        {
+          "refresh": 2
+        },
+        []
+      ],
+      "expected": {
+        "status": 200,
+        "value": {
+          "id": "Owned_clone",
+          "plugin_name": null,
+          "plugin_desc": null,
+          "plugin_icon": null,
+          "plugin_version": null,
+          "plugin_label": null,
+          "plugin_author": null,
+          "author_url": null,
+          "plugin_config_prefix": null,
+          "plugin_order": 0,
+          "auth_level": 0,
+          "installed": false,
+          "state": false,
+          "has_page": false,
+          "has_update": false,
+          "system_version_compatible": true,
+          "system_version_message": null,
+          "system_version": null,
+          "release": false,
+          "is_local": false,
+          "repo_url": null,
+          "install_count": 0,
+          "history": {},
+          "add_time": 0,
+          "plugin_public_key": null,
+          "name": "Owned custom dashboard twin",
+          "key": "summary",
+          "render_mode": "vuetify",
+          "attrs": {
+            "refresh": 2
+          },
+          "cols": {
+            "md": 8
+          },
+          "elements": []
+        }
+      },
+      "observed": {
+        "key": "summary",
+        "user_agent": null
+      }
+    },
+    {
+      "name": "falsey-cols-attrs-and-null-elements",
+      "input": [
+        [],
+        false,
+        null
+      ],
+      "expected": {
+        "status": 200,
+        "value": {
+          "id": "Owned_clone",
+          "plugin_name": null,
+          "plugin_desc": null,
+          "plugin_icon": null,
+          "plugin_version": null,
+          "plugin_label": null,
+          "plugin_author": null,
+          "author_url": null,
+          "plugin_config_prefix": null,
+          "plugin_order": 0,
+          "auth_level": 0,
+          "installed": false,
+          "state": false,
+          "has_page": false,
+          "has_update": false,
+          "system_version_compatible": true,
+          "system_version_message": null,
+          "system_version": null,
+          "release": false,
+          "is_local": false,
+          "repo_url": null,
+          "install_count": 0,
+          "history": {},
+          "add_time": 0,
+          "plugin_public_key": null,
+          "name": "Owned custom dashboard twin",
+          "key": "summary",
+          "render_mode": "vuetify",
+          "attrs": {},
+          "cols": {},
+          "elements": null
+        }
+      },
+      "observed": {
+        "key": "summary",
+        "user_agent": null
+      }
+    },
+    {
+      "name": "nonempty-array-cols",
+      "input": [
+        [
+          {
+            "md": 8
+          }
+        ],
+        {},
+        []
+      ],
+      "expected": {
+        "status": 500,
+        "error": "ValidationError"
+      },
+      "observed": {
+        "key": "summary",
+        "user_agent": null
+      }
+    },
+    {
+      "name": "non-dict-attrs",
+      "input": [
+        {},
+        "bad",
+        []
+      ],
+      "expected": {
+        "status": 500,
+        "error": "ValidationError"
+      },
+      "observed": {
+        "key": "summary",
+        "user_agent": null
+      }
+    },
+    {
+      "name": "huge-numeric-cols",
+      "input": [
+        13582985290493858492773514283592667786034938469317445497485196697278130927542418487205392083207560592298578262953847383475038725543234929971155548342800628721885763499406390331782864144164680730766837160526223176512798435772129956553355286032203080380775759732320198985094884004069116123084147875437183658467465148948790552744165376,
+        {},
+        []
+      ],
+      "expected": {
+        "status": 500,
+        "error": "ValidationError"
+      },
+      "observed": {
+        "key": "summary",
+        "user_agent": null
+      }
+    },
+    {
+      "name": "non-dict-elements",
+      "input": [
+        {},
+        {},
+        [
+          "bad"
+        ]
+      ],
+      "expected": {
+        "status": 500,
+        "error": "ValidationError"
+      },
+      "observed": {
+        "key": "summary",
+        "user_agent": null
+      }
+    },
+    {
+      "name": "null-elements",
+      "input": [
+        {},
+        {},
+        null
+      ],
+      "expected": {
+        "status": 200,
+        "value": {
+          "id": "Owned_clone",
+          "plugin_name": null,
+          "plugin_desc": null,
+          "plugin_icon": null,
+          "plugin_version": null,
+          "plugin_label": null,
+          "plugin_author": null,
+          "author_url": null,
+          "plugin_config_prefix": null,
+          "plugin_order": 0,
+          "auth_level": 0,
+          "installed": false,
+          "state": false,
+          "has_page": false,
+          "has_update": false,
+          "system_version_compatible": true,
+          "system_version_message": null,
+          "system_version": null,
+          "release": false,
+          "is_local": false,
+          "repo_url": null,
+          "install_count": 0,
+          "history": {},
+          "add_time": 0,
+          "plugin_public_key": null,
+          "name": "Owned custom dashboard twin",
+          "key": "summary",
+          "render_mode": "vuetify",
+          "attrs": {},
+          "cols": {},
+          "elements": null
+        }
+      },
+      "observed": {
+        "key": "summary",
+        "user_agent": null
+      }
+    },
+    {
+      "name": "wrong-pair",
+      "input": [
+        {},
+        {}
+      ],
+      "expected": {
+        "status": 500,
+        "error": "HTTPException"
+      },
+      "observed": {
+        "key": "summary",
+        "user_agent": null
+      }
+    },
+    {
+      "name": "no-widget",
+      "input": null,
+      "expected": {
+        "status": 200,
+        "value": null
+      },
+      "observed": {
+        "key": "summary",
+        "user_agent": null
+      }
+    }
+  ],
+  "sidebar_wire_cases": [
+    {
+      "name": "defaults-and-filter",
+      "input": [
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "details",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "value": [
+          {
+            "plugin_id": "Owned_clone",
+            "nav_key": "details",
+            "title": "Clone display name",
+            "icon": "mdi-puzzle",
+            "section": "system",
+            "permission": null,
+            "order": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "python-strings-and-unicode-int",
+      "input": [
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "zero",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "True",
+          "title": [
+            1
+          ],
+          "icon": {
+            "x": 2
+          },
+          "section": "system",
+          "permission": null,
+          "order": 12
+        }
+      ],
+      "expected": {
+        "status": 500,
+        "error": "ValidationError"
+      }
+    },
+    {
+      "name": "hash-keys-not-asset-paths",
+      "input": [
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": ".",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "..",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "my\ttool",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "my\\tool",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "value": [
+          {
+            "plugin_id": "Owned_clone",
+            "nav_key": ".",
+            "title": "Clone display name",
+            "icon": "mdi-puzzle",
+            "section": "system",
+            "permission": null,
+            "order": 0
+          },
+          {
+            "plugin_id": "Owned_clone",
+            "nav_key": "..",
+            "title": "Clone display name",
+            "icon": "mdi-puzzle",
+            "section": "system",
+            "permission": null,
+            "order": 0
+          },
+          {
+            "plugin_id": "Owned_clone",
+            "nav_key": "my\ttool",
+            "title": "Clone display name",
+            "icon": "mdi-puzzle",
+            "section": "system",
+            "permission": null,
+            "order": 0
+          },
+          {
+            "plugin_id": "Owned_clone",
+            "nav_key": "my\\tool",
+            "title": "Clone display name",
+            "icon": "mdi-puzzle",
+            "section": "system",
+            "permission": null,
+            "order": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "section-permission-order",
+      "input": [
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "lower",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "discovery",
+          "permission": "search",
+          "order": 1000
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "start",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "start",
+          "permission": "admin",
+          "order": 1
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "system",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "value": [
+          {
+            "plugin_id": "Owned_clone",
+            "nav_key": "lower",
+            "title": "Clone display name",
+            "icon": "mdi-puzzle",
+            "section": "discovery",
+            "permission": "search",
+            "order": 1000
+          },
+          {
+            "plugin_id": "Owned_clone",
+            "nav_key": "start",
+            "title": "Clone display name",
+            "icon": "mdi-puzzle",
+            "section": "start",
+            "permission": "admin",
+            "order": 1
+          },
+          {
+            "plugin_id": "Owned_clone",
+            "nav_key": "system",
+            "title": "Clone display name",
+            "icon": "mdi-puzzle",
+            "section": "system",
+            "permission": null,
+            "order": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "huge-integer",
+      "input": [
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "before",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 900719925474099312344
+        },
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "big",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 900719925474099312345
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "value": [
+          {
+            "plugin_id": "Owned_clone",
+            "nav_key": "before",
+            "title": "Clone display name",
+            "icon": "mdi-puzzle",
+            "section": "system",
+            "permission": null,
+            "order": 900719925474099312344
+          },
+          {
+            "plugin_id": "Owned_clone",
+            "nav_key": "big",
+            "title": "Clone display name",
+            "icon": "mdi-puzzle",
+            "section": "system",
+            "permission": null,
+            "order": 900719925474099312345
+          }
+        ]
+      }
+    },
+    {
+      "name": "partial-overflow-boundary",
+      "input": [
+        {
+          "plugin_id": "Owned_clone",
+          "nav_key": "first",
+          "title": "Clone display name",
+          "icon": "mdi-puzzle",
+          "section": "system",
+          "permission": null,
+          "order": 0
+        }
+      ],
+      "expected": {
+        "status": 200,
+        "value": [
+          {
+            "plugin_id": "Owned_clone",
+            "nav_key": "first",
+            "title": "Clone display name",
+            "icon": "mdi-puzzle",
+            "section": "system",
+            "permission": null,
+            "order": 0
+          }
+        ]
+      }
+    },
+    {
+      "name": "dict-is-iterable-but-not-rows",
+      "input": [],
+      "expected": {
+        "status": 200,
+        "value": []
+      }
+    },
+    {
+      "name": "truthy-noniterable-is-caught",
+      "input": [],
+      "expected": {
+        "status": 200,
+        "value": []
+      }
+    }
+  ]
+}

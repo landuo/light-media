@@ -1,0 +1,51 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/schemas/tmdb.py:19-34",
+    "app/chain/transfer.py:1945-1962"
+  ],
+  "boundary": "Actual fixed Pydantic TmdbEpisode construction; no provider or light-media code. Provider id is discarded; source transfer consumes this model without requiring an episode id.",
+  "cases": [
+    {
+      "input": {
+        "season_number": 1,
+        "episode_number": 1,
+        "name": "First"
+      },
+      "output": {
+        "air_date": null,
+        "episode_number": 1,
+        "episode_type": null,
+        "name": "First",
+        "overview": null,
+        "runtime": null,
+        "season_number": 1,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      }
+    },
+    {
+      "input": {
+        "id": 12345,
+        "season_number": 1,
+        "episode_number": 2,
+        "name": "Second"
+      },
+      "output": {
+        "air_date": null,
+        "episode_number": 2,
+        "episode_type": null,
+        "name": "Second",
+        "overview": null,
+        "runtime": null,
+        "season_number": 1,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      }
+    }
+  ]
+}

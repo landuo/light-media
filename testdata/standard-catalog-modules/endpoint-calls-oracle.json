@@ -1,0 +1,430 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed API functions and actual fixed Chain wrappers; module boundary returns controlled empty list",
+  "sources": {
+    "app/api/endpoints/recommend.py": "f4b754f6de839fa67c99e53cea2195760eaaf9b179248d85d53c77c1b5dda92e",
+    "app/api/endpoints/discover.py": "34f443f1c372a0149a4629c7d1222723d46c981980f14c9c9d29c123dc8a97ae",
+    "app/api/endpoints/anilist.py": "9c22a8a3f848cd1d0f7244fef6b260476982f98a9042b77866ecbda68e161ab5"
+  },
+  "cases": [
+    {
+      "endpoint": "recommend.tmdb_movies",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_tmdb_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": true
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "recommend.tmdb_tvs",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_tmdb_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电视剧",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": true
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "recommend.tmdb_tvs.source-ui",
+      "input": {
+        "page": 2,
+        "with_original_language": "zh|en|ja|ko"
+      },
+      "calls": [
+        {
+          "method": "async_tmdb_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电视剧",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "zh|en|ja|ko",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2,
+            "raise_exception": true
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "recommend.tmdb_trending",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_tmdb_trending",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "raise_exception": true
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "recommend.bangumi_calendar",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_bangumi_calendar",
+          "args": [],
+          "kwargs": {}
+        }
+      ]
+    },
+    {
+      "endpoint": "recommend.douban_showing",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_movie_showing",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "recommend.douban_movies",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_douban_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort": "R",
+            "tags": "",
+            "page": 2,
+            "count": 30
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "recommend.douban_tvs",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_douban_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电视剧",
+            "sort": "R",
+            "tags": "",
+            "page": 2,
+            "count": 30
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "recommend.douban_movie_top250",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_movie_top250",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "recommend.douban_tv_weekly_chinese",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_tv_weekly_chinese",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "recommend.douban_tv_weekly_global",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_tv_weekly_global",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "recommend.douban_tv_animation",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_tv_animation",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "recommend.douban_movie_hot",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_movie_hot",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "recommend.douban_tv_hot",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_tv_hot",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 30
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "discover.tmdb_movies",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_tmdb_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "discover.tmdb_tvs",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_tmdb_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电视剧",
+            "sort_by": "popularity.desc",
+            "with_genres": "",
+            "with_original_language": "",
+            "with_keywords": "",
+            "with_watch_providers": "",
+            "vote_average": 0.0,
+            "vote_count": 0,
+            "release_date": "",
+            "page": 2
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "discover.bangumi",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_bangumi_discover",
+          "args": [],
+          "kwargs": {
+            "type": 2,
+            "cat": null,
+            "sort": "rank",
+            "year": null,
+            "limit": 30,
+            "offset": 30
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "discover.douban_movies",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_douban_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电影",
+            "sort": "R",
+            "tags": "",
+            "page": 2,
+            "count": 30
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "discover.douban_tvs",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_douban_discover",
+          "args": [],
+          "kwargs": {
+            "mtype": "电视剧",
+            "sort": "R",
+            "tags": "",
+            "page": 2,
+            "count": 30
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "anilist.anilist_trending",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_anilist_trending",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 20
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "anilist.anilist_popular_this_season",
+      "input": {
+        "page": 2
+      },
+      "calls": [
+        {
+          "method": "async_anilist_popular_this_season",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 20
+          }
+        }
+      ]
+    },
+    {
+      "endpoint": "anilist.anilist_discover",
+      "input": {
+        "page": 2,
+        "media_format": "TV",
+        "season_year": 2026
+      },
+      "calls": [
+        {
+          "method": "async_anilist_discover",
+          "args": [],
+          "kwargs": {
+            "page": 2,
+            "count": 20,
+            "search": null,
+            "genre": null,
+            "media_format": "TV",
+            "season": null,
+            "season_year": 2026,
+            "status": null,
+            "country": null,
+            "sort": null
+          }
+        }
+      ]
+    }
+  ]
+}

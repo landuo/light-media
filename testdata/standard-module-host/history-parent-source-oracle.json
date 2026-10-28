@@ -1,0 +1,400 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/chain/storage.py:171-235",
+  "boundary": "Execute pinned StorageChain.delete_media_file against owned real temporary\nfiles. Storage operations are controlled boundaries; the caller algorithm is\nthe unchanged fixed AST. No application or Python runtime is shipped.\n",
+  "cases": [
+    {
+      "name": "other-subtitle",
+      "other": {
+        "A/B/Movie.srt": "subtitle"
+      },
+      "result": true,
+      "trace": [
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A/B",
+          "extensions": [
+            ".mkv",
+            ".!qb",
+            ".part",
+            ".srt",
+            ".flac"
+          ]
+        }
+      ],
+      "remaining": [
+        "A",
+        "A/B",
+        "A/B/Movie.srt"
+      ]
+    },
+    {
+      "name": "nonmedia-nfo",
+      "other": {
+        "A/B/Movie.nfo": "nfo"
+      },
+      "result": true,
+      "trace": [
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A/B",
+          "extensions": [
+            ".mkv",
+            ".!qb",
+            ".part",
+            ".srt",
+            ".flac"
+          ]
+        },
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A",
+          "extensions": [
+            ".mkv",
+            ".!qb",
+            ".part",
+            ".srt",
+            ".flac"
+          ]
+        },
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "name": "nested-audio",
+      "other": {
+        "A/B/extra/Sound.flac": "audio"
+      },
+      "result": true,
+      "trace": [
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A/B",
+          "extensions": [
+            ".mkv",
+            ".!qb",
+            ".part",
+            ".srt",
+            ".flac"
+          ]
+        }
+      ],
+      "remaining": [
+        "A",
+        "A/B",
+        "A/B/extra",
+        "A/B/extra/Sound.flac"
+      ]
+    },
+    {
+      "name": "temporary-part",
+      "other": {
+        "A/B/Downloading.part": "partial"
+      },
+      "result": true,
+      "trace": [
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A/B",
+          "extensions": [
+            ".mkv",
+            ".!qb",
+            ".part",
+            ".srt",
+            ".flac"
+          ]
+        }
+      ],
+      "remaining": [
+        "A",
+        "A/B",
+        "A/B/Downloading.part"
+      ]
+    },
+    {
+      "name": "empty-parent",
+      "other": {},
+      "result": true,
+      "trace": [
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A/B",
+          "extensions": [
+            ".mkv",
+            ".!qb",
+            ".part",
+            ".srt",
+            ".flac"
+          ]
+        },
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A",
+          "extensions": [
+            ".mkv",
+            ".!qb",
+            ".part",
+            ".srt",
+            ".flac"
+          ]
+        },
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "name": "no-associated-nonmedia",
+      "other": {
+        "A/B/Movie.nfo": "nfo"
+      },
+      "result": true,
+      "trace": [
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "list_files",
+          "path": "$OWNED/root/A/B",
+          "recursion": false
+        }
+      ],
+      "remaining": [
+        "A",
+        "A/B",
+        "A/B/Movie.nfo"
+      ]
+    },
+    {
+      "name": "false-parent",
+      "other": {},
+      "result": true,
+      "trace": [
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        }
+      ],
+      "remaining": [
+        "A",
+        "A/B"
+      ]
+    },
+    {
+      "name": "zero-any-files",
+      "other": {},
+      "result": true,
+      "trace": [
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A/B",
+          "extensions": [
+            ".mkv",
+            ".!qb",
+            ".part",
+            ".srt",
+            ".flac"
+          ]
+        }
+      ],
+      "remaining": [
+        "A",
+        "A/B"
+      ]
+    },
+    {
+      "name": "none-any-files",
+      "other": {},
+      "result": true,
+      "trace": [
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A/B",
+          "extensions": [
+            ".mkv",
+            ".!qb",
+            ".part",
+            ".srt",
+            ".flac"
+          ]
+        }
+      ],
+      "remaining": [
+        "A",
+        "A/B"
+      ]
+    },
+    {
+      "name": "false-directory-delete",
+      "other": {},
+      "result": false,
+      "trace": [
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A/B",
+          "extensions": [
+            ".mkv",
+            ".!qb",
+            ".part",
+            ".srt",
+            ".flac"
+          ]
+        },
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B"
+        }
+      ],
+      "remaining": [
+        "A",
+        "A/B"
+      ]
+    },
+    {
+      "name": "false-file-delete",
+      "other": {},
+      "result": false,
+      "trace": [
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        }
+      ],
+      "remaining": [
+        "A",
+        "A/B",
+        "A/B/Movie.mkv"
+      ]
+    },
+    {
+      "name": "explicit-empty-extensions",
+      "other": {
+        "A/B/Other.bin": "binary"
+      },
+      "result": true,
+      "trace": [
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B/Movie.mkv"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A/B",
+          "extensions": []
+        }
+      ],
+      "remaining": [
+        "A",
+        "A/B",
+        "A/B/Other.bin"
+      ]
+    }
+  ]
+}

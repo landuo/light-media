@@ -1,0 +1,168 @@
+{
+  "accepted_increment": true,
+  "whole_indices_accepted": false,
+  "indices": [
+    36,
+    37,
+    43
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": [
+    "app/chain/media.py:1035-1154: nonempty Blu-ray file_list scrapes only root with recursive=False; empty list takes ordinary root branch",
+    "app/chain/media.py:1311-1472: movie directory suppresses STREAM children and initializes directory metadata",
+    "app/chain/media.py:318-360,1155-1208: <directory>/<directory name>.nfo; existing skip/explicit overwrite; ordinary metadata_nfo followed by upload_file",
+    "app/chain/media.py:235-279: actual temporary NFO bytes and storage upload",
+    "app/db/transferhistory_oper.py:227-302: history preserves source FileItem size"
+  ],
+  "targets": [
+    "internal/app/asset_scrape.go",
+    "internal/app/plugin_original_metadata_directory.go",
+    "internal/app/plugin_original_metadata_event.go",
+    "internal/app/plugin_original_metadata_write.go",
+    "internal/app/plugin_original_metadata_scrape.go",
+    "internal/app/plugin_original_transfer_bluray_scrape_test.go",
+    "internal/app/plugin_module_process_bluray_test.go",
+    "internal/app/plugin_module_process_services_test.go"
+  ],
+  "behavior": [
+    "Actual manual directory import emits metadata.scrape and queues existing native scrape consumer",
+    "Movie Blu-ray root NFO path and existing/overwrite decisions match four fixed AST cases using real temporary upload IO",
+    "Native directory ownership validates unchanged original members and exact authorized metadata bytes; managed_file and import_receipt advance atomically",
+    "SQL commit failure after actual NFO publication recovers through durable prepared write proof on cold startup; recorded stage cleanup uses exact inode; foreign member/changed NFO stay unowned",
+    "Real Linux source/clone transfer paths and ordinary NFO module publish native hardlink and terminal copied directories; actual copied directory history deletion succeeds",
+    "Browser cancel/cold/retry -> actual NFO and 19B history -> cold zero transfer/NFO replay -> target tree including NFO deleted, source preserved"
+  ],
+  "evidence": {
+    "source_cases": 4,
+    "native_directory_safety_cases": 6,
+    "local_seconds": 48.999,
+    "race_seconds": 46.464,
+    "linux_cli_seconds": 1.87,
+    "linux_browser_seconds": 210.14,
+    "browser": {
+      "pass": true,
+      "iab": 85,
+      "pids": {
+        "before-cold": [
+          877570,
+          877577
+        ],
+        "cold-cancelled": [
+          879408,
+          879426
+        ],
+        "retry-success": [
+          879408,
+          879426
+        ],
+        "cold-success": [
+          881470,
+          881477
+        ],
+        "deleted": [
+          881470,
+          881477
+        ]
+      },
+      "members": [
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/bluray45r2-ui-tmp/TestPluginServicesProductionCLI1577900210/002/library/UIBluray/UIBluray (2024)/BDMV/STREAM/00001.m2ts",
+          "size": 19,
+          "inode": 73565385,
+          "device": 65025,
+          "sha256": "ead023166d01f02d7d5a2cda3912e287b267f071cbc0b093eaa84569ada6d65b"
+        },
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/bluray45r2-ui-tmp/TestPluginServicesProductionCLI1577900210/002/library/UIBluray/UIBluray (2024)/BDMV/index.bdmv",
+          "size": 18,
+          "inode": 71609336,
+          "device": 65025,
+          "sha256": "b71eee80f4975df3034de2e44220530a49011a075414c8983eea975066be275b"
+        }
+      ],
+      "nfo": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/bluray45r2-ui-tmp/TestPluginServicesProductionCLI1577900210/002/library/UIBluray/UIBluray (2024)/UIBluray (2024).nfo",
+        "size": 62,
+        "inode": 121754571,
+        "device": 65025,
+        "sha256": "54767c5abe5882fbfb11733ff72fc1fa08f2247b921761d7f5cff61e22ab48f8"
+      },
+      "history_stream_size": 19,
+      "cold_transfer_and_metadata_replay": 0,
+      "cleanup": {
+        "paths": {
+          "/tmp/light-media-plugin-scope-dRZTQ91A/bluray45r2-ui-tmp/TestPluginServicesProductionCLI1577900210/001": false,
+          "/tmp/light-media-plugin-scope-dRZTQ91A/bluray45r2-ui-tmp/TestPluginServicesProductionCLI1577900210/002/library/UIBluray/UIBluray (2024)": false,
+          "/tmp/light-media-plugin-scope-dRZTQ91A/bluray45r2-ui-tmp/TestPluginServicesProductionCLI1577900210/002/source/UIBluray.2024.BluRay": false
+        },
+        "gate": "uninstall/API404 and owned TempDir cleanup completed"
+      }
+    },
+    "build": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform45r2-20261027-linux",
+          "sha256": "533d5e1fef116f0b1f208fb1a8a5891dea9e3957aac011fa19dc73222473f3af",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform45r2-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3731,
+          "changed": [],
+          "elapsed_seconds": 2.09
+        },
+        {
+          "name": "process-platform45r2-20261027-linux.test",
+          "sha256": "b7ab2463bb74418595d6a5023f90af28db2966289bc01401184dc919b44c9b66",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform45r2-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4214,
+          "changed": [],
+          "elapsed_seconds": 8.21
+        }
+      ]
+    },
+    "manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-bluray-scrape-45-20261028/manifest.json"
+  },
+  "necessary_adaptations": [
+    "Reuse native asset/scrape queue and local root boundaries; no new business system or Python runtime. Development-only source AST oracle is not shipped.",
+    "Whole-directory snapshots must incorporate only authorized sidecar writes; prepared inode/content proof allows cold SQL recovery and module upload copies while refusing unknown contents.",
+    "Crash-left stage recovery case explicitly injects the recorded published inode at its temporary name; marked synthetic fault injection, not a claimed OS crash test."
+  ],
+  "red": [
+    "Actual initial movie-directory scrape rejected directory at regular-file snapshotPath; fixed.",
+    "Cold unit fixture initially reused a pre-restart job generation; corrected test lease/state without changing product guards.",
+    "First related run lacked OWNED_INPUT_FIXTURE_BINARY; rerun with existing documented fixture environment.",
+    "First Linux CLI 1.44s correctly rejected test clone result file_list_new without paired file_list; acceptance fixture corrected; main533d5e1 unchanged."
+  ],
+  "limits": [
+    "This increment validates movie Blu-ray scraping and native directory ownership. TV recursive=False currently performs an extra list before the TV branch; source _handle_tv_directory lists only when recursive=True. This separate ordinary-call discrepancy remains open.",
+    "Selected storage FileItem name/path differences and late-list exception DTO are still open. Prior directory oracle listed real temporary children without explicitly fixing provider order; next increment must freeze that controlled boundary and compare the new empty exception TransferInfo.",
+    "Tests use synthetic disc bytes, controlled metadata and test plugins. Linux main/subprocesses/files/SQLite/browser actions are real.",
+    "Complete ordinary module/event applicability audit and whole36/37/43/50 remain open."
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

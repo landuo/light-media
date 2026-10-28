@@ -28,23 +28,25 @@ type NativeDownloadRequest struct {
 	TMDBID       int64  `json:"tmdb_id"`
 }
 type NativeDownload struct {
-	ID                 string         `json:"id"`
-	SiteID             string         `json:"site_id"`
-	ResourceID         string         `json:"resource_id"`
-	ResourceTitle      string         `json:"resource_title"`
-	DownloaderID       string         `json:"downloader_id"`
-	DownloadPath       string         `json:"download_path"`
-	DownloaderSnapshot string         `json:"downloader_snapshot"`
-	Hash               string         `json:"hash"`
-	MaterialRef        string         `json:"material_ref"`
-	MediaType          string         `json:"media_type,omitempty"`
-	TMDBID             int64          `json:"tmdb_id,omitempty"`
-	Media              *catalog.Media `json:"media,omitempty"`
-	State              string         `json:"state"`
-	Error              string         `json:"error,omitempty"`
-	WorkflowID         string         `json:"workflow_id"`
-	CreatedAt          string         `json:"created_at"`
-	UpdatedAt          string         `json:"updated_at"`
+	SourceModuleStarted bool            `json:"source_module_started,omitempty"`
+	SourceDownloader    json.RawMessage `json:"source_downloader,omitempty"`
+	ID                  string          `json:"id"`
+	SiteID              string          `json:"site_id"`
+	ResourceID          string          `json:"resource_id"`
+	ResourceTitle       string          `json:"resource_title"`
+	DownloaderID        string          `json:"downloader_id"`
+	DownloadPath        string          `json:"download_path"`
+	DownloaderSnapshot  string          `json:"downloader_snapshot"`
+	Hash                string          `json:"hash"`
+	MaterialRef         string          `json:"material_ref"`
+	MediaType           string          `json:"media_type,omitempty"`
+	TMDBID              int64           `json:"tmdb_id,omitempty"`
+	Media               *catalog.Media  `json:"media,omitempty"`
+	State               string          `json:"state"`
+	Error               string          `json:"error,omitempty"`
+	WorkflowID          string          `json:"workflow_id"`
+	CreatedAt           string          `json:"created_at"`
+	UpdatedAt           string          `json:"updated_at"`
 }
 
 func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (NativeDownload, error) {
@@ -64,7 +66,7 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 	if err != nil {
 		return out, err
 	}
-	d, err := a.downloader(in.DownloaderID)
+	d, sourceChoice, err := a.originalDownloadSelection(in.DownloaderID, site)
 	if err != nil {
 		return out, err
 	}
@@ -167,6 +169,7 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 		return out, err
 	}
 	out = NativeDownload{ID: id("native_"), SiteID: site.ID, ResourceID: resource.ID, ResourceTitle: resource.Title, DownloaderID: d.ID, DownloadPath: path, DownloaderSnapshot: downloaderSnapshot(d), Hash: material.Hash, MaterialRef: ref, MediaType: in.MediaType, TMDBID: in.TMDBID, State: "planned", WorkflowID: id("wf_"), CreatedAt: now(), UpdatedAt: now()}
+	out.SourceDownloader = sourceChoice
 	if in.TMDBID > 0 {
 		// Downloads selected from a known title retain its card presentation.
 		// Reuse the catalog cache instead of adding another metadata request to
@@ -180,6 +183,13 @@ func (a *App) addNativeDownload(ctx context.Context, in NativeDownloadRequest) (
 	}
 	sourceContext, err := a.prepareDownloadContext(ctx, "native_download", out.ID, out.Hash, resource)
 	if err != nil {
+		return out, err
+	}
+	contextResource, sourceMedia, err := a.originalCachedDownloadInputs(ctx, resource, catalog.Media{ID: in.TMDBID, MediaType: in.MediaType})
+	if err != nil {
+		return out, err
+	}
+	if err = a.completeOriginalDownloadContext(ctx, &sourceContext, Candidate{Resource: contextResource}, catalog.Media{ID: in.TMDBID, MediaType: in.MediaType}, sourceMedia); err != nil {
 		return out, err
 	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
@@ -240,6 +250,9 @@ func (a *App) runNativeDownload(ctx context.Context, job Job, key string) (resul
 			_ = a.Store.Put(ctx, "native_download", in.ID, in)
 		}
 	}()
+	if in.SourceModuleStarted {
+		return bad("REVIEW_PLUGIN_DOWNLOAD_UNCONFIRMED", "下载插件已调用，结果尚未提交，请核对原任务后重新添加")
+	}
 	if err := a.jobCancelled(ctx, job); err != nil {
 		return err
 	}
@@ -266,6 +279,17 @@ func (a *App) runNativeDownload(ctx context.Context, job Job, key string) (resul
 	if err != nil {
 		return err
 	}
+	sourceContext, err := a.loadDownloadContext(ctx, "native_download", in.ID, in.Hash)
+	if err != nil {
+		return err
+	}
+	in.DownloadPath, err = a.originalResourceDownload(ctx, sourceContext, in.DownloadPath, nil, "Manual", in.SourceDownloader, client)
+	if err != nil {
+		return err
+	}
+	if sourceContext != nil {
+		sourceContext.OriginalDownloadDir, sourceContext.OriginalMaterialRef = in.DownloadPath, in.MaterialRef
+	}
 	release, err := a.beginWrite()
 	if err != nil {
 		return err
@@ -276,9 +300,45 @@ func (a *App) runNativeDownload(ctx context.Context, job Job, key string) (resul
 	if err = a.Store.Put(ctx, "native_download", in.ID, in); err != nil {
 		return err
 	}
-	added, err := client.Add(ctx, download.AddRequest{Torrent: material, SavePath: in.DownloadPath, Tags: []string{"light-media"}})
+	var siteCookie any
+	for _, site := range a.Settings().Sites {
+		if site.ID == in.SiteID {
+			siteCookie = site.Cookie
+			break
+		}
+	}
+	request := download.AddRequest{Torrent: material, SavePath: in.DownloadPath, Tags: []string{"light-media"}}
+	category, categorySet := originalDownloadContextCategory(sourceContext)
+	module, err := a.originalDownload(ctx, d, request, originalDownloadOptions{Category: category, CategorySet: categorySet, Cookie: siteCookie, Downloader: in.SourceDownloader, Media: in.Media, BeforeInvoke: func() error {
+		// A source function call is not replayed after process loss. Keep that
+		// boundary in the existing queued download instead of re-running an
+		// external plugin mutation merely because the job is retried.
+		in.SourceModuleStarted = true
+		return a.Store.Put(ctx, "native_download", in.ID, in)
+	}}, func(options originalDownloadOptions) (download.AddResult, error) {
+		if in.SourceModuleStarted || options.CategorySet {
+			request.SourceCategorySet = true
+			if category, ok := options.Category.(string); ok {
+				request.SourceCategory = &category
+			}
+		}
+		added, addErr := client.Add(ctx, request)
+		if addErr == nil && in.SourceModuleStarted {
+			_, addErr = client.SourcePostAdd(ctx, added, nil, nil)
+		}
+		return added, addErr
+	})
 	if err != nil {
+		if module.Declared {
+			return jobErr("REVIEW_PLUGIN_DOWNLOAD_FAILED", err)
+		}
 		return err
+	}
+	added := module.Added
+	if module.Override {
+		if err = verifyOriginalDownloadTask(ctx, client, in.Hash, added.Hash, in.DownloadPath); err != nil {
+			return err
+		}
 	}
 	if !sameHash(in.Hash, added.Hash) {
 		return bad("DOWNLOAD_HASH_MISMATCH", "下载器返回的种子标识不一致")
@@ -288,7 +348,11 @@ func (a *App) runNativeDownload(ctx context.Context, job Job, key string) (resul
 	in.Error = ""
 	in.UpdatedAt = now()
 	a.event(ctx, job, "INFO", "downloads", "accepted", "下载器已接收资源，目录监听负责后续识别整理")
-	return a.acceptNativeDownload(ctx, in, job)
+	if sourceContext != nil {
+		sourceContext.OriginalDownloader = module.Downloader
+		sourceContext.OriginalLayout = module.Layout
+	}
+	return a.acceptNativeDownload(ctx, in, job, sourceContext)
 }
 
 func (a *App) downloaderTaskAction(ctx context.Context, downloaderID, hash, action string) error {
@@ -347,8 +411,11 @@ func (a *App) downloaderTaskAction(ctx context.Context, downloaderID, hash, acti
 			return bad("DOWNLOAD_NOT_DOWNLOADING", "任务已离开正在下载列表，请刷新后重试")
 		}
 	}
-	if err = client.Control(ctx, actual, action); err != nil {
-		return err
+	applied, moduleErr := a.originalDownloaderControl(ctx, d, actual, action, func() error {
+		return client.Control(ctx, actual, action)
+	})
+	if moduleErr != nil && !applied {
+		return moduleErr
 	}
 	if action == "remove_keep_data" || action == "remove_with_data" {
 		// Cancel own bookkeeping too, so a queued retry cannot re-add the torrent.
@@ -368,8 +435,11 @@ func (a *App) downloaderTaskAction(ctx context.Context, downloaderID, hash, acti
 		if _, e = tx.ExecContext(ctx, `DELETE FROM reservations WHERE intent_id IN (SELECT id FROM records WHERE kind='intent' AND json_extract(payload,'$.state')='cancelled')`); e != nil {
 			return e
 		}
-		return tx.Commit()
+		if e = tx.Commit(); e != nil {
+			return e
+		}
+		return moduleErr
 	}
 	a.log("INFO", "downloads", action, "操作本程序的下载任务", "", "")
-	return nil
+	return moduleErr
 }

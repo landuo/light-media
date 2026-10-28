@@ -1,0 +1,700 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/helper/server.py": "d71d14373d8984390c6b7a6669ce6f6ffc4258fcf5f163ee189c52c8d3b0d47f",
+    "app/schemas/plugin.py": "d57a96c4ab5ec4525ce56e40dccffa93da719626449ed9bf7be80f47809e0f1a"
+  },
+  "pydantic_version": "2.13.4",
+  "kind": "actual fixed async client functions and Pydantic models; owned transport only, not official center acceptance",
+  "client_cases": [
+    {
+      "mode": "none",
+      "method": "async_get_plugin_statistic",
+      "value": {},
+      "error": null
+    },
+    {
+      "mode": "none",
+      "method": "async_get_plugin_ratings",
+      "value": {},
+      "error": null
+    },
+    {
+      "mode": "none",
+      "method": "async_get_plugin_rating",
+      "value": {
+        "plugin_id": "Owned",
+        "average_rating": 0.0,
+        "rating_count": 0,
+        "user_rating": null
+      },
+      "error": null
+    },
+    {
+      "mode": "none",
+      "method": "async_submit_plugin_rating",
+      "value": null,
+      "error": null
+    },
+    {
+      "mode": "none",
+      "method": "async_install_plugin_reg",
+      "value": false,
+      "error": null
+    },
+    {
+      "mode": "http_failure",
+      "method": "async_get_plugin_statistic",
+      "value": {},
+      "error": null
+    },
+    {
+      "mode": "http_failure",
+      "method": "async_get_plugin_ratings",
+      "value": {},
+      "error": null
+    },
+    {
+      "mode": "http_failure",
+      "method": "async_get_plugin_rating",
+      "value": {
+        "plugin_id": "Owned",
+        "average_rating": 0.0,
+        "rating_count": 0,
+        "user_rating": null
+      },
+      "error": null
+    },
+    {
+      "mode": "http_failure",
+      "method": "async_submit_plugin_rating",
+      "value": null,
+      "error": null
+    },
+    {
+      "mode": "http_failure",
+      "method": "async_install_plugin_reg",
+      "value": false,
+      "error": null
+    },
+    {
+      "mode": "transport_exception",
+      "method": "async_get_plugin_statistic",
+      "value": null,
+      "error": "RuntimeError"
+    },
+    {
+      "mode": "transport_exception",
+      "method": "async_get_plugin_ratings",
+      "value": {},
+      "error": null
+    },
+    {
+      "mode": "transport_exception",
+      "method": "async_get_plugin_rating",
+      "value": {
+        "plugin_id": "Owned",
+        "average_rating": 0.0,
+        "rating_count": 0,
+        "user_rating": null
+      },
+      "error": null
+    },
+    {
+      "mode": "transport_exception",
+      "method": "async_submit_plugin_rating",
+      "value": null,
+      "error": null
+    },
+    {
+      "mode": "transport_exception",
+      "method": "async_install_plugin_reg",
+      "value": null,
+      "error": "RuntimeError"
+    },
+    {
+      "mode": "valid",
+      "method": "async_get_plugin_statistic",
+      "value": {
+        "owned": "actual center payload"
+      },
+      "error": null
+    },
+    {
+      "mode": "valid",
+      "method": "async_get_plugin_ratings",
+      "value": {
+        "owned": "actual center payload"
+      },
+      "error": null
+    },
+    {
+      "mode": "valid",
+      "method": "async_get_plugin_rating",
+      "value": {
+        "owned": "actual center payload"
+      },
+      "error": null
+    },
+    {
+      "mode": "valid",
+      "method": "async_submit_plugin_rating",
+      "value": {
+        "owned": "actual center payload"
+      },
+      "error": null
+    },
+    {
+      "mode": "valid",
+      "method": "async_install_plugin_reg",
+      "value": true,
+      "error": null
+    },
+    {
+      "mode": "empty_object",
+      "method": "async_get_plugin_statistic",
+      "value": {},
+      "error": null
+    },
+    {
+      "mode": "empty_object",
+      "method": "async_get_plugin_ratings",
+      "value": {},
+      "error": null
+    },
+    {
+      "mode": "empty_object",
+      "method": "async_get_plugin_rating",
+      "value": {},
+      "error": null
+    },
+    {
+      "mode": "empty_object",
+      "method": "async_submit_plugin_rating",
+      "value": {},
+      "error": null
+    },
+    {
+      "mode": "empty_object",
+      "method": "async_install_plugin_reg",
+      "value": true,
+      "error": null
+    },
+    {
+      "mode": "json_exception",
+      "method": "async_get_plugin_statistic",
+      "value": null,
+      "error": "ValueError"
+    },
+    {
+      "mode": "json_exception",
+      "method": "async_get_plugin_ratings",
+      "value": {},
+      "error": null
+    },
+    {
+      "mode": "json_exception",
+      "method": "async_get_plugin_rating",
+      "value": {
+        "plugin_id": "Owned",
+        "average_rating": 0.0,
+        "rating_count": 0,
+        "user_rating": null
+      },
+      "error": null
+    },
+    {
+      "mode": "json_exception",
+      "method": "async_submit_plugin_rating",
+      "value": null,
+      "error": null
+    },
+    {
+      "mode": "json_exception",
+      "method": "async_install_plugin_reg",
+      "value": true,
+      "error": null
+    },
+    {
+      "mode": "error_object",
+      "method": "async_get_plugin_statistic",
+      "value": {
+        "success": false,
+        "message": "owned center said no"
+      },
+      "error": null
+    },
+    {
+      "mode": "error_object",
+      "method": "async_get_plugin_ratings",
+      "value": {
+        "success": false,
+        "message": "owned center said no"
+      },
+      "error": null
+    },
+    {
+      "mode": "error_object",
+      "method": "async_get_plugin_rating",
+      "value": {
+        "success": false,
+        "message": "owned center said no"
+      },
+      "error": null
+    },
+    {
+      "mode": "error_object",
+      "method": "async_submit_plugin_rating",
+      "value": {
+        "success": false,
+        "message": "owned center said no"
+      },
+      "error": null
+    },
+    {
+      "mode": "error_object",
+      "method": "async_install_plugin_reg",
+      "value": true,
+      "error": null
+    }
+  ],
+  "schema_cases": [
+    {
+      "kind": "request",
+      "input": {
+        "rating": 0
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": 0.1
+      },
+      "success": true,
+      "value": {
+        "rating": 0.1
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": 1
+      },
+      "success": true,
+      "value": {
+        "rating": 1.0
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": 4.5
+      },
+      "success": true,
+      "value": {
+        "rating": 4.5
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": 5
+      },
+      "success": true,
+      "value": {
+        "rating": 5.0
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": 5.1
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": 4.55
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": true
+      },
+      "success": true,
+      "value": {
+        "rating": 1.0
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": false
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "4.5"
+      },
+      "success": true,
+      "value": {
+        "rating": 4.5
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": " 4.5 "
+      },
+      "success": true,
+      "value": {
+        "rating": 4.5
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "4_._5"
+      },
+      "success": true,
+      "value": {
+        "rating": 4.5
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "0x1"
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "1e0"
+      },
+      "success": true,
+      "value": {
+        "rating": 1.0
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "1_0e-1"
+      },
+      "success": true,
+      "value": {
+        "rating": 1.0
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "NaN"
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "inf"
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": null
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": []
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": {}
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "_4.5"
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "4.5_"
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "4__5e-1"
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "+4.5"
+      },
+      "success": true,
+      "value": {
+        "rating": 4.5
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "４.５"
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "4 "
+      },
+      "success": true,
+      "value": {
+        "rating": 4.0
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": ".5"
+      },
+      "success": true,
+      "value": {
+        "rating": 0.5
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": "1."
+      },
+      "success": true,
+      "value": {
+        "rating": 1.0
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": 0.10000000001
+      },
+      "success": true,
+      "value": {
+        "rating": 0.10000000001
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": 0.1000000001
+      },
+      "success": true,
+      "value": {
+        "rating": 0.1000000001
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": 0.100000001
+      },
+      "success": true,
+      "value": {
+        "rating": 0.100000001
+      }
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": 0.100000000001
+      },
+      "success": true,
+      "value": {
+        "rating": 0.100000000001
+      }
+    },
+    {
+      "kind": "request",
+      "input": {},
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "request",
+      "input": {
+        "rating": 4.5,
+        "ignored": "source permits extras"
+      },
+      "success": true,
+      "value": {
+        "rating": 4.5
+      }
+    },
+    {
+      "kind": "response",
+      "input": {
+        "plugin_id": "Owned"
+      },
+      "success": true,
+      "value": {
+        "plugin_id": "Owned",
+        "average_rating": 0.0,
+        "rating_count": 0,
+        "user_rating": null
+      }
+    },
+    {
+      "kind": "response",
+      "input": {
+        "plugin_id": "Owned",
+        "average_rating": "4.2",
+        "rating_count": "3",
+        "user_rating": true
+      },
+      "success": true,
+      "value": {
+        "plugin_id": "Owned",
+        "average_rating": 4.2,
+        "rating_count": 3,
+        "user_rating": 1.0
+      }
+    },
+    {
+      "kind": "response",
+      "input": {
+        "plugin_id": "Owned",
+        "average_rating": -1,
+        "rating_count": -3,
+        "user_rating": 6.5
+      },
+      "success": true,
+      "value": {
+        "plugin_id": "Owned",
+        "average_rating": -1.0,
+        "rating_count": -3,
+        "user_rating": 6.5
+      }
+    },
+    {
+      "kind": "response",
+      "input": {
+        "plugin_id": "Owned",
+        "rating_count": 1208925819614629174706176
+      },
+      "success": true,
+      "value": {
+        "plugin_id": "Owned",
+        "average_rating": 0.0,
+        "rating_count": 1208925819614629174706176,
+        "user_rating": null
+      }
+    },
+    {
+      "kind": "response",
+      "input": {
+        "plugin_id": "Owned",
+        "rating_count": 3.0
+      },
+      "success": true,
+      "value": {
+        "plugin_id": "Owned",
+        "average_rating": 0.0,
+        "rating_count": 3,
+        "user_rating": null
+      }
+    },
+    {
+      "kind": "response",
+      "input": {
+        "plugin_id": "Owned",
+        "rating_count": "3.0"
+      },
+      "success": true,
+      "value": {
+        "plugin_id": "Owned",
+        "average_rating": 0.0,
+        "rating_count": 3,
+        "user_rating": null
+      }
+    },
+    {
+      "kind": "response",
+      "input": {
+        "plugin_id": "Owned",
+        "rating_count": "3e0"
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "response",
+      "input": {
+        "plugin_id": "Owned",
+        "average_rating": null
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "response",
+      "input": {
+        "plugin_id": "Owned",
+        "rating_count": 3.5
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "response",
+      "input": {
+        "plugin_id": 1
+      },
+      "success": false,
+      "value": null
+    },
+    {
+      "kind": "response",
+      "input": {},
+      "success": false,
+      "value": null
+    }
+  ]
+}

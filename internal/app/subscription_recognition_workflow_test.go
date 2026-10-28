@@ -151,6 +151,12 @@ func TestSubscriptionRecognitionActualSelectionContextSurvivesRestartAndRecheck(
 			// The complete original titles/files must pass real automatic checks.
 			local := "# synthetic-private-selected-word\nJade[.]Dynasty => Jade.Dynasty\n\n "
 			f := newRecognitionSelectionFixture(t, func(f *recognitionSelectionFixture) {
+				// The ordinary precheck now follows the full pinned recognition
+				// caller. The old compact UI cache alone is not a provider response.
+				installMetadataFixture(t, f.app, "owned-recognition-source", []string{"/3/tv/206484"}, func(r *http.Request) (*http.Response, error) {
+					body := `{"id":206484,"name":"诛仙","original_name":"Jade Dynasty","first_air_date":"2022-01-01","number_of_seasons":4,"number_of_episodes":5,"seasons":[{"season_number":4,"episode_count":5}],"genres":[],"credits":{"cast":[],"crew":[]},"external_ids":{}}`
+					return &http.Response{StatusCode: 200, Header: http.Header{}, Body: io.NopCloser(strings.NewReader(body))}, nil
+				})
 				f.request.CustomWords = subscriptionWordsRaw(t, local)
 				if err := f.app.saveRecognitionWords(ctx, 0, []string{"S04E0[12] => S04E01-E04"}); err != nil {
 					t.Fatal(err)
@@ -349,17 +355,20 @@ func TestIntentRecognitionPreservesExplicitEmptyExtensionsAndLegacyGlobalFallbac
 // Neutral HTTP/core portion of the former continuation fixture. No plugin
 // setup, worker or event consumer participates in this core recognition test.
 type recognitionSelectionFixture struct {
-	app       *App
-	sub       Subscription
-	request   SubscriptionRequest
-	adds      atomic.Int32
-	gate      atomic.Bool
-	entered   chan struct{}
-	release   chan struct{}
-	enterOnce sync.Once
-	freeOnce  sync.Once
-	listing   atomic.Value
-	seedTask  func(Intent, float64)
+	expectedIntents *int
+	deferCheck      bool
+	checkJob        Job
+	app             *App
+	sub             Subscription
+	request         SubscriptionRequest
+	adds            atomic.Int32
+	gate            atomic.Bool
+	entered         chan struct{}
+	release         chan struct{}
+	enterOnce       sync.Once
+	freeOnce        sync.Once
+	listing         atomic.Value
+	seedTask        func(Intent, float64)
 }
 
 func newRecognitionSelectionFixture(t *testing.T, configure ...func(*recognitionSelectionFixture)) *recognitionSelectionFixture {
@@ -504,6 +513,10 @@ func newRecognitionSelectionFixture(t *testing.T, configure ...func(*recognition
 	if err != nil || check.Kind != "subscription" {
 		t.Fatal("missing actual subscription check", err)
 	}
+	f.checkJob = check
+	if f.deferCheck {
+		return f
+	}
 	if err = a.safeRun(ctx, check); err != nil {
 		t.Fatal("actual subscription did not select resources", err)
 	}
@@ -511,8 +524,12 @@ func newRecognitionSelectionFixture(t *testing.T, configure ...func(*recognition
 		t.Fatal("check did not finish", err)
 	}
 	selected, err := a.Store.List(ctx, "intent", 100, 0)
-	if err != nil || len(selected) != 2 {
-		t.Fatal("check did not create two actual selected intents", len(selected), err)
+	wantIntents := 2
+	if f.expectedIntents != nil {
+		wantIntents = *f.expectedIntents
+	}
+	if err != nil || len(selected) != wantIntents {
+		t.Fatal("check selected unexpected actual intents", len(selected), wantIntents, err)
 	}
 	for _, raw := range selected {
 		var in Intent

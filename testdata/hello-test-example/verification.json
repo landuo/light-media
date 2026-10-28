@@ -1,0 +1,50 @@
+{
+  "date": "2026-10-29",
+  "worker": "HelloTest",
+  "version": "0.1.0",
+  "kind": "Actual development-host App/router/SQLite and independently built SDK executable; Linux artifact compile verified separately, no new Linux/browser runtime claim.",
+  "command": [
+    "go",
+    "test",
+    "./internal/app",
+    "-run",
+    "^TestHelloExampleLocalInstallRunCloneRestartResetUninstall$",
+    "-count=1",
+    "-v"
+  ],
+  "passed": true,
+  "test_seconds": 1.88,
+  "package_seconds": 2.848,
+  "source_sha256": {
+    "cmd/hello-test/main.go": "81f0898d6d7fab4750c848b91482506acdf8be1edb818107981f5ad537411989",
+    "examples/hello-test/build.mjs": "d1685b00be0a6ad3e1798699e16d9daf19afa2f5d143d0d897fabe5447a286af",
+    "internal/app/plugin_hello_example_test.go": "56637f7d8f55611534aae5a3e164beaef12fa98ecf2db4b5b446de2d0559c0f8",
+    "docs/plugin-test-quickstart.md": "38f13d072d19b8263891b56b46838769c20d2805a70a315faa77ee1920546acd"
+  },
+  "linux_artifact": {
+    "plugin_id": "HelloTest",
+    "version": "0.1.0",
+    "platform": "linux-amd64",
+    "directory": "/Users/accidia/projects/light-media/work/hello-test-repo",
+    "index": "/Users/accidia/projects/light-media/work/hello-test-repo/go-plugins.v1.json",
+    "sha256": "088ac0031fa04664a902d0817d0366d40875243969d9949807ab6af9879f45f0"
+  },
+  "scenarios": [
+    "local artifact install",
+    "disabled POST409 with no count",
+    "configuration save then2 manual executions",
+    "clone fresh independent count1/source2 and clone page own API",
+    "actual App close/reopen both counts retained",
+    "source uninstall API404 then reinstall count2 retained",
+    "source reset count0 while clone1 retained",
+    "both instances uninstall"
+  ],
+  "initial_failure": "macOS /var symlink in default test roots correctly rejected by artifact safety. Test now uses isolated canonical workspace work directory; no safety guard changed.",
+  "source_and_packager": "Persistent sources remain; generated test binaries and temporary data are cleaned. Run documented command to rebuild the installable repository.",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

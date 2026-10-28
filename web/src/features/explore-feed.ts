@@ -37,6 +37,7 @@ export function resetExploreFeed(feed: ExploreFeed) {
   Object.assign(feed, createExploreFeed(), { generation });
 }
 export function exploreMediaKey(item: ExploreMedia) {
+  if (typeof item.plugin_media_key === 'string') return item.plugin_media_key;
   return [
     item.source || 'themoviedb',
     item.media_type,

@@ -1,0 +1,108 @@
+{
+  "accepted_increment": true,
+  "whole_indices_accepted": false,
+  "indices": [
+    43
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": [
+    "app/chain/tmdb.py:262-285",
+    "app/chain/douban.py:194-221",
+    "app/chain/bangumi.py:81-93",
+    "app/api/endpoints/tmdb.py:108-171",
+    "app/api/endpoints/douban.py:45-85",
+    "app/api/endpoints/bangumi.py:13-52",
+    "src/views/discover/MediaDetailView.vue:1032-1085",
+    "src/views/discover/PersonCardSlideView.vue:29-55",
+    "src/views/discover/MediaCardSlideView.vue"
+  ],
+  "targets": [
+    "internal/app/plugin_original_catalog_related.go",
+    "internal/app/http.go",
+    "internal/app/plugin_original_catalog_related_test.go",
+    "internal/app/plugin_module_process_catalog_related_test.go",
+    "internal/app/plugin_module_process_services_test.go",
+    "web/src/components/Catalog.vue",
+    "web/src/components/ExploreDetail.vue",
+    "web/src/components/CatalogRelated.vue"
+  ],
+  "behavior": [
+    "Two independent lazy related requests after recognition, selected by resolved tmdb_id then douban_id then bangumi_id, not requested route source.",
+    "Native cache is inside module fallback. Source/clone None/list accumulation, false cutoff, exception continuation, invalid result and Bangumi final20 slice preserve source behavior. Douban credits False raises response validation unlike TMDB empty list.",
+    "Both native Catalog and ExploreDetail use existing media cards and actor buttons; one section error does not remove hero or successful sibling. Stop/reload/uninstall use existing runtime."
+  ],
+  "evidence": {
+    "source_cases": 16,
+    "actual_sdk_seconds": 4.673,
+    "related_seconds": 32.493,
+    "race_seconds": 5.757,
+    "web_tests": 24,
+    "web_build": "vue-tsc and production build passed",
+    "linux_cli_seconds": 2.17,
+    "linux_browser_gate_seconds": 245.08,
+    "browser": "IAB90 actual clone/native list order; two explicit errors retain hero; separate retry restores each without re-recognition; actual cold newPIDs0replay, existing browser session on douban999 route uses recognizedTMDB120 and source+clone once per section; uninstall404 restores native actor.",
+    "manifest": "testdata/plugin-module-no-official-auth-20261026/catalog-related-51-20261028/manifest.json",
+    "build": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform51-20261027-linux",
+          "sha256": "2ba788460beca28231006df531221cb3669ff5d1b291ab2d6d93c2012aff6827",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform51-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3744,
+          "changed": [],
+          "elapsed_seconds": 5.04
+        },
+        {
+          "name": "process-platform51-20261027-linux.test",
+          "sha256": "b51df3781c422ec3131a1c7d9d4d47fe747c08272931f54d6ac921a7e45228a5",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform51-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4236,
+          "changed": [],
+          "elapsed_seconds": 8.58
+        }
+      ]
+    }
+  },
+  "adaptations": [
+    "Existing native cached catalog data remains the concrete provider for fallback; controlled cache seeds are synthetic provider evidence, actual server/SDK/browser are Linux real execution. No remote-provider availability claim.",
+    "Existing detail views now call native /catalog/detail/credits and recommendations rather than source per-provider URLs; exact module names and kwargs are retained.",
+    "Existing explicit retry behavior retained; source lazy cards log errors and retry on reactivation. No main detail failure on related errors.",
+    "Existing compact native CastMember is projected to full source MediaPerson defaults; plugin raw returned models preserve source DTO fields. Native cache may not contain source-specific fields that existing host never fetched.",
+    "Fixed source frontend has no AniList-related card; existing native AniList rendering remains without adding an independent AniList related business subsystem."
+  ],
+  "failures_explained": [
+    "Source AST harness initially lacked BaseModel binding; fixed harness only.",
+    "First broad catalog regression selected transfer fixture without four catalog event handlers. Reran unchanged production code with existing catalog-opaque worker; all related catalog tests passed."
+  ],
+  "remaining": [
+    "43:existing selection dialog seasons bypass async_tmdb_seasons; continue source+host audit,197methods/199ordinarycalls",
+    "50:final scope evidence audit"
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

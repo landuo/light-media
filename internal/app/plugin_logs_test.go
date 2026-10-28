@@ -150,7 +150,7 @@ func TestPluginLogsAuthenticationScopeMethodsAndBoundedExport(t *testing.T) {
 	assertNoPluginLogTemps(t, a)
 }
 
-func TestPluginLogsCorruptHistoryIsNotReturnedAsCompleteArchive(t *testing.T) {
+func TestPluginLogsSharedSpoolCorruptionDoesNotDamageIndependentPluginFile(t *testing.T) {
 	a, cookie := pluginLogsFixture(t, 3)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
@@ -177,12 +177,12 @@ func TestPluginLogsCorruptHistoryIsNotReturnedAsCompleteArchive(t *testing.T) {
 			Resume  string  `json:"resume_id"`
 		} `json:"data"`
 	}
-	if history.Code != 200 || json.Unmarshal(history.Body.Bytes(), &boundary) != nil || !boundary.Data.History.Gap || !strings.Contains(boundary.Data.Resume, ":") {
+	if history.Code != 200 || json.Unmarshal(history.Body.Bytes(), &boundary) != nil || boundary.Data.History.Gap || !strings.Contains(boundary.Data.Resume, ":") {
 		t.Fatal("a retained-history gap discarded the boundary for fresh live logs", history.Code)
 	}
 	response := callTest(t, a.Handler(), "GET", "/api/plugins/one/logs/download", "", cookie, "")
-	if response.Code != 409 || response.Header().Get("Content-Type") == "application/zip" || !strings.Contains(response.Body.String(), "PLUGIN_LOG_HISTORY_CHANGED") {
-		t.Fatal("corrupt snapshot was returned as a successful complete archive", response.Code)
+	if response.Code != 200 || response.Header().Get("Content-Type") != "application/zip" {
+		t.Fatal("unrelated structured spool corruption hid an intact plugin file", response.Code)
 	}
 	assertNoPluginLogTemps(t, a)
 }

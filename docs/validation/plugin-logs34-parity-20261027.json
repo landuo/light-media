@@ -1,0 +1,591 @@
+{
+  "index": 34,
+  "complete": true,
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "supersedes": "Earlier logs34-evidence.json single-spool ZIP/rotation adaptation is superseded by actual independent per-instance files and fixed rotation below. Earlier intermediate browser/CLI receipts remain historical, not final storage acceptance.",
+  "mapping": [
+    {
+      "source": "B/app/log.py:21-84,123-174; CPython3.12.13 logging/handlers.py:130-200",
+      "target": "plugin_log_rotation.go; plugin_log_projection.go; logs_runtime.go:write; cmd/server/main.go",
+      "behavior": "Existing single writer projects sanitized accepted records to logs/plugins/<lower-instance>.log. Default5MiB/current+10 backups; threshold >= with Unicode len+byte tell and empty-file exception. LOG_MAX_FILE_SIZE/LOG_BACKUP_COUNT Pydantic int startup overrides, host LogMaxMiB/LogRetainFiles fallback, <=0 append/no-rename behavior. Source arbitrary integer remains big.Int; existing canonical backup indexes visited descending, avoiding an enormous absent-file scan."
+    },
+    {
+      "source": "B/app/api/endpoints/system.py:360-457",
+      "target": "plugin_logs.go:preparePluginLogFile",
+      "behavior": "Current first regardless mtime; remaining backups by mtime descending; max10 total; independent ZIP stem/name per actual file. Current text excludes backups. No files404, backup-only ZIP allowed. Rooted nofollow regular-file descriptors and unlinked private output spool."
+    },
+    {
+      "source": "B/app/api/endpoints/system.py:954-1068",
+      "target": "plugin_log_projection.go:readPluginProjectionHistory; plugin_logs.go; logs_http.go:streamLogs",
+      "behavior": "Current history last100KiB with incomplete leading line dropped, last50 trimmed nonempty physical lines; physical full text split/newline reversal. Live stream reuses host event IDs, bounded ring, gaps and reconnect; only serialized successful plugin-file records emitted, raw source-format text included."
+    },
+    {
+      "source": "B/app/log.py:372-419,480-531",
+      "target": "plugin_original_logs.go; plugin_original_base.go; plugin_original_resources.go; plugin_original_modules.go; plugin_original_notice.go; refresh_resource.go",
+      "behavior": "Trusted synchronous SDK owner from common scope validates source/clone identity. Explicit log, immediate notice failure, module declaration/rate-limit/execution and refresh-service errors use same sole logger. Background Tick without caller remains global. No goroutine/stack inference."
+    },
+    {
+      "source": "F/src/views/system/LoggingView.vue:398-640; F/src/components/dialog/PluginLogDialog.vue",
+      "target": "plugin-logs.ts; PluginLogDialog.vue",
+      "behavior": "Actual fixed parser functions for physical raw/continuation lines; source severity/time/source fields and blank suppression. Initial50/live600, fixed batching/connection/retry cadence and controls retained."
+    }
+  ],
+  "oracles": {
+    "source-oracle.json": "4da27d82f4c3549f202dc86a725f8e336f9660229688313a3c610746a1534a47",
+    "text-source-oracle.json": "7a48e78a9fb4cc5bf7afc8c0fc8668910cab32c293a774711138b4311bf9493a",
+    "caller-source-oracle.json": "f35883e00d8d1bab8783d9eb2cb8953dff69f8c52a2c150cd3e3beb4303eb20a",
+    "file-source-oracle.json": "3f91eb7340a4d133d6cb809b0be16fd6f486e5c409006845427bcdf5b8f4c853"
+  },
+  "oracle_kinds": {
+    "frontend": "Actual fixed TypeScript parser AST with4 synthetic physical inputs; existing normalization/group/filter source cases retained.",
+    "text": "Actual fixed get_logging text reversal expression,3 synthetic cases;2 actual Go HTTP nonempty files.",
+    "caller": "Actual fixed frame walker on5 synthetic stacks.",
+    "storage": "Actual fixed LogConfigModel/selector/ZIP builder on temp regular files; pinned CPython3.12.13 rotation methods.15 Pydantic2.13.4 string ints,5 zero/negative/positive file configurations. ZIP entries match independent names/order/content/compression/permissions/mtime;1970 and2110 years reproduce source ZIP builder failure."
+  },
+  "checks": {
+    "logs34-configured-host-tests.jsonl": {
+      "sha256": "2fe5b8f52e47fa6d9da6cbe5cc964c971bbd9a46d8e7f44186fb1775dc94e31f",
+      "roots": {
+        "pass": 37,
+        "fail": 0,
+        "skip": 1
+      },
+      "packages": {
+        "light-media/cmd/server": {
+          "action": "pass",
+          "seconds": 0.57
+        },
+        "light-media/internal/app": {
+          "action": "pass",
+          "seconds": 10.343
+        }
+      }
+    },
+    "logs34-configured-final-race.jsonl": {
+      "sha256": "3694349dfc56881f30d51da9cf9037ecb60bbeac902f6900deb3cc90293ca1c0",
+      "roots": {
+        "pass": 18,
+        "fail": 0,
+        "skip": 0
+      },
+      "packages": {
+        "light-media/internal/app": {
+          "action": "pass",
+          "seconds": 43.154
+        }
+      }
+    },
+    "auth47-projection-final-host-tests.jsonl": {
+      "sha256": "cd4aa6af3c402d6f4fd51a740c85b2442bdedbea31a109a7a49e9029270d3300",
+      "roots": {
+        "pass": 18,
+        "fail": 0,
+        "skip": 1
+      },
+      "packages": {
+        "light-media/internal/app": {
+          "action": "pass",
+          "seconds": 12.47
+        }
+      }
+    },
+    "logs34-projection-frontend-final-tests.log": {
+      "sha256": "5fd3541f4f6c08bca372386ee0e2969c0bee03a93dc65338245de4857ce3360f"
+    },
+    "logs34-configured-compile.log": {
+      "sha256": "f4080cecabbd538de721fd1442e44cece8184267fd4b79bd4c77815d665b4ed2"
+    },
+    "logs34-configured-linux-test-build.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "logs34-final-storage-host-tests.jsonl": {
+      "sha256": "f4c2207f7474e6c7b60b7cd2175d7e918d617b35200cbb2d0a74989051df289e",
+      "roots": {
+        "pass": 37,
+        "fail": 0,
+        "skip": 1
+      },
+      "packages": {
+        "light-media/cmd/server": {
+          "action": "pass",
+          "seconds": 0.664
+        },
+        "light-media/internal/app": {
+          "action": "pass",
+          "seconds": 8.744
+        }
+      }
+    },
+    "logs34-final-legacy-recovery-host-tests.jsonl": {
+      "sha256": "cf7a784fac47498c78bd998d57377d46642db5aaf79eff09d4e5938b8dc4911b",
+      "roots": {
+        "pass": 37,
+        "fail": 0,
+        "skip": 1
+      },
+      "packages": {
+        "light-media/cmd/server": {
+          "action": "pass",
+          "seconds": 1.226
+        },
+        "light-media/internal/app": {
+          "action": "pass",
+          "seconds": 11.183
+        }
+      }
+    },
+    "logs34-final-zip-metadata-race.jsonl": {
+      "sha256": "d4c3595a94fa4cc6302199e2b0e25de690e0c02f1f5139a7833cc52c0075e3e4",
+      "roots": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      "packages": {
+        "light-media/internal/app": {
+          "action": "pass",
+          "seconds": 3.193
+        }
+      }
+    },
+    "logs34-final-legacy-recovery-race.jsonl": {
+      "sha256": "31335c2a62951875ef23fe625aaf1c920e4b7e7a9856303e56d871a8200568c4",
+      "roots": {
+        "pass": 2,
+        "fail": 0,
+        "skip": 0
+      },
+      "packages": {
+        "light-media/internal/app": {
+          "action": "pass",
+          "seconds": 4.83
+        }
+      }
+    },
+    "logs34-final-production-linux.log": {
+      "sha256": "fabb2875cf74c7767a35c22b94cf7def897f5f730336f38305d1eaca1cbaf879",
+      "result": "PASS",
+      "seconds": 1.37,
+      "server_sha256": "cfc9189e0afe81d8c94e834d93f11b58c62758c5a26229e4cd231008225fa288",
+      "test_sha256": "38acc100520730a335c24e053caae83e84c9eeb0cbcad035680405571656ae0c",
+      "pids": {
+        "source": [
+          2275466,
+          2275605
+        ],
+        "clone": [
+          2275479,
+          2275612
+        ]
+      },
+      "kind": "actual production Linux cmd/server + separate owned Go SDK processes/HTTP repository; synthetic data only; fixture uninstall/server stop successful"
+    },
+    "logs34-chain-caller-host-test.jsonl": {
+      "sha256": "116baee63e24c32737a6de99dba74bb7c61dbdf022b892f41bfc20ca9c6f93a9",
+      "roots": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      "kind": "actual local host/independent SDK workers, not independent production CLI"
+    },
+    "logs34-chain-caller-host-race.jsonl": {
+      "sha256": "dd32d6728df0495b5961afed1a2f30427d3a8221839b7b0a8dd5ce841dff85b7",
+      "roots": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      "kind": "host race detector with actual separately built normal SDK workers; not child race instrumentation"
+    },
+    "logs34-final-resource-auth-context-race.jsonl": {
+      "sha256": "c2248aa98bfa2b25b4ee8b5d523a73b85e0f8f346ea9527deb4fe1750c0d5eb6",
+      "roots": {
+        "pass": 1,
+        "fail": 0,
+        "skip": 0
+      },
+      "kind": "host race detector with independently built normal source/clone SDK workers, no child race claim"
+    }
+  },
+  "legacy_migration": {
+    "algorithm": "Before existing writer starts, scan retained global spool oldest→current, project only absent per-instance namespaces. Pending receipt owns its newly created canonical leaves; interrupted replay removes only owned namespace then replays deterministically. Completed .plugin-projection-v1 prevents duplication; existing current/backup native files remain authoritative. Original spool files retained.",
+    "limitations": "Only still-retained old spool can be restored; already-pruned history is unavailable. Malformed retained lines persist unreadable count; history Gap=true/Complete=false and export X-Plugin-Log-Legacy-Gap=true. Test covers valid idempotence/interrupted replay and corrupted-line warning persisted across2 starts. Oversized malformed retained lines are discarded with a bounded16KiB reader and the same persistent gap; they cannot prevent host startup."
+  },
+  "adaptations": [
+    "Native sole bounded queue/writer/redactor replaces Python2-worker queue; no new logging daemon/framework. Existing global spool remains for global diagnostics while each plugin owns independent physical rotation; global spool size/age budget does not prune plugin files.",
+    "Go module attribution and accepted host timestamp replace Python caller filename and LogRecord timing; no fabricated Python traceback. Source file header/physical continuation and actual default formatter layout retained.",
+    "Cookie admin scope/URL exact installed instance replace original superuser resource-cookie query. Host SSE IDs/resume/gaps/ring/writer watermark replace0.5s inode/size polling; existing source file-poll batching/rotation limitations are not recreated.",
+    "Arbitrary custom Python LogRecord format strings/console formatter and arbitrary Python object logging are not supplied by the typed Go SDK. Ordinary accepted string messages retain existing credential/URL redaction and record-size truncation boundaries.",
+    "Source ZIP years1980..2107 enforced. Go ZIP uses extended UTC timestamp in addition to local DOS time; both retain source two-second mtime and actual file permissions. Archive compressed bytes need not be byte-identical. Existing native1GiB plain export/two-minute deadline/export slot remain; format errors map to opaque native API error instead of exposing Python exceptions."
+  ],
+  "files_sha256": {
+    "internal/app/plugin_log_projection.go": "9347d5199418149b015846d2223b38099aabbf09ae68ac43438466ae40003fa6",
+    "internal/app/plugin_log_rotation.go": "a5c2fdd6a11c70bf6da9e8464720ae8c2ee9ba0f74606b595c51d4aca4d0c59e",
+    "internal/app/plugin_logs.go": "bd1b0dd1b50942556b7d7bc647ced5d5e6fe541885a94e419cd9f24991410b85",
+    "internal/app/logs_runtime.go": "e9cf4b0a4fc940b02bb5b615dadcdbcd8ac8e5662cebeaa169fe660d632029f9",
+    "internal/app/logs_http.go": "876e38169198c35d11a6ef6cfc67c2bae76b466d367e4ea611d68e096abade84",
+    "internal/app/plugin_original_logs.go": "db7e2964045a83065b7ced76f9aea4891eddb36890a29617c312fbdd8b2a7ab2",
+    "internal/app/plugin_original_base.go": "989020d5ae77a79b4d3cba80048144cb50534cc7a65b2afbce2632e5e680effb",
+    "internal/app/plugin_original_resources.go": "124055a11fb3c3825c59d16f5b7c833d7f508d853a65a7fd1e4b11ecc86c6f55",
+    "internal/app/plugin_original_modules.go": "9ea75bd8c50d1640b93aa1c0350d930192d80cd43d1bc6ba4cef17aa83fed2a7",
+    "internal/app/plugin_original_notice.go": "87385f351800f66e090590565c8337fca1a8bc1c3515b7f79bee1ebe1643a6b6",
+    "web/src/features/plugin-logs.ts": "db2edd7b037587d808d36aa706c51e076baaf2d968b45e01baaf112510ad8d89",
+    "web/src/components/PluginLogDialog.vue": "07019728550c72d7eb7fb0722bbae7d795a456aacad0013182e0336f9cb19f38",
+    "internal/app/plugin_log_projection_test.go": "9cec65fae08c6f666072ba32ba2e3efdc09dbc950d397b07bd54ee9404ce021d",
+    "internal/app/plugin_log_rotation_test.go": "2fe786be95db90fca7bf7258e93f2f37c0a0a7e8c90d43bcbd9f3eefc24ec85e",
+    "internal/app/plugin_logs_source_text_test.go": "22424f97684d94aba403deebc837897c23e0f4482532747319cdc112a0a9efc7",
+    "internal/app/plugin_original_logs_host_context_test.go": "509db80ab9b155fcff2565c096fe00340769c0ab749555f651ec2369877bcf8e",
+    "internal/app/plugin_module_process_logs_test.go": "3c270901fe561a9f512131991c0faed909b3ff0027f449370b8262f49be53108",
+    "internal/app/runtime.go": "07a2950cca4dcf7244cb4f07198be2719cdfa7b0b4b489c84abd11a5bb3e47f7",
+    "cmd/server/main.go": "984acf34c20796345d9f524060e34a396c1e23a6f50e8fa8f4ff865c2d695c19",
+    "internal/app/plugin_original_chain_event.go": "cf9aa0d3a6d2123a558e51ed8b4b1743af97972c9db9433280a7b28e7affdb4d",
+    "internal/app/plugin_original_auth.go": "d7603e327faa9e6d05e19e6e4d3ab09f303916c2dc36692dc5cd91264b1f19d4"
+  },
+  "remaining": [],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "old_service_modified": false
+  },
+  "chain_audit": {
+    "artifact": "logs34-chain-caller-audit.json",
+    "sha256": "df56339f5bdd31a1824bbd30da63c343ed2fd715bb3b72dacdb39df06c38ee3c",
+    "kind": "actual fixed LoggerManager and synchronous EventManager AST under3 owned compiled sender/clone/main frames, with receiver class/registry/notification sink synthetic",
+    "source": "B/app/core/event.py:139-155,351-420,499-572,754-773; B/app/log.py:372-419,480-531",
+    "recommendation": "Main agent applied caller-context helper to chain_handler_failed and native event_invalid guard. Actual SDK regression sends from source/clone to the same failing source subscriber, then main-context dispatch; exactly one error belongs to each sender or global respectively, remaining subscriber still completes. No arbitrary receiver-based ownership."
+  },
+  "production_current": {
+    "server": "server-unified-linux",
+    "server_sha256": "cfc9189e0afe81d8c94e834d93f11b58c62758c5a26229e4cd231008225fa288",
+    "test": "logs34-final-process-linux.test",
+    "test_sha256": "38acc100520730a335c24e053caae83e84c9eeb0cbcad035680405571656ae0c",
+    "old_service_modified": false,
+    "agent_owned_cli_processes_running": false
+  },
+  "browser_hold": {
+    "test": "TestPluginLogsProductionCLI",
+    "environment": [
+      "PLUGIN_PROCESS_SERVER_BINARY",
+      "OWNED_INSTANCE_LOG_PROCESS_BINARY",
+      "PLUGIN_PROCESS_LOG_BROWSER_STATE"
+    ],
+    "state_contents": "origin/repository/data_dir only; no token",
+    "control_suffixes": [
+      ".emit → .emit.done",
+      ".restart → .restart.done",
+      ".done → fixture uninstall/server shutdown"
+    ],
+    "deadline_minutes": 35
+  },
+  "accepted": true,
+  "reachable_sdk_resource_audit": {
+    "scope": "Current standard SDK base/resources vocabulary only; unrelated231 module consumers belong43 and are not34 blockers.",
+    "total_methods": 22,
+    "base_methods": 7,
+    "resource_methods": 15,
+    "rows": [
+      {
+        "methods": [
+          "plugin.base.get_config",
+          "plugin.base.update_config",
+          "plugin.base.get_data_path",
+          "plugin.base.save_data",
+          "plugin.base.get_data",
+          "plugin.base.del_data",
+          "plugin.base.get_instance_metadata"
+        ],
+        "entry": "plugin_original_base.go:pluginOriginalBaseHost",
+        "trusted_context": "withOriginalPluginLogContext immediately after scope and executable identity validation",
+        "reachable_log_sites": [],
+        "audit": "Config cache/DB/path/KV/instance metadata helpers return errors; no current host a.log call in this synchronous subtree."
+      },
+      {
+        "methods": [
+          "plugin.log.write"
+        ],
+        "entry": "plugin_original_resources.go→pluginOriginalLogHost",
+        "reachable_log_sites": [
+          "plugin_original_logs.go:writeOriginalPluginCallLog"
+        ],
+        "audit": "Existing active scope/level/payload validation; one writer/redactor and concrete instance/call ID."
+      },
+      {
+        "methods": [
+          "message.post"
+        ],
+        "entry": "originalPostMessageResource→postOriginalPluginMessage",
+        "reachable_log_sites": [
+          "plugin_original_modules.go:module_declaration_failed/module_rate_limited/module_execution_failed",
+          "plugin_original_notice.go:QueueCall immediate notification_failed"
+        ],
+        "audit": "All synchronous host producers use caller context; notice Tick uses ordinary global logger after original stack has ended. Notification rendering/history/preferences/notice.message enqueue produce no a.log themselves. Source/clone immediate failure and originating-caller module SDK tests actual."
+      },
+      {
+        "methods": [
+          "plugin.services.refresh"
+        ],
+        "entry": "originalRefreshServicesResource",
+        "reachable_log_sites": [
+          "plugin_original_refresh_resource.go:register_service_failed via writeOriginalPluginCallLog(scope.installation,scope.logCall)"
+        ],
+        "audit": "Direct active-scope binding. State/service getter failures return errors before registration; ordinary startup registerOriginalObjectServices is a distinct non-SDK stack."
+      },
+      {
+        "methods": [
+          "event.send"
+        ],
+        "entry": "originalEventResource→sendOriginalChainEvent",
+        "reachable_log_sites": [
+          "plugin_original_chain_event.go:chain_handler_failed through logOriginalPluginContext",
+          "plugin_original_chain_event.go:event_invalid through same helper; native JSON guard, no exact Python Event encoding counterpart"
+        ],
+        "audit": "Synchronous chain preserves initiating caller, including clone and later subscriber continuation. Broadcast enqueue is asynchronous; its eventual handler errors remain ordinary global host logs, while each receiver SDK resource has a new validated own scope."
+      },
+      {
+        "methods": [
+          "event.check",
+          "event.manage"
+        ],
+        "entry": "originalEventResource→originalEventHasHandler/originalManageEventResource",
+        "reachable_log_sites": [],
+        "audit": "Registry enable/list/check/register/remove and validation have no current a.log producer. No owner inferred from affected handler identity."
+      },
+      {
+        "methods": [
+          "auth.ticket.create"
+        ],
+        "entry": "originalAuthTicketResource→originalObjectAuthProviders",
+        "reachable_log_sites": [
+          "plugin_original_auth.go:auth_provider_declaration_failed via logOriginalPluginContext"
+        ],
+        "audit": "New final native mint-validation diagnostic fix. Actual source/clone SDK calls keep initiating HTTP call ID; separate anonymous /auth/providers getter failures remain global. Fixed Python ticket helper lacks this cross-process extra declaration check; diagnostic is native adaptation, not invented source behavior."
+      },
+      {
+        "methods": [
+          "input.create",
+          "input.get",
+          "input.pop",
+          "input.remove"
+        ],
+        "entry": "originalInputResource→plugininput.Manager",
+        "reachable_log_sites": [],
+        "audit": "SDK resource only mutates/reads input manager. consumeOriginalPluginInput feedback occurs later from native incoming-message HTTP context, not reachable as a synchronous SDK child; its generic input_feedback_failed remains global. Any postOriginalPluginMessage reached there has its actual native/no-owner context."
+      },
+      {
+        "methods": [
+          "service.progress.update"
+        ],
+        "entry": "originalServiceProgressResource",
+        "reachable_log_sites": [],
+        "audit": "Updates already-running service progress under current service-call context; does not call executeOriginalService. The executor service_failed log occurs after actual SDK callback has returned/unwound; keeping it global matches source caller frames."
+      },
+      {
+        "methods": [
+          "brush.inventory.read"
+        ],
+        "entry": "originalBrushInventory",
+        "reachable_log_sites": [],
+        "audit": "Read-only SQL snapshot/projection plus scope revalidation; no host logger producer."
+      },
+      {
+        "methods": [
+          "downloader.tasks.read"
+        ],
+        "entry": "originalDownloaderTasks→native protocol client",
+        "reachable_log_sites": [],
+        "audit": "Configured exact downloader/hash read and scope revalidation; no App logger-producing callee. Native client returns bounded opaque errors; neither read entry nor projection logs."
+      },
+      {
+        "methods": [
+          "plugin.background.submit"
+        ],
+        "entry": "originalSubmitResource",
+        "reachable_log_sites": [
+          "plugin_original_submitted.go:submitted_method_failed is background Wait completion, intentionally ordinary global logger"
+        ],
+        "audit": "Submission/admission itself has no logger. Submitted worker host callbacks receive fresh actual object/method scope; asynchronous Wait/unpublished-retirement logs cannot inherit a completed originating stack. No goroutine inference."
+      }
+    ],
+    "source_caller_reference": "B/app/log.py:372-419,480-531; actual fixed frame AST caller-source-oracle and synchronous chain3-frame replay.",
+    "final_delta": "plugin_original_auth.go getter diagnostic changed after browser/CLI baseline, with actual SDK source+clone+anonymous regression. It changes only failure log routing, no auth success/data/UI semantics."
+  },
+  "browser": {
+    "server_sha256": "cfc9189e0afe81d8c94e834d93f11b58c62758c5a26229e4cd231008225fa288",
+    "seconds": 382.37,
+    "result": "PASS",
+    "production_log": "logs34-final-browser-production.log",
+    "operations": [
+      "Raw current-file source header/physical continuation parsing and real SSE live updates",
+      "Search and ERROR level filters; pause hides new records, resume catches retained live source lines",
+      "Plaintext new-window physical reverse and ZIP download link request; archive content/retention additionally proven by source oracle and production CLI",
+      "Source/clone visible history and live isolation",
+      "Actual cold process restart; browser SSE gap/reload/reconnect returns to live state"
+    ],
+    "cleanup": "root confirmed CLI41750 .done, owned fixtures auto-uninstalled and server stopped; browser/tunnel closed by root."
+  },
+  "archived_evidence": {
+    "logs34-final-legacy-recovery-host-tests.jsonl": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-legacy-recovery-host-tests.jsonl.gz",
+      "original_sha256": "cf7a784fac47498c78bd998d57377d46642db5aaf79eff09d4e5938b8dc4911b",
+      "archived_sha256": "6a5a004e8584bf1d78a4d7c2c0d6090460fff55b9f333dce49decbe87f734762"
+    },
+    "logs34-configured-final-race.jsonl": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-configured-final-race.jsonl.gz",
+      "original_sha256": "3694349dfc56881f30d51da9cf9037ecb60bbeac902f6900deb3cc90293ca1c0",
+      "archived_sha256": "670235b7767ca454cc94ddbb9dde39ca047c2dbdf8bcea0f5f1d8fab99fc3746"
+    },
+    "logs34-final-legacy-recovery-race.jsonl": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-legacy-recovery-race.jsonl.gz",
+      "original_sha256": "31335c2a62951875ef23fe625aaf1c920e4b7e7a9856303e56d871a8200568c4",
+      "archived_sha256": "dc6d0c5db3673434a08683fb32063858fee7f74a18c34c48302e146dbf2f0c2f"
+    },
+    "logs34-final-zip-metadata-race.jsonl": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-zip-metadata-race.jsonl.gz",
+      "original_sha256": "d4c3595a94fa4cc6302199e2b0e25de690e0c02f1f5139a7833cc52c0075e3e4",
+      "archived_sha256": "139ccd71017fb43dc0d6737adc6050f63276a1257538415bb2062694eb62da4f"
+    },
+    "logs34-chain-caller-host-test.jsonl": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-chain-caller-host-test.jsonl.gz",
+      "original_sha256": "116baee63e24c32737a6de99dba74bb7c61dbdf022b892f41bfc20ca9c6f93a9",
+      "archived_sha256": "198d693742e344460edd5d36c43909e27329f34a64a1dc86dd3399a4b4bd3b3e"
+    },
+    "logs34-chain-caller-host-race.jsonl": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-chain-caller-host-race.jsonl.gz",
+      "original_sha256": "dd32d6728df0495b5961afed1a2f30427d3a8221839b7b0a8dd5ce841dff85b7",
+      "archived_sha256": "2d7b0b7c2fb6b3fc299e95bf42ff7f7991b8c469d84fb3b316f2b177f022868d"
+    },
+    "logs34-final-resource-auth-context.jsonl": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-resource-auth-context.jsonl.gz",
+      "original_sha256": "3822cb187b0c8709c0dc2716bfdedda272db23a763000d3f330dc6c9e4e0b376",
+      "archived_sha256": "274df44e8a9274780a1faf3686bb84afab9b1f9ca58c415257d9542edec85998"
+    },
+    "logs34-projection-frontend-final-tests.log": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-projection-frontend-final-tests.log.gz",
+      "original_sha256": "5fd3541f4f6c08bca372386ee0e2969c0bee03a93dc65338245de4857ce3360f",
+      "archived_sha256": "f5759df51f457cb4df161f57b0c6312353f77a69492c6747a86ba090392f76f7"
+    },
+    "logs34-final-production-linux.log": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-production-linux.log.gz",
+      "original_sha256": "fabb2875cf74c7767a35c22b94cf7def897f5f730336f38305d1eaca1cbaf879",
+      "archived_sha256": "b2503e1ed4bf01d06e8061cb14c7cb924dec0498c35157a28956b2d5d89f8d91"
+    },
+    "logs34-final-browser-production.log": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-production.log.gz",
+      "original_sha256": "a3238aa73ec5ef80470fe291d3c9f639b7c391ea8b443c50b7852108c51df1ca",
+      "archived_sha256": "d1f3ee36c05701f5bfff68963637d0d779fd4c4fe4e5b623322fadcacdf712ed"
+    },
+    "logs34-chain-caller-audit.py": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-chain-caller-audit.py.gz",
+      "original_sha256": "ac53fca1eab99e963c83f78520e1a76e6267ab90e38c5a7c6545e17d4ebfa267",
+      "archived_sha256": "654f3fbb2b6225656d5eb4579dac9cf4823250808600a4a666266311017f3bd8"
+    },
+    "logs34-chain-caller-audit.json": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-chain-caller-audit.json.gz",
+      "original_sha256": "df56339f5bdd31a1824bbd30da63c343ed2fd715bb3b72dacdb39df06c38ee3c",
+      "archived_sha256": "cc902e4394a774b8f662f151c1a45d03fdf0e11170543cb56e5651d2b29cd825"
+    },
+    "logs34-final-resource-auth-context-race.jsonl": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-resource-auth-context-race.jsonl.gz",
+      "original_sha256": "c2248aa98bfa2b25b4ee8b5d523a73b85e0f8f346ea9527deb4fe1750c0d5eb6",
+      "archived_sha256": "786e73065ed0462098ebda7531fb9ec05d3ba3b1160122765ce849f958c3d042"
+    },
+    "logs34-final-browser-live.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-live.ax.txt.gz",
+      "original_sha256": "0219e3c6c221ed668368cba1d473fbb5d5d7847b227cfe12ec7ea3e685c78de2",
+      "archived_sha256": "2161dff9346b00fdc8649ae8c863aa90ba163c8e905bd552aea9bdf5da655f41"
+    },
+    "logs34-final-browser-resumed.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-resumed.ax.txt.gz",
+      "original_sha256": "eafcfc9cf0a3983c52a0101b6d67a52be19c82c578540ded84201ff9b7b6d1af",
+      "archived_sha256": "38ccfbcce7eb9b50305af2725143e2a62d3c2490c7dcd68ca26b4fdd31837aca"
+    },
+    "logs34-final-browser-physical-text.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-physical-text.ax.txt.gz",
+      "original_sha256": "03db62d0f995920d7659d7a825afbe92907d47631da2676fabe284d07e29f60b",
+      "archived_sha256": "0b4bcb7f631b55608aa88200fc0f10da5f20d29c19321a3814e515901f03db3c"
+    },
+    "logs34-final-browser-paused.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-paused.png",
+      "original_sha256": "5a026df6ee8994024716f0c64506306f95d5d7ae9516f8c25da0009adfa1493e",
+      "archived_sha256": "5a026df6ee8994024716f0c64506306f95d5d7ae9516f8c25da0009adfa1493e"
+    },
+    "logs34-final-browser-physical-text.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-physical-text.png",
+      "original_sha256": "63f49a12e14a9cac5feef55860274c702cd48966592919af35a941bb7145c3a5",
+      "archived_sha256": "63f49a12e14a9cac5feef55860274c702cd48966592919af35a941bb7145c3a5"
+    },
+    "logs34-final-browser-cold.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-cold.png",
+      "original_sha256": "24a8b0b166d6dd4064f9c1992a69dfe6482389b5fc72fde7e0ed0e8c47394e82",
+      "archived_sha256": "24a8b0b166d6dd4064f9c1992a69dfe6482389b5fc72fde7e0ed0e8c47394e82"
+    },
+    "logs34-final-browser-cold.json": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-cold.json.gz",
+      "original_sha256": "35848b10167982af69c0ae24722912549f8702ed480610469b2d562daaece13e",
+      "archived_sha256": "a318017313f486136a414fa1fcbdc6047ce3e2628ac76c85a2765b81fd84e9c6"
+    },
+    "logs34-final-browser-level.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-level.ax.txt.gz",
+      "original_sha256": "86a5e749e895957c77158c6e1aab1e56a1bc94cc736d8d05c0d5814678f81bd0",
+      "archived_sha256": "aab37e5a4570eee756bca1041c7ef91ca05dfae7bef2b489fa15bfcdbe96dc59"
+    },
+    "logs34-final-browser-live.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-live.png",
+      "original_sha256": "e69bf7e744eeb8b45a7a1b65cb33f30aa8b9b890e958a201b9e247f3b023faf7",
+      "archived_sha256": "e69bf7e744eeb8b45a7a1b65cb33f30aa8b9b890e958a201b9e247f3b023faf7"
+    },
+    "logs34-final-browser-level.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-level.png",
+      "original_sha256": "e74e78c398ef35425d706df354c5beff2c942e25ff341e9aa5c31aaf8e00b43b",
+      "archived_sha256": "e74e78c398ef35425d706df354c5beff2c942e25ff341e9aa5c31aaf8e00b43b"
+    },
+    "logs34-final-browser-filter.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-filter.png",
+      "original_sha256": "d0cf511f1399e1dac8065f2cb42e7df264b16672a2b0fa0831485442ff6352b8",
+      "archived_sha256": "d0cf511f1399e1dac8065f2cb42e7df264b16672a2b0fa0831485442ff6352b8"
+    },
+    "logs34-final-browser-readback.json": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-readback.json.gz",
+      "original_sha256": "1bb7310364568a42782cf574759e718d8fa9629dda81c28f706f358f40c14d15",
+      "archived_sha256": "38216cabf09337877531c1b7786dcc3eca82bb3e64b441a2eddf2b5d021f2214"
+    },
+    "logs34-final-browser-twin.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-twin.ax.txt.gz",
+      "original_sha256": "0a593c2e5b8c1b4d22aa43f42e2ced6991505391b6a87f19d0da638bf619072f",
+      "archived_sha256": "97edb15e263fcc59982d558816d83dc9819cbf212a6c498aca168556e3d16ff0"
+    },
+    "logs34-final-browser-twin.png": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-twin.png",
+      "original_sha256": "8137f7bdcf757f6284ec7c43d50d7532792ed5ed0b8cd301de7200736a19dc6d",
+      "archived_sha256": "8137f7bdcf757f6284ec7c43d50d7532792ed5ed0b8cd301de7200736a19dc6d"
+    },
+    "logs34-final-browser-paused.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-paused.ax.txt.gz",
+      "original_sha256": "7b41cc065852c621f196ca3b9ac72e57459d773c4c052f0589f980d2455b263c",
+      "archived_sha256": "a66a77966a7f95983250915803ecf02a39642f3dfb57b889ab5feda3599e677e"
+    },
+    "logs34-final-browser-cold.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-cold.ax.txt.gz",
+      "original_sha256": "1ce5136638155d02dfe84b2cade72faaa5c5a2668722f727ac0f3eaedb79fae7",
+      "archived_sha256": "419fa27f40ffdf7d33ca820f98d886d3d696a0c585cba1b2c210e8ea7178dcf3"
+    },
+    "logs34-final-browser-filter.ax.txt": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-browser-filter.ax.txt.gz",
+      "original_sha256": "f7d627cbbe060043b6d5b37b96d704eea5ad9dded75b4bd677b7e1628c298c49",
+      "archived_sha256": "aa0a336afbfc4603cb818b6ee8749f38a6ff67628ec1bc2bcec27fbc20dd169a"
+    },
+    "logs34-final-paused-before.json": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-paused-before.json.gz",
+      "original_sha256": "f50b184c663222ea52f934bd8bdb3a653fff1a9053a272f38a8741831a51085c",
+      "archived_sha256": "9ad26626d22d320fe559deba52ec1c577fa46ce5c0915059cdeca26d27a8c1db"
+    },
+    "logs34-final-resumed.json": {
+      "path": "testdata/plugin-module-no-official-auth-20261026/logs34-final-resumed.json.gz",
+      "original_sha256": "545c2b6676da4a6c076659500a2bf6a7d1a2dfc7e461e5ee4df72b133ae60589",
+      "archived_sha256": "69ef61e6d71f9171c0813b48e52b1a08737e1b15544e019201532b942da39bd3"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "daedce70999cc161cd007f5145d007238e4606504c85b6675bb3040dac449caa",
+  "source_methods": {
+    "_handle_tv_directory": [
+      1552,
+      1594
+    ],
+    "_initialize_tv_directory_metadata": [
+      1596,
+      1656
+    ]
+  },
+  "kind": "Fixed TV directory dispatch order; parsing, NFO/images and storage boundaries controlled.",
+  "cases": [
+    {
+      "recursive": false,
+      "calls": [
+        "nfo:season:2",
+        "images:season:2"
+      ]
+    },
+    {
+      "recursive": true,
+      "calls": [
+        "list_files",
+        "nfo:season:2",
+        "images:season:2"
+      ]
+    }
+  ]
+}

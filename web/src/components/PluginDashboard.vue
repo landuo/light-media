@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { ref, computed, nextTick, onMounted, onUnmounted, watch } from 'vue';
+import {
+  ref,
+  computed,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  onActivated,
+  onDeactivated,
+  watch,
+} from 'vue';
 import { GridStack, type GridStackWidget } from 'gridstack';
 import 'gridstack/dist/gridstack.css';
 import { useDisplay } from 'vuetify';
@@ -14,7 +23,6 @@ import { api, errorText } from '../api';
 import {
   dashboardID,
   dashboardEnabled,
-  dashboardPreferredLayout,
   dashboardResponse,
   dashboardProfile,
   dashboardColumns,
@@ -32,10 +40,13 @@ const container = ref<HTMLElement>(),
   items = ref<DashboardItem[]>([]),
   layout = ref<DashboardLayout>({ items: {} }),
   profile = ref(dashboardProfile(window.innerWidth));
-const editing = ref(false),
+const requesting = ref(true),
+  editing = ref(false),
   settings = ref(false),
   loading = ref(true),
   error = ref(''),
+  metadata = ref<DashboardMeta[]>([]),
+  order = ref<DashboardMeta[]>([]),
   settingItems = ref<DashboardItem[]>([]),
   settingEnabled = ref<Record<string, boolean>>({});
 const visible = computed(() =>
@@ -44,7 +55,11 @@ const visible = computed(() =>
 const timers = new Map<string, ReturnType<typeof setTimeout>>(),
   inflight = new Set<string>();
 const errors = ref<Record<string, string>>({});
-const autoHeights = new Map<string, number>();
+const autoHeights = new Map<string, number>(),
+  resizeStartHeights = new Map<string, number | undefined>(),
+  observedHeights = new Map<string, number>(),
+  pendingResize = new Set<HTMLElement>();
+let resizeFrame: number | undefined, notificationFrame: number | undefined;
 let active = true,
   grid: GridStack | undefined,
   resizeObserver: ResizeObserver | undefined,
@@ -62,32 +77,66 @@ function local(key: string) {
 async function getSetting(key: string) {
   return (await api('/plugins/dashboard/settings/' + key))?.value;
 }
+function rememberSetting(key: string, value: unknown) {
+  try {
+    localStorage.setItem(localKey(key), JSON.stringify(value));
+  } catch {
+    /* Disabled storage does not prevent the server request. */
+  }
+}
 function saveSetting(key: string, value: unknown) {
-  localStorage.setItem(localKey(key), JSON.stringify(value));
   const saved = JSON.parse(JSON.stringify(value));
   saveChain = saveChain
     .catch(() => {})
     .then(async () => {
-      await api('/plugins/dashboard/settings/' + key, saved);
+      const result = await api('/plugins/dashboard/settings/' + key, saved);
+      if (result?.saved !== true) throw new Error(result?.message || '仪表板设置保存失败');
     });
   return saveChain;
 }
+async function loadShared<T>(key: string, normalize: (value: unknown) => T | undefined) {
+  const previous = normalize(local(key));
+  try {
+    const remote = normalize(await getSetting(key));
+    if (remote !== undefined) {
+      rememberSetting(key, remote);
+      return remote;
+    }
+    if (previous !== undefined) await saveSetting(key, previous);
+  } catch (e) {
+    if (active) error.value = errorText(e);
+  }
+  return previous;
+}
 async function loadLayout(key: string) {
-  const previous = dashboardLayout(local(key));
-  const remote = dashboardLayout(await getSetting(key));
-  const selected = dashboardPreferredLayout(previous, remote);
-  const result = selected.layout ?? { items: {} };
-  const inherited =
-    result.enabled === undefined ? dashboardEnabled(await getSetting('enabled')) : undefined;
-  if (inherited !== undefined) result.enabled = inherited;
-  if (selected.layout !== undefined || inherited !== undefined)
-    localStorage.setItem(localKey(key), JSON.stringify(result));
-  if (selected.write || inherited !== undefined) await saveSetting(key, result);
-  return result;
+  const result = (await loadShared(key, dashboardLayout)) ?? { items: {} };
+  // Display choices are shared across profiles; geometry is device specific.
+  return { ...result, enabled: layout.value.enabled };
 }
 function saveLayout() {
-  layout.value = { ...layout.value, updatedAt: Date.now() };
-  return saveSetting(profile.value, layout.value);
+  const { enabled: _display, ...geometry } = layout.value;
+  rememberSetting(profile.value, geometry);
+  return saveSetting(profile.value, geometry).catch((e) => {
+    if (active) error.value = errorText(e);
+  });
+}
+function sortItems() {
+  const index = (item: DashboardMeta) => {
+    const i = order.value.findIndex((x) => x.id === item.id && x.key === item.key);
+    return i < 0 ? 999 : i;
+  };
+  items.value.sort((a, b) => index(a) - index(b));
+}
+async function loadMetadata() {
+  try {
+    const next = await api<DashboardMeta[]>('/plugins/dashboard/meta');
+    if (!active) return;
+    metadata.value = next ?? [];
+    await Promise.all(metadata.value.map(loadItem));
+    await syncGrid();
+  } catch (e) {
+    if (active) error.value = errorText(e);
+  }
 }
 function clearTimer(id: string) {
   clearTimeout(timers.get(id));
@@ -96,7 +145,7 @@ function clearTimer(id: string) {
 function schedule(item: DashboardItem) {
   const id = dashboardID(item);
   clearTimer(id);
-  const delay = dashboardRefresh(item, !!layout.value.enabled?.[id], active);
+  const delay = dashboardRefresh(item, !!layout.value.enabled?.[id], active && requesting.value);
   if (delay !== undefined)
     timers.set(
       id,
@@ -110,13 +159,19 @@ async function loadItem(meta: DashboardMeta) {
   clearTimer(id);
   try {
     const result = await api(
-      '/plugins/' + encodeURIComponent(meta.id) + '/dashboard?key=' + encodeURIComponent(meta.key),
+      '/plugins/' +
+        encodeURIComponent(meta.id) +
+        '/dashboard?key=' +
+        encodeURIComponent(meta.key || ''),
     );
     if (!active) return;
     const item = dashboardResponse(meta, result);
+    if (item === null) return;
     const index = items.value.findIndex((x) => dashboardID(x) === id);
-    if (index < 0) items.value.push(item);
-    else items.value[index] = item;
+    if (index < 0) {
+      items.value.push(item);
+      sortItems();
+    } else items.value[index] = item;
     delete errors.value[id];
     schedule(item);
   } catch (e) {
@@ -127,12 +182,12 @@ async function loadItem(meta: DashboardMeta) {
 }
 function capture(manualHeight?: string) {
   if (!grid || syncing) return;
-  const nodes = grid.save(false, false) as GridStackWidget[];
+  const columns = grid.getColumn();
+  const nodes = grid.save(false, false, undefined, columns) as GridStackWidget[];
   const next = { ...layout.value.items };
   for (const node of nodes) {
     if (!node.id) continue;
     const previous = next[node.id],
-      columns = dashboardColumns(profile.value),
       w = dashboardInt(node.w, 1, columns, columns);
     next[node.id] = {
       x: dashboardInt(node.x, 0, columns - w, 0),
@@ -150,31 +205,46 @@ async function syncGrid() {
   syncing = true;
   await nextTick();
   try {
-    grid.removeAll(false, false);
+    const visibleIDs = new Set(visible.value.map(dashboardID));
+    grid.batchUpdate();
+    for (const node of [...grid.engine.nodes])
+      if (node.el && !visibleIDs.has(String(node.id ?? node.el.getAttribute('gs-id') ?? '')))
+        grid.removeWidget(node.el, false, false);
     const elements = container.value?.querySelectorAll<HTMLElement>('.dashboard-grid-item') || [];
     for (const element of elements) {
       const item = items.value.find((x) => dashboardID(x) === element.getAttribute('gs-id'));
-      if (item) {
-        grid.makeWidget(
-          element,
-          dashboardWidget(
-            item,
-            profile.value,
-            layout.value,
-            autoHeights.get(profile.value + ':' + dashboardID(item)),
-          ),
-        );
-        if (!editing.value && layout.value.items[dashboardID(item)]?.h === undefined)
-          measureHeight(element);
+      if (!item) continue;
+      const id = dashboardID(item),
+        node = (element as HTMLElement & { gridstackNode?: GridStackWidget }).gridstackNode;
+      const widget: GridStackWidget = dashboardWidget(
+        item,
+        profile.value,
+        layout.value,
+        autoHeights.get(profile.value + ':' + id),
+      );
+      if (node && !layout.value.items[id]) {
+        delete widget.autoPosition;
+        delete widget.x;
+        delete widget.y;
       }
+      if (node && layout.value.items[id]?.h === undefined) widget.h = node.h;
+      if (node) grid.update(element, widget);
+      else grid.makeWidget(element, widget);
     }
+    grid.batchUpdate(false);
     grid.setStatic(!editing.value);
     observeSizes();
+    await nextTick();
+    for (const element of elements)
+      if (
+        !editing.value &&
+        layout.value.items[element.getAttribute('gs-id') || '']?.h === undefined
+      )
+        measureHeight(element);
   } finally {
     syncing = false;
   }
 }
-
 function rememberHeight(element: HTMLElement) {
   const id = element.getAttribute('gs-id') || '',
     h = Number(element.getAttribute('gs-h'));
@@ -187,31 +257,86 @@ function measureHeight(element: HTMLElement) {
 }
 function observeSizes() {
   resizeObserver?.disconnect();
+  observedHeights.clear();
   container.value
     ?.querySelectorAll('[data-layout-size-source]')
     .forEach((el) => resizeObserver?.observe(el));
 }
+function resizedContent(entries: ResizeObserverEntry[]) {
+  if (editing.value || syncing) return;
+  for (const entry of entries) {
+    const element = entry.target.closest<HTMLElement>('.dashboard-grid-item');
+    if (!element) continue;
+    const id = element.getAttribute('gs-id') || '',
+      before = observedHeights.get(id),
+      height = entry.contentRect.height;
+    observedHeights.set(id, height);
+    if (
+      layout.value.items[id]?.h === undefined &&
+      (before === undefined || Math.abs(before - height) >= 4)
+    )
+      pendingResize.add(element);
+  }
+  if (!pendingResize.size || resizeFrame !== undefined) return;
+  resizeFrame = window.requestAnimationFrame(() => {
+    resizeFrame = undefined;
+    for (const element of pendingResize) measureHeight(element);
+    pendingResize.clear();
+  });
+}
+async function compactAndSave(manualHeight?: string) {
+  if (!grid || syncing) return;
+  grid.compact('compact');
+  await nextTick();
+  capture(manualHeight);
+  void saveLayout();
+  await nextTick();
+  for (const element of container.value?.querySelectorAll<HTMLElement>('.dashboard-grid-item') ||
+    [])
+    if (!editing.value && layout.value.items[element.getAttribute('gs-id') || '']?.h === undefined)
+      measureHeight(element);
+}
+function dragStopped() {
+  void compactAndSave();
+}
+function notifyContentResize() {
+  if (notificationFrame !== undefined) return;
+  notificationFrame = window.requestAnimationFrame(() => {
+    notificationFrame = undefined;
+    window.dispatchEvent(new Event('resize'));
+  });
+}
+function resizeStarted(_event: Event, element: HTMLElement & { gridstackNode?: GridStackWidget }) {
+  resizeStartHeights.set(element.getAttribute('gs-id') || '', element.gridstackNode?.h);
+  notifyContentResize();
+}
+function resizeStopped(_event: Event, element: HTMLElement & { gridstackNode?: GridStackWidget }) {
+  const id = element.getAttribute('gs-id') || '',
+    before = resizeStartHeights.get(id),
+    after = element.gridstackNode?.h;
+  resizeStartHeights.delete(id);
+  notifyContentResize();
+  void compactAndSave(
+    before !== undefined && after !== undefined && before !== after ? id : undefined,
+  );
+}
 async function toggleEdit() {
+  error.value = '';
   if (editing.value) {
-    capture();
-    try {
-      await saveLayout();
-      editing.value = false;
-    } catch (e) {
-      error.value = errorText(e);
-    }
+    void compactAndSave();
+    editing.value = false;
   } else editing.value = true;
   grid?.setStatic(!editing.value);
   await syncGrid();
 }
 async function resetLayout() {
+  error.value = '';
   layout.value = { ...layout.value, items: {} };
-  try {
-    await saveLayout();
-    await syncGrid();
-  } catch (e) {
-    error.value = errorText(e);
-  }
+  void saveLayout();
+  grid?.removeAll(false, false);
+  await syncGrid();
+  editing.value = false;
+  grid?.setStatic(true);
 }
 function openSettings() {
   settingItems.value = [...items.value];
@@ -219,36 +344,38 @@ function openSettings() {
   settings.value = true;
 }
 async function saveSettings() {
+  error.value = '';
+  const ordered = settingItems.value.map((x) => ({ id: x.id, key: x.key }));
+  items.value = [...settingItems.value];
+  order.value = ordered as DashboardMeta[];
+  const enabled = { ...settingEnabled.value };
+  layout.value = { ...layout.value, enabled };
+  // Source writes both local snapshots before attempting sequential requests.
+  rememberSetting('enabled', enabled);
+  rememberSetting('order', ordered);
   try {
-    const ordered = settingItems.value.map((x) => ({ id: x.id, key: x.key }));
-    items.value = [...settingItems.value];
-    layout.value = { ...layout.value, enabled: { ...settingEnabled.value } };
-    await saveLayout();
+    await saveSetting('enabled', enabled);
     await saveSetting('order', ordered);
-    settings.value = false;
-    // Source settings save re-fetches declarations once even when automatic
-    // refresh is absent. A hidden widget receives no subsequent timer.
-    await Promise.all(items.value.map(loadItem));
-    await syncGrid();
   } catch (e) {
-    error.value = errorText(e);
+    if (active) error.value = errorText(e);
   }
+  // Source closes and rediscovers metadata even after persistence fails.
+  void loadMetadata();
+  settings.value = false;
 }
 async function switchProfile() {
   const next = dashboardProfile(window.innerWidth);
   if (next === profile.value) return;
   const revision = ++switching;
-  if (editing.value) {
+  if (grid) {
     capture();
-    try {
-      await saveLayout();
-    } catch (e) {
-      error.value = errorText(e);
-      return;
-    }
+    void saveLayout();
   }
   profile.value = next;
-  layout.value = dashboardLayout(local(next)) ?? { items: {} };
+  layout.value = {
+    ...(dashboardLayout(local(next)) ?? { items: {} }),
+    enabled: layout.value.enabled,
+  };
   grid?.column(dashboardColumns(next), next === 'mobile' ? 'list' : 'moveScale');
   await syncGrid();
   try {
@@ -263,16 +390,10 @@ async function switchProfile() {
   for (const item of items.value) schedule(item);
 }
 onMounted(async () => {
-  resizeObserver = new ResizeObserver((entries) => {
-    if (editing.value || syncing) return;
-    for (const entry of entries) {
-      const el = entry.target.closest<HTMLElement>('.dashboard-grid-item');
-      if (el && layout.value.items[el.getAttribute('gs-id') || '']?.h === undefined)
-        measureHeight(el);
-    }
-  });
+  resizeObserver = new ResizeObserver(resizedContent);
   grid = GridStack.init(
     {
+      animate: true,
       cellHeight: 16,
       column: dashboardColumns(profile.value),
       draggable: {
@@ -286,37 +407,44 @@ onMounted(async () => {
     },
     container.value,
   );
-  grid.on('dragstop', () => capture());
-  grid.on('resizestop', (_event, el) => capture(el.getAttribute('gs-id') || undefined));
+  grid.on('dragstop', dragStopped);
+  grid.on('resizestart', resizeStarted);
+  grid.on('resize', notifyContentResize);
+  grid.on('resizestop', resizeStopped);
   window.addEventListener('resize', switchProfile);
   layout.value = dashboardLayout(local(profile.value)) ?? { items: {} };
   try {
-    const [stored, order, meta] = await Promise.all([
-      loadLayout(profile.value),
-      getSetting('order'),
-      api<DashboardMeta[]>('/plugins/dashboard/meta'),
-    ]);
+    const enabled = await loadShared('enabled', dashboardEnabled);
     if (!active) return;
-    layout.value = stored;
-    const ordering = Array.isArray(order) ? order : local('order');
-    if (Array.isArray(ordering))
-      meta.sort((a, b) => {
-        const index = (item: DashboardMeta) => {
-          const i = ordering.findIndex((x) => x.id === item.id && x.key === item.key);
-          return i < 0 ? 999 : i;
-        };
-        return index(a) - index(b);
-      });
-    // The installed page obtains each plugin's declaration once, including a
-    // hidden widget. Only visible widgets receive subsequent refresh timers.
-    for (const m of meta) items.value.push(m);
-    await Promise.all(meta.map(loadItem));
-    await syncGrid();
+    if (enabled !== undefined) layout.value.enabled = enabled;
+    const storedOrder = await loadShared('order', (value) =>
+      Array.isArray(value)
+        ? value
+            .filter((x) => x && typeof x.id === 'string' && x.id)
+            .map((x) => ({ id: x.id, key: typeof x.key === 'string' ? x.key : '' }))
+        : undefined,
+    );
+    if (!active) return;
+    order.value = (storedOrder ?? []) as DashboardMeta[];
+    layout.value = await loadLayout(profile.value);
+    if (!active) return;
+    await loadMetadata();
   } catch (e) {
     if (active) error.value = errorText(e);
   } finally {
     if (active) loading.value = false;
   }
+});
+onActivated(() => {
+  active = true;
+  requesting.value = true;
+  for (const meta of metadata.value)
+    if (layout.value.enabled?.[dashboardID(meta)]) void loadItem(meta);
+  void nextTick(syncGrid);
+});
+onDeactivated(() => {
+  requesting.value = false;
+  for (const id of timers.keys()) clearTimer(id);
 });
 watch(() => visible.value.map((x) => dashboardID(x) + JSON.stringify(x.cols)).join('|'), syncGrid);
 onUnmounted(() => {
@@ -325,6 +453,9 @@ onUnmounted(() => {
   window.removeEventListener('resize', switchProfile);
   for (const id of timers.keys()) clearTimer(id);
   resizeObserver?.disconnect();
+  if (resizeFrame !== undefined) window.cancelAnimationFrame(resizeFrame);
+  if (notificationFrame !== undefined) window.cancelAnimationFrame(notificationFrame);
+  pendingResize.clear();
   grid?.destroy(false);
   grid = undefined;
 });
@@ -353,19 +484,27 @@ onUnmounted(() => {
           :gs-id="dashboardID(item)"
         >
           <div class="grid-stack-item-content">
-            <VAlert v-if="errors[dashboardID(item)]" type="error"
-              >{{ errors[dashboardID(item)]
-              }}<VBtn variant="text" @click="loadItem(item)">重试</VBtn></VAlert
-            >
-            <PluginDashboardWidget v-else :item="item" @loaded="syncGrid" />
-            <span
-              v-if="editing"
-              class="dashboard-grid-drag-handle"
-              role="button"
-              tabindex="0"
-              aria-label="拖动组件"
-              ><VIcon icon="mdi-drag" size="small"
-            /></span>
+            <div class="dashboard-grid-auto-size" data-layout-size-source>
+              <div class="dashboard-grid-content-measure">
+                <VAlert v-if="errors[dashboardID(item)]" type="error"
+                  >{{ errors[dashboardID(item)]
+                  }}<VBtn variant="text" @click="loadItem(item)">重试</VBtn></VAlert
+                >
+                <PluginDashboardWidget
+                  :item="item"
+                  :allow-refresh="requesting"
+                  @loaded="syncGrid"
+                />
+              </div>
+              <span
+                v-if="editing"
+                class="dashboard-grid-drag-handle"
+                role="button"
+                tabindex="0"
+                aria-label="拖动组件"
+                ><VIcon icon="mdi-drag" size="small"
+              /></span>
+            </div>
           </div>
         </div>
       </div>
@@ -449,10 +588,30 @@ onUnmounted(() => {
   overflow: visible !important;
   position: relative;
 }
+.dashboard-grid-auto-size {
+  position: relative;
+  width: 100%;
+}
+.is-manual-height .dashboard-grid-auto-size,
+.is-manual-height .dashboard-grid-content-measure,
+.is-editing .dashboard-grid-auto-size,
+.is-editing .dashboard-grid-content-measure {
+  height: 100%;
+}
 .grid-stack-item-content :deep(.v-card) {
   height: auto;
 }
-.is-manual-height .grid-stack-item-content :deep(.v-card) {
+.is-manual-height .dashboard-grid-auto-size {
+  position: relative;
+  width: 100%;
+}
+.is-manual-height .dashboard-grid-auto-size,
+.is-manual-height .dashboard-grid-content-measure,
+.is-editing .dashboard-grid-auto-size,
+.is-editing .dashboard-grid-content-measure {
+  height: 100%;
+}
+.grid-stack-item-content :deep(.v-card) {
   height: 100%;
 }
 .grid-stack-item-content :deep(.v-card-text) {

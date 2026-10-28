@@ -1,0 +1,167 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:1251-1279",
+    "app/chain/transfer.py:1391-1408",
+    "app/db/transferhistory_oper.py:227-261"
+  ],
+  "kind": "Fixed successful transfer callback/history destination consumption.\nExecutes only the ordinary successful-history/broadcast statements, plus the\nreal add_success and target-dir selection methods. History storage and media\nfields are controlled; effects use real owned link/copy files. No AI branch\nor external service runs.\n",
+  "cases": [
+    {
+      "name": "link",
+      "transfer_type": "link",
+      "relative_target": "Plugin chosen folder/Mapped source result.mkv",
+      "history": {
+        "src": "{root}/source/Owned.mkv",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "{root}/source/Owned.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "Owned.mkv",
+          "basename": null,
+          "extension": null,
+          "size": 22,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": "{root}/library/Plugin chosen folder/Mapped source result.mkv",
+        "dest_storage": "local",
+        "dest_fileitem": {
+          "path": "{root}/library/Plugin chosen folder/Mapped source result.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "Mapped source result.mkv",
+          "basename": null,
+          "extension": null,
+          "size": 22,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "mode": "link",
+        "type": "电影",
+        "category": null,
+        "title": "Owned",
+        "year": "2024",
+        "tmdbid": 123,
+        "imdbid": null,
+        "tvdbid": null,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": null,
+        "episodes": null,
+        "image": null,
+        "downloader": null,
+        "download_hash": null,
+        "status": 1,
+        "files": [
+          "{root}/source/Owned.mkv"
+        ]
+      },
+      "events": [
+        {
+          "type": "transfer.complete",
+          "target": "{root}/library/Plugin chosen folder/Mapped source result.mkv",
+          "history_id": 101
+        }
+      ],
+      "returned_history_id": 101,
+      "native_target_exists": false,
+      "same_inode": true,
+      "content": "owned transfer content"
+    },
+    {
+      "name": "copy",
+      "transfer_type": "copy",
+      "relative_target": "Plugin chosen folder/Mapped source result.mkv",
+      "history": {
+        "src": "{root}/source/Owned.mkv",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "{root}/source/Owned.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "Owned.mkv",
+          "basename": null,
+          "extension": null,
+          "size": 22,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": "{root}/library/Plugin chosen folder/Mapped source result.mkv",
+        "dest_storage": "local",
+        "dest_fileitem": {
+          "path": "{root}/library/Plugin chosen folder/Mapped source result.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "Mapped source result.mkv",
+          "basename": null,
+          "extension": null,
+          "size": 22,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "mode": "copy",
+        "type": "电影",
+        "category": null,
+        "title": "Owned",
+        "year": "2024",
+        "tmdbid": 123,
+        "imdbid": null,
+        "tvdbid": null,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": null,
+        "episodes": null,
+        "image": null,
+        "downloader": null,
+        "download_hash": null,
+        "status": 1,
+        "files": [
+          "{root}/source/Owned.mkv"
+        ]
+      },
+      "events": [
+        {
+          "type": "transfer.complete",
+          "target": "{root}/library/Plugin chosen folder/Mapped source result.mkv",
+          "history_id": 101
+        }
+      ],
+      "returned_history_id": 101,
+      "native_target_exists": false,
+      "same_inode": false,
+      "content": "owned transfer content"
+    }
+  ]
+}

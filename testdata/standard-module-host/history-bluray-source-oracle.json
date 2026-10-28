@@ -1,0 +1,107 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/chain/storage.py:171-235",
+  "boundary": "Execute pinned StorageChain.delete_media_file against owned real temporary\nfiles. Storage operations are controlled boundaries; the caller algorithm is\nthe unchanged fixed AST. No application or Python runtime is shipped.\n",
+  "cases": [
+    {
+      "name": "bluray-directory",
+      "other": {
+        "A/B/Disc/BDMV/STREAM/00001.m2ts": "stream"
+      },
+      "result": true,
+      "trace": [
+        {
+          "method": "is_bluray_folder",
+          "path": "$OWNED/root/A/B/Disc"
+        },
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Disc"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A/B/Disc",
+          "extensions": [
+            ".mkv",
+            ".!qb",
+            ".part",
+            ".srt",
+            ".flac"
+          ]
+        },
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Disc"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B/Disc"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A/B",
+          "extensions": [
+            ".mkv",
+            ".!qb",
+            ".part",
+            ".srt",
+            ".flac"
+          ]
+        },
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A/B"
+        },
+        {
+          "method": "any_files",
+          "path": "$OWNED/root/A",
+          "extensions": [
+            ".mkv",
+            ".!qb",
+            ".part",
+            ".srt",
+            ".flac"
+          ]
+        },
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A"
+        },
+        {
+          "method": "get_parent_item",
+          "path": "$OWNED/root/A"
+        }
+      ],
+      "remaining": []
+    },
+    {
+      "name": "bluray-directory-veto",
+      "other": {
+        "A/B/Disc/BDMV/STREAM/00001.m2ts": "stream"
+      },
+      "result": false,
+      "trace": [
+        {
+          "method": "is_bluray_folder",
+          "path": "$OWNED/root/A/B/Disc"
+        },
+        {
+          "method": "delete_file",
+          "path": "$OWNED/root/A/B/Disc"
+        }
+      ],
+      "remaining": [
+        "A",
+        "A/B",
+        "A/B/Disc",
+        "A/B/Disc/BDMV",
+        "A/B/Disc/BDMV/STREAM",
+        "A/B/Disc/BDMV/STREAM/00001.m2ts"
+      ]
+    }
+  ]
+}

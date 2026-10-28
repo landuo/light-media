@@ -1,0 +1,8 @@
+=== RUN   TestPluginServicesProductionCLI
+    plugin_module_process_service_instances_test.go:145: actual production max_instances=1: old held; new admitted=false; actual business calls old=1 new=0; clock kwargs and input separated
+    plugin_module_process_service_instances_test.go:145: actual production max_instances=2: old held; new admitted=true; actual business calls old=1 new=1; clock kwargs and input separated
+    plugin_module_process_services_test.go:360: actual async services: HTTP acknowledgement before held SDK finish; fixed same-ID old failure finishes new logical job/value51 then new success100; reinit PID=2280812 retained; reload PID=2280828, old HTTP canceled and new actual result completed
+    plugin_module_process_services_test.go:362: actual Linux service host: manual synchronous wait, busy no-op, 37% progress/false tuple, real date clock count=1, list order/running next=null, clone independent PID, cold registry/config and cleared in-memory progress
+    plugin_module_process_services_test.go:400: actual services cleanup: source+clone uninstalled, API404 and no service registrations
+--- PASS: TestPluginServicesProductionCLI (2.75s)
+PASS

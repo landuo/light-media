@@ -3,6 +3,8 @@ import { VTextField } from 'vuetify/components/VTextField';
 import { ref, onMounted, onUnmounted, computed, defineAsyncComponent } from 'vue';
 import { api, action, ui, refreshSettings, refreshStatus, go, errorText, date } from './api';
 import { createPluginNavigation, pluginNavigationTarget } from './features/plugin-navigation';
+import { abortPluginAPIRequests } from './features/plugin-remote-api';
+import { appInterface, observeInterfaceEnvironment } from './features/interface-mode';
 import {
   createSystemMessageFeed,
   systemMessageIcon,
@@ -31,6 +33,13 @@ const ShortcutTools = defineAsyncComponent(() => import('./components/ShortcutTo
 const Plugins = defineAsyncComponent(() => import('./components/Plugins.vue'));
 const PluginAppPage = defineAsyncComponent(() => import('./components/PluginAppPage.vue'));
 const PluginDashboard = defineAsyncComponent(() => import('./components/PluginDashboard.vue'));
+const PluginQuickAccess = defineAsyncComponent(() => import('./components/PluginQuickAccess.vue'));
+const PluginApplicationCenter = defineAsyncComponent(() => import('./components/PluginApplicationCenter.vue'));
+const InterfaceModeMenu = defineAsyncComponent(() => import('./components/InterfaceModeMenu.vue'));
+const AppModeFooter = defineAsyncComponent(() => import('./components/AppModeFooter.vue'));
+const quickAccessOpen = ref(false);
+const quickAccessPull = ref({ transform: 'translateY(0)', transition: 'none' });
+const PluginAuthLogin = defineAsyncComponent(() => import('./components/PluginAuthLogin.vue'));
 const pluginNavigation = createPluginNavigation(() => api('/plugins/navigation'));
 const pluginNavItems = pluginNavigation.state;
 function normalizeRoute(value: string) {
@@ -145,12 +154,14 @@ async function readNotification(n: any, jump = false) {
   }
 }
 function change() {
+  abortPluginAPIRequests();
   route.value = normalizeRoute(location.hash.slice(1));
   if (searchComponent.value) searchSession.lastRoute = route.value;
   mobile.value = false;
   window.scrollTo(0, 0);
   if (pageKey.value !== 'files') initialFilePaths.value = [];
 }
+function goBack() { window.history.back(); }
 function searchMedia(resource = false) {
   if (!globalQuery.value.trim()) return;
   searchMenuOpen.value = false;
@@ -176,6 +187,7 @@ function organizePaths(paths: string[]) {
   go('files');
 }
 function expired() {
+  abortPluginAPIRequests();
   authGeneration++;
   systemMessageFeed.setAuthenticated(false);
   notifications.value = { items: [], unread: 0 };
@@ -229,7 +241,9 @@ async function logout() {
   await action(() => api('/auth/logout', {}));
 }
 let timer: number;
+let stopInterfaceMode = () => {};
 onMounted(() => {
+  stopInterfaceMode = observeInterfaceEnvironment();
   change();
   window.addEventListener('hashchange', change);
   window.addEventListener('session-expired', expired);
@@ -244,6 +258,7 @@ onMounted(() => {
   }, 15000);
 });
 onUnmounted(() => {
+  stopInterfaceMode();
   authGeneration++;
   systemMessageFeed.destroy();
   clearInterval(timer);
@@ -291,11 +306,12 @@ onUnmounted(() => {
       <button class="primary full" :disabled="ui.busy > 0">
         {{ auth?.setup_required ? '创建并开始' : '登录' }}
       </button>
+      <PluginAuthLogin v-if="!auth?.setup_required" @authenticated="bootstrap" />
     </form>
   </div>
-  <div v-else class="app-shell">
-    <div v-if="mobile" class="sidebar-shade" @click="mobile = false"></div>
-    <aside :class="['sidebar', { open: mobile }]">
+  <div v-else :class="['app-shell', { 'app-interface': appInterface }]">
+    <div v-if="mobile && !appInterface" class="sidebar-shade" @click="mobile = false"></div>
+    <aside v-if="!appInterface" :class="['sidebar', { open: mobile }]">
       <a class="brand" href="#discover"
         ><span class="brand-mark"><BrandMark /></span><span>光影<small>LIGHT MEDIA</small></span></a
       >
@@ -313,23 +329,22 @@ onUnmounted(() => {
               ui.status.counts.active_jobs
             }}</span></a
           >
-          <template>
-            <a
-              v-for="item in pluginNavItems.items.filter((item) => item.section === group.section)"
-              :key="item.instance_id + ':' + item.nav_key"
-              :href="'#' + pluginNavigationTarget(item)"
-              :class="{ active: route === pluginNavigationTarget(item) }"
-              :aria-current="route === pluginNavigationTarget(item) ? 'page' : undefined"
-            >
-              <span class="nav-icon"><VIcon :icon="item.icon" size="22" /></span>{{ item.title }}
-            </a>
-          </template>
+          <a
+            v-for="item in pluginNavItems.items.filter((item) => item.section === group.section)"
+            :key="item.instance_id + ':' + item.nav_key"
+            :href="'#' + pluginNavigationTarget(item)"
+            :class="{ active: route === pluginNavigationTarget(item) }"
+            :aria-current="route === pluginNavigationTarget(item) ? 'page' : undefined"
+          >
+            <span class="nav-icon"><VIcon :icon="item.icon" size="22" /></span>{{ item.title }}
+          </a>
         </template>
       </nav>
     </aside>
     <div class="main-shell">
       <header class="topbar">
         <button
+          v-if="!appInterface"
           class="icon-button mobile-toggle"
           aria-label="打开导航"
           :aria-expanded="mobile"
@@ -337,6 +352,7 @@ onUnmounted(() => {
         >
           <AppIcon name="menu" />
         </button>
+        <button v-else class="icon-button" aria-label="返回" @click="goBack"><VIcon icon="mdi-arrow-left" /></button>
         <form
           class="global-search"
           role="search"
@@ -371,6 +387,7 @@ onUnmounted(() => {
           </div>
         </form>
         <div class="topbar-actions">
+          <InterfaceModeMenu />
           <ShortcutTools />
           <span v-if="ui.busy" class="loading-dot" aria-label="正在加载"></span
           ><button
@@ -513,6 +530,8 @@ onUnmounted(() => {
         </div>
       </section>
       <main>
+        <PluginQuickAccess v-if="pageKey === 'dashboard' && appInterface" @visibility="quickAccessOpen = $event" @pull="quickAccessPull = $event" />
+        <PluginApplicationCenter v-if="pageKey === 'apps'" :navigation="nav" :plugins="pluginNavItems.items" :error="pluginNavItems.error" :search-route="searchSession.lastRoute" @retry="pluginNavigation.ensure(true)" />
         <KeepAlive>
           <Recommend v-if="pageKey === 'discover'" />
         </KeepAlive>
@@ -522,6 +541,14 @@ onUnmounted(() => {
         <KeepAlive>
           <Explore v-if="pageKey === 'explore'" />
         </KeepAlive>
+        <KeepAlive>
+          <Plugins v-if="pageKey === 'plugins'" @changed="pluginNavigation.ensure(true)" />
+        </KeepAlive>
+        <div :style="quickAccessPull">
+          <KeepAlive>
+            <PluginDashboard v-if="pageKey === 'dashboard'" />
+          </KeepAlive>
+        </div>
         <ExploreDetail v-if="pageKey === 'explore-detail'" :key="route" :route="route" />
         <KeepAlive :max="24">
           <component :is="searchComponent" v-if="searchComponent" :key="route" :route="route" />
@@ -535,8 +562,6 @@ onUnmounted(() => {
           :key="route"
           :view="route"
         /><SiteManager v-else-if="pageKey === 'sites'" />
-        <Plugins v-else-if="pageKey === 'plugins'" @changed="pluginNavigation.ensure(true)" />
-        <PluginDashboard v-else-if="pageKey === 'dashboard'" />
         <PluginAppPage
           v-else-if="pageKey === 'plugin-app'"
           :key="route"
@@ -558,7 +583,7 @@ onUnmounted(() => {
         <Settings v-else-if="pageKey === 'settings'" /><DownloaderTasks
           v-else-if="pageKey === 'downloads'"
         /><Operations
-          v-else-if="!searchComponent && !['discover', 'recommend-browse', 'explore', 'explore-detail'].includes(pageKey)"
+          v-else-if="!searchComponent && !['discover', 'recommend-browse', 'explore', 'explore-detail', 'apps', 'plugins', 'dashboard'].includes(pageKey)"
           :key="route"
           :view="route.split('/')[0]!"
           :initial-job="
@@ -567,6 +592,7 @@ onUnmounted(() => {
         />
       </main>
     </div>
+    <AppModeFooter v-if="appInterface && !quickAccessOpen" :route="route" />
   </div>
   <div class="toasts" role="status">
     <button
@@ -583,6 +609,9 @@ onUnmounted(() => {
   </div>
 </template>
 <style scoped>
+.app-interface .main-shell { margin-left: 0; }
+.app-interface :deep(.dashboard-actions) { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+.app-interface main { padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)); }
 .explore-tabs-host {
   position: sticky;
   top: var(--topbar-height);

@@ -1,0 +1,552 @@
+{
+  "items": [
+    38,
+    39
+  ],
+  "fixed_backend": {
+    "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "files": {
+      "app/core/plugin.py": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "app/scheduler.py": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+      "app/helper/progress.py": "c488d87e324d17255a3a8809a2532460a9e8b7009edbf20bbde06ccebf04e390",
+      "app/core/cache.py": "fbcd0a557be024741891b539321fd06d09e0025c15f699d3bfdab5cebec2a91d",
+      "app/schemas/dashboard.py": "5a0d3289a088678fda12c233a79d953a0d2f353dfaaa050d85454483a6374213",
+      "app/api/endpoints/system.py": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92"
+    }
+  },
+  "fixed_frontend": {
+    "commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+    "files": {
+      "src/views/system/ServiceView.vue": "bce4302f652ff7979b7602d95284704167276fc1ebab4079ea050bef88a75187"
+    }
+  },
+  "mapping": [
+    {
+      "item": "38 declaration/registration/removal",
+      "source": [
+        "app/core/plugin.py:905",
+        "app/scheduler.py:1197",
+        "app/scheduler.py:1338"
+      ],
+      "target": [
+        "internal/app/plugin_original_services.go",
+        "internal/app/plugin_original_refresh_resource.go",
+        "internal/app/plugin_original_direct_dispatch.go"
+      ],
+      "behavior": "Current actual enabled object get_service; remove old registrations before current get_service; full sid instance+service ID captures | suffix, logical job id strips suffix; last logical definition replaces previous method; invalid clock still leaves source method metadata; stop/reload unregisters current timers; cold rebuild gets fresh actual object config."
+    },
+    {
+      "item": "38 ordinary clock parameters",
+      "source": [
+        "app/scheduler.py:1372",
+        "APScheduler3.11.3 BaseScheduler.add_job/_process_jobs",
+        "APScheduler3.11.3 executors.base.run_job"
+      ],
+      "target": [
+        "internal/app/plugin_original_service_options.go",
+        "internal/app/plugin_original_direct_dispatch.go",
+        "internal/plugins/schedule/trigger.go"
+      ],
+      "behavior": "Coalesce default last due vs false all due; default 1 second grace, null unlimited, positive integral seconds; actual max_instances keyed by full sid across re-registration, default1 vs2 proven with held actual workers; next_run_time null pause or source date parsing; unavailable executor removes clock on submission but manual method remains; only default jobstore; empty args/no duplicates; trigger constructor fields represented by normalized Spec, extra constructor kwargs ignored for already constructed trigger."
+    },
+    {
+      "item": "38 trigger algorithm",
+      "source": [
+        "APScheduler3.11.3 interval/cron/date triggers"
+      ],
+      "target": [
+        "internal/plugins/schedule/trigger.go"
+      ],
+      "behavior": "Existing 31 APS calendar/time oracle cases plus native interval/date/bounds tests; 4 controlled uniform jitter cases cover previous actual interval fire anchor, cron calendar, interval end exhaustion and cron jitter clipping; due collection performs source extra next-fire draw."
+    },
+    {
+      "item": "39 sync/async/manual and result",
+      "source": [
+        "app/api/endpoints/system.py:1343",
+        "app/scheduler.py:774",
+        "app/scheduler.py:808",
+        "app/scheduler.py:945",
+        "app/scheduler.py:958",
+        "app/scheduler.py:975"
+      ],
+      "target": [
+        "internal/app/plugin_original_direct_dispatch.go",
+        "internal/app/plugin_original_service_arguments.go",
+        "internal/app/plugin_original_service_progress.go"
+      ],
+      "behavior": "Native POST starts actual work async and has existing busy400; fixed GET waits synchronous actual callback, missing/busy fixed GET no-op; explicit Go async declaration maps coroutine branch and acknowledges before actual completion; both manual and clock call same run service; only explicit tuple false is failure, ordinary JSON list false succeeds; business input follows dict(func_kwargs or {}) representative constructor behavior and is separate from clock kwargs; progress callbacks stay bound to actual method scope; pure host finish intentionally addresses current logical ID, allowing an older completion to finish new same-ID job as fixed source."
+    },
+    {
+      "item": "38/39 list/progress",
+      "source": [
+        "app/scheduler.py:843",
+        "app/scheduler.py:1392",
+        "app/schemas/dashboard.py:85",
+        "app/helper/progress.py:9",
+        "app/core/cache.py:360"
+      ],
+      "target": [
+        "internal/app/plugin_original_direct_dispatch.go",
+        "internal/app/plugin_original_service_progress.go",
+        "internal/app/plugin_original_service_projection.go",
+        "internal/app/plugin_services.go"
+      ],
+      "behavior": "Running first in registration/dictionary order with next_run null; waiting clocks sort by next time; completed date hidden but progress cached; preserved source paused mixed-sort failure; Chinese i18n aliases and actual ScheduleProgress optional strings/bool projection; in-memory 1024/24h TLRU touches reads without renewing TTL and expired update/end never revive cache."
+    },
+    {
+      "item": "39 page interaction",
+      "source": [
+        "src/views/system/ServiceView.vue:19",
+        "src/views/system/ServiceView.vue:44"
+      ],
+      "target": [
+        "web/src/components/PluginServices.vue"
+      ],
+      "behavior": "Source table/provider/name/status/next/execute; running disabled; GET submission is not awaited, immediate source submitted toast, load after1000ms and poll5s; no invented completion toast/progress bar."
+    }
+  ],
+  "necessary_adaptations": [
+    {
+      "reason": "Go process boundary",
+      "details": "Original bound Python func becomes declared handler string and actual current Go SDK RPC. async metadata explicitly represents inspect.iscoroutinefunction; no Python runtime or emulation system. Only supported JSON declaration data crosses process boundary; no arbitrary Python callable/object/exception repr compatibility is claimed."
+    },
+    {
+      "reason": "Existing typed Go trigger contract",
+      "details": "Calendar/timezone/interval/date/jitter are normalized into schedule.Spec; ordinary kwargs and business input remain separate. Existing Go spec expects explicit IANA timezone. Constructor dictionaries from Python are ported by author into this spec; arbitrary Python trigger objects cannot be shared. Go time.Duration bounds apply to seconds/grace/jitter representability; out-of-range is explicit error rather than overflow."
+    },
+    {
+      "reason": "Random generator runtime",
+      "details": "uniform jitter formula, microsecond rounding, interval anchoring and cron clipping match controlled dependency oracle; Go RNG stream is not CPython MT stream."
+    },
+    {
+      "reason": "Existing host integration",
+      "details": "Single-user application session/origin/API auth and native JSON envelope retained; fixed compatible service routes provided. Chinese host identity localization supplies source aliases, without adding a new global locale engine. SDK errors are safe Go diagnostics with existing system.error reporting, not unrestricted Python traceback strings."
+    },
+    {
+      "reason": "Go worker lifecycle",
+      "details": "Actual reload/stop invalidates old RPC capability generation and cancels real held worker HTTP. Pure host logical ID progress/finish behavior retains fixed source old-completion/new-job effect. Progress and clocks are in-memory, rebuilt from current config after restart, with no durable replay framework."
+    },
+    {
+      "reason": "Scoped cache region",
+      "details": "The plugin service progress uses fixed 1024/24h TLRU policy within this host service map. It does not add unrelated global cache/other business progress systems."
+    }
+  ],
+  "preserved_source_risks": [
+    {
+      "source_behavior": "paused timer plus another registered clock yields sorting TypeError",
+      "target_behavior": "explicit HTTP500 service-list error retained; single paused service manually callable",
+      "evidence": "source-oracle.json + TestOriginalServiceActualSDKPausedSourceFailure"
+    },
+    {
+      "source_behavior": "old same-ID async completion updates new logical job/progress",
+      "target_behavior": "retained source behavior, so UI may show new in-flight job runnable/failed until its own completion",
+      "evidence": "async-oracle.json + final actual Linux async branch"
+    }
+  ],
+  "source_oracles": [
+    {
+      "path": "testdata/standard-services/async-oracle.json",
+      "sha256": "8c209e25d6d0fab34032f63e75081a04efbb577565ea64a2107f2e841d2cc91a",
+      "kind": "fixed source AST / pinned dependency replay; not original app or Linux server"
+    },
+    {
+      "path": "testdata/standard-services/cache-oracle.json",
+      "sha256": "946850245165e81827115978fde994f32abe01ee29db2469ffd88303933ab875",
+      "kind": "fixed source AST / pinned dependency replay; not original app or Linux server"
+    },
+    {
+      "path": "testdata/standard-services/clock-oracle.json",
+      "sha256": "2b295b7d6586d5a96cb431577be3c385a7c7cab413e406e8325d364db4e2b29b",
+      "kind": "fixed source AST / pinned dependency replay; not original app or Linux server"
+    },
+    {
+      "path": "testdata/standard-services/frontend-oracle.json",
+      "sha256": "08cfd27a9de530475531034d0b5193c0edd6c5c2223f600efb12131b0e04eab0",
+      "kind": "fixed source AST / pinned dependency replay; not original app or Linux server"
+    },
+    {
+      "path": "testdata/standard-services/instances-oracle.json",
+      "sha256": "e06a6a9188dee4cdefc5f103944db0a1f489d87530e3cfa77a250135158f1729",
+      "kind": "fixed source AST / pinned dependency replay; not original app or Linux server"
+    },
+    {
+      "path": "testdata/standard-services/jitter-oracle.json",
+      "sha256": "6ee5137da98cc0c1938a8aeea54137a490d6f1f5b43197d19d76b7a9d8aaee28",
+      "kind": "fixed source AST / pinned dependency replay; not original app or Linux server"
+    },
+    {
+      "path": "testdata/standard-services/progress-oracle.json",
+      "sha256": "c2669bf59d410825a4473ccc1fc8acb79f08233ecec486d150cb087e8817ac7d",
+      "kind": "fixed source AST / pinned dependency replay; not original app or Linux server"
+    },
+    {
+      "path": "testdata/standard-services/source-oracle.json",
+      "sha256": "497927121cc59e8975f11e7d064df3aec3a59848e920004b5d8e1eda251dfa19",
+      "kind": "fixed source AST / pinned dependency replay; not original app or Linux server"
+    }
+  ],
+  "development_only_dependency_versions": {
+    "APScheduler": "3.11.3",
+    "cachetools": "5.5.2",
+    "pydantic": "2.13.4",
+    "note": "Private development venv only; original requirements do not pin these dependency artifacts; exact method/blob and dependency versions recorded. No application Python runtime."
+  },
+  "evidence": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-review-model-final-tests.jsonl.gz",
+      "kind": "actual SDK and source/dependency projection tests before final TLRU increment",
+      "root_passes": [
+        "TestOriginalServiceAPITokenActualSDK",
+        "TestOriginalServiceActualSDKAsyncReplacementSource",
+        "TestOriginalServiceActualSDKExecutorInstancesReplacement",
+        "TestOriginalServiceArgumentsFixedStartSource",
+        "TestOriginalServiceProgressFixedModelProjection",
+        "TestOriginalServiceActualSDKListSourceOrder",
+        "TestOriginalServiceActualSDKClockOptionsSource",
+        "TestOriginalServiceActualSDKPausedSourceFailure",
+        "TestOriginalServiceNextTimeDependencyConversion",
+        "TestOriginalServiceActualSDKProgressFailureAndNoop",
+        "TestOriginalServiceActualSDKResultTupleAndClock",
+        "TestOriginalServiceActualSDKSuffixReplacementAndSyncWait",
+        "TestOriginalServiceTupleBoundary",
+        "TestOriginalStandardDirectModuleEndToEnd",
+        "TestPublicPluginServicesAuthAndCrossSiteGETGuard",
+        "TestPluginServiceTimeDifferenceOriginalUnits"
+      ],
+      "failures": 0,
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-review-model-final-tests.jsonl",
+      "uncompressed_sha256": "f6b9d08654a4744ad2c45f0c2e07ce75084cd4a2c4a2a6cf9c0695645cca71d7",
+      "sha256": "295954d6a5ba04abefa4d12295e57625114103321dbf144c6ee729be8d58002c",
+      "compression": "gzip"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-cache-final-tests.jsonl.gz",
+      "kind": "final TLRU production + 17 service roots",
+      "root_passes": [
+        "TestOriginalServiceAPITokenActualSDK",
+        "TestOriginalServiceActualSDKAsyncReplacementSource",
+        "TestOriginalServiceActualSDKExecutorInstancesReplacement",
+        "TestOriginalServiceArgumentsFixedStartSource",
+        "TestOriginalServiceProgressFixedModelProjection",
+        "TestOriginalServiceProgressFixedTLRU",
+        "TestOriginalServiceActualSDKListSourceOrder",
+        "TestOriginalServiceActualSDKClockOptionsSource",
+        "TestOriginalServiceActualSDKPausedSourceFailure",
+        "TestOriginalServiceNextTimeDependencyConversion",
+        "TestOriginalServiceActualSDKProgressFailureAndNoop",
+        "TestOriginalServiceActualSDKResultTupleAndClock",
+        "TestOriginalServiceActualSDKSuffixReplacementAndSyncWait",
+        "TestOriginalServiceTupleBoundary",
+        "TestOriginalStandardDirectModuleEndToEnd",
+        "TestPublicPluginServicesAuthAndCrossSiteGETGuard",
+        "TestPluginServiceTimeDifferenceOriginalUnits"
+      ],
+      "failures": 0,
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-cache-final-tests.jsonl",
+      "uncompressed_sha256": "1447d54e7a49a90ac49704a76fc6ed58a0e440f1ccb3f00b2e33907effeb0fac",
+      "sha256": "47b95415ffaec1fb461d75d187846bede8eeec2c3c279d81102772425a26034e",
+      "compression": "gzip"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-cache-expiry-final-tests.jsonl.gz",
+      "kind": "final TLRU controlled-boundary and actual held SDK completion roots",
+      "root_passes": [
+        "TestOriginalServiceActualSDKExpiredFinishDoesNotRevive",
+        "TestOriginalServiceProgressFixedTLRU"
+      ],
+      "failures": 0,
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-cache-expiry-final-tests.jsonl",
+      "uncompressed_sha256": "4187000fb60d0db5567165257483102327c4e45be3f397d94a768d91c5502cd2",
+      "sha256": "24cc49ee74bcfb6eb861a654f770f5f3fab7e0b0b9b59512e7e5acd9cf28e2d3",
+      "compression": "gzip"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-trigger-jitter-tests.jsonl.gz",
+      "kind": "trigger dependency replay and Go algorithm tests",
+      "root_passes": [
+        "TestInstalledAPSchedulerOracle",
+        "TestTriggerIntervalAnchorAndFractionalPrecisionAcrossLongSpans",
+        "TestTriggerDateAndEndBounds",
+        "TestTriggerRejectsConflictingKindsAndInvalidScopes",
+        "TestTriggerActualAPSchedulerJitterAlgorithm"
+      ],
+      "failures": 0,
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-trigger-jitter-tests.jsonl",
+      "uncompressed_sha256": "35bf5f252ec5f29884387267869904c9f6255b1d74be6bbabb44c4eba1129da4",
+      "sha256": "d9185cc7e61064a516ff94b30bb6ef88e3d40c1fccd446dc076bca443a5e6cbc",
+      "compression": "gzip"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-final-race-tests.jsonl.gz",
+      "kind": "actual SDK race roots at earlier service snapshot",
+      "root_passes": [
+        "TestOriginalServiceActualSDKListSourceOrder",
+        "TestOriginalServiceActualSDKClockOptionsSource",
+        "TestOriginalServiceActualSDKPausedSourceFailure"
+      ],
+      "failures": 0,
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-final-race-tests.jsonl",
+      "uncompressed_sha256": "9da2c142f57acc871fba82da555ee2510f55e78a800a2143f880cba8bb32c6b0",
+      "sha256": "3b43abac6f53f4ae92ae12e2ea8262f000c6dff0ce91f9444c8c172b3775769c",
+      "compression": "gzip"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-final-trigger-race-tests.jsonl.gz",
+      "kind": "trigger race roots",
+      "root_passes": [
+        "TestInstalledAPSchedulerOracle",
+        "TestTriggerIntervalAnchorAndFractionalPrecisionAcrossLongSpans",
+        "TestTriggerDateAndEndBounds",
+        "TestTriggerRejectsConflictingKindsAndInvalidScopes",
+        "TestTriggerActualAPSchedulerJitterAlgorithm"
+      ],
+      "failures": 0,
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-final-trigger-race-tests.jsonl",
+      "uncompressed_sha256": "793785b6f63ea4f719fed1dbd2cba7f84fa50b17b9bcbaeaa72f376a5a91e2b9",
+      "sha256": "1d309e54bfe9752172fca8a46b02929ece01bada66ad4725a53e730f38582d96",
+      "compression": "gzip"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-web-source-final-tests.log",
+      "kind": "source frontend function replay and component tests",
+      "sha256": "37409ae63a4a730ad0022a6dbca201d0503ad2df4112e4a3aab7ada6c63421c6",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-web-source-final-tests.log"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-process-linux.log",
+      "kind": "actual Linux original sync snapshot, PASS1.26s",
+      "sha256": "b39c6e180072ffaa652ca2c47569ad295ca75a039bd501ed2bef18150798ebe8",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-process-linux.log"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-process-browser.log",
+      "kind": "actual Linux sync snapshot held for real browser, PASS1105.21s",
+      "sha256": "0702dd77626bbc160a1155df1567c2f8d3158dfc5520ca5c18b252d7e9f00722",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-process-browser.log"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-async-process-linux.log",
+      "kind": "actual Linux async snapshot, PASS1.32s",
+      "sha256": "f5623d72b7d1950afdfb8ac62608a6ecd2a9fe8a4fca93282743e5e15c421d5e",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-async-process-linux.log"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-final-process-linux.log",
+      "kind": "actual Linux unified cfc snapshot with max1/2+async+sync, PASS2.75s",
+      "sha256": "e7ee8787736dc0325b1033c7946bea76c23fc808458ef4510112d61e9b3625cc",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-final-process-linux.log"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-cache-input-race-tests.jsonl.gz",
+      "kind": "final service/input cache concurrency; 4 roots,14.901s",
+      "root_passes": [
+        "TestOriginalInputFixedMessageSourceActualSDK",
+        "TestOriginalServiceActualSDKAsyncReplacementSource",
+        "TestOriginalServiceActualSDKExpiredFinishDoesNotRevive",
+        "TestOriginalServiceProgressFixedTLRU"
+      ],
+      "failed_roots": [],
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-cache-input-race-tests.jsonl",
+      "uncompressed_sha256": "33fce8026a99a28127f7ebf90b11d8c98e755420ae11475dcbd979dbf9501bfc",
+      "sha256": "b693e9622801fe27b520b79d63c5e7cb2e8dbbea6edca6f825a44ddf32965778",
+      "compression": "gzip"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services40-process-final-linux.log",
+      "kind": "latest actual Linux unified route+TLRU+input trim snapshot; all38/39 branches repeated, PASS4.22s",
+      "sha256": "3c6a6514d18088f450f5c03c004ee0ffb204711a5c9601b6517d43691519fa38",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services40-process-final-linux.log"
+    }
+  ],
+  "browser_evidence": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-browser-clone-completed.json",
+      "sha256": "ae305085dbe75a05b51fdd40ef6e66a04b8610e7e2d488889eb10edc2b51a927",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-browser-clone-completed.json"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-browser-cold-inspect.json",
+      "sha256": "2c8246906ff8e107e6cd30cea4d205e26a05db7916a9ce1be543933f7699746a",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-browser-cold-inspect.json"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-browser-cold.ax.txt",
+      "sha256": "81afeb5b69ad190488dbac37b73482f0d40abf3785224b1114c139ca4203b364",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-browser-cold.ax.txt"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-browser-cold.json",
+      "sha256": "fec35c80d65fd059f02b0b3d70eaa5a1f7f8018b79e02f70941634381fbe7bcc",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-browser-cold.json"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-browser-cold.jsonl.gz",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-browser-cold.jsonl",
+      "uncompressed_sha256": "e4148634631897e50672e113450765d32d9cfcae7d1200f354b56dc81f05aa48",
+      "sha256": "21f2fdd27a6c737f5665240af0644cab28feb628894beb3c1de6b572a1f47cca",
+      "compression": "gzip"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-browser-cold.png",
+      "sha256": "35eda62a59d22261cb7a8dd4dd2a1de3631ef64114b6ddb304f1adb9846cf8ee",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-browser-cold.png"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-browser-completed.ax.txt",
+      "sha256": "fadf2257417a29f10ba71d3a70894e478361230da290076f10d5973849954db8",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-browser-completed.ax.txt"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-browser-completed.json",
+      "sha256": "e12801396137c555b72b798fedef33321a634ff904bd8e11dd9b5ecf8d683a13",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-browser-completed.json"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-browser-initial.ax.txt",
+      "sha256": "e1f83243f3197e4c1af50d0cab09aed8ec9f1a0e98f134e138e3a8f46b56c681",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-browser-initial.ax.txt"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-browser-initial.json",
+      "sha256": "c2535a2b5fd770557b467ef9dfd9b719c689d637d07f0e2728de6f22b9ff63c1",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-browser-initial.json"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-browser-running.ax.txt",
+      "sha256": "0725f43670b327a85241ade16fcb470c95554a7fdb4d1d3efa5752c8cd4b7cde",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-browser-running.ax.txt"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-browser-running.json",
+      "sha256": "9faab2000067146e419bb2d5afcd0da29e13abb6f2a16aede29dfdba509b619d",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-browser-running.json"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/services38-browser-running.png",
+      "sha256": "6f3a0f1e3cc85b7d80f2e85a9149ef28359ea733b7c027773b478f669414e97a",
+      "original_work_path": "work/plugin-no-official-auth-20261026/services38-browser-running.png"
+    }
+  ],
+  "binary_receipts": {
+    "services38-build-result.json": {
+      "changed_during_build": [],
+      "binaries": {
+        "services38-server-linux": "9a51d5d728210187ef24a0a92b783b2678053bae84821dce00fff12cfd9a475b",
+        "services38-input-linux": "fb6d60cdd5c2afa51285eec5d9145cd48d8e6dc8d3d54dce33de73c2a23715d1",
+        "services38-process-linux.test": "16fb23b093d69a8b6399cc74fc7d79b3b1321c17d6694d3ee071e5e67f1d4b21"
+      }
+    },
+    "services38-async-build-result.json": {
+      "changed_during_build": [],
+      "binaries": {
+        "services38-async-server-linux": "bd86741c4b69627342c3e6de6b3097f226ce13878d8ae22bd4f7cf22fdee1524",
+        "services38-async-process-linux.test": "834d5726b99387590e69b2181f57704564a30a23ea9aa6c332bd879d3ccb1240"
+      }
+    },
+    "services38-final-binaries.json": {
+      "server-unified-linux": "cfc9189e0afe81d8c94e834d93f11b58c62758c5a26229e4cd231008225fa288",
+      "services38-input-final-linux": "d25fbd2f58764a73646744e48def08e706678aeea9ab40dd7e078b38720ca361",
+      "services38-final-process-linux.test": "16ce86b6e7481afeaf8fcd7b2b8fcbe942d20c22a170e6eceb821f5f36613909"
+    },
+    "services40-final-binaries.json": {
+      "server-unified-route-linux": "79d52d45d94d7a13b649303dcdea557ccca30b35921a6abe62f9ae1c2994cd56",
+      "services38-input-final-linux": "d25fbd2f58764a73646744e48def08e706678aeea9ab40dd7e078b38720ca361",
+      "services40-command-linux": "d909b7a58c05dbf473548a7e490a768fb16fc290b237b0efa41169fc14ebe23a",
+      "services40-process-final-linux.test": "eabbec3ffe49e3326b72ba574e44b70156182039fe2507d7ca32c0d1ea94d089"
+    }
+  },
+  "latest_unified_actual": {
+    "server_sha256": "cfc9189e0afe81d8c94e834d93f11b58c62758c5a26229e4cd231008225fa288",
+    "duration_seconds": 2.75,
+    "real_async_reinit_pid": 2280812,
+    "real_async_reload_pid": 2280828,
+    "actual_max_instances": {
+      "1": {
+        "old": 1,
+        "new": 0
+      },
+      "2": {
+        "old": 1,
+        "new": 1
+      }
+    },
+    "business_input_verified_from_real_worker": true,
+    "cleanup": "source+clone uninstalled; plugin API404 and service registrations0; private test process exited"
+  },
+  "latest_cache_increment": {
+    "production_stable": true,
+    "evidence": [
+      "services38-cache-final-tests.jsonl",
+      "services38-cache-expiry-final-tests.jsonl"
+    ],
+    "unified_rebuild_and_existing_linux_cli": {
+      "status": "passed",
+      "server_sha256": "79d52d45d94d7a13b649303dcdea557ccca30b35921a6abe62f9ae1c2994cd56",
+      "evidence": "services40-process-final-linux.log",
+      "duration_seconds": 4.22
+    }
+  },
+  "scope_exclusions": [
+    "Workflow",
+    "AI",
+    "Official authorization levels"
+  ],
+  "unverified": [],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "merged": false,
+    "deployed": false,
+    "shared_matrix_edited_by_this_agent": false
+  },
+  "source_scope_review": {
+    "status": "closed for38/39 within documented Go SDK/JSON/time/locale adaptations",
+    "known_unimplemented_contracts": [],
+    "reviewed": [
+      "current enabled object declaration/load order and fullsid vslogicalID",
+      "all ordinary scheduler kwargs with actualmax1/2 effect and businessInput separation",
+      "date/interval/cron/jitter algorithms and clock→same runtime入口",
+      "sync vs coroutine-mapped ack/held/finish, sourceGET vs nativePOST",
+      "source logical old finish affects currentjob preserved",
+      "progress typedprojection/1024 TLRU/read/write TTL/oldcacheafterdelete",
+      "running/waiting/list sort/pausedfailure/one-shot retention",
+      "actual stop/reload/cold/clone/cleanup and sourceUI run/no-await/delayedrefresh"
+    ],
+    "testing_limit": "24h boundary uses exact controlled clock source/Go + held actual SDK completion, not actual24h wait. APS dependency artifact version not pinned by fixed source; tested3.11.3, cachetools5.5.2."
+  },
+  "archive_root": "testdata/plugin-module-no-official-auth-20261026",
+  "archive_note": "Raw work logs are archived here; .jsonl gzip retains original source hash. Binary receipt JSON only, no compiled binaries committed. Source oracles remain in existing tracked-capable testdata/standard-services and standard-command-* paths.",
+  "target_file_sha256": {
+    "internal/app/plugin_original_direct_dispatch.go": "b17d54ced8ed482ebb7c619a677f515d6082f529a44046ec1a139378111bd3a9",
+    "internal/app/plugin_original_refresh_resource.go": "00a1a1baf80bb74c61d3ad0e281ff3ab06a70afd6e4c9556d689c71b9a57a525",
+    "internal/app/plugin_original_service_arguments.go": "0ad7af480b77e7043a704aa3189f1c9da752f325442e3c32236074e7f954b32e",
+    "internal/app/plugin_original_service_options.go": "d8db2a407b0de5726d2ef062ec9feb7804da402782928e47801c509a8f0e983e",
+    "internal/app/plugin_original_service_progress.go": "5a2082f98867dac8c48e10ee04bab05325520c026a96bf48a87b5ebe1b26b5aa",
+    "internal/app/plugin_original_service_projection.go": "6247e60473c1e14afcd65f70b18773989413f95b5e9aa2e5080670ac51ee8610",
+    "internal/app/plugin_original_services.go": "cb1c93b92cec031b93a3e1cc0fe127363c2da37d02180804a364295f88f1238c",
+    "internal/app/plugin_services.go": "2ec442adc44a0d688cd79c2c77fbc4a18bf562bc93c6f4e752229c1bfbd414df",
+    "internal/plugins/schedule/trigger.go": "12b4448dd12600e105a12013f926e1cce1a5a426a2f67273fba33d80bbb95a96",
+    "web/src/components/PluginServices.vue": "3184964ef4b173f9f147ed54cdb64393c85d70c380d35415e0ecfee69642af7c"
+  },
+  "actual_final_invocation": {
+    "working_directory": "/tmp/light-media-plugin-scope-dRZTQ91A",
+    "binary": "./services40-process-final-linux.test",
+    "args": [
+      "-test.run=^TestPluginServicesProductionCLI$",
+      "-test.v"
+    ],
+    "environment": {
+      "PLUGIN_PROCESS_SERVER_BINARY": "$PWD/server-unified-route-linux",
+      "OWNED_INPUT_PROCESS_FIXTURE_BINARY": "$PWD/services38-input-final-linux",
+      "PLUGIN_PROCESS_SERVICE_ASYNC_FIXTURE": "true",
+      "PLUGIN_PROCESS_SERVICE_ASYNC_ORACLE": "$PWD/services38-async-oracle.json",
+      "PLUGIN_PROCESS_SERVICE_INSTANCES_FIXTURE": "true",
+      "PLUGIN_PROCESS_SERVICE_INSTANCES_ORACLE": "$PWD/services38-instances-oracle.json",
+      "PLUGIN_PROCESS_INPUT_COMMAND_FIXTURE": "true",
+      "OWNED_COMMAND_PROCESS_FIXTURE_BINARY": "$PWD/services40-command-linux"
+    },
+    "exit_code": 0,
+    "duration_seconds": 4.22
+  }
+}

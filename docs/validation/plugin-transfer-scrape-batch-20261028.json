@@ -1,0 +1,120 @@
+{
+  "accepted_increment": true,
+  "complete": false,
+  "indices": [
+    36,
+    37,
+    43
+  ],
+  "scope": "Existing manual/default local transfer batch: aggregate successful media by target directory only after batch registration closes and all import tasks finish. Whole indices remain 42/46.",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "mapping": [
+    {
+      "source": [
+        "app/chain/transfer.py:1473-1627",
+        "app/chain/transfer.py:1321-1334",
+        "app/chain/transfer.py:2067",
+        "app/chain/transfer.py:2989",
+        "app/chain/transfer.py:3540"
+      ],
+      "behavior": "Register before queue; close registration; remove finished tasks including failure; first target by storage/path, first truthy meta/media, stable unique file_list; clear state before one broadcast per root.",
+      "target": [
+        "internal/app/plugin_original_scrape_batch.go",
+        "internal/app/import_run.go",
+        "internal/app/organize_manual.go",
+        "internal/app/job_completion.go",
+        "internal/app/asset_scrape.go",
+        "internal/app/runtime.go"
+      ],
+      "evidence": [
+        "testdata/standard-module-host/scrape-batch-source-oracle.json:7 actual fixed-method replays",
+        "TestOriginalScrapeBatchFixedSource",
+        "TestOriginalScrapeBatchActualManualHost",
+        "TestPluginServicesProductionCLI",
+        "IAB71/verify-scrape36-proof.py"
+      ]
+    },
+    {
+      "source": [
+        "app/schemas/tmdb.py:19-34",
+        "app/chain/transfer.py:1958",
+        "app/modules/themoviedb/__init__.py:858-869",
+        "app/modules/themoviedb/scraper.py:34-88"
+      ],
+      "behavior": "TmdbEpisode DTO omits ID. Transfer accepts DTO with season/episode. Native metadata scraper directly calls native helper rather than Chain tmdb_episodes.",
+      "target": [
+        "internal/app/import_plan.go",
+        "internal/app/plugin_original_metadata_scrape.go"
+      ],
+      "evidence": [
+        "testdata/standard-module-host/scrape-episode-source-oracle.json:2 actual Pydantic cases",
+        "TestOriginalScrapeNativeSeasonDoesNotInvokeEpisodeModule",
+        "actual Linux source/clone ID-less episode DTO and real local NFO writer"
+      ]
+    }
+  ],
+  "evidence_types": {
+    "source_replay": "Fixed Python methods/schema with controlled dependencies; no production Python dependency.",
+    "actual_host": "Linux cmd/server, real SDK installation/source+clone, API actions, 3 hardlinks, persisted histories and NFO files; synthetic TV metadata and fixture-supplied NFO XML. Does not claim real TMDB or external media server.",
+    "browser": "IAB71 real selection/preview3/0; source False yields3/3 failed and retained form; restore+first cold same form preview; actual3 success; second cold same IDs/targets/inodes, zero replay. 05 screenshot is loading only; 06 is loaded proof.",
+    "faults": "Actual SQLite queue-insert abort and retry, changed-source tail failure, real queued cancellation and cold-pending recovery in Go host with SDK."
+  },
+  "results": {
+    "linux_cli_seconds": 2.03,
+    "linux_browser_gate_seconds": 695.9,
+    "relevant_race_seconds": 54.555,
+    "compiler_inputs": [
+      3720,
+      4183
+    ],
+    "inputs_changed": [],
+    "browser_pids": [
+      [
+        479992,
+        479999
+      ],
+      [
+        486492,
+        486498
+      ],
+      [
+        492650,
+        492657
+      ]
+    ],
+    "metadata_events_per_instance": 1,
+    "queued_core_consumers_per_root": 1,
+    "ui_success_hardlinks": 3,
+    "ui_nfo_files": 5,
+    "cold_write_replay": 0,
+    "uninstall_api404_and_tempdir_cleanup": true
+  },
+  "adaptations": [
+    "Source batch map is transient; target records batch registration/targets in existing SQLite records and uses existing import jobs as pending authority. Restart closes abandoned registration and waits on persisted tasks. No new executor/workflow.",
+    "Core scrape work is committed with batch marker and uses existing queue; ordinary plugin observer broadcast occurs after commit. Crash between commit and broadcast can lose transient observer notification; completed marker prevents replay, durable core job survives.",
+    "Existing explicit preview remains side-effect free. Native cached season requirement is retained; SDK episode DTO does not invent an episode ID."
+  ],
+  "red_green": [
+    "Premature event before second job completion reproduced in 2.301s; fixed.",
+    "Compilation failures (missing time import, wrong tuple constant) preserved.",
+    "Linux r1 1.28s rejected source ID-less episodes; corrected using actual schema.",
+    "Linux r2 11.43s/debug11.46s showed incorrectly intercepted native scraper season boundary; fixed. Process NFO proof explicitly uses declared metadata_nfo provider plus real writer.",
+    "Linux r3 11.56s observer incorrectly assumed re-init clears observations; delta baseline fixed, production unchanged.",
+    "Race43.250s counted newly subscribed metadata event as transfer event; typed event filter fixed; final54.555s passed.",
+    "Browser observer null-event and proof null-target handling were observer errors, corrected without product change."
+  ],
+  "remaining": [
+    "Non-SingleHistory reorganization and legacy quality-cleanup delayed scrape do not yet carry ordinary batch event; next increment.",
+    "Directory-unit/Blu-ray applicability, media_exists/media_files existing callers, complete ordinary event/module coverage audit and indices36/37/43/50 remain open."
+  ],
+  "frontend": "No new frontend code; previously accepted frontend547/main30 build reused. No claim of a new full frontend run.",
+  "artifact_manifest": "testdata/plugin-module-no-official-auth-20261026/scrape-batch-36-20261028/manifest.json",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

@@ -1,14 +1,22 @@
 <script setup lang="ts">
 import { VTextField } from 'vuetify/components/VTextField';
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { api, clone, errorText, image, toast } from '../api';
 import { submitSeasonBatch, type SeasonSubscriptionRow } from '../features/subscriptions';
 const props = defineProps<{ template: any; existing: any[] }>();
 const emit = defineEmits<{ close: [created: boolean]; changed: [] }>();
-const rows = ref<SeasonSubscriptionRow[]>(
-  (props.template.media.seasons || [])
-    .filter((s: any) => s.season_number > 0)
-    .map((s: any) => ({
+const rows = ref<SeasonSubscriptionRow[]>([]);
+const loading = ref(false),
+  loadError = ref('');
+let active = true;
+async function loadSeasons() {
+  if (loading.value) return;
+  loading.value = true;
+  loadError.value = '';
+  try {
+    const seasons = await api('/catalog/seasons?id=' + props.template.media.id);
+    if (!active) return;
+    rows.value = (seasons || []).map((s: any) => ({
       season: s.season_number,
       title: s.name || '第 ' + s.season_number + ' 季',
       episode_count: s.episode_count,
@@ -46,8 +54,17 @@ const rows = ref<SeasonSubscriptionRow[]>(
       )
         ? '本季已有订阅'
         : '',
-    })),
-);
+    }));
+  } catch (e) {
+    if (active) loadError.value = errorText(e);
+  } finally {
+    if (active) loading.value = false;
+  }
+}
+onMounted(loadSeasons);
+onUnmounted(() => {
+  active = false;
+});
 const running = ref(false),
   checked = computed(() => rows.value.filter((s) => s.selected)),
   completed = computed(() => rows.value.filter((s) => s.state === 'success').length);
@@ -106,6 +123,10 @@ async function submit() {
         <button class="small" :disabled="running" @click="all">选择 / 取消全部可订阅季</button
         ><span class="hint">已选 {{ checked.length }} 季 · 已成功 {{ completed }} 季</span>
       </div>
+      <div v-if="loadError" class="error-box" role="alert">
+        {{ loadError }} <button :disabled="loading" @click="loadSeasons">重试</button>
+      </div>
+      <div v-if="loading" class="notice">正在读取季度…</div>
       <div class="season-list">
         <div v-for="s in rows" :key="s.season" class="season-row">
           <input
@@ -155,7 +176,7 @@ async function submit() {
           />
         </div>
       </div>
-      <div v-if="!rows.length" class="notice">没有可用的季度元数据，请返回刷新影视资料后重试。</div>
+      <div v-if="!loading && !loadError && !rows.length" class="notice">没有可用的季度元数据。</div>
       <div class="button-row">
         <button :disabled="running" @click="emit('close', completed > 0)">
           {{ completed ? '完成' : '取消' }}</button

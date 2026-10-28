@@ -1,0 +1,427 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/modules/filemanager/__init__.py:415-541",
+  "kind": "Actual fixed FileManager.transfer flag selection with real disposable\nsource paths and Pydantic directory model. Native handler is a controlled\ncapture boundary; no scrape/notification side effects are simulated.\n",
+  "cases": [
+    {
+      "name": "path_None",
+      "kwargs": {
+        "target_directory": null,
+        "scrape": null
+      },
+      "output": {
+        "need_notify": false,
+        "need_scrape": false,
+        "need_rename": true
+      }
+    },
+    {
+      "name": "path_False",
+      "kwargs": {
+        "target_directory": null,
+        "scrape": false
+      },
+      "output": {
+        "need_notify": false,
+        "need_scrape": false,
+        "need_rename": true
+      }
+    },
+    {
+      "name": "path_True",
+      "kwargs": {
+        "target_directory": null,
+        "scrape": true
+      },
+      "output": {
+        "need_notify": false,
+        "need_scrape": true,
+        "need_rename": true
+      }
+    },
+    {
+      "name": "directory_default_None",
+      "kwargs": {
+        "target_directory": {
+          "name": null,
+          "priority": 0,
+          "storage": null,
+          "download_path": null,
+          "media_type": null,
+          "media_category": null,
+          "download_type_folder": false,
+          "download_category_folder": false,
+          "monitor_type": null,
+          "monitor_mode": "fast",
+          "transfer_type": "link",
+          "overwrite_mode": null,
+          "library_path": "/var/folders/kb/qtfry4pd46s2n08g7frpj8280000gn/T/owned-native-flags-41gzc7qw/library",
+          "library_storage": "local",
+          "renaming": false,
+          "scraping": false,
+          "notify": true,
+          "library_type_folder": false,
+          "library_category_folder": false
+        },
+        "scrape": null
+      },
+      "output": {
+        "need_notify": true,
+        "need_scrape": false,
+        "need_rename": false
+      }
+    },
+    {
+      "name": "directory_default_False",
+      "kwargs": {
+        "target_directory": {
+          "name": null,
+          "priority": 0,
+          "storage": null,
+          "download_path": null,
+          "media_type": null,
+          "media_category": null,
+          "download_type_folder": false,
+          "download_category_folder": false,
+          "monitor_type": null,
+          "monitor_mode": "fast",
+          "transfer_type": "link",
+          "overwrite_mode": null,
+          "library_path": "/var/folders/kb/qtfry4pd46s2n08g7frpj8280000gn/T/owned-native-flags-25ubos1a/library",
+          "library_storage": "local",
+          "renaming": false,
+          "scraping": false,
+          "notify": true,
+          "library_type_folder": false,
+          "library_category_folder": false
+        },
+        "scrape": false
+      },
+      "output": {
+        "need_notify": true,
+        "need_scrape": false,
+        "need_rename": false
+      }
+    },
+    {
+      "name": "directory_default_True",
+      "kwargs": {
+        "target_directory": {
+          "name": null,
+          "priority": 0,
+          "storage": null,
+          "download_path": null,
+          "media_type": null,
+          "media_category": null,
+          "download_type_folder": false,
+          "download_category_folder": false,
+          "monitor_type": null,
+          "monitor_mode": "fast",
+          "transfer_type": "link",
+          "overwrite_mode": null,
+          "library_path": "/var/folders/kb/qtfry4pd46s2n08g7frpj8280000gn/T/owned-native-flags-mfq1z7yc/library",
+          "library_storage": "local",
+          "renaming": false,
+          "scraping": false,
+          "notify": true,
+          "library_type_folder": false,
+          "library_category_folder": false
+        },
+        "scrape": true
+      },
+      "output": {
+        "need_notify": true,
+        "need_scrape": true,
+        "need_rename": false
+      }
+    },
+    {
+      "name": "directory_false_None",
+      "kwargs": {
+        "target_directory": {
+          "name": null,
+          "priority": 0,
+          "storage": null,
+          "download_path": null,
+          "media_type": null,
+          "media_category": null,
+          "download_type_folder": false,
+          "download_category_folder": false,
+          "monitor_type": null,
+          "monitor_mode": "fast",
+          "transfer_type": "link",
+          "overwrite_mode": null,
+          "library_path": "/var/folders/kb/qtfry4pd46s2n08g7frpj8280000gn/T/owned-native-flags-gc9xq7zz/library",
+          "library_storage": "local",
+          "renaming": false,
+          "scraping": false,
+          "notify": false,
+          "library_type_folder": false,
+          "library_category_folder": false
+        },
+        "scrape": null
+      },
+      "output": {
+        "need_notify": false,
+        "need_scrape": false,
+        "need_rename": false
+      }
+    },
+    {
+      "name": "directory_false_False",
+      "kwargs": {
+        "target_directory": {
+          "name": null,
+          "priority": 0,
+          "storage": null,
+          "download_path": null,
+          "media_type": null,
+          "media_category": null,
+          "download_type_folder": false,
+          "download_category_folder": false,
+          "monitor_type": null,
+          "monitor_mode": "fast",
+          "transfer_type": "link",
+          "overwrite_mode": null,
+          "library_path": "/var/folders/kb/qtfry4pd46s2n08g7frpj8280000gn/T/owned-native-flags-bblkpcbj/library",
+          "library_storage": "local",
+          "renaming": false,
+          "scraping": false,
+          "notify": false,
+          "library_type_folder": false,
+          "library_category_folder": false
+        },
+        "scrape": false
+      },
+      "output": {
+        "need_notify": false,
+        "need_scrape": false,
+        "need_rename": false
+      }
+    },
+    {
+      "name": "directory_false_True",
+      "kwargs": {
+        "target_directory": {
+          "name": null,
+          "priority": 0,
+          "storage": null,
+          "download_path": null,
+          "media_type": null,
+          "media_category": null,
+          "download_type_folder": false,
+          "download_category_folder": false,
+          "monitor_type": null,
+          "monitor_mode": "fast",
+          "transfer_type": "link",
+          "overwrite_mode": null,
+          "library_path": "/var/folders/kb/qtfry4pd46s2n08g7frpj8280000gn/T/owned-native-flags-rcrrkmqv/library",
+          "library_storage": "local",
+          "renaming": false,
+          "scraping": false,
+          "notify": false,
+          "library_type_folder": false,
+          "library_category_folder": false
+        },
+        "scrape": true
+      },
+      "output": {
+        "need_notify": false,
+        "need_scrape": true,
+        "need_rename": false
+      }
+    },
+    {
+      "name": "directory_true_None",
+      "kwargs": {
+        "target_directory": {
+          "name": null,
+          "priority": 0,
+          "storage": null,
+          "download_path": null,
+          "media_type": null,
+          "media_category": null,
+          "download_type_folder": false,
+          "download_category_folder": false,
+          "monitor_type": null,
+          "monitor_mode": "fast",
+          "transfer_type": "link",
+          "overwrite_mode": null,
+          "library_path": "/var/folders/kb/qtfry4pd46s2n08g7frpj8280000gn/T/owned-native-flags-_0zgyfff/library",
+          "library_storage": "local",
+          "renaming": false,
+          "scraping": true,
+          "notify": true,
+          "library_type_folder": false,
+          "library_category_folder": false
+        },
+        "scrape": null
+      },
+      "output": {
+        "need_notify": true,
+        "need_scrape": true,
+        "need_rename": false
+      }
+    },
+    {
+      "name": "directory_true_False",
+      "kwargs": {
+        "target_directory": {
+          "name": null,
+          "priority": 0,
+          "storage": null,
+          "download_path": null,
+          "media_type": null,
+          "media_category": null,
+          "download_type_folder": false,
+          "download_category_folder": false,
+          "monitor_type": null,
+          "monitor_mode": "fast",
+          "transfer_type": "link",
+          "overwrite_mode": null,
+          "library_path": "/var/folders/kb/qtfry4pd46s2n08g7frpj8280000gn/T/owned-native-flags-we3ojs45/library",
+          "library_storage": "local",
+          "renaming": false,
+          "scraping": true,
+          "notify": true,
+          "library_type_folder": false,
+          "library_category_folder": false
+        },
+        "scrape": false
+      },
+      "output": {
+        "need_notify": true,
+        "need_scrape": false,
+        "need_rename": false
+      }
+    },
+    {
+      "name": "directory_true_True",
+      "kwargs": {
+        "target_directory": {
+          "name": null,
+          "priority": 0,
+          "storage": null,
+          "download_path": null,
+          "media_type": null,
+          "media_category": null,
+          "download_type_folder": false,
+          "download_category_folder": false,
+          "monitor_type": null,
+          "monitor_mode": "fast",
+          "transfer_type": "link",
+          "overwrite_mode": null,
+          "library_path": "/var/folders/kb/qtfry4pd46s2n08g7frpj8280000gn/T/owned-native-flags-zhxr9758/library",
+          "library_storage": "local",
+          "renaming": false,
+          "scraping": true,
+          "notify": true,
+          "library_type_folder": false,
+          "library_category_folder": false
+        },
+        "scrape": true
+      },
+      "output": {
+        "need_notify": true,
+        "need_scrape": true,
+        "need_rename": false
+      }
+    },
+    {
+      "name": "directory_null_None",
+      "kwargs": {
+        "target_directory": {
+          "name": null,
+          "priority": 0,
+          "storage": null,
+          "download_path": null,
+          "media_type": null,
+          "media_category": null,
+          "download_type_folder": false,
+          "download_category_folder": false,
+          "monitor_type": null,
+          "monitor_mode": "fast",
+          "transfer_type": "link",
+          "overwrite_mode": null,
+          "library_path": "/var/folders/kb/qtfry4pd46s2n08g7frpj8280000gn/T/owned-native-flags-ge67_4s5/library",
+          "library_storage": "local",
+          "renaming": false,
+          "scraping": null,
+          "notify": null,
+          "library_type_folder": false,
+          "library_category_folder": false
+        },
+        "scrape": null
+      },
+      "output": {
+        "need_notify": null,
+        "need_scrape": null,
+        "need_rename": false
+      }
+    },
+    {
+      "name": "directory_null_False",
+      "kwargs": {
+        "target_directory": {
+          "name": null,
+          "priority": 0,
+          "storage": null,
+          "download_path": null,
+          "media_type": null,
+          "media_category": null,
+          "download_type_folder": false,
+          "download_category_folder": false,
+          "monitor_type": null,
+          "monitor_mode": "fast",
+          "transfer_type": "link",
+          "overwrite_mode": null,
+          "library_path": "/var/folders/kb/qtfry4pd46s2n08g7frpj8280000gn/T/owned-native-flags-f0lu4034/library",
+          "library_storage": "local",
+          "renaming": false,
+          "scraping": null,
+          "notify": null,
+          "library_type_folder": false,
+          "library_category_folder": false
+        },
+        "scrape": false
+      },
+      "output": {
+        "need_notify": null,
+        "need_scrape": false,
+        "need_rename": false
+      }
+    },
+    {
+      "name": "directory_null_True",
+      "kwargs": {
+        "target_directory": {
+          "name": null,
+          "priority": 0,
+          "storage": null,
+          "download_path": null,
+          "media_type": null,
+          "media_category": null,
+          "download_type_folder": false,
+          "download_category_folder": false,
+          "monitor_type": null,
+          "monitor_mode": "fast",
+          "transfer_type": "link",
+          "overwrite_mode": null,
+          "library_path": "/var/folders/kb/qtfry4pd46s2n08g7frpj8280000gn/T/owned-native-flags-s0xn820y/library",
+          "library_storage": "local",
+          "renaming": false,
+          "scraping": null,
+          "notify": null,
+          "library_type_folder": false,
+          "library_category_folder": false
+        },
+        "scrape": true
+      },
+      "output": {
+        "need_notify": null,
+        "need_scrape": true,
+        "need_rename": false
+      }
+    }
+  ]
+}

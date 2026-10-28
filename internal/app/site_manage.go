@@ -288,6 +288,7 @@ func (a *App) refreshManagedSite(ctx context.Context, key string) (any, error) {
 // connection and optional owning job. A failed response never replaces an
 // existing day; its first failure can create that day's error observation.
 type siteCollectionHooks struct {
+	OrdinaryEvent         bool
 	Origin                siteCollectionOrigin
 	ExpectedMessagePolicy *siteMessagePolicy
 	Auto                  bool
@@ -323,32 +324,49 @@ func (a *App) collectManagedSiteObserved(ctx context.Context, key, eventKey stri
 	// The existing site-card endpoint is a connection test. Only real refresh
 	// jobs and the plugin refresh API may read/mark messages, as in MoviePilot.
 	readMessages := messageOption.enabled && hooks != nil
-	e = a.withSite(ctx, s, hooks != nil && hooks.Auto, func(client *sites.Client) error {
-		client.AddRequestGuard(func(requestCtx context.Context) error {
-			currentPolicy, policyErr := readPolicy(requestCtx)
-			if policyErr != nil {
-				return policyErr
+	collectNative := func() (sites.UserStats, *sites.SourceUserData, error) {
+		var nativeStats sites.UserStats
+		var nativeData *sites.SourceUserData
+		nativeErr := a.withSite(ctx, s, hooks != nil && hooks.Auto, func(client *sites.Client) error {
+			client.AddRequestGuard(func(requestCtx context.Context) error {
+				currentPolicy, policyErr := readPolicy(requestCtx)
+				if policyErr != nil {
+					return policyErr
+				}
+				if messageOption != currentPolicy {
+					return bad("SITE_MESSAGE_SETTINGS_CHANGED", "站点消息设置已变化，请重新刷新")
+				}
+				if hooks != nil && hooks.RequestGuard != nil {
+					return hooks.RequestGuard(requestCtx)
+				}
+				return nil
+			})
+			var err error
+			if hooks != nil {
+				snapshot.SourceOutcome = "none"
+				nativeStats, nativeData, err = client.SourceUserStats(ctx, sites.UserStatsOptions{ReadMessages: readMessages, Location: shanghai()})
+			} else {
+				nativeStats, err = client.UserStatsWithOptions(ctx, sites.UserStatsOptions{ReadMessages: readMessages})
 			}
-			if messageOption != currentPolicy {
-				return bad("SITE_MESSAGE_SETTINGS_CHANGED", "站点消息设置已变化，请重新刷新")
-			}
-			if hooks != nil && hooks.RequestGuard != nil {
-				return hooks.RequestGuard(requestCtx)
-			}
-			return nil
+			return err
 		})
-		var err error
-		if hooks != nil {
-			snapshot.SourceOutcome = "none"
-			observed, snapshot.SourceData, err = client.SourceUserStats(ctx, sites.UserStatsOptions{ReadMessages: readMessages, Location: shanghai()})
-			if snapshot.SourceData != nil {
-				snapshot.SourceOutcome = "data"
-			}
-		} else {
-			observed, err = client.UserStatsWithOptions(ctx, sites.UserStatsOptions{ReadMessages: readMessages})
+		if hooks != nil && hooks.OrdinaryEvent && nativeData == nil {
+			a.reportOriginalSiteModuleFailure(ctx, nativeErr)
 		}
-		return err
-	})
+		return nativeStats, nativeData, nativeErr
+	}
+	if hooks != nil {
+		observed, snapshot.SourceData, e = a.originalSiteUserData(ctx, s, collectNative)
+		if snapshot.SourceData != nil {
+			snapshot.SourceOutcome = "data"
+		}
+	} else {
+		observed, snapshot.SourceData, e = collectNative()
+	}
+	var moduleFailure *APIError
+	if errors.As(e, &moduleFailure) && moduleFailure.Code == "PLUGIN_MODULE_RESULT_INVALID" {
+		return siteSnapshot{}, e
+	}
 	if err := ctx.Err(); err != nil {
 		return siteSnapshot{}, err
 	}
@@ -421,7 +439,7 @@ func (a *App) collectManagedSiteObserved(ctx context.Context, key, eventKey stri
 		}
 	}
 	var finishSystemError func(bool)
-	if hooks != nil {
+	if hooks != nil && !hooks.OrdinaryEvent {
 		finishSystemError, err = a.stageSiteSystemErrorTx(ctx, tx, hooks.Origin, key, e)
 		if err != nil {
 			return siteSnapshot{}, err

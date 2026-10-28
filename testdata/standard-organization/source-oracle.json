@@ -1,0 +1,636 @@
+{
+  "fixed_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": "src/views/plugin/PluginCardListView.vue",
+  "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+  "kind": "fixed frontend function replay; synthetic values",
+  "cases": [
+    {
+      "name": "legacy-load-defaults",
+      "fn": "loadPluginFolders",
+      "input": {
+        "folders": {
+          "Legacy": [
+            "one"
+          ],
+          "Modern": {
+            "plugins": [
+              "two"
+            ],
+            "order": 0,
+            "icon": "",
+            "color": "",
+            "showIcon": false,
+            "future": {
+              "n": 0
+            }
+          }
+        }
+      },
+      "expected": {
+        "folders": {
+          "Legacy": {
+            "plugins": [
+              "one"
+            ],
+            "order": 0,
+            "icon": "mdi-folder",
+            "color": "#2196F3",
+            "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+            "background": "",
+            "showIcon": true
+          },
+          "Modern": {
+            "plugins": [
+              "two"
+            ],
+            "order": 0,
+            "icon": "mdi-folder",
+            "color": "#2196F3",
+            "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+            "background": "",
+            "showIcon": false
+          }
+        },
+        "order": [],
+        "folderOrder": [
+          "Legacy",
+          "Modern"
+        ],
+        "calls": []
+      }
+    },
+    {
+      "name": "legacy-user-order",
+      "fn": "loadPluginOrderConfig",
+      "input": {
+        "order": [
+          "two",
+          {
+            "id": "one",
+            "order": 8
+          }
+        ]
+      },
+      "expected": {
+        "folders": {},
+        "order": [
+          {
+            "id": "two",
+            "type": "plugin",
+            "order": 0
+          },
+          {
+            "id": "one",
+            "type": "plugin",
+            "order": 1
+          }
+        ],
+        "folderOrder": [],
+        "calls": []
+      }
+    },
+    {
+      "name": "combined-quick-filters-ignore-query",
+      "fn": "getFilteredFolderPlugins",
+      "input": {
+        "folders": {
+          "Group": [
+            "one",
+            "two",
+            "three"
+          ]
+        },
+        "current": "Group",
+        "query": "not matching",
+        "updates": true,
+        "running": true,
+        "plugins": [
+          {
+            "id": "one",
+            "plugin_name": "One",
+            "has_update": true,
+            "state": true
+          },
+          {
+            "id": "two",
+            "plugin_name": "Two",
+            "has_update": true,
+            "state": false
+          },
+          {
+            "id": "three",
+            "plugin_name": "Three",
+            "has_update": false,
+            "state": true
+          }
+        ]
+      },
+      "expected": {
+        "folders": {
+          "Group": [
+            "one",
+            "two",
+            "three"
+          ]
+        },
+        "order": [],
+        "folderOrder": [],
+        "calls": [],
+        "result": [
+          {
+            "id": "one",
+            "plugin_name": "One",
+            "has_update": true,
+            "state": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "root-mixed-folder-orders",
+      "fn": "saveMixedSortOrder",
+      "input": {
+        "folders": {
+          "A": {
+            "plugins": [
+              "one"
+            ],
+            "order": 0
+          },
+          "B": {
+            "plugins": [],
+            "order": 1
+          }
+        },
+        "mixed": [
+          {
+            "type": "folder",
+            "id": "B",
+            "data": {}
+          },
+          {
+            "type": "plugin",
+            "id": "two",
+            "data": {
+              "id": "two"
+            }
+          },
+          {
+            "type": "folder",
+            "id": "A",
+            "data": {}
+          }
+        ],
+        "plugins": [
+          {
+            "id": "one"
+          },
+          {
+            "id": "two"
+          }
+        ],
+        "order": [
+          {
+            "id": "stale",
+            "type": "plugin",
+            "order": 9
+          }
+        ]
+      },
+      "expected": {
+        "folders": {
+          "A": {
+            "plugins": [
+              "one"
+            ],
+            "order": 2,
+            "icon": "mdi-folder",
+            "color": "#2196F3",
+            "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+            "background": "",
+            "showIcon": true
+          },
+          "B": {
+            "plugins": [],
+            "order": 0,
+            "icon": "mdi-folder",
+            "color": "#2196F3",
+            "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+            "background": "",
+            "showIcon": true
+          }
+        },
+        "order": [
+          {
+            "id": "B",
+            "type": "folder",
+            "order": 0
+          },
+          {
+            "id": "two",
+            "type": "plugin",
+            "order": 1
+          },
+          {
+            "id": "A",
+            "type": "folder",
+            "order": 2
+          }
+        ],
+        "folderOrder": [
+          "B",
+          "A"
+        ],
+        "calls": [
+          {
+            "path": "/user/config/PluginOrder",
+            "value": [
+              {
+                "id": "B",
+                "type": "folder",
+                "order": 0
+              },
+              {
+                "id": "two",
+                "type": "plugin",
+                "order": 1
+              },
+              {
+                "id": "A",
+                "type": "folder",
+                "order": 2
+              }
+            ]
+          },
+          {
+            "path": "plugin/folders",
+            "value": {
+              "A": {
+                "plugins": [
+                  "one"
+                ],
+                "order": 1,
+                "icon": "mdi-folder",
+                "color": "#2196F3",
+                "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+                "background": "",
+                "showIcon": true
+              },
+              "B": {
+                "plugins": [],
+                "order": 0,
+                "icon": "mdi-folder",
+                "color": "#2196F3",
+                "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+                "background": "",
+                "showIcon": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "filtered-folder-sort-drops-hidden-members",
+      "fn": "saveFolderPluginOrder",
+      "input": {
+        "folders": {
+          "A": {
+            "plugins": [
+              "one",
+              "hidden",
+              "two"
+            ],
+            "order": 3,
+            "showIcon": false
+          }
+        },
+        "current": "A",
+        "sorted": [
+          {
+            "id": "two"
+          },
+          {
+            "id": "one"
+          }
+        ],
+        "order": [
+          {
+            "id": "A",
+            "type": "folder",
+            "order": 3
+          }
+        ]
+      },
+      "expected": {
+        "folders": {
+          "A": {
+            "plugins": [
+              "two",
+              "one"
+            ],
+            "order": 3,
+            "icon": "mdi-folder",
+            "color": "#2196F3",
+            "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+            "background": "",
+            "showIcon": false
+          }
+        },
+        "order": [
+          {
+            "id": "A",
+            "type": "folder",
+            "order": 3
+          },
+          {
+            "id": "two",
+            "type": "plugin",
+            "order": 3.1
+          },
+          {
+            "id": "one",
+            "type": "plugin",
+            "order": 3.11
+          }
+        ],
+        "folderOrder": [
+          "A"
+        ],
+        "calls": [
+          {
+            "path": "/user/config/PluginOrder",
+            "value": [
+              {
+                "id": "A",
+                "type": "folder",
+                "order": 3
+              },
+              {
+                "id": "two",
+                "type": "plugin",
+                "order": 3.1
+              },
+              {
+                "id": "one",
+                "type": "plugin",
+                "order": 3.11
+              }
+            ]
+          },
+          {
+            "path": "plugin/folders",
+            "value": {
+              "A": {
+                "plugins": [
+                  "two",
+                  "one"
+                ],
+                "order": 0,
+                "icon": "mdi-folder",
+                "color": "#2196F3",
+                "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+                "background": "",
+                "showIcon": false
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "drop-removes-first-other-membership",
+      "fn": "handleDropToFolder",
+      "input": {
+        "folders": {
+          "A": {
+            "plugins": [
+              "one",
+              "one",
+              "two"
+            ],
+            "order": 1
+          },
+          "B": {
+            "plugins": [],
+            "order": 0
+          }
+        },
+        "dragged": "one",
+        "target": "B",
+        "plugins": [
+          {
+            "id": "one"
+          }
+        ]
+      },
+      "expected": {
+        "folders": {
+          "A": {
+            "plugins": [
+              "one",
+              "two"
+            ],
+            "order": 1,
+            "icon": "mdi-folder",
+            "color": "#2196F3",
+            "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+            "background": "",
+            "showIcon": true
+          },
+          "B": {
+            "plugins": [
+              "one"
+            ],
+            "order": 0,
+            "icon": "mdi-folder",
+            "color": "#2196F3",
+            "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+            "background": "",
+            "showIcon": true
+          }
+        },
+        "order": [],
+        "folderOrder": [
+          "B",
+          "A"
+        ],
+        "calls": [
+          {
+            "path": "plugin/folders",
+            "value": {
+              "A": {
+                "plugins": [
+                  "one",
+                  "two"
+                ],
+                "order": 1,
+                "icon": "mdi-folder",
+                "color": "#2196F3",
+                "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+                "background": "",
+                "showIcon": true
+              },
+              "B": {
+                "plugins": [
+                  "one"
+                ],
+                "order": 0,
+                "icon": "mdi-folder",
+                "color": "#2196F3",
+                "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+                "background": "",
+                "showIcon": true
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "root-sort-second-write-fails",
+      "fn": "saveMixedSortOrder",
+      "input": {
+        "folders": {
+          "A": {
+            "plugins": [
+              "one"
+            ],
+            "order": 0
+          },
+          "B": {
+            "plugins": [],
+            "order": 1
+          }
+        },
+        "mixed": [
+          {
+            "type": "folder",
+            "id": "B",
+            "data": {}
+          },
+          {
+            "type": "plugin",
+            "id": "two",
+            "data": {
+              "id": "two"
+            }
+          },
+          {
+            "type": "folder",
+            "id": "A",
+            "data": {}
+          }
+        ],
+        "plugins": [
+          {
+            "id": "one"
+          },
+          {
+            "id": "two"
+          }
+        ],
+        "order": [
+          {
+            "id": "stale",
+            "type": "plugin",
+            "order": 9
+          }
+        ],
+        "failFolders": true
+      },
+      "expected": {
+        "folders": {
+          "A": {
+            "plugins": [
+              "one"
+            ],
+            "order": 2,
+            "icon": "mdi-folder",
+            "color": "#2196F3",
+            "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+            "background": "",
+            "showIcon": true
+          },
+          "B": {
+            "plugins": [],
+            "order": 0,
+            "icon": "mdi-folder",
+            "color": "#2196F3",
+            "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+            "background": "",
+            "showIcon": true
+          }
+        },
+        "order": [
+          {
+            "id": "B",
+            "type": "folder",
+            "order": 0
+          },
+          {
+            "id": "two",
+            "type": "plugin",
+            "order": 1
+          },
+          {
+            "id": "A",
+            "type": "folder",
+            "order": 2
+          }
+        ],
+        "folderOrder": [
+          "B",
+          "A"
+        ],
+        "calls": [
+          {
+            "path": "/user/config/PluginOrder",
+            "value": [
+              {
+                "id": "B",
+                "type": "folder",
+                "order": 0
+              },
+              {
+                "id": "two",
+                "type": "plugin",
+                "order": 1
+              },
+              {
+                "id": "A",
+                "type": "folder",
+                "order": 2
+              }
+            ]
+          },
+          {
+            "path": "plugin/folders",
+            "value": {
+              "A": {
+                "plugins": [
+                  "one"
+                ],
+                "order": 1,
+                "icon": "mdi-folder",
+                "color": "#2196F3",
+                "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+                "background": "",
+                "showIcon": true
+              },
+              "B": {
+                "plugins": [],
+                "order": 0,
+                "icon": "mdi-folder",
+                "color": "#2196F3",
+                "gradient": "linear-gradient(rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%), linear-gradient(135deg, rgba(33, 150, 243, 0.7) 0%, rgba(33, 150, 243, 0.8) 100%)",
+                "background": "",
+                "showIcon": true
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

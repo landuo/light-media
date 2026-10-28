@@ -152,16 +152,34 @@ func (a *App) servePluginOrganizationCompatAPI(w http.ResponseWriter, r *http.Re
 			}
 			pluginHTTPJSON(w, 200, out)
 		} else {
-			pluginHTTPJSON(w, 200, current.Folders)
+			pluginHTTPJSON(w, 200, originalFolderJSON(current))
 		}
 		return true
 	}
 	var raw json.RawMessage
-	if root || order || member {
+	if order && r.ContentLength == 0 {
+		raw = json.RawMessage(`null`)
+	} else if root || order || member {
 		var ok bool
 		raw, ok = organizationCompatBody(w, r)
 		if !ok {
 			return true
+		}
+	}
+	if order && len(raw) > 0 && (raw[0] == '-' || raw[0] >= '0' && raw[0] <= '9') && bytes.ContainsAny(raw, ".eE") {
+		integer, err := originalRatingInteger(raw)
+		if err != nil {
+			pluginHTTPError(w, &pluginHTTPFailure{422, "Input should be a valid integer"})
+			return true
+		}
+		// In the source union, a JSON float matches lax bool before lax int;
+		// strict JSON integers keep the int branch instead.
+		if integer == "0" {
+			raw = json.RawMessage(`false`)
+		} else if integer == "1" {
+			raw = json.RawMessage(`true`)
+		} else {
+			raw = json.RawMessage(integer)
 		}
 	}
 	var folders map[string]json.RawMessage
@@ -169,7 +187,7 @@ func (a *App) servePluginOrganizationCompatAPI(w http.ResponseWriter, r *http.Re
 		organizationCompatTypeError(w, raw, "dict")
 		return true
 	}
-	if order || member {
+	if member {
 		var list []json.RawMessage
 		if json.Unmarshal(raw, &list) != nil || bytes.Equal(raw, []byte("null")) {
 			organizationCompatTypeError(w, raw, "list")
@@ -181,10 +199,14 @@ func (a *App) servePluginOrganizationCompatAPI(w http.ResponseWriter, r *http.Re
 		switch {
 		case root:
 			current.Folders = folders
+			current.folderKeys = originalFolderInputKeys(raw)
 		case order:
 			current.Order = append(json.RawMessage(nil), raw...)
 			current.orderPresent = true
 		case member:
+			if _, exists := current.Folders[parts[0]]; !exists {
+				current.folderKeys = append(originalFolderKeys(*current), parts[0])
+			}
 			// The original PUT replaces a new-format object with a legacy list;
 			// POST folders is the full appearance-preserving edit endpoint.
 			current.Folders[parts[0]] = append(json.RawMessage(nil), raw...)
@@ -195,6 +217,7 @@ func (a *App) servePluginOrganizationCompatAPI(w http.ResponseWriter, r *http.Re
 				return false, nil
 			}
 			current.Folders[parts[0]] = json.RawMessage(`[]`)
+			current.folderKeys = append(current.folderKeys, parts[0])
 			out = organizationCompatResponse(true, "文件夹 '"+parts[0]+"' 创建成功")
 		case r.Method == "DELETE":
 			if _, exists := current.Folders[parts[0]]; !exists {

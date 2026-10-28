@@ -15,16 +15,17 @@ type Service = {
   provider: string;
   name: string;
   status: string;
-  next_run: string;
+  next_run: string | null;
   can_run: boolean;
+
 };
 const items = ref<Service[]>([]),
   loading = ref(true),
-  error = ref(''),
-  submitting = ref('');
+  error = ref('');
 let mounted = true,
   fetching = false,
   timer: ReturnType<typeof setInterval>;
+const refreshTimers = new Set<ReturnType<typeof setTimeout>>();
 async function load() {
   if (!mounted || fetching || document.hidden) return;
   fetching = true;
@@ -41,25 +42,25 @@ async function load() {
     if (mounted) loading.value = false;
   }
 }
-async function run(item: Service) {
-  if (submitting.value || !item.can_run || error.value) return;
-  submitting.value = item.id;
-  try {
-    await api('/plugins/services/run', {
-      instance_id: item.instance_id,
-      service_id: item.service_id,
-    });
-    if (mounted) toast('定时作业执行请求提交成功！');
-    await load();
-  } catch (e) {
+function run(item: Service) {
+  if (item.status === '正在运行') return;
+  // Fixed ServiceView starts the synchronous host endpoint without awaiting it,
+  // acknowledges submission, then refreshes after one second. Completion and
+  // retained failures remain available through the ordinary progress API.
+  void api('/v1/system/runscheduler?jobid=' + encodeURIComponent(item.id)).catch((e) => {
     if (mounted) {
       error.value = errorText(e);
       toast(error.value, true);
     }
-  } finally {
-    submitting.value = '';
-  }
+  });
+  toast('定时作业执行请求提交成功！');
+  const pending = setTimeout(() => {
+    refreshTimers.delete(pending);
+    void load();
+  }, 1000);
+  refreshTimers.add(pending);
 }
+
 function visible() {
   if (!document.hidden) void load();
 }
@@ -71,6 +72,8 @@ onMounted(() => {
 onUnmounted(() => {
   mounted = false;
   clearInterval(timer);
+  for (const pending of refreshTimers) clearTimeout(pending);
+  refreshTimers.clear();
   document.removeEventListener('visibilitychange', visible);
 });
 </script>
@@ -94,23 +97,13 @@ onUnmounted(() => {
           <td>{{ item.provider }}</td>
           <td>{{ item.name }}</td>
           <td>
-            <VChip
-              :color="
-                item.status === '正在运行'
-                  ? 'success'
-                  : item.status === '等待核对'
-                    ? 'warning'
-                    : undefined
-              "
-              >{{ item.status }}</VChip
-            >
+            <VChip :color="item.status === '正在运行' ? 'success' : item.status === '停止' ? 'error' : undefined">{{ item.status }}</VChip>
           </td>
           <td>{{ item.next_run }}</td>
           <td>
             <VBtn
               size="small"
-              :disabled="!item.can_run || !!submitting || !!error"
-              :loading="submitting === item.id"
+              :disabled="item.status === '正在运行'"
               @click="run(item)"
               ><template #prepend><VIcon icon="mdi-play" /></template>执行</VBtn
             >

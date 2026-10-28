@@ -1,0 +1,193 @@
+{
+  "fixed_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": "src/composables/usePullDownGesture.ts",
+  "sha256": "8fc913e93fba8a2d8d3c82c077184bdf46c643b6149153ef6548a6fb0f61902c",
+  "kind": "fixed full gesture function with owned Vue/API/time/DOM boundaries",
+  "cases": [
+    {
+      "input": {
+        "name": "trigger-at-resisted120",
+        "moves": [
+          {
+            "y": 160
+          }
+        ]
+      },
+      "expected": {
+        "before": {
+          "distance": 120,
+          "pulling": true,
+          "transform": "translateY(48px)",
+          "transition": "none",
+          "indicator": true
+        },
+        "triggered": 1,
+        "prevented": 1,
+        "timer_ms": [
+          300
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "indicator60-below-trigger",
+        "moves": [
+          {
+            "y": 80
+          }
+        ]
+      },
+      "expected": {
+        "before": {
+          "distance": 60,
+          "pulling": true,
+          "transform": "translateY(24px)",
+          "transition": "none",
+          "indicator": true
+        },
+        "triggered": 0,
+        "prevented": 1,
+        "timer_ms": [
+          300
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "continued-small-pull-keeps-resistance",
+        "moves": [
+          {
+            "y": 160
+          },
+          {
+            "y": 10
+          }
+        ]
+      },
+      "expected": {
+        "before": {
+          "distance": 7.5,
+          "pulling": true,
+          "transform": "translateY(3px)",
+          "transition": "none",
+          "indicator": false
+        },
+        "triggered": 0,
+        "prevented": 2,
+        "timer_ms": [
+          300
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "negative80-cancels-current-pull",
+        "moves": [
+          {
+            "y": 160
+          },
+          {
+            "y": -80
+          }
+        ]
+      },
+      "expected": {
+        "before": {
+          "distance": 0,
+          "pulling": false,
+          "transform": "translateY(0)",
+          "transition": "transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          "indicator": false
+        },
+        "triggered": 0,
+        "prevented": 1,
+        "timer_ms": [
+          300
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "initial-scroll101-blocks",
+        "initialScroll": 101,
+        "moves": [
+          {
+            "y": 160,
+            "scroll": 0
+          }
+        ]
+      },
+      "expected": {
+        "before": {
+          "distance": 0,
+          "pulling": false,
+          "transform": "translateY(0)",
+          "transition": "transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          "indicator": false
+        },
+        "triggered": 0,
+        "prevented": 0,
+        "timer_ms": [
+          300
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "continued-pull-ignores-later-scroll",
+        "moves": [
+          {
+            "y": 160
+          },
+          {
+            "y": 300,
+            "scroll": 200
+          }
+        ]
+      },
+      "expected": {
+        "before": {
+          "distance": 200,
+          "pulling": true,
+          "transform": "translateY(80px)",
+          "transition": "none",
+          "indicator": true
+        },
+        "triggered": 1,
+        "prevented": 2,
+        "timer_ms": [
+          300
+        ]
+      }
+    },
+    {
+      "input": {
+        "name": "dialog-refresh-after500-cancels",
+        "moves": [
+          {
+            "y": 160
+          },
+          {
+            "y": 180,
+            "overlay": true,
+            "elapsed": 501
+          }
+        ]
+      },
+      "expected": {
+        "before": {
+          "distance": 0,
+          "pulling": false,
+          "transform": "translateY(0)",
+          "transition": "transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+          "indicator": false
+        },
+        "triggered": 0,
+        "prevented": 1,
+        "timer_ms": [
+          300
+        ]
+      }
+    }
+  ]
+}

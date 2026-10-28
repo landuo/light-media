@@ -1,0 +1,3902 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/modules/filemanager/transhandler.py:833-890",
+  "source_sha256": "48948f9137ae68ac2f0cf4c1235dd3db6327cc9d66ff7490c17a5657504d5e36",
+  "kind": "Execute pinned __rename_subtitles, with real FileItem and pathlib.\nOnly the normal DEFAULT_SUB setting is supplied; no old application runs.\n",
+  "patterns": {
+    "_zhcn_sub_re": "([.\\[(\\s](((zh[-_])?(cn|ch[si]|sg|sc))|zho?|chinese|(cn|ch[si]|sg|zho?)[-_&]?(cn|ch[si]|sg|zho?|eng|jap|ja|jpn)|eng[-_&]?(cn|ch[si]|sg|zho?)|(jap|ja|jpn)[-_&]?(cn|ch[si]|sg|zho?)|简[体中]?)[.\\])\\s])|([\\u4e00-\\u9fa5]{0,3}[中双][\\u4e00-\\u9fa5]{0,2}[字文语][\\u4e00-\\u9fa5]{0,3})|简体|简中|JPSC|sc_jp|(?<![a-z0-9])gb(?![a-z0-9])",
+    "_zhtw_sub_re": "([.\\[(\\s](((zh[-_])?(hk|tw|cht|tc))|cht[-_&]?(cht|eng|jap|ja|jpn)|eng[-_&]?cht|(jap|ja|jpn)[-_&]?cht|繁[体中]?)[.\\])\\s])|繁体中[文字]|中[文字]繁体|繁体|JPTC|tc_jp|(?<![a-z0-9])big5(?![a-z0-9])",
+    "_ja_sub_re": "([.\\[(\\s](ja-jp|jap|ja|jpn|(jap|ja|jpn)[-_&]?eng|eng[-_&]?(jap|ja|jpn))[.\\])\\s])|日本語|日語",
+    "_eng_sub_re": "[.\\[(\\s]eng[.\\])\\s]"
+  },
+  "cases": [
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.ass"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.ass"
+    },
+    {
+      "default_sub": "zh-cn",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.ass"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.zh-tw.ass"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.zh-tw.ass"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.zh-tw.ass"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.zh-tw.ass"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.zh-tw.ass"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.zh-tw.ass"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.zh-tw.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.ass"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.ass"
+    },
+    {
+      "default_sub": "zh-tw",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.ass"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.ja.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.ja.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.ja.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.ja.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.ja.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.ja.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.ass"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.ass"
+    },
+    {
+      "default_sub": "ja",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.ass"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.eng.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.eng.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.eng.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.default.eng.ass"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.default.eng.ass"
+    },
+    {
+      "default_sub": "eng",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..default.eng.ass"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.ass"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.ass"
+    },
+    {
+      "default_sub": "",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.ass"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.ass"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.ass"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.ass"
+    },
+    {
+      "default_sub": null,
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.ass"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.ass"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.ass"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.ass"
+    },
+    {
+      "default_sub": "ZH-CN",
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.ass"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.ass"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.ass"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.ass"
+    },
+    {
+      "default_sub": false,
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.ass"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.zh.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.zh-cn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.cht.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.ass"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.ass"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.繁体中文.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.ass"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.ass"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.中字.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.ass"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.eng.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.jpn.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.ja.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.ja.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.ja-jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..ja.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.gb.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.big5.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.gb2312.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.chinese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.JPSC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.JPTC.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.sc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.tc_jp.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.中英字幕.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.zh-tw.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.zh-tw.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.中文繁体.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..zh-tw.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.chs+cht.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.CHI.SRT",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.SRT"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.English.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.chİnese.srt",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..chi.zh-cn.srt"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.mkv",
+      "result": "/owned/library/Film.eng.ass"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/.hidden",
+      "result": "/owned/library/.hidden.eng.ass"
+    },
+    {
+      "default_sub": 1,
+      "source": "/owned/source/Film.ENG.ass",
+      "target": "/owned/library/Film.",
+      "result": "/owned/library/Film..eng.ass"
+    }
+  ]
+}

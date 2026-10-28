@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { VSelect } from 'vuetify/components/VSelect';
 import { VTextField } from 'vuetify/components/VTextField';
-import { computed, ref, watch } from 'vue';
-import { api, bytes, errorText, ui } from '../api';
+import { computed, onBeforeUnmount, ref, watch } from 'vue';
+import { api, bytes, errorText, toast, ui } from '../api';
 import AppIcon from './AppIcon.vue';
 import DownloadTarget from './DownloadTarget.vue';
 import type { Candidate } from '../features/resources';
 
 const props = defineProps<{ candidate: Candidate; request?: any; media?: any }>();
-const emit = defineEmits<{ close: []; done: [result: any] }>();
+const emit = defineEmits<{ close: []; done: [result: any]; error: [message: string] }>();
 const downloader = ref(''),
   downloadPath = ref(''),
   advanced = ref(false),
@@ -27,6 +27,42 @@ watch(
     error.value = '';
   },
 );
+let disposed = false;
+let releaseWait: (() => void) | undefined;
+onBeforeUnmount(() => {
+  disposed = true;
+  releaseWait?.();
+});
+function waitForUpdate() {
+  return new Promise<void>((resolve) => {
+    const timer = setTimeout(() => {
+      releaseWait = undefined;
+      resolve();
+    }, 250);
+    releaseWait = () => {
+      clearTimeout(timer);
+      releaseWait = undefined;
+      resolve();
+    };
+  });
+}
+async function waitForAcceptance(result: any) {
+  if (!result?.id) throw new Error('未能确认下载结果');
+  let current = result;
+  while (!disposed) {
+    if (current.state === 'accepted') return current;
+    if (['failed', 'waiting', 'cancelled'].includes(current.state)) {
+      const message = current.error || '添加下载失败';
+      toast(`${siteName.value} ${props.candidate.resource.title} 添加下载失败：${message}`, true);
+      emit('error', message);
+      return;
+    }
+    if (!['planned', 'submitting'].includes(current.state)) throw new Error('未能确认下载状态');
+    await waitForUpdate();
+    if (disposed) return;
+    current = await api('/downloads/native/' + encodeURIComponent(result.id));
+  }
+}
 async function start() {
   if (busy.value) return;
   busy.value = true;
@@ -42,7 +78,8 @@ async function start() {
       download_path: downloadPath.value,
       ...(tmdbID.value ? { media_type: mediaType.value, tmdb_id: tmdbID.value } : {}),
     });
-    emit('done', result);
+    const accepted = await waitForAcceptance(result);
+    if (accepted && !disposed) emit('done', accepted);
   } catch (e) {
     error.value = errorText(e);
   } finally {

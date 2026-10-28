@@ -1,0 +1,123 @@
+{
+  "accepted_increment": true,
+  "whole_module_complete": false,
+  "scope": "36/37/43 ordinary main-file retry increment",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": [
+    "app/chain/transfer.py:3795-3870",
+    "app/chain/media.py:729-779,853-880",
+    "app/chain/__init__.py:949-963",
+    "src/views/reorganize/TransferHistoryView.vue:765-771 ordinary reorganize dialog; AI entries excluded"
+  ],
+  "target": [
+    "internal/app/plugin_original_transfer_retry.go:retryOriginalTransferHistory",
+    "internal/app/transfer_history.go:transferHistoryAPI",
+    "internal/app/organize_manual.go:failed-history owner resolution"
+  ],
+  "behavior": "The normal retry endpoint now re-parses current source, dispatches recognize_media then synchronous obtain_images, and starts a new actual transfer plan. A reserved primary owner for successfully published sibling materials is not treated as an existing video asset.",
+  "source_replay": "Reuses pinned five ordinary redo cases in testdata/standard-module-host/transfer-redo-source-oracle.json; complete excluded AI retry is not invoked.",
+  "actual_tests": {
+    "red": "main-retry33-red.log: actual primary endpoint returned old failed plan",
+    "sdk_green_seconds": 2.004,
+    "tests": [
+      "TestOriginalMainRetryActualSDK",
+      "TestOriginalSingleExtraRetryActualSDK"
+    ],
+    "assertions": "New plan/file IDs, exactly one recognition/images/transfer per retry, real primary hardlink, stable history, Close/New no replay",
+    "race_seconds": 33.017,
+    "linux_cli_seconds": 10.78,
+    "linux_browser_gate_seconds": 196.06,
+    "production_case": "SingleMainRetry invokes actual authenticated POST /api/history/transfers/{id}/retry after controlled initial rejection; final history success, old partial retained and new complete plan; cold real inode equal source."
+  },
+  "browser": "IAB67 verifies resulting successful primary history through actual search and full reload after main restart. Does not claim a browser retry-button click: fixed ordinary frontend provides a reorganize dialog; its dedicated AI retry is excluded.",
+  "build": {
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "binaries": [
+      {
+        "name": "server-platform33-20261027-linux",
+        "sha256": "766023317db3b92ccf34bae75c830ce45c7829cb5935d27e961a0ce4e291a07c",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform33-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3717,
+        "changed": [],
+        "elapsed_seconds": 3.6
+      },
+      {
+        "name": "process-platform33-20261027-linux.test",
+        "sha256": "30cf6f1d0e4c5e159ed7db41ba9db38e01fa0a36f4518ffdd22ee3240a6ceff2",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform33-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4176,
+        "changed": [],
+        "elapsed_seconds": 7.36
+      }
+    ]
+  },
+  "worker_sha256": "376f0e246479b6e4a299bf524d87398aaff31f409b70f66b25a097d41990f6cc",
+  "browser_verdict": {
+    "passed": true,
+    "kind": "Browser observation of actual production-HTTP retry result, not a dedicated retry button",
+    "pids": [
+      [
+        367172,
+        367178
+      ],
+      [
+        370085,
+        370092
+      ]
+    ],
+    "history_id": "file_1E2oPqpGk5FyT0KSGO147jdH",
+    "failed_plan": "plan_xElXin1UQtOh79XyNUSMeDEp",
+    "new_successful_plan": "plan_rheBREeI1ueRvpkLXGmbugW4",
+    "cold_write_calls": 0,
+    "files": [
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module33-ui-tmp/TestPluginServicesProductionCLI2099740797/002/source/SingleMainRetry.2024.mkv",
+        "inode": 2915153,
+        "device": 65025,
+        "size": 26,
+        "sha256": "b0743e7376d3a6fb6d4fcd06b4362ae8e297d1397c5ee37b44c921ad8c405c7c"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module33-ui-tmp/TestPluginServicesProductionCLI2099740797/002/library/SingleMainRetry (2024)/SingleMainRetry (2024).mkv",
+        "inode": 2915153,
+        "device": 65025,
+        "size": 26,
+        "sha256": "b0743e7376d3a6fb6d4fcd06b4362ae8e297d1397c5ee37b44c921ad8c405c7c"
+      }
+    ]
+  },
+  "manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-main-retry-33-20261028/manifest.json",
+  "limitations": [
+    "Synthetic tiny file and controlled SDK result; real Go Linux server/plugin/API/browser/filesystem/persistence.",
+    "Existing host requires projected TMDB identity; no new non-TMDB import business.",
+    "Successful-primary old-target cleanup and generic automatic manual recognition remain separate pending caller differences."
+  ],
+  "cleanup": "Source/clone actual uninstall/API404/TempDir PASS; IAB67 and34448 stopped.",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

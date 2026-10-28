@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -17,10 +18,11 @@ import (
 )
 
 type importSnapshot struct {
-	Device uint64 `json:"device"`
-	Inode  uint64 `json:"inode"`
-	Size   int64  `json:"size"`
-	ModNS  int64  `json:"mod_ns"`
+	Directory string `json:"directory,omitempty"`
+	Device    uint64 `json:"device"`
+	Inode     uint64 `json:"inode"`
+	Size      int64  `json:"size"`
+	ModNS     int64  `json:"mod_ns"`
 }
 
 func snapshot(info os.FileInfo) (importSnapshot, error) {
@@ -37,7 +39,7 @@ func (s importSnapshot) matches(info os.FileInfo) bool {
 }
 
 func planSnapshot(file PlanFile) importSnapshot {
-	return importSnapshot{Device: file.Device, Inode: file.Inode, Size: file.Size, ModNS: file.ModNS}
+	return importSnapshot{Device: file.Device, Inode: file.Inode, Size: file.Size, ModNS: file.ModNS, Directory: file.DirectoryDigest}
 }
 
 func within(root, target string) bool {
@@ -98,7 +100,10 @@ func importDir(name string, create bool) (*os.File, error) {
 			if errors.Is(openErr, unix.ENOENT) {
 				return nil, os.ErrNotExist
 			}
-			return nil, bad("INVALID_PATH", "目录不可访问或包含符号链接")
+			// Keep the public guard/error code while allowing a concrete source
+			// module caller to distinguish an OS permission failure from a link
+			// or path authorization rejection.
+			return nil, fmt.Errorf("%w: %w", bad("INVALID_PATH", "目录不可访问或包含符号链接"), openErr)
 		}
 		fd = next
 	}

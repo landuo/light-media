@@ -14,6 +14,7 @@ import (
 
 // Build two actual artifacts with -ldflags '-X main.fixtureVersion=2.0'.
 var fixtureVersion = "1.0"
+var fixturePluginID = "OwnedModuleFixture"
 
 type object struct {
 	mu           sync.Mutex
@@ -28,7 +29,7 @@ type object struct {
 }
 
 func manifest() plugins.Manifest {
-	return plugins.Manifest{SchemaVersion: 1, PluginID: "OwnedModuleFixture", Name: "Owned module fixture", Version: fixtureVersion, Runtime: "go-executable", Entry: "owned-module-fixture", HostAPIMin: 1, HostAPIMax: 1,
+	return plugins.Manifest{SchemaVersion: 1, PluginID: fixturePluginID, Name: "Owned module fixture", Version: fixtureVersion, Runtime: "go-executable", Entry: "owned-module-fixture", HostAPIMin: 1, HostAPIMax: 1,
 		Methods: []string{"invoke", "init", "get_state", "get_service", "get_command", "get_api", "snapshot", "http", "stop"}, Capabilities: []string{},
 		APIs: []plugins.HTTPAPI{{Key: "owned_status", Path: "/status", Methods: []string{"GET"}, Auth: "bear"}}}
 }

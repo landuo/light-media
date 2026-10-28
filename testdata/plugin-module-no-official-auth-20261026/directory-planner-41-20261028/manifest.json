@@ -1,0 +1,438 @@
+{
+  "kind": "Linux real cmd/server + actual Go SDK + IAB78 and pinned source replay; generated small media byte fixtures, not external movie services",
+  "whole_indices_accepted": false,
+  "binaries": [
+    {
+      "name": "server-platform41-20261027-linux",
+      "sha256": "ce12853d669b6f04d9418f9de81482137725548088501f5756a3d85f8b6b6ef5",
+      "command": [
+        "go",
+        "build",
+        "-trimpath",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform41-20261027-linux",
+        "./cmd/server"
+      ],
+      "inputs": 3723,
+      "changed": [],
+      "elapsed_seconds": 3.56
+    },
+    {
+      "name": "process-platform41-20261027-linux.test",
+      "sha256": "098a5f7d4b6b13ac8b4d2555af1183976b0a7fe013d39e25aece4f2bb0363bd8",
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform41-20261027-linux.test",
+        "./internal/app"
+      ],
+      "inputs": 4193,
+      "changed": [],
+      "elapsed_seconds": 7.6
+    }
+  ],
+  "worker_sha256": "9a1d5c5c35982625a59002d8148c6f2a14ff5b728c82a6e190d9f92b9aa83990",
+  "artifacts": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/internal/app/import_plan.go.gz",
+      "original": "internal/app/import_plan.go",
+      "sha256": "bacf47811d135f11d1a9aeca01ad5d54c3247b6a682f24955cbccc965d382f8e",
+      "stored_sha256": "4a5afec1589cf510622c8c37802c6492065f502a6c497cc37c590d3d4280ddca",
+      "size": 31669
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/internal/app/organize_manual.go.gz",
+      "original": "internal/app/organize_manual.go",
+      "sha256": "a3cf2b0f0e74001d6cbc5e435c7f7cf0e1a0895daf84a4a791f82209e97dae45",
+      "stored_sha256": "2d65ff40322ca726ed7db9976b846d29e87f56819a79add6cf28170d05a7544b",
+      "size": 25243
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/internal/app/physical_directories.go.gz",
+      "original": "internal/app/physical_directories.go",
+      "sha256": "1819b316a99b4e4c5c5afe421ba3b9933ea68d535c03bf145a54ab4644cd770a",
+      "stored_sha256": "8a8faa890aa603b1a8ca088b85660c0a0d7bff3d987435b2baed5a924cefa81a",
+      "size": 7994
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/internal/app/plugin_module_process_directory_test.go.gz",
+      "original": "internal/app/plugin_module_process_directory_test.go",
+      "sha256": "c0938f8ca2108b703f672b724044de98a004529252f4970246f446ddeb2f6c43",
+      "stored_sha256": "7703dd2eb953757477cf5b8e50a84a53cbb4c257c62d2dbd4b6d22ed35c37f36",
+      "size": 10721
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/internal/app/plugin_original_transfer_collection.go.gz",
+      "original": "internal/app/plugin_original_transfer_collection.go",
+      "sha256": "02067a624088b890daa789654e50287f86b9c5db56c012fbcaaf64bb8b4a1941",
+      "stored_sha256": "6a4db1b37089667445694aed5ad231242da853ab9e95848adc519fce9e0829dc",
+      "size": 3692
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/internal/app/plugin_original_transfer_directory.go.gz",
+      "original": "internal/app/plugin_original_transfer_directory.go",
+      "sha256": "93b7df0f1459cf10965e7435807548a2c166e643f154d1484e079f70ddc9a707",
+      "stored_sha256": "999bf77bde878b59b12af7981dc1d22429c1bc2cc35b213a2593baa0c20ad645",
+      "size": 7010
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/internal/app/plugin_original_transfer_directory_plan.go.gz",
+      "original": "internal/app/plugin_original_transfer_directory_plan.go",
+      "sha256": "da9ea5ff2dbc6f3d5bb2144763832e11239c664afbb9b3b472b87e91b9d04cbd",
+      "stored_sha256": "e4e8f7ce1456752383cc6c9a62b4d7d1ccaa47e4a2890848d6115dac151b783e",
+      "size": 6943
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/internal/app/plugin_original_transfer_directory_plan_test.go.gz",
+      "original": "internal/app/plugin_original_transfer_directory_plan_test.go",
+      "sha256": "090f25d4e5731848d92be1a53acf84cf275d65986bda91d8ec1e8f390d2406b7",
+      "stored_sha256": "487c8e15b556b01e65e8e46171409877234026efff2f3c2309c854311ae89309",
+      "size": 5652
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/internal/app/plugin_original_transfer_recognition.go.gz",
+      "original": "internal/app/plugin_original_transfer_recognition.go",
+      "sha256": "03e76cea6cbce03e35d7d2c730221223b0a335e47ca907c804da3b6edf2e15e6",
+      "stored_sha256": "6a49c1d51a4361f77651f92e472021f5fb6bc7fdca7840468ad9b8690ebd4b1b",
+      "size": 4196
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/internal/app/plugin_original_transfer_single_extra.go.gz",
+      "original": "internal/app/plugin_original_transfer_single_extra.go",
+      "sha256": "4e91dfc83f24ebe27dcf935c3237c6a6221d69cee042b4276e85cb19913c83a4",
+      "stored_sha256": "5bab69e3766163568878d3117fff9a76baf4eb824c78ea06fbac02f3b1b7b71a",
+      "size": 2741
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/testdata/standard-module-host/generate-transfer-directory-plan-oracle.py.gz",
+      "original": "testdata/standard-module-host/generate-transfer-directory-plan-oracle.py",
+      "sha256": "7bcbb8f9bbdd592fff90d9c7b9ce86cf332831607605ed7b2fe96087ed1b3291",
+      "stored_sha256": "c40faf6a802676b820ad488f7b223fe024c2c5020c8330b3cf79bae4c68fb764",
+      "size": 5786
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/testdata/standard-module-host/transfer-directory-plan-source-oracle.json.gz",
+      "original": "testdata/standard-module-host/transfer-directory-plan-source-oracle.json",
+      "sha256": "de8a1deb2702e9cc7c4b6fee103f446ae60be08c533570be5ca7f3e1f7386c42",
+      "stored_sha256": "6727bc194144bc223b6d33c5eafce72757b8c6945f9a9597ca687c04b8a768f8",
+      "size": 16791
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/archive-directory41.py.gz",
+      "original": "work/plugin-no-official-auth-20261026/archive-directory41.py",
+      "sha256": "cd51a7d440b919c0954c667a5a25362171471ecf919ead1fc53be7e38f7360d1",
+      "stored_sha256": "f74d11116c1d12bb41a3cd489e92d23eeb07495e99277f3e99a989838f411fda",
+      "size": 6639
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/build-platform41.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/build-platform41.log",
+      "sha256": "60e35f9163ff5fbc0bb4cb12632650ae21a842986521d52446be4822f1c897da",
+      "stored_sha256": "dd497151f18b51acbc0665a0a9e633479e6499d26f66d7e0221c441b4a69086f",
+      "size": 709
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/build-platform41.py.gz",
+      "original": "work/plugin-no-official-auth-20261026/build-platform41.py",
+      "sha256": "f80eddd1facc19ad8cd292bb45b247d2512b035dc0256e0f1c225c7114a5bc1e",
+      "stored_sha256": "506106870fd2d678635dcd9c17df3d5f5a74f7e00364ab981848a90b1fd92b6d",
+      "size": 2332
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser/01-four-preview.dom.txt.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser/01-four-preview.dom.txt",
+      "sha256": "0e42b2afbeb0505d134b5dcb139bffa4d1e97a752e8f8e2041063e73c5cd39f5",
+      "stored_sha256": "093972a92ce15944108beb6616295e679e0fe1dc65478bad6e15d8f79dc16f1a",
+      "size": 6653
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser/01-four-preview.png",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser/01-four-preview.png",
+      "sha256": "3da88c9ba3eb7d8f4b60cf8125f17113f5a9733753ae13dbe1423f8e9b97e735",
+      "stored_sha256": "3da88c9ba3eb7d8f4b60cf8125f17113f5a9733753ae13dbe1423f8e9b97e735",
+      "size": 64286
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser/02-four-actual-failures.dom.txt.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser/02-four-actual-failures.dom.txt",
+      "sha256": "005ec84af0ad640f250f7713cca8d6e6580c184a19e7454c503a52d15f30a323",
+      "stored_sha256": "ad36743c61f6dbb37419a7388471f943d0893958b17d4019e42930f135916bc4",
+      "size": 6840
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser/02-four-actual-failures.png",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser/02-four-actual-failures.png",
+      "sha256": "ec0bf9d7f6ef4baab5b1687bfe5989d4b1fa842ccedebeb2f6cee62b09ffbad2",
+      "stored_sha256": "ec0bf9d7f6ef4baab5b1687bfe5989d4b1fa842ccedebeb2f6cee62b09ffbad2",
+      "size": 67560
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser/03-restored-preview.dom.txt.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser/03-restored-preview.dom.txt",
+      "sha256": "9eaf03dfde5086edced7f98d5499a32d084529d0724763b94f0bd39ed0eb2717",
+      "stored_sha256": "a3aa9a59d6cdd2f7188c69b6c7c8f08edfee076007573dd684b706a183af325e",
+      "size": 6685
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser/03-restored-preview.png",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser/03-restored-preview.png",
+      "sha256": "bad1f2265d445652b7c15a0b5b19538fbab015a5972e7ad1e80d00c680cb5e69",
+      "stored_sha256": "bad1f2265d445652b7c15a0b5b19538fbab015a5972e7ad1e80d00c680cb5e69",
+      "size": 68818
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser/04-history-success.dom.txt.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser/04-history-success.dom.txt",
+      "sha256": "1d414b87dfda94535fc110654b2b43ca1325f286c439667de4e343f4e80a3a59",
+      "stored_sha256": "1e8c72e0912f05750a3b4c25d480b0f19ed59bebde69cbc6df84cad4362cf4b7",
+      "size": 17178
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser/04-history-success.png",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser/04-history-success.png",
+      "sha256": "69975b3d2839d1675eedef6eac82cc6ae16a019695010841edd51052af7507ee",
+      "stored_sha256": "69975b3d2839d1675eedef6eac82cc6ae16a019695010841edd51052af7507ee",
+      "size": 57502
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser/05-cold-history.dom.txt.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser/05-cold-history.dom.txt",
+      "sha256": "f4fd20bd9bcfffeabedc3c10c056fb90a77555b3340a7b69598b4b4b14f272c6",
+      "stored_sha256": "c373ee094c270bfc073ce7cd7f9d78f5561f4f85c261bf56c666c98b0c12c8c2",
+      "size": 17169
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser/05-cold-history.png",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser/05-cold-history.png",
+      "sha256": "69975b3d2839d1675eedef6eac82cc6ae16a019695010841edd51052af7507ee",
+      "stored_sha256": "69975b3d2839d1675eedef6eac82cc6ae16a019695010841edd51052af7507ee",
+      "size": 57502
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser/06-cold-history-loaded.dom.txt.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser/06-cold-history-loaded.dom.txt",
+      "sha256": "f4fd20bd9bcfffeabedc3c10c056fb90a77555b3340a7b69598b4b4b14f272c6",
+      "stored_sha256": "c373ee094c270bfc073ce7cd7f9d78f5561f4f85c261bf56c666c98b0c12c8c2",
+      "size": 17169
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser/06-cold-history-loaded.png",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser/06-cold-history-loaded.png",
+      "sha256": "69975b3d2839d1675eedef6eac82cc6ae16a019695010841edd51052af7507ee",
+      "stored_sha256": "69975b3d2839d1675eedef6eac82cc6ae16a019695010841edd51052af7507ee",
+      "size": 57502
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser-before.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser-before.json",
+      "sha256": "9546c414b0a7e9e6b5499aca8a3ae68d149150b555447b5e91083a853688f00a",
+      "stored_sha256": "58e685930fe0b530f826c7e6e28b56f4c93242b2d562037fc372ecc6ee95460c",
+      "size": 81108
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser-cold-after-page.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser-cold-after-page.json",
+      "sha256": "6139582c97b56395537ad611ef5e55321ceacb220c4fef9d042f21b17c3059c9",
+      "stored_sha256": "01b9b0c3e41a52e9b0210a502d43be09d9f0c98fc6a22b8fea8d1d4a52b1d13e",
+      "size": 25795
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser-cold.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser-cold.json",
+      "sha256": "cdb1462d4a3a4102da4a33d357810075953f17a302e00bfc325b9bbed46f02e9",
+      "stored_sha256": "0d52073b35bd4340ea3e79f2bc7d40a015d2369314a46cc60b07d5abfecf34ce",
+      "size": 25670
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser-fail.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser-fail.json",
+      "sha256": "ec45247247f3690a10af5cdc11c4c81464293ca7cb42d1afbf35d37555e8f09f",
+      "stored_sha256": "5d013489b4b34b7eddd2ef80f9d0e0f4c41c56da091255505ee94e8ee55748f9",
+      "size": 81107
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser-failed.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser-failed.json",
+      "sha256": "2729ea506a08da2561f6d1defe86e51049c8c0e5b7698417c8791d3f55f83a13",
+      "stored_sha256": "ac0151fed1d1516affc614ea527842aabceed1728cf422e08b05806744b0aa61",
+      "size": 132636
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser-restore.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser-restore.json",
+      "sha256": "bfa256040bb53e4ca1c3e8f8e2eb4c16d4b39ad56efc466fdf74abd82ca13e2a",
+      "stored_sha256": "29716b620c143900dd7e99462d89e4106c84c1e82c3f362a99ca66885c92d592",
+      "size": 132636
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser-succeeded.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser-succeeded.json",
+      "sha256": "53583779d94ad4cafa8e8d74a5a7eda6831cdea67724bbb945c01de06232987f",
+      "stored_sha256": "258fb93d95235862e79c4594a480840bd44e2faff470090c7ff52947467e8b35",
+      "size": 302336
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-browser-verdict.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-browser-verdict.json",
+      "sha256": "826a1f53116154883ceb3de7ae119ff2b2b750960df7bac9e2e5257204183d45",
+      "stored_sha256": "a9081b8e3ea8dce115de16edd6fc61285a7488f305ce7a04a47cf77ebbadf038",
+      "size": 322
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-cli-evidence/directory41-cli.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-cli-evidence/directory41-cli.json",
+      "sha256": "cb15c74c4f066395a418dcf4dcf3631a9660df18194ebf85abba60875d9058d2",
+      "stored_sha256": "2a9ca4db7e0a4b02c39358831b214f6b5c1a8fdbb02769b762715c1bd545eb71",
+      "size": 49395
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-cli-evidence/events36-service-process.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-cli-evidence/events36-service-process.log",
+      "sha256": "004badd4c27ed7f5f3d1ebc7fe541f6aef79064482461b0bd4531a6ee8e7ba42",
+      "stored_sha256": "47027f9d52bd781bce323155990aecb01db2d21ba6716594f8e3c7136b31b71b",
+      "size": 18653
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-cli-remote.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-cli-remote.log",
+      "sha256": "b1d9e60fce0d6943ae264ee09d66412515e3e6f0a71e8125639fb66a1bd2cada",
+      "stored_sha256": "41c040668b2ed512dc4b74de95b446a36707b131945f3351fef9db62eff99294",
+      "size": 1023
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-cold-summary.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-cold-summary.log",
+      "sha256": "ee625446dcb6545257b53b65034e9bc44510f2aa56cfa1bd02dfc7e71a931aa6",
+      "stored_sha256": "fa559bb52003284ae5c614b1df0e44ffc145bab16a7253bbf7ae08a04a8ad958",
+      "size": 1567
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-local.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-local.log",
+      "sha256": "73e313af952d6dc9b193e64dd93f236ee3b39a38586e0926136cf05c67a540be",
+      "stored_sha256": "129b14ad1f77c49645c71aa3ed68c64c4454458e1b13cc0a0b132bc0542b1be2",
+      "size": 37
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-observe.py.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-observe.py",
+      "sha256": "eb8ad0667c6be0d32f8bd12ffe65b61c86c24b25c50b14ed1d420b28408f1a0e",
+      "stored_sha256": "62f82280753d0c74988faf46761a37cab036bc384ad3d4a51ff1aa16ba6ba40c",
+      "size": 2340
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-orphan-tv-red.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-orphan-tv-red.log",
+      "sha256": "5f02eeff7b667e4819f546b346e48f3038f0159e231b532f4793f9a02266d0da",
+      "stored_sha256": "15ce47e4b48ce1953bf7a495ba48560d475a03f8ac5860c3c381119adeeb17c1",
+      "size": 2276
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-preview-duplicate-red.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-preview-duplicate-red.log",
+      "sha256": "94692ba0638d40dc13b5e3fc7788a73f373d842f19f2cc93c8e2091d8d286d37",
+      "stored_sha256": "471debf5d123bbf0946cf6ffa87c38a857c40e1d6f7699b901ccaa5eddf00e2a",
+      "size": 4680
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-r1-race.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-r1-race.log",
+      "sha256": "f3db640158e400449536b7bf339ab2c7ee3a043d1460d41669d567893c1d49a0",
+      "stored_sha256": "a02ad96e52bc75d0a4fbbb4d2917c6cb32522a1d08fb597ae4cfb247ccaed8b0",
+      "size": 38
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-race.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-race.log",
+      "sha256": "37da599cceaed03adf4d95d12159f13b63abbef99911cb9721253361e604319b",
+      "stored_sha256": "bf20000debc38144609554a604dd4c652887338f1499c4d9e465f42e39c3670c",
+      "size": 38
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-related.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-related.log",
+      "sha256": "c4318e038ceecd701b89e91f5fb0d29171a587e1d25e9efab59f01f38d2e0408",
+      "stored_sha256": "53630433c50b670662fc33ca02028e97cccb62b3c16d4742a0cc631a9c7bd224",
+      "size": 38
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-ui-evidence/directory41-cli.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-ui-evidence/directory41-cli.json",
+      "sha256": "39ef371c636b35ae8dfbcce870b38bd701bef8a1412c64ce8f1f0eb1e43df5a9",
+      "stored_sha256": "c0e821f57776f6fb32c4e82520f5f2b2dc680b300f101b2139c9f4f39770a978",
+      "size": 49336
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-ui-evidence/events36-service-process.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-ui-evidence/events36-service-process.log",
+      "sha256": "5704e0943c1aa0aba9a993942ad1d2f032d19771ee22369efee3afe5083c370b",
+      "stored_sha256": "10392ecabf0d799cd604200a90f41eb9e61ab9687394180a1a3bef65bfcc74ed",
+      "size": 36740
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-ui-remote.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-ui-remote.log",
+      "sha256": "d95d3b4b6fc0015ae7b4f3ec89074e3cbe00c7dfa51f5496eed51a1dcf0fec6e",
+      "stored_sha256": "1a918d39f6c09862b81c64623aa192944c955347b7c21fc9f9efd139f07b4833",
+      "size": 1025
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/directory41-ui-state.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/directory41-ui-state.json",
+      "sha256": "6701664e10d1dc55ffb74e1aa9c3073084b7cb2eef5fd382dca49ac6d905f4aa",
+      "stored_sha256": "59ff300211e87e4a395fd47580bb35d7f6c4c16019f738062a2fbcd188702359",
+      "size": 4860
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/platform41-r1-result.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/platform41-r1-result.json",
+      "sha256": "673a7c6f85338a06e6bb21f846e60972ce84e553359fa72092cd8d1bcf8791d2",
+      "stored_sha256": "eb545927377d504d728da46f1c071761ce6b093f66c93de5202d6fbcb5ed4740",
+      "size": 1082
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/platform41-result.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/platform41-result.json",
+      "sha256": "a5062d500ad5645ed5f2ceb566b3dafb2b978e7f44d633e98ea83244435df2fe",
+      "stored_sha256": "641ded239ef8548f73b1b0ed6bbc8af7693d4cdf3b4fa68bcd102bf4bd2e90d6",
+      "size": 1081
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/process-platform41-20261027-linux.test.build.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/process-platform41-20261027-linux.test.build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "size": 0
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/process-platform41-20261027-linux.test.inputs.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/process-platform41-20261027-linux.test.inputs.json",
+      "sha256": "a8af99529eadd849354b039f11b09d36ce13538f849d031d057517c780e74d51",
+      "stored_sha256": "fff6ce269827e980fa4f96d8f2b08aca01f3dcca5b73c2700f7354633ec9290d",
+      "size": 643238
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/run-directory41.py.gz",
+      "original": "work/plugin-no-official-auth-20261026/run-directory41.py",
+      "sha256": "abeb505a2508c8deada6478ffc5eaa087bf5899206c7dfc562ae5ae805f3022f",
+      "stored_sha256": "ca917f434a98549e1df5f2c5a592540eb7eaf9346706c3aa9dd4e73d658eee47",
+      "size": 1159
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/server-platform41-20261027-linux.build.log.gz",
+      "original": "work/plugin-no-official-auth-20261026/server-platform41-20261027-linux.build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "size": 0
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-planner-41-20261028/work/plugin-no-official-auth-20261026/server-platform41-20261027-linux.inputs.json.gz",
+      "original": "work/plugin-no-official-auth-20261026/server-platform41-20261027-linux.inputs.json",
+      "sha256": "e840ff921a0a9db15a77100912a326736b7d81aeed82dc215c58dfd74dcaaaf5",
+      "stored_sha256": "627dd14fabc3e8ebb2f6c73ced83c392c65880d3b245962d3056ba6c0119008e",
+      "size": 569767
+    }
+  ]
+}

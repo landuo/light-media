@@ -1,0 +1,150 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+  "kind": "fixed static-file/access AST, real temporary files/actual streaming response; credential decoder/provider lookup controlled",
+  "cases": [
+    {
+      "name": "authenticated-js",
+      "method": "GET",
+      "path": "Owned/ui/remoteEntry.js",
+      "session": true,
+      "status": 200,
+      "content_type": "application/javascript",
+      "content_disposition": "inline; filename=remoteEntry.js",
+      "allow": null,
+      "content_range": null,
+      "bytes": 24,
+      "sha256": "a17afa158c961be40ba76e4c681135152be33704516726db77ba665630346897"
+    },
+    {
+      "name": "anonymous-declared-mjs",
+      "method": "GET",
+      "path": "owned/ui/part.mjs",
+      "session": false,
+      "status": 200,
+      "content_type": "application/javascript",
+      "content_disposition": "inline; filename=part.mjs",
+      "allow": null,
+      "content_range": null,
+      "bytes": 17,
+      "sha256": "56332e0a55734bc2b73df56a2df8635ed5c5b24b6d7a456b41de7cab9a2f3814"
+    },
+    {
+      "name": "anonymous-outside-directory",
+      "method": "GET",
+      "path": "owned/outside.txt",
+      "session": false,
+      "status": 403,
+      "content_type": "application/json",
+      "content_disposition": null,
+      "allow": null,
+      "content_range": null,
+      "bytes": 33,
+      "sha256": null
+    },
+    {
+      "name": "binary-range-is-full-stream",
+      "method": "GET",
+      "path": "owned/opaque.bin",
+      "session": true,
+      "status": 200,
+      "content_type": "application/octet-stream",
+      "content_disposition": "inline; filename=opaque.bin",
+      "allow": null,
+      "content_range": null,
+      "bytes": 655360,
+      "sha256": "6abbc184514289bf27c4d6b6eee974f3a8d1f6b49c41e8328c2dc581120dcef6"
+    },
+    {
+      "name": "missing-file",
+      "method": "GET",
+      "path": "owned/missing.bin",
+      "session": true,
+      "status": 404,
+      "content_type": "application/json",
+      "content_disposition": null,
+      "allow": null,
+      "content_range": null,
+      "bytes": 129,
+      "sha256": null
+    },
+    {
+      "name": "directory",
+      "method": "GET",
+      "path": "owned/ui",
+      "session": true,
+      "status": 403,
+      "content_type": "application/json",
+      "content_disposition": null,
+      "allow": null,
+      "content_range": null,
+      "bytes": 123,
+      "sha256": null
+    },
+    {
+      "name": "double-dot-substring",
+      "method": "GET",
+      "path": "owned/asset..data.txt",
+      "session": true,
+      "status": 403,
+      "content_type": "application/json",
+      "content_disposition": null,
+      "allow": null,
+      "content_range": null,
+      "bytes": 22,
+      "sha256": null
+    },
+    {
+      "name": "head-is-not-get",
+      "method": "HEAD",
+      "path": "owned/ui/remoteEntry.js",
+      "session": true,
+      "status": 405,
+      "content_type": "application/json",
+      "content_disposition": null,
+      "allow": "GET",
+      "content_range": null,
+      "bytes": 0,
+      "sha256": null
+    }
+  ],
+  "files": {
+    "ui/remoteEntry.js": {
+      "base64": "ZXhwb3J0IGNvbnN0IG93bmVkPXRydWU7"
+    },
+    "ui/part.mjs": {
+      "base64": "ZXhwb3J0IGRlZmF1bHQgMTs="
+    },
+    "ui/style.css": {
+      "base64": "Lm93bmVke2NvbG9yOnB1cnBsZX0="
+    },
+    "opaque.bin": {
+      "pattern": [
+        255,
+        0,
+        1,
+        254,
+        10
+      ],
+      "repetitions": 131072
+    },
+    "asset..data.txt": {
+      "base64": "b3duZWQ="
+    },
+    "outside.txt": {
+      "base64": "b3V0c2lkZSBhdXRoZW50aWNhdGlvbiBkaXI="
+    }
+  },
+  "binary_response": {
+    "status": 200,
+    "content_type": "application/octet-stream",
+    "bytes": [
+      255,
+      0,
+      1,
+      254,
+      10
+    ],
+    "sha256": "ccae98022baea24d0c18b70b14d311ef5534e931776916cdb066e5a7fcab9d35"
+  }
+}

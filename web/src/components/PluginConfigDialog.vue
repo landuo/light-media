@@ -33,12 +33,6 @@ const props = defineProps<{ plugin: PluginCard }>();
 const emit = defineEmits<{ close: []; saved: []; switch: []; changed: [] }>();
 const display = useDisplay();
 const renderMode = ref<"vuetify" | "vue">("vuetify");
-const remoteMaxWidth = ref("60rem");
-function remoteLayout(layout?: { maxWidth?: unknown }) {
-  const width =
-    typeof layout?.maxWidth === "string" ? layout.maxWidth.trim() : "";
-  remoteMaxWidth.value = width || "60rem";
-}
 const remote = shallowRef<Component>();
 const controller = new AbortController();
 const remoteAPI = shallowRef<ReturnType<typeof createPluginRemoteAPI>>();
@@ -145,7 +139,7 @@ onUnmounted(() => {
   <VDialog
     :model-value="true"
     scrollable
-    :max-width="remoteMaxWidth"
+    max-width="60rem"
     :fullscreen="!display.mdAndUp.value"
     :persistent="saving"
     content-class="plugin-dialog-surface"
@@ -201,6 +195,7 @@ onUnmounted(() => {
             :key="index"
             :node="node"
             :model="model"
+            @error="error = $event"
           />
           <p v-if="!nodes.length && !error">此插件没有可配置项</p>
         </template>
@@ -265,7 +260,6 @@ onUnmounted(() => {
           :is="remote"
           :initial-config="model"
           :api="remoteAPI"
-          @layout="remoteLayout"
           @save="saveRemote"
           @switch="!saving && emit('switch')"
           @close="!saving && emit('close')"

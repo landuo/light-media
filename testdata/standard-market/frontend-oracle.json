@@ -1,0 +1,1811 @@
+{
+  "source_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "path": "src/views/plugin/PluginCardListView.vue",
+  "sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+  "kind": "actual fixed frontend AST; owned cards; synthetic framework/network/i18n boundaries, not browser execution",
+  "cases": [
+    {
+      "cards": [
+        {
+          "id": "c",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 3,
+          "installed": true
+        },
+        {
+          "id": "b",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 2
+        },
+        {
+          "id": "a",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 1
+        },
+        {
+          "id": "d",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 4
+        }
+      ],
+      "filter": {
+        "name": "",
+        "author": [],
+        "label": [],
+        "repo": []
+      },
+      "sort": "name",
+      "stats": {},
+      "keyword": "SEARCH",
+      "expected": {
+        "progression": [
+          {
+            "status": "empty",
+            "count": 4
+          },
+          {
+            "status": "empty",
+            "count": 4
+          },
+          {
+            "status": "empty",
+            "count": 4
+          }
+        ],
+        "search": [
+          "b",
+          "a"
+        ],
+        "market": [
+          "c",
+          "b",
+          "a",
+          "d"
+        ],
+        "display": [
+          "c",
+          "b",
+          "a",
+          "d"
+        ],
+        "authors": [
+          "one",
+          "two"
+        ],
+        "labels": [
+          "tools",
+          "media",
+          "test label"
+        ],
+        "repositories": [
+          "/tmp/owned-two",
+          "/tmp/owned one",
+          "owner/repo",
+          "owner/second"
+        ]
+      }
+    },
+    {
+      "cards": [
+        {
+          "id": "c",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 3,
+          "installed": true
+        },
+        {
+          "id": "b",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 2
+        },
+        {
+          "id": "a",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 1
+        },
+        {
+          "id": "d",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 4
+        }
+      ],
+      "filter": {
+        "name": "Alpha search",
+        "author": [],
+        "label": [],
+        "repo": []
+      },
+      "sort": "count",
+      "stats": {},
+      "keyword": "Alpha search",
+      "expected": {
+        "progression": [
+          {
+            "status": "empty",
+            "count": 1
+          },
+          {
+            "status": "empty",
+            "count": 1
+          },
+          {
+            "status": "empty",
+            "count": 1
+          }
+        ],
+        "search": [],
+        "market": [
+          "a"
+        ],
+        "display": [
+          "a"
+        ],
+        "authors": [
+          "one",
+          "two"
+        ],
+        "labels": [
+          "tools",
+          "media",
+          "test label"
+        ],
+        "repositories": [
+          "/tmp/owned-two",
+          "/tmp/owned one",
+          "owner/repo",
+          "owner/second"
+        ]
+      }
+    },
+    {
+      "cards": [
+        {
+          "id": "c",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 3,
+          "installed": true
+        },
+        {
+          "id": "b",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 2
+        },
+        {
+          "id": "a",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 1
+        },
+        {
+          "id": "d",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 4
+        }
+      ],
+      "filter": {
+        "name": "search",
+        "author": [
+          "one",
+          "two"
+        ],
+        "label": [
+          "tools"
+        ],
+        "repo": [
+          "/tmp/owned one"
+        ]
+      },
+      "sort": "count",
+      "stats": {},
+      "keyword": "a",
+      "expected": {
+        "progression": [
+          {
+            "status": "empty",
+            "count": 1
+          },
+          {
+            "status": "empty",
+            "count": 1
+          },
+          {
+            "status": "empty",
+            "count": 1
+          }
+        ],
+        "search": [
+          "c",
+          "b",
+          "a",
+          "d"
+        ],
+        "market": [
+          "a"
+        ],
+        "display": [
+          "a"
+        ],
+        "authors": [
+          "one",
+          "two"
+        ],
+        "labels": [
+          "tools",
+          "media",
+          "test label"
+        ],
+        "repositories": [
+          "/tmp/owned-two",
+          "/tmp/owned one",
+          "owner/repo",
+          "owner/second"
+        ]
+      }
+    },
+    {
+      "cards": [
+        {
+          "id": "c",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 3,
+          "installed": true
+        },
+        {
+          "id": "b",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 2
+        },
+        {
+          "id": "a",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 1
+        },
+        {
+          "id": "d",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 4
+        }
+      ],
+      "filter": {
+        "name": "",
+        "author": [],
+        "label": [],
+        "repo": [
+          "owner/repo",
+          "owner/second"
+        ]
+      },
+      "sort": "repo_url",
+      "stats": {
+        "a": 1,
+        "b": 8,
+        "c": 2
+      },
+      "keyword": "",
+      "expected": {
+        "progression": [
+          {
+            "status": "empty",
+            "count": 2
+          },
+          {
+            "status": "empty",
+            "count": 2
+          },
+          {
+            "status": "empty",
+            "count": 2
+          }
+        ],
+        "search": [
+          "c",
+          "b",
+          "a",
+          "d"
+        ],
+        "market": [
+          "c",
+          "b"
+        ],
+        "display": [
+          "c",
+          "b"
+        ],
+        "authors": [
+          "one",
+          "two"
+        ],
+        "labels": [
+          "tools",
+          "media",
+          "test label"
+        ],
+        "repositories": [
+          "/tmp/owned-two",
+          "/tmp/owned one",
+          "owner/repo",
+          "owner/second"
+        ]
+      }
+    },
+    {
+      "cards": [
+        {
+          "id": "c",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 3,
+          "installed": true
+        },
+        {
+          "id": "b",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 2
+        },
+        {
+          "id": "a",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 1
+        },
+        {
+          "id": "d",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 4
+        }
+      ],
+      "filter": {
+        "name": "",
+        "author": [],
+        "label": [],
+        "repo": []
+      },
+      "sort": "count",
+      "stats": {
+        "c": 2,
+        "b": 8,
+        "a": 1,
+        "d": 2
+      },
+      "keyword": "ALPHA",
+      "expected": {
+        "progression": [
+          {
+            "status": "empty",
+            "count": 4
+          },
+          {
+            "status": "empty",
+            "count": 4
+          },
+          {
+            "status": "empty",
+            "count": 4
+          }
+        ],
+        "search": [
+          "a",
+          "d"
+        ],
+        "market": [
+          "b",
+          "c",
+          "d",
+          "a"
+        ],
+        "display": [
+          "b",
+          "c",
+          "d",
+          "a"
+        ],
+        "authors": [
+          "one",
+          "two"
+        ],
+        "labels": [
+          "tools",
+          "media",
+          "test label"
+        ],
+        "repositories": [
+          "/tmp/owned-two",
+          "/tmp/owned one",
+          "owner/repo",
+          "owner/second"
+        ]
+      }
+    },
+    {
+      "cards": [
+        {
+          "id": "c",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 3,
+          "installed": true
+        },
+        {
+          "id": "b",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 2
+        },
+        {
+          "id": "a",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 1
+        },
+        {
+          "id": "d",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 4
+        }
+      ],
+      "filter": {
+        "name": "",
+        "author": [],
+        "label": [],
+        "repo": []
+      },
+      "sort": "name",
+      "stats": {
+        "c": 2,
+        "b": 8,
+        "a": 1,
+        "d": 2
+      },
+      "keyword": "ALPHA",
+      "expected": {
+        "progression": [
+          {
+            "status": "empty",
+            "count": 4
+          },
+          {
+            "status": "empty",
+            "count": 4
+          },
+          {
+            "status": "empty",
+            "count": 4
+          }
+        ],
+        "search": [
+          "a",
+          "d"
+        ],
+        "market": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "display": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "authors": [
+          "one",
+          "two"
+        ],
+        "labels": [
+          "tools",
+          "media",
+          "test label"
+        ],
+        "repositories": [
+          "/tmp/owned-two",
+          "/tmp/owned one",
+          "owner/repo",
+          "owner/second"
+        ]
+      }
+    },
+    {
+      "cards": [
+        {
+          "id": "c",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 3,
+          "installed": true
+        },
+        {
+          "id": "b",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 2
+        },
+        {
+          "id": "a",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 1
+        },
+        {
+          "id": "d",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 4
+        }
+      ],
+      "filter": {
+        "name": "",
+        "author": [],
+        "label": [],
+        "repo": []
+      },
+      "sort": "author",
+      "stats": {
+        "c": 2,
+        "b": 8,
+        "a": 1,
+        "d": 2
+      },
+      "keyword": "ALPHA",
+      "expected": {
+        "progression": [
+          {
+            "status": "empty",
+            "count": 4
+          },
+          {
+            "status": "empty",
+            "count": 4
+          },
+          {
+            "status": "empty",
+            "count": 4
+          }
+        ],
+        "search": [
+          "a",
+          "d"
+        ],
+        "market": [
+          "a",
+          "c",
+          "d",
+          "b"
+        ],
+        "display": [
+          "a",
+          "c",
+          "d",
+          "b"
+        ],
+        "authors": [
+          "one",
+          "two"
+        ],
+        "labels": [
+          "tools",
+          "media",
+          "test label"
+        ],
+        "repositories": [
+          "/tmp/owned-two",
+          "/tmp/owned one",
+          "owner/repo",
+          "owner/second"
+        ]
+      }
+    },
+    {
+      "cards": [
+        {
+          "id": "c",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 3,
+          "installed": true
+        },
+        {
+          "id": "b",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 2
+        },
+        {
+          "id": "a",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 1
+        },
+        {
+          "id": "d",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 4
+        }
+      ],
+      "filter": {
+        "name": "",
+        "author": [],
+        "label": [],
+        "repo": []
+      },
+      "sort": "repo_url",
+      "stats": {
+        "c": 2,
+        "b": 8,
+        "a": 1,
+        "d": 2
+      },
+      "keyword": "ALPHA",
+      "expected": {
+        "progression": [
+          {
+            "status": "empty",
+            "count": 4
+          },
+          {
+            "status": "empty",
+            "count": 4
+          },
+          {
+            "status": "empty",
+            "count": 4
+          }
+        ],
+        "search": [
+          "a",
+          "d"
+        ],
+        "market": [
+          "c",
+          "b",
+          "a",
+          "d"
+        ],
+        "display": [
+          "c",
+          "b",
+          "a",
+          "d"
+        ],
+        "authors": [
+          "one",
+          "two"
+        ],
+        "labels": [
+          "tools",
+          "media",
+          "test label"
+        ],
+        "repositories": [
+          "/tmp/owned-two",
+          "/tmp/owned one",
+          "owner/repo",
+          "owner/second"
+        ]
+      }
+    },
+    {
+      "cards": [
+        {
+          "id": "c",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 3,
+          "installed": true
+        },
+        {
+          "id": "b",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 2
+        },
+        {
+          "id": "a",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 1
+        },
+        {
+          "id": "d",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 4
+        }
+      ],
+      "filter": {
+        "name": "",
+        "author": [],
+        "label": [],
+        "repo": []
+      },
+      "sort": "add_time",
+      "stats": {
+        "c": 2,
+        "b": 8,
+        "a": 1,
+        "d": 2
+      },
+      "keyword": "ALPHA",
+      "expected": {
+        "progression": [
+          {
+            "status": "empty",
+            "count": 4
+          },
+          {
+            "status": "empty",
+            "count": 4
+          },
+          {
+            "status": "empty",
+            "count": 4
+          }
+        ],
+        "search": [
+          "a",
+          "d"
+        ],
+        "market": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "display": [
+          "a",
+          "b",
+          "c",
+          "d"
+        ],
+        "authors": [
+          "one",
+          "two"
+        ],
+        "labels": [
+          "tools",
+          "media",
+          "test label"
+        ],
+        "repositories": [
+          "/tmp/owned-two",
+          "/tmp/owned one",
+          "owner/repo",
+          "owner/second"
+        ]
+      }
+    },
+    {
+      "cards": [
+        {
+          "id": "x0",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 0,
+          "installed": true
+        },
+        {
+          "id": "x1",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 1
+        },
+        {
+          "id": "x2",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 2
+        },
+        {
+          "id": "x3",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 3
+        },
+        {
+          "id": "x4",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 4,
+          "installed": true
+        },
+        {
+          "id": "x5",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 5
+        },
+        {
+          "id": "x6",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 6
+        },
+        {
+          "id": "x7",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 7
+        },
+        {
+          "id": "x8",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 8,
+          "installed": true
+        },
+        {
+          "id": "x9",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 9
+        },
+        {
+          "id": "x10",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 10
+        },
+        {
+          "id": "x11",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 11
+        },
+        {
+          "id": "x12",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 12,
+          "installed": true
+        },
+        {
+          "id": "x13",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 13
+        },
+        {
+          "id": "x14",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 14
+        },
+        {
+          "id": "x15",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 15
+        },
+        {
+          "id": "x16",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 16,
+          "installed": true
+        },
+        {
+          "id": "x17",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 17
+        },
+        {
+          "id": "x18",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 18
+        },
+        {
+          "id": "x19",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 19
+        },
+        {
+          "id": "x20",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 20,
+          "installed": true
+        },
+        {
+          "id": "x21",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 21
+        },
+        {
+          "id": "x22",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 22
+        }
+      ],
+      "filter": {
+        "name": "",
+        "author": [],
+        "label": [],
+        "repo": []
+      },
+      "sort": "count",
+      "stats": {},
+      "keyword": "",
+      "expected": {
+        "progression": [
+          {
+            "status": "ok",
+            "count": 23
+          },
+          {
+            "status": "empty",
+            "count": 23
+          },
+          {
+            "status": "empty",
+            "count": 23
+          }
+        ],
+        "search": [
+          "x0",
+          "x4",
+          "x8",
+          "x12",
+          "x16",
+          "x20",
+          "x1",
+          "x2",
+          "x3",
+          "x5",
+          "x6",
+          "x7",
+          "x9",
+          "x10",
+          "x11",
+          "x13",
+          "x14",
+          "x15",
+          "x17",
+          "x18",
+          "x19",
+          "x21",
+          "x22"
+        ],
+        "market": [
+          "x0",
+          "x1",
+          "x2",
+          "x3",
+          "x4",
+          "x5",
+          "x6",
+          "x7",
+          "x8",
+          "x9",
+          "x10",
+          "x11",
+          "x12",
+          "x13",
+          "x14",
+          "x15",
+          "x16",
+          "x17",
+          "x18",
+          "x19",
+          "x20",
+          "x21",
+          "x22"
+        ],
+        "display": [
+          "x0",
+          "x1",
+          "x2",
+          "x3",
+          "x4",
+          "x5",
+          "x6",
+          "x7",
+          "x8",
+          "x9",
+          "x10",
+          "x11",
+          "x12",
+          "x13",
+          "x14",
+          "x15",
+          "x16",
+          "x17",
+          "x18",
+          "x19"
+        ],
+        "authors": [
+          "one",
+          "two"
+        ],
+        "labels": [
+          "tools",
+          "media",
+          "test label"
+        ],
+        "repositories": [
+          "/tmp/owned-two",
+          "/tmp/owned one",
+          "owner/repo",
+          "owner/second"
+        ]
+      }
+    },
+    {
+      "cards": [
+        {
+          "id": "x0",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 0,
+          "installed": true
+        },
+        {
+          "id": "x1",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 1
+        },
+        {
+          "id": "x2",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 2
+        },
+        {
+          "id": "x3",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 3
+        },
+        {
+          "id": "x4",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 4,
+          "installed": true
+        },
+        {
+          "id": "x5",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 5
+        },
+        {
+          "id": "x6",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 6
+        },
+        {
+          "id": "x7",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 7
+        },
+        {
+          "id": "x8",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 8,
+          "installed": true
+        },
+        {
+          "id": "x9",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 9
+        },
+        {
+          "id": "x10",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 10
+        },
+        {
+          "id": "x11",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 11
+        },
+        {
+          "id": "x12",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 12,
+          "installed": true
+        },
+        {
+          "id": "x13",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 13
+        },
+        {
+          "id": "x14",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 14
+        },
+        {
+          "id": "x15",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 15
+        },
+        {
+          "id": "x16",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 16,
+          "installed": true
+        },
+        {
+          "id": "x17",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 17
+        },
+        {
+          "id": "x18",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 18
+        },
+        {
+          "id": "x19",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 19
+        },
+        {
+          "id": "x20",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 20,
+          "installed": true
+        },
+        {
+          "id": "x21",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 21
+        },
+        {
+          "id": "x22",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 22
+        },
+        {
+          "id": "x23",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 23
+        },
+        {
+          "id": "x24",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 24,
+          "installed": true
+        },
+        {
+          "id": "x25",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 25
+        },
+        {
+          "id": "x26",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 26
+        },
+        {
+          "id": "x27",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 27
+        },
+        {
+          "id": "x28",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 28,
+          "installed": true
+        },
+        {
+          "id": "x29",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 29
+        },
+        {
+          "id": "x30",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 30
+        },
+        {
+          "id": "x31",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 31
+        },
+        {
+          "id": "x32",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 32,
+          "installed": true
+        },
+        {
+          "id": "x33",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 33
+        },
+        {
+          "id": "x34",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 34
+        },
+        {
+          "id": "x35",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 35
+        },
+        {
+          "id": "x36",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 36,
+          "installed": true
+        },
+        {
+          "id": "x37",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 37
+        },
+        {
+          "id": "x38",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 38
+        },
+        {
+          "id": "x39",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 39
+        },
+        {
+          "id": "x40",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 40,
+          "installed": true
+        },
+        {
+          "id": "x41",
+          "plugin_name": "Bravo",
+          "plugin_desc": "SEARCH",
+          "plugin_author": "two",
+          "plugin_label": "media",
+          "repo_url": "https://raw.githubusercontent.com/owner/second",
+          "add_time": 41
+        },
+        {
+          "id": "x42",
+          "plugin_name": "Alpha",
+          "plugin_desc": "search",
+          "plugin_author": "one",
+          "plugin_label": "tools",
+          "repo_url": "local://a?path=%2Ftmp%2Fowned%20one",
+          "add_time": 42
+        },
+        {
+          "id": "x43",
+          "plugin_name": "Delta",
+          "plugin_desc": "alpha tail",
+          "plugin_author": "two",
+          "plugin_label": "test label",
+          "repo_url": "local://d?path=%2Ftmp%2Fowned-two",
+          "add_time": 43
+        },
+        {
+          "id": "x44",
+          "plugin_name": "Charlie",
+          "plugin_desc": "cleanup",
+          "plugin_author": "one",
+          "plugin_label": "tools,media",
+          "repo_url": "https://github.com/owner/repo",
+          "add_time": 44,
+          "installed": true
+        }
+      ],
+      "filter": {
+        "name": "",
+        "author": [],
+        "label": [],
+        "repo": []
+      },
+      "sort": "count",
+      "stats": {},
+      "keyword": "",
+      "expected": {
+        "progression": [
+          {
+            "status": "ok",
+            "count": 40
+          },
+          {
+            "status": "ok",
+            "count": 45
+          },
+          {
+            "status": "empty",
+            "count": 45
+          }
+        ],
+        "search": [
+          "x0",
+          "x4",
+          "x8",
+          "x12",
+          "x16",
+          "x20",
+          "x24",
+          "x28",
+          "x32",
+          "x36",
+          "x40",
+          "x44",
+          "x1",
+          "x2",
+          "x3",
+          "x5",
+          "x6",
+          "x7",
+          "x9",
+          "x10",
+          "x11",
+          "x13",
+          "x14",
+          "x15",
+          "x17",
+          "x18",
+          "x19",
+          "x21",
+          "x22",
+          "x23",
+          "x25",
+          "x26",
+          "x27",
+          "x29",
+          "x30",
+          "x31",
+          "x33",
+          "x34",
+          "x35",
+          "x37",
+          "x38",
+          "x39",
+          "x41",
+          "x42",
+          "x43"
+        ],
+        "market": [
+          "x0",
+          "x1",
+          "x2",
+          "x3",
+          "x4",
+          "x5",
+          "x6",
+          "x7",
+          "x8",
+          "x9",
+          "x10",
+          "x11",
+          "x12",
+          "x13",
+          "x14",
+          "x15",
+          "x16",
+          "x17",
+          "x18",
+          "x19",
+          "x20",
+          "x21",
+          "x22",
+          "x23",
+          "x24",
+          "x25",
+          "x26",
+          "x27",
+          "x28",
+          "x29",
+          "x30",
+          "x31",
+          "x32",
+          "x33",
+          "x34",
+          "x35",
+          "x36",
+          "x37",
+          "x38",
+          "x39",
+          "x40",
+          "x41",
+          "x42",
+          "x43",
+          "x44"
+        ],
+        "display": [
+          "x0",
+          "x1",
+          "x2",
+          "x3",
+          "x4",
+          "x5",
+          "x6",
+          "x7",
+          "x8",
+          "x9",
+          "x10",
+          "x11",
+          "x12",
+          "x13",
+          "x14",
+          "x15",
+          "x16",
+          "x17",
+          "x18",
+          "x19"
+        ],
+        "authors": [
+          "one",
+          "two"
+        ],
+        "labels": [
+          "tools",
+          "media",
+          "test label"
+        ],
+        "repositories": [
+          "/tmp/owned-two",
+          "/tmp/owned one",
+          "owner/repo",
+          "owner/second"
+        ]
+      }
+    }
+  ]
+}

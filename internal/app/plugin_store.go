@@ -132,7 +132,8 @@ func validatePluginInstallation(in PluginInstallation) (PluginInstallation, erro
 
 func (p *PluginStore) installTx(ctx context.Context, tx *sql.Tx, in PluginInstallation) error {
 	var previousID string
-	err := tx.QueryRowContext(ctx, `SELECT plugin_id FROM plugin_installations WHERE instance_id=?`, in.InstanceID).Scan(&previousID)
+	var previouslyInstalled bool
+	err := tx.QueryRowContext(ctx, `SELECT plugin_id,installed FROM plugin_installations WHERE instance_id=?`, in.InstanceID).Scan(&previousID, &previouslyInstalled)
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return err
 	}
@@ -148,7 +149,7 @@ ON CONFLICT(instance_id) DO UPDATE SET version=excluded.version,manifest_schema=
 	if err != nil {
 		return err
 	}
-	return nil
+	return p.updateOriginalInstalledOrderTx(ctx, tx, in.InstanceID, true, previouslyInstalled)
 }
 
 func (p *PluginStore) Install(ctx context.Context, in PluginInstallation) error {

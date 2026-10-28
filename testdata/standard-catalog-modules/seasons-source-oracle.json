@@ -1,0 +1,505 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "boundary": "Actual pinned season wrapper, endpoint response model and native system\nmodule. Provider responses and ordinary plugin callbacks are owned controls.\n",
+  "source_sha256": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/tmdb.py": "ed0d8a8e1a5e3c02ddf0594ef26b54180e4b36f33dce350f68a8ffc0a6dc6a6f",
+    "app/modules/themoviedb/__init__.py": "383dee3ab7ae88a569b1b772cd86731a64d9f624b384c011338ef55d78ac44d6",
+    "app/api/endpoints/tmdb.py": "db2f6266357b1384418cc914edec5f59a17ddd5e75433771fa2f4c7e3885c976",
+    "app/schemas/tmdb.py": "e1f6a6f57dabbc506a842956ab43b71a9862af0f0d9c4257382d99612096303c"
+  },
+  "cases": [
+    {
+      "name": "null",
+      "plugin": null,
+      "native": [
+        {
+          "season_number": 1,
+          "name": "Native Season One",
+          "episode_count": 3
+        }
+      ],
+      "fail": false,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "clone",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "native",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 0,
+      "output": [
+        {
+          "air_date": null,
+          "episode_count": 3,
+          "name": "Native Season One",
+          "overview": null,
+          "poster_path": null,
+          "season_number": 1,
+          "vote_average": null
+        }
+      ]
+    },
+    {
+      "name": "false",
+      "plugin": false,
+      "native": [
+        {
+          "season_number": 1,
+          "name": "Native Season One",
+          "episode_count": 3
+        }
+      ],
+      "fail": false,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 0,
+      "output": []
+    },
+    {
+      "name": "list_empty",
+      "plugin": [],
+      "native": [
+        {
+          "season_number": 1,
+          "name": "Native Season One",
+          "episode_count": 3
+        }
+      ],
+      "fail": false,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "clone",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "native",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 0,
+      "output": [
+        {
+          "air_date": null,
+          "episode_count": 3,
+          "name": "Native Season One",
+          "overview": null,
+          "poster_path": null,
+          "season_number": 1,
+          "vote_average": null
+        }
+      ]
+    },
+    {
+      "name": "list",
+      "plugin": [
+        {
+          "season_number": "2",
+          "name": "Plugin Season Two",
+          "episode_count": "8",
+          "extra": "discarded"
+        }
+      ],
+      "native": [
+        {
+          "season_number": 1,
+          "name": "Native Season One",
+          "episode_count": 3
+        }
+      ],
+      "fail": false,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "clone",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "native",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 0,
+      "output": [
+        {
+          "air_date": null,
+          "episode_count": 8,
+          "name": "Plugin Season Two",
+          "overview": null,
+          "poster_path": null,
+          "season_number": 2,
+          "vote_average": null
+        },
+        {
+          "air_date": null,
+          "episode_count": 3,
+          "name": "Native Season One",
+          "overview": null,
+          "poster_path": null,
+          "season_number": 1,
+          "vote_average": null
+        }
+      ]
+    },
+    {
+      "name": "tuple",
+      "plugin": {
+        "__plugin_module_tuple": [
+          {
+            "season_number": "2",
+            "name": "Plugin Season Two",
+            "episode_count": "8",
+            "extra": "discarded"
+          }
+        ]
+      },
+      "native": [
+        {
+          "season_number": 1,
+          "name": "Native Season One",
+          "episode_count": 3
+        }
+      ],
+      "fail": false,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 0,
+      "output": [
+        {
+          "air_date": null,
+          "episode_count": 8,
+          "name": "Plugin Season Two",
+          "overview": null,
+          "poster_path": null,
+          "season_number": 2,
+          "vote_average": null
+        }
+      ]
+    },
+    {
+      "name": "dict",
+      "plugin": {},
+      "native": [
+        {
+          "season_number": 1,
+          "name": "Native Season One",
+          "episode_count": 3
+        }
+      ],
+      "fail": false,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 0,
+      "output": []
+    },
+    {
+      "name": "invalid",
+      "plugin": 9,
+      "native": [
+        {
+          "season_number": 1,
+          "name": "Native Season One",
+          "episode_count": 3
+        }
+      ],
+      "fail": false,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ],
+      "status": 500,
+      "error_count": 0,
+      "output": null
+    },
+    {
+      "name": "bad_list",
+      "plugin": [
+        false
+      ],
+      "native": [
+        {
+          "season_number": 1,
+          "name": "Native Season One",
+          "episode_count": 3
+        }
+      ],
+      "fail": false,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "clone",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "native",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ],
+      "status": 500,
+      "error_count": 0,
+      "output": null
+    },
+    {
+      "name": "native_dto_failure",
+      "plugin": null,
+      "native": [
+        {
+          "season_number": 1,
+          "name": 123
+        }
+      ],
+      "fail": false,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "clone",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "native",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 1,
+      "output": []
+    },
+    {
+      "name": "list_native_dto_failure",
+      "plugin": [
+        {
+          "season_number": "2",
+          "name": "Plugin Season Two",
+          "episode_count": "8",
+          "extra": "discarded"
+        }
+      ],
+      "native": [
+        {
+          "season_number": 1,
+          "name": 123
+        }
+      ],
+      "fail": false,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "clone",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "native",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 1,
+      "output": [
+        {
+          "air_date": null,
+          "episode_count": 8,
+          "name": "Plugin Season Two",
+          "overview": null,
+          "poster_path": null,
+          "season_number": 2,
+          "vote_average": null
+        }
+      ]
+    },
+    {
+      "name": "native_special_and_missing",
+      "plugin": null,
+      "native": [
+        {},
+        {
+          "season_number": null
+        },
+        {
+          "season_number": 0,
+          "name": "Specials",
+          "overview": ""
+        },
+        {
+          "season_number": 1,
+          "name": "Native Season One",
+          "episode_count": 3
+        }
+      ],
+      "fail": false,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "clone",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "native",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 0,
+      "output": [
+        {
+          "air_date": null,
+          "episode_count": null,
+          "name": "Specials",
+          "overview": "",
+          "poster_path": null,
+          "season_number": 0,
+          "vote_average": null
+        },
+        {
+          "air_date": null,
+          "episode_count": 3,
+          "name": "Native Season One",
+          "overview": null,
+          "poster_path": null,
+          "season_number": 1,
+          "vote_average": null
+        }
+      ]
+    },
+    {
+      "name": "throw",
+      "plugin": null,
+      "native": [
+        {
+          "season_number": 1,
+          "name": "Native Season One",
+          "episode_count": 3
+        }
+      ],
+      "fail": true,
+      "calls": [
+        {
+          "kind": "source",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "clone",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        },
+        {
+          "kind": "native",
+          "kwargs": {
+            "tmdbid": 120
+          }
+        }
+      ],
+      "status": 200,
+      "error_count": 1,
+      "output": [
+        {
+          "air_date": null,
+          "episode_count": 3,
+          "name": "Native Season One",
+          "overview": null,
+          "poster_path": null,
+          "season_number": 1,
+          "vote_average": null
+        }
+      ]
+    }
+  ]
+}

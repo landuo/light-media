@@ -5,21 +5,34 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"light-media/internal/plugins"
 )
 
 // PluginServiceInfo is the public projection of a registered service. Its
 // method input and credentials never leave the host. Registration is in-memory.
 type PluginServiceInfo struct {
-	ID         string `json:"id"`
-	InstanceID string `json:"instance_id"`
-	ServiceID  string `json:"service_id"`
-	Name       string `json:"name"`
-	Provider   string `json:"provider"`
-	Status     string `json:"status"`
-	NextRun    string `json:"next_run"`
-	CanRun     bool   `json:"can_run"`
-	due        time.Time
-	busy       bool
+	ID               string         `json:"id"`
+	InstanceID       string         `json:"instance_id"`
+	ServiceID        string         `json:"service_id"`
+	Name             string         `json:"name"`
+	Provider         string         `json:"provider"`
+	Status           string         `json:"status"`
+	NextRun          *string        `json:"next_run"`
+	CanRun           bool           `json:"can_run"`
+	Progress         float64        `json:"progress"`
+	ProgressText     *string        `json:"progress_text"`
+	ProgressEnable   bool           `json:"progress_enable"`
+	ProgressDetail   map[string]any `json:"progress_detail"`
+	NameI18N         *string        `json:"name_i18n"`
+	ProviderI18N     *string        `json:"provider_i18n"`
+	StatusI18N       *string        `json:"status_i18n"`
+	NextRunI18N      *string        `json:"next_run_i18n"`
+	ProgressTextI18N *string        `json:"progress_text_i18n"`
+
+	due               time.Time
+	busy              bool
+	registrationOrder uint64
 }
 
 // Match MoviePilot's TimerUtils.time_difference: floor seconds, omit zero
@@ -52,8 +65,26 @@ func (a *App) pluginServicesHTTP(w http.ResponseWriter, r *http.Request, path st
 	if strings.HasPrefix(path, "v1/") || strings.HasPrefix(path, "v2/") {
 		compat = path[3:]
 	}
+	if jobID, ok := originalServiceProgressPath(compat); ok && r.Method == http.MethodGet {
+		progress := a.originalServiceProgressSnapshot(jobID)
+		if err := normalizeOriginalServiceProgressProjection(progress); err != nil {
+			a.writeError(w, r, err)
+			return true
+		}
+		if progress == nil {
+			writeJSON(w, r, map[string]any{"success": false, "message": "后台服务不存在"})
+		} else {
+			writeJSON(w, r, map[string]any{"success": true, "data": progress})
+		}
+		return true
+	}
 	if (path == "plugins/services" || compat == "dashboard/schedule") && r.Method == http.MethodGet {
-		writeJSON(w, r, a.originalPublicServices(time.Now()))
+		items, err := a.originalPublicServicesResult(time.Now())
+		if err != nil {
+			a.writeError(w, r, err)
+		} else {
+			writeJSON(w, r, items)
+		}
 		return true
 	}
 	instance, id := "", ""
@@ -72,12 +103,29 @@ func (a *App) pluginServicesHTTP(w http.ResponseWriter, r *http.Request, path st
 			a.writeError(w, r, &APIError{"ORIGIN_REJECTED", "禁止跨站写入请求", 403})
 			return true
 		}
-		for _, item := range a.originalPublicServices(time.Now()) {
-			if item.ID == r.URL.Query().Get("jobid") {
-				instance, id = item.InstanceID, item.ServiceID
+		if !r.URL.Query().Has("jobid") {
+			a.writeError(w, r, &APIError{"VALIDATION_ERROR", "缺少 jobid 参数", http.StatusUnprocessableEntity})
+			return true
+		}
+		jobID := plugins.LastQuery(r.URL.Query(), "jobid")
+		if jobID == "" {
+			writeJSON(w, r, map[string]any{"success": false, "message": "命令不能为空！"})
+			return true
+		}
+		state := &a.pluginOriginalDirectJobs
+		state.mu.Lock()
+		for key, job := range state.jobs {
+			if originalServiceID(job) == jobID {
+				instance, id = key.instance, key.service
 				break
 			}
 		}
+		state.mu.Unlock()
+		// Scheduler.start silently returns for missing/running jobs; this
+		// original API acknowledges the request, not the eventual result.
+		_ = a.runOriginalService(r.Context(), instance, id, true)
+		writeJSON(w, r, map[string]bool{"success": true})
+		return true
 	} else {
 		return false
 	}

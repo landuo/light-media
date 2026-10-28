@@ -1,0 +1,513 @@
+{
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "axios_version": "1.9.0",
+  "kind": "fixed api/index initialization + actual requestOptimizer and actual fixed Axios with controlled adapter; no external requests",
+  "sources": {
+    "api/index.ts": "9e746e31fffe23500b3d92c4e66ee95824a6d39481d1909058c158503e5408e8",
+    "utils/requestOptimizer.ts": "ba0e73892dc73dad524457a032f80967a88bd444c7e536b517559fd320c94887"
+  },
+  "surface": {
+    "callable": true,
+    "request": "function",
+    "defaults": "object",
+    "interceptors": "object"
+  },
+  "cases": [
+    {
+      "name": "same-origin-host-scheduler",
+      "path": "system/runscheduler",
+      "verb": "get",
+      "options": {
+        "params": {
+          "jobid": "owned root"
+        }
+      },
+      "expected": {
+        "state": "fulfilled",
+        "value": {
+          "success": true
+        },
+        "calls": [
+          {
+            "url": "/api/v1/system/runscheduler?jobid=owned+root",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "same-origin-web-message-leading-slash",
+      "path": "/message/web?text=%2Fmissing",
+      "verb": "post",
+      "expected": {
+        "state": "fulfilled",
+        "value": {
+          "success": true
+        },
+        "calls": [
+          {
+            "url": "/api/v1/message/web?text=%2Fmissing",
+            "method": "post",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "fixed-file-alias",
+      "path": "plugin/file/Source/frontend/assets/remoteEntry.js",
+      "verb": "get",
+      "response": "ordinary file",
+      "contentType": "text/javascript",
+      "expected": {
+        "state": "fulfilled",
+        "value": "ordinary file",
+        "calls": [
+          {
+            "url": "/api/v1/plugin/file/Source/frontend/assets/remoteEntry.js",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "fixed-remotes-alias",
+      "path": "plugin/remotes?token=moviepilot",
+      "verb": "get",
+      "response": "[{\"id\":\"Source\"}]",
+      "expected": {
+        "state": "fulfilled",
+        "value": [
+          {
+            "id": "Source"
+          }
+        ],
+        "calls": [
+          {
+            "url": "/api/v1/plugin/remotes?token=moviepilot",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "same-origin-absolute",
+      "path": "http://localhost/api/v2/plugin/Source/state",
+      "verb": "get",
+      "expected": {
+        "state": "fulfilled",
+        "value": {
+          "success": true
+        },
+        "calls": [
+          {
+            "url": "http://localhost/api/v2/plugin/Source/state",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "same-origin-baseURL",
+      "path": "plugin/Source/state",
+      "verb": "get",
+      "options": {
+        "baseURL": "http://localhost/api/v2/"
+      },
+      "expected": {
+        "state": "fulfilled",
+        "value": {
+          "success": true
+        },
+        "calls": [
+          {
+            "url": "http://localhost/api/v2/plugin/Source/state",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "same-origin-root-baseURL",
+      "path": "healthz",
+      "verb": "get",
+      "options": {
+        "baseURL": "http://localhost/"
+      },
+      "expected": {
+        "state": "fulfilled",
+        "value": {
+          "success": true
+        },
+        "calls": [
+          {
+            "url": "http://localhost/healthz",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "explicit-other-plugin",
+      "path": "plugin/Peer/state",
+      "verb": "get",
+      "expected": {
+        "state": "fulfilled",
+        "value": {
+          "success": true
+        },
+        "calls": [
+          {
+            "url": "/api/v1/plugin/Peer/state",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "callable-client",
+      "path": "plugin/Source/state",
+      "verb": "call",
+      "expected": {
+        "state": "fulfilled",
+        "value": {
+          "success": true
+        },
+        "calls": [
+          {
+            "url": "/api/v1/plugin/Source/state",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "request-config-and-transform",
+      "path": "plugin/Source/change",
+      "verb": "request",
+      "data": {
+        "count": 2
+      },
+      "options": {
+        "method": "post",
+        "params": {
+          "tags": [
+            "a",
+            "b"
+          ]
+        },
+        "headers": {
+          "X-Source": "yes"
+        },
+        "timeout": 75
+      },
+      "expected": {
+        "state": "fulfilled",
+        "value": {
+          "success": true
+        },
+        "calls": [
+          {
+            "url": "/api/v1/plugin/Source/change?tags[]=a&tags[]=b",
+            "method": "post",
+            "body": "{\"count\":2}",
+            "headers": {
+              "X-Source": "yes",
+              "Content-Type": "application/json"
+            },
+            "timeout": 75,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "HTTP200-success-false-resolves",
+      "path": "plugin/Source/noop",
+      "verb": "get",
+      "response": "{\"success\":false,\"message\":\"owned no-op\"}",
+      "expected": {
+        "state": "fulfilled",
+        "value": {
+          "success": false,
+          "message": "owned no-op"
+        },
+        "calls": [
+          {
+            "url": "/api/v1/plugin/Source/noop",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "HTTP200-error-field-resolves",
+      "path": "plugin/Source/object",
+      "verb": "get",
+      "response": "{\"error\":{\"message\":\"ordinary field\"}}",
+      "expected": {
+        "state": "fulfilled",
+        "value": {
+          "error": {
+            "message": "ordinary field"
+          }
+        },
+        "calls": [
+          {
+            "url": "/api/v1/plugin/Source/object",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "default-invalid-JSON-is-text",
+      "path": "plugin/Source/text",
+      "verb": "get",
+      "response": "not JSON",
+      "contentType": "application/json",
+      "expected": {
+        "state": "fulfilled",
+        "value": "not JSON",
+        "calls": [
+          {
+            "url": "/api/v1/plugin/Source/text",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "default-HTML-is-text",
+      "path": "plugin/Source/html",
+      "verb": "get",
+      "response": "<p>ordinary</p>",
+      "contentType": "text/html",
+      "expected": {
+        "state": "fulfilled",
+        "value": "<p>ordinary</p>",
+        "calls": [
+          {
+            "url": "/api/v1/plugin/Source/html",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "explicit-text-does-not-JSON-parse",
+      "path": "plugin/Source/text",
+      "verb": "get",
+      "response": "{\"n\":1}",
+      "options": {
+        "responseType": "text"
+      },
+      "expected": {
+        "state": "fulfilled",
+        "value": "{\"n\":1}",
+        "calls": [
+          {
+            "url": "/api/v1/plugin/Source/text",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "bodyless204-empty-string",
+      "path": "plugin/Source/empty",
+      "verb": "delete",
+      "status": 204,
+      "response": "",
+      "expected": {
+        "state": "fulfilled",
+        "value": "",
+        "calls": [
+          {
+            "url": "/api/v1/plugin/Source/empty",
+            "method": "delete",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "HTTP503-rejects-Axios-error",
+      "path": "plugin/Source/fail",
+      "verb": "get",
+      "status": 503,
+      "response": "{\"message\":\"owned failure\"}",
+      "expected": {
+        "state": "rejected",
+        "name": "AxiosError",
+        "message": "Request failed with status code 503",
+        "status": 503,
+        "data": {
+          "message": "owned failure"
+        },
+        "calls": [
+          {
+            "url": "/api/v1/plugin/Source/fail",
+            "method": "get",
+            "body": null,
+            "headers": {
+              "X-Source": null,
+              "Content-Type": null
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "request-custom-transforms",
+      "path": "plugin/Source/raw",
+      "verb": "transform",
+      "data": {
+        "private": "owned"
+      },
+      "response": "owned response",
+      "expected": {
+        "state": "fulfilled",
+        "value": {
+          "transformed": "owned response"
+        },
+        "calls": [
+          {
+            "url": "/api/v1/plugin/Source/raw",
+            "method": "post",
+            "body": "literal raw",
+            "headers": {
+              "X-Source": null,
+              "Content-Type": "application/x-www-form-urlencoded"
+            },
+            "timeout": 0,
+            "signal": true,
+            "bearer_attached": true
+          }
+        ]
+      }
+    }
+  ]
+}

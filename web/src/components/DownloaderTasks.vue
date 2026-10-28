@@ -6,6 +6,7 @@ import {
   downloadTaskInfo,
   downloadTimeLeft,
   downloadingTaskIsRunning,
+  downloadSourceFileSize,
 } from '../features/downloader-tasks';
 const clients = computed(() =>
   (ui.settings?.downloaders || []).filter((d: any) => d.enabled !== false),
@@ -96,7 +97,7 @@ onUnmounted(() => {
   </p>
   <p v-if="loading && !instance" class="loading-state">正在读取下载任务…</p>
   <div v-if="instance?.tasks?.length" class="download-grid">
-    <article v-for="task in instance.tasks" :key="task.hash" class="download-card">
+    <article v-for="task in instance.tasks" :key="task.hash || task.name" class="download-card">
       <img
         v-if="identity(task).media?.poster_path || identity(task).media?.backdrop_path"
         class="download-backdrop"
@@ -107,8 +108,17 @@ onUnmounted(() => {
         <h3>{{ identity(task).title }} {{ identity(task).seasonEpisode }}</h3>
         <p class="download-filename">{{ identity(task).subtitle }}</p>
         <p class="download-speed">
-          {{ bytes(task.total_size) }}　↑ {{ bytes(task.upload_speed) }}/s　↓
-          {{ bytes(task.download_speed) }}/s {{ downloadTimeLeft(task) }}
+          {{
+            task.source_torrent
+              ? downloadSourceFileSize(task.source_torrent.size)
+              : bytes(task.total_size)
+          }}　↑
+          {{
+            task.source_torrent ? task.source_torrent.upspeed || '' : bytes(task.upload_speed)
+          }}/s　↓
+          {{
+            task.source_torrent ? task.source_torrent.dlspeed || '' : bytes(task.download_speed)
+          }}/s {{ downloadTimeLeft(task) }}
         </p>
         <div
           class="progress"

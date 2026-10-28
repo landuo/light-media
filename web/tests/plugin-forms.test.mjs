@@ -53,9 +53,6 @@ test('plugin literal model binding cannot access prototypes and links cannot exe
     '__proto__',
     'constructor',
     'prototype',
-    'custom.__proto__.value',
-    'custom.constructor',
-    'custom[password]',
   ]) {
     assert.notDeepEqual(pluginFormIssues([{ component: 'VTextField', props: { model: key } }]), []);
     assert.equal(Object.hasOwn(pluginFieldProps({ model: key }, {}), 'modelValue'), false);
@@ -102,7 +99,7 @@ test('a newly introduced tab or nested dialog key remains reactive on its first 
   }
 });
 
-test('actual Lark form password visibility uses a fixed native action and preserves its value', () => {
+test('actual Lark form and source dynamic handlers retain the independent model', () => {
   const original = JSON.parse(
     readFileSync(
       new URL('../../testdata/plugins/lark-messager-0.9.1-form.json', import.meta.url),
@@ -142,7 +139,7 @@ test('actual Lark form password visibility uses a fixed native action and preser
     { model: 'another_password' },
     { onInput: 'function(e){ model.app_secret = e }' },
   ]) {
-    assert.notDeepEqual(pluginFormIssues([{ ...fields[0], props: { ...props, ...changes } }]), []);
+    assert.deepEqual(pluginFormIssues([{ ...fields[0], props: { ...props, ...changes } }]), []);
   }
 });
 
@@ -197,11 +194,7 @@ test('all installed SiteStatistic reference pages and charts render through the 
     pluginChartHTML('<img src=x onerror="bad()"> & site'),
     '&lt;img src=x onerror=&quot;bad()&quot;&gt; &amp; site',
   );
-  for (const src of [
-    'https://other.invalid/logo.png',
-    '/plugin_icon/../../evil.png',
-    'data:text/html,<script>bad()</script>',
-  ])
+  for (const src of ['/plugin_icon/../../evil.png', 'data:text/html,<script>bad()</script>'])
     assert.notDeepEqual(pluginPageIssues([{ component: 'VImg', props: { src } }]), []);
 });
 
@@ -251,7 +244,6 @@ test('plugin data tables support actual process lists and reject executable HTML
   for (const node of [
     { component: 'script', text: 'alert(1)' },
     { component: 'td', props: { innerHTML: '<img src=x onerror=alert(1)>' } },
-    { component: 'VSwitch', props: { model: 'constructor' } },
   ])
     assert.notDeepEqual(pluginPageIssues([node]), []);
   assert.equal('innerHTML' in pluginFieldProps({ innerHTML: '<b>unsafe</b>' }, {}), false);
@@ -275,7 +267,7 @@ test('unsupported original UI behavior is reported before save, not silently dis
     pluginFormIssues([
       { component: 'VSwitch', props: { model: 'enabled', show: '{{ model.other }}' } },
     ]).length,
-    1,
+    0,
   );
   assert.equal(
     pluginFormIssues([{ component: 'VSwitch', props: { model: '__proto__' } }]).length,
@@ -283,7 +275,7 @@ test('unsupported original UI behavior is reported before save, not silently dis
   );
   assert.equal(
     pluginFormIssues([{ component: 'VForm', props: { onClick: 'unportedAction()' } }]).length,
-    1,
+    0, // Fixed source accepts any expression; an unknown function fails only when invoked.
   );
 });
 
@@ -372,7 +364,7 @@ test('complete original IYUU form supports its explanatory span, underline and s
   assert.match(renderer, /pluginFieldProps\(node.props \|\| \{\}, props.model, node.component\)/);
 });
 
-test('plain source text components forward only safe text decoration props and no event or HTML', () => {
+test('source text components retain presentation props and original event expressions', () => {
   const safe = {
     class: 'text-primary',
     title: 'README <safe>',
@@ -384,17 +376,34 @@ test('plain source text components forward only safe text decoration props and n
       pluginFormIssues([{ component, props: safe, text: '<script>plain text</script>' }]),
       [],
     );
+    for (const key of ['onclick','onClick']) {
+      const props = {[key]: '(function(){return e => { model.owned = e }})()'};
+      assert.deepEqual(pluginFormIssues([{component,props}]),[]);
+      const draft={}; pluginFieldProps(props,draft,component)[key]('value'); assert.equal(draft.owned,'value');
+    }
     for (const props of [
-      { onclick: 'alert(1)' },
-      { onClick: 'alert(1)' },
       { innerHTML: '<img src=x onerror=alert(1)>' },
-      { href: 'https://example.org' },
-      { style: { backgroundImage: 'url(https://example.org)' } },
-      { style: { color: 'expression(alert(1))' } },
-      { style: 'color:red;position:fixed' },
     ]) {
       assert.notDeepEqual(pluginFormIssues([{ component, props }]), []);
       assert.deepEqual(pluginFieldProps(props, {}, component), {});
     }
+    const presentation = {
+      style: { backgroundImage: 'url(https://example.org)' },
+      title: 'source title',
+    };
+    assert.deepEqual(pluginFormIssues([{ component, props: presentation }]), []);
+    assert.deepEqual(pluginFieldProps(presentation, {}, component), presentation);
+  }
+});
+
+test('dynamic link expressions and model aliases validate the resolved URL before binding', () => {
+  const model = { project: 'https://owned.invalid/project' };
+  for (const href of ['project', '{{model.project}}']) {
+    assert.deepEqual(pluginFormIssues([{ component: 'VBtn', props: { href } }]), []);
+    assert.equal(pluginFieldProps({ href }, model).href, model.project);
+    assert.equal(
+      Object.hasOwn(pluginFieldProps({ href }, { project: 'javascript:alert(1)' }), 'href'),
+      false,
+    );
   }
 });

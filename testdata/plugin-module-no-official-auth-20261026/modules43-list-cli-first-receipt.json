@@ -1,0 +1,33 @@
+{
+  "kind": "actual cmd/server controls with Go SDK provider and owned downloader HTTP/protocol peer; initial claimed row synthetic",
+  "server": {
+    "path": "/tmp/light-media-plugin-scope-dRZTQ91A/server-platform4b-20261027-linux",
+    "sha256": "e1844415fefe9f39854c10addf5f87108421457a11115f2eed8ad559de3ba40b"
+  },
+  "binary": {
+    "path": "/tmp/light-media-plugin-scope-dRZTQ91A/modules43-list-process-linux.test",
+    "sha256": "f2b31f6438bdb2fda39ed1ee596c36d1f8f2d6985ece09206a199cf04c23d8a8"
+  },
+  "fixture_sha256": "df8e461c809e6188def1f4a2ecc5573d141f8bd13f4640fc19310bb093d8691e",
+  "environment": {
+    "TMPDIR": "/tmp/light-media-plugin-scope-dRZTQ91A/modules43-list-tmp",
+    "PLUGIN_PROCESS_SERVER_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/server-platform4b-20261027-linux",
+    "OWNED_INPUT_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/services38-input-final-linux",
+    "OWNED_DOWNLOADER_CONTROL_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/downloader-control-linux",
+    "PLUGIN_PROCESS_DOWNLOADER_CONTROL_FIXTURE": "true",
+    "PLUGIN_PROCESS_DOWNLOADER_LIST_FIXTURE": "true",
+    "PLUGIN_PROCESS_DOWNLOADER_LIST_ORACLE": "/tmp/light-media-plugin-scope-dRZTQ91A/downloader-list-oracle.json",
+    "PLUGIN_PROCESS_EVENTS36_EVIDENCE_DIR": "/tmp/light-media-plugin-scope-dRZTQ91A/modules43-list-evidence"
+  },
+  "command": [
+    "/tmp/light-media-plugin-scope-dRZTQ91A/modules43-list-process-linux.test",
+    "-test.v",
+    "-test.run",
+    "^TestPluginServicesProductionCLI$",
+    "-test.timeout",
+    "90s"
+  ],
+  "exit_code": 1,
+  "elapsed_seconds": 1.597,
+  "log_sha256": "df452339f430af8a6e61c4bf741ce4b5c65231645d5aa1911e1cbd38ffa11c50"
+}

@@ -1,0 +1,171 @@
+{
+  "item": 35,
+  "accepted": false,
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source_mapping": {
+    "app/core/plugin.py:873": "actual object API getter, business-state-independent routes",
+    "app/api/endpoints/plugin.py:130-221": "per-instance replacement, v1/v2, default API-key/bear and anonymous",
+    "app/api/endpoints/plugin.py:253-291": "anonymous authentication remote directory and ordinary resource cookie",
+    "app/api/endpoints/plugin.py:764-837": "generic code-file read, path/type/error, MIME, inline header and8KiB stream",
+    "app/core/security.py:254-346": "existing key/bear fallback order",
+    "src/api/index.ts": "Axios request/response transform, explicit binary responseType"
+  },
+  "source_cases": {
+    "manager_route": 9,
+    "static_file": 8
+  },
+  "files": {
+    "internal/app/plugin_original_api_methods.go": "a74f449b0791595248c0774d6cb996b366510c9301a0f92fd4dafe726a98a4bc",
+    "internal/app/plugin_original_api_methods_test.go": "3b4f37cd6c5ee6df10921d81afb5d8635c5875b8266ebf63057fce87ea0a28d9",
+    "internal/app/plugin_original_api_source_test.go": "c04b8b68b6979d99b213981e16b309ae57d3f15213a4ace8cc9b9fe1b656cc7c",
+    "internal/app/plugin_original_static_http.go": "3eecde8a1a9c57d883509ecce1ff159518e9281a689094986bc69fb57b23bacb",
+    "internal/app/plugin_original_static_http_test.go": "cfed8275d10c1adce33c57fdfe7f0e5d344e72145bc81d7d4c3521f804ee922d",
+    "internal/app/plugin_original_static_source_test.go": "7822e125a8f17cfb65c2c9ab8bbbcaf45155ab55064f14377c9d18f41c69f8c3",
+    "internal/app/plugin_module_process_api35_test.go": "febf736f5375279ed66ec10aa3aff4884b53d76501ca1c0c5a8a5d3d3dd50061",
+    "internal/app/plugin_custom_api.go": "6dd13177dbbcc58278af71089df703ade00b66170fe52619f4feb3d5d3a5802e",
+    "internal/plugins/api.go": "b9e0d28b8a599bcb29299374688f71f6068dbe87369105fc9868f27558fc879c",
+    "internal/plugins/api_test.go": "56f54f51238f2eb1b7c569009f3f0ae88c9feb36ca5f3ff2765835717be7d3c8",
+    "internal/plugins/artifacts/frontend.go": "4b3e8739836f3f8e9e3da3d383f2315445bd7ce3174108a5727d0c987f1737fc",
+    "internal/plugins/artifacts/package_resource.go": "1ae0c0ebe1cc7f5100d429a35862b196a977a23ecbd12b49162a0d837e3e1511",
+    "internal/plugins/artifacts/package_resource_test.go": "389d6e4d2e3f9e2565b6a7f2e4c54dcdd7975d208b705ef56ea974b5e33f352f",
+    "web/src/features/plugin-remote-api.ts": "350ae30f42283487aad209f51915d21670578417cfaeb39e010a3a44b46095b4",
+    "web/tests/plugin-federation.test.mjs": "690f3edda70a8282c3b70c40d976d0ac08f082212f842710b61772297349992e",
+    "cmd/owned-api35-fixture/main.go": "e66d85cc528e1e724b1acb1161ffdf8939d945ec1a7862fc66983dab3c2be15b",
+    "testdata/standard-api/source-oracle.json": "28ca02a6181afda1e7fc05fd18131ed8f6bfdb9ded2289e19c6029dcfb4a84a0",
+    "testdata/standard-api/static-source-oracle.json": "55c4b1fcf6129d542ecd1003c6c574dd6de2d9c9b399654c2340d96ebf1d6989",
+    "testdata/standard-api/ui/remoteEntry.js": "123eddd4dae39ae825ab6aae63b3e39cf54b17615486f6fe8c45b9b973c1b61b"
+  },
+  "logs": {
+    "api35-targeted-tests.jsonl": "a15ef2cf7f6a0b849c924060abbeb6eb4fa0b812b8fb6fae5fc765114dcf6688",
+    "api35-targeted-fixed-tests.jsonl": "553382a91d913195a48395ca13a3d1be7bc8e08132d70bae77b8b1e620780b0e",
+    "api35-process-local.log": "0e3499ebf7165555c0b8e01fba99405c914e95d6bfa890febadabe19146f6b65",
+    "api35-process-cold-diagnostic.log": "33a376b75b782784048df7e270019949dcb59841bcf28d3be339f9b41eba40ba",
+    "api35-process-clone-config-diagnostic.log": "037fa15a357a3019f84f394eede30884ce34f632990d291a5dad0b84629e39e3",
+    "api35-process-local-final.log": "f45d8353b2f800e602b70a816c32d0b252f4fcbd0816e733e9692f3432b4f75e",
+    "api35-static-binary-tests.jsonl": "64e204fa1ee9e27bca63e80b98630e49e388e58b1af22c78fca7311e93374e50",
+    "api35-static-source-tests.jsonl": "2dd61dcca87beb225d1eb1726741feb1dcf923ecefcfc4d8be49abf6c8a5b63c",
+    "api35-static-binary-host-race-tests.jsonl": "5ed8e5c4e65b28716ae4e6d2afbea86b6fdb1e118da160a40cc56ebc8d689766",
+    "api35-process-static-binary-local.log": "3c96a07047be328d719272ccf26572a3de22c4d20232dd9285e8ae0ce65eb778",
+    "api35-process-vue-local-final.log": "6d903ca299ae3a99f9c3b088ef367b74ae9d883b30774cada5ca0f7d529d2ea8",
+    "api35-frontend-binary-tests.log": "3817d477cc33b136dde9d38deec9ada22679f5d5e2cebd7a16002fab975a6641",
+    "api35-typescript-check.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "api35-static-source-replay.log": "590d42d0b6e2234dde32c3601e45d5b246c250fe699121ca5a3b1f788f47b86f",
+    "api35-process-linux.log": "a59d8fadaa11b269429a48a89142423b1eaab9372a6172c1a96a2608c39f12e1",
+    "api35-browser-binary.png": "73b6152bb73ad74aab576460e5bb6d3b7292cca020dc292e51b2cb66a940b68d",
+    "api35-browser-cold-clone.ax.txt": "d131fe38017ff1fa55bb7a40e253ffd5c6d2979fe26cc8d8efda110a3ea3442d",
+    "api35-browser-final.log": "91c8507b836f1085eec880ded6795453de2d7e7f2bf96e9e6dc44a353b64b2c9",
+    "api35-browser-204.ax.txt": "4237ff7ca297c9b74f075335a8a75d28c45c172c193dec3bf9bc1fdbe84cfde9",
+    "api35-browser-clone.ax.txt": "39b53fc4e86abcb06b8d217e24340ac08490930c7cc3e1c8fdaf4df173e26129",
+    "api35-browser-cold-source.ax.txt": "82024d9015625e04bcffb201d55d3bfcce6418dc5d561486ad1a7d7b6ed46c36",
+    "api35-browser-cold-source.png": "b6b0061acfadd3a86db1c36daced5ab82299c674717d6096029a022f3b36d58a",
+    "api35-browser-raw.ax.txt": "63fe5c86bf88b84c054c28a5f90f9cff56db76a23f029b454244cf46a72bb30d",
+    "api35-browser-failure.png": "d09655edf4dd0b23b03bcfbbd0eacd9c1e4ed367c856878e8a9f477f4b1b2255",
+    "api35-browser-binary.ax.txt": "920fc0525c6e302fccb0ea9835c3d6882eb2ecca1dcf346bc90a2f30358fede1",
+    "api35-browser-failure.ax.txt": "50129ace713dffd235dcf176a9c7b5d0bf9b50357501ca3c090bc49eeb6ae5b8",
+    "api35-unified-linux.log": "a59d8fadaa11b269429a48a89142423b1eaab9372a6172c1a96a2608c39f12e1",
+    "setup-api35-unified-linux.log": "5e425c390c25cfc0121dafb55a830bd4845eb51f7b854eab36e78480bdc64835"
+  },
+  "adaptations": [
+    "Python endpoint callable identity maps to compiled Go API key/http method; parameters/body are explicit Go declarations and the worker implements business argument conversions. Existing bounded IPC/capability checks retained.",
+    "Go native auth=anonymous is the explicit SDK counterpart of source allow_anonymous; falsey/default and other source auth values select API key; source methods=[] failure preserved.",
+    "JWT resource token maps to existing single-user session cookie; ordinary key auth does not grant static file access. Provider may expose only its own declared verified frontend root.",
+    "Code packages are verified immutable artifacts: internal host .acquired.json receipt is excluded and data/config/KV remain outside the code root. File opens retain verified inode across replacement and stream8KiB without a global lock held across client IO.",
+    "Binary HTTP bodies use existing base64 IPC at8MiB, below16MiB logical payload ceiling; verified package files use direct rooted streams up to existing package ceiling. JSON/text validation retained where applicable; ordinary binary MIME and download metadata supported. No arbitrary Python Response object runtime or generic new compatibility framework.",
+    "Existing Go cookie/key/session policy, no workflow/AI or new user/permission system; no official center write or old service modified."
+  ],
+  "failed_checks_explained": [
+    "First source oracle rejected invented methods=[] default GET; corrected to fixed FastAPI registration failure, retained failed log.",
+    "Old getter assertion expected blank auth even though fixed manager supplies apikey; assertion corrected from source.",
+    "Three early cold snapshot failures were fixture json.Unmarshal merging a pre-existing map and retaining the clone enable flag; fixture now decodes a new map and replaces it. Product save/restart semantics and strict equality assertions unchanged.",
+    "First unified CLI launch failed before server startup because the explicitly selected owned TMPDIR did not exist. Created that isolated directory, preserved setup log, and both CLI/browser runs subsequently passed; no product logic changed for this setup error."
+  ],
+  "remaining": [
+    "Expanded fixed Axios client and ordinary host/peer/global/baseURL/file calls require fresh embedded production binary + real browser acceptance.",
+    "Central source JS/CSS clone derivation must replace incomplete owner-prefix rebinding; dynamic deliberate source URLs must remain source.",
+    "Existing source folders/** and user/config/PluginOrder aliases need priority preservation in the injected Axios client."
+  ],
+  "browser": {
+    "state_env": "API35_PROCESS_BROWSER_STATE",
+    "restart_suffix": ".restart",
+    "done_suffix": ".done",
+    "credentials": "api35-acceptance / owned-api35-password (disposable only)",
+    "actions": [
+      "读取实际状态",
+      "调用匿名接口",
+      "读取二进制下载",
+      "上传二进制并回读",
+      "签名原文回显",
+      "调用空响应",
+      "验证失败响应",
+      "读取源插件代码文件流"
+    ],
+    "expected_download_bytes": 5,
+    "expected_binary_sha256": "ccae98022baea24d0c18b70b14d311ef5534e931776916cdb066e5a7fcab9d35",
+    "verified": true,
+    "server_sha256": "cfc9189e0afe81d8c94e834d93f11b58c62758c5a26229e4cd231008225fa288",
+    "kind": "actual Linux production server + actual browser interaction by root; synthetic plugin/repository/credentials",
+    "source_and_clone_before_cold": {
+      "source_version": "2.0",
+      "source_pid": 2290560,
+      "clone_version": "1.0",
+      "clone_pid": 2290565
+    },
+    "source_and_clone_after_cold": {
+      "source_pid": 2294441,
+      "clone_pid": 2294447,
+      "init_count": 1
+    },
+    "raw_echo_bytes": 26,
+    "file_download_click": "actual browser click only; browser-saved file bytes not captured; exact package stream bytes/range behavior proven separately by production CLI",
+    "fresh_tab_reload": "tab24 reloaded Vue and successfully called API; tab22 was unexpectedly lost; no response/result is attributed to lost tab",
+    "cleanup": "root closed tab24 and tunnel60223; successful CLI post-browser uninstall/removal assertions and automatic owned test temp/process cleanup"
+  },
+  "checks": {
+    "api35-targeted-fixed-tests.jsonl": {
+      "pass": 9
+    },
+    "api35-static-binary-tests.jsonl": {
+      "pass": 22
+    },
+    "api35-static-source-tests.jsonl": {
+      "pass": 1
+    },
+    "api35-static-binary-host-race-tests.jsonl": {
+      "pass": 11
+    },
+    "actual_linux_cli": "PASS; raw elapsed in api35-process-linux.log; server services38-server-linux SHA256 9a51d5d728210187ef24a0a92b783b2678053bae84821dce00fff12cfd9a475b",
+    "actual_linux_cli_cfc": "PASS0.98s; api35-unified-linux.log; sharedserver cfc9189e0afe81d8c94e834d93f11b58c62758c5a26229e4cd231008225fa288",
+    "actual_linux_browser_hold_final": "PASS365.02s including post-browser API removal, retained source code read and removed clone code404; api35-browser-final.log"
+  },
+  "local_completed_native_build_cleanup": [
+    {
+      "name": "api35-server-local",
+      "sha256": "5959299d101e6900de6098744b786b05fc00edb10358b1938111deddce91969b",
+      "bytes": 53351554
+    },
+    {
+      "name": "api35-fixture-local",
+      "sha256": "1de3192cadab59672f0ed5d67a25087e97db92415d09dbef09347aa03df918ba",
+      "bytes": 4163090
+    },
+    {
+      "name": "api35-fixture-v2-local",
+      "sha256": "e7109db56e105c4d7dabfaa2c8634629849a7a02c01a6bb080fedfa64e01deb9",
+      "bytes": 4163138
+    }
+  ],
+  "archive": {
+    "directory": "docs/validation/plugin-api35-20261027",
+    "manifest": "evidence-manifest.json",
+    "all_log_entries_present": true
+  },
+  "reopened_20261027": "Actual fixed global Axios exposed ordinary host/peer, callable/config and HTTP200 business-field behavior absent from prior fetch wrapper. Prior Linux/browser API transport evidence remains valid for its recorded binary; the expanded client is pending fresh embedded build and browser acceptance.",
+  "expanded_client_local_evidence": {
+    "source_replay": "testdata/standard-api/frontend-axios-oracle.json:18 actual fixed Axios cases",
+    "target_frontend": "api35-message-frontend-final.log:89 roots PASS1.146s; api35-remaining-frontend.log:89 roots PASS0.73s",
+    "target_go": "api35-alias-cookie-go.jsonl:12 roots PASS7.688s, no skip",
+    "typescript": "api35-message-typescript-final.log:exit0",
+    "fixtures": "api35-axios-linux-build.json + api35-axios-linux-upload.log"
+  }
+}

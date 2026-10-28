@@ -182,7 +182,7 @@ function openSelected() {
 }
 function downloadAdded() {
   if (active.value) {
-    downloaded.value[candidateKey(active.value)] = 'planned';
+    downloaded.value[candidateKey(active.value)] = 'accepted';
     selected.value = selected.value.filter((k) => k !== candidateKey(active.value!));
   }
   toast('下载任务已添加');
@@ -371,6 +371,7 @@ onUnmounted(() => {
     :request="request"
     @close="close"
     @done="downloadAdded"
+    @error="close"
   />
 </template>
 <style scoped>

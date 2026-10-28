@@ -1,0 +1,185 @@
+{
+  "scope": "36/37/43 incremental independent subtitle/audio; whole items remain unaccepted",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "accepted_increment": true,
+  "whole_module_complete": false,
+  "mapping": [
+    {
+      "source": "app/chain/transfer.py:3072-3105,3195-3292",
+      "behavior": "Subtitle/audio bypass video minimum size; selected extra alone is a task, unique sibling main metadata may be inherited; no parent/ambiguous/unrelated retains selected metadata",
+      "target": [
+        "internal/app/plugin_original_transfer_single_extra.go",
+        "internal/app/organize_manual.go",
+        "internal/app/import_plan.go",
+        "internal/app/recognition_words.go"
+      ],
+      "oracle": "testdata/standard-module-host/transfer-single-extra-source-oracle.json",
+      "tests": [
+        "TestOriginalSingleExtraManualActualSDK",
+        "TestOriginalSingleExtraInheritedMetadataFixedSource",
+        "TestPluginServicesProductionCLI"
+      ]
+    },
+    {
+      "source": "app/api/endpoints/transfer.py:277-365",
+      "behavior": "Manual history reorganization retains preview target, then removes the selected old destination before real transfer",
+      "target": [
+        "internal/app/organize_manual.go",
+        "internal/app/history_auxiliary.go"
+      ],
+      "tests": [
+        "TestOriginalSingleExtraManualActualSDK",
+        "IAB65 history preview/actual/old-target absence/stable history ID"
+      ]
+    },
+    {
+      "source": "app/chain/transfer.py:3795-3870; app/chain/media.py:729-779,853-880; app/chain/__init__.py:949-963",
+      "behavior": "Ordinary auxiliary retry recognizes current metadata, calls synchronous obtain_images then transfer in a fresh plan",
+      "target": [
+        "internal/app/plugin_original_transfer_retry.go",
+        "internal/app/transfer_history.go",
+        "internal/app/plugin_original_catalog_images.go",
+        "internal/app/plugin_original_modules.go"
+      ],
+      "oracle": "testdata/standard-module-host/transfer-redo-source-oracle.json",
+      "tests": [
+        "TestOriginalSingleExtraRetryActualSDK",
+        "actual Linux POST history retry and process cold recovery"
+      ]
+    }
+  ],
+  "adaptations": [
+    "Existing Go persistent plans/jobs/managed_file ownership, verified allowed local roots and physical receipts replace in-process Python objects; subtitle/audio create no video asset/slot/reservation.",
+    "Existing TMDB host requires a valid projected identity for execution. Explicit-ID/manual-history and fresh retry paths covered here; general auto-identification caller remains pending.",
+    "This evidence covers independent auxiliaries only; main retry and directory/Bluray/quality caller differences are not claimed closed.",
+    "Python executes pinned source excerpts only in development oracle tooling; application/server/plugin workers remain Go."
+  ],
+  "evidence_types": {
+    "source_replay": "Five complete selected-extra planner cases, now invoking the original allowed-file filter at min_filesize=10; five ordinary redo scenarios; controlled storage/recognition collaborators, no original deployed service writes.",
+    "local_actual_sdk": "Fresh subtitle/audio, real hardlinks, sibling metadata five cases, history reorganization, retry/new identity/images and Close/New. 5.369s; previous broader 15.513s / race59.490s; final affected race18.614s.",
+    "linux_actual": "Final CLI9.65s; IAB65 gate990.55s includes human action/build wait and r1→r2 owned main restart. UI driver remains r1; browser operations begin after r2 restart.",
+    "browser": "10MB threshold preserves 24B subtitle and22B audio; reject preview/actual then restore in same retained form; one stable subtitle history; history preview leaves old target then actual moves only subtitle; audio separate; cold two records/file hashes/inodes with zero SDK write replay.",
+    "synthetic_inputs": "Owned tiny media/sidecar bytes and SDK module values are synthetic; process, filesystem, UI, persistence, failure/recovery and uninstall are real."
+  },
+  "final_build": {
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "binaries": [
+      {
+        "name": "server-platform31-20261027-linux",
+        "sha256": "bcc9cf7050176d1767280e49f18162c0869dfbc7c55fb00d9acda848adc2c1dc",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform31-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3716,
+        "changed": [],
+        "elapsed_seconds": 3.35
+      },
+      {
+        "name": "process-platform31-20261027-linux.test",
+        "sha256": "ac8c0b4b23efcd0e0b48b449d7939a048f492ca82856554bba8789a4fae03d9c",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform31-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4174,
+        "changed": [],
+        "elapsed_seconds": 6.9
+      }
+    ]
+  },
+  "ui_driver_sha256": "72cde86096ecb9e3d38e2b2adb08fe077229a42a5a0bd6c33aeff7ddce3b50c9",
+  "r1_main_sha256": "d23696b520027eb23cd735268c683db172cbf09d6c180aa802c47b4366357c19",
+  "worker_sha256": "376f0e246479b6e4a299bf524d87398aaff31f409b70f66b25a097d41990f6cc",
+  "browser_verdict": {
+    "passed": true,
+    "kind": "actual Linux browser/HTTP/SDK/filesystem/readonly SQLite observations",
+    "stable_subtitle_history_id": "file_E4RTSEJJEfJg8eFweJsR-yqZ",
+    "pids": [
+      [
+        326080,
+        326087
+      ],
+      [
+        334854,
+        334860
+      ]
+    ],
+    "independent_history_count": 2,
+    "post_cold_sdk_transfer_calls": 0,
+    "files": [
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module31-ui-tmp/TestPluginServicesProductionCLI298785324/002/source/OwnedUITransfer.2024.mkv",
+        "exists": true,
+        "inode": 102936863,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module31-ui-tmp/TestPluginServicesProductionCLI298785324/002/source/OwnedUITransfer.2024.zh.srt",
+        "exists": true,
+        "inode": 102936861,
+        "device": 65025,
+        "size": 24,
+        "sha256": "64dbf5f224a79e3fabf60ab04a96e766c25c35a3d179b2fbbd11098e89e609b7"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module31-ui-tmp/TestPluginServicesProductionCLI298785324/002/source/OwnedUITransfer.2024.flac",
+        "exists": true,
+        "inode": 102936862,
+        "device": 65025,
+        "size": 22,
+        "sha256": "21842006e19f366fe6059346fde9ce2bb380525353d684dabcd08505ad4f0930"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module31-ui-tmp/TestPluginServicesProductionCLI298785324/002/library/Owned high-level UI (2024)/Owned high-level UI (2024).flac",
+        "exists": true,
+        "inode": 102936862,
+        "device": 65025,
+        "size": 22,
+        "sha256": "21842006e19f366fe6059346fde9ce2bb380525353d684dabcd08505ad4f0930"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module31-ui-tmp/TestPluginServicesProductionCLI298785324/002/library/again/Owned high-level UI (2024)/Owned high-level UI (2024).default.chi.zh-cn.srt",
+        "exists": true,
+        "inode": 102936861,
+        "device": 65025,
+        "size": 24,
+        "sha256": "64dbf5f224a79e3fabf60ab04a96e766c25c35a3d179b2fbbd11098e89e609b7"
+      }
+    ],
+    "min_filesize_mb": 10,
+    "no_main_publication_or_false_video_inventory": true
+  },
+  "manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-single-extra-31-20261028/manifest.json",
+  "negative_evidence": [
+    "Initial missing worker/TMPDIR were harness setup errors; retained separately.",
+    "Actual NO_MEDIA_FILES failure showed missing auxiliary manual entry; fixed.",
+    "Fixture missing new target directory was corrected, not a product assertion relaxation.",
+    "Actual min-size red incorrectly skipped auxiliaries; source filter proved exemption and product fixed.",
+    "Temporary oracle generator syntax error corrected before any regenerated source evidence."
+  ],
+  "cleanup": "Actual source/clone uninstall, API404 and test TempDir cleanup PASS; IAB65 closed and34446 tunnel stopped.",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

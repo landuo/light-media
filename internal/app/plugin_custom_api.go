@@ -80,9 +80,10 @@ func (a *App) pluginHTTPAuthority(r *http.Request, auth string, native bool) (pl
 	if token := plugins.LastQuery(query, "token"); token != "" {
 		return checkKey(token, "token")
 	}
-	// Native same-origin plugin pages use the existing session. Compatibility
-	// aliases retain the original explicit bearer/key requirements.
-	if native && a.authenticated(r) {
+	// The fixed bearer account is represented by this host's HttpOnly cookie.
+	// Both native and fixed aliases retain the same single-user authority;
+	// key-only APIs were handled above and never gain cookie authentication.
+	if a.authenticated(r) {
 		if !sameRequestOrigin(r) || r.Header.Get("Sec-Fetch-Site") == "cross-site" {
 			return fail(403, "请求来源不匹配")
 		}
@@ -132,6 +133,12 @@ func pluginHTTPError(w http.ResponseWriter, failure *pluginHTTPFailure) {
 }
 
 func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool {
+	if a.serveOriginalPluginDiscovery(w, r) {
+		return true
+	}
+	if a.serveOriginalPluginStaticFile(w, r) {
+		return true
+	}
 	instance, endpoint, native, matched := pluginCustomPath(r.URL.Path)
 	if !matched {
 		return false
@@ -237,7 +244,7 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		}
 	}
 	if api.Body != "" && r.Body != nil {
-		bodyReader := io.Reader(http.MaxBytesReader(w, r.Body, 512<<10))
+		bodyReader := io.Reader(http.MaxBytesReader(w, r.Body, plugins.MaxHTTPBodyBytes))
 		body, err := io.ReadAll(bodyReader)
 		if err != nil {
 			pluginHTTPError(w, &pluginHTTPFailure{413, "Request body too large"})

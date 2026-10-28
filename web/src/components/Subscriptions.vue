@@ -19,7 +19,10 @@ import {
 import {
   subscriptionTarget,
   subscriptionTotal,
+  subscriptionDownloaded,
+  subscriptionProgressTotal,
   validateSubscriptionCounts,
+  mediaDetailSeasons,
 } from '../features/subscriptions';
 import {
   calendarDay,
@@ -98,8 +101,8 @@ function totalEpisodes(s: any) {
   return subscriptionTotal(s);
 }
 function percent(s: any) {
-  return totalEpisodes(s)
-    ? Math.min(100, Math.round(((s.in_library_episodes?.length || 0) / totalEpisodes(s)) * 100))
+  return subscriptionProgressTotal(s)
+    ? Math.min(100, Math.round((subscriptionDownloaded(s) / subscriptionProgressTotal(s)) * 100))
     : 0;
 }
 const isCalendar = computed(() => props.view.split('?')[0] === 'calendar');
@@ -204,7 +207,7 @@ function policySize(field: string, event: Event) {
 function setSeason(value: number) {
   editing.value.season = value;
   editing.value.total_episodes =
-    editing.value.media?.seasons?.find((season: any) => season.season_number === value)
+    mediaDetailSeasons(editing.value.media).find((season: any) => season.season_number === value)
       ?.episode_count || 0;
 }
 function editEvent() {
@@ -268,7 +271,7 @@ function begin(s?: any) {
   editing.value.site_ids ||= [];
   editing.value.custom_words ??= '';
   editing.value.total_episodes ??=
-    editing.value.media?.seasons?.find(
+    mediaDetailSeasons(editing.value.media).find(
       (season: any) => season.season_number === editing.value.season,
     )?.episode_count || 0;
   excluded.value = (editing.value.excluded || []).join(',');
@@ -294,7 +297,8 @@ async function pick(m: any) {
   editing.value.season =
     editing.value.media?.media_type === 'movie'
       ? 0
-      : editing.value.media?.seasons?.find((s: any) => s.season_number > 0)?.season_number || 1;
+      : mediaDetailSeasons(editing.value.media).find((s: any) => s.season_number > 0)
+          ?.season_number || 1;
   editing.value.target_scope = editing.value.media?.media_type === 'movie' ? 'movie' : 'season';
   setSeason(editing.value.season);
   lookupResults.value = [];
@@ -366,8 +370,8 @@ async function state(s: any) {
   await action(
     () =>
       api(
-        '/subscriptions/' + s.id,
-        { ...s, state: s.state === 'paused' ? 'active' : 'paused' },
+        '/subscriptions/' + s.id + '/status',
+        { state: s.state === 'paused' ? 'active' : 'paused', revision: s.revision },
         'PUT',
       ),
     '订阅状态已更新',
@@ -584,8 +588,8 @@ watch(() => props.view, applyView);
           <div class="subscription-progress-text">
             <AppIcon name="download" />
             <span
-              >已入库 {{ s.in_library_episodes?.length || 0 }} /
-              {{ totalEpisodes(s) || '待定' }}</span
+              >已下载 {{ subscriptionDownloaded(s) }} /
+              {{ subscriptionProgressTotal(s) || '待定' }}</span
             >
           </div>
           <span :class="['subscription-state', s.state]">{{ label(s.state) }}</span>
@@ -668,7 +672,7 @@ watch(() => props.view, applyView);
           class="subscription-progress"
           :value="percent(s)"
           max="100"
-          :aria-label="s.media.title + ' 入库进度'"
+          :aria-label="s.media.title + ' 下载进度'"
         ></progress>
       </article>
     </div>
@@ -1115,12 +1119,7 @@ watch(() => props.view, applyView);
         >
           取消订阅
         </button>
-        <button
-          v-if="
-            !editing.id && editing.media.media_type === 'tv' && editing.media.seasons?.length > 1
-          "
-          @click="openMulti"
-        >
+        <button v-if="!editing.id && editing.media.media_type === 'tv'" @click="openMulti">
           选择多个季度订阅
         </button>
         <span class="subscription-action-spacer"></span>

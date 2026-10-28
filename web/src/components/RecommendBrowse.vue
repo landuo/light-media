@@ -23,12 +23,18 @@ import {
   type ExploreLoadStatus,
   type ExplorePage,
 } from '../features/explore-feed';
-import { recommendBrowseSource, recommendPath, type RecommendSource } from '../features/recommend';
+import { recommendBrowseSource, type RecommendSource } from '../features/recommend';
+import {
+  appendExtraRecommendations,
+  requestRecommendBrowsePage,
+  type ExtraRecommendSource,
+} from '../features/plugin-catalog-sources';
 
 const props = withDefaults(defineProps<{ route: string; active?: boolean }>(), { active: true });
 const display = useDisplay();
 const source = computed(() => recommendBrowseSource(props.route));
 const title = ref(source.value.title);
+const definition = computed<RecommendSource>(() => ({ ...source.value, category: '' }));
 const feed = reactive(createExploreFeed());
 const activated = ref(true),
   scrollY = ref(0);
@@ -43,8 +49,13 @@ async function load({ done }: { done: (status: ExploreLoadStatus) => void }) {
     feed.error = '推荐来源不存在';
     return done('error');
   }
-  const id = source.value.id;
-  done(await loadExplorePage(feed, (page) => api<ExplorePage>(recommendPath(id, page)), errorText));
+  done(
+    await loadExplorePage(
+      feed,
+      (page) => requestRecommendBrowsePage(definition.value, page, source.value.title),
+      errorText,
+    ),
+  );
 }
 function retry(props: { onClick?: () => void }) {
   feed.error = '';
@@ -55,9 +66,16 @@ async function loadTitle() {
   title.value = source.value.title;
   if (title.value || !source.value.id) return;
   try {
-    const response = await api<{ sources: RecommendSource[] }>('/catalog/recommend/sources');
-    if (token === titleGeneration)
-      title.value = response.sources.find((item) => item.id === source.value.id)?.title || '';
+    const response = await api<{
+      sources: RecommendSource[];
+      extra_sources?: ExtraRecommendSource[];
+    }>('/catalog/recommend/sources');
+    if (token === titleGeneration) {
+      const item = appendExtraRecommendations(response.sources, response.extra_sources || []).find(
+        (item) => item.id === source.value.id,
+      );
+      title.value = item?.title || '';
+    }
   } catch {
     // The feed's own retry state reports source errors; the title is optional.
   }

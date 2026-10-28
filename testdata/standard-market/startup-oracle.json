@@ -1,0 +1,65 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/startup/lifecycle.py": "a45910b15c78d90d86b8415ded20edf2c9610ee0378ed32b53265e1fb4c3b386",
+    "app/startup/plugins_initializer.py": "66824a0d94d96e2081d22a434ab49ca9499baab60cafe1410f71bd699353d8ed"
+  },
+  "kind": "actual fixed async functions; synthetic executor/provider boundaries, not production startup evidence",
+  "cases": [
+    {
+      "kind": "noop",
+      "calls": [
+        "sync",
+        "dependencies",
+        "system_modified",
+        "restart_finish",
+        "usage"
+      ]
+    },
+    {
+      "kind": "synced",
+      "calls": [
+        "sync",
+        "dependencies",
+        "init_config",
+        "register_api",
+        "register_scheduler",
+        "restart_command",
+        "system_modified",
+        "restart_finish",
+        "usage"
+      ]
+    },
+    {
+      "kind": "dependencies",
+      "calls": [
+        "sync",
+        "dependencies",
+        "init_config",
+        "register_api",
+        "register_scheduler",
+        "restart_command",
+        "system_modified",
+        "restart_finish",
+        "usage"
+      ]
+    },
+    {
+      "kind": "safe",
+      "calls": [
+        "system_modified",
+        "restart_finish"
+      ]
+    },
+    {
+      "kind": "sync_exception",
+      "calls": [
+        "sync",
+        "dependencies",
+        "system_modified",
+        "restart_finish",
+        "usage"
+      ]
+    }
+  ]
+}

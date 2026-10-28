@@ -1,0 +1,146 @@
+{
+  "whole_indices": [
+    36,
+    37,
+    43
+  ],
+  "accepted_whole_scope": false,
+  "increment_status": "验收通过",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": {
+    "locations": [
+      "B app/chain/transfer.py:2004-2064 storage→same transfer with preview",
+      "B app/chain/transfer.py:3536-3559 _preview_callback",
+      "B app/modules/filemanager/transhandler.py:83-137 preview FileItem/defaults",
+      "B app/modules/filemanager/transhandler.py:389-419 native file preview skips actual target storage/conflict checks",
+      "F src/components/dialog/ReorganizeDialog.vue:826/835/1000-1099 preview flag uses same transfer/manual endpoint"
+    ],
+    "sha256": {
+      "app/chain/transfer.py": "1e42c4e69cb6294afe36e3c4aa4bb40cb9356aa017f2e8e9c91b9c928b140b37",
+      "app/modules/filemanager/transhandler.py": "48948f9137ae68ac2f0cf4c1235dd3db6327cc9d66ff7490c17a5657504d5e36",
+      "app/modules/filemanager/__init__.py": "7a02d0f0107b76465a9f2c2ef99731e2f39aa11dee3b6a01d2c3dfbc6d7dd9ab",
+      "app/schemas/transfer.py": "b0c1e7bdc15d5041094d1be9050de5a279a5f5651bbfc32de85a001ecb56b2bd",
+      "src/components/dialog/ReorganizeDialog.vue": "7168cc64bdfb3b5c01be5b571d67e95002ab5ece8242e26115fe73810a9534fd"
+    }
+  },
+  "target": [
+    "internal/app/organize_manual.go:290 explicit request.Preview only",
+    "internal/app/import_plan.go:31/234/494-532 preview context/native fallback; no root write probe or destination conflict/slot/sidecar probing in preview",
+    "internal/app/plugin_original_transfer_module.go:237-354 shared 14 arguments + storage selection + typed caller result",
+    "internal/app/http.go /import/preview retains native executable preparation API; no source preview flag",
+    "internal/app/plugin_original_transfer_preview_test.go actual source/SDK + preserved public preparation subtitle",
+    "internal/app/plugin_module_process_transfer_module_test.go actual main manual-organize preview cases"
+  ],
+  "source_replay": {
+    "script": "testdata/standard-module-host/generate-transfer-preview-oracle.py",
+    "output": "testdata/standard-module-host/transfer-preview-source-oracle.json",
+    "cases": 10,
+    "kind": "fixed Python AST with controlled module registry/storage/rename boundary; actual native preview helpers/branch and actual nested callback; owned existing target unchanged; no old system run"
+  },
+  "local": {
+    "actual_sdk_fixed_source_cases": 10,
+    "first_red": "transfer-preview-local-r1.log: preview method omitted from sealed metadata; fixed",
+    "first_green": "transfer-preview-local-r2.log actual source/SDK test 3.56s",
+    "broad_race": "main20 production snapshot 170.406s PASS; includes previous transfer/browser/file/auto/manual coverage",
+    "public_preparation_red": "transfer-preview-public-plan-red.log 8.328s total: executable public plan lost real subtitle",
+    "corrective_green": "transfer-preview-public-plan-green.log 5.181s tests PASS",
+    "final_related_race": "transfer-preview-final-race.log 18.666s PASS (33.173s wall)",
+    "front": "main19 546 tests/build reused only after all 130 compiler-selected web embed inputs compared equal on main21"
+  },
+  "actual_linux": {
+    "main_sha256": "98700ffbd8e0dbaa358f2342aaf909e198c66e388ebccbf84696af4dfe5b02b8",
+    "test_sha256": "e3434faad538cb887cffeb31c4f81c004caa2faf787fee47aadb185f3d268192",
+    "worker_sha256": "fe806697d860f57de8792a812a152161238e4c3f6c560fcf979d2672b1cf2cd7",
+    "compiler_inputs": [
+      3699,
+      4143
+    ],
+    "input_changes_during_build": [],
+    "cli_seconds": 1.96,
+    "cases": "5 real /files/organize preview=true branches + 6 execution branches, cold new process/no replay and actual uninstall/API404"
+  },
+  "actual_browser": {
+    "tab": "IAB54",
+    "gate_seconds": 243.98,
+    "passed": true,
+    "scenarios": [
+      "source terminal model preview path/no physical file",
+      "false preview failure retains original form; cold new source+clone PIDs/no replay; same form recovers",
+      "source None→clone separate hypothetical path; cold config/PID recovery and repeated preview",
+      "actual execute preview=false, popup closes, one real hardlink/asset/receipt and one ordinary completion per instance",
+      "existing actual target and asset still preview successfully without extra completion/jobs; final cold+browser reload keeps login/query/one history"
+    ],
+    "proof": {
+      "passed": true,
+      "kind": "actual Linux cmd/server + real SDK + owned filesystem + IAB54",
+      "cold_pids": [
+        [
+          4048905,
+          4048911
+        ],
+        [
+          4052078,
+          4052084
+        ],
+        [
+          4054645,
+          4054651
+        ],
+        [
+          4057913,
+          4057919
+        ]
+      ],
+      "preview_plans": 7,
+      "preview_jobs": 0,
+      "actual_job": [
+        [
+          "job_gcuIcK0wTmSYI76InIUJGzIC",
+          "succeeded"
+        ]
+      ],
+      "actual_assets": 1,
+      "actual_receipts": 1,
+      "clone_preview_directory_exists": false,
+      "target": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module21-ui-tmp/TestPluginServicesProductionCLI3977499629/002/library/Owned high-level UI (2024)/Owned high-level UI (2024).mkv",
+        "inode": 182550131,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "source": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module21-ui-tmp/TestPluginServicesProductionCLI3977499629/002/source/OwnedUITransfer.2024.mkv",
+        "inode": 182550131,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "executed_plan": "plan_nAXujERHTocQvYuJO-JDPfcF",
+      "preview_complete_callbacks": 0,
+      "ordinary_execute_complete_callbacks": 2
+    }
+  },
+  "adaptations": [
+    "Go typed model wire marker preserves TransferInfo vs ordinary dict distinction. Lists run native preview but remain invalid at the typed caller, exactly as fixed source.",
+    "Real source preview belongs to manual-organize request.Preview. Existing Go /import/preview prepares an executable sealed plan and preserves auxiliary-file provenance; incorrectly equating the two was detected with a real subtitle regression, corrected and retested on main21.",
+    "Go retains an inert preview plan/metadata record for existing API response correlation. Preview reserves no slot, writes no publication receipt/asset and enqueues no execution. Explicit actual UI action builds a fresh execution plan.",
+    "Only authorized existing local roots are exposed. Hypothetical plugin targets must remain within that root. No target file/folder probe and no normal callback occurs in explicit preview; plugin itself remains trusted executable code.",
+    "Native pure path rendering still supports user-required compact bottom preview, with user instructions overriding fixed frontend layout/toggle choices."
+  ],
+  "remaining": [
+    "Execution native naming-event precedence: an overriding transfer provider still encounters preliminary naming events in executable plan preparation; not closed by preview pass.",
+    "Arbitrary legitimate actual target mapping rather than current frozen target; full TransferInfo nested validation/consumption/history, TV/nullability, auxiliary task/overwrite behavior.",
+    "media_exists/media_files, directory-unit/bluray, metadata aggregation, download tuple/preexisting-hash ordering and complete ordinary-call/event audit remain open."
+  ],
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-preview-21-20261028/manifest.json",
+  "superseded_snapshot": "testdata/plugin-module-no-official-auth-20261026/transfer-preview-20-20261028/manifest.json",
+  "cleanup": "IAB53/54 closed; actual main source/clone uninstalled/API404 and test TempDir cleanup PASS; tunnels34434/34435 stopped. One cold observer raced shutdown and received connection refused; successful reread used new actual PIDs, no product defect claimed.",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

@@ -7,22 +7,23 @@ import (
 )
 
 const (
-	BaseGetConfig    = "plugin.base.get_config"
-	BaseUpdateConfig = "plugin.base.update_config"
-	BaseGetDataPath  = "plugin.base.get_data_path"
-	BaseSaveData     = "plugin.base.save_data"
-	BaseGetData      = "plugin.base.get_data"
-	BaseDelData      = "plugin.base.del_data"
+	BaseGetConfig           = "plugin.base.get_config"
+	BaseUpdateConfig        = "plugin.base.update_config"
+	BaseGetDataPath         = "plugin.base.get_data_path"
+	BaseSaveData            = "plugin.base.save_data"
+	BaseGetData             = "plugin.base.get_data"
+	BaseDelData             = "plugin.base.del_data"
+	BaseGetInstanceMetadata = "plugin.base.get_instance_metadata"
 )
 
 // BaseMethods is the finite method vocabulary, not an authorization grant.
 // Only the host's recognized contract may grant any of these operations.
 func BaseMethods() []string {
-	return []string{BaseGetConfig, BaseUpdateConfig, BaseGetDataPath, BaseSaveData, BaseGetData, BaseDelData}
+	return []string{BaseGetConfig, BaseUpdateConfig, BaseGetDataPath, BaseSaveData, BaseGetData, BaseDelData, BaseGetInstanceMetadata}
 }
 func IsBaseMethod(method string) bool {
 	switch method {
-	case BaseGetConfig, BaseUpdateConfig, BaseGetDataPath, BaseSaveData, BaseGetData, BaseDelData:
+	case BaseGetConfig, BaseUpdateConfig, BaseGetDataPath, BaseSaveData, BaseGetData, BaseDelData, BaseGetInstanceMetadata:
 		return true
 	}
 	return false
@@ -32,6 +33,38 @@ func IsBaseMethod(method string) bool {
 // for background use. Omitting a target resolves the real instance on the host,
 // so a plugin requires no clone-specific code or process-global namespace.
 type Base struct{ Host HostCaller }
+
+// InstanceMetadata describes the current calling instance. DisplayVersion may
+// be customized for a clone; PluginID and Version remain the authenticated
+// executable identity and must never be replaced with presentation values.
+type InstanceMetadata struct {
+	InstanceID       string `json:"instance_id"`
+	SourceInstanceID string `json:"source_instance_id"`
+	PluginID         string `json:"plugin_id"`
+	Version          string `json:"plugin_version"`
+	Name             string `json:"name"`
+	Description      string `json:"description"`
+	DisplayVersion   string `json:"display_version"`
+	Icon             string `json:"icon"`
+}
+
+// GetInstanceMetadata is read-only and always resolves the actual caller.
+// Unlike config/data helpers, it accepts no target namespace override.
+func (b Base) GetInstanceMetadata(ctx context.Context) (InstanceMetadata, error) {
+	var result InstanceMetadata
+	raw, err := b.call(ctx, BaseGetInstanceMetadata, map[string]any{}, nil)
+	if err != nil {
+		return result, err
+	}
+	err = json.Unmarshal(raw, &result)
+	return result, err
+}
+
+// GetName is the Go equivalent of _PluginBase.get_name for generated clones.
+func (b Base) GetName(ctx context.Context) (string, error) {
+	metadata, err := b.GetInstanceMetadata(ctx)
+	return metadata.Name, err
+}
 
 type BaseDataRow struct {
 	ID       int64           `json:"id"`

@@ -84,6 +84,12 @@ func validateRuleSection(config priorityrules.Configuration, section string) err
 func (a *App) priorityRulesAPI(w http.ResponseWriter, r *http.Request, section string) (any, error) {
 	ctx := r.Context()
 	if section == "" && r.Method == "GET" {
+		// A plugin may read settings while answering media_category. Do not
+		// hold the settings write lock across an external SDK call.
+		categories, err := a.originalMediaCategories(ctx)
+		if err != nil {
+			return nil, err
+		}
 		a.settingsMu.Lock()
 		defer a.settingsMu.Unlock()
 		revisions := map[string]int64{}
@@ -93,16 +99,6 @@ func (a *App) priorityRulesAPI(w http.ResponseWriter, r *http.Request, section s
 				return nil, err
 			}
 			revisions[key] = revision
-		}
-		policy, err := a.currentMediaCategoryPolicy()
-		if err != nil {
-			return nil, err
-		}
-		categories := map[string][]string{"电影": {}, "电视剧": {}}
-		for kind, title := range map[string]string{"movie": "电影", "tv": "电视剧"} {
-			for _, rule := range policy[kind] {
-				categories[title] = append(categories[title], rule.name)
-			}
 		}
 		return map[string]any{"configuration": ruleConfiguration(a.Settings().PriorityRules), "revisions": revisions, "categories": categories}, nil
 	}

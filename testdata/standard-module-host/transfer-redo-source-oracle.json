@@ -1,0 +1,98 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/chain/transfer.py:3795-3870",
+  "kind": "Pinned ordinary redo_transfer_history caller; controlled history, metadata and transfer.\nNot the excluded AI retry scheduler. Actual source presence is checked in owned temp storage.\n",
+  "cases": [
+    {
+      "name": "success",
+      "result": [
+        true,
+        ""
+      ],
+      "trace": [
+        {
+          "method": "recognize_by_path",
+          "kwargs": {
+            "episode_group": null,
+            "obtain_images": true
+          }
+        },
+        {
+          "method": "delete_file"
+        },
+        {
+          "method": "do_transfer",
+          "force": true,
+          "background": false,
+          "manual": true,
+          "source": "{root}/Owned.2024.zh.srt"
+        }
+      ]
+    },
+    {
+      "name": "without_target",
+      "result": [
+        true,
+        ""
+      ],
+      "trace": [
+        {
+          "method": "recognize_by_path",
+          "kwargs": {
+            "episode_group": null,
+            "obtain_images": true
+          }
+        },
+        {
+          "method": "do_transfer",
+          "force": true,
+          "background": false,
+          "manual": true,
+          "source": "{root}/Owned.2024.zh.srt"
+        }
+      ]
+    },
+    {
+      "name": "transfer_false",
+      "result": [
+        false,
+        "owned rejection"
+      ],
+      "trace": [
+        {
+          "method": "recognize_by_path",
+          "kwargs": {
+            "episode_group": null,
+            "obtain_images": true
+          }
+        },
+        {
+          "method": "delete_file"
+        },
+        {
+          "method": "do_transfer",
+          "force": true,
+          "background": false,
+          "manual": true,
+          "source": "{root}/Owned.2024.zh.srt"
+        }
+      ]
+    },
+    {
+      "name": "history_missing",
+      "result": [
+        false,
+        "整理记录不存在"
+      ],
+      "trace": []
+    },
+    {
+      "name": "source_missing",
+      "result": [
+        false,
+        "源目录不存在：{root}/missing.srt"
+      ],
+      "trace": []
+    }
+  ]
+}

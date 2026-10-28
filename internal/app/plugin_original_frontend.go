@@ -2,8 +2,10 @@ package app
 
 import (
 	"context"
+	"net/url"
 	"reflect"
 	"slices"
+	"strings"
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/artifacts"
@@ -38,7 +40,7 @@ func (a *App) originalFrontendLocked(ctx context.Context, instance string) (*ori
 		return missing()
 	}
 	object := loaded.(*originalPluginInstance)
-	if !object.external || object.manifest.Frontend == nil || object.frontendPackageSHA256 == "" {
+	if !object.external || object.manifest.Frontend == nil || object.frontendPackageHash() == "" {
 		return missing()
 	}
 	in, err := a.pluginStore.Installation(ctx, instance)
@@ -55,7 +57,7 @@ func (a *App) originalFrontendLocked(ctx context.Context, instance string) (*ori
 		}
 		return validatePluginArtifactContract(m, contract)
 	})
-	if err != nil || installed.PackageSHA256 != object.frontendPackageSHA256 || !originalObjectStillLoaded(object) {
+	if err != nil || installed.PackageSHA256 != object.frontendPackageHash() || !originalObjectStillLoaded(object) {
 		// Do not publish filesystem paths or detailed validation errors to callers.
 		return nil, artifacts.Acquired{}, &APIError{"PLUGIN_FRONTEND_INVALID", "插件界面制品校验失败", 409}
 	}
@@ -64,11 +66,15 @@ func (a *App) originalFrontendLocked(ctx context.Context, instance string) (*ori
 
 func frontendDescriptor(instance string, installed artifacts.Acquired) originalFrontendDescriptor {
 	f := installed.Manifest.Frontend
+	entry := strings.Split(f.Entry, "/")
+	for i := range entry {
+		entry[i] = url.PathEscape(entry[i])
+	}
 	return originalFrontendDescriptor{
 		InstanceID: instance, PluginID: installed.Manifest.PluginID, Version: installed.Manifest.Version,
 		PackageSHA256: installed.PackageSHA256, Contract: f.Contract, Exposes: slices.Clone(f.Exposes),
 		Shared: slices.Clone(f.Shared), APIContract: f.APIContract,
-		EntryPath: "/plugins/" + instance + "/frontend/" + installed.PackageSHA256 + "/assets/" + f.Entry,
+		EntryPath: "/plugins/" + url.PathEscape(instance) + "/frontend/" + installed.PackageSHA256 + "/assets/" + strings.Join(entry, "/"),
 	}
 }
 

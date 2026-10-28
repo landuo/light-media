@@ -223,7 +223,7 @@ func (a *App) reconcileNativeSiteIdentitiesTx(ctx context.Context, tx *sql.Tx, p
 	// Management deletion's cache removal belongs to this same commit.
 	for _, site := range previous.Sites {
 		if _, ok := current[site.ID]; !ok {
-			if _, err = tx.ExecContext(ctx, `DELETE FROM records WHERE (kind IN ('site_connection','site_stats_latest','site_cooldown') AND id=?) OR (kind='site_stats_history' AND substr(id,1,?)=?)`, site.ID, len(site.ID)+1, site.ID+":"); err != nil {
+			if _, err = tx.ExecContext(ctx, `DELETE FROM records WHERE (kind IN ('site_connection','site_stats_latest','site_cooldown','site_icon') AND id=?) OR (kind='site_stats_history' AND substr(id,1,?)=?)`, site.ID, len(site.ID)+1, site.ID+":"); err != nil {
 				return err
 			}
 		}

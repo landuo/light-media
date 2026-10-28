@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -67,9 +68,21 @@ func (p *PluginStore) validateSiteMessageHistoryExecution(ctx context.Context, q
 	if e != nil {
 		return seedhost.ErrUnsafe
 	}
-	var current Notification
-	if cleanupJournalStrict(raw, &current) != nil {
+	var record notificationRecord
+	if cleanupJournalStrict(raw, &record) != nil {
 		return seedhost.ErrUnsafe
+	}
+	current := record.Notification
+	if len(record.ProtectedContent) > 0 {
+		var plaintext json.RawMessage
+		if p.store.Unseal(record.ProtectedContent, &plaintext) != nil {
+			return seedhost.ErrUnsafe
+		}
+		var protected originalMessageHistoryPayload
+		if cleanupJournalStrict(plaintext, &protected) != nil || protected.UTCOffset < -86400 || protected.UTCOffset > 86400 || protected.ID != record.ID || protected.CreatedAt != record.CreatedAt {
+			return seedhost.ErrUnsafe
+		}
+		current = protected.Notification
 	}
 	current.Read = false
 	if saved.Digest != p.noticeID("business-history-value", current) {

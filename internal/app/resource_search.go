@@ -33,13 +33,29 @@ func (a *App) searchResources(ctx context.Context, in SearchRequest) (SearchOutp
 		return SearchOutput{}, err
 	}
 	out := SearchOutput{Candidates: []Candidate{}, Sites: []SiteStatus{}, WorkflowID: a.workflow(ctx, in.WorkflowID, catalog.Media{}), CachedAt: now()}
-	out, err = a.searchSites(ctx, in, out, func(siteCtx context.Context, config SiteConfig) siteSearchOutput {
-		var result sites.SearchResult
+	fetch := func(siteCtx context.Context, config SiteConfig, page int) (sites.SearchResult, error) {
+		var fetched sites.SearchResult
 		err := a.withSite(siteCtx, config, false, func(client *sites.Client) error {
 			var err error
-			result, err = client.Search(siteCtx, in.Query, in.Page)
+			fetched, err = client.Search(siteCtx, in.Query, page)
 			return err
 		})
+		return fetched, err
+	}
+	if _, streaming := ctx.Value(searchProgressKey{}).(func(SearchOutput)); !streaming {
+		in.resourceBatch = &originalResourceBatchSearch{app: a, keyword: in.Query, page: in.Page, native: fetch}
+	}
+	out, err = a.searchSites(ctx, in, out, func(siteCtx context.Context, config SiteConfig) siteSearchOutput {
+		var result sites.SearchResult
+		native := func(page int) (sites.SearchResult, error) {
+			return fetch(siteCtx, config, page)
+		}
+		var err error
+		if _, streaming := siteCtx.Value(searchProgressKey{}).(func(SearchOutput)); streaming {
+			result, err = a.originalStreamResourceSite(siteCtx, config, in.Query, in.Page, native)
+		} else {
+			result, err = in.resourceBatch.site(config)
+		}
 		found := siteSearchOutput{status: a.searchStatus(siteCtx, config.ID, len(result.Resources), err, 0), candidates: []Candidate{}}
 		for _, resource := range result.Resources {
 			season, episodes := a.resourceNumberingSuggestionContext(siteCtx, resource.Title)
@@ -86,10 +102,14 @@ func (a *App) browseManagedSiteResources(ctx context.Context, key, query string,
 		HasMore bool `json:"has_more"`
 	}{SearchOutput: SearchOutput{Candidates: []Candidate{}, Sites: []SiteStatus{}, WorkflowID: a.workflow(ctx, "", catalog.Media{}), CachedAt: now()}, Page: page}
 	var result sites.SearchResult
-	err = a.withSite(ctx, config, false, func(client *sites.Client) error {
-		var err error
-		result, err = client.Search(ctx, query, page)
-		return err
+	result, err = a.originalBrowseSiteResources(ctx, config, query, page, func() (sites.SearchResult, error) {
+		var native sites.SearchResult
+		err := a.withSite(ctx, config, false, func(client *sites.Client) error {
+			var err error
+			native, err = client.Search(ctx, query, page)
+			return err
+		})
+		return native, err
 	})
 	out.HasMore = result.HasMore
 	out.Sites = append(out.Sites, a.searchStatus(ctx, key, len(result.Resources), err, 0))

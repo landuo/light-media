@@ -1,0 +1,1756 @@
+{
+  "reference_runtime": {
+    "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+    "unicode": "15.0.0",
+    "purpose": "development-only actual fixed-source replay; Go production has no Python dependency"
+  },
+  "source_config": {
+    "enabled": true,
+    "marker": "owned-source"
+  },
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/core/plugin.py:1907-2135",
+  "source_sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+  "endpoint_sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+  "kind": "actual fixed clone HTTP/helper/copy/modify/reload/start/register/folder functions; owned source files, registries and Python compiler loader boundary",
+  "excluded_in_reference": [
+    "official auth is user-excluded and returns true at original check boundary",
+    "out-of-scope final AI tool cache call omitted from start AST"
+  ],
+  "cases": [
+    {
+      "suffix": "",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverride",
+      "target_length": 19,
+      "success": false,
+      "message": "插件ID和分身后缀不能为空",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": true,
+        "marker": "owned-source"
+      },
+      "public_config": {
+        "enabled": true,
+        "marker": "owned-source"
+      },
+      "installed": true,
+      "folder_member": true,
+      "observations": []
+    },
+    {
+      "suffix": "_Copy",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverride_copy",
+      "target_length": 24,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": true,
+      "init_count": 1,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverride_copy"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverride_copy"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverride_copy",
+          "running": true
+        }
+      ],
+      "cold_loaded": true,
+      "cold_public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "uninstall": {
+        "success": true,
+        "code_exists": false,
+        "config": null,
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "AAAAAAAAAAAAAAAAAAAAA",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaa",
+      "target_length": 40,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": true,
+      "init_count": 1,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaa",
+          "running": true
+        }
+      ],
+      "cold_loaded": true,
+      "cold_public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "uninstall": {
+        "success": true,
+        "code_exists": false,
+        "config": null,
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "target_length": 96,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": true,
+      "init_count": 1,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "running": true
+        }
+      ],
+      "cold_loaded": true,
+      "cold_public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "uninstall": {
+        "success": true,
+        "code_exists": false,
+        "config": null,
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "target_length": 97,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": true,
+      "init_count": 1,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "running": true
+        }
+      ],
+      "cold_loaded": true,
+      "cold_public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "uninstall": {
+        "success": true,
+        "code_exists": false,
+        "config": null,
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "备份",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverride备份",
+      "target_length": 21,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": true,
+      "init_count": 1,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverride备份"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverride备份"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverride备份",
+          "running": true
+        }
+      ],
+      "cold_loaded": true,
+      "cold_public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "uninstall": {
+        "success": true,
+        "code_exists": false,
+        "config": null,
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "ÉCopy",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverrideécopy",
+      "target_length": 24,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": true,
+      "init_count": 1,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverrideécopy"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverrideécopy"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverrideécopy",
+          "running": true
+        }
+      ],
+      "cold_loaded": true,
+      "cold_public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "uninstall": {
+        "success": true,
+        "code_exists": false,
+        "config": null,
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "a.b",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverridea.b",
+      "target_length": 22,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverridea.b"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverridea.b"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverridea.b",
+          "running": false
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "a-b",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverridea-b",
+      "target_length": 22,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverridea-b"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverridea-b"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverridea-b",
+          "running": false
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": " ",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverride ",
+      "target_length": 20,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverride "
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverride "
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverride ",
+          "running": false
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "İCopy",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverridei̇copy",
+      "target_length": 25,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": true,
+      "init_count": 1,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverridei̇copy"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverridei̇copy"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverridei̇copy",
+          "running": true
+        }
+      ],
+      "cold_loaded": true,
+      "cold_public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "uninstall": {
+        "success": true,
+        "code_exists": false,
+        "config": null,
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "ΟΣ",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverrideος",
+      "target_length": 21,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": true,
+      "init_count": 1,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverrideος"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverrideος"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverrideος",
+          "running": true
+        }
+      ],
+      "cold_loaded": true,
+      "cold_public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "uninstall": {
+        "success": true,
+        "code_exists": false,
+        "config": null,
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "K",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverridek",
+      "target_length": 20,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": true,
+      "init_count": 1,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverridek"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverridek"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverridek",
+          "running": true
+        }
+      ],
+      "cold_loaded": true,
+      "cold_public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "uninstall": {
+        "success": true,
+        "code_exists": false,
+        "config": null,
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "Ａ",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverrideａ",
+      "target_length": 20,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverrideａ"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverrideａ"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverrideａ",
+          "running": false
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "é",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverrideé",
+      "target_length": 21,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverrideé"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverrideé"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverrideé",
+          "running": false
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "a·b",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverridea·b",
+      "target_length": 22,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": true,
+      "init_count": 1,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverridea·b"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverridea·b"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverridea·b",
+          "running": true
+        }
+      ],
+      "cold_loaded": true,
+      "cold_public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "uninstall": {
+        "success": true,
+        "code_exists": false,
+        "config": null,
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "target_length": 255,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": true,
+      "init_count": 1,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "running": true
+        }
+      ],
+      "cold_loaded": true,
+      "cold_public_config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "uninstall": {
+        "success": true,
+        "code_exists": false,
+        "config": null,
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "target_length": 256,
+      "success": false,
+      "message": "创建插件分身失败：[Errno 63] File name too long: '/var/folders/kb/qtfry4pd46s2n08g7frpj8280000gn/T/tmpgp57_81w/app/plugins/ownedmoduleoverrideaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'",
+      "code_exists": false,
+      "loaded": false,
+      "init_count": null,
+      "config": null,
+      "public_config": {},
+      "installed": false,
+      "folder_member": false,
+      "observations": []
+    },
+    {
+      "suffix": "💫",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverride💫",
+      "target_length": 20,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverride💫"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverride💫"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverride💫",
+          "running": false
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "!",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverride!",
+      "target_length": 20,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverride!"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverride!"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverride!",
+          "running": false
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "a?b",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverridea?b",
+      "target_length": 22,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverridea?b"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverridea?b"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverridea?b",
+          "running": false
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "a#b",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverridea#b",
+      "target_length": 22,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverridea#b"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverridea#b"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverridea#b",
+          "running": false
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "a%b",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverridea%b",
+      "target_length": 22,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverridea%b"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverridea%b"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverridea%b",
+          "running": false
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "a:b",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverridea:b",
+      "target_length": 22,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverridea:b"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverridea:b"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverridea:b",
+          "running": false
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "a'b",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverridea'b",
+      "target_length": 22,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverridea'b"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverridea'b"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverridea'b",
+          "running": false
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "a\"b",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverridea\"b",
+      "target_length": 22,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverridea\"b"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverridea\"b"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverridea\"b",
+          "running": false
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "a+b",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverridea+b",
+      "target_length": 22,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverridea+b"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverridea+b"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverridea+b",
+          "running": false
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    },
+    {
+      "suffix": "a;b",
+      "source_id": "OwnedModuleOverride",
+      "target_id": "OwnedModuleOverridea;b",
+      "target_length": 22,
+      "success": true,
+      "message": "插件分身创建成功",
+      "code_exists": true,
+      "loaded": false,
+      "init_count": null,
+      "config": {
+        "enabled": false,
+        "marker": "owned-source",
+        "enable": false
+      },
+      "public_config": {},
+      "installed": true,
+      "folder_member": true,
+      "observations": [
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        },
+        {
+          "stage": "reload-event",
+          "kind": "plugin.reload"
+        },
+        {
+          "stage": "register-services",
+          "plugin_id": "OwnedModuleOverridea;b"
+        },
+        {
+          "stage": "register-commands",
+          "plugin_id": "OwnedModuleOverridea;b"
+        },
+        {
+          "stage": "register-api",
+          "plugin_id": "OwnedModuleOverridea;b",
+          "running": false
+        },
+        {
+          "stage": "load",
+          "error": "SyntaxError"
+        }
+      ],
+      "cold_loaded": false,
+      "cold_public_config": {},
+      "uninstall": {
+        "success": true,
+        "code_exists": true,
+        "config": {
+          "enabled": false,
+          "marker": "owned-source",
+          "enable": false
+        },
+        "public_config": {},
+        "installed": false,
+        "folder_member": false,
+        "loaded": false,
+        "class_registered": false
+      }
+    }
+  ]
+}

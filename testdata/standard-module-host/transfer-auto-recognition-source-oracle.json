@@ -1,0 +1,83 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:1782-1857",
+    "app/chain/media.py:723-779"
+  ],
+  "kind": "Run the pinned ordinary transfer recognition prefix and MediaChain implementation.\n\nOnly the prefix before the failure-notification/AI branch is extracted. Provider\nand database boundaries are controlled; source conditionals and image order run.\n",
+  "cases": [
+    {
+      "name": "automatic_success",
+      "trace": [
+        {
+          "method": "recognize_media",
+          "by_meta": true
+        },
+        {
+          "method": "obtain_images"
+        }
+      ],
+      "recognized": true,
+      "poster_path": "mutated-input"
+    },
+    {
+      "name": "automatic_missing",
+      "trace": [
+        {
+          "method": "recognize_media",
+          "by_meta": true
+        }
+      ],
+      "recognized": false,
+      "poster_path": null
+    },
+    {
+      "name": "preloaded",
+      "trace": [],
+      "recognized": true,
+      "poster_path": null
+    },
+    {
+      "name": "history_id",
+      "trace": [
+        {
+          "method": "recognize_media",
+          "by_meta": false
+        },
+        {
+          "method": "obtain_images"
+        }
+      ],
+      "recognized": true,
+      "poster_path": "mutated-input"
+    },
+    {
+      "name": "history_without_id",
+      "trace": [
+        {
+          "method": "recognize_media",
+          "by_meta": true
+        },
+        {
+          "method": "obtain_images"
+        }
+      ],
+      "recognized": true,
+      "poster_path": "mutated-input"
+    },
+    {
+      "name": "history_year_conflict",
+      "trace": [
+        {
+          "method": "recognize_media",
+          "by_meta": true
+        },
+        {
+          "method": "obtain_images"
+        }
+      ],
+      "recognized": true,
+      "poster_path": "mutated-input"
+    }
+  ]
+}

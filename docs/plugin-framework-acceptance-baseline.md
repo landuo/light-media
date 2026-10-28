@@ -1,3 +1,9 @@
+# 历史有限验收基线
+
+当前任务与唯一状态表见 [任务说明](plugin-module-continuation-20261025.md) 和 [50 节对照表](plugin-module-parity-matrix.md)。下方旧 G16/G17 已按用户要求排除，不计入当前未完成项或阻塞；旧组不再作为当前任务总数。
+
+---
+
 # 插件框架有限验收基线（2026-10-24）
 
 ## 当前范围和状态
@@ -38,6 +44,10 @@
 - G26：External notification delivery
 - G27：Original market history/statistics/ratings/telemetry
 - G28：Rich original core business-event payloads
+
+## 后续进展
+
+2026-10-25 的续开发、真实入口验证与未关闭项见 [插件模块续开发核查](plugin-module-continuation-20261025.md)。本文件以下记录保留为 2026-10-24 的历史证据，不代表当前所有能力均已验收。
 
 ## 本次已验证的小批次
 

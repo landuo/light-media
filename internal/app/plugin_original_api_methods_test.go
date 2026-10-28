@@ -83,7 +83,7 @@ func TestPluginOriginalAPIMethodActualWorker(t *testing.T) {
 	}
 	before, _ := json.Marshal(object.manifest)
 	first, err := object.getAPIs(context.Background())
-	if err != nil || len(first) != 1 || first[0].Path != "/actual" || !reflect.DeepEqual(first[0].Methods, []string{"GET", "PATCH"}) || first[0].Auth != "" {
+	if err != nil || len(first) != 1 || first[0].Path != "/actual" || !reflect.DeepEqual(first[0].Methods, []string{"GET", "PATCH"}) || first[0].Auth != "apikey" {
 		t.Fatalf("actual raw get_api differs from declaration: %+v %v", first, err)
 	}
 	setMode := func(mode string) {

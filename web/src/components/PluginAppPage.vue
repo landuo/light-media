@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import { ref, shallowRef, markRaw, onMounted, onUnmounted, type Component } from 'vue';
+import { ref, shallowRef, markRaw, watch, onUnmounted, type Component } from 'vue';
 import { VAlert } from 'vuetify/components/VAlert';
 import { VSkeletonLoader } from 'vuetify/components/VSkeletonLoader';
 import { VThemeProvider } from 'vuetify/components/VThemeProvider';
-import { api, errorText } from '../api';
-import type { PluginCard } from '../features/plugin-forms';
-import { loadPluginRemote } from '../features/plugin-federation';
+import { errorText } from '../api';
+import { loadPluginAppRemote } from '../features/plugin-federation';
 import { createPluginRemoteAPI } from '../features/plugin-remote-api';
-import { parsePluginNavigationRoute, type PluginNavigationItem } from '../features/plugin-navigation';
+import { parsePluginNavigationRoute } from '../features/plugin-navigation';
 
 const props = defineProps<{ route: string }>();
 const emit = defineEmits<{ changed: [] }>();
@@ -16,33 +15,38 @@ const navKey = ref('');
 const remote = shallowRef<Component>();
 const remoteAPI = shallowRef<ReturnType<typeof createPluginRemoteAPI>>();
 const error = ref('');
-const controller = new AbortController();
-let active = true;
+let controller = new AbortController(),
+  active = true,
+  revision = 0;
 
-onMounted(async () => {
+async function load() {
+  controller.abort();
+  controller = new AbortController();
+  const current = ++revision;
+  remote.value = undefined;
+  error.value = '';
   try {
     const { instance, navKey: key } = parsePluginNavigationRoute(props.route);
-    const [cards, navigation] = await Promise.all([
-      api<PluginCard[]>('/plugins'), api<PluginNavigationItem[]>('/plugins/navigation'),
-    ]);
-    if (!active) return;
-    const plugin = cards.find((card) => card.instance_id === instance && card.installed);
-    if (!plugin || !navigation.some((item) => item.instance_id === instance && item.nav_key === key))
-      throw new Error('插件未安装或未声明此全页入口');
-    const { component, descriptor } = await loadPluginRemote(instance, 'AppPage', {
-      signal: controller.signal, version: plugin.version,
+    // The fixed route loads an existing remote directly. Sidebar declarations
+    // determine menu placement, not whether an AppPage can be opened by URL.
+    const { component, descriptor } = await loadPluginAppRemote(instance, key, {
+      signal: controller.signal,
     });
-    if (!active) return;
-    pluginID.value = descriptor.plugin_id;
+    if (!active || current !== revision) return;
+    pluginID.value = descriptor.instance_id;
     navKey.value = key;
     remoteAPI.value = createPluginRemoteAPI(
-      descriptor.plugin_id, descriptor.instance_id, controller.signal, () => emit('changed'),
+      descriptor.plugin_id,
+      descriptor.instance_id,
+      controller.signal,
+      () => emit('changed'),
     );
     remote.value = markRaw(component);
   } catch (e) {
-    if (active) error.value = errorText(e);
+    if (active && current === revision) error.value = errorText(e);
   }
-});
+}
+watch(() => props.route, load, { immediate: true });
 onUnmounted(() => {
   active = false;
   controller.abort();

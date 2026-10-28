@@ -1,0 +1,291 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:2004-2064",
+    "app/chain/transfer.py:3536-3559",
+    "app/modules/filemanager/transhandler.py:83-137",
+    "app/modules/filemanager/transhandler.py:389-419"
+  ],
+  "kind": "Pinned transfer dispatcher, FileManager, native file-preview branch and preview callback.\nStorage selection and rename rendering are controlled boundaries; the real\nTransHandler preview helpers/branch and real nested _preview_callback execute.\nAll preexisting targets and source files are disposable local test files.\n",
+  "cases": [
+    {
+      "name": "none",
+      "plugin": null,
+      "throws": false,
+      "result": [
+        true,
+        null
+      ],
+      "exception": null,
+      "preview_items": [
+        {
+          "source": "{root}/Source.mkv",
+          "target": "{root}/Owned (2024)/Source.mkv",
+          "target_dir": "{root}/Owned (2024)",
+          "success": true,
+          "message": null,
+          "type": "电影",
+          "title": "Owned (2024)",
+          "season": null,
+          "episode": null,
+          "episode_end": null,
+          "part": null,
+          "org_string": "Source.mkv",
+          "apply_words": [],
+          "resource_team": null,
+          "customization": null
+        }
+      ],
+      "trace": [
+        "plugin",
+        "native_preview"
+      ],
+      "source_bytes": "owned preview content",
+      "target_bytes": "preexisting target",
+      "errors": 0
+    },
+    {
+      "name": "false",
+      "plugin": false,
+      "throws": false,
+      "result": [
+        false,
+        "文件整理模块运行失败"
+      ],
+      "exception": null,
+      "preview_items": [],
+      "trace": [
+        "plugin"
+      ],
+      "source_bytes": "owned preview content",
+      "target_bytes": "preexisting target",
+      "errors": 0
+    },
+    {
+      "name": "empty_list",
+      "plugin": [],
+      "throws": false,
+      "result": [
+        false,
+        "文件整理模块运行失败"
+      ],
+      "exception": null,
+      "preview_items": [],
+      "trace": [
+        "plugin",
+        "native_preview"
+      ],
+      "source_bytes": "owned preview content",
+      "target_bytes": "preexisting target",
+      "errors": 0
+    },
+    {
+      "name": "list",
+      "plugin": [
+        "plugin"
+      ],
+      "throws": false,
+      "result": null,
+      "exception": "AttributeError",
+      "preview_items": [],
+      "trace": [
+        "plugin",
+        "native_preview"
+      ],
+      "source_bytes": "owned preview content",
+      "target_bytes": "preexisting target",
+      "errors": 0
+    },
+    {
+      "name": "empty_dict",
+      "plugin": {},
+      "throws": false,
+      "result": [
+        false,
+        "文件整理模块运行失败"
+      ],
+      "exception": null,
+      "preview_items": [],
+      "trace": [
+        "plugin"
+      ],
+      "source_bytes": "owned preview content",
+      "target_bytes": "preexisting target",
+      "errors": 0
+    },
+    {
+      "name": "dict_success",
+      "plugin": {
+        "success": true
+      },
+      "throws": false,
+      "result": null,
+      "exception": "AttributeError",
+      "preview_items": [],
+      "trace": [
+        "plugin"
+      ],
+      "source_bytes": "owned preview content",
+      "target_bytes": "preexisting target",
+      "errors": 0
+    },
+    {
+      "name": "model_false",
+      "plugin": {
+        "__plugin_transfer_info": {
+          "success": false,
+          "message": "owned preview veto"
+        }
+      },
+      "throws": false,
+      "result": [
+        false,
+        "owned preview veto"
+      ],
+      "exception": null,
+      "preview_items": [
+        {
+          "source": "{root}/Source.mkv",
+          "target": null,
+          "target_dir": null,
+          "success": false,
+          "message": "owned preview veto",
+          "type": "电影",
+          "title": "Owned (2024)",
+          "season": null,
+          "episode": null,
+          "episode_end": null,
+          "part": null,
+          "org_string": "Source.mkv",
+          "apply_words": [],
+          "resource_team": null,
+          "customization": null
+        }
+      ],
+      "trace": [
+        "plugin"
+      ],
+      "source_bytes": "owned preview content",
+      "target_bytes": "preexisting target",
+      "errors": 0
+    },
+    {
+      "name": "model_default",
+      "plugin": {
+        "__plugin_transfer_info": {}
+      },
+      "throws": false,
+      "result": [
+        true,
+        null
+      ],
+      "exception": null,
+      "preview_items": [
+        {
+          "source": "{root}/Source.mkv",
+          "target": null,
+          "target_dir": null,
+          "success": true,
+          "message": null,
+          "type": "电影",
+          "title": "Owned (2024)",
+          "season": null,
+          "episode": null,
+          "episode_end": null,
+          "part": null,
+          "org_string": "Source.mkv",
+          "apply_words": [],
+          "resource_team": null,
+          "customization": null
+        }
+      ],
+      "trace": [
+        "plugin"
+      ],
+      "source_bytes": "owned preview content",
+      "target_bytes": "preexisting target",
+      "errors": 0
+    },
+    {
+      "name": "model_target",
+      "plugin": {
+        "__plugin_transfer_info": {
+          "success": true,
+          "target_item": {
+            "storage": "local",
+            "type": "file",
+            "path": "{root}/custom/Preview.mkv",
+            "name": "Preview.mkv"
+          }
+        }
+      },
+      "throws": false,
+      "result": [
+        true,
+        null
+      ],
+      "exception": null,
+      "preview_items": [
+        {
+          "source": "{root}/Source.mkv",
+          "target": "{root}/custom/Preview.mkv",
+          "target_dir": null,
+          "success": true,
+          "message": null,
+          "type": "电影",
+          "title": "Owned (2024)",
+          "season": null,
+          "episode": null,
+          "episode_end": null,
+          "part": null,
+          "org_string": "Source.mkv",
+          "apply_words": [],
+          "resource_team": null,
+          "customization": null
+        }
+      ],
+      "trace": [
+        "plugin"
+      ],
+      "source_bytes": "owned preview content",
+      "target_bytes": "preexisting target",
+      "errors": 0
+    },
+    {
+      "name": "throw",
+      "plugin": null,
+      "throws": true,
+      "result": [
+        true,
+        null
+      ],
+      "exception": null,
+      "preview_items": [
+        {
+          "source": "{root}/Source.mkv",
+          "target": "{root}/Owned (2024)/Source.mkv",
+          "target_dir": "{root}/Owned (2024)",
+          "success": true,
+          "message": null,
+          "type": "电影",
+          "title": "Owned (2024)",
+          "season": null,
+          "episode": null,
+          "episode_end": null,
+          "part": null,
+          "org_string": "Source.mkv",
+          "apply_words": [],
+          "resource_team": null,
+          "customization": null
+        }
+      ],
+      "trace": [
+        "plugin",
+        "native_preview"
+      ],
+      "source_bytes": "owned preview content",
+      "target_bytes": "preexisting target",
+      "errors": 1
+    }
+  ]
+}

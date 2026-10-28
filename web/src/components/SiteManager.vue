@@ -496,7 +496,11 @@ onUnmounted(() => {
       >
         <div class="site-card-body">
           <div class="site-card-title">
-            <SiteIcon :url="homepage(row)" :name="row.config.name" />
+            <SiteIcon
+              :url="homepage(row)"
+              :name="row.config.name"
+              :cached="`/api/sites/manage/${encodeURIComponent(row.config.id)}/icon`"
+            />
             <div class="site-card-identity">
               <h2>{{ row.config.name }}</h2>
               <span

@@ -97,7 +97,7 @@ func (a *App) handler() http.Handler {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Referrer-Policy", "same-origin")
 		w.Header().Set("X-Frame-Options", "DENY")
-		if a.servePluginOrganizationCompatAPI(w, r) || a.servePluginCustomAPI(w, r) {
+		if a.servePluginOrganizationCompatAPI(w, r) || a.servePluginCustomAPI(w, r) || a.serveOriginalSchedulerTokenAPI(w, r) {
 			return
 		}
 		if strings.HasPrefix(r.URL.Path, "/api/") {
@@ -111,7 +111,10 @@ func (a *App) handler() http.Handler {
 					return
 				}
 			}
-			if r.URL.Path != "/api/auth/status" && r.URL.Path != "/api/auth/login" && r.URL.Path != "/api/auth/setup" && !a.authenticated(r) {
+			if r.URL.Path != "/api/auth/status" && r.URL.Path != "/api/auth/login" && r.URL.Path != "/api/auth/setup" && r.URL.Path != "/api/auth/providers" && r.URL.Path != "/api/auth/exchange" && !a.authenticated(r) {
+				if a.serveOriginalPluginFrontend(w, r) || a.serveOriginalAuthFrontendDescriptor(w, r) {
+					return
+				}
 				a.writeError(w, r, &APIError{"UNAUTHORIZED", "请先登录", 401})
 				return
 			}
@@ -125,6 +128,9 @@ func (a *App) handler() http.Handler {
 func (a *App) api(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	p := strings.TrimPrefix(r.URL.Path, "/api/")
+	if a.serveOriginalCatalogSources(w, r, p) || a.serveOriginalCatalogMedia(w, r, p) {
+		return
+	}
 	if a.standardWebCommandHTTP(w, r, p) {
 		return
 	}
@@ -148,6 +154,10 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		out, e = a.originalManagerHTTP(w, r, strings.TrimPrefix(strings.TrimPrefix(p, "plugins"), "/"))
 	case p == "auth/status" && method == "GET":
 		out = map[string]any{"setup_required": !a.hasAdmin(), "authenticated": a.authenticated(r)}
+	case p == "auth/providers" && method == http.MethodGet:
+		out, e = a.originalAuthProviders(ctx)
+	case p == "auth/exchange" && method == http.MethodPost:
+		out, e = a.originalAuthExchange(w, r)
 	case (p == "auth/login" || p == "auth/setup") && method == "POST":
 		_, e = a.auth(w, r)
 		out = map[string]bool{"authenticated": e == nil}
@@ -233,6 +243,9 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 			out, e = a.deleteManagedSite(ctx, parts[0])
 		} else if len(parts) == 2 && parts[1] == "refresh" && method == "POST" {
 			out, e = a.refreshManagedSite(ctx, parts[0])
+		} else if len(parts) == 2 && parts[1] == "icon" && method == "GET" {
+			a.serveManagedSiteIcon(w, r, parts[0])
+			return
 		} else if len(parts) == 2 && parts[1] == "history" && method == "GET" {
 			out, e = a.managedSiteHistory(ctx, parts[0])
 		} else if len(parts) == 2 && parts[1] == "resources" && method == "POST" {
@@ -263,7 +276,13 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 			e = &APIError{"NOT_FOUND", "接口不存在", 404}
 		}
 	case p == "catalog/recommend/sources" && method == "GET":
-		out = map[string]any{"sources": catalog.RecommendSources()}
+		var extra []map[string]any
+		extra, e = a.originalCatalogSources(ctx, "recommend")
+		out = map[string]any{"sources": catalog.RecommendSources(), "extra_sources": extra}
+	case p == "catalog/explore/sources" && method == "GET":
+		var extra []map[string]any
+		extra, e = a.originalCatalogSources(ctx, "discover")
+		out = map[string]any{"extra_sources": extra}
 	case p == "catalog/recommend" && method == "GET":
 		out, e = a.catalogRecommendAPI(r)
 	case p == "catalog/recommend/preferences" && method == "GET":
@@ -349,6 +368,10 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		}
 	case p == "downloads" && method == "GET":
 		out, e = a.downloadList(ctx, r.URL.Query().Get("downloader_id"))
+	case strings.HasPrefix(p, "downloads/native/") && method == "GET":
+		var record NativeDownload
+		e = a.Store.Get(ctx, "native_download", strings.TrimPrefix(p, "downloads/native/"), &record)
+		out = record
 	case strings.HasPrefix(p, "downloads/") && strings.HasSuffix(p, "/files") && method == "GET":
 		out, e = a.downloadFiles(ctx, strings.TrimSuffix(strings.TrimPrefix(p, "downloads/"), "/files"))
 	case strings.HasPrefix(p, "downloads/") && strings.HasSuffix(p, "/import-preview") && method == "POST":
@@ -399,6 +422,27 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 			e = a.Store.Get(ctx, "subscription", key, &s)
 			if e == nil {
 				out, e = a.enqueue(ctx, "subscription", map[string]any{"id": key, "revision": s.Revision}, id("wf_"))
+			}
+		} else if strings.HasSuffix(key, "/reset") && method == "POST" {
+			key = strings.TrimSuffix(key, "/reset")
+			var saved Subscription
+			saved, e = a.resetSubscription(ctx, key)
+			if e == nil {
+				out, e = a.subscriptionEditorValue(ctx, saved)
+			}
+		} else if strings.HasSuffix(key, "/status") && method == "PUT" {
+			key = strings.TrimSuffix(key, "/status")
+			var in struct {
+				State    string `json:"state"`
+				Revision int    `json:"revision"`
+			}
+			e = decodeBody(w, r, &in)
+			if e == nil {
+				var saved Subscription
+				saved, e = a.saveSubscriptionStatus(ctx, key, in.State, in.Revision)
+				if e == nil {
+					out, e = a.subscriptionEditorValue(ctx, saved)
+				}
 			}
 		} else if method == "PUT" {
 			var in SubscriptionRequest
@@ -545,6 +589,8 @@ func (a *App) publicSettings() map[string]any {
 	c := a.Settings()
 	secretState := map[string]any{"tmdb": c.TMDB.APIKey != "" || c.TMDB.AccessToken != "", "fnos": c.FNOS.Password != "", "api_token": c.APIToken != ""}
 	secretState["proxy_host"] = c.ProxyHost != ""
+	secretState["github_token"], secretState["repo_github_token"] = c.GitHubToken != "", c.RepoGitHubToken != ""
+	c.GitHubToken, c.RepoGitHubToken = "", ""
 	proxyEndpoint := networkproxy.Endpoint(c.ProxyHost)
 	c.ProxyHost = ""
 	c.ClearProxyHost = false
@@ -649,6 +695,11 @@ func validateFNOSCredentialChange(incoming, previous FNConfig) error {
 
 func (a *App) preserveSecrets(c *Settings) {
 	c.PluginMarkets = a.Settings().PluginMarkets
+	c.PluginLocalRepoPaths = a.Settings().PluginLocalRepoPaths
+	c.PluginAutoReload = a.Settings().PluginAutoReload
+	c.PluginServerURL = a.Settings().PluginServerURL
+	c.PluginStatisticShare = a.Settings().PluginStatisticShare
+	c.GitHubProxy, c.GitHubToken, c.RepoGitHubToken = a.Settings().GitHubProxy, a.Settings().GitHubToken, a.Settings().RepoGitHubToken
 	// The system settings form does not edit these controls. Its cached full
 	// snapshot must not overwrite newer changes made in the plugin/site flow.
 	c.IndexerSites = a.Settings().IndexerSites
@@ -890,6 +941,10 @@ func (a *App) catalogAPI(r *http.Request, action string) (any, error) {
 	var e error
 	switch action {
 	case "browse", "search":
+		if action == "search" {
+			result, e = a.originalCatalogSearch(ctx, query, kind, q.Get("source"), page, 20)
+			break
+		}
 		var p catalog.Page
 		key := action + ":" + kind + ":" + q.Get("list") + ":" + query + ":" + strconv.Itoa(page)
 		ttl := time.Hour
@@ -906,34 +961,38 @@ func (a *App) catalogAPI(r *http.Request, action string) (any, error) {
 			e = a.decorateMedia(ctx, p.Results)
 		}
 		result = map[string]any{"results": p.Results, "page": p.Page, "total_pages": p.TotalPages, "total_results": p.TotalResults, "has_more": p.Page < p.TotalPages, "cached_at": cachedAt}
+	case "detail/credits", "detail/recommendations":
+		result, e = a.originalCatalogRelated(ctx, q.Get("source"), kind, q.Get("source_id"), strings.TrimPrefix(action, "detail/"))
 	case "detail":
-		var m catalog.Media
-		m, e = a.media(ctx, kind, int64(atoi(q.Get("id"))))
-		if e == nil {
-			items := []catalog.Media{m}
-			e = a.decorateMedia(ctx, items)
-			m = items[0]
-		}
-		result = m
+		result, e = a.originalCatalogTMDBDetail(ctx, kind, int64(atoi(q.Get("id"))))
+	case "seasons":
+		result, e = a.originalCatalogSeasons(ctx, int64(atoi(q.Get("id"))))
 	case "season":
 		var s catalog.Season
-		s, e = a.season(ctx, int64(atoi(q.Get("id"))), atoi(q.Get("season")))
+		var group any
+		if q.Has("episode_group") {
+			group = q.Get("episode_group")
+		}
+		s, e = a.originalCatalogSeason(ctx, int64(atoi(q.Get("id"))), atoi(q.Get("season")), group)
 		result = s
 	case "person":
-		var p catalog.Person
-		_, e = a.cached(ctx, "person:"+q.Get("id"), 7*24*time.Hour, &p, func() (any, error) { return a.catalog().Person(ctx, int64(atoi(q.Get("id")))) })
-		result = p
+		var p json.RawMessage
+		result, e = a.originalCatalogPerson(ctx, int64(atoi(q.Get("id"))), func() (json.RawMessage, error) {
+			_, err := a.cached(ctx, "source-person:"+q.Get("id"), 7*24*time.Hour, &p, func() (any, error) { return a.catalog().SourcePersonInformation(ctx, int64(atoi(q.Get("id")))) })
+			return p, err
+		})
 	case "person/credits":
-		var p catalog.Page
-		_, e = a.cached(ctx, "credits:"+q.Get("id"), 24*time.Hour, &p, func() (any, error) { return a.catalog().PersonCredits(ctx, int64(atoi(q.Get("id")))) })
-		result = p
+		result, e = a.originalCatalogPersonCredits(ctx, int64(atoi(q.Get("id"))), page, func() (catalog.Page, error) {
+			var p catalog.Page
+			_, err := a.cached(ctx, "source-credits:"+q.Get("id")+":"+strconv.Itoa(page), 24*time.Hour, &p, func() (any, error) { return a.catalog().SourcePersonCredits(ctx, int64(atoi(q.Get("id"))), page) })
+			if err != nil {
+				a.log("WARN", "catalog", "source_person_credits_failed", "人物参演作品读取失败", "", "")
+				return catalog.Page{Results: []catalog.Media{}, Page: page, TotalPages: page}, nil
+			}
+			return p, nil
+		})
 	default:
 		e = &APIError{"NOT_FOUND", "接口不存在", 404}
-	}
-	if action == "person/credits" && e == nil {
-		p := result.(catalog.Page)
-		e = a.decorateMedia(ctx, p.Results)
-		result = p
 	}
 	return result, e
 }
@@ -946,6 +1005,24 @@ func (a *App) media(ctx context.Context, kind string, tmdb int64) (catalog.Media
 	return m, e
 }
 func (a *App) season(ctx context.Context, tmdb int64, n int) (catalog.Season, error) {
+	groups, err := a.originalPluginModules(ctx, "")
+	if err != nil {
+		return catalog.Season{}, err
+	}
+	if !originalModuleGroupsHaveMethod(groups, "tmdb_episodes") {
+		return a.nativeSeason(ctx, tmdb, n)
+	}
+	view := catalog.Season{SeriesID: tmdb, SeasonNumber: n}
+	rows, err := a.originalCatalogEpisodesMethod(ctx, "tmdb_episodes", tmdb, n, nil, func() (json.RawMessage, error) {
+		return a.originalCatalogNativeEpisodeRows(ctx, tmdb, n, nil, &view)
+	}, groups)
+	if err != nil {
+		return catalog.Season{}, err
+	}
+	return originalCatalogSeasonProjection(view, rows)
+}
+
+func (a *App) nativeSeason(ctx context.Context, tmdb int64, n int) (catalog.Season, error) {
 	var s catalog.Season
 	_, e := a.cached(ctx, fmt.Sprintf("season:%d:%d", tmdb, n), 12*time.Hour, &s, func() (any, error) { return a.catalog().Season(ctx, tmdb, n) })
 	return s, e

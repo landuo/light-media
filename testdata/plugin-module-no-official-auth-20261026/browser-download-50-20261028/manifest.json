@@ -1,0 +1,344 @@
+{
+  "build": {
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "binaries": [
+      {
+        "name": "server-platform50-20261027-linux",
+        "sha256": "93734d99571f4995ca6767c69eb383772ab491c826e19fd67089ec29e86d1bd2",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform50-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3734,
+        "changed": [],
+        "elapsed_seconds": 4.51
+      },
+      {
+        "name": "process-platform50-20261027-linux.test",
+        "sha256": "941265e01d8efaa450d2ce2e35cc822b7d63f06266c3dcbfc48cd390455ef686",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform50-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4224,
+        "changed": [],
+        "elapsed_seconds": 8.6
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "original": "internal/app/file_content.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/internal/app/file_content.go.gz",
+      "sha256": "fd69a05261dd8fd5c8145a6b4e3a4fd2b217db9de85d479c9d6e15c096307275",
+      "stored_sha256": "abf0e47dffa5830191f4a423b00431f7671feb2cefc997d80fd1c78e7a4718b9"
+    },
+    {
+      "original": "internal/app/plugin_module_process_browser_download_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/internal/app/plugin_module_process_browser_download_test.go.gz",
+      "sha256": "eae8464c7df0098e9e839b8d08b45240dc3667913072be3b733937b8671bc891",
+      "stored_sha256": "05d465f81f914f6d660ac938ccf2afd988ee9177f001e8082d876ce1c3e46a6e"
+    },
+    {
+      "original": "internal/app/plugin_module_process_services_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/internal/app/plugin_module_process_services_test.go.gz",
+      "sha256": "ed53f33ce67de666a3025768cbe0317d4115b06ba1bbf54a2131c0a5d2346331",
+      "stored_sha256": "1d29d35f7d148508d606f12f0dc95624c9541ea66a1024c90f84b4efecd4087e"
+    },
+    {
+      "original": "internal/app/plugin_original_browser_download.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/internal/app/plugin_original_browser_download.go.gz",
+      "sha256": "65417eac9cb456a8315054ebb31e5ae18b7093dbb06fdff6218c50f7f0240ac2",
+      "stored_sha256": "731428d17c0df1cdf4089eda489cef55605a72aa704bf5fe430f0e8bd5186541"
+    },
+    {
+      "original": "internal/app/plugin_original_browser_download_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/internal/app/plugin_original_browser_download_test.go.gz",
+      "sha256": "153cca6173209826f03e4c25af41281833561619d6a62d02fc1912d1594a78db",
+      "stored_sha256": "f3f711f423321bc8bc41ea694f94df41c29d29b26e91b161ac2264603580ac47"
+    },
+    {
+      "original": "testdata/standard-module-host/browser-download-source-oracle.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/testdata/standard-module-host/browser-download-source-oracle.json.gz",
+      "sha256": "46b16e3dcaa15cd725aa4e7c9930834546dd3c75096c50e39a973d9c6f097c75",
+      "stored_sha256": "5b02d2ec2e7a3ec7555c027fcb3f0a6abb191b1ddcf5a6892a4e1f43590af507"
+    },
+    {
+      "original": "testdata/standard-module-host/generate-browser-download-oracle.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/testdata/standard-module-host/generate-browser-download-oracle.py.gz",
+      "sha256": "34c663f0118affab30d79796d8acd3af514a3ebe4326faa2090d1796f828141a",
+      "stored_sha256": "be051db6b1c7cb794e0ae54d70a9b4a07aaddd115ef82535d0be6c62e22a5ea8"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/archive-download50.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/archive-download50.py.gz",
+      "sha256": "2ec81da4e27d0da657d280f893f76d4e7851c0fa1935df5eeebb1ce020d08773",
+      "stored_sha256": "e5cc148a1b68601145d27f9fddceb23985ad12803798534ff8b637e76fdc4f05"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/build-platform50.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/build-platform50.py.gz",
+      "sha256": "a0936d65fde78cbbb35d6bc90d01875bda29f0e5c9f0a5f7f49bcdccb9b1b7b5",
+      "stored_sha256": "e0bc7e089c5be72b6ba3e2f5d4255c149ff676f4a7302b9ecac7b73491852c37"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-browser/clone-preview-download.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-browser/clone-preview-download.dom.txt.gz",
+      "sha256": "9e1120dd584590fee0303419aaec8975eb8a2d93c9ab76096726eac882077f96",
+      "stored_sha256": "3e6f38b05bfb0281f2efbc60397ab96a3f4b63204f0c6dcbe3e8e64043dd444d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-browser/clone-preview-download.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-browser/clone-preview-download.png",
+      "sha256": "51f9f31ce97a31e4a750693b1623ffea89d36a388d8bfaab6de056e757d63512",
+      "stored_sha256": "51f9f31ce97a31e4a750693b1623ffea89d36a388d8bfaab6de056e757d63512"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-browser/cold-preview.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-browser/cold-preview.dom.txt.gz",
+      "sha256": "2c1f3f1569b33be8c6f6fbbf34a4b6966be23b37bced3420d17b0423a1bb433f",
+      "stored_sha256": "5d39ef2a8d499a01c556efcd9c5d7fc3f00969d0dfa91d83d5e1626ca2f4c343"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-browser/cold-preview.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-browser/cold-preview.png",
+      "sha256": "67a1ba5e02549dc037e2668f9ee5b03fdfce595d7c7d32e2da239040ac28992e",
+      "stored_sha256": "67a1ba5e02549dc037e2668f9ee5b03fdfce595d7c7d32e2da239040ac28992e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-browser/download-proof.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-browser/download-proof.json.gz",
+      "sha256": "d791e90c4f3150ab6d05751186d479f9792f97bf5341c64cf6085e14a3c4e766",
+      "stored_sha256": "805e9565acf4e9f5ca98d2ec20ef3fe2d547724778081d3e7220770ba5c685d0"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-browser/downloaded-Native.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-browser/downloaded-Native.png",
+      "sha256": "29ac9e01d4f53b8cf39e7a9d79335042920159f7b0380fba380140d77dba2dbb",
+      "stored_sha256": "29ac9e01d4f53b8cf39e7a9d79335042920159f7b0380fba380140d77dba2dbb"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-browser/preview-observations.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-browser/preview-observations.json.gz",
+      "sha256": "d5215e1e93f26b85fd4ccd8cd34156685c240d735229ded83b0f1c5950b07e2c",
+      "stored_sha256": "022369c9cf21d8ae3df41631259fe2a7c5b5fcde9bc47f7ab0962df272b58dac"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-browser/restored-preview.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-browser/restored-preview.dom.txt.gz",
+      "sha256": "2c1f3f1569b33be8c6f6fbbf34a4b6966be23b37bced3420d17b0423a1bb433f",
+      "stored_sha256": "5d39ef2a8d499a01c556efcd9c5d7fc3f00969d0dfa91d83d5e1626ca2f4c343"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-browser/restored-preview.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-browser/restored-preview.png",
+      "sha256": "b43dc268daf973ed5753c02dfe22bfa6b889a3a248b8b00b6b7e29e9a855ef71",
+      "stored_sha256": "b43dc268daf973ed5753c02dfe22bfa6b889a3a248b8b00b6b7e29e9a855ef71"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-browser/source-false-after-reload.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-browser/source-false-after-reload.dom.txt.gz",
+      "sha256": "2c1f3f1569b33be8c6f6fbbf34a4b6966be23b37bced3420d17b0423a1bb433f",
+      "stored_sha256": "5d39ef2a8d499a01c556efcd9c5d7fc3f00969d0dfa91d83d5e1626ca2f4c343"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-browser/source-false-after-reload.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-browser/source-false-after-reload.png",
+      "sha256": "5aee2f1e02ca3a003e3b2833a1ac6ffb5f7a442effc686dc2d33ae0733cb2c4b",
+      "stored_sha256": "5aee2f1e02ca3a003e3b2833a1ac6ffb5f7a442effc686dc2d33ae0733cb2c4b"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-browser/source-false-preview.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-browser/source-false-preview.dom.txt.gz",
+      "sha256": "2c1f3f1569b33be8c6f6fbbf34a4b6966be23b37bced3420d17b0423a1bb433f",
+      "stored_sha256": "5d39ef2a8d499a01c556efcd9c5d7fc3f00969d0dfa91d83d5e1626ca2f4c343"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-browser/source-false-preview.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-browser/source-false-preview.png",
+      "sha256": "0232db229e464627dcb3fded3d0c7718ee9f02c4e821fa2d3d340407b1012930",
+      "stored_sha256": "0232db229e464627dcb3fded3d0c7718ee9f02c4e821fa2d3d340407b1012930"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-observe.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-observe.py.gz",
+      "sha256": "abeb1b0e2b1401447314f5d7a66854181236be01412b644d2756a5a13feda501",
+      "stored_sha256": "769df737f3b577b14e6fc3cac32a5fd9482a316edeebe36acaf2d4e013123104"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-race.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-race.log.gz",
+      "sha256": "e87d318bed0f6fea2c201c4d44bb9766b7365b3d8b46d75238da03dc1ffe1f3c",
+      "stored_sha256": "f438c5f05bdc14277681c4ac9fde36c018a5bdbbfd08b410c32ef9d502ab1f81"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-related.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-related.log.gz",
+      "sha256": "e8c9b77c3a8a3d000913461e40c61004797bb875636c193e8d087b4b9ed7b912",
+      "stored_sha256": "02ff16af43a7c889d290ec6d30b927c3f667e0c42d7a5649a09c19ae8d97d8af"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-browser-before.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-browser-before.json.gz",
+      "sha256": "0db6badb0ee21bd81346191459f0b9a0d2c868810cc7b01a46e2f9900b6ea231",
+      "stored_sha256": "5a8e6df31c954b7c768d25fdeaa68282f3834e0d37d11ad6cae1de2b9a71ce49"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-browser-cold.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-browser-cold.json.gz",
+      "sha256": "9c84869afeda48479a756489d38a193b0bba5250dd33be15c45ef939bee67d8c",
+      "stored_sha256": "cf07959ad5fd79ac2ced25adf1517aa371afa09a8011b4d8e5ea9ae06778c1b5"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-browser-failed.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-browser-failed.json.gz",
+      "sha256": "c7c1d827a09b718e815cb229fd1054983861b2fa287aa23b739e985c71da0e4c",
+      "stored_sha256": "71025831193d75765f5545692f54a6730ab247ef63088c684f4d5ffac9f87980"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-browser-false.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-browser-false.json.gz",
+      "sha256": "7ba292a441e1e46d4c9049394a76fdf14660ac85eabfe6e8879c35f29026cce3",
+      "stored_sha256": "99887cf2989c526e81ea5fd21f46698d05816181fab23409c98ffe5c342249bd"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-browser-final.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-browser-final.json.gz",
+      "sha256": "4242ae9fedf67d058311a21101dbf5db954bb343213b17994291ab4072cd5f2a",
+      "stored_sha256": "39a20ef6a745338e23fc834d86a5aae70b54130aec6444606298773712095587"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-browser-invalid.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-browser-invalid.json.gz",
+      "sha256": "323952008ff7ef2bc0b1f27cbd99bcf39ff502c68656c7350d071f67a992ad72",
+      "stored_sha256": "26eb84b1b8c6d99b27f854e30b58146986aad3527760a6b05b4b20928cfb241e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-browser-restore.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-browser-restore.json.gz",
+      "sha256": "ff214d8c33d26c7d1c170eec17b68b072f833be2f8a0c14a31b38003d3c8e9e2",
+      "stored_sha256": "485dcf67b61fc44ddd2fdbfd95387ffbe691263de41f12f78bdc0b6d394a3e05"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-browser-restored.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-browser-restored.json.gz",
+      "sha256": "211556775c1af660981250b91a61bf36050a88ccf5213c4c7e273b55d3e388dc",
+      "stored_sha256": "3880063c4723617a5e41a47dc34348a16c16e1a4029e2d613226bc49cfc80f34"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-cleanup.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-cleanup.json.gz",
+      "sha256": "9e9d6a9a7dbeb807a104d85e9d17a37ca896dc2fbab5c443446a81f3a4deb2c4",
+      "stored_sha256": "9107df350568129b9b2bfd60ccae032ee1325ff2d30eded1adb2f44e95896208"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-cli-evidence/browser-download50-proof.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-cli-evidence/browser-download50-proof.json.gz",
+      "sha256": "eb7afde6e2a2cd31e61802f346dab0259a44aa302fa5734333d12d9c496d10c5",
+      "stored_sha256": "a5684c2de6aae591e40837912d91fef365aed760114f73b9d97ba8b0e597cf65"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-cli-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-cli-evidence/events36-service-process.log.gz",
+      "sha256": "09ee21a1b3a6a9dc942124768a4980440121efeeb071989330907d8e1783ca96",
+      "stored_sha256": "c2bc0fcf1a5d18638255bd44fa9c33d3ec3e4efb632ff3afe871e280d5185dc9"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-cli.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-cli.log.gz",
+      "sha256": "b398bdbaf17e75a7aac7b49d01a5415177f02dd44f73c95aa9707f532b51c64d",
+      "stored_sha256": "b8ebd25a691f9913b1abc1a64433d304dc3abad56506ccde207ba79ba3ed1695"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-observe.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-observe.py.gz",
+      "sha256": "abeb1b0e2b1401447314f5d7a66854181236be01412b644d2756a5a13feda501",
+      "stored_sha256": "769df737f3b577b14e6fc3cac32a5fd9482a316edeebe36acaf2d4e013123104"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-ui-evidence/browser-download50-proof.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-ui-evidence/browser-download50-proof.json.gz",
+      "sha256": "822fdac28df8795eb3da256188fce865cc3d3b3a80bb6b133dd8346595a31ab9",
+      "stored_sha256": "f7bbcafce56adf2f35a619f332e705eec4e3919197743574d5a93deb80f9cf26"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-ui-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-ui-evidence/events36-service-process.log.gz",
+      "sha256": "314d26b70c72557fa2271b57834b38a7c9cc7e61d34c164cc3420ec8411c656e",
+      "stored_sha256": "61bde537ca968279c66266e82330e56cf0248cc5156837e4da96259e97271c58"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-ui-state.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-ui-state.json.gz",
+      "sha256": "5a6a4e5160ab36ea984278bb79ca0273739e24e99061a2d7db7dabac2127ff23",
+      "stored_sha256": "13a3f2951f1646f8b53cc5755e5e7bab2608d650fbd87ccfc316fe4152c93835"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-ui-state.json.done",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-ui-state.json.done.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-ui-state.json.restart.done",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-ui-state.json.restart.done.gz",
+      "sha256": "e89c2728a74649905c80f143cb7bd4fa0df3885412337159b0e9be50921fd801",
+      "stored_sha256": "34b7e38053177f296a73b4ac35601056fd41c2f9e8d62f3ad9cab7773c7451cc"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-remote/download50-ui.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-remote/download50-ui.log.gz",
+      "sha256": "40b6fd5adeac6a96781e49f26f77beb44a9b30b0136de7f860d3d41001b91f34",
+      "stored_sha256": "c5c246f8bbf73984eb6030f3e8b367fbc26a375a4f584ef22805625649dabb8c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-sdk-r2.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-sdk-r2.log.gz",
+      "sha256": "3723d6d477c4719eb27d0e8759bc8e4b4319da106c536b6cfc1c2dc5b0ca20c5",
+      "stored_sha256": "ed1fd14e5195a130e3c6e3c42a9089627b8da0948e090bfddcbfb47bd1c734ef"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/download50-sdk.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/download50-sdk.log.gz",
+      "sha256": "62f90242b324a3c5247adbc831bd642edb3ad14183fd3747dd3266a5ae124406",
+      "stored_sha256": "a4e59b9e214635e5507e53497dc044ac96a2065b40ac9028ba94e46330d85018"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/platform50-result.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/platform50-result.json.gz",
+      "sha256": "9ca59139a106bf29e89b3f306faabe6ae358e12384b2be1f0077d1a495d313ae",
+      "stored_sha256": "e8289744388af17d156a09faba881ee039ef50a14e7f825359924586e7b93233"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/process-platform50-20261027-linux.test.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/process-platform50-20261027-linux.test.inputs.json.gz",
+      "sha256": "7a3903bbbeb71062e026193437a79995fe935cb5eaadbeb1b30cdb19c793479d",
+      "stored_sha256": "574ab783aaaeb148d5ebb91cd0a2e024c2b68cc593cb0a28a23d9ed1b182855f"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/run-download50.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/run-download50.py.gz",
+      "sha256": "c40e653375fc245ff7c0e767c3983a1aec4ea1ded29cb9929ca0b4a6ee6749d3",
+      "stored_sha256": "cd53146534bd9391e3968390eaddeb06d898d536fc7a752fe8c1e00dd34f48d8"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/server-platform50-20261027-linux.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/browser-download-50-20261028/work/plugin-no-official-auth-20261026/server-platform50-20261027-linux.inputs.json.gz",
+      "sha256": "52197b57f46cd535e0eb541d57c275fda724f3f21b9ccaf393d59d8e95d2f382",
+      "stored_sha256": "50018ce0ca79cef28936aebfedb72f51027057cab959f33f22fb32ff518cccbd"
+    }
+  ]
+}

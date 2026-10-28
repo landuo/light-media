@@ -1,0 +1,127 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "daedce70999cc161cd007f5145d007238e4606504c85b6675bb3040dac449caa",
+  "source_methods": {
+    "_cleanup_temp_file": [
+      186,
+      197
+    ],
+    "_should_scrape": [
+      200,
+      234
+    ],
+    "_save_file": [
+      236,
+      272
+    ],
+    "_get_target_fileitem_and_path": [
+      322,
+      426
+    ],
+    "scrape_metadata_event": [
+      1035,
+      1154
+    ],
+    "_scrape_nfo_generic": [
+      1156,
+      1208
+    ],
+    "scrape_metadata": [
+      1311,
+      1375
+    ],
+    "_handle_movie_scraping": [
+      1377,
+      1417
+    ],
+    "_handle_movie_directory": [
+      1419,
+      1464
+    ]
+  },
+  "kind": "fixed-source AST with controlled identity/policy/storage; real temp NFO write/upload",
+  "cases": [
+    {
+      "name": "members",
+      "calls": [
+        {
+          "method": "metadata_nfo",
+          "season": null,
+          "episode": null
+        },
+        {
+          "method": "upload_file",
+          "path": "Owned (2024).nfo",
+          "bytes": "<movie>owned NFO</movie>"
+        },
+        {
+          "method": "system_images",
+          "path": "."
+        }
+      ],
+      "files": {
+        "Owned (2024).nfo": "<movie>owned NFO</movie>",
+        "BDMV/STREAM/00001.m2ts": "owned stream"
+      }
+    },
+    {
+      "name": "empty_file_list",
+      "calls": [
+        {
+          "method": "metadata_nfo",
+          "season": null,
+          "episode": null
+        },
+        {
+          "method": "upload_file",
+          "path": "Owned (2024).nfo",
+          "bytes": "<movie>owned NFO</movie>"
+        },
+        {
+          "method": "system_images",
+          "path": "."
+        }
+      ],
+      "files": {
+        "Owned (2024).nfo": "<movie>owned NFO</movie>",
+        "BDMV/STREAM/00001.m2ts": "owned stream"
+      }
+    },
+    {
+      "name": "existing_skip",
+      "calls": [
+        {
+          "method": "system_images",
+          "path": "."
+        }
+      ],
+      "files": {
+        "Owned (2024).nfo": "prior NFO",
+        "BDMV/STREAM/00001.m2ts": "owned stream"
+      }
+    },
+    {
+      "name": "existing_overwrite",
+      "calls": [
+        {
+          "method": "metadata_nfo",
+          "season": null,
+          "episode": null
+        },
+        {
+          "method": "upload_file",
+          "path": "Owned (2024).nfo",
+          "bytes": "<movie>owned NFO</movie>"
+        },
+        {
+          "method": "system_images",
+          "path": "."
+        }
+      ],
+      "files": {
+        "Owned (2024).nfo": "<movie>owned NFO</movie>",
+        "BDMV/STREAM/00001.m2ts": "owned stream"
+      }
+    }
+  ]
+}

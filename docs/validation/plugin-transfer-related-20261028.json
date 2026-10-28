@@ -1,0 +1,177 @@
+{
+  "whole_indices": [
+    36,
+    37,
+    43
+  ],
+  "accepted_whole_scope": false,
+  "increment_status": "验收通过",
+  "scope": "related manual previews, concrete callback/fallback rows, native subtitle suffix and actual UI three-file transfer; collection overrides/history operations/whole transfer scope remain pending",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/modules/filemanager/transhandler.py:352-368 rename event followed by subtitle-only language/default suffix",
+    "app/modules/filemanager/transhandler.py:833-890 exact subtitle patterns, precedence, default marker and pathlib stem",
+    "app/core/config.py:416 DEFAULT_SUB=zh-cn",
+    "app/chain/transfer.py:3299-3368 related task collection",
+    "app/chain/transfer.py:3538-3667 per-task preview callback and failure fallback",
+    "app/chain/transfer.py:3687-3697 per-task preview summary",
+    "app/modules/filemanager/transhandler.py:389-419 synthetic preview without target storage/conflict probes"
+  ],
+  "target": [
+    "internal/app/plugin_original_transfer_subtitle.go + _patterns.go exact pinned patterns with existing pure Go CPython matcher",
+    "internal/app/plugin_original_transfer_context.go subtitle adjustment after actual native rename, audio extension no longer forced",
+    "internal/app/plugin_original_transfer_auxiliary.go adopts resolved native result directly",
+    "internal/app/source_transfer_sidecars.go preview-only no-target-probe branch",
+    "internal/app/plugin_original_transfer_related_preview.go each related file independently calls storage/transfer/native preview",
+    "internal/app/import_plan.go OriginalPreview and concrete callback flag, frozen contexts/methods for every preview file",
+    "internal/app/organize_manual.go one preview output row per file, raw fallback versus concrete callback media distinction",
+    "internal/app/import_run.go execute/run refuse explicit source preview plans; public executable preparation endpoint retained",
+    "internal/app/source_directory_authorization.go preview-only state bound to existing sealed authority",
+    "internal/app/types.go normal DEFAULT_SUB setting, original preview/callback data"
+  ],
+  "source_replay": {
+    "subtitle": "testdata/standard-module-host/transfer-subtitle-source-oracle.json 648 real pinned __rename_subtitles+FileItem/pathlib cases, 4 exact patterns generated to Go; filenames/language precedence/default/null/uppercase/hidden/trailing-dot/Unicode I",
+    "preview": "testdata/standard-module-host/transfer-related-preview-source-oracle.json 3 actual pinned do_transfer loop/callback/fallback/summary cases on a supplied 3-task main/subtitle/audio set; dispatch/FileManager/native preview real, task collection boundary controlled",
+    "harness_corrections": "First related loop lacked source_oper and produced 3 caught NameErrors; output inspected, actual AST initializers and source/target operation boundaries restored, explicit trace/summary assertions added. Never treated the harness NameError rows as source behavior."
+  },
+  "local": {
+    "subtitle": "648 exact comparisons PASS1.349s; full transfer/source-extension57.901s PASS",
+    "regex_red": "Initial regexp2 IgnoreCase missed Film.chİnese.srt; existing pure-Go CPython matcher reused, source expected unchanged. No global regex behavior or business plugin changed.",
+    "fixture_refinement": "Old constant .mkv rename patch forced Go audio .flac beyond source semantics; test-only rename_source_extension uses actual source_item extension to return independent valid paths. Exact subtitle expected now .default.chi.zh-cn.srt.",
+    "related": "actual SDK/manualOrganize native/raw false subtitle/typed veto subtitle, source per-item fields, preexisting target bytes unchanged, no receipt/asset/callback/job and explicit preview cannot execute:7.294s then full source comparison8.929s PASS",
+    "final_race": "342.262s app/1.910s SDK,358.213s wall PASS; sourcejson no standalone test files"
+  },
+  "actual_linux": {
+    "main_sha256": "d4638235c71f031ee8d969f218555a8d5d02f9915a64bf9fa71ec4662613a1b3",
+    "test_sha256": "bd842f881a99b64b9f8881b4373d6ca2df020747b37054515f9c2781b1477b81",
+    "worker_sha256": "5bc4095b7d00871176ccbfdab635f8cb0c4d428122c14c5df4b08ab9b8d97906",
+    "compiler_inputs": [
+      3707,
+      4158
+    ],
+    "changed": [],
+    "worker_note": "test-only HTTP snapshot transfer_calls/events/trace instrumentation built separately after main/test; does not change main/test compiler inputs",
+    "cli_seconds": 3.7,
+    "preview_cases": "existing5 plus3 related composite cases: total3, separate failure and media-known distinction, native default subtitle name, each source3 methods, clone3/2, chain12/10, direct preview executionHTTP400, existing bytes unchanged",
+    "media_kind": "owned synthetic text files with mkv/srt/flac suffixes, controlled recognition from actual SDK; actual Linux process, actual SDK/file IO, no claim of real video decoding or remote media recognition"
+  },
+  "actual_browser": {
+    "tab": "IAB59",
+    "gate_seconds": 359.58,
+    "proof": {
+      "passed": true,
+      "kind": "actual Linux cmd/server/real SDK/owned synthetic files + IAB59",
+      "cold_pids": [
+        [
+          39886,
+          39893
+        ],
+        [
+          44110,
+          44117
+        ],
+        [
+          45863,
+          45870
+        ],
+        [
+          48303,
+          48309
+        ]
+      ],
+      "preview_plans": 7,
+      "preview_jobs": 0,
+      "preview_rows_per_request": 3,
+      "actual_job": [
+        [
+          "job_eUfQv061tyz7HSduIJQo8NRW",
+          "succeeded"
+        ]
+      ],
+      "actual_assets": 1,
+      "actual_receipts": 3,
+      "actual_callbacks": 3,
+      "history_rows": 3,
+      "source": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module26-ui-tmp/TestPluginServicesProductionCLI1729120331/002/source/OwnedUITransfer.2024.mkv",
+        "inode": 19112262,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "target": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module26-ui-tmp/TestPluginServicesProductionCLI1729120331/002/library/Plugin returned UI target/Actual plugin file.mkv",
+        "inode": 19112262,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "related": [
+        {
+          "input": {
+            "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module26-ui-tmp/TestPluginServicesProductionCLI1729120331/002/source/OwnedUITransfer.2024.zh.srt",
+            "inode": 19112260,
+            "device": 65025,
+            "size": 24,
+            "sha256": "64dbf5f224a79e3fabf60ab04a96e766c25c35a3d179b2fbbd11098e89e609b7"
+          },
+          "target": {
+            "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module26-ui-tmp/TestPluginServicesProductionCLI1729120331/002/library/Plugin returned UI target/Actual plugin related.srt",
+            "inode": 19112260,
+            "device": 65025,
+            "size": 24,
+            "sha256": "64dbf5f224a79e3fabf60ab04a96e766c25c35a3d179b2fbbd11098e89e609b7"
+          }
+        },
+        {
+          "input": {
+            "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module26-ui-tmp/TestPluginServicesProductionCLI1729120331/002/source/OwnedUITransfer.2024.flac",
+            "inode": 19112261,
+            "device": 65025,
+            "size": 22,
+            "sha256": "21842006e19f366fe6059346fde9ce2bb380525353d684dabcd08505ad4f0930"
+          },
+          "target": {
+            "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module26-ui-tmp/TestPluginServicesProductionCLI1729120331/002/library/Plugin returned UI target/Actual plugin related.flac",
+            "inode": 19112261,
+            "device": 65025,
+            "size": 22,
+            "sha256": "21842006e19f366fe6059346fde9ce2bb380525353d684dabcd08505ad4f0930"
+          }
+        }
+      ],
+      "ordinary_execute_events": 6,
+      "executed_plan": "plan_YkYzZvTXZssFEwKUxtMKgXhM"
+    },
+    "interaction": "3 successful previews→3 typed veto rows with same form→cold restore source3→None/clone3 distinct extensions→cold clone3→same form actual main/subtitle/audio3 hardlinks→existing3 target preview→cold original Cookie/query and three independent successful histories",
+    "layout": "actual screenshot/scroll verified preview uses same dialog content scroll; fixed bottom buttons remain; no frontend file changed",
+    "assertions": "every file has14 actual kwargs, preview true/false distinguished; terminal execute only6 storage events/no native naming; three complete/subtitle/audio event types reach both source/clone; target files match source inode/device/size/SHA and stay unchanged after preview/cold; cold zero writes/provider/callback replay"
+  },
+  "front": {
+    "embed_files": 130,
+    "changed": [],
+    "baseline": "main19 546 frontend tests/build",
+    "claim": "identical embedded bytes only; no new frontend test run"
+  },
+  "adaptations": [
+    "Source live object identity is transported as explicit Go model/snapshots; no Python runtime. The already present pure Go CPython regex library is reused, without developing its owning business plugin.",
+    "Existing native public preparation API still creates executable sealed plans. Source manual preview remains inert and now cryptographically binds that distinction; one current form submission creates a new executable operation.",
+    "Default subtitle setting uses native JSON/env inputs and pinned zh-cn fallback. Existing Go root/source/identity/snapshot protections and native media template remain.",
+    "Related preview script supplies the task set explicitly; it is not evidence that get_parent_item/list_files collection override callers are wired."
+  ],
+  "remaining": [
+    "Actual related-file collection still uses OS directly instead of all original get_parent_item/list_files overrides; sync_extra_files/single-file/standalone auxiliary collection and inherited metadata require completion.",
+    "Standalone auxiliary organize/retry and independent history file deletion, grouped partial asset registration after auxiliary failure remain open.",
+    "Existing auxiliary64MiB/32 caps are not source behavior; must resolve rather than treat unexplained limits as complete.",
+    "Native no-module TransferInfo flags, aggregate/TV/notification/metadata batch consumers, legitimate quality/overwrite target transition remain open.",
+    "media_exists/media_files, directory-unit/bluray, download tuple/preexisting hash order,197 names/199ordinary callers/81ordinary events reverse audit and whole50 conclusion"
+  ],
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-related-26-20261028/manifest.json",
+  "cleanup": "actual source+clone uninstall/API404/test TempDir cleanup PASS; IAB59 closed, SSH34440 PID42792 stopped; no main26 process remains",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

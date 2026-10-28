@@ -2,7 +2,9 @@ package app
 
 import (
 	"context"
+	"github.com/google/uuid"
 	"light-media/internal/plugins"
+	"slices"
 	"sort"
 )
 
@@ -14,6 +16,9 @@ func (a *App) registerOriginalChainHandler(kind string, handler originalMutableE
 	defer a.pluginOriginalEventsMu.Unlock()
 	if a.pluginOriginalChainHandlers == nil {
 		a.pluginOriginalChainHandlers = make(map[string][]originalMutableEventHandler)
+	}
+	if !slices.Contains(a.pluginOriginalBroadcast.chainOrder, kind) {
+		a.pluginOriginalBroadcast.chainOrder = append(a.pluginOriginalBroadcast.chainOrder, kind)
 	}
 	handlers := a.pluginOriginalChainHandlers[kind][:0]
 	for _, old := range a.pluginOriginalChainHandlers[kind] {
@@ -45,8 +50,7 @@ func (a *App) unregisterOriginalObjectChainHandlers(instance string) {
 }
 
 func (a *App) registerOriginalObjectChainHandlers(object *originalPluginInstance) {
-	instance := object.installation.InstanceID
-	a.unregisterOriginalObjectChainHandlers(instance)
+	a.registerOriginalObjectBroadcastHandlers(object)
 	declarations := append([]plugins.ChainHandler(nil), object.manifest.ChainHandlers...)
 	// Explicit canonical chain declarations take precedence over the published
 	// ResetHandlers compatibility declaration, then canonical Events shorthand.
@@ -67,28 +71,47 @@ func (a *App) registerOriginalObjectChainHandlers(object *originalPluginInstance
 	}
 	for _, declaration := range declarations {
 		method := declaration.Method
-		a.registerOriginalChainHandler(declaration.Event, originalMutableEventHandler{
-			ID: instance + "/" + method, Instance: instance, Priority: declaration.Order(),
-			Enabled: func() bool {
-				if !originalObjectStillLoaded(object) {
-					return false
-				}
-				object.configMu.RLock()
-				defer object.configMu.RUnlock()
-				return object.eventsEnabled
-			},
-			Invoke: func(ctx context.Context, event *plugins.MutableEvent) error {
-				return invokeOriginalMutableEvent(ctx, object, method, event)
-			},
-		})
+		if !slices.Contains(object.manifest.Methods, method) {
+			continue
+		}
+		a.registerOriginalChainHandler(declaration.Event, a.originalBoundChainHandler(object, method, declaration.Order()))
 	}
 }
 
 func (a *App) sendOriginalChainEvent(ctx context.Context, event *plugins.MutableEvent) bool {
+	return a.sendOriginalChainEventObserved(ctx, event, nil)
+}
+
+// Storage selection retains the concrete object that supplied its callable
+// methods. Observation does not change callback ordering or ordinary returns.
+func (a *App) sendOriginalChainEventObserved(ctx context.Context, event *plugins.MutableEvent, observe func(originalMutableEventHandler, *plugins.MutableEvent)) bool {
+	data, err := originalNewEventData(event.Data)
+	if err != nil {
+		a.logOriginalPluginContext(ctx, "ERROR", "event_invalid", "插件事件数据编码失败")
+		return false
+	}
+	event.Data = data
+	if event.EventID == "" {
+		event.EventID = uuid.NewString()
+	}
+	if event.Priority == nil {
+		priority := 10
+		event.Priority = &priority
+	}
 	a.pluginOriginalEventsMu.Lock()
 	handlers := append([]originalMutableEventHandler(nil), a.pluginOriginalChainHandlers[event.Type]...)
 	a.pluginOriginalEventsMu.Unlock()
+	if observe != nil {
+		for i := range handlers {
+			handler := handlers[i]
+			handlers[i].Invoke = func(ctx context.Context, event *plugins.MutableEvent) error {
+				err := handler.Invoke(ctx, event)
+				observe(handler, event)
+				return err
+			}
+		}
+	}
 	return dispatchOriginalMutableEvent(ctx, handlers, event, func(error) {
-		a.log("ERROR", "plugins", "chain_handler_failed", "插件链式事件处理失败", "", "")
+		a.logOriginalPluginContext(ctx, "ERROR", "chain_handler_failed", "插件链式事件处理失败")
 	})
 }

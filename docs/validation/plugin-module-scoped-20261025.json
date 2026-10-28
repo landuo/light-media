@@ -1,0 +1,349 @@
+{
+  "scope": "plugin module, Linux/local/single user; workflow and AI excluded",
+  "complete": false,
+  "accepted_indices": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    11,
+    14,
+    15,
+    16,
+    17,
+    28
+  ],
+  "total_indices": 46,
+  "excluded_indices": [
+    22,
+    44,
+    45,
+    46
+  ],
+  "source_manifest": "plugin-module-fixed-sources-20261025.json",
+  "evidence": {
+    "final-verified/tests.jsonl": {
+      "path": "testdata/plugin-module-scoped-20261025/app-final-verified.jsonl.gz",
+      "uncompressed_sha256": "78b18bc78492fa4315f9d1fd05124d2d78109881432b266ed9b5dd1e11af3a2b"
+    },
+    "sdk-complete-final.jsonl": {
+      "path": "testdata/plugin-module-scoped-20261025/sdk-complete-final.jsonl.gz",
+      "uncompressed_sha256": "1946063cdff80b2c4a7315a2adc2865b85d25bc17786a2bddd6e6c429ea84e35"
+    },
+    "license-and-source-final.jsonl": {
+      "path": "testdata/plugin-module-scoped-20261025/license-and-source-final.jsonl.gz",
+      "uncompressed_sha256": "057c02a87c3f78d12a4167d8380b6e41ff17d3364b1ca8e694f92217c71af403"
+    },
+    "race-final/tests.jsonl": {
+      "path": "testdata/plugin-module-scoped-20261025/race-final.jsonl.gz",
+      "uncompressed_sha256": "7466d4cd5a3be693fe26b4e33d87e14bc117399546b04cadc8c5203f706085aa"
+    },
+    "race-final/vet-compile.log": {
+      "path": "testdata/plugin-module-scoped-20261025/vet-compile-final.log.gz",
+      "uncompressed_sha256": "9cbce86d39d1d2426072851f1bbeed10d3af512bd8a0387614d696e073fcd032"
+    },
+    "web-tests-current.log": {
+      "path": "testdata/plugin-module-scoped-20261025/web-tests-current.log.gz",
+      "uncompressed_sha256": "da0a8cf85e6dec8ad3346fb95e75870b55f694db1cf246b4f3f5c9c32313fe41"
+    },
+    "web-build-current.log": {
+      "path": "testdata/plugin-module-scoped-20261025/web-build-current.log.gz",
+      "uncompressed_sha256": "f6156b590eaf889911d80bb3fd4b1eb55060422b650943708460f6eedd62af27"
+    },
+    "linux-final-gates.log": {
+      "path": "testdata/plugin-module-scoped-20261025/linux-final-gates.log.gz",
+      "uncompressed_sha256": "57029621578fa089cbc46e7ac18ba5a8fa3f2a09e0bd734320e49430baa774f9"
+    },
+    "process-test.log": {
+      "path": "testdata/plugin-module-scoped-20261025/linux-process-initial.log.gz",
+      "uncompressed_sha256": "fbc2d51a1c977bb7facbd9fbc847990b65dec46be3439b52a0ce5b0ffa23c299"
+    },
+    "process-current-test.log": {
+      "path": "testdata/plugin-module-scoped-20261025/linux-process-vue.log.gz",
+      "uncompressed_sha256": "9296f4747a9724915b848068e3b1c070d82c35d2babfc144859e32ba52148d6e"
+    },
+    "process-final-test.log": {
+      "path": "testdata/plugin-module-scoped-20261025/linux-process-files.log.gz",
+      "uncompressed_sha256": "643eb894e20fd33469f6164a7d07de6382937561f587e40919f9b21db5f57869"
+    },
+    "process-json-fixed-test.log": {
+      "path": "testdata/plugin-module-scoped-20261025/linux-process-json.log.gz",
+      "uncompressed_sha256": "329540d91f09fbcb616731bcf252de78e98c07480bd523016bcbd482faf19754"
+    },
+    "process-ui-test.log": {
+      "path": "testdata/plugin-module-scoped-20261025/linux-process-current-ui.log.gz",
+      "uncompressed_sha256": "1d50d1162c1ef9752c9c24a4637695cc0b87bf6125498528af75091080179330"
+    },
+    "browser-observations.jsonl": {
+      "path": "testdata/plugin-module-scoped-20261025/browser-observations.jsonl.gz",
+      "uncompressed_sha256": "3eb4ab5f64252c55ca81e9c22930fd401df1e14fcdeb8287a7084049d742af11"
+    }
+  },
+  "test_results": {
+    "final-verified/tests.jsonl": {
+      "pass": 186,
+      "fail": 0,
+      "skip": 0
+    },
+    "sdk-complete-final.jsonl": {
+      "pass": 150,
+      "fail": 0,
+      "skip": 0
+    },
+    "license-and-source-final.jsonl": {
+      "pass": 55,
+      "fail": 0,
+      "skip": 0
+    },
+    "race-final/tests.jsonl": {
+      "pass": 7,
+      "fail": 0,
+      "skip": 0
+    },
+    "web": {
+      "pass": 443,
+      "fail": 0,
+      "skip": 0
+    },
+    "go_vet": "exit 0",
+    "go_all_packages_compile": "exit 0",
+    "web_build": "exit 0",
+    "linux_sdk_scope_and_license_roots": {
+      "pass": 4,
+      "fail": 0,
+      "skip": 0
+    }
+  },
+  "screenshots": [
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-dashboard.png",
+      "sha256": "870c70fc88ad4dc72443e22c10421b4c1bafb207aea43e32caa3f48d29e25054"
+    },
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-folder-persistent.png",
+      "sha256": "8d6006bddd6ee63c4cb3c67f43f8ad883a0f889a0219318a5085a79cd0f358a2"
+    },
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-installed.png",
+      "sha256": "6f64d3f3ef6dfd2f77afbd9a30d088f55282f0c509515aaf083f4532fbedfb39"
+    },
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-json-api-failure.png",
+      "sha256": "728e51cc81d8872821962f0120a282d581e146c78a0061ba559c10dfe9075071"
+    },
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-json-api-written.png",
+      "sha256": "35ba815483ada55caccd9a7481c38750aaf3c1f093e19abe0e5af4d2fe9d8e77"
+    },
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-json-clone-written.png",
+      "sha256": "3de987a4e9b9652cbd511c565c93f9c1dba91f80f6b3da58c87608ed40c7c6f1"
+    },
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-json-failure-current.png",
+      "sha256": "5d4ea6b4596dbb0b77c5f71226176acf2dd29702c9724eb48f4efc30b0576b73"
+    },
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-json-progress-current.png",
+      "sha256": "dc46bfc610a39a8355b3ef4069dfdcbe27b9611cfeb40640c532f5a4a5a0eb4e"
+    },
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-json-written-current.png",
+      "sha256": "01c5b911416a4f3c24164c892dcf27c9e910b49940baf756849ed4d3e5d02c91"
+    },
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-update-isolation.png",
+      "sha256": "147a3d7a05b22a9bbba54ee1202f99d2261465907f1adc321d8819596bc00377"
+    },
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-vue-api-failure.png",
+      "sha256": "314cafd6adc87814051b3ede13e757521670207da09f5bcff6bcff75bc329e38"
+    },
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-vue-app-page.png",
+      "sha256": "2930e48a72629182d8e571293383bfffdda9078c55a179342c02f987b6ef7f12"
+    },
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-vue-clone-api.png",
+      "sha256": "34249d1b50863869869d2c7d881a3a34e58e1c00311bf0e1e5ae10c3a0794fa5"
+    },
+    {
+      "path": "testdata/plugin-module-scoped-20261025/browser-vue-dashboard-isolation.png",
+      "sha256": "161039c957f12baac6bced25f39a25e9acf68705e487e5f653234e26ab9b580a"
+    }
+  ],
+  "linux_process": {
+    "classification": "real Linux amd64 cmd/server with embedded built UI and actual independently built Go SDK processes; synthetic loopback repository/plugin/test credentials; no real trackers/downloaders/official licensing/channel delivery",
+    "os": "Linux 6.1.0-10-amd64 x86_64",
+    "runs": [
+      {
+        "log": "process-test.log",
+        "root_pass": 1,
+        "failed": 0
+      },
+      {
+        "log": "process-current-test.log",
+        "root_pass": 1,
+        "failed": 0
+      },
+      {
+        "log": "process-final-test.log",
+        "root_pass": 1,
+        "failed": 0
+      },
+      {
+        "log": "process-json-fixed-test.log",
+        "root_pass": 1,
+        "failed": 0
+      },
+      {
+        "log": "process-ui-test.log",
+        "root_pass": 1,
+        "failed": 0
+      }
+    ],
+    "assertions": [
+      "artifact acquisition and actual PID/init counter",
+      "same object config re-init; new PID reload/update; source/clone code isolation",
+      "manual run and real system-clock tick",
+      "init error 500 retains written config and existing object; recovery",
+      "SIGTERM and fresh-process startup restore code/config/KV",
+      "source uninstall removes API and retains config/KV; reinstall continuation",
+      "clone reset clears DB config/KV but leaves instance file; clone uninstall leaves owned data file and source intact",
+      "workflow and agent dedicated endpoints absent"
+    ]
+  },
+  "browser": {
+    "json": [
+      "market install, config save, update source with clone v1 retained, reset, uninstall, folder move and reload",
+      "JSON POST writes actual persisted KV; GET 503 visible error; retry succeeds",
+      "clone source-prefixed API binds to clone; source remains json-source-retained",
+      "latest embedded frontend shows source ProgressDialog purple card / white progress; closes after actual 2-second fixture POST; error/retry retested"
+    ],
+    "vue": [
+      "actual ZIP frontend assets load ESM via shared host Vue",
+      "Config saved marker visible in Page via actual instance API",
+      "503 shown; retry succeeds; AppPage navigation details uses actual nav_key",
+      "clone Config/Page API isolation; source and clone dashboard each show own marker; browser reload retains selection"
+    ],
+    "partial_only": [
+      "arbitrary JSON component/HTML/CSS combinations",
+      "shared Vuetify federation and full dashboard layout/mobile navigation matrices"
+    ],
+    "snapshots": "browser-observations.jsonl.gz"
+  },
+  "rejected_attempts": [
+    {
+      "name": "tmdb_info hook at sourceRecognizeTMDBMedia",
+      "status": "withdrawn",
+      "reason": "fixed source uses recognize_media at that host relation; wrong tmdb_info hook and its two green tests removed before final validation",
+      "not_accepted_logs": [
+        "metadata-module-tests.jsonl",
+        "source-consumer-regression.jsonl",
+        "final-candidate/tests.jsonl"
+      ],
+      "final_replacement": "license-and-source-final.jsonl checks restored real source consumers"
+    },
+    {
+      "name": "first JSON page POST fixture",
+      "status": "test-only declaration corrected and browser rerun",
+      "reason": "missing HTTPAPI Body=json dropped request body; corrected actual fixture instead of weakening host body boundary; intermediate failing browser result is not accepted"
+    }
+  ],
+  "remaining": {
+    "blocked": [],
+    "implementation_gaps": [
+      36,
+      37,
+      43
+    ],
+    "unverified_indices": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      12,
+      13,
+      18,
+      19,
+      20,
+      21,
+      23,
+      24,
+      25,
+      26,
+      27,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      47,
+      48,
+      49,
+      50
+    ],
+    "scope_note": "231 fixed module call sites are an inventory, not proof of target coverage or authorization to build other business systems; keep only existing host/Linux/local/single-user plugin portions"
+  },
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "base": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "merged": false,
+    "deployed_to_existing_service": false,
+    "working_tree": "/Users/accidia/projects/light-media"
+  },
+  "binary_provenance": {
+    "light-media-linux-ui": {
+      "sha256": "38c552b19c877b3685dca5030d39ecf2a47cac8d77a8daa22978f2c0749bf2f0",
+      "buildinfo": "/Users/accidia/projects/light-media/work/plugin-module-scoped-20261025/light-media-linux-ui: go1.26.2\n\tpath\tlight-media/cmd/server\n\tmod\tlight-media\tv0.0.0-20261024163548-7fc62635bc4a+dirty\t\n\tdep\tgithub.com/andybalholm/brotli\tv1.2.6\th1:ftYnfj6usCp+UGV5kSJ3+chpMQgU+gJf/AxsUQ52REI=\n\tdep\tgithub.com/antchfx/htmlquery\tv1.3.7\th1:KCUklE1EO/xm6iS3CWx6iatFlcnENBk4I4UYa2pBmLU=\n\tdep\tgithub.com/antchfx/xpath\tv1.3.9\th1:muXJSod6jRzhsiUjvduNSxsRSptFZ2GOJ1oMD1QkPSA=\n\tdep\tgithub.com/dlclark/regexp2/v2\tv2.9.0\th1:kKj+BlRuUhZzJk8B3yOBxWKxDFnx2Ilq4e7KNdq/Mxk=\n\tdep\tgithub.com/dustin/go-humanize\tv1.0.1\th1:GzkhY7T5VNhEkwH0PVJgjz+fX1rhBrR7pRT3mDkpeCY=\n\tdep\tgithub.com/golang/groupcache\tv0.0.0-20241129210726-2c02b8208cf8\th1:f+oWsMOmNPc8JmEHVZIycC7hBoQxHH9pNKQORJNozsQ=\n\tdep\tgithub.com/google/uuid\tv1.6.0\th1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=\n\tdep\tgithub.com/json-iterator/go\tv1.1.12\th1:PV8peI4a0ysnczrg+LtxykD8LfKY9ML6u2jnxaEnrnM=\n\tdep\tgithub.com/klauspost/compress\tv1.20.3\th1:zWNoFqq/lSuYQRim3dUXlXeA0IqwuZGicdG5ZTfY5j4=\n\tdep\tgithub.com/markusmobius/go-dateparser\tv1.4.7\n\t=>\t./third_party/go-dateparser\t(devel)\t\n\t\n\tdep\tgithub.com/markusmobius/go-dateutil/v2\tv2.9.1\th1:5g4V8s1vg/EAmhu/g14VQcHgocNf8H8VD4IzOfZg+1Y=\n\tdep\tgithub.com/modern-go/concurrent\tv0.0.0-20180306012644-bacd9c7ef1dd\th1:TRLaZ9cD/w8PVh93nsPXa1VrQ6jlwL5oN8l14QlcNfg=\n\tdep\tgithub.com/modern-go/reflect2\tv1.0.2\th1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9Gz0M=\n\tdep\tgithub.com/pkg/errors\tv0.9.1\th1:FEBLx1zS214owpjy7qsBeixbURkuhQAwrK5UwLGTwt4=\n\tdep\tgithub.com/remyoudompheng/bigfft\tv0.0.0-20230129092748-24d4a6f8daec\th1:W09IVJc94icq4NjY3clb7Lk8O1qJ8BdBEF8z0ibU0rE=\n\tdep\tgithub.com/sirupsen/logrus\tv1.9.3\th1:dueUQJ1C2q9oE3F7wvmSGAaVtTmUizReu6fjN8uqzbQ=\n\tdep\tgo.yaml.in/yaml/v3\tv3.0.5\th1:N6y/pJk8buWs9NY5ERU2HSMfm+IuD/OtfdAnq6kESPw=\n\tdep\tgolang.org/x/crypto\tv0.58.0\th1:COkYLr4k7nDI4r6QtMML2AfzeIswWHAJthLS6K/M/54=\n\tdep\tgolang.org/x/exp\tv0.0.0-20260908205506-85c1c2202aba\th1:Ck8QetSgk912qxWLMCKxd0in+aiyBQyDSMae6e/xmpU=\n\tdep\tgolang.org/x/net\tv0.61.0\th1:RR+6j/BTBCrggOLugxa+66R8FvoN6MHlzDlZIbN9YFw=\n\tdep\tgolang.org/x/sys\tv0.49.0\th1:XbzkgYJHdqh/8m2Uu0W/dQv8nktxx4BFHp1M0gROTXA=\n\tdep\tgolang.org/x/text\tv0.43.0\th1:1QivrlhwAsnMOcqgOdl9my7s9OyZl8O5/UGUTJVXoWc=\n\tdep\tmodernc.org/libc\tv1.77.1\th1:Ct8j47QtiZ1Enj2DtFXQtUqrPCAjdCmPjtCuvrYQ0Hs=\n\tdep\tmodernc.org/mathutil\tv1.7.1\th1:GCZVGXdaN8gTqB1Mf/usp1Y/hSqgI2vAGGP4jZMCxOU=\n\tdep\tmodernc.org/memory\tv1.12.1\th1:nFMiWrpStgZczNl6XI9GnIk/rWhYIyHGUaR04pGbp9g=\n\tdep\tmodernc.org/sqlite\tv1.60.1\th1:/blz53O951KWFOso4QQvEs/Fq6cDBKLtMVrYNSeJVKw=\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=linux\n\tbuild\tGOAMD64=v1\n\tbuild\tvcs=git\n\tbuild\tvcs.revision=7fc62635bc4a8f37068a14c2680161df7ccfb5ed\n\tbuild\tvcs.time=2026-10-24T16:35:48Z\n\tbuild\tvcs.modified=true\n"
+    },
+    "json-v1-ui-linux": {
+      "sha256": "2b48d2d1ed4e4abaf7296f415d432596115729181f30870e69bf7bb53710dcbc",
+      "buildinfo": "/Users/accidia/projects/light-media/work/plugin-module-scoped-20261025/json-v1-ui-linux: go1.26.2\n\tpath\tlight-media/cmd/owned-standard-fixture\n\tmod\tlight-media\tv0.0.0-20261024163548-7fc62635bc4a+dirty\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-ldflags=\"-X main.fixturePageEvents=true -X main.fixturePageDelay=true\"\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=linux\n\tbuild\tGOAMD64=v1\n\tbuild\tvcs=git\n\tbuild\tvcs.revision=7fc62635bc4a8f37068a14c2680161df7ccfb5ed\n\tbuild\tvcs.time=2026-10-24T16:35:48Z\n\tbuild\tvcs.modified=true\n"
+    },
+    "json-v2-fixed-linux": {
+      "sha256": "cd8c6ba4da97521aa4356fcc8e3898a95822cb8ce508778cfb265270b9aea924",
+      "buildinfo": "/Users/accidia/projects/light-media/work/plugin-module-scoped-20261025/json-v2-fixed-linux: go1.26.2\n\tpath\tlight-media/cmd/owned-standard-fixture\n\tmod\tlight-media\tv0.0.0-20261024163548-7fc62635bc4a+dirty\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\t-ldflags=\"-X main.fixturePageEvents=true -X main.fixtureVersion=2.0\"\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=linux\n\tbuild\tGOAMD64=v1\n\tbuild\tvcs=git\n\tbuild\tvcs.revision=7fc62635bc4a8f37068a14c2680161df7ccfb5ed\n\tbuild\tvcs.time=2026-10-24T16:35:48Z\n\tbuild\tvcs.modified=true\n"
+    },
+    "app-process-linux-final.test": {
+      "sha256": "693d286f0fe0b324e89ea315be35b02f8c04ad9c28a9c794e1a99d52397fe463",
+      "buildinfo": "/Users/accidia/projects/light-media/work/plugin-module-scoped-20261025/app-process-linux-final.test: go1.26.2\n\tpath\tlight-media/internal/app.test\n\tmod\tlight-media\t(devel)\t\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\tCGO_ENABLED=0\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=linux\n\tbuild\tGOAMD64=v1\n"
+    }
+  },
+  "cleanup": {
+    "status": "complete",
+    "task_binaries_removed": 213,
+    "bytes_removed": 1430373240,
+    "temporary_data_directories_removed": true,
+    "remote_test_directory_removed": true,
+    "test_processes_joined": true,
+    "ssh_tunnels_stopped": true,
+    "temporary_browser_tabs_closed": true,
+    "prior_dirty_snapshot_preserved": true
+  },
+  "scope_updates": [
+    {
+      "date": "2026-10-26",
+      "user_reply": "不需要认证",
+      "index": 22,
+      "status": "excluded",
+      "application_login_api_auth_and_index_47_retained": true
+    }
+  ],
+  "test_results_note": "Prior license/level gate tests and binary hashes are historical evidence before the 2026-10-26 official-authorization exclusion; new scope validation pending.",
+  "current_continuation": "plugin-module-no-official-auth-20261026.json"
+}

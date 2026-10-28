@@ -50,7 +50,7 @@ func inspectMetadata(ctx context.Context, req Request, client *http.Client) (Rel
 	if !platformPattern.MatchString(req.Platform) {
 		return bad(errors.New("invalid platform"))
 	}
-	index, err := fetchIndex(ctx, req.RepositoryURL, client)
+	index, err := fetchPluginIndex(ctx, req.RepositoryURL, req.PluginID, client, req.LocalRoots)
 	if err != nil {
 		return bad(err)
 	}
@@ -68,20 +68,53 @@ func inspectMetadata(ctx context.Context, req Request, client *http.Client) (Rel
 }
 
 // fetchIndex is the single bounded strict JSON parser for every metadata path.
-func fetchIndex(ctx context.Context, repositoryURL string, client *http.Client) (Index, error) {
+func fetchIndex(ctx context.Context, repositoryURL string, client *http.Client, localRoots []string) (Index, error) {
+	body, err := fetchIndexBody(ctx, repositoryURL, client, localRoots)
+	if err != nil {
+		return Index{}, err
+	}
+	indexes, err := parseRepository(body)
+	if err != nil {
+		return Index{}, err
+	}
+	if IsLocalRepository(repositoryURL) {
+		return selectRepositoryIndex(indexes, mustLocalID(repositoryURL))
+	}
+	if len(indexes) != 1 {
+		return Index{}, errors.New("repository contains multiple plugins; select an explicit plugin ID")
+	}
+	return indexes[0], nil
+}
+
+func fetchIndexBody(ctx context.Context, repositoryURL string, client *http.Client, localRoots []string) ([]byte, error) {
 	ctx, cancel := context.WithTimeout(ctx, 2*time.Minute)
 	defer cancel()
 	if client == nil {
 		client = &http.Client{Timeout: 30 * time.Second}
 	}
-	body, err := download(ctx, client, repositoryURL, MaxIndexBytes)
-	if err != nil {
-		return Index{}, err
+	var body []byte
+	var err error
+	if IsLocalRepository(repositoryURL) {
+		root, rootErr := trustedLocalRoot(repositoryURL, localRoots)
+		if rootErr != nil {
+			return nil, rootErr
+		}
+		body, err = readLocalFile(ctx, root, IndexName, MaxIndexBytes)
+	} else {
+		address := repositoryURL
+		if resolved, ok := githubRepositoryFile(repositoryURL, IndexName); ok {
+			address = resolved
+		}
+		body, err = download(ctx, client, address, MaxIndexBytes)
 	}
+	return body, err
+}
+
+func parseIndex(body []byte) (Index, error) {
 	var index Index
 	dec := json.NewDecoder(strings.NewReader(string(body)))
 	dec.DisallowUnknownFields()
-	if err = dec.Decode(&index); err != nil {
+	if err := dec.Decode(&index); err != nil {
 		return Index{}, fmt.Errorf("invalid Go artifact index: %w", err)
 	}
 	if dec.Decode(new(any)) != io.EOF {

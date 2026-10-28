@@ -1,0 +1,202 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "sources": {
+    "app/core/plugin.py": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+    "app/api/endpoints/plugin.py": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce"
+  },
+  "kind": "fixed manager/routes AST + actual FastAPI with controlled callback; no original host",
+  "cases": [
+    {
+      "name": "default-get",
+      "input": [
+        {
+          "key": "default",
+          "path": "/default"
+        }
+      ],
+      "routes": [
+        {
+          "path": "/default",
+          "methods": [
+            "GET"
+          ],
+          "auth": "apikey"
+        }
+      ]
+    },
+    {
+      "name": "empty-methods",
+      "input": [
+        {
+          "key": "empty",
+          "path": "/empty",
+          "methods": []
+        }
+      ],
+      "routes": []
+    },
+    {
+      "name": "anonymous-precedes-bear",
+      "input": [
+        {
+          "key": "anonymous",
+          "path": "/anonymous",
+          "methods": [
+            "GET"
+          ],
+          "allow_anonymous": true,
+          "auth": "bear"
+        }
+      ],
+      "routes": [
+        {
+          "path": "/anonymous",
+          "methods": [
+            "GET"
+          ],
+          "auth": "anonymous"
+        }
+      ]
+    },
+    {
+      "name": "truthy-anonymous-string",
+      "input": [
+        {
+          "key": "truthy",
+          "path": "/truthy",
+          "allow_anonymous": "false"
+        }
+      ],
+      "routes": [
+        {
+          "path": "/truthy",
+          "methods": [
+            "GET"
+          ],
+          "auth": "anonymous"
+        }
+      ]
+    },
+    {
+      "name": "false-anonymous-unknown-auth",
+      "input": [
+        {
+          "key": "fallback",
+          "path": "/fallback",
+          "allow_anonymous": false,
+          "auth": "unrecognized"
+        }
+      ],
+      "routes": [
+        {
+          "path": "/fallback",
+          "methods": [
+            "GET"
+          ],
+          "auth": "apikey"
+        }
+      ]
+    },
+    {
+      "name": "nonstring-auth-fallback",
+      "input": [
+        {
+          "key": "numeric",
+          "path": "/numeric",
+          "auth": 7
+        }
+      ],
+      "routes": [
+        {
+          "path": "/numeric",
+          "methods": [
+            "GET"
+          ],
+          "auth": "apikey"
+        }
+      ]
+    },
+    {
+      "name": "method-set-uppercase",
+      "input": [
+        {
+          "key": "methodset",
+          "path": "/methodset",
+          "methods": [
+            "get",
+            "GET",
+            "patch"
+          ]
+        }
+      ],
+      "routes": [
+        {
+          "path": "/methodset",
+          "methods": [
+            "GET",
+            "PATCH"
+          ],
+          "auth": "apikey"
+        }
+      ]
+    },
+    {
+      "name": "bad-item-does-not-hide-later-route",
+      "input": [
+        {
+          "key": "before",
+          "path": "/before"
+        },
+        {
+          "key": "bad",
+          "path": "/bad",
+          "methods": 7
+        },
+        {
+          "key": "after",
+          "path": "/after",
+          "methods": [
+            "PATCH"
+          ]
+        }
+      ],
+      "routes": [
+        {
+          "path": "/before",
+          "methods": [
+            "GET"
+          ],
+          "auth": "apikey"
+        },
+        {
+          "path": "/after",
+          "methods": [
+            "PATCH"
+          ],
+          "auth": "apikey"
+        }
+      ]
+    },
+    {
+      "name": "missing-path-aborts-manager-batch",
+      "input": [
+        {
+          "key": "before",
+          "path": "/before"
+        },
+        {
+          "key": "bad"
+        },
+        {
+          "key": "after",
+          "path": "/after"
+        }
+      ],
+      "routes": []
+    }
+  ],
+  "bodyless_response": {
+    "status": 204,
+    "body": ""
+  }
+}

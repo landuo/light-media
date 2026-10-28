@@ -1,0 +1,332 @@
+{
+  "build": {
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "binaries": [
+      {
+        "name": "server-platform53-20261027-linux",
+        "sha256": "658171bbb1b1e6a7cac9ebf03f48311c98852ca0952d8e6e2dc5e0c9eb51d2d8",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform53-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3745,
+        "changed": [],
+        "elapsed_seconds": 2.08
+      },
+      {
+        "name": "process-platform53-20261027-linux.test",
+        "sha256": "0f467b69e623526a65605ed21df79a25477c3722748144e2120c922556d56aa1",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform53-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4239,
+        "changed": [],
+        "elapsed_seconds": 8.21
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "original": "internal/app/plugin_module_process_catalog_seasons_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/internal/app/plugin_module_process_catalog_seasons_test.go.gz",
+      "sha256": "c0a2db3f5cb9affb10bc378db8bef2e66d6a57f08893debd6ae96fa213b6df49",
+      "stored_sha256": "e1c2cde0a437c9770055e8118a50006562d4cdcea546f40e48494bb2c3dc0dc2"
+    },
+    {
+      "original": "testdata/standard-catalog-modules/detail-seasons-source-oracle.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/testdata/standard-catalog-modules/detail-seasons-source-oracle.json.gz",
+      "sha256": "7b0224d8dc9a407fc3138654381ef828b3efb70e94493ff683abfc9fd23e30be",
+      "stored_sha256": "deef2cfe4fa9fd97308a356c2cc309bd49034cff74a6e5f1dc0eafb0e7cf24b9"
+    },
+    {
+      "original": "testdata/standard-catalog-modules/generate_detail_seasons_oracle.mjs",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/testdata/standard-catalog-modules/generate_detail_seasons_oracle.mjs.gz",
+      "sha256": "d97acbf53790fd3b122e4cc99ca87f558124a21269746cba8e9697dcbe02a460",
+      "stored_sha256": "a33194d65ed5745f42c4a4f654667e9576c013482e6dda1756be1045e7d3f0dc"
+    },
+    {
+      "original": "web/src/components/Catalog.vue",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/web/src/components/Catalog.vue.gz",
+      "sha256": "145eed57701f31cde376b82c48737f6f96bcb41fac65333356450210b69494e7",
+      "stored_sha256": "7e73ad450f94bd2ee183d7e662de2e25271a3e409b94de9a54ef228b9dbc4f90"
+    },
+    {
+      "original": "web/src/components/Subscriptions.vue",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/web/src/components/Subscriptions.vue.gz",
+      "sha256": "f9c118c54db081831e16c487ea84a4e8481b68beb516e7ac821043376a1a6934",
+      "stored_sha256": "5c224f06f9098db23abee78a94bb2ddf5f2017b86ba85ecbf480977a692b5bbe"
+    },
+    {
+      "original": "web/src/features/subscriptions.ts",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/web/src/features/subscriptions.ts.gz",
+      "sha256": "eb938f63beb88a84f0b5adefc37b8ceedb8124a9c5a41c29b2d8a1c5e6fa7cbb",
+      "stored_sha256": "abf95cc25a98fc0ab5a4b7f9e3b1a1b1d4a1b5daf937e5ebec32aed3c28909fb"
+    },
+    {
+      "original": "web/tests/subscriptions.test.mjs",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/web/tests/subscriptions.test.mjs.gz",
+      "sha256": "3bbe7315f61ddd3b81a9f0a4ff54478e56063a85ef6b4fa10ebb889e0688abc3",
+      "stored_sha256": "18b03c44c3ba277179c1687480bfe60b851287dc289ed904745f8670170732cf"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/archive-detail-seasons53.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/archive-detail-seasons53.py.gz",
+      "sha256": "2a1966f5f124d735f5db2e72f7ba760ddd989effa89500b453e4c16046954902",
+      "stored_sha256": "b12b37fed4ff3e60d1e10929d66a85cf5fb8deff180b3445e38775673b2cd433"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/build-platform53.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/build-platform53.py.gz",
+      "sha256": "43489621129bf50a8d823d1a62ef4338bd4f17fe90845f34354d360699837220",
+      "stored_sha256": "cc95ecf6c12d0c670e2a90bb9935df48a9aad9edb7f8e94e156fa3c0a886d195"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/detail-seasons53-format.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/detail-seasons53-format.log.gz",
+      "sha256": "24ccd4ac8fcafea93ed567622b34ef164e2fdb2bfee21facb8d04547bddb449c",
+      "stored_sha256": "810340d644277a7598c74738b69a0d7a874c1a35661e4fa5051f1d95cff39576"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/detail-seasons53-oracle.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/detail-seasons53-oracle.log.gz",
+      "sha256": "a4d3c2a9338ce33101a608859b8b56d1c98f07ccaa0be26f1bbc4f4e49a65cdb",
+      "stored_sha256": "80d56ca3733ccb0372f123b0266625bae40a97c23b3117dcaa72c3c71465340c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/detail-seasons53-web-build.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/detail-seasons53-web-build.log.gz",
+      "sha256": "e07cf59589e092518c3cba49ff7defe7a4ab0339ca5748ab089cd6d197309ba6",
+      "stored_sha256": "c3391f720305fd583e720d36c4f1e0122d18db13550e8294cd7357997b03b2e6"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/detail-seasons53-web-inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/detail-seasons53-web-inputs.json.gz",
+      "sha256": "a84e71badae7c531a30de95814134bdd135c68ddfd47f006adf87e41fc8f82b8",
+      "stored_sha256": "4eff4d84bc56b7ffa34ee7c6eb75351ebbfa996f80f467ce02b93504ace11a43"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/detail-seasons53-web-tests-final.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/detail-seasons53-web-tests-final.log.gz",
+      "sha256": "904c9eacfd94353d5c655276bb262f431f24b3a489ca0350d7f867be4123bf29",
+      "stored_sha256": "bb290569afa12b2cb198f00b344c070d8fa0e24064ad7d2bd28eb13c322a6d58"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/detail-seasons53-web-tests.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/detail-seasons53-web-tests.log.gz",
+      "sha256": "59508df869b7a497d48550b80222dd4d3437bdd48ce5b7780b8b6269e7b96104",
+      "stored_sha256": "f0c925954297fc4e9bc14e1aea38c7b275af3c0071f2b8cda6d4517d921fa40a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/platform53-result.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/platform53-result.json.gz",
+      "sha256": "ba964e104fd52a5af55fa1e54baa86642c67ea56c3448afdc05b2b47aaf99609",
+      "stored_sha256": "4afc499a358ce828918c398b301b8c605b5400b761bd56c5ca7e13a0043f3ffe"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/process-platform53-20261027-linux.test.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/process-platform53-20261027-linux.test.inputs.json.gz",
+      "sha256": "e7d2864bcf50990645093388d202413b0225bbeb292b385aa6299ac0c653f3ef",
+      "stored_sha256": "5b74f9737a4a4b6e2f9a6e7343004bc2f77deedde9598f9a78cc948734f6d5a4"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/run-seasons53.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/run-seasons53.py.gz",
+      "sha256": "012eaf1bc3703bcfc5e3d9db4b7daffd4408a65aedfee445426713e4acf07da9",
+      "stored_sha256": "3ef040d300e530fc35b5218f507313cb8726cfcacada5e480c65477b2c99432d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-browser/00-episode-fixture-false-error.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-browser/00-episode-fixture-false-error.dom.txt.gz",
+      "sha256": "b19aae6c3f416a5608ae9e3cf0558c8d147f0dd3bfda09b43191a775d9bb6d3d",
+      "stored_sha256": "c01e1709ac549834383c479dbc3e0874eb66585f282807413fa7a85b25a97b97"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-browser/00-episode-fixture-false-error.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-browser/00-episode-fixture-false-error.png",
+      "sha256": "c75d87c4a76bc546515b98e0b11c03bb37210688d2af4d7d54bcbe6165c278ae",
+      "stored_sha256": "c75d87c4a76bc546515b98e0b11c03bb37210688d2af4d7d54bcbe6165c278ae"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-browser/01-detail-sorted.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-browser/01-detail-sorted.dom.txt.gz",
+      "sha256": "000803616773722d1f3c448459a7823976f31d0a617fde68d5f43afa268a6d5c",
+      "stored_sha256": "2a45547d9aaeb486f62e2b3cd634e7f302a001f1e241d91b81354ea7efde68e8"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-browser/01-detail-sorted.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-browser/01-detail-sorted.png",
+      "sha256": "5f47f6b6332245024e16aa19adf8a486bb65ab2b6ca3d8fc7a18edfa4edb1be2",
+      "stored_sha256": "5f47f6b6332245024e16aa19adf8a486bb65ab2b6ca3d8fc7a18edfa4edb1be2"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-browser/02-subscription-season2.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-browser/02-subscription-season2.dom.txt.gz",
+      "sha256": "e98969163b1e399785a3ec998ab5bbb3aed60fb5f08125ff7214a9b95d200c8e",
+      "stored_sha256": "d89d183c1ab693523304bf87f838e4df0e2661bf6295d3abb08934c26ae8d36b"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-browser/02-subscription-season2.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-browser/02-subscription-season2.png",
+      "sha256": "26d0b46020204e729acbbb49b75dc72db9e284130111e8ba304b69137e6f6c8c",
+      "stored_sha256": "26d0b46020204e729acbbb49b75dc72db9e284130111e8ba304b69137e6f6c8c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-browser/03-null-seasons.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-browser/03-null-seasons.dom.txt.gz",
+      "sha256": "c8d9f23a44a65d556b961ca82a63353f5ee69eb6ad8b5d239b5acc2e0956a205",
+      "stored_sha256": "9d99feb53824b109c58e4ec4a4c0175bb8f8abafe8c4d0e23133f8a264f30830"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-browser/03-null-seasons.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-browser/03-null-seasons.png",
+      "sha256": "5a5c4ec599eb7db4197fe94b3bf4a643fd40df64a5e32108567d4dc2305423c3",
+      "stored_sha256": "5a5c4ec599eb7db4197fe94b3bf4a643fd40df64a5e32108567d4dc2305423c3"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-browser/04-cold-sorted.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-browser/04-cold-sorted.dom.txt.gz",
+      "sha256": "000803616773722d1f3c448459a7823976f31d0a617fde68d5f43afa268a6d5c",
+      "stored_sha256": "2a45547d9aaeb486f62e2b3cd634e7f302a001f1e241d91b81354ea7efde68e8"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-browser/04-cold-sorted.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-browser/04-cold-sorted.png",
+      "sha256": "21fa05c6d641118bf77cccc60abdcb3da9b7db27cd0fd98849da0766841111d3",
+      "stored_sha256": "21fa05c6d641118bf77cccc60abdcb3da9b7db27cd0fd98849da0766841111d3"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-cleanup.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-cleanup.json.gz",
+      "sha256": "f38eeee8c0b19c90e9404a314595d73c013a68745d81497212f23f3516f630cc",
+      "stored_sha256": "45618743469fff77bf5e4a4a602e2d255733179425c62cfed119e0d80bd64d01"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-observe.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-observe.py.gz",
+      "sha256": "de0478dfbf46c88baa3c761a577c5c4411f9497c30d2509cc0984057182c86a5",
+      "stored_sha256": "42a49cf34c7e4c13dd8467bbc0eec388b1c9c36affda7746699dd8419dbf2ce0"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-cold.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-cold.json.gz",
+      "sha256": "f0f8396852ca29f61e97ed368c1fcb7953befac77da55e792de90c3d7c4139ac",
+      "stored_sha256": "c6c93ba4aef3ddb2b9b9dfe7e31776160ed2c8e2bc288b8ec22e90b2dddb7789"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-empty-loaded.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-empty-loaded.json.gz",
+      "sha256": "940d0ebf7dd0e36762de3f3d27098272ed4c08527b0416477c02ecf7bdf6e01c",
+      "stored_sha256": "3f9227c25c6b6277f977a0c0b8654ec8eb4e18ce1d4fe22e062337a5ca2f270a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-empty.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-empty.json.gz",
+      "sha256": "87225655c325d6c66b7e80e16a0a0d87f0248c7552d4d4667f9655ac215975d4",
+      "stored_sha256": "eb2aeab7cf18c2125fd32008ed4f27217dcf13d68f7f87d17cbd93de9643f38d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-final.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-final.json.gz",
+      "sha256": "3ca6a8fe405784fe4d630897a607751e741316a83080c4bb68843fc59f64a4f4",
+      "stored_sha256": "7b45caa9b06e7359b37867ea45bb57fd5a2b1780a67041ec94d47cb9dd40da19"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-initial-error.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-initial-error.json.gz",
+      "sha256": "92a574225db8344bb11afd3cdbb571a501eafab5e3bf8466842ac96222e925ae",
+      "stored_sha256": "5616a1315b79b1fbb98c2551a2110488ce39536624b89b09f176a0c9bda15808"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-restore.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-restore.json.gz",
+      "sha256": "b4ad5b8215f991f2ac15125dd67f85b61b43d08c91546726f8a513dad72d62cb",
+      "stored_sha256": "abc71b13ac51a213eca4387af8f87bb9d2aeedf8f4ad8f29dfd25370cce0c18e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-selected.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-browser-selected.json.gz",
+      "sha256": "f3e08166a2907e39c9d70d7609550e579b0e7eb1ff97b2994ac4b37f933af5b6",
+      "stored_sha256": "04b9080d7ad3ef8b01f4597149acbe1c89205961dc34a4a5ed2b9bea3563b8b7"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-cli-evidence/catalog-seasons52-proof.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-cli-evidence/catalog-seasons52-proof.json.gz",
+      "sha256": "60ba5d819e44bd56f64a3c8aa051a0892ef06d3bd4f3b3c9537e8b13fdf83358",
+      "stored_sha256": "95f125d82da593be9ac1b7e92d57cdb167dcd4a282c9481118904cb5a73514c1"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-cli-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-cli-evidence/events36-service-process.log.gz",
+      "sha256": "26c8b6e04aea0b7f65021dba8d0cd77e5602cdf390c1151bfd30898c52560ca0",
+      "stored_sha256": "9f8afb82fcf0d7b4698c4201db96090234a4c732323546b24843d90e334c119a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-cli.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-cli.log.gz",
+      "sha256": "d5f519b25daab7e156adc5df986cf5aaaf2287dab33f8fea7be53141eeb101fa",
+      "stored_sha256": "d8cb0d883bb0b3755c5b8771f8f610a5b876fb3ad779fb30deab4c5e5d3987b3"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-observe.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-observe.py.gz",
+      "sha256": "de0478dfbf46c88baa3c761a577c5c4411f9497c30d2509cc0984057182c86a5",
+      "stored_sha256": "42a49cf34c7e4c13dd8467bbc0eec388b1c9c36affda7746699dd8419dbf2ce0"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-ui-evidence/catalog-seasons52-proof.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-ui-evidence/catalog-seasons52-proof.json.gz",
+      "sha256": "24c8c46b4c8db20f3a716e5eb40042a8f04dde8c00b3f7a37cb65f8e47fc9bf0",
+      "stored_sha256": "ca3a48d1d616322983403c3ee62a41f668e846e1d9c1cbdec4f2e722741092b8"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-ui-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-ui-evidence/events36-service-process.log.gz",
+      "sha256": "90adc2df95cb7a325f7c5b96cfde11b003ae6b1fbe8ca9c010fb23c78a19d3c7",
+      "stored_sha256": "54dd22824d4a20a53c741dd05c2e3dff0d041a5a7f79c621fb837a06ab834c30"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-ui-state.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-ui-state.json.gz",
+      "sha256": "a3ebd4e353a771db8b870e46d34d805eb08acca522b994fd31fbd49b657348dc",
+      "stored_sha256": "a2ebaecda10af31f9eac66e31b6009e7bd505b208f3feb3de7c85875e814de7b"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-ui-state.json.done",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-ui-state.json.done.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-ui-state.json.restart.done",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-ui-state.json.restart.done.gz",
+      "sha256": "06000542aae10c6782db5eabf59be225f1166238cd18919872c387b58e60a978",
+      "stored_sha256": "f816b7f81bc6e71261f810bd65f5c21bc7b8069b23f38771a9e736ea2799d0dd"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-ui.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/seasons53-remote/seasons53-ui.log.gz",
+      "sha256": "764b4b10852446fa512e88e31e2a90f3d5722086e4ef89b302d134377abcd78d",
+      "stored_sha256": "fd2161cd0e1443e50954b297cd5904c6feb23bbf92bb47fb6c39dc4fad09d7af"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/server-platform53-20261027-linux.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/catalog-detail-seasons-53-20261028/work/plugin-no-official-auth-20261026/server-platform53-20261027-linux.inputs.json.gz",
+      "sha256": "24d9b0e74ef222958101e3489ecca6bc0f60f5a89cea379f78fc79449bb271db",
+      "stored_sha256": "8d8da695587ccdc0e14aeb1191aa14941130c6546d2edb74210caf871f54779a"
+    }
+  ]
+}

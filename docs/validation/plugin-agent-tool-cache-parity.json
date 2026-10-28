@@ -1,0 +1,64 @@
+{
+  "date": "2026-10-25",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_blob": "8fc8954d7e7df32b970f16f461efa244fa2f142c",
+  "source_sha256": {
+    "internal/app/plugin_original_extensions.go": "a6157d89341b4028ed79e84d682b03d24984f8d81adc80ddc263b45c9db6c287",
+    "internal/app/plugin_original_extensions_test.go": "bd40332f02f15c8eedfee19a7bdbb0535eecc6152de83762a97d925fddaf9797",
+    "testdata/standard-agent-tools/source_oracle.py": "38fb09067a3518143ee06448da056c59b2838db4aba31e09a9aadac48982c40f",
+    "testdata/standard-agent-tools/source-oracle.json": "c347422250693c3a1f7df21fc9d3da2da016438fc1eabcf4d3f14a85619f7434"
+  },
+  "runs": [
+    {
+      "path": "work/plugin-module-20261025/agent-tools/normal-final.jsonl",
+      "sha256": "a65d5784ff4faae1553e918374a0be92f65e8aafb613438634287ceebd105f0b",
+      "roots": [
+        "TestOriginalExtensionActionsHTTPAuthAndGroups",
+        "TestOriginalExtensionActionActualInvocation",
+        "TestOriginalExtensionMissingMethodBeforeState",
+        "TestOriginalExtensionAgentToolCacheLifecycle",
+        "TestOriginalExtensionAgentToolCacheRejectsConcurrentStaleBuild",
+        "TestOriginalExtensionAgentToolCacheJSONIterablesActualSDK",
+        "TestOriginalExtensionAgentToolScalarCacheFailureActualSDK"
+      ],
+      "elapsed_seconds": 4.789,
+      "race_app_and_worker": false,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "path": "work/plugin-module-20261025/agent-tools/race-final.jsonl",
+      "sha256": "ed7747533bd54831a5d42ebe5af86b34176671d67419c73838361c56d7d462c1",
+      "roots": [
+        "TestOriginalExtensionActionsHTTPAuthAndGroups",
+        "TestOriginalExtensionActionActualInvocation",
+        "TestOriginalExtensionMissingMethodBeforeState",
+        "TestOriginalExtensionAgentToolCacheLifecycle",
+        "TestOriginalExtensionAgentToolCacheRejectsConcurrentStaleBuild",
+        "TestOriginalExtensionAgentToolCacheJSONIterablesActualSDK",
+        "TestOriginalExtensionAgentToolScalarCacheFailureActualSDK"
+      ],
+      "elapsed_seconds": 37.831,
+      "race_app_and_worker": true,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "scope": "Exact source list(tools) cache-copy behavior for JSON values; actual independent SDK worker installed over owned HTTP; existing action/cache lifecycle regressions. No Agent execution engine claim.",
+  "source_oracle_passed": true,
+  "platform": "darwin-arm64",
+  "go": "go1.26.2",
+  "worker_builds": {
+    "normal": "work/plugin-module-20261025/extensions/owned-extensions",
+    "race": "work/plugin-module-20261025/extensions/owned-extensions-race",
+    "extension_ldflags": "-X main.fixtureExtensionMethods=both",
+    "race_verified": "go version -m includes -race=true"
+  },
+  "not_modified": [
+    "shared worker fixture",
+    "action invocation",
+    "Agent execution engine",
+    "original MoviePilot source",
+    "production"
+  ]
+}

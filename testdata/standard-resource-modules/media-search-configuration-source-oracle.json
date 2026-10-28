@@ -1,0 +1,383 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/core/config.py": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+    "app/utils/limit.py": "797da5fde45bc7dcf80966f6fc01b53e33663ad0521c37a095cea16498b3706e"
+  },
+  "kind": "actual selected ordinary Settings converters/validator under dev Pydantic, fake env-present mapping prevents file writes; actual MinIntervalLimiter.reserve and CPython overflow sleep, controlled monotonic clock",
+  "pydantic": "2.13.4",
+  "cases": [
+    {
+      "field": "MAX_SEARCH_NAME_LIMIT",
+      "raw": "0",
+      "max_names": "0",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": false,
+      "diagnostics": []
+    },
+    {
+      "field": "MAX_SEARCH_NAME_LIMIT",
+      "raw": "-2",
+      "max_names": "-2",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": false,
+      "diagnostics": []
+    },
+    {
+      "field": "MAX_SEARCH_NAME_LIMIT",
+      "raw": " ２ ",
+      "max_names": "2",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "MAX_SEARCH_NAME_LIMIT",
+      "raw": "1_0",
+      "max_names": "10",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "MAX_SEARCH_NAME_LIMIT",
+      "raw": "bad",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": true,
+      "diagnostics": [
+        "ERROR",
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "MAX_SEARCH_NAME_LIMIT",
+      "raw": "\u001c2\u001f",
+      "max_names": "2",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_MULTIPLE_NAME",
+      "raw": "YES",
+      "max_names": "3",
+      "multiple": true,
+      "interval": "2.0",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_MULTIPLE_NAME",
+      "raw": "t",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_MULTIPLE_NAME",
+      "raw": " off ",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_MULTIPLE_NAME",
+      "raw": "0",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_MULTIPLE_NAME",
+      "raw": "bad",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_KEYWORD_MIN_INTERVAL",
+      "raw": "2",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_KEYWORD_MIN_INTERVAL",
+      "raw": "0",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "0.0",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_KEYWORD_MIN_INTERVAL",
+      "raw": "-1",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "-1.0",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_KEYWORD_MIN_INTERVAL",
+      "raw": "-0.0",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "-0.0",
+      "normalized": false,
+      "diagnostics": []
+    },
+    {
+      "field": "SEARCH_KEYWORD_MIN_INTERVAL",
+      "raw": "nan",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "nan",
+      "normalized": false,
+      "diagnostics": []
+    },
+    {
+      "field": "SEARCH_KEYWORD_MIN_INTERVAL",
+      "raw": "inf",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "inf",
+      "normalized": false,
+      "diagnostics": []
+    },
+    {
+      "field": "SEARCH_KEYWORD_MIN_INTERVAL",
+      "raw": "-inf",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "-inf",
+      "normalized": false,
+      "diagnostics": []
+    },
+    {
+      "field": "SEARCH_KEYWORD_MIN_INTERVAL",
+      "raw": "+-inf",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": true,
+      "diagnostics": [
+        "ERROR",
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_KEYWORD_MIN_INTERVAL",
+      "raw": " ２.５ ",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "2.5",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_KEYWORD_MIN_INTERVAL",
+      "raw": "1_0.5",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "10.5",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_KEYWORD_MIN_INTERVAL",
+      "raw": "0x1p2",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": true,
+      "diagnostics": [
+        "ERROR",
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_KEYWORD_MIN_INTERVAL",
+      "raw": "bad",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "2.0",
+      "normalized": true,
+      "diagnostics": [
+        "ERROR",
+        "WARN",
+        "WARN"
+      ]
+    },
+    {
+      "field": "SEARCH_KEYWORD_MIN_INTERVAL",
+      "raw": "1e1000",
+      "max_names": "3",
+      "multiple": false,
+      "interval": "inf",
+      "normalized": true,
+      "diagnostics": [
+        "WARN",
+        "WARN"
+      ]
+    }
+  ],
+  "reservations": [
+    {
+      "interval": "2.0",
+      "ticks": [
+        100.0,
+        100.0,
+        102.0
+      ],
+      "waits": [
+        "0.0",
+        "2.0",
+        "2.0"
+      ],
+      "error": null
+    },
+    {
+      "interval": "0.0",
+      "ticks": [
+        100.0,
+        100.0,
+        102.0
+      ],
+      "waits": [
+        "0.0",
+        "0.0",
+        "0.0"
+      ],
+      "error": null
+    },
+    {
+      "interval": "-1.0",
+      "ticks": [
+        100.0,
+        100.0,
+        102.0
+      ],
+      "waits": [
+        "0.0",
+        "0.0",
+        "0.0"
+      ],
+      "error": null
+    },
+    {
+      "interval": "nan",
+      "ticks": [
+        100.0,
+        100.0,
+        102.0
+      ],
+      "waits": [
+        "0.0",
+        "0.0",
+        "0.0"
+      ],
+      "error": null
+    },
+    {
+      "interval": "inf",
+      "ticks": [
+        100.0,
+        100.0,
+        102.0
+      ],
+      "waits": [
+        "0.0",
+        "inf"
+      ],
+      "error": "OverflowError"
+    },
+    {
+      "interval": "1e+100",
+      "ticks": [
+        100.0,
+        100.0,
+        102.0
+      ],
+      "waits": [
+        "0.0",
+        "1e+100"
+      ],
+      "error": "OverflowError"
+    },
+    {
+      "interval": "9000000000.0",
+      "ticks": [
+        100.0,
+        100.0,
+        102.0
+      ],
+      "waits": [
+        "0.0",
+        "9000000000.0",
+        "17999999998.0"
+      ],
+      "error": "OverflowError"
+    }
+  ]
+}

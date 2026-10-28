@@ -246,15 +246,31 @@ func (a *App) resolveMaterial(ctx context.Context, ref, purpose string) ([]byte,
 }
 
 func (a *App) acceptDownload(ctx context.Context, in Intent, j Job) error {
+	return a.acceptDownloadWithContext(ctx, in, j, nil)
+}
+
+func (a *App) acceptDownloadWithContext(ctx context.Context, in Intent, j Job, live *downloadContextSnapshot) error {
 	source, e := a.loadDownloadContext(ctx, "intent", in.ID, in.Hash)
 	if e != nil {
 		return e
+	}
+	if live != nil {
+		source = live
 	}
 	tx, e := a.Store.DB.BeginTx(ctx, nil)
 	if e != nil {
 		return e
 	}
 	defer tx.Rollback()
+	fresh, e := standardBusinessFactIsNewTx(ctx, tx, domainEventID("download.accepted", in.ID))
+	if e != nil {
+		return e
+	}
+	if source != nil {
+		if e = a.saveDownloadContextTx(ctx, tx, *source); e != nil {
+			return e
+		}
+	}
 	if e = a.saveSourceEpisodeSelectionTx(ctx, tx, in); e != nil {
 		return e
 	}
@@ -278,5 +294,11 @@ func (a *App) acceptDownload(ctx context.Context, in Intent, j Job) error {
 	if e = a.enqueueSubscriptionCompletionPreparationTx(ctx, tx, in); e != nil {
 		return e
 	}
-	return tx.Commit()
+	if e = tx.Commit(); e != nil {
+		return e
+	}
+	if fresh && live != nil {
+		a.emitOriginalDownloadAdded(ctx, in.Hash, source, source.OriginalDownloader)
+	}
+	return nil
 }

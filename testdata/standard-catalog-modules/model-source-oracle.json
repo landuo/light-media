@@ -1,0 +1,1024 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed Pydantic DTO classes, source-model validation only; no old application, no target implementation",
+  "pydantic": "2.13.4",
+  "sources": {
+    "app/schemas/context.py": "4450abd267664ddef80c52889ca9fe9bade48ff473161d162c539836e0a7cc6e",
+    "app/schemas/tmdb.py": "e1f6a6f57dabbc506a842956ab43b71a9862af0f0d9c4257382d99612096303c"
+  },
+  "cases": [
+    {
+      "model": "MediaPerson",
+      "input": null,
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "MediaPerson",
+      "input": false,
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "MediaPerson",
+      "input": 0,
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "MediaPerson",
+      "input": "",
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "MediaPerson",
+      "input": [],
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "MediaPerson",
+      "input": {},
+      "state": "valid",
+      "output": {
+        "source": null,
+        "id": null,
+        "type": 1,
+        "name": null,
+        "character": null,
+        "images": {},
+        "profile_path": null,
+        "gender": null,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": null,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    },
+    {
+      "model": "MediaPerson",
+      "input": {
+        "id": 120,
+        "name": "Owned Person",
+        "also_known_as": [
+          "One"
+        ],
+        "source": "themoviedb",
+        "profile_path": "https://owned.invalid/person.jpg"
+      },
+      "state": "valid",
+      "output": {
+        "source": "themoviedb",
+        "id": 120,
+        "type": 1,
+        "name": "Owned Person",
+        "character": null,
+        "images": {},
+        "profile_path": "https://owned.invalid/person.jpg",
+        "gender": null,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [
+          "One"
+        ],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": null,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    },
+    {
+      "model": "MediaPerson",
+      "input": {
+        "id": "120",
+        "name": "Owned",
+        "popularity": "0.0"
+      },
+      "state": "valid",
+      "output": {
+        "source": null,
+        "id": 120,
+        "type": 1,
+        "name": "Owned",
+        "character": null,
+        "images": {},
+        "profile_path": null,
+        "gender": null,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": 0.0,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    },
+    {
+      "model": "MediaPerson",
+      "input": {
+        "id": true,
+        "type": true,
+        "gender": false
+      },
+      "state": "valid",
+      "output": {
+        "source": null,
+        "id": 1,
+        "type": 1,
+        "name": null,
+        "character": null,
+        "images": {},
+        "profile_path": null,
+        "gender": 0,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": null,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    },
+    {
+      "model": "MediaPerson",
+      "input": {
+        "id": 12.0
+      },
+      "state": "valid",
+      "output": {
+        "source": null,
+        "id": 12,
+        "type": 1,
+        "name": null,
+        "character": null,
+        "images": {},
+        "profile_path": null,
+        "gender": null,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": null,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    },
+    {
+      "model": "MediaPerson",
+      "input": {
+        "id": 12.5
+      },
+      "state": "invalid",
+      "error_types": [
+        "int_from_float"
+      ]
+    },
+    {
+      "model": "MediaPerson",
+      "input": {
+        "id": 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      },
+      "state": "valid",
+      "output": {
+        "source": null,
+        "id": 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+        "type": 1,
+        "name": null,
+        "character": null,
+        "images": {},
+        "profile_path": null,
+        "gender": null,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": null,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    },
+    {
+      "model": "MediaPerson",
+      "input": {
+        "also_known_as": [
+          1,
+          {
+            "name": "owned"
+          }
+        ]
+      },
+      "state": "valid",
+      "output": {
+        "source": null,
+        "id": null,
+        "type": 1,
+        "name": null,
+        "character": null,
+        "images": {},
+        "profile_path": null,
+        "gender": null,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [
+          1,
+          {
+            "name": "owned"
+          }
+        ],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": null,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    },
+    {
+      "model": "MediaPerson",
+      "input": {
+        "name": 123
+      },
+      "state": "invalid",
+      "error_types": [
+        "string_type"
+      ]
+    },
+    {
+      "model": "MediaPerson",
+      "input": {
+        "images": []
+      },
+      "state": "invalid",
+      "error_types": [
+        "dict_type"
+      ]
+    },
+    {
+      "model": "MediaPerson",
+      "input": {
+        "unknown": "ignored"
+      },
+      "state": "valid",
+      "output": {
+        "source": null,
+        "id": null,
+        "type": 1,
+        "name": null,
+        "character": null,
+        "images": {},
+        "profile_path": null,
+        "gender": null,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": null,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    },
+    {
+      "model": "MediaPerson",
+      "input": {
+        "episode_number": "4",
+        "season_number": 2,
+        "crew": [
+          {
+            "id": 1
+          }
+        ]
+      },
+      "state": "valid",
+      "output": {
+        "source": null,
+        "id": null,
+        "type": 1,
+        "name": null,
+        "character": null,
+        "images": {},
+        "profile_path": null,
+        "gender": null,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": null,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    },
+    {
+      "model": "MediaPerson",
+      "input": {
+        "episode_number": null,
+        "season_number": null
+      },
+      "state": "valid",
+      "output": {
+        "source": null,
+        "id": null,
+        "type": 1,
+        "name": null,
+        "character": null,
+        "images": {},
+        "profile_path": null,
+        "gender": null,
+        "original_name": null,
+        "credit_id": null,
+        "also_known_as": [],
+        "birthday": null,
+        "deathday": null,
+        "imdb_id": null,
+        "known_for_department": null,
+        "place_of_birth": null,
+        "popularity": null,
+        "biography": null,
+        "roles": [],
+        "title": null,
+        "url": null,
+        "avatar": null,
+        "latin_name": null,
+        "career": [],
+        "relation": null
+      }
+    },
+    {
+      "model": "TmdbSeason",
+      "input": null,
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "TmdbSeason",
+      "input": false,
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "TmdbSeason",
+      "input": 0,
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "TmdbSeason",
+      "input": "",
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "TmdbSeason",
+      "input": [],
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "TmdbSeason",
+      "input": {},
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_count": null,
+        "name": null,
+        "overview": null,
+        "poster_path": null,
+        "season_number": null,
+        "vote_average": null
+      }
+    },
+    {
+      "model": "TmdbSeason",
+      "input": {
+        "id": 120,
+        "name": "Owned Person",
+        "also_known_as": [
+          "One"
+        ],
+        "source": "themoviedb",
+        "profile_path": "https://owned.invalid/person.jpg"
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_count": null,
+        "name": "Owned Person",
+        "overview": null,
+        "poster_path": null,
+        "season_number": null,
+        "vote_average": null
+      }
+    },
+    {
+      "model": "TmdbSeason",
+      "input": {
+        "id": "120",
+        "name": "Owned",
+        "popularity": "0.0"
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_count": null,
+        "name": "Owned",
+        "overview": null,
+        "poster_path": null,
+        "season_number": null,
+        "vote_average": null
+      }
+    },
+    {
+      "model": "TmdbSeason",
+      "input": {
+        "id": true,
+        "type": true,
+        "gender": false
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_count": null,
+        "name": null,
+        "overview": null,
+        "poster_path": null,
+        "season_number": null,
+        "vote_average": null
+      }
+    },
+    {
+      "model": "TmdbSeason",
+      "input": {
+        "id": 12.0
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_count": null,
+        "name": null,
+        "overview": null,
+        "poster_path": null,
+        "season_number": null,
+        "vote_average": null
+      }
+    },
+    {
+      "model": "TmdbSeason",
+      "input": {
+        "id": 12.5
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_count": null,
+        "name": null,
+        "overview": null,
+        "poster_path": null,
+        "season_number": null,
+        "vote_average": null
+      }
+    },
+    {
+      "model": "TmdbSeason",
+      "input": {
+        "id": 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_count": null,
+        "name": null,
+        "overview": null,
+        "poster_path": null,
+        "season_number": null,
+        "vote_average": null
+      }
+    },
+    {
+      "model": "TmdbSeason",
+      "input": {
+        "also_known_as": [
+          1,
+          {
+            "name": "owned"
+          }
+        ]
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_count": null,
+        "name": null,
+        "overview": null,
+        "poster_path": null,
+        "season_number": null,
+        "vote_average": null
+      }
+    },
+    {
+      "model": "TmdbSeason",
+      "input": {
+        "name": 123
+      },
+      "state": "invalid",
+      "error_types": [
+        "string_type"
+      ]
+    },
+    {
+      "model": "TmdbSeason",
+      "input": {
+        "images": []
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_count": null,
+        "name": null,
+        "overview": null,
+        "poster_path": null,
+        "season_number": null,
+        "vote_average": null
+      }
+    },
+    {
+      "model": "TmdbSeason",
+      "input": {
+        "unknown": "ignored"
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_count": null,
+        "name": null,
+        "overview": null,
+        "poster_path": null,
+        "season_number": null,
+        "vote_average": null
+      }
+    },
+    {
+      "model": "TmdbSeason",
+      "input": {
+        "episode_number": "4",
+        "season_number": 2,
+        "crew": [
+          {
+            "id": 1
+          }
+        ]
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_count": null,
+        "name": null,
+        "overview": null,
+        "poster_path": null,
+        "season_number": 2,
+        "vote_average": null
+      }
+    },
+    {
+      "model": "TmdbSeason",
+      "input": {
+        "episode_number": null,
+        "season_number": null
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_count": null,
+        "name": null,
+        "overview": null,
+        "poster_path": null,
+        "season_number": null,
+        "vote_average": null
+      }
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": null,
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": false,
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": 0,
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": "",
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": [],
+      "state": "invalid",
+      "error_types": [
+        "model_type"
+      ]
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": {},
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_number": null,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      }
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": {
+        "id": 120,
+        "name": "Owned Person",
+        "also_known_as": [
+          "One"
+        ],
+        "source": "themoviedb",
+        "profile_path": "https://owned.invalid/person.jpg"
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_number": null,
+        "episode_type": null,
+        "name": "Owned Person",
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      }
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": {
+        "id": "120",
+        "name": "Owned",
+        "popularity": "0.0"
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_number": null,
+        "episode_type": null,
+        "name": "Owned",
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      }
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": {
+        "id": true,
+        "type": true,
+        "gender": false
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_number": null,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      }
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": {
+        "id": 12.0
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_number": null,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      }
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": {
+        "id": 12.5
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_number": null,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      }
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": {
+        "id": 10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_number": null,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      }
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": {
+        "also_known_as": [
+          1,
+          {
+            "name": "owned"
+          }
+        ]
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_number": null,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      }
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": {
+        "name": 123
+      },
+      "state": "invalid",
+      "error_types": [
+        "string_type"
+      ]
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": {
+        "images": []
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_number": null,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      }
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": {
+        "unknown": "ignored"
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_number": null,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      }
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": {
+        "episode_number": "4",
+        "season_number": 2,
+        "crew": [
+          {
+            "id": 1
+          }
+        ]
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_number": 4,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": 2,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [
+          {
+            "id": 1
+          }
+        ],
+        "guest_stars": []
+      }
+    },
+    {
+      "model": "TmdbEpisode",
+      "input": {
+        "episode_number": null,
+        "season_number": null
+      },
+      "state": "valid",
+      "output": {
+        "air_date": null,
+        "episode_number": null,
+        "episode_type": null,
+        "name": null,
+        "overview": null,
+        "runtime": null,
+        "season_number": null,
+        "still_path": null,
+        "vote_average": null,
+        "crew": [],
+        "guest_stars": []
+      }
+    }
+  ]
+}

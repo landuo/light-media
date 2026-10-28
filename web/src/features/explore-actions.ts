@@ -38,9 +38,15 @@ export function tmdbExploreMedia(media: ExploreActionMedia | null | undefined) {
 
 export function exploreResolvePath(media: ExploreActionMedia) {
   if (
-    !['douban', 'bangumi', 'anilist'].includes(media.source) ||
+    typeof media.source !== 'string' ||
+    !media.source ||
+    media.source === 'themoviedb' ||
+    /[\u0000\r\n]/.test(media.source) ||
     !['movie', 'tv'].includes(media.media_type) ||
-    !/^[1-9]\d*$/.test(String(media.source_id || ''))
+    !String(media.source_id || '') ||
+    (['douban', 'bangumi', 'anilist'].includes(media.source) &&
+      !/^[1-9]\d*$/.test(String(media.source_id))) ||
+    /[\u0000\r\n]/.test(String(media.source_id))
   )
     throw new Error('影视来源或编号无效');
   return (
@@ -49,6 +55,8 @@ export function exploreResolvePath(media: ExploreActionMedia) {
       source: media.source,
       kind: media.media_type,
       source_id: String(media.source_id),
+      ...(typeof media.title === 'string' && media.title ? { title: media.title } : {}),
+      ...(media.year != null && String(media.year) ? { year: String(media.year) } : {}),
     })
   );
 }

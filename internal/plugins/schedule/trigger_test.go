@@ -132,3 +132,46 @@ func TestTriggerRejectsConflictingKindsAndInvalidScopes(t *testing.T) {
 		}
 	}
 }
+
+func TestTriggerActualAPSchedulerJitterAlgorithm(t *testing.T) {
+	raw, err := os.ReadFile("../../../testdata/standard-services/jitter-oracle.json")
+	var oracle struct {
+		Version string
+		Cases   []struct {
+			Name, Kind, Start string
+			End               *string
+			Jitter, Draw      float64
+			Times             []string
+		}
+	}
+	if err != nil || json.Unmarshal(raw, &oracle) != nil || oracle.Version != "3.11.3" || len(oracle.Cases) != 4 {
+		t.Fatal("actual dependency jitter oracle", err)
+	}
+	for _, sample := range oracle.Cases {
+		spec := Spec{Kind: sample.Kind, Timezone: "UTC", StartAt: sample.Start, JitterSeconds: sample.Jitter}
+		if spec.Kind == "cron" {
+			spec.Fields = &CronFields{Second: "*/10"}
+		} else {
+			spec.IntervalMS = 10000
+		}
+		if sample.End != nil {
+			spec.EndAt = *sample.End
+		}
+		start := instant(t, sample.Start)
+		trigger, err := New(spec, start)
+		if err != nil {
+			t.Fatal(err)
+		}
+		trigger.jitterRandom = func() float64 { return sample.Draw }
+		next := trigger.First(start)
+		for _, want := range sample.Times {
+			if !next.Equal(instant(t, want)) {
+				t.Fatal(sample.Name, "jitter algorithm changed", next, want)
+			}
+			next = trigger.Next(next)
+		}
+		if len(sample.Times) < 2 && !next.IsZero() {
+			t.Fatal(sample.Name, "source exhausted trigger produced a new time", next)
+		}
+	}
+}

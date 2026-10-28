@@ -1,0 +1,177 @@
+{
+  "accepted_increment": true,
+  "whole_indices_accepted": false,
+  "indices": [
+    36,
+    37,
+    43
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": [
+    "app/modules/filemanager/transhandler.py:transfer_media directory recursive storage.list/FileItem.name and original item; outer exception at617-619 creates fresh failed TransferInfo",
+    "app/chain/transfer.py:1087-1207 ordinary callback records and emits failure; AI retry excluded",
+    "app/chain/media.py:1035-1154 Blu-ray nonempty list event recursive=False; _handle_tv_directory lists only recursive=True"
+  ],
+  "targets": [
+    "internal/app/plugin_original_metadata_scrape.go",
+    "internal/app/plugin_original_metadata_tv_directory_test.go",
+    "internal/app/import_run.go",
+    "internal/app/plugin_original_transfer_directory_publish.go",
+    "internal/app/plugin_original_transfer_directory_result.go",
+    "internal/app/plugin_original_transfer_native_flags.go",
+    "internal/app/plugin_original_transfer_events.go",
+    "internal/app/plugin_original_transfer_bluray_storage_test.go",
+    "internal/app/plugin_module_process_transfer_test.go",
+    "internal/app/plugin_module_process_bluray_test.go",
+    "internal/app/jobs.go",
+    "cmd/owned-transfer-events-fixture/storage.go"
+  ],
+  "behavior": [
+    "Storage recursion uses provider.name for destination and passes original source FileItem to link/copy; durable sealed member mappings survive cancelled-job cold recovery.",
+    "Later provider list exception retains already-published physical prefix, returns new empty failed TransferInfo, emits one failure and ends actual native job with no automatic retry.",
+    "TV recursive=False omits list_files and writes one real season.nfo; fixed AST2cases, real SDK, Linux ordinary event endpoint -> host consumer -> metadata_nfo -> actual storage publication.",
+    "Browser sees cancelled job, cold retry succeeds, actual hardlinks/NFO and19B history remain after second cold start without replay; target+history deletion preserves source."
+  ],
+  "evidence": {
+    "source_directory_cases": 7,
+    "source_disc_name_cases": 8,
+    "source_tv_cases": 2,
+    "local_real_process_seconds": 7.73,
+    "race_seconds": 38.135,
+    "linux_cli_seconds": 3.47,
+    "linux_browser_seconds": 206.32,
+    "browser": {
+      "pass": true,
+      "iab": 86,
+      "pids": {
+        "before-cold": [
+          924163,
+          924169
+        ],
+        "cold-cancelled": [
+          925760,
+          925766
+        ],
+        "retry-success": [
+          925760,
+          925766
+        ],
+        "cold-success": [
+          927899,
+          927906
+        ],
+        "deleted": [
+          927899,
+          927906
+        ]
+      },
+      "members": [
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/bluray46r3-ui-tmp/TestPluginServicesProductionCLI2289743128/003/library/UIBluray/UIBluray (2024)/BDMV/STREAM/00001.m2ts",
+          "size": 19,
+          "inode": 119609518,
+          "device": 65025,
+          "sha256": "ead023166d01f02d7d5a2cda3912e287b267f071cbc0b093eaa84569ada6d65b"
+        },
+        {
+          "path": "/tmp/light-media-plugin-scope-dRZTQ91A/bluray46r3-ui-tmp/TestPluginServicesProductionCLI2289743128/003/library/UIBluray/UIBluray (2024)/BDMV/index.bdmv",
+          "size": 18,
+          "inode": 117588964,
+          "device": 65025,
+          "sha256": "b71eee80f4975df3034de2e44220530a49011a075414c8983eea975066be275b"
+        }
+      ],
+      "nfo": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/bluray46r3-ui-tmp/TestPluginServicesProductionCLI2289743128/003/library/UIBluray/UIBluray (2024)/UIBluray (2024).nfo",
+        "size": 62,
+        "inode": 184646037,
+        "device": 65025,
+        "sha256": "54767c5abe5882fbfb11733ff72fc1fa08f2247b921761d7f5cff61e22ab48f8"
+      },
+      "history_stream_size": 19,
+      "cold_replay": 0,
+      "cleanup": {
+        "paths": {
+          "/tmp/light-media-plugin-scope-dRZTQ91A/bluray46r3-ui-tmp/TestPluginServicesProductionCLI2289743128/001": false,
+          "/tmp/light-media-plugin-scope-dRZTQ91A/bluray46r3-ui-tmp/TestPluginServicesProductionCLI2289743128/003/source/UIBluray.2024.BluRay": false,
+          "/tmp/light-media-plugin-scope-dRZTQ91A/bluray46r3-ui-tmp/TestPluginServicesProductionCLI2289743128/003/library/UIBluray/UIBluray (2024)": false
+        }
+      },
+      "tv_nfo": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/bluray46r3-ui-tmp/TestPluginServicesProductionCLI2289743128/003/source/TVSource46/Season 2/season.nfo",
+        "bytes": "<season>owned TV metadata</season>",
+        "inode": 134308447,
+        "size": 34,
+        "sha256": "f5311abd71f23be4323df4d055e960302040882b120eb7d0d048bb8a49bfe117"
+      }
+    },
+    "build": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform46r3-20261027-linux",
+          "sha256": "f68e9bce2746334021898e9c0adda70e240f61149b7d679d9fa5f5405ba58325",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform46r3-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3731,
+          "changed": [],
+          "elapsed_seconds": 4.35
+        },
+        {
+          "name": "process-platform46r3-20261027-linux.test",
+          "sha256": "495dd5013e0916f591b9852498e312e4f8aa501f7a8a8388521c7b4686a53af7",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform46r3-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4215,
+          "changed": [],
+          "elapsed_seconds": 8.64
+        }
+      ]
+    },
+    "manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-directory-storage-46-20261028/manifest.json"
+  },
+  "adaptations": [
+    "Local path ownership and frozen snapshots remain mandatory; unsafe provider name/path rejected. Original source FileItem is sealed, never logged as plaintext receipt.",
+    "Development AST Python is source replay only; product remains all Go. Tests use synthetic bytes, controlled metadata and owned test plugins.",
+    "Provider exception text uses existing Go SDK error contract (plugin_operation_failed); no fabricated original Python exception text.",
+    "Cold partial-write cancellation test injects a SQL generation change after first published member; not an actual OS crash.",
+    "TV production proof explicitly supplies scrape_source=douban to isolate NFO and avoid unrelated image fetching; no claim of image-provider validation."
+  ],
+  "red": [
+    "TV root-only list count1 rather than0",
+    "Provider.name ignored in physical destination",
+    "Original controlled oracle failed to fix list order; explicit directory order now demonstrates two physical effects before late exception with empty result.",
+    "65.597s related run uncovered nil-key check affecting ordinary flags; corrected explicit-presence guard.",
+    "Linux46 redundant fixture cancel of terminal failure rejected400; Linux46r2 used pre-execution target rather than actual plan.",
+    "Mac preflight25.52s exposed actual directory provider exception scheduled retry_wait; fixed explicit failed result mapping; next7.73s passed."
+  ],
+  "remaining": [
+    "Non-BDMV-named directory deletion must follow pinned StorageChain parent cleanup instead of blanket rejection.",
+    "Ordinary197methods/199calls/81events applicability and whole36/37/43/50 remain open."
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

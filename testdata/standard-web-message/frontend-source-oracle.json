@@ -1,0 +1,373 @@
+{
+  "fixed_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "kind": "fixed frontend AST/function replay with controlled transport/ref/DOM callback; no real browser",
+  "sources": {
+    "components/dialog/ShortcutMessageDialog.vue": "78c3a7571db0a9681e3cb030e990b0c4538ab7f5d1884d20f17e7de2a506fa5b",
+    "views/system/MessageView.vue": "8f57283e550e7bf7c82a832cada3e606829e8b8c4be16bbc1a530e04c99818a0",
+    "layouts/components/ShortcutBar.vue": "41dc5e29542f460bce0cf80b312799dd6f0ca7b4bd9fe846b5f012228e686f9b",
+    "components/cards/MessageCard.vue": "d35d15599f131a60767e874f0414a37334e6bd3d1873170e3ee6afc294285758",
+    "@core/utils/index.ts": "331d0a80437ca56ea8707fe874a0062738fdebd34136122761d4ab6a4350e380"
+  },
+  "sends": [
+    {
+      "input": {
+        "name": "empty-no-request",
+        "text": " \n\t "
+      },
+      "expected": {
+        "calls": [],
+        "draft": " \n\t ",
+        "disabled": false,
+        "during": {
+          "draft": " \n\t ",
+          "disabled": false
+        }
+      }
+    },
+    {
+      "input": {
+        "name": "encoded-trimmed-command",
+        "text": " 　/owned 甲 & b\n "
+      },
+      "expected": {
+        "calls": [
+          {
+            "path": "message/web?text=%2Fowned%20%E7%94%B2%20%26%20b",
+            "method": "POST"
+          },
+          "scroll"
+        ],
+        "draft": "",
+        "disabled": false,
+        "during": {
+          "draft": " 　/owned 甲 & b\n ",
+          "disabled": true
+        }
+      }
+    },
+    {
+      "input": {
+        "name": "HTTP-success-false-body-is-not-interpreted",
+        "text": "/missing",
+        "body": {
+          "success": false
+        }
+      },
+      "expected": {
+        "calls": [
+          {
+            "path": "message/web?text=%2Fmissing",
+            "method": "POST"
+          },
+          "scroll"
+        ],
+        "draft": "",
+        "disabled": false,
+        "during": {
+          "draft": "/missing",
+          "disabled": true
+        }
+      }
+    },
+    {
+      "input": {
+        "name": "HTTP-failure-keeps-draft",
+        "text": "/owned",
+        "fail": true
+      },
+      "expected": {
+        "calls": [
+          {
+            "path": "message/web?text=%2Fowned",
+            "method": "POST"
+          }
+        ],
+        "draft": "/owned",
+        "disabled": false,
+        "during": {
+          "draft": "/owned",
+          "disabled": true
+        }
+      }
+    },
+    {
+      "input": {
+        "name": "pending-draft-change-is-cleared-on-success",
+        "text": "/first",
+        "changed": "/typed while waiting"
+      },
+      "expected": {
+        "calls": [
+          {
+            "path": "message/web?text=%2Ffirst",
+            "method": "POST"
+          },
+          "scroll"
+        ],
+        "draft": "",
+        "disabled": false,
+        "during": {
+          "draft": "/first",
+          "disabled": true
+        }
+      }
+    }
+  ],
+  "histories": [
+    {
+      "input": {
+        "name": "history-SSE-date-note-null-empty-dedup",
+        "batches": [
+          [
+            {
+              "id": 1,
+              "action": 1,
+              "title": "same",
+              "text": "body",
+              "reg_time": "2026-10-26 10:00:00",
+              "note": {}
+            }
+          ],
+          [
+            {
+              "id": 99,
+              "action": 1,
+              "title": "same",
+              "text": "body",
+              "date": "2026-10-26 10:00:00",
+              "note": null
+            }
+          ]
+        ]
+      },
+      "expected": [
+        {
+          "changed": true,
+          "items": [
+            {
+              "id": 1,
+              "action": 1,
+              "title": "same",
+              "text": "body",
+              "reg_time": "2026-10-26 10:00:00",
+              "note": {}
+            }
+          ],
+          "lastTime": "2026-10-26 10:00:00"
+        },
+        {
+          "changed": false,
+          "items": [
+            {
+              "id": 1,
+              "action": 1,
+              "title": "same",
+              "text": "body",
+              "reg_time": "2026-10-26 10:00:00",
+              "note": {}
+            }
+          ],
+          "lastTime": "2026-10-26 10:00:00"
+        }
+      ]
+    },
+    {
+      "input": {
+        "name": "source-sorts-batches-and-appends-older-page",
+        "batches": [
+          [
+            {
+              "id": "new",
+              "title": "new",
+              "reg_time": "2026-10-26 11:00:00"
+            },
+            {
+              "id": "middle",
+              "title": "middle",
+              "reg_time": "2026-10-26 10:00:00"
+            }
+          ],
+          [
+            {
+              "id": "old",
+              "title": "old",
+              "reg_time": "2026-10-26 09:00:00"
+            }
+          ]
+        ]
+      },
+      "expected": [
+        {
+          "changed": true,
+          "items": [
+            {
+              "id": "middle",
+              "title": "middle",
+              "reg_time": "2026-10-26 10:00:00"
+            },
+            {
+              "id": "new",
+              "title": "new",
+              "reg_time": "2026-10-26 11:00:00"
+            }
+          ],
+          "lastTime": "2026-10-26 11:00:00"
+        },
+        {
+          "changed": true,
+          "items": [
+            {
+              "id": "old",
+              "title": "old",
+              "reg_time": "2026-10-26 09:00:00"
+            },
+            {
+              "id": "middle",
+              "title": "middle",
+              "reg_time": "2026-10-26 10:00:00"
+            },
+            {
+              "id": "new",
+              "title": "new",
+              "reg_time": "2026-10-26 11:00:00"
+            }
+          ],
+          "lastTime": "2026-10-26 11:00:00"
+        }
+      ]
+    },
+    {
+      "input": {
+        "name": "same-signature-id-is-ignored-and-note-distinguishes",
+        "batches": [
+          [
+            {
+              "id": 1,
+              "title": "one",
+              "date": "2026-10-26T09:00:00Z",
+              "note": {
+                "x": 1
+              }
+            },
+            {
+              "id": 2,
+              "title": "one",
+              "date": "2026-10-26T09:00:00Z",
+              "note": {
+                "x": 1
+              }
+            },
+            {
+              "id": 3,
+              "title": "one",
+              "date": "2026-10-26T09:00:00Z",
+              "note": "{\"x\":1}"
+            }
+          ]
+        ]
+      },
+      "expected": [
+        {
+          "changed": true,
+          "items": [
+            {
+              "id": 1,
+              "title": "one",
+              "date": "2026-10-26T09:00:00Z",
+              "note": {
+                "x": 1
+              }
+            }
+          ],
+          "lastTime": "2026-10-26T09:00:00Z"
+        }
+      ]
+    }
+  ],
+  "shortcuts": [
+    {
+      "url": "https://owned.invalid/?shortcut=message#/plugins",
+      "open": true
+    },
+    {
+      "url": "https://owned.invalid/#/dashboard?shortcut=message",
+      "open": true
+    },
+    {
+      "url": "https://owned.invalid/?SHORTCUT=message",
+      "open": true
+    },
+    {
+      "url": "https://owned.invalid/?shortcut=Message",
+      "open": false
+    },
+    {
+      "url": "https://owned.invalid/?shortcut=%6dessage",
+      "open": false
+    },
+    {
+      "url": "https://owned.invalid/?shortcut=scheduler",
+      "open": false
+    }
+  ],
+  "markdown": [
+    {
+      "input": "first\nsecond",
+      "expected": "<p>first<br>\nsecond</p>\n"
+    },
+    {
+      "input": "**text** <i>ordinary</i> [link](https://example.test/path)",
+      "expected": "<p><strong>text</strong> <i>ordinary</i> <a href=\"https://example.test/path\" target=\"_blank\" rel=\"noopener noreferrer\">link</a></p>\n"
+    },
+    {
+      "input": "",
+      "expected": ""
+    }
+  ],
+  "notes": [
+    {
+      "note": null,
+      "expected": {}
+    },
+    {
+      "note": {},
+      "expected": {}
+    },
+    {
+      "note": "",
+      "expected": {}
+    },
+    {
+      "note": [
+        {
+          "title_year": "Owned (2026)",
+          "type": "电影",
+          "vote_average": 8
+        }
+      ],
+      "expected": [
+        {
+          "title_year": "Owned (2026)",
+          "type": "电影",
+          "vote_average": 8
+        }
+      ]
+    },
+    {
+      "note": "[{\"title_year\":\"Owned (2026)\",\"type\":\"电影\",\"vote_average\":8}]",
+      "expected": [
+        {
+          "title_year": "Owned (2026)",
+          "type": "电影",
+          "vote_average": 8
+        }
+      ]
+    },
+    {
+      "note": "malformed",
+      "expected": "malformed"
+    }
+  ],
+  "messageCardSource": "<script lang=\"ts\" setup>\nimport MarkdownIt from 'markdown-it'\nimport mdLinkAttributes from 'markdown-it-link-attributes'\nimport { isNullOrEmptyObject } from '@/@core/utils'\nimport type { Message } from '@/api/types'\nimport { formatDateDifference } from '@core/utils/formatters'\n\n// 输入参数\nconst props = defineProps({\n  message: Object as PropType<Message>,\n  width: String,\n  height: String,\n})\n\n// 定义事件\nconst emit = defineEmits(['imageload'])\n\n// 图片是否加载完成\nconst isImageLoaded = ref(false)\n\n// 图片是否加载失败\nconst imageLoadError = ref(false)\n\n// 初始化 markdown-it\nconst md = new MarkdownIt({\n  html: true,\n  breaks: true,\n  linkify: true,\n  typographer: true,\n})\n\n// 插件：链接在新窗口打开\nmd.use(mdLinkAttributes, {\n  attrs: {\n    target: '_blank',\n    rel: 'noopener noreferrer',\n  },\n})\n\n// 图片加载完成\nasync function imageLoaded() {\n  isImageLoaded.value = true\n  emit('imageload')\n}\n\n// 链接打开新窗口\nfunction openLink() {\n  if (props.message?.link) window.open(props.message.link, '_blank')\n}\n\n// 将note转换为json\nfunction noteToJson() {\n  if (props.message?.note) {\n    try {\n      return JSON.parse(props.message.note)\n    } catch (error) {\n      return props.message.note\n    }\n  }\n  return {}\n}\n\n// 渲染 Markdown\nfunction renderMarkdown(value: string) {\n  if (!value) return ''\n  return md.render(value)\n}\n</script>\n\n<template>\n  <VCard variant=\"tonal\" :width=\"props.width\" :height=\"props.height\" @click=\"openLink\" max-width=\"23rem\">\n    <div v-if=\"props.message?.image\" class=\"relative text-center card-cover-blurred\">\n      <VImg\n        :src=\"props.message?.image\"\n        aspect-ratio=\"3/2\"\n        cover\n        position=\"top\"\n        @load=\"imageLoaded\"\n        @error=\"imageLoadError = true\"\n        min-height=\"10rem\"\n      >\n        <template #placeholder>\n          <div class=\"w-full h-full\">\n            <VSkeletonLoader class=\"object-cover aspect-w-2 aspect-h-3\" />\n          </div>\n        </template>\n      </VImg>\n    </div>\n    <div\n      v-if=\"\n        props.message?.title &&\n        !props.message?.text &&\n        !props.message?.image &&\n        isNullOrEmptyObject(props.message?.note) &&\n        props.message?.action === 0\n      \"\n      class=\"rounded-md text-body-1 py-2 px-4 elevation-2 bg-primary text-white chat-right mb-1\"\n    >\n      <p class=\"mb-0\">{{ props.message?.title }}</p>\n    </div>\n    <VCardTitle v-else-if=\"props.message?.title\" class=\"break-words whitespace-break-spaces\">\n      {{ props.message?.title }}\n    </VCardTitle>\n    <div\n      v-if=\"props.message?.text && props.message?.action === 0\"\n      class=\"rounded-md text-body-1 py-1 px-4 elevation-2 bg-primary text-white chat-right\"\n    >\n      <div class=\"markdown-body\" v-html=\"renderMarkdown(props.message?.text)\" />\n    </div>\n    <VCardText\n      v-if=\"props.message?.text && props.message?.action === 1\"\n      class=\"markdown-body\"\n      v-html=\"renderMarkdown(props.message?.text)\"\n    />\n    <VCardText v-if=\"!isNullOrEmptyObject(props.message?.note)\">\n      <VList>\n        <VListItem v-for=\"(value, key) in noteToJson()\" :key=\"key\" two-line>\n          <VListItemTitle v-if=\"value.title_year\" class=\"font-bold break-words whitespace-break-spaces\">\n            {{ Number(key) + 1 }}. {{ value.title_year }}\n          </VListItemTitle>\n          <VListItemTitle v-if=\"value.enclosure\" class=\"font-bold break-words whitespace-break-spaces\">\n            {{ Number(key) + 1 }}. {{ value.title }} {{ value.volume_factor }} ↑{{ value.seeders }}\n          </VListItemTitle>\n          <VListItemSubtitle v-if=\"value.type\">\n            类型：{{ value.type }} 评分：{{ value.vote_average }}\n          </VListItemSubtitle>\n          <VListItemSubtitle v-if=\"value.enclosure\" class=\"whitespace-break-spaces\">\n            {{ value.description }}\n          </VListItemSubtitle>\n        </VListItem>\n      </VList>\n    </VCardText>\n  </VCard>\n  <div class=\"text-end\">\n    <span v-if=\"props.message?.action === 0\" class=\"text-sm italic me-2\">{{ props.message?.userid }}</span>\n    <span class=\"text-sm italic me-2\">{{\n      formatDateDifference(props.message?.reg_time || props.message?.date || '')\n    }}</span>\n  </div>\n</template>\n\n<style lang=\"scss\">\n.markdown-body {\n  word-break: break-all;\n\n  p {\n    margin-block-end: 0.5rem;\n  }\n\n  p:last-child {\n    margin-block-end: 0;\n  }\n\n  a {\n    color: inherit;\n    text-decoration: underline;\n  }\n\n  ul {\n    list-style-type: disc;\n    margin-block-end: 0.5rem;\n    padding-inline-start: 1.5rem;\n  }\n\n  ol {\n    list-style-type: decimal;\n    margin-block-end: 0.5rem;\n    padding-inline-start: 1.5rem;\n  }\n\n  li {\n    display: list-item;\n    margin-block-end: 0.25rem;\n  }\n\n  code {\n    border-radius: 4px;\n    background-color: rgba(var(--v-border-color), 0.1);\n    font-family: monospace;\n    padding-block: 0.2rem;\n    padding-inline: 0.4rem;\n  }\n\n  pre {\n    overflow: auto;\n    padding: 1rem;\n    border-radius: 8px;\n    background-color: rgba(var(--v-border-color), 0.1);\n    margin-block-end: 0.5rem;\n\n    code {\n      padding: 0;\n      background-color: transparent;\n    }\n  }\n\n  blockquote {\n    border-inline-start: 4px solid rgba(var(--v-border-color), 0.2);\n    font-style: italic;\n    margin-block-end: 0.5rem;\n    padding-inline-start: 1rem;\n  }\n\n  table {\n    border-collapse: collapse;\n    inline-size: 100%;\n    margin-block-end: 1rem;\n\n    th,\n    td {\n      padding: 0.5rem;\n      border: 1px solid rgba(var(--v-border-color), 0.1);\n      text-align: start;\n    }\n\n    th {\n      background-color: rgba(var(--v-border-color), 0.05);\n    }\n  }\n\n  img {\n    block-size: auto;\n    max-inline-size: 100%;\n  }\n}\n</style>\n",
+  "sourceIsEmptyObject": "\"use strict\";\nfunction isNullOrEmptyObject(obj) {\n    // 首先判断是否为 null 或 undefined\n    if (obj === null || obj === undefined)\n        return true;\n    // 然后判断是否为空对象\n    return !!(typeof obj === 'object' && Object.keys(obj).length === 0);\n}\n"
+}

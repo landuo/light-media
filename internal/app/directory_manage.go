@@ -366,6 +366,9 @@ func (a *App) directoryOptions(downloader, kind string) (any, error) {
 }
 func (a *App) directoryAPI(r *http.Request, path string) (any, error) {
 	ctx := r.Context()
+	if path == "transfer-types" && r.Method == "GET" {
+		return a.originalTransferTypes(ctx)
+	}
 	if path == "options" && r.Method == "GET" {
 		return a.directoryOptions(r.URL.Query().Get("downloader_id"), r.URL.Query().Get("media_type"))
 	}

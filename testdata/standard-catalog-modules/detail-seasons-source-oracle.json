@@ -1,0 +1,125 @@
+{
+  "commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "path": "src/views/discover/MediaDetailView.vue",
+  "sha256": "363a00daae5ed0b6086d3deea27cf2839a7e52cfe4b43e35e739a109aa00e66a",
+  "start_line": 274,
+  "code": "const getMediaSeasons = computed(() => {\n  if (!mediaDetail.value?.season_info) return []\n  return [...mediaDetail.value.season_info].sort((a, b) => {\n    if (a.season_number === 0) return 1\n    if (b.season_number === 0) return -1\n    return (a.season_number || 0) - (b.season_number || 0)\n  })\n})\ngetMediaSeasons",
+  "cases": [
+    {
+      "name": "unordered",
+      "input": {
+        "season_info": [
+          {
+            "season_number": 0,
+            "name": "Specials",
+            "episode_count": 1
+          },
+          {
+            "season_number": 2,
+            "name": "Two",
+            "episode_count": 8
+          },
+          {
+            "season_number": 1,
+            "name": "One",
+            "episode_count": 3
+          }
+        ]
+      },
+      "output": [
+        {
+          "season_number": 1,
+          "name": "One",
+          "episode_count": 3
+        },
+        {
+          "season_number": 2,
+          "name": "Two",
+          "episode_count": 8
+        },
+        {
+          "season_number": 0,
+          "name": "Specials",
+          "episode_count": 1
+        }
+      ]
+    },
+    {
+      "name": "null",
+      "input": {
+        "season_info": null
+      },
+      "output": []
+    },
+    {
+      "name": "empty",
+      "input": {
+        "season_info": []
+      },
+      "output": []
+    },
+    {
+      "name": "missing",
+      "input": {},
+      "output": []
+    },
+    {
+      "name": "missing_number",
+      "input": {
+        "season_info": [
+          {
+            "name": "Without number"
+          },
+          {
+            "season_number": 2
+          },
+          {
+            "season_number": 0
+          }
+        ]
+      },
+      "output": [
+        {
+          "name": "Without number"
+        },
+        {
+          "season_number": 2
+        },
+        {
+          "season_number": 0
+        }
+      ]
+    },
+    {
+      "name": "duplicate",
+      "input": {
+        "season_info": [
+          {
+            "season_number": 2,
+            "name": "first"
+          },
+          {
+            "season_number": 1
+          },
+          {
+            "season_number": 2,
+            "name": "second"
+          }
+        ]
+      },
+      "output": [
+        {
+          "season_number": 1
+        },
+        {
+          "season_number": 2,
+          "name": "first"
+        },
+        {
+          "season_number": 2,
+          "name": "second"
+        }
+      ]
+    }
+  ]
+}

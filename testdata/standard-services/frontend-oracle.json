@@ -1,0 +1,46 @@
+{
+  "fixed_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": "src/views/system/ServiceView.vue",
+  "source_sha256": "bce4302f652ff7979b7602d95284704167276fc1ebab4079ea050bef88a75187",
+  "kind": "actual fixed source functions with held protocol request; synthetic list values",
+  "immediate": {
+    "requests": [
+      {
+        "path": "system/runscheduler",
+        "options": {
+          "params": {
+            "jobid": "Demo_tick"
+          }
+        }
+      }
+    ],
+    "timer_ms": [
+      1000
+    ],
+    "toasts": [
+      "setting.scheduler.executeSuccess"
+    ],
+    "list": []
+  },
+  "after_refresh": {
+    "requests": [
+      {
+        "path": "system/runscheduler",
+        "options": {
+          "params": {
+            "jobid": "Demo_tick"
+          }
+        }
+      },
+      {
+        "path": "dashboard/schedule"
+      }
+    ],
+    "list": [
+      {
+        "id": "Demo_tick",
+        "status": "正在运行"
+      }
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "item": 35,
+  "accepted": true,
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "scope": "supplementary fixed Source static-file filename header/error fidelity, prior Axios/lifecycle/browser proof remains separately bound",
+  "source": "app/api/endpoints/plugin.py:816-839 StreamingResponse header construction and catch500",
+  "source_runtime": {
+    "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+    "unicode": "15.0.0",
+    "fastapi": "0.136.3",
+    "starlette": "1.3.1",
+    "aiofiles": "25.1.0"
+  },
+  "fixed_requirements": "requirements.in fastapi~=0.136.3/starlette~=1.3.1/aiofiles~=25.1.0",
+  "source_proof": "actual fixed static-file/access AST and FastAPI0.136.3/Starlette1.3.1 through ASGI2.4 raw header/body capture on Python3.12.13; real files and 8KiB stream; only resource-token decoder controlled",
+  "cases": 6,
+  "expected": [
+    "ASCII200 raw literal header",
+    "Latin1 é200 with rawE9 byte",
+    "Chinese500 detail Internal Server Error",
+    "emoji500 same detail",
+    "quote200 unescaped literal original header",
+    "query byte percent-encoded URL200 literal filename header"
+  ],
+  "target": [
+    "internal/app/plugin_original_static_http.go",
+    "internal/app/plugin_original_static_source_test.go",
+    "internal/app/plugin_module_process_api35_test.go"
+  ],
+  "separate_Go_ABI": "versioned Go frontend handler has no inline disposition header; it retains200 for verified UTF8 assets, explicitly a separate wire",
+  "local": "6 fixed filename + old8 source rows and actual App/SDK related10 roots PASS11.378s; fullSDK107/artifact53 roots,35frontend/tsc PASS",
+  "harness_failures": [
+    "TestClient from fixed Starlette1.3.1 decoded a legal Latin1 raw header asUTF8; source pipeline switched to direct ASGI raw capture, Source endpoint untouched",
+    "first target archive lacked frontend remoteEntry required by actual declared manifest; added owned remoteEntry file to Source+target fixture, not a product change",
+    "new process fixture used url.PathEscape while its import was being edited; transient compile fixed before stable gate",
+    "query byte filename must be escaped once for actual HTTP URL; direct ASGI path already decoded, target httptest now uses URL.EscapedPath; source header literal and rawLatin1 preserved"
+  ],
+  "remaining": [],
+  "evidence_manifest": "evidence-manifest.json",
+  "compiled_test": {
+    "binary": "work/plugin-no-official-auth-20261026/clone-symbol-static-process-linux.test",
+    "sha256": "0ada591a4daabec89528649e181790c043d88c0eed9c92169ecb96540a9ed542",
+    "bytes": 69800258
+  },
+  "acceptance_scope": "this supplementary source-derived behavior and real Linux gate only; parent owns whole-row/unique-ledger review and counts",
+  "server_sha256": "3c4ac9f59b5c99f612d32c25d320ad088c9cf76468586955b5d229b3d8d11e91",
+  "test_sha256": "0ada591a4daabec89528649e181790c043d88c0eed9c92169ecb96540a9ed542",
+  "actual_linux": {
+    "result": "PASS9.38s",
+    "log": "evidence/api35-static-platform7-production-cli.log.gz",
+    "bindings": "evidence/clone-static-platform7-final-bindings.json.gz",
+    "coverage": [
+      "source alias Chinese/emoji filename real500 detail Internal Server Error",
+      "actual Latin1 inline header byteE9 matches raw source ASGI",
+      "same immutable UTF8 CSS asset in pinned Go frontend ABI200 without disposition",
+      "all prior actual API install/getter/register/auth/path/body/raw/binary204/503/config/init/state/clone/update/cold/cancel-drain assertions",
+      "primary API404+authorized code200 exactv2 bytes; valid clone API404+code404"
+    ]
+  },
+  "cleanup": "actual tests exited0; exact owned server argv/data-dir scan empty; test-only independent dirs/processes cleaned; no old service changed",
+  "delivery": "local dirty worktree only; uncommitted/unpushed/undeployed",
+  "prior_browser_reference": "../plugin-api35-r3-20261027/result.json and prior f37/derived archives; new file-header exception is API-only and fixed-source route semantics, no new UI flow"
+}

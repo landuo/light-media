@@ -1,0 +1,136 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/api/endpoints/media.py": "cbf09c0f3abfe6130a88d6a82bbb212c9fa47cca65cccf91e7067946c7368926"
+  },
+  "boundary": "Fixed ordinary rule-editor category endpoint and module dispatcher.\nPlugin/core functions are owned boundaries; dispatch and endpoint AST are fixed.\n",
+  "cases": [
+    {
+      "name": "native",
+      "plugin": null,
+      "fail": false,
+      "result": {
+        "电影": [
+          "原生电影"
+        ],
+        "电视剧": [
+          "原生剧集"
+        ]
+      },
+      "error": null,
+      "calls": [
+        "source",
+        "clone",
+        "native"
+      ],
+      "messages": 0
+    },
+    {
+      "name": "override",
+      "plugin": {
+        "电影": [
+          "插件电影"
+        ],
+        "电视剧": [
+          "插件剧集"
+        ]
+      },
+      "fail": false,
+      "result": {
+        "电影": [
+          "插件电影"
+        ],
+        "电视剧": [
+          "插件剧集"
+        ]
+      },
+      "error": null,
+      "calls": [
+        "source"
+      ],
+      "messages": 0
+    },
+    {
+      "name": "empty_object",
+      "plugin": {},
+      "fail": false,
+      "result": {},
+      "error": null,
+      "calls": [
+        "source"
+      ],
+      "messages": 0
+    },
+    {
+      "name": "false",
+      "plugin": false,
+      "fail": false,
+      "result": {},
+      "error": null,
+      "calls": [
+        "source"
+      ],
+      "messages": 0
+    },
+    {
+      "name": "zero",
+      "plugin": 0,
+      "fail": false,
+      "result": {},
+      "error": null,
+      "calls": [
+        "source"
+      ],
+      "messages": 0
+    },
+    {
+      "name": "empty_list",
+      "plugin": [],
+      "fail": false,
+      "result": {},
+      "error": null,
+      "calls": [
+        "source",
+        "clone",
+        "native"
+      ],
+      "messages": 0
+    },
+    {
+      "name": "invalid_list",
+      "plugin": [
+        "bad"
+      ],
+      "fail": false,
+      "result": null,
+      "error": "ValidationError",
+      "calls": [
+        "source",
+        "clone",
+        "native"
+      ],
+      "messages": 0
+    },
+    {
+      "name": "throw",
+      "plugin": null,
+      "fail": true,
+      "result": {
+        "电影": [
+          "原生电影"
+        ],
+        "电视剧": [
+          "原生剧集"
+        ]
+      },
+      "error": null,
+      "calls": [
+        "source",
+        "clone",
+        "native"
+      ],
+      "messages": 1
+    }
+  ]
+}

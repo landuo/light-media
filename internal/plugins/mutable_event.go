@@ -12,8 +12,10 @@ const mutableEventContract = "light-media.mutable-event/v1"
 // Data supports every JSON value, including null, arrays and scalars. RawMessage
 // avoids float64 coercion and preserves arbitrary-size JSON integer values.
 type MutableEvent struct {
-	Type string          `json:"type"`
-	Data json.RawMessage `json:"data"`
+	Type     string          `json:"type"`
+	Data     json.RawMessage `json:"data"`
+	EventID  string          `json:"event_id,omitempty"`
+	Priority *int            `json:"priority,omitempty"`
 }
 
 type mutableEventSnapshot struct {
@@ -92,5 +94,15 @@ func decodeMutableEvent(raw json.RawMessage) (MutableEvent, error) {
 		return event, errors.New("invalid mutable event data")
 	}
 	event.Data = append(json.RawMessage(nil), fields["data"]...)
+	if raw, ok := fields["event_id"]; ok {
+		if json.Unmarshal(raw, &event.EventID) != nil {
+			return event, errors.New("invalid event ID")
+		}
+	}
+	if raw, ok := fields["priority"]; ok {
+		if json.Unmarshal(raw, &event.Priority) != nil {
+			return event, errors.New("invalid event priority")
+		}
+	}
 	return event, nil
 }

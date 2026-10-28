@@ -1,0 +1,880 @@
+{
+  "kind": "Existing reorganization and legacy cleanup deferred metadata.scrape",
+  "whole_indices_accepted": false,
+  "actual_main_sha256": "bcfe8f8f06444850c9acbea1199996c35982888d2a3e8a37815167350d670fa5",
+  "actual_test_sha256": "fe0b7c7d1b3fff87efc511f3433b6475517e3abb8f775ce527b9102f208e32af",
+  "browser_main_sha256": "b5d8183a1d1cbe5c00ae8b5d42d365922a2d846b052e59cc0822416f1cbcf125",
+  "linux_cli_seconds": 2.7,
+  "linux_browser_gate_seconds": 452.77,
+  "race_seconds": 68.346,
+  "artifacts": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/internal/app/import_reorganize.go.gz",
+      "original": "internal/app/import_reorganize.go",
+      "sha256": "324ae032a2b3b9c8b9fbe27abfac35e30afed3fe619d7060badd66589244e3be",
+      "raw_sha256": "a3623214154b38d8f8e243950ac721f8bdd2f23b1cc07b549a7dee1d8fee5b51",
+      "bytes": 3522
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/internal/app/import_run.go.gz",
+      "original": "internal/app/import_run.go",
+      "sha256": "23a6cb30f771c49ada7321b2a86013ce05800f5865f5dd544b1707059af98367",
+      "raw_sha256": "45da7ce67c0b1ea4037bf4471704d29561b131b95eef27f47eaf833b85aea511",
+      "bytes": 10231
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/internal/app/job_completion.go.gz",
+      "original": "internal/app/job_completion.go",
+      "sha256": "5771d74a7816c7625162b1d355bd65f095d904afc72d9fac2390373c1c63d9c1",
+      "raw_sha256": "9860240f0b127997a7b57deb2a8973e829b9a79a4e98e083c1d93314fa2228e0",
+      "bytes": 958
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/internal/app/jobs.go.gz",
+      "original": "internal/app/jobs.go",
+      "sha256": "8f3711b64e646f7d6fdf18fcb632f4b3350d0deaf10d9c43e93750f16da5bbcb",
+      "raw_sha256": "97fc3b233c6ecaedae9c512bc6b17e8e1908d27a6a6c22116ac53cd87b2ecd26",
+      "bytes": 4786
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/internal/app/plugin_module_process_scrape_batch_test.go.gz",
+      "original": "internal/app/plugin_module_process_scrape_batch_test.go",
+      "sha256": "f362e181c09c7a237c043990de8059a912909ee7425f6930b07dbeacf172704c",
+      "raw_sha256": "032f209072df3c3e8578871992a529efc34ec492ac53a55cbcf7395340f1b52a",
+      "bytes": 5879
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/internal/app/plugin_original_scrape_batch.go.gz",
+      "original": "internal/app/plugin_original_scrape_batch.go",
+      "sha256": "9455f27d7c7d48861ec31361deef1e4422b88a710df036864c72526870c8cde1",
+      "raw_sha256": "28eab5e6ef40d7496c3bd1b40629e8b8425d13a19fab3681b89467bbe6c29c70",
+      "bytes": 3157
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/internal/app/plugin_original_scrape_deferred_test.go.gz",
+      "original": "internal/app/plugin_original_scrape_deferred_test.go",
+      "sha256": "6f715b4b94bcdf0b1a961f06001e2269d8081b3c84ad45ec8e5a992a4d4a8528",
+      "raw_sha256": "b571eac3cb1e395950830ffbacce84308ea2d4c810f7f6768c3b0f5fe801b305",
+      "bytes": 3660
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/internal/app/subscription_quality_replace.go.gz",
+      "original": "internal/app/subscription_quality_replace.go",
+      "sha256": "151263b5c2f98f315ed4af6996ebf25ec87f542bed370c5c70f96acfee65fde2",
+      "raw_sha256": "dc5d4bf3ef56825c6f4f40b404fda2743c753cbcee2c4989e71e279d70928d3f",
+      "bytes": 6650
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/build-platform37.py.gz",
+      "original": "build-platform37.py",
+      "sha256": "ecb6182590c4e5517085170273b59704a7ea0e88860c4d4228e1f8e72a7dc8a2",
+      "raw_sha256": "1c3a792a53ebdd31113e74fd7834af08c8e83fdbe4df28b3e08c100413e7089b",
+      "bytes": 1168
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/build-platform37r2.py.gz",
+      "original": "build-platform37r2.py",
+      "sha256": "9f59ab89ba3d7a0d9b2c8d3a942b3af43adbb627aa7e4419d7e60de32691f31b",
+      "raw_sha256": "ccbe5ec41685850902a44f81201a59c60408552816910c571728c4506fd112af",
+      "bytes": 1170
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/build-platform37r3.py.gz",
+      "original": "build-platform37r3.py",
+      "sha256": "41212c6070c10271b6a1228bf19d1582b50e27fe5344ef4dd8c01328c277be66",
+      "raw_sha256": "fd8573863fd99dc147ca10214a2dfb1110b4c2c4c92596c9025dcd234391a20b",
+      "bytes": 1170
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/build-platform37r4.py.gz",
+      "original": "build-platform37r4.py",
+      "sha256": "250cbf89fc7fa231086e2954db9148b01cc07f4d98bda029d98434068de245ba",
+      "raw_sha256": "f19f382dec3c73bfd85d16c45e657e074c9837cd9b91cc6d5ac0da8f500a9917",
+      "bytes": 1170
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/build-platform37r5.py.gz",
+      "original": "build-platform37r5.py",
+      "sha256": "71fa5f3f2b4189c61c0bd8e9a6552fcdfff19da3b2790aedeae549132728549e",
+      "raw_sha256": "3414968bc8b5f3b2753975e8dd5395b0279ce5f38105f71feedd62e5fd0b0675",
+      "bytes": 1170
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/platform37-build-summary.log.gz",
+      "original": "platform37-build-summary.log",
+      "sha256": "472c95a3d074bc6276d0cbc19383a02746560c9b64a661cdceb407832e9a07bf",
+      "raw_sha256": "7fe23a0d6e4be5f64d1f7e86672d2c437381bec6b3094d6311a9171433e9d687",
+      "bytes": 347
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/platform37-result.json.gz",
+      "original": "platform37-result.json",
+      "sha256": "615b3d7e8dbe782861249c90d1dd771cc616a445961de862e6b99c1e94c4439c",
+      "raw_sha256": "f695a9ad98a8cb0dbd7639a2600616f9b077a40f8d4c19c062de35f456ab0e28",
+      "bytes": 475
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/platform37r2-build-summary.log.gz",
+      "original": "platform37r2-build-summary.log",
+      "sha256": "651abc5fd6455f8c423e8da01e8304d989c903f691f908d9f9e512e87e5b55c9",
+      "raw_sha256": "ef4aca184e3d3cc3615b94122d74fad9156358a3ee87bf8c1909ae98a726c870",
+      "bytes": 351
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/platform37r2-result.json.gz",
+      "original": "platform37r2-result.json",
+      "sha256": "0543efdfbe3c04b5cc394cba130c8710068303da8f015ccf25e8ac3ff8bf9625",
+      "raw_sha256": "e4aada72dd01219c02ed95c56b0a6c397074337de09a6ce71e2e3e59f8349792",
+      "bytes": 476
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/platform37r3-build-summary.log.gz",
+      "original": "platform37r3-build-summary.log",
+      "sha256": "59e0e093fe075b7ff2b2ea11e6a4d318af557241e52e3b27f9a02e503c2354d4",
+      "raw_sha256": "7ac1da26fb56011b3d39b6b6c2127e5f1304bc60433885c54d49e1c52a895e34",
+      "bytes": 352
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/platform37r3-result.json.gz",
+      "original": "platform37r3-result.json",
+      "sha256": "36f9d0790c21b017a7768e850d882df1a5ce4a0853a27f339f7000f9ddb53ef9",
+      "raw_sha256": "5ac99221bf38a7a7eaf2405e3b6f49f36656f459993a13efdcf26e3145c2c424",
+      "bytes": 475
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/platform37r4-build-summary.log.gz",
+      "original": "platform37r4-build-summary.log",
+      "sha256": "fd7f099b396bf21a430cd95fe623e6ad54ede00ba2290f30167ddbf61b2213ca",
+      "raw_sha256": "2e718f6ceb71ce3acb46879379cbc851470e09b48015561c0929fa2a5e6c7fa8",
+      "bytes": 351
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/platform37r4-result.json.gz",
+      "original": "platform37r4-result.json",
+      "sha256": "ba985842bd61bfe34cda06506013e981e1446e1499a4115059a82139fab01356",
+      "raw_sha256": "9783ec95261994929902192d3d59ec4c80e30eb4b352f7663beeace5157e3c97",
+      "bytes": 476
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/platform37r5-build-summary.log.gz",
+      "original": "platform37r5-build-summary.log",
+      "sha256": "4ed1b10908c32fb6b37e75ae50f82e6009e3e98f5cdba57367d53f0366464507",
+      "raw_sha256": "3aada317adacde700931b32478820dd4397c199ea460bafdc8783ebaf5a6d358",
+      "bytes": 350
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/platform37r5-result.json.gz",
+      "original": "platform37r5-result.json",
+      "sha256": "988f58de3e59eff3c3bfeb88d59fb41113b8edbbf15e6ebf1ad60be0fc6d9be3",
+      "raw_sha256": "28315b5adaedd0e926423b6f189c3951892a41466c217bdfb0b4705e6af18179",
+      "bytes": 477
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/process-platform37-20261027-linux.test.build.log.gz",
+      "original": "process-platform37-20261027-linux.test.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/process-platform37-20261027-linux.test.inputs.json.gz",
+      "original": "process-platform37-20261027-linux.test.inputs.json",
+      "sha256": "727a3366031ea7310f3b64d411bced61ed4649593c24e8a45cb0e6b96fb64ec8",
+      "raw_sha256": "7c7de6a386f3f5f9b20ea28bd4a8b5c1f7e7560ed28718c574615544d5c54876",
+      "bytes": 194429
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/process-platform37r2-20261027-linux.test.build.log.gz",
+      "original": "process-platform37r2-20261027-linux.test.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/process-platform37r2-20261027-linux.test.inputs.json.gz",
+      "original": "process-platform37r2-20261027-linux.test.inputs.json",
+      "sha256": "a28cbad99260622b50928c9ea16c26d53a3b32fe9bd0a7581cab93692201e2e7",
+      "raw_sha256": "6efef839d52f45e2c1e1f7db0b78868383a3fe00e01bf3b115c71624016a8983",
+      "bytes": 194428
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/process-platform37r3-20261027-linux.test.build.log.gz",
+      "original": "process-platform37r3-20261027-linux.test.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/process-platform37r3-20261027-linux.test.inputs.json.gz",
+      "original": "process-platform37r3-20261027-linux.test.inputs.json",
+      "sha256": "96e34d2c20e2d5baed8b093dfebc2ee80e6caba9b3100790970ebe349666c6d8",
+      "raw_sha256": "e1ebd030ff14237b6906e6a98136f08ea0cf5bc214aa8d4f48be487afdc56739",
+      "bytes": 194428
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/process-platform37r4-20261027-linux.test.build.log.gz",
+      "original": "process-platform37r4-20261027-linux.test.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/process-platform37r4-20261027-linux.test.inputs.json.gz",
+      "original": "process-platform37r4-20261027-linux.test.inputs.json",
+      "sha256": "f20caa65f7be287c12e18f53e76aef29b309abe5160ba36dd1ca1006fb1dc0c6",
+      "raw_sha256": "eb82c7cbd69c14d8887f71e957932c68aa4920e19258f5647c4a7e402073cfc7",
+      "bytes": 194431
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/process-platform37r5-20261027-linux.test.build.log.gz",
+      "original": "process-platform37r5-20261027-linux.test.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/process-platform37r5-20261027-linux.test.inputs.json.gz",
+      "original": "process-platform37r5-20261027-linux.test.inputs.json",
+      "sha256": "57c15af1eac17a0267399a825013a37cfcec18ed49101ab24803ad3ce0b2479e",
+      "raw_sha256": "acd22618238dc8d15347edae4b272b4a839a191fd2e6cb3eb0cc2df601bb0e17",
+      "bytes": 194430
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/run-scrape37.py.gz",
+      "original": "run-scrape37.py",
+      "sha256": "20fc547c693db5d3ddc7c014e499f06ec48ec7701f6992d615bde343882fb51a",
+      "raw_sha256": "98b3c4e74128d9a1670cadf7074b445c5a96ff4b3aada1cdb0358f6109cc83ce",
+      "bytes": 657
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/run-scrape37r2.py.gz",
+      "original": "run-scrape37r2.py",
+      "sha256": "0d98f2d9bdb7b7334dc6be962bc4036d91997d9e90bea94362b884811d305b80",
+      "raw_sha256": "98b10a7c914e930c16b71b329f70234c84303fb4f1423b5a82e4c96b121ef966",
+      "bytes": 660
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/run-scrape37r3.py.gz",
+      "original": "run-scrape37r3.py",
+      "sha256": "d275a9355cb49919e92854bea876b4e95c165a577eab93bb50c67202695fb942",
+      "raw_sha256": "0fa8b4202760980d1b7c4dd2ab2e64b3a58943ace3d49960da13bd99d34a1679",
+      "bytes": 667
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/run-scrape37r4.py.gz",
+      "original": "run-scrape37r4.py",
+      "sha256": "816d9c01fd5d3d7727831848c123e8e211333db66cb4850d04173182788bc31e",
+      "raw_sha256": "de4a5c1aaa86b8337422a6a2b11dfa868aa05e807bc6d115e9ff145320373962",
+      "bytes": 667
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/run-scrape37r5.py.gz",
+      "original": "run-scrape37r5.py",
+      "sha256": "5a1321b4050969d9440923250792fdc0c006323e03e151a53facbdaf18263073",
+      "raw_sha256": "f4097ffe22ec606916f12b5b84f36fce3419d7a4b10cc167c89aff07e7d6077d",
+      "bytes": 667
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-browser/01-managed-preview.dom.txt.gz",
+      "original": "scrape37-browser/01-managed-preview.dom.txt",
+      "sha256": "fe30c458bfbce76044cc9b8a6d84d80283c39a6e853119c15f1fe2153218140b",
+      "raw_sha256": "f6929c8dea1f03845f8c6adb10f898dc72c3b0b3da1dee65018e1fcab1a60e95",
+      "bytes": 1891
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-browser/01-managed-preview.png.gz",
+      "original": "scrape37-browser/01-managed-preview.png",
+      "sha256": "f55ac59eb7fdc8f62522761792030b14062b157d4d33ac9b34867f64d59c1d03",
+      "raw_sha256": "7ee6ae9c64b4765024361590e9a75693f1332c03ce0ddc6e76e14ed6ddcf42aa",
+      "bytes": 48202
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-browser/02-r1-failure-missing-cleanup.dom.txt.gz",
+      "original": "scrape37-browser/02-r1-failure-missing-cleanup.dom.txt",
+      "sha256": "73524f5fbb40b4496fb30bcabd645e97e91b9b053bb70512a37e7c6f0112870e",
+      "raw_sha256": "ac2952ad5f8d384875540cc67754838f2a2b3ac014b9c6e6a7d3434892825341",
+      "bytes": 1966
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-browser/02-r1-failure-missing-cleanup.png.gz",
+      "original": "scrape37-browser/02-r1-failure-missing-cleanup.png",
+      "sha256": "e40c2b80363db564e029860b5af8be370ace1a5a6d35ecbde6f310a98f8f008b",
+      "raw_sha256": "171ca199d276f27b3bab406d330138bb41c645698309ca9f82081003b9c6710d",
+      "bytes": 25268
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-browser-verdict.json.gz",
+      "original": "scrape37-browser-verdict.json",
+      "sha256": "e363a17463feb6df14771f9f1286b95f69af3d481b8b6459d993b2f0e764f28c",
+      "raw_sha256": "4f43f5c6947e5a257acb8d06ac97925ba9e0b5a851c144a06e23dcbdc9e56b41",
+      "bytes": 710
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-deferred-final.log.gz",
+      "original": "scrape37-deferred-final.log",
+      "sha256": "e8a32c603d464749399acde449d11266e903fb409b8b67964e43773de9eecc46",
+      "raw_sha256": "910f87b29f7fb728cf082ade40f0e123aeaf676c65bff369064047d20812f1c1",
+      "bytes": 58
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-deferred-first.log.gz",
+      "original": "scrape37-deferred-first.log",
+      "sha256": "ffab97f69b591b4b21e36b408ccd08d9f152c63bacde3164f8fdb7f81987dbc1",
+      "raw_sha256": "7fa8d7f5f4c1d440cdb006413a770ffc8cc96f7e303a164ac825465ca437ff96",
+      "bytes": 57
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-deferred-retry.log.gz",
+      "original": "scrape37-deferred-retry.log",
+      "sha256": "ea93302235da4d61454a5f34bb95088a5855ca0b4b13b571e6d9b1304bf08549",
+      "raw_sha256": "b2f81ff03d8b4fd7591a83abc447bfccedb3d842e9ef172287081aab2be221d6",
+      "bytes": 7133
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-linux-summary.log.gz",
+      "original": "scrape37-linux-summary.log",
+      "sha256": "27175b5941c3942f6986cacd9e7ff4428cfa2c2d09b3a9898669a8ed27440a4d",
+      "raw_sha256": "f224682fdcf34593b0c064072b0963d2b0964f0dcec9dba0e8e0079d5a8bea13",
+      "bytes": 590
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-observe.py.gz",
+      "original": "scrape37-observe.py",
+      "sha256": "ea9d2ddc9d30747bb240e3838618ca1ea83c621c0b96a8304ce12c2365989269",
+      "raw_sha256": "f73d438e8513e1fefc4c3afce6c2f88dd80330ce349441b467b68fad44a3acd1",
+      "bytes": 1216
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-obsolete-binary-cleanup.json.gz",
+      "original": "scrape37-obsolete-binary-cleanup.json",
+      "sha256": "586babc7f3627d255ba610230c2c59189a999cddfe87bc0c03f2b33b1d6eb1ed",
+      "raw_sha256": "430cef0c4a21fc5334e9d5df96e9b286e1270b4c37757daaabfcbb595e40b8ee",
+      "bytes": 757
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-race.log.gz",
+      "original": "scrape37-race.log",
+      "sha256": "7d4e80611607d42387bd4814f13cae53a9d15fe589219fe83af9ba906f33bd4a",
+      "raw_sha256": "02f8062bcc6ffcddc43426462ece84fc2d3461f42deeb58a5f2e4515dbab92ae",
+      "bytes": 58
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37-browser-fail.json.gz",
+      "original": "scrape37-runtime/scrape37-browser-fail.json",
+      "sha256": "0beeacd753f020210e1f42794fc35df39dab5d9e7732e12ffa138462e81c2d02",
+      "raw_sha256": "78e93098253599d172828b9386cac1767478599d00787605cd8c5e40790e6de9",
+      "bytes": 5886
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37-browser-failed.json.gz",
+      "original": "scrape37-runtime/scrape37-browser-failed.json",
+      "sha256": "c96236fb3b02fd7b61389e74d63637402c22e75e6df3a004be9567684a26bdca",
+      "raw_sha256": "75118de6561c123356989162c8487d75e1b1d5d2a9f0c4c3559aaa231c85c22b",
+      "bytes": 5331
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37-browser-initial.json.gz",
+      "original": "scrape37-runtime/scrape37-browser-initial.json",
+      "sha256": "d148e495c62411af2616458978d561fcd2cd284aec1ea1cf3945cc0f1ed70473",
+      "raw_sha256": "acb4084da7e6c31d7821e2cc2e0deaa806e1f0a88ef051a2251fd4ad56f9c33d",
+      "bytes": 4317
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37-browser-preview.json.gz",
+      "original": "scrape37-runtime/scrape37-browser-preview.json",
+      "sha256": "bba698651482535c124884b30dcb810f6b1f4a2b205106b90d34cb587766ac11",
+      "raw_sha256": "19d6efee9d208028012e6b95df2341b9da214ad50faa0d9773259b8fce3b0d99",
+      "bytes": 5872
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37-cli-evidence/events36-service-process.log.gz",
+      "original": "scrape37-runtime/scrape37-cli-evidence/events36-service-process.log",
+      "sha256": "2f5ec2bce498074cac5de7ffb7c0adfc15675a110795a2f2799d647cf5da22a1",
+      "raw_sha256": "9a9f8a0abdb7d55808f899a02c7809b47b8404bc3e6cb5a571d3f7d83667dc97",
+      "bytes": 4865
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37-cli-evidence/scrape-batch36-cli.json.gz",
+      "original": "scrape37-runtime/scrape37-cli-evidence/scrape-batch36-cli.json",
+      "sha256": "b6e5221b40e20faadb11767608fa56aea884e61db621e3323022685988805953",
+      "raw_sha256": "19647e0111f0871e73ba322c2e1220317731a227cf7c5d09b46c20d7d960017c",
+      "bytes": 9327
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37-cli.log.gz",
+      "original": "scrape37-runtime/scrape37-cli.log",
+      "sha256": "0718889db5fb83b37f2859219b579b7f73b68850f3fda691dbf5277c4878c761",
+      "raw_sha256": "f3baf7ac08a9fb553d8f0671901e918661091ac95b7d110fb22ddd40a922b6cc",
+      "bytes": 389
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37-linux-deferred.log.gz",
+      "original": "scrape37-runtime/scrape37-linux-deferred.log",
+      "sha256": "22066e9c75bee985fb5574d038e0266456f2a4da369ecb401191c37da057d909",
+      "raw_sha256": "e55449c4c4e77c98dd8c311c639cddfd0e3a6374fb6f0ba409939806b1a585c5",
+      "bytes": 7850
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37-ui-evidence/events36-service-process.log.gz",
+      "original": "scrape37-runtime/scrape37-ui-evidence/events36-service-process.log",
+      "sha256": "89e10651fddcbd73e34c0850e551da1d816ec602b647a042cf55b09f39346463",
+      "raw_sha256": "a290fb1dc10c3a35ae1de20e58cc49199b2b11ee841d717c7d2a7ff037f1de6f",
+      "bytes": 5840
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37-ui-evidence/scrape-batch36-cli.json.gz",
+      "original": "scrape37-runtime/scrape37-ui-evidence/scrape-batch36-cli.json",
+      "sha256": "9a8b226ea42df30082a40b01753bee94b48a1a3ca21690e2587b57526f4a007e",
+      "raw_sha256": "89f32e83cbaf87719031bac269551093c6b93cb371a7dc026d36b34d09549243",
+      "bytes": 9358
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37-ui-state.json.gz",
+      "original": "scrape37-runtime/scrape37-ui-state.json",
+      "sha256": "7d7e09c59cd802262f1df405ba2d5d4be7638cecf0a4e14bc7260f2572f0c627",
+      "raw_sha256": "d405a990ff8375c76a2d29b1381b8656e491513ce7a9a3f2f7b7a9c03e65dca4",
+      "bytes": 994
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37-ui.log.gz",
+      "original": "scrape37-runtime/scrape37-ui.log",
+      "sha256": "b5bb0430079054b50163473547e7551404bb8f4414f0e6457bb20ef77e143068",
+      "raw_sha256": "f762af70dde1b2651114bc0ec9559be6c1961e004d8689562fb0f7c6801db3f7",
+      "bytes": 391
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-browser-cold-after.json.gz",
+      "original": "scrape37-runtime/scrape37r2-browser-cold-after.json",
+      "sha256": "be3322e1dee73de83179a47e5f2253dcf18e399bac0bf37b7b4ff5757bbd8731",
+      "raw_sha256": "a3ae5b6969c6b48132337ad2a41eb4cfa8887ab61556de8258f100b5297454b2",
+      "bytes": 5533
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-browser-cold-before.json.gz",
+      "original": "scrape37-runtime/scrape37r2-browser-cold-before.json",
+      "sha256": "48ce8cc3218363509f43ece3518cb71928bbf394d6d10efee1805b8f6d25a86f",
+      "raw_sha256": "9615b972a048d77e6de05972fc5f51585b2c659c9fb626ceb590d481f7a120e3",
+      "bytes": 4893
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-browser-fail.json.gz",
+      "original": "scrape37-runtime/scrape37r2-browser-fail.json",
+      "sha256": "1160cf961699d6bcef9f13d38fe010707052bef2ec2fb41c682931e43c5812b1",
+      "raw_sha256": "d76c07e9de58f9d4f16dfc3558404c520ea6daa10f8f148faaf4414e55f271a8",
+      "bytes": 5917
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-browser-failed.json.gz",
+      "original": "scrape37-runtime/scrape37r2-browser-failed.json",
+      "sha256": "a6027de9e58ad894bd363955d53a6cf30737c66538fb9394e2db344febf152a4",
+      "raw_sha256": "306c381dc766e11025423809e3cee0b4017e4f7e029cff0457640ac3db37906c",
+      "bytes": 5387
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-browser-initial.json.gz",
+      "original": "scrape37-runtime/scrape37r2-browser-initial.json",
+      "sha256": "5aeaa5dc5791d7a2d48a983f3a08bf42cd685dd0dcf24524a9e9468f90e4cfe7",
+      "raw_sha256": "100878226e400009c534eb730be13a0a41fe97d30879e3ee1040722d7b1358b4",
+      "bytes": 4345
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-browser-preview.json.gz",
+      "original": "scrape37-runtime/scrape37r2-browser-preview.json",
+      "sha256": "f29ac6c52dd896a9d0e5f1e26c5cfdd1233d5e6adbdcc12137d2974cad9c356d",
+      "raw_sha256": "31c3bcfc6a4be64322765e540f06b778203c7268a1aad026da5cafe824a2aabf",
+      "bytes": 5900
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-browser-restore.json.gz",
+      "original": "scrape37-runtime/scrape37r2-browser-restore.json",
+      "sha256": "62baf16142f3de84187bc4983336b31b0a5d6ba16e755991ba031c4f7c56dbce",
+      "raw_sha256": "4bbe02c0e73789bc0cf0486a6d22cb5f84b53f54864d9ec9bcfaac0e943ec3f8",
+      "bytes": 5396
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-browser-success.json.gz",
+      "original": "scrape37-runtime/scrape37r2-browser-success.json",
+      "sha256": "44d7189c181249da058708b07693db912cd9f307cefd6db8c805e3e7259b49a1",
+      "raw_sha256": "c95edd5d8899a3e10107bf18d8ec57385f66a65267d2d486533991a72a00fb60",
+      "bytes": 9570
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-cli-evidence/events36-service-process.log.gz",
+      "original": "scrape37-runtime/scrape37r2-cli-evidence/events36-service-process.log",
+      "sha256": "36459047129c18bf83fe9c94eb4eb373035f4ea72b362fb64974547ac1c1c565",
+      "raw_sha256": "83073cef918a377c7d7c16102fda4df2dafdbbbe6bdf38e0f1c86e05665711b9",
+      "bytes": 5202
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-cli-evidence/scrape-batch36-cli.json.gz",
+      "original": "scrape37-runtime/scrape37r2-cli-evidence/scrape-batch36-cli.json",
+      "sha256": "044612c12e894e3dcb9b1c8d9a6eb362054d50690ddf27960dae99d96fddb08e",
+      "raw_sha256": "a7f3d69b8cbd90fe4e9de00c5c0d9ff4b3b2837f924938b4d0071291cc69e35d",
+      "bytes": 9643
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-cli.log.gz",
+      "original": "scrape37-runtime/scrape37r2-cli.log",
+      "sha256": "c20df17e10b4fe05049fa938d0f0ebaf4eb41698dcf1b2641ce7d9c9ba73c735",
+      "raw_sha256": "5e23e7d43f7142fc1c7550447bba461b7a39b9026cc40f0e5f141a23a96f163d",
+      "bytes": 389
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-first-restart.json.gz",
+      "original": "scrape37-runtime/scrape37r2-first-restart.json",
+      "sha256": "759581d916f731303a5e14aa92c0c191f133c5e246c4bbb571f7810bb6d4fdde",
+      "raw_sha256": "b0fe5e160378a4c51fb057a5c1140bf10e441b68e45c5eec1571f6e08937669d",
+      "bytes": 133
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-ui-evidence/events36-service-process.log.gz",
+      "original": "scrape37-runtime/scrape37r2-ui-evidence/events36-service-process.log",
+      "sha256": "c9f59fcb90496e74764b5548668b16abc40d04e86347b7f53f98c5f0cb709890",
+      "raw_sha256": "71f3ee235ce90ef45e6469c51580b7fdab7bd77bcea040d8cb14871136a19020",
+      "bytes": 7630
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-ui-evidence/scrape-batch36-cli.json.gz",
+      "original": "scrape37-runtime/scrape37r2-ui-evidence/scrape-batch36-cli.json",
+      "sha256": "1692d67f912ade2afc0c9011ae53ff90dce5ffe454cff442764ff090711eed81",
+      "raw_sha256": "dbf0be52c2e22616933da03f202bad9987b3ebd38bc9ef5e8958cf1baa734288",
+      "bytes": 9657
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-ui-state.json.gz",
+      "original": "scrape37-runtime/scrape37r2-ui-state.json",
+      "sha256": "a3525671d366f9c3764e1a88d6250dede927b39023dc0287f1d844b5d71df10e",
+      "raw_sha256": "4085a7fb25bf97e8358c411ad0654b8505e4c812fc23f60d53921918fcd33892",
+      "bytes": 997
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r2-ui.log.gz",
+      "original": "scrape37-runtime/scrape37r2-ui.log",
+      "sha256": "da7198d6331484f1eec56f28ae7b8fc27f11d5abe76d5fabaf1295b860a0a18c",
+      "raw_sha256": "b01060daed8e2f0f24b6a898fdff058493d07946852cd5fd65a1f2a65e6d5a2c",
+      "bytes": 391
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r3-cli-evidence/events36-service-process.log.gz",
+      "original": "scrape37-runtime/scrape37r3-cli-evidence/events36-service-process.log",
+      "sha256": "9786ee94f8c2025f49cdf6358b376648d734378ddef298fe8665ed6048c6e690",
+      "raw_sha256": "06f4126a4db4192db9515c2ee9064f6054971657fde0dc0001e644f00c1a520d",
+      "bytes": 5255
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r3-cli.log.gz",
+      "original": "scrape37-runtime/scrape37r3-cli.log",
+      "sha256": "37a496922f341323b2d16bb02d1c2cff09746b056570630c672d167bc2f3cb86",
+      "raw_sha256": "6b8fb94f102c94a81c182dcf213b57e37b6051db6a254842cf773bc562e23bd1",
+      "bytes": 2329
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r4-cli-evidence/events36-service-process.log.gz",
+      "original": "scrape37-runtime/scrape37r4-cli-evidence/events36-service-process.log",
+      "sha256": "4314e91d58238b7bbb28f454741377ffaed55df95c3c5cf39a5806d098257ff1",
+      "raw_sha256": "2e7663c91659ef458d17dd91056d83a3cf0de52f31d9dcaf331e58c8abee4ef1",
+      "bytes": 5974
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r4-cli-evidence/scrape-batch36-cli.json.gz",
+      "original": "scrape37-runtime/scrape37r4-cli-evidence/scrape-batch36-cli.json",
+      "sha256": "29ba367ef2af6c4d75fb453029221a896f4fc9c2afcc1d486040af1ca4471a1b",
+      "raw_sha256": "a17150a0d06bdc2005319d2720911aa9a93bc11c97b8a8be618d87aa5f41c734",
+      "bytes": 10263
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r4-cli.log.gz",
+      "original": "scrape37-runtime/scrape37r4-cli.log",
+      "sha256": "3d882bb591b0821090a883e4ce76a7ed8ff1b09db6c2b1d16c567eafabab910a",
+      "raw_sha256": "ecd427dadc9f65cf177fe043a3772a2440ddc7864309dad7a9c029d4e6a421ab",
+      "bytes": 589
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r5-cli-evidence/events36-service-process.log.gz",
+      "original": "scrape37-runtime/scrape37r5-cli-evidence/events36-service-process.log",
+      "sha256": "3ca28707519236c4be58dd8f24800c7171dd9b55391f41eefa5fb904d490e1a4",
+      "raw_sha256": "df4237b768e7319d4ec559e4bb062aec429297a38acde3f3461fe7e9ba0fd2ea",
+      "bytes": 5955
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r5-cli-evidence/scrape-batch36-cli.json.gz",
+      "original": "scrape37-runtime/scrape37r5-cli-evidence/scrape-batch36-cli.json",
+      "sha256": "02e06423e7095785f300e79c6a8e40e7b301e8438b75bb5330c5b13b71810b00",
+      "raw_sha256": "9b2d66850ce90e867b8a77a88c034ed6c7040625615ad888a3dd3fe9f9c338d9",
+      "bytes": 10268
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r5-cli.log.gz",
+      "original": "scrape37-runtime/scrape37r5-cli.log",
+      "sha256": "b8604dbc2b9fa8aea5b5b56c1349a41b61877d9480ebbf4ad0418ceb824d26c7",
+      "raw_sha256": "cd86bad87d93936948527389feee8383662e9c94eb9c313a6fbb452e458c042f",
+      "bytes": 591
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-runtime/scrape37r5-linux-deferred.log.gz",
+      "original": "scrape37-runtime/scrape37r5-linux-deferred.log",
+      "sha256": "bf3406214d4ade2504f16f45d57fc191d8cc355137698d18ac539c0ac8905692",
+      "raw_sha256": "d250c6406097e53001ed8ee4e7d53ae217afd08afe67cc7742fe18cb26f9e970",
+      "bytes": 7921
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-ui-state.json.gz",
+      "original": "scrape37-ui-state.json",
+      "sha256": "7d7e09c59cd802262f1df405ba2d5d4be7638cecf0a4e14bc7260f2572f0c627",
+      "raw_sha256": "d405a990ff8375c76a2d29b1381b8656e491513ce7a9a3f2f7b7a9c03e65dca4",
+      "bytes": 994
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37-ui-summary.log.gz",
+      "original": "scrape37-ui-summary.log",
+      "sha256": "68b0d4f1f9d452c1172e4ebc199387e0b414973079a81c3e78174d8fbe9fa9a7",
+      "raw_sha256": "9b9580ea9df0d8397e42eff49ad71cbcf129084801a133cd7a07fe078118a9c0",
+      "bytes": 592
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-browser/01-preview.dom.txt.gz",
+      "original": "scrape37r2-browser/01-preview.dom.txt",
+      "sha256": "6596c138523d8bea46b501bc516e63dcd2e335ca5ccb11c325097726d049bd9e",
+      "raw_sha256": "cdda8c4ded1fa18ca4d16eae8b23c370cb279b809657e043cfc22f583aff812e",
+      "bytes": 1893
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-browser/01-preview.png.gz",
+      "original": "scrape37r2-browser/01-preview.png",
+      "sha256": "4ae536fb9748078ae93dff45ec95c5150edfa15e45a13d28fac51bcc963e897c",
+      "raw_sha256": "f9cb568ec616fb5c0fb891562419f6413f3a2ccfe0fbd7ab556c7748498b905d",
+      "bytes": 43370
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-browser/02-failure-retained.dom.txt.gz",
+      "original": "scrape37r2-browser/02-failure-retained.dom.txt",
+      "sha256": "a3f486a046dd103a67ec056ca99b4230dc937537db1c3eb3bd6e3a220d6cacb3",
+      "raw_sha256": "fe8f330a853dd10694f17352ba11eb8757cba08872a2191aefd25fda15308b79",
+      "bytes": 1871
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-browser/02-failure-retained.png.gz",
+      "original": "scrape37r2-browser/02-failure-retained.png",
+      "sha256": "f14dca82f43e49037359d9148ef9f57c58a412559cd66bb2910aaf1d217925fd",
+      "raw_sha256": "57dc53c378a08c1c02a6ad5bd190ee80eec306ab2d432d66cfb5926bfaaa9ad8",
+      "bytes": 48788
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-browser/03-cold-preview.dom.txt.gz",
+      "original": "scrape37r2-browser/03-cold-preview.dom.txt",
+      "sha256": "6596c138523d8bea46b501bc516e63dcd2e335ca5ccb11c325097726d049bd9e",
+      "raw_sha256": "cdda8c4ded1fa18ca4d16eae8b23c370cb279b809657e043cfc22f583aff812e",
+      "bytes": 1893
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-browser/03-cold-preview.png.gz",
+      "original": "scrape37r2-browser/03-cold-preview.png",
+      "sha256": "053aba72dc49b720b625061a1035cf7536552a6a093e73710b476163e083c2ae",
+      "raw_sha256": "150409d967b41fc96f5b4516c24eb3db4dc463f83a415a7e0b8cae07e9d77a9f",
+      "bytes": 48426
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-browser/04-success-history.dom.txt.gz",
+      "original": "scrape37r2-browser/04-success-history.dom.txt",
+      "sha256": "3273a0621c95bcc3c826f10053d124ceb6d554da16d6f9d8115b1a17b2cefc45",
+      "raw_sha256": "da0f7db4469acd79d3a1a38174ae1d71f2b38bad348707d544b22ab1e638d5a8",
+      "bytes": 1717
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-browser/04-success-history.png.gz",
+      "original": "scrape37r2-browser/04-success-history.png",
+      "sha256": "1d483e6432a65deeceaa6f2c0bef9416bfca29a905e9a446cb75c81eec2430b2",
+      "raw_sha256": "2b87c18cba4327cfbfa7252bedb40af8131ac793cec4dcf4e9d058305417851b",
+      "bytes": 53233
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-browser/05-success-history-loaded.dom.txt.gz",
+      "original": "scrape37r2-browser/05-success-history-loaded.dom.txt",
+      "sha256": "ed865cde9e7f40883ded7aac469d83f1bfe70746cdbd62e5eb48eac9123cdb0c",
+      "raw_sha256": "276188f1047dadcdfd9ff96121c40954c314e7f5eb0e1e089dc291ecccbdf2a0",
+      "bytes": 1452
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-browser/05-success-history-loaded.png.gz",
+      "original": "scrape37r2-browser/05-success-history-loaded.png",
+      "sha256": "da04f41808bb9508217e5a3a6939df8f9ae453b275327c7852a2e09fb756d200",
+      "raw_sha256": "5d60119471aba6e8b8f797051abcb94dd3bc24b23a327651e75b15fc1c10eb40",
+      "bytes": 50813
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-browser/06-cold-history-loaded.dom.txt.gz",
+      "original": "scrape37r2-browser/06-cold-history-loaded.dom.txt",
+      "sha256": "651ba357fa28626b6afd3795fee9e9dd51a0c206afc994713dee7aef46b0d6bd",
+      "raw_sha256": "7e648badc79958c1010c4ac949486ac3380b1ef0c454560ade955948fd1c90c2",
+      "bytes": 1443
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-browser/06-cold-history-loaded.png.gz",
+      "original": "scrape37r2-browser/06-cold-history-loaded.png",
+      "sha256": "cd0f77481e287eaea743858724d8964b725a0d352d27f42ef4b0acda35d6d796",
+      "raw_sha256": "7f25225279326a7a086abb8e6b8a394fdbba437b5d90fc3a6c8c4fa3714cdda7",
+      "bytes": 49162
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-linux-summary.log.gz",
+      "original": "scrape37r2-linux-summary.log",
+      "sha256": "262c3ea3bba6c20c2114d7036b540fba9fb451b37fbfbd8c8385fed4c8d5178a",
+      "raw_sha256": "048b822323e680fdedf8ed43d25d95c209546cf6545e4e14c3be445a4c246cb7",
+      "bytes": 592
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-observe.py.gz",
+      "original": "scrape37r2-observe.py",
+      "sha256": "83e2aec5d4af3193d400ff156c8b127b605e55514cfc828e3b7907e526609fc6",
+      "raw_sha256": "0e74f14fa45d3eb47501156006a53c13706d19c2976dc69cad940ee7b7451868",
+      "bytes": 1256
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-race.log.gz",
+      "original": "scrape37r2-race.log",
+      "sha256": "09927d19bb506686de964edda0ecf2b751f0b42b1317f6582833df68c716dcee",
+      "raw_sha256": "34449b7dafa70bd1e0f997d0b3785db75f44093ac7222bab9b390d738b5839f6",
+      "bytes": 58
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-ui-state.json.gz",
+      "original": "scrape37r2-ui-state.json",
+      "sha256": "a3525671d366f9c3764e1a88d6250dede927b39023dc0287f1d844b5d71df10e",
+      "raw_sha256": "4085a7fb25bf97e8358c411ad0654b8505e4c812fc23f60d53921918fcd33892",
+      "bytes": 997
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r2-ui-summary.log.gz",
+      "original": "scrape37r2-ui-summary.log",
+      "sha256": "681f8e06528fe956bae208e65d709f2cdf05d4e5ccd5482b7c1059a5c004011b",
+      "raw_sha256": "aa0f1c08e70e4dd20d1dd26a3043e2712a9eda0d91c041fbec4831f6d5ba6f8d",
+      "bytes": 593
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r3-linux-summary.log.gz",
+      "original": "scrape37r3-linux-summary.log",
+      "sha256": "3bfacbe8efafa8945610de05d128f67abde234444a0803d33c8bc252d74fbdae",
+      "raw_sha256": "60f27e6cc4fdad610c2d7549759e69de0b6476683a4b4f09bef833610ae5bc5e",
+      "bytes": 1190
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r4-linux-summary.log.gz",
+      "original": "scrape37r4-linux-summary.log",
+      "sha256": "f12c8d6b000d1a60a38bb179ce469faee12e465e93f4531469bf38f22addb2bd",
+      "raw_sha256": "bc33a2361fdbfa5f59a1efdc9d7c885f0a8b398baa39179a44903733c24536d3",
+      "bytes": 786
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r4-race.log.gz",
+      "original": "scrape37r4-race.log",
+      "sha256": "784e6e7b792cd077e94edb627495f38025c079ed39bd9ff093c5b820ce2a97aa",
+      "raw_sha256": "1182d85df36a847d12d02de0b1e67343e382d823540a7a0e0fad648ea133477b",
+      "bytes": 11215
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r5-deferred-ssh.log.gz",
+      "original": "scrape37r5-deferred-ssh.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r5-linux-summary.log.gz",
+      "original": "scrape37r5-linux-summary.log",
+      "sha256": "fa1ba15839ace350aa54cc0d44e007dede418527169f95312afb445f6968f88e",
+      "raw_sha256": "480909d43b6360ad8815451aa7cebd563d9ce8e6d67963212259e6b27cff74cd",
+      "bytes": 793
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r5-precision.log.gz",
+      "original": "scrape37r5-precision.log",
+      "sha256": "62fb62f5f7a2f782658365b6876c265c8be165262e857e6ee820c0f97b1dbe79",
+      "raw_sha256": "d2cdea9ef60d6d705b984c77c6c85c66986647bef23f8ff5cccc503824e090fe",
+      "bytes": 57
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/scrape37r5-race.log.gz",
+      "original": "scrape37r5-race.log",
+      "sha256": "363ed3e3f3b1761c3d9c5ace6f5fd186d70bba4e156d9c595219f9d78e767db1",
+      "raw_sha256": "fbb1d8ddae801ea4facba80d3ab8d5b58d01a430383ee4f5e5a0d2068bd3723f",
+      "bytes": 58
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/server-platform37-20261027-linux.build.log.gz",
+      "original": "server-platform37-20261027-linux.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/server-platform37-20261027-linux.inputs.json.gz",
+      "original": "server-platform37-20261027-linux.inputs.json",
+      "sha256": "06e7e129fde0d0f1b7abdd9e5bc4354214beac1591c61ebaca1f462ebcf65af9",
+      "raw_sha256": "4ab8596285831b0adf19ed2273a11e822e6e2a791079f711337af7a80a11cf51",
+      "bytes": 172757
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/server-platform37r2-20261027-linux.build.log.gz",
+      "original": "server-platform37r2-20261027-linux.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/server-platform37r2-20261027-linux.inputs.json.gz",
+      "original": "server-platform37r2-20261027-linux.inputs.json",
+      "sha256": "0090b4cf2e70b5d1184737da6c9e3ba8916b4100c1241f94cc8901a1930ff894",
+      "raw_sha256": "939d040006e104c7a39a82621ff343d0ef9e754970824637737994e169dda413",
+      "bytes": 172761
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/server-platform37r3-20261027-linux.build.log.gz",
+      "original": "server-platform37r3-20261027-linux.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/server-platform37r3-20261027-linux.inputs.json.gz",
+      "original": "server-platform37r3-20261027-linux.inputs.json",
+      "sha256": "0090b4cf2e70b5d1184737da6c9e3ba8916b4100c1241f94cc8901a1930ff894",
+      "raw_sha256": "939d040006e104c7a39a82621ff343d0ef9e754970824637737994e169dda413",
+      "bytes": 172761
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/server-platform37r4-20261027-linux.build.log.gz",
+      "original": "server-platform37r4-20261027-linux.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/server-platform37r4-20261027-linux.inputs.json.gz",
+      "original": "server-platform37r4-20261027-linux.inputs.json",
+      "sha256": "3e5b3da137bfdb736a9865c31ca19081982e67ac6878a4a290db32d0166009b0",
+      "raw_sha256": "10bda0963d986122640ae259c9b93d9643d5bf03a3e039e0fd2f62af7e6ce7aa",
+      "bytes": 172760
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/server-platform37r5-20261027-linux.build.log.gz",
+      "original": "server-platform37r5-20261027-linux.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 20
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/server-platform37r5-20261027-linux.inputs.json.gz",
+      "original": "server-platform37r5-20261027-linux.inputs.json",
+      "sha256": "27c507acde6188faca0476520a12f4fcaaf872fb30c56b7d45cb54792849b485",
+      "raw_sha256": "3f06071fe9156828b61921509af72b7e663aa5811a8186e3851e4f07c7b02158",
+      "bytes": 172763
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/scrape-deferred-37-20261028/verify-scrape37-proof.py.gz",
+      "original": "verify-scrape37-proof.py",
+      "sha256": "17c0a0a8c2eb6403d5b63036a5ecc64789d0332bbacb5e8710479055d5e6eea9",
+      "raw_sha256": "debf737bcb4028152828e17b9c9b717a57031c2229ade1ced6e628632b85d37f",
+      "bytes": 1394
+    }
+  ]
+}

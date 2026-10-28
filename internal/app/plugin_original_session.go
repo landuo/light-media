@@ -17,6 +17,17 @@ func (p *originalPluginInstance) callSession(ctx context.Context, runner plugins
 	if err != nil {
 		return plugins.RunResult{}, err
 	}
+	// A fixed plugin method belongs to its loaded object. Disconnecting one
+	// HTTP caller does not stop that object. Legacy serial RPC has no per-call
+	// cancellation frame: aborting mid-exchange would kill the persistent worker.
+	// Once admitted, drain that bounded exchange; its session/application stop
+	// and runner budget still apply. Concurrent SDKs can cancel only this call.
+	if !client.SupportsConcurrent() {
+		if err := ctx.Err(); err != nil {
+			return plugins.RunResult{}, err
+		}
+		ctx = context.WithoutCancel(ctx)
+	}
 	callback, closePhase := p.originalBaseSessionHost(ctx, method, host)
 	defer closePhase()
 	options := plugins.CallOptions{Timeout: runner.Timeout, ExcludeHostTime: runner.ExcludeHostTime}
@@ -115,7 +126,10 @@ func (a *App) closeOriginalSessions() {
 		cancel()
 		return true
 	})
+	a.pluginOriginalRunningMu.Lock()
 	a.pluginOriginalClasses.Range(func(key, value any) bool { a.pluginOriginalClasses.Delete(key); return true })
+	a.pluginOriginalClassOrder = nil
+	a.pluginOriginalRunningMu.Unlock()
 }
 
 // Original close and stop_service are business methods; transport stop is

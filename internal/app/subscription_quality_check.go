@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"slices"
 	"time"
@@ -72,10 +73,26 @@ func (a *App) checkQualitySubscription(ctx context.Context, j Job, s Subscriptio
 		return a.recordSubscriptionCheck(ctx, s, "电影尚未到上映日期，保持洗版订阅", metadataDates, time.Time{})
 	}
 	settings := a.Settings()
-	request := SearchRequest{Query: s.Keyword, MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: available, Policy: s.Policy, SiteIDs: subscriptionSiteControls(settings.RSSSites, s.SiteIDs), Mappings: s.Mappings, AllowEarly: s.AllowEarly, EpisodeDates: dates}
-	result, err := a.search(ctx, request, true)
-	if err != nil {
-		return err
+	request := SearchRequest{originalSubscription: &s, Query: s.Keyword, MediaType: s.Media.MediaType, TMDBID: s.Media.ID, Season: s.Season, Episodes: available, Policy: s.Policy, SiteIDs: subscriptionSiteControls(settings.RSSSites, s.SiteIDs), Mappings: s.Mappings, AllowEarly: s.AllowEarly, EpisodeDates: dates}
+	var result SearchOutput
+	if prior, e := a.readAcquisition(ctx, a.Store.DB, j.ID); e == nil {
+		// The existing acquisition owns this already selected batch. Searching
+		// again would add provider effects whose results beginAcquisition then
+		// discards, and could require a provider that selected Context replaced.
+		request, result.Candidates = prior.Request, prior.Candidates
+	} else if errors.Is(e, sql.ErrNoRows) {
+		result, err = a.search(ctx, request, true)
+		if err != nil {
+			return err
+		}
+		if len(result.Candidates) > 0 {
+			result.Candidates, err = a.originalSubscriptionResourceSelection(ctx, s, request, result.Candidates)
+			if err != nil {
+				return err
+			}
+		}
+	} else {
+		return e
 	}
 	created, err := a.runSubscriptionAcquisition(ctx, j, s, request, result.Candidates, state, available)
 	if err != nil {
@@ -88,7 +105,7 @@ func (a *App) checkQualitySubscription(ctx context.Context, j Job, s Subscriptio
 	return a.recordSubscriptionCheck(ctx, s, reason, metadataDates, time.Time{})
 }
 
-func (a *App) storeQualityProgress(ctx context.Context, old Subscription, state subscriptionquality.State) error {
+func (a *App) storeQualityProgress(ctx context.Context, old Subscription, state subscriptionquality.State, sourceMetadataUpdatedAt ...string) error {
 	a.subMu.Lock()
 	defer a.subMu.Unlock()
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
@@ -104,6 +121,9 @@ func (a *App) storeQualityProgress(ctx context.Context, old Subscription, state 
 		return bad("SUBSCRIPTION_CHANGED", "订阅在元数据更新期间已变化")
 	}
 	setSubscriptionQualityState(&current, state)
+	if len(sourceMetadataUpdatedAt) > 0 && sourceMetadataUpdatedAt[0] != "" {
+		current.LastCheck = sourceMetadataUpdatedAt[0]
+	}
 	if current.SourceState == "N" {
 		current.SourceState = "R"
 	}

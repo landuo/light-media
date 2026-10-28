@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"light-media/internal/plugins/schedule"
+	"strings"
 	"time"
 )
 
@@ -41,6 +42,7 @@ func (a *App) updateOriginalPluginJobs(ctx context.Context, instance string) {
 	for _, definition := range defs {
 		if err := a.addOriginalPluginJob(ctx, object.installation, definition); err != nil {
 			a.log("ERROR", "plugins", "register_service_failed", "注册插件定时服务失败", "", "")
+			a.reportOriginalPluginExecutionError(ctx, "system", "插件 "+object.manifest.Name+" 服务注册失败", nil, err)
 		}
 	}
 }
@@ -53,11 +55,21 @@ func (a *App) addOriginalPluginJob(ctx context.Context, in PluginInstallation, d
 		return bad("PLUGIN_NOT_LOADED", "插件未加载")
 	}
 	object := value.(*originalPluginInstance)
-	at := time.Now()
-	trigger, err := schedule.New(definition.Trigger, at)
+	provider, err := object.originalDisplayName(ctx)
 	if err != nil {
 		return err
 	}
+	at := time.Now()
+	trigger, triggerErr := schedule.New(definition.Trigger, at)
+	options, optionsErr := originalServiceOptions(&definition)
+	if optionsErr != nil {
+		triggerErr = optionsErr
+	}
+	// Scheduler uses the prefix as the executable job identity. Its explicit
+	// remove_plugin_job call removes every prior suffixed timer before replacing
+	// the method, so the final declaration wins (including invalid triggers).
+	timerID := in.InstanceID + "_" + definition.ID
+	definition.ID, _, _ = strings.Cut(definition.ID, "|")
 	if definition.MisfireGraceMS == 0 {
 		definition.MisfireGraceMS = 1000
 	}
@@ -67,6 +79,14 @@ func (a *App) addOriginalPluginJob(ctx context.Context, in PluginInstallation, d
 	if state.jobs == nil {
 		state.jobs = make(map[originalServiceKey]*originalDirectJob)
 	}
-	state.jobs[originalServiceKey{in.InstanceID, definition.ID}] = &originalDirectJob{object: object, definition: definition, trigger: trigger, due: trigger.First(at)}
-	return nil
+	state.nextRegistration++
+	job := &originalDirectJob{object: object, definition: definition, trigger: trigger, provider: provider, registrationOrder: state.nextRegistration, coalesceDisabled: options.coalesceDisabled, misfireUnlimited: options.unlimited, executorUnavailable: options.executorUnavailable, clockRegistered: triggerErr == nil, timerID: timerID, maxInstances: options.maxInstances}
+	if triggerErr == nil {
+		job.due = trigger.First(at)
+		if options.hasNextRun {
+			job.due = options.nextRun
+		}
+	}
+	state.jobs[originalServiceKey{in.InstanceID, definition.ID}] = job
+	return triggerErr
 }

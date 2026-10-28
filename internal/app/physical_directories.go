@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
-	"light-media/internal/transferextensions"
 	"path/filepath"
 	"strings"
 )
@@ -144,13 +143,20 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 	}
 	if !validMedia(request.MediaType, request.TMDBID) {
 		for i, file := range request.Files {
-			video, _ := classifier.Media(transferextensions.PathFile(file.Path))
-			if !a.importSourceAllowed(file.Path, request.Manual) || !video {
+			class := originalImportFileClass(file)
+			video, _ := classifier.Media(class)
+			if !a.importSourceAllowed(file.Path, request.Manual) || !video && !(request.Manual && classifier.Extra(class)) {
 				return request, bad("INVALID_SOURCE", "请选择容器媒体目录内的视频文件")
 			}
 			hint, numbering, reason := a.importNFOEvidence(file.Path)
 			scanned := importScanFile{Path: file.Path, Parsed: a.parseManualImportFileContext(ctx, file), InferredMedia: hint, Numbering: numbering, IdentityReason: reason}
-			inferred, err := a.directoryFileIdentity(ctx, DirectoryRule{MediaType: "mixed", Mode: request.Mode}, scanned)
+			var inferred ImportRequest
+			var err error
+			if request.Manual && a.originalManualRecognitionAvailable() {
+				inferred, err = a.originalManualTransferIdentity(ctx, request, file, scanned)
+			} else {
+				inferred, err = a.directoryFileIdentity(ctx, DirectoryRule{MediaType: "mixed", Mode: request.Mode}, scanned)
+			}
 			if err != nil {
 				return request, err
 			}
@@ -161,6 +167,8 @@ func (a *App) prepareManualImport(ctx context.Context, request ImportRequest) (I
 				return request, bad("IMPORT_IDENTITY_MISMATCH", "自动识别结果与指定TMDB ID不符")
 			}
 			request.MediaType, request.TMDBID = inferred.MediaType, inferred.TMDBID
+			request.originalResolvedMedia = inferred.originalResolvedMedia
+			request.Files[i].originalResolvedMeta = inferred.Files[0].originalResolvedMeta
 			if file.Season == 0 && !file.SeasonExplicit {
 				request.Files[i].Season = inferred.Files[0].Season
 				request.Files[i].SeasonExplicit = inferred.Files[0].SeasonExplicit

@@ -1,0 +1,137 @@
+{
+  "items": [
+    31,
+    32,
+    33
+  ],
+  "accepted": true,
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "kind": "source replay + true Linux cmd/server/Go SDK + true IAB renderer and Chrome touch emulation; repository/plugins/accounts synthetic",
+  "source_to_target": {
+    "31": {
+      "source": [
+        "B/app/core/plugin.py:1051",
+        "B/app/api/endpoints/plugin.py:764",
+        "F/src/utils/federationLoader.ts:45",
+        "F/src/components/dialog/PluginConfigDialog.vue:188",
+        "F/src/pages/plugin-app.vue:14"
+      ],
+      "target": [
+        "internal/app/plugin_original_frontend_http.go",
+        "internal/plugins/artifacts/clone_frontend.go",
+        "web/src/features/plugin-federation.ts",
+        "web/src/components/PluginConfigDialog.vue",
+        "web/src/components/PluginDataDialog.vue",
+        "web/src/components/PluginAppPage.vue"
+      ]
+    },
+    "32": {
+      "source": [
+        "B/app/core/plugin.py:1191",
+        "F/src/pages/dashboard.vue:416",
+        "F/src/pages/dashboard.vue:662",
+        "F/src/pages/dashboard.vue:733",
+        "F/src/pages/dashboard.vue:1056",
+        "F/src/components/misc/DashboardElement.vue:207",
+        "F/src/components/render/DashboardRender.vue:11"
+      ],
+      "target": [
+        "internal/app/plugin_original_dashboard_meta.go",
+        "internal/app/plugin_original_dashboard_tuple.go",
+        "internal/app/plugin_dashboard_preferences.go",
+        "web/src/components/PluginDashboard.vue",
+        "web/src/components/PluginDashboardWidget.vue",
+        "web/tests/plugin-dashboard-profile.test.mjs"
+      ]
+    },
+    "33": {
+      "source": [
+        "B/app/core/plugin.py:1133",
+        "F/src/stores/pluginSidebarNav.ts:22",
+        "F/src/utils/pluginSidebarNav.ts:15",
+        "F/src/layouts/components/DefaultLayout.vue:233",
+        "F/src/layouts/components/QuickAccess.vue:159",
+        "F/src/composables/useRecentPlugins.ts:58",
+        "F/src/composables/usePWA.ts:62"
+      ],
+      "target": [
+        "internal/app/plugin_navigation.go",
+        "web/src/components/PluginQuickAccess.vue",
+        "web/src/features/plugin-quick-access.ts",
+        "web/src/features/plugin-navigation.ts",
+        "web/src/App.vue"
+      ]
+    }
+  },
+  "r3": {
+    "server_sha256": "0afb9d33c9c04a0c160319fe04b1e6175fcce17bb703afdc19d89786a9a6b6b7",
+    "main_pids": [
+      2528560,
+      2568412
+    ],
+    "source_pids": [
+      2528584,
+      2568422
+    ],
+    "clone_pids": [
+      2528590,
+      2568429
+    ],
+    "gate": "PASS1894.49s; final real API/uninstall/remotes/sidebar/dashboard cleanup",
+    "actual_browser": [
+      "current6-column source resizew4h25 cloney25; native saved value exact (priorw6 bug is fixed)",
+      "mobile1-column source resizeh28 cloney28; native saved value exact",
+      "desktop remains sourcew8h22 clonew6h22/y22; independent profiles",
+      "all five preference records identical after actual main stop/start; new source/clone PIDs and retained Cookie; three responsive layouts restored in DOM",
+      "actual owned SQLite BEFORE INSERT/UPDATE ABORT for enabled settings: source disappears immediately, dialog closes, actual HTTP error visible, database remains source=true",
+      "reload remote values restore both widgets; remove triggers then real save source=false commits; restore source=true commits",
+      "shared Vue3.5.44/Vuetify3.7.3/theme and xs/sm/lg at actual widths390/900/1280"
+    ]
+  },
+  "prior_evidence": [
+    {
+      "manifest": "testdata/plugin-module-no-official-auth-20261026/ui3133-prior-partial-archive-manifest.json",
+      "coverage": "79d true Config save/init2/Page/API failure+retry/ESM CSS/shared theme/VTextField/VTabs/VSwitch/VDialog/VDataTable/discovery enabled split/metadata4/defaults/cold; original failedApp baretemplate evidence retained; finalPASS2009.81s"
+    },
+    {
+      "manifest": "testdata/plugin-module-no-official-auth-20261026/ui3133-partials-and-gesture-20261027.json",
+      "coverage": "f37 native source/clone sidebar actually visible and opens correct AppPage identity; actual native pointer drag/resize readback; VDialog survives15 real polls;21cb Chrome touch actual4 PIDs/recent3/cold/local1042px icons &36,172,228 dominantcolor/down160/up160/short60/dialogguard/more/Apps; partial failures retained",
+      "original_manifest_accepted": false
+    },
+    {
+      "report": "docs/validation/plugin-api35-r3-20261027/result.json",
+      "coverage": "derived fullpage Page fallback after missing specific AppPage and AppPage; real cancellation/back recovers same SDK"
+    },
+    {
+      "report": "docs/validation/plugin-clone-frontend-r3-20261027/result.json",
+      "coverage": "source/clone frontend-only/DEV/exact clone update/cold derivation receipts and real fetched content"
+    },
+    {
+      "report": "docs/validation/plugin-render29-30-parity-20261027.json",
+      "coverage": "JSON Form/Page/ordinary recursive renderer actual CSS/icons/slots/SDK writes/error/retry"
+    }
+  ],
+  "source_expectation_corrections": [
+    "fixed GridStack compact removes empty horizontal gap; vertical actual reorder is used for meaningful drag validation",
+    "fixed dashboard grid.save must receive current column; real complete SFC+real GridStack engine firstred thenfix retained",
+    "immediate snapshot can show pending HTTP/dialog animation; final persisted/readback/state is used",
+    "Chrome extension UI occupied automation during r3; continued through IAB, no product failure inferred"
+  ],
+  "adaptations": [
+    "Go verified immutable resource descriptor replaces Python dist import path; Vue federation ESM shared Vue/Vuetify behavior preserved",
+    "single-user server preferences replace per-user Dashboard settings; geometry profile/sharedenabled/localfirst sequencing preserved; no media widget or multi-user permission system introduced",
+    "existing app interface mode and same-series Vuetify dialog replace original layout infrastructure; storage names separate independent light-media from old service",
+    "source console-only failures additionally visible under existing project UI error requirement",
+    "touch Chrome/CDP is emulator evidence, not physical mobile hardware"
+  ],
+  "remaining": [],
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/ui3133-r3-evidence-manifest.json",
+  "cleanup": "owned triggers removed; all own main/SDK and data cleaned by final CLI; IAB39 closed/viewportreset/tunnel34420 closed. Chrome368189194 and1280 viewport reset pending extension UI release; test server stopped, no product blocker. No push/deploy/old service writes.",
+  "uninstall_wording_clarification": {
+    "reference": "plugin-api35-r3-20261027/result.json#wording_correction",
+    "primary": "registered API removed; retained verified code remains readable200 to authorized sessions",
+    "valid_clone": "registered API removed and copied code physically deleted, file404",
+    "note": "UI31-33 cleanup itself remains real API/uninstall/remotes/sidebar/dashboard checks; do not reinterpret it as primary code404"
+  }
+}

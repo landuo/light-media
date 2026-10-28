@@ -1,0 +1,273 @@
+{
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "kind": "executed exact fixed TS functions and Vue reactive watcher; owned JSON models",
+  "recommend": {
+    "input": [
+      {
+        "name": "Owned one",
+        "api_path": "plugin/Owned/feed?kind=a",
+        "type": "电影"
+      },
+      {
+        "name": "Duplicate path",
+        "api_path": "plugin/Owned/feed?kind=a",
+        "type": "电视剧"
+      },
+      {
+        "name": "Same title",
+        "api_path": "plugin/Owned/feed2",
+        "type": "自定义类别"
+      },
+      {
+        "name": "Builtin duplicate",
+        "api_path": "recommend/tmdb_movies",
+        "type": "电影"
+      },
+      {
+        "name": "TMDB热门电影",
+        "api_path": "plugin/Owned/same-name",
+        "type": "电视剧"
+      }
+    ],
+    "base": [
+      {
+        "apipath": "recommend/tmdb_movies",
+        "title": "TMDB热门电影",
+        "type": "电影"
+      }
+    ],
+    "expected": [
+      {
+        "apipath": "recommend/tmdb_movies",
+        "title": "TMDB热门电影",
+        "type": "电影"
+      },
+      {
+        "apipath": "plugin/Owned/feed?kind=a",
+        "linkurl": "/browse/plugin/Owned/feed?kind=a&title=Owned%20one",
+        "title": "Owned one",
+        "type": "电影"
+      },
+      {
+        "apipath": "plugin/Owned/feed2",
+        "linkurl": "/browse/plugin/Owned/feed2?title=Same%20title",
+        "title": "Same title",
+        "type": "自定义类别"
+      },
+      {
+        "apipath": "plugin/Owned/same-name",
+        "linkurl": "/browse/plugin/Owned/same-name?title=TMDB%E7%83%AD%E9%97%A8%E7%94%B5%E5%BD%B1",
+        "title": "TMDB热门电影",
+        "type": "电视剧"
+      }
+    ],
+    "initial_enabled_by_title": {
+      "TMDB热门电影": true
+    },
+    "visible_after_append": [
+      {
+        "apipath": "recommend/tmdb_movies",
+        "title": "TMDB热门电影",
+        "type": "电影"
+      },
+      {
+        "apipath": "plugin/Owned/same-name",
+        "linkurl": "/browse/plugin/Owned/same-name?title=TMDB%E7%83%AD%E9%97%A8%E7%94%B5%E5%BD%B1",
+        "title": "TMDB热门电影",
+        "type": "电视剧"
+      }
+    ]
+  },
+  "discover": {
+    "input": [
+      {
+        "name": "Owned extra",
+        "mediaid_prefix": "owned",
+        "api_path": "plugin/Owned/feed",
+        "filter_params": {},
+        "filter_ui": []
+      },
+      {
+        "name": "Dup",
+        "mediaid_prefix": "owned",
+        "api_path": "other",
+        "filter_ui": []
+      },
+      {
+        "name": "Builtin",
+        "mediaid_prefix": "douban",
+        "api_path": "other",
+        "filter_ui": []
+      }
+    ],
+    "base": [
+      {
+        "name": "豆瓣",
+        "mediaid_prefix": "douban"
+      }
+    ],
+    "expected": [
+      {
+        "name": "豆瓣",
+        "mediaid_prefix": "douban"
+      },
+      {
+        "name": "Owned extra",
+        "mediaid_prefix": "owned",
+        "api_path": "plugin/Owned/feed",
+        "filter_params": {},
+        "filter_ui": []
+      }
+    ]
+  },
+  "filters": [
+    {
+      "name": "dependency-null",
+      "initial": {
+        "genre": "all",
+        "region": null
+      },
+      "depends": {
+        "region": [
+          "genre"
+        ]
+      },
+      "change": {
+        "genre": "action"
+      },
+      "expected": {
+        "genre": "action",
+        "region": null
+      },
+      "reset_count": 1
+    },
+    {
+      "name": "truthy-default-restores-after-clear",
+      "initial": {
+        "genre": "all",
+        "region": "CN"
+      },
+      "depends": {
+        "region": [
+          "genre"
+        ]
+      },
+      "change": {
+        "genre": "action"
+      },
+      "expected": {
+        "genre": "action",
+        "region": "CN"
+      },
+      "reset_count": 2
+    },
+    {
+      "name": "key-order-reversed",
+      "initial": {
+        "region": "CN",
+        "genre": "all"
+      },
+      "depends": {
+        "region": [
+          "genre"
+        ]
+      },
+      "change": {
+        "genre": "action"
+      },
+      "expected": {
+        "region": "CN",
+        "genre": "action"
+      },
+      "reset_count": 3
+    },
+    {
+      "name": "falsey-restores-default",
+      "initial": {
+        "genre": "all",
+        "region": null
+      },
+      "depends": null,
+      "change": {
+        "genre": ""
+      },
+      "expected": {
+        "genre": "all",
+        "region": null
+      },
+      "reset_count": 2
+    },
+    {
+      "name": "array-reference-comparison",
+      "initial": {
+        "genres": [
+          "all"
+        ],
+        "region": "CN",
+        "tag": ""
+      },
+      "depends": {
+        "region": [
+          "genres"
+        ]
+      },
+      "change": {
+        "tag": "updated"
+      },
+      "error": "Maximum recursive updates exceeded. This means you have a reactive effect that is mutating its own dependencies and thus recursively triggering itself. Possible sources include component template, render function, updated hook or watcher source function.",
+      "expected": {
+        "genres": [
+          "all"
+        ],
+        "region": "CN",
+        "tag": "updated"
+      },
+      "reset_count": 101
+    }
+  ],
+  "pagination": [
+    {
+      "input": null,
+      "expected": {
+        "page": 2
+      }
+    },
+    {
+      "input": {
+        "genre": "科幻"
+      },
+      "expected": {
+        "page": 2,
+        "genre": "科幻"
+      }
+    },
+    {
+      "input": {
+        "page": 7,
+        "genre": ""
+      },
+      "expected": {
+        "page": 7,
+        "genre": ""
+      }
+    },
+    {
+      "input": {
+        "page": "7",
+        "list": "ordinary",
+        "title": [
+          "Old title",
+          "Owned title"
+        ]
+      },
+      "expected": {
+        "page": "7",
+        "list": "ordinary",
+        "title": [
+          "Old title",
+          "Owned title"
+        ]
+      }
+    }
+  ]
+}

@@ -53,6 +53,7 @@ const scraping = ref<boolean | null>(props.initial?.target_path ? false : null),
 const busy = ref(false),
   previewBusy = ref(false),
   previewVisible = ref(false),
+  resultIsPreview = ref(true),
   error = ref('');
 const result = ref<OrganizeResponse | null>(null),
   progress = ref(''),
@@ -173,6 +174,7 @@ function payload(preview: boolean, background = false) {
 async function preview() {
   if (busy.value || previewBusy.value) return;
   previewVisible.value = true;
+  resultIsPreview.value = true;
   previewBusy.value = true;
   error.value = '';
   result.value = null;
@@ -195,6 +197,7 @@ function waitForPoll() {
 async function organize(background: boolean) {
   if (busy.value || previewBusy.value) return;
   busy.value = true;
+  resultIsPreview.value = false;
   error.value = '';
   result.value = null;
   completed.value = 0;
@@ -234,6 +237,15 @@ async function organize(background: boolean) {
         const detail = await api('/jobs/' + encodeURIComponent(id));
         if (!alive) return;
         const job = detail.job || detail;
+        const actualItems = detail.transfer?.items;
+        if (Array.isArray(actualItems) && actualItems.length) {
+          const first = response.items.findIndex((item) => item.job_id === id);
+          if (first >= 0) {
+            const remaining = response.items.filter((item) => item.job_id !== id);
+            remaining.splice(first, 0, ...actualItems);
+            response.items = remaining;
+          }
+        }
         if (['succeeded', 'done', 'failed', 'cancelled', 'needs_review'].includes(job.state)) {
           pending.delete(id);
           completed.value++;
@@ -241,14 +253,17 @@ async function organize(background: boolean) {
             const message =
               job.error_message || (job.state === 'cancelled' ? '整理任务已取消' : '整理失败');
             failures.push(message);
-            response.items
-              .filter((item) => item.job_id === id)
-              .forEach((item) => {
-                item.status = 'failed';
-                item.error = message;
-              });
+            if (!Array.isArray(actualItems) || !actualItems.length)
+              response.items = response.items.map((item) =>
+                item.job_id === id ? { ...item, status: 'failed', error: message } : item,
+              );
           }
         }
+        response.total = response.items.length;
+        response.failed = response.items.filter((item) =>
+          ['failed', 'blocked'].includes(item.status || ''),
+        ).length;
+        result.value = { ...response, items: [...response.items] };
         progress.value =
           job.state === 'retry_wait'
             ? job.error_message || '任务稍后重试'
@@ -502,15 +517,19 @@ onUnmounted(() => {
           </div>
           <section v-if="previewVisible" ref="previewPanel" class="organize-preview">
             <header>
-              <h3>整理结果预览</h3>
+              <h3>{{ resultIsPreview ? '整理结果预览' : '整理结果' }}</h3>
               <span v-if="result"
                 >总数 {{ result.total }} · 失败
                 {{ Math.max(result.failed || 0, failedRows.length) }}</span
               >
             </header>
-            <p class="preview-note">本次整理的预计结果；预览不会改动文件。</p>
+            <p v-if="resultIsPreview" class="preview-note">
+              本次整理的预计结果；预览不会改动文件。
+            </p>
             <p v-if="previewBusy" class="notice">正在生成预览结果…</p>
-            <p v-else-if="!previewRows.length" class="notice">暂无预览结果</p>
+            <p v-else-if="!previewRows.length" class="notice">
+              {{ resultIsPreview ? '暂无预览结果' : '暂无整理结果' }}
+            </p>
             <article
               v-for="(row, index) in previewRows"
               :key="row.source + ':' + index"

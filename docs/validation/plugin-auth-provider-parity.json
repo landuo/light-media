@@ -1,0 +1,80 @@
+{
+  "date": "2026-10-25",
+  "reference_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "platform": "darwin-arm64",
+  "go": "go1.26.2",
+  "git_base": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+  "working_tree_dirty": true,
+  "verification": "real independent compiled Go worker installed via owned HTTP artifact service; real plugin HTTP and session handlers; synthetic owned HMAC proof only",
+  "source_sha256": {
+    "internal/app/plugin_original_auth.go": "8927bcd98e7676008ec4358e8b1165a92e64e7559c98ccba72b91b28a5507949",
+    "internal/app/plugin_original_auth_ticket.go": "aab3b5119cf54bdbf25d9a66fabd1f8f580d7c4c579ea0cb2f1639b38b8d1c00",
+    "internal/app/plugin_original_auth_test.go": "6315f0228ab6704f7f4008ed183e104a019534cb250a25f79b2a46dfb621f7a3",
+    "internal/plugins/auth.go": "f0094420a5b74c30cebe37c8ff3825b689484ac1c16f60629633264280a75cf7",
+    "internal/app/plugin_original_resources.go": "717f224df90ff7af4636e991b5e5e5653730e6dcd6e25ebbd1add92322079c8b",
+    "cmd/owned-auth-fixture/main.go": "1f88951335bcb7a8d6d3ffdd510b3460c02d60368d31421610cc78fe1fa47921",
+    "testdata/standard-auth/source_oracle.py": "7b5befbcfbc1b47142468d3745f983ecc0df00875710da335a959de5f10d16f1",
+    "testdata/standard-auth/source-oracle.json": "67c161af33a1c2365e2fe330a2812d77f0d42d35a635de0822dec1adab558c80"
+  },
+  "runs": [
+    {
+      "log": "work/plugin-module-20261025/auth/normal-final.jsonl",
+      "sha256": "2f70e459cc1d8d358a9f3357883d90054c6d674a8ba60e794ac8ca425b6fe74e",
+      "root_tests": [
+        "TestOriginalAuthTicketSourceLifetimeAndCapacity",
+        "TestOriginalAuthTicketConcurrentConsume",
+        "TestOriginalAuthExchangeRequestValidation",
+        "TestOriginalAuthProvidersActualSDKSourceValues",
+        "TestOriginalAuthActualSDKProofExchangeAndAuthority",
+        "TestOriginalAuthActualSDKCloneAndConcurrentExchange",
+        "TestOriginalAuthActualSDKExpiryMissingUserAndOrigin"
+      ],
+      "elapsed_seconds": 2.849,
+      "failed": 0,
+      "skipped": 0,
+      "race_app_and_worker": false
+    },
+    {
+      "log": "work/plugin-module-20261025/auth/race-final.jsonl",
+      "sha256": "b061f813370ae2ba822db0db7dc0dd2b23384671153e666d744860aa369ab6da",
+      "root_tests": [
+        "TestOriginalAuthTicketSourceLifetimeAndCapacity",
+        "TestOriginalAuthTicketConcurrentConsume",
+        "TestOriginalAuthExchangeRequestValidation",
+        "TestOriginalAuthProvidersActualSDKSourceValues",
+        "TestOriginalAuthActualSDKProofExchangeAndAuthority",
+        "TestOriginalAuthActualSDKCloneAndConcurrentExchange",
+        "TestOriginalAuthActualSDKExpiryMissingUserAndOrigin"
+      ],
+      "elapsed_seconds": 18.737,
+      "failed": 0,
+      "skipped": 0,
+      "race_app_and_worker": true
+    }
+  ],
+  "source_oracle": {
+    "file": "testdata/standard-auth/source-oracle.json",
+    "sha256": "67c161af33a1c2365e2fe330a2812d77f0d42d35a635de0822dec1adab558c80",
+    "passed": true
+  },
+  "retained_initial_failure": {
+    "log": "work/plugin-module-20261025/auth/normal.jsonl",
+    "sha256": "93fe5cb17e307e4d426d7c401c59776dd138119b46bbf84146182a4a57a458c8",
+    "cause": "test decoded project data wrapper as a top-level list; fixed assertion"
+  },
+  "intermediate_parallel_test_selection_failure": "A broad auth regex also selected two in-progress parent frontend tests without their frontend worker env. Final backend scope explicitly selects seven core roots. Intermediate broad log was replaced by the final scoped run.",
+  "deviations": [
+    "existing single local-admin cookie sessions; no fabricated original users, is_active, passkeys, JWT or permissions",
+    "Go scoped mint additionally checks active real worker, provider declaration and existing admin",
+    "concurrent SDK required for synchronous provider recheck",
+    "verified digest frontend paths replace original resource URLs",
+    "existing data/request_id API envelope",
+    "Python exception text/traceback not transported"
+  ],
+  "not_claimed": [
+    "third-party authentication service validation",
+    "production validation",
+    "browser or Vue AuthPage verification in these backend logs",
+    "full user-system parity"
+  ]
+}

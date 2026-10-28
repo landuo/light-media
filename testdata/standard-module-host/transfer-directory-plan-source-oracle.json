@@ -1,0 +1,609 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:2685-2731",
+    "app/chain/transfer.py:3073-3370",
+    "app/utils/string.py:199-228"
+  ],
+  "kind": "Pinned directory filter/planner with controlled metadata and FileItem input.\nThe actual planner, association and optional identity comparison execute unchanged.\nNo target implementation supplies the expected order or inherited metadata.\n",
+  "cases": [
+    {
+      "name": "main_related_orphan_order",
+      "items": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Unmatched.flac",
+          "name": "Unmatched.flac",
+          "extension": "flac",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Other.2024.mkv",
+          "name": "Other.2024.mkv",
+          "extension": "mkv",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Other.2024.srt",
+          "name": "Other.2024.srt",
+          "extension": "srt",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 20
+        }
+      ],
+      "sync": true,
+      "metadata": {
+        "{root}/source/Unmatched.flac": {
+          "_path": "{root}/source/Unmatched.flac",
+          "type": "电影",
+          "name": "Orphan",
+          "year": "2024"
+        },
+        "{root}/source/Owned.2024.zh.srt": {
+          "_path": "{root}/source/Owned.2024.zh.srt",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        },
+        "{root}/source/Other.2024.mkv": {
+          "_path": "{root}/source/Other.2024.mkv",
+          "type": "电影",
+          "name": "Other",
+          "year": "2024"
+        },
+        "{root}/source/Other.2024.srt": {
+          "_path": "{root}/source/Other.2024.srt",
+          "type": "电影",
+          "name": "Other",
+          "year": "2024"
+        },
+        "{root}/source/Owned.2024.mkv": {
+          "_path": "{root}/source/Owned.2024.mkv",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        }
+      },
+      "output": [
+        "{root}/source/Other.2024.mkv",
+        "{root}/source/Other.2024.srt",
+        "{root}/source/Owned.2024.mkv",
+        "{root}/source/Owned.2024.zh.srt",
+        "{root}/source/Unmatched.flac"
+      ],
+      "inherited": {
+        "{root}/source/Other.2024.srt": "{root}/source/Other.2024.mkv",
+        "{root}/source/Owned.2024.zh.srt": "{root}/source/Owned.2024.mkv"
+      }
+    },
+    {
+      "name": "ambiguous_no_sync",
+      "items": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mp4",
+          "name": "Owned.2024.mp4",
+          "extension": "mp4",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 20
+        }
+      ],
+      "sync": false,
+      "metadata": {
+        "{root}/source/Owned.2024.zh.srt": {
+          "_path": "{root}/source/Owned.2024.zh.srt",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        },
+        "{root}/source/Owned.2024.mp4": {
+          "_path": "{root}/source/Owned.2024.mp4",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        },
+        "{root}/source/Owned.2024.mkv": {
+          "_path": "{root}/source/Owned.2024.mkv",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        }
+      },
+      "output": [
+        "{root}/source/Owned.2024.mp4",
+        "{root}/source/Owned.2024.mkv",
+        "{root}/source/Owned.2024.zh.srt"
+      ],
+      "inherited": {}
+    },
+    {
+      "name": "ambiguous_sync_identity",
+      "items": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mp4",
+          "name": "Owned.2024.mp4",
+          "extension": "mp4",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 20
+        }
+      ],
+      "sync": true,
+      "metadata": {
+        "{root}/source/Owned.2024.zh.srt": {
+          "_path": "{root}/source/Owned.2024.zh.srt",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        },
+        "{root}/source/Owned.2024.mp4": {
+          "_path": "{root}/source/Owned.2024.mp4",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        },
+        "{root}/source/Owned.2024.mkv": {
+          "_path": "{root}/source/Owned.2024.mkv",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        }
+      },
+      "output": [
+        "{root}/source/Owned.2024.mp4",
+        "{root}/source/Owned.2024.zh.srt",
+        "{root}/source/Owned.2024.mkv"
+      ],
+      "inherited": {
+        "{root}/source/Owned.2024.zh.srt": "{root}/source/Owned.2024.zh.srt"
+      }
+    },
+    {
+      "name": "only_extras",
+      "items": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Unmatched.flac",
+          "name": "Unmatched.flac",
+          "extension": "flac",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 20
+        }
+      ],
+      "sync": true,
+      "metadata": {
+        "{root}/source/Unmatched.flac": {
+          "_path": "{root}/source/Unmatched.flac",
+          "type": "电影",
+          "name": "Orphan",
+          "year": "2024"
+        },
+        "{root}/source/Owned.2024.zh.srt": {
+          "_path": "{root}/source/Owned.2024.zh.srt",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        }
+      },
+      "output": [
+        "{root}/source/Unmatched.flac",
+        "{root}/source/Owned.2024.zh.srt"
+      ],
+      "inherited": {}
+    },
+    {
+      "name": "duplicate_keys",
+      "items": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 20
+        }
+      ],
+      "sync": true,
+      "metadata": {
+        "{root}/source/Owned.2024.zh.srt": {
+          "_path": "{root}/source/Owned.2024.zh.srt",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        },
+        "{root}/source/Owned.2024.mkv": {
+          "_path": "{root}/source/Owned.2024.mkv",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        }
+      },
+      "output": [
+        "{root}/source/Owned.2024.mkv",
+        "{root}/source/Owned.2024.zh.srt"
+      ],
+      "inherited": {
+        "{root}/source/Owned.2024.zh.srt": "{root}/source/Owned.2024.zh.srt"
+      }
+    },
+    {
+      "name": "separate_parent",
+      "items": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Nested/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 20
+        }
+      ],
+      "sync": true,
+      "metadata": {
+        "{root}/source/Owned.2024.zh.srt": {
+          "_path": "{root}/source/Owned.2024.zh.srt",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        },
+        "{root}/source/Nested/Owned.2024.mkv": {
+          "_path": "{root}/source/Nested/Owned.2024.mkv",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        },
+        "{root}/source/Owned.2024.mkv": {
+          "_path": "{root}/source/Owned.2024.mkv",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        }
+      },
+      "output": [
+        "{root}/source/Nested/Owned.2024.mkv",
+        "{root}/source/Owned.2024.mkv",
+        "{root}/source/Owned.2024.zh.srt"
+      ],
+      "inherited": {
+        "{root}/source/Owned.2024.zh.srt": "{root}/source/Owned.2024.mkv"
+      }
+    },
+    {
+      "name": "provider_size_above_threshold",
+      "items": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 2097152
+        }
+      ],
+      "sync": true,
+      "min_filesize": 1,
+      "metadata": {
+        "{root}/source/Owned.2024.zh.srt": {
+          "_path": "{root}/source/Owned.2024.zh.srt",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        },
+        "{root}/source/Owned.2024.mkv": {
+          "_path": "{root}/source/Owned.2024.mkv",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        }
+      },
+      "output": [
+        "{root}/source/Owned.2024.mkv",
+        "{root}/source/Owned.2024.zh.srt"
+      ],
+      "inherited": {
+        "{root}/source/Owned.2024.zh.srt": "{root}/source/Owned.2024.mkv"
+      }
+    },
+    {
+      "name": "provider_size_filters_main",
+      "items": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 0
+        }
+      ],
+      "sync": true,
+      "min_filesize": 1,
+      "metadata": {
+        "{root}/source/Owned.2024.zh.srt": {
+          "_path": "{root}/source/Owned.2024.zh.srt",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        },
+        "{root}/source/Owned.2024.mkv": {
+          "_path": "{root}/source/Owned.2024.mkv",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        }
+      },
+      "output": [
+        "{root}/source/Owned.2024.zh.srt"
+      ],
+      "inherited": {}
+    },
+    {
+      "name": "provider_name_hard_filter",
+      "items": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "keep.mkv",
+          "extension": "mkv",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 20
+        }
+      ],
+      "sync": true,
+      "pattern": "^keep",
+      "metadata": {
+        "{root}/source/Owned.2024.mkv": {
+          "_path": "{root}/source/Owned.2024.mkv",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        },
+        "{root}/source/Owned.2024.zh.srt": {
+          "_path": "{root}/source/Owned.2024.zh.srt",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        }
+      },
+      "output": [
+        "{root}/source/Owned.2024.mkv"
+      ],
+      "inherited": {}
+    },
+    {
+      "name": "identity_optional_fields",
+      "items": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Unmatched.flac",
+          "name": "Unmatched.flac",
+          "extension": "flac",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Other.2024.mkv",
+          "name": "Other.2024.mkv",
+          "extension": "mkv",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Other.2024.srt",
+          "name": "Other.2024.srt",
+          "extension": "srt",
+          "size": 20
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 20
+        }
+      ],
+      "sync": true,
+      "metas": {
+        "{root}/source/Unmatched.flac": {
+          "_path": "{root}/source/Unmatched.flac",
+          "type": "电影",
+          "name": "Orphan",
+          "year": null
+        },
+        "{root}/source/Owned.2024.zh.srt": {
+          "_path": "{root}/source/Owned.2024.zh.srt",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024",
+          "begin_episode": 1
+        },
+        "{root}/source/Other.2024.srt": {
+          "_path": "{root}/source/Other.2024.srt",
+          "type": "电视剧",
+          "name": "Other",
+          "year": "2024"
+        }
+      },
+      "metadata": {
+        "{root}/source/Unmatched.flac": {
+          "_path": "{root}/source/Unmatched.flac",
+          "type": "电影",
+          "name": "Orphan",
+          "year": null
+        },
+        "{root}/source/Owned.2024.zh.srt": {
+          "_path": "{root}/source/Owned.2024.zh.srt",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024",
+          "begin_episode": 1
+        },
+        "{root}/source/Other.2024.mkv": {
+          "_path": "{root}/source/Other.2024.mkv",
+          "type": "电影",
+          "name": "Other",
+          "year": "2024"
+        },
+        "{root}/source/Other.2024.srt": {
+          "_path": "{root}/source/Other.2024.srt",
+          "type": "电视剧",
+          "name": "Other",
+          "year": "2024"
+        },
+        "{root}/source/Owned.2024.mkv": {
+          "_path": "{root}/source/Owned.2024.mkv",
+          "type": "电影",
+          "name": "Owned",
+          "year": "2024"
+        }
+      },
+      "output": [
+        "{root}/source/Other.2024.mkv",
+        "{root}/source/Other.2024.srt",
+        "{root}/source/Owned.2024.mkv",
+        "{root}/source/Owned.2024.zh.srt",
+        "{root}/source/Unmatched.flac"
+      ],
+      "inherited": {
+        "{root}/source/Other.2024.srt": "{root}/source/Other.2024.mkv",
+        "{root}/source/Owned.2024.zh.srt": "{root}/source/Owned.2024.mkv"
+      }
+    }
+  ]
+}

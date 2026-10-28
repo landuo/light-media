@@ -4,6 +4,7 @@ import { readFileSync } from 'node:fs';
 import {
   normalizePluginLogLevel,
   pluginLogEntry,
+  pluginLogEntries,
   appendPluginLogs,
   groupPluginLogs,
   filterPluginLogGroups,
@@ -79,4 +80,50 @@ test('history and resumed stream deduplicate stable IDs within a bounded 600-lin
   assert.equal(bounded.entries.length, 600);
   assert.equal(bounded.entries[0].id, 'log_152');
   assert.equal(bounded.entries.at(-1).id, 'log_751');
+});
+
+test('fixed physical-line parser, continuation metadata and 600-line bound are retained', () => {
+  const oracle = JSON.parse(
+    readFileSync(
+      new URL('../../testdata/standard-plugin-logs/source-oracle.json', import.meta.url),
+    ),
+  );
+  for (const sample of oracle.cases) {
+    const records = sample.messages.flatMap((message, index) =>
+      pluginLogEntries(
+        {
+          id: 'owned_' + index,
+          plugin_instance_id: 'one',
+          level: 'INFO',
+          time: new Date('2026-10-26 12:00:00.001').toISOString(),
+          module: 'plugins',
+          message,
+          ...(sample.raw_messages ? { raw: sample.raw_messages[index] } : {}),
+        },
+        'one',
+      ),
+    );
+    const actual = appendPluginLogs([], records);
+    const projection = (item) => ({
+      level: item.level,
+      message: item.message,
+      source: item.source,
+      appName: item.appName || '',
+      timestampMs: item.timestampMs,
+      secondKey: item.secondKey,
+      secondDisplay: item.secondDisplay,
+      timeDisplay: item.timeDisplay,
+    });
+    assert.deepEqual(
+      actual.entries.map(projection),
+      sample.expected.entries.map(projection),
+      sample.name,
+    );
+    assert.equal(actual.count, sample.expected.pending, sample.name);
+    assert.deepEqual(
+      appendPluginLogs(actual.entries, actual.entries).entries,
+      actual.entries,
+      'stable line identities survive resumed overlap',
+    );
+  }
 });

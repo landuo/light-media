@@ -1,0 +1,51 @@
+{
+  "environment": {
+    "GOOS": "linux",
+    "GOARCH": "amd64",
+    "CGO_ENABLED": "0"
+  },
+  "go_version": "go version go1.26.2 darwin/arm64",
+  "inputs": 3639,
+  "changed_during_build": [],
+  "elapsed_seconds": 8.85,
+  "binaries": [
+    {
+      "name": "server-platform2-20261027-linux",
+      "command": [
+        "go",
+        "build",
+        "-trimpath",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform2-20261027-linux",
+        "./cmd/server"
+      ],
+      "sha256": "21cbbd9b0200631bb6720e94b47f910c326674ec81ceda2b4013f139f4e96243"
+    },
+    {
+      "name": "process-platform2-20261027-linux.test",
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform2-20261027-linux.test",
+        "./internal/app"
+      ],
+      "sha256": "62810ca9be2b725ff9e1f1ed5b740bc1d316ebd28044b7a202184d7672ca7971"
+    },
+    {
+      "name": "render-rich-platform2-linux",
+      "command": [
+        "go",
+        "build",
+        "-trimpath",
+        "-ldflags",
+        "-X main.fixturePluginID=OwnedRenderFixture -X main.fixtureName=Owned_render_fixture -X main.fixturePageEvents=true -X main.fixtureRichForm=true",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/render-rich-platform2-linux",
+        "./cmd/owned-standard-fixture"
+      ],
+      "sha256": "b78f6ba8a0b21ca54df2d9a5aaa2de8f9793a7316cab944591556a11fd68408b"
+    }
+  ]
+}

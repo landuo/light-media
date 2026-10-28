@@ -18,6 +18,7 @@ import (
 	"sync"
 	"syscall"
 
+	"golang.org/x/sys/unix"
 	"light-media/internal/plugins"
 )
 
@@ -35,8 +36,8 @@ type originalBaseConfigValue struct {
 }
 
 type originalBaseCallScope struct {
-	object *originalPluginInstance
-	phase string
+	object       *originalPluginInstance
+	phase        string
 	installation PluginInstallation
 	logCall      originalPluginLogCall
 	// validate must reject expired/replaced calls, not merely installed objects.
@@ -72,6 +73,10 @@ func (a *App) pluginOriginalBaseHost(ctx context.Context, scope originalBaseCall
 	in := scope.installation
 	if identity.PluginID != in.PluginID || identity.InstanceID != in.InstanceID || identity.Version != in.Version {
 		return nil, bad("PLUGIN_IDENTITY_MISMATCH", "插件执行身份不匹配")
+	}
+	ctx = withOriginalPluginLogContext(ctx, scope)
+	if method == plugins.BaseGetInstanceMetadata {
+		return a.originalBaseInstanceMetadata(ctx, scope, raw)
 	}
 	var request originalBaseRequest
 	d := json.NewDecoder(bytes.NewReader(raw))
@@ -140,6 +145,43 @@ func (a *App) pluginOriginalBaseHost(ctx context.Context, scope originalBaseCall
 		return json.RawMessage("null"), nil
 	}
 	return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件公共方法未实现")
+}
+
+// Metadata is owned by the authenticated manager instance, never by a caller
+// supplied target or a replacement executable's display claims. The worker's
+// pinned implementation identity stays separate from the clone's presentation.
+func (a *App) originalBaseInstanceMetadata(ctx context.Context, scope originalBaseCallScope, raw json.RawMessage) (json.RawMessage, error) {
+	var request struct{}
+	if err := originalResourceDecode(raw, &request); err != nil {
+		return nil, err
+	}
+	object := scope.object
+	if object == nil || object.app != a || object.installation.InstanceID != scope.installation.InstanceID {
+		return nil, bad("PLUGIN_CAPABILITY_DENIED", "插件显示信息未绑定当前实例")
+	}
+	a.pluginMu.Lock()
+	defer a.pluginMu.Unlock()
+	if err := scope.validate(ctx); err != nil {
+		return nil, err
+	}
+	in := scope.installation
+	metadata, err := a.pluginStore.instanceMetadata(ctx, a.Store.DB, in.InstanceID)
+	if err != nil {
+		return nil, err
+	}
+	result := plugins.InstanceMetadata{
+		InstanceID: in.InstanceID, PluginID: in.PluginID, Version: in.Version,
+		Name: object.manifest.Name, Description: object.manifest.Description,
+		DisplayVersion: in.Version, Icon: object.manifest.Icon,
+	}
+	if metadata.SourceInstanceID != "" {
+		result.SourceInstanceID = metadata.SourceInstanceID
+		result.Name = metadata.Name
+		result.Description = metadata.Description
+		result.DisplayVersion = metadata.DisplayVersion
+		result.Icon = metadata.Icon
+	}
+	return json.Marshal(result)
 }
 
 func copyOriginalBaseJSON(raw json.RawMessage) json.RawMessage {
@@ -486,7 +528,7 @@ func (a *App) originalBaseDataPath(ctx context.Context, target string) (string, 
 		return "", bad("INVALID_PLUGIN_VALUE", "插件数据目录名称无效")
 	}
 	ensure := true
-	// Raw Linux syscalls are deliberate: os.Root.OpenFile follows symlinks
+	// Descriptor-relative Unix calls are deliberate: os.Root.OpenFile follows symlinks
 	// within its root even when O_NOFOLLOW is supplied. Here each single named
 	// component must itself be a directory, never any symlink (including sibling).
 	rootFD, err := originalBaseOpenDirectory(-1, a.Dir)
@@ -511,7 +553,7 @@ func (a *App) originalBaseDataPath(ctx context.Context, target string) (string, 
 // receive 0700 subject to umask. No chmod, removal or arbitrary path is exposed.
 func originalBaseEnsureDirectory(parent int, name string, ensure bool) (int, error) {
 	if ensure {
-		err := syscall.Mkdirat(parent, name, 0700)
+		err := unix.Mkdirat(parent, name, 0700)
 		if err != nil && !errors.Is(err, syscall.EEXIST) {
 			return -1, err
 		}
@@ -528,7 +570,7 @@ func originalBaseOpenDirectory(parent int, name string) (int, error) {
 		if parent < 0 {
 			fd, err = syscall.Open(name, flags, 0)
 		} else {
-			fd, err = syscall.Openat(parent, name, flags, 0)
+			fd, err = unix.Openat(parent, name, flags, 0)
 		}
 		if errors.Is(err, syscall.EINTR) {
 			continue

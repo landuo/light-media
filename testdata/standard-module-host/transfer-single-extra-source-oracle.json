@@ -1,0 +1,309 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/chain/transfer.py:3195-3292",
+  "kind": "Pinned complete single-extra planner, with controlled storage listing and main metadata.\nOnly the selected extra is planned; ambiguous/no parent supplies no inherited metadata.\n",
+  "cases": [
+    {
+      "name": "subtitle",
+      "current": {
+        "storage": "local",
+        "type": "file",
+        "path": "{root}/source/Owned.2024.zh.srt",
+        "name": "Owned.2024.zh.srt",
+        "extension": "srt",
+        "size": 24
+      },
+      "listing": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 26
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 24
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.flac",
+          "name": "Owned.2024.flac",
+          "extension": "flac",
+          "size": 24
+        }
+      ],
+      "parent": true,
+      "min_filesize": 10,
+      "output": [
+        {
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "storage": "local",
+          "type": "file",
+          "name": "Owned.2024.zh.srt",
+          "basename": null,
+          "extension": "srt",
+          "size": 24,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ],
+      "inherited": [
+        {
+          "main_path": "{root}/source/Owned.2024.mkv",
+          "title": "Main metadata",
+          "quality": "2160p"
+        }
+      ],
+      "trace": [
+        "get_parent_item",
+        "list_files"
+      ]
+    },
+    {
+      "name": "audio",
+      "current": {
+        "storage": "local",
+        "type": "file",
+        "path": "{root}/source/Owned.2024.flac",
+        "name": "Owned.2024.flac",
+        "extension": "flac",
+        "size": 24
+      },
+      "listing": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 26
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 24
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.flac",
+          "name": "Owned.2024.flac",
+          "extension": "flac",
+          "size": 24
+        }
+      ],
+      "parent": true,
+      "min_filesize": 10,
+      "output": [
+        {
+          "path": "{root}/source/Owned.2024.flac",
+          "storage": "local",
+          "type": "file",
+          "name": "Owned.2024.flac",
+          "basename": null,
+          "extension": "flac",
+          "size": 24,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ],
+      "inherited": [
+        {
+          "main_path": "{root}/source/Owned.2024.mkv",
+          "title": "Main metadata",
+          "quality": "2160p"
+        }
+      ],
+      "trace": [
+        "get_parent_item",
+        "list_files"
+      ]
+    },
+    {
+      "name": "ambiguous",
+      "current": {
+        "storage": "local",
+        "type": "file",
+        "path": "{root}/source/Owned.2024.zh.srt",
+        "name": "Owned.2024.zh.srt",
+        "extension": "srt",
+        "size": 24
+      },
+      "listing": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 26
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mp4",
+          "name": "Owned.2024.mp4",
+          "extension": "mp4",
+          "size": 24
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 24
+        }
+      ],
+      "parent": true,
+      "min_filesize": 10,
+      "output": [
+        {
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "storage": "local",
+          "type": "file",
+          "name": "Owned.2024.zh.srt",
+          "basename": null,
+          "extension": "srt",
+          "size": 24,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ],
+      "inherited": [],
+      "trace": [
+        "get_parent_item",
+        "list_files"
+      ]
+    },
+    {
+      "name": "unrelated",
+      "current": {
+        "storage": "local",
+        "type": "file",
+        "path": "{root}/source/Other.zh.srt",
+        "name": "Other.zh.srt",
+        "extension": "srt",
+        "size": 24
+      },
+      "listing": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 26
+        },
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "name": "Owned.2024.zh.srt",
+          "extension": "srt",
+          "size": 24
+        }
+      ],
+      "parent": true,
+      "min_filesize": 10,
+      "output": [
+        {
+          "path": "{root}/source/Other.zh.srt",
+          "storage": "local",
+          "type": "file",
+          "name": "Other.zh.srt",
+          "basename": null,
+          "extension": "srt",
+          "size": 24,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ],
+      "inherited": [],
+      "trace": [
+        "get_parent_item",
+        "list_files"
+      ]
+    },
+    {
+      "name": "no_parent",
+      "current": {
+        "storage": "local",
+        "type": "file",
+        "path": "{root}/source/Owned.2024.zh.srt",
+        "name": "Owned.2024.zh.srt",
+        "extension": "srt",
+        "size": 24
+      },
+      "listing": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.2024.mkv",
+          "name": "Owned.2024.mkv",
+          "extension": "mkv",
+          "size": 26
+        }
+      ],
+      "parent": false,
+      "min_filesize": 10,
+      "output": [
+        {
+          "path": "{root}/source/Owned.2024.zh.srt",
+          "storage": "local",
+          "type": "file",
+          "name": "Owned.2024.zh.srt",
+          "basename": null,
+          "extension": "srt",
+          "size": 24,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ],
+      "inherited": [],
+      "trace": [
+        "get_parent_item"
+      ]
+    }
+  ]
+}

@@ -66,12 +66,7 @@ export function dashboardWidget(
   const id = dashboardID(item),
     columns = dashboardColumns(profile),
     saved = layout.items[id];
-  const declared =
-    profile === 'mobile'
-      ? 1
-      : profile === 'tablet'
-        ? (item.cols?.sm ?? item.cols?.md)
-        : (item.cols?.md ?? item.cols?.cols);
+  const declared = item.cols?.md ?? item.cols?.cols;
   const w = dashboardInt(saved?.w ?? declared, 1, columns, columns);
   return {
     id,
@@ -93,7 +88,12 @@ export function dashboardRefresh(item: DashboardItem, enabled: boolean, active: 
 
 // Responses replace the declaration/data. A refresh carries only metadata;
 // spreading the previous full widget here would silently retain stale rows.
-export function dashboardResponse(meta: DashboardMeta, result: Record<string, any>): DashboardItem {
+export function dashboardResponse(
+  meta: DashboardMeta,
+  result: Record<string, any> | null,
+): DashboardItem | null {
+  // MoviePilot treats None as no new widget, retaining any previous response.
+  if (result === null) return null;
   return { ...result, id: meta.id, key: meta.key, name: meta.name };
 }
 
@@ -101,20 +101,13 @@ export function dashboardEnabled(value: unknown): Record<string, boolean> | unde
   if (!object(value)) return;
   return Object.fromEntries(Object.entries(value).map(([id, enabled]) => [id, Boolean(enabled)]));
 }
-// The installed page keeps a newer local edit, backfills an absent server row,
-// and retains local display flags when an old server envelope lacks them.
+// Fixed loadSharedDashboardConfig always prefers a valid server value; local
+// history is only the missing/error fallback and is backfilled when absent.
 export function dashboardPreferredLayout(
   local: DashboardLayout | undefined,
   remote: DashboardLayout | undefined,
 ) {
-  if (!remote) return { layout: local, write: local !== undefined };
-  if (
-    local?.updatedAt !== undefined &&
-    (remote.updatedAt === undefined || local.updatedAt > remote.updatedAt)
-  )
-    return { layout: local, write: true };
-  const layout: DashboardLayout = { ...remote };
-  if (layout.enabled === undefined && local?.enabled !== undefined)
-    layout.enabled = { ...local.enabled };
-  return { layout, write: remote.enabled === undefined && local?.enabled !== undefined };
+  return remote !== undefined
+    ? { layout: remote, write: false }
+    : { layout: local, write: local !== undefined };
 }

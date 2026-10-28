@@ -1,0 +1,55 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "oracle": "source-events-oracle.json",
+  "raw_authenticated_aliases": {
+    "/api/v1/recommend/source": "raw RecommendMediaSource[]; v2 same",
+    "/api/v1/discover/source": "raw DiscoverMediaSource[]; v2 same"
+  },
+  "native_authenticated": {
+    "/api/catalog/recommend/sources": "normal envelope data={sources: existing15, extra_sources: RecommendMediaSource[]}",
+    "/api/catalog/explore/sources": "normal envelope data={extra_sources: DiscoverMediaSource[]}"
+  },
+  "recommend_source": {
+    "name": "Owned ordinary recommendations",
+    "api_path": "plugin/OwnedCatalogFixture/feed?list=ordinary",
+    "type": "电影"
+  },
+  "discover_source": {
+    "name": "Owned ordinary discover",
+    "mediaid_prefix": "owned",
+    "api_path": "plugin/OwnedCatalogFixture/feed",
+    "filter_params": {
+      "type": "电影",
+      "genre": "all",
+      "region": null
+    },
+    "filter_ui": [
+      {
+        "component": "VTextField",
+        "props": {
+          "model": "genre",
+          "label": "Owned genre"
+        }
+      }
+    ],
+    "depends": {
+      "region": [
+        "genre"
+      ]
+    }
+  },
+  "discover_optional_defaults": {
+    "filter_params": null,
+    "filter_ui": [],
+    "depends": null
+  },
+  "frontend_source": {
+    "recommend.vue:177": "dedupe exact api_path, append title/name/type; load arbitrary existing same-origin api_path through global Axios; existing query separators preserved",
+    "discover.vue:102": "dedupe mediaid_prefix against builtins and prior extras, append extra source tab",
+    "views/discover/ExtraSourceView.vue": "filter_params cloned; FormRender filter_ui; falsey values restore truthy defaults; changed dependency key clears dependent values; reset key on watched filters",
+    "ordinary_api": "dynamic plugin endpoints retain original raw MediaInfo[] shape; frontend compact projection necessary for existing native MediaCards; source full fields remain available"
+  },
+  "preferences": "Extra-source stable key is exact api_path. Native GET/PUT preserves extra path keys including temporarily absent plugins, equivalent to source user/config/Recommend; preference reads/writes do not broadcast source events. Existing builtin defaults remain.",
+  "authentication": "existing single-user HttpOnly Cookie; raw aliases are authenticated and have no new anonymous exception; same-origin Axios absolute/baseURL allowed; external credentials forbidden"
+}

@@ -1,0 +1,175 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed ordinary input dataclass/manager and MessageChain method; controlled clock, captured event/notice dependencies; no original app runtime",
+  "source_sha256": {
+    "app/helper/interaction.py": "2921d1a9f5931206f8b30fe58d36cc7e502f3e314110e8448680860643ff8457",
+    "app/chain/message.py": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1"
+  },
+  "cases": [
+    {
+      "name": "active-slash",
+      "text": "/owned literal",
+      "expired": false,
+      "consumed": true,
+      "events": [
+        {
+          "type": "message.action",
+          "data": {
+            "plugin_id": "OwnedInput",
+            "__mp_target_plugin_id": "OwnedInput",
+            "text": "plugin_input|<session>",
+            "input_text": "/owned literal",
+            "userid": "admin",
+            "channel": "Web",
+            "source": "admin",
+            "username": "admin",
+            "chat_id": null,
+            "reply_to_message_id": null,
+            "prompt_id": "owned",
+            "input_session_id": "<session>",
+            "payload": {
+              "large": 9007199254740993
+            }
+          }
+        }
+      ],
+      "notifications": [],
+      "pending": false
+    },
+    {
+      "name": "unicode-cancel",
+      "text": "\u001cQuIt\u001f",
+      "expired": false,
+      "consumed": true,
+      "events": [
+        {
+          "type": "message.action",
+          "data": {
+            "plugin_id": "OwnedInput",
+            "__mp_target_plugin_id": "OwnedInput",
+            "text": "plugin_input_cancel|<session>",
+            "userid": "admin",
+            "channel": "Web",
+            "source": "admin",
+            "username": "admin",
+            "chat_id": null,
+            "reply_to_message_id": null,
+            "prompt_id": "owned",
+            "input_session_id": "<session>",
+            "cancelled": true,
+            "payload": {
+              "large": 9007199254740993
+            }
+          }
+        }
+      ],
+      "notifications": [
+        {
+          "channel": "Web",
+          "source": "admin",
+          "userid": "admin",
+          "username": "admin",
+          "title": "已取消插件输入",
+          "save_history": false
+        }
+      ],
+      "pending": false
+    },
+    {
+      "name": "unicode-empty",
+      "text": "\u001c\u001f",
+      "expired": false,
+      "consumed": false,
+      "events": [],
+      "notifications": [],
+      "pending": true
+    },
+    {
+      "name": "callback",
+      "text": "CALLBACK:owned",
+      "expired": false,
+      "consumed": false,
+      "events": [],
+      "notifications": [],
+      "pending": true
+    },
+    {
+      "name": "expired-slash",
+      "text": "/owned",
+      "expired": true,
+      "consumed": false,
+      "events": [
+        {
+          "type": "message.action",
+          "data": {
+            "plugin_id": "OwnedInput",
+            "__mp_target_plugin_id": "OwnedInput",
+            "text": "plugin_input_expired|<session>",
+            "userid": "admin",
+            "channel": "Web",
+            "source": "admin",
+            "username": "admin",
+            "chat_id": null,
+            "reply_to_message_id": null,
+            "prompt_id": "owned",
+            "input_session_id": "<session>",
+            "expired": true,
+            "payload": {
+              "large": 9007199254740993
+            }
+          }
+        }
+      ],
+      "notifications": [
+        {
+          "channel": "Web",
+          "source": "admin",
+          "userid": "admin",
+          "username": "admin",
+          "title": "插件输入已超时，请重新发起操作。",
+          "save_history": false
+        }
+      ],
+      "pending": false
+    },
+    {
+      "name": "expired-answer",
+      "text": "answer",
+      "expired": true,
+      "consumed": true,
+      "events": [
+        {
+          "type": "message.action",
+          "data": {
+            "plugin_id": "OwnedInput",
+            "__mp_target_plugin_id": "OwnedInput",
+            "text": "plugin_input_expired|<session>",
+            "userid": "admin",
+            "channel": "Web",
+            "source": "admin",
+            "username": "admin",
+            "chat_id": null,
+            "reply_to_message_id": null,
+            "prompt_id": "owned",
+            "input_session_id": "<session>",
+            "expired": true,
+            "payload": {
+              "large": 9007199254740993
+            }
+          }
+        }
+      ],
+      "notifications": [
+        {
+          "channel": "Web",
+          "source": "admin",
+          "userid": "admin",
+          "username": "admin",
+          "title": "插件输入已超时，请重新发起操作。",
+          "save_history": false
+        }
+      ],
+      "pending": false
+    }
+  ]
+}

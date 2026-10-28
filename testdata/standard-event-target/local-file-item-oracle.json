@@ -1,0 +1,176 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed Pydantic FileURI/FileItem and LocalStorage constructors; owned real files with fixed mtime",
+  "source_sha256": {
+    "app/schemas/file.py": "676486e635bc9d0dfc0e589b514a6627c3330bf961a566c2cd8872b79f74aba0",
+    "app/modules/filemanager/storages/local.py": "fdbe39789b31b508aa35c4e15e273ee4ed19fc92130aa31c33d0b74fc10bfdf4"
+  },
+  "default": {
+    "path": "/",
+    "storage": "local",
+    "type": null,
+    "name": null,
+    "basename": null,
+    "extension": null,
+    "size": null,
+    "modify_time": null,
+    "children": [],
+    "fileid": null,
+    "parent_fileid": null,
+    "thumbnail": null,
+    "pickcode": null,
+    "drive_id": null,
+    "url": null
+  },
+  "file_bytes": "owned-fileitem",
+  "mtime_ns": 1712345678123456789,
+  "cases": [
+    {
+      "name": "Movie.2026.mkv",
+      "directory": false,
+      "expected": {
+        "path": "__ROOT__/Movie.2026.mkv",
+        "storage": "local",
+        "type": "file",
+        "name": "Movie.2026.mkv",
+        "basename": "Movie.2026",
+        "extension": "mkv",
+        "size": 14,
+        "modify_time": 1712345678.1234567,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      }
+    },
+    {
+      "name": ".hidden",
+      "directory": false,
+      "expected": {
+        "path": "__ROOT__/.hidden",
+        "storage": "local",
+        "type": "file",
+        "name": ".hidden",
+        "basename": ".hidden",
+        "extension": "",
+        "size": 14,
+        "modify_time": 1712345678.1234567,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      }
+    },
+    {
+      "name": "trailing.",
+      "directory": false,
+      "expected": {
+        "path": "__ROOT__/trailing.",
+        "storage": "local",
+        "type": "file",
+        "name": "trailing.",
+        "basename": "trailing.",
+        "extension": "",
+        "size": 14,
+        "modify_time": 1712345678.1234567,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      }
+    },
+    {
+      "name": "..dot.mkv",
+      "directory": false,
+      "expected": {
+        "path": "__ROOT__/..dot.mkv",
+        "storage": "local",
+        "type": "file",
+        "name": "..dot.mkv",
+        "basename": "..dot",
+        "extension": "mkv",
+        "size": 14,
+        "modify_time": 1712345678.1234567,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      }
+    },
+    {
+      "name": "字幕.zh-cn.srt",
+      "directory": false,
+      "expected": {
+        "path": "__ROOT__/字幕.zh-cn.srt",
+        "storage": "local",
+        "type": "file",
+        "name": "字幕.zh-cn.srt",
+        "basename": "字幕.zh-cn",
+        "extension": "srt",
+        "size": 14,
+        "modify_time": 1712345678.1234567,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      }
+    },
+    {
+      "name": "folder.2026",
+      "directory": true,
+      "expected": {
+        "path": "__ROOT__/folder.2026/",
+        "storage": "local",
+        "type": "dir",
+        "name": "folder.2026",
+        "basename": "folder",
+        "extension": null,
+        "size": null,
+        "modify_time": 1712345678.1234567,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      }
+    },
+    {
+      "name": "folder",
+      "directory": true,
+      "expected": {
+        "path": "__ROOT__/folder/",
+        "storage": "local",
+        "type": "dir",
+        "name": "folder",
+        "basename": "folder",
+        "extension": null,
+        "size": null,
+        "modify_time": 1712345678.1234567,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      }
+    }
+  ]
+}

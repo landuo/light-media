@@ -160,3 +160,61 @@ test('multi-season requests preserve common site and download choices while usin
   );
   assert.ok(calls.every((body) => body.downloader_id === '' && body.download_path === ''));
 });
+
+test('ordinary progress follows the fixed source result, including plugin existence facts', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { subscriptionDownloaded, subscriptionProgressTotal } =
+    await import('../src/features/subscriptions.ts');
+  const oracle = JSON.parse(
+    readFileSync(
+      new URL(
+        '../../testdata/standard-module-host/existence-progress-source-oracle.json',
+        import.meta.url,
+      ),
+    ),
+  );
+  assert.equal(oracle.commit, '2829e3b08214348f05ff2f5beae644882eccad58');
+  for (const row of oracle.cases) {
+    const input = {
+      media: { media_type: 'tv' },
+      total_episodes: row.media.total_episode,
+      lack_episode: row.media.lack_episode,
+      in_library_episodes: [],
+    };
+    assert.equal(subscriptionDownloaded(input), row.result);
+    assert.equal(subscriptionProgressTotal(input), row.media.total_episode);
+  }
+});
+
+test('plugin recognition seasons use the fixed MediaDetailView order without mutating raw dictionaries', async () => {
+  const { readFileSync } = await import('node:fs');
+  const { mediaDetailSeasons } = await import('../src/features/subscriptions.ts');
+  const oracle = JSON.parse(
+    readFileSync(
+      new URL(
+        '../../testdata/standard-catalog-modules/detail-seasons-source-oracle.json',
+        import.meta.url,
+      ),
+    ),
+  );
+  assert.equal(oracle.commit, '2829e3b08214348f05ff2f5beae644882eccad58');
+  for (const row of oracle.cases) {
+    const before = structuredClone(row.input);
+    assert.deepEqual(mediaDetailSeasons({ original_media: row.input }), row.output, row.name);
+    assert.deepEqual(row.input, before, 'source dictionaries stay unchanged');
+  }
+  const native = [{ season_number: 1, name: 'Legacy', episode_count: 4 }];
+  assert.deepEqual(mediaDetailSeasons({ seasons: native }), native);
+  assert.deepEqual(
+    mediaDetailSeasons({ seasons: native, original_media: { season_info: null } }),
+    [],
+  );
+  assert.equal(
+    subscriptionTotal({
+      media: { media_type: 'tv', seasons: native, original_media: oracle.cases[0].input },
+      season: 2,
+      start_episode: 3,
+    }),
+    6,
+  );
+});

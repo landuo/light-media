@@ -22,10 +22,13 @@ type Frontend struct {
 	APIContract string   `json:"api_contract"`
 }
 
-var frontendSegment = regexp.MustCompile(`^[A-Za-z0-9_][A-Za-z0-9_.-]{0,127}$`)
+func validFrontendSegment(value string) bool { return validPluginPhysicalComponent(value, true) }
+
+var frontendComponent = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_]{0,63}$`)
 
 // ValidFrontendPath accepts only canonical, bounded package-relative paths.
-// Percent escapes and URL punctuation are not file names in this contract.
+// Filesystem names stay separate from URL spellings; callers escape each
+// segment when constructing resource URLs.
 func ValidFrontendPath(value string) bool {
 	if value == "" || len(value) > 1024 || path.Clean(value) != value {
 		return false
@@ -35,7 +38,7 @@ func ValidFrontendPath(value string) bool {
 		return false
 	}
 	for _, part := range parts {
-		if !frontendSegment.MatchString(part) || part == "." || part == ".." || strings.HasSuffix(part, ".") {
+		if !validFrontendSegment(part) || part == "." || part == ".." || strings.HasSuffix(part, ".") {
 			return false
 		}
 		stem := strings.ToUpper(strings.SplitN(part, ".", 2)[0])
@@ -52,12 +55,18 @@ func (f *Frontend) Validate() error {
 	}
 	if f.Contract != FrontendFederationContract || f.APIContract != FrontendAPIContract ||
 		!ValidFrontendPath(f.Root) || !ValidFrontendPath(f.Entry) ||
-		path.Base(f.Entry) != "remoteEntry.js" || len(f.Exposes) == 0 || len(f.Exposes) > 4 ||
+		path.Base(f.Entry) != "remoteEntry.js" || len(f.Exposes) == 0 || len(f.Exposes) > 64 ||
 		len(f.Shared) == 0 || len(f.Shared) > 2 || !slices.Contains(f.Shared, "vue") {
 		return failure("invalid_frontend_contract")
 	}
+	seen := map[string]bool{}
+	for _, component := range f.Exposes {
+		if seen[component] || !frontendComponent.MatchString(component) {
+			return failure("invalid_frontend_contract")
+		}
+		seen[component] = true
+	}
 	for _, field := range []struct{ values, allowed []string }{
-		{f.Exposes, []string{"Config", "Page", "Dashboard", "AppPage"}},
 		{f.Shared, []string{"vue", "vuetify"}},
 	} {
 		seen := map[string]bool{}

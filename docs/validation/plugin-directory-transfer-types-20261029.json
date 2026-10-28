@@ -1,0 +1,102 @@
+{
+  "accepted_increment": true,
+  "whole_indices_accepted": false,
+  "indices": [
+    43
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source": [
+    "app/chain/storage.py:142-146",
+    "app/api/endpoints/storage.py:270-285",
+    "app/schemas/file.py:83",
+    "app/modules/filemanager/storages/local.py:24-29",
+    "src/components/cards/DirectoryCard.vue:129-175"
+  ],
+  "targets": [
+    "internal/app/plugin_original_transfer_types.go",
+    "internal/app/directory_manage.go",
+    "web/src/components/DirectoryManager.vue",
+    "web/src/features/directory-transfer-types.ts",
+    "internal/app/plugin_original_transfer_types_test.go",
+    "internal/app/plugin_module_process_transfer_types_test.go",
+    "internal/app/plugin_module_process_services_test.go",
+    "web/tests/directory-transfer-types.test.mjs",
+    "web/tests/directory-overwrite.test.mjs"
+  ],
+  "behavior": [
+    "Ordinary support_transtype goes source→clone→native by fixed None/list/scalar semantics, including invalid truthy DTO status500; preserve returned dictionary insertion order.",
+    "Each directory card performs two sequential local queries, intersects source keys with destination, preserves source labels/order, retains valid selection or defers first available selection to nextTick; empty intersection clears, failure leaves current selection."
+  ],
+  "evidence": {
+    "source_cases": 10,
+    "source_ui_cases": 6,
+    "actual_sdk_http_seconds": 2.98,
+    "frontend_full_tests": 556,
+    "race_seconds": 19.726,
+    "linux_cli_seconds": 1.64,
+    "linux_browser_gate_seconds": 242.55,
+    "browser": "IAB93: source None→clone copy/link; persisted auto becomes first copy and actual Save persists copy. Initial+post-save queries each add2 source/clone calls. Source9 returns500 and skips clone; visible error→retry restores two queries. SourceFalse clears options; Save rejected, persisted copy retained. New PIDs1140103/1140110→1144959/1144965 have0 calls before reload, then2 each, restored copy. Uninstall both→404 and native dictionary restored.",
+    "build": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform55r2-20261027-linux",
+          "sha256": "73add6db787810d5925ae945a77f9cd96de3e8ea7079faa7afa8b44a60e4a409",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform55r2-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3746,
+          "changed": [],
+          "elapsed_seconds": 1.43
+        },
+        {
+          "name": "process-platform55r2-20261027-linux.test",
+          "sha256": "654d318a39bbffb9da3c4ade94afa6d6e31e07d16e8e0d3b00bf49c143ca8048",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform55r2-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4242,
+          "changed": [],
+          "elapsed_seconds": 7.31
+        }
+      ]
+    },
+    "manifest": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/manifest.json"
+  },
+  "adaptations": [
+    "Existing Go organizer supports hardlink/copy/auto; native dictionary therefore link/copy/auto, not fixed local copy/move/link/softlink. UI maps link→hardlink and only offers existing executable modes. Raw plugin response is not filtered; no new move/symlink business system.",
+    "Target authenticated /api/directories/transfer-types replaces source storage/transtype/local; source query storage remains exactly local. Linux/local-only scope does not introduce cloud storage parameters.",
+    "Empty selection cannot save an enabled target directory because its older native API defaults empty mode to hardlink; explicit UI rejection prevents silently changing source empty behavior. Visible retry augments original console-only error handling.",
+    "Owned SDK fixtures plus synthetic empty directories; no user media or external provider. Python is development oracle/observer only."
+  ],
+  "failures_explained": [
+    "First Linux fixture expected plugin-style data.success from ordinary directory save, whose actual response contains data.directories. Fixed assertion now checks persisted mode through that DTO; production binary unchanged.",
+    "Four overwrite frontend fixtures lacked the new real helper import and assumed the last request was always PUT. Bound actual helper and locate PUT explicitly; all prior policy assertions retained; final556pass."
+  ],
+  "remaining": [
+    "43 complete caller/guard applicability audit",
+    "50 final evidence audit"
+  ],
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/modules/qbittorrent/qbittorrent.py:401",
+  "sha256": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0",
+  "kind": "actual source category branch; qbc HTTP transport/response parser controlled",
+  "cases": [
+    {
+      "enabled": false,
+      "category": "华语电影",
+      "calls": [
+        {
+          "urls": null,
+          "save_path": "/owned/downloads",
+          "is_paused": false,
+          "tags": null,
+          "use_auto_torrent_management": false,
+          "is_sequential_download": false,
+          "is_first_last_piece_priority": false,
+          "cookie": null,
+          "category": null
+        }
+      ],
+      "returned": [
+        true,
+        [
+          "owned-hash"
+        ]
+      ]
+    },
+    {
+      "enabled": true,
+      "category": "华语电影",
+      "calls": [
+        {
+          "urls": null,
+          "save_path": "/owned/downloads",
+          "is_paused": false,
+          "tags": null,
+          "use_auto_torrent_management": true,
+          "is_sequential_download": false,
+          "is_first_last_piece_priority": false,
+          "cookie": null,
+          "category": "华语电影"
+        }
+      ],
+      "returned": [
+        true,
+        [
+          "owned-hash"
+        ]
+      ]
+    },
+    {
+      "enabled": true,
+      "category": null,
+      "calls": [
+        {
+          "urls": null,
+          "save_path": "/owned/downloads",
+          "is_paused": false,
+          "tags": null,
+          "use_auto_torrent_management": false,
+          "is_sequential_download": false,
+          "is_first_last_piece_priority": false,
+          "cookie": null,
+          "category": null
+        }
+      ],
+      "returned": [
+        true,
+        [
+          "owned-hash"
+        ]
+      ]
+    }
+  ]
+}

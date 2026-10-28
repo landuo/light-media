@@ -1,0 +1,248 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual pinned dispatcher and ordinary browse endpoint/batch caller/title caller with actual Python bytes; registry/native core are owned boundaries",
+  "source_sha256": {
+    "app/chain/search.py": "2b04f6d246ea2573081cb72039a78acefb81cd7c895603e0433bab7dc7e7a528",
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/torrents.py": "6c2833fc9a87e9d57881fcdef760d131dd1d36acbc9d5de3d7279cdbd0d96a47",
+    "app/core/context.py": "70a088bd54c748ab44ec467e6a1f1fc5bb5368f818bb16288eca0d15cf98877e",
+    "app/utils/object.py": "0fd0161be3084593a9693244e9ea734c5d949cc23a6e8f34349177a5e220dc1c",
+    "app/schemas/types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+    "app/api/endpoints/site.py": "c352a148fd418f7eb6c91f490d8db4319c91c6ac2d68b920b35b525d1d8372a8"
+  },
+  "cases": [
+    {
+      "entry": "browse",
+      "name": "empty_bytes",
+      "plugin_result": {
+        "__plugin_module_bytes": ""
+      },
+      "returned": [],
+      "error": null,
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_refresh_torrents"
+        }
+      ],
+      "transport": "exact source bytes represented only across SDK JSON boundary by reserved base64 envelope"
+    },
+    {
+      "entry": "browse",
+      "name": "full_bytes",
+      "plugin_result": {
+        "__plugin_module_bytes": "b3duZWQ="
+      },
+      "returned": null,
+      "error": "AttributeError",
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_refresh_torrents"
+        }
+      ],
+      "transport": "exact source bytes represented only across SDK JSON boundary by reserved base64 envelope"
+    },
+    {
+      "entry": "batch",
+      "name": "empty_bytes",
+      "plugin_result": {
+        "__plugin_module_bytes": ""
+      },
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        },
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "error": null,
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_batch_search_torrents"
+        },
+        {
+          "kind": "core",
+          "method": "async_search_torrents"
+        },
+        {
+          "kind": "core",
+          "method": "get_search_page_size"
+        }
+      ],
+      "transport": "exact source bytes represented only across SDK JSON boundary by reserved base64 envelope"
+    },
+    {
+      "entry": "batch",
+      "name": "full_bytes",
+      "plugin_result": {
+        "__plugin_module_bytes": "b3duZWQ="
+      },
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        },
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": null,
+          "site_ua": null,
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned core resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": null,
+          "page_url": "http://127.0.0.1:43100/details.php?id=22",
+          "size": 2048,
+          "seeders": 2,
+          "peers": 0,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 1,
+          "hit_and_run": false,
+          "labels": [],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "普通",
+          "freedate_diff": ""
+        }
+      ],
+      "error": null,
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "async_batch_search_torrents"
+        },
+        {
+          "kind": "core",
+          "method": "async_search_torrents"
+        },
+        {
+          "kind": "core",
+          "method": "get_search_page_size"
+        }
+      ],
+      "transport": "exact source bytes represented only across SDK JSON boundary by reserved base64 envelope"
+    },
+    {
+      "entry": "title",
+      "name": "empty_bytes",
+      "plugin_result": {
+        "__plugin_module_bytes": ""
+      },
+      "returned": [],
+      "error": null,
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "filter_torrents"
+        }
+      ],
+      "transport": "exact source bytes represented only across SDK JSON boundary by reserved base64 envelope"
+    },
+    {
+      "entry": "title",
+      "name": "full_bytes",
+      "plugin_result": {
+        "__plugin_module_bytes": "b3duZWQ="
+      },
+      "returned": {
+        "__plugin_module_bytes": "b3duZWQ="
+      },
+      "error": null,
+      "observations": [
+        {
+          "kind": "plugin",
+          "method": "filter_torrents"
+        }
+      ],
+      "transport": "exact source bytes represented only across SDK JSON boundary by reserved base64 envelope"
+    }
+  ],
+  "adaptation": "Truthy title bytes reach the original caller unchanged; native typed public Candidate projection rejects them instead of treating the envelope as a source model. Empty bytes produce an empty result and never invoke core. Both batch bytes take the fixed AttributeError legacy fallback."
+}

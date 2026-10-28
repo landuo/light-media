@@ -143,7 +143,7 @@ async function submit() {
           variant="outlined"
           :disabled="busy"
           :error-messages="errors.version"
-          hint="仅修改显示版本；留空继承来源，不改变实际运行的插件版本"
+          hint="用于分身版本展示和更新检查；留空继承来源"
           persistent-hint
         />
         <VTextField
@@ -158,7 +158,8 @@ async function submit() {
           persistent-hint
         />
         <VAlert type="info" variant="tonal" class="mt-2">
-          仅复制配置，不复制历史记录及运行数据（KV）。创建后默认暂停，不会自动执行；请在分身设置中检查配置后自行启用。
+          仅复制配置，不复制历史记录及运行数据（KV）。来源配置非空时关闭 enable、enabled
+          两个常用启用字段；来源配置为空时按插件默认值初始化，可能自动启用。创建后请检查分身设置。
         </VAlert>
       </VCardText>
       <VCardActions class="plugin-dialog-actions">

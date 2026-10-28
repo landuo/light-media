@@ -23,12 +23,13 @@ type PackageFile struct {
 }
 
 type installedReceipt struct {
-	Manifest      plugins.Manifest `json:"manifest"`
-	SHA256        string           `json:"sha256"`
-	HostContract  string           `json:"host_contract"`
-	RepositoryURL string           `json:"repository_url,omitempty"`
-	Files         []PackageFile    `json:"files,omitempty"`
-	PackageSHA256 string           `json:"package_sha256,omitempty"`
+	Manifest           plugins.Manifest         `json:"manifest"`
+	SHA256             string                   `json:"sha256"`
+	HostContract       string                   `json:"host_contract"`
+	RepositoryURL      string                   `json:"repository_url,omitempty"`
+	Files              []PackageFile            `json:"files,omitempty"`
+	PackageSHA256      string                   `json:"package_sha256,omitempty"`
+	FrontendDerivation *frontendClassDerivation `json:"frontend_derivation,omitempty"`
 }
 
 // FrontendAsset contains already verified bounded bytes. No file handle or
@@ -40,6 +41,9 @@ type FrontendAsset struct {
 }
 
 func validatePackageFiles(m plugins.Manifest, files []PackageFile, executableSHA string) ([]PackageFile, error) {
+	return validateDerivedPackageFiles(m, files, executableSHA, nil)
+}
+func validateDerivedPackageFiles(m plugins.Manifest, files []PackageFile, executableSHA string, derivation *frontendClassDerivation) ([]PackageFile, error) {
 	if len(files) == 0 {
 		if m.Frontend != nil {
 			return nil, errors.New("frontend package requires complete file inventory")
@@ -88,7 +92,7 @@ func validatePackageFiles(m plugins.Manifest, files []PackageFile, executableSHA
 			entry = true
 		}
 	}
-	if !worker || !entry {
+	if !worker || (!entry && !derivedEntryRenamed(m, out, derivation)) {
 		return nil, errors.New("package inventory lacks worker or frontend entry")
 	}
 	if m.Frontend != nil && (m.Entry == m.Frontend.Root || strings.HasPrefix(m.Entry, m.Frontend.Root+"/")) {
@@ -164,7 +168,7 @@ func verifyPackageTree(root string, files []PackageFile, hasReceipt bool) error 
 	return err
 }
 
-func readPackageFile(root string, f PackageFile) ([]byte, error) {
+func openPackageFile(root string, f PackageFile) (*os.File, error) {
 	r, err := os.OpenRoot(root)
 	if err != nil {
 		return nil, err
@@ -194,6 +198,14 @@ func readPackageFile(root string, f PackageFile) ([]byte, error) {
 	if err != nil || !os.SameFile(info, actual) {
 		in.Close()
 		return nil, errors.New("package member changed while opening")
+	}
+	return in, nil
+}
+
+func readPackageFile(root string, f PackageFile) ([]byte, error) {
+	in, err := openPackageFile(root, f)
+	if err != nil {
+		return nil, err
 	}
 	b, err := io.ReadAll(io.LimitReader(in, f.Size+1))
 	err = errors.Join(err, in.Close())

@@ -43,6 +43,8 @@ type SourceUserData struct {
 	// Parser-created DTOs have no overlay until serialized and reopened; decoded
 	// snapshots are immutable, so modifying Messages does not replace raw authority.
 	rawMessageRows []json.RawMessage
+	rawSeedingInfo json.RawMessage
+	nullFields     map[string]bool
 	Error          *string `json:"err_msg"`
 	Day            string  `json:"updated_day"`
 	Time           *string `json:"updated_time"`
@@ -55,10 +57,31 @@ func (d *SourceUserData) UnmarshalJSON(raw []byte) error {
 	var value plain
 	wire := struct {
 		*plain
-		Rows json.RawMessage `json:"message_unread_contents"`
+		Rows    json.RawMessage `json:"message_unread_contents"`
+		Seeding json.RawMessage `json:"seeding_info"`
 	}{plain: &value}
 	if !decodeJSON(raw, &wire) {
 		return sourceModuleError(nil)
+	}
+	var fields map[string]json.RawMessage
+	if !decodeJSON(raw, &fields) {
+		return sourceModuleError(nil)
+	}
+	if len(wire.Seeding) > 0 {
+		var entries []json.RawMessage
+		if !decodeJSON(wire.Seeding, &entries) {
+			return sourceModuleError(nil)
+		}
+		value.rawSeedingInfo = append(json.RawMessage(nil), wire.Seeding...)
+		_ = decodeJSON(wire.Seeding, &value.SeedingInfo)
+	}
+	for key, token := range fields {
+		if string(token) == "null" {
+			if value.nullFields == nil {
+				value.nullFields = map[string]bool{}
+			}
+			value.nullFields[key] = true
+		}
 	}
 	var rows []json.RawMessage
 	if len(wire.Rows) != 0 && !decodeJSON(wire.Rows, &rows) {
@@ -82,14 +105,38 @@ func (d *SourceUserData) UnmarshalJSON(raw []byte) error {
 
 func (d SourceUserData) MarshalJSON() ([]byte, error) {
 	type plain SourceUserData
-	if d.rawMessageRows == nil {
-		return json.Marshal(plain(d))
+	raw, err := json.Marshal(plain(d))
+	if err != nil {
+		return nil, err
 	}
-	return json.Marshal(struct {
-		plain
-		Rows []json.RawMessage `json:"message_unread_contents"`
-	}{plain: plain(d), Rows: d.rawMessageRows})
+	if d.rawMessageRows == nil && len(d.nullFields) == 0 && len(d.rawSeedingInfo) == 0 {
+		return raw, nil
+	}
+	var fields map[string]json.RawMessage
+	if err = json.Unmarshal(raw, &fields); err != nil {
+		return nil, err
+	}
+	if d.rawMessageRows != nil {
+		fields["message_unread_contents"], err = json.Marshal(d.rawMessageRows)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if len(d.rawSeedingInfo) > 0 {
+		fields["seeding_info"] = d.rawSeedingInfo
+	}
+	for key := range d.nullFields {
+		value := string(fields[key])
+		if value == "0" || value == `""` || value == "null" {
+			fields[key] = json.RawMessage(`null`)
+		}
+	}
+	return json.Marshal(fields)
 }
+
+// SourceFieldNull distinguishes a nullable source column from an observed
+// numeric zero when projecting an actual module DTO into native account views.
+func (d SourceUserData) SourceFieldNull(key string) bool { return d.nullFields[key] }
 
 // SourceMessageRows preserves list entries even when a source row cannot be
 // unpacked. The producer must examine entries in order, rather than rejecting a

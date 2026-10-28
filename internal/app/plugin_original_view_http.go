@@ -73,17 +73,15 @@ func (a *App) originalExternalViewHTTP(ctx context.Context, object *originalPlug
 		if string(bytes.TrimSpace(raw)) == "null" {
 			return nil, nil
 		}
-		var tuple []json.RawMessage
-		if json.Unmarshal(raw, &tuple) != nil || len(tuple) != 3 {
-			return nil, &APIError{"PLUGIN_VIEW_FAILED", "插件仪表板返回格式无效", 500}
+		tuple, err := originalDashboardTuple(raw)
+		if err != nil {
+			return nil, err
 		}
-		if !originalViewJSONTruth(tuple[0]) {
-			tuple[0] = json.RawMessage(`{}`)
+		name, err := object.originalDisplayName(ctx)
+		if err != nil {
+			return nil, err
 		}
-		if !originalViewJSONTruth(tuple[1]) {
-			tuple[1] = json.RawMessage(`{}`)
-		}
-		return map[string]any{"id": object.installation.InstanceID, "name": object.manifest.Name, "key": key, "render_mode": mode, "cols": tuple[0], "attrs": tuple[1], "elements": tuple[2]}, nil
+		return originalDashboardResponse(object.installation.InstanceID, name, key, mode, tuple), nil
 	}
 }
 

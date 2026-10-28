@@ -1,0 +1,711 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "48948f9137ae68ac2f0cf4c1235dd3db6327cc9d66ff7490c17a5657504d5e36",
+  "source_methods": [
+    "transfer_media",
+    "__normalize_disc_folder_name",
+    "__get_tv_bluray_dir_path",
+    "__build_preview_item",
+    "__update_result",
+    "__transfer_dir",
+    "__transfer_dir_files"
+  ],
+  "kind": "Fixed TransHandler directory branch/recursion/result aggregation and disc naming.\nReal fixed DTOs and methods run; storage/naming/transfer-command/event boundaries\nare explicit owned adapters. Only disposable generated files are written.\n",
+  "cases": [
+    {
+      "mode": "preview",
+      "result": {
+        "success": true,
+        "fileitem": {
+          "path": "{root}/source/",
+          "storage": "local",
+          "type": "dir",
+          "name": "source",
+          "basename": "source",
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_diritem": {
+          "path": "{root}/library/Owned (2024)",
+          "storage": "local",
+          "type": "dir",
+          "name": "Owned (2024)",
+          "basename": "Owned (2024)",
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_item": {
+          "path": "{root}/library/Owned (2024)",
+          "storage": "local",
+          "type": "dir",
+          "name": "Owned (2024)",
+          "basename": "Owned (2024)",
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "transfer_type": "link",
+        "file_count": 0,
+        "file_list": [
+          "{root}/source/"
+        ],
+        "file_list_new": [
+          "{root}/library/Owned (2024)"
+        ],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "trace": [],
+      "effects": [],
+      "target_exists": false,
+      "empty_directory_copied": false
+    },
+    {
+      "mode": "success",
+      "result": {
+        "success": true,
+        "fileitem": {
+          "path": "{root}/source/",
+          "storage": "local",
+          "type": "dir",
+          "name": "source",
+          "basename": "source",
+          "extension": null,
+          "size": 12,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_diritem": {
+          "path": "{root}/library/Owned (2024)/",
+          "storage": "local",
+          "type": "dir",
+          "name": "Owned (2024)",
+          "basename": "Owned (2024)",
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_item": {
+          "path": "{root}/library/Owned (2024)/",
+          "storage": "local",
+          "type": "dir",
+          "name": "Owned (2024)",
+          "basename": "Owned (2024)",
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "transfer_type": "link",
+        "file_count": 0,
+        "file_list": [
+          "{root}/source/BDMV/STREAM/00001.m2ts",
+          "{root}/source/BDMV/index.bdmv"
+        ],
+        "file_list_new": [
+          "{root}/library/Owned (2024)/BDMV/STREAM/00001.m2ts",
+          "{root}/library/Owned (2024)/BDMV/index.bdmv"
+        ],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": true
+      },
+      "trace": [
+        [
+          "get_item",
+          "{root}/source/BDMV/STREAM"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/STREAM/"
+        ],
+        [
+          "get_folder",
+          "{root}/library/Owned (2024)"
+        ],
+        [
+          "intercept",
+          null,
+          null,
+          "{root}/library/Owned (2024)",
+          true
+        ],
+        [
+          "list",
+          "{root}/source/"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/STREAM/"
+        ],
+        [
+          "transfer_command",
+          "{root}/source/BDMV/STREAM/00001.m2ts",
+          "{root}/library/Owned (2024)/BDMV/STREAM/00001.m2ts"
+        ],
+        [
+          "transfer_command",
+          "{root}/source/BDMV/index.bdmv",
+          "{root}/library/Owned (2024)/BDMV/index.bdmv"
+        ],
+        [
+          "list",
+          "{root}/source/CERTIFICATE/"
+        ]
+      ],
+      "effects": [
+        "{root}/library/Owned (2024)/BDMV/STREAM/00001.m2ts",
+        "{root}/library/Owned (2024)/BDMV/index.bdmv"
+      ],
+      "target_exists": true,
+      "empty_directory_copied": false
+    },
+    {
+      "mode": "partial_failure",
+      "result": {
+        "success": false,
+        "fileitem": {
+          "path": "{root}/source/",
+          "storage": "local",
+          "type": "dir",
+          "name": "source",
+          "basename": "source",
+          "extension": null,
+          "size": 12,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": "link",
+        "file_count": 0,
+        "file_list": [
+          "{root}/source/BDMV/STREAM/00001.m2ts"
+        ],
+        "file_list_new": [
+          "{root}/library/Owned (2024)/BDMV/STREAM/00001.m2ts"
+        ],
+        "total_size": 0,
+        "fail_list": [],
+        "message": "owned second-file failure",
+        "need_scrape": false,
+        "need_notify": true
+      },
+      "trace": [
+        [
+          "get_item",
+          "{root}/source/BDMV/STREAM"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/STREAM/"
+        ],
+        [
+          "get_folder",
+          "{root}/library/Owned (2024)"
+        ],
+        [
+          "intercept",
+          null,
+          null,
+          "{root}/library/Owned (2024)",
+          true
+        ],
+        [
+          "list",
+          "{root}/source/"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/STREAM/"
+        ],
+        [
+          "transfer_command",
+          "{root}/source/BDMV/STREAM/00001.m2ts",
+          "{root}/library/Owned (2024)/BDMV/STREAM/00001.m2ts"
+        ],
+        [
+          "transfer_command",
+          "{root}/source/BDMV/index.bdmv",
+          "{root}/library/Owned (2024)/BDMV/index.bdmv"
+        ]
+      ],
+      "effects": [
+        "{root}/library/Owned (2024)/BDMV/STREAM/00001.m2ts"
+      ],
+      "target_exists": true,
+      "empty_directory_copied": false
+    },
+    {
+      "mode": "intercept_cancel",
+      "result": {
+        "success": false,
+        "fileitem": {
+          "path": "{root}/source/",
+          "storage": "local",
+          "type": "dir",
+          "name": "source",
+          "basename": "source",
+          "extension": null,
+          "size": 12,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": "link",
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": "owned directory veto",
+        "need_scrape": false,
+        "need_notify": true
+      },
+      "trace": [
+        [
+          "get_item",
+          "{root}/source/BDMV/STREAM"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/STREAM/"
+        ],
+        [
+          "get_folder",
+          "{root}/library/Owned (2024)"
+        ],
+        [
+          "intercept",
+          null,
+          null,
+          "{root}/library/Owned (2024)",
+          true
+        ]
+      ],
+      "effects": [],
+      "target_exists": true,
+      "empty_directory_copied": false
+    },
+    {
+      "mode": "empty",
+      "result": {
+        "success": true,
+        "fileitem": {
+          "path": "{root}/source/",
+          "storage": "local",
+          "type": "dir",
+          "name": "source",
+          "basename": "source",
+          "extension": null,
+          "size": 0,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_diritem": {
+          "path": "{root}/library/Owned (2024)/",
+          "storage": "local",
+          "type": "dir",
+          "name": "Owned (2024)",
+          "basename": "Owned (2024)",
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_item": {
+          "path": "{root}/library/Owned (2024)/",
+          "storage": "local",
+          "type": "dir",
+          "name": "Owned (2024)",
+          "basename": "Owned (2024)",
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "transfer_type": "link",
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": true
+      },
+      "trace": [
+        [
+          "get_item",
+          "{root}/source/BDMV/STREAM"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/STREAM/"
+        ],
+        [
+          "get_folder",
+          "{root}/library/Owned (2024)"
+        ],
+        [
+          "intercept",
+          null,
+          null,
+          "{root}/library/Owned (2024)",
+          true
+        ],
+        [
+          "list",
+          "{root}/source/"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/STREAM/"
+        ],
+        [
+          "list",
+          "{root}/source/CERTIFICATE/"
+        ]
+      ],
+      "effects": [],
+      "target_exists": true,
+      "empty_directory_copied": false
+    },
+    {
+      "mode": "late_list_failure",
+      "result": {
+        "success": false,
+        "fileitem": null,
+        "target_diritem": null,
+        "target_item": null,
+        "transfer_type": null,
+        "file_count": 0,
+        "file_list": [],
+        "file_list_new": [],
+        "total_size": 0,
+        "fail_list": [],
+        "message": "owned late directory listing failure",
+        "need_scrape": false,
+        "need_notify": false
+      },
+      "trace": [
+        [
+          "get_item",
+          "{root}/source/BDMV/STREAM"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/STREAM/"
+        ],
+        [
+          "get_folder",
+          "{root}/library/Owned (2024)"
+        ],
+        [
+          "intercept",
+          null,
+          null,
+          "{root}/library/Owned (2024)",
+          true
+        ],
+        [
+          "list",
+          "{root}/source/"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/STREAM/"
+        ],
+        [
+          "transfer_command",
+          "{root}/source/BDMV/STREAM/00001.m2ts",
+          "{root}/library/Owned (2024)/BDMV/STREAM/00001.m2ts"
+        ],
+        [
+          "transfer_command",
+          "{root}/source/BDMV/index.bdmv",
+          "{root}/library/Owned (2024)/BDMV/index.bdmv"
+        ],
+        [
+          "list",
+          "{root}/source/CERTIFICATE/"
+        ]
+      ],
+      "effects": [
+        "{root}/library/Owned (2024)/BDMV/STREAM/00001.m2ts",
+        "{root}/library/Owned (2024)/BDMV/index.bdmv"
+      ],
+      "target_exists": true,
+      "empty_directory_copied": false
+    },
+    {
+      "mode": "renamed_members",
+      "result": {
+        "success": true,
+        "fileitem": {
+          "path": "{root}/source/",
+          "storage": "local",
+          "type": "dir",
+          "name": "source",
+          "basename": "source",
+          "extension": null,
+          "size": 12,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_diritem": {
+          "path": "{root}/library/Owned (2024)/",
+          "storage": "local",
+          "type": "dir",
+          "name": "Owned (2024)",
+          "basename": "Owned (2024)",
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "target_item": {
+          "path": "{root}/library/Owned (2024)/",
+          "storage": "local",
+          "type": "dir",
+          "name": "Owned (2024)",
+          "basename": "Owned (2024)",
+          "extension": null,
+          "size": null,
+          "modify_time": null,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "transfer_type": "link",
+        "file_count": 0,
+        "file_list": [
+          "{root}/source/BDMV/STREAM/00001.m2ts",
+          "{root}/source/BDMV/index.bdmv"
+        ],
+        "file_list_new": [
+          "{root}/library/Owned (2024)/BluRay/Streams/feature.m2ts",
+          "{root}/library/Owned (2024)/BluRay/index-custom.bdmv"
+        ],
+        "total_size": 0,
+        "fail_list": [],
+        "message": null,
+        "need_scrape": false,
+        "need_notify": true
+      },
+      "trace": [
+        [
+          "get_item",
+          "{root}/source/BDMV/STREAM"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/STREAM/"
+        ],
+        [
+          "get_folder",
+          "{root}/library/Owned (2024)"
+        ],
+        [
+          "intercept",
+          null,
+          null,
+          "{root}/library/Owned (2024)",
+          true
+        ],
+        [
+          "list",
+          "{root}/source/"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/"
+        ],
+        [
+          "list",
+          "{root}/source/BDMV/STREAM/"
+        ],
+        [
+          "transfer_command",
+          "{root}/source/BDMV/STREAM/00001.m2ts",
+          "{root}/library/Owned (2024)/BluRay/Streams/feature.m2ts"
+        ],
+        [
+          "transfer_command",
+          "{root}/source/BDMV/index.bdmv",
+          "{root}/library/Owned (2024)/BluRay/index-custom.bdmv"
+        ],
+        [
+          "list",
+          "{root}/source/CERTIFICATE/"
+        ]
+      ],
+      "effects": [
+        "{root}/library/Owned (2024)/BluRay/Streams/feature.m2ts",
+        "{root}/library/Owned (2024)/BluRay/index-custom.bdmv"
+      ],
+      "target_exists": true,
+      "empty_directory_copied": false
+    }
+  ],
+  "naming": [
+    {
+      "part": "Disc 02",
+      "name": "Owned",
+      "effective_name": "Owned",
+      "output": "Disc 2"
+    },
+    {
+      "part": "",
+      "name": "S01D03",
+      "effective_name": "S01D03",
+      "output": "Disc 3"
+    },
+    {
+      "part": "DVD004",
+      "name": "CD 09",
+      "effective_name": "CD 09",
+      "output": "Disc 4"
+    },
+    {
+      "part": "",
+      "name": "Owned disk_05",
+      "effective_name": "Owned disk_05",
+      "output": "Disc 5"
+    },
+    {
+      "part": "",
+      "name": "盘片",
+      "effective_name": "盘片",
+      "output": "盘片"
+    },
+    {
+      "part": "",
+      "name": "",
+      "effective_name": "source",
+      "output": "source"
+    },
+    {
+      "part": "",
+      "name": "Disc ٠٧",
+      "effective_name": "Disc ٠٧",
+      "output": "Disc 7"
+    },
+    {
+      "part": "",
+      "name": "Disc 06",
+      "effective_name": "Disc 06",
+      "output": "Disc 6"
+    }
+  ]
+}

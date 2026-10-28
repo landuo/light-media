@@ -1,0 +1,106 @@
+{
+  "source_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "kind": "actual fixed addDownload function and TorrentCard openSharedDialog closeOn; API and toast I/O controlled. Pending HTTP promise is adapted by waiting for the native persisted result.",
+  "source_sha256": {
+    "src/components/dialog/AddDownloadDialog.vue": "ee3396d83c6ab469a57e1a2fc3f05f89a2502d516164523ef24485ca39ed228f",
+    "src/components/cards/TorrentCard.vue": "1bb6121dce1bff88d2378c2b912daad3c5fa9167c77e3386a4ed5c89c309c2ac"
+  },
+  "parent_close_on": [
+    "close",
+    "done",
+    "error"
+  ],
+  "cases": [
+    {
+      "mode": "success",
+      "calls": [
+        {
+          "endpoint": "download/add",
+          "payload": {
+            "torrent_in": {
+              "enclosure": "owned-torrent"
+            },
+            "downloader": null,
+            "save_path": null
+          },
+          "loading": true
+        }
+      ],
+      "emits": [
+        {
+          "name": "done",
+          "value": "owned-torrent"
+        }
+      ],
+      "toasts": [
+        {
+          "type": "success",
+          "value": {
+            "key": "dialog.addDownload.downloadSuccess",
+            "args": {}
+          }
+        }
+      ],
+      "loading_after": false,
+      "parent_closed": true,
+      "marked_downloaded": true
+    },
+    {
+      "mode": "business_failure",
+      "calls": [
+        {
+          "endpoint": "download/add",
+          "payload": {
+            "torrent_in": {
+              "enclosure": "owned-torrent"
+            },
+            "downloader": null,
+            "save_path": null
+          },
+          "loading": true
+        }
+      ],
+      "emits": [
+        {
+          "name": "error",
+          "value": "owned rejected"
+        }
+      ],
+      "toasts": [
+        {
+          "type": "error",
+          "value": {
+            "key": "dialog.addDownload.downloadFailed",
+            "args": {
+              "message": "owned rejected"
+            }
+          }
+        }
+      ],
+      "loading_after": false,
+      "parent_closed": true,
+      "marked_downloaded": false
+    },
+    {
+      "mode": "transport_failure",
+      "calls": [
+        {
+          "endpoint": "download/add",
+          "payload": {
+            "torrent_in": {
+              "enclosure": "owned-torrent"
+            },
+            "downloader": null,
+            "save_path": null
+          },
+          "loading": true
+        }
+      ],
+      "emits": [],
+      "toasts": [],
+      "loading_after": false,
+      "parent_closed": false,
+      "marked_downloaded": false
+    }
+  ]
+}

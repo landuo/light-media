@@ -1,0 +1,129 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/chain/transfer.py:3588-3661",
+  "kind": "Replay the pinned manual per-task loop, with a controlled physical task\nboundary. The actual loop determines continuation, error aggregation and\nprogress; this is not a full MoviePilot service run or storage-module test.\n",
+  "cases": [
+    {
+      "name": "subtitle_false",
+      "outcomes": [
+        true,
+        false,
+        true
+      ],
+      "success": false,
+      "completed": 2,
+      "failed": 1,
+      "errors": [
+        "Owned.srt owned rejection"
+      ],
+      "finished": [
+        "/owned/Owned.mkv",
+        "/owned/Owned.srt",
+        "/owned/Owned.flac"
+      ],
+      "trace": [
+        "start:Owned.mkv",
+        "handle:Owned.mkv",
+        "finish:Owned.mkv",
+        "start:Owned.srt",
+        "handle:Owned.srt",
+        "finish:Owned.srt",
+        "start:Owned.flac",
+        "handle:Owned.flac",
+        "finish:Owned.flac"
+      ]
+    },
+    {
+      "name": "main_false",
+      "outcomes": [
+        false,
+        true,
+        true
+      ],
+      "success": false,
+      "completed": 2,
+      "failed": 1,
+      "errors": [
+        "Owned.mkv owned rejection"
+      ],
+      "finished": [
+        "/owned/Owned.mkv",
+        "/owned/Owned.srt",
+        "/owned/Owned.flac"
+      ],
+      "trace": [
+        "start:Owned.mkv",
+        "handle:Owned.mkv",
+        "finish:Owned.mkv",
+        "start:Owned.srt",
+        "handle:Owned.srt",
+        "finish:Owned.srt",
+        "start:Owned.flac",
+        "handle:Owned.flac",
+        "finish:Owned.flac"
+      ]
+    },
+    {
+      "name": "subtitle_exception",
+      "outcomes": [
+        true,
+        "throw",
+        true
+      ],
+      "success": false,
+      "completed": 2,
+      "failed": 1,
+      "errors": [
+        "Owned.srt owned failure"
+      ],
+      "finished": [
+        "/owned/Owned.mkv",
+        "/owned/Owned.srt",
+        "/owned/Owned.flac"
+      ],
+      "trace": [
+        "start:Owned.mkv",
+        "handle:Owned.mkv",
+        "finish:Owned.mkv",
+        "start:Owned.srt",
+        "handle:Owned.srt",
+        "fail:Owned.srt",
+        "finish:Owned.srt",
+        "start:Owned.flac",
+        "handle:Owned.flac",
+        "finish:Owned.flac"
+      ]
+    },
+    {
+      "name": "two_failures",
+      "outcomes": [
+        false,
+        false,
+        true
+      ],
+      "success": false,
+      "completed": 1,
+      "failed": 2,
+      "errors": [
+        "Owned.mkv owned rejection",
+        "Owned.srt owned rejection"
+      ],
+      "finished": [
+        "/owned/Owned.mkv",
+        "/owned/Owned.srt",
+        "/owned/Owned.flac"
+      ],
+      "trace": [
+        "start:Owned.mkv",
+        "handle:Owned.mkv",
+        "finish:Owned.mkv",
+        "start:Owned.srt",
+        "handle:Owned.srt",
+        "finish:Owned.srt",
+        "start:Owned.flac",
+        "handle:Owned.flac",
+        "finish:Owned.flac"
+      ]
+    }
+  ]
+}

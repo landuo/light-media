@@ -1,0 +1,646 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed ordinary decrease/prepare AST; owned missing-inventory responses and full-best-version-disabled boundary, no old application/service",
+  "source_sha256": {
+    "app/chain/subscribe.py": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab",
+    "app/utils/media.py": "1b1931d0d392ea7a8893a70068af583945a52bdddc892353e3892f06cd2084ed",
+    "app/schemas/types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1"
+  },
+  "cases": [
+    {
+      "name": "all_missing",
+      "subscription": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 8,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "candidate_total": 5,
+      "inventory": {
+        "missing": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "satisfied": false,
+        "mode": null
+      },
+      "result": 5,
+      "prepared_fields": {
+        "total_episode": 5,
+        "lack_episode": 5
+      },
+      "subscription_after": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 5,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "query": [
+        {
+          "snapshot_total": 8,
+          "snapshot_is_copy": true,
+          "key": "tmdb:900043",
+          "best_version_accept_downloaded": false
+        }
+      ],
+      "warning_count": 0
+    },
+    {
+      "name": "confirmed_highest7",
+      "subscription": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 8,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "candidate_total": 5,
+      "inventory": {
+        "missing": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8
+        ],
+        "satisfied": false,
+        "mode": null
+      },
+      "result": 7,
+      "prepared_fields": {
+        "total_episode": 7,
+        "lack_episode": 7
+      },
+      "subscription_after": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 7,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "query": [
+        {
+          "snapshot_total": 8,
+          "snapshot_is_copy": true,
+          "key": "tmdb:900043",
+          "best_version_accept_downloaded": false
+        }
+      ],
+      "warning_count": 0
+    },
+    {
+      "name": "satisfied_keep_old",
+      "subscription": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 8,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "candidate_total": 5,
+      "inventory": {
+        "missing": null,
+        "satisfied": true,
+        "mode": null
+      },
+      "result": 8,
+      "prepared_fields": {
+        "total_episode": 8,
+        "lack_episode": 8
+      },
+      "subscription_after": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 8,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "query": [
+        {
+          "snapshot_total": 8,
+          "snapshot_is_copy": true,
+          "key": "tmdb:900043",
+          "best_version_accept_downloaded": false
+        }
+      ],
+      "warning_count": 0
+    },
+    {
+      "name": "invalid_no_exists",
+      "subscription": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 8,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "candidate_total": 5,
+      "inventory": {
+        "missing": null,
+        "satisfied": false,
+        "mode": "not_dict"
+      },
+      "result": 5,
+      "prepared_fields": {
+        "total_episode": 5,
+        "lack_episode": 5
+      },
+      "subscription_after": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 5,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "query": [
+        {
+          "snapshot_total": 8,
+          "snapshot_is_copy": true,
+          "key": "tmdb:900043",
+          "best_version_accept_downloaded": false
+        }
+      ],
+      "warning_count": 0
+    },
+    {
+      "name": "scope_mismatch",
+      "subscription": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 8,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "candidate_total": 5,
+      "inventory": {
+        "missing": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "satisfied": false,
+        "mode": "scope"
+      },
+      "result": 5,
+      "prepared_fields": {
+        "total_episode": 5,
+        "lack_episode": 5
+      },
+      "subscription_after": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 5,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "query": [
+        {
+          "snapshot_total": 8,
+          "snapshot_is_copy": true,
+          "key": "tmdb:900043",
+          "best_version_accept_downloaded": false
+        }
+      ],
+      "warning_count": 0
+    },
+    {
+      "name": "invalid_bool_episode",
+      "subscription": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 8,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "candidate_total": 5,
+      "inventory": {
+        "missing": [
+          true,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "satisfied": false,
+        "mode": null
+      },
+      "result": 5,
+      "prepared_fields": {
+        "total_episode": 5,
+        "lack_episode": 5
+      },
+      "subscription_after": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 5,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "query": [
+        {
+          "snapshot_total": 8,
+          "snapshot_is_copy": true,
+          "key": "tmdb:900043",
+          "best_version_accept_downloaded": false
+        }
+      ],
+      "warning_count": 0
+    },
+    {
+      "name": "inventory_error",
+      "subscription": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 8,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "candidate_total": 5,
+      "inventory": {
+        "missing": null,
+        "satisfied": false,
+        "mode": "raise"
+      },
+      "result": 5,
+      "prepared_fields": {
+        "total_episode": 5,
+        "lack_episode": 5
+      },
+      "subscription_after": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 5,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "query": [
+        {
+          "snapshot_total": 8,
+          "snapshot_is_copy": true,
+          "key": "tmdb:900043",
+          "best_version_accept_downloaded": false
+        }
+      ],
+      "warning_count": 1
+    },
+    {
+      "name": "alternate_key",
+      "subscription": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 8,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "candidate_total": 5,
+      "inventory": {
+        "missing": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          8
+        ],
+        "satisfied": false,
+        "mode": "alternate"
+      },
+      "result": 7,
+      "prepared_fields": {
+        "total_episode": 7,
+        "lack_episode": 7
+      },
+      "subscription_after": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 7,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 8,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "query": [
+        {
+          "snapshot_total": 8,
+          "snapshot_is_copy": true,
+          "key": "owned-other-key",
+          "best_version_accept_downloaded": false
+        }
+      ],
+      "warning_count": 0
+    },
+    {
+      "name": "lack_floor",
+      "subscription": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 8,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 1,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "candidate_total": 5,
+      "inventory": {
+        "missing": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "satisfied": false,
+        "mode": "low_lack"
+      },
+      "result": 5,
+      "prepared_fields": {
+        "total_episode": 5,
+        "lack_episode": 0
+      },
+      "subscription_after": {
+        "id": 43,
+        "name": "Owned decrease",
+        "type": "电视剧",
+        "total_episode": 5,
+        "start_episode": 1,
+        "season": 2,
+        "lack_episode": 1,
+        "best_version": false,
+        "tmdbid": 900043,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "900043",
+        "mediaid": null
+      },
+      "query": [
+        {
+          "snapshot_total": 8,
+          "snapshot_is_copy": true,
+          "key": "tmdb:900043",
+          "best_version_accept_downloaded": false
+        }
+      ],
+      "warning_count": 0
+    }
+  ],
+  "flow_proof": [
+    {
+      "function": "__refresh_total_episode_before_completion",
+      "line": 4250,
+      "parameters": [
+        "self",
+        "subscribe",
+        "mediainfo",
+        "meta",
+        "mediakey"
+      ],
+      "recognition_calls": [],
+      "downstream_same_meta_media": []
+    },
+    {
+      "function": "__finish_subscribe",
+      "line": 2806,
+      "parameters": [
+        "self",
+        "subscribe",
+        "mediainfo",
+        "meta"
+      ],
+      "recognition_calls": [],
+      "downstream_same_meta_media": []
+    },
+    {
+      "function": "check_and_handle_existing_media",
+      "line": 3977,
+      "parameters": [
+        "self",
+        "subscribe",
+        "meta",
+        "mediainfo",
+        "mediakey"
+      ],
+      "recognition_calls": [],
+      "downstream_same_meta_media": [
+        {
+          "line": 3993,
+          "callee": "__refresh_total_episode_before_completion",
+          "kwargs": {
+            "subscribe": "subscribe",
+            "mediainfo": "mediainfo",
+            "meta": "meta",
+            "mediakey": "mediakey"
+          }
+        }
+      ]
+    }
+  ],
+  "finish_calls": [
+    {
+      "line": 1616,
+      "kwargs": {
+        "subscribe": "subscribe",
+        "meta": "meta",
+        "mediainfo": "mediainfo"
+      }
+    },
+    {
+      "line": 1602,
+      "kwargs": {
+        "subscribe": "subscribe",
+        "meta": "meta",
+        "mediainfo": "mediainfo"
+      }
+    }
+  ],
+  "scope": "ordinary subscriptions only; best-version prepare branch not executed or accepted here"
+}

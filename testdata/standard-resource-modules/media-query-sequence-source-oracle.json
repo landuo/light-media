@@ -1,0 +1,215 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/chain/search.py": "2b04f6d246ea2573081cb72039a78acefb81cd7c895603e0433bab7dc7e7a528",
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/torrents.py": "6c2833fc9a87e9d57881fcdef760d131dd1d36acbc9d5de3d7279cdbd0d96a47",
+    "app/core/context.py": "70a088bd54c748ab44ec467e6a1f1fc5bb5368f818bb16288eca0d15cf98877e",
+    "app/utils/object.py": "0fd0161be3084593a9693244e9ea734c5d949cc23a6e8f34349177a5e220dc1c",
+    "app/schemas/types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+    "app/api/endpoints/site.py": "c352a148fd418f7eb6c91f490d8db4319c91c6ac2d68b920b35b525d1d8372a8",
+    "app/utils/limit.py": "797da5fde45bc7dcf80966f6fc01b53e33663ad0521c37a095cea16498b3706e"
+  },
+  "kind": "actual fixed SearchChain.process and MinIntervalLimiter with controlled monotonic clock, owned recognition/site search/final match boundaries",
+  "cases": [
+    {
+      "name": "stop_on_raw_result",
+      "multiple_names": false,
+      "initial_names_missing": false,
+      "nonempty_keywords": [
+        "Owned"
+      ],
+      "observations": [
+        {
+          "kind": "search",
+          "keyword": "Owned",
+          "clock": 100.0
+        }
+      ],
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": "owned-plugin-secret",
+          "site_ua": "Owned-UA",
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned plugin resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": "http://127.0.0.1:43100/download.php?id=11&passkey=owned-private-material",
+          "page_url": "http://127.0.0.1:43100/details.php?id=11",
+          "size": 1024,
+          "seeders": 3,
+          "peers": 2,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 0,
+          "hit_and_run": false,
+          "labels": [
+            "owned-label"
+          ],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "免费",
+          "freedate_diff": ""
+        }
+      ],
+      "final_clock": 100.0
+    },
+    {
+      "name": "all_names_enabled",
+      "multiple_names": true,
+      "initial_names_missing": false,
+      "nonempty_keywords": [
+        "Owned"
+      ],
+      "observations": [
+        {
+          "kind": "search",
+          "keyword": "Owned",
+          "clock": 100.0
+        },
+        {
+          "kind": "search",
+          "keyword": "Original",
+          "clock": 100.0
+        },
+        {
+          "kind": "search",
+          "keyword": "English",
+          "clock": 102.0
+        }
+      ],
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": "owned-plugin-secret",
+          "site_ua": "Owned-UA",
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned plugin resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": "http://127.0.0.1:43100/download.php?id=11&passkey=owned-private-material",
+          "page_url": "http://127.0.0.1:43100/details.php?id=11",
+          "size": 1024,
+          "seeders": 3,
+          "peers": 2,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 0,
+          "hit_and_run": false,
+          "labels": [
+            "owned-label"
+          ],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "免费",
+          "freedate_diff": ""
+        }
+      ],
+      "final_clock": 102.0
+    },
+    {
+      "name": "empty_then_result",
+      "multiple_names": false,
+      "initial_names_missing": false,
+      "nonempty_keywords": [
+        "Original"
+      ],
+      "observations": [
+        {
+          "kind": "search",
+          "keyword": "Owned",
+          "clock": 100.0
+        },
+        {
+          "kind": "search",
+          "keyword": "Original",
+          "clock": 100.0
+        }
+      ],
+      "returned": [
+        {
+          "site": 1,
+          "site_name": "Owned resource site",
+          "site_cookie": "owned-plugin-secret",
+          "site_ua": "Owned-UA",
+          "site_proxy": false,
+          "site_order": 0,
+          "site_downloader": null,
+          "title": "Owned plugin resource",
+          "description": null,
+          "imdbid": null,
+          "enclosure": "http://127.0.0.1:43100/download.php?id=11&passkey=owned-private-material",
+          "page_url": "http://127.0.0.1:43100/details.php?id=11",
+          "size": 1024,
+          "seeders": 3,
+          "peers": 2,
+          "grabs": 0,
+          "pubdate": null,
+          "date_elapsed": null,
+          "freedate": null,
+          "uploadvolumefactor": 1,
+          "downloadvolumefactor": 0,
+          "hit_and_run": false,
+          "labels": [
+            "owned-label"
+          ],
+          "pri_order": 0,
+          "category": null,
+          "volume_factor": "免费",
+          "freedate_diff": ""
+        }
+      ],
+      "final_clock": 100.0
+    },
+    {
+      "name": "fill_names_once_then_empty",
+      "multiple_names": false,
+      "initial_names_missing": true,
+      "nonempty_keywords": [],
+      "observations": [
+        {
+          "kind": "recognize",
+          "kwargs": {
+            "mtype": "电影",
+            "source": "themoviedb",
+            "mediaid": "900043",
+            "tmdbid": 900043,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null
+          }
+        },
+        {
+          "kind": "search",
+          "keyword": "Owned",
+          "clock": 100.0
+        },
+        {
+          "kind": "search",
+          "keyword": "Original",
+          "clock": 100.0
+        },
+        {
+          "kind": "search",
+          "keyword": "English",
+          "clock": 102.0
+        }
+      ],
+      "returned": [],
+      "final_clock": 102.0
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "item": 15,
+  "accepted": true,
+  "scope": "supplementary clone API suffix fidelity; existing clone/frontend-update/DEV proof remains separately bound to its binaries",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source_mapping": {
+    "app/core/plugin.py:1907-2135": "clone nonempty suffix + full str.lower, physical copy, config disabled, class compiler/exact-name lookup, start/reload",
+    "app/core/plugin.py:2140-2240": "full Unicode lower for JS/CSS/global literal and top-level asset rename; overlong rename logs failure and retains edited content/old names",
+    "app/api/endpoints/plugin.py:clone_plugin/reload_plugin/register_plugin/_add_clone_to_plugin_folder": "actual synchronous HTTP sequence; last running object init1",
+    "app/api/endpoints/plugin.py:993-1038": "uninstall checks registered class is_clone before code/config delete; invalid class keeps code/config",
+    "src/components/dialog/PluginCloneDialog.vue": "frontend alnum<=20 field rule remains a UI condition only"
+  },
+  "target": [
+    "internal/plugins/identity.go",
+    "internal/plugins/protocol.go",
+    "internal/plugins/worker.go",
+    "internal/plugins/frontend.go",
+    "internal/plugins/artifacts/acquire.go",
+    "internal/plugins/artifacts/clone_frontend.go",
+    "internal/app/core_source_primitives.go",
+    "internal/app/plugin_instances.go",
+    "internal/app/plugin_implementation.go",
+    "internal/app/plugin_original_frontend.go",
+    "web/src/features/plugin-remote-contract.ts",
+    "web/src/features/plugin-clone.ts"
+  ],
+  "source_replay": {
+    "kind": "actual fixed AST HTTP/clone/reload/start/register/folder/uninstall, actual owned filesystem and Python compile/exec; registry/config/provider auth boundaries controlled; AI cache excluded",
+    "cases": 28,
+    "loaded": [
+      "underscore",
+      "21+ ASCII",
+      "full length96",
+      "97",
+      "255",
+      "Chinese",
+      "accented",
+      "dottedI expansion",
+      "Greek final sigma",
+      "Kelvin lower before parsing",
+      "middle dot"
+    ],
+    "unloaded_success": [
+      "dot",
+      "dash",
+      "space",
+      "fullwidth NFKC name mismatch",
+      "decomposed-accent NFKC name mismatch",
+      "ordinary Unicode symbol emoji",
+      "bang",
+      "encoded query/hash/percent/colon/quote/plus/semicolon filename bytes"
+    ],
+    "failure": [
+      "empty suffix",
+      "physical filename256"
+    ],
+    "frontend_trees": "original9 plus14 identifier/symbol/name-limit actual trees"
+  },
+  "actual_local": {
+    "app_sdk": "10 related actual App/SDK/HTTP root tests pass11.378s including28suffix, code identity/cold-read/frontend/direct static auth/filename six cases",
+    "sdk": "107 root tests pass17.43s",
+    "artifacts": "53 root tests pass0.62s",
+    "frontend": "35 helper/loader/Vue tests pass; vue-tsc --noEmit pass"
+  },
+  "failure_history": [
+    "initial source-oracle snakecase SourceID/TargetID test decoding mismatch, corrected test only; actual safe API3 then passed1.47s",
+    "raw space in httptest URL caused test request-parser panic; percent-escaped test path restored exact actual HTTP transport",
+    "temporary unused strings import while gate was edited caused concurrent compile failure; fixed before current stable inputs",
+    "old UI total96 expected test updated to filesystem255 boundary; suffix20 field rule unchanged",
+    "platform6 first0.95s: test confused missing-class public GET{} with internally persisted copied config; reference now includes actual fixed get_plugin_config",
+    "platform6 second0.39s: test input had extra modules:{} absent from source config; final test consumes oracle.source_config instead of a handwritten different input",
+    "sameplatform6 source-input corrected PASS2.23s and independent installed/PID/header-code observations PASS2.54s; no product changes during these test corrections"
+  ],
+  "adaptations": [
+    "Compiled Go manifests/workers stay canonical; existing SDK binds copied instances independently with no Python source execution or new fake object",
+    "Both logical and physical IDs use bounded UTF8 Linux components; separators/control/format/line controls rejected; drive-style archive roots remain rejected, safe literal URI punctuation and Unicode symbols preserved",
+    "Copied-class loadability uses fixed Unicode15 NFKC/exact-name/identifier rules in existing resolver failure path; source success+unloaded/code/config/installed/folder/cold/uninstall retained",
+    "Actual Source get_plugin_config returns{} when class is absent, while encrypted persistent config remains. The CLI inspects only its owned t.TempDir via readonly SQLite and in-memory key, with no migration/lock/write/key output",
+    "Source static alias streams only exact verified immutable code inventory, with original Latin1 inline-header bytes and real nonLatin1 filename500. Go pinned frontend ABI has no disposition header and serves the same physical asset200; contracts stay separate"
+  ],
+  "remaining": [],
+  "linux_artifacts": {
+    "work/plugin-no-official-auth-20261026/clone-suffix-worker-linux": {
+      "sha256": "20f8d100bf6b5802962d02709c15473c095815938fb87dd1b8b5cb381c25e4f5",
+      "size": 4658443
+    },
+    "work/plugin-no-official-auth-20261026/clone-suffix-process-linux.test": {
+      "sha256": "7e0d3ada2882d1a6963e5e1b9122f6397a111a27875de7b270966779a1e302a5",
+      "size": 69238692
+    },
+    "testdata/standard-clone-suffix/source-oracle.json": {
+      "sha256": "67ca67987bdaf17d22ccb9ce96083dddda2930569a3f04eafe5e173c12bb8a3a",
+      "size": 25714
+    }
+  },
+  "evidence_manifest": "evidence-manifest.json",
+  "delivery": "local dirty worktree only; uncommitted/unpushed/undeployed",
+  "actual_linux_prior18": {
+    "main_sha256": "f4ca053ca84407bb9e3c097d0803e76516da44f6892e4bd665ea8c914a060df3",
+    "test_sha256": "e5c984b40cbeb44b11b7a89b0700ccbfc3c7e205311169f9e57763aee0d82971",
+    "result": "PASS2.54s",
+    "coverage": "original18conditions only; real PID/init/cold/config/private-vs-public/installed-membership/uninstall and primary code200; excludes later10symbol and header source fix",
+    "observations": "evidence/clone-suffix-platform6-observations.json.gz"
+  },
+  "source_runtime": {
+    "python": "3.12.13",
+    "unicode": "15.0.0",
+    "docker": "python:3.12.13-slim-bookworm",
+    "go_unicode_and_xtext_cases_norm": "15.0.0",
+    "initial18_cross_runtime": "all fields equal to Python3.14 after random owned temporary path normalization; initial9+4frontend trees byte-identical",
+    "canonical_oracle_now": "Python3.12.13 includes actual get_plugin_config public-class gate and explicit source_config input",
+    "observation_harness_adaptation": "Path.exists ENAMETOOLONG is suppressed only by owned observation wrapper on Python3.12; fixed cloned methods unmodified"
+  },
+  "next_linux_artifact": {
+    "binary": "work/plugin-no-official-auth-20261026/clone-symbol-static-process-linux.test",
+    "sha256": "0ada591a4daabec89528649e181790c043d88c0eed9c92169ecb96540a9ed542",
+    "bytes": 69800258
+  },
+  "acceptance_scope": "this supplementary source-derived behavior and real Linux gate only; parent owns whole-row/unique-ledger review and counts",
+  "server_sha256": "3c4ac9f59b5c99f612d32c25d320ad088c9cf76468586955b5d229b3d8d11e91",
+  "test_sha256": "0ada591a4daabec89528649e181790c043d88c0eed9c92169ecb96540a9ed542",
+  "actual_linux": {
+    "result": "PASS3.50s",
+    "log": "evidence/clone-symbol-platform7-production-cli.log.gz",
+    "bindings": "evidence/clone-static-platform7-final-bindings.json.gz",
+    "source_oracle_sha256": "e1642b6973c840d6316a1c04fe7af51437a2b617d6cf58af1f818e69d16684f3",
+    "source_cases": 28,
+    "copied_instances": 26,
+    "loaded": 11,
+    "unloaded": 15,
+    "source_pid_before": 2762623,
+    "source_pid_cold": 2762829,
+    "installed_after_uninstall_all_false": true,
+    "primary_uninstall": {
+      "api_status": 404,
+      "code_sha256": "20f8d100bf6b5802962d02709c15473c095815938fb87dd1b8b5cb381c25e4f5",
+      "code_status": 200
+    },
+    "observations": "evidence/clone-symbol-platform7-observations.json.gz"
+  },
+  "cleanup": "actual tests exited0; exact owned server argv/data-dir scan empty; test-only independent dirs/processes cleaned; no old service changed",
+  "coverage_boundary": "new suffix API conditions need no invented UI field; fixed frontend still limits manually entered suffix to ASCII alnum<=20. Existing clone/frontend/version/DEV/browser proof is referenced separately, not retested or reattributed."
+}

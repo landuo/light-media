@@ -10,6 +10,7 @@ import (
 )
 
 type nativeDirectoryAuthorization struct {
+	PreviewOnly              bool `json:"preview_only,omitempty"`
 	Version                  int
 	Plan, InputSHA, RootPath string
 	Policy                   importOverwritePolicy
@@ -37,7 +38,7 @@ func nativeDirectoryAuthority(plan ImportPlan, meta importMetadata, selection *n
 	} else if extensions != nil || meta.ExtensionInputSHA != "" {
 		return nativeDirectoryAuthorization{}, bad("REVIEW_TRANSFER_EXTENSIONS", "旧整理计划不能借用新扩展名来源")
 	}
-	return nativeDirectoryAuthorization{plan.DirectorySourceVersion, plan.ID, qualityImportSHA(plan), meta.RootPath, *meta.Overwrite, meta.Sidecars, selection, extensions}, nil
+	return nativeDirectoryAuthorization{PreviewOnly: meta.OriginalPreview, Version: plan.DirectorySourceVersion, Plan: plan.ID, InputSHA: qualityImportSHA(plan), RootPath: meta.RootPath, Policy: *meta.Overwrite, Sidecars: meta.Sidecars, Selection: selection, Extensions: extensions}, nil
 }
 func (a *App) saveNativeDirectoryAuthorizationTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, meta importMetadata, selection *nativeDirectorySelection, supplied ...*nativeTransferExtensionObservation) error {
 	extensions := transferExtensionObservation(ctx)

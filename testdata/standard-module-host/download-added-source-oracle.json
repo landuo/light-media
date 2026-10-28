@@ -1,0 +1,283 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/download.py:447-470",
+    "app/chain/download.py:1014-1018",
+    "app/chain/__init__.py:1391-1411"
+  ],
+  "kind": "Actual fixed background submission and ordinary download_added module wrapper.\nThreadHelper queue and installed module registries are owned boundaries; the\nfixed closure, dispatcher None/list/scalar/exception behavior run unchanged.\n",
+  "cases": [
+    {
+      "name": "none",
+      "result": null,
+      "callback_error": false,
+      "submit_error": false,
+      "calls_before_drain": 0,
+      "calls": [
+        {
+          "context": {
+            "meta_info": {
+              "episode_list": [
+                1,
+                2
+              ],
+              "org_string": "Owned.S01E01-E02",
+              "extra_private": {
+                "marker": "meta"
+              }
+            },
+            "media_info": {
+              "category": "外语电视剧",
+              "tmdb_id": 123,
+              "tmdb_info": {
+                "marker": "private media"
+              }
+            },
+            "torrent_info": {
+              "site_downloader": "Site downloader",
+              "title": "Owned torrent",
+              "site_cookie": "synthetic-cookie",
+              "enclosure": "https://owned.invalid/download?id=1",
+              "extra_private": {
+                "marker": "torrent"
+              }
+            },
+            "media_recognize_fail_count": 0,
+            "resource_source": "unknown",
+            "match_source": "unknown",
+            "candidate_recognized": false,
+            "media_info_is_target": false,
+            "allowed_episodes": null,
+            "confirmed_full_coverage": false
+          },
+          "download_dir": "/owned/downloads",
+          "torrent_content": {
+            "__plugin_module_bytes": "b3duZWQA/w=="
+          }
+        }
+      ],
+      "errors": 0,
+      "roles": []
+    },
+    {
+      "name": "false",
+      "result": false,
+      "callback_error": false,
+      "submit_error": false,
+      "calls_before_drain": 0,
+      "calls": [
+        {
+          "context": {
+            "meta_info": {
+              "episode_list": [
+                1,
+                2
+              ],
+              "org_string": "Owned.S01E01-E02",
+              "extra_private": {
+                "marker": "meta"
+              }
+            },
+            "media_info": {
+              "category": "外语电视剧",
+              "tmdb_id": 123,
+              "tmdb_info": {
+                "marker": "private media"
+              }
+            },
+            "torrent_info": {
+              "site_downloader": "Site downloader",
+              "title": "Owned torrent",
+              "site_cookie": "synthetic-cookie",
+              "enclosure": "https://owned.invalid/download?id=1",
+              "extra_private": {
+                "marker": "torrent"
+              }
+            },
+            "media_recognize_fail_count": 0,
+            "resource_source": "unknown",
+            "match_source": "unknown",
+            "candidate_recognized": false,
+            "media_info_is_target": false,
+            "allowed_episodes": null,
+            "confirmed_full_coverage": false
+          },
+          "download_dir": "/owned/downloads",
+          "torrent_content": {
+            "__plugin_module_bytes": "b3duZWQA/w=="
+          }
+        }
+      ],
+      "errors": 0,
+      "roles": []
+    },
+    {
+      "name": "list",
+      "result": [],
+      "callback_error": false,
+      "submit_error": false,
+      "calls_before_drain": 0,
+      "calls": [
+        {
+          "context": {
+            "meta_info": {
+              "episode_list": [
+                1,
+                2
+              ],
+              "org_string": "Owned.S01E01-E02",
+              "extra_private": {
+                "marker": "meta"
+              }
+            },
+            "media_info": {
+              "category": "外语电视剧",
+              "tmdb_id": 123,
+              "tmdb_info": {
+                "marker": "private media"
+              }
+            },
+            "torrent_info": {
+              "site_downloader": "Site downloader",
+              "title": "Owned torrent",
+              "site_cookie": "synthetic-cookie",
+              "enclosure": "https://owned.invalid/download?id=1",
+              "extra_private": {
+                "marker": "torrent"
+              }
+            },
+            "media_recognize_fail_count": 0,
+            "resource_source": "unknown",
+            "match_source": "unknown",
+            "candidate_recognized": false,
+            "media_info_is_target": false,
+            "allowed_episodes": null,
+            "confirmed_full_coverage": false
+          },
+          "download_dir": "/owned/downloads",
+          "torrent_content": {
+            "__plugin_module_bytes": "b3duZWQA/w=="
+          }
+        }
+      ],
+      "errors": 0,
+      "roles": []
+    },
+    {
+      "name": "scalar",
+      "result": true,
+      "callback_error": false,
+      "submit_error": false,
+      "calls_before_drain": 0,
+      "calls": [
+        {
+          "context": {
+            "meta_info": {
+              "episode_list": [
+                1,
+                2
+              ],
+              "org_string": "Owned.S01E01-E02",
+              "extra_private": {
+                "marker": "meta"
+              }
+            },
+            "media_info": {
+              "category": "外语电视剧",
+              "tmdb_id": 123,
+              "tmdb_info": {
+                "marker": "private media"
+              }
+            },
+            "torrent_info": {
+              "site_downloader": "Site downloader",
+              "title": "Owned torrent",
+              "site_cookie": "synthetic-cookie",
+              "enclosure": "https://owned.invalid/download?id=1",
+              "extra_private": {
+                "marker": "torrent"
+              }
+            },
+            "media_recognize_fail_count": 0,
+            "resource_source": "unknown",
+            "match_source": "unknown",
+            "candidate_recognized": false,
+            "media_info_is_target": false,
+            "allowed_episodes": null,
+            "confirmed_full_coverage": false
+          },
+          "download_dir": "/owned/downloads",
+          "torrent_content": {
+            "__plugin_module_bytes": "b3duZWQA/w=="
+          }
+        }
+      ],
+      "errors": 0,
+      "roles": []
+    },
+    {
+      "name": "callback_error",
+      "result": null,
+      "callback_error": true,
+      "submit_error": false,
+      "calls_before_drain": 0,
+      "calls": [
+        {
+          "context": {
+            "meta_info": {
+              "episode_list": [
+                1,
+                2
+              ],
+              "org_string": "Owned.S01E01-E02",
+              "extra_private": {
+                "marker": "meta"
+              }
+            },
+            "media_info": {
+              "category": "外语电视剧",
+              "tmdb_id": 123,
+              "tmdb_info": {
+                "marker": "private media"
+              }
+            },
+            "torrent_info": {
+              "site_downloader": "Site downloader",
+              "title": "Owned torrent",
+              "site_cookie": "synthetic-cookie",
+              "enclosure": "https://owned.invalid/download?id=1",
+              "extra_private": {
+                "marker": "torrent"
+              }
+            },
+            "media_recognize_fail_count": 0,
+            "resource_source": "unknown",
+            "match_source": "unknown",
+            "candidate_recognized": false,
+            "media_info_is_target": false,
+            "allowed_episodes": null,
+            "confirmed_full_coverage": false
+          },
+          "download_dir": "/owned/downloads",
+          "torrent_content": {
+            "__plugin_module_bytes": "b3duZWQA/w=="
+          }
+        }
+      ],
+      "errors": 1,
+      "roles": [
+        "plugin"
+      ]
+    },
+    {
+      "name": "submit_error",
+      "result": null,
+      "callback_error": false,
+      "submit_error": true,
+      "calls_before_drain": 0,
+      "calls": [],
+      "errors": 1,
+      "roles": []
+    }
+  ]
+}

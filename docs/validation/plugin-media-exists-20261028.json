@@ -1,0 +1,145 @@
+{
+  "accepted_increment": true,
+  "complete": false,
+  "indices": [
+    36,
+    37,
+    43
+  ],
+  "scope": "Ordinary media_exists in existing subscription check, decreasing-total guard and completion preparation. Original progress consumes persisted lack_episode, without inventing physical assets. Whole indices remain42/46.",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "mapping": [
+    {
+      "source": [
+        "app/chain/__init__.py:1606-1621",
+        "app/chain/download.py:1586-1725",
+        "app/schemas/mediaserver.py:9-25",
+        "app/chain/subscribe.py:4014-4174"
+      ],
+      "behavior": "Exact mediainfo/itemid/server kwargs; None falls through to the next plugin then native inventory; terminal False skips native existence; DTO movie truth/season-specific set difference; ordinary decrease queries old scope; completion queries fresh facts.",
+      "target": [
+        "internal/app/plugin_original_media_exists.go",
+        "internal/app/plugin_standard_subscription_recognition.go",
+        "internal/app/plugin_standard_subscription_decrease.go",
+        "internal/app/subscription_runtime.go",
+        "internal/app/subscription_completion_ordinary.go",
+        "internal/app/subscription_quality_completion_run.go"
+      ],
+      "evidence": [
+        "testdata/standard-module-host/media-exists-source-oracle.json:13 fixed method/schema replays",
+        "TestOriginalMediaExistsFixedSourceActualSDK:13 actual SDK results/kwargs",
+        "TestOriginalMediaExistsActualSubscriptionHost",
+        "TestOriginalMediaExistsCompletionUsesSealedObservation:actual preparation/history/delete/notice/event/cold",
+        "TestOriginalMediaExistsTerminalSkipsNativeInventory:real table rename proves terminal bypass",
+        "TestPluginServicesProductionCLI:actual installed source+clone, check, complete and cold"
+      ]
+    },
+    {
+      "source": [
+        "src/components/cards/SubscribeCard.vue:75-80"
+      ],
+      "behavior": "Downloaded episode progress is clamped total_episode minus lack_episode; it is not the number of owned local assets.",
+      "target": [
+        "web/src/features/subscriptions.ts:subscriptionDownloaded",
+        "web/src/components/Subscriptions.vue"
+      ],
+      "evidence": [
+        "testdata/standard-module-host/existence-progress-source-oracle.json:7 actual fixed computed replays",
+        "web/tests/subscriptions.test.mjs",
+        "IAB74 full flow / IAB75 ARIA label delta"
+      ]
+    }
+  ],
+  "evidence_types": {
+    "source_replay": "Pinned Python methods and Pydantic schemas, fixed frontend computed; controlled metadata/server dependencies. No production Python.",
+    "actual_sdk": "Real source process and host SQLite; movie/TV/season0/None/False/partial/full/custom totals/numeric equality/null seasons; terminal inventory-query fault; actual completion and cold replay.",
+    "actual_main": "Real Linux cmd/server creates subscriptions through HTTP; source False and clone partial affect persisted lack; invalid DTO fails job; fresh all-episodes result completes via existing check/history/delete/notification/event. Production no fake assets, slots or intents. Metadata cache and SDK provider are owned synthetic inputs; no real external media-server/TMDB/outbound notification delivery claimed.",
+    "browser": "IAB74:2/3→False0/3→invalid job with explicit reason→same job Retry→2/3→cold same ID/progress and no lookup replay. IAB75 checks final label 下载进度 with2/3. Each screenshot saved as raw JPEG bytes under historical .png filename; DOM proof is alongside."
+  },
+  "results": {
+    "source_cases": 13,
+    "frontend_source_cases": 7,
+    "frontend_tests": 548,
+    "frontend_build": true,
+    "related_sdk_seconds": 11.985,
+    "related_race_seconds": 36.728,
+    "linux_sdk_test_seconds": [
+      0.17,
+      1.69,
+      0.27,
+      0.14
+    ],
+    "linux_cli_seconds": 2.93,
+    "r4_browser_gate_seconds": 585.53,
+    "final_r5_browser_gate_seconds": 229.5,
+    "main_sha256": "3ddbb62d7b90de9a4f4e1e65faa4e269b2a36ca05dd0b4275899082de8f3e364",
+    "test_sha256": "20e3f2174934c667fc5712d23750b7d93ceb6bee58c0082af8c22ce5b86ca73f",
+    "browser_full_main_sha256": "47424323b5cfa5d567a7bec91ac366e3efdef9abc8485f624dbb8cb724762d2d",
+    "compiler_inputs": [
+      3721,
+      4187
+    ],
+    "inputs_changed_during_build": [],
+    "r4_r5_backend_inputs_unchanged": true,
+    "browser": {
+      "passed": true,
+      "kind": "Actual main + IAB74 full flow; IAB75 final ARIA-only delta",
+      "subscription": "sub_QGEUOAUba_TaG9ts0d8JbiY5",
+      "displayed_downloaded": [
+        2,
+        0,
+        0,
+        2,
+        2
+      ],
+      "total": 3,
+      "retry_same_job": "job_eRgawdPAGm24Ehvfk_w-Eq-X",
+      "pids_before": [
+        583576,
+        583598,
+        583605
+      ],
+      "pids_after": [
+        593157,
+        593179,
+        593185
+      ],
+      "cold_module_replay": 0,
+      "assets_slots_intents": 0,
+      "existing_completed_history_and_event": 1,
+      "r4_cli_seconds": 2.93,
+      "r4_browser_gate_seconds": 585.53,
+      "r5_browser_gate_seconds": 229.5,
+      "r4_r5_backend_inputs_unchanged": true
+    },
+    "uninstall_API404_and_tempdir_cleanup": true
+  },
+  "adaptations": [
+    "Linux/local single-user host has no source media-server item index: wrapper still passes itemid:null and server:null. Native fallback reuses the existing owned local inventory instead of developing a new media-server/library scanning system.",
+    "Plugin existence is read-only coverage. No asset, slot, file registration or deletion permission is generated. Existing reservations/admission guards continue to own real downloads and files.",
+    "Existing durable completion job performs one fresh module observation during preparation, then freezes that observation in its existing sealed completion record. SQL commit rechecks subscription revision/accepted facts without repeating plugin callbacks inside the transaction. Historical replay validates the sealed observation and does not query or send again.",
+    "Fixed frontend ordinary total-minus-lack projection is now used for the card progress; detailed local inventory continues to show real owned assets. Source null lack semantics are retained.",
+    "Full browser flow used r4; r5 changes only the progress ARIA label in embedded frontend. Compiler-input comparison proves all backend inputs identical; r5 runs the production gate and final label check. 548 frontend tests ran before the label-only correction; final build and actual IAB75 validate that correction."
+  ],
+  "red_green": [
+    "Initial actual subscription check skipped media_exists and module_execute stayed0; fixed.",
+    "Initial completion cold test reused pre-recovery job generation and correctly received cancelled. Test now claims the recovered generation, production guard unchanged.",
+    "First process fixture put Name on embedded download.Config instead of DownloaderConfig; compile rejected it, fixture corrected.",
+    "Real asset_slots rename showed terminal provider still queried native inventory before replacing result. Fixed both coverage and progress; dedicated green2.346s, related race36.728s.",
+    "Process observer initially assumed jobs.Data.Items; source API inspection corrected it to jobs.Data before any r3 production run. r3 is build-only, not runtime acceptance."
+  ],
+  "remaining": [
+    "media_files source subscribe/files host applicability and full ordinary module/event reverse-call audit",
+    "Directory-unit/Blu-ray entry and related ordinary events",
+    "Whole36/37/43/50 remain unaccepted"
+  ],
+  "artifact_manifest": "testdata/plugin-module-no-official-auth-20261026/media-exists-38-20261028/manifest.json",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

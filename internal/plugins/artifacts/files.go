@@ -15,7 +15,12 @@ import (
 )
 
 func safeName(name string) bool {
-	if name == "" || name == "." || strings.ContainsAny(name, "\\:\x00\r\n") || strings.HasPrefix(name, "/") {
+	if name == "" || name == "." || strings.ContainsAny(name, "\\\x00\r\n") || strings.HasPrefix(name, "/") {
+		return false
+	}
+	// Keep drive-style archive roots rejected. A colon inside a bounded Linux
+	// filename (including a copied class-derived asset) is an ordinary byte.
+	if len(name) >= 2 && name[1] == ':' {
 		return false
 	}
 	name = strings.TrimSuffix(name, "/")
@@ -207,30 +212,4 @@ func unpack(data []byte, format, root, entry string) error {
 		return errors.New("unsupported format")
 	}
 	return nil
-}
-
-// Refresh follows the original optional, post-success persistent-copy behavior.
-// Its failure never rolls back an otherwise completed installation.
-func refreshBackup(root, id, target string) error {
-	backupRoot := filepath.Join(root, ".backups")
-	if err := ensureRoot(backupRoot); err != nil {
-		return err
-	}
-	dest := filepath.Join(backupRoot, id)
-	if err := safeExistingTree(dest); err != nil {
-		return err
-	}
-	stage, err := os.MkdirTemp(backupRoot, ".refresh-")
-	if err != nil {
-		return err
-	}
-	defer os.RemoveAll(stage)
-	prepared := filepath.Join(stage, "code")
-	if err = copyTree(target, prepared); err != nil {
-		return err
-	}
-	if err = os.RemoveAll(dest); err != nil {
-		return err
-	}
-	return os.Rename(prepared, dest)
 }

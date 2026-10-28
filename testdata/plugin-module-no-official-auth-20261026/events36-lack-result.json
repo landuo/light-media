@@ -1,0 +1,57 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/chain/subscribe.py:1192-1195",
+  "target": "internal/app/subscription_runtime.go:407",
+  "source_oracle": "testdata/standard-subscription-events/add-lack-default-oracle.json",
+  "behavior": "A new source-owned TV subscription whose native UI input lacks lack_episode initializes it to resolved total_episode; existing updates/movies are unchanged. Three actual POST creates return total8/lack8 with automatic-total false, each reaches real SDK notices/Added observers.",
+  "server": {
+    "path": "/tmp/light-media-plugin-scope-dRZTQ91A/server-platform3-20261027-linux",
+    "sha256": "0afb9d33c9c04a0c160319fe04b1e6175fcce17bb703afdc19d89786a9a6b6b7"
+  },
+  "test_binary": {
+    "path": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-lack-process-linux.test",
+    "sha256": "4cf5144d6b3909f2b970268691a19e2b77d667464df4ea5c1070e8427e9bb459"
+  },
+  "runs": [
+    {
+      "test": "TestPluginServicesProductionCLI",
+      "command": [
+        "/tmp/light-media-plugin-scope-dRZTQ91A/events36-lack-process-linux.test",
+        "-test.v",
+        "-test.run",
+        "^TestPluginServicesProductionCLI$",
+        "-test.timeout",
+        "90s"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 4.002,
+      "log": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-lack-ordinary-linux.log",
+      "log_sha256": "fa4aabf0507ea79c7168946f2749a5ae891646d89697641be834cfb13d2ef86f"
+    },
+    {
+      "test": "TestPluginSubscriptionCompletionProductionCLI",
+      "command": [
+        "/tmp/light-media-plugin-scope-dRZTQ91A/events36-lack-process-linux.test",
+        "-test.v",
+        "-test.run",
+        "^TestPluginSubscriptionCompletionProductionCLI$",
+        "-test.timeout",
+        "90s"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 1.88,
+      "log": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-lack-completion-linux.log",
+      "log_sha256": "cc5bc1a21d9561dcd0ac1b412a2efcb3f986daf8592c44cc9a743d9b1f19d61f"
+    }
+  ],
+  "raw_manifest": "testdata/plugin-module-no-official-auth-20261026/events36-lack-archive-manifest.json",
+  "source_sdk": "6 roots pass; raw archived",
+  "actual_linux_test_elapsed_seconds": [
+    3.92,
+    1.8
+  ],
+  "reuse": "Also reverified existing reset/decrease/ordinary Web/service flows and full actual TV completion with source+clone, exception/recovery, cold. Earlierf37/21cb receipts preserved separately.",
+  "matrix_status": "Root owns sole matrix;36/37 remain partial while independent refresh/non-TMDB fallback host boundaries remain.",
+  "not_claimed": "Thisr3 snapshot contains the first download control bridge but these36 gates do not accept that separate group. Later10th control-source error classification fix is not inr3.",
+  "cleanup": "No browserhold; private CLI/server/SDK stopped, temp data removed; uncommitted/unpushed/no deployment."
+}

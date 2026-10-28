@@ -12,10 +12,12 @@ import (
 // Only the server-side history operation supplies this owner. The frozen
 // records never authorize overwriting another target or claiming another slot.
 type importReorganize struct {
-	Asset    Asset         `json:"asset"`
-	Video    managedFile   `json:"video"`
-	Owned    []managedFile `json:"owned"`
-	RootPath string        `json:"root_path"`
+	SingleHistory bool          `json:"single_history,omitempty"`
+	TargetRemoved bool          `json:"target_removed,omitempty"`
+	Asset         Asset         `json:"asset"`
+	Video         managedFile   `json:"video"`
+	Owned         []managedFile `json:"owned"`
+	RootPath      string        `json:"root_path"`
 }
 
 type reorganizeCleanup struct {
@@ -66,7 +68,7 @@ func (a *App) prepareImportReorganize(ctx context.Context, request ImportRequest
 	if !request.Manual || len(request.Files) != 1 {
 		return nil, bad("INVALID_REORGANIZE", "重新整理需要来自一条明确的整理历史")
 	}
-	frozen := &importReorganize{Owned: []managedFile{}}
+	frozen := &importReorganize{Owned: []managedFile{}, SingleHistory: request.originalSingleHistory}
 	if err := a.Store.Get(ctx, "asset", request.ReorganizeAssetID, &frozen.Asset); err != nil {
 		return nil, err
 	}
@@ -82,7 +84,7 @@ func (a *App) prepareImportReorganize(ctx context.Context, request ImportRequest
 		return nil, bad("REVIEW_REORGANIZE_OWNER", "原整理目标缺少可核验的文件归属")
 	}
 	source := request.Files[0].Path
-	stamp, err := snapshotPath(source)
+	stamp, err := snapshotTransferPath(source)
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +144,7 @@ func (a *App) guardImportReorganize(ctx context.Context, frozen *importReorganiz
 		if a.Store.Get(ctx, "managed_file", tokenHash(file.Path), &actual) != nil || actual.AssetID != file.AssetID || actual.RootID != file.RootID || actual.Snapshot != file.Snapshot {
 			return bad("REVIEW_REORGANIZE_OWNER", "原整理文件的归属在预览后改变")
 		}
-		stamp, inspectErr := snapshotPath(file.Path)
+		stamp, inspectErr := snapshotTransferPath(file.Path)
 		if inspectErr != nil && !errors.Is(inspectErr, os.ErrNotExist) || inspectErr == nil && stamp != file.Snapshot {
 			return bad("REVIEW_REORGANIZE_CHANGED", "原整理文件已被外部修改，已保留原结果")
 		}
@@ -186,8 +188,19 @@ func commitImportReorganizeTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, 
 		return err
 	}
 	old.State, old.Error = "superseded", "已由重新整理的新资产替换，旧自管文件等待核验清理"
+	if meta.Reorganize.SingleHistory {
+		old.Error = "已由重新整理的新资产替换；未选中的关联文件保留"
+		if meta.Reorganize.TargetRemoved {
+			old.State = "removed"
+		}
+	}
 	if err := txPut(ctx, tx, "asset", old.ID, old); err != nil {
 		return err
+	}
+	if meta.Reorganize.SingleHistory {
+		// The ordinary history endpoint already cleaned its selected target.
+		// Remaining subtitle/audio histories keep their own physical files.
+		return nil
 	}
 	transferred := map[string]bool{}
 	for _, file := range owned {
@@ -198,7 +211,7 @@ func commitImportReorganizeTx(ctx context.Context, tx *sql.Tx, plan ImportPlan, 
 		if transferred[file.Path] {
 			continue
 		}
-		if _, err := snapshotPath(file.Path); errors.Is(err, os.ErrNotExist) {
+		if _, err := snapshotTransferPath(file.Path); errors.Is(err, os.ErrNotExist) {
 			continue
 		} else if err != nil {
 			return err
@@ -244,7 +257,7 @@ func (a *App) runReorganizeCleanup(ctx context.Context, job Job, key string) err
 		return bad("REVIEW_REORGANIZE_ROOT", "新整理媒体库目录已变化，已保留旧目标文件")
 	}
 	var video managedFile
-	stamp, err := snapshotPath(replacement.Path)
+	stamp, err := snapshotTransferPath(replacement.Path)
 	if err != nil || stamp != cleanup.Snapshot || a.Store.Get(ctx, "managed_file", tokenHash(replacement.Path), &video) != nil || video.AssetID != replacement.ID || video.Snapshot != cleanup.Snapshot {
 		return bad("REVIEW_REORGANIZE_REPLACEMENT", "新整理视频已变化，旧目标文件保留")
 	}
@@ -268,7 +281,11 @@ func (a *App) runReorganizeCleanup(ctx context.Context, job Job, key string) err
 		return err
 	}
 	defer tx.Rollback()
-	if cleanup.Scrape {
+	deferred, err := completeOriginalDeferredScrapeTx(ctx, tx, job, cleanup.NewAssetID)
+	if err != nil {
+		return err
+	}
+	if cleanup.Scrape && !deferred {
 		if _, err = enqueueTx(ctx, tx, "scrape", map[string]string{"id": cleanup.NewAssetID}, job.WorkflowID); err != nil {
 			return err
 		}

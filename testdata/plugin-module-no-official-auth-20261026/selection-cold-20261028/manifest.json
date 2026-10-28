@@ -1,0 +1,543 @@
+{
+  "date": "2026-10-28",
+  "kind": "actual fixed source oracles, actual SDK/local filesystem/controlled protocol peers, actual Linux production HTTP/job/SDK/SQLite-fault/cold integration; no new browser in this increment",
+  "main_versions": {
+    "11": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform11-20261027-linux",
+          "sha256": "aea97ae7c754543d42461c080ac0a7d0094dad08b34df0342cf1d08fbe839840",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform11-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3692,
+          "changed": [],
+          "elapsed_seconds": 3.91
+        },
+        {
+          "name": "process-platform11-20261027-linux.test",
+          "sha256": "035ee6ee5ef08d447231ea65e8b4c52e0e92eaaa1c184912ea8971534142e761",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform11-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4128,
+          "changed": [],
+          "elapsed_seconds": 7.35
+        }
+      ]
+    },
+    "12": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform12-20261027-linux",
+          "sha256": "bc33f1f343e67d30ae6b5bc15ccf9056031f434a4e2c6e8cf8f50a1a26375db7",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform12-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3692,
+          "changed": [],
+          "elapsed_seconds": 3.99
+        },
+        {
+          "name": "process-platform12-20261027-linux.test",
+          "sha256": "68c8d88ee8868a27e245e011cd055e4b2a1a7d4a1dbbd62dafd2d4eff2ca5677",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform12-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4128,
+          "changed": [],
+          "elapsed_seconds": 7.3
+        }
+      ]
+    },
+    "13": {
+      "go_version": "go version go1.26.2 darwin/arm64",
+      "environment": {
+        "GOOS": "linux",
+        "GOARCH": "amd64",
+        "CGO_ENABLED": "0"
+      },
+      "binaries": [
+        {
+          "name": "server-platform13-20261027-linux",
+          "sha256": "08c519c22d4bc3e69eacf8e801f09e35c11ee235f5ff8b70758e11fd9987de59",
+          "command": [
+            "go",
+            "build",
+            "-trimpath",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform13-20261027-linux",
+            "./cmd/server"
+          ],
+          "inputs": 3692,
+          "changed": [],
+          "elapsed_seconds": 3.8
+        },
+        {
+          "name": "process-platform13-20261027-linux.test",
+          "sha256": "8e9db186a285c6a16d61b6c0826b84129d116bf25a5ee783679bb115c1cde549",
+          "command": [
+            "go",
+            "test",
+            "-c",
+            "-o",
+            "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform13-20261027-linux.test",
+            "./internal/app"
+          ],
+          "inputs": 4128,
+          "changed": [],
+          "elapsed_seconds": 6.41
+        }
+      ]
+    }
+  },
+  "artifacts": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/build-platform11.py.gz",
+      "sha256": "6190a85d443e980788300a6213f40dee343013566b01134931c9005a9f5baee1",
+      "raw_sha256": "94bb8fec4717d8557f95d95d0f616483ef3c9910ba44e1fc2c709b8dbacd7e1e"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/build-platform12.py.gz",
+      "sha256": "414805f8a5f05b4a3bb47cc3a1caf57c8d8beff7f6f3c47c5c7e0351cfa7062d",
+      "raw_sha256": "e8a317323a2607734a4a5e04b257d371bf7764c54e90513f1122ee25afd1cb38"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/build-platform13.py.gz",
+      "sha256": "70ee117679f98f9f6b426938b333c5a26a22e6a0e435a5f0d2fa35961fa8b477",
+      "raw_sha256": "b0794aff36218e36b826e484044888342c3ef07a3f51b9d185747f3d11519d44"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/internal-season-sync-local.log.gz",
+      "sha256": "ca6f9bf4a84cdfa716da7a6483a47383abff7f382db0536a5c984df967d1674b",
+      "raw_sha256": "cd6269044753d72b34a958b7e7f32a6433c3e5fab04cced1c576c5a13ad0909d"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/internal-season-sync-r2-local.log.gz",
+      "sha256": "4d8e050832e900c9c659845ec688dc188497b1ee260cd1dc8efd0bb7d8365162",
+      "raw_sha256": "1cf05cda6801c1bff3f437aa27c7bff348c6c29bb82b2ba90b9dbe423b819098"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/platform11-result.json.gz",
+      "sha256": "c01723dd10754314ec1e76d7f957d803374e0d8b908d9b9f1ebfdfa81d25a267",
+      "raw_sha256": "4db956d53108c1669357dacb2358f1382e71c7c7c4512b1e03e1bf905b7a2c5a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/platform12-result.json.gz",
+      "sha256": "a246f86e71de5a83e662533c66a5d51f1243191224cf27fa3aae21ec49d252e9",
+      "raw_sha256": "b403e3398fc52739fb266b6aa6f539fbdf99066afa73d828a46a57d409fa539f"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/platform13-result.json.gz",
+      "sha256": "9574f5dcfd553f0fde5836bb803476a91c9bf456ec59bbe87365445ac0188f04",
+      "raw_sha256": "4f3ee1fa7e1d9fc68e375f07c95c0d57ac145b022803db23509a0913f2e667ef"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/process-platform11-20261027-linux.test.inputs.json.gz",
+      "sha256": "1eb390ed4dc8b08b15e3e5756fe3774d5e0dd979f4213d2942ef4bf89e4ee0bc",
+      "raw_sha256": "fb34364e9afa0c8b63bbf476130ccf6417d226f1d10d7ce4cde55d97e7c690bc"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/process-platform12-20261027-linux.test.inputs.json.gz",
+      "sha256": "a8c79d864992efe2d88e28e89d9c48b08edc530bfb46a64d655f9d808377c6cc",
+      "raw_sha256": "236c9fe471b30e6e4ff80b7224572c78f9a88ee799292782f45a12d4908b8077"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/process-platform13-20261027-linux.test.inputs.json.gz",
+      "sha256": "6da55a83ee9fddedaf36c31f077f9f7ef683e6fbe9950141349c7025e2212884",
+      "raw_sha256": "b10a53cdfc20cc8eb503346296514d05561b8f5988952eecbf4b46e2d8c4a749"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform11-cli.log.gz",
+      "sha256": "029b3e7ac3b9f492137fbd932cda63001bdf2f289fb766a75041df64999cac4b",
+      "raw_sha256": "e3e5b077412b2b4005d8e31b238d839baeb02228ab0e42f1903608f27cbbe2b6"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform11-evidence/download-context-Clone.json.gz",
+      "sha256": "ebf8f583ea20f333395918a4dfb20a25ed4bda3ace772c33f5ca8a0a06572212",
+      "raw_sha256": "1226feba47a2f0cb3db240421a3f972f5d1df91b0dbf17cd8906dcf98adda30a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform11-evidence/download-context-Cold.json.gz",
+      "sha256": "529afc119a65d229b0913e77db9aa68373689f9bba2df31a8791ba9e36903bf9",
+      "raw_sha256": "6624f0864aa3494f4495fc52b7d9e4505f498369464a00c86ceac14452433af4"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform11-evidence/download-context-Escape.json.gz",
+      "sha256": "88decddbe14012a3cb5ad3cb792697fe256f99d6913acbdd940fd2a3bb5acf2b",
+      "raw_sha256": "a98d969785e7cf0591753d675e486e324b821dcdc054833503bae66dc840eb17"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform11-evidence/download-context-Normal.json.gz",
+      "sha256": "d45ae7b82e4a88799eec4eb563d69d5138dc4d013df6a827393fec62abcfc8f8",
+      "raw_sha256": "bee5fda07c0d542be193dfd5041024415d2a8d4e7bc6c47feedc35294d48d34f"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform11-evidence/download-context-Veto.json.gz",
+      "sha256": "a94312fce4168be5ac1ed4d3544766577cabe9505f9b58dd43cdcaa5c2afc831",
+      "raw_sha256": "cf0dc6d9d2e069dfeee19e244e3f4f61bbf22818ac3c9c9518ef20fd18200c99"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform11-evidence/download-context-VetoError.json.gz",
+      "sha256": "169a8d9265e87ae38441f8fe4e56ea2849c8a9c70ca22985df5e5b0f8b26a9e7",
+      "raw_sha256": "82c23cb89ae986ddf630d316a44ae7ad5e7158cc991240eb222dd589f3387fab"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform11-evidence/download-context-event-download.added.json.gz",
+      "sha256": "262b01ee8d94f049bb2f1b58b8ef3483d9c1243ad8192595ff3c2a2776cd3817",
+      "raw_sha256": "98c68e954b1d9fd7eb7824ac95a17373b997641c8c980195b8e77dd9dff87a46"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform11-evidence/download-context-event-resource.download.json.gz",
+      "sha256": "7a044e3f165a0166e7c5b4ad4658b0ed8b152589a6e0fceb294477da3c000e6c",
+      "raw_sha256": "4edc2fbb21082115f6bfb422c94759e6f4cb839cab507d9d44e3bb73e7380346"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform11-evidence/events36-service-process.log.gz",
+      "sha256": "f6b289c8daa153941e13fa095a9c1e56fb8e8ee0b3231f75dd5b54e97652a5e1",
+      "raw_sha256": "15dd7368e3cf9a43c649c8b54aa404bcda0de443a5250ffcb434ad12fac31839"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform11-evidence/resource-selection-0-event.json.gz",
+      "sha256": "a79e060ebb7f10d86d28d3d4689c47213108930cbdb92bc8b5b347b9c37b26e6",
+      "raw_sha256": "6226b5c309cda62930fee6378c04cfe52df6fb154d23cb35ad5998374cb78df6"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform11-evidence/resource-selection-1-event.json.gz",
+      "sha256": "081e38eb7286e86a84c6a27ec5b2bb462ae75a1878f7165dd7521ad71e094c42",
+      "raw_sha256": "718f6723109f70bdd106e3c614a59a0fef8af8b6b9118d73f7ed8af991043207"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-cli.log.gz",
+      "sha256": "e746cb67ed7e875525b728183b3d8c08abbd1b41ac2f92ce248fc491eb03e1f4",
+      "raw_sha256": "db576f8b84ff2e976a5e4b0701805bc7f4dff09506a7f61d673eba25fa38a2cc"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-evidence/download-context-Clone.json.gz",
+      "sha256": "a9e41a7c4bb09fb626cd80c895da18503a7522abe945b96b0c986acd35563a22",
+      "raw_sha256": "35c2a193f2af99e078c409a368f3d119f3b0736b1ada489a1657bc61c580525d"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-evidence/download-context-Cold.json.gz",
+      "sha256": "3fed200677f0d37442135cf66245f09f594b984cc054dcea7d279095317a00e8",
+      "raw_sha256": "d5dfe61e59cfa2022689e823c2c6a3ffbe46ad5db0582595fb38161837365252"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-evidence/download-context-Escape.json.gz",
+      "sha256": "6c6fa49c3eafb857bcc681a7bacc4ba16f5bb7675bf9dd9e00ba987006c91096",
+      "raw_sha256": "40ae96f0f331b5171a823c030ba3802dfa3c211f957ff509f048d75a5c0e1113"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-evidence/download-context-Normal.json.gz",
+      "sha256": "9ec38e267c8fe39845163d374493b517229402d67ab5d2dcbed3274f4fc24b00",
+      "raw_sha256": "51b0a600088af91a2149726580903731ec5f80185c23212b1080eec4f48647a3"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-evidence/download-context-Veto.json.gz",
+      "sha256": "088d824ab9511ef018f78d791296e400545a2144abf9b995b588405f0a55f996",
+      "raw_sha256": "291dedeadae5abebe5657d809f2bafdd262992502f40ca5dd7949227b0408f2b"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-evidence/download-context-VetoError.json.gz",
+      "sha256": "24014ce3fc2f2b3cd960bf2e5a981abbeec3b61806ee9b7e017981534d4d87b2",
+      "raw_sha256": "541f2d60c2f77a220b1c2aa19b294c1ca0f1ea83a29026440860222099a128d8"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-evidence/download-context-event-download.added.json.gz",
+      "sha256": "691da098fbeda347b3e082bd5bba225b51c2ce94f136822fe4e6b5776e5d951c",
+      "raw_sha256": "91ca9bb132c8b89b7c40d20fc963d2a07b5d12ddc5e7b1852b07f2838a10cf8a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-evidence/download-context-event-resource.download.json.gz",
+      "sha256": "7701929cd304c606e84d672911c68091735c1d8a50735e4a33a834992674e042",
+      "raw_sha256": "3437b18da1a403bb7ac9df2f34c42249e037e8c327bbc95c582c1c36b9ae75e4"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-evidence/events36-service-process.log.gz",
+      "sha256": "cc1a3c320dcdb7d1e304bf8d8d8c9c269c7296903dd4a59e57a85bc70dcf96b7",
+      "raw_sha256": "542bb98cae1b125c3b9392bb768800a7c0ae47d4a6b43209630097836c15e1f9"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-evidence/resource-selection-0-event.json.gz",
+      "sha256": "5fc8e60211ba47b1e2725fd387fa8e8b15148281cda3243839613b9cbbdc4337",
+      "raw_sha256": "7c5ce0fa90b3ea8177c097f31266a13d08e05fe8cfdb6b778770cdaf03900071"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-evidence/resource-selection-1-event.json.gz",
+      "sha256": "978746893d533ffff80e2df3c810ad4f91461d9a4dfe9c27e263c8775347122d",
+      "raw_sha256": "154cfba349bf746f6365cf98e57b7d116922e8de735b6e60a5917c6b8727e95b"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-evidence/resource-selection-cold-local-failure.json.gz",
+      "sha256": "37176b377280ca792775291be7203876bff5e808788e2b8de3f3afd4533b0983",
+      "raw_sha256": "93b7c6f35c1c84dd0f9c7836ea0c68d3867a35a64bf51eee59b81932d6a64ee6"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-evidence/resource-selection-cold-recovered-job.json.gz",
+      "sha256": "4ba756017e68d4140382ddaea913e0532f89ce993bdf85a8b05165dbf3bca93a",
+      "raw_sha256": "d9282c9c5c222faa93faf3fa2d2a1275c2c15a6bc8b2072423951daedc813899"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-cli.log.gz",
+      "sha256": "ee584fac32f04e81f09dc01d3327684e83942ad9cac0d6a6cbac10ef7beeecd7",
+      "raw_sha256": "b9004bcfb17a0ca784d84e9c85563a68673de9825289fc64b08e3bcad0d51a0e"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/download-context-Clone.json.gz",
+      "sha256": "4d4f935227a4860983c71570ba7f0e3a50beacfa1ad061e9adcab212689c7e31",
+      "raw_sha256": "17c9caa6f71d62df7b5fe11b5a9c4df86c8a71392adcb33a5bbfd85b16acea42"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/download-context-Cold.json.gz",
+      "sha256": "78f59bf21dc38c9b98f6f74b44e98f9063fbf67381753f519b4783e37700fd32",
+      "raw_sha256": "8713ac1be503209dc469a9d943a0960d341d70e1eb09c4b311a633630b8224c0"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/download-context-Escape.json.gz",
+      "sha256": "d40dfa2729f293352fd61165fe8729a7fd583e159ae81653d6a2cec78d8cf902",
+      "raw_sha256": "07fb591861c2d0e836935db9ab1e9475014bb4f7be2dd1908cebb47b4c9783b2"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/download-context-Normal.json.gz",
+      "sha256": "e2e9d040c3c1a5181f1a9ccf3cccedb8d9e5f1593ac03ce513c00fc1b933e3a6",
+      "raw_sha256": "d1a6df0d90becfe63874f18f17357aa0f3b1697a9d8340acb84de6bff7967179"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/download-context-Veto.json.gz",
+      "sha256": "ccc117e150e726c507c0ea203b123ee2f92b6cb8b337f8c12ad5dc1da2077f8d",
+      "raw_sha256": "2fd0eb90f786f2a3a1f95cca4e303a50893118bca480964beed941015c561dc0"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/download-context-VetoError.json.gz",
+      "sha256": "1f710df71eab3514110bb877620609307d25bd8b0704da97c1b5cdae8ecbbb46",
+      "raw_sha256": "93a543e8c98f0ba12e64c6011b63d3c40d38a82935aa7d9542857d0e9be2ae92"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/download-context-event-download.added.json.gz",
+      "sha256": "3fc4ab9c3bee86cb42f4970e1adb7ec62b2c01ba1770562b689e2d196126ac01",
+      "raw_sha256": "72993776adc76705e29b03df3a14d1f89e9aed56d676415a7d656a07ed3125b8"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/download-context-event-resource.download.json.gz",
+      "sha256": "430994847c6f7b94ae428e636e6c2581967ab0adf86a9acf41f405b630a5c68c",
+      "raw_sha256": "51b308f78b580ac548325d275fd0efe6db876cdb8eb47e166ede438fe0c3cfcf"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/events36-service-process.log.gz",
+      "sha256": "9a11b451c433578672983f13ff0e010be0484b176db1d1ca136577a7142e3ab5",
+      "raw_sha256": "55f716a9f7b1559ef47afdfc622d465b075ede10bbbd5aa2c8e5ca5e5da908a9"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/resource-selection-0-event.json.gz",
+      "sha256": "0137a3b0f285cd497f87fd15907c7b99fef6e02533f21fbeae0ad1d342b65b72",
+      "raw_sha256": "56af5038b3f53043840fb79fc377bb2b2612b93cb3537055ebca5024cfd106f6"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/resource-selection-1-event.json.gz",
+      "sha256": "baa33311326064b29e8199b0f418239cb835ea70e7839c0d3e09b65925955e36",
+      "raw_sha256": "e39f2185f1a31a8235608912bd4339f31deed61cb091be52797f8a477578e051"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/resource-selection-cold-failed-acquisition.json.gz",
+      "sha256": "2fdd1fcace95f573511a0844fdec275fd19a16aa84cbfe246e280a1e6c057e53",
+      "raw_sha256": "1eadcc1593e35c7e45644eaf93fd3815d1df6a591f4e0a5563fe53e9480a08c4"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/resource-selection-cold-local-failure.json.gz",
+      "sha256": "ad636cbb43c3d083eb7dfc8da561b41c4571c11c60101e8f9ca1333420fa7e2a",
+      "raw_sha256": "eccaa3f7ad91400bbedcb0ec8a322cd99037e340f1450e090ec77b5a932813c6"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/resource-selection-cold-recovered-acquisition.json.gz",
+      "sha256": "6c6e5866d49dd2fd002504a06cfac9e872718d82fb9c1225186a9789c43fdfa3",
+      "raw_sha256": "2391f1dfb12ad239e86f15b17465c00c5d63c388106d152968d4f8159cfd5af5"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform12-r3-evidence/resource-selection-cold-recovered-job.json.gz",
+      "sha256": "68df3a704ee621f64d8654fe84cbfb4d262475687ea315ca1fd48a0b071b0da6",
+      "raw_sha256": "1908450033cfdbbc17695391ce23a778df6116efdc98ad34e9c144accbdf7387"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-cli.log.gz",
+      "sha256": "c7372d00cf1f24bc9840f3305bdb2b76832f56d47d0c5ed9b57121e02bc40229",
+      "raw_sha256": "346aa799d1f444dc118176d83cecc827dabe0eabf95bfb7f9c939099832bd608"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/download-context-Clone.json.gz",
+      "sha256": "57d8228593a2ca99eed23d42c3c8827fe3eaa2cf7cc7b06c8ec5bd934687f5ec",
+      "raw_sha256": "445a6d0177883f32a7cf76519ccd827e6b80e4c34f63ce56ebc387d0923038c3"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/download-context-Cold.json.gz",
+      "sha256": "f1b4f696c60e14524e6a1248a0105c3be286e196e29f9af391fe8d2fe4e9567e",
+      "raw_sha256": "567a2fa6e1df273f9125368b4f26e4795240a6a8bd58798481c96924186efb7d"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/download-context-Escape.json.gz",
+      "sha256": "a67d6400576cc01f11025c83f154afe3e0373cbc516dd12f34617599884b29d7",
+      "raw_sha256": "542ce71f1b6590f63b4ec2a10bb0721440c4ee9c1c6902f5ad6b0772fcce4598"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/download-context-Normal.json.gz",
+      "sha256": "c293a808f55b0b70377c44b037cc67dcbb3b7bc02871726f96e73274b7be1f52",
+      "raw_sha256": "6324ed4f8662d2f0f7fce3a8edcdbb06c0a611486c4a60ef43c16186833e69ab"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/download-context-Veto.json.gz",
+      "sha256": "58bc9f8e8b36f9974dabc1ed5c0baceff0073ecf91ea641fcbb432a56da3f2e9",
+      "raw_sha256": "6d093c31dfa8b932ea7a8717b51adc259ab18003c5056a38b0f3404683032f03"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/download-context-VetoError.json.gz",
+      "sha256": "aa195d2cca80144c03e305b3224b0eeb60e1503954becf4711c53785758850f7",
+      "raw_sha256": "ea11a70689672c17433d3c5e434f5d9fff6721aa47532aba7782c36d47cf2df7"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/download-context-event-download.added.json.gz",
+      "sha256": "462ebed5095a2e5bc82810685322791ef68f52042b05bd555f9e538d8daac99a",
+      "raw_sha256": "555c72633469cda65df68059b8f931969f8bb45a0a6e161497eee675265efbda"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/download-context-event-resource.download.json.gz",
+      "sha256": "bfaa98cc60f39eae6651ce91f3475ed85ca7c41bc60e88cdc76be5ed2752259b",
+      "raw_sha256": "671db890e83b1a39dfb401b7667de3371c532c3681aa9834ec3577d20e0c7c24"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/events36-service-process.log.gz",
+      "sha256": "5c2797f7f3c89f5e6968c33fed3eee01d3d1b37026900cae03ec0be95ff85fa9",
+      "raw_sha256": "68b0e93f6f873a62f08810590617ad154c78ca9c40731668789755f1b475d6d3"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/resource-selection-0-event.json.gz",
+      "sha256": "fa6f26c61c5e1ff500f1c420a9aa332694eb020a308ca102bd238f7d2297355d",
+      "raw_sha256": "1ebba783bd66ba2a454d99f078936076d97247d77a77c1715dd387d2bc0a69f7"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/resource-selection-1-event.json.gz",
+      "sha256": "000d6ea62cedaf033312c1aeec16f75a9c39e1f2b3804992a95d27084a52f8fd",
+      "raw_sha256": "f1eae9a297c91d8a306d2126cd66fe9896784b43e2a2e08072fdfe90a4acde46"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/resource-selection-cold-contexts.json.gz",
+      "sha256": "bf0005ab442be9a516b1e853ae9d64a850d90cc88951d49c3458083fbdd0a94c",
+      "raw_sha256": "cb3a10b33b62fe2818ee5d1dc0f32ce9d8442d925d8ab1e2f0700e7448143114"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/resource-selection-cold-download-added.json.gz",
+      "sha256": "39f178f6223bca6053b5595e1cff5a4dbcfeec0b7a6e420341b92490b4bc9c11",
+      "raw_sha256": "7a9ddb7c2dbb43eede5ff113b87c2d1f2eb34bafab751f819fd5eef9ff2aaa18"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/resource-selection-cold-failed-acquisition.json.gz",
+      "sha256": "2fdd1fcace95f573511a0844fdec275fd19a16aa84cbfe246e280a1e6c057e53",
+      "raw_sha256": "1eadcc1593e35c7e45644eaf93fd3815d1df6a591f4e0a5563fe53e9480a08c4"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/resource-selection-cold-local-failure.json.gz",
+      "sha256": "a829edfc8d3278933b8f99e890905df4c7beeaceb123b76413e79e6d8311b182",
+      "raw_sha256": "a6f4d36edc8e0a96a53f0f5fac739e2898d0557381fcdbb1719b6e813e230ed6"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/resource-selection-cold-recovered-acquisition.json.gz",
+      "sha256": "89da281c06bd9d81266799b50962aa6ac2994c8f719b181d413cfb1867678faa",
+      "raw_sha256": "5089b6a7881ad56069b6c9ee75d47e3403a4a64770803e8a6f2eb75fde1510e4"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/selection-platform13-evidence/resource-selection-cold-recovered-job.json.gz",
+      "sha256": "03ecd5e631912227ee522e2cbce7500d3f715109aa23665f93f41e442f126d7b",
+      "raw_sha256": "b858348c7fde6615d69b47f8d784ed856961a6be05a47a94cf451dea1cb34d16"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/selection-native-handoff-current-sdk.log.gz",
+      "sha256": "4a72d3b13c8abc914d0d711027342dcd1eda640942e785dac78e273f26bed71c",
+      "raw_sha256": "561cb1604e74de2b179a41942b5ef2dc5a6fe50d3301efaa60476b85543f81bb"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/selection-native-handoff-quality-regression-r2.log.gz",
+      "sha256": "6ec13aea511c62d3be25b1a3f02067155d78ab54d5ce09ae925dac07297bac20",
+      "raw_sha256": "11818d6a6948eeff3bb44e2d3cbc954b14ec04696fcb6edbc2e39fa528d52992"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/selection-native-handoff-quality-regression.log.gz",
+      "sha256": "9070807a3047de233d9d15be263f30b885102e816e3d4881672f885206d708dc",
+      "raw_sha256": "138a18fdf3fee068450030f5fb5e1e49c1244a22d5a367d51f640a6ceeb9e93b"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/selection-quality-cold-local.log.gz",
+      "sha256": "f0cb5c8f2e1d04e0d32590ffdc3aace5a743f821c82976597a39bb2db97faf49",
+      "raw_sha256": "6aee90bee3f67b2d874d3ae3167694fa2b962046d3f7f599a7bf8a85527e21c4"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/selection-quality-cold-no-compact-cache.log.gz",
+      "sha256": "e613e47037ccfe41f8535d50b515a3c6a707545cb900a734800a2d52487f78d3",
+      "raw_sha256": "9fc7151fd67e7dcfa57150e8fc2ec65e56e0ee6c5cfa4ed805c7cba7f945557f"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/selection-quality-cold-r2-local.log.gz",
+      "sha256": "6de05ee307fecc3a4e0023e5cc9505b155fb64b18ea791d900aad7d41345968b",
+      "raw_sha256": "cdfd0dae19475f1c61efc7434fa04f1926a109b4a74a5b3252638fbb7f0601b0"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/selection-quality-cold-r3-local.log.gz",
+      "sha256": "d5d130e314517aea43fe5562429f4c7e86a67d994094e7bc7e38ea28a1b54d1b",
+      "raw_sha256": "20786500867c049980ab299b67097b8d7d6f41544e5f9610c435a67d8d74aa96"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/selection-quality-cold-r4-local.log.gz",
+      "sha256": "abfaecd390f033261002d2f87defa3327107a70d296eab6fced315e9317226e2",
+      "raw_sha256": "54558e1c684685a2cfd749124fc805b9fc5c270abad12b6937d77e78b3d61845"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/selection-season-final-race.log.gz",
+      "sha256": "939b2bb5deec955bdf0652f47bfbd363c796409e3f1609c5231ee8ce3a03b51c",
+      "raw_sha256": "aab4c5682cfbcd9991ae0d9961047f8abcaa8d09dd6b2e3dd11fc769c039053a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/server-platform11-20261027-linux.inputs.json.gz",
+      "sha256": "0bcf4c6a50c808132c30c6cf9e7cf20f78edcc781a02ca2fd8d79bb05e2af973",
+      "raw_sha256": "e777a80f776c5be47c098e21b7d7d62c964a808071d0eb630e2d5a764e844043"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/server-platform12-20261027-linux.inputs.json.gz",
+      "sha256": "e9b6a807b7e61b43f704aeed5f8e122025c79018abdfdfffc70665bcec2f9a63",
+      "raw_sha256": "9b0a93b9846d144e70a066b0d290e0d199f9d81a6004d02647b3253a5cdd4d45"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/local/server-platform13-20261027-linux.inputs.json.gz",
+      "sha256": "85c2ca5e6285e44a9ae9f4c6d9d77df8108a804b028526d9a9befbd4fe0ee81b",
+      "raw_sha256": "f6b2aaa2f7a7dde45ec9f4199e112cc071b5c757715e9624c34089d8441c6903"
+    }
+  ]
+}

@@ -1,0 +1,320 @@
+{
+  "build": {
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "binaries": [
+      {
+        "name": "server-platform43r2-20261027-linux",
+        "sha256": "10cc8184c5a25a62594135e304f6bc3a8398892713b02cc246d5bd9deba631cd",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform43r2-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3724,
+        "changed": [],
+        "elapsed_seconds": 1.45
+      },
+      {
+        "name": "process-platform43r2-20261027-linux.test",
+        "sha256": "b4c12da0b0da0515e492e0db4599aa0095c45a0c263ee09bca040899d1d59085",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform43r2-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4197,
+        "changed": [],
+        "elapsed_seconds": 7.16
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "original": "internal/app/plugin_module_process_transfer_completed_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/internal/app/plugin_module_process_transfer_completed_test.go.gz",
+      "sha256": "6e549c9348eef0ece409f7d679355b00950f40572e0d6d455be4b2b73d01fef9",
+      "stored_sha256": "67b09a92f4f1e9fe67c23d819b96b2a00b6e837ddf703c6b2ec3abda6957df47"
+    },
+    {
+      "original": "internal/app/plugin_original_modules_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/internal/app/plugin_original_modules_test.go.gz",
+      "sha256": "42cf64b1d7d59c4e3821406e463f99a2584ffe9c5c61df9a3e6a00369c423f8e",
+      "stored_sha256": "9a57ede1c200aac7024f73ebf3e5f16cdd93fad15ffcd2a189fb84db227b6b11"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_completed_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/internal/app/plugin_original_transfer_completed_test.go.gz",
+      "sha256": "f0d189740aa6e343436503c2085ba005e0d654096dc9a4e1c48889785bd52691",
+      "stored_sha256": "68a804aa1a6878cafeb927b425431efb52108d5d045ea9606999e7ec93cf9557"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_event_identity_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/internal/app/plugin_original_transfer_event_identity_test.go.gz",
+      "sha256": "70605ab5631615fc62f9d68c2f1281179953331ee2e95a62d5dfca5921fe96dc",
+      "stored_sha256": "9c13bfb87720ee078249af915f51f59479cea7145a6db231693bba970c36ad0d"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_events.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/internal/app/plugin_original_transfer_events.go.gz",
+      "sha256": "3d0ff6fc6a5d9723a3d5d2688c8a248520e79da392926d0fae01f21c64af8aa4",
+      "stored_sha256": "f5c623a7670664829f629e7658438be40292ca4209612bfa7f899677ace842d8"
+    },
+    {
+      "original": "testdata/standard-module-host/transfer-event-identity-source-oracle.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/testdata/standard-module-host/transfer-event-identity-source-oracle.json.gz",
+      "sha256": "f3318301a532346fe5fa433246db1b38903f4b8b77dab3d0c853bbfffaeb4078",
+      "stored_sha256": "e41226ffb5999bf28b078b0d4599fb092b52d42f27230d3cfcb1be10ed04f9c5"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/archive-events43.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/archive-events43.py.gz",
+      "sha256": "67bc21f54967df23f2a74151a260de796528108ea0d225e3247d87cc800f7bcd",
+      "stored_sha256": "aafdef5b0580c4302840d69f56a75754ea57fec4b2326665f0d899384c34e007"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/build-platform43.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/build-platform43.py.gz",
+      "sha256": "7aa6731ab26811e9f58a76367371427a8447ab11e968b0ffe76363f923de2d5f",
+      "stored_sha256": "396fa6524979e95d0883fd6308ef718bf146bc1be9a588a8a6eb68f7d9ed6b3c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/build-platform43r2.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/build-platform43r2.py.gz",
+      "sha256": "5df573fa907d905181444892b54195e96f52dcca33120c25f992f0c8603bb0be",
+      "stored_sha256": "f8a0208852ec1acf472b6f022032c8ba0402cd4d225cfef4bda892ff88257abf"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43-cli-console.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43-cli-console.log.gz",
+      "sha256": "ab5d4b4052b2587c360ce6110828661df67eeedd2ff1e2ba0a2f5d9494940919",
+      "stored_sha256": "fc6b7f7921b9a44f6bc2efa8326369748eac2bc7aa68ca27d6bde7250c003b16"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43-cli-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43-cli-evidence/events36-service-process.log.gz",
+      "sha256": "892bcfaf8b532dc748def96ee73d8062820fc822347ce98b81b79a9b214b212c",
+      "stored_sha256": "a61d01500a75ebc168092f1735508c63584e3cac26faf82eae11fd9be8e0fd90"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43-cli.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43-cli.log.gz",
+      "sha256": "02216b71586af780e544d4385082bb0deea430e9322de4a364f824e0521f5397",
+      "stored_sha256": "28b63b5d42d8c755df9ae0c607ad8011609654f775d1a1d60f25bacea1fc50d2"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-browser/01-cold-cancelled.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-browser/01-cold-cancelled.dom.txt.gz",
+      "sha256": "af53a7ed12e815af18f7ed9a9734d9535e99dcfa4323628b7d3789fcecbca624",
+      "stored_sha256": "48aa7443b76b083c3a1d78b05aeefd93b576b4b9939b2182b4ab2f822a4f55df"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-browser/01-cold-cancelled.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-browser/01-cold-cancelled.png",
+      "sha256": "021f02107930e86f278074881307d731eb75553290a13d364bf833306a499d31",
+      "stored_sha256": "021f02107930e86f278074881307d731eb75553290a13d364bf833306a499d31"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-browser/02-retry-success.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-browser/02-retry-success.dom.txt.gz",
+      "sha256": "a42d25983e9c6212fd5c162ced507b69605ad067c1929ece33dfac70e9145d6e",
+      "stored_sha256": "86f0aa75ed9f36c2dbd91881beaa8540ae3481cbebd8b9677a7da19646cc3315"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-browser/02-retry-success.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-browser/02-retry-success.png",
+      "sha256": "9feb614005919862185362a71fcdb39a6154ca3b090a4e766a1535729912231a",
+      "stored_sha256": "9feb614005919862185362a71fcdb39a6154ca3b090a4e766a1535729912231a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-browser/03-cold-success.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-browser/03-cold-success.dom.txt.gz",
+      "sha256": "a42d25983e9c6212fd5c162ced507b69605ad067c1929ece33dfac70e9145d6e",
+      "stored_sha256": "86f0aa75ed9f36c2dbd91881beaa8540ae3481cbebd8b9677a7da19646cc3315"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-browser/03-cold-success.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-browser/03-cold-success.png",
+      "sha256": "e370b231e3869486f31f65fd4d21b5c7b73c68e11ed879e75a43d881b92c1764",
+      "stored_sha256": "e370b231e3869486f31f65fd4d21b5c7b73c68e11ed879e75a43d881b92c1764"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-browser/04-cold-history.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-browser/04-cold-history.dom.txt.gz",
+      "sha256": "db37a3d523ddf6602b5f26ce08a31b6395123bcd3fce13b85844546786ba22be",
+      "stored_sha256": "530151c65e01853181f7eacaf2a80054de0ea729789ca0a102f5513ed95095eb"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-browser/04-cold-history.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-browser/04-cold-history.png",
+      "sha256": "b46bdc92201069ec2eb28264c9a707010e58bbd89eb67c278b146cf48b91cc7e",
+      "stored_sha256": "b46bdc92201069ec2eb28264c9a707010e58bbd89eb67c278b146cf48b91cc7e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-browser-before-cold.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-browser-before-cold.json.gz",
+      "sha256": "1e2f27b81cfdfd67aebaf9823cfafafe1b5dfe5b80e47456083962e550435f00",
+      "stored_sha256": "072f3f0ce93789c9589f2f4cbdf92b00cb87eb5ce697a347bff4b595c793d7b7"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-browser-cold-cancelled.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-browser-cold-cancelled.json.gz",
+      "sha256": "f368c23b2e460375eb36911d6a0214adc9890fcbf20d3209ebfa8c392ddbe473",
+      "stored_sha256": "20bb87c37c7f8a6fdc254752a8320e30e4d3fef7eb7bc77cf2325be48426effb"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-browser-cold-success.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-browser-cold-success.json.gz",
+      "sha256": "c84c4d23b42c21f2d3657f85b0ad4a0d2729a03792542e14d6a5c5ce9cbcb928",
+      "stored_sha256": "52a7e295753397dca5b4a44ba97059eb92ceec4a155e5d375af90e5e41c302ca"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-browser-retry-success.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-browser-retry-success.json.gz",
+      "sha256": "a7f315de7ac4fa591351167605ed8c8647215d0e736a67e9f55a29ff6e3684b4",
+      "stored_sha256": "0ccb620240a371c7a2d4a19f44547a1a26e4292f58db716d37d40da9ac3ae8cf"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-browser-verdict.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-browser-verdict.json.gz",
+      "sha256": "0b276aa5f01d4a78df996fb5174cb050b7f0ad3248036866845648ed84002f83",
+      "stored_sha256": "bb00a7b9045a468610483cd144bb43806540730543292f5f11ee33e5df744c96"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-cli-console.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-cli-console.log.gz",
+      "sha256": "60c88a56adbb09adfa38863025c83b3ebbf80c6ffd203cd6e09198d46c7e09d8",
+      "stored_sha256": "3836dfdb804b9e1e97e8839315639ba1bcad6585c1f3b37b3c839d1846f43813"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-cli-evidence/completed42-cli.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-cli-evidence/completed42-cli.json.gz",
+      "sha256": "97e1d3936f03ba6f9bad7f12225b2840b30ab5120bc7790fcabf57d949c1ad91",
+      "stored_sha256": "35429fc1e0efaaaf919d72c82f8a79d921b157cb259ca6c1e743a0f857be8111"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-cli-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-cli-evidence/events36-service-process.log.gz",
+      "sha256": "d67cc2ac0daf39ae51cd9c497ca691c4ab0bd59c90ee799fef40c83a48cdb20d",
+      "stored_sha256": "cab17448df2e3458f9bc4c13a206c97504f5aab57067082481b4a3ed05a7ef84"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-cli.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-cli.log.gz",
+      "sha256": "6b3fed796d7f820aa507867fbd60ce17d3e6e30a77c0c7c6a94b50b5feae3ade",
+      "stored_sha256": "01e4c4ab70774b062529d3849cfb8f2f3e68acfe21cace31b06b1b9160efa1ea"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-observe.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-observe.py.gz",
+      "sha256": "734da6cdefa03cf0176042c8088a856f8f5289cc8cd0fccaf397ccf210db00e6",
+      "stored_sha256": "50b3115a29a2d107d9327ca5fdcf515145f47298880143d3d39f34a6b75d439d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-ui-console.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-ui-console.log.gz",
+      "sha256": "12c9f124777bf4ec57f72fea0589fe81935809f4d054206801ced9d2a1916013",
+      "stored_sha256": "eb8998c69ae228f41a8f153683de6d878fc661aae04e7e7e163531f269f4ce90"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-ui-evidence/completed42-browser-final.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-ui-evidence/completed42-browser-final.json.gz",
+      "sha256": "c93a71026224cb8d4ce491f875e619d59656ad7e828aaed5849e2dbc1a0a12c0",
+      "stored_sha256": "8603106042b16ee19c7467d5c2f1f046016d5c3ba3dac6c2b6ca083f63acb553"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-ui-evidence/completed42-cli.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-ui-evidence/completed42-cli.json.gz",
+      "sha256": "5e94cd414de302ed30d66243eacc478c58c49083d2d27e01b303556a5bfede3e",
+      "stored_sha256": "70395c8ac9d53b6d88baba49853974fc1e642849a2f86c23701895d3985e2076"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-ui-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-ui-evidence/events36-service-process.log.gz",
+      "sha256": "fb95043f6fd6a0d5c4a582ca1afd8c61a7ec6cc70d9924c6081613b678942d84",
+      "stored_sha256": "ccd046b44f9f4dbe2a0464a20aeba711ec704b57372c214c7b4221b7a6e4eb4d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-ui-state.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-ui-state.json.gz",
+      "sha256": "9a07b9481f8559bb13f7fab9a063047a7aed725aa37b622e074b94caa119cf4c",
+      "stored_sha256": "327d58de4be0b1d98e92d9882d8898ed6b24c8e5a1173e8a0377ced38935d93a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-ui-state.json.done",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-ui-state.json.done.gz",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stored_sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-ui-state.json.restart.done",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-ui-state.json.restart.done.gz",
+      "sha256": "f8c797249ced12a928c5b273768e347213028d8fe8c0e2bc7e54de5a6d70c14a",
+      "stored_sha256": "be653e89ab64ee147f12035755447ea6d28dd0c06cfd6c71bf7259946c44cfef"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/completed43r2-ui.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/completed43r2-ui.log.gz",
+      "sha256": "28ef55d91089e4dce6cee01c13619abdbeb7fbd28cef1deb2c6906675db046e7",
+      "stored_sha256": "0e1cae0239fe86bcc56c52d8d793021eaa22f32dcf463bb5b5adcb4c9e2fbcd6"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/events43-local.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/events43-local.log.gz",
+      "sha256": "e82d600f6a804327e1c30eb048122012febefee409d1f0bd1405ff8571f480cc",
+      "stored_sha256": "c6a9e110062a8e3037ea587a4a8101d4ac280433a8c2045e0b7676985e633dd5"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/events43-race.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/events43-race.log.gz",
+      "sha256": "cfc7b5bfe58c1f9aff6342d093f4acf7e8670d2d900f3481a6e4d9d795314ffa",
+      "stored_sha256": "ca38997533f5b1a8c016487c023174dd4318bf16f2e3ad8d32fc4b5d406887bd"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/platform43-build.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/platform43-build.log.gz",
+      "sha256": "76ccaf5954457a9362f8583ad0be5ede5d01517065be5388adc58836a43771db",
+      "stored_sha256": "d2112299f6878359c0d9e54c210e922ad90c209669df8cc34d0f1662e0c4680e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/platform43-result.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/platform43-result.json.gz",
+      "sha256": "6543bc9f4a22c27b73ec5e1ba4f66a4ea216e7c6a2536ba8e76827acaed9be2e",
+      "stored_sha256": "b26f0f23ba6a41e7bb7fcccbde5bb6cb58a3ca13b7fc44ca78b57f324c6fca53"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/platform43r2-build.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/platform43r2-build.log.gz",
+      "sha256": "236831c448167379d7df51c7b4177220ecd5591b3a6bdc6d9f60a64841542797",
+      "stored_sha256": "da37c69ee93741b620b4bd9a0485c3f76ae876830038e033a77e7e936589f462"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/platform43r2-result.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/platform43r2-result.json.gz",
+      "sha256": "bbc01c40c05c88f465e6d87a93bf151ac47073a1ba45395fb9f8002e57b7047e",
+      "stored_sha256": "96715182ea56d78a178f833a2084b2e6f16840bf2802549c0d6c961dec4e3409"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/run-completed43.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/run-completed43.py.gz",
+      "sha256": "42ea1fa26c65c0de4a5eddaa1a8d36c19cb603198b1d6686c2a984106fdddabd",
+      "stored_sha256": "5e9115e6b41631d6d635bbeb6ca8350ca9f1fb6813597b51d345d1a0b63e30da"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/run-completed43r2.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-event-identity-43-20261028/work/plugin-no-official-auth-20261026/run-completed43r2.py.gz",
+      "sha256": "ce94cd4a88558b1c087c07b71361a867872964daa6f3a1db4c86bdd2bf7a5d17",
+      "stored_sha256": "d55e4596bd709bb33443bf4e0850889025ac486730a9aca9e647cf88e924e6f3"
+    }
+  ]
+}

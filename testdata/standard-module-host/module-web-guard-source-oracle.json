@@ -1,0 +1,36 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/schemas/types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+    "app/schemas/message.py": "e5b2f504e2c5d470b74a33756e577e19ce3f9b5284f9a0e1e2d522d1e3955597",
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/chain/message.py": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+    "app/api/endpoints/message.py": "b635fee943af5d867532133d96550ac840c0dbac847fe5fde2e230c567191bbd"
+  },
+  "boundary": "Read-only fixed Web message guards. No target IM/AI implementation is added.",
+  "cases": [
+    {
+      "channel": "Web",
+      "processing_capability": false,
+      "calls": [],
+      "start": null
+    },
+    {
+      "channel": "Telegram",
+      "processing_capability": true,
+      "calls": [
+        "mark_message_processing_started",
+        "mark_message_processing_finished"
+      ],
+      "start": {}
+    },
+    {
+      "channel": "Web",
+      "endpoint_message_ids": [
+        null,
+        null
+      ],
+      "feedback_calls": []
+    }
+  ]
+}

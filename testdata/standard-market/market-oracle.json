@@ -1,0 +1,300 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": {
+    "app/utils/string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+    "app/core/plugin.py": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7"
+  },
+  "comparisons": [
+    {
+      "left": "1.9",
+      "right": "1.10",
+      "comparison": -1
+    },
+    {
+      "left": "1",
+      "right": "1.0.0",
+      "comparison": 0
+    },
+    {
+      "left": "2.0",
+      "right": "1.99.99",
+      "comparison": 1
+    },
+    {
+      "left": "1.0-rc",
+      "right": "1.0",
+      "comparison": -1
+    },
+    {
+      "left": "1.0-stable",
+      "right": "1.0-rc",
+      "comparison": 1
+    },
+    {
+      "left": "1.0-beta",
+      "right": "1.0-alpha",
+      "comparison": 1
+    },
+    {
+      "left": "1.0-beta.2",
+      "right": "1.0-beta.10",
+      "comparison": -1
+    },
+    {
+      "left": "1.0-alpha",
+      "right": "1.0-alpha2",
+      "comparison": 1
+    },
+    {
+      "left": "1.0-RC",
+      "right": "1.0-rc",
+      "comparison": -1
+    },
+    {
+      "left": "1.0+build.7",
+      "right": "1.0",
+      "comparison": -1
+    },
+    {
+      "left": "1.0+build.7",
+      "right": "1.0+build.8",
+      "comparison": -1
+    },
+    {
+      "left": "1.0001",
+      "right": "1.1",
+      "comparison": 0
+    },
+    {
+      "left": "1.0.0.1",
+      "right": "1.0.0",
+      "comparison": 1
+    },
+    {
+      "left": "9999999999999999999999999999999.1",
+      "right": "9999999999999999999999999999998.99",
+      "comparison": 1
+    },
+    {
+      "left": " vV1.2\n",
+      "right": "1.2",
+      "comparison": 0
+    },
+    {
+      "left": "",
+      "right": "1.0",
+      "comparison": 0
+    },
+    {
+      "left": "1.0",
+      "right": "",
+      "comparison": 0
+    }
+  ],
+  "merges": [
+    {
+      "sources": [
+        {
+          "id": "First",
+          "version": "1.9",
+          "repository": "https://owned.invalid/a"
+        },
+        {
+          "id": "First",
+          "version": "1.10",
+          "repository": "https://owned.invalid/b"
+        },
+        {
+          "id": "Second",
+          "version": "3.0",
+          "repository": "https://owned.invalid/c"
+        }
+      ],
+      "selected": [
+        {
+          "id": "First",
+          "version": "1.10",
+          "repository": "https://owned.invalid/b"
+        },
+        {
+          "id": "Second",
+          "version": "3.0",
+          "repository": "https://owned.invalid/c"
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "id": "First",
+          "version": "2.0",
+          "repository": "https://owned.invalid/a"
+        },
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "https://owned.invalid/b"
+        }
+      ],
+      "selected": [
+        {
+          "id": "First",
+          "version": "2.0",
+          "repository": "https://owned.invalid/a"
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "https://owned.invalid/a"
+        },
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "https://owned.invalid/b"
+        }
+      ],
+      "selected": [
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "https://owned.invalid/a"
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "https://owned.invalid/a"
+        },
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "https://owned.invalid/b"
+        }
+      ],
+      "selected": [
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "https://owned.invalid/a"
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "id": "First",
+          "version": "1.0.0",
+          "repository": "https://owned.invalid/a"
+        },
+        {
+          "id": "First",
+          "version": "1",
+          "repository": "https://owned.invalid/b"
+        }
+      ],
+      "selected": [
+        {
+          "id": "First",
+          "version": "1.0.0",
+          "repository": "https://owned.invalid/a"
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "id": "First",
+          "version": "1.0-alpha",
+          "repository": "https://owned.invalid/a"
+        },
+        {
+          "id": "First",
+          "version": "1.0-beta",
+          "repository": "https://owned.invalid/b"
+        },
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "https://owned.invalid/c"
+        }
+      ],
+      "selected": [
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "https://owned.invalid/c"
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "https://owned.invalid/a"
+        },
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "local://First?path=/owned/one"
+        }
+      ],
+      "selected": [
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "https://owned.invalid/a"
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "https://owned.invalid/a"
+        },
+        {
+          "id": "First",
+          "version": "2.0",
+          "repository": "local://First?path=/owned/one"
+        }
+      ],
+      "selected": [
+        {
+          "id": "First",
+          "version": "2.0",
+          "repository": "local://First?path=/owned/one"
+        }
+      ]
+    },
+    {
+      "sources": [
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "local://First?path=/owned/one"
+        },
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "local://First?path=/owned/two"
+        }
+      ],
+      "selected": [
+        {
+          "id": "First",
+          "version": "1.0",
+          "repository": "local://First?path=/owned/one"
+        }
+      ]
+    }
+  ]
+}

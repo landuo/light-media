@@ -1,0 +1,126 @@
+{
+  "scope": "36/37 increment: ordinary concrete event consumers plus43 download-page list/control repeated; unique whole-row status stays root matrix",
+  "source_backend_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/command.py:441-480 CommandExcute/ModuleReload consumers",
+    "app/scheduler.py:1204-1210 PluginReload consumer",
+    "app/chain/search.py:2675-2697 and app/chain/subscribe.py:3701-3741 SiteDeleted consumers",
+    "app/core/event.py:433-510 independent event submission/error handling"
+  ],
+  "target": [
+    "internal/app/plugin_original_core_event_consumers.go",
+    "internal/app/plugin_original_core_site_deleted.go",
+    "internal/app/core_site_references.go",
+    "internal/app/plugin_original_event_queue.go",
+    "internal/app/plugin_original_direct_dispatch.go",
+    "internal/app/plugin_original_event_resource.go",
+    "internal/app/plugin_original_event_registry.go",
+    "internal/app/plugin_original_command_ingress.go",
+    "internal/app/plugin_original_events.go",
+    "internal/app/plugin_standard_business_events.go"
+  ],
+  "source_contract": [
+    "Ordinary SDK Event.Send reaches the existing Command/Scheduler core consumers as well as plugin subscribers; command args are Python-whitespace joined and context/large integer user values preserved.",
+    "Native ingress/lifecycle that already performed the concrete core side effect marks only that private queue entry, preventing double consumption. No flag reaches SDK event payload or callback context.",
+    "PluginReload consumes truthy current plugin_id only, re-reads actual current get_service; ModuleReload invokes existing ordinary command initialization, re-reading source/clone get_command.",
+    "SiteDeleted Search/Subscribe are independent asynchronous consumers. Search commits IndexerSites; Subscribe commits RSSSites before per-subscription commits. True/1.0 equal numeric1, string1 does not; wildcard resets even orphan selections. Later update failure preserves earlier commits and emits ordinary event error.",
+    "SiteDeleted event changes selected references only, never deletes configured sites or invokes site network services. Native actual site-delete retains its existing atomic transaction and marks already consumed core work."
+  ],
+  "source_oracles": [
+    "testdata/standard-event-target/core-consumer-source-oracle.json",
+    "testdata/standard-event-target/site-deleted-consumer-oracle.json",
+    "testdata/plugin-module-no-official-auth-20261026/events36-core-platform5-list-source-oracle.json",
+    "testdata/standard-module-host/downloader-card-source-oracle.json"
+  ],
+  "source_oracle_counts": {
+    "core": 9,
+    "site": 8,
+    "site_partial_failure": 1,
+    "list": 10,
+    "list_optional_models": 2,
+    "frontend_source_size": 5
+  },
+  "actual_main": {
+    "kind": "actual cmd/server ordinary event core consumers, downloader list/control, actual Go SDK and owned native HTTP peers; initial reference/subscription/download rows and SQLite failure trigger are synthetic",
+    "server": {
+      "path": "/tmp/light-media-plugin-scope-dRZTQ91A/server-platform5-20261027-linux",
+      "sha256": "af4acf6e99d94fa471e2d7b360b9bdcf81da819f375def4af2f27d230f8b4d12"
+    },
+    "binary": {
+      "path": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-core-process-linux.test",
+      "sha256": "7ed4f5a7571f345c34bb5d38de04564bdd219849cf2b3e06c0a26d6cd41e160c"
+    },
+    "fixture_sha256": "df8e461c809e6188def1f4a2ecc5573d141f8bd13f4640fc19310bb093d8691e",
+    "environment": {
+      "TMPDIR": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-core-tmp",
+      "PLUGIN_PROCESS_SERVER_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/server-platform5-20261027-linux",
+      "OWNED_INPUT_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/services38-input-final-linux",
+      "OWNED_DOWNLOADER_CONTROL_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/downloader-control-linux",
+      "PLUGIN_PROCESS_DOWNLOADER_CONTROL_FIXTURE": "true",
+      "PLUGIN_PROCESS_DOWNLOADER_LIST_FIXTURE": "true",
+      "PLUGIN_PROCESS_CORE_EVENT_CONSUMERS_FIXTURE": "true",
+      "PLUGIN_PROCESS_CORE_EVENT_ORACLE": "/tmp/light-media-plugin-scope-dRZTQ91A/core-consumer-source-oracle.json",
+      "PLUGIN_PROCESS_SITE_CORE_ORACLE": "/tmp/light-media-plugin-scope-dRZTQ91A/site-deleted-consumer-oracle.json",
+      "OWNED_CORE_EVENT_OBSERVER_PROCESS_FIXTURE_BINARY": "/tmp/light-media-plugin-scope-dRZTQ91A/core-event-observer-linux",
+      "PLUGIN_PROCESS_DOWNLOADER_LIST_ORACLE": "/tmp/light-media-plugin-scope-dRZTQ91A/downloader-list-oracle.json",
+      "PLUGIN_PROCESS_EVENTS36_EVIDENCE_DIR": "/tmp/light-media-plugin-scope-dRZTQ91A/events36-core-evidence"
+    },
+    "command": [
+      "/tmp/light-media-plugin-scope-dRZTQ91A/events36-core-process-linux.test",
+      "-test.v",
+      "-test.run",
+      "^TestPluginServicesProductionCLI$",
+      "-test.timeout",
+      "90s"
+    ],
+    "exit_code": 0,
+    "elapsed_seconds": 3.271,
+    "log_sha256": "b5ba928c240eaf5048e5106179e0240faf1e295455a2469ebbb8ddf3ff5d633d",
+    "input_sha256": {
+      "core-event-observer-linux": "d73aefad4aabdcbb044aaa456e05d81270332aba6f02cdb63c1116456d44c30e",
+      "services38-input-final-linux": "d25fbd2f58764a73646744e48def08e706678aeea9ab40dd7e078b38720ca361",
+      "downloader-control-linux": "df8e461c809e6188def1f4a2ecc5573d141f8bd13f4640fc19310bb093d8691e",
+      "core-consumer-source-oracle.json": "f956ef64390145e8648005e0a004bd1656dea732cd80a1a0df9fc362e6913659",
+      "site-deleted-consumer-oracle.json": "113ace938784459c9dba9f82ba1a653991bf8ba36c2ced6779389d18e1522297",
+      "downloader-list-oracle.json": "f779ce80f135d51cf77083baa4ef3eba2c2716af21d7da3c7b56014a73a4802b"
+    }
+  },
+  "actual_test_elapsed_seconds": 3.09,
+  "actual_observer_pids": {
+    "OwnedCoreEventObserver": [
+      2644881
+    ],
+    "OwnedCoreEventObservertwin": [
+      2644891
+    ]
+  },
+  "actual_claims": [
+    "Actual source and clone Event.Send command.excute -> real existing Command -> exact source args/context/9007199254740993 user -> actual source+clone callback once each.",
+    "Actual Event.Send plugin.reload -> chosen observer clone get_service+1, other source unchanged; module.reload -> both actual get_command+1; independent process PIDs in raw trace.",
+    "Only synthetic initial reference/subscription rows are seeded while stopped. Actual main numeric SiteDeleted removes selected first site refs, preserving configured sites.",
+    "Actual clone wildcard with owned SQLite second-update failure commits settings/first subscription, preserves second subscription, publishes actual system.error; cold readback preserves partial state.",
+    "Existing actual downloader list/control gate repeats normal, scalar false, empty list, callback failure, ownership, real owned HTTP/data effect and cold state on platform5."
+  ],
+  "verification": {
+    "source_sdk": "core9 ordinary cases; Site8+partial failure, native deletion and core regressions4 roots4.864s",
+    "race": "Site2 roots15.097s; prior core/queue3 roots7.465s",
+    "list": "10 source cases +2 typed optional models and ordinary source card formatting, SDK6 roots5.715s; frontend3 behavior tests"
+  },
+  "necessary_adaptations": [
+    "Native opaque site IDs map to stable authenticated source numeric IDs. Existing native subscription Revision and obsolete-job invalidation accompany changed site refs.",
+    "Native records use insertion order for per-record cleanup, corresponding to the source SQLite integer-ID creation order; no source integer IDs are fabricated for native records.",
+    "Source Python object reference aliases are not transported; these consumers use read-only event fields/full JSON values. Go safe diagnostics and ordinary system.error replace fabricated Python traceback.",
+    "Processing-status objects and absent external transport/module-manager business are not recreated. Ordinary existing command and scheduler execution remain real."
+  ],
+  "remaining": [
+    "MetadataScrape/DownloadFileDeleted and SiteUpdated built-in consumers still require existing host mapping/proof; producer native-only evidence is insufficient.",
+    "Existing catalog, full-context download preflight/selection/Added and local transfer/scrape/storage host events remain tracked by the source scope annotations; no whole36/37 or43 count raised.",
+    "No browser verification for the new download source_torrent card branch yet; frontend build success is not that proof."
+  ],
+  "failures_retained": [
+    "events36-core-consumer-source-tests.jsonl.gz: invalid owned service declaration used func/every_sec instead of published SDK handler/input/interval_ms; corrected fixture only before first green.",
+    "events36-core-first-linux.log.gz: combined source oracle helper incorrectly decoded module string calls as command-call objects before sending any core event; selected the captured command case, no product change."
+  ],
+  "raw_manifest": "testdata/plugin-module-no-official-auth-20261026/events36-core-consumer-archive-manifest.json",
+  "cleanup": "CLI and SDK workers ended normally; owned peers and temporary DataDirs closed; owned failure trigger removed before cold final readback; no browserhold; no user media/site/downloader/old service touched; code uncommitted/unpushed"
+}

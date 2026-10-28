@@ -21,6 +21,13 @@ var reviewedTemplateSources = map[string]string{
 	"internal/notice/template_assignment.go": "87212b6267257f398163d86ab12cb5a793567574800d385fd8e50f7b4191dbe8",
 }
 
+// The plugin host shares the existing integer converter through this small
+// adapter. Keep the frozen 11-file/45-input core inventory intact; independently
+// pin the adapter as well. Plugin rating Pydantic oracles exercise this boundary.
+var pluginHostAdapterSources = map[string]string{
+	"internal/notice/source_integer.go": "5139fbe2ebcc901a417b14c25c17721f02a691a268f5e11bdd0bb942f880cad3",
+}
+
 // These receipts pin a pure behavior core. They do not assert App registration,
 // persistent routing/queue recovery, recipient grants or an actual delivery.
 func TestFormalNoticeSourceInventory(t *testing.T) {
@@ -68,6 +75,16 @@ func TestFormalNoticeSourceInventory(t *testing.T) {
 			t.Fatal("reviewed template source changed", name)
 		}
 	}
+	for name, want := range pluginHostAdapterSources {
+		b, err := os.ReadFile(filepath.Join(root, name))
+		if err != nil {
+			t.Fatal(err)
+		}
+		sum := sha256.Sum256(b)
+		if hex.EncodeToString(sum[:]) != want {
+			t.Fatal("plugin host adapter changed", name)
+		}
+	}
 	actual := 0
 	err = filepath.WalkDir(".", func(name string, entry os.DirEntry, err error) error {
 		if err != nil {
@@ -77,6 +94,9 @@ func TestFormalNoticeSourceInventory(t *testing.T) {
 			return nil
 		}
 		if name == "template_assignment.go" {
+			return nil
+		}
+		if _, ok := pluginHostAdapterSources["internal/notice/"+filepath.ToSlash(name)]; ok {
 			return nil
 		}
 		actual++

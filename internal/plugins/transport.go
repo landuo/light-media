@@ -334,6 +334,8 @@ func (s *wireSession) writeWorkerReply(frame Frame) error {
 
 func workerReplyFailure(code string) error {
 	switch code {
+	case "MODULE_RATE_LIMITED":
+		return ErrModuleRateLimited
 	case "TRANSPORT_MESSAGE_LIMIT":
 		return failure("message_limit")
 	case "TRANSPORT_FRAME_LIMIT":

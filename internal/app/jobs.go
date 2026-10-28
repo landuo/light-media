@@ -17,16 +17,18 @@ func enqueueTx(ctx context.Context, tx *sql.Tx, kind string, payload any, wf str
 	if e != nil {
 		return Job{}, e
 	}
-	var envelope map[string]any
+	// Preserve plugin DTO numbers while adding host trace fields. Decoding the
+	// whole envelope into interface values would round integers through float64.
+	var envelope map[string]json.RawMessage
 	if e = json.Unmarshal(b, &envelope); e != nil || envelope == nil {
 		return Job{}, bad("INVALID_JOB", "任务参数须为对象")
 	}
 	if trace, ok := ctx.Value(jobTraceKey{}).(jobTrace); ok {
 		if trace.Job != "" {
-			envelope["_parent_job_id"] = trace.Job
+			envelope["_parent_job_id"], _ = json.Marshal(trace.Job)
 		}
 		if trace.Request != "" {
-			envelope["_request_id"] = trace.Request
+			envelope["_request_id"], _ = json.Marshal(trace.Request)
 		}
 	}
 	b, e = json.Marshal(envelope)
@@ -173,12 +175,14 @@ func (a *App) worker(ctx context.Context) {
 			if errors.As(e, &api) {
 				code = api.Code
 			}
+			// The pinned transfer task ends on an explicit false result;
+			// only a new user action retries that rejected operation.
 			if code == "DOWNLOADER_DISABLED" {
 				state = "retry_wait"
 				runAt = time.Now().Add(time.Minute).Unix()
 			} else if code == "AUTOMATION_PAUSED" {
 				state = "waiting_paused"
-			} else if code != "PLUGIN_ADAPTER_UNAVAILABLE" && j.Attempt < 3 && !strings.Contains(code, "REVIEW") && !strings.Contains(code, "CONFLICT") && !strings.Contains(code, "INVALID") && !strings.Contains(code, "EXCLUDED") {
+			} else if code != "PLUGIN_ADAPTER_UNAVAILABLE" && code != "PLUGIN_TRANSFER_FAILED" && j.Attempt < 3 && !strings.Contains(code, "REVIEW") && !strings.Contains(code, "CONFLICT") && !strings.Contains(code, "INVALID") && !strings.Contains(code, "EXCLUDED") {
 				state = "retry_wait"
 				runAt = time.Now().Add(time.Duration(1<<j.Attempt) * 30 * time.Second).Unix()
 			}
@@ -311,7 +315,15 @@ func (a *App) jobAPI(w http.ResponseWriter, r *http.Request, p string) (any, err
 		if e != nil {
 			return nil, e
 		}
-		return map[string]any{"job": view, "events": events, "decisions": decisions}, nil
+		result := map[string]any{"job": view, "events": events, "decisions": decisions}
+		if j.Kind == "import" {
+			transfer, err := a.originalTransferJobResult(r.Context(), j)
+			if err != nil {
+				return nil, err
+			}
+			result["transfer"] = transfer
+		}
+		return result, nil
 	}
 	if len(parts) == 2 && r.Method == "POST" {
 		var result sql.Result
@@ -320,7 +332,7 @@ func (a *App) jobAPI(w http.ResponseWriter, r *http.Request, p string) (any, err
 			if j.State != "failed" && j.State != "cancelled" && j.State != "needs_review" {
 				return nil, bad("JOB_NOT_RETRYABLE", "只能重试失败、取消或待核对的任务")
 			}
-			result, e = a.Store.DB.ExecContext(r.Context(), `UPDATE jobs SET state='queued',attempt=0,generation=generation+1,run_at=?,error_code='',error_message='',updated_at=? WHERE id=? AND generation=? AND state=?`, time.Now().Unix(), now(), j.ID, j.Generation, j.State)
+			result, e = a.retryOriginalScrapeJob(r.Context(), j)
 		case "cancel":
 			if j.State == "succeeded" || j.State == "cancelled" || j.State == "failed" {
 				return nil, bad("JOB_TERMINAL", "该任务已结束")
@@ -334,6 +346,11 @@ func (a *App) jobAPI(w http.ResponseWriter, r *http.Request, p string) (any, err
 		}
 		if n, _ := result.RowsAffected(); n != 1 {
 			return nil, bad("JOB_CHANGED", "任务状态已变化，请刷新后操作")
+		}
+		if (j.Kind == "import" || j.Kind == "reorganize_cleanup" || j.Kind == "quality_cleanup") && parts[1] == "cancel" {
+			if e = a.closeOriginalScrapeBatch(r.Context(), originalScrapeBatchID(j), false); e != nil {
+				return nil, e
+			}
 		}
 		a.event(r.Context(), j, "INFO", "jobs", parts[1], "管理员更新了任务状态")
 		return map[string]bool{"accepted": true}, nil

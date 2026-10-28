@@ -17,15 +17,22 @@ import (
 // The parsed fields are frozen too, so later parser/configuration changes
 // cannot reinterpret an accepted download. Raw inputs stay private for audit.
 type downloadContextSnapshot struct {
-	SourceMeta   json.RawMessage          `json:"source_meta,omitempty"`
-	DownloadID   string                   `json:"download_id"`
-	DownloadKind string                   `json:"download_kind"`
-	Hash         string                   `json:"hash"`
-	Title        string                   `json:"title"`
-	Subtitle     *string                  `json:"subtitle"`
-	Options      releasemeta.Options      `json:"options"`
-	Metadata     *subscribegroup.Metadata `json:"metadata"`
-	Seasons      string                   `json:"seasons"`
+	Original            *originalDownloadContext `json:"original_context,omitempty"`
+	OriginalEpisodes    []int                    `json:"original_episodes,omitempty"`
+	OriginalOrigin      string                   `json:"original_origin,omitempty"`
+	OriginalDownloader  json.RawMessage          `json:"original_downloader,omitempty"`
+	OriginalLayout      json.RawMessage          `json:"original_layout,omitempty"`
+	OriginalDownloadDir string                   `json:"original_download_dir,omitempty"`
+	OriginalMaterialRef string                   `json:"original_material_ref,omitempty"`
+	SourceMeta          json.RawMessage          `json:"source_meta,omitempty"`
+	DownloadID          string                   `json:"download_id"`
+	DownloadKind        string                   `json:"download_kind"`
+	Hash                string                   `json:"hash"`
+	Title               string                   `json:"title"`
+	Subtitle            *string                  `json:"subtitle"`
+	Options             releasemeta.Options      `json:"options"`
+	Metadata            *subscribegroup.Metadata `json:"metadata"`
+	Seasons             string                   `json:"seasons"`
 }
 type downloadAddedSnapshot struct {
 	JobID        string                   `json:"job_id"`
@@ -218,11 +225,7 @@ func (p *PluginStore) downloadAddedSnapshotFrom(ctx context.Context, q PluginPro
 	return snapshot, nil
 }
 
-func (a *App) acceptNativeDownload(ctx context.Context, in NativeDownload, job Job) error {
-	source, err := a.loadDownloadContext(ctx, "native_download", in.ID, in.Hash)
-	if err != nil {
-		return err
-	}
+func (a *App) acceptNativeDownload(ctx context.Context, in NativeDownload, job Job, source *downloadContextSnapshot) error {
 	event := DomainEvent{EventID: domainEventID("download.accepted", "native_download:"+in.ID), Type: "download.accepted", WorkflowID: in.WorkflowID, JobID: job.ID, NativeDownloadID: in.ID}
 	if validMedia(in.MediaType, in.TMDBID) {
 		event.MediaID = in.MediaType + ":" + strconv.FormatInt(in.TMDBID, 10)
@@ -233,13 +236,28 @@ func (a *App) acceptNativeDownload(ctx context.Context, in NativeDownload, job J
 		return err
 	}
 	defer tx.Rollback()
+	fresh, err := standardBusinessFactIsNewTx(ctx, tx, event.EventID)
+	if err != nil {
+		return err
+	}
+	if source != nil {
+		if err = a.saveDownloadContextTx(ctx, tx, *source); err != nil {
+			return err
+		}
+	}
 	if err = txPut(ctx, tx, "native_download", in.ID, in); err != nil {
 		return err
 	}
 	if err = a.recordDownloadAddedTx(ctx, tx, event, snapshot); err != nil {
 		return err
 	}
-	return tx.Commit()
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+	if fresh && source != nil {
+		a.emitOriginalDownloadAdded(ctx, in.Hash, source, source.OriginalDownloader)
+	}
+	return nil
 }
 
 func (a *App) stageIntentDownload(ctx context.Context, in Intent, source downloadContextSnapshot) error {

@@ -1,8 +1,9 @@
 package app
 
 // Instance management belongs to the host, not individual plugin workers.
-// Implementation identity remains immutable: presentation versions never select
-// executable code. Clones get independent namespaces and actual SDK objects.
+// Presentation versions never select executable code. Exact-ID market updates
+// may replace a copied clone implementation; other identity changes are rejected.
+// Clones get independent namespaces and actual SDK objects.
 import (
 	"bytes"
 	"context"
@@ -11,20 +12,28 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"regexp"
+	"os"
+	"path/filepath"
 	"strings"
 	"unicode"
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/artifacts"
-	"light-media/internal/plugins/builtin"
 )
 
 const pluginInstanceSchema = `CREATE TABLE IF NOT EXISTS plugin_instance_metadata(
  instance_id TEXT PRIMARY KEY,sealed BLOB NOT NULL,
  FOREIGN KEY(instance_id) REFERENCES plugin_installations(instance_id));`
 
-var pluginCloneSuffix = regexp.MustCompile(`^[A-Za-z0-9]{1,20}$`)
+// The fixed frontend's alnum<=20 rule does not constrain the backend API.
+// The complete generated ID is checked separately against a safe Linux path.
+type pluginCloneSuffixIdentifier struct{}
+
+func (pluginCloneSuffixIdentifier) MatchString(value string) bool {
+	return value != "" && plugins.ValidInstanceID("P"+value)
+}
+
+var pluginCloneSuffix pluginCloneSuffixIdentifier
 
 type PluginCloneRequest struct {
 	Suffix      string `json:"suffix"`
@@ -83,7 +92,7 @@ func (p *PluginStore) instanceMetadata(ctx context.Context, q pluginOrganization
 
 func validatePluginCloneRequest(in PluginCloneRequest) error {
 	if !pluginCloneSuffix.MatchString(in.Suffix) {
-		return bad("INVALID_PLUGIN_CLONE", "分身后缀须为1至20位字母或数字")
+		return bad("INVALID_PLUGIN_CLONE", "分身后缀须非空且不能包含路径分隔符、控制符或不安全路径字符")
 	}
 	for _, field := range []struct {
 		value string
@@ -115,12 +124,9 @@ func (p *PluginStore) cloneOriginalClass(ctx context.Context, source string, req
 	if err := validatePluginCloneRequest(request); err != nil {
 		return out, err
 	}
-	target := source + strings.ToLower(request.Suffix)
+	target := source + plugins.OriginalPluginLower(request.Suffix)
 	if !pluginStorageID.MatchString(target) {
 		return out, bad("INVALID_PLUGIN_CLONE", "分身编号超过长度限制")
-	}
-	if _, _, exists := builtin.Lookup(target); exists {
-		return out, bad("PLUGIN_CLONE_CONFLICT", "分身编号与内置插件编号冲突")
 	}
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
@@ -216,6 +222,9 @@ func (p *PluginStore) cloneOriginalClass(ctx context.Context, source string, req
 	out.DesiredEnabled = true
 	out.Generation = 1
 	out.Installed = true
+	if err = p.rebindOriginalDeletedCloneTx(ctx, tx, source, out); err != nil {
+		return out, err
+	}
 	if err = p.installTx(ctx, tx, out); err != nil {
 		return out, err
 	}
@@ -250,19 +259,61 @@ func (p *PluginStore) cloneOriginalClass(ctx context.Context, source string, req
 	return out, nil
 }
 
+// An exact-ID market update can replace a clone's original implementation ID.
+// Once that clone has actually been uninstalled and its code alias removed,
+// creating the same clone again must bind the newly copied source package.
+// The ordinary Install API still cannot change an existing identity.
+func (p *PluginStore) rebindOriginalDeletedCloneTx(ctx context.Context, tx *sql.Tx, source string, next PluginInstallation) error {
+	var previous string
+	var installed bool
+	err := tx.QueryRowContext(ctx, `SELECT plugin_id,installed FROM plugin_installations WHERE instance_id=?`, next.InstanceID).Scan(&previous, &installed)
+	if errors.Is(err, sql.ErrNoRows) || err == nil && previous == next.PluginID {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	conflict := bad("PLUGIN_INSTANCE_CONFLICT", "插件实例已属于其他插件")
+	if installed || previous != next.InstanceID {
+		return conflict
+	}
+	meta, err := p.instanceMetadata(ctx, tx, next.InstanceID)
+	if err != nil {
+		return err
+	}
+	if meta.SourceInstanceID != source {
+		return conflict
+	}
+	var sealed []byte
+	if err = tx.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, originalPluginAliasKind, next.InstanceID).Scan(&sealed); err != nil {
+		return conflict
+	}
+	raw, err := p.unseal(originalPluginAliasKind, next.InstanceID, "main", sealed)
+	if err != nil {
+		return err
+	}
+	var alias originalPluginCodeAlias
+	if json.Unmarshal(raw, &alias) != nil || alias.Instance != next.InstanceID || alias.Plugin != previous || alias.Present {
+		return conflict
+	}
+	_, err = tx.ExecContext(ctx, `UPDATE plugin_installations SET plugin_id=? WHERE instance_id=? AND plugin_id=? AND installed=0`, next.PluginID, next.InstanceID, previous)
+	return err
+}
+
 func (p *PluginStore) cloneOrganizationMemberTx(ctx context.Context, tx *sql.Tx, source, target string) error {
 	org, err := p.organization(ctx, tx)
 	if err != nil {
 		return err
 	}
-	for name, value := range org.Folders {
-		members, e := pluginFolderMembers(value)
+	for _, name := range originalFolderKeys(org) {
+		value := org.Folders[name]
+		members, e := pluginFolderRawMembers(value)
 		if e != nil {
 			return e
 		}
 		found := false
 		for _, member := range members {
-			if member == source {
+			if originalFolderMemberIs(member, source) {
 				found = true
 				break
 			}
@@ -270,7 +321,16 @@ func (p *PluginStore) cloneOrganizationMemberTx(ctx context.Context, tx *sql.Tx,
 		if !found {
 			continue
 		}
-		members = append(members, target)
+		if name == "" {
+			return nil
+		}
+		for _, member := range members {
+			if originalFolderMemberIs(member, target) {
+				return nil
+			}
+		}
+		encodedTarget, _ := json.Marshal(target)
+		members = append(members, encodedTarget)
 		list, e := json.Marshal(members)
 		if e != nil {
 			return e
@@ -302,17 +362,21 @@ func (a *App) pluginCloneHTTP(w http.ResponseWriter, r *http.Request, source str
 	// The original FastAPI endpoint is synchronous (def); client disconnect
 	// does not cancel the already accepted method sequence.
 	ctx := context.WithoutCancel(r.Context())
-	a.pluginLifecycleMu.Lock()
-	defer a.pluginLifecycleMu.Unlock()
+	a.pluginOriginalOperationMu.Lock()
+	defer a.pluginOriginalOperationMu.Unlock()
+	if !a.admitOriginalBackground() {
+		return nil, &APIError{"APP_STOPPING", "服务正在停止", http.StatusServiceUnavailable}
+	}
+	defer a.wg.Done()
 	if _, exists := a.pluginOriginalClasses.Load(source); !exists {
 		return map[string]any{"success": false, "message": "原插件 " + source + " 不存在"}, nil
 	}
 	if e := validatePluginCloneRequest(request); e != nil {
 		return map[string]any{"success": false, "message": e.Error()}, nil
 	}
-	target := source + strings.ToLower(request.Suffix)
-	if known, _, exists := builtin.Lookup(target); exists && known.PluginID == target {
-		return map[string]any{"success": false, "message": "分身插件 " + target + " 已存在"}, nil
+	target := source + plugins.OriginalPluginLower(request.Suffix)
+	if !pluginStorageID.MatchString(target) {
+		return map[string]any{"success": false, "message": "完整分身标识不是安全的Linux目录名，或超过255个UTF-8字节"}, nil
 	}
 	if retained, e := a.pluginStore.Installation(ctx, target); e == nil {
 		present, e := a.originalCodeAliasPresent(ctx, retained)
@@ -343,6 +407,18 @@ func (a *App) pluginCloneHTTP(w http.ResponseWriter, r *http.Request, source str
 			return map[string]any{"success": false, "message": copyErr.Error()}, nil
 		}
 	}
+	if implementation.External {
+		if _, deriveErr := artifacts.DeriveInstalledFrontend(ctx, a.pluginPackageRoot(), target, func(m plugins.Manifest, c string) error {
+			if m.PluginID != sourceInstallation.PluginID || m.Version != sourceInstallation.Version {
+				return bad("PLUGIN_IMPLEMENTATION_MISMATCH", "来源代码版本不匹配")
+			}
+			return validatePluginArtifactContract(m, c)
+		}); deriveErr != nil {
+			cleanupErr := os.RemoveAll(filepath.Join(a.pluginPackageRoot(), target))
+			return map[string]any{"success": false, "message": errors.Join(deriveErr, cleanupErr).Error()}, nil
+		}
+	}
+
 	cached, _, cacheErr := a.readOriginalBaseConfigForInit(ctx, source)
 	if cacheErr != nil {
 		return map[string]any{"success": false, "message": cacheErr.Error()}, nil

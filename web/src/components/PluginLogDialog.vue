@@ -16,7 +16,7 @@ import { api, apiURL, errorText } from '../api';
 import type { PluginCard } from '../features/plugin-forms';
 import {
   pluginLogLevels,
-  pluginLogEntry,
+  pluginLogEntries,
   appendPluginLogs,
   groupPluginLogs,
   filterPluginLogGroups,
@@ -126,10 +126,10 @@ function connect() {
     if (!active || stream !== current || paused.value) return;
     try {
       if (event.data.length > 20 << 10) return;
-      const entry = pluginLogEntry(JSON.parse(event.data), props.plugin.instance_id);
-      if (!entry) return;
+      const incoming = pluginLogEntries(JSON.parse(event.data), props.plugin.instance_id);
+      if (!incoming.length) return;
       lastID = event.lastEventId;
-      buffer.push(entry);
+      buffer.push(...incoming);
       if (buffer.length >= 600) flush();
       if (!flushTimer) flushTimer = setTimeout(flush, 80);
     } catch {
@@ -163,11 +163,12 @@ async function reloadHistory() {
   try {
     const result = await api(endpoint);
     if (!active) return;
-    const incoming = (result.history?.entries ?? [])
-      .map((value: any) => pluginLogEntry(value, props.plugin.instance_id))
-      .filter((value: PluginLogEntry | null): value is PluginLogEntry => !!value)
-      .reverse();
-    entries.value = incoming;
+    const incoming = [...(result.history?.entries ?? [])]
+      .reverse()
+      .flatMap((value: any) => pluginLogEntries(value, props.plugin.instance_id));
+    // Fixed /system/logging's default initial history is the last 50 physical
+    // nonempty lines, not 50 arbitrarily multiline structured records.
+    entries.value = incoming.slice(-50);
     lastID = result.resume_id ?? '';
     gap.value = result.history?.gap ? '日志采集或保留历史存在缺口，可打开完整日志查看现有记录' : '';
     error.value = '';

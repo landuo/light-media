@@ -1,0 +1,129 @@
+{
+  "accepted_increment": true,
+  "complete": false,
+  "indices": [
+    36,
+    37,
+    43
+  ],
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "mapping": [
+    {
+      "source": [
+        "app/chain/__init__.py:298-470,1606-1621",
+        "app/chain/download.py:1586-1725"
+      ],
+      "behavior": "A list plugin result continues through clone and native providers. Native DTO does not replace list. Native exception sends system error before empty-list truth or truthy-TV-list rejection. Terminal False skips native.",
+      "target": [
+        "internal/app/plugin_original_media_exists.go:resolveOriginalSubscriptionExistence/originalNativeSubscriptionExistence",
+        "internal/app/plugin_original_error.go",
+        "internal/app/subscription_runtime.go:checkSubscription"
+      ],
+      "evidence": [
+        "testdata/standard-module-host/media-exists-dispatch-source-oracle.json:10 actual dispatcher+caller replays",
+        "TestOriginalMediaExistsListInvokesNativeFixedSource:actual SDK and real SQLite table fault",
+        "TestPluginServicesProductionCLI:empty list0/3,truthy list caller error,clone restore/completion/cold",
+        "IAB77 actual check with missing native table:system error notification,job succeeds,0/3→clone2/3→cold2/3"
+      ]
+    }
+  ],
+  "results": {
+    "source_cases": 10,
+    "related_sdk_seconds": 22.972,
+    "related_race_seconds": 46.199,
+    "linux_cli_seconds": 2.91,
+    "linux_browser_gate_seconds": 301.6,
+    "binaries": [
+      {
+        "name": "server-platform40-20261027-linux",
+        "sha256": "d55637c010f97e22fa81d56c242392c622608e9ae4eaa152b209155c7c7689ba",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform40-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3722,
+        "changed": [],
+        "elapsed_seconds": 3.86
+      },
+      {
+        "name": "process-platform40-20261027-linux.test",
+        "sha256": "87fc8da6eb5368b50c18ea2b20122f80fb2d068f2a2b0e02b0e2b092f35c165a",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform40-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4191,
+        "changed": [],
+        "elapsed_seconds": 7.51
+      }
+    ],
+    "compiler_inputs": [
+      3722,
+      4191
+    ],
+    "inputs_changed": [],
+    "browser": {
+      "passed": true,
+      "actual_fault_job": "job_D-Ln_iRJ4-m5siHl7ppflU9k",
+      "fault_job_state": "succeeded",
+      "native_fault": "real test SQLite table temporarily renamed, restored before cold restart",
+      "browser_tab": 77,
+      "progress": [
+        2,
+        0,
+        2,
+        2
+      ],
+      "native_error_notification_seen": true,
+      "main_pid_before": [
+        649513
+      ],
+      "main_pid_after": [
+        654349
+      ],
+      "worker_pids_before": [
+        649535,
+        649542
+      ],
+      "worker_pids_after": [
+        654372,
+        654378
+      ],
+      "cold_module_queries": 0,
+      "fabricated_assets_slots_intents": 0,
+      "initial_settings_screenshot": "01-before is login redirect only, not progress proof"
+    },
+    "cleanup": "Native table restored; actual uninstall/API404 and TempDir removed; IAB77 and tunnel34457 closed."
+  },
+  "adaptations": [
+    "Native existence reuses the existing owned local inventory. Only list continuation now invokes its native reader here; returned native DTO is ignored by the same source list-merging rule. Existing None fallback and terminal DTO branches stay with their prior inventory/frozen-observation boundaries.",
+    "Native SQL failure is delivered by the existing ordinary system-error channel with 文件整理发生了错误 and the existing sanitized Go diagnostic contract; no raw SQL internals/stacktrace are rendered.",
+    "Synthetic missing-table fault temporarily also affected the ordinary GET subscriptions inventory view. The original card stayed visible; restoring the owned table and using the same page check refreshed to0/3. The actual check job succeeded under the source empty-list semantics, proven separately.",
+    "Browser screenshots are unmodified JPEG bytes under historical .png names, accompanied by DOM, real API, jobs and SQLite record counts. 01-before only shows the normal post-login settings redirect and is not progress evidence. Frontend was unchanged."
+  ],
+  "red_green": [
+    "Four actual SDK cases showed missing native system-error effects for list results. The10-case oracle runs actual fixed dispatcher+DownloadChain, not a stubbed new expectation; corrected native continuation then all related cases pass."
+  ],
+  "remaining": [
+    "Full ordinary host/event applicability audit.",
+    "Directory full planner/extras/ambiguity and Blu-ray directory-unit publication remain unaccepted.",
+    "media_files host applicability; no new library UI introduced.",
+    "Whole36/37/43/50 remain pending."
+  ],
+  "artifact_manifest": "testdata/plugin-module-no-official-auth-20261026/media-exists-list-40-20261028/manifest.json",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

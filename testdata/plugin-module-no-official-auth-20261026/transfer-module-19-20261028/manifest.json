@@ -1,0 +1,275 @@
+{
+  "date": "2026-10-28",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_replay": "testdata/standard-module-host/transfer-module-source-oracle.json,12 actual fixed wrapper/dispatcher/FileManager and task consumption cases",
+  "main": {
+    "name": "server-platform19-20261027-linux",
+    "sha256": "468d408d336dc069dc9363100b6c01a0a7dd0b662c19c60b2e951b9ff707cb56",
+    "command": [
+      "go",
+      "build",
+      "-trimpath",
+      "-o",
+      "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform19-20261027-linux",
+      "./cmd/server"
+    ],
+    "inputs": 3699,
+    "changed": [],
+    "elapsed_seconds": 3.98
+  },
+  "test": {
+    "name": "process-platform19-20261027-linux.test",
+    "sha256": "74c67f43fb29557c8127729b0fd88644533c2c73ac855781bd30d6b687c44141",
+    "command": [
+      "go",
+      "test",
+      "-c",
+      "-o",
+      "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform19-20261027-linux.test",
+      "./internal/app"
+    ],
+    "inputs": 4142,
+    "changed": [],
+    "elapsed_seconds": 7.41
+  },
+  "worker_sha256": "967bbcf32943005c9ae0dedbc19f2652a4cb939e43ea9510d42b96305453651e",
+  "front_tests": 546,
+  "current_race_seconds": 150.909,
+  "actual_linux_cli_seconds": 1.88,
+  "actual_iab52_driver_seconds": 410.68,
+  "browser_result": "PASS for actual false→form recover→cold→new operation succeeds, true physical inode/hash, historical single successful source row, second cold no replay; full scope43 remains open",
+  "assertions": "transfer-module19-browser-assertions.json.gz",
+  "cleanup": "actual source+clone uninstall/API404, parent services cleanup and TempDir cleanup passed; IAB52 and tunnel34433 closed",
+  "artifacts": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/build-platform19.py.gz",
+      "sha256": "20d37f1970df227e1ae138c3a17e4b856fb116529b78676959d39cc9b3196348",
+      "raw_sha256": "d6829e43f0d78153cc95b3690f76a55776c69be9b64bb0fab0e028bb45631a72"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/platform19-result.json.gz",
+      "sha256": "b5c3916fd4e8851ffa9d83a911222416724b5155c9e0cec4087879c0fcf0ffd9",
+      "raw_sha256": "128ebfa63d99c81a60310bfa35e480eb8df13725614e9844e5cd0551515f1577"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/process-platform19-20261027-linux.test.inputs.json.gz",
+      "sha256": "35da444adae3938b272ec0214714e1b9484044ede4c16ac0136c96db49c0ae69",
+      "raw_sha256": "f798f99a94392c25af1a4bcf7f0a61ad2af7f642a1772cc395e5c8ca6d4864d8"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/run-transfer-module19.py.gz",
+      "sha256": "4926c317e1537c8096432e42fef9f357db9fa83b8b36411bebfc0c8dda3ff148",
+      "raw_sha256": "ccd0049e577b1cd1c2024d7cd228a5a12f73b2ad3fb42b465de5208beebfcac9"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/server-platform19-20261027-linux.inputs.json.gz",
+      "sha256": "336912f2d017c3dba5850252f4139980347b2df89b8785e843a1578584bb8232",
+      "raw_sha256": "ffc10fbb032e03d6fe7efd3b9caa4678bf5f462492911b880c3a1a7fe17dc1bc"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/transfer-module-frozen-disabled-red.log.gz",
+      "sha256": "32d45d2c453f45656f78c512418e3f8b168830df2d38a77db768df1f58c804ce",
+      "raw_sha256": "bb0c9e1563b29f13c2d3d2fd5b22ecf26c9351691a25f2ba9950b92c5b0a07a2"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/transfer-module-frozen-reservations-green.log.gz",
+      "sha256": "500eead7a83e2a1617b19cbc4b9de70175efacd8bf2fc1311f8f47e75568a64f",
+      "raw_sha256": "c736a3a175c9faadc9dd39f94de587bd6f6ff842c667ef233b86acd154ed2bb2"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/transfer-module-reservation-worker-green.log.gz",
+      "sha256": "6db39319ac259a3bcfb75bb39ce2e5b0984e2646a4a37c10647c772c9a2b0aaa",
+      "raw_sha256": "96af30cc6c60019b30944e117c926564f9ab268bdabe2ef2cfbe92baeba86562"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/transfer-module-reservation-worker-red.log.gz",
+      "sha256": "a054716d9ecd6ad26c00c8fa10056e253514f3a60b2334f408586e3f6daa94b7",
+      "raw_sha256": "7aa79512ce049457d9ff3ee21ec891cdb2da47015bd4e616a7866de8dde39a4f"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/browser/cold-history-loading.txt.gz",
+      "sha256": "bd168dfeaf298d2b60ecd33525adb4d4c30876aaa40542e43abcbe188f21f673",
+      "raw_sha256": "1a28fad7cc20c76980b324d1e8cfd7d453a29cf279cf82ba9049ee21a3f7e870"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/browser/cold-history.png",
+      "sha256": "8de13cef18e304cc46aa6e2c145213b647e136f1e484dbe69bcb8e692356a980",
+      "raw_sha256": "8de13cef18e304cc46aa6e2c145213b647e136f1e484dbe69bcb8e692356a980"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/browser/cold-history.txt.gz",
+      "sha256": "8b38c8b22c622556a2d81d1b350e8657aa6dc1e66d3a9e9c093afebf6a71ff79",
+      "raw_sha256": "2fb5728d6421f9e96f86d8e89f8fe3985074629987233f21c087f28acab7cad7"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/browser/failure.png",
+      "sha256": "77dc31995d204ecd0734f5d2d008bc57bee012391c43408c247deeeb246006be",
+      "raw_sha256": "77dc31995d204ecd0734f5d2d008bc57bee012391c43408c247deeeb246006be"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/browser/failure.txt.gz",
+      "sha256": "30762bd85605202f1be498de363a9184e2ecaba264d08bbce1073b368ee0bcff",
+      "raw_sha256": "ede352bd924449f40b074acefd7a3d583e1a087c702cbdd30d3e6dafbcc029df"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/browser/form.txt.gz",
+      "sha256": "5a9bf875ef298fd5aedb9c9ea30544c57e70d4dd896efc5fa696f1b51b52e194",
+      "raw_sha256": "9c43fef5be8bda514e808493289c6c712ed5079827765fe8c16109a6e171a06f"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/browser/history-filtered.txt.gz",
+      "sha256": "05d0be71a2b7dfb44e183f2f58bfc7e0757b90721901fefbda752a49813a1691",
+      "raw_sha256": "39f71e93d3f7f2e3d08d499b7bcec21b3be1075b4812d5627a5bc0012aadde59"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/browser/history-success.png",
+      "sha256": "22e663b1cef91619507044a17ea0124288a97af9b4909a550fd9c45fd3a7d48d",
+      "raw_sha256": "22e663b1cef91619507044a17ea0124288a97af9b4909a550fd9c45fd3a7d48d"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/browser/history-success.txt.gz",
+      "sha256": "7c47d09317383a06b98ffc187e2be2429bb8c42b7d936b18fcdf6fbdd1a4c31f",
+      "raw_sha256": "32781024fdc9022ca79ac1fdee099a14a896d3546c88fdb4faf0d7672491403c"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/browser/history.txt.gz",
+      "sha256": "bd83c30c0b44a3ffacb46dc6380375b2e26d3ec010f6e65a4696e8189c6d569c",
+      "raw_sha256": "6987b71f7270a656a8694dcb13e8f9d96765aa4e2c858d05d8d69bd7354b0a20"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/browser/retry-after-cold.txt.gz",
+      "sha256": "38e3dc010bb9977ea3c2268354fe75eed840f006b35c3c8504082b2be3891d0b",
+      "raw_sha256": "5dbfc858b5995024e22763b9509f175b436e3836bc464e3c5007889995156342"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/browser/source-list.txt.gz",
+      "sha256": "e5b722ae98a1da0f63a26adae89ef7837723cbbb7051eea0dc2921b2283f3faa",
+      "raw_sha256": "fb558f3a55c33c537c207c3411e3184bc0f8f65a4e2cc556bb1927f7da7da9b5"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/browser/success.png",
+      "sha256": "44f373f3b1e83c13537ab78c5e96a000c4b1dfeb3d620cdcc78a070718d7f943",
+      "raw_sha256": "44f373f3b1e83c13537ab78c5e96a000c4b1dfeb3d620cdcc78a070718d7f943"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/transfer-module19-current-race.log.gz",
+      "sha256": "5d715c84cf6c0b2d69b3651d20e5abd4d263bddf3fc7810010fea74c7da89c4c",
+      "raw_sha256": "4c97eaabf00debf9f2a70a35942a319e7fd4dfbf2586694d39eef656e0550b02"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/transfer-module19-front-build.log.gz",
+      "sha256": "54011bc4df44ca2312a2dc1f1e7fe7e953934a4f6ef7c086b0950b2aec73cb4c",
+      "raw_sha256": "f7736126129af12836f55604dda6a7dfa80064030a1b6af7a4a91eaec6ddd268"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/transfer-module19-front-inputs.json.gz",
+      "sha256": "a6fa735366fd27445f8e7075ecddd67cee9d620f401f58029d52e5c7474e1cc5",
+      "raw_sha256": "f2e2182ca7d36c5f54d9ce76b2b7a16b833b3f763768a5b99b2112a09f4b4c60"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/transfer-module19-front-tests.log.gz",
+      "sha256": "7c7d33ec0fff1be8b9209c6ed1d4108ddc81fbf45bc9684b08c9bfa8f4d3bdbc",
+      "raw_sha256": "a974534bc04e3614c8a4a23fb80d19f0f459b511119f9069855123123a1416ce"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/transfer-module19-observe.py.gz",
+      "sha256": "4e5d40c3ab80d244598a4582b68da9d442f4b45efd11ce9dd916462481ac7c00",
+      "raw_sha256": "b34820efed7fce568eab12b1e138534bc209fe2372468ab7a1ed182bcb6a2d3a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-browser-assertions.json.gz",
+      "sha256": "8b6c0ac916f34c569b0bd7c1325e62d1b669252eb192a7f9612d50bd4b90a9a6",
+      "raw_sha256": "9d03ca23f34982aa9b0b395187d492bfd05a50687fa614b05d9727f90e968531"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-cli-evidence/events36-service-process.log.gz",
+      "sha256": "f0c3a66d58edfec11d5651de36785533265a114681a71902881efdd7f5861c31",
+      "raw_sha256": "d11d05c9b50c50f9aea45096d49e52d20a9a3cb74752b103ed14a24296aeab2b"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-cli-evidence/transfer-module-real-main.json.gz",
+      "sha256": "f2ad7deeaedaf058ab22740b8752de48b16408e459b63c74d09b3ae7391d5d45",
+      "raw_sha256": "7e2c6f304a6070e54f47735c724111776ae82bbdf17ea8ff919e7b396f5f30d1"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-cli.log.gz",
+      "sha256": "fe5fa505abdfb0b7218d1c07bf670a9208cb7652d93094584f5087ca202daadd",
+      "raw_sha256": "000e0999e945b7abb29084fed9bf5f4f7ce0ab3ab88c6b6ea37f698fb544918d"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-observe.py.gz",
+      "sha256": "4e5d40c3ab80d244598a4582b68da9d442f4b45efd11ce9dd916462481ac7c00",
+      "raw_sha256": "b34820efed7fce568eab12b1e138534bc209fe2372468ab7a1ed182bcb6a2d3a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-observed-before.json.gz",
+      "sha256": "e48970a9b06660a905b8796318d49481146506186f49cbc8f47af0f24e40cbe9",
+      "raw_sha256": "9ab900aa09dd020efc3d822824efc6bc1d648454438207f79e71b1ef502eacdb"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-observed-cold-after-success.json.gz",
+      "sha256": "1bf8687ee2de27968d4131f8965dd37089a711072083da940c78b735e0cb85dd",
+      "raw_sha256": "e3195bfe13b59a1585810de122c66f37abcd2371ca9b51a7868203d24bdb524a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-observed-cold-before-ui.json.gz",
+      "sha256": "6e984f54bbf0679c7580ad366f412d495456dfe1c8aba60632265b165929f1d2",
+      "raw_sha256": "6caefbdfb449833e25246ab20f04b808b40238091389e8b81593e6d8f685592b"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-observed-fail.json.gz",
+      "sha256": "f91669ab580ca89fb13e22235ec8fd14f628974dc4d51d95e5a7a0de0b571a3c",
+      "raw_sha256": "aaaaeb4acaffeb3af5819c04b617286d5815843c8f6f605d4efbbf782a89d4de"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-observed-failed-readback.json.gz",
+      "sha256": "dbdddc6bc469ac4517245182b43890b15adf3bc9894d0c75fcc8b66163770914",
+      "raw_sha256": "c6087c0421033521ddae531f5cebba26a05cd6e497ed651e62dbab3828ae35df"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-observed-restore.json.gz",
+      "sha256": "8297279eb18c2613aa6771a12815ab453a3fe6be93cc8c48601b8ceb1934c516",
+      "raw_sha256": "b140254ed8e11bea5a27db6893d1fe7e6355586814dabd0a06847bf4131c8dff"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-observed-success.json.gz",
+      "sha256": "974b06c99edffa36f87ec2c787a1d629b0f0817b1dab4ae8c52dc3532eb3a4f2",
+      "raw_sha256": "fd56b87d79eeb4c46c97b8925e15921a116259ed69fea3b1d2e060a417c91351"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-ui-evidence/events36-service-process.log.gz",
+      "sha256": "9541aeed0c8c23504bde99b1a6a2c6332b8460b61480f02d0b09a3bf49788c84",
+      "raw_sha256": "3cc0dbc3e74eefed277c1e4c91265c1a665f2988d8b026e7d1955058fff9759d"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-ui-evidence/transfer-module-real-main.json.gz",
+      "sha256": "d1ae1fc8ba0022602b72e48e64cfe36fc7c8769c42528700906724c0c80858aa",
+      "raw_sha256": "cb5426997f4356939d5c6a4a6dcd403b7202375e615c6869fbb7a713f2ebcaea"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-ui-state.json.gz",
+      "sha256": "ef589bec86e42832c162ebbc45922dc0e7fb9afffb48f48b3d1e86f1f192e0a0",
+      "raw_sha256": "c87f5ccbffd3961c0e36d175d934422148720fbbcae10aa9dd4caf76e458bb34"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-ui-state.json.done.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-ui-state.json.restart.done.gz",
+      "sha256": "8daad50dc94975f4c7da7bc961e4f9348a7a0607db1768eed6ba841a479e86ca",
+      "raw_sha256": "9bb2e99b63ac23910360b0d832fd4c44b123894957eee4d2d6733719346c2dd3"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/transfer-module19-ui.log.gz",
+      "sha256": "25b92af494ea9e8679debabc00c6131de291d4de9ab926d8c65c0f42907b14b5",
+      "raw_sha256": "300fe6c962e93c6c4c1d6fca129ad11ef7f2393e80b767dbc04f5350adf13c29"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/transfer-module-19-20261028/local/verify-transfer-module19-proof.py.gz",
+      "sha256": "370c1ed244d9769d8109fc1a0bde8e47914f0cb63987b99c639b04cf68c954ed",
+      "raw_sha256": "bad63484b0b6fed0b0aff39034ced17ab8f8255701cc6ac21e1e89ee5afacd07"
+    }
+  ]
+}

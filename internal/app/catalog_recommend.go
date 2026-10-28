@@ -76,13 +76,48 @@ func (a *App) catalogRecommendPreferences(ctx context.Context) (RecommendPrefere
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return RecommendPreferences{}, err
 	}
-	return normalizeRecommendPreferences(stored)
+	builtin := RecommendPreferences{Enabled: map[string]bool{}}
+	known := map[string]bool{}
+	for _, source := range catalog.RecommendSources() {
+		known[source.ID] = true
+		if value, ok := stored.Enabled[source.ID]; ok {
+			builtin.Enabled[source.ID] = value
+		}
+	}
+	out, err := normalizeRecommendPreferences(builtin)
+	if err != nil {
+		return out, err
+	}
+	// Fixed /user/config/Recommend retains keys for temporarily absent plugin
+	// sources. Reading preferences must not broadcast another source event.
+	for key, value := range stored.Enabled {
+		if !known[key] {
+			out.Enabled[key] = value
+		}
+	}
+	return out, nil
 }
 
 func (a *App) saveCatalogRecommendPreferences(ctx context.Context, in RecommendPreferences) (RecommendPreferences, error) {
-	out, err := normalizeRecommendPreferences(in)
+	base := RecommendPreferences{Enabled: map[string]bool{}}
+	extraEnabled := map[string]bool{}
+	known := map[string]bool{}
+	for _, source := range catalog.RecommendSources() {
+		known[source.ID] = true
+	}
+	for key, value := range in.Enabled {
+		if known[key] {
+			base.Enabled[key] = value
+		} else {
+			extraEnabled[key] = value
+		}
+	}
+	out, err := normalizeRecommendPreferences(base)
 	if err != nil {
 		return RecommendPreferences{}, err
+	}
+	for key, value := range extraEnabled {
+		out.Enabled[key] = value
 	}
 	if err = a.Store.Put(ctx, "ui_preferences", "catalog_recommend", out); err != nil {
 		return RecommendPreferences{}, err
@@ -144,8 +179,16 @@ func (a *App) catalogRecommendAPI(r *http.Request) (any, error) {
 	defer explorer.CloseIdleConnections()
 	ctx := r.Context()
 	var result catalog.ExplorePage
-	cachedAt, err := a.cached(ctx, recommendCacheKey(id, page, time.Now()), time.Hour, &result, func() (any, error) {
-		return explorer.Recommend(ctx, id, page)
+	method, kwargs := originalCatalogRecommendModule(id, page)
+	cachedAt, err := a.cachedOriginalRecommendation(ctx, recommendCacheKey(id, page, time.Now()), &result, func() (catalog.ExplorePage, error) {
+		if id == "bangumi_calendar" {
+			full, err := a.originalCatalogFeed(ctx, method, kwargs, 1, func() (catalog.ExplorePage, error) { return explorer.BangumiCalendarModule(ctx) })
+			if err != nil {
+				return full, err
+			}
+			return originalCatalogCalendarPage(full, page, 30), nil
+		}
+		return a.originalCatalogFeed(ctx, method, kwargs, page, func() (catalog.ExplorePage, error) { return explorer.Recommend(ctx, id, page) })
 	})
 	if err != nil {
 		return nil, catalogExploreError(err)

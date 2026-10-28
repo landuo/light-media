@@ -1,0 +1,166 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": "app/core/plugin.py",
+  "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+  "kind": "actual fixed clone frontend/rename AST with real owned temporary filesystem; no old project mutation",
+  "source_call_gate": "_modify_plugin_files:2044 only calls when plugin_dir/dist exists; Go declared Frontend.Root mapping must be explicitly documented",
+  "cases": [
+    {
+      "name": "global-JS-CSS-key-class-and-path",
+      "source_id": "Owned",
+      "clone_id": "Ownedcopy",
+      "input_hex": {
+        "remoteEntry.js": "77696e646f772e4d6f76696550696c6f744150492e6765742822706c7567696e2f4f776e65642f737461746522293b20636f6e7374206373735f5f4f776e65645f5f3d226f776e65642d612e637373223b20636f6e7374206d697865643d224f776e6564223b20636f6e7374206c6f7765723d226f776e6564223b20636f6e73742072756e74696d653d224f77222b226e6564223b77696e646f772e4d6f76696550696c6f744150492e6765742822706c7567696e2f222b72756e74696d652b222f737461746522293b",
+        "owned-a.css": "2e6f776e6564202e4f776e6564207b202d2d6f776e65642d636f6c6f723a707572706c65207d",
+        "owned-a.js": "6578706f727420636f6e737420706174683d222e2f6f776e65642d612e637373223b",
+        "other.txt": "4f776e6564206f776e6564"
+      },
+      "status": [
+        true,
+        "联邦插件文件修改完成"
+      ],
+      "expected_hex": {
+        "other.txt": "4f776e6564206f776e6564",
+        "ownedcopy-a.css": "2e6f776e6564636f7079202e4f776e6564636f7079207b202d2d6f776e6564636f70792d636f6c6f723a707572706c65207d",
+        "ownedcopy-a.js": "6578706f727420636f6e737420706174683d222e2f6f776e6564636f70792d612e637373223b",
+        "remoteEntry.js": "77696e646f772e4d6f76696550696c6f744150492e6765742822706c7567696e2f4f776e6564636f70792f737461746522293b20636f6e7374206373735f5f4f776e6564636f70795f5f3d226f776e6564636f70792d612e637373223b20636f6e7374206d697865643d224f776e6564636f7079223b20636f6e7374206c6f7765723d226f776e6564636f7079223b20636f6e73742072756e74696d653d224f77222b226e6564223b77696e646f772e4d6f76696550696c6f744150492e6765742822706c7567696e2f222b72756e74696d652b222f737461746522293b"
+      }
+    },
+    {
+      "name": "nested-content-only-top-level-renames",
+      "source_id": "Owned",
+      "clone_id": "Ownedcopy",
+      "input_hex": {
+        "assets/owned-chunk.js": "636f6e73742069643d224f776e6564223b20636f6e7374206373733d222e2f6f776e65642e637373223b",
+        "assets/owned.css": "2e6f776e6564207b7d",
+        "owned-root.js": "696d706f727420222e2f6173736574732f6f776e65642d6368756e6b2e6a7322"
+      },
+      "status": [
+        true,
+        "联邦插件文件修改完成"
+      ],
+      "expected_hex": {
+        "assets/owned-chunk.js": "636f6e73742069643d224f776e6564636f7079223b20636f6e7374206373733d222e2f6f776e6564636f70792e637373223b",
+        "assets/owned.css": "2e6f776e6564636f7079207b7d",
+        "ownedcopy-root.js": "696d706f727420222e2f6173736574732f6f776e6564636f70792d6368756e6b2e6a7322"
+      }
+    },
+    {
+      "name": "case-condition-lowercase-replace-only",
+      "source_id": "Owned",
+      "clone_id": "Ownedcopy",
+      "input_hex": {
+        "Owned-Chunk.js": "4f776e6564206f776e6564",
+        "OWNED.css": "2e4f776e6564202e6f776e6564207b7d",
+        "owned2.css": "2e4f776e6564207b7d"
+      },
+      "status": [
+        true,
+        "联邦插件文件修改完成"
+      ],
+      "expected_hex": {
+        "OWNED.css": "2e4f776e6564636f7079202e6f776e6564636f7079207b7d",
+        "Owned-Chunk.js": "4f776e6564636f7079206f776e6564636f7079",
+        "ownedcopy2.css": "2e4f776e6564636f7079207b7d"
+      }
+    },
+    {
+      "name": "rename-collision-does-not-overwrite",
+      "source_id": "Owned",
+      "clone_id": "Ownedcopy",
+      "input_hex": {
+        "owned.js": "4f776e656420736f75726365",
+        "ownedcopy.js": "4f776e6564636f7079207072656578697374696e67"
+      },
+      "status": [
+        true,
+        "联邦插件文件修改完成"
+      ],
+      "expected_hex": {
+        "owned.js": "4f776e6564636f707920736f75726365",
+        "ownedcopycopy.js": "4f776e6564636f7079636f7079207072656578697374696e67"
+      }
+    },
+    {
+      "name": "UTF8-replacement-and-universal-newlines",
+      "source_id": "Owned",
+      "clone_id": "Ownedcopy",
+      "input_hex": {
+        "owned.js": "4f776e65640d0a6f776e65640de180ffff",
+        "owned.css": "2e4f776e65640d0a2e6f776e65640deda080"
+      },
+      "status": [
+        true,
+        "联邦插件文件修改完成"
+      ],
+      "expected_hex": {
+        "ownedcopy.css": "2e4f776e6564636f70790a2e6f776e6564636f70790aefbfbdefbfbdefbfbd",
+        "ownedcopy.js": "4f776e6564636f70790a6f776e6564636f70790aefbfbdefbfbdefbfbd"
+      }
+    },
+    {
+      "name": "case-sensitive-extensions",
+      "source_id": "Owned",
+      "clone_id": "Ownedcopy",
+      "input_hex": {
+        "owned.JS": "4f776e6564206f776e6564",
+        "owned.CSS": "4f776e6564206f776e6564",
+        "owned.json": "4f776e6564206f776e6564"
+      },
+      "status": [
+        true,
+        "联邦插件文件修改完成"
+      ],
+      "expected_hex": {
+        "ownedcopy.CSS": "4f776e6564206f776e6564",
+        "ownedcopy.JS": "4f776e6564206f776e6564",
+        "ownedcopy.json": "4f776e6564206f776e6564"
+      }
+    },
+    {
+      "name": "all-lowercase-class",
+      "source_id": "owned",
+      "clone_id": "ownedcopy",
+      "input_hex": {
+        "owned.js": "6f776e6564206373735f5f6f776e65645f5f206f776e6564636f7079",
+        "owned.css": "2e6f776e6564207b7d"
+      },
+      "status": [
+        true,
+        "联邦插件文件修改完成"
+      ],
+      "expected_hex": {
+        "ownedcopy.css": "2e6f776e6564636f7079636f7079207b7d",
+        "ownedcopy.js": "6f776e6564636f7079636f7079206373735f5f6f776e6564636f7079636f70795f5f206f776e6564636f7079636f7079636f7079"
+      }
+    },
+    {
+      "name": "suffix-contains-lowercase-source",
+      "source_id": "Owned",
+      "clone_id": "Ownedowned",
+      "input_hex": {
+        "owned.js": "4f776e6564206f776e6564206373735f5f4f776e65645f5f",
+        "owned.css": "2e4f776e6564202e6f776e6564207b7d"
+      },
+      "status": [
+        true,
+        "联邦插件文件修改完成"
+      ],
+      "expected_hex": {
+        "ownedowned.css": "2e4f776e65646f776e6564202e6f776e65646f776e6564207b7d",
+        "ownedowned.js": "4f776e65646f776e65646f776e6564206f776e65646f776e6564206373735f5f4f776e65646f776e65646f776e65645f5f"
+      }
+    },
+    {
+      "name": "empty-root",
+      "source_id": "Owned",
+      "clone_id": "Ownedcopy",
+      "input_hex": {},
+      "status": [
+        true,
+        "联邦插件文件修改完成"
+      ],
+      "expected_hex": {}
+    }
+  ]
+}

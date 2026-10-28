@@ -93,12 +93,13 @@ func TestOriginalWebCommandMediaTextRoutingActualSDK(t *testing.T) {
 		name        string
 		text        any
 		includeText bool
+		status      int
 	}{
-		{"image-only-without-text", nil, false},
-		{"image-only-empty-text", "", true},
-		{"image-only-null-text", nil, true},
-		{"image-with-non-command", "ordinary message", true},
-		{"image-with-ai-command", "/ai describe", true},
+		{"image-only-without-text", nil, false, 501},
+		{"image-only-empty-text", "", true, 501},
+		{"image-only-null-text", nil, true, 501},
+		{"image-with-non-command", "ordinary message", true, 200},
+		{"image-with-ai-command", "/ai describe", true, 501},
 	} {
 		t.Run(test.name, func(t *testing.T) {
 			body := map[string]any{"image": ref}
@@ -107,7 +108,7 @@ func TestOriginalWebCommandMediaTextRoutingActualSDK(t *testing.T) {
 			}
 			raw, _ := json.Marshal(body)
 			response := callTest(t, h, "POST", "/api/message/web", string(raw), cookie, "")
-			if response.Code != http.StatusNotImplemented {
+			if response.Code != test.status {
 				t.Fatal(response.Code, response.Body.String())
 			}
 		})

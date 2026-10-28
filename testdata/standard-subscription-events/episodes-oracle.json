@@ -1,0 +1,190 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed Pydantic model and __apply_episodes_refresh method; captured synchronous chain mutation only",
+  "source_sha256": {
+    "app/schemas/event.py": "d5134476edc76096098b85ee32d2f96eb5db2441c873c80729a46b91386687d6",
+    "app/chain/subscribe.py": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab"
+  },
+  "cases": [
+    {
+      "name": "unchanged",
+      "current": 5,
+      "updated": false,
+      "total": 8,
+      "input": {
+        "tmdbid": 206484,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "206484",
+        "season": 4,
+        "mediainfo": {
+          "source": "themoviedb",
+          "tmdb_id": 206484,
+          "seasons": {
+            "4": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        },
+        "current_total_episode": 5,
+        "subscribe_id": null,
+        "scene": "create",
+        "updated": false,
+        "total_episode": null,
+        "source": "未知来源",
+        "reason": ""
+      },
+      "result": 5
+    },
+    {
+      "name": "raise",
+      "current": 5,
+      "updated": true,
+      "total": 8,
+      "input": {
+        "tmdbid": 206484,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "206484",
+        "season": 4,
+        "mediainfo": {
+          "source": "themoviedb",
+          "tmdb_id": 206484,
+          "seasons": {
+            "4": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        },
+        "current_total_episode": 5,
+        "subscribe_id": null,
+        "scene": "create",
+        "updated": false,
+        "total_episode": null,
+        "source": "未知来源",
+        "reason": ""
+      },
+      "result": 8
+    },
+    {
+      "name": "clamp-low",
+      "current": 5,
+      "updated": true,
+      "total": 2,
+      "input": {
+        "tmdbid": 206484,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "206484",
+        "season": 4,
+        "mediainfo": {
+          "source": "themoviedb",
+          "tmdb_id": 206484,
+          "seasons": {
+            "4": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        },
+        "current_total_episode": 5,
+        "subscribe_id": null,
+        "scene": "create",
+        "updated": false,
+        "total_episode": null,
+        "source": "未知来源",
+        "reason": ""
+      },
+      "result": 5
+    },
+    {
+      "name": "false-total",
+      "current": 5,
+      "updated": true,
+      "total": 0,
+      "input": {
+        "tmdbid": 206484,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "206484",
+        "season": 4,
+        "mediainfo": {
+          "source": "themoviedb",
+          "tmdb_id": 206484,
+          "seasons": {
+            "4": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        },
+        "current_total_episode": 5,
+        "subscribe_id": null,
+        "scene": "create",
+        "updated": false,
+        "total_episode": null,
+        "source": "未知来源",
+        "reason": ""
+      },
+      "result": 5
+    },
+    {
+      "name": "negative",
+      "current": 5,
+      "updated": true,
+      "total": -1,
+      "input": {
+        "tmdbid": 206484,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": "themoviedb",
+        "media_id": "206484",
+        "season": 4,
+        "mediainfo": {
+          "source": "themoviedb",
+          "tmdb_id": 206484,
+          "seasons": {
+            "4": [
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
+          }
+        },
+        "current_total_episode": 5,
+        "subscribe_id": null,
+        "scene": "create",
+        "updated": false,
+        "total_episode": null,
+        "source": "未知来源",
+        "reason": ""
+      },
+      "result": 5
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "source": {
+    "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "path": "app/api/endpoints/system.py",
+    "sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+    "expression": "'\\n'.join(text.split('\\n')[::-1])"
+  },
+  "kind": "fixed AST full-text expression; synthetic owned log file values",
+  "cases": [
+    {
+      "name": "multiline-message",
+      "input": "【INFO】OWNED_TIMESTAMP - plugins - first\nTraceback (owned):\n  detail\n",
+      "expected": "\n  detail\nTraceback (owned):\n【INFO】OWNED_TIMESTAMP - plugins - first"
+    },
+    {
+      "name": "two-records",
+      "input": "【INFO】OWNED_TIMESTAMP - plugins - first\ncontinuation\n【ERROR】OWNED_TIMESTAMP - plugins - second\n",
+      "expected": "\n【ERROR】OWNED_TIMESTAMP - plugins - second\ncontinuation\n【INFO】OWNED_TIMESTAMP - plugins - first"
+    },
+    {
+      "name": "empty",
+      "input": "",
+      "expected": ""
+    }
+  ]
+}

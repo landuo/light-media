@@ -158,6 +158,20 @@ func (e *Engine) Filter(ctx context.Context, names []string, torrents []Torrent,
 	}
 	return result, err
 }
+
+// HasApplicableGroups preserves FilterModule's distinction between returning
+// the actual input list (no applicable groups) and a newly collected list.
+func (e *Engine) HasApplicableGroups(names []string, media *Media) bool {
+	if len(names) == 0 {
+		return false
+	}
+	for _, group := range e.groups {
+		if slices.Contains(names, group.Name) && applicable(group, media) {
+			return true
+		}
+	}
+	return false
+}
 func (e *Engine) filter(ctx context.Context, names []string, torrents []Torrent, media *Media, mode Mode) ([]Match, error) {
 	result := make([]Match, len(torrents))
 	for i, torrent := range torrents {

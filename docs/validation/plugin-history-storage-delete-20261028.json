@@ -1,0 +1,147 @@
+{
+  "whole_indices": [
+    36,
+    43
+  ],
+  "accepted_whole_scope": false,
+  "increment_status": "验收通过",
+  "scope": "Regular local-file history deletion through ordinary storage modules; independent main/subtitle/audio ownership; strict return branches; configured-root parent cleanup and cold recovery. Directory/Bluray history producers, auxiliary redo/retry, partial registration and the full ordinary-call audit remain open.",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/api/endpoints/history.py:221-260",
+    "app/chain/storage.py:171-235",
+    "app/modules/filemanager/__init__.py:255-284,314,374",
+    "app/core/config.py:377 DOWNLOAD_TMPEXT"
+  ],
+  "target": [
+    "internal/app/history_auxiliary.go:removeHistoricalPublishedTarget",
+    "internal/app/history_delete.go",
+    "internal/app/plugin_original_history_delete.go",
+    "internal/app/plugin_original_history_parent.go",
+    "internal/app/plugin_original_browser_mutation.go",
+    "internal/app/file_manager.go:browserOperationItem",
+    "internal/app/asset_manage.go:private operation journal",
+    "internal/fileextensions/settings.go:ResolveSettingsList",
+    "internal/app/types.go:DownloadTmpExt"
+  ],
+  "source_replay": {
+    "history_choices": 8,
+    "history_false_return_branches": 5,
+    "parent_cleanup": 12,
+    "kind": "Fixed AST callers; actual owned temporary files for parent effects, controlled storage/DB boundaries. No Python execution dependency added.",
+    "input_sha256": {
+      "testdata/standard-module-host/history-parent-source-oracle.json": "faac75aef3484ac59ad0c53bb06bb2ae673989e7125a702d5d9d9d2bfe4cafd1",
+      "testdata/standard-module-host/generate-history-parent-oracle.py": "0a2b2ee5841e856194788a4431bea6eca6d9eee53e6ebb36d7c7a2a8f0a10b62",
+      "testdata/standard-module-host/transfer-history-delete-source-oracle.json": "e93fe469688f31316aa7d7ba9814e7c3be79e752fdbbeaa4127c6c5f774c5635",
+      "testdata/standard-module-host/generate-transfer-history-delete-oracle.py": "d7df58f61d5a467fc2d59fa6185884f7db92bb9a4316bb36e2854353968458b2"
+    }
+  },
+  "local": {
+    "parent_source_cases": 9,
+    "directory_sdk_cases": 2,
+    "normal": "22.840s broad deletion/history; 8.227s parent source+real source/None-clone directory SDK; final hide-commit failure + actual Close/New recovery 1.104s; full fileextensions package 0.363s",
+    "final_race_seconds": 79.617,
+    "final_race": "actual app deletion/history/parent/legacy-quarantine/source and target SQL-failure cold recovery PASS",
+    "not_claimed": "Earlier combined command printed fileextensions [no tests to run]; it is not extension race coverage. Full frontend tests were not rerun because frontend sources and embedded assets are unchanged."
+  },
+  "actual_linux": {
+    "main_sha256": "1a736f3b8a9263030a0e3e4b6daebe08452e3dd2418d4497ba1674a8b72a624d",
+    "test_sha256": "282d7c3b99dbea90141128cfefd615deb7346d85a91a50f2d73c97e6b723d7a7",
+    "worker_sha256": "376f0e246479b6e4a299bf524d87398aaff31f409b70f66b25a097d41990f6cc",
+    "compiler_inputs": [
+      3712,
+      4168
+    ],
+    "changed": [],
+    "cli_seconds": 8.69,
+    "cli": "Six additional actual HTTP cases: source false/true, target false, main target true preserving extras, None→clone source and target; actual SDK invocation counts and physical files checked; earlier preview/execution/cold/uninstall gate still passes.",
+    "sdk": "history29-sdk-final.log: actual Linux SDK source/parent/main/auxiliary/history and Close/New recovery tests PASS, including 9 source parent cases and 2 source/None-clone directory callbacks."
+  },
+  "actual_browser": {
+    "tabs": [
+      "IAB62",
+      "IAB63"
+    ],
+    "gate_seconds": 1294.97,
+    "gate_note": "Manual UI actions and build/restart waits included, not HTTP latency. Gate driver remained the actual r1 binary; main server was upgraded in the owned test directory across cold restarts. Exact versions in proof.",
+    "proof": {
+      "passed": true,
+      "scope": "Actual Linux server, ordinary SDK source/clone, browser actions, physical bytes/inodes and independent history projection. The pre-r2 directory FileItem failure is retained separately. Final cold starts perform no storage writes.",
+      "main_sha256": "1a736f3b8a9263030a0e3e4b6daebe08452e3dd2418d4497ba1674a8b72a624d",
+      "final_cli_test_sha256": "282d7c3b99dbea90141128cfefd615deb7346d85a91a50f2d73c97e6b723d7a7",
+      "pid_pairs": [
+        [
+          213957,
+          213965
+        ],
+        [
+          219672,
+          219679
+        ],
+        [
+          230085,
+          230092
+        ],
+        [
+          236284,
+          236290
+        ],
+        [
+          239844,
+          239851
+        ]
+      ],
+      "observations": [
+        "source-false-after",
+        "cold-after-false",
+        "source-clone-deleted",
+        "main-target-clone-deleted",
+        "parent-deleted-after-r2",
+        "final-cold-after-parent",
+        "final-target-false-after",
+        "final-cold-after-target-false"
+      ],
+      "ui_driver_sha256": "65f7e99c24b6574c95f99bc18323607c6b15f8fd0be0c6dd5af6ade33e0b5f44",
+      "ui_main_revisions": [
+        {
+          "sha256": "1b0a76c8d91a71532936e41e942609c50e249a085327b677a3c7c5427eb37776",
+          "scope": "source false, None-clone source removal, main target isolation; parent cleanup failed before directory dispatch"
+        },
+        {
+          "sha256": "717fa94193a0e59040f7ebc554ec68bf2e206da9b9a69965aed11f2aba10234d",
+          "scope": "cold resume of the actual failed parent cleanup"
+        },
+        {
+          "sha256": "1a736f3b8a9263030a0e3e4b6daebe08452e3dd2418d4497ba1674a8b72a624d",
+          "scope": "cold preservation and target false deletion; final CLI and SDK tests are separate"
+        }
+      ]
+    },
+    "checks": [
+      "Source false leaves all files, visible failure and selected row; cold process restores three histories without replay",
+      "None→clone explicit retry deletes only subtitle source and history",
+      "Main target deletion preserves subtitle/audio targets and main source",
+      "Parent containing only owned NFO is removed through ordinary directory delete_file; protected root remains",
+      "Target false is ignored by pinned endpoint: selected record disappears, all physical files stay; cold start keeps state without replay"
+    ]
+  },
+  "corrections": [
+    "Initial production build found accidental use of test-only fileCode helper; replaced with errors.As(APIError), failed build retained.",
+    "First Linux SDK run used wrong cwd for source fixtures; failure retained, corrected owned testdata paths without relaxing assertions.",
+    "Real IAB parent cleanup failed because canonical directory FileItem.path has a trailing slash. Preserve that wire path while authorizing its normalized actual directory; actual source/clone directory tests added and browser retry after cold start succeeded.",
+    "Additional cold recovery test initially failed because old synthetic import fixture did not persist Settings; save through real saveSettings before restart. Test helper clone suffix normalized lowercase; harness fixes retained."
+  ],
+  "adaptations": [
+    "Existing native configured roots map DirectoryHelper protection; no unconfigured local path is authorized for cleanup. Source no-associated and unsupported-storage None samples are source-only observations, not host execution claims.",
+    "Retain host path/symlink/download-in-use/ownership/snapshot checks and sealed operation receipts. A success value alone does not authorize unverified local side effects; uncertain module writes are not repeated.",
+    "History deletion removes a single actual publication. Main video removal updates its native asset slot only; auxiliary materials keep their own ownership and independent histories.",
+    "Final completed physical-file receipt is resumable after its parent has disappeared; original Python lacks this Go durable recovery journal."
+  ],
+  "remaining": [
+    "Standalone auxiliary organize/retry and Source metadata inheritance",
+    "Independent partial-success registration and later task continuation",
+    "TransferInfo complete consumers, directory/Bluray producers, full ordinary module/event audit"
+  ],
+  "cleanup": "Real UI gate uninstalled source+clone, checked API404 and no service registration, shut down owned server and removed TempDirs. IAB63 closed; IAB62 was automatically closed on interrupted turn. Tunnel PID55423 stopped.",
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/history-storage-delete-29-20261028/manifest.json"
+}

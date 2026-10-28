@@ -248,7 +248,16 @@ func (c *Client) qbAdd(ctx context.Context, in AddRequest, hashes []string) (Add
 		return out, beforeMutation(failure("add", "multipart_failed"))
 	}
 	_, _ = f.Write(in.Torrent)
-	for key, value := range map[string]string{"savepath": in.SavePath, "stopped": strconv.FormatBool(in.Paused), "tags": strings.Join(in.Tags, ","), "autoTMM": strconv.FormatBool(c.config.AutoCategory), "sequentialDownload": strconv.FormatBool(c.config.Sequential), "firstLastPiecePrio": strconv.FormatBool(c.config.FirstLast), "skip_checking": "false", "contentLayout": "Original"} {
+	autoCategory := c.config.AutoCategory
+	fields := map[string]string{"savepath": in.SavePath, "stopped": strconv.FormatBool(in.Paused), "tags": strings.Join(in.Tags, ","), "sequentialDownload": strconv.FormatBool(c.config.Sequential), "firstLastPiecePrio": strconv.FormatBool(c.config.FirstLast), "skip_checking": "false", "contentLayout": "Original"}
+	if in.SourceCategorySet {
+		autoCategory = autoCategory && in.SourceCategory != nil && *in.SourceCategory != ""
+		if autoCategory {
+			fields["category"] = *in.SourceCategory
+		}
+	}
+	fields["autoTMM"] = strconv.FormatBool(autoCategory)
+	for key, value := range fields {
 		if err := w.WriteField(key, value); err != nil {
 			return out, beforeMutation(failure("add", "multipart_failed"))
 		}

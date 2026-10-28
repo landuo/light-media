@@ -1,0 +1,172 @@
+{
+  "accepted": false,
+  "complete": false,
+  "backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "row": 43,
+  "scope": "ordinary existing recognition, native core notification and site-card browse consumers; whole43 remains unaccepted",
+  "source_index": "testdata/plugin-module-scoped-20261025/fixed-host-call-inventory.json",
+  "audit_work": "work/plugin-no-official-auth-20261026/modules43-host-call-audit.json",
+  "handoff": "work/plugin-no-official-auth-20261026/modules43-download-transfer-storage-handoff.json",
+  "implemented": [
+    {
+      "source": [
+        "B/app/chain/__init__.py:703",
+        "B/app/chain/__init__.py:813",
+        "B/app/chain/subscribe.py:1095-1133",
+        "B/app/chain/subscribe.py:54-92",
+        "B/app/chain/subscribe.py:1378-1384"
+      ],
+      "target": [
+        "plugin_original_recognize_override.go:originalRecognizeTMDBModule",
+        "plugin_original_recognize_override.go:sourceAsyncRecognizeTMDBMedia",
+        "core_business_source_facts.go:sourceRecognizeTMDBMedia",
+        "subscription_add_source.go:buildUISubscriptionAdd",
+        "plugin_original_recognize_override.go:originalSubscriptionRecognitionMeta/originalRecognizeSubscriptionTMDBMedia",
+        "plugin_standard_subscription_episodes.go:refreshStandardSubscriptionEpisodes"
+      ],
+      "behavior": "Default explicit-ID ChainBase helper preserves its independent sync defaults. Actual existing completion/precheck callers instead reuse build_subscribe_meta/full subscription source IDs and pass recognize_media/mediaid string/cacheFalse/episode_group; original Web/API async_add prepares reused complete MetaInfo before its independent async_recognize_media/source mediaid/cacheFalse. Both paths use existing SDK Runner and existing native decoder.",
+      "verification": [
+        "testdata/standard-module-host/recognize-source-oracle.json",
+        "testdata/standard-module-host/async-recognize-source-oracle.json",
+        "modules43-async-recognize-sdk-source-final-tests.jsonl",
+        "modules43-true-sync-callers-source-tests.jsonl",
+        "modules43-sync-caller-provider-boundaries-final-race-tests.jsonl"
+      ],
+      "boundary": "same10 pinned source cases each for sync and async; actual source async_add prefix with owned MetaInfo parser boundary checks caller assignments; native complete MetaInfo parser separately reused, not independently reimplemented"
+    },
+    {
+      "source": [
+        "B/app/chain/__init__.py:71",
+        "B/app/chain/__init__.py:1631-1860",
+        "B/app/helper/message.py:710-763",
+        "B/app/chain/__init__.py:298-330"
+      ],
+      "target": [
+        "plugin_notice_delivery.go:sendPluginMessageModules",
+        "plugin_original_notice.go:sendOriginalNoticeModulesCount",
+        "plugin_notice_delivery.go:attemptPluginMessage"
+      ],
+      "behavior": "already rendered/history/event/queued native core Call forwarded to actual ordinary module dispatcher once; args after method preserved; no new channel/duplicate routing. Sender errors preserve source later-provider and caller consumption, native ledger records actual attempts/failures",
+      "verification": [
+        "modules43-core-notice-initial-tests.jsonl",
+        "docs/validation/plugin-web-message42-parity-20261027.json",
+        "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/events36-decrease-result.json"
+      ],
+      "remaining": "none for this actual create/completion sender bridge; entire43 still pending other existing consumers"
+    },
+    {
+      "source": [
+        "app/api/endpoints/site.py:396-420",
+        "app/chain/torrents.py:418-435",
+        "app/chain/__init__.py:async_refresh_torrents/async_run_module"
+      ],
+      "target": [
+        "internal/app/resource_search.go:browseManagedSiteResources",
+        "internal/app/plugin_original_resource_search.go:originalBrowseSiteResources",
+        "internal/app/plugin_original_modules.go:invokeOriginalPluginModuleGroups",
+        "internal/sites/client.go:Resource.ModuleSourceFields"
+      ],
+      "behavior": "site_resource ordinary site card browse uses exact async_refresh_torrents; same discovery frame, null/list/scalar cutoff and actual native core query order; independently installed clone/config/cold/uninstall proven",
+      "verification": [
+        "testdata/standard-resource-modules/incremental-parity.json",
+        "testdata/standard-resource-modules/source-oracle.json"
+      ],
+      "incremental_report": "testdata/standard-resource-modules/incremental-parity.json",
+      "remaining": "browser and all other existing global resource consumers remain separately pending; not whole43 acceptance"
+    }
+  ],
+  "necessary_adaptations": [
+    "JSON source model input/output crosses actual isolated Go SDK instead of Python object identity; complete source MediaInfo fields retained, typed compact native identity/id/title checks fail explicitly on unusable override",
+    "plugin MediaInfo may have no provider payload; ProviderInfo stays null rather than fabricating network evidence; full source tmdb_info.media_type Chinese converted only inside compact movie/tv decoder wire while original provider data retained",
+    "source invalid list result raises AttributeError only after native core called; Go retains native call ordering and returns explicit typed invalid/notfound errors; native provider failure retains host error rather than claiming complete source arbitrary-model equivalence",
+    "same existing Go awaitable SDK Runner executes independent sync/async extension names; no Python runtime or separate coroutine framework",
+    "ordinary metadata passed as reused full MetaObject.ToDict source projection; arbitrary Python object/callable alias mutations are not IPC JSON values and are not claimed verified"
+  ],
+  "known_differences_or_remaining": [
+    "remaining existing native catalog, media-specific resource search and priority filter, downloader/transfer/local-storage consumers require separate source-specific closures; actual keyword browse/SSE/non-SSE batch closed incrementally via platform4b main/browser report",
+    "media detail original async_recognize_media/async_obtain_images callsites belong pending catalog bridge, not wired by async_add helper",
+    "source shared recognition server secondary lookup has no matching current local native host and remains separately scoped, no new cloud recognition business added",
+    "whole43 never inferred complete from these bridges or231 static inventory"
+  ],
+  "failed_attempts": [
+    {
+      "file": "modules43-async-recognize-sdk-source-tests.jsonl",
+      "cause": "full source TV model exposed source tmdb_info.media_type Chinese/native movie-tv discriminator mismatch; fixed internal compact-only mapping, ProviderInfo unchanged"
+    },
+    {
+      "oracle": "initial async caller AST replay missed MEDIA_SOURCE_ID_FIELDS namespace constant; added actual fixed constant AST, no source modified"
+    },
+    {
+      "file": "modules43-sync-caller-provider-boundaries-race-tests.jsonl",
+      "cause": "new test incorrectly selected private error_code/modules as clear SQLite columns; switched to existing authenticated readPluginMessage; production unchanged"
+    }
+  ],
+  "actual_production": {
+    "state": "incremental actual existing recognize/core sender consumers verified; not whole43",
+    "recognition_and_notice": "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+    "single_recognition_per_preparation": "testdata/plugin-module-no-official-auth-20261026/events36-decrease-result.json",
+    "server_sha256": [
+      "f37e0d1205539e0a44adee61d616af0a7934b33939cbd21e494b42b0e1316d9e",
+      "21cbbd9b0200631bb6720e94b47f910c326674ec81ceda2b4013f139f4e96243"
+    ],
+    "bounds": "actual create/precheck/completion and owned HTTP recipients, including source sender failure with clone/Added continuation and cold no replay. Completion material protocol is owned in-process preparation; actual cmd/server download submission is not claimed.",
+    "site_card_browse": "testdata/standard-resource-modules/incremental-parity.json",
+    "resource_browse_sse_batch_platform4b": "testdata/standard-resource-modules/incremental-parity.json"
+  },
+  "code_sha256": {
+    "internal/app/core_business_source_facts.go": "2b37dbdf33c25296d248b697cb7d4d9bce09396f079c984b6e6cce0d6cf5bcdc",
+    "internal/app/subscription_add_source.go": "42e6c370aceeeab205bf86da5dcd7ec991a917f43bff1395310e448616af2aaf",
+    "internal/app/plugin_original_recognize_override.go": "e2b723feed528fb643f6a5703a674042c23a992119b356e460564a3a46596098",
+    "internal/catalog/source_information.go": "d96c1a33aafd11a4666121f11b5cfda13d17dab958df3c7d4ace15fff8c0c3cf",
+    "internal/app/plugin_notice_delivery.go": "8ca86b5f5259919a6904ce5d24a6990e78bd611a23cfcf7062ecb5956c623d15",
+    "internal/app/plugin_original_notice.go": "925353cde3d3326e66ce4e6b3f74f835fa1728efab8266ca8dc983493c551569"
+  },
+  "artifacts": {
+    "testdata/standard-module-host/evidence/modules43-recognize-sdk-source-tests.jsonl.gz": "f5abb6c47a76d13774b87315b540c060cb5d23034d2e355dbaf519a84578f777",
+    "testdata/standard-module-host/evidence/modules43-async-recognize-sdk-source-tests.jsonl.gz": "b12dd5080a77917b01fa324b0153db184a8142328fbfd221ec1ff12e3bc9ff39",
+    "testdata/standard-module-host/evidence/modules43-async-recognize-sdk-source-final-tests.jsonl.gz": "299391a7c525ea326f29a07db2e02a1a4c0ed9282a89593ae9d30f3b91cdab7d",
+    "testdata/standard-module-host/evidence/modules43-core-notice-initial-tests.jsonl.gz": "66dd27fdc70db9e75a7b0aafe97b99718c5ec2106ae7aa277912141cd06af3df",
+    "testdata/standard-module-host/evidence/modules43-catalog-final-tests.jsonl.gz": "fb98b1e53c99e8a646c7e21377775b7e1083f76411744768f0495f85072a3a50",
+    "testdata/standard-module-host/evidence/modules43-async-recognize-source-replay.log.gz": "44637e5053a7b8fb9a89c656a3f05c6f7a43ca9af097ceaba7c766ba1b6cd71a",
+    "testdata/standard-module-host/evidence/modules43-async-recognize-source-replay-final.log.gz": "ad09df4a900d7cc514b27ff7c39d0070f748684673cc3ebd05c29caacf1264e4"
+  },
+  "final_incremental_regression": {
+    "roots": 32,
+    "seconds": 35.737,
+    "result": "PASS",
+    "file": "testdata/standard-module-host/evidence/messages42-modules43-true-callers-final-regression-tests.jsonl.gz",
+    "scope": "current42 history/input/notice receipt and provider0 core/API consumption; sync/async source20cases +actualasyncadd andsynccompletion callers +originalsourceadd/completion+servicesprecheck/create; collections overlap earlier results"
+  },
+  "async_caller_race": {
+    "roots": 1,
+    "seconds": 4.64,
+    "result": "PASS",
+    "file": "testdata/standard-module-host/evidence/modules43-async-caller-final-race-tests.jsonl.gz"
+  },
+  "final_extra_artifacts": {
+    "testdata/standard-module-host/evidence/messages42-modules43-async-final-regression-tests.jsonl.gz": "b104f4009329bcada9bdc9be44a9d8a02b63d9c4b1a643a1b17a69071f88f082",
+    "testdata/standard-module-host/evidence/modules43-async-caller-final-race-tests.jsonl.gz": "d87a96d72d00e5414682e07eda8bc5b74ef191a12cd2496ebf7fada4865c26a9",
+    "testdata/standard-module-host/evidence/messages42-process-linux-final-build.log.gz": "d7f27e94104642031bf9215a34bab1c826cad0ec3a87d024b9d448f79168918b",
+    "testdata/standard-module-host/modules43-host-call-audit.json.gz": "a3b79181a05dbea9e3fc038ca0c64eedaec1882408e35bfc605baebe577ebfbe",
+    "testdata/standard-module-host/modules43-download-transfer-storage-handoff.json.gz": "3740c75c6db8c6c35320498558357449828f3073fb4ffdbc1ffa51b8844f80b7",
+    "testdata/standard-module-host/evidence/modules43-true-sync-callers-source-tests.jsonl.gz": "844b89c248c823cc6e118a76d4cddd1f6afe45968f7b162f84b91b03258cffa6",
+    "testdata/standard-module-host/evidence/modules43-async-sync-callers-source-replay.log.gz": "aff83ee95b807a13a9fc506701ffc0e3af10076e5cb7787d5c994d4ee59b7afc",
+    "testdata/standard-module-host/evidence/modules43-sync-caller-provider-boundaries-race-tests.jsonl.gz": "4d78e92f426db7291d4d823e3b2200d76f9755811580438893a046975b93d18f",
+    "testdata/standard-module-host/evidence/modules43-sync-caller-provider-boundaries-final-race-tests.jsonl.gz": "fdddd674c297f527f561653cc94d26d138f7a1aa7ba3f834937f09287b622628",
+    "testdata/standard-module-host/evidence/messages42-modules43-true-callers-final-regression-tests.jsonl.gz": "1fae4e481368123b2d6e4c8c5213d5cbabf7b8730c90a61448fcf044d2b088fe"
+  },
+  "sync_caller_and_missing_provider_race": {
+    "roots": 2,
+    "seconds": 7.449,
+    "result": "PASS",
+    "file": "testdata/standard-module-host/evidence/modules43-sync-caller-provider-boundaries-final-race-tests.jsonl.gz"
+  },
+  "resolved_incremental_difference": {
+    "previous": "precheck/completion performed fresh recognize_media twice in one preparation",
+    "resolution": "existing preparation now resolves complete Meta/MediaInfo once and passes exact snapshot onward; source AST plus9 decrease/prepare replay; actual21cb check/veto/finish3 native operations have3 recognition calls",
+    "evidence": "testdata/plugin-module-no-official-auth-20261026/events36-decrease-result.json"
+  },
+  "resource_browse_increment": "testdata/standard-resource-modules/incremental-parity.json",
+  "code_sha256_scope": "historical exact source snapshot for prior recognition/notice gates; later existing-host corrections are bound by cited services result main SHA and manifests"
+}

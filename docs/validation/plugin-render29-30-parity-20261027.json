@@ -1,0 +1,261 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "accepted_indices": [
+    29,
+    30
+  ],
+  "complete_for_these_indices": true,
+  "source_to_target": [
+    {
+      "source": "F/src/components/render/FormRender.vue:16–154; F/src/components/dialog/PluginConfigDialog.vue:120; B/app/api/endpoints/plugin.py:975;F/src/components/cards/PluginCard.vue:161",
+      "target": [
+        "web/src/components/PluginFormRenderer.vue",
+        "web/src/features/plugin-forms.ts",
+        "web/src/features/plugin-ace.ts",
+        "web/src/components/PluginConfigDialog.vue",
+        "internal/app/plugin_original_config.go"
+      ],
+      "evidence": [
+        "testdata/standard-render/source-oracle.json",
+        "testdata/plugin-module-no-official-auth-20261026/process-render-browser.log",
+        "testdata/plugin-module-no-official-auth-20261026/render-runtime-save-readback.json",
+        "testdata/plugin-module-no-official-auth-20261026/ui3133-prior-partial-archive-manifest.json"
+      ]
+    },
+    {
+      "source": "B/app/api/endpoints/plugin.py:680;F/src/components/dialog/PluginDataDialog.vue:79;F/src/components/render/PageRender.vue:35",
+      "target": [
+        "web/src/components/PluginDataDialog.vue",
+        "web/src/components/PluginFormRenderer.vue",
+        "internal/app/plugin_original_view_adapter.go"
+      ],
+      "evidence": [
+        "testdata/standard-render/source-oracle.json",
+        "testdata/plugin-module-no-official-auth-20261026/render-runtime-page-style.json",
+        "testdata/plugin-module-no-official-auth-20261026/render-runtime-page-failure.ax.txt",
+        "testdata/plugin-module-no-official-auth-20261026/ui3133-prior-partial-archive-manifest.json"
+      ]
+    }
+  ],
+  "actual_json_checks": [
+    {
+      "accepted_rows": [],
+      "status": "JSON renderer portion verified; combined Vue branch awaits remaining remote UI gate",
+      "source": "fixed FormRender functions9 cases; PageRender/DashboardRender template-derived cases; plugin.py:108/131 cold init side effect",
+      "production_binary_sha256": "cfc9189e0afe81d8c94e834d93f11b58c62758c5a26229e4cd231008225fa288",
+      "linux_test_seconds": 484.12,
+      "frontend_tests_passed": 483,
+      "management_roots_passed": 239,
+      "sdk_roots_passed": 182,
+      "actual": [
+        "recursiveJSON/AceYAML/slot/HTML/falseytext",
+        "functionfactorycounter3→4;conditionalhidepreservesnotes",
+        "Unicode literal dictionary key saved",
+        "sameSDKPID configsave/init+1",
+        "realSQLiteINSERT/UPDATE failure keepsform/config/KV/PID/initcount;retry",
+        "source/clone config+KV+API isolation",
+        "actual503 pageerror thenPOST success/reload",
+        "cold newPIDs/init1/config retained;ownfixture deliberately overwrites sharedKV from config.key on every init",
+        "browseruninstalls/API404/emptyUI/processstopped"
+      ],
+      "corrected_test_expectation": "first cold helper wrongly assumed plugin would not overwrite its own KV; fixed source core always invokes init_plugin, and ownedfixture init explicitly saveShared(config). Original failing helper output retained; product unchanged.",
+      "files": [
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/process-render-browser.log",
+          "sha256": "7ac12bf116d4d635118ad918dd0262f122b1713d023c4f4ca6c602a4be9bbd64"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/unified-production-inputs.json",
+          "sha256": "cff27396939986b96f5b34f60d3a4964e1fd883bf97acd71618550efc0f771b5"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/unified-build-result.json",
+          "sha256": "69303713adb0f5b7beba24e911b339c9f2bbeb2b2e54850246339bb886b84180"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/web-unified-final-tests.log",
+          "sha256": "f6bf0be1f0a2019a2b40084f6a233fc06012da4fc633e7ae8f132db51656fa6c"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/web-unified-final-build.log",
+          "sha256": "f201604a9df8cda66714832b236be8e2cd77c839618b4e3f1a5a03e28bbbfec4"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/web-render-literal-final.log",
+          "sha256": "8efd8798c4e2980572d3ab63dea584b6ff1ddd74b5a81d26e3fd9bde46a34420"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/management-unified-platform-final.jsonl",
+          "sha256": "faf29f7c0280068a27e86d4b752d1db74041aa5ee3160d1915742c06fa7ec478"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/sdk-unified-platform-final.jsonl",
+          "sha256": "981f835ebbeaa20665a45db12b9cfc204121850006ea92b33cad6b1e16ab6ae6"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-save-failure.ax.txt",
+          "sha256": "d566f0302c9bebac139e90eb8398e65a9f9901a4232d2cdc538c5189a0521c02"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-initial.json",
+          "sha256": "66846ff0cb3dad19771a8987c2df1ea4e83c92ae61b059b1acb05d361267332a"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-form-initial.ax.txt",
+          "sha256": "9304b93e2571a5596bbc7ba223ebc5edb132ebf047ec885b65e97b64cc78cc52"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-cleaned.ax.txt",
+          "sha256": "e092922c9342096bfe927186b58f1d2ff43137d98d13a9e4e37ea968f1a7de28"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-clone.json",
+          "sha256": "3ca0331aed10c570dbbda660ebb78bb1a8b16e5d0692382c3ff63fa753b53177"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-saved.json",
+          "sha256": "713e261bcec432f7b5deb33b35b9c6095ffeee2d25af59b997e0bd12c87a3636"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-cleanup.json",
+          "sha256": "9ef9a082e823b49ce90962a718116fb0bacc32762a2cc83938fb2986f651e557"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-cold.json",
+          "sha256": "5e1e7b04de19313d8fa1463a8d2bd40d5720f954ea47bad48cd54c31034fbdb2"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-cleaned.png",
+          "sha256": "70e8181febb9e8ca81d72fa468a68e2e47ea87f50613f177adcab14a5ebe0174"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-clone-page.json",
+          "sha256": "6439d7118875d3868e13369a7a6e2631b50202747098e205c2247f54e948ae7d"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-observations.json",
+          "sha256": "4ddc7cfc0934064965473159f496f0844c3f880597377d5f39adc351173998cd"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-save-failure.png",
+          "sha256": "36b1ec389ee844d63a59f593240c6666d505580564e866a55a8dfb9ed45cb4c7"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-page-error.png",
+          "sha256": "4935279490ee6f1d06505d6cf6a6b84aba03f8fd872e7172ebec090081af9247"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-failed.json",
+          "sha256": "8a4a76e05202b0e4c098f18007b332f443ab179e459837d7c329d0e0d5defded"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-form-initial.png",
+          "sha256": "3c76c21812aa9ebedb01515a04fddcf29f528ff4fa74fdb224d552b61e901057"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-retry.json",
+          "sha256": "d503725a00dab363e9b7197a7c72e5fc3818c68380104b4551a8e9d376611d37"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-page-error.ax.txt",
+          "sha256": "6bc12b53c558b3664c2c1dac49955a7a575cbeeb81fa4d1bef27e02a54b2a4bc"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-cold-final.json",
+          "sha256": "e8bdec9f409f6edbcdd5e3a97e1239e90fc49d9705886d96ef6521b2920ad008"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-browser-source-page.json",
+          "sha256": "b57928f9ef4acbabc466e912186d2fa8aaafb35e3bf5c6123e47e88aa5d7fcbe"
+        }
+      ]
+    },
+    {
+      "accepted_rows": [],
+      "status": "actual JSON portions verified;29/30 await shared Vue branch and combined source audit",
+      "server_sha256": "f37e0d1205539e0a44adee61d616af0a7934b33939cbd21e494b42b0e1316d9e",
+      "test_seconds": 163.36,
+      "source": [
+        "fixed FormRender13 actual function cases/PageRender3 event steps",
+        "F/src/plugins/vuetify/icons.ts:1–15",
+        "F/src/styles/main.scss:7"
+      ],
+      "actual": [
+        "unbundled mdi-zodiac-aquarius renders realSVG via normal Iconify",
+        "runtimeutility opacity0.2/overline",
+        "raw nested CSS variable/color/translateX3px/paddingBlock5px",
+        "AceMonokaiYAML/font14px",
+        "configsave Unicode/modelcounter4 actualSDKinit2",
+        "PageCSScolor12,34,56/smallcaps/2px",
+        "PageordinaryPOST refreshes actualKV/browser-page-write",
+        "actual503 keepspage data;retry clearserror",
+        "browseruninstall/emptyUI;test PASS/service+tunnel+tabclosed"
+      ],
+      "files": [
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-runtime-browser-gate.log",
+          "sha256": "3982c60e78542b6014ae5da9ada872bf66d0bb7d146823f4383c11c2ed23aadc"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-runtime-computed-styles.json",
+          "sha256": "ceec33332df73630ad07898196ee27e107eb7f2d70a1eda163bbf1d95c961160"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-runtime-form.ax.txt",
+          "sha256": "defb531e880ad1c2751328827639ebee9fe42998d4fd0313348e3b8dc3da8426"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-runtime-form.png",
+          "sha256": "cb3c85490ee24fc3c8bfedeca70ed801c1982eadb778639467a311cc712ea219"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-runtime-page-failure.ax.txt",
+          "sha256": "c3d174f5ce67012ce5e01c3709f4099dcb2d5a6896fdaf737534a8544718edb1"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-runtime-page-failure.png",
+          "sha256": "a5bb50f597d1ef8a31a34fb06eb117a9f0956be11b4141cef374f0b1b30ad12a"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-runtime-page-style.json",
+          "sha256": "a4a5a9ed72370b62da8c67c65997c23241f60ecede22bd29d4224078a8757ea1"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-runtime-page.ax.txt",
+          "sha256": "6dc18121d892a810162eb94167855100d3449cd74b5bb8db0902916dbd85114a"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-runtime-page.png",
+          "sha256": "259926a2c52cfbe3d53b4a0b0376ffc364fb37fb57e4944bc4dcccfd1c2a0075"
+        },
+        {
+          "path": "testdata/plugin-module-no-official-auth-20261026/render-runtime-save-readback.json",
+          "sha256": "cdfca6e9914a8443a478728ee0e9f27375994434c8c8aedd89440c7146f4ea41"
+        }
+      ]
+    }
+  ],
+  "actual_vue_branch": "79d CLI+browser2009.81s: real shared VueConfig theme/tabs/preview/save source init1→2 with clone unchanged; Page503 preserves data/retry; fresh document/cold PIDs/config retained. This does not accept31–33 layout/navigation.",
+  "source_replay": "13 actual FormRender cases and3 Page watchEffect steps. Template-derived Page/Dashboard/slots and actual SFC cases are source replay/synthetic, separate from real browser.",
+  "adaptations": [
+    "Go executable/JSON value boundary replaces Python classes, existing typed render-pair validation recorded standard-navigation README.",
+    "Platform metadata maps source-literal JSON event paths to the current Go instance; Vue clone text/resource derivation remains14/15/35 and is not accepted here.",
+    "Errors are made visible by existing project requirement; raw author CSS/props and source show/error/listener behavior preserved.",
+    "Vuetify3.7.3 class utilities scoped to plugin surfaces avoid global element resets; inherit existing Inter/CJK. Original normal Iconify provider handles runtime names.",
+    "Ace fixed ordinary modes/themes/workers/Jinja2 via existing JS dependency; no Python/AI/workflow runtime."
+  ],
+  "limits": [
+    "29/30 only;14/15/31–33/35 remain open.",
+    "Fixture cold init deliberately writes config.key to its own shared KV; previous page write overwritten by plugin side effect, not host persistence loss."
+  ],
+  "delivery": "dev/plugins-continuation local uncommitted; no push/deploy",
+  "evidence_sha256": {
+    "testdata/standard-render/source-oracle.json": "bedc2855ca390de4981d2a29a59dea0d4bdce71e714c15bb5dcc647fd2a88af9",
+    "testdata/plugin-module-no-official-auth-20261026/process-render-browser.log": "7ac12bf116d4d635118ad918dd0262f122b1713d023c4f4ca6c602a4be9bbd64",
+    "testdata/plugin-module-no-official-auth-20261026/render-runtime-save-readback.json": "cdfca6e9914a8443a478728ee0e9f27375994434c8c8aedd89440c7146f4ea41",
+    "testdata/plugin-module-no-official-auth-20261026/ui3133-prior-partial-archive-manifest.json": "e4b65c08323d3e836d57ebd6eabab287793cba5c01b7dd2b94915ed4314738a2",
+    "testdata/plugin-module-no-official-auth-20261026/render-runtime-page-style.json": "a4a5a9ed72370b62da8c67c65997c23241f60ecede22bd29d4224078a8757ea1",
+    "testdata/plugin-module-no-official-auth-20261026/render-runtime-page-failure.ax.txt": "c3d174f5ce67012ce5e01c3709f4099dcb2d5a6896fdaf737534a8544718edb1"
+  }
+}

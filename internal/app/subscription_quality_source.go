@@ -11,7 +11,19 @@ import (
 // alternative providers/episode groups retain the original nullable columns;
 // they are not inferred from a title or from a compact media search result.
 func (a *App) subscriptionSourceProjection(ctx context.Context, s Subscription) (json.RawMessage, error) {
-	state, e := a.subscriptionQualitySourceState(ctx, s)
+	return a.subscriptionSourceProjectionFrom(ctx, a.Store.DB, s)
+}
+
+// The caller can freeze both sides of a plugin event with the same owning
+// transaction, without waiting for a second connection to the store.
+func (a *App) subscriptionSourceProjectionFrom(ctx context.Context, q PluginProofReader, s Subscription) (json.RawMessage, error) {
+	return a.subscriptionSourceProjectionReferences(ctx, q, s, false)
+}
+
+// Event observers can represent a missing named reference as unknown. Core
+// acquisition/quality callers retain their strict dependency errors.
+func (a *App) subscriptionSourceProjectionReferences(ctx context.Context, q PluginProofReader, s Subscription, missingDownloaderAsNull bool) (json.RawMessage, error) {
+	state, e := a.subscriptionQualitySourceStateFrom(ctx, q, s)
 	if e != nil {
 		return nil, e
 	}
@@ -56,7 +68,7 @@ func (a *App) subscriptionSourceProjection(ctx context.Context, s Subscription) 
 	row["sites"] = []int64{}
 	sites := []int64{}
 	for _, id := range s.SiteIDs {
-		identity, e := a.Store.nativeSiteByAppID(ctx, id)
+		identity, e := a.Store.readNativeSiteIdentity(ctx, q, "site_id", id)
 		if e != nil {
 			return nil, e
 		}
@@ -66,13 +78,17 @@ func (a *App) subscriptionSourceProjection(ctx context.Context, s Subscription) 
 	if s.DownloaderID != "" {
 		d, e := a.configuredDownloader(s.DownloaderID)
 		if e != nil {
-			return nil, e
+			if !missingDownloaderAsNull {
+				return nil, e
+			}
+			a.log("WARN", "plugins", "subscription_event_reference_missing", "订阅事件引用的下载器已不存在，名称保留为未知值", "", "")
+		} else {
+			row["downloader"] = d.Name
 		}
-		row["downloader"] = d.Name
 	}
 	row["best_version"], row["best_version_full"], row["current_priority"], row["episode_priority"] = flag(s.BestVersion), flag(s.BestVersionFull), s.CurrentPriority, s.EpisodePriority
 	row["save_path"], row["search_imdbid"], row["manual_total_episode"] = s.DownloadPath, flag(s.SourceSearchIMDb), flag(s.ManualTotalEpisode)
-	words, e := a.subscriptionWords(ctx, s.ID)
+	words, e := a.subscriptionWordsFrom(ctx, q, s.ID)
 	if e != nil {
 		return nil, e
 	}

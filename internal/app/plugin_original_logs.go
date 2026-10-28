@@ -48,13 +48,40 @@ func (a *App) pluginOriginalLogHost(ctx context.Context, scope originalBaseCallS
 	if entry.Level == plugins.LogWarning {
 		level = "WARN"
 	}
-	in := scope.installation
-	// Reuse the sole writer/redactor, bounded queue, rotation, SSE, history and
-	// export pipeline. Neither raw stderr nor arbitrary worker fields are copied.
-	a.writeLog(map[string]any{
-		"level": level, "module": "plugins", "event": "plugin_message", "message": entry.Message,
-		"app_version": appVersion, "plugin_id": in.PluginID, "plugin_version": in.Version,
-		"plugin_instance_id": in.InstanceID, "plugin_call_id": scope.logCall.id, "operation": scope.logCall.phase,
-	})
+	// Reuse the sole writer/redactor, queue, SSE, history and export pipeline.
+	a.writeOriginalPluginCallLog(scope.installation, scope.logCall, level, "plugin_message", entry.Message)
 	return json.RawMessage(`null`), nil
+}
+
+// A bounded native context carries the trusted caller across a synchronous
+// host resource call. It never enters a plugin payload or a queued notice;
+// queued/background work without an active caller keeps ordinary host logs.
+type originalPluginLogContextKey struct{}
+type originalPluginLogContext struct {
+	installation PluginInstallation
+	call         originalPluginLogCall
+}
+
+func withOriginalPluginLogContext(ctx context.Context, scope originalBaseCallScope) context.Context {
+	return context.WithValue(ctx, originalPluginLogContextKey{}, originalPluginLogContext{scope.installation, scope.logCall})
+}
+
+func (a *App) writeOriginalPluginCallLog(in PluginInstallation, call originalPluginLogCall, level, event, message string) {
+	fields := map[string]any{"level": level, "module": "plugins", "event": event, "message": message,
+		"app_version": appVersion, "plugin_id": in.PluginID, "plugin_version": in.Version, "plugin_instance_id": in.InstanceID}
+	if call.id != "" {
+		fields["plugin_call_id"] = call.id
+	}
+	if call.phase != "" {
+		fields["operation"] = call.phase
+	}
+	a.writeLog(fields)
+}
+
+func (a *App) logOriginalPluginContext(ctx context.Context, level, event, message string) {
+	if caller, ok := ctx.Value(originalPluginLogContextKey{}).(originalPluginLogContext); ok {
+		a.writeOriginalPluginCallLog(caller.installation, caller.call, level, event, message)
+		return
+	}
+	a.log(level, "plugins", event, message, "", "")
 }

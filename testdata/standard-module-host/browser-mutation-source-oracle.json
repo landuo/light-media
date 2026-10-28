@@ -1,0 +1,676 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "Fixed StorageChain/dispatcher/FileManager/LocalStorage and API mkdir/rename/delete.\nActual temporary local filesystem, synthetic plugin return values and effects.\nNever imports or starts the reference application; production is Go only.\n",
+  "cases": [
+    {
+      "action": "mkdir",
+      "method": "create_folder",
+      "mode": "none",
+      "value": null,
+      "success": true,
+      "source_exists": true,
+      "target_exists": true,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem",
+            "name"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "mkdir",
+      "method": "create_folder",
+      "mode": "false",
+      "value": false,
+      "success": false,
+      "source_exists": true,
+      "target_exists": false,
+      "core_calls": 0,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "mkdir",
+      "method": "create_folder",
+      "mode": "empty_list",
+      "value": [],
+      "success": false,
+      "source_exists": true,
+      "target_exists": true,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem",
+            "name"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "mkdir",
+      "method": "create_folder",
+      "mode": "list",
+      "value": [
+        "plugin"
+      ],
+      "success": true,
+      "source_exists": true,
+      "target_exists": true,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem",
+            "name"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "mkdir",
+      "method": "create_folder",
+      "mode": "true_no_effect",
+      "value": true,
+      "success": true,
+      "source_exists": true,
+      "target_exists": false,
+      "core_calls": 0,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "mkdir",
+      "method": "create_folder",
+      "mode": "effect_true",
+      "value": true,
+      "success": true,
+      "source_exists": true,
+      "target_exists": true,
+      "core_calls": 0,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "mkdir",
+      "method": "create_folder",
+      "mode": "effect_false",
+      "value": false,
+      "success": false,
+      "source_exists": true,
+      "target_exists": true,
+      "core_calls": 0,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "mkdir",
+      "method": "create_folder",
+      "mode": "effect_none",
+      "value": null,
+      "success": true,
+      "source_exists": true,
+      "target_exists": true,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem",
+            "name"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "mkdir",
+      "method": "create_folder",
+      "mode": "effect_throw",
+      "value": null,
+      "success": true,
+      "source_exists": true,
+      "target_exists": true,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem",
+            "name"
+          ]
+        }
+      ],
+      "error_titles": [
+        "Owned 发生了错误"
+      ]
+    },
+    {
+      "action": "rename",
+      "method": "rename_file",
+      "mode": "none",
+      "value": null,
+      "success": true,
+      "source_exists": false,
+      "target_exists": true,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem",
+            "name"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "rename",
+      "method": "rename_file",
+      "mode": "false",
+      "value": false,
+      "success": false,
+      "source_exists": true,
+      "target_exists": false,
+      "core_calls": 0,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "rename",
+      "method": "rename_file",
+      "mode": "empty_list",
+      "value": [],
+      "success": false,
+      "source_exists": false,
+      "target_exists": true,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem",
+            "name"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "rename",
+      "method": "rename_file",
+      "mode": "list",
+      "value": [
+        "plugin"
+      ],
+      "success": true,
+      "source_exists": false,
+      "target_exists": true,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem",
+            "name"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "rename",
+      "method": "rename_file",
+      "mode": "true_no_effect",
+      "value": true,
+      "success": true,
+      "source_exists": true,
+      "target_exists": false,
+      "core_calls": 0,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "rename",
+      "method": "rename_file",
+      "mode": "effect_true",
+      "value": true,
+      "success": true,
+      "source_exists": false,
+      "target_exists": true,
+      "core_calls": 0,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "rename",
+      "method": "rename_file",
+      "mode": "effect_false",
+      "value": false,
+      "success": false,
+      "source_exists": false,
+      "target_exists": true,
+      "core_calls": 0,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "rename",
+      "method": "rename_file",
+      "mode": "effect_none",
+      "value": null,
+      "success": false,
+      "source_exists": false,
+      "target_exists": true,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem",
+            "name"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "rename",
+      "method": "rename_file",
+      "mode": "effect_throw",
+      "value": null,
+      "success": false,
+      "source_exists": false,
+      "target_exists": true,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem",
+            "name"
+          ],
+          "name": "New"
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem",
+            "name"
+          ]
+        }
+      ],
+      "error_titles": [
+        "Owned 发生了错误"
+      ]
+    },
+    {
+      "action": "delete",
+      "method": "delete_file",
+      "mode": "none",
+      "value": null,
+      "success": true,
+      "source_exists": false,
+      "target_exists": false,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem"
+          ],
+          "name": null
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "delete",
+      "method": "delete_file",
+      "mode": "false",
+      "value": false,
+      "success": false,
+      "source_exists": true,
+      "target_exists": false,
+      "core_calls": 0,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem"
+          ],
+          "name": null
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "delete",
+      "method": "delete_file",
+      "mode": "empty_list",
+      "value": [],
+      "success": false,
+      "source_exists": false,
+      "target_exists": false,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem"
+          ],
+          "name": null
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "delete",
+      "method": "delete_file",
+      "mode": "list",
+      "value": [
+        "plugin"
+      ],
+      "success": true,
+      "source_exists": false,
+      "target_exists": false,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem"
+          ],
+          "name": null
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "delete",
+      "method": "delete_file",
+      "mode": "true_no_effect",
+      "value": true,
+      "success": true,
+      "source_exists": true,
+      "target_exists": false,
+      "core_calls": 0,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem"
+          ],
+          "name": null
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "delete",
+      "method": "delete_file",
+      "mode": "effect_true",
+      "value": true,
+      "success": true,
+      "source_exists": false,
+      "target_exists": false,
+      "core_calls": 0,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem"
+          ],
+          "name": null
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "delete",
+      "method": "delete_file",
+      "mode": "effect_false",
+      "value": false,
+      "success": false,
+      "source_exists": false,
+      "target_exists": false,
+      "core_calls": 0,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem"
+          ],
+          "name": null
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "delete",
+      "method": "delete_file",
+      "mode": "effect_none",
+      "value": null,
+      "success": true,
+      "source_exists": false,
+      "target_exists": false,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem"
+          ],
+          "name": null
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem"
+          ]
+        }
+      ],
+      "error_titles": []
+    },
+    {
+      "action": "delete",
+      "method": "delete_file",
+      "mode": "effect_throw",
+      "value": null,
+      "success": true,
+      "source_exists": false,
+      "target_exists": false,
+      "core_calls": 1,
+      "calls": [
+        {
+          "role": "plugin",
+          "keys": [
+            "fileitem"
+          ],
+          "name": null
+        },
+        {
+          "role": "core",
+          "keys": [
+            "fileitem"
+          ]
+        }
+      ],
+      "error_titles": [
+        "Owned 发生了错误"
+      ]
+    }
+  ]
+}

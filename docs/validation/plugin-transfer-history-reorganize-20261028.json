@@ -1,0 +1,255 @@
+{
+  "accepted_increment": true,
+  "complete": false,
+  "indices": [
+    36,
+    37,
+    43
+  ],
+  "scope": "Existing local primary transfer-history manual reorganization: selected old destination cleanup, rejection/retry/cold recovery, and native callback target projection. Whole-index acceptance remains 42/46.",
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_frontend": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "mapping": [
+    {
+      "source": [
+        "app/api/endpoints/transfer.py:299-320",
+        "app/chain/transfer.py:3389-3394",
+        "app/chain/storage.py:171-235"
+      ],
+      "behavior": "History manual cleanup removes the selected destination, aborts if deletion returns false, and retains parents containing other subtitle/audio files. Preview does not delete.",
+      "target": [
+        "internal/app/organize_manual.go",
+        "internal/app/plugin_original_history_reorganize.go",
+        "internal/app/history_auxiliary.go",
+        "internal/app/plugin_original_history_parent.go",
+        "internal/app/import_reorganize.go"
+      ],
+      "evidence": [
+        "history-reorganize-source-oracle.json:7 fixed branch replays",
+        "history-parent-source-oracle.json:12 fixed controlled-filesystem cases",
+        "TestOriginalMainHistoryReorganize*",
+        "Linux HistoryMainReorganize35",
+        "IAB70 01-06 / verify-reorganize35-proof.py"
+      ]
+    },
+    {
+      "source": [
+        "app/chain/transfer.py:3795-3870"
+      ],
+      "behavior": "Ordinary redo deletes only the selected target via delete_file, ignores false and does not clean the target parent.",
+      "target": [
+        "internal/app/plugin_original_transfer_retry.go",
+        "internal/app/plugin_original_history_reorganize.go"
+      ],
+      "evidence": [
+        "transfer-redo-source-oracle.json:5 fixed replays",
+        "TestOriginalMainHistoryOrdinaryRedoDeleteFalse",
+        "previous main33 actual ordinary retry endpoint evidence retained"
+      ]
+    },
+    {
+      "source": [
+        "app/chain/transfer.py:1135-1195",
+        "app/chain/transfer.py:1251-1310",
+        "app/db/transferhistory_oper.py:227-319",
+        "app/modules/filemanager/__init__.py:415-541"
+      ],
+      "behavior": "Native FileManager returns target FileItem; callback stores its path and then broadcasts the same actual result.",
+      "target": [
+        "internal/app/plugin_original_transfer_callback.go",
+        "internal/app/plugin_original_transfer_module.go"
+      ],
+      "evidence": [
+        "transfer-callback-source-oracle.json",
+        "transfer-native-flags-source-oracle.json",
+        "TestOriginalTransferNativeWithoutOverrideFlagsAndScrape",
+        "r1 IAB69 actual empty history targets FAIL, fixed in r2 IAB70 actual three paths plus both SDK event sets"
+      ]
+    }
+  ],
+  "build": {
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "binaries": [
+      {
+        "name": "server-platform35r2-20261027-linux",
+        "sha256": "cf3e2a3f585f8a5f614dc5d4ad208e4dc30f85e56cb7ce0747aa12088fd55eee",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform35r2-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3719,
+        "changed": [],
+        "elapsed_seconds": 3.7
+      },
+      {
+        "name": "process-platform35r2-20261027-linux.test",
+        "sha256": "ca60184cae7ba4311117dbb1ddd945437135117df4d5a4f6348e0b5eb89e25d7",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform35r2-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4180,
+        "changed": [],
+        "elapsed_seconds": 7.65
+      }
+    ]
+  },
+  "browser_verdict": {
+    "passed": true,
+    "kind": "Actual Linux host and IAB70, owned synthetic SDK media and local hardlink files",
+    "pids": [
+      [
+        438224,
+        438231
+      ],
+      [
+        440496,
+        440502
+      ],
+      [
+        442591,
+        442596
+      ]
+    ],
+    "history_ids": [
+      "file_e46ba777e7280e0d6e10c69d24c11f9e",
+      "file_e0c77b3618a75d0c9e38de1b98aba2d8",
+      "file_djLQbCezBJII6NS5KdN6SaL7"
+    ],
+    "native_history_targets": [
+      "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module35r2-ui-tmp/TestPluginServicesProductionCLI4023691460/002/library/history-browser-again/Owned high-level UI (2024)/Owned high-level UI (2024).flac",
+      "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module35r2-ui-tmp/TestPluginServicesProductionCLI4023691460/002/library/history-browser-again/Owned high-level UI (2024)/Owned high-level UI (2024).default.chi.zh-cn.srt",
+      "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module35r2-ui-tmp/TestPluginServicesProductionCLI4023691460/002/library/history-browser-again/Owned high-level UI (2024)/Owned high-level UI (2024).mkv"
+    ],
+    "old_files": [
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module35r2-ui-tmp/TestPluginServicesProductionCLI4023691460/002/source/OwnedUITransfer.2024.mkv",
+        "inode": 170261719,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module35r2-ui-tmp/TestPluginServicesProductionCLI4023691460/002/library/Plugin returned UI target/Actual plugin file.mkv",
+        "exists": false
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module35r2-ui-tmp/TestPluginServicesProductionCLI4023691460/002/source/OwnedUITransfer.2024.zh.srt",
+        "inode": 170261717,
+        "device": 65025,
+        "size": 24,
+        "sha256": "64dbf5f224a79e3fabf60ab04a96e766c25c35a3d179b2fbbd11098e89e609b7"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module35r2-ui-tmp/TestPluginServicesProductionCLI4023691460/002/source/OwnedUITransfer.2024.flac",
+        "inode": 170261718,
+        "device": 65025,
+        "size": 22,
+        "sha256": "21842006e19f366fe6059346fde9ce2bb380525353d684dabcd08505ad4f0930"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module35r2-ui-tmp/TestPluginServicesProductionCLI4023691460/002/library/Plugin returned UI target/Actual plugin related.srt",
+        "inode": 170261717,
+        "device": 65025,
+        "size": 24,
+        "sha256": "64dbf5f224a79e3fabf60ab04a96e766c25c35a3d179b2fbbd11098e89e609b7"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module35r2-ui-tmp/TestPluginServicesProductionCLI4023691460/002/library/Plugin returned UI target/Actual plugin related.flac",
+        "inode": 170261718,
+        "device": 65025,
+        "size": 22,
+        "sha256": "21842006e19f366fe6059346fde9ce2bb380525353d684dabcd08505ad4f0930"
+      }
+    ],
+    "new_files": [
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module35r2-ui-tmp/TestPluginServicesProductionCLI4023691460/002/library/history-browser-again/Owned high-level UI (2024)/Owned high-level UI (2024).flac",
+        "inode": 170261718,
+        "device": 65025,
+        "size": 22,
+        "sha256": "21842006e19f366fe6059346fde9ce2bb380525353d684dabcd08505ad4f0930"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module35r2-ui-tmp/TestPluginServicesProductionCLI4023691460/002/library/history-browser-again/Owned high-level UI (2024)/Owned high-level UI (2024).default.chi.zh-cn.srt",
+        "inode": 170261717,
+        "device": 65025,
+        "size": 24,
+        "sha256": "64dbf5f224a79e3fabf60ab04a96e766c25c35a3d179b2fbbd11098e89e609b7"
+      },
+      {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module35r2-ui-tmp/TestPluginServicesProductionCLI4023691460/002/library/history-browser-again/Owned high-level UI (2024)/Owned high-level UI (2024).mkv",
+        "inode": 170261719,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      }
+    ],
+    "cold_write_replay": 0
+  },
+  "verification": {
+    "source_replay": "Seven new unchanged fixed AST selection/cleanup branches, with controlled storage; existing 12 parent/5 redo/9 callback cases are source evidence, not a running MoviePilot service.",
+    "local": "red 2.846s selected target retained; false retry 4.922s FAIL then 4.394s PASS; SQL fault red2.226s then5-case4.001s PASS; related regression46.620s PASS; pre-native-fix broad race110.915s PASS; direct native target red3.877s; final native/callback/reorganize/partial race53.264s PASS.",
+    "linux_cli_seconds": 12.59,
+    "browser_gate_seconds": 219.24,
+    "browser_gate_includes_waiting_for_human_actions": true,
+    "linux_ui": "Actual cmd/server; initial data prepared through actual HTTP using owned synthetic materials; browser history selection→preview3/0→actual delete false retains form/history/files→source None and clone true→cold zero writes→same form preview→actual three native hardlinks and stable history IDs→cold and original browser Cookie/search restored. Old main gone, old subtitle/audio inodes unchanged. Source/clone each one delete and three completion events, all event targets equal persisted history.",
+    "frontend": "No frontend changes in this increment. Reused existing built frontend; no new Vue suite is claimed.",
+    "cleanup": "r1 and r2 observers ran actual source+clone uninstall, API404 and TempDir cleanup. IAB69/70 closed, SSH34450/34451 stopped."
+  },
+  "necessary_adaptations": [
+    "Existing plan, path, source snapshot and managed-file authorization are validated before destructive cleanup. Fixed source cleans after collection/planning but before per-file recognition; target recognizes/builds an authorized executable plan first, then cleans immediately before enqueue. This preserves single deletion/rejection/transfer effects while honoring existing light-media filesystem authority; recognition failure retains old target instead of deleting it. This ordering difference is explicit, not identical replay.",
+    "Existing encrypted deletion/publication receipts and native quarantine survive interrupted local writes. A subsequent explicit action may reuse a completed deletion after failed metadata persistence, verifying matching source snapshot, removed asset and target absence; cold startup never blindly repeats deletion.",
+    "Native direct callback now normalizes typed FileItems through the same TransferInfo DTO as SDK dispatch. Browser destructive admission remains intact; an already authorized history hardlink uses its frozen file identity for post-quarantine verification.",
+    "Ordinary Go native reorganizations without an original plugin transfer context retain their existing asset-group transaction; selected-file behavior is attached to the ordinary migrated history context."
+  ],
+  "unverified_not_claimed": [
+    "Directory-unit/bluray and aggregate metadata producer/consumer parity",
+    "All other existing-host reverse callers and complete 36/37/43/50 audit",
+    "Seven source manual cases include successful/failed move and reorganize flag: this increment does not claim fresh Linux/browser proof of those separate branches",
+    "No Python runtime, no business plugin implementation, no AI/workflow interfaces added"
+  ],
+  "failed_evidence": {
+    "r1_main": "104fda9ef1659c848dfdf68e9737c00bba24227285aba8de55e1d6cf175f9ba9",
+    "r1_test": "90555102ff1800bb7a6e45de796b799a8244d8113f36d008e63b7e19a75f4e1b",
+    "r1_browser": "Real IAB69 native publication succeeded but history target projection was empty; 441.24s driver PASS proves baseline+cleanup only, not UI acceptance.",
+    "observer_corrections": "Missing standard/transfer worker environment in broad local selection, source collection parent calls initially mislabeled as destination cleanup, source oracle first matched an earlier function, first observer treated an empty path as current directory. Failures kept; no product guards weakened."
+  },
+  "artifact_manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-history-reorganize-35-20261028/manifest.json",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "head": "7fc62635bc4a8f37068a14c2680161df7ccfb5ed",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  },
+  "target_sha256": {
+    "internal/app/history_auxiliary.go": "e443a8a7d7d6f555f27aa4a55b010df24c54a96b1e4dc95d680953dede2057c8",
+    "internal/app/import_plan.go": "4bbc3ee401908ee4f66cc15260286b61a38053f1efdeedfa095a56d0afce8922",
+    "internal/app/import_reorganize.go": "f0a011646087638934c692eb4286140a9ffc65e55e6ded3a71d6d2475d4eb199",
+    "internal/app/import_run.go": "dc69425aa118fd248e20140c1aec9aeb9dac42aee7a5a5721e43a1a9c7f26ce2",
+    "internal/app/organize_manual.go": "adcec9eed42d069ab445c38110de823c169bc712b6bf8406bfa3aa53f77b4abc",
+    "internal/app/plugin_module_process_transfer_module_test.go": "d9a9f405c6460eb295dbc85afd1b0a0c40d011be7e2c964c234ec17eb30d5f11",
+    "internal/app/plugin_original_browser_mutation.go": "dceb801c623f9103689c8efa393ef645cbf4a6ef836cc0ed44b06f45a83cbca8",
+    "internal/app/plugin_original_history_parent.go": "15423f11c6ed6f0e6cf2f47ec7b764a46a9c1692ffb599cc40658534fd554386",
+    "internal/app/plugin_original_history_reorganize.go": "01ba009093c7b22963aa3a5ebce9641dfb4de42bc0bdc900c5b5926ed0b52616",
+    "internal/app/plugin_original_reorganize_test.go": "907ba6aec7e26040ec1c340ce17025af1226569d89b16776fdf852fe1b06e878",
+    "internal/app/plugin_original_transfer_callback.go": "eda5cbf07be4b380d3ef4b32aa6d7d915e4d08ed86e5da8bba216580d2881b31",
+    "internal/app/plugin_original_transfer_module.go": "805a22300b6601972d424d6d20cbf38110f0c2d4521a6753c09b12e5338ab13f",
+    "internal/app/plugin_original_transfer_native_flags_test.go": "94519525f8cddd1058b02e1ea1522910216f1cf1a2ad3efaccd4d9b6991b9db7",
+    "internal/app/plugin_original_transfer_retry.go": "933e59c317e83346eeadf0ba2e0b753c839014cdad3665547846bdb03e4fcd6b"
+  }
+}

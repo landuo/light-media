@@ -1,0 +1,53 @@
+{
+  "scope": "read-only auth-level dependency verification; no source code or configuration changed",
+  "fixed_backend_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "macos_artifact": {
+    "path": "/Users/accidia/projects/MoviePilot/app/helper/sites.so",
+    "sha256": "0bb6ff867208222d85df91e54b3396ee93abfbbb8d8f3c5a1b702bdbbd0befad",
+    "format": "Mach-O universal x86_64/arm64",
+    "commit_binding": "unestablished: ignored external component; Dockerfile downloads resources/main without hash or commit pin",
+    "rea_symbols": "ev_4423776c93ee8b8104b550522f00c9ef8ee34a0250c77683a5fadcb6e60f314d",
+    "rea_disassembly": "ev_daaccafed7f17f2187bcd87873476489750fd752a97a660362abe413b66fe764",
+    "static_default_level": 1,
+    "basis": [
+      "inner constructor 0x2dad8–0x2daf8 initializes same private state field to None",
+      "get_auth_level cold branch 0x501dc–0x5022c returns constant 1 for a nonmatching state, constant 2 for matching state",
+      "module initializer 0xaf0–0xb10 binds constant slots to integers 1 and 2",
+      "outer SitesHelper.auth_level getter calls inner get_auth_level"
+    ],
+    "target_executed": false
+  },
+  "historical_linux_artifact": {
+    "source_container": "cb82e3f550881334ef3814426016d08d909bccd88d3297522756ba31654d129a",
+    "source_path": "/app/app/helper/sites.cpython-312-x86_64-linux-gnu.so",
+    "local_path": "/Users/accidia/projects/light-media/work/_site_statistic_migration_review/artifacts/sites.cpython-312-x86_64-linux-gnu.so",
+    "bytes": 3301928,
+    "sha256": "8a14c1668778305b9b40bdd5456e6a95afe6ef101b11db02750fbcd4e7ae0b64",
+    "source_writes": 0,
+    "target_executed": false
+  },
+  "historical_linux_limits": [
+    "Original runtime container binding and SHA are recorded; no authenticated binding to fixed backend commit found",
+    "Prior runtime probes cover synthetic catalog/alias/schema behavior, not authentication or current licensed level",
+    "Original artifact file was cleaned; saved full static evidence remains",
+    "Mac string pool matches historical Linux decoded pool hash but this does not equate executable behavior"
+  ],
+  "go_host_search": {
+    "matching_auth_host_found": false,
+    "scope": "internal/app plugin management and internal/sites; no shared SitesHelper/auth_level/valid_auth provider",
+    "tracker_authentication_is_not_moviepilot_authorization": true
+  },
+  "can_implement_now": [
+    "Fixed plugin.py:1852–1887 grade-consumption and list/start filters",
+    "Fixed crypto.py:49+ Base64 DER RSA OAEP/SHA256 matching; no user credential required for synthetic equivalence tests",
+    "Documented local level-1 baseline using current artifact static evidence, without pretending to have authenticated higher grades"
+  ],
+  "still_missing": [
+    "Fixed-version external authorization component/source/service binding for equivalent grade calculation",
+    "Faithful check_user/auth-material validation into grades 2/3 and associated restart/expiry behavior",
+    "Real host authentication result needed before grade-99 special-key matching can become usable; correct RSA matching alone is insufficient"
+  ],
+  "no_credentials_read": true,
+  "configuration_modified": false,
+  "old_services_modified": false
+}

@@ -32,7 +32,9 @@ type subscriptionCompletionCheckResult struct {
 	Event          string
 	Cancel         bool
 	Source, Reason string
-	Consumers      []string
+	// Retained for decoding older completion records; this field is not
+	// populated as a claim of actual chain execution.
+	Consumers []string `json:",omitempty"`
 }
 type subscriptionCompletionReceipt struct {
 	Version                      int

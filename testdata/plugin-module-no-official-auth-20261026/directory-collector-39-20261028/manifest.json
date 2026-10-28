@@ -1,0 +1,351 @@
+{
+  "kind": "Fixed recursive storage collector in existing manual organization",
+  "whole_indices_accepted": false,
+  "binaries": [
+    {
+      "name": "server-platform39-20261027-linux",
+      "sha256": "eea22407908c775f56614378b6505568d872793761410666efc19944ec5b15cb",
+      "command": [
+        "go",
+        "build",
+        "-trimpath",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform39-20261027-linux",
+        "./cmd/server"
+      ],
+      "inputs": 3722,
+      "changed": [],
+      "elapsed_seconds": 3.71
+    },
+    {
+      "name": "process-platform39-20261027-linux.test",
+      "sha256": "71a2c3e1722c443c9bf759c4fbf092388921aa8bd30cb2e478f1c514872b94eb",
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-o",
+        "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform39-20261027-linux.test",
+        "./internal/app"
+      ],
+      "inputs": 4190,
+      "changed": [],
+      "elapsed_seconds": 7.41
+    }
+  ],
+  "worker_sha256": "9a1d5c5c35982625a59002d8148c6f2a14ff5b728c82a6e190d9f92b9aa83990",
+  "artifacts": [
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/cmd/owned-module-override/main.go.gz",
+      "original": "cmd/owned-module-override/main.go",
+      "sha256": "477c28787cbdf6b1da85bf3e468f7b29bf0c4db3a2a0900bdba1672d713bf08b",
+      "raw_sha256": "1e7abd15aefc6a425d2ef97d3a708d12e597712069b97dd9a5f656b2e7870ddb"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/internal/app/import_plan.go.gz",
+      "original": "internal/app/import_plan.go",
+      "sha256": "21bfa4fdcd9766419ed188ba2732f9a3027bec0c72a897b8706fe00316b4710c",
+      "raw_sha256": "8dc3ff7f602eb4a81dceb3ed43f07687b1e9ee9e484f98a33bc73aa81fa9d4aa"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/internal/app/organize_manual.go.gz",
+      "original": "internal/app/organize_manual.go",
+      "sha256": "0e9168ce3b97e7ac390cc50fdb9e004caa4b1b8c5a16e9acd8b102758fda7cf1",
+      "raw_sha256": "e023ef0a48a38d9e63824032ef1e250f9d9f355625ceae0ffdd0f7d58414e7c3"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/internal/app/plugin_module_process_directory_test.go.gz",
+      "original": "internal/app/plugin_module_process_directory_test.go",
+      "sha256": "35c8bbe1a4091ba06be20c38821569a03eb40885bf55d29a18b208dc8e4c3b12",
+      "raw_sha256": "ef6e46098129079389bf81c351b17b3fa4fce8cb129cc98e0210375dc8cf5a6a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/internal/app/plugin_module_process_services_test.go.gz",
+      "original": "internal/app/plugin_module_process_services_test.go",
+      "sha256": "a05ac52fa0f3905cd46c94929364ce3a0e47dca0027cc3917b8eb1dd37a05ac7",
+      "raw_sha256": "1970f3b186c7df101881c12237667225a6ead44b05697fb4dfa5e892d8acd18e"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/internal/app/plugin_original_transfer_collection.go.gz",
+      "original": "internal/app/plugin_original_transfer_collection.go",
+      "sha256": "0e38f9742f5288f4b19a8ce82ffc73a3d8706abf1432668caa80694dfc3a3090",
+      "raw_sha256": "79b88a16e200743cfc04bc549989353c5e4d5fa1703fb5857dfbf7f561f540ab"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/internal/app/plugin_original_transfer_directory.go.gz",
+      "original": "internal/app/plugin_original_transfer_directory.go",
+      "sha256": "4b0eb4c10335751d50c383ab13564428e71caee54a4e1f8446cc09d0bc74492d",
+      "raw_sha256": "e0b82e232c43535d78993a88b13c831cdb029f74009d18bcb0c6901c19cc0a0e"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/internal/app/plugin_original_transfer_directory_test.go.gz",
+      "original": "internal/app/plugin_original_transfer_directory_test.go",
+      "sha256": "b30240abed01d47cc4df992efccb791f83b2035e678a1ae6c7bb45880a38dbf7",
+      "raw_sha256": "6dffa8a174809cc0006df0db26a250aab613dcb093d07c1931fe68030f968176"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/internal/app/plugin_original_transfer_single_extra.go.gz",
+      "original": "internal/app/plugin_original_transfer_single_extra.go",
+      "sha256": "2f5758e1d40e1c1f34a376296b22b8caebdeb49dc879af450036c71d4d15858e",
+      "raw_sha256": "ae3801638e14185a5bdbb7d8e8c08d00ae16f59fe407be68ef3f1768fd954224"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/testdata/standard-module-host/generate-transfer-directory-oracle.py.gz",
+      "original": "testdata/standard-module-host/generate-transfer-directory-oracle.py",
+      "sha256": "be87fbfb2f5bf364e04170c62497b7b9106454fe626fa47d392681fbf39ce337",
+      "raw_sha256": "9b65436eea171d978d3eeb639d98ee65c0d4b858db1f0a2819efad9588534383"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/testdata/standard-module-host/transfer-directory-source-oracle.json.gz",
+      "original": "testdata/standard-module-host/transfer-directory-source-oracle.json",
+      "sha256": "69db1c60c8b419caac7192310b2ce29043751d12141fe387307f233d231f7a5d",
+      "raw_sha256": "7a3fa35231e4540df6b78f14ad6d1ba842a4e1f84955b1cd6c3ad22ace997133"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/build-platform39.log.gz",
+      "original": "build-platform39.log",
+      "sha256": "86520de558e28e417ffa150728996e3d3e8c5d0b8e9a30513e6ad9011f03ee84",
+      "raw_sha256": "71c61e4d0dd97d0b162b903644ec5ffa755c0f27c9beba261c33ef95a35c0f08"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/build-platform39.py.gz",
+      "original": "build-platform39.py",
+      "sha256": "3290fce6f80d003c3d15ff8f12be66db5f9b484bc93e60751b118f0684634d6e",
+      "raw_sha256": "422f6b4e0034e049b3b6beeb1f10a4f4c33ef2f39bc594588fb424ca97331676"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-browser/01-recursive-preview.dom.txt.gz",
+      "original": "directory39-browser/01-recursive-preview.dom.txt",
+      "sha256": "e5a9393ce74c1e992495f0d0305630f2eccc1c6c51081baee926a1992bbc2325",
+      "raw_sha256": "ba803db00fd6e2edbcde0f65a3208be5b2dbb6e6e40440ecd8e777129902815a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-browser/01-recursive-preview.png.gz",
+      "original": "directory39-browser/01-recursive-preview.png",
+      "sha256": "81dc332843a9caf85d88bab2f60e2a2ebdaafa45e32848c4507e5fa079cf064e",
+      "raw_sha256": "e27e9112e189538914333971f0a8ae78a9e2e074d034ad4538a66a9998959c40"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-browser/02-source-false-retains-form.dom.txt.gz",
+      "original": "directory39-browser/02-source-false-retains-form.dom.txt",
+      "sha256": "5830b6d9cf97471c9015dc6f950138eac26f282aab50a4487bedb2749dde79be",
+      "raw_sha256": "2019efd1294a0f3cf91837af0aef900af2081752f2b5d7f9d872b358c122576c"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-browser/02-source-false-retains-form.png.gz",
+      "original": "directory39-browser/02-source-false-retains-form.png",
+      "sha256": "7dc9f764849045e2a6dd8e8fe9a08fd2de2eed83ee8d07ee8532e305eb0bf2a8",
+      "raw_sha256": "bc5a76c69a2045699ffc5f8bee31a69d8f18602538cd77fd59029d984f5f2cee"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-browser/03-restored-preview.dom.txt.gz",
+      "original": "directory39-browser/03-restored-preview.dom.txt",
+      "sha256": "e5a9393ce74c1e992495f0d0305630f2eccc1c6c51081baee926a1992bbc2325",
+      "raw_sha256": "ba803db00fd6e2edbcde0f65a3208be5b2dbb6e6e40440ecd8e777129902815a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-browser/03-restored-preview.png.gz",
+      "original": "directory39-browser/03-restored-preview.png",
+      "sha256": "81dc332843a9caf85d88bab2f60e2a2ebdaafa45e32848c4507e5fa079cf064e",
+      "raw_sha256": "e27e9112e189538914333971f0a8ae78a9e2e074d034ad4538a66a9998959c40"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-browser/04-real-history.dom.txt.gz",
+      "original": "directory39-browser/04-real-history.dom.txt",
+      "sha256": "f61b71183550be25613b29cf0ed188b9d1f2f0b155765348e56c1dfd9a6a2109",
+      "raw_sha256": "ed6da27a6b29a283bdfe14992d3b1f05464eb80271cd56bf653219e70aab422a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-browser/04-real-history.png.gz",
+      "original": "directory39-browser/04-real-history.png",
+      "sha256": "374534e095a188a4bc259042a01fdd799e7c3b596e1b3ffc2b4ad5e4dfae10e9",
+      "raw_sha256": "7438fb9bc8cc9108f8c0a5ffc0c7f1c9604957820b95988d28223115649169e4"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-browser/05-cold-history.dom.txt.gz",
+      "original": "directory39-browser/05-cold-history.dom.txt",
+      "sha256": "55c29c0a3ecf4004c15e9d624489edb263d667e7fc2690320b86505b64fe2908",
+      "raw_sha256": "0a781150f56714148e4907eb298f663a21becb500ac81a4b9a4eabaab05319ba"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-browser/05-cold-history.png.gz",
+      "original": "directory39-browser/05-cold-history.png",
+      "sha256": "89ff8f770306d177cccf1b82bfc9a5a1af6a5c9b0e6ed40deb8fdcfebb0513af",
+      "raw_sha256": "03c217f9164e4330dc853036a1fe39e3bfa4041e41cbeabde3e62ce55fac9ad5"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-browser-verdict.json.gz",
+      "original": "directory39-browser-verdict.json",
+      "sha256": "89690dacf1547fe65ba0ac0c930bfcea18f17ab66793e6cd4659d924e479f0b9",
+      "raw_sha256": "a1e449c7e4bb9ef38c4bed340586cfda63a0b67492f8b0cea2874e4323975d6a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-cleanup.log.gz",
+      "original": "directory39-cleanup.log",
+      "sha256": "baa7cf688f862dce9e123a5f4e99a624f3efb109ca4fe368b14c0a742e80852c",
+      "raw_sha256": "033c15f5131d719f2f909eac2929e4455d309568cf08ca592ad8ef39f4de42e3"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-first-green.log.gz",
+      "original": "directory39-first-green.log",
+      "sha256": "fe49eda8bbcb9ed06a125088fd6a5f17dcdca085367504e260cf4d12b5e01ddd",
+      "raw_sha256": "1107c9a56c169a35dd9087e8c875fb31482250d3361cea5cb8d8cb8cbc894808"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-initial-red.log.gz",
+      "original": "directory39-initial-red.log",
+      "sha256": "ce07983b3bcf0ad843f1bea4c6559eabe8dbe4bfcb60b5ae0bf52815d89e14a4",
+      "raw_sha256": "e6614380844b8fea1998093b2ee7d00c60ec88c5f10b14ea2fb60477f897aa2a"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-linux-cli.log.gz",
+      "original": "directory39-linux-cli.log",
+      "sha256": "4a1b131c2f2cd99fda63a47efdf124cdc924ba487f536196a8635d1f564f84f7",
+      "raw_sha256": "0703727d740226ce717608fde6a6afd4ad82cfd8494ed3109f10fc30108a27ee"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-linux-ui.log.gz",
+      "original": "directory39-linux-ui.log",
+      "sha256": "10a9df9b2e373aa557f67e281412eeb9b7af372360a726fc3fd3c2350b8e746a",
+      "raw_sha256": "c57553588d968da24543d1d922d282f30a8d491963610b494645ed1062726eb2"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-observe.py.gz",
+      "original": "directory39-observe.py",
+      "sha256": "57f83c684ebe896f5cc32aefb142018e25e29303db3904db37b58c6d3e2731a9",
+      "raw_sha256": "32d97e1964a2192edca3564891e7821ce83a6845767f011cdfaa5d4ad5c8109e"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-race.log.gz",
+      "original": "directory39-race.log",
+      "sha256": "5cb4095a924d9b27004859298eb5662e59f7487da443d8eca102a8555f779a37",
+      "raw_sha256": "8c9c5909eb85937c8355dcfa677f46faa2a0d283bb5f4908dc4808eca4e3bbd2"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-related.log.gz",
+      "original": "directory39-related.log",
+      "sha256": "c4075e3018c5693fee9b800d47c70cb9c0f62970df7e10f93a581daa07f8d62c",
+      "raw_sha256": "a718434328d282d463d28e9a0ecf341a8486a235831b160a4ee3a2ea4c8c12b4"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-runtime/directory39-browser-actual.json.gz",
+      "original": "directory39-runtime/directory39-browser-actual.json",
+      "sha256": "5ffa4d88c1d56a3398c8297ccbedd87e491fc9cbecb5fa203c1bb57c8711979e",
+      "raw_sha256": "4c43047f7e527d22d6bcd382724756e595e0495595cb7f130149a4f077675e5d"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-runtime/directory39-browser-cold-after-page.json.gz",
+      "original": "directory39-runtime/directory39-browser-cold-after-page.json",
+      "sha256": "3e7a885ecc78de46f954d5e5c9b0f3a2a0ffa35a7d1d0115e4278dec3a309d75",
+      "raw_sha256": "1035b6bcba327b796ab0fe6f250f3d069a73be65761cca7ad74ee986e555997b"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-runtime/directory39-browser-cold.json.gz",
+      "original": "directory39-runtime/directory39-browser-cold.json",
+      "sha256": "5a26b1560a3973abca25fa4f7104f38db4a09076d6263d07c13d4ee76a94887f",
+      "raw_sha256": "a46078b3c0db8389710239e411f1ddd5e185a22ca376d89f377bb517d1bd52b5"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-runtime/directory39-browser-fail.json.gz",
+      "original": "directory39-runtime/directory39-browser-fail.json",
+      "sha256": "3f151c00bba18833d9a7fa2a5f73868c4b66751b8ca64a50b732c448aeb0bd6d",
+      "raw_sha256": "87ad1f0f7177fb43a481b7f542a5c039b0e8d4a631f3096875b52cf3f742a782"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-runtime/directory39-browser-failed-after-ui.json.gz",
+      "original": "directory39-runtime/directory39-browser-failed-after-ui.json",
+      "sha256": "26391b194894035bc7bd590d2d5528d9c071360929dbde8cebb7696f8057ba3f",
+      "raw_sha256": "9e77c18561c56897066113dbe826d0b57f20b40e689a3dfaaca710b98e865d2d"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-runtime/directory39-browser-preview.json.gz",
+      "original": "directory39-runtime/directory39-browser-preview.json",
+      "sha256": "2de0364b1c8c1397becf33ddb0c073fa3aad163ffd75d3c369c7086e5176a043",
+      "raw_sha256": "5753258bc38773a617318652e389269cf6d36a39a316f43b5dc46f51b9f21473"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-runtime/directory39-browser-restore.json.gz",
+      "original": "directory39-runtime/directory39-browser-restore.json",
+      "sha256": "732c60f366469bff620498d2388f2bd732e8e05e33eaf674cf097a34f729b3c2",
+      "raw_sha256": "4fd1e2560a215340a9a7d6c2dce4d6475f50a1a40bd89b71218d9df6a9b4f236"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-runtime/directory39-cli-evidence/directory39-cli.json.gz",
+      "original": "directory39-runtime/directory39-cli-evidence/directory39-cli.json",
+      "sha256": "ec2dfbb0d41ffc8b32d61ac8f40a064bccf63c6d71e677136d73460dc8b3796b",
+      "raw_sha256": "576753fad8883097db428121b2f909af3e3e3e1f865510d6eb2acb2062abfdab"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-runtime/directory39-cli-evidence/events36-service-process.log.gz",
+      "original": "directory39-runtime/directory39-cli-evidence/events36-service-process.log",
+      "sha256": "609213627bd8ac4d50278ba59a1ca22a371403ee49ec4f1e1792a2a077aba718",
+      "raw_sha256": "01e524f26dcceb0ec0d916ec23fc3cace9030f2a976927a3c73aa1799ae555f4"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-runtime/directory39-ui-evidence/directory39-cli.json.gz",
+      "original": "directory39-runtime/directory39-ui-evidence/directory39-cli.json",
+      "sha256": "6bea09dbd6a31ed97f6543bc614ea4d9ab68b2dea5fed7574890778d7cd53606",
+      "raw_sha256": "9af998e6086f288ee3c453da62172926642496a6bf6ee2da100b6f12fb8b1c82"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-runtime/directory39-ui-evidence/events36-service-process.log.gz",
+      "original": "directory39-runtime/directory39-ui-evidence/events36-service-process.log",
+      "sha256": "2374282266dd888f75602bcd3b50f247f44aefa36d461b8f31b9b67b6f9f16e7",
+      "raw_sha256": "bedb78f13151d22a16eacd9338f341b376356870bcfdce5e2297fe0a0aa47656"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-runtime/directory39-ui-state.json.restart.done.gz",
+      "original": "directory39-runtime/directory39-ui-state.json.restart.done",
+      "sha256": "9125ad4babe47d94b2d33a3917f52c0c0cb722d8b631378abfd4420844754dc4",
+      "raw_sha256": "9f62c1cc2f1348ed1eb8e35c67cabd4d08104059b0b19f64ca8e7b19c22810b7"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-sdk.log.gz",
+      "original": "directory39-sdk.log",
+      "sha256": "19320f1cf339fe80d321fecdd04553160f161d60d926d3d337bada62722493b4",
+      "raw_sha256": "258c84d080787dd39c1a93c7f61c1ba2f69b7977222fa405ec1ba3a535d4a6c3"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/directory39-ui-state.json.gz",
+      "original": "directory39-ui-state.json",
+      "sha256": "2fbea0768786c2ea6d8a21cb1fe0dd4b842d790a02bab99c0f44e1c0f7bd45f5",
+      "raw_sha256": "1d662bf82aa1f747e0570caf924ed642bbcc174884ed5a83a84afd61fffe449d"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/platform39-result.json.gz",
+      "original": "platform39-result.json",
+      "sha256": "fa5e98cbaf68b0d05781173b05bb197b0ece57727ae8baa8fc4781b44b5289cc",
+      "raw_sha256": "808b42bf24bb6175b06c1743b5c53a43080fec24906ac8b3bddf7d5ee83f85b4"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/process-platform39-20261027-linux.test.build.log.gz",
+      "original": "process-platform39-20261027-linux.test.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/process-platform39-20261027-linux.test.inputs.json.gz",
+      "original": "process-platform39-20261027-linux.test.inputs.json",
+      "sha256": "f4d7276c393b958d9481c3ea6fe8f227bebda7a1feb876cd2e3df3505dd93a7a",
+      "raw_sha256": "6502890ea8a5084d34b7f6500912cd06a1e4594e22c071862977add935b567b5"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/run-directory39.py.gz",
+      "original": "run-directory39.py",
+      "sha256": "bb47dd3fa962cd15595063690100d0e813a973a805640c9271b9a48341ef43d0",
+      "raw_sha256": "55feb58eb216608660b78176f8c38f88327f0662ea4e6bd947414fd507593156"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/server-platform39-20261027-linux.build.log.gz",
+      "original": "server-platform39-20261027-linux.build.log",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-collector-39-20261028/server-platform39-20261027-linux.inputs.json.gz",
+      "original": "server-platform39-20261027-linux.inputs.json",
+      "sha256": "0dab790d25e5ebdf7e2ded63557e9d7f2df2b727c33371c2f117009977ff5ae6",
+      "raw_sha256": "955127bbbe06ff1da4b9a4b4191c73c2c037b6cdfc4c1a2d7df8f9950e89a531"
+    }
+  ]
+}

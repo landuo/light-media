@@ -14,6 +14,10 @@ import (
 // in-memory broadcast. Each currently loaded enabled subscriber is attempted
 // once by broadcastOriginalPluginEvent; this is NOT exactly-once delivery.
 func (a *App) emitStandardBusinessEvent(ctx context.Context, event string, data any) {
+	a.emitStandardBusinessEventCoreState(ctx, event, data, false)
+}
+
+func (a *App) emitStandardBusinessEventCoreState(ctx context.Context, event string, data any, consumed bool) {
 	raw, err := json.Marshal(data)
 	if err != nil {
 		a.log("ERROR", "plugins", "business_event_invalid", "插件业务事件数据编码失败", "", "")
@@ -22,7 +26,7 @@ func (a *App) emitStandardBusinessEvent(ctx context.Context, event string, data 
 	// An HTTP client disconnect after successful commit cannot cancel a
 	// detached original EventManager callback. The existing manager owns its
 	// lifetime and closes all loaded objects during shutdown.
-	a.broadcastOriginalPluginEvent(context.WithoutCancel(ctx), event, raw)
+	a.broadcastOriginalPluginEventCoreState(context.WithoutCancel(ctx), event, raw, consumed)
 }
 
 func (a *App) emitStandardSiteRefreshed(ctx context.Context, siteID string) {
@@ -55,7 +59,7 @@ func (a *App) emitStandardSiteDeletions(ctx context.Context, previous, next Sett
 			a.log("ERROR", "plugins", "business_event_identity", "插件站点删除事件身份无法核对", "", "")
 			continue
 		}
-		a.emitStandardBusinessEvent(ctx, "site.deleted", map[string]any{"site_id": identity.publicSourceID()})
+		a.emitStandardBusinessEventCoreState(ctx, "site.deleted", map[string]any{"site_id": identity.publicSourceID()}, true)
 	}
 }
 

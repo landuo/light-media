@@ -1,0 +1,12 @@
+FROM scratch
+COPY server-backup-linux /server
+COPY process-backup-linux.test /process.test
+COPY standard-v1-linux /standard-v1
+COPY standard-v2-linux /standard-v2
+WORKDIR /tmp
+ENV PLUGIN_PROCESS_EDITABLE_MARKET=true \
+    PLUGIN_PROCESS_DOCKER_BACKUP_FIXTURE=true \
+    PLUGIN_PROCESS_SERVER_BINARY=/server \
+    OWNED_STANDARD_FIXTURE_BINARY=/standard-v1 \
+    OWNED_STANDARD_FIXTURE_V2_BINARY=/standard-v2
+ENTRYPOINT ["/process.test", "-test.run", "^TestPluginModuleProductionProcessLifecycle$", "-test.v", "-test.timeout=3m"]

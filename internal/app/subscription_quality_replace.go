@@ -638,7 +638,11 @@ func (a *App) runQualityCleanup(ctx context.Context, j Job, id string) error {
 			return e
 		}
 	}
-	if replacement.ScrapeState == "pending" {
+	deferred, e := completeOriginalDeferredScrapeTx(ctx, tx, j, replacement.ID)
+	if e != nil {
+		return e
+	}
+	if replacement.ScrapeState == "pending" && !deferred {
 		if _, e = enqueueTx(ctx, tx, "scrape", map[string]string{"id": replacement.ID}, j.WorkflowID); e != nil {
 			return e
 		}

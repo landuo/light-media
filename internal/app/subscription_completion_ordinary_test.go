@@ -47,7 +47,7 @@ func TestOrdinarySubscriptionCompletionUsesRealAcceptedDownloadWithoutPriority10
 // A real owned search -> preview -> confirm -> Client.Add -> accepted SQL path.
 // The callback lets the composed host run the same real completion/Notice chain
 // without a compact MediaInfo fixture or a manufactured completion receipt.
-func ordinaryMovieDownloadWorkflow(t *testing.T, kind string, after func(*App, Subscription)) {
+func ordinaryMovieDownloadWorkflow(t *testing.T, kind string, after func(*App, Subscription), options ...func(*SubscriptionRequest)) {
 	t.Helper()
 	a, source, _ := importTestApp(t)
 	ctx := context.Background()
@@ -101,6 +101,12 @@ func ordinaryMovieDownloadWorkflow(t *testing.T, kind string, after func(*App, S
 	request := SubscriptionRequest{MediaType: kind, TMDBID: m.ID, Season: season, DownloaderID: "fixture-qb", DownloadPath: source, RootID: "root", Schedule: Schedule{Mode: "manual"}}
 	if kind == "tv" {
 		request.TotalEpisodes = 1
+		// The fixed ordinary check always recognizes full metadata. The old
+		// compact-only cache was insufficient once that real module call ran.
+		installNoticeSourceFixtures(t, a, m, season, 1)
+	}
+	for _, option := range options {
+		option(&request)
 	}
 	s, e := a.saveSubscription(ctx, "", request)
 	if e != nil {

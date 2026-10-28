@@ -5,6 +5,7 @@ import { VBtn } from 'vuetify/components/VBtn';
 import { VCard } from 'vuetify/components/VCard';
 import { api, errorText } from '../api';
 import MediaCards from './MediaCards.vue';
+import { requestRecommendPage } from '../features/plugin-catalog-sources';
 import {
   createExploreFeed,
   loadExplorePage,
@@ -14,7 +15,6 @@ import {
 import {
   ensureRecommendShelf,
   recommendBrowseRoute,
-  recommendPath,
   type RecommendSource,
 } from '../features/recommend';
 
@@ -50,7 +50,7 @@ let resize: ResizeObserver | undefined;
 let scrollTimer: ReturnType<typeof setTimeout> | undefined;
 
 function request(page: number) {
-  return api<ExplorePage>(recommendPath(props.source.id, page));
+  return requestRecommendPage(props.source, page);
 }
 async function load() {
   await ensureRecommendShelf(feed, props.active, request, errorText);

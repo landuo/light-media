@@ -1,0 +1,704 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/storage.py:45",
+    "app/chain/__init__.py:470",
+    "app/modules/filemanager/__init__.py:220",
+    "app/api/endpoints/storage.py:90",
+    "app/utils/string.py:1000"
+  ],
+  "kind": "Pinned StorageChain, ChainBase dispatcher, FileManager list and storage/list caller.\nOnly module registries, test plugin values and LocalStorage.list responses are\nowned. Actual source FileItem/Pydantic, sort and None/list/tuple effects run.\n",
+  "cases": [
+    {
+      "name": "none",
+      "plugin": null,
+      "native": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "/owned/File10.mkv",
+          "name": "File10.mkv",
+          "size": 3,
+          "modify_time": 10
+        }
+      ],
+      "fail": false,
+      "core_fail": false,
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "fileitem": {
+              "path": "/owned/",
+              "storage": "local",
+              "type": "dir",
+              "name": "owned",
+              "basename": "owned",
+              "extension": null,
+              "size": null,
+              "modify_time": 42.0,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "recursion": false
+          }
+        },
+        {
+          "role": "core",
+          "item": {
+            "path": "/owned/",
+            "storage": "local",
+            "type": "dir",
+            "name": "owned",
+            "basename": "owned",
+            "extension": null,
+            "size": null,
+            "modify_time": 42.0,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          }
+        }
+      ],
+      "status": 200,
+      "output": [
+        {
+          "path": "/owned/File10.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "File10.mkv",
+          "basename": null,
+          "extension": null,
+          "size": 3,
+          "modify_time": 10.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ],
+      "errors": 0,
+      "exception": null
+    },
+    {
+      "name": "false",
+      "plugin": false,
+      "native": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "/owned/File10.mkv",
+          "name": "File10.mkv",
+          "size": 3,
+          "modify_time": 10
+        }
+      ],
+      "fail": false,
+      "core_fail": false,
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "fileitem": {
+              "path": "/owned/",
+              "storage": "local",
+              "type": "dir",
+              "name": "owned",
+              "basename": "owned",
+              "extension": null,
+              "size": null,
+              "modify_time": 42.0,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "recursion": false
+          }
+        }
+      ],
+      "status": 500,
+      "output": null,
+      "errors": 0,
+      "exception": "ValidationError: 1 validation error for list[FileItem]\n  Input should be a valid list [type=list_type, input_value=False, input_type=bool]\n    For further information visit https://errors.pydantic.dev/2.14/v/list_type"
+    },
+    {
+      "name": "empty_list",
+      "plugin": [],
+      "native": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "/owned/File10.mkv",
+          "name": "File10.mkv",
+          "size": 3,
+          "modify_time": 10
+        }
+      ],
+      "fail": false,
+      "core_fail": false,
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "fileitem": {
+              "path": "/owned/",
+              "storage": "local",
+              "type": "dir",
+              "name": "owned",
+              "basename": "owned",
+              "extension": null,
+              "size": null,
+              "modify_time": 42.0,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "recursion": false
+          }
+        },
+        {
+          "role": "core",
+          "item": {
+            "path": "/owned/",
+            "storage": "local",
+            "type": "dir",
+            "name": "owned",
+            "basename": "owned",
+            "extension": null,
+            "size": null,
+            "modify_time": 42.0,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          }
+        }
+      ],
+      "status": 200,
+      "output": [
+        {
+          "path": "/owned/File10.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "File10.mkv",
+          "basename": null,
+          "extension": null,
+          "size": 3,
+          "modify_time": 10.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ],
+      "errors": 0,
+      "exception": null
+    },
+    {
+      "name": "list",
+      "plugin": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "/owned/File2.mkv",
+          "name": "File2.mkv",
+          "size": "12.0",
+          "modify_time": "2.0"
+        }
+      ],
+      "native": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "/owned/File10.mkv",
+          "name": "File10.mkv",
+          "size": 3,
+          "modify_time": 10
+        }
+      ],
+      "fail": false,
+      "core_fail": false,
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "fileitem": {
+              "path": "/owned/",
+              "storage": "local",
+              "type": "dir",
+              "name": "owned",
+              "basename": "owned",
+              "extension": null,
+              "size": null,
+              "modify_time": 42.0,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "recursion": false
+          }
+        },
+        {
+          "role": "core",
+          "item": {
+            "path": "/owned/",
+            "storage": "local",
+            "type": "dir",
+            "name": "owned",
+            "basename": "owned",
+            "extension": null,
+            "size": null,
+            "modify_time": 42.0,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          }
+        }
+      ],
+      "status": 200,
+      "output": [
+        {
+          "path": "/owned/File2.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "File2.mkv",
+          "basename": null,
+          "extension": null,
+          "size": 12,
+          "modify_time": 2.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "/owned/File10.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "File10.mkv",
+          "basename": null,
+          "extension": null,
+          "size": 3,
+          "modify_time": 10.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ],
+      "errors": 0,
+      "exception": null
+    },
+    {
+      "name": "tuple",
+      "plugin": {
+        "__plugin_module_tuple": [
+          {
+            "storage": "local",
+            "type": "file",
+            "path": "/owned/File2.mkv",
+            "name": "File2.mkv",
+            "size": "12.0",
+            "modify_time": "2.0"
+          }
+        ]
+      },
+      "native": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "/owned/File10.mkv",
+          "name": "File10.mkv",
+          "size": 3,
+          "modify_time": 10
+        }
+      ],
+      "fail": false,
+      "core_fail": false,
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "fileitem": {
+              "path": "/owned/",
+              "storage": "local",
+              "type": "dir",
+              "name": "owned",
+              "basename": "owned",
+              "extension": null,
+              "size": null,
+              "modify_time": 42.0,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "recursion": false
+          }
+        }
+      ],
+      "status": 500,
+      "output": null,
+      "errors": 0,
+      "exception": "AttributeError: 'tuple' object has no attribute 'sort'"
+    },
+    {
+      "name": "empty_tuple",
+      "plugin": {
+        "__plugin_module_tuple": []
+      },
+      "native": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "/owned/File10.mkv",
+          "name": "File10.mkv",
+          "size": 3,
+          "modify_time": 10
+        }
+      ],
+      "fail": false,
+      "core_fail": false,
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "fileitem": {
+              "path": "/owned/",
+              "storage": "local",
+              "type": "dir",
+              "name": "owned",
+              "basename": "owned",
+              "extension": null,
+              "size": null,
+              "modify_time": 42.0,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "recursion": false
+          }
+        },
+        {
+          "role": "core",
+          "item": {
+            "path": "/owned/",
+            "storage": "local",
+            "type": "dir",
+            "name": "owned",
+            "basename": "owned",
+            "extension": null,
+            "size": null,
+            "modify_time": 42.0,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          }
+        }
+      ],
+      "status": 200,
+      "output": [
+        {
+          "path": "/owned/File10.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "File10.mkv",
+          "basename": null,
+          "extension": null,
+          "size": 3,
+          "modify_time": 10.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ],
+      "errors": 0,
+      "exception": null
+    },
+    {
+      "name": "dict",
+      "plugin": {},
+      "native": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "/owned/File10.mkv",
+          "name": "File10.mkv",
+          "size": 3,
+          "modify_time": 10
+        }
+      ],
+      "fail": false,
+      "core_fail": false,
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "fileitem": {
+              "path": "/owned/",
+              "storage": "local",
+              "type": "dir",
+              "name": "owned",
+              "basename": "owned",
+              "extension": null,
+              "size": null,
+              "modify_time": 42.0,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "recursion": false
+          }
+        }
+      ],
+      "status": 500,
+      "output": null,
+      "errors": 0,
+      "exception": "ValidationError: 1 validation error for list[FileItem]\n  Input should be a valid list [type=list_type, input_value={}, input_type=dict]\n    For further information visit https://errors.pydantic.dev/2.14/v/list_type"
+    },
+    {
+      "name": "plugin_throw",
+      "plugin": null,
+      "native": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "/owned/File10.mkv",
+          "name": "File10.mkv",
+          "size": 3,
+          "modify_time": 10
+        }
+      ],
+      "fail": true,
+      "core_fail": false,
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "fileitem": {
+              "path": "/owned/",
+              "storage": "local",
+              "type": "dir",
+              "name": "owned",
+              "basename": "owned",
+              "extension": null,
+              "size": null,
+              "modify_time": 42.0,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "recursion": false
+          }
+        },
+        {
+          "role": "core",
+          "item": {
+            "path": "/owned/",
+            "storage": "local",
+            "type": "dir",
+            "name": "owned",
+            "basename": "owned",
+            "extension": null,
+            "size": null,
+            "modify_time": 42.0,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          }
+        }
+      ],
+      "status": 200,
+      "output": [
+        {
+          "path": "/owned/File10.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "File10.mkv",
+          "basename": null,
+          "extension": null,
+          "size": 3,
+          "modify_time": 10.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ],
+      "errors": 1,
+      "exception": null
+    },
+    {
+      "name": "core_throw",
+      "plugin": null,
+      "native": [
+        {
+          "storage": "local",
+          "type": "file",
+          "path": "/owned/File10.mkv",
+          "name": "File10.mkv",
+          "size": 3,
+          "modify_time": 10
+        }
+      ],
+      "fail": false,
+      "core_fail": true,
+      "calls": [
+        {
+          "role": "plugin",
+          "kwargs": {
+            "fileitem": {
+              "path": "/owned/",
+              "storage": "local",
+              "type": "dir",
+              "name": "owned",
+              "basename": "owned",
+              "extension": null,
+              "size": null,
+              "modify_time": 42.0,
+              "children": [],
+              "fileid": null,
+              "parent_fileid": null,
+              "thumbnail": null,
+              "pickcode": null,
+              "drive_id": null,
+              "url": null
+            },
+            "recursion": false
+          }
+        },
+        {
+          "role": "core",
+          "item": {
+            "path": "/owned/",
+            "storage": "local",
+            "type": "dir",
+            "name": "owned",
+            "basename": "owned",
+            "extension": null,
+            "size": null,
+            "modify_time": 42.0,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          }
+        }
+      ],
+      "status": 500,
+      "output": null,
+      "errors": 1,
+      "exception": "ValidationError: 1 validation error for list[FileItem]\n  Input should be a valid list [type=list_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.14/v/list_type"
+    }
+  ],
+  "natural_keys": {
+    "File2.mkv": [
+      "file",
+      2,
+      ".mkv"
+    ],
+    "File10.mkv": [
+      "file",
+      10,
+      ".mkv"
+    ],
+    "file02.mkv": [
+      "file",
+      2,
+      ".mkv"
+    ],
+    "İ2": [
+      "i̇",
+      2,
+      ""
+    ],
+    "Σ1Σ": [
+      "σ",
+      1,
+      "σ"
+    ],
+    "１２.mkv": [
+      "",
+      12,
+      ".mkv"
+    ],
+    "١٠.mkv": [
+      "",
+      10,
+      ".mkv"
+    ]
+  }
+}

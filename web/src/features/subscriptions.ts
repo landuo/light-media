@@ -1,3 +1,18 @@
+// Fixed MediaDetailView.getMediaSeasons consumes MediaInfo.season_info and puts
+// specials last. Keep raw plugin dictionaries; the native compact list is only
+// the fallback for older host records without an original MediaInfo response.
+export function mediaDetailSeasons(media: any): any[] {
+  const original = media?.original_media;
+  const rows =
+    original && Object.hasOwn(original, 'season_info') ? original.season_info : media?.seasons;
+  if (!rows) return [];
+  return [...rows].sort((a, b) => {
+    if (a.season_number === 0) return 1;
+    if (b.season_number === 0) return -1;
+    return (a.season_number || 0) - (b.season_number || 0);
+  });
+}
+
 export function subscriptionTarget(input: Record<string, any>, convertLegacy = false) {
   if (input.media?.media_type === 'movie')
     return { target_scope: 'movie', start_episode: 0, episodes: [] as number[] };
@@ -33,7 +48,7 @@ export function subscriptionTotal(input: Record<string, any>) {
       .length;
   const total =
     cap ||
-    input.media?.seasons?.find((value: any) => value.season_number === input.season)
+    mediaDetailSeasons(input.media).find((value: any) => value.season_number === input.season)
       ?.episode_count ||
     0;
   const excludedCount = [...excluded].filter((ep: any) => ep >= start && ep <= total).length;
@@ -82,4 +97,16 @@ export async function submitSeasonBatch(
       row.message = describe(error);
     }
   }
+}
+
+// Fixed SubscribeCard uses total - lack; a plugin existence observation is
+// reflected in that persisted progress, without inventing a physical asset.
+export function subscriptionDownloaded(input: Record<string, any>) {
+  if (input.media?.media_type !== 'tv') return input.in_library_episodes?.length || 0;
+  const total = input.total_episodes || 0;
+  if (!total) return 0;
+  return Math.min(Math.max(total - (input.lack_episode || 0), 0), total);
+}
+export function subscriptionProgressTotal(input: Record<string, any>) {
+  return input.media?.media_type === 'tv' ? input.total_episodes || 0 : subscriptionTotal(input);
 }

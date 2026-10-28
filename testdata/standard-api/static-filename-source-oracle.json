@@ -1,0 +1,129 @@
+{
+  "fixed_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+  "kind": "actual fixed static-file/access AST, actual FastAPI/Starlette ASGI response headers and complete file stream; resource credential boundary controlled",
+  "runtime": {
+    "python": "3.12.13 (main, Apr 14 2026, 14:33:40) [Clang 22.1.3 ]",
+    "unicode": "15.0.0",
+    "fastapi": "0.136.3",
+    "starlette": "1.3.1",
+    "aiofiles": "25.1.0"
+  },
+  "fixed_requirements": "requirements.in fastapi~=0.136.3,starlette~=1.3.1,aiofiles~=25.1.0",
+  "cases": [
+    {
+      "name": "ascii",
+      "method": "GET",
+      "path": "Owned/ui/ordinary.css",
+      "session": true,
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "content_disposition": "inline; filename=ordinary.css",
+      "header_bytes_base64": "aW5saW5lOyBmaWxlbmFtZT1vcmRpbmFyeS5jc3M=",
+      "allow": null,
+      "content_range": null,
+      "detail": null,
+      "bytes": 9,
+      "sha256": "62eaa97212004742e1fe27d1c38b8977aa8e1b425f67c2a69660972bb02dd573"
+    },
+    {
+      "name": "latin1",
+      "method": "GET",
+      "path": "Owned/ui/ownedé.css",
+      "session": true,
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "content_disposition": "inline; filename=ownedé.css",
+      "header_bytes_base64": "aW5saW5lOyBmaWxlbmFtZT1vd25lZOkuY3Nz",
+      "allow": null,
+      "content_range": null,
+      "detail": null,
+      "bytes": 9,
+      "sha256": "62eaa97212004742e1fe27d1c38b8977aa8e1b425f67c2a69660972bb02dd573"
+    },
+    {
+      "name": "chinese",
+      "method": "GET",
+      "path": "Owned/ui/owned备份.css",
+      "session": true,
+      "status": 500,
+      "content_type": "application/json",
+      "content_disposition": null,
+      "header_bytes_base64": "",
+      "allow": null,
+      "content_range": null,
+      "detail": "Internal Server Error",
+      "bytes": 34,
+      "sha256": null
+    },
+    {
+      "name": "emoji",
+      "method": "GET",
+      "path": "Owned/ui/owned💫.css",
+      "session": true,
+      "status": 500,
+      "content_type": "application/json",
+      "content_disposition": null,
+      "header_bytes_base64": "",
+      "allow": null,
+      "content_range": null,
+      "detail": "Internal Server Error",
+      "bytes": 34,
+      "sha256": null
+    },
+    {
+      "name": "quoted",
+      "method": "GET",
+      "path": "Owned/ui/owneda\"b.css",
+      "session": true,
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "content_disposition": "inline; filename=owneda\"b.css",
+      "header_bytes_base64": "aW5saW5lOyBmaWxlbmFtZT1vd25lZGEiYi5jc3M=",
+      "allow": null,
+      "content_range": null,
+      "detail": null,
+      "bytes": 9,
+      "sha256": "62eaa97212004742e1fe27d1c38b8977aa8e1b425f67c2a69660972bb02dd573"
+    },
+    {
+      "name": "query-byte",
+      "method": "GET",
+      "path": "Owned/ui/owneda?b.css",
+      "session": true,
+      "status": 200,
+      "content_type": "text/css; charset=utf-8",
+      "content_disposition": "inline; filename=owneda?b.css",
+      "header_bytes_base64": "aW5saW5lOyBmaWxlbmFtZT1vd25lZGE/Yi5jc3M=",
+      "allow": null,
+      "content_range": null,
+      "detail": null,
+      "bytes": 9,
+      "sha256": "62eaa97212004742e1fe27d1c38b8977aa8e1b425f67c2a69660972bb02dd573"
+    }
+  ],
+  "files": {
+    "ui/ordinary.css": {
+      "base64": "b3duZWQtY3Nz"
+    },
+    "ui/ownedé.css": {
+      "base64": "b3duZWQtY3Nz"
+    },
+    "ui/owned备份.css": {
+      "base64": "b3duZWQtY3Nz"
+    },
+    "ui/owned💫.css": {
+      "base64": "b3duZWQtY3Nz"
+    },
+    "ui/owneda\"b.css": {
+      "base64": "b3duZWQtY3Nz"
+    },
+    "ui/owneda?b.css": {
+      "base64": "b3duZWQtY3Nz"
+    },
+    "ui/remoteEntry.js": {
+      "base64": "ZXhwb3J0IGNvbnN0IG93bmVkPXRydWU7"
+    }
+  },
+  "harness": "ASGI2.4 raw header/body capture; original TestClient attempt hit its UTF8-decoding error on legitimate Latin1 header, not a source endpoint failure"
+}

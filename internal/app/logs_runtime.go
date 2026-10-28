@@ -55,6 +55,10 @@ type logHealth struct {
 	Sequence       uint64 `json:"sequence"`
 }
 type runtimeLogger struct {
+	pluginProjectionLegacyGap bool
+	pluginProjectionSequence  uint64          // protected by fileMu; last serialized writer record
+	pluginProjectionFailures  map[uint64]bool // protected by fileMu; bounded to the existing SSE ring
+
 	app                                                              *App
 	mu                                                               sync.Mutex
 	queue                                                            []encodedLog
@@ -86,6 +90,10 @@ type runtimeLogger struct {
 func newRuntimeLogger(a *App) (*runtimeLogger, error) {
 	l := &runtimeLogger{app: a, boot: id("instance_"), wake: make(chan struct{}, 1), barriers: make(chan logBarrier, 16), stop: make(chan struct{}), done: make(chan struct{}), overrides: map[string]debugOverride{}, stdout: os.Stdout, frontend: map[string][]time.Time{}, streamSlots: make(chan struct{}, 8), exportSlots: make(chan struct{}, 1)}
 	if err := l.openFile(); err != nil {
+		return nil, err
+	}
+	if err := l.bootstrapPluginProjections(); err != nil {
+		_ = l.file.Close()
 		return nil, err
 	}
 	l.pruneFiles() // New has not returned; no background read races with initial fixtures.
@@ -421,6 +429,29 @@ func (l *runtimeLogger) write(v encodedLog) {
 		l.totalBytes += int64(n)
 		if err == nil && n != len(v.Data) {
 			err = io.ErrShortWrite
+		}
+	}
+	if projectionErr := l.writePluginProjection(v.Data); projectionErr != nil {
+		if l.pluginProjectionFailures == nil {
+			l.pluginProjectionFailures = map[uint64]bool{}
+		}
+		l.pluginProjectionFailures[v.Seq] = true
+		if err == nil {
+			err = projectionErr
+		}
+	}
+	l.pluginProjectionSequence = v.Seq
+	if len(l.pluginProjectionFailures) > 0 {
+		l.mu.Lock()
+		oldest := l.seq + 1
+		if len(l.ring) > 0 {
+			oldest = l.ring[0].Seq
+		}
+		l.mu.Unlock()
+		for seq := range l.pluginProjectionFailures {
+			if seq < oldest {
+				delete(l.pluginProjectionFailures, seq)
+			}
 		}
 	}
 	needPrune := v.Budget.Total > 0 && l.totalBytes > int64(v.Budget.Total)<<20

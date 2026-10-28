@@ -1,0 +1,134 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_blobs": {
+    "app/core/auth.py": "038979d4d87430e9af1ab9a4b40789f5f1aad9e0",
+    "app/core/plugin.py": "8fc8954d7e7df32b970f16f461efa244fa2f142c",
+    "app/api/endpoints/auth.py": "66b02dd576355a3da5e1e18e6748e2deaf5f3e36"
+  },
+  "exact_120s_accepted": true,
+  "over_120s_rejected": true,
+  "capacity_after_create": 1025,
+  "capacity_after_unknown_consume": 1024,
+  "provider_rows": [
+    {
+      "extra": 9007199254740993,
+      "type": "plugin",
+      "plugin_id": "OwnedAuth",
+      "id": "plugin:OwnedAuth",
+      "name": "Owned source",
+      "enabled": true
+    },
+    {
+      "id": null,
+      "name": "",
+      "enabled": false,
+      "type": "plugin",
+      "plugin_id": "OwnedAuth"
+    },
+    {
+      "id": "duplicate",
+      "enabled": [],
+      "type": "plugin",
+      "plugin_id": "OwnedAuth",
+      "name": "Owned source"
+    },
+    {
+      "id": "duplicate",
+      "enabled": 1,
+      "type": "plugin",
+      "plugin_id": "OwnedAuth",
+      "name": "Owned source"
+    },
+    {
+      "id": "duplicate",
+      "enabled": "yes",
+      "remote": {
+        "x": 2
+      },
+      "type": "plugin",
+      "plugin_id": "OwnedAuth",
+      "name": "Owned source"
+    }
+  ],
+  "provider_iterables": [
+    {
+      "input": null,
+      "provider_count": 0
+    },
+    {
+      "input": false,
+      "provider_count": 0
+    },
+    {
+      "input": 0,
+      "provider_count": 0
+    },
+    {
+      "input": {},
+      "provider_count": 0
+    },
+    {
+      "input": {
+        "key": 1
+      },
+      "provider_count": 0
+    },
+    {
+      "input": "text",
+      "provider_count": 0
+    },
+    {
+      "input": [
+        {},
+        {
+          "id": "kept"
+        }
+      ],
+      "provider_count": 1
+    }
+  ],
+  "provider_errors": {
+    "getter": 0,
+    "state": "propagated",
+    "render": "propagated"
+  },
+  "vue_remote": {
+    "id": null,
+    "enabled": false,
+    "remote": {
+      "id": "OwnedAuth",
+      "url": "/plugin/file/ownedauth/ui/remoteEntry.js",
+      "name": "Owned source"
+    },
+    "type": "plugin",
+    "plugin_id": "OwnedAuth",
+    "name": "Owned source",
+    "component": "AuthPage"
+  },
+  "skipped_rows_name_read": false,
+  "modern_epoch_plus_1ns_accepted": true,
+  "modern_epoch_plus_1us_rejected": true,
+  "exchange": [
+    {
+      "user_id": 1,
+      "statuses": [
+        200,
+        401
+      ]
+    },
+    {
+      "user_id": 2,
+      "statuses": [
+        403,
+        401
+      ]
+    },
+    {
+      "user_id": 9,
+      "statuses": [
+        403,
+        401
+      ]
+    }
+  ]
+}

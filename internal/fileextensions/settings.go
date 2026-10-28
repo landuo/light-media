@@ -89,41 +89,9 @@ func Resolve(in Inputs) (Snapshot, error) {
 			out.Inputs.Environment[key] = value
 			origin = "environment"
 		}
-		value, e := decode(raw)
+		values, e := ResolveSettingsList(raw, defaults.Values[key])
 		if e != nil {
-			return Snapshot{}, ErrSourceValidation
-		}
-		// The actual Settings.generic_type_validator preserves an already-list
-		// value. Its generic converter supplies the field factory for other
-		// non-string values, but leaves explicit None for schema rejection.
-		fallback := func() any { v, _ := decode(defaults.Values[key]); return v }
-		if s, ok := value.(string); ok {
-			parsed, pe := decode([]byte(strings.TrimSpace(s)))
-			if pe != nil {
-				value = fallback()
-			} else if _, list := parsed.([]any); list && jinjaexec.PythonRepr(jinjaexec.ToValue(parsed)) == s {
-				// The source only assigns the converted value when needs_update is
-				// true. For a literal "[]" it leaves a string and Pydantic rejects it.
-				return Snapshot{}, ErrSourceValidation
-			} else {
-				value = parsed
-			}
-		} else if value != nil {
-			if _, list := value.([]any); !list {
-				value = fallback()
-			}
-		}
-		list, ok := value.([]any)
-		if !ok {
-			return Snapshot{}, ErrSourceValidation
-		}
-		values := make([]string, 0, len(list))
-		for _, v := range list {
-			s, ok := v.(string)
-			if !ok {
-				return Snapshot{}, ErrUnsupportedMember
-			}
-			values = append(values, s)
+			return Snapshot{}, e
 		}
 		out.Fields[key] = Field{origin, append(json.RawMessage(nil), raw...), values}
 	}
@@ -135,6 +103,49 @@ func Resolve(in Inputs) (Snapshot, error) {
 	out.InputSHA = hex.EncodeToString(sum[:])
 	return out, nil
 }
+
+// ResolveSettingsList applies the fixed Settings list conversion with the
+// caller's actual field factory default, including explicit empty lists.
+func ResolveSettingsList(raw, defaultRaw json.RawMessage) ([]string, error) {
+	value, e := decode(raw)
+	if e != nil {
+		return nil, ErrSourceValidation
+	}
+	// The actual Settings.generic_type_validator preserves an already-list
+	// value. Its generic converter supplies the field factory for other
+	// non-string values, but leaves explicit None for schema rejection.
+	fallback := func() any { v, _ := decode(defaultRaw); return v }
+	if s, ok := value.(string); ok {
+		parsed, pe := decode([]byte(strings.TrimSpace(s)))
+		if pe != nil {
+			value = fallback()
+		} else if _, list := parsed.([]any); list && jinjaexec.PythonRepr(jinjaexec.ToValue(parsed)) == s {
+			// The source only assigns the converted value when needs_update is
+			// true. For a literal "[]" it leaves a string and Pydantic rejects it.
+			return nil, ErrSourceValidation
+		} else {
+			value = parsed
+		}
+	} else if value != nil {
+		if _, list := value.([]any); !list {
+			value = fallback()
+		}
+	}
+	list, ok := value.([]any)
+	if !ok {
+		return nil, ErrSourceValidation
+	}
+	values := make([]string, 0, len(list))
+	for _, v := range list {
+		s, ok := v.(string)
+		if !ok {
+			return nil, ErrUnsupportedMember
+		}
+		values = append(values, s)
+	}
+	return values, nil
+}
+
 func (s Snapshot) Values(key string) []string {
 	f, ok := s.Fields[key]
 	if !ok {

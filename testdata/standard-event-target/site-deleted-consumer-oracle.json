@@ -1,0 +1,326 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed SearchChain/SubscribeChain remove_site methods; owned configuration and subscriptions, no source service operations",
+  "source_sha256": {
+    "app/chain/search.py": "2b04f6d246ea2573081cb72039a78acefb81cd7c895603e0433bab7dc7e7a528",
+    "app/chain/subscribe.py": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab"
+  },
+  "cases": [
+    {
+      "site_id": 1,
+      "settings": {
+        "indexer": [
+          2
+        ],
+        "rss": [
+          2
+        ]
+      },
+      "subscriptions": [
+        {
+          "id": 1,
+          "sites": [
+            2
+          ]
+        },
+        {
+          "id": 2,
+          "sites": [
+            2
+          ]
+        },
+        {
+          "id": 3,
+          "sites": null
+        }
+      ],
+      "updates": [
+        {
+          "id": 1,
+          "fields": {
+            "sites": [
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "site_id": "*",
+      "settings": {
+        "indexer": [],
+        "rss": []
+      },
+      "subscriptions": [
+        {
+          "id": 1,
+          "sites": []
+        },
+        {
+          "id": 2,
+          "sites": []
+        },
+        {
+          "id": 3,
+          "sites": null
+        }
+      ],
+      "updates": [
+        {
+          "id": 1,
+          "fields": {
+            "sites": []
+          }
+        },
+        {
+          "id": 2,
+          "fields": {
+            "sites": []
+          }
+        }
+      ]
+    },
+    {
+      "site_id": null,
+      "settings": {
+        "indexer": [
+          1,
+          2
+        ],
+        "rss": [
+          1,
+          2
+        ]
+      },
+      "subscriptions": [
+        {
+          "id": 1,
+          "sites": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": 2,
+          "sites": [
+            2
+          ]
+        },
+        {
+          "id": 3,
+          "sites": null
+        }
+      ],
+      "updates": []
+    },
+    {
+      "site_id": 0,
+      "settings": {
+        "indexer": [
+          1,
+          2
+        ],
+        "rss": [
+          1,
+          2
+        ]
+      },
+      "subscriptions": [
+        {
+          "id": 1,
+          "sites": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": 2,
+          "sites": [
+            2
+          ]
+        },
+        {
+          "id": 3,
+          "sites": null
+        }
+      ],
+      "updates": []
+    },
+    {
+      "site_id": 99,
+      "settings": {
+        "indexer": [
+          1,
+          2
+        ],
+        "rss": [
+          1,
+          2
+        ]
+      },
+      "subscriptions": [
+        {
+          "id": 1,
+          "sites": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": 2,
+          "sites": [
+            2
+          ]
+        },
+        {
+          "id": 3,
+          "sites": null
+        }
+      ],
+      "updates": []
+    },
+    {
+      "site_id": "1",
+      "settings": {
+        "indexer": [
+          1,
+          2
+        ],
+        "rss": [
+          1,
+          2
+        ]
+      },
+      "subscriptions": [
+        {
+          "id": 1,
+          "sites": [
+            1,
+            2
+          ]
+        },
+        {
+          "id": 2,
+          "sites": [
+            2
+          ]
+        },
+        {
+          "id": 3,
+          "sites": null
+        }
+      ],
+      "updates": []
+    },
+    {
+      "site_id": true,
+      "settings": {
+        "indexer": [
+          2
+        ],
+        "rss": [
+          2
+        ]
+      },
+      "subscriptions": [
+        {
+          "id": 1,
+          "sites": [
+            2
+          ]
+        },
+        {
+          "id": 2,
+          "sites": [
+            2
+          ]
+        },
+        {
+          "id": 3,
+          "sites": null
+        }
+      ],
+      "updates": [
+        {
+          "id": 1,
+          "fields": {
+            "sites": [
+              2
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "site_id": 1.0,
+      "settings": {
+        "indexer": [
+          2
+        ],
+        "rss": [
+          2
+        ]
+      },
+      "subscriptions": [
+        {
+          "id": 1,
+          "sites": [
+            2
+          ]
+        },
+        {
+          "id": 2,
+          "sites": [
+            2
+          ]
+        },
+        {
+          "id": 3,
+          "sites": null
+        }
+      ],
+      "updates": [
+        {
+          "id": 1,
+          "fields": {
+            "sites": [
+              2
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "failure_case": {
+    "site_id": "*",
+    "settings": {
+      "indexer": [],
+      "rss": []
+    },
+    "subscriptions": [
+      {
+        "id": 1,
+        "sites": []
+      },
+      {
+        "id": 2,
+        "sites": [
+          2
+        ]
+      },
+      {
+        "id": 3,
+        "sites": null
+      }
+    ],
+    "updates": [
+      {
+        "id": 1,
+        "fields": {
+          "sites": []
+        }
+      }
+    ],
+    "exception": "RuntimeError"
+  }
+}

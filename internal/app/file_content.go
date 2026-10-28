@@ -23,6 +23,24 @@ func (a *App) serveBrowserContent(w http.ResponseWriter, r *http.Request) error 
 	if !info.Mode().IsRegular() {
 		return bad("INVALID_FILE", "只能下载普通文件")
 	}
+	downloadPath, e := a.originalBrowserDownload(r.Context(), path)
+	if e != nil {
+		return e
+	}
+	if downloadPath != path {
+		file, e = importOpen(downloadPath)
+		if e != nil {
+			return e
+		}
+		defer file.Close()
+		info, e = file.Stat()
+		if e != nil {
+			return e
+		}
+		if !info.Mode().IsRegular() {
+			return bad("INVALID_FILE", "只能下载普通文件")
+		}
+	}
 	w.Header().Set("Content-Type", "application/octet-stream")
 	w.Header().Set("Content-Disposition", mime.FormatMediaType("attachment", map[string]string{"filename": filepath.Base(path)}))
 	w.Header().Set("X-Content-Type-Options", "nosniff")

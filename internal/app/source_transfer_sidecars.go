@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -52,7 +51,7 @@ func (a *App) sourceImportSidecars(ctx context.Context, file PlanFile, allowOver
 	}
 	return a.sourceImportSidecarsChecked(ctx, file, existing)
 }
-func (a *App) sourceImportSidecarsChecked(ctx context.Context, file PlanFile, existing func(string) error) ([]importSidecar, error) {
+func (a *App) sourceImportSidecarsChecked(ctx context.Context, file PlanFile, existing func(string) error, probeTarget ...bool) ([]importSidecar, error) {
 	observed := transferExtensionObservation(ctx)
 	if observed == nil {
 		var e error
@@ -72,53 +71,55 @@ func (a *App) sourceImportSidecarsChecked(ctx context.Context, file PlanFile, ex
 	if e != nil {
 		return nil, e
 	}
-	dir, e := importDir(filepath.Dir(file.Source), false)
+	entries, e := a.originalTransferSiblingItems(ctx, file.Source)
 	if e != nil {
 		return nil, e
 	}
-	defer dir.Close()
-	entries, e := dir.ReadDir(2001)
-	if e != nil && e != io.EOF {
-		return nil, e
-	}
-	if len(entries) > 2000 {
-		return nil, bad("REVIEW_SIDECARS", "源目录过大，请缩小范围")
-	}
-	mains := []string{}
-	for _, entry := range entries {
-		if entry.IsDir() {
-			continue
-		}
-		media, _ := constructor.Media(transferextensions.PathFile(entry.Name()))
-		if media {
-			mains = append(mains, entry.Name())
-		}
-	}
+	// In the pinned single-file branch the selected main replaces the sibling
+	// main index. Another video with the same stem does not make it ambiguous.
+	mainStem := sourceExtraStem(filepath.Base(file.Source), false)
 	targetStem := strings.TrimSuffix(file.Target, filepath.Ext(file.Target))
 	result := []importSidecar{}
+	seen := map[string]bool{}
 	for _, entry := range entries {
-		if entry.IsDir() {
+		item := originalTransferItemClass(entry)
+		if media, _ := constructor.Media(item); media {
 			continue
 		}
-		item := transferextensions.PathFile(entry.Name())
 		if !constructor.Extra(item) {
 			continue
 		}
 		subtitle := constructor.Subtitle(item)
-		if matched, ok := sourceRelatedMainName(entry.Name(), mains, constructor); !ok || matched != filepath.Base(file.Source) {
+		entryName := originalTransferItemName(entry)
+		name := sourceText(entry["path"])
+		if mainStem == "" || sourceExtraStem(entryName, subtitle) != mainStem || originalTransferBlockedExtra(name) {
 			continue
+		}
+		storage := sourceText(entry["storage"])
+		if storage == "" {
+			storage = "local"
+		}
+		key := storage + ":" + filepath.Clean(strings.ReplaceAll(name, "\\", "/"))
+		if seen[key] {
+			continue
+		}
+		seen[key] = true
+		if storage != "local" {
+			return nil, bad("UNSUPPORTED_STORAGE", "当前整理只支持本地存储")
+		}
+		if e := a.originalMetadataAllowed(name); e != nil {
+			return nil, e
 		}
 		// A changed live handler can no longer classify a cached constructor extra.
 		// Native preview refuses the inconsistent material instead of calling it video.
 		if !handler.Extra(item) {
 			return nil, bad("REVIEW_TRANSFER_EXTENSIONS", "传输实例和当前附加文件分类不一致")
 		}
-		name := filepath.Join(filepath.Dir(file.Source), entry.Name())
 		locked, e := snapshotPath(name)
-		if e != nil || locked.Size > 64<<20 {
-			return nil, bad("REVIEW_SIDECARS", "附加文件无效或超过当前原生64MiB边界")
+		if e != nil {
+			return nil, e
 		}
-		sideStem := strings.TrimSuffix(entry.Name(), filepath.Ext(entry.Name()))
+		sideStem := strings.TrimSuffix(entryName, filepath.Ext(entryName))
 		if subtitle {
 			for {
 				dot := strings.LastIndexByte(sideStem, '.')
@@ -128,17 +129,19 @@ func (a *App) sourceImportSidecarsChecked(ctx context.Context, file PlanFile, ex
 				sideStem = sideStem[:dot]
 			}
 		}
-		suffix := entry.Name()[len(sideStem):]
+		suffix := entryName[len(sideStem):]
 		target := targetStem + suffix
-		if _, e = os.Lstat(target); e == nil {
-			if existing == nil {
-				return nil, bad("IMPORT_CONFLICT", "附加文件目标已存在")
-			}
-			if e = existing(target); e != nil {
+		if len(probeTarget) == 0 || probeTarget[0] {
+			if _, e = os.Lstat(target); e == nil {
+				if existing == nil {
+					return nil, bad("IMPORT_CONFLICT", "附加文件目标已存在")
+				}
+				if e = existing(target); e != nil {
+					return nil, e
+				}
+			} else if !os.IsNotExist(e) {
 				return nil, e
 			}
-		} else if !os.IsNotExist(e) {
-			return nil, e
 		}
 		kind := "audio"
 		if handler.Subtitle(item) {
@@ -148,10 +151,11 @@ func (a *App) sourceImportSidecarsChecked(ctx context.Context, file PlanFile, ex
 		if kind == "subtitle" {
 			kind = ""
 		}
-		result = append(result, importSidecar{Source: name, Target: target, Snapshot: locked, Kind: kind})
-		if len(result) > 32 {
-			return nil, bad("REVIEW_SIDECARS", "附加文件超过当前原生32个边界")
+		frozen, e := originalTransferFrozenItem(entry)
+		if e != nil {
+			return nil, e
 		}
+		result = append(result, importSidecar{Source: name, Target: target, Snapshot: locked, Kind: kind, Item: frozen})
 	}
 	return result, nil
 }

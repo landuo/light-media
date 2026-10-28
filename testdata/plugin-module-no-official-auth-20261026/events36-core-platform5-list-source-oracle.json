@@ -1,0 +1,741 @@
+{
+  "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed ChainBase list wrapper/dispatcher/signature, DownloadChain.downloading and Pydantic DownloaderTorrent; history lookup and native provider outputs owned boundaries",
+  "source_sha256": {
+    "app/chain/__init__.py": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+    "app/utils/object.py": "0fd0161be3084593a9693244e9ea734c5d949cc23a6e8f34349177a5e220dc1c",
+    "app/schemas/transfer.py": "b0c1e7bdc15d5041094d1be9050de5a279a5f5651bbfc32de85a001ecb56b2bd",
+    "app/chain/download.py": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+    "app/schemas/types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1"
+  },
+  "cases": [
+    {
+      "name": "null_core",
+      "plugin_result": null,
+      "plugin_failure": false,
+      "core_failure": false,
+      "selected": "Owned downloader",
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        }
+      ],
+      "roles": [],
+      "returned": [
+        {
+          "downloader": "Owned downloader",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Core owned",
+          "site_name": null,
+          "name": "Owned",
+          "year": "2026",
+          "season_episode": "S02E03",
+          "path": "/owned/Owned.S02E03.1080p",
+          "size": 2048.0,
+          "progress": 37.0,
+          "state": "downloading",
+          "upspeed": "0 B",
+          "dlspeed": "1.00 KB",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Owned.S02E03.1080p",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {
+            "title": "Owned media",
+            "poster": "/owned-poster.jpg"
+          },
+          "userid": null,
+          "username": null,
+          "left_time": "1时0秒"
+        }
+      ]
+    },
+    {
+      "name": "false_terminal",
+      "plugin_result": false,
+      "plugin_failure": false,
+      "core_failure": false,
+      "selected": "Owned downloader",
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        }
+      ],
+      "roles": [],
+      "returned": []
+    },
+    {
+      "name": "empty_dict_terminal",
+      "plugin_result": {},
+      "plugin_failure": false,
+      "core_failure": false,
+      "selected": "Owned downloader",
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        }
+      ],
+      "roles": [],
+      "returned": []
+    },
+    {
+      "name": "empty_string_terminal",
+      "plugin_result": "",
+      "plugin_failure": false,
+      "core_failure": false,
+      "selected": "Owned downloader",
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        }
+      ],
+      "roles": [],
+      "returned": []
+    },
+    {
+      "name": "empty_list_core",
+      "plugin_result": [],
+      "plugin_failure": false,
+      "core_failure": false,
+      "selected": "Owned downloader",
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        }
+      ],
+      "roles": [],
+      "returned": [
+        {
+          "downloader": "Owned downloader",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Core owned",
+          "site_name": null,
+          "name": "Owned",
+          "year": "2026",
+          "season_episode": "S02E03",
+          "path": "/owned/Owned.S02E03.1080p",
+          "size": 2048.0,
+          "progress": 37.0,
+          "state": "downloading",
+          "upspeed": "0 B",
+          "dlspeed": "1.00 KB",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Owned.S02E03.1080p",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {
+            "title": "Owned media",
+            "poster": "/owned-poster.jpg"
+          },
+          "userid": null,
+          "username": null,
+          "left_time": "1时0秒"
+        }
+      ]
+    },
+    {
+      "name": "list_before_core",
+      "plugin_result": [
+        {
+          "downloader": "Owned downloader",
+          "hash": "0123456789012345678901234567890123456789",
+          "title": "Owned.S02E03.1080p",
+          "site_name": null,
+          "name": "Owned",
+          "year": "2026",
+          "season_episode": "S02E03",
+          "path": "/owned/Owned.S02E03.1080p",
+          "size": 2048.0,
+          "progress": 37.0,
+          "state": "downloading",
+          "upspeed": "0 B",
+          "dlspeed": "1.00 KB",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Owned.S02E03.1080p",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {
+            "title": "Owned media",
+            "poster": "/owned-poster.jpg"
+          },
+          "userid": null,
+          "username": null,
+          "left_time": "1时0秒"
+        }
+      ],
+      "plugin_failure": false,
+      "core_failure": false,
+      "selected": "Owned downloader",
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        }
+      ],
+      "roles": [],
+      "returned": [
+        {
+          "downloader": "Owned downloader",
+          "hash": "0123456789012345678901234567890123456789",
+          "title": "Owned.S02E03.1080p",
+          "site_name": null,
+          "name": "Owned",
+          "year": "2026",
+          "season_episode": "S02E03",
+          "path": "/owned/Owned.S02E03.1080p",
+          "size": 2048.0,
+          "progress": 37.0,
+          "state": "downloading",
+          "upspeed": "0 B",
+          "dlspeed": "1.00 KB",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Owned.S02E03.1080p",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {
+            "title": "Owned media",
+            "poster": "/owned-poster.jpg"
+          },
+          "userid": null,
+          "username": null,
+          "left_time": "1时0秒"
+        },
+        {
+          "downloader": "Owned downloader",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Core owned",
+          "site_name": null,
+          "name": "Owned",
+          "year": "2026",
+          "season_episode": "S02E03",
+          "path": "/owned/Owned.S02E03.1080p",
+          "size": 2048.0,
+          "progress": 37.0,
+          "state": "downloading",
+          "upspeed": "0 B",
+          "dlspeed": "1.00 KB",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Owned.S02E03.1080p",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {
+            "title": "Owned media",
+            "poster": "/owned-poster.jpg"
+          },
+          "userid": null,
+          "username": null,
+          "left_time": "1时0秒"
+        }
+      ]
+    },
+    {
+      "name": "list_optional_downloader",
+      "plugin_result": [
+        {
+          "downloader": null,
+          "hash": "0123456789012345678901234567890123456789",
+          "title": "Owned.S02E03.1080p",
+          "site_name": null,
+          "name": "Owned",
+          "year": "2026",
+          "season_episode": "S02E03",
+          "path": "/owned/Owned.S02E03.1080p",
+          "size": 2048.0,
+          "progress": 37.0,
+          "state": "downloading",
+          "upspeed": "0 B",
+          "dlspeed": "1.00 KB",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Owned.S02E03.1080p",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {
+            "title": "Owned media",
+            "poster": "/owned-poster.jpg"
+          },
+          "userid": null,
+          "username": null,
+          "left_time": "1时0秒"
+        }
+      ],
+      "plugin_failure": false,
+      "core_failure": false,
+      "selected": "Owned downloader",
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        }
+      ],
+      "roles": [],
+      "returned": [
+        {
+          "downloader": null,
+          "hash": "0123456789012345678901234567890123456789",
+          "title": "Owned.S02E03.1080p",
+          "site_name": null,
+          "name": "Owned",
+          "year": "2026",
+          "season_episode": "S02E03",
+          "path": "/owned/Owned.S02E03.1080p",
+          "size": 2048.0,
+          "progress": 37.0,
+          "state": "downloading",
+          "upspeed": "0 B",
+          "dlspeed": "1.00 KB",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Owned.S02E03.1080p",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {
+            "title": "Owned media",
+            "poster": "/owned-poster.jpg"
+          },
+          "userid": null,
+          "username": null,
+          "left_time": "1时0秒"
+        },
+        {
+          "downloader": "Owned downloader",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Core owned",
+          "site_name": null,
+          "name": "Owned",
+          "year": "2026",
+          "season_episode": "S02E03",
+          "path": "/owned/Owned.S02E03.1080p",
+          "size": 2048.0,
+          "progress": 37.0,
+          "state": "downloading",
+          "upspeed": "0 B",
+          "dlspeed": "1.00 KB",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Owned.S02E03.1080p",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {
+            "title": "Owned media",
+            "poster": "/owned-poster.jpg"
+          },
+          "userid": null,
+          "username": null,
+          "left_time": "1时0秒"
+        }
+      ]
+    },
+    {
+      "name": "plugin_exception_core",
+      "plugin_result": null,
+      "plugin_failure": true,
+      "core_failure": false,
+      "selected": "Owned downloader",
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        }
+      ],
+      "roles": [
+        "plugin"
+      ],
+      "returned": [
+        {
+          "downloader": "Owned downloader",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Core owned",
+          "site_name": null,
+          "name": "Owned",
+          "year": "2026",
+          "season_episode": "S02E03",
+          "path": "/owned/Owned.S02E03.1080p",
+          "size": 2048.0,
+          "progress": 37.0,
+          "state": "downloading",
+          "upspeed": "0 B",
+          "dlspeed": "1.00 KB",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Owned.S02E03.1080p",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {
+            "title": "Owned media",
+            "poster": "/owned-poster.jpg"
+          },
+          "userid": null,
+          "username": null,
+          "left_time": "1时0秒"
+        }
+      ]
+    },
+    {
+      "name": "list_core_exception",
+      "plugin_result": [
+        {
+          "downloader": "Owned downloader",
+          "hash": "0123456789012345678901234567890123456789",
+          "title": "Owned.S02E03.1080p",
+          "site_name": null,
+          "name": "Owned",
+          "year": "2026",
+          "season_episode": "S02E03",
+          "path": "/owned/Owned.S02E03.1080p",
+          "size": 2048.0,
+          "progress": 37.0,
+          "state": "downloading",
+          "upspeed": "0 B",
+          "dlspeed": "1.00 KB",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Owned.S02E03.1080p",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {
+            "title": "Owned media",
+            "poster": "/owned-poster.jpg"
+          },
+          "userid": null,
+          "username": null,
+          "left_time": "1时0秒"
+        }
+      ],
+      "plugin_failure": false,
+      "core_failure": true,
+      "selected": "Owned downloader",
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": "Owned downloader",
+            "include_all_tags": false
+          }
+        }
+      ],
+      "roles": [
+        "system"
+      ],
+      "returned": [
+        {
+          "downloader": "Owned downloader",
+          "hash": "0123456789012345678901234567890123456789",
+          "title": "Owned.S02E03.1080p",
+          "site_name": null,
+          "name": "Owned",
+          "year": "2026",
+          "season_episode": "S02E03",
+          "path": "/owned/Owned.S02E03.1080p",
+          "size": 2048.0,
+          "progress": 37.0,
+          "state": "downloading",
+          "upspeed": "0 B",
+          "dlspeed": "1.00 KB",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Owned.S02E03.1080p",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {
+            "title": "Owned media",
+            "poster": "/owned-poster.jpg"
+          },
+          "userid": null,
+          "username": null,
+          "left_time": "1时0秒"
+        }
+      ]
+    },
+    {
+      "name": "all_null_tuple_core",
+      "plugin_result": {
+        "__plugin_module_tuple": [
+          null,
+          null
+        ]
+      },
+      "plugin_failure": false,
+      "core_failure": false,
+      "selected": null,
+      "observations": [
+        {
+          "kind": "plugin",
+          "args": [],
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": null,
+            "include_all_tags": false
+          }
+        },
+        {
+          "kind": "core",
+          "kwargs": {
+            "status": "下载中",
+            "hashs": null,
+            "downloader": null,
+            "include_all_tags": false
+          }
+        }
+      ],
+      "roles": [],
+      "returned": [
+        {
+          "downloader": "Owned downloader",
+          "hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "title": "Core owned",
+          "site_name": null,
+          "name": "Owned",
+          "year": "2026",
+          "season_episode": "S02E03",
+          "path": "/owned/Owned.S02E03.1080p",
+          "size": 2048.0,
+          "progress": 37.0,
+          "state": "downloading",
+          "upspeed": "0 B",
+          "dlspeed": "1.00 KB",
+          "tags": "light-media",
+          "save_path": "/owned",
+          "content_path": "/owned/Owned.S02E03.1080p",
+          "category": null,
+          "download_limit": null,
+          "upload_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null,
+          "trackers": [],
+          "media": {
+            "title": "Owned media",
+            "poster": "/owned-poster.jpg"
+          },
+          "userid": null,
+          "username": null,
+          "left_time": "1时0秒"
+        }
+      ]
+    }
+  ],
+  "projection_samples": [
+    {
+      "downloader": "Owned downloader",
+      "hash": null,
+      "title": null,
+      "site_name": null,
+      "name": null,
+      "year": "2026",
+      "season_episode": "S02E03",
+      "path": "/owned/Owned.S02E03.1080p",
+      "size": 1e+100,
+      "progress": 37.0,
+      "state": null,
+      "upspeed": "0 B",
+      "dlspeed": "1.00 KB",
+      "tags": "light-media",
+      "save_path": "/owned",
+      "content_path": "/owned/Owned.S02E03.1080p",
+      "category": null,
+      "download_limit": null,
+      "upload_limit": null,
+      "ratio_limit": null,
+      "seeding_time_limit": null,
+      "trackers": [],
+      "media": {
+        "title": "Owned media",
+        "poster": "/owned-poster.jpg"
+      },
+      "userid": null,
+      "username": null,
+      "left_time": "1时0秒"
+    },
+    {
+      "downloader": "Owned downloader",
+      "hash": "0123456789012345678901234567890123456789",
+      "title": "Owned.S02E03.1080p",
+      "site_name": null,
+      "name": "Owned",
+      "year": "2026",
+      "season_episode": "S02E03",
+      "path": "/owned/Owned.S02E03.1080p",
+      "size": -10.5,
+      "progress": 37.0,
+      "state": "downloading",
+      "upspeed": "0 B",
+      "dlspeed": "1.00 KB",
+      "tags": "light-media",
+      "save_path": "/owned",
+      "content_path": "/owned/Owned.S02E03.1080p",
+      "category": null,
+      "download_limit": null,
+      "upload_limit": null,
+      "ratio_limit": null,
+      "seeding_time_limit": null,
+      "trackers": [],
+      "media": {
+        "title": "Owned media",
+        "poster": "/owned-poster.jpg"
+      },
+      "userid": null,
+      "username": null,
+      "left_time": "1时0秒"
+    }
+  ]
+}

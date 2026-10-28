@@ -1,0 +1,994 @@
+{
+  "commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "kind": "thirteen actual fixed FormRender function cases; synthetic models and inert HTML",
+  "sources": {
+    "FormRender.vue": "8a2641a7cb06242d6a43a80939f9bccb2a00948454f62347ab0c6cf990a41ccc",
+    "PageRender.vue": "1c185e7ea49e777d90195aff6bf749edf271ba16a267d9e6352d839d115fa1f6",
+    "DashboardRender.vue": "078d0f0fb8573ab0ed0b0c7e49d455cc587e74c11ece45c556f2166d211ca31e"
+  },
+  "cases": [
+    {
+      "name": "model-aliases-and-updates",
+      "kind": "props",
+      "model": {
+        "text": "start",
+        "count": 2,
+        "choice": "A"
+      },
+      "props": {
+        "modelvalue": "text",
+        "v-model": "count",
+        "model:selection": "choice",
+        "label": "text"
+      },
+      "updates": [
+        {
+          "handler": "onUpdate:value",
+          "value": "changed"
+        },
+        {
+          "handler": "onUpdate:modelValue",
+          "value": 4
+        },
+        {
+          "handler": "onUpdate:selection",
+          "value": "B"
+        }
+      ],
+      "expected": {
+        "props": {
+          "value": "start",
+          "onUpdate:value": "$function",
+          "modelValue": 2,
+          "onUpdate:modelValue": "$function",
+          "selection": "A",
+          "onUpdate:selection": "$function",
+          "label": "start"
+        },
+        "model": {
+          "text": "changed",
+          "count": 4,
+          "choice": "B"
+        }
+      }
+    },
+    {
+      "name": "literal-unicode-and-punctuation-keys",
+      "kind": "props",
+      "model": {
+        "7": "seven",
+        "中文 标题": "原值",
+        "custom[password]": "brackets",
+        "custom.constructor": "literal dotted",
+        "null": "nullable"
+      },
+      "props": {
+        "model": "中文 标题",
+        "model:selection:ignored": "custom[password]",
+        "label": "custom.constructor",
+        "modelvalue": 7,
+        "model:nullable": null
+      },
+      "updates": [
+        {
+          "handler": "onUpdate:modelValue",
+          "value": "新值"
+        },
+        {
+          "handler": "onUpdate:selection",
+          "value": "edited"
+        },
+        {
+          "handler": "onUpdate:value",
+          "value": "seven edited"
+        },
+        {
+          "handler": "onUpdate:nullable",
+          "value": "null edited"
+        }
+      ],
+      "expected": {
+        "props": {
+          "modelValue": "原值",
+          "onUpdate:modelValue": "$function",
+          "selection": "brackets",
+          "onUpdate:selection": "$function",
+          "label": "literal dotted",
+          "value": "seven",
+          "onUpdate:value": "$function",
+          "nullable": "nullable",
+          "onUpdate:nullable": "$function"
+        },
+        "model": {
+          "7": "seven edited",
+          "中文 标题": "新值",
+          "custom[password]": "edited",
+          "custom.constructor": "literal dotted",
+          "null": "null edited"
+        }
+      }
+    },
+    {
+      "name": "native-style-keeps-css-props-and-complex-author-rules",
+      "kind": "render",
+      "model": {},
+      "node": {
+        "component": "style",
+        "props": {
+          "media": "screen"
+        },
+        "text": "/* owned */ @media (min-width:300px) { .owned > b:is(.probe) { --owned:red; transform:translateX(3px); color:var(--owned); padding-block:5px } }"
+      },
+      "expected": {
+        "component": "style",
+        "props": {
+          "media": "screen"
+        },
+        "content": "/* owned */ @media (min-width:300px) { .owned > b:is(.probe) { --owned:red; transform:translateX(3px); color:var(--owned); padding-block:5px } }"
+      }
+    },
+    {
+      "name": "native-style-html-keeps-form-inner-component-layer",
+      "kind": "render",
+      "model": {},
+      "node": {
+        "component": "style",
+        "props": {
+          "media": "screen"
+        },
+        "html": ".owned-html-probe { color:rgb(12,34,56) }"
+      },
+      "expected": {
+        "component": "style",
+        "props": {
+          "media": "screen"
+        },
+        "slots": {
+          "default": {
+            "component": "style",
+            "props": {
+              "innerHTML": ".owned-html-probe { color:rgb(12,34,56) }"
+            },
+            "content": null
+          }
+        }
+      }
+    },
+    {
+      "name": "missing-show-variable-propagates-source-reference-error",
+      "kind": "props",
+      "model": {},
+      "props": {
+        "show": "{{ owned_missing_visible }}"
+      },
+      "expected_error": {
+        "name": "ReferenceError",
+        "message": "owned_missing_visible is not defined"
+      }
+    },
+    {
+      "name": "show-aliases-follow-property-insertion-order",
+      "kind": "props",
+      "model": {
+        "visible": true,
+        "hidden": false
+      },
+      "props": {
+        "show": "{{ visible }}",
+        "v-show": "{{ hidden }}"
+      },
+      "expected": {
+        "props": {
+          "style": {
+            "display": "none"
+          }
+        },
+        "model": {
+          "visible": true,
+          "hidden": false
+        }
+      }
+    },
+    {
+      "name": "ordinary-show-prefixed-property",
+      "kind": "props",
+      "model": {
+        "title": "owned label"
+      },
+      "props": {
+        "show-arrows": true,
+        "label": "title",
+        "color": "primary"
+      },
+      "expected": {
+        "props": {
+          "show-arrows": true,
+          "label": "owned label",
+          "color": "primary"
+        },
+        "model": {
+          "title": "owned label"
+        }
+      }
+    },
+    {
+      "name": "show-before-later-style",
+      "kind": "props",
+      "model": {
+        "enabled": false
+      },
+      "props": {
+        "show": "{{ enabled }}",
+        "style": {
+          "color": "red"
+        }
+      },
+      "expected": {
+        "props": {
+          "style": {
+            "color": "red"
+          }
+        },
+        "model": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "name": "event-function-factory",
+      "kind": "props",
+      "model": {
+        "total": 3
+      },
+      "props": {
+        "onClick": "(function(){return e => { model.total += e }})()"
+      },
+      "updates": [
+        {
+          "handler": "onClick",
+          "value": 5
+        }
+      ],
+      "expected": {
+        "props": {
+          "onClick": "$function"
+        },
+        "model": {
+          "total": 8
+        }
+      }
+    },
+    {
+      "name": "falsey-form-text-falls-through-content",
+      "kind": "render",
+      "model": {},
+      "node": {
+        "component": "VCard",
+        "text": 0,
+        "content": [
+          {
+            "component": "span",
+            "text": "owned fallback"
+          }
+        ]
+      },
+      "expected": {
+        "component": "VCard",
+        "props": {},
+        "slots": {
+          "default": [
+            {
+              "component": "span",
+              "props": {},
+              "content": "owned fallback"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "form-rich-html-retains-component-layer",
+      "kind": "render",
+      "model": {},
+      "node": {
+        "component": "VCard",
+        "props": {
+          "class": "owned-card"
+        },
+        "html": "<b>owned rich text</b>",
+        "content": [
+          {
+            "component": "span",
+            "text": "ignored"
+          }
+        ]
+      },
+      "expected": {
+        "component": "VCard",
+        "props": {
+          "class": "owned-card"
+        },
+        "slots": {
+          "default": {
+            "component": "VCard",
+            "props": {
+              "innerHTML": "<b>owned rich text</b>"
+            },
+            "content": null
+          }
+        }
+      }
+    },
+    {
+      "name": "form-slot-object-array-and-default-precedence",
+      "kind": "render",
+      "model": {
+        "key": "owned"
+      },
+      "node": {
+        "component": "VTextField",
+        "props": {
+          "model": "key"
+        },
+        "slots": {
+          "append": {
+            "component": "span",
+            "text": "suffix"
+          },
+          "prepend": [
+            {
+              "component": "b",
+              "text": "prefix"
+            }
+          ],
+          "default": {
+            "component": "span",
+            "text": "overridden"
+          }
+        },
+        "content": [
+          {
+            "component": "span",
+            "text": "default content"
+          }
+        ]
+      },
+      "expected": {
+        "component": "VTextField",
+        "props": {
+          "modelValue": "owned",
+          "onUpdate:modelValue": "$function"
+        },
+        "slots": {
+          "append": {
+            "component": "span",
+            "props": {},
+            "content": "suffix"
+          },
+          "prepend": [
+            {
+              "component": "b",
+              "props": {},
+              "content": "prefix"
+            }
+          ],
+          "default": [
+            {
+              "component": "span",
+              "props": {},
+              "content": "default content"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "owned-rich-recursive-browser-form",
+      "kind": "render",
+      "model": {
+        "enabled": false,
+        "key": "rich-default",
+        "gate": true,
+        "notes": "owned notes",
+        "total": 3,
+        "caption": "Owned notes",
+        "editor_content": "owned: true\n",
+        "中文 标题": "原版字段"
+      },
+      "node": {
+        "component": "VCard",
+        "content": [
+          {
+            "component": "style",
+            "props": {
+              "media": "screen"
+            },
+            "text": "/* owned fixed-render CSS probe */\n@media (min-width: 300px) { .owned-html-wrapper > .v-card > b { --owned-probe: rgb(33, 150, 243); color: var(--owned-probe); transform: translateX(3px); padding-block: 5px; } }"
+          },
+          {
+            "component": "VCardTitle",
+            "text": "Owned recursive configuration"
+          },
+          {
+            "component": "VCardText",
+            "content": [
+              {
+                "component": "VRow",
+                "content": [
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 6
+                    },
+                    "content": [
+                      {
+                        "component": "VSwitch",
+                        "props": {
+                          "model": "enabled",
+                          "label": "Enabled"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 6
+                    },
+                    "content": [
+                      {
+                        "component": "VTextField",
+                        "props": {
+                          "model": "key",
+                          "label": "Owned value"
+                        },
+                        "slots": {
+                          "prepend": {
+                            "component": "span",
+                            "text": "Key prefix"
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 6
+                    },
+                    "content": [
+                      {
+                        "component": "VSwitch",
+                        "props": {
+                          "model": "gate",
+                          "label": "Show details"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 6
+                    },
+                    "content": [
+                      {
+                        "component": "VTextField",
+                        "props": {
+                          "model": "notes",
+                          "label": "caption",
+                          "show": "{{ gate }}"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 6
+                    },
+                    "content": [
+                      {
+                        "component": "VTextField",
+                        "props": {
+                          "model": "中文 标题",
+                          "label": "Owned literal field"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 6
+                    },
+                    "content": [
+                      {
+                        "component": "VTextField",
+                        "props": {
+                          "model": "total",
+                          "label": "Owned counter",
+                          "readonly": true
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 6
+                    },
+                    "content": [
+                      {
+                        "component": "VBtn",
+                        "text": "Increment owned counter",
+                        "props": {
+                          "color": "primary",
+                          "onClick": "(function(){ return e => { model.total += 1 } })()"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 12
+                    },
+                    "content": [
+                      {
+                        "component": "VAceEditor",
+                        "props": {
+                          "modelvalue": "editor_content",
+                          "lang": "yaml",
+                          "theme": "monokai",
+                          "style": "height: 100px",
+                          "options": {
+                            "fontSize": 14,
+                            "tabSize": 4,
+                            "useWorker": false
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 12
+                    },
+                    "content": [
+                      {
+                        "component": "VCard",
+                        "props": {
+                          "class": "owned-html-wrapper"
+                        },
+                        "html": "<b>Owned rich inner</b>"
+                      }
+                    ]
+                  },
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 12
+                    },
+                    "content": [
+                      {
+                        "component": "VCard",
+                        "text": 0,
+                        "content": [
+                          {
+                            "component": "span",
+                            "text": "Owned zero text fallback"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "component": "VCol",
+                    "props": {
+                      "cols": 12
+                    },
+                    "content": [
+                      {
+                        "component": "div",
+                        "props": {
+                          "class": "owned-runtime-utility opacity-20 text-decoration-overline"
+                        },
+                        "text": "Owned runtime utility"
+                      },
+                      {
+                        "component": "VIcon",
+                        "props": {
+                          "icon": "mdi-zodiac-aquarius",
+                          "class": "owned-runtime-icon",
+                          "aria-label": "Owned runtime icon"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "expected": {
+        "component": "VCard",
+        "props": {},
+        "slots": {
+          "default": [
+            {
+              "component": "style",
+              "props": {
+                "media": "screen"
+              },
+              "content": "/* owned fixed-render CSS probe */\n@media (min-width: 300px) { .owned-html-wrapper > .v-card > b { --owned-probe: rgb(33, 150, 243); color: var(--owned-probe); transform: translateX(3px); padding-block: 5px; } }"
+            },
+            {
+              "component": "VCardTitle",
+              "props": {},
+              "slots": {
+                "default": "Owned recursive configuration"
+              }
+            },
+            {
+              "component": "VCardText",
+              "props": {},
+              "slots": {
+                "default": [
+                  {
+                    "component": "VRow",
+                    "props": {},
+                    "slots": {
+                      "default": [
+                        {
+                          "component": "VCol",
+                          "props": {
+                            "cols": 6
+                          },
+                          "slots": {
+                            "default": [
+                              {
+                                "component": "VSwitch",
+                                "props": {
+                                  "modelValue": false,
+                                  "onUpdate:modelValue": "$function",
+                                  "label": "Enabled"
+                                },
+                                "slots": {
+                                  "default": []
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "component": "VCol",
+                          "props": {
+                            "cols": 6
+                          },
+                          "slots": {
+                            "default": [
+                              {
+                                "component": "VTextField",
+                                "props": {
+                                  "modelValue": "rich-default",
+                                  "onUpdate:modelValue": "$function",
+                                  "label": "Owned value"
+                                },
+                                "slots": {
+                                  "prepend": {
+                                    "component": "span",
+                                    "props": {},
+                                    "content": "Key prefix"
+                                  },
+                                  "default": []
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "component": "VCol",
+                          "props": {
+                            "cols": 6
+                          },
+                          "slots": {
+                            "default": [
+                              {
+                                "component": "VSwitch",
+                                "props": {
+                                  "modelValue": true,
+                                  "onUpdate:modelValue": "$function",
+                                  "label": "Show details"
+                                },
+                                "slots": {
+                                  "default": []
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "component": "VCol",
+                          "props": {
+                            "cols": 6
+                          },
+                          "slots": {
+                            "default": [
+                              {
+                                "component": "VTextField",
+                                "props": {
+                                  "modelValue": "owned notes",
+                                  "onUpdate:modelValue": "$function",
+                                  "label": "Owned notes",
+                                  "style": {
+                                    "display": ""
+                                  }
+                                },
+                                "slots": {
+                                  "default": []
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "component": "VCol",
+                          "props": {
+                            "cols": 6
+                          },
+                          "slots": {
+                            "default": [
+                              {
+                                "component": "VTextField",
+                                "props": {
+                                  "modelValue": "原版字段",
+                                  "onUpdate:modelValue": "$function",
+                                  "label": "Owned literal field"
+                                },
+                                "slots": {
+                                  "default": []
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "component": "VCol",
+                          "props": {
+                            "cols": 6
+                          },
+                          "slots": {
+                            "default": [
+                              {
+                                "component": "VTextField",
+                                "props": {
+                                  "modelValue": 3,
+                                  "onUpdate:modelValue": "$function",
+                                  "label": "Owned counter",
+                                  "readonly": true
+                                },
+                                "slots": {
+                                  "default": []
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "component": "VCol",
+                          "props": {
+                            "cols": 6
+                          },
+                          "slots": {
+                            "default": [
+                              {
+                                "component": "VBtn",
+                                "props": {
+                                  "color": "primary",
+                                  "onClick": "$function"
+                                },
+                                "slots": {
+                                  "default": "Increment owned counter"
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "component": "VCol",
+                          "props": {
+                            "cols": 12
+                          },
+                          "slots": {
+                            "default": [
+                              {
+                                "component": "VAceEditor",
+                                "props": {
+                                  "value": "owned: true\n",
+                                  "onUpdate:value": "$function",
+                                  "lang": "yaml",
+                                  "theme": "monokai",
+                                  "style": "height: 100px",
+                                  "options": {
+                                    "fontSize": 14,
+                                    "tabSize": 4,
+                                    "useWorker": false
+                                  }
+                                },
+                                "slots": {
+                                  "default": []
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "component": "VCol",
+                          "props": {
+                            "cols": 12
+                          },
+                          "slots": {
+                            "default": [
+                              {
+                                "component": "VCard",
+                                "props": {
+                                  "class": "owned-html-wrapper"
+                                },
+                                "slots": {
+                                  "default": {
+                                    "component": "VCard",
+                                    "props": {
+                                      "innerHTML": "<b>Owned rich inner</b>"
+                                    },
+                                    "content": null
+                                  }
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "component": "VCol",
+                          "props": {
+                            "cols": 12
+                          },
+                          "slots": {
+                            "default": [
+                              {
+                                "component": "VCard",
+                                "props": {},
+                                "slots": {
+                                  "default": [
+                                    {
+                                      "component": "span",
+                                      "props": {},
+                                      "content": "Owned zero text fallback"
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        },
+                        {
+                          "component": "VCol",
+                          "props": {
+                            "cols": 12
+                          },
+                          "slots": {
+                            "default": [
+                              {
+                                "component": "div",
+                                "props": {
+                                  "class": "owned-runtime-utility opacity-20 text-decoration-overline"
+                                },
+                                "content": "Owned runtime utility"
+                              },
+                              {
+                                "component": "VIcon",
+                                "props": {
+                                  "icon": "mdi-zodiac-aquarius",
+                                  "class": "owned-runtime-icon",
+                                  "aria-label": "Owned runtime icon"
+                                },
+                                "slots": {
+                                  "default": []
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "page_event_cases": {
+    "steps": [
+      {
+        "events": {
+          "click": {
+            "api": "plugin/Owned/one",
+            "method": "GET",
+            "params": {
+              "first": true
+            }
+          }
+        }
+      },
+      {
+        "events": {}
+      },
+      {
+        "events": {
+          "click": {
+            "api": "plugin/Owned/two",
+            "method": "POST",
+            "params": {
+              "second": true
+            }
+          }
+        }
+      }
+    ],
+    "calls": [
+      [
+        [
+          "plugin/Owned/one",
+          "GET",
+          {
+            "first": true
+          }
+        ]
+      ],
+      [
+        [
+          "plugin/Owned/one",
+          "GET",
+          {
+            "first": true
+          }
+        ],
+        [
+          "plugin/Owned/one",
+          "GET",
+          {
+            "first": true
+          }
+        ]
+      ],
+      [
+        [
+          "plugin/Owned/one",
+          "GET",
+          {
+            "first": true
+          }
+        ],
+        [
+          "plugin/Owned/one",
+          "GET",
+          {
+            "first": true
+          }
+        ],
+        [
+          "plugin/Owned/two",
+          "POST",
+          {
+            "second": true
+          }
+        ]
+      ]
+    ]
+  }
+}

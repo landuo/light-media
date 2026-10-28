@@ -73,38 +73,61 @@ func (h PluginDataResetHandler) Order() int {
 }
 
 type Manifest struct {
+	// Source licensing metadata is retained only for saved manifest compatibility.
+	// The user excluded official authorization: these fields never gate discovery or loading.
+	AuthLevel       *int   `json:"auth_level,omitempty"`
+	PluginPublicKey string `json:"plugin_public_key,omitempty"`
 	// Missing class attribute sorts as 0. A class inheriting MoviePilot Base's
 	// plugin_order=9999 must export 9999, not omit it.
-	PluginOrder          int                      `json:"plugin_order,omitempty"`
-	ResetHandlers        []PluginDataResetHandler `json:"reset_handlers,omitempty"`
-	ChainHandlers        []ChainHandler           `json:"chain_handlers,omitempty"`
-	Frontend             *Frontend                `json:"frontend,omitempty"`
-	RuntimeSupport       *RuntimeSupport          `json:"runtime_support,omitempty"`
-	SchemaVersion        int                      `json:"schema_version"`
-	PluginID             string                   `json:"plugin_id"`
-	Name                 string                   `json:"name"`
-	Description          string                   `json:"description,omitempty"`
-	Icon                 string                   `json:"icon,omitempty"`
-	Author               string                   `json:"author,omitempty"`
-	AuthorURL            string                   `json:"author_url,omitempty"`
-	Version              string                   `json:"version"`
-	Runtime              string                   `json:"runtime"`
-	Entry                string                   `json:"entry"`
-	HostAPIMin           int                      `json:"host_api_min"`
-	HostAPIMax           int                      `json:"host_api_max"`
-	Methods              []string                 `json:"methods"`
-	Capabilities         []string                 `json:"capabilities"`
-	Events               []string                 `json:"events,omitempty"`
-	HasPage              bool                     `json:"has_page,omitempty"`
-	Dashboards           []string                 `json:"dashboards,omitempty"`
-	APIs                 []HTTPAPI                `json:"apis,omitempty"`
-	ConfigDefaults       string                   `json:"config_defaults,omitempty"`
-	ConfigFormProjection string                   `json:"config_form_projection,omitempty"`
-	FormModelPolicy      *FormModelPolicy         `json:"form_model_policy,omitempty"`
+	PluginOrder       int                      `json:"plugin_order,omitempty"`
+	ResetHandlers     []PluginDataResetHandler `json:"reset_handlers,omitempty"`
+	ChainHandlers     []ChainHandler           `json:"chain_handlers,omitempty"`
+	BroadcastHandlers []BroadcastHandler       `json:"broadcast_handlers,omitempty"`
+	Frontend          *Frontend                `json:"frontend,omitempty"`
+	RuntimeSupport    *RuntimeSupport          `json:"runtime_support,omitempty"`
+	SchemaVersion     int                      `json:"schema_version"`
+	PluginID          string                   `json:"plugin_id"`
+	Name              string                   `json:"name"`
+	Description       string                   `json:"description,omitempty"`
+	Icon              string                   `json:"icon,omitempty"`
+	Author            string                   `json:"author,omitempty"`
+	AuthorURL         string                   `json:"author_url,omitempty"`
+	Version           string                   `json:"version"`
+	Runtime           string                   `json:"runtime"`
+	Entry             string                   `json:"entry"`
+	HostAPIMin        int                      `json:"host_api_min"`
+	HostAPIMax        int                      `json:"host_api_max"`
+	Methods           []string                 `json:"methods"`
+	Capabilities      []string                 `json:"capabilities"`
+	Events            []string                 `json:"events,omitempty"`
+	HasPage           bool                     `json:"has_page,omitempty"`
+	Dashboards        []string                 `json:"dashboards,omitempty"`
+	// Optional bound get_dashboard parameter names. Nil preserves the original
+	// SDK's key/user_agent payload; an explicit empty list declares no arguments.
+	DashboardParameters  *[]string        `json:"dashboard_parameters,omitempty"`
+	APIs                 []HTTPAPI        `json:"apis,omitempty"`
+	ConfigDefaults       string           `json:"config_defaults,omitempty"`
+	ConfigFormProjection string           `json:"config_form_projection,omitempty"`
+	FormModelPolicy      *FormModelPolicy `json:"form_model_policy,omitempty"`
 }
 
 func (m Manifest) Validate() error {
+	if m.DashboardParameters != nil {
+		if len(*m.DashboardParameters) > 64 || !slices.Contains(m.Methods, "get_dashboard") {
+			return failure("invalid_manifest")
+		}
+		seen := map[string]bool{}
+		for _, name := range *m.DashboardParameters {
+			if !methodPattern.MatchString(name) || seen[name] {
+				return failure("invalid_manifest")
+			}
+			seen[name] = true
+		}
+	}
 	if err := m.validateChainHandlers(); err != nil {
+		return err
+	}
+	if err := m.validateBroadcastHandlers(); err != nil {
 		return err
 	}
 	if len(m.ResetHandlers) > 64 {
@@ -139,7 +162,7 @@ func (m Manifest) Validate() error {
 	if m.ConfigDefaults != "" && m.ConfigDefaults != ConfigDefaultsPure && m.ConfigDefaults != ConfigDefaultsTransactional {
 		return failure("invalid_manifest")
 	}
-	if m.SchemaVersion != 1 || !identityPattern.MatchString(m.PluginID) || !versionPattern.MatchString(m.Version) ||
+	if m.SchemaVersion != 1 || !ValidInstanceID(m.PluginID) || !versionPattern.MatchString(m.Version) ||
 		m.Name == "" || len(m.Name) > 256 || m.Runtime != "go-executable" || m.HostAPIMin < 1 || m.HostAPIMax < m.HostAPIMin ||
 		m.Entry == "" || filepath.IsAbs(m.Entry) || strings.Contains(m.Entry, "\\") || filepath.ToSlash(filepath.Clean(m.Entry)) != m.Entry ||
 		m.Entry == "." || m.Entry == ".." || strings.HasPrefix(m.Entry, "../") || strings.ContainsAny(m.Entry, "\x00\r\n") {
@@ -179,7 +202,12 @@ func (m Manifest) Validate() error {
 		}
 	}
 	for _, method := range m.Methods {
-		if strings.HasPrefix(method, "transport.") {
+		if strings.HasPrefix(method, "transport.") || method == "get_actions" || method == "get_agent_tools" {
+			return failure("invalid_manifest")
+		}
+	}
+	for _, kind := range m.Events {
+		if excludedPluginExtensionEvent(kind) {
 			return failure("invalid_manifest")
 		}
 	}
@@ -293,7 +321,7 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 	if err := manifest.Validate(); err != nil {
 		return out, err
 	}
-	if ctx == nil || !identityPattern.MatchString(instanceID) ||
+	if ctx == nil || !ValidInstanceID(instanceID) ||
 		!filepath.IsAbs(command.Path) || (command.Dir != "" && !filepath.IsAbs(command.Dir)) ||
 		!methodPattern.MatchString(method) || method == "handshake" || method == "stop" || strings.HasPrefix(method, "transport.") || !slices.Contains(manifest.Methods, method) ||
 		(len(payload) > MaxLogicalMessageBytes || len(payload) > 0 && !json.Valid(payload)) {
@@ -534,7 +562,7 @@ func (s *wireSession) exchange(method string, payload json.RawMessage) (json.Raw
 			return nil, failure("invalid_reply")
 		}
 		if frame.Error != nil {
-			s.businessFailure = frame.Error.Code == "OPERATION_FAILED"
+			s.businessFailure = frame.Error.Code == "OPERATION_FAILED" || frame.Error.Code == "MODULE_RATE_LIMITED"
 			return nil, workerReplyFailure(frame.Error.Code)
 		}
 		if !json.Valid(frame.Result) {
@@ -631,7 +659,7 @@ func (runner Runner) Start(lifeCtx context.Context, command Command, manifest Ma
 	if err = manifest.Validate(); err != nil {
 		return nil, err
 	}
-	if lifeCtx == nil || binding.Generation < 1 || binding.PluginID != manifest.PluginID || binding.Version != manifest.Version || !identityPattern.MatchString(binding.InstanceID) || !filepath.IsAbs(command.Path) || command.Dir != "" && !filepath.IsAbs(command.Dir) {
+	if lifeCtx == nil || binding.Generation < 1 || binding.PluginID != manifest.PluginID || binding.Version != manifest.Version || !ValidInstanceID(binding.InstanceID) || !filepath.IsAbs(command.Path) || command.Dir != "" && !filepath.IsAbs(command.Dir) {
 		return nil, failure("invalid_invocation")
 	}
 	runner, err = runner.normalized()

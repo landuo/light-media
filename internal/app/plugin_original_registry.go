@@ -58,6 +58,9 @@ func (a *App) originalDirectoryInstallation(ctx context.Context, instance string
 	if _, err = tx.ExecContext(ctx, `UPDATE plugin_installations SET installed=0,desired_enabled=1 WHERE instance_id=?`, instance); err != nil {
 		return in, err
 	}
+	if err = a.pluginStore.updateOriginalInstalledOrderTx(ctx, tx, instance, false, true); err != nil {
+		return in, err
+	}
 	if err = tx.Commit(); err != nil {
 		return in, err
 	}
@@ -94,15 +97,12 @@ func (a *App) writeOriginalCodeAlias(ctx context.Context, in PluginInstallation,
 	return err
 }
 func (a *App) originalCodeAliasPresent(ctx context.Context, in PluginInstallation) (bool, error) {
-	if in.InstanceID == in.PluginID {
-		return true, nil
-	}
 	meta, err := a.pluginStore.instanceMetadata(ctx, a.Store.DB, in.InstanceID)
 	if err != nil {
 		return false, err
 	}
 	if meta.SourceInstanceID == "" {
-		return false, nil
+		return in.InstanceID == in.PluginID, nil
 	}
 	var sealed []byte
 	err = a.Store.DB.QueryRowContext(ctx, `SELECT payload FROM records WHERE kind=? AND id=?`, originalPluginAliasKind, in.InstanceID).Scan(&sealed)

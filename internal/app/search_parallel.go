@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	"light-media/internal/catalog"
 	"light-media/internal/decision"
 	"light-media/internal/priorityrules"
 	"light-media/internal/sites"
@@ -61,12 +62,56 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 	type event struct {
 		index   int
 		started bool
+		partial bool
 		result  siteSearchOutput
 	}
 	updates := make(chan event, 2*len(configs))
+	if _, streaming := ctx.Value(searchProgressKey{}).(func(SearchOutput)); streaming {
+		indexes := map[string]int{}
+		for index, config := range configs {
+			indexes[config.ID] = index
+		}
+		progressCtx := ctx
+		ctx = context.WithValue(ctx, originalResourcePageProgressKey{}, originalResourcePageProgress(func(site SiteConfig, result sites.SearchResult, finished bool) {
+			if in.mediaModuleSearch != nil {
+				previous := in.mediaModuleSearch.results[site.ID].result.Resources
+				result.Resources = append(append([]sites.Resource{}, previous...), result.Resources...)
+			}
+			status := a.searchStatus(progressCtx, site.ID, len(result.Resources), nil, 1)
+			if !finished {
+				status.Status = "searching"
+			}
+			found := siteSearchOutput{status: status, candidates: []Candidate{}}
+			for _, resource := range result.Resources {
+				var candidate Candidate
+				if in.priorityTarget != nil {
+					choice := a.evaluateResourceContext(progressCtx, resource, *in.priorityTarget, decision.NativePolicy(decisionPolicy(in.Policy)))
+					candidate = Candidate{Resource: resource, Accepted: choice.Accepted, NeedsConfirmation: choice.NeedsConfirmation, Reasons: choice.Reasons, Season: choice.Season, Episodes: choice.Episodes}
+				} else {
+					choice := decision.EvaluateResourceContext(progressCtx, resource, decision.NativePolicy(decisionPolicy(in.Policy)))
+					if choice.Accepted {
+						choice.Reasons = append(choice.Reasons, "media_identity_required")
+					}
+					season, episodes := a.resourceNumberingSuggestionContext(progressCtx, resource.Title)
+					candidate = Candidate{Resource: resource, Accepted: choice.Accepted, NeedsConfirmation: choice.Accepted, Reasons: choice.Reasons, Season: season, Episodes: episodes}
+				}
+				found.candidates = append(found.candidates, candidate)
+			}
+			select {
+			case updates <- event{index: indexes[site.ID], partial: true, result: found}:
+			case <-progressCtx.Done():
+			}
+		}))
+	}
+	if in.resourceBatch != nil {
+		in.resourceBatch.attach(ctx, configs)
+	}
+	if in.mediaModuleSearch != nil {
+		in.mediaModuleSearch.ctx, in.mediaModuleSearch.configs = ctx, append([]SiteConfig(nil), configs...)
+	}
 	slots := make(chan struct{}, concurrentSearchSites)
 	var workers sync.WaitGroup
-	defer workers.Wait()
+	defer func() { cancel(); workers.Wait() }()
 	for i, config := range configs {
 		workers.Add(1)
 		go func() {
@@ -80,17 +125,25 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 			if ctx.Err() != nil {
 				return
 			}
-			updates <- event{index: i, started: true}
+			select {
+			case updates <- event{index: i, started: true}:
+			case <-ctx.Done():
+				return
+			}
 			start := time.Now()
 			siteCtx, cancel := context.WithTimeout(ctx, siteSearchTimeout)
 			defer cancel()
 			result := run(siteCtx, config)
 			result.status.ID = config.ID
 			result.status.ElapsedMS = time.Since(start).Milliseconds()
-			updates <- event{index: i, result: result}
+			select {
+			case updates <- event{index: i, result: result}:
+			case <-ctx.Done():
+			}
 		}()
 	}
 	var collected []Candidate
+	partial := map[int][]Candidate{}
 	for completed := 0; completed < len(configs); {
 		select {
 		case <-ctx.Done():
@@ -106,9 +159,13 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 			return out, ctx.Err()
 		case update := <-updates:
 			if update.started {
-				out.Sites[update.index].Status = "searching"
+				if out.Sites[update.index].Status == "queued" {
+					out.Sites[update.index].Status = "searching"
+				}
 			} else {
-				completed++
+				if !update.partial {
+					completed++
+				}
 				filtered, filterErr := additional.apply(ctx, update.result.candidates)
 				if filterErr != nil {
 					out.Candidates = []Candidate{}
@@ -121,10 +178,20 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 					update.result.status.Count = len(filtered)
 				}
 				out.Sites[update.index] = update.result.status
-				collected = append(collected, update.result.candidates...)
+				if update.partial {
+					partial[update.index] = update.result.candidates
+				} else {
+					delete(partial, update.index)
+					collected = append(collected, update.result.candidates...)
+				}
 				out.Candidates = append([]Candidate{}, collected...)
+				for index := range configs {
+					out.Candidates = append(out.Candidates, partial[index]...)
+				}
 				sortSearchCandidates(out.Candidates, in.Policy)
-				a.logSite(update.result.status, out.WorkflowID)
+				if !update.partial {
+					a.logSite(update.result.status, out.WorkflowID)
+				}
 			}
 			emitSearchProgress(ctx, out)
 		}
@@ -139,6 +206,12 @@ func (a *App) searchSites(ctx context.Context, in SearchRequest, out SearchOutpu
 		return out, err
 	}
 	sorter.sort(a, out.Candidates, in.Policy)
+	if in.mediaModuleSearch != nil {
+		out, err = originalMediaResourceDeduplicate(out, configs)
+		if err != nil {
+			return out, err
+		}
+	}
 	emitSearchProgress(ctx, out)
 	return out, nil
 }
@@ -188,6 +261,20 @@ func (a *App) cacheSearchResources(ctx context.Context, resources []sites.Resour
 	if len(resources) == 0 {
 		return nil
 	}
+	private := map[string]downloadContextSnapshot{}
+	for _, resource := range resources {
+		if len(resource.ModuleSourceFields) == 0 {
+			continue
+		}
+		snapshot, e := a.prepareDownloadContext(ctx, "search_resource", resource.SiteID+":"+resource.ID, "", resource)
+		if e != nil {
+			return e
+		}
+		if e = a.buildOriginalDownloadContext(ctx, &snapshot, Candidate{Resource: resource}, catalog.Media{}, resource.ModuleMediaFields); e != nil {
+			return e
+		}
+		private[resource.SiteID+":"+resource.ID] = snapshot
+	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -198,6 +285,16 @@ func (a *App) cacheSearchResources(ctx context.Context, resources []sites.Resour
 		value := map[string]any{"resource": resource, "query": queries[resource.ID], "page": page, "fetched_at": fetchedAt, "media_key": identity}
 		if err = txPut(ctx, tx, "resource", resource.SiteID+":"+resource.ID, value); err != nil {
 			return err
+		}
+		if snapshot, ok := private[resource.SiteID+":"+resource.ID]; ok {
+			if err = a.saveDownloadContextTx(ctx, tx, snapshot); err != nil {
+				return err
+			}
+		} else {
+			// A new native response supersedes a stale plugin-only context.
+			if _, err = tx.ExecContext(ctx, `DELETE FROM records WHERE kind='download_context' AND id=?`, "search_resource:"+resource.SiteID+":"+resource.ID); err != nil {
+				return err
+			}
 		}
 	}
 	return tx.Commit()

@@ -1,0 +1,903 @@
+{
+  "fixed_backend": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/transfer.py:2393-2478",
+    "app/chain/storage.py:106-116,161-168",
+    "app/chain/__init__.py:298-470"
+  ],
+  "kind": "Execute the pinned recursive transfer collector and ordinary storage dispatcher.\nOwned providers return controlled FileItem trees. No target code supplies expectations.\n",
+  "cases": [
+    {
+      "name": "nested_native",
+      "initial": {
+        "storage": "local",
+        "type": "dir",
+        "path": "{root}/source",
+        "name": "source",
+        "extension": null,
+        "size": 26
+      },
+      "plugin": {},
+      "native_tree": {
+        "{root}/source": [
+          {
+            "storage": "local",
+            "type": "dir",
+            "path": "{root}/source/Season 1",
+            "name": "Season 1",
+            "extension": null,
+            "size": 26
+          },
+          {
+            "storage": "local",
+            "type": "file",
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "name": "Owned.S01E01.mkv",
+            "extension": "mkv",
+            "size": 26
+          }
+        ],
+        "{root}/source/Season 1": [
+          {
+            "storage": "local",
+            "type": "file",
+            "path": "{root}/source/Season 1/Owned.S01E02.mkv",
+            "name": "Owned.S01E02.mkv",
+            "extension": "mkv",
+            "size": 26
+          }
+        ]
+      },
+      "output": [
+        {
+          "item": {
+            "path": "{root}/source/Season 1/Owned.S01E02.mkv",
+            "storage": "local",
+            "type": "file",
+            "name": "Owned.S01E02.mkv",
+            "basename": null,
+            "extension": "mkv",
+            "size": 26,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "bluray": false
+        },
+        {
+          "item": {
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "storage": "local",
+            "type": "file",
+            "name": "Owned.S01E01.mkv",
+            "basename": null,
+            "extension": "mkv",
+            "size": 26,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "bluray": false
+        }
+      ],
+      "exception": null,
+      "trace": [
+        {
+          "role": "plugin",
+          "method": "get_file_item",
+          "path": "{root}/source"
+        },
+        {
+          "role": "native",
+          "method": "get_file_item",
+          "path": "{root}/source"
+        },
+        {
+          "role": "plugin",
+          "method": "list_files",
+          "path": "{root}/source",
+          "recursion": false
+        },
+        {
+          "role": "native",
+          "method": "list_files",
+          "path": "{root}/source"
+        },
+        {
+          "role": "plugin",
+          "method": "list_files",
+          "path": "{root}/source/Season 1",
+          "recursion": false
+        },
+        {
+          "role": "native",
+          "method": "list_files",
+          "path": "{root}/source/Season 1"
+        }
+      ]
+    },
+    {
+      "name": "root_false",
+      "initial": {
+        "storage": "local",
+        "type": "dir",
+        "path": "{root}/source",
+        "name": "source",
+        "extension": null,
+        "size": 26
+      },
+      "plugin": {
+        "get_file_item:{root}/source": false
+      },
+      "native_tree": {
+        "{root}/source": [
+          {
+            "storage": "local",
+            "type": "file",
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "name": "Owned.S01E01.mkv",
+            "extension": "mkv",
+            "size": 26
+          }
+        ]
+      },
+      "output": [],
+      "exception": null,
+      "trace": [
+        {
+          "role": "plugin",
+          "method": "get_file_item",
+          "path": "{root}/source"
+        }
+      ]
+    },
+    {
+      "name": "list_false",
+      "initial": {
+        "storage": "local",
+        "type": "dir",
+        "path": "{root}/source",
+        "name": "source",
+        "extension": null,
+        "size": 26
+      },
+      "plugin": {
+        "list_files:{root}/source": false
+      },
+      "native_tree": {
+        "{root}/source": [
+          {
+            "storage": "local",
+            "type": "file",
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "name": "Owned.S01E01.mkv",
+            "extension": "mkv",
+            "size": 26
+          }
+        ]
+      },
+      "output": [],
+      "exception": null,
+      "trace": [
+        {
+          "role": "plugin",
+          "method": "get_file_item",
+          "path": "{root}/source"
+        },
+        {
+          "role": "native",
+          "method": "get_file_item",
+          "path": "{root}/source"
+        },
+        {
+          "role": "plugin",
+          "method": "list_files",
+          "path": "{root}/source",
+          "recursion": false
+        }
+      ]
+    },
+    {
+      "name": "list_tuple_order",
+      "initial": {
+        "storage": "local",
+        "type": "dir",
+        "path": "{root}/source",
+        "name": "source",
+        "extension": null,
+        "size": 26
+      },
+      "plugin": {
+        "list_files:{root}/source": {
+          "__plugin_module_tuple": [
+            {
+              "storage": "local",
+              "type": "file",
+              "path": "{root}/source/Owned.S01E01.mkv",
+              "name": "Owned.S01E01.mkv",
+              "extension": "mkv",
+              "size": 26
+            },
+            {
+              "storage": "local",
+              "type": "dir",
+              "path": "{root}/source/Season 1",
+              "name": "Season 1",
+              "extension": null,
+              "size": 26
+            }
+          ]
+        }
+      },
+      "native_tree": {
+        "{root}/source": [],
+        "{root}/source/Season 1": [
+          {
+            "storage": "local",
+            "type": "file",
+            "path": "{root}/source/Season 1/Owned.S01E02.mkv",
+            "name": "Owned.S01E02.mkv",
+            "extension": "mkv",
+            "size": 26
+          }
+        ]
+      },
+      "output": [
+        {
+          "item": {
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "storage": "local",
+            "type": "file",
+            "name": "Owned.S01E01.mkv",
+            "basename": null,
+            "extension": "mkv",
+            "size": 26,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "bluray": false
+        },
+        {
+          "item": {
+            "path": "{root}/source/Season 1/Owned.S01E02.mkv",
+            "storage": "local",
+            "type": "file",
+            "name": "Owned.S01E02.mkv",
+            "basename": null,
+            "extension": "mkv",
+            "size": 26,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "bluray": false
+        }
+      ],
+      "exception": null,
+      "trace": [
+        {
+          "role": "plugin",
+          "method": "get_file_item",
+          "path": "{root}/source"
+        },
+        {
+          "role": "native",
+          "method": "get_file_item",
+          "path": "{root}/source"
+        },
+        {
+          "role": "plugin",
+          "method": "list_files",
+          "path": "{root}/source",
+          "recursion": false
+        },
+        {
+          "role": "plugin",
+          "method": "list_files",
+          "path": "{root}/source/Season 1",
+          "recursion": false
+        },
+        {
+          "role": "native",
+          "method": "list_files",
+          "path": "{root}/source/Season 1"
+        }
+      ]
+    },
+    {
+      "name": "list_merge",
+      "initial": {
+        "storage": "local",
+        "type": "dir",
+        "path": "{root}/source",
+        "name": "source",
+        "extension": null,
+        "size": 26
+      },
+      "plugin": {
+        "list_files:{root}/source": [
+          {
+            "storage": "local",
+            "type": "file",
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "name": "Owned.S01E01.mkv",
+            "extension": "mkv",
+            "size": 26
+          }
+        ]
+      },
+      "native_tree": {
+        "{root}/source": [
+          {
+            "storage": "local",
+            "type": "dir",
+            "path": "{root}/source/Season 1",
+            "name": "Season 1",
+            "extension": null,
+            "size": 26
+          },
+          {
+            "storage": "local",
+            "type": "file",
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "name": "Owned.S01E01.mkv",
+            "extension": "mkv",
+            "size": 26
+          }
+        ],
+        "{root}/source/Season 1": [
+          {
+            "storage": "local",
+            "type": "file",
+            "path": "{root}/source/Season 1/Owned.S01E02.mkv",
+            "name": "Owned.S01E02.mkv",
+            "extension": "mkv",
+            "size": 26
+          }
+        ]
+      },
+      "output": [
+        {
+          "item": {
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "storage": "local",
+            "type": "file",
+            "name": "Owned.S01E01.mkv",
+            "basename": null,
+            "extension": "mkv",
+            "size": 26,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "bluray": false
+        },
+        {
+          "item": {
+            "path": "{root}/source/Season 1/Owned.S01E02.mkv",
+            "storage": "local",
+            "type": "file",
+            "name": "Owned.S01E02.mkv",
+            "basename": null,
+            "extension": "mkv",
+            "size": 26,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "bluray": false
+        },
+        {
+          "item": {
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "storage": "local",
+            "type": "file",
+            "name": "Owned.S01E01.mkv",
+            "basename": null,
+            "extension": "mkv",
+            "size": 26,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "bluray": false
+        }
+      ],
+      "exception": null,
+      "trace": [
+        {
+          "role": "plugin",
+          "method": "get_file_item",
+          "path": "{root}/source"
+        },
+        {
+          "role": "native",
+          "method": "get_file_item",
+          "path": "{root}/source"
+        },
+        {
+          "role": "plugin",
+          "method": "list_files",
+          "path": "{root}/source",
+          "recursion": false
+        },
+        {
+          "role": "native",
+          "method": "list_files",
+          "path": "{root}/source"
+        },
+        {
+          "role": "plugin",
+          "method": "list_files",
+          "path": "{root}/source/Season 1",
+          "recursion": false
+        },
+        {
+          "role": "native",
+          "method": "list_files",
+          "path": "{root}/source/Season 1"
+        }
+      ]
+    },
+    {
+      "name": "empty_list_native",
+      "initial": {
+        "storage": "local",
+        "type": "dir",
+        "path": "{root}/source",
+        "name": "source",
+        "extension": null,
+        "size": 26
+      },
+      "plugin": {
+        "list_files:{root}/source": []
+      },
+      "native_tree": {
+        "{root}/source": [
+          {
+            "storage": "local",
+            "type": "file",
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "name": "Owned.S01E01.mkv",
+            "extension": "mkv",
+            "size": 26
+          }
+        ]
+      },
+      "output": [
+        {
+          "item": {
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "storage": "local",
+            "type": "file",
+            "name": "Owned.S01E01.mkv",
+            "basename": null,
+            "extension": "mkv",
+            "size": 26,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "bluray": false
+        }
+      ],
+      "exception": null,
+      "trace": [
+        {
+          "role": "plugin",
+          "method": "get_file_item",
+          "path": "{root}/source"
+        },
+        {
+          "role": "native",
+          "method": "get_file_item",
+          "path": "{root}/source"
+        },
+        {
+          "role": "plugin",
+          "method": "list_files",
+          "path": "{root}/source",
+          "recursion": false
+        },
+        {
+          "role": "native",
+          "method": "list_files",
+          "path": "{root}/source"
+        }
+      ]
+    },
+    {
+      "name": "single_file",
+      "initial": {
+        "storage": "local",
+        "type": "file",
+        "path": "{root}/source/Owned.S01E01.mkv",
+        "name": "Owned.S01E01.mkv",
+        "extension": "mkv",
+        "size": 26
+      },
+      "plugin": {},
+      "native_tree": {},
+      "output": [
+        {
+          "item": {
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "storage": "local",
+            "type": "file",
+            "name": "Owned.S01E01.mkv",
+            "basename": null,
+            "extension": "mkv",
+            "size": 26,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "bluray": false
+        }
+      ],
+      "exception": null,
+      "trace": [
+        {
+          "role": "plugin",
+          "method": "get_file_item",
+          "path": "{root}/source/Owned.S01E01.mkv"
+        },
+        {
+          "role": "native",
+          "method": "get_file_item",
+          "path": "{root}/source/Owned.S01E01.mkv"
+        }
+      ]
+    },
+    {
+      "name": "latest_metadata",
+      "initial": {
+        "storage": "local",
+        "type": "file",
+        "path": "{root}/source/Owned.S01E01.mkv",
+        "name": "Owned.S01E01.mkv",
+        "extension": "mkv",
+        "size": 26
+      },
+      "plugin": {
+        "get_file_item:{root}/source/Owned.S01E01.mkv": {
+          "storage": "local",
+          "type": "file",
+          "path": "{root}/source/Owned.S01E01.mkv",
+          "name": "provider-name.mkv",
+          "extension": "mkv",
+          "size": 51
+        }
+      },
+      "native_tree": {},
+      "output": [
+        {
+          "item": {
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "storage": "local",
+            "type": "file",
+            "name": "provider-name.mkv",
+            "basename": null,
+            "extension": "mkv",
+            "size": 51,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "bluray": false
+        }
+      ],
+      "exception": null,
+      "trace": [
+        {
+          "role": "plugin",
+          "method": "get_file_item",
+          "path": "{root}/source/Owned.S01E01.mkv"
+        }
+      ]
+    },
+    {
+      "name": "bluray_root",
+      "initial": {
+        "storage": "local",
+        "type": "dir",
+        "path": "{root}/source/Disc",
+        "name": "Disc",
+        "extension": null,
+        "size": 26
+      },
+      "plugin": {},
+      "native_tree": {
+        "{root}/source/Disc": [
+          {
+            "storage": "local",
+            "type": "dir",
+            "path": "{root}/source/Disc/BDMV",
+            "name": "BDMV",
+            "extension": null,
+            "size": 26
+          },
+          {
+            "storage": "local",
+            "type": "file",
+            "path": "{root}/source/Disc/extra.txt",
+            "name": "extra.txt",
+            "extension": "txt",
+            "size": 26
+          }
+        ]
+      },
+      "output": [
+        {
+          "item": {
+            "path": "{root}/source/Disc",
+            "storage": "local",
+            "type": "dir",
+            "name": "Disc",
+            "basename": null,
+            "extension": null,
+            "size": 26,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "bluray": true
+        }
+      ],
+      "exception": null,
+      "trace": [
+        {
+          "role": "plugin",
+          "method": "get_file_item",
+          "path": "{root}/source/Disc"
+        },
+        {
+          "role": "native",
+          "method": "get_file_item",
+          "path": "{root}/source/Disc"
+        },
+        {
+          "role": "plugin",
+          "method": "list_files",
+          "path": "{root}/source/Disc",
+          "recursion": false
+        },
+        {
+          "role": "native",
+          "method": "list_files",
+          "path": "{root}/source/Disc"
+        }
+      ]
+    },
+    {
+      "name": "bluray_stream",
+      "initial": {
+        "storage": "local",
+        "type": "file",
+        "path": "{root}/source/Disc/BDMV/STREAM/00001.m2ts",
+        "name": "00001.m2ts",
+        "extension": "m2ts",
+        "size": 26
+      },
+      "plugin": {},
+      "native_tree": {},
+      "output": [
+        {
+          "item": {
+            "path": "{root}/source/Disc",
+            "storage": "local",
+            "type": "dir",
+            "name": "Disc",
+            "basename": null,
+            "extension": null,
+            "size": 26,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "bluray": true
+        }
+      ],
+      "exception": null,
+      "trace": [
+        {
+          "role": "plugin",
+          "method": "get_file_item",
+          "path": "{root}/source/Disc/BDMV/STREAM/00001.m2ts"
+        },
+        {
+          "role": "native",
+          "method": "get_file_item",
+          "path": "{root}/source/Disc/BDMV/STREAM/00001.m2ts"
+        },
+        {
+          "role": "plugin",
+          "method": "get_file_item",
+          "path": "{root}/source/Disc"
+        },
+        {
+          "role": "native",
+          "method": "get_file_item",
+          "path": "{root}/source/Disc"
+        }
+      ]
+    },
+    {
+      "name": "certificate_only",
+      "initial": {
+        "storage": "local",
+        "type": "dir",
+        "path": "{root}/source/Disc",
+        "name": "Disc",
+        "extension": null,
+        "size": 26
+      },
+      "plugin": {},
+      "native_tree": {
+        "{root}/source/Disc": [
+          {
+            "storage": "local",
+            "type": "dir",
+            "path": "{root}/source/Disc/CERTIFICATE",
+            "name": "CERTIFICATE",
+            "extension": null,
+            "size": 26
+          }
+        ]
+      },
+      "output": [
+        {
+          "item": {
+            "path": "{root}/source/Disc",
+            "storage": "local",
+            "type": "dir",
+            "name": "Disc",
+            "basename": null,
+            "extension": null,
+            "size": 26,
+            "modify_time": null,
+            "children": [],
+            "fileid": null,
+            "parent_fileid": null,
+            "thumbnail": null,
+            "pickcode": null,
+            "drive_id": null,
+            "url": null
+          },
+          "bluray": true
+        }
+      ],
+      "exception": null,
+      "trace": [
+        {
+          "role": "plugin",
+          "method": "get_file_item",
+          "path": "{root}/source/Disc"
+        },
+        {
+          "role": "native",
+          "method": "get_file_item",
+          "path": "{root}/source/Disc"
+        },
+        {
+          "role": "plugin",
+          "method": "list_files",
+          "path": "{root}/source/Disc",
+          "recursion": false
+        },
+        {
+          "role": "native",
+          "method": "list_files",
+          "path": "{root}/source/Disc"
+        }
+      ]
+    },
+    {
+      "name": "invalid_list_scalar",
+      "initial": {
+        "storage": "local",
+        "type": "dir",
+        "path": "{root}/source",
+        "name": "source",
+        "extension": null,
+        "size": 26
+      },
+      "plugin": {
+        "list_files:{root}/source": true
+      },
+      "native_tree": {
+        "{root}/source": [
+          {
+            "storage": "local",
+            "type": "file",
+            "path": "{root}/source/Owned.S01E01.mkv",
+            "name": "Owned.S01E01.mkv",
+            "extension": "mkv",
+            "size": 26
+          }
+        ]
+      },
+      "output": null,
+      "exception": "TypeError",
+      "trace": [
+        {
+          "role": "plugin",
+          "method": "get_file_item",
+          "path": "{root}/source"
+        },
+        {
+          "role": "native",
+          "method": "get_file_item",
+          "path": "{root}/source"
+        },
+        {
+          "role": "plugin",
+          "method": "list_files",
+          "path": "{root}/source",
+          "recursion": false
+        }
+      ]
+    }
+  ]
+}

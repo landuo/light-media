@@ -44,16 +44,30 @@ func (a *App) catalogExplorePreferences(ctx context.Context) (ExplorePreferences
 	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return ExplorePreferences{}, err
 	}
-	return normalizeExplorePreferences(stored)
+	return normalizePluginExplorePreferences(stored)
 }
 
 func (a *App) saveCatalogExplorePreferences(ctx context.Context, in ExplorePreferences) (ExplorePreferences, error) {
-	result, err := normalizeExplorePreferences(in)
+	result, err := normalizePluginExplorePreferences(in)
 	if err != nil {
 		return ExplorePreferences{}, err
 	}
 	if err = a.Store.Put(ctx, "ui_preferences", "catalog_explore", result); err != nil {
 		return ExplorePreferences{}, err
+	}
+	return result, nil
+}
+
+// Fixed discover tab preferences keep temporarily absent plugin prefixes. Source
+// discovery is requested by the page only; preference IO must not send events.
+func normalizePluginExplorePreferences(in ExplorePreferences) (ExplorePreferences, error) {
+	result := ExplorePreferences{TabOrder: []string{}}
+	seen := map[string]bool{}
+	for _, source := range append(append([]string{}, in.TabOrder...), "themoviedb", "douban", "bangumi", "anilist") {
+		if !seen[source] {
+			seen[source] = true
+			result.TabOrder = append(result.TabOrder, source)
+		}
 	}
 	return result, nil
 }

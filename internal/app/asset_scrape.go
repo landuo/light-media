@@ -127,7 +127,7 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 	if !within(root.Path, asset.Path) {
 		return bad("REVIEW_ROOT_CHANGED", "资产路径不在配置库内")
 	}
-	if _, err = snapshotPath(asset.Path); err != nil {
+	if _, err = snapshotTransferPath(asset.Path); err != nil {
 		return bad("REVIEW_ASSET_MISSING", "视频不可访问，不能标记刮削成功")
 	}
 	if err = a.jobCancelled(ctx, job); err != nil {
@@ -152,6 +152,71 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 			_ = a.Store.Put(persist, "asset", asset.ID, asset)
 		}
 	}()
+	var inherited struct {
+		Event  json.RawMessage `json:"original_metadata_event"`
+		Assets []string        `json:"original_metadata_assets"`
+	}
+	if len(job.Payload) != 0 {
+		if err = json.Unmarshal(job.Payload, &inherited); err != nil {
+			return err
+		}
+	}
+	if len(inherited.Event) != 0 && originalModuleResultTruthy(inherited.Event) {
+		if err = a.validateOriginalAssetMetadataEvent(asset, inherited.Event); err != nil {
+			return err
+		}
+		var related []Asset
+		seen := map[string]bool{asset.ID: true}
+		for _, id := range inherited.Assets {
+			if seen[id] {
+				continue
+			}
+			seen[id] = true
+			var other Asset
+			if err = a.Store.Get(ctx, "asset", id, &other); err != nil {
+				return err
+			}
+			if other.State == "removed" || other.State == "missing_confirmed" || other.State == "superseded" {
+				return bad("REVIEW_ASSET", "批次资产已移除，不能刮削")
+			}
+			if _, err = snapshotTransferPath(other.Path); err != nil {
+				return bad("REVIEW_ASSET_MISSING", "批次视频不可访问，不能标记刮削成功")
+			}
+			if err = a.validateOriginalAssetMetadataEvent(other, inherited.Event); err != nil {
+				return err
+			}
+			related = append(related, other)
+		}
+		var directories []*originalMetadataDirectory
+		for _, candidate := range append([]Asset{asset}, related...) {
+			directory, e := a.beginOriginalMetadataDirectory(ctx, candidate)
+			if e != nil {
+				return e
+			}
+			if directory != nil {
+				directories = append(directories, directory)
+			}
+		}
+		inheritedContext := context.WithValue(ctx, originalMetadataWriteCheckKey{}, a.importCheck(ctx, job))
+		inheritedContext = context.WithValue(inheritedContext, originalMetadataDirectoriesKey{}, directories)
+		if err = a.consumeOriginalCoreMetadataScrape(inheritedContext, inherited.Event); err != nil {
+			return err
+		}
+		for _, directory := range directories {
+			if err = a.finishOriginalMetadataDirectory(ctx, directory); err != nil {
+				return err
+			}
+		}
+		if err = a.finishAssetScrape(ctx, job, &asset); err != nil {
+			return err
+		}
+		for i := range related {
+			if err = a.finishAssetScrape(ctx, job, &related[i]); err != nil {
+				return err
+			}
+		}
+		return nil
+	}
 	identity, err := a.media(ctx, asset.Media.MediaType, asset.Media.ID)
 	if err != nil {
 		return err
@@ -182,13 +247,15 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 		}
 	}
 	check := a.importCheck(ctx, job)
-	nfo, err := assetNFO(identity, episode)
+	nfo, err := a.assetOriginalNFO(ctx, asset.Path, identity, episode)
 	if err != nil {
 		return err
 	}
 	videoStem := strings.TrimSuffix(asset.Path, filepath.Ext(asset.Path))
-	if err = a.writeAssetMetadata(ctx, job, asset, videoStem+".nfo", nfo, "nfo", asset.ID, check); err != nil {
-		return err
+	if len(nfo) != 0 {
+		if err = a.writeAssetMetadata(ctx, job, asset, videoStem+".nfo", nfo, "nfo", asset.ID, check); err != nil {
+			return err
+		}
 	}
 	showDir := filepath.Dir(asset.Path)
 	sharedOwner := asset.ID
@@ -197,12 +264,14 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 			showDir = filepath.Dir(showDir)
 		}
 		sharedOwner = ""
-		showNFO, err := assetNFO(identity, nil)
+		showNFO, err := a.assetOriginalNFO(ctx, showDir, identity, nil)
 		if err != nil {
 			return err
 		}
-		if err = a.writeAssetMetadata(ctx, job, asset, filepath.Join(showDir, "tvshow.nfo"), showNFO, "nfo", "", check); err != nil {
-			return err
+		if len(showNFO) != 0 {
+			if err = a.writeAssetMetadata(ctx, job, asset, filepath.Join(showDir, "tvshow.nfo"), showNFO, "nfo", "", check); err != nil {
+				return err
+			}
 		}
 	}
 	images := []struct{ source, target, owner string }{{identity.PosterPath, filepath.Join(showDir, "poster.jpg"), sharedOwner}, {identity.BackdropPath, filepath.Join(showDir, "fanart.jpg"), sharedOwner}}
@@ -225,6 +294,10 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 			return err
 		}
 	}
+	return a.finishAssetScrape(ctx, job, &asset)
+}
+
+func (a *App) finishAssetScrape(ctx context.Context, job Job, asset *Asset) error {
 	asset.ScrapeState = "scraped"
 	asset.Error = ""
 	fnosEnabled := a.Settings().FNOS.Enabled
@@ -239,7 +312,7 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 	if err = txPut(ctx, tx, "asset", asset.ID, asset); err != nil {
 		return err
 	}
-	if err = recordDomainEventTx(ctx, tx, assetDomainEvent("scrape.completed", job, asset)); err != nil {
+	if err = recordDomainEventTx(ctx, tx, assetDomainEvent("scrape.completed", job, *asset)); err != nil {
 		return err
 	}
 	if fnosEnabled {
@@ -253,7 +326,7 @@ func (a *App) runScrape(ctx context.Context, job Job, assetID string) (returnErr
 	if err = tx.Commit(); err != nil {
 		return err
 	}
-	a.event(ctx, job, "INFO", "scrape", "metadata_published", "NFO 已写入明确来源 ID、季集及演员资料；可用海报已发布")
+	a.event(ctx, job, "INFO", "scrape", "metadata_published", "元数据刮削处理完成")
 	return nil
 }
 

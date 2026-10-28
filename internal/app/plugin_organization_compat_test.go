@@ -40,7 +40,7 @@ func TestPluginOrganizationCompatInstalledASGIReference(t *testing.T) {
 			Allow                           *string
 		}
 	}
-	if err = json.Unmarshal(raw, &reference); err != nil || len(reference.Cases) != 20 || reference.Source["plugin"] != "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce" || reference.Source["response"] != "0afd53be12ee3a6f513e74e10c98344b0d9f66e01c250e66a74ccee604bc1970" {
+	if err = json.Unmarshal(raw, &reference); err != nil || len(reference.Cases) != 32 || reference.Source["plugin"] != "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce" || reference.Source["response"] != "0afd53be12ee3a6f513e74e10c98344b0d9f66e01c250e66a74ccee604bc1970" {
 		t.Fatal("installed ASGI reference changed", err)
 	}
 	a := newTestApp(t)
@@ -94,8 +94,8 @@ func TestPluginOrganizationCompatAuthorityRollbackAndConcurrentOwnership(t *test
 		t.Fatal(err)
 	}
 	before, _ := a.pluginStore.Organization(ctx)
-	if w := organizationCompatRequest(a, cookie, "POST", path, []byte(`{"unsafe":["../invalid"]}`), ""); w.Code != 422 {
-		t.Fatal("invalid member accepted", w.Code, w.Body.String())
+	if w := organizationCompatRequest(a, cookie, "POST", path, []byte(`[]`), ""); w.Code != 422 {
+		t.Fatal("invalid top-level dictionary accepted", w.Code, w.Body.String())
 	}
 	after, _ := a.pluginStore.Organization(ctx)
 	if !reflect.DeepEqual(before, after) {

@@ -1,0 +1,208 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "path": "app/schemas/event.py",
+  "sha256": "d5134476edc76096098b85ee32d2f96eb5db2441c873c80729a46b91386687d6",
+  "kind": "actual pinned AST; synthetic snapshot input values",
+  "cases": [
+    {
+      "before": {},
+      "after": {},
+      "fields": []
+    },
+    {
+      "before": {
+        "gone": null
+      },
+      "after": {},
+      "fields": []
+    },
+    {
+      "before": {
+        "flag": true,
+        "zero": false,
+        "nested": [
+          true,
+          {
+            "n": 1.0
+          }
+        ]
+      },
+      "after": {
+        "flag": 1,
+        "zero": 0,
+        "nested": [
+          1,
+          {
+            "n": 1
+          }
+        ]
+      },
+      "fields": []
+    },
+    {
+      "before": {
+        "id": 1,
+        "state": "R",
+        "custom_words": "old",
+        "total_episode": 2
+      },
+      "after": {
+        "id": 1,
+        "state": "S",
+        "custom_words": "new",
+        "total_episode": 3
+      },
+      "fields": [
+        "custom_words",
+        "state",
+        "total_episode"
+      ]
+    },
+    {
+      "before": {
+        "x": 9007199254740992
+      },
+      "after": {
+        "x": 9007199254740993
+      },
+      "fields": [
+        "x"
+      ]
+    },
+    {
+      "before": {
+        "z": [],
+        "a": {}
+      },
+      "after": {
+        "z": null,
+        "a": false
+      },
+      "fields": [
+        "a",
+        "z"
+      ]
+    },
+    {
+      "before": {
+        "x": 0.1
+      },
+      "after": {
+        "x": 0.1
+      },
+      "fields": []
+    },
+    {
+      "before": {
+        "removed": 1
+      },
+      "after": {
+        "added": 2
+      },
+      "fields": [
+        "added",
+        "removed"
+      ]
+    },
+    {
+      "before": {
+        "nested": {
+          "old": null
+        }
+      },
+      "after": {
+        "nested": {}
+      },
+      "fields": [
+        "nested"
+      ]
+    }
+  ],
+  "model_sha256": "efa92d87ca839f42e2f2c38f591dc0635c21ce93fe5cb5120cd0d261e694a67e",
+  "columns": [
+    "anilistid",
+    "backdrop",
+    "bangumiid",
+    "best_version",
+    "best_version_full",
+    "current_priority",
+    "custom_words",
+    "date",
+    "description",
+    "doubanid",
+    "downloader",
+    "effect",
+    "episode_group",
+    "episode_priority",
+    "exclude",
+    "filter",
+    "filter_groups",
+    "id",
+    "imdbid",
+    "include",
+    "keyword",
+    "lack_episode",
+    "last_update",
+    "manual_total_episode",
+    "media_category",
+    "media_id",
+    "media_source",
+    "mediaid",
+    "name",
+    "note",
+    "poster",
+    "quality",
+    "resolution",
+    "save_path",
+    "search_imdbid",
+    "season",
+    "sites",
+    "start_episode",
+    "state",
+    "tmdbid",
+    "total_episode",
+    "tvdbid",
+    "type",
+    "username",
+    "vote",
+    "year"
+  ],
+  "completion_check_defaults": {
+    "subscribe": null,
+    "mediainfo": null,
+    "meta": null,
+    "cancel": false,
+    "source": "未知来源",
+    "reason": ""
+  },
+  "completion_source": {
+    "path": "app/chain/subscribe.py",
+    "sha256": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab",
+    "ordered_calls": [
+      {
+        "line": 2814,
+        "name": "ChainEventType.SubscribeCompletionCheck"
+      },
+      {
+        "line": 2827,
+        "name": "add_history"
+      },
+      {
+        "line": 2829,
+        "name": "delete"
+      },
+      {
+        "line": 2836,
+        "name": "post_message"
+      },
+      {
+        "line": 2850,
+        "name": "EventType.SubscribeComplete"
+      },
+      {
+        "line": 2856,
+        "name": "sub_done_async"
+      }
+    ]
+  }
+}

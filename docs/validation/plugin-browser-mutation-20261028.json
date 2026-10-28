@@ -1,0 +1,48 @@
+{
+  "whole_indices": [
+    36,
+    37,
+    43
+  ],
+  "accepted_whole_scope": false,
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/chain/storage.py:58-98",
+    "app/chain/__init__.py:470",
+    "app/modules/filemanager/__init__.py:42,287-337",
+    "app/modules/filemanager/storages/local.py:121-132,178-210",
+    "app/api/endpoints/storage.py:117-148,184-258"
+  ],
+  "target": [
+    "internal/app/plugin_original_browser_mutation.go",
+    "internal/app/file_manager.go:confirmBrowserOperation/restoreBrowserOperation",
+    "internal/app/plugin_original_metadata_storage.go",
+    "internal/app/plugin_module_process_browser_mutation_test.go",
+    "cmd/owned-module-override/main.go"
+  ],
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/browser-mutation-20261028/manifest.json",
+  "source_replay": "27 actual pinned StorageChain/dispatcher/FileManager/LocalStorage/endpoint cases, real disposable local filesystem; None/false/list/bare true/effect true/effect false/effect None/effect throw. Original source read only, no source service started.",
+  "synthetic_test": "Go SDK and owned physical files27cases17.143s; storage/browser/metadata/operation race regression64.291s passed. No production Python runtime introduced.",
+  "actual_linux": "main9edd841c0/test2dcec468/worker845c97a0 CLI1.97s passed; initial1.54s red was observer lifetime counter vs mutation delta, preserved. Same main IAB49 final423.57s passed and actual uninstall/API404/owned TempDir cleanup. Source/clone3912125/3912132→3920013/3920019.",
+  "actual_browser": [
+    "Source SDK creates OwnedUIWriter; real inode151107680 retained through source rename and clone rename",
+    "Source false: explicit error/request ID, input OwnedUIRecovery retained; no new directory, clone not called; restore then same dialog retry creates actual directory",
+    "Source None→clone real rename; pre-cold source module_execute1/clone rename1. Source result is terminal where specified, not inferred from frontend display order",
+    "Cold new SDK instances have zero write calls; old Cookie refresh then actual page rename source1/clone1, same inode14682070",
+    "Single batch confirm deletes only two self-created disposable empty test folders; actual source3/clone delete2 after cold; existing owned File10 inode57041518/25bytes/hash92ccab0c remains unchanged"
+  ],
+  "adaptations": [
+    "Existing root, frozen parent, subtree snapshot, target absence and active-downloader guards run before installed modules; actual local physical effects and current parent/root identity are verified afterwards. A bare truthy return without the promised physical change is rejected explicitly.",
+    "Native delete retains the existing local recycle operation; an actual plugin direct deletion follows source behavior and is journaled unrecoverable, never advertises an invented restore copy. Restore rejects that direct-deletion record.",
+    "None/list/scalar dispatch retains source effects: an empty plugin list can run the native operation and still return false; failures preserve effects and a persisted module error so the same confirmation cannot turn into success or replay the plugin after restart.",
+    "Go typed process kwargs replace Python shared objects. source exact ordinary method arguments remain fileitem+name or fileitem only for delete; core create_folder accepts an existing plugin-created directory; core rename/delete filesystem errors return false as source.",
+    "Source core error display title corrected to 文件整理发生了错误 from get_name=文件整理. Source AST27 and current helper/source mapping verify the exact title; current read/core failure regression is local race coverage, not a claim that Linux root chmod denied reads.",
+    "Directory row actions are shown on hover/focus, confirmed via normal keyboard focus; initial direct locator no-match was not a product data-type bug. No frontend change was made."
+  ],
+  "remaining": [
+    "High-level transfer override, media_exists/media_files and remaining applicable existing-host module call audit",
+    "Directory-unit/bluray and aggregated metadata source behavior, download tuple layout and pre-existing hash source order",
+    "Full36/37/43/50 acceptance remains open"
+  ],
+  "delivery": "dev/plugins-continuation uncommitted/unpushed/undeployed; owned IAB49, server and34430 tunnel stopped"
+}

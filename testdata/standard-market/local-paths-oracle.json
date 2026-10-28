@@ -1,0 +1,107 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+  "kind": "actual fixed method AST and native pathlib; nonexistent owned synthetic paths; no filesystem writes",
+  "cases": [
+    {
+      "value": null,
+      "root": "/owned/plugin-root",
+      "paths": []
+    },
+    {
+      "value": "",
+      "root": "/owned/plugin-root",
+      "paths": []
+    },
+    {
+      "value": " , , ",
+      "root": "/owned/plugin-root",
+      "paths": []
+    },
+    {
+      "value": "relative/future",
+      "root": "/owned/plugin-root",
+      "paths": [
+        "/owned/plugin-root/relative/future"
+      ]
+    },
+    {
+      "value": " ./a/../future , /owned/shared , /owned/shared ",
+      "root": "/owned/plugin-root",
+      "paths": [
+        "/owned/plugin-root/future",
+        "/owned/shared",
+        "/owned/shared"
+      ]
+    },
+    {
+      "value": "/owned/one，two",
+      "root": "/owned/plugin-root",
+      "paths": [
+        "/owned/one，two"
+      ]
+    },
+    {
+      "value": "/owned/a\nb",
+      "root": "/owned/plugin-root",
+      "paths": [
+        "/owned/a\nb"
+      ]
+    },
+    {
+      "value": "/owned/a, /owned/a",
+      "root": "/owned/plugin-root",
+      "paths": [
+        "/owned/a",
+        "/owned/a"
+      ]
+    },
+    {
+      "value": "/owned/no-parent/no-child",
+      "root": "/owned/plugin-root",
+      "paths": [
+        "/owned/no-parent/no-child"
+      ]
+    },
+    {
+      "value": "~/future",
+      "root": "/owned/plugin-root",
+      "paths": [
+        "${home}/future"
+      ]
+    },
+    {
+      "value": "~${username}/future",
+      "root": "/owned/plugin-root",
+      "paths": [
+        "${named_home}/future"
+      ]
+    }
+  ],
+  "filesystem": [
+    {
+      "value": "link/../future",
+      "paths": [
+        "${root}/target/future"
+      ]
+    },
+    {
+      "value": "missing/../link/child",
+      "paths": [
+        "${root}/target/nested/child"
+      ]
+    },
+    {
+      "value": "dangling/child",
+      "paths": [
+        "${root}/future-parent/child"
+      ]
+    },
+    {
+      "value": "regular/child",
+      "paths": [
+        "${root}/regular/child"
+      ]
+    }
+  ]
+}

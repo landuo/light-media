@@ -1,0 +1,476 @@
+{
+  "build": {
+    "go_version": "go version go1.26.2 darwin/arm64",
+    "environment": {
+      "GOOS": "linux",
+      "GOARCH": "amd64",
+      "CGO_ENABLED": "0"
+    },
+    "binaries": [
+      {
+        "name": "server-platform55r2-20261027-linux",
+        "sha256": "73add6db787810d5925ae945a77f9cd96de3e8ea7079faa7afa8b44a60e4a409",
+        "command": [
+          "go",
+          "build",
+          "-trimpath",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/server-platform55r2-20261027-linux",
+          "./cmd/server"
+        ],
+        "inputs": 3746,
+        "changed": [],
+        "elapsed_seconds": 1.43
+      },
+      {
+        "name": "process-platform55r2-20261027-linux.test",
+        "sha256": "654d318a39bbffb9da3c4ade94afa6d6e31e07d16e8e0d3b00bf49c143ca8048",
+        "command": [
+          "go",
+          "test",
+          "-c",
+          "-o",
+          "/Users/accidia/projects/light-media/work/plugin-no-official-auth-20261026/process-platform55r2-20261027-linux.test",
+          "./internal/app"
+        ],
+        "inputs": 4242,
+        "changed": [],
+        "elapsed_seconds": 7.31
+      }
+    ]
+  },
+  "artifacts": [
+    {
+      "original": "internal/app/directory_manage.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/internal/app/directory_manage.go.gz",
+      "sha256": "f8766f00db9701f890c8d3ee12d11642c60e7b51270500592f6f6bbd4d68d67d",
+      "stored_sha256": "e6b00fe9a00271f5de2617506ec1ecb518de5daadab594e11d5c2a6bc4b0230f"
+    },
+    {
+      "original": "internal/app/plugin_module_process_services_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/internal/app/plugin_module_process_services_test.go.gz",
+      "sha256": "1b01d7c7e9b62806fe8862abfd65a6266871bbb7d9353186dbf4f5d4992436c7",
+      "stored_sha256": "fb39ed806c4129b3120e04bdcbe4cb89c546cf8ff5f3178fc3bb098c4aea8289"
+    },
+    {
+      "original": "internal/app/plugin_module_process_transfer_types_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/internal/app/plugin_module_process_transfer_types_test.go.gz",
+      "sha256": "ced7ca01b0a178a328aec4a94d7dd477a7cc34cc66b325efb2e5c6090db4e65b",
+      "stored_sha256": "1feb8c29f9c1d497775d12b7968243e573d4baca940201d1aa8be9a330e2f210"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_types.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/internal/app/plugin_original_transfer_types.go.gz",
+      "sha256": "5445b0e0e932864cd5a235a9ee3b70d84714ce119243487a028dcc1a37cabef9",
+      "stored_sha256": "e3e6ad43074af41f61c4f1eb62a146e140a6b208aa3f725c49fbdf612fb42f45"
+    },
+    {
+      "original": "internal/app/plugin_original_transfer_types_test.go",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/internal/app/plugin_original_transfer_types_test.go.gz",
+      "sha256": "f2388a648e28eb474ce6064336090c6c4e8dbe186b703d80174e843b70fed1a9",
+      "stored_sha256": "7ad76debd1f2da617e236064302e29e525f073b60cf03c70149b60a63925e39c"
+    },
+    {
+      "original": "testdata/standard-module-host/generate-transfer-types-oracle.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/testdata/standard-module-host/generate-transfer-types-oracle.py.gz",
+      "sha256": "584acfb04fc1dea9b4ae886c74d6be12b78a1cd46b0a311876028cba62942a3f",
+      "stored_sha256": "cb932398b3987290db69e10c7ff81d66fbf35d80d7ec8fd3302a9df1e362e2b7"
+    },
+    {
+      "original": "testdata/standard-module-host/generate-transfer-types-ui-oracle.mjs",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/testdata/standard-module-host/generate-transfer-types-ui-oracle.mjs.gz",
+      "sha256": "46e004fdae6dec04065b025b2b31f0a341e2548d48450489cc35e3ccc20c77c3",
+      "stored_sha256": "67c192c439037c29fc48e2ae839c4e218cdb7ca67732c29bf54c780630e11c51"
+    },
+    {
+      "original": "testdata/standard-module-host/transfer-types-source-oracle.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/testdata/standard-module-host/transfer-types-source-oracle.json.gz",
+      "sha256": "8065697efa32a37bd2f34247f81c8953ec1897a4cda069ada541ca2970be3811",
+      "stored_sha256": "cb2e2aa3aefda50c2371ac4acf55ade5c578f17f863db5b128a002739f7742ca"
+    },
+    {
+      "original": "testdata/standard-module-host/transfer-types-ui-source-oracle.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/testdata/standard-module-host/transfer-types-ui-source-oracle.json.gz",
+      "sha256": "81a32d16929acc2c14c7bbff657acf6165ce71c97c23a63050787f26ea2db8fe",
+      "stored_sha256": "5626e78dfd4ee93c6f4cfa63909da825f4bd59ddfd909cab8a439cdc7de637c5"
+    },
+    {
+      "original": "web/src/components/DirectoryManager.vue",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/web/src/components/DirectoryManager.vue.gz",
+      "sha256": "732b137bcd2e481fde5fd3bef6914a323ff02b6d6a61beda2e50b1b63ec92450",
+      "stored_sha256": "f20af1a5575c3c76f21851db00fa09eb329aa09ed588dc7541c5096481dd5637"
+    },
+    {
+      "original": "web/src/features/directory-transfer-types.ts",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/web/src/features/directory-transfer-types.ts.gz",
+      "sha256": "daaa19a4a1f10419cbfcb171e75b881b77155affef45a672eb25f3730e782c50",
+      "stored_sha256": "42581ce7c57ae6aabaebc50a4e6dba114db724e9f7c9116c8bedb43e54d72f77"
+    },
+    {
+      "original": "web/tests/directory-overwrite.test.mjs",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/web/tests/directory-overwrite.test.mjs.gz",
+      "sha256": "f11b2dbd535a55f0a59fa17e83b53c9e8407900a535269ebbbd42edf4a6b5296",
+      "stored_sha256": "aa1bed5ae09f9ab69328be2ebe5fb23d95154c4735c02292c8641db0d143fcf8"
+    },
+    {
+      "original": "web/tests/directory-transfer-types.test.mjs",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/web/tests/directory-transfer-types.test.mjs.gz",
+      "sha256": "3aa3fc563b68d6c2a010ecd7b733eaa184f300cb5d1bb652dd9e41d7825afc20",
+      "stored_sha256": "76d52f43fd8a0cd2445d9ca1b2c7b56deee601c82ced0f76121ece716e927648"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/archive-types55.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/archive-types55.py.gz",
+      "sha256": "d8c19069cfd52284f0596b03f3fe1b0db66daa9e3689da145c78fe1d80e21f24",
+      "stored_sha256": "fc7a82038989211a1a1f96c599a6827966cb0ef35ec413b6a6c8de58a2b504d7"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/build-platform55.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/build-platform55.py.gz",
+      "sha256": "b258bd07199e601ad34e0d6d9e8e08961901d158bffe2cbe48d784f8309f3e1d",
+      "stored_sha256": "f217a6e5c5bf102770fc9f1d0455e518d6b4806dd2349a55efd6d436652a17b4"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/build-platform55r2.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/build-platform55r2.py.gz",
+      "sha256": "b374d5ba4aac679bbc7333851fcc2ef20d3f26372dfdeb42fcc54b8db6c6b658",
+      "stored_sha256": "0d6b491757e513dee68b950e6283d1e0119db430a1e8b0fca5c41f134bbfb91d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/platform55-result.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/platform55-result.json.gz",
+      "sha256": "bc67b073e11a93616830cc2585ade29252e106a3c2bdeeebbc45a550fffbaccb",
+      "stored_sha256": "73589712bef4466ab513704c82864bb912f9acf8bcc48b136c84b9dd5714c85d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/platform55r2-result.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/platform55r2-result.json.gz",
+      "sha256": "cba00309afd5d09f1ad1392109422f33eff2b3ed3309001568449ccd119e4356",
+      "stored_sha256": "db9ed366bbcb9c78edc436cf3d2557e38bb005b9b282392d1bab02b231ce5f96"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/process-platform55-20261027-linux.test.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/process-platform55-20261027-linux.test.inputs.json.gz",
+      "sha256": "c6acf0ccce6f66c08b62e34a3225ed6e874233136239c79edab4fdb41dd68edb",
+      "stored_sha256": "66ce24b510a8bdca01c27e9ad0b0f6926f7e6d704a869232075c3501cd1db66c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/process-platform55r2-20261027-linux.test.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/process-platform55r2-20261027-linux.test.inputs.json.gz",
+      "sha256": "bc5ab97c1556ce534bf63556644a0afb1b1427c710d0257c42776dcd4732796f",
+      "stored_sha256": "eb0bab7266898e171e3dabf3add8bc6c6cb5964a26081bf5257a40782b8cf925"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/run-types55.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/run-types55.py.gz",
+      "sha256": "d32c3c3f8cce129693d9f80b57087e182d0297f743d3a544999c81310145deb0",
+      "stored_sha256": "6c307a971e0f3f907a9f92ec4db657b3db051a5d37ca47011530b684ff2dd1b6"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/run-types55r2.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/run-types55r2.py.gz",
+      "sha256": "452ae7a4e7c01dfc68b068b07b5165ed031c06fd322a511ec0a642b7d2e5f333",
+      "stored_sha256": "56236cc45e1e6561e853cb49bcc92300df03e74f5c5effbf436e381773fcf84e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/server-platform55-20261027-linux.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/server-platform55-20261027-linux.inputs.json.gz",
+      "sha256": "5ff6b82ebcd4b8fd37efc87a85479e38a9d11669d5d719760011bec1b606a413",
+      "stored_sha256": "c4742af577b191e90b00be0a8f7f754e93646de482f97eace0bd033e4ed77090"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/server-platform55r2-20261027-linux.inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/server-platform55r2-20261027-linux.inputs.json.gz",
+      "sha256": "5ff6b82ebcd4b8fd37efc87a85479e38a9d11669d5d719760011bec1b606a413",
+      "stored_sha256": "c4742af577b191e90b00be0a8f7f754e93646de482f97eace0bd033e4ed77090"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-build-web.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-build-web.log.gz",
+      "sha256": "f05e564f9b3a83eeb570d39fe998e849a6a562ee2f2d565fdebe56c72941694c",
+      "stored_sha256": "564930de1c13835877fee73fe23b50bd3fe10e786eba43d1d76a5f3ea0c969a4"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-cleanup.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-cleanup.json.gz",
+      "sha256": "2d12f43e43477d1ae7bfa91bff72026657248fc78d9d6b9236d19fc4866510ac",
+      "stored_sha256": "b6590b2760ca96fe13127fbe2b668034a36430282c1f790c4b7624695192a84a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-cli-driver.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-cli-driver.log.gz",
+      "sha256": "a6d5df9d41ab4047b260771001032319e07a4f5a47135b8cd3963cf41194ab60",
+      "stored_sha256": "66fdb750a26b653cf68611fa5132e2cd9f073f46b9e0ed9b4a24342fc59e2d53"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-local-driver.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-local-driver.log.gz",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "stored_sha256": "89ed3b723e0e40d8957a2df55fcb04d57b6d95fa665c5fe67b098df7f29694ae"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-local-result.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-local-result.json.gz",
+      "sha256": "fc0e77c01ac4e95c9d324d97f27d39243c34bfe4356c095bd80d71c61d010888",
+      "stored_sha256": "8be10c8d5df34323f4751a9095c87b0d15804b14af065c1bb2002be42a197e7f"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-local.jsonl",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-local.jsonl.gz",
+      "sha256": "07bc2cf291b0aed6dc7ff9786b920f4706f5b410f10d1e0c1c40f5b578a52c59",
+      "stored_sha256": "0a683fb315d0d4ad6e5419a4ae2c3e0d9e10fe0f336cb5f6eb276b4c3d5334c9"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-observe.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-observe.py.gz",
+      "sha256": "4ed3c8decc92dad1df06e551fcb7f9321be22383ed70ea667c63c8f2fc639565",
+      "stored_sha256": "07f8946d4905cb5624babd54afb4e8a3acf56c139aa21b54b368fde9d498d603"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-race.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-race.log.gz",
+      "sha256": "5eb0007a4cbdbc2aea77846c691e9b4411e0fe4728bc4d6b157d87c7641a42ab",
+      "stored_sha256": "caf7699b4aa5e976a1aa2846568afec3f3802fb8c9fb451097cf8ef0a4b658ea"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55-cli-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55-cli-evidence/events36-service-process.log.gz",
+      "sha256": "5be34eaea23745db3bb90cf0f7ff2e14d29740e2e51e30f392161c9d3f7819d1",
+      "stored_sha256": "0cb1970ed70ca2ce559737810d051150169dd8b9ad86289f358455d1ac7f122c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55-cli.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55-cli.log.gz",
+      "sha256": "474a2d6985af8e29ffe63e615a8fd0dacae389a2cf4b0ec830c166df4e2830bc",
+      "stored_sha256": "be8a40dc240f92cdc5414482cf51461fb22acecfb8f5cb5426537c8579eb38f3"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-before.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-before.json.gz",
+      "sha256": "1adc0a5ff3a61831bfec4cd8f57a0c7c3e446e22250babf8e175acd6bea8ce06",
+      "stored_sha256": "cb3e8adc21441bdc319b79cc9867a9ee9ff4ed890a17b51ef1336550e85946fd"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-cold.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-cold.json.gz",
+      "sha256": "93c8d8dab74370bd6d3b1c81997dd4bd4e6bbd8328154c723f0621a0bd6b972e",
+      "stored_sha256": "b8df6b744c10d34af9f79ff1403bf0f332e8377d653082b5633d52220d0d967f"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-empty-rejected.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-empty-rejected.json.gz",
+      "sha256": "9bb60da620ef8649c4ed54493eb943d5ad66c50e2c401e4fbc4b6a997476a6ba",
+      "stored_sha256": "80b8b94eeeb9332c28be8456410805ddfc4d6357897ab5cdcb2d03e8ee80362d"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-empty.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-empty.json.gz",
+      "sha256": "5bf00af425ecaeed6ad312230354569ac75dfaaad54f07dbf6117e9f0c88faf5",
+      "stored_sha256": "fc3372dc773788122febcbe426d5bae44c51e0c2e8f7f722f61354ab3a584bfc"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-failed.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-failed.json.gz",
+      "sha256": "481fb4cf811153e62fa33506f4f91d0b84a88a625847fdcd19e39c55445a9cd0",
+      "stored_sha256": "f22271e96f7fceef53c6290b6646d8e02cbfaf71be7ceb8a833999861c66370c"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-final.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-final.json.gz",
+      "sha256": "f52790fd88047a668e8a9a5c5de43248c6f935acb7f0c42bb3ac6fddcd1c06ac",
+      "stored_sha256": "dca5eca43028cdff772b440b1020afce7b835f8f89f39c9f06cc9e44794ffde3"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-invalid.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-invalid.json.gz",
+      "sha256": "fa6fa108e52bb601af496fa7266b2d5372ae7bf039a893712501508bf1dae875",
+      "stored_sha256": "b04c5e888a9b21d4559d008d7ada32fecfe79b5273e169070f3ad84fb3f7a41a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-recovered.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-recovered.json.gz",
+      "sha256": "c1d1abe517c2bb6219d4e16e8a9dd61fbe7cc1c833d5037158ff38f5d0393e37",
+      "stored_sha256": "e8f0b148836f04b6b058da2476e135a05dfb8a4d3d9b2d2b8b0bdbbfa28ace8a"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-restore.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-restore.json.gz",
+      "sha256": "79edd86136164806cecbf19d05427e4e0e7927a4762237002dde3f6023205d7c",
+      "stored_sha256": "dbd4d44aa77542e58e3822cf3b966212cf97a9b22ce1e119c784ac0abdf7d2ad"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-saved.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-browser-saved.json.gz",
+      "sha256": "bd0daa96e2b8437a1bd4ecc755350e0fcf4a2b4db5a0ada4e3ca2867b10e92c6",
+      "stored_sha256": "3e0ef01a37abe2d925077f6c8d6b2891fc3364747173d3201afedd0aa31b5f27"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-cli-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-cli-evidence/events36-service-process.log.gz",
+      "sha256": "fdb0a63a49e6945b61bb1cc3379e2f4baf47dc2631b42453f66d908eaac0415f",
+      "stored_sha256": "aefefef79ecd8c177f0a822ac51a78304914626cc3eee6949d6c0503d3be02ed"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-cli-evidence/transfer-types55-proof.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-cli-evidence/transfer-types55-proof.json.gz",
+      "sha256": "e08153c83d29a8bd23961ec5464beb0979a5b7f91b7b0cb01e9f54e218e7dc8e",
+      "stored_sha256": "0eb4bc2f94b583be520d9591215f5a67050f7761a795d6c6e62fe05fc42bd016"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-cli.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-cli.log.gz",
+      "sha256": "a29970c6ae769ad7eeb933c6051c31e17ebbf064a257b54782c92b9cd0f5696c",
+      "stored_sha256": "9036dd1ab100b98a6ae28269350c48fd3cbb176bd851b92f1c597e64497838d6"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-ui-evidence/events36-service-process.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-ui-evidence/events36-service-process.log.gz",
+      "sha256": "bf096ba4d8a83908840d5c3771bd7b32027b26a3add6d12ea9b6614007ccea61",
+      "stored_sha256": "0ab20972fbebacd4801c064399f9ce8ec991f81020733b6aa5025a3be603b3bc"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-ui-evidence/transfer-types55-proof.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-ui-evidence/transfer-types55-proof.json.gz",
+      "sha256": "e2c78a6bb25e5322440659ba24edd4c6c670eb489b561411f12a0f7085d5ca45",
+      "stored_sha256": "2b85e8861b984ab97517667bb9c79b43fb96f39f543781b49d5d7fcc8b649b45"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-ui-state.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-ui-state.json.gz",
+      "sha256": "61691a01990ec4d63194e77ffb88b5b8076474ab02ed402d5210e0035bfbd252",
+      "stored_sha256": "c62d4aa8cb3b89633c25a08c0597708e5397d3f326bff900fed2603c4d5843ea"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-remote/types55r2-ui.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-remote/types55r2-ui.log.gz",
+      "sha256": "968895aaf13bc3a6d52c41e4a8532be0c20dd1c48026d51cccfeac8803dd13d2",
+      "stored_sha256": "89ada2d0337e6fa13abbbf72e7fcef4d5b95f5b5dbfdc8001b0abb8f7b0e9ad1"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-source-oracle.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-source-oracle.log.gz",
+      "sha256": "0bc722c48edce32b86ece41885ee62d2f6591e715dfbfd73b7d07db378e5e5bc",
+      "stored_sha256": "3622054fb2ad130bdf66bc692554e064d0a74409af72ec71603c456b25d4aac3"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-ui-oracle.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-ui-oracle.log.gz",
+      "sha256": "bd421293bb9c60ffbddc5cddfeb023ae6e24f1256f4f3fc1a48f64795ce40ef5",
+      "stored_sha256": "59124f31787a93378aecd291f4e8ffd9c92ff35aa161fec8261c7a8f02b43ff0"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-web-all-final.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-web-all-final.log.gz",
+      "sha256": "b16e796596790b18f76d0ec18b3423e722034b5b7c30a2bd64506f3155003707",
+      "stored_sha256": "3d1131ae285a782fa5ce21e0096f36e12a99ade3250b15b1bd0c775126b5da13"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-web-all.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-web-all.log.gz",
+      "sha256": "6bca2798e797af6d3f60fb7f840ba9ae4cfa0e0c979eae69bf695318f4fc5fd8",
+      "stored_sha256": "3dea3186ffb3a151c22acdb3badba04e8b12f3f8383d5cd91fb3b0e9aa050a50"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-web-inputs.json",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-web-inputs.json.gz",
+      "sha256": "4e889bc7f2dd49c8ce5e1e6150a457d4ce2d61894aef43e8d4f60bb40995aa66",
+      "stored_sha256": "ab132ac871bb0c035ff0d6ee4319786fb25b8ad08da96840e752006a01764edb"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55-web-tests.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55-web-tests.log.gz",
+      "sha256": "b1432cf68ab317c0bccda4df044d5c9c976e6388907f94c8ee15f293f3463d50",
+      "stored_sha256": "10f7edd58aa18f24ce35d22a395db6a01d6a209dc92e40d1d9d65fb4518e14ce"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-browser/01-clone-order.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-browser/01-clone-order.dom.txt.gz",
+      "sha256": "405ae83095d5be528ccbb5d63483fb166bc739e08c1e2045ce5921a300caa555",
+      "stored_sha256": "843b7964cf356b43a5d7744911b7af5809f9f9b878937569555bafc231aecd60"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-browser/01-clone-order.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-browser/01-clone-order.png",
+      "sha256": "1b1242e2070dbbd488107b418363a1f3fe627e7c05c2753cd53154af2b053eb8",
+      "stored_sha256": "1b1242e2070dbbd488107b418363a1f3fe627e7c05c2753cd53154af2b053eb8"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-browser/02-invalid-return.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-browser/02-invalid-return.dom.txt.gz",
+      "sha256": "f153b70adf19ee8f7a3fdd62f9f944ebbe5ab95cd1a824685edefa93e6c76d28",
+      "stored_sha256": "edc7aea59402b4dd6d373be3b437022cf3d76f0c435558465f50b586def84be3"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-browser/02-invalid-return.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-browser/02-invalid-return.png",
+      "sha256": "9aafda957736735ed86cea9c91e1ff494af5fd676df2cdc9d1f79a73d05fe21e",
+      "stored_sha256": "9aafda957736735ed86cea9c91e1ff494af5fd676df2cdc9d1f79a73d05fe21e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-browser/03-retry-restored.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-browser/03-retry-restored.dom.txt.gz",
+      "sha256": "15badf6369a4540dbc694c00005cdbd6ed71a204c9ecd47892b6adda0b59e5dc",
+      "stored_sha256": "fbabd8703bef09b890cbf89be9f3181bdaa9bc69937a0354c10634b36025e795"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-browser/03-retry-restored.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-browser/03-retry-restored.png",
+      "sha256": "72dd9b33befdad05e4bf3b776077a2d8b42e5a613351682672846460ad5b564b",
+      "stored_sha256": "72dd9b33befdad05e4bf3b776077a2d8b42e5a613351682672846460ad5b564b"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-browser/04-empty-options.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-browser/04-empty-options.dom.txt.gz",
+      "sha256": "10b97358738eeb6b0aaa16098a54dd75a72238e87a1199033f82f3ad3405fb64",
+      "stored_sha256": "65330f327ad2c6563e7535df0c804ab2b22b835b6930a408230a43d788af4b6e"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-browser/04-empty-options.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-browser/04-empty-options.png",
+      "sha256": "a818cc4cec3ed3cc688e91762370085bcc58f1e448c04e778e25d50c0a7ae9b4",
+      "stored_sha256": "a818cc4cec3ed3cc688e91762370085bcc58f1e448c04e778e25d50c0a7ae9b4"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-browser/05-empty-save-rejected.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-browser/05-empty-save-rejected.dom.txt.gz",
+      "sha256": "22dbd635b27a6daa315e7476aacd29d891c923d128eaeec51adb2f5205dd3f4a",
+      "stored_sha256": "3b94455724cdd771c7398b3608d9c02b3c9c961a75059361f963955c340dc997"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-browser/05-empty-save-rejected.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-browser/05-empty-save-rejected.png",
+      "sha256": "67ec04381efcf95e42ae26f6bd2e4534725237a3c879768409210d653f59e375",
+      "stored_sha256": "67ec04381efcf95e42ae26f6bd2e4534725237a3c879768409210d653f59e375"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-browser/06-cold-persisted.dom.txt",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-browser/06-cold-persisted.dom.txt.gz",
+      "sha256": "55a3fae8a9e685252e766ae13df0712ac42e860879bd0e763c28fc6d2f856ba6",
+      "stored_sha256": "6544229deff8a4ae8ed28edc55ecff6c7e499284c7cd86f3473e1c6526550fb1"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-browser/06-cold-persisted.png",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-browser/06-cold-persisted.png",
+      "sha256": "45048033c5d7df48992f485d82bb964a56765464c605c02df973dbfb81d00d70",
+      "stored_sha256": "45048033c5d7df48992f485d82bb964a56765464c605c02df973dbfb81d00d70"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-cli-driver.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-cli-driver.log.gz",
+      "sha256": "9f0765954d7157db96736c553d026b447d4dfce01df217272dd2d75d926d6398",
+      "stored_sha256": "7ead3d33d1b4fe4f1d3544f4443ebdc0b715c0cbcd86467841019b37ef42b36f"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-observe.py",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-observe.py.gz",
+      "sha256": "10cf94c896dd7681b56e75d5dbfd5a8c58e411997054e1e080a93e52de7f9738",
+      "stored_sha256": "7ad69f67692effcbe7d0790a9bcb145942f1e9f53830a29a19ffa4d73cae1011"
+    },
+    {
+      "original": "work/plugin-no-official-auth-20261026/types55r2-ui-driver.log",
+      "path": "testdata/plugin-module-no-official-auth-20261026/directory-transfer-types-55-20261029/work/plugin-no-official-auth-20261026/types55r2-ui-driver.log.gz",
+      "sha256": "3e1782bcbcd075ab9c504ec1b4fa1d3a27ba4ffd94300773db86cef69374b60d",
+      "stored_sha256": "c61e19b3e5e5aa6f487fad3377e385e4fe0686536201abc5ec308f4db539bc22"
+    }
+  ]
+}

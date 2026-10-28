@@ -26,10 +26,21 @@ type originalPluginInstance struct {
 	eventsEnabled         bool
 	external              bool
 	hostContract          string
-	frontendPackageSHA256 string // real installed content identity captured for this loaded object
+	frontendPackageSHA256 atomic.Pointer[string] // verified resource identity may advance without replacing the backend object
 	sessionMu             sync.Mutex
 	session               *plugins.Client
 	sessionStarted        bool
+}
+
+func (p *originalPluginInstance) frontendPackageHash() string {
+	value := p.frontendPackageSHA256.Load()
+	if value == nil {
+		return ""
+	}
+	return *value
+}
+func (p *originalPluginInstance) setFrontendPackageHash(value string) {
+	p.frontendPackageSHA256.Store(&value)
 }
 
 type originalInitializingObjectKey struct{}
@@ -77,8 +88,11 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 		if metadataErr != nil {
 			return nil
 		}
-		a.pluginOriginalClasses.Store(instance, originalPluginClass{installation: in, isClone: meta.SourceInstanceID != ""})
-		object := &originalPluginInstance{app: a, installation: in, manifest: manifest, external: implementation.External, hostContract: implementation.HostContract, frontendPackageSHA256: implementation.PackageSHA256}
+		class := originalPluginClass{installation: in, isClone: meta.SourceInstanceID != ""}
+		a.storeOriginalPluginClass(instance, class)
+		object := &originalPluginInstance{app: a, installation: in, manifest: manifest, external: implementation.External, hostContract: implementation.HostContract}
+		object.setFrontendPackageHash(implementation.PackageSHA256)
+		a.registerOriginalObjectChainHandlers(object)
 		err = object.init(ctx)
 		if err != nil && object.external {
 			object.finishOriginalInitialization(false)
@@ -90,7 +104,6 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 			}
 			a.pluginRunningInstances.Store(instance, object)
 			a.pluginOriginalRunningMu.Unlock()
-			a.registerOriginalObjectChainHandlers(object)
 			object.finishOriginalInitialization(true)
 			// Original start stores the object before get_state/event registration.
 			// A later exception is caught without rolling back that stored object.
@@ -150,11 +163,10 @@ func (a *App) initializeOriginalCloneCalls(ctx context.Context, instance string)
 // Only the manager decides stop order. Client.StopWithHost owns the actual
 // process shutdown/join; no legacy queue transition can veto this method.
 func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
-	a.unregisterOriginalObjectChainHandlers(instance)
 	loaded, ok := a.pluginRunningInstances.Load(instance)
 	if !ok {
 		a.stopOriginalUnpublishedSubmissions(ctx, instance)
-		a.pluginOriginalClasses.Delete(instance)
+		a.forgetOriginalPluginClass(instance)
 		return nil
 	}
 	object := loaded.(*originalPluginInstance)
@@ -173,7 +185,7 @@ func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
 	}
 	a.pluginOriginalRunningMu.Lock()
 	defer a.pluginOriginalRunningMu.Unlock()
-	a.pluginOriginalClasses.Delete(instance)
+	a.forgetOriginalPluginClassLocked(instance)
 	a.pluginRunningInstances.Delete(instance)
 	for i, id := range a.pluginOriginalRunningOrder {
 		if id == instance {
@@ -195,20 +207,25 @@ func (a *App) registerOriginalPluginAPIs(instance string) {
 			a.log("ERROR", "plugins", "register_apis_failed", "读取插件API失败", "", "")
 			return
 		}
-		for i := range apis {
-			if apis[i].Auth == "" {
-				apis[i].Auth = "apikey"
-			}
-		}
 		// Route declarations are data, not a grant of native host capabilities.
-		// The existing instance URL dispatcher supplies the instance prefix.
+		// Like add_api_route's per-item try/except, a bad declaration must not
+		// discard valid routes before or after it. Keep the SDK's collision and
+		// size checks while publishing only individually accepted declarations.
 		declaration := object.manifest
-		declaration.APIs = apis
-		if err := declaration.Validate(); err != nil {
-			a.log("ERROR", "plugins", "register_apis_failed", "插件API声明无效", "", "")
-			return
+		declaration.APIs = nil
+		for _, api := range apis {
+			if api.Auth == "" {
+				api.Auth = "apikey"
+			}
+			candidate := declaration
+			candidate.APIs = append(append([]plugins.HTTPAPI(nil), declaration.APIs...), api)
+			if err := candidate.Validate(); err != nil {
+				a.log("ERROR", "plugins", "register_apis_failed", "插件API声明无效，已跳过该接口", "", "")
+				continue
+			}
+			declaration.APIs = candidate.APIs
 		}
-		a.pluginRegisteredAPIs.Store(instance, apis)
+		a.pluginRegisteredAPIs.Store(instance, declaration.APIs)
 	}
 }
 

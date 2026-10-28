@@ -1,0 +1,2456 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_inventory": "testdata/plugin-module-scoped-20261025/fixed-event-call-inventory.json",
+  "source_inventory_sha256": "e56d39c09635cc468522043f39778ed945e7c26cd8355faa659c5862e616d26f",
+  "unique_status_authority": "docs/plugin-module-parity-matrix.md; this file annotates the existing fixed inventory and does not assign row acceptance",
+  "kind": "Per-callsite scope and current concrete host/consumer audit, not execution count",
+  "counts": {
+    "source_calls": 92,
+    "in_scope_source_calls": 81,
+    "excluded_source_calls": 11,
+    "registered_source_consumers": 11,
+    "ordinary_source_consumers": 10
+  },
+  "annotations": [
+    {
+      "source_call_index": 0,
+      "source_call": "app/agent/__init__.py:660",
+      "event": "agent.tokens.usage",
+      "event_kind": "broadcast",
+      "applicability": "按用户要求排除",
+      "target": [],
+      "conclusion": "Workflow/AI dedicated producer excluded; not an acceptance pending/blocker.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "_send_agent_tokens_usage_event",
+      "fixed_source_sha256": "fd95c28c83f9d4bfa73ddecc4308691e9f1bb913383003f748ee5c9133ef6952",
+      "target_symbols": []
+    },
+    {
+      "source_call_index": 1,
+      "source_call": "app/agent/__init__.py:799",
+      "event": "agent.llm.provider",
+      "event_kind": "chain",
+      "applicability": "按用户要求排除",
+      "target": [],
+      "conclusion": "Workflow/AI dedicated producer excluded; not an acceptance pending/blocker.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "_resolve_llm_runtime_config",
+      "fixed_source_sha256": "fd95c28c83f9d4bfa73ddecc4308691e9f1bb913383003f748ee5c9133ef6952",
+      "target_symbols": []
+    },
+    {
+      "source_call_index": 2,
+      "source_call": "app/agent/tools/impl/_filter_rule_utils.py:432",
+      "event": "config.updated",
+      "event_kind": "broadcast",
+      "applicability": "按用户要求排除",
+      "target": [],
+      "conclusion": "Workflow/AI dedicated producer excluded; not an acceptance pending/blocker.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "save_system_config",
+      "fixed_source_sha256": "3aa4af80b893993b7f49976a078100e47112c361d15f68234cded8e0138b92e9",
+      "target_symbols": []
+    },
+    {
+      "source_call_index": 3,
+      "source_call": "app/agent/tools/impl/delete_subscribe.py:69",
+      "event": "subscribe.deleted",
+      "event_kind": "broadcast",
+      "applicability": "按用户要求排除",
+      "target": [],
+      "conclusion": "Workflow/AI dedicated producer excluded; not an acceptance pending/blocker.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "run",
+      "fixed_source_sha256": "c91d3f99e71835e1e243e9135afe8e3cb48c8bc744a322bd0d479a0415294f8d",
+      "target_symbols": []
+    },
+    {
+      "source_call_index": 4,
+      "source_call": "app/agent/tools/impl/run_slash_command.py:91",
+      "event": "command.excute",
+      "event_kind": "broadcast",
+      "applicability": "按用户要求排除",
+      "target": [],
+      "conclusion": "Workflow/AI dedicated producer excluded; not an acceptance pending/blocker.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-core-consumer-result.json"
+      ],
+      "remaining": [],
+      "source_method": "run",
+      "fixed_source_sha256": "78cf8e8394154544011f67c831d01d53c157c901075b8fd918dabdc28526d997",
+      "target_symbols": []
+    },
+    {
+      "source_call_index": 5,
+      "source_call": "app/agent/tools/impl/update_site.py:200",
+      "event": "site.updated",
+      "event_kind": "broadcast",
+      "applicability": "按用户要求排除",
+      "target": [],
+      "conclusion": "Workflow/AI dedicated producer excluded; not an acceptance pending/blocker.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "run",
+      "fixed_source_sha256": "149ffb85d33c11bb20f79fe0789971a10b5c1d383f582dd15f4394a5cb1ce0c0",
+      "target_symbols": []
+    },
+    {
+      "source_call_index": 6,
+      "source_call": "app/agent/tools/impl/update_subscribe.py:263",
+      "event": "subscribe.modified",
+      "event_kind": "broadcast",
+      "applicability": "按用户要求排除",
+      "target": [],
+      "conclusion": "Workflow/AI dedicated producer excluded; not an acceptance pending/blocker.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "run",
+      "fixed_source_sha256": "d918976c88db701251dd7e48b6fdb9fd62e1a5a3584258df54b31c5cbf3581b8",
+      "target_symbols": []
+    },
+    {
+      "source_call_index": 7,
+      "source_call": "app/agent/tools/impl/update_system_settings.py:276",
+      "event": "config.updated",
+      "event_kind": "broadcast",
+      "applicability": "按用户要求排除",
+      "target": [],
+      "conclusion": "Workflow/AI dedicated producer excluded; not an acceptance pending/blocker.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "run",
+      "fixed_source_sha256": "4905c09af078e8c02f8f3404f241057032af7008ba0a9cf996f590d1205e6ae4",
+      "target_symbols": []
+    },
+    {
+      "source_call_index": 8,
+      "source_call": "app/api/endpoints/discover.py:28",
+      "event": "discover.source",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_catalog_sources.go",
+        "internal/app/plugin_original_catalog_opaque.go",
+        "internal/app/plugin_original_catalog_sources_test.go",
+        "internal/app/plugin_original_catalog_opaque_test.go"
+      ],
+      "conclusion": "Fixed catalog source/legacy-key conversion/name assistance chain producers and actual returned-mutation consumers implemented. Native primary extra-sources and non-TMDB opaque IDs remain separate. Actual main8 IAB44 actions verify opaque source identity, source/clone/cold; source AST oracles and SDK prove None/fallback/exception ordering. UI extra-sources IAB and CLI versions remain separately bound.",
+      "evidence": [
+        "docs/validation/plugin-catalog-extra-ui-20261027.json",
+        "docs/validation/plugin-catalog-sources-cli-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "testdata/standard-catalog-modules/source-events-oracle.json",
+        "testdata/standard-catalog-modules/opaque-source-oracle.json"
+      ],
+      "remaining": [],
+      "source_method": "source",
+      "fixed_source_sha256": "34f443f1c372a0149a4629c7d1222723d46c981980f14c9c9d29c123dc8a97ae",
+      "target_symbols": [
+        "internal/app/plugin_original_catalog_sources.go",
+        "internal/app/plugin_original_catalog_opaque.go",
+        "internal/app/plugin_original_catalog_sources_test.go",
+        "internal/app/plugin_original_catalog_opaque_test.go"
+      ]
+    },
+    {
+      "source_call_index": 9,
+      "source_call": "app/api/endpoints/history.py:251",
+      "event": "downloadfile.deleted",
+      "event_kind": "broadcast",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/core_download_file_deleted.go",
+        "internal/app/plugin_original_core_download_file_deleted.go"
+      ],
+      "conclusion": "Real native history deletion emits committed src/hash; SDK Event.Send also reaches the actual source consumer. Source checks empty/hash and owned records, target additionally requires current file/task ownership before real remove_keep_data. Source-shaped path/hash cannot authorize arbitrary host paths. Actual main8 Add+Metadata/FileDeleted gate and owned SDK tests retained. Fixed successful retained-directory source event is now separately represented by a sealed retained fact, preserving physical state and exact src/hash event; native downloader removal remains delete_file=False.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "internal/app/plugin_original_core_download_file_deleted_test.go",
+        "internal/app/plugin_module_process_download_file_deleted_test.go",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "delete_transfer_history",
+      "fixed_source_sha256": "ce5dc4bcd2e3518f3afc3c31e81f61aaa84733a0f7489a9d679849a1292228a6",
+      "target_symbols": [
+        "internal/app/core_download_file_deleted.go",
+        "internal/app/plugin_original_core_download_file_deleted.go"
+      ]
+    },
+    {
+      "source_call_index": 10,
+      "source_call": "app/api/endpoints/media.py:446",
+      "event": "media.recognize.convert",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_catalog_sources.go",
+        "internal/app/plugin_original_catalog_opaque.go",
+        "internal/app/plugin_original_catalog_sources_test.go",
+        "internal/app/plugin_original_catalog_opaque_test.go"
+      ],
+      "conclusion": "Fixed catalog source/legacy-key conversion/name assistance chain producers and actual returned-mutation consumers implemented. Native primary extra-sources and non-TMDB opaque IDs remain separate. Actual main8 IAB44 actions verify opaque source identity, source/clone/cold; source AST oracles and SDK prove None/fallback/exception ordering. UI extra-sources IAB and CLI versions remain separately bound.",
+      "evidence": [
+        "docs/validation/plugin-catalog-extra-ui-20261027.json",
+        "docs/validation/plugin-catalog-sources-cli-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "testdata/standard-catalog-modules/source-events-oracle.json",
+        "testdata/standard-catalog-modules/opaque-source-oracle.json"
+      ],
+      "remaining": [],
+      "source_method": "detail",
+      "fixed_source_sha256": "cbf09c0f3abfe6130a88d6a82bbb212c9fa47cca65cccf91e7067946c7368926",
+      "target_symbols": [
+        "internal/app/plugin_original_catalog_sources.go",
+        "internal/app/plugin_original_catalog_opaque.go",
+        "internal/app/plugin_original_catalog_sources_test.go",
+        "internal/app/plugin_original_catalog_opaque_test.go"
+      ]
+    },
+    {
+      "source_call_index": 11,
+      "source_call": "app/api/endpoints/plugin.py:749",
+      "event": "plugin.data.reset",
+      "event_kind": "chain",
+      "applicability": "existing plugin platform",
+      "target": [
+        "internal/app/plugin_original_reset_event.go",
+        "internal/app/plugin_original_reset.go"
+      ],
+      "conclusion": "Exact synchronous reset request and mutated result consumed by actual plugin manager; source and clone independently reset.",
+      "evidence": [
+        "docs/validation/plugin-module-scoped-20261025.json",
+        "internal/app/plugin_original_reset_chain_test.go"
+      ],
+      "remaining": [],
+      "source_method": "reset_plugin",
+      "fixed_source_sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "target_symbols": [
+        "internal/app/plugin_original_reset_event.go",
+        "internal/app/plugin_original_reset.go"
+      ]
+    },
+    {
+      "source_call_index": 12,
+      "source_call": "app/api/endpoints/recommend.py:38",
+      "event": "recommend.source",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_catalog_sources.go",
+        "internal/app/plugin_original_catalog_opaque.go",
+        "internal/app/plugin_original_catalog_sources_test.go",
+        "internal/app/plugin_original_catalog_opaque_test.go"
+      ],
+      "conclusion": "Fixed catalog source/legacy-key conversion/name assistance chain producers and actual returned-mutation consumers implemented. Native primary extra-sources and non-TMDB opaque IDs remain separate. Actual main8 IAB44 actions verify opaque source identity, source/clone/cold; source AST oracles and SDK prove None/fallback/exception ordering. UI extra-sources IAB and CLI versions remain separately bound.",
+      "evidence": [
+        "docs/validation/plugin-catalog-extra-ui-20261027.json",
+        "docs/validation/plugin-catalog-sources-cli-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "testdata/standard-catalog-modules/source-events-oracle.json",
+        "testdata/standard-catalog-modules/opaque-source-oracle.json"
+      ],
+      "remaining": [],
+      "source_method": "source",
+      "fixed_source_sha256": "f4b754f6de839fa67c99e53cea2195760eaaf9b179248d85d53c77c1b5dda92e",
+      "target_symbols": [
+        "internal/app/plugin_original_catalog_sources.go",
+        "internal/app/plugin_original_catalog_opaque.go",
+        "internal/app/plugin_original_catalog_sources_test.go",
+        "internal/app/plugin_original_catalog_opaque_test.go"
+      ]
+    },
+    {
+      "source_call_index": 13,
+      "source_call": "app/api/endpoints/search.py:78",
+      "event": "media.recognize.convert",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_catalog_sources.go",
+        "internal/app/plugin_original_catalog_opaque.go",
+        "internal/app/plugin_original_catalog_sources_test.go",
+        "internal/app/plugin_original_catalog_opaque_test.go"
+      ],
+      "conclusion": "Fixed catalog source/legacy-key conversion/name assistance chain producers and actual returned-mutation consumers implemented. Native primary extra-sources and non-TMDB opaque IDs remain separate. Actual main8 IAB44 actions verify opaque source identity, source/clone/cold; source AST oracles and SDK prove None/fallback/exception ordering. UI extra-sources IAB and CLI versions remain separately bound.",
+      "evidence": [
+        "docs/validation/plugin-catalog-extra-ui-20261027.json",
+        "docs/validation/plugin-catalog-sources-cli-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "testdata/standard-catalog-modules/source-events-oracle.json",
+        "testdata/standard-catalog-modules/opaque-source-oracle.json"
+      ],
+      "remaining": [],
+      "source_method": "_resolve_media_search_params",
+      "fixed_source_sha256": "2a82b91e8c510ee5d28a568b38dc7bb62e6800a34dd54d55775eff7a8ac89b89",
+      "target_symbols": [
+        "internal/app/plugin_original_catalog_sources.go",
+        "internal/app/plugin_original_catalog_opaque.go",
+        "internal/app/plugin_original_catalog_sources_test.go",
+        "internal/app/plugin_original_catalog_opaque_test.go"
+      ]
+    },
+    {
+      "source_call_index": 14,
+      "source_call": "app/api/endpoints/site.py:85",
+      "event": "site.updated",
+      "event_kind": "broadcast",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/site_manage.go",
+        "internal/app/plugin_standard_site_events.go",
+        "internal/app/plugin_original_core_site_updated.go",
+        "internal/app/site_message_history.go"
+      ],
+      "conclusion": "Actual add/edit producer and all three ordinary SDK-issued SiteUpdated consumers are implemented: favicon, temporary-cache invalidation, userdata refresh. Real SQL failure, encrypted notification history, failure recovery, source/clone/cold and IAB site/icon readback are version-bound. The late encrypted-history fix also passed actual main9 Linux1.90s.",
+      "evidence": [
+        "docs/validation/plugin-site-updated-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform9-initial-runtime/manifest.json"
+      ],
+      "remaining": [],
+      "source_method": "add_site",
+      "fixed_source_sha256": "c352a148fd418f7eb6c91f490d8db4319c91c6ac2d68b920b35b525d1d8372a8",
+      "target_symbols": [
+        "internal/app/site_manage.go",
+        "internal/app/plugin_standard_site_events.go",
+        "internal/app/plugin_original_core_site_updated.go",
+        "internal/app/site_message_history.go"
+      ]
+    },
+    {
+      "source_call_index": 15,
+      "source_call": "app/api/endpoints/site.py:108",
+      "event": "site.updated",
+      "event_kind": "broadcast",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/site_manage.go",
+        "internal/app/plugin_standard_site_events.go",
+        "internal/app/plugin_original_core_site_updated.go",
+        "internal/app/site_message_history.go"
+      ],
+      "conclusion": "Actual add/edit producer and all three ordinary SDK-issued SiteUpdated consumers are implemented: favicon, temporary-cache invalidation, userdata refresh. Real SQL failure, encrypted notification history, failure recovery, source/clone/cold and IAB site/icon readback are version-bound. The late encrypted-history fix also passed actual main9 Linux1.90s.",
+      "evidence": [
+        "docs/validation/plugin-site-updated-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform9-initial-runtime/manifest.json"
+      ],
+      "remaining": [],
+      "source_method": "update_site",
+      "fixed_source_sha256": "c352a148fd418f7eb6c91f490d8db4319c91c6ac2d68b920b35b525d1d8372a8",
+      "target_symbols": [
+        "internal/app/site_manage.go",
+        "internal/app/plugin_standard_site_events.go",
+        "internal/app/plugin_original_core_site_updated.go",
+        "internal/app/site_message_history.go"
+      ]
+    },
+    {
+      "source_call_index": 16,
+      "source_call": "app/api/endpoints/site.py:145",
+      "event": "site.deleted",
+      "event_kind": "broadcast",
+      "applicability": "source operation has no existing native host",
+      "target": [],
+      "conclusion": "source reset also clears all sites and starts CookieCloud; native single-site delete already applies reference pruning, but no CookieCloud/reset service is added",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "reset",
+      "fixed_source_sha256": "c352a148fd418f7eb6c91f490d8db4319c91c6ac2d68b920b35b525d1d8372a8",
+      "target_symbols": []
+    },
+    {
+      "source_call_index": 17,
+      "source_call": "app/api/endpoints/site.py:573",
+      "event": "site.deleted",
+      "event_kind": "broadcast",
+      "applicability": "existing native site management",
+      "target": [
+        "internal/app/runtime.go",
+        "internal/app/plugin_standard_business_events.go",
+        "internal/app/core_site_references.go"
+      ],
+      "conclusion": "Native delete prunes configured search/RSS/subscription references atomically and broadcasts stable source numeric site identity after commit. Plugin-issued ordinary event now reaches real independent Search/Subscribe core consumers; numeric/bool/float/string source membership, wildcard and partial failures are source-replayed/SDK-tested, actual source+clone main and cold readback proved.",
+      "evidence": [
+        "internal/app/native_site_deleted_test.go",
+        "internal/app/plugin_site_controls_test.go",
+        "testdata/plugin-module-no-official-auth-20261026/events36-core-consumer-result.json"
+      ],
+      "remaining": [],
+      "source_method": "delete_site",
+      "fixed_source_sha256": "c352a148fd418f7eb6c91f490d8db4319c91c6ac2d68b920b35b525d1d8372a8",
+      "target_symbols": [
+        "internal/app/runtime.go:saveSettings",
+        "internal/app/plugin_standard_business_events.go",
+        "internal/app/core_site_references.go"
+      ]
+    },
+    {
+      "source_call_index": 18,
+      "source_call": "app/api/endpoints/subscribe.py:231",
+      "event": "subscribe.modified",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary subscription",
+      "target": [
+        "internal/app/subscription_runtime.go",
+        "internal/app/plugin_standard_subscription_reset.go"
+      ],
+      "conclusion": "Update/status/reset use full source model snapshots, sorted Python-style field difference and committed source scene.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/process-status-linux.log.gz"
+      ],
+      "remaining": [],
+      "source_method": "update_subscribe",
+      "fixed_source_sha256": "ee93ba32748abbac7ef6f060ad3eeeb05a5681b5bcdd7b691270f6bb7e8ab469",
+      "target_symbols": [
+        "internal/app/subscription_runtime.go",
+        "internal/app/plugin_standard_subscription_reset.go"
+      ]
+    },
+    {
+      "source_call_index": 19,
+      "source_call": "app/api/endpoints/subscribe.py:264",
+      "event": "subscribe.modified",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary subscription",
+      "target": [
+        "internal/app/subscription_runtime.go",
+        "internal/app/plugin_standard_subscription_reset.go"
+      ],
+      "conclusion": "Update/status/reset use full source model snapshots, sorted Python-style field difference and committed source scene.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/process-status-linux.log.gz"
+      ],
+      "remaining": [],
+      "source_method": "update_subscribe_status",
+      "fixed_source_sha256": "ee93ba32748abbac7ef6f060ad3eeeb05a5681b5bcdd7b691270f6bb7e8ab469",
+      "target_symbols": [
+        "internal/app/subscription_runtime.go",
+        "internal/app/plugin_standard_subscription_reset.go"
+      ]
+    },
+    {
+      "source_call_index": 20,
+      "source_call": "app/api/endpoints/subscribe.py:346",
+      "event": "subscribe.modified",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary subscription",
+      "target": [
+        "internal/app/subscription_runtime.go",
+        "internal/app/plugin_standard_subscription_reset.go"
+      ],
+      "conclusion": "Update/status/reset use full source model snapshots, sorted Python-style field difference and committed source scene.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/process-status-linux.log.gz"
+      ],
+      "remaining": [],
+      "source_method": "reset_subscribes",
+      "fixed_source_sha256": "ee93ba32748abbac7ef6f060ad3eeeb05a5681b5bcdd7b691270f6bb7e8ab469",
+      "target_symbols": [
+        "internal/app/subscription_runtime.go",
+        "internal/app/plugin_standard_subscription_reset.go"
+      ]
+    },
+    {
+      "source_call_index": 21,
+      "source_call": "app/api/endpoints/subscribe.py:455",
+      "event": "subscribe.deleted",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary subscription",
+      "target": [
+        "internal/app/subscription_runtime.go"
+      ],
+      "conclusion": "Committed native delete broadcasts source model/id; media-id and ID source endpoints map to same single-season existing native delete.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+        "docs/validation/plugin-module-scoped-20261025.json"
+      ],
+      "remaining": [],
+      "source_method": "delete_subscribe_by_mediaid",
+      "fixed_source_sha256": "ee93ba32748abbac7ef6f060ad3eeeb05a5681b5bcdd7b691270f6bb7e8ab469",
+      "target_symbols": [
+        "internal/app/subscription_runtime.go"
+      ]
+    },
+    {
+      "source_call_index": 22,
+      "source_call": "app/api/endpoints/subscribe.py:855",
+      "event": "subscribe.deleted",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary subscription",
+      "target": [
+        "internal/app/subscription_runtime.go"
+      ],
+      "conclusion": "Committed native delete broadcasts source model/id; media-id and ID source endpoints map to same single-season existing native delete.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+        "docs/validation/plugin-module-scoped-20261025.json"
+      ],
+      "remaining": [],
+      "source_method": "delete_subscribe",
+      "fixed_source_sha256": "ee93ba32748abbac7ef6f060ad3eeeb05a5681b5bcdd7b691270f6bb7e8ab469",
+      "target_symbols": [
+        "internal/app/subscription_runtime.go"
+      ]
+    },
+    {
+      "source_call_index": 23,
+      "source_call": "app/api/endpoints/system.py:756",
+      "event": "config.updated",
+      "event_kind": "broadcast",
+      "applicability": "existing plugin settings",
+      "target": [
+        "internal/app/plugin_standard_config_events.go"
+      ],
+      "conclusion": "Native plugin settings bulk uses changed key set/null; original single-setting and Wiki use actual saved values, tokens masked.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/config-market-tests.jsonl.gz",
+        "docs/validation/plugin-module-scoped-20261025.json"
+      ],
+      "remaining": [],
+      "source_method": "set_env_setting",
+      "fixed_source_sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "target_symbols": [
+        "internal/app/plugin_standard_config_events.go"
+      ]
+    },
+    {
+      "source_call_index": 24,
+      "source_call": "app/api/endpoints/system.py:855",
+      "event": "config.updated",
+      "event_kind": "broadcast",
+      "applicability": "existing plugin settings",
+      "target": [
+        "internal/app/plugin_standard_config_events.go"
+      ],
+      "conclusion": "Native plugin settings bulk uses changed key set/null; original single-setting and Wiki use actual saved values, tokens masked.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/config-market-tests.jsonl.gz",
+        "docs/validation/plugin-module-scoped-20261025.json"
+      ],
+      "remaining": [],
+      "source_method": "sync_plugin_market_from_wiki",
+      "fixed_source_sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "target_symbols": [
+        "internal/app/plugin_standard_config_events.go"
+      ]
+    },
+    {
+      "source_call_index": 25,
+      "source_call": "app/api/endpoints/system.py:905",
+      "event": "config.updated",
+      "event_kind": "broadcast",
+      "applicability": "existing plugin settings",
+      "target": [
+        "internal/app/plugin_standard_config_events.go"
+      ],
+      "conclusion": "Native plugin settings bulk uses changed key set/null; original single-setting and Wiki use actual saved values, tokens masked.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/config-market-tests.jsonl.gz",
+        "docs/validation/plugin-module-scoped-20261025.json"
+      ],
+      "remaining": [],
+      "source_method": "set_setting",
+      "fixed_source_sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "target_symbols": [
+        "internal/app/plugin_standard_config_events.go"
+      ]
+    },
+    {
+      "source_call_index": 26,
+      "source_call": "app/api/endpoints/system.py:919",
+      "event": "config.updated",
+      "event_kind": "broadcast",
+      "applicability": "existing plugin settings",
+      "target": [
+        "internal/app/plugin_standard_config_events.go"
+      ],
+      "conclusion": "Native plugin settings bulk uses changed key set/null; original single-setting and Wiki use actual saved values, tokens masked.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/config-market-tests.jsonl.gz",
+        "docs/validation/plugin-module-scoped-20261025.json"
+      ],
+      "remaining": [],
+      "source_method": "set_setting",
+      "fixed_source_sha256": "b49f278c79f0336341f1124f55e2e917a7bdc8e259243f01d862e18755028e92",
+      "target_symbols": [
+        "internal/app/plugin_standard_config_events.go"
+      ]
+    },
+    {
+      "source_call_index": 27,
+      "source_call": "app/chain/__init__.py:248",
+      "event": "system.error",
+      "event_kind": "broadcast",
+      "applicability": "existing plugin methods/events/services/native ordinary errors",
+      "target": [
+        "internal/app/plugin_original_error.go",
+        "internal/app/plugin_original_service_progress.go",
+        "internal/app/system_error_events.go"
+      ],
+      "conclusion": "Concrete plugin/module/event/clock failures retain ordinary helper role and broadcast; native diagnostics use recorded safe Go code/stack rather than fabricated Python traceback.",
+      "evidence": [
+        "docs/validation/plugin-event-execution-parity.json",
+        "testdata/plugin-module-no-official-auth-20261026/services38-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/modules43-downloader-control-result.json"
+      ],
+      "remaining": [],
+      "source_method": "__handle_plugin_error",
+      "fixed_source_sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+      "target_symbols": [
+        "internal/app/plugin_original_error.go",
+        "internal/app/plugin_original_service_progress.go",
+        "internal/app/system_error_events.go"
+      ]
+    },
+    {
+      "source_call_index": 28,
+      "source_call": "app/chain/__init__.py:274",
+      "event": "system.error",
+      "event_kind": "broadcast",
+      "applicability": "existing plugin methods/events/services/native ordinary errors",
+      "target": [
+        "internal/app/plugin_original_error.go",
+        "internal/app/plugin_original_service_progress.go",
+        "internal/app/system_error_events.go"
+      ],
+      "conclusion": "Concrete plugin/module/event/clock failures retain ordinary helper role and broadcast; native diagnostics use recorded safe Go code/stack rather than fabricated Python traceback.",
+      "evidence": [
+        "docs/validation/plugin-event-execution-parity.json",
+        "testdata/plugin-module-no-official-auth-20261026/services38-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/modules43-downloader-control-result.json"
+      ],
+      "remaining": [],
+      "source_method": "__handle_system_error",
+      "fixed_source_sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+      "target_symbols": [
+        "internal/app/plugin_original_error.go",
+        "internal/app/plugin_original_service_progress.go",
+        "internal/app/system_error_events.go"
+      ]
+    },
+    {
+      "source_call_index": 29,
+      "source_call": "app/chain/__init__.py:1725",
+      "event": "notice.message",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary notice SDK/core",
+      "target": [
+        "internal/app/plugin_original_notice.go",
+        "internal/app/plugin_notice_delivery.go"
+      ],
+      "conclusion": "Exact mutable notice fields are consumed before actual modules and history; SDK/core source and clone delivery proved independently.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/events36-lack-result.json"
+      ],
+      "remaining": [],
+      "source_method": "post_message",
+      "fixed_source_sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+      "target_symbols": [
+        "internal/app/plugin_original_notice.go",
+        "internal/app/plugin_notice_delivery.go"
+      ]
+    },
+    {
+      "source_call_index": 30,
+      "source_call": "app/chain/__init__.py:1735",
+      "event": "notice.message",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary notice SDK/core",
+      "target": [
+        "internal/app/plugin_original_notice.go",
+        "internal/app/plugin_notice_delivery.go"
+      ],
+      "conclusion": "Exact mutable notice fields are consumed before actual modules and history; SDK/core source and clone delivery proved independently.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/events36-lack-result.json"
+      ],
+      "remaining": [],
+      "source_method": "post_message",
+      "fixed_source_sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+      "target_symbols": [
+        "internal/app/plugin_original_notice.go",
+        "internal/app/plugin_notice_delivery.go"
+      ]
+    },
+    {
+      "source_call_index": 31,
+      "source_call": "app/chain/__init__.py:1841",
+      "event": "notice.message",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary notice SDK/core",
+      "target": [
+        "internal/app/plugin_original_notice.go",
+        "internal/app/plugin_notice_delivery.go"
+      ],
+      "conclusion": "Exact mutable notice fields are consumed before actual modules and history; SDK/core source and clone delivery proved independently.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/events36-lack-result.json"
+      ],
+      "remaining": [],
+      "source_method": "async_post_message",
+      "fixed_source_sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+      "target_symbols": [
+        "internal/app/plugin_original_notice.go",
+        "internal/app/plugin_notice_delivery.go"
+      ]
+    },
+    {
+      "source_call_index": 32,
+      "source_call": "app/chain/__init__.py:1851",
+      "event": "notice.message",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary notice SDK/core",
+      "target": [
+        "internal/app/plugin_original_notice.go",
+        "internal/app/plugin_notice_delivery.go"
+      ],
+      "conclusion": "Exact mutable notice fields are consumed before actual modules and history; SDK/core source and clone delivery proved independently.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/events36-lack-result.json"
+      ],
+      "remaining": [],
+      "source_method": "async_post_message",
+      "fixed_source_sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+      "target_symbols": [
+        "internal/app/plugin_original_notice.go",
+        "internal/app/plugin_notice_delivery.go"
+      ]
+    },
+    {
+      "source_call_index": 33,
+      "source_call": "app/chain/download.py:839",
+      "event": "resource.download",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_download_context.go",
+        "internal/app/download_events.go",
+        "internal/app/native_download.go",
+        "internal/app/search_download.go"
+      ],
+      "conclusion": "Exact fixed full Context/episodes/origin/downloader and cancel/save_path consumption are replayed and real SDK-tested. Actual main9 CLI and IAB46 prove Add→veto/no accepted marker→same resource retry, source/clone isolation and cold no replay. Actual main10 adds selector prefix proof; current selected Context handoff recovery fix still needs final main validation, so this is no blanket current-tree pass.",
+      "evidence": [
+        "docs/validation/plugin-download-context-20261028.json",
+        "testdata/plugin-module-no-official-auth-20261026/download-context-20261028/runtime/manifest.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform10-runtime/manifest.json"
+      ],
+      "remaining": [],
+      "source_method": "download_single",
+      "fixed_source_sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+      "target_symbols": [
+        "internal/app/plugin_original_download_context.go",
+        "internal/app/download_events.go",
+        "internal/app/native_download.go",
+        "internal/app/search_download.go"
+      ]
+    },
+    {
+      "source_call_index": 34,
+      "source_call": "app/chain/download.py:1020",
+      "event": "download.added",
+      "event_kind": "broadcast",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_download_context.go",
+        "internal/app/download_events.go",
+        "internal/app/native_download.go",
+        "internal/app/search_download.go"
+      ],
+      "conclusion": "Exact fixed full Context/episodes/origin/downloader and cancel/save_path consumption are replayed and real SDK-tested. Actual main9 CLI and IAB46 prove Add→veto/no accepted marker→same resource retry, source/clone isolation and cold no replay. Actual main10 adds selector prefix proof; current selected Context handoff recovery fix still needs final main validation, so this is no blanket current-tree pass.",
+      "evidence": [
+        "docs/validation/plugin-download-context-20261028.json",
+        "testdata/plugin-module-no-official-auth-20261026/download-context-20261028/runtime/manifest.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform10-runtime/manifest.json"
+      ],
+      "remaining": [],
+      "source_method": "download_single",
+      "fixed_source_sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+      "target_symbols": [
+        "internal/app/plugin_original_download_context.go",
+        "internal/app/download_events.go",
+        "internal/app/native_download.go",
+        "internal/app/search_download.go"
+      ]
+    },
+    {
+      "source_call_index": 35,
+      "source_call": "app/chain/download.py:1193",
+      "event": "resource.selection",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_resource_selection.go",
+        "internal/app/subscription_runtime.go",
+        "internal/app/subscription_quality_check.go",
+        "internal/app/subscription_acquisition_batch.go"
+      ],
+      "conclusion": "Fixed batch_download prefix9 cases and actual SDK/host cases retained. Nonempty quality selected Context now closed by actual main13 Linux2.91s SQL intent-commit failure -> cold generation2 acceptance, one selection/one real Add/one DownloadAdded, and later main14 Linux3.11s plus83.319s race. Original failed attempts retained; this is ordinary source/host evidence, not static execution coverage.",
+      "evidence": [
+        "testdata/standard-event-target/resource-selection-oracle.json",
+        "testdata/plugin-module-no-official-auth-20261026/resource-selection-20261028/manifest.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform10-runtime/manifest.json",
+        "docs/validation/plugin-download-context-20261028.json",
+        "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/manifest.json",
+        "testdata/plugin-module-no-official-auth-20261026/post-download-20261028/manifest.json"
+      ],
+      "remaining": [],
+      "source_method": "batch_download",
+      "fixed_source_sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+      "target_symbols": [
+        "internal/app/plugin_original_resource_selection.go",
+        "internal/app/subscription_runtime.go",
+        "internal/app/subscription_quality_check.go",
+        "internal/app/subscription_acquisition_batch.go"
+      ]
+    },
+    {
+      "source_call_index": 36,
+      "source_call": "app/chain/download.py:1824",
+      "event": "download.deleted",
+      "event_kind": "broadcast",
+      "applicability": "existing actual source-file-triggered task removal",
+      "target": [
+        "internal/app/core_download_file_deleted.go",
+        "internal/app/plugin_standard_business_events.go"
+      ],
+      "conclusion": "Native concrete removal emits source hash/full DownloaderTorrent snapshots after core return including source false/None; direct user task removal does not invent this source event.",
+      "evidence": [
+        "internal/app/plugin_standard_business_events_additional_test.go",
+        "docs/validation/plugin-module-scoped-20261025.json"
+      ],
+      "remaining": [],
+      "source_method": "download_file_deleted",
+      "fixed_source_sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+      "target_symbols": [
+        "internal/app/core_download_file_deleted.go",
+        "internal/app/plugin_standard_business_events.go"
+      ]
+    },
+    {
+      "source_call_index": 37,
+      "source_call": "app/chain/media.py:809",
+      "event": "name.recognize",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_catalog_sources.go",
+        "internal/app/plugin_original_catalog_opaque.go",
+        "internal/app/plugin_original_catalog_sources_test.go",
+        "internal/app/plugin_original_catalog_opaque_test.go"
+      ],
+      "conclusion": "Fixed catalog source/legacy-key conversion/name assistance chain producers and actual returned-mutation consumers implemented. Native primary extra-sources and non-TMDB opaque IDs remain separate. Actual main8 IAB44 actions verify opaque source identity, source/clone/cold; source AST oracles and SDK prove None/fallback/exception ordering. UI extra-sources IAB and CLI versions remain separately bound.",
+      "evidence": [
+        "docs/validation/plugin-catalog-extra-ui-20261027.json",
+        "docs/validation/plugin-catalog-sources-cli-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "testdata/standard-catalog-modules/source-events-oracle.json",
+        "testdata/standard-catalog-modules/opaque-source-oracle.json"
+      ],
+      "remaining": [],
+      "source_method": "recognize_help",
+      "fixed_source_sha256": "daedce70999cc161cd007f5145d007238e4606504c85b6675bb3040dac449caa",
+      "target_symbols": [
+        "internal/app/plugin_original_catalog_sources.go",
+        "internal/app/plugin_original_catalog_opaque.go",
+        "internal/app/plugin_original_catalog_sources_test.go",
+        "internal/app/plugin_original_catalog_opaque_test.go"
+      ]
+    },
+    {
+      "source_call_index": 38,
+      "source_call": "app/chain/media.py:1792",
+      "event": "name.recognize",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_catalog_sources.go",
+        "internal/app/plugin_original_catalog_opaque.go",
+        "internal/app/plugin_original_catalog_sources_test.go",
+        "internal/app/plugin_original_catalog_opaque_test.go"
+      ],
+      "conclusion": "Fixed catalog source/legacy-key conversion/name assistance chain producers and actual returned-mutation consumers implemented. Native primary extra-sources and non-TMDB opaque IDs remain separate. Actual main8 IAB44 actions verify opaque source identity, source/clone/cold; source AST oracles and SDK prove None/fallback/exception ordering. UI extra-sources IAB and CLI versions remain separately bound.",
+      "evidence": [
+        "docs/validation/plugin-catalog-extra-ui-20261027.json",
+        "docs/validation/plugin-catalog-sources-cli-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "testdata/standard-catalog-modules/source-events-oracle.json",
+        "testdata/standard-catalog-modules/opaque-source-oracle.json"
+      ],
+      "remaining": [],
+      "source_method": "async_recognize_help",
+      "fixed_source_sha256": "daedce70999cc161cd007f5145d007238e4606504c85b6675bb3040dac449caa",
+      "target_symbols": [
+        "internal/app/plugin_original_catalog_sources.go",
+        "internal/app/plugin_original_catalog_opaque.go",
+        "internal/app/plugin_original_catalog_sources_test.go",
+        "internal/app/plugin_original_catalog_opaque_test.go"
+      ]
+    },
+    {
+      "source_call_index": 39,
+      "source_call": "app/chain/message.py:350",
+      "event": "command.excute",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary commands",
+      "target": [
+        "internal/app/plugin_original_command_ingress.go",
+        "internal/app/plugin_original_core_event_consumers.go"
+      ],
+      "conclusion": "Trusted Web producer retained; new SDK Event.Send now reaches actual existing Command consumer, source argument joining and no double native execution.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/services40-result.json",
+        "internal/app/plugin_original_core_event_consumers_test.go",
+        "testdata/plugin-module-no-official-auth-20261026/events36-core-consumer-result.json"
+      ],
+      "remaining": [],
+      "source_method": "_handle_message_core",
+      "fixed_source_sha256": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+      "target_symbols": [
+        "internal/app/plugin_original_command_ingress.go",
+        "internal/app/plugin_original_core_event_consumers.go"
+      ]
+    },
+    {
+      "source_call_index": 40,
+      "source_call": "app/chain/message.py:447",
+      "event": "user.message",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary Web messages",
+      "target": [
+        "internal/app/plugin_original_command_ingress.go"
+      ],
+      "conclusion": "Unconsumed ordinary text after pending input/command routing broadcasts exact trusted six fields; no AI/media preset business added.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/services40-result.json"
+      ],
+      "remaining": [],
+      "source_method": "_handle_message_core",
+      "fixed_source_sha256": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+      "target_symbols": [
+        "internal/app/plugin_original_command_ingress.go"
+      ]
+    },
+    {
+      "source_call_index": 41,
+      "source_call": "app/chain/message.py:495",
+      "event": "message.action",
+      "event_kind": "broadcast",
+      "applicability": "existing plugin input/callback",
+      "target": [
+        "internal/app/plugin_original_input.go",
+        "internal/app/plugin_original_event_target.go"
+      ],
+      "conclusion": "Text/image metadata callback, reply/cancel/expiry/clone target retained; external transport CALLBACK parser absent and not newly built.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/services40-result.json"
+      ],
+      "remaining": [],
+      "source_method": "_handle_plugin_input_interaction",
+      "fixed_source_sha256": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+      "target_symbols": [
+        "internal/app/plugin_original_input.go",
+        "internal/app/plugin_original_event_target.go"
+      ]
+    },
+    {
+      "source_call_index": 42,
+      "source_call": "app/chain/message.py:526",
+      "event": "message.action",
+      "event_kind": "broadcast",
+      "applicability": "existing plugin input/callback",
+      "target": [
+        "internal/app/plugin_original_input.go",
+        "internal/app/plugin_original_event_target.go"
+      ],
+      "conclusion": "Text/image metadata callback, reply/cancel/expiry/clone target retained; external transport CALLBACK parser absent and not newly built.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/services40-result.json"
+      ],
+      "remaining": [],
+      "source_method": "_handle_plugin_input_interaction",
+      "fixed_source_sha256": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+      "target_symbols": [
+        "internal/app/plugin_original_input.go",
+        "internal/app/plugin_original_event_target.go"
+      ]
+    },
+    {
+      "source_call_index": 43,
+      "source_call": "app/chain/message.py:556",
+      "event": "message.action",
+      "event_kind": "broadcast",
+      "applicability": "existing plugin input/callback",
+      "target": [
+        "internal/app/plugin_original_input.go",
+        "internal/app/plugin_original_event_target.go"
+      ],
+      "conclusion": "Text/image metadata callback, reply/cancel/expiry/clone target retained; external transport CALLBACK parser absent and not newly built.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/services40-result.json"
+      ],
+      "remaining": [],
+      "source_method": "_handle_plugin_input_interaction",
+      "fixed_source_sha256": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+      "target_symbols": [
+        "internal/app/plugin_original_input.go",
+        "internal/app/plugin_original_event_target.go"
+      ]
+    },
+    {
+      "source_call_index": 44,
+      "source_call": "app/chain/message.py:766",
+      "event": "message.action",
+      "event_kind": "broadcast",
+      "applicability": "existing plugin input/callback",
+      "target": [
+        "internal/app/plugin_original_input.go",
+        "internal/app/plugin_original_event_target.go"
+      ],
+      "conclusion": "Text/image metadata callback, reply/cancel/expiry/clone target retained; external transport CALLBACK parser absent and not newly built.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/services40-result.json"
+      ],
+      "remaining": [],
+      "source_method": "_handle_callback",
+      "fixed_source_sha256": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+      "target_symbols": [
+        "internal/app/plugin_original_input.go",
+        "internal/app/plugin_original_event_target.go"
+      ]
+    },
+    {
+      "source_call_index": 45,
+      "source_call": "app/chain/site.py:78",
+      "event": "site.refreshed",
+      "event_kind": "broadcast",
+      "applicability": "existing site statistics/collection",
+      "target": [
+        "internal/app/site_manage.go",
+        "internal/app/site_statistics.go",
+        "internal/app/plugin_standard_business_events.go"
+      ],
+      "conclusion": "Native one-site and aggregate refresh publish stable source identity or *, after the existing actual collection outcome.",
+      "evidence": [
+        "internal/app/plugin_standard_business_events_additional_test.go",
+        "docs/validation/plugin-module-scoped-20261025.json"
+      ],
+      "remaining": [],
+      "source_method": "refresh_userdata",
+      "fixed_source_sha256": "06358a8fd070d46ab254015a2f8c7a34f07c35dd240bd2b3fef38cbf219252fa",
+      "target_symbols": [
+        "internal/app/site_manage.go",
+        "internal/app/site_statistics.go",
+        "internal/app/plugin_standard_business_events.go"
+      ]
+    },
+    {
+      "source_call_index": 46,
+      "source_call": "app/chain/site.py:167",
+      "event": "site.refreshed",
+      "event_kind": "broadcast",
+      "applicability": "existing site statistics/collection",
+      "target": [
+        "internal/app/site_manage.go",
+        "internal/app/site_statistics.go",
+        "internal/app/plugin_standard_business_events.go"
+      ],
+      "conclusion": "Native one-site and aggregate refresh publish stable source identity or *, after the existing actual collection outcome.",
+      "evidence": [
+        "internal/app/plugin_standard_business_events_additional_test.go",
+        "docs/validation/plugin-module-scoped-20261025.json"
+      ],
+      "remaining": [],
+      "source_method": "refresh_userdatas",
+      "fixed_source_sha256": "06358a8fd070d46ab254015a2f8c7a34f07c35dd240bd2b3fef38cbf219252fa",
+      "target_symbols": [
+        "internal/app/site_manage.go",
+        "internal/app/site_statistics.go",
+        "internal/app/plugin_standard_business_events.go"
+      ]
+    },
+    {
+      "source_call_index": 47,
+      "source_call": "app/chain/site.py:570",
+      "event": "site.updated",
+      "event_kind": "broadcast",
+      "applicability": "source operation has no existing native host",
+      "target": [],
+      "conclusion": "CookieCloud cookie synchronization is absent; native ordinary save/import events retained",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "sync_cookies",
+      "fixed_source_sha256": "06358a8fd070d46ab254015a2f8c7a34f07c35dd240bd2b3fef38cbf219252fa",
+      "target_symbols": []
+    },
+    {
+      "source_call_index": 48,
+      "source_call": "app/chain/subscribe.py:797",
+      "event": "media.recognize.convert",
+      "event_kind": "chain",
+      "applicability": "absent explicit-TMDB subscription legacy-key fallback",
+      "target": [
+        "internal/app/subscription_add_source.go",
+        "internal/app/plugin_original_catalog_opaque.go"
+      ],
+      "conclusion": "These two source helpers are only entered for unrecognized legacy/custom media keys. Existing native subscription request requires resolved explicit TMDB identity; do not invent a new foreign-key subscription system. Existing catalog unknown-key ingress is independently implemented and verified through platform8 main/browser; it does not add foreign-key subscription storage.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "testdata/standard-catalog-modules/opaque-source-oracle.json"
+      ],
+      "remaining": [],
+      "source_method": "__get_event_media",
+      "fixed_source_sha256": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab",
+      "target_symbols": [
+        "internal/app/subscription_add_source.go"
+      ]
+    },
+    {
+      "source_call_index": 49,
+      "source_call": "app/chain/subscribe.py:821",
+      "event": "media.recognize.convert",
+      "event_kind": "chain",
+      "applicability": "absent explicit-TMDB subscription legacy-key fallback",
+      "target": [
+        "internal/app/subscription_add_source.go",
+        "internal/app/plugin_original_catalog_opaque.go"
+      ],
+      "conclusion": "These two source helpers are only entered for unrecognized legacy/custom media keys. Existing native subscription request requires resolved explicit TMDB identity; do not invent a new foreign-key subscription system. Existing catalog unknown-key ingress is independently implemented and verified through platform8 main/browser; it does not add foreign-key subscription storage.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "testdata/standard-catalog-modules/opaque-source-oracle.json"
+      ],
+      "remaining": [],
+      "source_method": "__async_get_event_meida",
+      "fixed_source_sha256": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab",
+      "target_symbols": [
+        "internal/app/subscription_add_source.go"
+      ]
+    },
+    {
+      "source_call_index": 50,
+      "source_call": "app/chain/subscribe.py:1049",
+      "event": "subscribe.added",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary subscription create",
+      "target": [
+        "internal/app/subscription_add_receipt.go",
+        "internal/app/plugin_standard_business_events.go"
+      ],
+      "conclusion": "Actual UI async add and existing core create both retain frozen recognized full MediaInfo/username, commit then notice then Added; source callback failure consumes but clone/Added continue.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/events36-lack-result.json"
+      ],
+      "remaining": [],
+      "source_method": "add",
+      "fixed_source_sha256": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab",
+      "target_symbols": [
+        "internal/app/subscription_add_receipt.go",
+        "internal/app/plugin_standard_business_events.go"
+      ]
+    },
+    {
+      "source_call_index": 51,
+      "source_call": "app/chain/subscribe.py:1255",
+      "event": "subscribe.added",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary subscription create",
+      "target": [
+        "internal/app/subscription_add_receipt.go",
+        "internal/app/plugin_standard_business_events.go"
+      ],
+      "conclusion": "Actual UI async add and existing core create both retain frozen recognized full MediaInfo/username, commit then notice then Added; source callback failure consumes but clone/Added continue.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-increment-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/events36-lack-result.json"
+      ],
+      "remaining": [],
+      "source_method": "async_add",
+      "fixed_source_sha256": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab",
+      "target_symbols": [
+        "internal/app/subscription_add_receipt.go",
+        "internal/app/plugin_standard_business_events.go"
+      ]
+    },
+    {
+      "source_call_index": 52,
+      "source_call": "app/chain/subscribe.py:2814",
+      "event": "subscribe.completion.check",
+      "event_kind": "chain",
+      "applicability": "existing ordinary subscription complete",
+      "target": [
+        "internal/app/plugin_standard_subscription_events.go",
+        "internal/app/subscription_quality_completion_run.go"
+      ],
+      "conclusion": "Actual check consumes cancel/source/reason before history/delete/notice; same resolved full Meta/MediaInfo reused once per preparation.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-decrease-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/events36-lack-result.json"
+      ],
+      "remaining": [],
+      "source_method": "__finish_subscribe",
+      "fixed_source_sha256": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab",
+      "target_symbols": [
+        "internal/app/plugin_standard_subscription_events.go",
+        "internal/app/subscription_quality_completion_run.go"
+      ]
+    },
+    {
+      "source_call_index": 53,
+      "source_call": "app/chain/subscribe.py:2850",
+      "event": "subscribe.complete",
+      "event_kind": "broadcast",
+      "applicability": "existing ordinary subscription complete",
+      "target": [
+        "internal/app/subscription_quality_completion_run.go"
+      ],
+      "conclusion": "Actual committed history/delete and core notice precede Complete; veto and cold no resend/source clone tested.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-lack-result.json"
+      ],
+      "remaining": [],
+      "source_method": "__finish_subscribe",
+      "fixed_source_sha256": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab",
+      "target_symbols": [
+        "internal/app/subscription_quality_completion_run.go"
+      ]
+    },
+    {
+      "source_call_index": 54,
+      "source_call": "app/chain/subscribe.py:4215",
+      "event": "subscribe.episodes.refresh",
+      "event_kind": "chain",
+      "applicability": "existing ordinary TV create and precheck",
+      "target": [
+        "internal/app/plugin_standard_subscription_episodes.go",
+        "internal/app/subscription_completion_ordinary.go"
+      ],
+      "conclusion": "Source create/precheck mutable total callback, defaults, current provider count/max, updated truth, decrease/lack delta and one-recognition consumption verified. Fixed scene=refresh callsites belong the independent refresh_subscribe metadata batch, which has no existing native operation. The ordinary event remains registered/available through actual Event.Send and existing create/precheck scene producers; no new subscription-refresh business was added. This is a recorded applicability adaptation, not a claim that absent refresh_subscribe executes.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-decrease-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/events36-lack-result.json"
+      ],
+      "remaining": [],
+      "source_method": "__apply_episodes_refresh",
+      "fixed_source_sha256": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab",
+      "target_symbols": [
+        "internal/app/plugin_standard_subscription_episodes.go",
+        "internal/app/subscription_completion_ordinary.go"
+      ]
+    },
+    {
+      "source_call_index": 55,
+      "source_call": "app/chain/subscribe.py:4242",
+      "event": "subscribe.episodes.refresh",
+      "event_kind": "chain",
+      "applicability": "existing ordinary TV create and precheck",
+      "target": [
+        "internal/app/plugin_standard_subscription_episodes.go",
+        "internal/app/subscription_completion_ordinary.go"
+      ],
+      "conclusion": "Source create/precheck mutable total callback, defaults, current provider count/max, updated truth, decrease/lack delta and one-recognition consumption verified. Fixed scene=refresh callsites belong the independent refresh_subscribe metadata batch, which has no existing native operation. The ordinary event remains registered/available through actual Event.Send and existing create/precheck scene producers; no new subscription-refresh business was added. This is a recorded applicability adaptation, not a claim that absent refresh_subscribe executes.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/events36-decrease-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/events36-lack-result.json"
+      ],
+      "remaining": [],
+      "source_method": "__async_apply_episodes_refresh",
+      "fixed_source_sha256": "190f0500279b64f4ca2cd726f07dbb3e20ae9b7c46187268a208afcbe9c9b7ab",
+      "target_symbols": [
+        "internal/app/plugin_standard_subscription_episodes.go",
+        "internal/app/subscription_completion_ordinary.go"
+      ]
+    },
+    {
+      "source_call_index": 56,
+      "source_call": "app/chain/transfer.py:1153",
+      "event": "transfer.failed",
+      "event_kind": "broadcast",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "__default_callback",
+      "fixed_source_sha256": "1e42c4e69cb6294afe36e3c4aa4bb40cb9356aa017f2e8e9c91b9c928b140b37",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 57,
+      "source_call": "app/chain/transfer.py:1167",
+      "event": "transfer.subtitle.failed",
+      "event_kind": "broadcast",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "__default_callback",
+      "fixed_source_sha256": "1e42c4e69cb6294afe36e3c4aa4bb40cb9356aa017f2e8e9c91b9c928b140b37",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 58,
+      "source_call": "app/chain/transfer.py:1181",
+      "event": "transfer.audio.failed",
+      "event_kind": "broadcast",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "__default_callback",
+      "fixed_source_sha256": "1e42c4e69cb6294afe36e3c4aa4bb40cb9356aa017f2e8e9c91b9c928b140b37",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 59,
+      "source_call": "app/chain/transfer.py:1267",
+      "event": "transfer.complete",
+      "event_kind": "broadcast",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "__default_callback",
+      "fixed_source_sha256": "1e42c4e69cb6294afe36e3c4aa4bb40cb9356aa017f2e8e9c91b9c928b140b37",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 60,
+      "source_call": "app/chain/transfer.py:1281",
+      "event": "transfer.subtitle.complete",
+      "event_kind": "broadcast",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "__default_callback",
+      "fixed_source_sha256": "1e42c4e69cb6294afe36e3c4aa4bb40cb9356aa017f2e8e9c91b9c928b140b37",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 61,
+      "source_call": "app/chain/transfer.py:1295",
+      "event": "transfer.audio.complete",
+      "event_kind": "broadcast",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "__default_callback",
+      "fixed_source_sha256": "1e42c4e69cb6294afe36e3c4aa4bb40cb9356aa017f2e8e9c91b9c928b140b37",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 62,
+      "source_call": "app/chain/transfer.py:1491",
+      "event": "metadata.scrape",
+      "event_kind": "broadcast",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-scrape-batch-20261028.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json",
+        "docs/validation/plugin-transfer-scrape-deferred-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "__send_metadata_scrape_event",
+      "fixed_source_sha256": "1e42c4e69cb6294afe36e3c4aa4bb40cb9356aa017f2e8e9c91b9c928b140b37",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 63,
+      "source_call": "app/chain/transfer.py:1619",
+      "event": "metadata.scrape",
+      "event_kind": "broadcast",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-scrape-batch-20261028.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json",
+        "docs/validation/plugin-transfer-scrape-deferred-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "__flush_scrape_batch_if_ready",
+      "fixed_source_sha256": "1e42c4e69cb6294afe36e3c4aa4bb40cb9356aa017f2e8e9c91b9c928b140b37",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 64,
+      "source_call": "app/chain/transfer.py:2010",
+      "event": "storage.operation",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "__handle_transfer",
+      "fixed_source_sha256": "1e42c4e69cb6294afe36e3c4aa4bb40cb9356aa017f2e8e9c91b9c928b140b37",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 65,
+      "source_call": "app/chain/transfer.py:2026",
+      "event": "storage.operation",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "__handle_transfer",
+      "fixed_source_sha256": "1e42c4e69cb6294afe36e3c4aa4bb40cb9356aa017f2e8e9c91b9c928b140b37",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 66,
+      "source_call": "app/chain/user.py:159",
+      "event": "auth.verification",
+      "event_kind": "chain",
+      "applicability": "absent multiuser/media-server auxiliary auth producer",
+      "target": [
+        "internal/app/auth_admin.go"
+      ],
+      "conclusion": "Source auxiliary media-server/password/token auth creates or updates users/permissions and auth interception. User explicitly limits one local user and excludes building multiuser/permission business. Ordinary event API does not reject these names; this is not official-level auth removal.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "auxiliary_authenticate",
+      "fixed_source_sha256": "5acc1eb83964bbc592dada64860a6838dcbbb5ba2e66cf0dda8de96b8b536806",
+      "target_symbols": [
+        "internal/app/auth_admin.go (single local admin authentication remains independent)"
+      ]
+    },
+    {
+      "source_call_index": 67,
+      "source_call": "app/chain/user.py:222",
+      "event": "auth.intercept",
+      "event_kind": "chain",
+      "applicability": "absent multiuser/media-server auxiliary auth producer",
+      "target": [
+        "internal/app/auth_admin.go"
+      ],
+      "conclusion": "Source auxiliary media-server/password/token auth creates or updates users/permissions and auth interception. User explicitly limits one local user and excludes building multiuser/permission business. Ordinary event API does not reject these names; this is not official-level auth removal.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "_process_auth_success",
+      "fixed_source_sha256": "5acc1eb83964bbc592dada64860a6838dcbbb5ba2e66cf0dda8de96b8b536806",
+      "target_symbols": [
+        "internal/app/auth_admin.go (single local admin authentication remains independent)"
+      ]
+    },
+    {
+      "source_call_index": 68,
+      "source_call": "app/chain/webhook.py:21",
+      "event": "webhook.message",
+      "event_kind": "broadcast",
+      "applicability": "source operation has no existing native host",
+      "target": [],
+      "conclusion": "No existing generic WebhookChain message API/transport; generic webhook.message event name remains valid in SDK",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "message",
+      "fixed_source_sha256": "691911cb24b7d740a8ee9214ba3d054d791d95d0853cf9790a4b9e92223629f8",
+      "target_symbols": []
+    },
+    {
+      "source_call_index": 69,
+      "source_call": "app/command.py:266",
+      "event": "command.register",
+      "event_kind": "chain",
+      "applicability": "existing core/plugin command menus",
+      "target": [
+        "internal/app/plugin_original_command_register.go"
+      ],
+      "conclusion": "Source core menu preflight and loaded plugin register_commands provider retained with cancellation/force/503 no-provider and cold rebuild.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/services40-result.json"
+      ],
+      "remaining": [],
+      "source_method": "__trigger_register_commands_event",
+      "fixed_source_sha256": "e178d40ba65ee3fdd9fdce9f198f6a4433c8ddd8e3c73496bd843a40a4e7af3f",
+      "target_symbols": [
+        "internal/app/plugin_original_command_register.go"
+      ]
+    },
+    {
+      "source_call_index": 70,
+      "source_call": "app/command.py:439",
+      "event": "etype",
+      "event_kind": "dynamic",
+      "applicability": "existing generic plugin command event",
+      "target": [
+        "internal/app/plugin_original_command_ingress.go"
+      ],
+      "conclusion": "Declared arbitrary ordinary event retained, copied data+arguments+channel/source/user and instance target dispatched through the common manager.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/services40-result.json"
+      ],
+      "remaining": [],
+      "source_method": "send_plugin_event",
+      "fixed_source_sha256": "e178d40ba65ee3fdd9fdce9f198f6a4433c8ddd8e3c73496bd843a40a4e7af3f",
+      "target_symbols": [
+        "internal/app/plugin_original_command_ingress.go:dispatchOriginalCommand"
+      ]
+    },
+    {
+      "source_call_index": 71,
+      "source_call": "app/core/module.py:74",
+      "event": "module.reload",
+      "event_kind": "broadcast",
+      "applicability": "source module manager absent; ordinary existing command consumer retained",
+      "target": [
+        "internal/app/plugin_original_core_event_consumers.go"
+      ],
+      "conclusion": "No Python core ModuleManager lifecycle is recreated. Ordinary SDK event still invokes existing Command.init_commands consumer, not an empty compatibility shell.",
+      "evidence": [
+        "internal/app/plugin_original_core_event_consumers_test.go",
+        "testdata/plugin-module-no-official-auth-20261026/events36-core-consumer-result.json"
+      ],
+      "remaining": [],
+      "source_method": "reload",
+      "fixed_source_sha256": "3d0a57719f3040e985c54aad91fef5cf7e8d72d91acb6a5faf86c2c21b370b32",
+      "target_symbols": [
+        "internal/app/plugin_original_core_event_consumers.go"
+      ]
+    },
+    {
+      "source_call_index": 72,
+      "source_call": "app/core/plugin.py:651",
+      "event": "plugin.reload",
+      "event_kind": "broadcast",
+      "applicability": "existing plugin lifecycle/scheduler",
+      "target": [
+        "internal/app/plugin_original_events.go",
+        "internal/app/plugin_original_core_event_consumers.go"
+      ],
+      "conclusion": "Native lifecycle keeps schedule refresh+observers; SDK send now invokes existing Scheduler independently; current instance only, no all-plugin fallback on missing pid.",
+      "evidence": [
+        "testdata/plugin-module-no-official-auth-20261026/services38-result.json",
+        "internal/app/plugin_original_core_event_consumers_test.go",
+        "testdata/plugin-module-no-official-auth-20261026/events36-core-consumer-result.json"
+      ],
+      "remaining": [],
+      "source_method": "reload_plugin",
+      "fixed_source_sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "target_symbols": [
+        "internal/app/plugin_original_events.go",
+        "internal/app/plugin_original_core_event_consumers.go"
+      ]
+    },
+    {
+      "source_call_index": 73,
+      "source_call": "app/modules/discord/__init__.py:554",
+      "event": "command.register",
+      "event_kind": "chain",
+      "applicability": "absent external message transport producer",
+      "target": [
+        "internal/app/plugin_original_command_register.go"
+      ],
+      "conclusion": "Source Discord/Slack/Telegram/WeChat menu client producer absent. Existing ordinary core/plugin register_commands extension remains; do not add a new external messaging platform.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "register_commands",
+      "fixed_source_sha256": "99cfc585c2c941fcca849064d7349e0c2a69d7af646b2470570494ce0b687183",
+      "target_symbols": [
+        "internal/app/plugin_original_command_register.go"
+      ]
+    },
+    {
+      "source_call_index": 74,
+      "source_call": "app/modules/emby/__init__.py:96",
+      "event": "auth.intercept",
+      "event_kind": "chain",
+      "applicability": "absent multiuser/media-server auxiliary auth producer",
+      "target": [
+        "internal/app/auth_admin.go"
+      ],
+      "conclusion": "Source auxiliary media-server/password/token auth creates or updates users/permissions and auth interception. User explicitly limits one local user and excludes building multiuser/permission business. Ordinary event API does not reject these names; this is not official-level auth removal.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "user_authenticate",
+      "fixed_source_sha256": "656930e0ea93a73e22a2d71a323a0083fa4c724a78a2d09e66d2787f82d9e275",
+      "target_symbols": [
+        "internal/app/auth_admin.go (single local admin authentication remains independent)"
+      ]
+    },
+    {
+      "source_call_index": 75,
+      "source_call": "app/modules/filemanager/transhandler.py:474",
+      "event": "transfer.overwrite.check",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "transfer_media",
+      "fixed_source_sha256": "48948f9137ae68ac2f0cf4c1235dd3db6327cc9d66ff7490c17a5657504d5e36",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 76,
+      "source_call": "app/modules/filemanager/transhandler.py:923",
+      "event": "transfer.intercept",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "__transfer_dir",
+      "fixed_source_sha256": "48948f9137ae68ac2f0cf4c1235dd3db6327cc9d66ff7490c17a5657504d5e36",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 77,
+      "source_call": "app/modules/filemanager/transhandler.py:1045",
+      "event": "transfer.intercept",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "__transfer_file",
+      "fixed_source_sha256": "48948f9137ae68ac2f0cf4c1235dd3db6327cc9d66ff7490c17a5657504d5e36",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 78,
+      "source_call": "app/modules/filemanager/transhandler.py:1244",
+      "event": "transfer.rename.build",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json",
+        "docs/validation/plugin-transfer-naming-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "get_rename_path",
+      "fixed_source_sha256": "48948f9137ae68ac2f0cf4c1235dd3db6327cc9d66ff7490c17a5657504d5e36",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 79,
+      "source_call": "app/modules/filemanager/transhandler.py:1265",
+      "event": "transfer.rename",
+      "event_kind": "chain",
+      "applicability": "existing native host: source/target/evidence mapped",
+      "target": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ],
+      "conclusion": "Applicable native media/subtitle/audio tasks, directory-as-one-task, full completion/failure callback DTO, provider naming/list order/late exception, mutable rename/intercept/overwrite/storage selection, batch and deferred metadata are implemented and verified by the version-bound reports below. Movie Blu-ray and TV root-only metadata, partial effects, false results, clone isolation, browser actions and cold no-replay are covered. Static call count is not an execution count; excluded workflow/AI and absent independent business hosts are not claimed as executed.",
+      "evidence": [
+        "docs/validation/plugin-transfer-events-20261027/result.json",
+        "testdata/plugin-module-no-official-auth-20261026/platform8-runtime/manifest.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-bluray-scrape-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-history-ordinary-directory-20261028.json"
+      ],
+      "remaining": [],
+      "source_method": "get_rename_path",
+      "fixed_source_sha256": "48948f9137ae68ac2f0cf4c1235dd3db6327cc9d66ff7490c17a5657504d5e36",
+      "target_symbols": [
+        "internal/app/plugin_original_transfer_context.go",
+        "internal/app/plugin_original_transfer_rename.go",
+        "internal/app/plugin_original_transfer_intercept.go",
+        "internal/app/plugin_original_transfer_storage.go",
+        "internal/app/plugin_original_transfer_events.go",
+        "internal/app/plugin_original_metadata_event.go",
+        "internal/app/plugin_original_metadata_scrape.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go"
+      ]
+    },
+    {
+      "source_call_index": 80,
+      "source_call": "app/modules/jellyfin/__init__.py:97",
+      "event": "auth.intercept",
+      "event_kind": "chain",
+      "applicability": "absent multiuser/media-server auxiliary auth producer",
+      "target": [
+        "internal/app/auth_admin.go"
+      ],
+      "conclusion": "Source auxiliary media-server/password/token auth creates or updates users/permissions and auth interception. User explicitly limits one local user and excludes building multiuser/permission business. Ordinary event API does not reject these names; this is not official-level auth removal.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "user_authenticate",
+      "fixed_source_sha256": "9bfb73673e06e2cb30f6bec8ad5f3de4d3bce6a126f2a5c3843251e31ea42da3",
+      "target_symbols": [
+        "internal/app/auth_admin.go (single local admin authentication remains independent)"
+      ]
+    },
+    {
+      "source_call_index": 81,
+      "source_call": "app/modules/plex/__init__.py:103",
+      "event": "auth.intercept",
+      "event_kind": "chain",
+      "applicability": "absent multiuser/media-server auxiliary auth producer",
+      "target": [
+        "internal/app/auth_admin.go"
+      ],
+      "conclusion": "Source auxiliary media-server/password/token auth creates or updates users/permissions and auth interception. User explicitly limits one local user and excludes building multiuser/permission business. Ordinary event API does not reject these names; this is not official-level auth removal.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "user_authenticate",
+      "fixed_source_sha256": "e4c89056219746a0bcfbb44ea265014163e6a066fc40b7e720a8d4cd699f86c6",
+      "target_symbols": [
+        "internal/app/auth_admin.go (single local admin authentication remains independent)"
+      ]
+    },
+    {
+      "source_call_index": 82,
+      "source_call": "app/modules/slack/__init__.py:686",
+      "event": "command.register",
+      "event_kind": "chain",
+      "applicability": "absent external message transport producer",
+      "target": [
+        "internal/app/plugin_original_command_register.go"
+      ],
+      "conclusion": "Source Discord/Slack/Telegram/WeChat menu client producer absent. Existing ordinary core/plugin register_commands extension remains; do not add a new external messaging platform.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "register_commands",
+      "fixed_source_sha256": "d86e757a9c3984cf9866c3b32365922af6663decc8b067c7f08168d12d516ac8",
+      "target_symbols": [
+        "internal/app/plugin_original_command_register.go"
+      ]
+    },
+    {
+      "source_call_index": 83,
+      "source_call": "app/modules/telegram/__init__.py:787",
+      "event": "command.register",
+      "event_kind": "chain",
+      "applicability": "absent external message transport producer",
+      "target": [
+        "internal/app/plugin_original_command_register.go"
+      ],
+      "conclusion": "Source Discord/Slack/Telegram/WeChat menu client producer absent. Existing ordinary core/plugin register_commands extension remains; do not add a new external messaging platform.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "register_commands",
+      "fixed_source_sha256": "efa99bfdfaa848cf622fbaf2534b0c55957d1fb21860cf467236799c77afd46a",
+      "target_symbols": [
+        "internal/app/plugin_original_command_register.go"
+      ]
+    },
+    {
+      "source_call_index": 84,
+      "source_call": "app/modules/trimemedia/__init__.py:113",
+      "event": "auth.intercept",
+      "event_kind": "chain",
+      "applicability": "absent multiuser/media-server auxiliary auth producer",
+      "target": [
+        "internal/app/auth_admin.go"
+      ],
+      "conclusion": "Source auxiliary media-server/password/token auth creates or updates users/permissions and auth interception. User explicitly limits one local user and excludes building multiuser/permission business. Ordinary event API does not reject these names; this is not official-level auth removal.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "user_authenticate",
+      "fixed_source_sha256": "35d5faff13c72cfce0be72844deef0878d94539e7b3a54778b1d51f01d466e0c",
+      "target_symbols": [
+        "internal/app/auth_admin.go (single local admin authentication remains independent)"
+      ]
+    },
+    {
+      "source_call_index": 85,
+      "source_call": "app/modules/ugreen/__init__.py:104",
+      "event": "auth.intercept",
+      "event_kind": "chain",
+      "applicability": "absent multiuser/media-server auxiliary auth producer",
+      "target": [
+        "internal/app/auth_admin.go"
+      ],
+      "conclusion": "Source auxiliary media-server/password/token auth creates or updates users/permissions and auth interception. User explicitly limits one local user and excludes building multiuser/permission business. Ordinary event API does not reject these names; this is not official-level auth removal.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "user_authenticate",
+      "fixed_source_sha256": "09f5179995db519596f91dabdedec40ac82f90abc8ef08ce3f87ed42e291ec02",
+      "target_symbols": [
+        "internal/app/auth_admin.go (single local admin authentication remains independent)"
+      ]
+    },
+    {
+      "source_call_index": 86,
+      "source_call": "app/modules/wechat/__init__.py:450",
+      "event": "command.register",
+      "event_kind": "chain",
+      "applicability": "absent external message transport producer",
+      "target": [
+        "internal/app/plugin_original_command_register.go"
+      ],
+      "conclusion": "Source Discord/Slack/Telegram/WeChat menu client producer absent. Existing ordinary core/plugin register_commands extension remains; do not add a new external messaging platform.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "register_commands",
+      "fixed_source_sha256": "dc356ae7b2817aebfbbae99839235edbae7b9e8a9fdea99d80c49b1abffbaa16",
+      "target_symbols": [
+        "internal/app/plugin_original_command_register.go"
+      ]
+    },
+    {
+      "source_call_index": 87,
+      "source_call": "app/modules/zspace/__init__.py:90",
+      "event": "auth.intercept",
+      "event_kind": "chain",
+      "applicability": "absent multiuser/media-server auxiliary auth producer",
+      "target": [
+        "internal/app/auth_admin.go"
+      ],
+      "conclusion": "Source auxiliary media-server/password/token auth creates or updates users/permissions and auth interception. User explicitly limits one local user and excludes building multiuser/permission business. Ordinary event API does not reject these names; this is not official-level auth removal.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "user_authenticate",
+      "fixed_source_sha256": "c1a40c61c5c2ccd8af8e6d5f9bf751d327431533b7845e87442d72f8a2cff0b2",
+      "target_symbols": [
+        "internal/app/auth_admin.go (single local admin authentication remains independent)"
+      ]
+    },
+    {
+      "source_call_index": 88,
+      "source_call": "app/scheduler.py:892",
+      "event": "system.error",
+      "event_kind": "broadcast",
+      "applicability": "existing plugin methods/events/services/native ordinary errors",
+      "target": [
+        "internal/app/plugin_original_error.go",
+        "internal/app/plugin_original_service_progress.go",
+        "internal/app/system_error_events.go"
+      ],
+      "conclusion": "Concrete plugin/module/event/clock failures retain ordinary helper role and broadcast; native diagnostics use recorded safe Go code/stack rather than fabricated Python traceback.",
+      "evidence": [
+        "docs/validation/plugin-event-execution-parity.json",
+        "testdata/plugin-module-no-official-auth-20261026/services38-result.json",
+        "testdata/plugin-module-no-official-auth-20261026/modules43-downloader-control-result.json"
+      ],
+      "remaining": [],
+      "source_method": "__handle_job_error",
+      "fixed_source_sha256": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d",
+      "target_symbols": [
+        "internal/app/plugin_original_error.go",
+        "internal/app/plugin_original_service_progress.go",
+        "internal/app/system_error_events.go"
+      ]
+    },
+    {
+      "source_call_index": 89,
+      "source_call": "app/workflow/__init__.py:388",
+      "event": "workflow.execute",
+      "event_kind": "broadcast",
+      "applicability": "按用户要求排除",
+      "target": [],
+      "conclusion": "Workflow/AI dedicated producer excluded; not an acceptance pending/blocker.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "_trigger_workflow",
+      "fixed_source_sha256": "a0ced6582e682dd4c2d39a529f6104dabc3dae85ca3c090a963119f5c377d720",
+      "target_symbols": []
+    },
+    {
+      "source_call_index": 90,
+      "source_call": "app/workflow/actions/fetch_medias.py:109",
+      "event": "recommend.source",
+      "event_kind": "chain",
+      "applicability": "按用户要求排除",
+      "target": [],
+      "conclusion": "Workflow/AI dedicated producer excluded; not an acceptance pending/blocker.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "__init__",
+      "fixed_source_sha256": "3cf1d92b60b5b7a816b43c23ba98acd92e64f9214d86fd1332b2d5c77f7eb117",
+      "target_symbols": []
+    },
+    {
+      "source_call_index": 91,
+      "source_call": "app/workflow/actions/send_event.py:45",
+      "event": "workflow.execution",
+      "event_kind": "chain",
+      "applicability": "按用户要求排除",
+      "target": [],
+      "conclusion": "Workflow/AI dedicated producer excluded; not an acceptance pending/blocker.",
+      "evidence": [],
+      "remaining": [],
+      "source_method": "execute",
+      "fixed_source_sha256": "fda3f16200c758a4c8c1eae33e856a7ed5cbca5e56257271ac96fab6ce7b2c6b",
+      "target_symbols": []
+    }
+  ],
+  "consumers": [
+    {
+      "path": "app/chain/download.py",
+      "line": 1808,
+      "handler": "download_file_deleted",
+      "event_expression": "EventType.DownloadFileDeleted",
+      "applicability": "implemented and actual SDK/main verified",
+      "target": "internal/app/plugin_original_core_download_file_deleted.go",
+      "conclusion": "SDK Event.Send invokes the real native owned removal consumer, in addition to actual history producer. Path/task ownership and actual downloader side effect are verified.",
+      "evidence": "internal/app/plugin_module_process_download_file_deleted_test.go; platform8-runtime/manifest.json"
+    },
+    {
+      "path": "app/chain/media.py",
+      "line": 1034,
+      "handler": "scrape_metadata_event",
+      "event_expression": "EventType.MetadataScrape",
+      "applicability": "implemented and actual SDK/main verified",
+      "target": "internal/app/plugin_original_metadata_event.go; internal/app/plugin_original_metadata_scrape.go; internal/app/asset_scrape.go",
+      "conclusion": "Generic SDK Event.Send walks full FileItem/local storage and real NFO provider; native transfer uses same inherited event data in existing scrape job without a duplicate core writer. Source/clone/cold and actual main8 gates verified. Subsequent actual main36/37/45/46 verify batching/deferred cleanup, movie directory NFO, TV recursive=False, prepared-write recovery and zero cold replay.",
+      "evidence": "docs/validation/plugin-transfer-events-20261027/result.json; platform8-runtime/manifest.json; docs/validation/plugin-transfer-scrape-batch-20261028.json; docs/validation/plugin-transfer-scrape-deferred-20261028.json; docs/validation/plugin-transfer-bluray-scrape-20261028.json; docs/validation/plugin-transfer-directory-storage-20261028.json"
+    },
+    {
+      "path": "app/chain/search.py",
+      "line": 2675,
+      "handler": "remove_site",
+      "event_expression": "EventType.SiteDeleted",
+      "applicability": "implemented and actual SDK/main verified",
+      "target": "internal/app/plugin_original_core_site_deleted.go; internal/app/core_site_references.go",
+      "conclusion": "Native delete preserves existing atomic host transaction; generic plugin event executes two independent source consumers. Indexer then RSS/each subscription commits preserve prior effects on later real SQLite failure; no configured site deleted, no network I/O.",
+      "evidence": "testdata/plugin-module-no-official-auth-20261026/events36-core-consumer-result.json"
+    },
+    {
+      "path": "app/chain/site.py",
+      "line": 590,
+      "handler": "cache_site_icon",
+      "event_expression": "EventType.SiteUpdated",
+      "applicability": "implemented and actual SDK/main/browser verified",
+      "target": "internal/app/plugin_original_core_site_updated.go; internal/app/plugin_original_site_icon.go; internal/app/site_message_history.go",
+      "conclusion": "All three source ordinary consumers are implemented and real SDK/main/browser verified, including true SQL partial failure, icon, account, native temporary cache, encrypted message dedupe and cold recovery. No official SitesHelper grade auth.",
+      "evidence": "docs/validation/plugin-site-updated-20261027/result.json; platform9-initial-runtime/manifest.json"
+    },
+    {
+      "path": "app/chain/site.py",
+      "line": 632,
+      "handler": "clear_site_data",
+      "event_expression": "EventType.SiteUpdated",
+      "applicability": "implemented and actual SDK/main/browser verified",
+      "target": "internal/app/plugin_original_core_site_updated.go; internal/app/plugin_original_site_icon.go; internal/app/site_message_history.go",
+      "conclusion": "All three source ordinary consumers are implemented and real SDK/main/browser verified, including true SQL partial failure, icon, account, native temporary cache, encrypted message dedupe and cold recovery. No official SitesHelper grade auth.",
+      "evidence": "docs/validation/plugin-site-updated-20261027/result.json; platform9-initial-runtime/manifest.json"
+    },
+    {
+      "path": "app/chain/site.py",
+      "line": 654,
+      "handler": "cache_site_userdata",
+      "event_expression": "EventType.SiteUpdated",
+      "applicability": "implemented and actual SDK/main/browser verified",
+      "target": "internal/app/plugin_original_core_site_updated.go; internal/app/plugin_original_site_icon.go; internal/app/site_message_history.go",
+      "conclusion": "All three source ordinary consumers are implemented and real SDK/main/browser verified, including true SQL partial failure, icon, account, native temporary cache, encrypted message dedupe and cold recovery. No official SitesHelper grade auth.",
+      "evidence": "docs/validation/plugin-site-updated-20261027/result.json; platform9-initial-runtime/manifest.json"
+    },
+    {
+      "path": "app/chain/subscribe.py",
+      "line": 3701,
+      "handler": "remove_site",
+      "event_expression": "EventType.SiteDeleted",
+      "applicability": "implemented and actual SDK/main verified",
+      "target": "internal/app/plugin_original_core_site_deleted.go; internal/app/core_site_references.go",
+      "conclusion": "Native delete preserves existing atomic host transaction; generic plugin event executes two independent source consumers. Indexer then RSS/each subscription commits preserve prior effects on later real SQLite failure; no configured site deleted, no network I/O.",
+      "evidence": "testdata/plugin-module-no-official-auth-20261026/events36-core-consumer-result.json"
+    },
+    {
+      "path": "app/chain/workflow.py",
+      "line": 1147,
+      "handler": "event_process",
+      "event_expression": "EventType.WorkflowExecute",
+      "applicability": "按用户要求排除",
+      "target": "",
+      "conclusion": "Workflow dedicated consumer excluded."
+    },
+    {
+      "path": "app/command.py",
+      "line": 441,
+      "handler": "command_event",
+      "event_expression": "EventType.CommandExcute",
+      "applicability": "implemented and actual SDK/main verified",
+      "target": "internal/app/plugin_original_core_event_consumers.go",
+      "conclusion": "SDK event now invokes existing Command; native producer consumed queue flag prevents duplicate.",
+      "evidence": "testdata/plugin-module-no-official-auth-20261026/events36-core-consumer-result.json"
+    },
+    {
+      "path": "app/command.py",
+      "line": 475,
+      "handler": "module_reload_event",
+      "event_expression": "EventType.ModuleReload",
+      "applicability": "implemented and actual SDK/main verified",
+      "target": "internal/app/plugin_original_core_event_consumers.go",
+      "conclusion": "Concrete existing command rebuild retained without adding Python ModuleManager business.",
+      "evidence": "testdata/plugin-module-no-official-auth-20261026/events36-core-consumer-result.json"
+    },
+    {
+      "path": "app/scheduler.py",
+      "line": 1204,
+      "handler": "on_plugin_reload",
+      "event_expression": "EventType.PluginReload",
+      "applicability": "implemented and actual SDK/main verified",
+      "target": "internal/app/plugin_original_core_event_consumers.go",
+      "conclusion": "Concrete Scheduler update for current instance; missing pid no-op.",
+      "evidence": "testdata/plugin-module-no-official-auth-20261026/events36-core-consumer-result.json"
+    }
+  ],
+  "precise_current_gaps": [],
+  "not_new_business": [
+    "No external message transport/menu clients, auxiliary media-server user provisioning, arbitrary webhook service, CookieCloud, source core ModuleManager or independent subscription metadata-refresh business is added.",
+    "Only workflow/AI source callsites are excluded from the fixed ordinary inventory; absent-business callsite applicability is explicit while ordinary names/Event.Send remain supported."
+  ],
+  "closed_increments": [
+    {
+      "evidence": "testdata/plugin-module-no-official-auth-20261026/events36-core-consumer-result.json",
+      "actual_main": "af4acf6e99d94fa471e2d7b360b9bdcf81da819f375def4af2f27d230f8b4d12",
+      "test_seconds": 3.09,
+      "core_consumer_count": 5,
+      "source_registered_ordinary_core_consumers": 10
+    },
+    {
+      "id": "selection_and_download_added_20261028",
+      "source": "app/chain/download.py:447-470,1014-1020 and ordinary/quality resource.selection callers",
+      "target": [
+        "internal/app/plugin_original_resource_selection.go",
+        "internal/app/plugin_original_download_added.go",
+        "internal/app/native_download.go",
+        "internal/app/search_download.go"
+      ],
+      "evidence": [
+        "docs/validation/plugin-download-context-20261028.json",
+        "testdata/plugin-module-no-official-auth-20261026/selection-cold-20261028/manifest.json",
+        "testdata/plugin-module-no-official-auth-20261026/post-download-20261028/manifest.json"
+      ],
+      "verified": "actual Linux13 2.91s selected nonempty Context cold recovery→one Add; actual Linux14 3.11s full post-download module context/path/metainfo, source+clone, HTTP failure and cold no replay",
+      "whole_indices_accepted": false
+    },
+    {
+      "id": "directory_and_metadata_final_20261028",
+      "evidence": [
+        "docs/validation/plugin-history-ordinary-directory-20261028.json",
+        "docs/validation/plugin-transfer-event-identity-20261028.json",
+        "docs/validation/plugin-transfer-scrape-batch-20261028.json",
+        "docs/validation/plugin-transfer-scrape-deferred-20261028.json",
+        "docs/validation/plugin-transfer-directory-storage-20261028.json",
+        "docs/validation/plugin-transfer-bluray-20261028.json",
+        "docs/validation/plugin-transfer-naming-20261028.json"
+      ],
+      "whole_indices_accepted": true,
+      "indices": [
+        36,
+        37
+      ],
+      "current_core_regression": "docs/validation/plugin-events-final-20261028.json"
+    }
+  ],
+  "audit_updated": "2026-10-28: all44 fixed source hashes rechecked;92 producer sites and10 ordinary registered consumers reconciled with version-bound evidence through main47; current actual SDK core regression12.852s. No new independent business host is inferred."
+}

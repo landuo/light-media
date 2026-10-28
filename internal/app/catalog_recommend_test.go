@@ -154,8 +154,12 @@ func TestRecommendPreferencesPersistAcrossStoreReopenIndependently(t *testing.T)
 	if err != nil || len(saved.Enabled) != len(defaults.Enabled) || saved.Enabled["tmdb_movies"] || saved.Enabled["douban_movie_hot"] || !saved.Enabled["tmdb_tvs"] {
 		t.Fatalf("partial preferences were not completed: %+v, %v", saved, err)
 	}
-	if _, err = a.saveCatalogRecommendPreferences(ctx, RecommendPreferences{Enabled: map[string]bool{"unknown": false}}); err == nil {
-		t.Fatal("unknown source preferences accepted")
+	// Fixed user/config/Recommend stores ordinary extra source path keys even
+	// while a plugin is stopped; normalizing builtins must not discard them.
+	saved.Enabled["plugin/Owned/feed?list=ordinary"] = false
+	saved, err = a.saveCatalogRecommendPreferences(ctx, saved)
+	if err != nil || saved.Enabled["plugin/Owned/feed?list=ordinary"] {
+		t.Fatal("extra source preference not retained", err)
 	}
 	if err = store.Close(); err != nil {
 		t.Fatal(err)

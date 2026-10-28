@@ -1,0 +1,119 @@
+{
+  "whole_indices": [
+    36,
+    37,
+    43
+  ],
+  "accepted_whole_scope": false,
+  "increment_status": "验收通过",
+  "scope": "TransferInfo/FileItem concrete constructor and decoder; complete result consumer semantics still pending",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source": [
+    "app/schemas/transfer.py:114-153 TransferInfo defaults/nullability/types",
+    "app/schemas/file.py:13-77 FileURI/FileItem defaults/nullability/types",
+    "app/chain/transfer.py:2004-2083 storage/module/callback",
+    "app/chain/__init__.py:224-298 ordinary safe invocation and fallthrough"
+  ],
+  "target": [
+    "internal/plugins/module_transfer.go ModuleTransferInfoResult/DecodeModuleTransferInfo",
+    "internal/sourcejson/model.go ModelInteger reused by TransferInfo/FileItem/person",
+    "internal/app/plugin_original_transfer_module.go originalTransferModuleInfo",
+    "cmd/owned-module-override/main.go build_transfer_info acceptance-only configuration"
+  ],
+  "source_replay": {
+    "script": "testdata/standard-module-host/generate-transfer-info-oracle.py",
+    "output": "testdata/standard-module-host/transfer-info-source-oracle.json",
+    "cases": 45,
+    "kind": "exact pinned Pydantic constructor execution offline; no old service"
+  },
+  "local": {
+    "actual_sdk": "4 constructor/provider cases,2.35s: bad success/count/path fails inside actual worker and native writes real file; typed veto stops with explicit null need_scrape retained",
+    "expanded_race": "transfer-info-race-r1.log PASS app207.057s/plugins2.033s,222.618s wall; sourcejson no independent test files",
+    "source_findings": "Pydantic rejects both +/-2^63 float bounds, accepts arbitrary integer/string precision, accepts modify_time=1._0; assertions generated from source"
+  },
+  "actual_linux": {
+    "main_sha256": "070753455fedcd298d33c2064eb9a49b39cf1d9f71d4efdfa186104cf54c5b5f",
+    "test_sha256": "a766cd44fe1cd05e8ba8d4dc456ee661beb848a6451252e4d24d6cee1c0d1a63",
+    "worker_sha256": "74fad753757b5c5d2a3fd1621c22257f87f0d4977394f8719f1c25a1583af639",
+    "compiler_inputs": [
+      3702,
+      4149
+    ],
+    "changed_during_build": [],
+    "cli_seconds": 2.37
+  },
+  "actual_browser": {
+    "tab": "IAB57",
+    "gate_seconds": 341.58,
+    "passed": true,
+    "proof": {
+      "passed": true,
+      "kind": "actual Linux cmd/server + real SDK + owned filesystem + IAB57",
+      "cold_pids": [
+        [
+          4149648,
+          4149654
+        ],
+        [
+          4154902,
+          4154909
+        ],
+        [
+          4156288,
+          4156295
+        ],
+        [
+          4158629,
+          4158635
+        ]
+      ],
+      "preview_plans": 7,
+      "preview_jobs": 0,
+      "actual_job": [
+        [
+          "job_vxfCCGJfx-29ak8qxCUml97M",
+          "succeeded"
+        ]
+      ],
+      "actual_assets": 1,
+      "actual_receipts": 1,
+      "clone_preview_directory_exists": false,
+      "target": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module24-ui-tmp/TestPluginServicesProductionCLI3209202060/002/library/Plugin returned UI target/Actual plugin file.mkv",
+        "inode": 110484669,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "source": {
+        "path": "/tmp/light-media-plugin-scope-dRZTQ91A/transfer-module24-ui-tmp/TestPluginServicesProductionCLI3209202060/002/source/OwnedUITransfer.2024.mkv",
+        "inode": 110484669,
+        "device": 65025,
+        "size": 26,
+        "sha256": "ad439c25b091b66bf4c100c48a074b0dea5261488ef0612555a3ccec910da101"
+      },
+      "executed_plan": "plan_bLi2HTr1r1xqTtjvF-3sZsWY",
+      "preview_complete_callbacks": 0,
+      "ordinary_execute_complete_callbacks": 2
+    },
+    "additional": "typed constructor veto→failure retained→cold→source recovery→independent clone→cold→actual hardlink→existing target preview→cold unique history. Terminal execution adds exactly storage2, no native rename. All seven previews create zero execution jobs."
+  },
+  "front": "130 embed inputs unchanged from main19 546 frontend tests/build; no additional frontend run claimed",
+  "adaptations": [
+    "Go JSON process transport replaces Python heap object identity with explicit concrete model marker; plain dict remains distinct. Unknown fields ignored, explicit nulls preserved.",
+    "Source can construct nonfinite modify_time but cannot encode it into standard JSON. Go transport rejects nonfinite values explicitly. This is a finite JSON boundary adaptation, not claimed as source constructor rejection.",
+    "Linux/local authorized-file publication and existing persistence proofs retained; no workflow/AI extension added."
+  ],
+  "remaining": [
+    "Complete TransferInfo counts/mode/TV/null-target/history consumers, auxiliary independent tasks/modules/names/history, quality/overwrite retarget",
+    "media_exists/media_files, metadata batch, directory/bluray, download tuple/hash order, complete ordinary module/event audit"
+  ],
+  "evidence_manifest": "testdata/plugin-module-no-official-auth-20261026/transfer-info-24-20261028/manifest.json",
+  "cleanup": "IAB57 closed; source+clone uninstall/API404/test TempDir cleanup PASS; SSH34438 stopped.",
+  "delivery": {
+    "branch": "dev/plugins-continuation",
+    "committed": false,
+    "pushed": false,
+    "deployed": false
+  }
+}

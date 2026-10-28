@@ -184,9 +184,13 @@ func siteMessageHistory(t *testing.T, a *App) []Notification {
 	var result []Notification
 	for rows.Next() {
 		var raw []byte
-		var n Notification
-		if err = rows.Scan(&raw); err != nil || json.Unmarshal(raw, &n) != nil {
+		var record notificationRecord
+		if err = rows.Scan(&raw); err != nil || json.Unmarshal(raw, &record) != nil {
 			t.Fatal("bad history", err)
+		}
+		n, err := a.openNotification(record)
+		if err != nil {
+			t.Fatal("encrypted history", err)
 		}
 		result = append(result, n)
 	}

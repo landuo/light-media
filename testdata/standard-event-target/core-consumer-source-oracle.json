@@ -1,0 +1,136 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "actual fixed concrete Command/Scheduler event consumer methods; command registry/executor/processing-status and scheduler update are counted boundaries",
+  "source_sha256": {
+    "app/command.py": "e178d40ba65ee3fdd9fdce9f198f6a4433c8ddd8e3c73496bd843a40a4e7af3f",
+    "app/scheduler.py": "35c5508ddec38e6f45c1e86e95abfbc79c2207e6d6d6092cf5d40e639f40d74d"
+  },
+  "cases": [
+    {
+      "event": "command.excute",
+      "data": {
+        "cmd": "/owned   A\tB",
+        "channel": "Web",
+        "source": "owned-source",
+        "user": 9007199254740993,
+        "processing_status": null
+      },
+      "calls": [
+        {
+          "cmd": "/owned",
+          "data_str": "A B",
+          "channel": "Web",
+          "source": "owned-source",
+          "userid": 9007199254740993
+        }
+      ],
+      "finished": [
+        {
+          "status": null,
+          "user": 9007199254740993
+        }
+      ],
+      "exception": null
+    },
+    {
+      "event": "command.excute",
+      "data": {
+        "cmd": "/missing X",
+        "channel": "Web",
+        "source": "owned-source",
+        "user": 9007199254740993,
+        "processing_status": null
+      },
+      "calls": [],
+      "finished": [
+        {
+          "status": null,
+          "user": 9007199254740993
+        }
+      ],
+      "exception": null
+    },
+    {
+      "event": "command.excute",
+      "data": {
+        "cmd": "",
+        "channel": "Web",
+        "source": "owned-source",
+        "user": 9007199254740993,
+        "processing_status": null
+      },
+      "calls": [],
+      "finished": [
+        {
+          "status": null,
+          "user": 9007199254740993
+        }
+      ],
+      "exception": null
+    },
+    {
+      "event": "command.excute",
+      "data": {
+        "cmd": null,
+        "channel": "Web",
+        "source": "owned-source",
+        "user": 9007199254740993,
+        "processing_status": null
+      },
+      "calls": [],
+      "finished": [
+        {
+          "status": null,
+          "user": 9007199254740993
+        }
+      ],
+      "exception": null
+    },
+    {
+      "event": "command.excute",
+      "data": {
+        "cmd": 123,
+        "channel": "Web",
+        "source": "owned-source",
+        "user": 9007199254740993,
+        "processing_status": null
+      },
+      "calls": [],
+      "finished": [
+        {
+          "status": null,
+          "user": 9007199254740993
+        }
+      ],
+      "exception": "AttributeError"
+    },
+    {
+      "event": "plugin.reload",
+      "data": {
+        "plugin_id": "OwnedInput"
+      },
+      "calls": [
+        "OwnedInput"
+      ]
+    },
+    {
+      "event": "plugin.reload",
+      "data": {},
+      "calls": []
+    },
+    {
+      "event": "plugin.reload",
+      "data": {
+        "plugin_id": ""
+      },
+      "calls": []
+    },
+    {
+      "event": "module.reload",
+      "data": {},
+      "calls": [
+        "init_commands"
+      ]
+    }
+  ]
+}

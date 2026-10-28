@@ -1,0 +1,242 @@
+{
+  "normal_and_race_fixture_builds": [
+    {
+      "env": "LIGHT_MEDIA_CONCURRENT_FIXTURE",
+      "command": "./cmd/owned-concurrent-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_AUTH_FIXTURE_BINARY",
+      "command": "./cmd/owned-auth-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_AUTH_FRONTEND_FIXTURE_BINARY",
+      "command": "./cmd/owned-auth-fixture",
+      "ldflags": "-X main.fixtureFrontend=true"
+    },
+    {
+      "env": "OWNED_MODULE_OVERRIDE_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_MODULE_OVERRIDE_V2_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.version=2.0"
+    },
+    {
+      "env": "OWNED_MODULE_NO_DECLARATION_BINARY",
+      "command": "./cmd/owned-module-override",
+      "ldflags": "-X main.declareModules=false"
+    },
+    {
+      "env": "OWNED_MODULE_FIXTURE_BINARY",
+      "command": "./cmd/owned-module-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_MODULE_FIXTURE_BINARY_V2",
+      "command": "./cmd/owned-module-fixture",
+      "ldflags": "-X main.fixtureVersion=2.0"
+    },
+    {
+      "env": "OWNED_MODULE_FIXTURE_BINARY_V3",
+      "command": "./cmd/owned-module-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_STANDARD_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_STANDARD_FIXTURE_V2_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureVersion=2.0"
+    },
+    {
+      "env": "OWNED_STANDARD_DASHBOARD_META_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureDashboardMethods=multi"
+    },
+    {
+      "env": "OWNED_STANDARD_NO_DASHBOARD_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureDashboardMethods=none"
+    },
+    {
+      "env": "OWNED_BASE_FIXTURE_BINARY",
+      "command": "./cmd/owned-base-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "ORIGINAL_API_FIXTURE_BINARY",
+      "command": "./cmd/original-api-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "ORIGINAL_API_REGISTRATION_FIXTURE_BINARY",
+      "command": "./cmd/original-api-registration-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_APP_CONCURRENT_FIXTURE_BINARY",
+      "command": "./cmd/owned-app-concurrent-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_BRUSH_INVENTORY_FIXTURE_BINARY",
+      "command": "./cmd/owned-brush-inventory-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_BRUSH_INVENTORY_DENIED_FIXTURE_BINARY",
+      "command": "./cmd/owned-brush-inventory-fixture",
+      "ldflags": "-X main.fixtureDenied=true"
+    },
+    {
+      "env": "OWNED_COMMAND_INGRESS_FIXTURE_BINARY",
+      "command": "./cmd/owned-command-ingress-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_DOWNLOADER_TASKS_FIXTURE_BINARY",
+      "command": "./cmd/owned-downloader-tasks-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_DOWNLOADER_TASKS_DENIED_FIXTURE_BINARY",
+      "command": "./cmd/owned-downloader-tasks-fixture",
+      "ldflags": "-X main.fixtureDenied=true"
+    },
+    {
+      "env": "OWNED_EVENT_FIXTURE_BINARY",
+      "command": "./cmd/owned-event-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_EVENT_TARGET_FIXTURE_BINARY",
+      "command": "./cmd/owned-event-target-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_FRONTEND_FIXTURE_BINARY",
+      "command": "./cmd/owned-frontend-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_FRONTEND_FIXTURE_BINARY_V2",
+      "command": "./cmd/owned-frontend-fixture",
+      "ldflags": "-X main.fixtureVersion=2.0"
+    },
+    {
+      "env": "OWNED_INSTANCE_LOG_FIXTURE_BINARY",
+      "command": "./cmd/owned-instance-log-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_INSTANCE_LOG_DENIED_FIXTURE_BINARY",
+      "command": "./cmd/owned-instance-log-fixture",
+      "ldflags": "-X main.fixtureDenied=true"
+    },
+    {
+      "env": "OWNED_SUBMITTED_FIXTURE_BINARY",
+      "command": "./cmd/owned-submitted-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_ORDER_ALPHA",
+      "command": "./cmd/owned-handler-order-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_ORDER_BETA",
+      "command": "./cmd/owned-handler-order-fixture",
+      "ldflags": "-X main.pluginID=OwnedOrderBeta -X main.order=-10 -X main.priority=20"
+    },
+    {
+      "env": "OWNED_ORDER_DEFAULT",
+      "command": "./cmd/owned-handler-order-fixture",
+      "ldflags": "-X main.pluginID=OwnedOrderDefault -X main.order=0 -X main.defaultDeclaration=true"
+    },
+    {
+      "env": "OWNED_RESET_MUTATOR",
+      "command": "./cmd/owned-reset-generic-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_RESET_OBSERVER",
+      "command": "./cmd/owned-reset-generic-fixture",
+      "ldflags": "-X main.pluginID=OwnedResetObserver -X main.priority=10 -X main.observer=true"
+    },
+    {
+      "env": "OWNED_COMMAND_MUTATOR",
+      "command": "./cmd/owned-command-register-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_COMMAND_OBSERVER",
+      "command": "./cmd/owned-command-register-fixture",
+      "ldflags": "-X main.pluginID=OwnedCommandObserver -X main.priority=10 -X main.shorthand=true"
+    },
+    {
+      "env": "OWNED_CATALOG_SECOND_BINARY",
+      "command": "./cmd/owned-module-fixture",
+      "ldflags": "-X main.fixturePluginID=OwnedCatalogSecond"
+    },
+    {
+      "env": "OWNED_CATALOG_CLONE_BINARY",
+      "command": "./cmd/owned-module-fixture",
+      "ldflags": "-X main.fixturePluginID=OwnedModuleFixtureexact -X main.fixtureVersion=2.0"
+    },
+    {
+      "env": "OWNED_LICENSE_DENIED_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureVersion=2.0 -X main.fixtureAuthLevel=2"
+    },
+    {
+      "env": "OWNED_INPUT_FIXTURE_BINARY",
+      "command": "./cmd/owned-input-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_NOTICE_FIXTURE_BINARY",
+      "command": "./cmd/owned-notice-fixture",
+      "ldflags": ""
+    },
+    {
+      "env": "OWNED_STANDARD_DASHBOARD_ZERO_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureDashboardParameters=[]"
+    },
+    {
+      "env": "OWNED_STANDARD_DASHBOARD_ONE_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureDashboardParameters=[\"user_agent\"]"
+    },
+    {
+      "env": "OWNED_STANDARD_DASHBOARD_TWO_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureDashboardParameters=[\"key\",\"user_agent\"]"
+    },
+    {
+      "env": "OWNED_STANDARD_DASHBOARD_INVALID_FIXTURE_BINARY",
+      "command": "./cmd/owned-standard-fixture",
+      "ldflags": "-X main.fixtureDashboardParameters=[\"key\"]"
+    }
+  ],
+  "linux_process_additions": [
+    {
+      "command": "./cmd/owned-standard-fixture",
+      "v1_flags": "-X main.fixturePageEvents=true -X main.fixturePageDelay=true",
+      "v2_flags": "-X main.fixturePageEvents=true -X main.fixtureVersion=2.0"
+    }
+  ],
+  "environment": {
+    "GOOS": "linux",
+    "GOARCH": "amd64",
+    "CGO_ENABLED": "0"
+  },
+  "note": "build in primary Git worktree with default caches; artifacts cleaned after evidence retention; no Python application runtime"
+}

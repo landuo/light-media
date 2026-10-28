@@ -58,12 +58,8 @@ func (a *App) buildUISubscriptionAdd(ctx context.Context, in SubscriptionRequest
 	if (kind != "movie" && kind != "tv") || id <= 0 {
 		return out, bad("INVALID_MEDIA", "请选择电影或电视剧")
 	}
-	recognized, e := a.sourceRecognizeTMDBMedia(ctx, catalog.Media{MediaType: kind, ID: id})
-	if e != nil {
-		return out, e
-	}
 	originalMedia := in.Media
-	in.MediaType, in.TMDBID, in.Media = kind, id, recognized.Media
+	var e error
 	// The existing native UI sends these source locals in Media; explicit name
 	// and year fields are the source-compatible API spellings. A genuinely
 	// absent local remains None, even when recognition finds a title/year.
@@ -130,6 +126,15 @@ func (a *App) buildUISubscriptionAdd(ctx context.Context, in SubscriptionRequest
 	if e != nil {
 		return out, e
 	}
+	metaFields, e := meta.ToDict()
+	if e != nil {
+		return out, e
+	}
+	recognized, e := a.sourceAsyncRecognizeTMDBMedia(ctx, catalog.Media{MediaType: kind, ID: id}, metaFields)
+	if e != nil {
+		return out, e
+	}
+	in.MediaType, in.TMDBID, in.Media = kind, id, recognized.Media
 	if e = a.applySubscriptionQualityDefaults(ctx, &in, kind); e != nil {
 		return out, e
 	}
@@ -143,6 +148,21 @@ func (a *App) buildUISubscriptionAdd(ctx context.Context, in SubscriptionRequest
 	fields := sourceMap(fieldsValue)
 	if fields == nil {
 		return out, notice.ErrTemplateDependency
+	}
+	if kind == "tv" && in.TotalEpisodes == 0 {
+		current := len(sourceRows(sourceMap(fields["seasons"])[strconv.Itoa(in.Season)]))
+		total, err := a.applyStandardSubscriptionEpisodes(ctx, current, in.Season, recognized.MediaInfo, nil, "create")
+		if err != nil {
+			return out, err
+		}
+		if total == 0 {
+			return out, bad("INVALID_TOTAL_EPISODES", "未获取到当前季总集数")
+		}
+		in.TotalEpisodes = total
+		if in.ManualTotalEpisode == nil {
+			automatic := false
+			in.ManualTotalEpisode = &automatic
+		}
 	}
 	image := fields["backdrop"]
 	if !sourceSubscriptionTruth(image) {

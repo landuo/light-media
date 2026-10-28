@@ -1,0 +1,32 @@
+import fs from 'node:fs';import crypto from 'node:crypto';import {createRequire} from 'node:module';
+const require=createRequire(new URL('../../web/package.json',import.meta.url)),ts=require('typescript'),{parse}=require('@vue/compiler-sfc');
+const root='/Users/accidia/projects/MoviePilot-Frontend/src/';
+const files=['components/dialog/ShortcutMessageDialog.vue','views/system/MessageView.vue','layouts/components/ShortcutBar.vue','components/cards/MessageCard.vue','@core/utils/index.ts'];
+const raw=Object.fromEntries(files.map(p=>[p,fs.readFileSync(root+p,'utf8')]));
+function extract(path,names){const code=path.endsWith('.vue')?parse(raw[path]).descriptor.scriptSetup.content:raw[path],tree=ts.createSourceFile('fixed.ts',code,ts.ScriptTarget.Latest,true);const found=tree.statements.filter(n=>ts.isFunctionDeclaration(n)&&names.includes(n.name.text));if(found.length!==names.length)throw Error('source inventory');return ts.transpileModule(found.map(n=>n.getText(tree).replace(/^export /,'')).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText}
+const sendCode=extract(files[0],['sendMessage']);const sends=[];
+for(const input of [{name:'empty-no-request',text:' \n\t '},{name:'encoded-trimmed-command',text:' \u3000/owned 甲 & b\n '},{name:'HTTP-success-false-body-is-not-interpreted',text:'/missing',body:{success:false}},{name:'HTTP-failure-keeps-draft',text:'/owned',fail:true},{name:'pending-draft-change-is-cleared-on-success',text:'/first',changed:'/typed while waiting'}]){
+ const calls=[],user_message={value:input.text},sendButtonDisabled={value:false},messageViewRef={value:{forceScrollToEnd(){calls.push('scroll')}}};let resolve;const pending=new Promise(r=>resolve=r);
+ const promise=new Function('api','user_message','sendButtonDisabled','messageViewRef','console',sendCode+';return sendMessage()')({async post(path){calls.push({path,method:'POST'});if(input.changed!==undefined)await pending;if(input.fail)throw Error('owned transport failure');return input.body}},user_message,sendButtonDisabled,messageViewRef,{error(){}});
+ const during={draft:user_message.value,disabled:sendButtonDisabled.value};if(input.changed!==undefined){user_message.value=input.changed;resolve()};await promise;
+ sends.push({input,expected:{calls,draft:user_message.value,disabled:sendButtonDisabled.value,during}});
+}
+const names=['normalizeNote','getMessageKey','getMessageTime','sortMessages','compareTime','updateLastTime','mergeMessages'],historyCode=extract(files[1],names),histories=[];
+const historyInputs=[{name:'history-SSE-date-note-null-empty-dedup',batches:[[{id:1,action:1,title:'same',text:'body',reg_time:'2026-10-26 10:00:00',note:{}}],[{id:99,action:1,title:'same',text:'body',date:'2026-10-26 10:00:00',note:null}]]},{name:'source-sorts-batches-and-appends-older-page',batches:[[{id:'new',title:'new',reg_time:'2026-10-26 11:00:00'},{id:'middle',title:'middle',reg_time:'2026-10-26 10:00:00'}],[{id:'old',title:'old',reg_time:'2026-10-26 09:00:00'}]]},{name:'same-signature-id-is-ignored-and-note-distinguishes',batches:[[{id:1,title:'one',date:'2026-10-26T09:00:00Z',note:{x:1}},{id:2,title:'one',date:'2026-10-26T09:00:00Z',note:{x:1}},{id:3,title:'one',date:'2026-10-26T09:00:00Z',note:'{"x":1}'}]]}];
+for(const input of historyInputs){const messages={value:[]},lastTime={value:''},messageKeys=new Set(),states=[];const merge=new Function('messages','lastTime','messageKeys',historyCode+';return mergeMessages')(messages,lastTime,messageKeys);for(const batch of input.batches){states.push({changed:merge(batch),items:structuredClone(messages.value),lastTime:lastTime.value})};histories.push({input,expected:states})}
+const shortcutCode=extract(files[4],['getQueryValue']);const shortcuts=['https://owned.invalid/?shortcut=message#/plugins','https://owned.invalid/#/dashboard?shortcut=message','https://owned.invalid/?SHORTCUT=message','https://owned.invalid/?shortcut=Message','https://owned.invalid/?shortcut=%6dessage','https://owned.invalid/?shortcut=scheduler'].map(url=>({url,open:new Function(shortcutCode+';return getQueryValue("shortcut",'+JSON.stringify(url)+')')()==='message'}));
+const output={fixed_commit:'2829e3b08214348f05ff2f5beae644882eccad58',kind:'fixed frontend AST/function replay with controlled transport/ref/DOM callback; no real browser',sources:Object.fromEntries(files.map(p=>[p,crypto.createHash('sha256').update(raw[p]).digest('hex')])),sends,histories,shortcuts};fs.writeFileSync(new URL('./frontend-source-oracle.json',import.meta.url),JSON.stringify(output,null,2)+'\n');console.log('fixed web message:',sends.length,'send +',histories.length,'history +',shortcuts.length,'shortcut scenarios');
+const mdRaw=parse(raw['components/cards/MessageCard.vue']).descriptor.scriptSetup.content,mdTree=ts.createSourceFile('card.ts',mdRaw,ts.ScriptTarget.Latest,true);
+const mdNodes=mdTree.statements.filter(n=>ts.isFunctionDeclaration(n)&&n.name.text==='renderMarkdown'||ts.isVariableStatement(n)&&n.declarationList.declarations.some(d=>d.name.getText(mdTree)==='md')||ts.isExpressionStatement(n)&&n.expression.getText(mdTree).startsWith('md.use('));
+const mdCode=ts.transpileModule(mdNodes.map(n=>n.getText(mdTree)).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+const sourceRequire=createRequire('/Users/accidia/projects/MoviePilot-Frontend/package.json');
+const render=new Function('MarkdownIt','mdLinkAttributes',mdCode+';return renderMarkdown')(sourceRequire('markdown-it'),sourceRequire('markdown-it-link-attributes'));
+output.markdown=['first\nsecond','**text** <i>ordinary</i> [link](https://example.test/path)',''].map(input=>({input,expected:render(input)}));
+fs.writeFileSync(new URL('./frontend-source-oracle.json',import.meta.url),JSON.stringify(output,null,2)+'\n');
+
+const noteCode=extract('components/cards/MessageCard.vue',['noteToJson']);
+output.notes=[null,{},'',[{title_year:'Owned (2026)',type:'电影',vote_average:8}],'[{"title_year":"Owned (2026)","type":"电影","vote_average":8}]','malformed'].map(note=>({note,expected:new Function('props',noteCode+';return noteToJson()')({message:{note}})}));
+fs.writeFileSync(new URL('./frontend-source-oracle.json',import.meta.url),JSON.stringify(output,null,2)+'\n');
+
+output.messageCardSource=raw['components/cards/MessageCard.vue'];output.sourceIsEmptyObject=extract('@core/utils/index.ts',['isNullOrEmptyObject']);
+fs.writeFileSync(new URL('./frontend-source-oracle.json',import.meta.url),JSON.stringify(output,null,2)+'\n');

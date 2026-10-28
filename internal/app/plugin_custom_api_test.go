@@ -10,7 +10,7 @@ import (
 
 const syntheticPluginAPIKey = "synthetic-api-reference-key-2026"
 
-func TestPluginHTTPAuthorityPriorityAndNativeSessionBoundary(t *testing.T) {
+func TestPluginHTTPAuthorityPriorityAndSameOriginSessionBoundary(t *testing.T) {
 	a, cookie := retainedPluginAuthorityFixture(t)
 	validKey := syntheticPluginAPIKey
 	for _, item := range []struct {
@@ -21,7 +21,7 @@ func TestPluginHTTPAuthorityPriorityAndNativeSessionBoundary(t *testing.T) {
 		{name: "anonymous", auth: "anonymous"},
 		{name: "bear-key", auth: "bear", key: validKey},
 		{name: "bear-token-query", auth: "bear", query: "token=" + validKey},
-		{name: "legacy-cookie-rejected", auth: "bear", cookie: true, status: 401},
+		{name: "source-bearer-cookie-adaptation", auth: "bear", cookie: true},
 		{name: "native-cookie", auth: "bear", native: true, cookie: true},
 		{name: "bear-session", auth: "bear", authorization: "Bearer " + cookie.Value},
 		{name: "invalid-bearer-wins-key", auth: "bear", authorization: "Bearer synthetic-invalid", key: validKey, status: 403},

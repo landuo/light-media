@@ -1,0 +1,10 @@
+import fs from 'node:fs';import crypto from 'node:crypto';import {createRequire} from 'node:module';import {pathToFileURL} from 'node:url';
+const require=createRequire(new URL('../../web/package.json',import.meta.url)),ts=require('typescript');
+const root='/Users/accidia/projects/MoviePilot-Frontend',path=root+'/src/@core/utils/image.ts',raw=fs.readFileSync(path,'utf8');
+const tree=ts.createSourceFile('fixed.ts',raw,ts.ScriptTarget.Latest,true),names=['rgbStringToHex','getImageCacheKey','rememberDominantColor','getDominantColor'];
+const code=ts.transpileModule(tree.statements.filter(n=>ts.isFunctionDeclaration(n)&&names.includes(n.name.text)).map(n=>n.getText(tree).replace(/^export /,'')).join('\n'),{compilerOptions:{target:ts.ScriptTarget.ES2022}}).outputText;
+const library=root+'/node_modules/colorthief/dist/color-thief.mjs';const ColorThief=(await import(pathToFileURL(library))).default;
+globalThis.document={createElement(){let image;return {getContext(){return {drawImage(x){image=x},getImageData(){return {data:new Uint8ClampedArray(Array(400).fill(image.rgba).flat())}}}}}}};
+const read=new Function('colorThief','dominantColorCache','console',`const DEFAULT_DOMINANT_COLOR='#28A9E1',DOMINANT_COLOR_CACHE_LIMIT=100;${code};return getDominantColor`)(new ColorThief(),new Map(),{warn(){}});
+const cases=[];for(const [name,rgba] of [['purple',[145,85,253,255]],['red',[255,0,0,255]],['white',[255,255,255,255]],['transparent',[1,2,3,0]]]){const image={src:name,naturalWidth:20,naturalHeight:20,rgba};cases.push({name,rgba,expected:await read(image)})}
+const output={fixed_commit:'2829e3b08214348f05ff2f5beae644882eccad58',kind:'fixed utility AST and actual fixed ColorThief browser 2.6.0 with controlled canvas pixels',sources:Object.fromEntries([[path,raw],[library,fs.readFileSync(library)]].map(([p,s])=>[p.slice(root.length+1),crypto.createHash('sha256').update(s).digest('hex')])),cases};fs.writeFileSync(new URL('./icon-color-oracle.json',import.meta.url),JSON.stringify(output,null,2)+'\n');console.log('fixed image cases:',cases.length);

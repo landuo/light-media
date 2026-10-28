@@ -3,6 +3,7 @@ package plugins
 import (
 	"encoding/json"
 	"errors"
+	"mime"
 	"net/url"
 	"regexp"
 	"slices"
@@ -39,6 +40,11 @@ type HTTPRequest struct {
 	// Base64 IPC encoding preserves exact bytes for signed webhook requests.
 	Body []byte `json:"body,omitempty"`
 }
+
+// Binary API values stay below the existing 16 MiB JSON/IPC payload ceiling
+// after base64 encoding. Package-file responses use a rooted file stream.
+const MaxHTTPBodyBytes = 8 << 20
+
 type HTTPResponse struct {
 	Status  int               `json:"status"`
 	Body    []byte            `json:"body"`
@@ -120,23 +126,39 @@ func (request HTTPRequest) LastQuery(name string) string {
 	return values[len(values)-1]
 }
 func (response HTTPResponse) Validate() error {
-	if response.Status < 200 || response.Status > 599 || len(response.Body) > 512<<10 || len(response.Headers) > 8 {
+	if response.Status < 200 || response.Status > 599 || len(response.Body) > MaxHTTPBodyBytes || len(response.Headers) > 8 {
 		return errors.New("invalid plugin HTTP response")
 	}
 	for key, value := range response.Headers {
-		if !slices.Contains([]string{"Content-Type", "Cache-Control", "Retry-After"}, key) || strings.ContainsAny(value, "\x00\r\n") || len(value) > 512 {
+		if !slices.Contains([]string{"Content-Type", "Cache-Control", "Retry-After", "Content-Disposition", "ETag", "Last-Modified", "Content-Encoding", "Accept-Ranges", "Content-Range"}, key) || strings.ContainsAny(value, "\x00\r\n") || len(value) > 512 {
 			return errors.New("invalid plugin HTTP response header")
 		}
-		if key == "Content-Type" && !slices.Contains([]string{"application/json", "application/json; charset=utf-8", "text/plain", "text/plain; charset=utf-8"}, value) {
-			return errors.New("unsupported plugin HTTP response type")
+		if key == "Content-Type" {
+			if _, _, err := mime.ParseMediaType(value); err != nil {
+				return errors.New("invalid plugin HTTP response type")
+			}
+		}
+		if key == "Content-Disposition" {
+			kind, _, err := mime.ParseMediaType(value)
+			if err != nil || kind != "inline" && kind != "attachment" {
+				return errors.New("invalid plugin HTTP disposition")
+			}
 		}
 	}
-	contentType := response.Headers["Content-Type"]
-	if contentType == "" || strings.HasPrefix(contentType, "application/json") {
+	// RFC-defined bodyless statuses are valid plugin responses. The source
+	// FastAPI Response accepts them and the existing browser handles 204.
+	if (response.Status == 204 || response.Status == 304) && len(response.Body) == 0 {
+		return nil
+	}
+	if response.Headers["Content-Encoding"] != "" {
+		return nil
+	}
+	contentType, _, _ := mime.ParseMediaType(response.Headers["Content-Type"])
+	if contentType == "" || contentType == "application/json" || strings.HasSuffix(contentType, "+json") {
 		if !json.Valid(response.Body) {
 			return errors.New("invalid plugin JSON response")
 		}
-	} else if !utf8.Valid(response.Body) {
+	} else if strings.HasPrefix(contentType, "text/") && !utf8.Valid(response.Body) {
 		return errors.New("invalid plugin text response")
 	}
 	return nil
