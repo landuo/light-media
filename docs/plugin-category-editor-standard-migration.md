@@ -1,5 +1,7 @@
 # CategoryEditor 1.3：本次标准 worker 迁移记录
 
+> **2026-10-29 NAS 部署补充**：后续独立部署任务已按用户“更新光影”授权，发布宿主提交 `35f4f890`（兼容业务提交 `2b795ebb`，只额外隔离归档探针）。NAS 已恢复 healthy，原安装记录自动修复并加载已发布的 CategoryEditor 1.3；实际浏览器配置表单可打开，未启用或保存策略。配置、密钥、原 category.yaml 与其他服务保持；详见 [本次部署记录](plugin-categoryeditor-host-nas-deployment-20261029.json)。下文“未部署”等文字保留原云端迁移阶段的历史边界。
+
 > 当前状态：**已批准安全适配边界下验收通过；最终独立核对 passed，main 提交推送进行中，未部署**。本记录属于 2026-10-28 新授权的已安装业务插件迁移，不恢复已取消的平台重构。历史 `plugin-category-editor-delivery.md` 记载的旧实现、旧配置导入和部署不能充当本次标准 worker 的验收结果。唯一权威进度为 `migration/ledger.json`。
 
 ## 来源与交付边界
