@@ -79,6 +79,11 @@ func TestCategoryGenericFieldRefreshChangesActualOrganizePathAndCachesAbsence(t 
 	if err := os.WriteFile(filepath.Join(a.Dir, "category.yaml"), []byte(raw), 0600); err != nil {
 		t.Fatal(err)
 	}
+	// CategoryHelper applies an externally edited file only on explicit init;
+	// ordinary consumers retain the process-local maps between reloads.
+	if _, err := a.reloadMediaCategoryPolicy(); err != nil {
+		t.Fatal(err)
+	}
 	detail := categoryMovieDetail()
 	detail["status"], detail["budget"] = "Released", 30000000
 	calls := useCategoryDetailResponse(t, a, 200, detail)

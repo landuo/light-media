@@ -170,18 +170,13 @@ func useCategoryDetailResponse(t *testing.T, a *App, status int, body map[string
 		t.Fatal(err)
 	}
 	calls := 0
-	previous := http.DefaultTransport
-	http.DefaultTransport = imageTransport(func(request *http.Request) (*http.Response, error) {
+	installMetadataFixture(t, a, "synthetic-category-key", []string{"/3/movie/123"}, func(request *http.Request) (*http.Response, error) {
 		calls++
 		if request.URL.Scheme != "https" || request.URL.Host != "api.themoviedb.org" || request.URL.Path != "/3/movie/123" {
 			t.Fatal("category refresh left the official detail origin")
 		}
 		return &http.Response{StatusCode: status, Header: http.Header{"Content-Type": []string{"application/json"}}, Body: io.NopCloser(strings.NewReader(string(raw)))}, nil
 	})
-	a.config.TMDB = TMDBConfig{APIKey: "synthetic-category-key"}
-	a.catClient = catalog.New(catalog.Credentials{APIKey: a.config.TMDB.APIKey})
-	a.catCreds = a.config.TMDB
-	http.DefaultTransport = previous
 	return &calls
 }
 
@@ -297,6 +292,10 @@ func TestCustomMediaCategoryPlanPublishesFrozenHardlink(t *testing.T) {
 	if err := os.WriteFile(policyPath, []byte(customJapaneseMovieCategory), 0600); err != nil {
 		t.Fatal(err)
 	}
+	// Source CategoryHelper observes file edits only through explicit init.
+	if _, err := a.reloadMediaCategoryPolicy(); err != nil {
+		t.Fatal(err)
+	}
 	path := filepath.Join(source, "Test Film (2024).mkv")
 	importWrite(t, path, []byte("frozen Japanese category fixture"))
 	plan, err := a.previewImport(context.Background(), ImportRequest{MediaType: "movie", TMDBID: 123, RootID: "root", Mode: "hardlink", Scraping: importFlag(false), Files: []ImportFileRequest{{Path: path}}, LibraryTypeFolder: importFlag(true)})
@@ -305,6 +304,9 @@ func TestCustomMediaCategoryPlanPublishesFrozenHardlink(t *testing.T) {
 		t.Fatalf("custom category not reflected in preview: %+v %v", plan, err)
 	}
 	if err := os.WriteFile(policyPath, []byte("movie:\n  后续新分类:\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := a.reloadMediaCategoryPolicy(); err != nil {
 		t.Fatal(err)
 	}
 	job, err := a.executeImport(context.Background(), plan.ID, nil)

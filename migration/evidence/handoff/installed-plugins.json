@@ -1,0 +1,1371 @@
+{
+  "observed_at": "2026-10-28T17:34:14.563030+00:00",
+  "count": 23,
+  "source": "Running MP container; SQLite mode=ro + AST literal metadata; no plugin import/run",
+  "plugins": [
+    {
+      "id": "CategoryEditor",
+      "directory": "/app/app/plugins/categoryeditor",
+      "source_found": true,
+      "class_name": "CategoryEditor",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "二级分类策略",
+      "plugin_desc": "编辑下载和整理时自动二级分类的目录规则。",
+      "plugin_version": "1.3",
+      "plugin_author": "jxxghp",
+      "plugin_order": 5,
+      "auth_level": 1,
+      "source_sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+      "files": [
+        {
+          "path": "categoryeditor/__init__.py",
+          "sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+          "bytes": 4291
+        }
+      ]
+    },
+    {
+      "id": "TorrentTransfer",
+      "directory": "/app/app/plugins/torrenttransfer",
+      "source_found": true,
+      "class_name": "TorrentTransfer",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "自动转移做种",
+      "plugin_desc": "定期转移下载器中的做种任务到另一个下载器。",
+      "plugin_version": "1.10.3",
+      "plugin_author": "jxxghp",
+      "plugin_order": 18,
+      "auth_level": 2,
+      "source_sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+      "files": [
+        {
+          "path": "torrenttransfer/__init__.py",
+          "sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+          "bytes": 46423
+        }
+      ]
+    },
+    {
+      "id": "SiteStatistic",
+      "directory": "/app/app/plugins/sitestatistic",
+      "source_found": true,
+      "class_name": "SiteStatistic",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "站点数据统计",
+      "plugin_desc": "站点统计数据图表。",
+      "plugin_version": "1.9.7",
+      "plugin_author": "lightolly,jxxghp",
+      "plugin_order": 1,
+      "auth_level": 2,
+      "source_sha256": "763a88be85185a94082a2f131ed1c80d8306abe24b10ebe9ae95447cfe5da17d",
+      "files": [
+        {
+          "path": "sitestatistic/README.md",
+          "sha256": "ab4703102aee8185d445106fc22ba36fc6d705b90e299a9772cf0f3b056ee7f0",
+          "bytes": 1692
+        },
+        {
+          "path": "sitestatistic/__init__.py",
+          "sha256": "763a88be85185a94082a2f131ed1c80d8306abe24b10ebe9ae95447cfe5da17d",
+          "bytes": 51785
+        }
+      ]
+    },
+    {
+      "id": "RemoveLink",
+      "directory": "/app/app/plugins/removelink",
+      "source_found": true,
+      "class_name": "RemoveLink",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "清理媒体文件",
+      "plugin_desc": "媒体文件清理工具：支持硬链接文件清理、STRM文件清理、刮削文件清理（元数据、图片、字幕）、转移记录清理、种子联动删除等功能",
+      "plugin_version": "2.18",
+      "plugin_author": "DzAvril",
+      "plugin_order": 0,
+      "auth_level": 1,
+      "source_sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+      "files": [
+        {
+          "path": "removelink/README.md",
+          "sha256": "17e3bb989f345090f67b9f0291db2ac9f3b9e97f50e912ee5e0f88e5fe08e6ae",
+          "bytes": 1202
+        },
+        {
+          "path": "removelink/__init__.py",
+          "sha256": "22fb375e531378b3454607c7bca305b637abd60ee8ed69e14e32fbc2ddfc5485",
+          "bytes": 89523
+        },
+        {
+          "path": "removelink/dist/assets/remoteEntry.js",
+          "sha256": "cb500f8375534b574b9a72d36f0f3e08a967af871974b44271474c3670c9269b",
+          "bytes": 980
+        },
+        {
+          "path": "removelink/dist/assets/style.css",
+          "sha256": "0502ab6e96b309f848d155fa7822ef2f6588c196d8c1feff6f8d414300f9b60c",
+          "bytes": 7206
+        },
+        {
+          "path": "removelink/dist/assets/view.js",
+          "sha256": "e4377287647869ad3c97c293ad7abcaa60864d50d1f75140a9910895a9580a53",
+          "bytes": 11038
+        },
+        {
+          "path": "removelink/frontend/build.mjs",
+          "sha256": "f1028d5d98dc047534f25dbd372164166d8e9394c72387b8fb7bd8821eaf7720",
+          "bytes": 370
+        },
+        {
+          "path": "removelink/frontend/remoteEntry.js",
+          "sha256": "cb500f8375534b574b9a72d36f0f3e08a967af871974b44271474c3670c9269b",
+          "bytes": 980
+        },
+        {
+          "path": "removelink/frontend/style.css",
+          "sha256": "0502ab6e96b309f848d155fa7822ef2f6588c196d8c1feff6f8d414300f9b60c",
+          "bytes": 7206
+        },
+        {
+          "path": "removelink/frontend/view.js",
+          "sha256": "e4377287647869ad3c97c293ad7abcaa60864d50d1f75140a9910895a9580a53",
+          "bytes": 11038
+        },
+        {
+          "path": "removelink/package.json",
+          "sha256": "22ec30bf1b21922cfa63674bf8a72572c3bfa482c9dee8cccc91cf02ce73408d",
+          "bytes": 225
+        }
+      ]
+    },
+    {
+      "id": "MPServerStatus",
+      "directory": "/app/app/plugins/mpserverstatus",
+      "source_found": true,
+      "class_name": "MPServerStatus",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "MoviePilot服务监控",
+      "plugin_desc": "在仪表板中实时显示MoviePilot公共服务器状态。",
+      "plugin_version": "1.4",
+      "plugin_author": "jxxghp",
+      "plugin_order": 99,
+      "auth_level": 1,
+      "source_sha256": "63583e9706aeee31a181b2fefa4e80c793ae4f2b9a76c9efea5956f8b0043d90",
+      "files": [
+        {
+          "path": "mpserverstatus/__init__.py",
+          "sha256": "63583e9706aeee31a181b2fefa4e80c793ae4f2b9a76c9efea5956f8b0043d90",
+          "bytes": 39573
+        }
+      ]
+    },
+    {
+      "id": "PluginUnInstall",
+      "directory": "/app/app/plugins/pluginuninstall",
+      "source_found": true,
+      "class_name": "PluginUnInstall",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "插件彻底卸载",
+      "plugin_desc": "删除数据库中已安装插件记录、清理插件文件。",
+      "plugin_version": "2.2",
+      "plugin_author": "thsrite",
+      "plugin_order": 98,
+      "auth_level": 1,
+      "source_sha256": "2210e9dea47eeccdc46208d515e45ce1222dcadf50dbfc63cbeb41f94e470487",
+      "files": [
+        {
+          "path": "pluginuninstall/__init__.py",
+          "sha256": "2210e9dea47eeccdc46208d515e45ce1222dcadf50dbfc63cbeb41f94e470487",
+          "bytes": 8558
+        }
+      ]
+    },
+    {
+      "id": "AutoSignIn",
+      "directory": "/app/app/plugins/autosignin",
+      "source_found": true,
+      "class_name": "AutoSignIn",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "站点自动签到",
+      "plugin_desc": "自动模拟登录、签到站点。",
+      "plugin_version": "2.9.15",
+      "plugin_author": "thsrite",
+      "plugin_order": 0,
+      "auth_level": 2,
+      "source_sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+      "files": [
+        {
+          "path": "autosignin/README.md",
+          "sha256": "fc642f72fec5f5b0322a246fc83ac186edffb1e5e150d120f812760c17d40a84",
+          "bytes": 2895
+        },
+        {
+          "path": "autosignin/__init__.py",
+          "sha256": "1d8329afc00bc218710e302e0eda915351731d41101df08fcf378e90440b9220",
+          "bytes": 89482
+        },
+        {
+          "path": "autosignin/result.py",
+          "sha256": "7a2a49fd8aafe084c6a9a482ca6883cbee8505f443ae5e9741af25161bb458b2",
+          "bytes": 5475
+        },
+        {
+          "path": "autosignin/sites/52pt.py",
+          "sha256": "88d1fb315d2272097f8e124eb8245aa952fd1933f7685005118e9c875528d2fb",
+          "bytes": 6164
+        },
+        {
+          "path": "autosignin/sites/__init__.py",
+          "sha256": "041c319628021eca215ea2cc6545f3e0c212d5392374851d8452c79ec71b471d",
+          "bytes": 4488
+        },
+        {
+          "path": "autosignin/sites/btschool.py",
+          "sha256": "efc63422cc4b2c3e18c35324f358b4d9899a58cffbf8099c4efc533cc5b48bcd",
+          "bytes": 3152
+        },
+        {
+          "path": "autosignin/sites/chdbits.py",
+          "sha256": "d1f745f0b69b167e0f51038a3f09b495806096f44587889bca585e6782b5eb89",
+          "bytes": 6040
+        },
+        {
+          "path": "autosignin/sites/haidan.py",
+          "sha256": "d68586c83b5721a495e7af5172e7642cbe6cf74d7c555eab8a3c3153ba281461",
+          "bytes": 2885
+        },
+        {
+          "path": "autosignin/sites/hares.py",
+          "sha256": "27d5be0a5c313b3cbadb50a029cc4fa627e3f4aa393503e330f5c56be48ad0e2",
+          "bytes": 3502
+        },
+        {
+          "path": "autosignin/sites/hdarea.py",
+          "sha256": "6046dd7626ad9f071a073dc142b86f204aa491bcfabe9e20cb4197eee4d5e630",
+          "bytes": 2684
+        },
+        {
+          "path": "autosignin/sites/hdchina.py",
+          "sha256": "dec9063410d6601c885df2de60844feacf2fb143d4aa662eba47fcad27948731",
+          "bytes": 4703
+        },
+        {
+          "path": "autosignin/sites/hdcity.py",
+          "sha256": "b13a4af9d4df371b1fb5c74323ddb532ff016fe53d36caf7c36bcacdb7148475",
+          "bytes": 2583
+        },
+        {
+          "path": "autosignin/sites/hdsky.py",
+          "sha256": "a2f272ff66d9ade5106942f3e577fd12a967b7375d516c92dc189b9672fa7a70",
+          "bytes": 6240
+        },
+        {
+          "path": "autosignin/sites/hdupt.py",
+          "sha256": "eb8e2c96088fdf956a0cb1efb58ac69716d89ebfd4d3240089eb53fa0c0e55f3",
+          "bytes": 3637
+        },
+        {
+          "path": "autosignin/sites/mteam.py",
+          "sha256": "5bac7c23743fd226ce546e0ddf2794aca2aebaecbe4fa945c4a5e728ae9f4fd4",
+          "bytes": 5873
+        },
+        {
+          "path": "autosignin/sites/nexushd.py",
+          "sha256": "cbfdac17f522880b502ea9f0546d6c486846c0016280c86b234ad248fba5b2bf",
+          "bytes": 2715
+        },
+        {
+          "path": "autosignin/sites/opencd.py",
+          "sha256": "30045d631f459d7a04fdd068a1cab48bcd6dcb7cc21ebb0fb8fbac5bf0d32b2b",
+          "bytes": 5479
+        },
+        {
+          "path": "autosignin/sites/pterclub.py",
+          "sha256": "3cd559c4ef3510180da4f57db19595de2de75dcd85519430a9aa1ee4dadfd3d3",
+          "bytes": 3018
+        },
+        {
+          "path": "autosignin/sites/pttime.py",
+          "sha256": "e1e8e5a446ed15802774eda142c57b22a8482ddee511d49aff256a5a8089bb7b",
+          "bytes": 2432
+        },
+        {
+          "path": "autosignin/sites/ptzone.py",
+          "sha256": "fc2eb9921e388dfaeaee789e94524865be24f0a58d74c1af1d3c7651d269dc90",
+          "bytes": 2473
+        },
+        {
+          "path": "autosignin/sites/rousipro.py",
+          "sha256": "5d5fb642d99651df42caf36cd465f6992d9bcfd7d893d35f5be531860b68e0b0",
+          "bytes": 8133
+        },
+        {
+          "path": "autosignin/sites/tjupt.py",
+          "sha256": "ed717891d30abcac798407c8889776ec79191e447b4ef7f97aee1bddb0f98bb0",
+          "bytes": 11487
+        },
+        {
+          "path": "autosignin/sites/ttg.py",
+          "sha256": "4cc08e4951e89348e02164990ab66a63ff6917b98d2d86cfbaaf7e21d859d51b",
+          "bytes": 3893
+        },
+        {
+          "path": "autosignin/sites/u2.py",
+          "sha256": "787e2e2752b8d35029e3fe4066303b23149152f29f40759e16114873f141fdd5",
+          "bytes": 6910
+        },
+        {
+          "path": "autosignin/sites/yema.py",
+          "sha256": "bafababa5790f9ed3b2d6a581b472fbcd2f202ff78854acf2c463eed0e65307b",
+          "bytes": 3196
+        },
+        {
+          "path": "autosignin/sites/zhuque.py",
+          "sha256": "69301edf86db5f68d2e3fb720841b03a4d1489e90b37ec3384a0fbbc764a0563",
+          "bytes": 3546
+        }
+      ]
+    },
+    {
+      "id": "MergeMessageNotify",
+      "directory": "/app/app/plugins/mergemessagenotify",
+      "source_found": true,
+      "class_name": "MergeMessageNotify",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "聚合消息通知",
+      "plugin_desc": "消息通知，一个插件就够了。",
+      "plugin_version": "1.20.1",
+      "plugin_author": "hotlcc",
+      "plugin_order": 66,
+      "auth_level": 1,
+      "source_sha256": "d3df56cb08a826968c00376a93643090fe982eb6742862286bb53aacdb561d68",
+      "files": [
+        {
+          "path": "mergemessagenotify/__init__.py",
+          "sha256": "d3df56cb08a826968c00376a93643090fe982eb6742862286bb53aacdb561d68",
+          "bytes": 19805
+        },
+        {
+          "path": "mergemessagenotify/channel/__init__.py",
+          "sha256": "7af2e408176c9ad0ddb36e612273d8f0996a38893f1a7b7e6033fb0a4b3da786",
+          "bytes": 5288
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/__init__.py",
+          "sha256": "a75f952e969211e2eb8e4ef08fce79dca2c6ea6a360191776f7838d56d701200",
+          "bytes": 3559
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/apprise.py",
+          "sha256": "6402ae7e95765340a1001191d8c0f3120f1283eb1d4cf7305e96b28b82c6f409",
+          "bytes": 4157
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/bark.py",
+          "sha256": "b0acbfff184ccbc59ace73ac0ac68d3740d59b49d1c88b82328153fca20b5182",
+          "bytes": 25359
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/chanify.py",
+          "sha256": "984709b8b40e9b5f0fd9b2ec05a3844deb202c7e5e068f75d847c75b36bbf2db",
+          "bytes": 4363
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/dingtalkrobot.py",
+          "sha256": "dbdb5877b9b9924aa7c3dc46aa3df1143eb85d8fa73cebcfcdeab8deab415119",
+          "bytes": 9197
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/email.py",
+          "sha256": "dd10781fe8cf50d243a5c35c150b34c627bbeedd5348002b7ce4379b9608a079",
+          "bytes": 10904
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/feishubot.py",
+          "sha256": "2c43e28fb204c4efc73a79edde7414b61ea67995fc21626182009daee3bb463f",
+          "bytes": 9188
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/gotify.py",
+          "sha256": "aab017f3fc443e6437ed32eea055ea16378d41e2599c7119ec90c7a7fd004bb5",
+          "bytes": 6349
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/http.py",
+          "sha256": "7044472eb88a47e9e702ada4e779b97a31dc7353a247f5a758b8bcac2886db08",
+          "bytes": 14066
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/iyuu.py",
+          "sha256": "8111e9ebfb36976a3cca405a533df2d8d4fc2b58093976ef71845b9d1087b371",
+          "bytes": 4087
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/ntfy.py",
+          "sha256": "91e5c3cae2c2fa463c29f8deccdf9380a9e8a1c0a3bb028abff666242a1d5aa3",
+          "bytes": 10455
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/onebot11.py",
+          "sha256": "bd934d5435c58138d5edf5f69e181d43e94c2463cb227cdc7a392d014640ad70",
+          "bytes": 12267
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/pushdeer.py",
+          "sha256": "5fea750dc7a830a41d87be2fd65f604042fcfd2960af34db182f8eb9fe7ff5e1",
+          "bytes": 6115
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/pushme.py",
+          "sha256": "2360359561eee9b6ddede5e27b995359f66cf5bbb4d9888c2f5b3143183beb65",
+          "bytes": 8558
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/pushover.py",
+          "sha256": "936a067840ced5d54bbcc7f87ebf7c78345df17fdb8ccebfbb15abdb558d0e9d",
+          "bytes": 10577
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/pushplus.py",
+          "sha256": "1aab9addfdb5e48536b5babf2b1ec84de2634daa9f5f0998b2cb15d7e378eb40",
+          "bytes": 5681
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/qiyeweixinbot.py",
+          "sha256": "b3127509a677081d93cfaa5c90c2f22dac64127d647d1e8d9776b4a582cff2bb",
+          "bytes": 7530
+        },
+        {
+          "path": "mergemessagenotify/channel/custom/serverchan.py",
+          "sha256": "0e5180e3375d77760045b1cf6ed3006c1db966ed114500577db67253686b906d",
+          "bytes": 6468
+        },
+        {
+          "path": "mergemessagenotify/module.py",
+          "sha256": "70aabde52e8b579555c551966a8e095cefc038a1a3b69b0291e6160cb3ccc2f1",
+          "bytes": 398
+        },
+        {
+          "path": "mergemessagenotify/requirements.txt",
+          "sha256": "90dc777e50187fdb3da8e756056051fd16eb4c6b692f24143d4be6675c9400f1",
+          "bytes": 37
+        },
+        {
+          "path": "mergemessagenotify/util.py",
+          "sha256": "071405330d6c90fd87d1dceccd4111aeafad896347e73dcc2b10459af8c47981",
+          "bytes": 664
+        }
+      ]
+    },
+    {
+      "id": "IYUUAutoSeed",
+      "directory": "/app/app/plugins/iyuuautoseed",
+      "source_found": true,
+      "class_name": "IYUUAutoSeed",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "IYUU自动辅种",
+      "plugin_desc": "基于IYUU官方Api实现自动辅种。",
+      "plugin_version": "2.22",
+      "plugin_author": "jxxghp,CKun",
+      "plugin_order": 17,
+      "auth_level": 2,
+      "source_sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+      "files": [
+        {
+          "path": "iyuuautoseed/README.md",
+          "sha256": "8dc1fc812693a607972b3412356cc292bdc4cdb7441f4ca6b14bc592d1774b6e",
+          "bytes": 2084
+        },
+        {
+          "path": "iyuuautoseed/__init__.py",
+          "sha256": "3cde4efa9ddd36f82318bed62a6a62ab9004257d8570538f937351b65970bdb7",
+          "bytes": 68187
+        },
+        {
+          "path": "iyuuautoseed/iyuu_helper.py",
+          "sha256": "74f0cbde2789eab6a6c0d0edcc6fe3364a5e4ccceb909b5c8842492dc11cdcf0",
+          "bytes": 4881
+        }
+      ]
+    },
+    {
+      "id": "SystemProcess",
+      "directory": "/app/app/plugins/systemprocess",
+      "source_found": true,
+      "class_name": "SystemProcess",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "系统进程",
+      "plugin_desc": "查看系统进程，支持仪表板",
+      "plugin_version": "1.1",
+      "plugin_author": "hotlcc",
+      "plugin_order": 66,
+      "auth_level": 1,
+      "source_sha256": "d0c8c6f1e034f46ce8b7d3c1bcd0cddc0e2d6455b2a6b35daa4b8002cd39f6ac",
+      "files": [
+        {
+          "path": "systemprocess/__init__.py",
+          "sha256": "d0c8c6f1e034f46ce8b7d3c1bcd0cddc0e2d6455b2a6b35daa4b8002cd39f6ac",
+          "bytes": 14303
+        }
+      ]
+    },
+    {
+      "id": "MediaServerRefresh",
+      "directory": "/app/app/plugins/mediaserverrefresh",
+      "source_found": true,
+      "class_name": "MediaServerRefresh",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "媒体库服务器刷新",
+      "plugin_desc": "入库后自动刷新Emby/Jellyfin/Plex服务器海报墙。",
+      "plugin_version": "1.3.3",
+      "plugin_author": "jxxghp",
+      "plugin_order": 14,
+      "auth_level": 1,
+      "source_sha256": "ea92f39a852aa0333cb625885e0fbf7b2a679f4f7449463bb6126afe6694a3fc",
+      "files": [
+        {
+          "path": "mediaserverrefresh/__init__.py",
+          "sha256": "ea92f39a852aa0333cb625885e0fbf7b2a679f4f7449463bb6126afe6694a3fc",
+          "bytes": 8723
+        }
+      ]
+    },
+    {
+      "id": "RemoteIdentifiers",
+      "directory": "/app/app/plugins/remoteidentifiers",
+      "source_found": true,
+      "class_name": "RemoteIdentifiers",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "共享识别词",
+      "plugin_desc": "从Github、Etherpad远程文件中获取共享识别词并应用",
+      "plugin_version": "2.4.1",
+      "plugin_author": "honue",
+      "plugin_order": 10,
+      "auth_level": 1,
+      "source_sha256": "14ec7f5f2964ebd1674305d5294ffa56fb61e2cd1021ea31e50d9675813891a4",
+      "files": [
+        {
+          "path": "remoteidentifiers/__init__.py",
+          "sha256": "14ec7f5f2964ebd1674305d5294ffa56fb61e2cd1021ea31e50d9675813891a4",
+          "bytes": 15374
+        }
+      ]
+    },
+    {
+      "id": "SubscribeGroup",
+      "directory": "/app/app/plugins/subscribegroup",
+      "source_found": true,
+      "class_name": "SubscribeGroup",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "订阅规则自动填充",
+      "plugin_desc": "电视剧下载后自动添加官组等信息到订阅；添加订阅后根据二级分类名称自定义订阅规则。",
+      "plugin_version": "2.8.7",
+      "plugin_author": "thsrite",
+      "plugin_order": 26,
+      "auth_level": 2,
+      "source_sha256": "06870f20e39237e4a69c9615ce005411feaa5e1a97cad50fd3b7b0645bead383",
+      "files": [
+        {
+          "path": "subscribegroup/__init__.py",
+          "sha256": "06870f20e39237e4a69c9615ce005411feaa5e1a97cad50fd3b7b0645bead383",
+          "bytes": 35254
+        }
+      ]
+    },
+    {
+      "id": "AutoBackup",
+      "directory": "/app/app/plugins/autobackup",
+      "source_found": true,
+      "class_name": "AutoBackup",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "自动备份",
+      "plugin_desc": "自动备份数据和配置文件。",
+      "plugin_version": "2.1.4",
+      "plugin_author": "thsrite",
+      "plugin_order": 17,
+      "auth_level": 1,
+      "source_sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+      "files": [
+        {
+          "path": "autobackup/__init__.py",
+          "sha256": "dedab53b1adf96dc59879ebdd67f77fe67ea773981d4befb04ca000889f607e4",
+          "bytes": 41444
+        },
+        {
+          "path": "autobackup/requirements.txt",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      ]
+    },
+    {
+      "id": "BrushFlowLanduo",
+      "directory": "/app/app/plugins/brushflowlanduo",
+      "source_found": true,
+      "class_name": "BrushFlowLanduo",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "站点刷流-landuo",
+      "plugin_desc": "自动托管多个站点刷流任务，并独立调度、统计与诊断。",
+      "plugin_version": "5.2.16",
+      "plugin_author": "jxxghp,landuo",
+      "plugin_order": 21,
+      "auth_level": 2,
+      "source_sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+      "files": [
+        {
+          "path": "brushflowlanduo/README.md",
+          "sha256": "995babfc37cb0dccd37a81b130606638e14e9e4761b93d08891e14fe507a1653",
+          "bytes": 13040
+        },
+        {
+          "path": "brushflowlanduo/__init__.py",
+          "sha256": "1dafc17709c39b0d89e572273e4207c450096254e318aa252cabdea2f79e2301",
+          "bytes": 169983
+        },
+        {
+          "path": "brushflowlanduo/compose.guard.yml",
+          "sha256": "beabd6bae3854bcdf51f191dce5a06ecce4a71c3bae51636f349d10e547596d5",
+          "bytes": 972
+        },
+        {
+          "path": "brushflowlanduo/dist/assets/BrushFlowWorkbench-Bm62dbu_.js",
+          "sha256": "0a72ffc46829770121e3293e21d2f37a56537ac9ad7beba41f479c109cd8c6a2",
+          "bytes": 149714
+        },
+        {
+          "path": "brushflowlanduo/dist/assets/BrushFlowWorkbench-Cm4ufV31.css",
+          "sha256": "241f00a9459080d20f1493eac48db080821c358b5e25b2e7aa663a471ab7e7cf",
+          "bytes": 18139
+        },
+        {
+          "path": "brushflowlanduo/dist/assets/__federation_expose_AppPage-CM8LIrza.js",
+          "sha256": "fdd36ac3a9c88b4c8fff9feaa5fedbe8fb1bc44c8648b5bef240a09d095ed407",
+          "bytes": 776
+        },
+        {
+          "path": "brushflowlanduo/dist/assets/__federation_expose_Config-CEnA3JSm.js",
+          "sha256": "e799616dd0bff754818a3ba08effcf1d780bc463451ae48f3bd8818bf6de51f3",
+          "bytes": 942
+        },
+        {
+          "path": "brushflowlanduo/dist/assets/__federation_expose_Dashboard-BF4A7g-y.css",
+          "sha256": "542fa9b7a84d1a45c810012ec28b69252ff0e9aea52b2161fdca1658aa850e7a",
+          "bytes": 1482
+        },
+        {
+          "path": "brushflowlanduo/dist/assets/__federation_expose_Dashboard-DeCNUr-1.js",
+          "sha256": "060f0c1ef84741b7f68537e986c039ddedab1735a701e19998e6ae651db57976",
+          "bytes": 5052
+        },
+        {
+          "path": "brushflowlanduo/dist/assets/__federation_expose_Page-DWtJDoX0.js",
+          "sha256": "70dab92a30ac69f08b9acadaf05a427d0f415b953962b7172245e01c2aa38607",
+          "bytes": 779
+        },
+        {
+          "path": "brushflowlanduo/dist/assets/__federation_fn_import-JrT3xvdd.js",
+          "sha256": "4776b5a84c2055e4a6907ebf7377f6abd86f26b7d520d685a13b40d5aa8538aa",
+          "bytes": 13711
+        },
+        {
+          "path": "brushflowlanduo/dist/assets/__federation_shared_vuetify/styles-I7amCcZu.css",
+          "sha256": "934467218c4272b6f969ae1188c25415accb2fd32b4749bb9a17b0c91aafa512",
+          "bytes": 321212
+        },
+        {
+          "path": "brushflowlanduo/dist/assets/_plugin-vue_export-helper-L2psG6M3.js",
+          "sha256": "f1b401ecab98d2f3a7d37d16482c4421dabece4cc3310fb2821eaa41faa88c98",
+          "bytes": 6244
+        },
+        {
+          "path": "brushflowlanduo/dist/assets/index-Bio7p7Ge.js",
+          "sha256": "15609a515843ccd8a8c8363a9f3c781b766c36acf6c3a6cfd989555b65a9ed3e",
+          "bytes": 1489
+        },
+        {
+          "path": "brushflowlanduo/dist/assets/remoteEntry.js",
+          "sha256": "6a33335d3b47db08b4f4b1b2423c2103c482aada0ecef29af262ccd19fc18c0e",
+          "bytes": 4291
+        },
+        {
+          "path": "brushflowlanduo/dist/index.html",
+          "sha256": "44ddb109b299010fb4a21c30dd5c3e550b2554f87b3363a30b9e177a17e7ebb8",
+          "bytes": 540
+        },
+        {
+          "path": "brushflowlanduo/index.html",
+          "sha256": "aa71a71b93e3ee57aeb0d79aa24938b8103e4dfaf0a45e44abc559499d07689a",
+          "bytes": 72
+        },
+        {
+          "path": "brushflowlanduo/models.py",
+          "sha256": "4b292809c13557614c5ac2448936e7c8f774e22e9f866dd2d3fe53e56b7ebaa7",
+          "bytes": 8346
+        },
+        {
+          "path": "brushflowlanduo/package.json",
+          "sha256": "869da0561af8864f40841fae1849f2fe99590f495388aa51e22d073a0dbdc2e8",
+          "bytes": 398
+        },
+        {
+          "path": "brushflowlanduo/promotion_guard.py",
+          "sha256": "bd6d8618f6a39f3fc8c2844efe1c71e49b0eea10ceb23efe605c82329469085c",
+          "bytes": 12738
+        },
+        {
+          "path": "brushflowlanduo/src/components/AppPage.vue",
+          "sha256": "127df3bc1c3865059b63b1e51583ea2c35ada7427288daa812b1a69e6268e7c4",
+          "bytes": 383
+        },
+        {
+          "path": "brushflowlanduo/src/components/BrushFlowWorkbench.vue",
+          "sha256": "d4b3d4bd7d605e100d27cec3aeaccb985ebfbb966d0cea5985ead8ea34cd87cf",
+          "bytes": 53600
+        },
+        {
+          "path": "brushflowlanduo/src/components/Config.vue",
+          "sha256": "2ddedbf295f505f6ed539f507eb4c6d2b4c0ab75bb7983f009c1c00265c093bf",
+          "bytes": 522
+        },
+        {
+          "path": "brushflowlanduo/src/components/Dashboard.vue",
+          "sha256": "0dde7da3c523c7ffdf9358802d493012ea50e3fb1d19ddeb1a3d67ff5903f1ab",
+          "bytes": 3727
+        },
+        {
+          "path": "brushflowlanduo/src/components/Page.vue",
+          "sha256": "42da784c392a9b35f1f749da67d59f7db12714072ded4876ca7cdeec36417d29",
+          "bytes": 364
+        },
+        {
+          "path": "brushflowlanduo/src/components/TaskEditorDialog.vue",
+          "sha256": "3ecdd2a81856a6cfca842f5fa7a36c8b5f2676c3e6e822766345a67687f34e12",
+          "bytes": 22816
+        },
+        {
+          "path": "brushflowlanduo/src/main.js",
+          "sha256": "c44c7b6f91cb4e97907e867fb30d48d48199cd745135a91e4e5b9e4c138d91f3",
+          "bytes": 113
+        },
+        {
+          "path": "brushflowlanduo/src/utils.js",
+          "sha256": "f78e71140b6445392bf90a531dfdfd553689090d7b661c5c801bfc10f770de6f",
+          "bytes": 5911
+        },
+        {
+          "path": "brushflowlanduo/vite.config.js",
+          "sha256": "8106bdd3fc9c338144ee6ce73c6f0b404b91a5094c4106a759a4e736001b3d4d",
+          "bytes": 1585
+        }
+      ]
+    },
+    {
+      "id": "MergeSiteSwitch",
+      "directory": "/app/app/plugins/mergesiteswitch",
+      "source_found": true,
+      "class_name": "MergeSiteSwitch",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "聚合站点开关",
+      "plugin_desc": "统一管理所有与站点相关的开关。",
+      "plugin_version": "1.2",
+      "plugin_author": "hotlcc",
+      "plugin_order": 66,
+      "auth_level": 2,
+      "source_sha256": "52d798421eabe57a88f3d0fc448289309fdfc8ecd6ea50d98cd5436d93289ab0",
+      "files": [
+        {
+          "path": "mergesiteswitch/__init__.py",
+          "sha256": "52d798421eabe57a88f3d0fc448289309fdfc8ecd6ea50d98cd5436d93289ab0",
+          "bytes": 45327
+        }
+      ]
+    },
+    {
+      "id": "TorrentTransfermusic",
+      "directory": "/app/app/plugins/torrenttransfermusic",
+      "source_found": true,
+      "class_name": "TorrentTransfermusic",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "自动转移做种 分身",
+      "plugin_desc": "定期转移下载器中的做种任务到另一个下载器。 (分身版本)",
+      "plugin_version": "1.10.3",
+      "plugin_author": "jxxghp",
+      "plugin_order": 18,
+      "auth_level": 2,
+      "source_sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+      "files": [
+        {
+          "path": "torrenttransfermusic/__init__.py",
+          "sha256": "4d271e68aa3fc994c1d50cd850d4b1e5699c9f7900eaa106082b9f13efe4c5bb",
+          "bytes": 46476
+        }
+      ]
+    },
+    {
+      "id": "ScrapeFileClean",
+      "directory": "/app/app/plugins/scrapefileclean",
+      "source_found": true,
+      "class_name": "ScrapeFileClean",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "源文件联动清理",
+      "plugin_desc": "为手动清理下载目录设计：手动删除源文件后，自动联动清理媒体库中对应的硬链接文件、刮削文件（元数据、图片、字幕）与转移记录，支持延迟删除防止误删",
+      "plugin_version": "1.0.7",
+      "plugin_author": "xlmc",
+      "plugin_order": 0,
+      "auth_level": 1,
+      "source_sha256": "c14c36e17112605e6c856614e88ea425530be2462123126a85e1adfea009a3af",
+      "files": [
+        {
+          "path": "scrapefileclean/README.md",
+          "sha256": "3f42085ee90db9938292d4c7573745c95ae4c269f33919db07a1ae72ccea487c",
+          "bytes": 3244
+        },
+        {
+          "path": "scrapefileclean/__init__.py",
+          "sha256": "c14c36e17112605e6c856614e88ea425530be2462123126a85e1adfea009a3af",
+          "bytes": 57535
+        }
+      ]
+    },
+    {
+      "id": "LarkMessager",
+      "directory": "/app/app/plugins/larkmessager",
+      "source_found": true,
+      "class_name": "LarkMessager",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "Lark 应用消息通知",
+      "plugin_desc": "基于国际版飞书 Lark 开放平台应用的通知与消息交互插件，支持文本、卡片消息发送及消息回调交互。",
+      "plugin_version": "0.9.1",
+      "plugin_author": "ui-beam-9",
+      "plugin_order": 50,
+      "auth_level": 1,
+      "source_sha256": "d9f6a1078706b03dc97247450a8084a8c67f07dbfccb675235fc0e1b91b18372",
+      "files": [
+        {
+          "path": "larkmessager/CHANGELOG.md",
+          "sha256": "b43073397a77b96f023a04d78ebad1da9348ed997c8818ede283cef6f87819a2",
+          "bytes": 7319
+        },
+        {
+          "path": "larkmessager/README.md",
+          "sha256": "a9d81164f4ed0da24ff8c0aad6197e532ea62e311e04bfd05b47f771e56e4d63",
+          "bytes": 12912
+        },
+        {
+          "path": "larkmessager/__init__.py",
+          "sha256": "d9f6a1078706b03dc97247450a8084a8c67f07dbfccb675235fc0e1b91b18372",
+          "bytes": 119368
+        },
+        {
+          "path": "larkmessager/client.py",
+          "sha256": "28ac4a3dae4879a86bba956f493b60121948fb2ca5e631d81c4868c604468654",
+          "bytes": 63586
+        },
+        {
+          "path": "larkmessager/crypto.py",
+          "sha256": "8867ad8e0f7fedd59cc0c3b64058d8d76b1e851459188688dbd35904b11e9529",
+          "bytes": 4349
+        },
+        {
+          "path": "larkmessager/requirements.txt",
+          "sha256": "9df7920f0b2887a9dc1ebb46489ad0960def6ab7d781c68e0133827f21e28093",
+          "bytes": 55
+        },
+        {
+          "path": "larkmessager/schemas.py",
+          "sha256": "701b1bda58ea5ccc4eda6e71b173813c9e3b340716748086f68abfd0bd5234c4",
+          "bytes": 4502
+        }
+      ]
+    },
+    {
+      "id": "CleanInvalidSeed",
+      "directory": "/app/app/plugins/cleaninvalidseed",
+      "source_found": true,
+      "class_name": "CleanInvalidSeed",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "清理无效做种",
+      "plugin_desc": "清理已经被站点删除的种子及源文件，支持qBittorrent和Transmission",
+      "plugin_version": "2.1",
+      "plugin_author": "DzAvril",
+      "plugin_order": 1,
+      "auth_level": 1,
+      "source_sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+      "files": [
+        {
+          "path": "cleaninvalidseed/__init__.py",
+          "sha256": "fd398230ee132f6002dbaf892e28fb10b9b95567fda9ce513e1543329a8b7fda",
+          "bytes": 85202
+        }
+      ]
+    },
+    {
+      "id": "SeedRescue",
+      "directory": "/app/app/plugins/seedrescue",
+      "source_found": true,
+      "class_name": "SeedRescue",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "稀缺保种",
+      "plugin_desc": "读取目标站RSS，可选择跨站同源候选下载后辅种，也可直接下载保种站点原种。",
+      "plugin_version": "1.6.3",
+      "plugin_author": "landuo",
+      "plugin_order": 18,
+      "auth_level": 2,
+      "source_sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+      "files": [
+        {
+          "path": "seedrescue/README.md",
+          "sha256": "5d265005819562c5cf916ea2ff75a054d9a52c32d0a573ffc8a44bfc21ce9597",
+          "bytes": 12395
+        },
+        {
+          "path": "seedrescue/__init__.py",
+          "sha256": "e379ec20d09fbd3bc461b1b8f51ec508d0270a63a841763cc965c39adb98d375",
+          "bytes": 89201
+        },
+        {
+          "path": "seedrescue/core.py",
+          "sha256": "db94a30635ed122fe37ffd617509ffc106a1e0612931bde951334f5cf7e44095",
+          "bytes": 10761
+        },
+        {
+          "path": "seedrescue/detail.py",
+          "sha256": "02055b2fad2b0aef8ed8a6ba9cda2e19e8ede7f7604ae31d27b24e7f49d915eb",
+          "bytes": 8459
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-B6ZhwrJe.css",
+          "sha256": "598f412a7749841ab5500064c019203bf9b3c93be94a7a1bd1393365f856479d",
+          "bytes": 1390
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-B9705ZTz.css",
+          "sha256": "6bc85b87c1fdd546e81d1e0223c6d03650d18d1473d8cd14f488272d0d99f42e",
+          "bytes": 1390
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-Bc2JKOMd.css",
+          "sha256": "26751be5d38b46491b793d7289324ec3f5625fa68cd4a459f6dfa43c7bba9e00",
+          "bytes": 1483
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-BdfVIK4W.js",
+          "sha256": "5677e37ad027cae3a3b746f38d7dcf32c73a240e6c39e1051ecbc9dc04a5bab8",
+          "bytes": 49980
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-Bdnf8pOW.css",
+          "sha256": "57a0e0a724c9fce8f1a894fa43c361ea43497b0ff6b962832cc27ca43b4e1c40",
+          "bytes": 1483
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-BwfIB2Xw.js",
+          "sha256": "1d57fc36bf5c406b5c4af826ed1b8809009eb87eff4f8a0b402676bb35c54ed0",
+          "bytes": 39348
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-C0MKqaDa.css",
+          "sha256": "ac13c4e31d703147f0bb7d4d41b8e8c1b061f97111ef47eaa8d35a2e992538d6",
+          "bytes": 1483
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-C7qM2njz.js",
+          "sha256": "e3063b8753255b7886c5629d459b628e736dcf58322e1450884a9f517fb4c6c2",
+          "bytes": 63722
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-CIbNJbVj.js",
+          "sha256": "4e456d0ed9f7a349774ad2c20ef6afb1adf76a9e120051a47744bf1429cd3bbc",
+          "bytes": 40168
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-COlMN8-x.js",
+          "sha256": "04b41f9d76733efc77300be4064718cda837729550f48e18fc9f968ed07d01dc",
+          "bytes": 24505
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-CWuVOhXs.css",
+          "sha256": "d10f116a4adbdd7be428d08cfb1f635ada1a8a10c2f72bae055b09d02f55097c",
+          "bytes": 1390
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-CgZt9Y4V.css",
+          "sha256": "809034b45f83b330755121f2c488f68af0730939d24988bcfa75a3cb05cd71ff",
+          "bytes": 1390
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-Cp2HEIV1.js",
+          "sha256": "3221a45902a09aea0b9101a16427760c541fcebeab87b7b37fdeb19681fd7890",
+          "bytes": 49558
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-CuFbIRhQ.css",
+          "sha256": "0cc30a16512fe654f2df58867708883dfafaae42e12b8fe9e623b2b4dc73ecce",
+          "bytes": 1211
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-D6c3Rq89.js",
+          "sha256": "c446a54d2fd4acbc3974750e0b910e778a916d152755841ba4d504351c887cc0",
+          "bytes": 62941
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-DJnJYt2W.css",
+          "sha256": "a7327b038aee15a67859d96cf7d9bf60708d5e3b396415e414c91eb27a435159",
+          "bytes": 1390
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-DKbvkzy4.css",
+          "sha256": "157dab1f5ad0006edd81663318387e376fa02b3192d9d7527392678575a1e48f",
+          "bytes": 1390
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-DO3Nn46e.css",
+          "sha256": "edced77c2d1343d3eeabb662ab2645b00cf3f4c1aebd9d87465933b54e6961cb",
+          "bytes": 1483
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-MXJaLfw3.js",
+          "sha256": "9c24b3bdc2af9e91102e3bec759307d2328061f96b50c73d387b07d8f07500f7",
+          "bytes": 29789
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-QkA30BuX.js",
+          "sha256": "f11f60e1a8e577df043324d143f9a3acdd06eff4db695ede926a0baa2a10e685",
+          "bytes": 61423
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-VgbU94z_.js",
+          "sha256": "76d4c4fab0218f2926294004dc0ab6117dfae504db2331a7cb3651ebab2c6f63",
+          "bytes": 60111
+        },
+        {
+          "path": "seedrescue/dist/assets/SeedRescueWorkbench-vW1MzrS0.js",
+          "sha256": "973022bf6c949045dab79f5d8294898c4ad8e9fef6c2e159e8922255b1787c4e",
+          "bytes": 32510
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_AppPage-BDDD0wCM.js",
+          "sha256": "216e212c280a05f787bb5048cd364db86c42095ab9938ff1a758c24d3e1407b6",
+          "bytes": 816
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_AppPage-BYlWtM2C.js",
+          "sha256": "26499fca39d5fc39e50eceda8d8e27dcec62c87146c5f4a927dbe59af1d53062",
+          "bytes": 816
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_AppPage-By9sKDCE.js",
+          "sha256": "378e57cc3900549cba6e63643f4a0376eeb4af5493754775ab3a35cb8c3a8cf2",
+          "bytes": 816
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_AppPage-C4gyLbRM.js",
+          "sha256": "248f88547484c8072c33eceb9818db0c0bed555c638a21997d1e1a9154e58713",
+          "bytes": 816
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_AppPage-CTUd5Qcw.js",
+          "sha256": "734c213817c58780ec69592d0b2f8e3b276a2f1762d975c8126ad4b7ec593db7",
+          "bytes": 774
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_AppPage-CzYf1fPg.js",
+          "sha256": "5bf817f35cf7e113f83eb3b478f0be202dcf5ed68768cddfbd7698cd95a82610",
+          "bytes": 816
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_AppPage-DyVScxbt.js",
+          "sha256": "806a293e21d1557460a69ce91953ce16108b68983be91acda954d255a8a65f78",
+          "bytes": 774
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_AppPage-DzuDctlS.js",
+          "sha256": "0a864939790843b28c1672aaf3a47d99dd7ee67bf95dca09d2dd674d7c87c90b",
+          "bytes": 774
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_AppPage-lEO9SRCy.js",
+          "sha256": "bfa9513d8ad6a274910ba63f084a7d32977afd0442af56c66632dbe904782732",
+          "bytes": 816
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_AppPage-t5uu8UeP.js",
+          "sha256": "c870ce546f444a6bd06fcefb55f5cb8d41a05446eb1fd89caca9f36d3c4d2b1c",
+          "bytes": 816
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_AppPage-wVFfD1n8.js",
+          "sha256": "cfd5c9ee62e940555eb3a8fbf418850b1e30826b1e1ccfe789a26341e227555d",
+          "bytes": 816
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Config-CNCXqtM8.js",
+          "sha256": "52bd74fac154217931aa3bfeb3eded330ecdf84999fb9bb3ca524253753f440e",
+          "bytes": 12168
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Config-CjwiiaeH.js",
+          "sha256": "ff426a25fa45ac2158ec4a83917cfa778642ba0c53b028a0d41141b39187ca58",
+          "bytes": 14080
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Config-CoXXX0ux.js",
+          "sha256": "b73fcc26c7e2a7c8dce821fcce2e8e4356a91cf0b3c42b2078b0f6396931e2ae",
+          "bytes": 12180
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Config-DubM6cxs.js",
+          "sha256": "d20e334a9d07750748cbed89412248bc07929b74521caf81595e36282744c66b",
+          "bytes": 13364
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Dashboard-CASK1Aj1.js",
+          "sha256": "83a33b98db2f9e87a8af57ac6ddc2f05ac41e9cc2bc8f3fe4b0a3acae3624aea",
+          "bytes": 1281
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Dashboard-l3LPbQrq.js",
+          "sha256": "fbc4bd556023bd18048eb0e37f27ad835d0e09b1996ede0cb13c9641aa3c105f",
+          "bytes": 1287
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Page-7eOfTYty.js",
+          "sha256": "289ee155e1b7e0731853dbab0f5cbce7a0cf893a80447204d8ce25a9da0727f5",
+          "bytes": 777
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Page-9GQvn0dx.js",
+          "sha256": "72142d2f72908c87b8b7a0bcc8a158cf715718e727b4715de11b3ee98c863ac3",
+          "bytes": 777
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Page-BE39okBU.js",
+          "sha256": "f5daddbda4d95a489e50a1ac9d49cd5986a83fa04ddb40e676e5676ab90ffc95",
+          "bytes": 777
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Page-BaDFSotl.js",
+          "sha256": "86d7b116a1667cfc000be1953a8d156c44fdef3f86a347bdc7d1729ddb19f28b",
+          "bytes": 777
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Page-BiUtsrGH.js",
+          "sha256": "88eece6da31c0b2371bab6ebe3cd586223b5b641c48c6e3c704b16396c936135",
+          "bytes": 777
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Page-COFg249p.js",
+          "sha256": "0247f6fbfdd5157669ca6b9b6269007585fda7a3e04051adc74fe63684fb903d",
+          "bytes": 777
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Page-CWBKd09E.js",
+          "sha256": "8e6865be438d440a7ebf04f034fb74349d8f77fc92b6da7d213122cf6858a178",
+          "bytes": 777
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Page-DY-yZgVk.js",
+          "sha256": "02f4914fb3077986c992d406ff1591d4e3e480262c7e3f98396324ffc0a9baa2",
+          "bytes": 777
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Page-Dazh_9YT.js",
+          "sha256": "989a6fa33cec93ac56488d004c12ae9c5e359fe32de786a8cdcf2113007558f7",
+          "bytes": 777
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Page-DkEUj2JN.js",
+          "sha256": "5d400402c11477fcd68219132a707c08dd8d85fda0da3727b13f19d3a355ef3b",
+          "bytes": 777
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_expose_Page-qro7ctaG.js",
+          "sha256": "9bacdbfb219bb824db15113b220f34c9a57e5ee68715f4968a8bb0419aa14740",
+          "bytes": 777
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_fn_import-JrT3xvdd.js",
+          "sha256": "4776b5a84c2055e4a6907ebf7377f6abd86f26b7d520d685a13b40d5aa8538aa",
+          "bytes": 13711
+        },
+        {
+          "path": "seedrescue/dist/assets/__federation_shared_vuetify/styles-I7amCcZu.css",
+          "sha256": "934467218c4272b6f969ae1188c25415accb2fd32b4749bb9a17b0c91aafa512",
+          "bytes": 321212
+        },
+        {
+          "path": "seedrescue/dist/assets/index-5_nX7QMA.js",
+          "sha256": "fbf5e3f75c2091c7b3ff797da35247c14b826e38d0669aaa1f7f6e64beaeab42",
+          "bytes": 1489
+        },
+        {
+          "path": "seedrescue/dist/assets/index-BGOK4ukm.js",
+          "sha256": "fe0f97a1d74ff9cf6c60de8cf4256b0fef48f8150b17eb61675982d452dc2a6b",
+          "bytes": 1489
+        },
+        {
+          "path": "seedrescue/dist/assets/index-BrPE4pmP.js",
+          "sha256": "c4390f5c51bbfead4576d51f39d6be2c9975e203a2bbf986735ed1203f4c36c1",
+          "bytes": 1489
+        },
+        {
+          "path": "seedrescue/dist/assets/index-CF5x97kG.js",
+          "sha256": "e5515a5bd4e05274aba6556940b391db8dac602c90075feed61c66d52049445b",
+          "bytes": 1489
+        },
+        {
+          "path": "seedrescue/dist/assets/index-CxfZQPRt.js",
+          "sha256": "e3d3f5cd55d0a4599dbddd76574f4b51471db08e275a58379c9f9c7e49ed4c85",
+          "bytes": 1489
+        },
+        {
+          "path": "seedrescue/dist/assets/index-DF2xwo58.js",
+          "sha256": "7fffd7ba006d648d079c92fb6d583a681fea4ea9e3eb8b26a866f915811183a9",
+          "bytes": 1489
+        },
+        {
+          "path": "seedrescue/dist/assets/index-DOXf5fYI.js",
+          "sha256": "44b31ca5a917c344f760dfd4c76b4e09a79a408da429165c864f529e89fe0d48",
+          "bytes": 1489
+        },
+        {
+          "path": "seedrescue/dist/assets/index-Daa8_YsC.js",
+          "sha256": "a8828458046e1f98dcff3572520c62acffb6329ad5fe1c921487309cc7d17840",
+          "bytes": 1489
+        },
+        {
+          "path": "seedrescue/dist/assets/index-bLql0HiA.js",
+          "sha256": "43642a55c3fbc7bd85ff8b5a029cb6d53d0ecae81652936d62f2373c5cd724a9",
+          "bytes": 1489
+        },
+        {
+          "path": "seedrescue/dist/assets/index-m3UMTf6b.js",
+          "sha256": "402e76afd94a6443bdaa81e7afbd766d4f0f860744efbfaae6161522c7031225",
+          "bytes": 1489
+        },
+        {
+          "path": "seedrescue/dist/assets/index-weCi0POs.js",
+          "sha256": "dfb2d1410c81e2daaea6b4d176fcbe9510d960d2bccbe61c4b97e1fafbb648ac",
+          "bytes": 1489
+        },
+        {
+          "path": "seedrescue/dist/assets/remoteEntry.js",
+          "sha256": "a8ca57dce7b005b047047cc6649ada4d7aeba2d196481f912af336c1ac978d75",
+          "bytes": 4211
+        },
+        {
+          "path": "seedrescue/dist/index.html",
+          "sha256": "2fb569963eea9afea16c22393ac028e02e3af5dbdcd96d9c2522468409d0ac4a",
+          "bytes": 450
+        },
+        {
+          "path": "seedrescue/models.py",
+          "sha256": "73fab2672ef27474614311c213ebc69f4a3a896c3a2cccf2161f910d50cfff99",
+          "bytes": 467
+        }
+      ]
+    },
+    {
+      "id": "CloudflareSpeedTest",
+      "directory": "/app/app/plugins/cloudflarespeedtest",
+      "source_found": true,
+      "class_name": "CloudflareSpeedTest",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "Cloudflare IP优选",
+      "plugin_desc": "🌩 测试 Cloudflare CDN 延迟和速度，自动优选IP。",
+      "plugin_version": "1.5.1",
+      "plugin_author": "thsrite",
+      "plugin_order": 12,
+      "auth_level": 1,
+      "source_sha256": "2e4549b9181e8714c401f18f1b082f539d1d8c20fa32c9675b994b6277b106f1",
+      "files": [
+        {
+          "path": "cloudflarespeedtest/__init__.py",
+          "sha256": "2e4549b9181e8714c401f18f1b082f539d1d8c20fa32c9675b994b6277b106f1",
+          "bytes": 37169
+        },
+        {
+          "path": "cloudflarespeedtest/requirements.txt",
+          "sha256": "317727a61e8786fa5fc4996dfbc4aec1f3e9e2d94856a47f4bf7c123c65f425c",
+          "bytes": 19
+        }
+      ]
+    },
+    {
+      "id": "CustomHosts",
+      "directory": "/app/app/plugins/customhosts",
+      "source_found": true,
+      "class_name": "CustomHosts",
+      "bases": [
+        "_PluginBase"
+      ],
+      "plugin_name": "自定义Hosts",
+      "plugin_desc": "修改系统hosts文件，加速网络访问。",
+      "plugin_version": "1.2.2",
+      "plugin_author": "thsrite",
+      "plugin_order": 10,
+      "auth_level": 1,
+      "source_sha256": "9c68f52c4e045180f92e9a2e223a15b681bfa5016082ee00e2015220430035fc",
+      "files": [
+        {
+          "path": "customhosts/README.md",
+          "sha256": "d29831b9a5120769857b9e771fbefd9a7df1acac3971494a2788f0ba0d2765fe",
+          "bytes": 846
+        },
+        {
+          "path": "customhosts/__init__.py",
+          "sha256": "9c68f52c4e045180f92e9a2e223a15b681bfa5016082ee00e2015220430035fc",
+          "bytes": 11303
+        },
+        {
+          "path": "customhosts/requirements.txt",
+          "sha256": "317727a61e8786fa5fc4996dfbc4aec1f3e9e2d94856a47f4bf7c123c65f425c",
+          "bytes": 19
+        }
+      ]
+    }
+  ]
+}

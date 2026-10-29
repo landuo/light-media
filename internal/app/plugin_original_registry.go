@@ -72,6 +72,7 @@ func (a *App) originalDirectoryInstallation(ctx context.Context, instance string
 type originalPluginClass struct {
 	installation PluginInstallation
 	isClone      bool
+	external     bool // verified implementation identity at class import, never catalog membership
 }
 
 const originalPluginAliasKind = "plugin-original-code-alias-v1"

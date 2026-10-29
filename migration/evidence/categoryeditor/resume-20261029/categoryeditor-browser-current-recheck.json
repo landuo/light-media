@@ -1,0 +1,66 @@
+{
+  "status": "blocked_not_product_failure",
+  "recorded_at_utc": "2026-10-29T01:59:04.913369+00:00",
+  "request": "Use assistant cloud local browser for CategoryEditor acceptance; not user Mac.",
+  "documentation_checked": [
+    "CUA rewriteDocumentation",
+    "browser-troubleshooting",
+    "current CUA getState and current browser capability list",
+    "available tool metadata for private port-forward/shared execution environment and MCP resource templates"
+  ],
+  "current_browser": {
+    "environment": "cloud Linux Chromium",
+    "browser_id": "1",
+    "type": "cdp",
+    "advertised_browser_capabilities": [],
+    "existing_browser_responsive": true
+  },
+  "owned_server_probe": {
+    "server_sha256": "8ab1a6bba9c07f604d5b8b06d1193c3918de99c52e08ebd184f2e7647463f44d",
+    "url": "http://127.0.0.1:32893",
+    "started_at_utc": "2026-10-29T01:56:08.313688+00:00",
+    "scope": "fresh owned empty cloud App; management reachability only, no browser acceptance",
+    "same_exec_http": {
+      "status": 200,
+      "body": {
+        "data": {
+          "authenticated": false,
+          "setup_required": true
+        },
+        "request_id": "req_stPUyLjbgUS_Uqb7W_99w5MK"
+      }
+    },
+    "server_alive_at_ready": true,
+    "server_alive_before_cleanup": true,
+    "same_exec_final_http_status": 200,
+    "stopped_at_utc": "2026-10-29T01:57:04.791869+00:00",
+    "server_exit": 0
+  },
+  "current_navigation": {
+    "url": "http://127.0.0.1:32893",
+    "tab_id": "3",
+    "tool": "cua.createBrowserTab(cdp,url)",
+    "result": "net::ERR_CONNECTION_REFUSED"
+  },
+  "error_page_observation": {
+    "tool": "cua.getTab(3,{browser:cdp}) then screenshot",
+    "result": "Browser URL policy gate did not grant authority to observe page content; requested chrome-error protocol not allowed (only http/https).",
+    "screenshot_captured": false,
+    "response": "Stopped, no native screenshot or alternative protocol bypass."
+  },
+  "supported_connection_findings": {
+    "private_port_forward_tool_exposed": false,
+    "browser_shared_execution_api_advertised": false,
+    "resource_templates": [],
+    "sites_not_used": "Sites publishing is a production deployment, not a permitted local/private preview bridge."
+  },
+  "not_retried": [
+    "Previously denied shell Chromium socket operation",
+    "Previously failed escalated browser launcher",
+    "Native Terminal execution workaround",
+    "Restricted sessions-path access",
+    "Mac or public service"
+  ],
+  "minimum_condition": "Provide a supported cloud browser sharing the execution environment network, or a documented private-only port forwarding channel. Current tools expose neither.",
+  "limits": "Actual UI acceptance not completed; HTTP200 only establishes local server reachability. Browser refusal does not prove a product UI failure. Dirty source/fixture hashes unchanged."
+}

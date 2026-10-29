@@ -1,0 +1,4742 @@
+[
+  {
+    "case_id": "fresh_getters_and_noops",
+    "step": 0,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "fresh_getters_and_noops",
+    "step": 1,
+    "op": "get_command",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "fresh_getters_and_noops",
+    "step": 2,
+    "op": "get_api",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "fresh_getters_and_noops",
+    "step": 3,
+    "op": "get_page",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "fresh_getters_and_noops",
+    "step": 4,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "fresh_getters_and_noops",
+    "step": 5,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_null",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_null",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_null",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "keep-content"
+        },
+        "enabled_at_call": "keep-enabled",
+        "content_at_call": "keep-content"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_null",
+    "step": 1,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_null",
+    "step": 2,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_null",
+    "step": 3,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_null",
+    "step": 4,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_object",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_object",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_object",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "keep-content"
+        },
+        "enabled_at_call": "keep-enabled",
+        "content_at_call": "keep-content"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_object",
+    "step": 1,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_object",
+    "step": 2,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_object",
+    "step": 3,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_object",
+    "step": 4,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_false",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_false",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_false",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "keep-content"
+        },
+        "enabled_at_call": "keep-enabled",
+        "content_at_call": "keep-content"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_false",
+    "step": 1,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_false",
+    "step": 2,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_false",
+    "step": 3,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_false",
+    "step": 4,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_zero",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_zero",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_zero",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "keep-content"
+        },
+        "enabled_at_call": "keep-enabled",
+        "content_at_call": "keep-content"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_zero",
+    "step": 1,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_zero",
+    "step": 2,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_zero",
+    "step": 3,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_zero",
+    "step": 4,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_zero_float",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_zero_float",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_zero_float",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "keep-content"
+        },
+        "enabled_at_call": "keep-enabled",
+        "content_at_call": "keep-content"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_zero_float",
+    "step": 1,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_zero_float",
+    "step": 2,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_zero_float",
+    "step": 3,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_zero_float",
+    "step": 4,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_string",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_string",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_string",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "keep-content"
+        },
+        "enabled_at_call": "keep-enabled",
+        "content_at_call": "keep-content"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_string",
+    "step": 1,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_string",
+    "step": 2,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_string",
+    "step": 3,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_string",
+    "step": 4,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_list",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "falsey_config_list",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_list",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "keep-content"
+        },
+        "enabled_at_call": "keep-enabled",
+        "content_at_call": "keep-content"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_list",
+    "step": 1,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_list",
+    "step": 2,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_list",
+    "step": 3,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "retained_falsey_config_list",
+    "step": 4,
+    "op": "get_state",
+    "return": "keep-enabled",
+    "raised": false,
+    "enabled": "keep-enabled",
+    "content": "keep-content",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_missing",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": null,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_missing",
+    "step": 1,
+    "op": "get_state",
+    "return": null,
+    "raised": false,
+    "enabled": null,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_null",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": null,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_null",
+    "step": 1,
+    "op": "get_state",
+    "return": null,
+    "raised": false,
+    "enabled": null,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_object",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": {},
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_object",
+    "step": 1,
+    "op": "get_state",
+    "return": {},
+    "raised": false,
+    "enabled": {},
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_false",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_false",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_zero",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": 0,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_zero",
+    "step": 1,
+    "op": "get_state",
+    "return": 0,
+    "raised": false,
+    "enabled": 0,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_zero_float",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": 0.0,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_zero_float",
+    "step": 1,
+    "op": "get_state",
+    "return": 0.0,
+    "raised": false,
+    "enabled": 0.0,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_string",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": "",
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_string",
+    "step": 1,
+    "op": "get_state",
+    "return": "",
+    "raised": false,
+    "enabled": "",
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_list",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": [],
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_list",
+    "step": 1,
+    "op": "get_state",
+    "return": [],
+    "raised": false,
+    "enabled": [],
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_true",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_true",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_failure_true",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_true",
+    "step": 1,
+    "op": "get_state",
+    "return": true,
+    "raised": false,
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_true",
+    "step": 2,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_true",
+    "step": 3,
+    "op": "get_state",
+    "return": true,
+    "raised": false,
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_one",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": 1,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": 1,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_one",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_failure_one",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": 1,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": 1,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_one",
+    "step": 1,
+    "op": "get_state",
+    "return": 1,
+    "raised": false,
+    "enabled": 1,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_one",
+    "step": 2,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": 1,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_one",
+    "step": 3,
+    "op": "get_state",
+    "return": 1,
+    "raised": false,
+    "enabled": 1,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_negative",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": -2,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": -2,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_negative",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_failure_negative",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": -2,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": -2,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_negative",
+    "step": 1,
+    "op": "get_state",
+    "return": -2,
+    "raised": false,
+    "enabled": -2,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_negative",
+    "step": 2,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": -2,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_negative",
+    "step": 3,
+    "op": "get_state",
+    "return": -2,
+    "raised": false,
+    "enabled": -2,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_fraction",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": 0.5,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": 0.5,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_fraction",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_failure_fraction",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": 0.5,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": 0.5,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_fraction",
+    "step": 1,
+    "op": "get_state",
+    "return": 0.5,
+    "raised": false,
+    "enabled": 0.5,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_fraction",
+    "step": 2,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": 0.5,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_fraction",
+    "step": 3,
+    "op": "get_state",
+    "return": 0.5,
+    "raised": false,
+    "enabled": 0.5,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_false_string",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": "false",
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": "false",
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_false_string",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_failure_false_string",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": "false",
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": "false",
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_false_string",
+    "step": 1,
+    "op": "get_state",
+    "return": "false",
+    "raised": false,
+    "enabled": "false",
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_false_string",
+    "step": 2,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": "false",
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_false_string",
+    "step": 3,
+    "op": "get_state",
+    "return": "false",
+    "raised": false,
+    "enabled": "false",
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_list_nonempty",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": [
+          false
+        ],
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": [
+          false
+        ],
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_list_nonempty",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_failure_list_nonempty",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": [
+      false
+    ],
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": [
+          false
+        ],
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_list_nonempty",
+    "step": 1,
+    "op": "get_state",
+    "return": [
+      false
+    ],
+    "raised": false,
+    "enabled": [
+      false
+    ],
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_list_nonempty",
+    "step": 2,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": [
+      false
+    ],
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_list_nonempty",
+    "step": 3,
+    "op": "get_state",
+    "return": [
+      false
+    ],
+    "raised": false,
+    "enabled": [
+      false
+    ],
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_object_nonempty",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": {
+          "x": false
+        },
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": {
+          "x": false
+        },
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_object_nonempty",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "enabled_failure_object_nonempty",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": {
+      "x": false
+    },
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": {
+          "x": false
+        },
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_object_nonempty",
+    "step": 1,
+    "op": "get_state",
+    "return": {
+      "x": false
+    },
+    "raised": false,
+    "enabled": {
+      "x": false
+    },
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_object_nonempty",
+    "step": 2,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": {
+      "x": false
+    },
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "enabled_failure_object_nonempty",
+    "step": 3,
+    "op": "get_state",
+    "return": {
+      "x": false
+    },
+    "raised": false,
+    "enabled": {
+      "x": false
+    },
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "content_missing",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": ""
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": ""
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_missing",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_null",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": ""
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": ""
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_null",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_object",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": ""
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": ""
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_object",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_false",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": ""
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": ""
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_false",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_zero",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": ""
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": ""
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_zero",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_zero_float",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": ""
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": ""
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_zero_float",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_string",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": ""
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": ""
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_string",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_list",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": ""
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": ""
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": ""
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_list",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_unicode",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_unicode",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_line_endings",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "a\r\nb\rc\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "a\r\nb\rc\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "a\r\nb\rc\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "a\r\nb\rc\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "a\r\nb\rc\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "a\r\nb\rc\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "a\r\nb\rc\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "a\r\nb\rc\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_line_endings",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "a\r\nb\rc\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "a\r\nb\rc\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "a\r\nb\rc\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_bom",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "\ufeffmovie: {}\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "\ufeffmovie: {}\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "\ufeffmovie: {}\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "\ufeffmovie: {}\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "\ufeffmovie: {}\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "\ufeffmovie: {}\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "\ufeffmovie: {}\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "\ufeffmovie: {}\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_bom",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "\ufeffmovie: {}\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "\ufeffmovie: {}\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "\ufeffmovie: {}\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "content_integer",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "TypeError",
+    "enabled": true,
+    "content": 1,
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": 1
+        },
+        "enabled_at_call": true,
+        "content_at_call": 1
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "content_integer",
+    "step": 1,
+    "op": "get_state",
+    "return": true,
+    "raised": false,
+    "enabled": true,
+    "content": 1,
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "content_list_nonempty",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "TypeError",
+    "enabled": true,
+    "content": [
+      "x"
+    ],
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": [
+            "x"
+          ]
+        },
+        "enabled_at_call": true,
+        "content_at_call": [
+          "x"
+        ]
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "content_list_nonempty",
+    "step": 1,
+    "op": "get_state",
+    "return": true,
+    "raised": false,
+    "enabled": true,
+    "content": [
+      "x"
+    ],
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "content_object_nonempty",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "TypeError",
+    "enabled": true,
+    "content": {
+      "x": 1
+    },
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": {
+            "x": 1
+          }
+        },
+        "enabled_at_call": true,
+        "content_at_call": {
+          "x": 1
+        }
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "content_object_nonempty",
+    "step": 1,
+    "op": "get_state",
+    "return": true,
+    "raised": false,
+    "enabled": true,
+    "content": {
+      "x": 1
+    },
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "content_surrogate",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "UnicodeEncodeError",
+    "enabled": true,
+    "content": "a\ud800b",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "a\ud800b"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "a\ud800b"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "content_surrogate",
+    "step": 1,
+    "op": "get_state",
+    "return": true,
+    "raised": false,
+    "enabled": true,
+    "content": "a\ud800b",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "nonmapping_config_true",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "worker",
+    "source_exception_class": "AttributeError",
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "nonmapping_config_true",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "nonmapping_config_integer",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "worker",
+    "source_exception_class": "AttributeError",
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "nonmapping_config_integer",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "nonmapping_config_string",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "worker",
+    "source_exception_class": "AttributeError",
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "nonmapping_config_string",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "nonmapping_config_list",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "worker",
+    "source_exception_class": "AttributeError",
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "nonmapping_config_list",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "helper_constructor_raise",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "helper_constructor_raise",
+    "step": 1,
+    "op": "get_state",
+    "return": true,
+    "raised": false,
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "helper_constructor_raise",
+    "step": 2,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "helper_constructor_raise",
+    "step": 3,
+    "op": "get_state",
+    "return": true,
+    "raised": false,
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "helper_init_raise",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "helper_init_raise",
+    "step": 1,
+    "op": "get_state",
+    "return": true,
+    "raised": false,
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "helper_init_raise",
+    "step": 2,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "helper_init_raise",
+    "step": 3,
+    "op": "get_state",
+    "return": true,
+    "raised": false,
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "helper_init_false",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "helper_init_false",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "helper_init_false",
+    "step": 2,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "helper_init_false",
+    "step": 3,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "message_raise",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "message",
+    "source_exception_class": "RuntimeError",
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "message_raise",
+    "step": 1,
+    "op": "get_state",
+    "return": true,
+    "raised": false,
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "message_raise",
+    "step": 2,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "message_raise",
+    "step": 3,
+    "op": "get_state",
+    "return": true,
+    "raised": false,
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "message_false",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "message_false",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "message_false",
+    "step": 2,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "message_false",
+    "step": 3,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "update_raise",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "update",
+    "source_exception_class": "RuntimeError",
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "update_raise",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "update_raise",
+    "step": 2,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "update_raise",
+    "step": 3,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "update_false",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "update_false",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "update_false",
+    "step": 2,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "update_false",
+    "step": 3,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "update_none",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "update_none",
+    "step": 1,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "update_none",
+    "step": 2,
+    "op": "stop_service",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "update_none",
+    "step": 3,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "duplicate_successful_apply",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "duplicate_successful_apply",
+    "step": 1,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      },
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      },
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "duplicate_successful_apply",
+    "step": 2,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      },
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      },
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "disabled_replaces_members_not_file",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "disabled_replaces_members_not_file",
+    "step": 1,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "disabled draft",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "disabled_replaces_members_not_file",
+    "step": 2,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "disabled draft",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "failure_then_repair",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "message",
+    "source_exception_class": "RuntimeError",
+    "enabled": true,
+    "content": "first",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "first"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "first"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "first"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "failure_then_repair",
+    "step": 1,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "second",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "second"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "second"
+      },
+      {
+        "method": "plugin.systemmessage.put",
+        "payload": {
+          "message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+          "title": "二级分类策略"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "second"
+      },
+      {
+        "method": "plugin.base.update_config",
+        "payload": {
+          "config": {
+            "content": "second",
+            "enabled": false
+          }
+        },
+        "enabled_at_call": false,
+        "content_at_call": "second"
+      }
+    ],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "second",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "second",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "failure_then_repair",
+    "step": 2,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "second",
+    "callbacks": [],
+    "notifications": [
+      {
+        "args": [
+          "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！"
+        ],
+        "kwargs": {
+          "title": "二级分类策略"
+        }
+      }
+    ],
+    "update_arguments": [
+      {
+        "content": "second",
+        "enabled": false
+      }
+    ],
+    "controlled_store_not_original_db": {
+      "content": "second",
+      "enabled": false
+    }
+  },
+  {
+    "case_id": "fresh_object_after_failure",
+    "step": 0,
+    "op": "init",
+    "return": null,
+    "raised": true,
+    "exception_phase": "apply",
+    "source_exception_class": "RuntimeError",
+    "enabled": true,
+    "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+    "callbacks": [
+      {
+        "method": "plugin.category.apply",
+        "payload": {
+          "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+        },
+        "enabled_at_call": true,
+        "content_at_call": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+      }
+    ],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "fresh_object_after_failure",
+    "step": 1,
+    "op": "new_object",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "fresh_object_after_failure",
+    "step": 2,
+    "op": "init",
+    "return": null,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  },
+  {
+    "case_id": "fresh_object_after_failure",
+    "step": 3,
+    "op": "get_state",
+    "return": false,
+    "raised": false,
+    "enabled": false,
+    "content": "",
+    "callbacks": [],
+    "notifications": [],
+    "update_arguments": [],
+    "controlled_store_not_original_db": null
+  }
+]

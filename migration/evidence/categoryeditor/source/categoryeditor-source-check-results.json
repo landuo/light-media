@@ -1,0 +1,434 @@
+{
+  "kind": "source_contract_harness_sanity_only_not_target_acceptance",
+  "binding": {
+    "categoryeditor-source-replay.py": "d1d7ad9d06a3da07f6ef172407414257599957b7cfa5574279c968daea8194d0",
+    "categoryeditor-source-helper-replay.py": "22f7d52c170d358cd2b6b53e2d3c0c781119a5d82f0664196182f0bcbaf0ef21",
+    "categoryeditor-source-inputs.json": "2d3a4cdf9ef8af9431181bcb419961f3aa10b1fa5c4668ee3839482b2edb32b0",
+    "categoryeditor-source-helper-inputs.json": "a9224f02261b09a20d780099463201b74d198a2370e68bec58290f39a874c780",
+    "categoryeditor-source-oracle.json": "a92f0462e1708e293baa21203029e78071512a4afc78a3a038b3774733b02aca",
+    "categoryeditor-source-helper-oracle.json": "9fa95d762b18da0ee90973f4b494bf508a4ce68546834d11d214795df66d78a6"
+  },
+  "checks": [
+    {
+      "id": "falsey_config_null.unchanged",
+      "ok": true
+    },
+    {
+      "id": "retained_falsey_config_null.retains_failed_state",
+      "ok": true
+    },
+    {
+      "id": "falsey_config_object.unchanged",
+      "ok": true
+    },
+    {
+      "id": "retained_falsey_config_object.retains_failed_state",
+      "ok": true
+    },
+    {
+      "id": "falsey_config_false.unchanged",
+      "ok": true
+    },
+    {
+      "id": "retained_falsey_config_false.retains_failed_state",
+      "ok": true
+    },
+    {
+      "id": "falsey_config_zero.unchanged",
+      "ok": true
+    },
+    {
+      "id": "retained_falsey_config_zero.retains_failed_state",
+      "ok": true
+    },
+    {
+      "id": "falsey_config_zero_float.unchanged",
+      "ok": true
+    },
+    {
+      "id": "retained_falsey_config_zero_float.retains_failed_state",
+      "ok": true
+    },
+    {
+      "id": "falsey_config_string.unchanged",
+      "ok": true
+    },
+    {
+      "id": "retained_falsey_config_string.retains_failed_state",
+      "ok": true
+    },
+    {
+      "id": "falsey_config_list.unchanged",
+      "ok": true
+    },
+    {
+      "id": "retained_falsey_config_list.retains_failed_state",
+      "ok": true
+    },
+    {
+      "id": "enabled_failure_true.raw_type_retained",
+      "ok": true
+    },
+    {
+      "id": "enabled_failure_one.raw_type_retained",
+      "ok": true
+    },
+    {
+      "id": "enabled_failure_negative.raw_type_retained",
+      "ok": true
+    },
+    {
+      "id": "enabled_failure_fraction.raw_type_retained",
+      "ok": true
+    },
+    {
+      "id": "enabled_failure_false_string.raw_type_retained",
+      "ok": true
+    },
+    {
+      "id": "enabled_failure_list_nonempty.raw_type_retained",
+      "ok": true
+    },
+    {
+      "id": "enabled_failure_object_nonempty.raw_type_retained",
+      "ok": true
+    },
+    {
+      "id": "missing_enabled_is_none",
+      "ok": true
+    },
+    {
+      "id": "null_enabled_is_none",
+      "ok": true
+    },
+    {
+      "id": "false_is_bool_not_none",
+      "ok": true
+    },
+    {
+      "id": "enabled_true.full_order_ignores_return_false",
+      "ok": true
+    },
+    {
+      "id": "enabled_true.message_before_off_and_update_after_off",
+      "ok": true
+    },
+    {
+      "id": "enabled_one.full_order_ignores_return_false",
+      "ok": true
+    },
+    {
+      "id": "enabled_one.message_before_off_and_update_after_off",
+      "ok": true
+    },
+    {
+      "id": "enabled_negative.full_order_ignores_return_false",
+      "ok": true
+    },
+    {
+      "id": "enabled_negative.message_before_off_and_update_after_off",
+      "ok": true
+    },
+    {
+      "id": "enabled_fraction.full_order_ignores_return_false",
+      "ok": true
+    },
+    {
+      "id": "enabled_fraction.message_before_off_and_update_after_off",
+      "ok": true
+    },
+    {
+      "id": "enabled_false_string.full_order_ignores_return_false",
+      "ok": true
+    },
+    {
+      "id": "enabled_false_string.message_before_off_and_update_after_off",
+      "ok": true
+    },
+    {
+      "id": "enabled_list_nonempty.full_order_ignores_return_false",
+      "ok": true
+    },
+    {
+      "id": "enabled_list_nonempty.message_before_off_and_update_after_off",
+      "ok": true
+    },
+    {
+      "id": "enabled_object_nonempty.full_order_ignores_return_false",
+      "ok": true
+    },
+    {
+      "id": "enabled_object_nonempty.message_before_off_and_update_after_off",
+      "ok": true
+    },
+    {
+      "id": "helper_init_false.full_order_ignores_return_false",
+      "ok": true
+    },
+    {
+      "id": "helper_init_false.message_before_off_and_update_after_off",
+      "ok": true
+    },
+    {
+      "id": "message_false.full_order_ignores_return_false",
+      "ok": true
+    },
+    {
+      "id": "message_false.message_before_off_and_update_after_off",
+      "ok": true
+    },
+    {
+      "id": "update_false.full_order_ignores_return_false",
+      "ok": true
+    },
+    {
+      "id": "update_false.message_before_off_and_update_after_off",
+      "ok": true
+    },
+    {
+      "id": "update_none.full_order_ignores_return_false",
+      "ok": true
+    },
+    {
+      "id": "update_none.message_before_off_and_update_after_off",
+      "ok": true
+    },
+    {
+      "id": "content_missing.empty_file_and_content",
+      "ok": true
+    },
+    {
+      "id": "content_null.empty_file_and_content",
+      "ok": true
+    },
+    {
+      "id": "content_object.empty_file_and_content",
+      "ok": true
+    },
+    {
+      "id": "content_false.empty_file_and_content",
+      "ok": true
+    },
+    {
+      "id": "content_zero.empty_file_and_content",
+      "ok": true
+    },
+    {
+      "id": "content_zero_float.empty_file_and_content",
+      "ok": true
+    },
+    {
+      "id": "content_string.empty_file_and_content",
+      "ok": true
+    },
+    {
+      "id": "content_list.empty_file_and_content",
+      "ok": true
+    },
+    {
+      "id": "content_integer.type_error_no_file_change",
+      "ok": true
+    },
+    {
+      "id": "content_list_nonempty.type_error_no_file_change",
+      "ok": true
+    },
+    {
+      "id": "content_object_nonempty.type_error_no_file_change",
+      "ok": true
+    },
+    {
+      "id": "surrogate_truncates_before_unicode_error",
+      "ok": true
+    },
+    {
+      "id": "nonmapping_true.attribute_error_no_mutation",
+      "ok": true
+    },
+    {
+      "id": "nonmapping_integer.attribute_error_no_mutation",
+      "ok": true
+    },
+    {
+      "id": "nonmapping_string.attribute_error_no_mutation",
+      "ok": true
+    },
+    {
+      "id": "nonmapping_list.attribute_error_no_mutation",
+      "ok": true
+    },
+    {
+      "id": "helper_constructor_raise.partial_order",
+      "ok": true
+    },
+    {
+      "id": "helper_constructor_raise.stop_no_effect",
+      "ok": true
+    },
+    {
+      "id": "helper_init_raise.partial_order",
+      "ok": true
+    },
+    {
+      "id": "helper_init_raise.stop_no_effect",
+      "ok": true
+    },
+    {
+      "id": "message_raise.partial_order",
+      "ok": true
+    },
+    {
+      "id": "message_raise.stop_no_effect",
+      "ok": true
+    },
+    {
+      "id": "update_raise.partial_order",
+      "ok": true
+    },
+    {
+      "id": "update_raise.stop_no_effect",
+      "ok": true
+    },
+    {
+      "id": "missing_parent.actual_os_write_failure",
+      "ok": true
+    },
+    {
+      "id": "directory.actual_os_write_failure",
+      "ok": true
+    },
+    {
+      "id": "read_only.actual_os_write_failure",
+      "ok": true
+    },
+    {
+      "id": "duplicate_apply_not_deduped_by_plugin",
+      "ok": true
+    },
+    {
+      "id": "form_uses_bundled_1",
+      "ok": true
+    },
+    {
+      "id": "form_uses_bundled_3",
+      "ok": true
+    },
+    {
+      "id": "form_missing.actual_read_failure",
+      "ok": true
+    },
+    {
+      "id": "form_directory.actual_read_failure",
+      "ok": true
+    },
+    {
+      "id": "form_invalid_utf8.actual_read_failure",
+      "ok": true
+    },
+    {
+      "id": "form_read_only.actual_read_failure",
+      "ok": true
+    },
+    {
+      "id": "fresh_object_defaults_not_retained_failure",
+      "ok": true
+    },
+    {
+      "id": "import_paths_not_dynamic_settings",
+      "ok": true
+    },
+    {
+      "id": "helper_blank.warm_retains_cold_empty",
+      "ok": true
+    },
+    {
+      "id": "helper_comments.warm_retains_cold_empty",
+      "ok": true
+    },
+    {
+      "id": "helper_null.warm_retains_cold_empty",
+      "ok": true
+    },
+    {
+      "id": "helper_empty_map.warm_retains_cold_empty",
+      "ok": true
+    },
+    {
+      "id": "helper_empty_sequence.warm_retains_cold_empty",
+      "ok": true
+    },
+    {
+      "id": "helper_false.warm_retains_cold_empty",
+      "ok": true
+    },
+    {
+      "id": "helper_zero.warm_retains_cold_empty",
+      "ok": true
+    },
+    {
+      "id": "helper_empty_string.warm_retains_cold_empty",
+      "ok": true
+    },
+    {
+      "id": "helper_parser_failure.warm_retains_cold_empty",
+      "ok": true
+    },
+    {
+      "id": "helper_duplicate_key.warm_retains_cold_empty",
+      "ok": true
+    },
+    {
+      "id": "helper_multiple_documents.warm_retains_cold_empty",
+      "ok": true
+    },
+    {
+      "id": "numeric_warm.delayed_failure",
+      "ok": true
+    },
+    {
+      "id": "numeric_warm.plugin_applied_before_match_error",
+      "ok": true
+    },
+    {
+      "id": "large_comment_65k.warm.raw_source_accepts",
+      "ok": true
+    },
+    {
+      "id": "path_like_category.warm.raw_source_accepts",
+      "ok": true
+    },
+    {
+      "id": "cycle_bounded.warm.raw_source_accepts",
+      "ok": true
+    },
+    {
+      "id": "numeric_cold.delayed_failure",
+      "ok": true
+    },
+    {
+      "id": "numeric_cold.plugin_applied_before_match_error",
+      "ok": true
+    },
+    {
+      "id": "large_comment_65k.cold.raw_source_accepts",
+      "ok": true
+    },
+    {
+      "id": "path_like_category.cold.raw_source_accepts",
+      "ok": true
+    },
+    {
+      "id": "cycle_bounded.cold.raw_source_accepts",
+      "ok": true
+    },
+    {
+      "id": "cycle_child_completed_with_bound",
+      "ok": true
+    },
+    {
+      "id": "large_comment_exceeds_64k",
+      "ok": true
+    }
+  ],
+  "failed": []
+}

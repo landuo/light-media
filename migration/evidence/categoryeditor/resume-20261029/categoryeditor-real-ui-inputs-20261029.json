@@ -1,0 +1,28 @@
+{
+  "scope": "Synthetic UI inputs actually typed; no authentication values. Expectations derive from pinned plugin write/init/message/autodisable sequence and accepted target central clone contract, not target classifier output.",
+  "plugin_source_sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+  "base_policy": "movie:\n  UI动画:\n    genre_ids: '16'\n  UI其他:\ntv:\n  UI剧集:\n    origin_country: 'CN'\n",
+  "clone_policy": "movie:\n  UI分身:\n    original_language: 'en'\n  UI分身其他:\ntv:\n  UI分身剧集:\n",
+  "invalid_root": "42\n",
+  "disabled_clone_pre_uninstall_config": "movie:\n  UI卸载前配置:\ntv: {}\n",
+  "clone_suffix": "uicopy",
+  "clone_display_name": "二级分类策略 UI分身",
+  "clone_version": "inherited1.3",
+  "expected_message": "二级分类策略已更新，请注意同步调整目录设置，插件将恢复关闭状态！",
+  "expected_success_effects": [
+    "exact policy bytes written",
+    "helper reinitialized",
+    "local system message",
+    "same instance config enabled false and content retained"
+  ],
+  "expected_invalid_root_effects": [
+    "write42 occurs before helper root error",
+    "no success message/autodisable",
+    "saved enabled true config remains"
+  ],
+  "expected_clone_contract": [
+    "copied initial config with enable off",
+    "separate configs/KV/copied packages but same global category policy",
+    "reset/uninstall only current instance scope per target central contract"
+  ]
+}

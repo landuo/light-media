@@ -1,0 +1,174 @@
+=== RUN   TestCategoryEditorSourceOracleReplay
+=== RUN   TestCategoryEditorSourceOracleReplay/fresh_getters_and_noops
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_null
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_null
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_object
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_object
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_false
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_false
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_zero
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_zero
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_zero_float
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_zero_float
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_string
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_string
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_list
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_list
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_missing
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_null
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_object
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_false
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_zero
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_zero_float
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_string
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_list
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_true
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_true
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_one
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_one
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_negative
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_negative
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_fraction
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_fraction
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_false_string
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_false_string
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_list_nonempty
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_list_nonempty
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_object_nonempty
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_object_nonempty
+=== RUN   TestCategoryEditorSourceOracleReplay/content_missing
+=== RUN   TestCategoryEditorSourceOracleReplay/content_null
+=== RUN   TestCategoryEditorSourceOracleReplay/content_object
+=== RUN   TestCategoryEditorSourceOracleReplay/content_false
+=== RUN   TestCategoryEditorSourceOracleReplay/content_zero
+=== RUN   TestCategoryEditorSourceOracleReplay/content_zero_float
+=== RUN   TestCategoryEditorSourceOracleReplay/content_string
+=== RUN   TestCategoryEditorSourceOracleReplay/content_list
+=== RUN   TestCategoryEditorSourceOracleReplay/content_unicode
+=== RUN   TestCategoryEditorSourceOracleReplay/content_line_endings
+=== RUN   TestCategoryEditorSourceOracleReplay/content_bom
+=== RUN   TestCategoryEditorSourceOracleReplay/content_integer
+=== RUN   TestCategoryEditorSourceOracleReplay/content_list_nonempty
+=== RUN   TestCategoryEditorSourceOracleReplay/content_object_nonempty
+=== RUN   TestCategoryEditorSourceOracleReplay/content_surrogate
+=== RUN   TestCategoryEditorSourceOracleReplay/nonmapping_config_true
+=== RUN   TestCategoryEditorSourceOracleReplay/nonmapping_config_integer
+=== RUN   TestCategoryEditorSourceOracleReplay/nonmapping_config_string
+=== RUN   TestCategoryEditorSourceOracleReplay/nonmapping_config_list
+=== RUN   TestCategoryEditorSourceOracleReplay/helper_constructor_raise
+=== RUN   TestCategoryEditorSourceOracleReplay/helper_init_raise
+=== RUN   TestCategoryEditorSourceOracleReplay/helper_init_false
+=== RUN   TestCategoryEditorSourceOracleReplay/message_raise
+=== RUN   TestCategoryEditorSourceOracleReplay/message_false
+=== RUN   TestCategoryEditorSourceOracleReplay/update_raise
+=== RUN   TestCategoryEditorSourceOracleReplay/update_false
+=== RUN   TestCategoryEditorSourceOracleReplay/update_none
+=== RUN   TestCategoryEditorSourceOracleReplay/write_failure_missing_parent
+    source_oracle_test.go:367: real user-file path/permission failure belongs to App/filesystem integration, not a mock host
+=== RUN   TestCategoryEditorSourceOracleReplay/write_failure_directory
+    source_oracle_test.go:367: real user-file path/permission failure belongs to App/filesystem integration, not a mock host
+=== RUN   TestCategoryEditorSourceOracleReplay/write_failure_read_only
+    source_oracle_test.go:367: real user-file path/permission failure belongs to App/filesystem integration, not a mock host
+=== RUN   TestCategoryEditorSourceOracleReplay/duplicate_successful_apply
+=== RUN   TestCategoryEditorSourceOracleReplay/disabled_replaces_members_not_file
+=== RUN   TestCategoryEditorSourceOracleReplay/failure_then_repair
+=== RUN   TestCategoryEditorSourceOracleReplay/fresh_object_after_failure
+=== RUN   TestCategoryEditorSourceOracleReplay/form_reads_bundled_not_user_or_member
+    source_oracle_test.go:367: bundled-default file reads/mutations and frozen source settings paths are outside this pure-worker boundary replay
+=== RUN   TestCategoryEditorSourceOracleReplay/form_default_missing
+    source_oracle_test.go:367: real bundled-default read/encoding/permission failure belongs to host integration
+=== RUN   TestCategoryEditorSourceOracleReplay/form_default_directory
+    source_oracle_test.go:367: real bundled-default read/encoding/permission failure belongs to host integration
+=== RUN   TestCategoryEditorSourceOracleReplay/form_default_invalid_utf8
+    source_oracle_test.go:367: real bundled-default read/encoding/permission failure belongs to host integration
+=== RUN   TestCategoryEditorSourceOracleReplay/form_default_read_only
+    source_oracle_test.go:367: real bundled-default read/encoding/permission failure belongs to host integration
+=== RUN   TestCategoryEditorSourceOracleReplay/form_rereads_default
+    source_oracle_test.go:367: bundled-default file reads/mutations and frozen source settings paths are outside this pure-worker boundary replay
+=== RUN   TestCategoryEditorSourceOracleReplay/import_paths_frozen
+    source_oracle_test.go:367: bundled-default file reads/mutations and frozen source settings paths are outside this pure-worker boundary replay
+=== NAME  TestCategoryEditorSourceOracleReplay
+    source_oracle_test.go:532: independent original-source worker differential: 68/68 selected cases passed, 68 cases executed, 196 steps completed; 10 cases / 24 steps explicitly not run; controlled host only
+--- PASS: TestCategoryEditorSourceOracleReplay (0.31s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/fresh_getters_and_noops (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_null (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_null (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_object (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_object (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_false (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_false (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_zero (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_zero (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_zero_float (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_zero_float (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_string (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_string (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_list (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_list (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_missing (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_null (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_object (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_false (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_zero (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_zero_float (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_string (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_list (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_true (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_true (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_one (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_one (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_negative (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_negative (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_fraction (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_fraction (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_false_string (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_false_string (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_list_nonempty (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_list_nonempty (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_object_nonempty (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_object_nonempty (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_missing (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_null (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_object (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_false (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_zero (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_zero_float (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_string (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_list (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_unicode (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_line_endings (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_bom (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_integer (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_list_nonempty (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_object_nonempty (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_surrogate (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/nonmapping_config_true (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/nonmapping_config_integer (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/nonmapping_config_string (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/nonmapping_config_list (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/helper_constructor_raise (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/helper_init_raise (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/helper_init_false (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/message_raise (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/message_false (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/update_raise (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/update_false (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/update_none (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/write_failure_missing_parent (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/write_failure_directory (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/write_failure_read_only (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/duplicate_successful_apply (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/disabled_replaces_members_not_file (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/failure_then_repair (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/fresh_object_after_failure (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/form_reads_bundled_not_user_or_member (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/form_default_missing (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/form_default_directory (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/form_default_invalid_utf8 (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/form_default_read_only (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/form_rereads_default (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/import_paths_frozen (0.00s)
+=== RUN   TestCategoryEditorSourceComparisonRetainsSurrogatesAndNumericKinds
+--- PASS: TestCategoryEditorSourceComparisonRetainsSurrogatesAndNumericKinds (0.00s)
+PASS
+ok  	light-media/internal/plugins/categoryeditor	1.434s

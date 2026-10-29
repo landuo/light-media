@@ -194,7 +194,7 @@ func (a *App) sourceRecognizeTMDBMedia(ctx context.Context, input catalog.Media)
 }
 
 func (a *App) sourceRecognizeTMDBCore(ctx context.Context, input catalog.Media) (sourceMediaInformation, error) {
-	policy, e := loadMediaCategoryPolicy(a.Dir)
+	policy, e := a.currentMediaCategoryPolicy()
 	if e != nil {
 		return sourceMediaInformation{}, e
 	}
@@ -202,7 +202,11 @@ func (a *App) sourceRecognizeTMDBCore(ctx context.Context, input catalog.Media) 
 	if e != nil {
 		return sourceMediaInformation{}, e
 	}
-	projection, e := sourceTMDBMediaInfo(raw, input.MediaType, a.Settings().TMDBImageDomain, policy.category(media))
+	category, e := policy.categoryWithError(media)
+	if e != nil {
+		return sourceMediaInformation{}, e
+	}
+	projection, e := sourceTMDBMediaInfo(raw, input.MediaType, a.Settings().TMDBImageDomain, category)
 	if e != nil {
 		return sourceMediaInformation{}, e
 	}

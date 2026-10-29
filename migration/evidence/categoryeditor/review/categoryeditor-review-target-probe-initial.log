@@ -1,0 +1,8 @@
+COMMAND: go test -overlay ../evidence/categoryeditor-review-overlay.json ./internal/app -run ^TestCategoryEditorIndependentReviewProbe$ -count=1 -v
+=== RUN   TestCategoryEditorIndependentReviewProbe
+    categoryeditor_independent_review_overlay_test.go:125: recorded 59 target inputs warm/cold plus 3 owned filesystem contrasts
+--- PASS: TestCategoryEditorIndependentReviewProbe (0.07s)
+PASS
+ok  	light-media/internal/app	0.245s
+
+COMMAND_EXIT=0

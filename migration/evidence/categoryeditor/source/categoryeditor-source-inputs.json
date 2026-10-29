@@ -1,0 +1,1577 @@
+{
+  "format_version": 1,
+  "kind": "controlled_source_replay_inputs",
+  "default_text": "# synthetic bundled default\r\nmovie:\r\n  \u9ed8\u8ba4\u7535\u5f71:\r\ntv:\r\n  \u9ed8\u8ba4\u5267\u96c6:\r\n",
+  "initial_user_text": "# owned initial user policy\nmovie: {}\n",
+  "cases": [
+    {
+      "id": "fresh_getters_and_noops",
+      "steps": [
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "get_command"
+        },
+        {
+          "op": "get_api"
+        },
+        {
+          "op": "get_page"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "falsey_config_null",
+      "steps": [
+        {
+          "op": "init",
+          "config": null,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "retained_falsey_config_null",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": "keep-enabled",
+            "content": "keep-content"
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "init",
+          "config": null,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "falsey_config_object",
+      "steps": [
+        {
+          "op": "init",
+          "config": {},
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "retained_falsey_config_object",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": "keep-enabled",
+            "content": "keep-content"
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "init",
+          "config": {},
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "falsey_config_false",
+      "steps": [
+        {
+          "op": "init",
+          "config": false,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "retained_falsey_config_false",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": "keep-enabled",
+            "content": "keep-content"
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "init",
+          "config": false,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "falsey_config_zero",
+      "steps": [
+        {
+          "op": "init",
+          "config": 0,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "retained_falsey_config_zero",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": "keep-enabled",
+            "content": "keep-content"
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "init",
+          "config": 0,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "falsey_config_zero_float",
+      "steps": [
+        {
+          "op": "init",
+          "config": 0.0,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "retained_falsey_config_zero_float",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": "keep-enabled",
+            "content": "keep-content"
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "init",
+          "config": 0.0,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "falsey_config_string",
+      "steps": [
+        {
+          "op": "init",
+          "config": "",
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "retained_falsey_config_string",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": "keep-enabled",
+            "content": "keep-content"
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "init",
+          "config": "",
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "falsey_config_list",
+      "steps": [
+        {
+          "op": "init",
+          "config": [],
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "retained_falsey_config_list",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": "keep-enabled",
+            "content": "keep-content"
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "init",
+          "config": [],
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_missing",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            }
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_null",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": null
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_object",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": {}
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_false",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": false
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_zero",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": 0
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_zero_float",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": 0.0
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_string",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": ""
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_list",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": []
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_true",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": true
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_failure_true",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": true
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "init",
+          "config": null,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_one",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": 1
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_failure_one",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": 1
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "init",
+          "config": null,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_negative",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": -2
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_failure_negative",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": -2
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "init",
+          "config": null,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_fraction",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": 0.5
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_failure_fraction",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": 0.5
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "init",
+          "config": null,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_false_string",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": "false"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_failure_false_string",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": "false"
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "init",
+          "config": null,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_list_nonempty",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": [
+              false
+            ]
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_failure_list_nonempty",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": [
+              false
+            ]
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "init",
+          "config": null,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_object_nonempty",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": {
+              "x": false
+            }
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "enabled_failure_object_nonempty",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "unrelated": {
+              "preserve": 1
+            },
+            "enabled": {
+              "x": false
+            }
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "init",
+          "config": null,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_missing",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_null",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": null
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_object",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": {}
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_false",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": false
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_zero",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": 0
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_zero_float",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": 0.0
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_string",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": ""
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_list",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": []
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_unicode",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_line_endings",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "a\r\nb\rc\n"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_bom",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "\ufeffmovie: {}\n"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_integer",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": 1
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_list_nonempty",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": [
+              "x"
+            ]
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_object_nonempty",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": {
+              "x": 1
+            }
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "content_surrogate",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "a\ud800b"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "nonmapping_config_true",
+      "steps": [
+        {
+          "op": "init",
+          "config": true,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "nonmapping_config_integer",
+      "steps": [
+        {
+          "op": "init",
+          "config": 1,
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "nonmapping_config_string",
+      "steps": [
+        {
+          "op": "init",
+          "config": "x",
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "nonmapping_config_list",
+      "steps": [
+        {
+          "op": "init",
+          "config": [
+            1
+          ],
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "helper_constructor_raise",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "extra": "not-in-update-argument"
+          },
+          "fault": {
+            "helper_constructor": "raise"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "helper_init_raise",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "extra": "not-in-update-argument"
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "helper_init_false",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "extra": "not-in-update-argument"
+          },
+          "fault": {
+            "helper_init": "false"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "message_raise",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "extra": "not-in-update-argument"
+          },
+          "fault": {
+            "message": "raise"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "message_false",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "extra": "not-in-update-argument"
+          },
+          "fault": {
+            "message": "false"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "update_raise",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "extra": "not-in-update-argument"
+          },
+          "fault": {
+            "update": "raise"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "update_false",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "extra": "not-in-update-argument"
+          },
+          "fault": {
+            "update": "false"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "update_none",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n",
+            "extra": "not-in-update-argument"
+          },
+          "fault": {
+            "update": "none"
+          }
+        },
+        {
+          "op": "get_state"
+        },
+        {
+          "op": "stop_service"
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "write_failure_missing_parent",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ],
+      "user_path_mode": "missing_parent"
+    },
+    {
+      "id": "write_failure_directory",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ],
+      "user_path_mode": "directory"
+    },
+    {
+      "id": "write_failure_read_only",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ],
+      "user_path_mode": "read_only"
+    },
+    {
+      "id": "duplicate_successful_apply",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+          },
+          "fault": {}
+        },
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "disabled_replaces_members_not_file",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+          },
+          "fault": {}
+        },
+        {
+          "op": "init",
+          "config": {
+            "enabled": false,
+            "content": "disabled draft"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "failure_then_repair",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "first"
+          },
+          "fault": {
+            "message": "raise"
+          }
+        },
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "second"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "fresh_object_after_failure",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+          },
+          "fault": {
+            "helper_init": "raise"
+          }
+        },
+        {
+          "op": "new_object"
+        },
+        {
+          "op": "init",
+          "config": {},
+          "fault": {}
+        },
+        {
+          "op": "get_state"
+        }
+      ]
+    },
+    {
+      "id": "form_reads_bundled_not_user_or_member",
+      "steps": [
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_form"
+        },
+        {
+          "op": "init",
+          "config": {
+            "enabled": false,
+            "content": "draft"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_form"
+        }
+      ]
+    },
+    {
+      "id": "form_default_missing",
+      "steps": [
+        {
+          "op": "get_form"
+        },
+        {
+          "op": "get_state"
+        }
+      ],
+      "default_path_mode": "missing"
+    },
+    {
+      "id": "form_default_directory",
+      "steps": [
+        {
+          "op": "get_form"
+        },
+        {
+          "op": "get_state"
+        }
+      ],
+      "default_path_mode": "directory"
+    },
+    {
+      "id": "form_default_invalid_utf8",
+      "steps": [
+        {
+          "op": "get_form"
+        },
+        {
+          "op": "get_state"
+        }
+      ],
+      "default_path_mode": "invalid_utf8"
+    },
+    {
+      "id": "form_default_read_only",
+      "steps": [
+        {
+          "op": "get_form"
+        },
+        {
+          "op": "get_state"
+        }
+      ],
+      "default_path_mode": "read_only"
+    },
+    {
+      "id": "form_rereads_default",
+      "steps": [
+        {
+          "op": "get_form"
+        },
+        {
+          "op": "set_default_bytes",
+          "base64": "IyBjaGFuZ2VkDQptb3ZpZToge30NCg=="
+        },
+        {
+          "op": "get_form"
+        }
+      ]
+    },
+    {
+      "id": "import_paths_frozen",
+      "steps": [
+        {
+          "op": "change_settings_paths"
+        },
+        {
+          "op": "init",
+          "config": {
+            "enabled": true,
+            "content": "movie:\n  \u4e2d\u6587\ud83d\ude00:\n    original_language: 'zh'\ntv:\n  \u5267\u96c6:\n"
+          },
+          "fault": {}
+        },
+        {
+          "op": "get_form"
+        }
+      ]
+    }
+  ]
+}

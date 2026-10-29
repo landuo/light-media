@@ -1,0 +1,206 @@
+{
+  "recorded_at_utc": "2026-10-28T18:32:18.755371+00:00",
+  "role": "integration-test development evidence; not independent source review or acceptance signature",
+  "environment": "current authorized cloud Linux/amd64, owned temp dirs, actual App/SQLite and real Go subprocess, controlled loopback artifact HTTP",
+  "base_git_head": "10d76660fb78595948d89dccaa034c87a2240206",
+  "go_version": "go version go1.26.2 linux/amd64",
+  "commands": [
+    "source ../toolchain/env.sh",
+    "go build -o work/category-editor ./cmd/category-editor",
+    "go build -race -o work/category-editor-integration-race ./cmd/category-editor",
+    "CATEGORYEDITOR_WORKER_BINARY=\"$PWD/work/category-editor-integration-race\" go test -race ./internal/app -run '^TestCategoryEditorStandard|^TestCategoryEditorLegacyAliasUninstallDoesNotDeletePackagePaths$' -count=1 -timeout=7m -v",
+    "go vet ./internal/app"
+  ],
+  "exits": {
+    "build": 0,
+    "race": 0,
+    "vet": 0
+  },
+  "package_duration_seconds": 157.189,
+  "standard_top_level_count": 7,
+  "standard_leaf_pass_count": 25,
+  "legacy_negative_leaf_pass_count": 1,
+  "failure_skip_or_race_count": 0,
+  "diagnostic_marker_counts": {
+    "WARNING: DATA RACE": 0,
+    "\"event\":\"stop_failed\"": 0,
+    "\"event\":\"stop_method_failed\"": 0,
+    "actual CategoryEditor process exit/join status": 0
+  },
+  "observed_process_terminal_exit_assertions": true,
+  "source_binding_check": {
+    "during_run_captured_count": 45,
+    "changed_by_termination": [],
+    "binding_file": "categoryeditor-integration-verified-source-bindings.json"
+  },
+  "sha256": {
+    "internal/app/plugin_categoryeditor_standard_test.go": "19dc76892fa4b1fbd0db22a7c8afd052c22a73264e72126b561d32b85f75cde0",
+    "internal/app/plugin_categoryeditor_uninstall_identity_test.go": "034b70cacc720279a19588a7f5062be003f8ce3c5485cd6095e8169c1cdbef8b",
+    "internal/app/plugin_categoryeditor_resources.go": "c9c9a009c1e4edcd5a1c6b09263fc227f5cd916931d500889e457da43fd83420",
+    "internal/plugins/categoryeditor/categoryeditor.go": "b7f16a9609a8cff0816034896066fc52d376209aa63dac54c1cf92f2f7bb4069",
+    "internal/plugins/category_policy.go": "dd601bff6914b2151f043864b8edc2a640c2fdc0ba98f79565e03489328434b9",
+    "cmd/category-editor/main.go": "2e91534eace7accb04d54be3dce9f2b440d29c523ca1de98c0172164e0e693d6",
+    "work/category-editor": "4087b9dbd40320d36afef9fe98e74b3b4b098b36892ab71dd57eb0bb8498cbb1",
+    "work/category-editor-integration-race": "83be658a70b7793e07704a19cd2d92e556576785fe3e0dbd1b2ed7fba252353a",
+    "go.mod": "622569e08ea6fb374e66a0e35f22bc29b276841d7ab74ade1e1d813a6095b5fa",
+    "go.sum": "2166fc925241cdfc675fc78e2e3d2b36152d9eb208a86d6defccec9551c61355"
+  },
+  "evidence_sha256": {
+    "../evidence/categoryeditor-integration-verified-build.log": "f4d6929511cd2d494c77822153f89ee1f4c353eda32eb089855622e2260ce66e",
+    "../evidence/categoryeditor-integration-verified-build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "../evidence/categoryeditor-integration-verified-race.log": "f18dbe52954e788f1e3790be8e39ec2f970d23833727521ecb74d03730526dac",
+    "../evidence/categoryeditor-integration-verified-race.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "../evidence/categoryeditor-integration-verified-vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "../evidence/categoryeditor-integration-verified-vet.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "leaf_tests": [
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardInstallSaveAndSourceSurface",
+      "seconds": 4.57
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardCloneLifecycleAndColdNoReplay",
+      "seconds": 17.92
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardWarmAndColdSourceReloadOracle/blank",
+      "seconds": 6.72
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardWarmAndColdSourceReloadOracle/comments",
+      "seconds": 7.53
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardWarmAndColdSourceReloadOracle/null",
+      "seconds": 6.84
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardWarmAndColdSourceReloadOracle/empty_map",
+      "seconds": 6.18
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardWarmAndColdSourceReloadOracle/empty_sequence",
+      "seconds": 6.55
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardWarmAndColdSourceReloadOracle/false",
+      "seconds": 5.71
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardWarmAndColdSourceReloadOracle/zero",
+      "seconds": 6.49
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardWarmAndColdSourceReloadOracle/empty_string",
+      "seconds": 9.58
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardWarmAndColdSourceReloadOracle/parser_failure",
+      "seconds": 6.12
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardWarmAndColdSourceReloadOracle/duplicate_key",
+      "seconds": 10.08
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardWarmAndColdSourceReloadOracle/multiple_documents",
+      "seconds": 7.1
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardFailureOrderAndRetainedConfig/non_string_content",
+      "seconds": 4.31
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardFailureOrderAndRetainedConfig/unwritable_regular_file",
+      "seconds": 4.4
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardFailureOrderAndRetainedConfig/non_regular_path",
+      "seconds": 4.37
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardFailureOrderAndRetainedConfig/unpaired_surrogate",
+      "seconds": 4.56
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardPythonConfigTruthiness/null",
+      "seconds": 4.31
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardPythonConfigTruthiness/false",
+      "seconds": 4.44
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardPythonConfigTruthiness/0",
+      "seconds": 4.46
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardPythonConfigTruthiness/\"\"",
+      "seconds": 4.26
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardPythonConfigTruthiness/[]",
+      "seconds": 4.49
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardPythonConfigTruthiness/{}",
+      "seconds": 4.56
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardSourceAcceptsUnvalidatedConditionOnSave",
+      "seconds": 4.41
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorStandardActualOrganizePreviewConsumesPolicy",
+      "seconds": 4.94
+    },
+    {
+      "status": "PASS",
+      "name": "TestCategoryEditorLegacyAliasUninstallDoesNotDeletePackagePaths",
+      "seconds": 0.34
+    }
+  ],
+  "coverage": [
+    "actual digest-pinned sdk-resources/v1 executable install and config-save HTTP lifecycle; byte-exact global category.yaml, real core category result, notification, auto-disable and full config replacement",
+    "source/clone config and synthetic KV isolation; shared policy; reload and source same-version force artifact reacquisition; clone nonforce existing-code reinstall and wrong-ID force rejection; reset/uninstall including actual current package removal; cold no replay checked via inode, frozen mtime, config revision and fresh notice queue",
+    "original helper warm/cold oracle 11 cases including blank/malformed/duplicate/multiple-document YAML",
+    "nonstring, permission-denied regular file, directory path and raw unpaired surrogate failures, with source ordered state/file effects",
+    "Python content falsey inputs with string enabled truthiness; numeric YAML save accepts before deferred classification error",
+    "real HTTP organize preview through actual metadata decoder/projection/classifier and SQLite plan: policy A/B affects successive targets, prior plan frozen; exactly two bounded in-memory synthetic provider responses; no file publication/execution/download",
+    "synthetic legacy compiled-alias uninstall negative control preserves owned current/source/other marker paths; no native business execution"
+  ],
+  "limits": [
+    "not an old MoviePilot live-process or NAS run; source baseline is fixed original Python source plus separately captured helper oracle",
+    "strict loopback artifact server and bounded in-memory metadata transport are controlled dependencies; not a real public provider service",
+    "preview/planning coverage does not claim physical transfer/publication or a real downloader",
+    "no fabricated clone v2 artifact: actual clone existing-code reinstall and source-artifact mismatch rejection are distinct from source same-version force update",
+    "App-level notification exception injection is not claimed; closed native queue is a no-op, and message-exception order belongs to controlled worker/source-oracle evidence",
+    "not entire app test suite; no browser/server acceptance, production configuration migration, deployment, commit or push by this agent",
+    "coordinator owns independent review, behavior-difference decisions and final acceptance"
+  ]
+}

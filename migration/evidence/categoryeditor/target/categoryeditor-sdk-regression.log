@@ -1,0 +1,73 @@
+ok  	light-media/internal/plugins	34.835s
+ok  	light-media/internal/plugins/artifacts	1.527s
+ok  	light-media/internal/plugins/autobackup	2.498s
+2026/10/29 03:21:18 http: TLS handshake error from 127.0.0.1:50500: remote error: tls: bad certificate
+--- FAIL: TestFormalSourceAndOriginalReferenceIntegrity (0.02s)
+    provenance_test.go:63: formal source/reference changed without review internal/plugins/autosignin/durable/controller.go
+--- FAIL: TestAutoSignInSDKSourceLifetimeOverTwoMinutesAndCancellation (0.00s)
+    --- FAIL: TestAutoSignInSDKSourceLifetimeOverTwoMinutesAndCancellation/source-three-serial-visits-over-two-minutes (0.00s)
+        runner_lifetime_test.go:24: long original source consumer did not complete plugin: invalid_manifest 0 92.467µs 
+    --- FAIL: TestAutoSignInSDKSourceLifetimeOverTwoMinutesAndCancellation/source-network-parent-cancellation (0.00s)
+        runner_lifetime_test.go:27: actual source cancellation did not stop network/history plugin: invalid_manifest 0 0 75.881µs
+--- FAIL: TestAutoSignInRealSDKHostGrantWholeLifecycleHTTPHistoryAndPage (0.00s)
+    sdk_test.go:80: plugin: invalid_manifest
+--- FAIL: TestAutoSignInSDKForgedCapabilityIdentityArgumentsAndPublicInventory (0.00s)
+    sdk_test.go:130: plugin: invalid_manifest
+2026/10/29 03:21:24 http: TLS handshake error from 127.0.0.1:37472: remote error: tls: bad certificate
+FAIL
+FAIL	light-media/internal/plugins/autosignin	8.506s
+ok  	light-media/internal/plugins/autosignin/durable	2.770s
+ok  	light-media/internal/plugins/autosignin/imagehash	2.911s
+?   	light-media/internal/plugins/autosignin/imagehash/jpegport	[no test files]
+ok  	light-media/internal/plugins/brushflow	0.590s
+ok  	light-media/internal/plugins/brushflow/ledger	6.136s
+--- FAIL: TestSiteStatisticOriginalFormAndWorkerActions (0.01s)
+    site_statistic_test.go:36: plugin: invalid_manifest
+--- FAIL: TestSubscribeGroupCatalogFormAndMinimalHostAuthority (0.00s)
+    subscribe_group_test.go:18: missing pinned native implementation
+FAIL
+FAIL	light-media/internal/plugins/builtin	0.416s
+ok  	light-media/internal/plugins/categoryeditor	0.130s
+ok  	light-media/internal/plugins/cleaninvalidseed	0.482s
+--- FAIL: TestFormalHostSourceAndInstalledFailurePrefixProvenance (0.00s)
+    provenance_test.go:37: formal source changed without provenance internal/plugins/cleaninvalidseed/host/owner.go
+FAIL
+FAIL	light-media/internal/plugins/cleaninvalidseed/host	5.703s
+ok  	light-media/internal/plugins/cloudflarespeedtest	1.159s
+ok  	light-media/internal/plugins/iyuuautoseed	3.342s
+?   	light-media/internal/plugins/iyuuautoseed/compat/encodingdetector	[no test files]
+?   	light-media/internal/plugins/iyuuautoseed/compat/htmlextract	[no test files]
+?   	light-media/internal/plugins/iyuuautoseed/compat/pythonre	[no test files]
+?   	light-media/internal/plugins/iyuuautoseed/compat/urlprep	[no test files]
+ok  	light-media/internal/plugins/iyuuautoseed/native	0.887s
+--- FAIL: TestSDKBoundNoticeToOwnedLarkAPI (0.00s)
+    sdk_test.go:30: plugin: invalid_manifest
+--- FAIL: TestSDKBoundIngressToActualParser (0.00s)
+    sdk_test.go:139: plugin: invalid_manifest {0 0 0 0 [] 0 0} 0
+FAIL
+FAIL	light-media/internal/plugins/larkmessager	1.345s
+ok  	light-media/internal/plugins/larkmessager/host	0.227s
+ok  	light-media/internal/plugins/mergemessagenotify	3.203s
+ok  	light-media/internal/plugins/mergemessagenotify/apprise	3.343s
+ok  	light-media/internal/plugins/mergemessagenotify/mako	0.267s
+ok  	light-media/internal/plugins/mergemessagenotify/smtp	0.821s
+?   	light-media/internal/plugins/remoteidentifiers	[no test files]
+ok  	light-media/internal/plugins/removelink	0.322s
+--- FAIL: TestFrozenCandidateSourceAndEvidence (0.00s)
+    provenance_test.go:93: open ../../../../internal/app/plugin_remove_link_owner.go: no such file or directory
+FAIL
+FAIL	light-media/internal/plugins/removelink/host	22.951s
+ok  	light-media/internal/plugins/schedule	0.116s
+ok  	light-media/internal/plugins/scrapefileclean	0.317s
+ok  	light-media/internal/plugins/scrapefileclean/host	10.178s
+ok  	light-media/internal/plugins/seedrescue	0.201s
+--- FAIL: TestRealSDKFixedHostSnapshotsShareVolatileSampleAndConfigureResets (0.00s)
+    handler_test.go:30: invalid or invented source surface plugin: invalid_manifest
+FAIL
+FAIL	light-media/internal/plugins/serverstatus	0.129s
+ok  	light-media/internal/plugins/statistic	0.147s
+ok  	light-media/internal/plugins/subscribegroup	0.069s
+ok  	light-media/internal/plugins/torrenttransfer	0.763s
+ok  	light-media/internal/plugins/uninstall	0.093s
+?   	light-media/cmd/category-editor	[no test files]
+FAIL

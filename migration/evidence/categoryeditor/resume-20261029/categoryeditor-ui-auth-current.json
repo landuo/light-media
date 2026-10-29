@@ -1,0 +1,65 @@
+{
+  "observed_at_utc": "2026-10-29T03:37:30.438284+00:00",
+  "status": "browser_connected_account_created_authenticated",
+  "channel": {
+    "method": "Sites documented managed-linux local preview daemon",
+    "workspace": "/workspace/scratch/a1d82674c6f8/business-plugins-20261029/light-media/work/cloud-browser-bridge-20261029",
+    "official_start": "sites-preview start <owned workspace>",
+    "official_stop": "sites-preview stop then status; only after confirming preview still belongs to this task",
+    "receipt": "Sites preview running at http://127.0.0.1:4173/",
+    "site_registered_or_published": false,
+    "public_exposure": false,
+    "current_mode": "normal after controlled official stop/start at03:29",
+    "server_sha256": "8ab1a6bba9c07f604d5b8b06d1193c3918de99c52e08ebd184f2e7647463f44d"
+  },
+  "browser": {
+    "id": "1",
+    "tab_id": "6",
+    "url": "http://127.0.0.1:4173/#plugins",
+    "observed_page": "光影 · Light Media / 创建你的媒体空间 / 用户名 / 密码 / 管理员密码至少12位 / 创建并开始",
+    "positive_auth_signal_observed": true
+  },
+  "auth": {
+    "synthetic_account_identifier": "categoryeditor-cloud-qa",
+    "reusable_secret_read_or_logged": false,
+    "secure_request_result": {
+      "status": "submitted"
+    },
+    "result_observed_at_utc": "2026-10-29T03:20:02Z",
+    "page_after_result": "At03:20:07 real page moved to #settings and displayed logout plus complete settings controls; positive authenticated signal.",
+    "new_user_authorization": "User explicitly requested a new secure input request at 03:17; one request issued.",
+    "capability_recheck": "browserAuth exposes request for secure credential collection/fill only, no documented autonomous password generation method; new-password is field autocomplete metadata. No exposed password-manager/generator tool.",
+    "boundary": "No secret read, recorded, remembered, directly filled, or used through API/bootstrap/session bypass. Reuse ordinary browser session only.",
+    "previous_attempts": [
+      {
+        "secure_request_result": {
+          "status": "declined"
+        },
+        "result_observed_at_utc": "2026-10-29T02:33:39Z",
+        "page_after_result": "Still initialization form; no signed-in signal.",
+        "new_user_authorization": "User directs assistant to choose a new test password; original declined request was not repeated."
+      },
+      {
+        "secure_request_result": {
+          "status": "submitted"
+        },
+        "result_observed_at_utc": "2026-10-29T03:04:10Z",
+        "page_after_result": "Initialization form remains; newly added registration length-validation error; no signed-in signal.",
+        "new_user_authorization": "User explicitly requested a new secure input request at 02:56; one new browserAuth request was issued.",
+        "visible_validation_error": "用户名需为1–64字节，密码需为10–72字节",
+        "validation_evidence": {
+          "before_request_utc": "2026-10-29T02:57:21Z",
+          "before_hint": "管理员密码至少 12 位。",
+          "after_request_utc": "2026-10-29T03:04:23Z",
+          "error_new_after_submit": true,
+          "username_before_request": "Explicitly filled categoryeditor-cloud-qa (23 ASCII characters)",
+          "username_after_request": "Browser privacy layer returns <redacted> even for non-secret username; actual value unobservable. Do not infer literal length10 or changed value from redaction.",
+          "password_inspected": false,
+          "isolated_cause": "Not established: joint username/password validation message; no secret inspection or speculation."
+        }
+      }
+    ]
+  },
+  "acceptance": "Authentication succeeded. Actual business UI flow recorded separately; full plugin acceptance still pending explicit safety decisions and remaining lifecycle boundaries.",
+  "ownership": "Browser/preview handed off exclusively by connect_cloud_browser_service; current assistant owns eventual cleanup. Parent explicitly requests preserving owned preview for now."
+}

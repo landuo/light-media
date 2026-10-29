@@ -2,12 +2,15 @@ package app
 
 import (
 	"bytes"
-	"crypto/sha256"
+	"errors"
 	"io"
+	"os"
+	"path/filepath"
 	"sync"
 	"unicode/utf8"
 
 	"go.yaml.in/yaml/v3"
+	"golang.org/x/sys/unix"
 )
 
 // CategoryHelper.init replaces its movie/tv maps only for a truthy parsed root.
@@ -16,8 +19,11 @@ import (
 type mediaCategoryRuntime struct {
 	mu          sync.Mutex
 	initialized bool
-	digest      [32]byte
 	policy      mediaCategoryPolicy
+	// A truthy non-mapping _categorys raises at .get outside the source IO
+	// handler. Remember it separately: getters still use the previous maps,
+	// but a later init whose read fails retries that same .get operation.
+	rootError error
 }
 
 type categoryReloadKind uint8
@@ -26,6 +32,7 @@ const (
 	categoryKeepEmpty categoryReloadKind = iota
 	categoryKeepParseFailure
 	categoryReplaceMaps
+	categoryKeepRootFailure
 )
 
 func categoryPluginReload(raw []byte) (mediaCategoryPolicy, categoryReloadKind, error) {
@@ -43,8 +50,11 @@ func categoryPluginReload(raw []byte) (mediaCategoryPolicy, categoryReloadKind, 
 	if decoder.Decode(&extra) != io.EOF {
 		return nil, categoryKeepParseFailure, nil // load(), unlike load_all(), rejects extra documents.
 	}
+	if err := categoryPluginResolveYAML11(document.Content[0], raw); err != nil {
+		return nil, categoryKeepEmpty, err
+	}
 	// Nodes never construct or execute tags. Unsupported native shapes, custom
-	// tags, cycles and resource expansion still fail explicitly before a write.
+	// tags, cycles and resource expansion fail before accepting replacement maps.
 	budget := 8192
 	duplicate, err := categoryPluginNodes(document.Content[0], nil, &budget)
 	if err != nil {
@@ -60,7 +70,10 @@ func categoryPluginReload(raw []byte) (mediaCategoryPolicy, categoryReloadKind, 
 	if categoryYAMLEmpty(root) {
 		return nil, categoryKeepEmpty, nil
 	}
-	policy, err := parseMediaCategoryPolicy(raw)
+	if root.Kind != yaml.MappingNode {
+		return nil, categoryKeepRootFailure, categoryPolicyError("顶层必须是movie和tv分类映射")
+	}
+	policy, err := parseMediaCategoryPolicyConditions(raw, true)
 	return policy, categoryReplaceMaps, err
 }
 
@@ -93,7 +106,7 @@ func categoryPluginNodes(node *yaml.Node, parents map[*yaml.Node]bool, budget *i
 			if key.Kind != yaml.ScalarNode {
 				return false, categoryPolicyError("复杂YAML键的原生语义尚未实现")
 			}
-			id := key.Tag + "\x00" + key.Value
+			id := categoryPluginKeyIdentity(key)
 			if seen[id] {
 				duplicate = true
 			}
@@ -111,34 +124,124 @@ func categoryPluginNodes(node *yaml.Node, parents map[*yaml.Node]bool, budget *i
 }
 
 func (a *App) currentMediaCategoryPolicy() (mediaCategoryPolicy, error) {
-	raw, err := readMediaCategoryPolicy(a.Dir)
-	if err != nil {
-		return nil, err
-	}
+	return a.loadMediaCategoryRuntime(false)
+}
+
+// CategoryHelper getters only consult process-local maps. Only explicit init
+// (including CategoryEditor after writing) reloads an already initialized helper.
+func (a *App) reloadMediaCategoryPolicy() (mediaCategoryPolicy, error) {
+	return a.loadMediaCategoryRuntime(true)
+}
+
+func (a *App) loadMediaCategoryRuntime(reload bool) (mediaCategoryPolicy, error) {
 	runtime := &a.mediaCategories
 	runtime.mu.Lock()
-	parserWarning := false
+	warning := ""
 	defer func() {
 		runtime.mu.Unlock()
-		if parserWarning {
-			a.log("WARN", "category", "parse_failed_cached", "二级分类策略解析失败；保留当前进程分类，冷启动时为空", "", "")
+		switch warning {
+		case "parse_failed_cached":
+			a.log("WARN", "category", warning, "二级分类策略解析失败；保留当前进程分类，冷启动时为空", "", "")
+		case "load_failed_cached":
+			a.log("WARN", "category", warning, "二级分类策略配置文件加载出错；保留当前进程分类，冷启动时为空", "", "")
 		}
 	}()
-	digest := sha256.Sum256(raw)
-	if runtime.initialized && runtime.digest == digest {
+	if runtime.initialized && !reload {
+		return runtime.policy, nil
+	}
+	raw, err := readCategoryHelperPolicy(a.Dir)
+	if err != nil {
+		var loadError *categoryHelperLoadError
+		if !errors.As(err, &loadError) {
+			return nil, err // Host safety boundaries are not ordinary source IO failures.
+		}
+		warning = "load_failed_cached"
+		if runtime.rootError != nil {
+			return nil, runtime.rootError
+		}
+		if runtime.policy == nil {
+			runtime.policy = mediaCategoryPolicy{}
+		}
+		runtime.initialized = true
 		return runtime.policy, nil
 	}
 	policy, kind, err := categoryPluginReload(raw)
+	if kind == categoryKeepRootFailure {
+		runtime.rootError = err
+	}
 	if err != nil {
 		return nil, err
 	}
+	runtime.rootError = nil
 	if kind == categoryReplaceMaps {
 		runtime.policy = policy
 	}
-	parserWarning = kind == categoryKeepParseFailure
+	if kind == categoryKeepParseFailure {
+		warning = "parse_failed_cached"
+	}
 	if runtime.policy == nil {
 		runtime.policy = mediaCategoryPolicy{}
 	}
-	runtime.initialized, runtime.digest = true, digest
+	runtime.initialized = true
 	return runtime.policy, nil
+}
+
+// Only real filesystem IO errors take the source's warn-and-retain path.
+// Resource bounds and regular-file/no-symlink checks remain fatal and distinct.
+type categoryHelperLoadError struct{ error }
+
+func (e *categoryHelperLoadError) Unwrap() error { return e.error }
+
+func readCategoryHelperPolicy(dataDir string) ([]byte, error) {
+	path := filepath.Join(dataDir, "category.yaml")
+	info, err := os.Lstat(path)
+	if errors.Is(err, os.ErrNotExist) {
+		// Source init copies its packaged default into the owned config path.
+		// Exclusive creation must never truncate a path created concurrently.
+		fd, createErr := unix.Open(path, unix.O_WRONLY|unix.O_CREAT|unix.O_EXCL|unix.O_CLOEXEC|unix.O_NOFOLLOW, 0600)
+		if createErr == nil {
+			file := os.NewFile(uintptr(fd), path)
+			_, writeErr := file.WriteString(defaultMediaCategoryPolicy)
+			closeErr := file.Close()
+			if writeErr != nil {
+				return nil, &categoryHelperLoadError{writeErr}
+			}
+			if closeErr != nil {
+				return nil, &categoryHelperLoadError{closeErr}
+			}
+		} else if !errors.Is(createErr, os.ErrExist) {
+			return nil, &categoryHelperLoadError{createErr}
+		}
+		info, err = os.Lstat(path)
+	}
+	if err != nil {
+		return nil, &categoryHelperLoadError{err}
+	}
+	if !info.Mode().IsRegular() || info.Size() > maxCategoryPolicyBytes {
+		return nil, categoryPolicyError("请使用不超过64 KiB的普通配置文件")
+	}
+	fd, err := unix.Open(path, unix.O_RDONLY|unix.O_CLOEXEC|unix.O_NOFOLLOW|unix.O_NONBLOCK, 0)
+	if errors.Is(err, unix.ELOOP) {
+		return nil, categoryPolicyError("请使用不超过64 KiB的普通配置文件")
+	}
+	if err != nil {
+		return nil, &categoryHelperLoadError{err}
+	}
+	file := os.NewFile(uintptr(fd), path)
+	defer file.Close()
+	info, err = file.Stat()
+	if err != nil {
+		return nil, &categoryHelperLoadError{err}
+	}
+	if !info.Mode().IsRegular() || info.Size() > maxCategoryPolicyBytes {
+		return nil, categoryPolicyError("请使用不超过64 KiB的普通配置文件")
+	}
+	raw, err := io.ReadAll(io.LimitReader(file, maxCategoryPolicyBytes+1))
+	if err != nil {
+		return nil, &categoryHelperLoadError{err}
+	}
+	if len(raw) > maxCategoryPolicyBytes {
+		return nil, categoryPolicyError("配置文件超过64 KiB")
+	}
+	return raw, nil
 }

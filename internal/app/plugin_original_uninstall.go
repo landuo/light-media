@@ -48,7 +48,10 @@ func (a *App) originalPluginUninstallHTTP(r *http.Request, path string) (any, er
 			}
 			retained = false
 			var removeErr error
-			if _, _, compiled := builtin.Lookup(class.installation.PluginID); !compiled {
+			if _, _, compiled := builtin.Lookup(class.installation.PluginID); class.external || !compiled {
+				// A legacy catalog name can now have a real standard artifact.
+				// Use the imported implementation identity, not that historical name,
+				// while retaining the compiled-alias-only branch's existing behavior.
 				// Package roots are owned by the artifact manager; deleting this copied code
 				// does not remove configuration data paths or source/other instance packages.
 				a.pluginImplementationMu.Lock()

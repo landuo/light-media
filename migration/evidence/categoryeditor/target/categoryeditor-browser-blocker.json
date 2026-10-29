@@ -1,0 +1,22 @@
+{
+  "status": "blocked_not_product_failure",
+  "local_browser": {
+    "action": "owned real App + Python Playwright Chromium",
+    "result": "TargetClosedError: Chromium process_singleton_posix socket() Operation not permitted before UI"
+  },
+  "escalated_launch": {
+    "action": "same owned local acceptance script, require_escalated",
+    "result": "bwrap launcher read-only sessions path error before test process; restricted path was not accessed"
+  },
+  "official_cloud_browser": {
+    "action": "CUA cloud browser tab 2 navigate http://127.0.0.1:31743",
+    "result": "net::ERR_CONNECTION_REFUSED"
+  },
+  "same_exec_server": {
+    "result": "GET /api/auth/status = 200; authenticated=false, setup_required=true; real server remained running"
+  },
+  "limits": "No native Terminal fallback, no Mac, no NAS, no public service, no UI acceptance claimed. Waiting for supported same-environment browser path.",
+  "artifacts": {
+    "script_sha256": "132343fffc6ea17b6aaf42bec94a834d109a319021cddcc00e6971adeebe58c0"
+  }
+}

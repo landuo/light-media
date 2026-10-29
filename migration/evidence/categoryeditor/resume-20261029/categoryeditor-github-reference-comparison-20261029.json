@@ -1,0 +1,73 @@
+{
+  "observed_at_utc": "2026-10-29T01:24:21.510958+00:00",
+  "method": "actual GitHub connector GET branch -> complete recursive Git tree -> file at pinned commit as base64; locally decoded bytes SHA256 and Git blob SHA1 verified",
+  "deployed_snapshot_files": {
+    "__init__.py": {
+      "bytes": 4291,
+      "sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27"
+    }
+  },
+  "raw_evidence_sha256": "3c51fe185f69d7431d0102cfd43f037aafff7257f4cb8cbcd710a2ab52bcdbb8",
+  "repositories": [
+    {
+      "repository": "landuo/MoviePilot-Plugins",
+      "ref": "main",
+      "commit_sha": "2e6a90f6c3598c79520640429e4fc4a113152ac0",
+      "commit_url": "https://github.com/landuo/MoviePilot-Plugins/commit/2e6a90f6c3598c79520640429e4fc4a113152ac0",
+      "tree_sha": "b7251de2f9c39e68e702dcc8999101454aa35ffb",
+      "tree_truncated": false,
+      "tree_entry_count": 559,
+      "categoryeditor_tree_entries": [],
+      "files": [],
+      "categoryeditor_status": "absent_at_pinned_default_branch",
+      "comparison": "No CategoryEditor tree or file in complete default-branch recursive tree; no file equality or source replacement claim."
+    },
+    {
+      "repository": "jxxghp/MoviePilot-Plugins",
+      "ref": "main",
+      "commit_sha": "ce3357c0f2bb4e46f5ff9b72560505a33b26a362",
+      "commit_url": "https://github.com/jxxghp/MoviePilot-Plugins/commit/ce3357c0f2bb4e46f5ff9b72560505a33b26a362",
+      "tree_sha": "63772fbae6fe713d23a62003f45761e3116a0292",
+      "tree_truncated": false,
+      "tree_entry_count": 2055,
+      "categoryeditor_tree_entries": [
+        {
+          "path": "plugins/categoryeditor",
+          "mode": "040000",
+          "type": "tree",
+          "sha": "7b7a9ab8b26aa36e43c5e4aa970847094aed1b2f",
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Plugins/git/trees/7b7a9ab8b26aa36e43c5e4aa970847094aed1b2f"
+        },
+        {
+          "path": "plugins/categoryeditor/__init__.py",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "bc7a1368b64b04668a579b7211c1228a8a35b2ad",
+          "size": 4291,
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Plugins/git/blobs/bc7a1368b64b04668a579b7211c1228a8a35b2ad"
+        }
+      ],
+      "files": [
+        {
+          "path": "plugins/categoryeditor/__init__.py",
+          "bytes": 4291,
+          "git_blob_sha1": "bc7a1368b64b04668a579b7211c1228a8a35b2ad",
+          "sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+          "plugin_version": "1.3",
+          "installed_snapshot_relative_path": "__init__.py",
+          "byte_match": true,
+          "url": "https://github.com/jxxghp/MoviePilot-Plugins/blob/ce3357c0f2bb4e46f5ff9b72560505a33b26a362/plugins/categoryeditor/__init__.py"
+        }
+      ],
+      "categoryeditor_status": "present_all_files_identical",
+      "downloaded_evidence_file": "categoryeditor-github-jxxghp-pinned-20261029.py"
+    }
+  ],
+  "host_main_version_or_commit_identified": false,
+  "source_baseline_replaced": false,
+  "cautions": [
+    "These are plugin repository commits, NOT installed NAS MoviePilot main commits.",
+    "_PluginBase and MessageHelper/CategoryHelper are host-main sources, not supplied by these plugin repositories.",
+    "Matching plugin bytes do not establish helper/base/host version, current user configuration, or approval of safety adaptations."
+  ]
+}

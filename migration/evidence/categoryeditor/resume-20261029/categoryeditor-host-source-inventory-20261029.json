@@ -1,0 +1,63 @@
+{
+  "scope": "historical uploaded NAS plugin source archive only; current NAS fingerprints pending",
+  "archive": "../uploads/mp-plugins-handoff-20261029.zip",
+  "archive_sha256": "44703b6523509ee82ea60d841b1a42256f54a4476a64f2efbd8b056d0d040183",
+  "archive_entries": 192,
+  "root_entries": [
+    "installed-plugins.json",
+    "README.txt"
+  ],
+  "business_source_files": 190,
+  "manifest_top_level": {
+    "observed_at": "2026-10-28T17:34:14.563030+00:00",
+    "count": 23,
+    "source": "Running MP container; SQLite mode=ro + AST literal metadata; no plugin import/run"
+  },
+  "readme": "Current running MoviePilot plugin source snapshot, read-only collected 2026-10-29 Asia/Shanghai. 23 instances / 22 base plugins. TorrentTransfermusic is the TorrentTransfer music clone, centrally managed by the target host. No runtime config/database/credentials included. Metadata is AST-derived without importing or executing plugins. SHA256 for every source file is in installed-plugins.json. Existing plugin settings/runtime data remain on NAS and must not be guessed or put in Git. Reference this exact snapshot rather than silently upgrading plugins.",
+  "nas_moviepilot_main_version": null,
+  "nas_moviepilot_main_commit": null,
+  "same_commit_official_fetch_identified": false,
+  "reason": "README and installed-plugins.json identify plugin versions/hashes, not MoviePilot host version, commit, image tag, or digest. Do not substitute latest.",
+  "missing_host_paths": [
+    "app/plugins/__init__.py",
+    "app/modules/themoviedb/__init__.py",
+    "app/modules/themoviedb/category.py",
+    "app/helper/message.py",
+    "app/helper/system.py",
+    "app/core/config.py"
+  ],
+  "categoryeditor": {
+    "plugin_version": "1.3",
+    "sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+    "imports": [
+      "from app.core.config import settings",
+      "from app.modules.themoviedb import CategoryHelper",
+      "from app.plugins import _PluginBase"
+    ],
+    "helper_reference": "CategoryHelper().init() at line 43; actual implementation/re-export is not present.",
+    "message_reference": "self.systemmessage.put(...) at line 44; no MessageHelper import in plugin. _PluginBase host source is absent, so actual MessageHelper import cannot be established from this archive."
+  },
+  "archive_messagehelper_symbol_hits": [],
+  "system_helper_import_evidence": "installed-plugin-sources/autobackup/__init__.py:23 from app.helper.system import SystemHelper; this does NOT establish MessageHelper location.",
+  "requested_path_correction": {
+    "app/helper/category.py": "Absent; not imported by CategoryEditor. Historical NAS helper manifest identifies actual helper at /app/app/modules/themoviedb/category.py.",
+    "app/helper/system.py": "Absent; historical base does not import MessageHelper from this module. It imports app.helper.message."
+  },
+  "historical_local_host_evidence": {
+    "warning": "Already-retained historical snapshots, outside this ZIP; current NAS identity not confirmed. No host version/commit identified here.",
+    "base": {
+      "file": "testdata/plugins/auto-backup-2.1.4/input/_auto_backup_port/reference/app-plugin-base.py",
+      "observed_at": "2026-10-18T02:35:11.993186+00:00",
+      "original_path": "/app/app/plugins/__init__.py",
+      "sha256": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+      "messagehelper_actual_import": "line 10: from app.helper.message import MessageHelper",
+      "message_assignment": "line 48: self.systemmessage = MessageHelper()"
+    },
+    "category_helper": {
+      "file": "testdata/plugins/category-editor-1.3/installed-category-helper.py",
+      "observed_at": "2026-10-20T11:44:16.559139+00:00",
+      "original_path": "/app/app/modules/themoviedb/category.py",
+      "sha256": "1c0ec53b78caa3a4949dd970931f38430c67c9d46ea2e16c3cc00950fb24c2b2"
+    }
+  }
+}

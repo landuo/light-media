@@ -1,0 +1,221 @@
+=== RUN   TestCategoryConditionsSupportOriginalRangesWithoutExpansion
+--- PASS: TestCategoryConditionsSupportOriginalRangesWithoutExpansion (0.00s)
+=== RUN   TestCategoryAliasesAndMergesMatchOriginalIterationOrder
+--- PASS: TestCategoryAliasesAndMergesMatchOriginalIterationOrder (0.00s)
+=== RUN   TestCategoryGenericFieldRefreshChangesActualOrganizePathAndCachesAbsence
+    category_conditions_test.go:88: additional TMDB fields were not used 华语电影 0 0 <nil>
+{"app_version":"0.4.19","event":"stopped","id":"log_RP8o3_VScEFhjKnZFNSWmoB2","instance_id":"instance_aSZUnmYe514ZAj7x2cK1aK7D","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-29T01:20:01.623111293Z","workflow_id":""}
+--- FAIL: TestCategoryGenericFieldRefreshChangesActualOrganizePathAndCachesAbsence (0.73s)
+=== RUN   TestCategoryEditorDeferredConditionLoadsBeforeMatching
+=== RUN   TestCategoryEditorDeferredConditionLoadsBeforeMatching/16
+=== RUN   TestCategoryEditorDeferredConditionLoadsBeforeMatching/1.5
+=== RUN   TestCategoryEditorDeferredConditionLoadsBeforeMatching/true
+=== RUN   TestCategoryEditorDeferredConditionLoadsBeforeMatching/[16]
+=== RUN   TestCategoryEditorDeferredConditionLoadsBeforeMatching/{id:_16}
+--- PASS: TestCategoryEditorDeferredConditionLoadsBeforeMatching (0.01s)
+    --- PASS: TestCategoryEditorDeferredConditionLoadsBeforeMatching/16 (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionLoadsBeforeMatching/1.5 (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionLoadsBeforeMatching/true (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionLoadsBeforeMatching/[16] (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionLoadsBeforeMatching/{id:_16} (0.00s)
+=== RUN   TestCategoryEditorDeferredConditionUsesSourceEvaluationOrder
+=== RUN   TestCategoryEditorDeferredConditionUsesSourceEvaluationOrder/earlier_mismatch_does_not_hide_later_split_error
+=== RUN   TestCategoryEditorDeferredConditionUsesSourceEvaluationOrder/earlier_absent_field_does_not_hide_later_split_error
+=== RUN   TestCategoryEditorDeferredConditionUsesSourceEvaluationOrder/matched_earlier_rule_stops_before_invalid_later_rule
+=== RUN   TestCategoryEditorDeferredConditionUsesSourceEvaluationOrder/unconditional_earlier_rule_stops_before_invalid_later_rule
+=== RUN   TestCategoryEditorDeferredConditionUsesSourceEvaluationOrder/absent_invalid_field_mismatches_without_raising
+--- PASS: TestCategoryEditorDeferredConditionUsesSourceEvaluationOrder (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionUsesSourceEvaluationOrder/earlier_mismatch_does_not_hide_later_split_error (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionUsesSourceEvaluationOrder/earlier_absent_field_does_not_hide_later_split_error (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionUsesSourceEvaluationOrder/matched_earlier_rule_stops_before_invalid_later_rule (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionUsesSourceEvaluationOrder/unconditional_earlier_rule_stops_before_invalid_later_rule (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionUsesSourceEvaluationOrder/absent_invalid_field_mismatches_without_raising (0.00s)
+=== RUN   TestCategoryEditorDeferredConditionPreservesInfoTruthiness
+=== RUN   TestCategoryEditorDeferredConditionPreservesInfoTruthiness/origin_list_with_empty_element
+=== RUN   TestCategoryEditorDeferredConditionPreservesInfoTruthiness/production_list_with_empty_element
+=== RUN   TestCategoryEditorDeferredConditionPreservesInfoTruthiness/genre_list_with_zero
+=== RUN   TestCategoryEditorDeferredConditionPreservesInfoTruthiness/truthy_generic_field
+=== RUN   TestCategoryEditorDeferredConditionPreservesInfoTruthiness/falsey_condition_false
+=== RUN   TestCategoryEditorDeferredConditionPreservesInfoTruthiness/falsey_condition_0
+=== RUN   TestCategoryEditorDeferredConditionPreservesInfoTruthiness/falsey_condition_0.0
+=== RUN   TestCategoryEditorDeferredConditionPreservesInfoTruthiness/falsey_condition_[]
+=== RUN   TestCategoryEditorDeferredConditionPreservesInfoTruthiness/falsey_condition_{}
+=== RUN   TestCategoryEditorDeferredConditionPreservesInfoTruthiness/falsey_condition_null
+--- PASS: TestCategoryEditorDeferredConditionPreservesInfoTruthiness (0.01s)
+    --- PASS: TestCategoryEditorDeferredConditionPreservesInfoTruthiness/origin_list_with_empty_element (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionPreservesInfoTruthiness/production_list_with_empty_element (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionPreservesInfoTruthiness/genre_list_with_zero (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionPreservesInfoTruthiness/truthy_generic_field (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionPreservesInfoTruthiness/falsey_condition_false (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionPreservesInfoTruthiness/falsey_condition_0 (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionPreservesInfoTruthiness/falsey_condition_0.0 (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionPreservesInfoTruthiness/falsey_condition_[] (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionPreservesInfoTruthiness/falsey_condition_{} (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionPreservesInfoTruthiness/falsey_condition_null (0.00s)
+=== RUN   TestCategoryEditorDeferredConditionKeepsWarmAndColdMaps
+=== RUN   TestCategoryEditorDeferredConditionKeepsWarmAndColdMaps/#00
+=== RUN   TestCategoryEditorDeferredConditionKeepsWarmAndColdMaps/movie:_[unterminated
+--- PASS: TestCategoryEditorDeferredConditionKeepsWarmAndColdMaps (0.01s)
+    --- PASS: TestCategoryEditorDeferredConditionKeepsWarmAndColdMaps/#00 (0.00s)
+    --- PASS: TestCategoryEditorDeferredConditionKeepsWarmAndColdMaps/movie:_[unterminated (0.00s)
+=== RUN   TestCategoryEditorDeferredConditionDoesNotRelaxSafety
+--- PASS: TestCategoryEditorDeferredConditionDoesNotRelaxSafety (0.01s)
+=== RUN   TestCategoryEditorDeferredConditionErrorsReachImportCaller
+{"app_version":"0.4.19","event":"stopped","id":"log_xDqdztTjPW0iqFbzenA1fQLu","instance_id":"instance_zOkCP7VDxBTn9stBWIJvS2iZ","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-29T01:20:02.136655292Z","workflow_id":""}
+--- PASS: TestCategoryEditorDeferredConditionErrorsReachImportCaller (0.47s)
+=== RUN   TestCategoryEditorDeferredConditionErrorsReachRecognitionCaller
+{"app_version":"0.4.19","event":"stopped","id":"log_UrxJOhh911E3JAIoxvq0xqz3","instance_id":"instance_j_n7ydGbmswIAV3Gb_RNBbvY","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-29T01:20:02.524987444Z","workflow_id":""}
+--- PASS: TestCategoryEditorDeferredConditionErrorsReachRecognitionCaller (0.39s)
+=== RUN   TestCategoryEditorRuntimeArchivedTruthyRootRetainsGetterMaps
+=== RUN   TestCategoryEditorRuntimeArchivedTruthyRootRetainsGetterMaps/scalar_string
+=== RUN   TestCategoryEditorRuntimeArchivedTruthyRootRetainsGetterMaps/nonempty_sequence
+=== RUN   TestCategoryEditorRuntimeArchivedTruthyRootRetainsGetterMaps/scalar_true
+=== RUN   TestCategoryEditorRuntimeArchivedTruthyRootRetainsGetterMaps/scalar_integer
+--- PASS: TestCategoryEditorRuntimeArchivedTruthyRootRetainsGetterMaps (0.01s)
+    --- PASS: TestCategoryEditorRuntimeArchivedTruthyRootRetainsGetterMaps/scalar_string (0.00s)
+    --- PASS: TestCategoryEditorRuntimeArchivedTruthyRootRetainsGetterMaps/nonempty_sequence (0.00s)
+    --- PASS: TestCategoryEditorRuntimeArchivedTruthyRootRetainsGetterMaps/scalar_true (0.00s)
+    --- PASS: TestCategoryEditorRuntimeArchivedTruthyRootRetainsGetterMaps/scalar_integer (0.00s)
+=== RUN   TestCategoryEditorRuntimeArchivedWriteOnlyStillNotifiesAndDisables
+--- PASS: TestCategoryEditorRuntimeArchivedWriteOnlyStillNotifiesAndDisables (0.01s)
+=== RUN   TestCategoryEditorRuntimeArchivedGetterDoesNotReloadExternalChanges
+--- PASS: TestCategoryEditorRuntimeArchivedGetterDoesNotReloadExternalChanges (0.00s)
+=== RUN   TestCategoryEditorRuntimeArchivedMissingFileCopiesExactDefault
+--- PASS: TestCategoryEditorRuntimeArchivedMissingFileCopiesExactDefault (0.02s)
+=== RUN   TestCategoryEditorRuntimeRootFailureSurvivesReadIOUntilParsedAgain
+=== RUN   TestCategoryEditorRuntimeRootFailureSurvivesReadIOUntilParsedAgain/reset_""
+=== RUN   TestCategoryEditorRuntimeRootFailureSurvivesReadIOUntilParsedAgain/reset_"movie:_[unterminated"
+--- PASS: TestCategoryEditorRuntimeRootFailureSurvivesReadIOUntilParsedAgain (0.01s)
+    --- PASS: TestCategoryEditorRuntimeRootFailureSurvivesReadIOUntilParsedAgain/reset_"" (0.00s)
+    --- PASS: TestCategoryEditorRuntimeRootFailureSurvivesReadIOUntilParsedAgain/reset_"movie:_[unterminated" (0.00s)
+=== RUN   TestCategoryEditorRuntimeReadSafetyErrorsAreNotSwallowed
+=== RUN   TestCategoryEditorRuntimeReadSafetyErrorsAreNotSwallowed/symlink
+=== RUN   TestCategoryEditorRuntimeReadSafetyErrorsAreNotSwallowed/directory
+=== RUN   TestCategoryEditorRuntimeReadSafetyErrorsAreNotSwallowed/oversized
+=== RUN   TestCategoryEditorRuntimeReadSafetyErrorsAreNotSwallowed/non_utf8
+=== RUN   TestCategoryEditorRuntimeReadSafetyErrorsAreNotSwallowed/cyclic_yaml
+--- PASS: TestCategoryEditorRuntimeReadSafetyErrorsAreNotSwallowed (0.01s)
+    --- PASS: TestCategoryEditorRuntimeReadSafetyErrorsAreNotSwallowed/symlink (0.00s)
+    --- PASS: TestCategoryEditorRuntimeReadSafetyErrorsAreNotSwallowed/directory (0.00s)
+    --- PASS: TestCategoryEditorRuntimeReadSafetyErrorsAreNotSwallowed/oversized (0.00s)
+    --- PASS: TestCategoryEditorRuntimeReadSafetyErrorsAreNotSwallowed/non_utf8 (0.00s)
+    --- PASS: TestCategoryEditorRuntimeReadSafetyErrorsAreNotSwallowed/cyclic_yaml (0.00s)
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/truthy_empty_string_list_string_condition/warm=false
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/truthy_empty_string_list_string_condition/warm=true
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/unicode_decimal_range/warm=false
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/unicode_decimal_range/warm=true
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/unicode_superscript_range/warm=false
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/unicode_superscript_range/warm=true
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/section_scalar/warm=false
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/section_scalar/warm=true
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/rule_scalar/warm=false
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/rule_scalar/warm=true
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/yaml11_boolean_condition/warm=false
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/yaml11_boolean_condition/warm=true
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/duplicate_true_and_one/warm=false
+=== RUN   TestCategoryEditorSemanticsMatchesArchivedReviewOracle/duplicate_true_and_one/warm=true
+--- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle (0.13s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/truthy_empty_string_list_string_condition/warm=false (0.00s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/truthy_empty_string_list_string_condition/warm=true (0.00s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/unicode_decimal_range/warm=false (0.00s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/unicode_decimal_range/warm=true (0.00s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/unicode_superscript_range/warm=false (0.00s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/unicode_superscript_range/warm=true (0.00s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/section_scalar/warm=false (0.00s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/section_scalar/warm=true (0.00s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/rule_scalar/warm=false (0.00s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/rule_scalar/warm=true (0.00s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/yaml11_boolean_condition/warm=false (0.00s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/yaml11_boolean_condition/warm=true (0.00s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/duplicate_true_and_one/warm=false (0.00s)
+    --- PASS: TestCategoryEditorSemanticsMatchesArchivedReviewOracle/duplicate_true_and_one/warm=true (0.00s)
+=== RUN   TestCategoryEditorSemanticsDeferredShapesPreserveStrictParser
+--- PASS: TestCategoryEditorSemanticsDeferredShapesPreserveStrictParser (0.00s)
+=== RUN   TestCategoryEditorSemanticsPublicListAndImportErrorStages
+=== RUN   TestCategoryEditorSemanticsPublicListAndImportErrorStages/section_scalar
+{"app_version":"0.4.19","event":"stopped","id":"log_XJCujBeC2IZV8VOPVYstOmMo","instance_id":"instance_WgSeJFRSemFq6J-J2VcUTUKc","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-29T01:20:03.147948224Z","workflow_id":""}
+=== RUN   TestCategoryEditorSemanticsPublicListAndImportErrorStages/rule_scalar
+{"app_version":"0.4.19","event":"stopped","id":"log_x-GRPOUcYGTvu99yRdRLuNVw","instance_id":"instance_AmsZRa0xAnQbySilhagxn6nc","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-29T01:20:03.416269575Z","workflow_id":""}
+--- PASS: TestCategoryEditorSemanticsPublicListAndImportErrorStages (0.70s)
+    --- PASS: TestCategoryEditorSemanticsPublicListAndImportErrorStages/section_scalar (0.43s)
+    --- PASS: TestCategoryEditorSemanticsPublicListAndImportErrorStages/rule_scalar (0.27s)
+=== RUN   TestCategoryEditorSemanticsUnicodeRangeAndErrorTiming
+--- PASS: TestCategoryEditorSemanticsUnicodeRangeAndErrorTiming (0.00s)
+=== RUN   TestCategoryEditorSemanticsYAML11BooleansAndPythonKeyCollision
+--- PASS: TestCategoryEditorSemanticsYAML11BooleansAndPythonKeyCollision (0.01s)
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/animation_before_Chinese
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Chinese
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Cantonese
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Tibetan
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Zhuang
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/foreign_despite_Chinese_display_title
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Chinese_animation
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Taiwan_animation
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Japanese_animation
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/documentary_before_drama
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/kids_before_variety
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/reality
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/talk
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/domestic
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/western
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/western_UK_compatibility
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Korean
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Thai_follows_original_policy
+=== RUN   TestDefaultMediaCategoryRulesMatchMoviePilotOrder/unmatched
+--- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder (0.01s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/animation_before_Chinese (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Chinese (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Cantonese (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Tibetan (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Zhuang (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/foreign_despite_Chinese_display_title (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Chinese_animation (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Taiwan_animation (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Japanese_animation (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/documentary_before_drama (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/kids_before_variety (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/reality (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/talk (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/domestic (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/western (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/western_UK_compatibility (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Korean (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/Thai_follows_original_policy (0.00s)
+    --- PASS: TestDefaultMediaCategoryRulesMatchMoviePilotOrder/unmatched (0.00s)
+=== RUN   TestCustomMediaCategoryPreservesFileOrderAndConditionSemantics
+--- PASS: TestCustomMediaCategoryPreservesFileOrderAndConditionSemantics (0.00s)
+=== RUN   TestMediaCategoryPolicyRejectsUnsafeOrUnsupportedConfiguration
+--- PASS: TestMediaCategoryPolicyRejectsUnsafeOrUnsupportedConfiguration (0.00s)
+=== RUN   TestFullCustomMediaCategoryKeepsJapaneseMoviePriorityAndTVDefaults
+--- PASS: TestFullCustomMediaCategoryKeepsJapaneseMoviePriorityAndTVDefaults (0.00s)
+=== RUN   TestMediaCategoryRefreshesLegacyCacheBeforePlanning
+    media_category_test.go:210: legacy metadata classified without refreshing reliable fields: {DirectorySourceVersion:0 Manual:false ReorganizeAssetID: Renaming:<nil> Scraping:<nil> LibraryTypeFolder:<nil> Warnings:[] SpaceNeeded:0 SpaceAvailable:0 ID: WorkflowID: Media:{LibraryState: SubscriptionID: DownloadState: ID:0 MediaType: Title: OriginalTitle: OriginalLanguage: OriginCountry:[] ProductionCountries:[] CategoryMetadataKnown:false CategoryFields:map[] IMDbID: Aliases:[] Year:0 Overview: PosterPath: BackdropPath: ReleaseDate: VoteAverage:0 VoteCount:0 Popularity:0 Genres:[] GenreIDs:[] Cast:[] Recommendations:[] Seasons:[] NumberOfEpisodes:0 NumberOfSeasons:0 Status: Runtime:0 Character: Job:} RootID: Mode: Files:[] State: IntentID: CreatedAt:} TMDB 认证失败，请检查凭据
+{"app_version":"0.4.19","event":"stopped","id":"log_2fvHKOwNh7s9BvPa91ZZt-UW","instance_id":"instance_lgO3eSsUO7K2v9ftvjstsR-v","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-29T01:20:09.929480468Z","workflow_id":""}
+--- FAIL: TestMediaCategoryRefreshesLegacyCacheBeforePlanning (6.48s)
+=== RUN   TestMediaCategoryRefreshFailureDoesNotClassifyLegacyUnknownLanguage
+=== RUN   TestMediaCategoryRefreshFailureDoesNotClassifyLegacyUnknownLanguage/upstream_failure
+{"app_version":"0.4.19","event":"stopped","id":"log_ZhwPA4fneFZuGqlnOrWhw5JX","instance_id":"instance_jaEmfTr5SpMStqSg6RCvBuQK","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-29T01:20:20.861521445Z","workflow_id":""}
+--- PASS: TestMediaCategoryRefreshFailureDoesNotClassifyLegacyUnknownLanguage (10.94s)
+    --- PASS: TestMediaCategoryRefreshFailureDoesNotClassifyLegacyUnknownLanguage/upstream_failure (10.94s)
+=== RUN   TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback
+=== RUN   TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/动画电影
+    media_category_test.go:267: fresh detail did not follow original absent-field/fallback semantics: {DirectorySourceVersion:0 Manual:false ReorganizeAssetID: Renaming:<nil> Scraping:<nil> LibraryTypeFolder:<nil> Warnings:[] SpaceNeeded:0 SpaceAvailable:0 ID: WorkflowID: Media:{LibraryState: SubscriptionID: DownloadState: ID:0 MediaType: Title: OriginalTitle: OriginalLanguage: OriginCountry:[] ProductionCountries:[] CategoryMetadataKnown:false CategoryFields:map[] IMDbID: Aliases:[] Year:0 Overview: PosterPath: BackdropPath: ReleaseDate: VoteAverage:0 VoteCount:0 Popularity:0 Genres:[] GenreIDs:[] Cast:[] Recommendations:[] Seasons:[] NumberOfEpisodes:0 NumberOfSeasons:0 Status: Runtime:0 Character: Job:} RootID: Mode: Files:[] State: IntentID: CreatedAt:} TMDB 认证失败，请检查凭据
+{"app_version":"0.4.19","event":"stopped","id":"log_N2NzNf-t_EXm14g5JNLXx8_m","instance_id":"instance_nF9jyXGzRWB2124F9S-5cFQR","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-29T01:20:24.413233392Z","workflow_id":""}
+=== RUN   TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/外语电影
+    media_category_test.go:267: fresh detail did not follow original absent-field/fallback semantics: {DirectorySourceVersion:0 Manual:false ReorganizeAssetID: Renaming:<nil> Scraping:<nil> LibraryTypeFolder:<nil> Warnings:[] SpaceNeeded:0 SpaceAvailable:0 ID: WorkflowID: Media:{LibraryState: SubscriptionID: DownloadState: ID:0 MediaType: Title: OriginalTitle: OriginalLanguage: OriginCountry:[] ProductionCountries:[] CategoryMetadataKnown:false CategoryFields:map[] IMDbID: Aliases:[] Year:0 Overview: PosterPath: BackdropPath: ReleaseDate: VoteAverage:0 VoteCount:0 Popularity:0 Genres:[] GenreIDs:[] Cast:[] Recommendations:[] Seasons:[] NumberOfEpisodes:0 NumberOfSeasons:0 Status: Runtime:0 Character: Job:} RootID: Mode: Files:[] State: IntentID: CreatedAt:} TMDB 认证失败，请检查凭据
+{"app_version":"0.4.19","event":"stopped","id":"log_YMpdGLqcljWjG5cHLRrFC-Ia","instance_id":"instance_TzwVGKYsvgaKhR3pOIFGneu3","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-29T01:20:28.904760576Z","workflow_id":""}
+--- FAIL: TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback (8.04s)
+    --- FAIL: TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/动画电影 (3.55s)
+    --- FAIL: TestMediaCategoryFreshPartialMetadataFollowsMoviePilotFallback/外语电影 (4.50s)
+=== RUN   TestCustomMediaCategoryPlanPublishesFrozenHardlink
+{"app_version":"0.4.19","event":"published","id":"log_Mk4mV6L9ebkh35P-b3xs7GYO","instance_id":"instance_0objGHELxnOGzY9zX-rG71_k","job_id":"job_nQnFcuGpiTDpx2hXL-_prGs1","level":"INFO","message":"已登记本次实际发布成功的文件；源文件保留","module":"import","time":"2026-10-29T01:20:29.615751745Z","workflow_id":"wf_nm_COs5s4NsKaN2OsEI8_pkM"}
+{"app_version":"0.4.19","event":"stopped","id":"log_UKyGJWNVuetztxm_NZ0JLF53","instance_id":"instance_0objGHELxnOGzY9zX-rG71_k","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-10-29T01:20:29.630039403Z","workflow_id":""}
+--- PASS: TestCustomMediaCategoryPlanPublishesFrozenHardlink (0.72s)
+=== RUN   TestOriginalMediaCategoriesSourceAndActualRuleAPI
+    plugin_original_media_categories_test.go:27: OWNED_MODULE_OVERRIDE_BINARY must name an actual separately compiled owned-module-override worker
+--- FAIL: TestOriginalMediaCategoriesSourceAndActualRuleAPI (0.01s)
+FAIL
+FAIL	light-media/internal/app	30.123s
+FAIL

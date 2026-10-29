@@ -88,7 +88,7 @@ func (a *App) startOriginalPlugin(ctx context.Context, instance string) *origina
 		if metadataErr != nil {
 			return nil
 		}
-		class := originalPluginClass{installation: in, isClone: meta.SourceInstanceID != ""}
+		class := originalPluginClass{installation: in, isClone: meta.SourceInstanceID != "", external: implementation.External}
 		a.storeOriginalPluginClass(instance, class)
 		object := &originalPluginInstance{app: a, installation: in, manifest: manifest, external: implementation.External, hostContract: implementation.HostContract}
 		object.setFrontendPackageHash(implementation.PackageSHA256)

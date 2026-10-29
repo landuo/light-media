@@ -16,16 +16,20 @@ func (a *App) originalMediaCategories(ctx context.Context) (json.RawMessage, err
 	empty := originalModuleResultEmpty(result)
 	if empty || json.Unmarshal(result, &list) == nil && string(result) != "null" {
 		policy, nativeErr := a.currentMediaCategoryPolicy()
-		if nativeErr != nil {
-			a.reportOriginalPluginExecutionError(ctx, "system", "TheMovieDb发生了错误", map[string]any{"type": "module", "module_id": "TheMovieDbModule", "module_name": "TheMovieDb", "module_method": "media_category"}, nativeErr)
-		} else if empty {
+		if nativeErr == nil && empty {
 			categories := map[string][]string{"电影": {}, "电视剧": {}}
-			for kind, title := range map[string]string{"movie": "电影", "tv": "电视剧"} {
-				for _, rule := range policy[kind] {
-					categories[title] = append(categories[title], rule.name)
+			for _, entry := range [][2]string{{"movie", "电影"}, {"tv", "电视剧"}} {
+				categories[entry[1]], nativeErr = policy.categoryNames(entry[0])
+				if nativeErr != nil {
+					break
 				}
 			}
-			result, _ = json.Marshal(categories)
+			if nativeErr == nil {
+				result, _ = json.Marshal(categories)
+			}
+		}
+		if nativeErr != nil {
+			a.reportOriginalPluginExecutionError(ctx, "system", "TheMovieDb发生了错误", map[string]any{"type": "module", "module_id": "TheMovieDbModule", "module_name": "TheMovieDb", "module_method": "media_category"}, nativeErr)
 		}
 		// A prior list survives a non-list native result, including a dict.
 	}

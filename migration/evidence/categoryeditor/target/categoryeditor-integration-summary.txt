@@ -1,0 +1,48 @@
+CategoryEditor standard-worker integration development evidence
+Final observed completion: 2026-10-28T18:30:59Z
+
+Result
+- Current-source normal and race workers built with verified official Go 1.26.2.
+- Final dual-end race run (actual App and actual worker both race-instrumented): 7 Standard top-level tests / 25 leaf cases, plus 1 legacy-alias negative control, all PASS; 157.189 seconds; exit 0.
+- go vet ./internal/app: exit 0.
+- No DATA RACE, stop_failed, stop_method_failed, or captured-worker terminal join/exit error markers. Fixtures explicitly assert terminal Stop status for observed worker clients.
+- 45 source/fixture bindings captured during the final run remained byte-identical at termination. go.mod and go.sum retain their original supplied hashes.
+
+Owned product deliverable
+- internal/app/plugin_categoryeditor_standard_test.go
+- SHA256 19dc76892fa4b1fbd0db22a7c8afd052c22a73264e72126b561d32b85f75cde0
+- No host/SDK/worker/product file outside that test was edited by this integration subtask. Parent/worker agents own the implementation fixes and negative-control test. No commit/push performed here.
+
+Actual integration coverage
+- Digest-pinned sdk-resources/v1 artifact install over owned loopback HTTP, actual Linux subprocess, real App/SQLite, source-shaped form and absence of manual/native-invoke, scheduler, command, API or business page surfaces.
+- Real configuration PUT reaches exact category.yaml bytes, actual core classification and system-message helper, then disables enabled and replaces the full configuration with two source fields.
+- Source/clone independent config and synthetic platform KV, shared global category.yaml; source reload/same-version force reacquisition; clone existing-code reinstall and source-ID force mismatch rejection; reset and uninstall isolation including actual package removal; cold initialization has no repeated write/notice/config revision.
+- Eleven fixed-original-helper warm/cold YAML oracle cases; Python falsey content; string enabled truthiness; permission-denied regular file, directory path, truthy non-string content, raw unpaired surrogate with truncate-before-encoding-error ordering.
+- Numeric YAML condition is accepted by save/notice/disable and fails only when actual classification evaluates it, matching the original helper's deferred validation.
+- Actual POST /api/import/preview consumes two worker-saved policies through the production metadata decoder/projection/classifier, writes two SQLite preview plans with differing category targets, and preserves the first plan. Exactly two strict in-memory synthetic metadata responses; owned synthetic source unchanged, target empty, jobs zero. No execution/download/publication performed.
+
+Discrepancies found without changing source-derived expectations
+- Numeric condition previously failed too early during save. Original helper assigns the YAML map without evaluating condition.split. Worker/parent fixed deferred evaluation; final real save and later-classification assertions PASS.
+- External clone uninstall previously retained its package because the source ID also exists in the legacy catalog. Parent's minimal verified-external-identity fix now removes only the current artifact package; our actual clone test and parent's synthetic legacy-alias negative control both PASS.
+- Incorrect test hypothesis corrected: closing the native notice queue produces a no-op, not the source oracle's injected notice exception. Removed that fixture assumption; App-level notice exceptions are not claimed.
+- Preview initially failed safely with missing metadata credentials: a loaded standard get_module surface selects full source recognition. Replaced only the test transport with the existing strict, non-fallback metadata fixture; production classifier and planner remain real.
+
+Traceability and final artifacts
+- Original installed source SHA256: 24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27.
+- Original helper SHA256: 1c0ec53b78caa3a4949dd970931f38430c67c9d46ea2e16c3cc00950fb24c2b2.
+- Final normal binary SHA256: 4087b9dbd40320d36afef9fe98e74b3b4b098b36892ab71dd57eb0bb8498cbb1.
+- Final race binary SHA256: 83be658a70b7793e07704a19cd2d92e556576785fe3e0dbd1b2ed7fba252353a.
+- categoryeditor-integration-verified-{build,race,vet}.{log,exit}: raw final outputs and actual exit statuses.
+- categoryeditor-integration-verified-summary.json: commands, all leaf results, hashes, diagnostic counts, coverage and limits.
+- categoryeditor-integration-verified-source-bindings.json: current source/fixture hashes and capture phase.
+- Earlier failures remain in first/race/final-race logs. The 18:18 announced final run did not start before interruption; the actual final run is session 95930, started 18:27, terminated normally 18:30:59. Do not mistake older failed logs for the final run or vice versa.
+
+Reproduction from light-media
+  source ../toolchain/env.sh
+  go build -race -o work/category-editor-integration-race ./cmd/category-editor
+  CATEGORYEDITOR_WORKER_BINARY="$PWD/work/category-editor-integration-race" go test -race ./internal/app -run '^TestCategoryEditorStandard|^TestCategoryEditorLegacyAliasUninstallDoesNotDeletePackagePaths$' -count=1 -timeout=7m -v
+  go vet ./internal/app
+Missing CATEGORYEDITOR_WORKER_BINARY is intentionally fatal, never a skipped green result.
+
+Limits
+This is integration-test development evidence, not independent source-review or acceptance sign-off. It is not a live old-MoviePilot/NAS test or full-app test-suite pass. External metadata is controlled synthetic transport, not a public provider session. No fabricated newer clone artifact, real downloader transfer, production configuration import, media publication, browser acceptance or deployment is claimed. Coordinator owns independent review, approved behavior differences, full-server/browser checks and final delivery. Worker artifacts are retained for the coordinator's ongoing verification/cleanup.

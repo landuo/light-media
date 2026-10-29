@@ -1,0 +1,205 @@
+{
+  "status": "known_non_safety_fixes_verified_in_controlled_replay",
+  "full_equivalence": false,
+  "source_current_plugin_sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+  "source_helper": "historical 2026-10-20, sha256 1c0ec53b78caa3a4949dd970931f38430c67c9d46ea2e16c3cc00950fb24c2b2; current NAS identity not verified",
+  "target_files": {
+    "go.mod": "622569e08ea6fb374e66a0e35f22bc29b276841d7ab74ade1e1d813a6095b5fa",
+    "go.sum": "2166fc925241cdfc675fc78e2e3d2b36152d9eb208a86d6defccec9551c61355",
+    "internal/app/category_conditions.go": "c617f27de62da84d81e745d805a2578a2abf3b59ccf9f8cd83d1d44adc7b8db0",
+    "internal/app/category_yaml.go": "e86f35596e8823b3229e9a3bcb47664e30c3195c1ace4945c535800d70a35368",
+    "internal/app/core_business_source_facts.go": "52f124dd057ea0d0e79531f24c265ace05c5e3e3c92ecada99b900c2e5c5e62e",
+    "internal/app/defaults/category.yaml": "1095b3aeb315569f541fded31bc77f43fa625cb9ac4844e3a28ba7d7868b2303",
+    "internal/app/media_category.go": "7bc4a56baf0f6611de3f267d876a83b0de1d587a2935e6482723b6d315081ad8",
+    "internal/app/media_category_runtime.go": "f2ad131739f8241bcc61e333e746ad419c1ec79defcc1a245072b84e959ce491",
+    "internal/app/plugin_categoryeditor_resources.go": "1821eb85c8d1f5104ea709303a7cfa4fbeeee0349144ffa6491b7a0d554db9dd",
+    "internal/app/plugin_categoryeditor_wire.go": "88acdb1a6ee46e011c451e7cf6619440507bacb11cf21aa9560c63afbab77948",
+    "internal/app/plugin_original_media_categories.go": "ea1676696b28603c32193eb471b450ff47636283736fae79a5620c706ef9a780",
+    "internal/app/plugin_original_resources.go": "25c62dab5b5fe553b844118cce0035dc5b7a96dcf4d5642bba2f21a5b6590b28",
+    "internal/app/system_messages.go": "6c4ba3976744ff0a4c6e0212ab6a00b86e656d3d611b62779588c303edbfb0e2",
+    "internal/catalog/category_fields.go": "85df7e6405acbc55c78e8f217a953872695a23e2dc396051924f84450eddfc2e",
+    "internal/catalog/category_metadata.go": "3723dc0d9181fa9d588196a4bb791b2da81e9080c210b67a6f96044522644366",
+    "internal/plugins/category_policy.go": "dd601bff6914b2151f043864b8edc2a640c2fdc0ba98f79565e03489328434b9",
+    "internal/plugins/categoryeditor/categoryeditor.go": "b7f16a9609a8cff0816034896066fc52d376209aa63dac54c1cf92f2f7bb4069",
+    "internal/plugins/categoryeditor/form.json": "80ad278e12525c6b61563468ffa00b32b719ffd56f3029a89f13ccf1db8bb6a6"
+  },
+  "target_stable_during_probe": true,
+  "source_input_cases": 20,
+  "source_temperatures": [
+    "warm",
+    "cold"
+  ],
+  "target_filesystem_cases": 3,
+  "source_filesystem_cases": 4,
+  "root_io_sequence_steps": 4,
+  "matched_comparisons": 294,
+  "total_raw_comparisons": 306,
+  "unexpected_mismatches": [],
+  "excluded_cold_failed_constructor_observations": [
+    {
+      "id": "scalar_true",
+      "temperature": "cold",
+      "field": "getter_query_error",
+      "source": false,
+      "target": true,
+      "equal": false
+    },
+    {
+      "id": "scalar_true",
+      "temperature": "cold",
+      "field": "movie_categories",
+      "source": {
+        "value": []
+      },
+      "target": {
+        "value": null
+      },
+      "equal": false
+    },
+    {
+      "id": "scalar_true",
+      "temperature": "cold",
+      "field": "movie_match",
+      "source": {
+        "value": ""
+      },
+      "target": {
+        "value": null
+      },
+      "equal": false
+    },
+    {
+      "id": "scalar_integer",
+      "temperature": "cold",
+      "field": "getter_query_error",
+      "source": false,
+      "target": true,
+      "equal": false
+    },
+    {
+      "id": "scalar_integer",
+      "temperature": "cold",
+      "field": "movie_categories",
+      "source": {
+        "value": []
+      },
+      "target": {
+        "value": null
+      },
+      "equal": false
+    },
+    {
+      "id": "scalar_integer",
+      "temperature": "cold",
+      "field": "movie_match",
+      "source": {
+        "value": ""
+      },
+      "target": {
+        "value": null
+      },
+      "equal": false
+    },
+    {
+      "id": "scalar_string",
+      "temperature": "cold",
+      "field": "getter_query_error",
+      "source": false,
+      "target": true,
+      "equal": false
+    },
+    {
+      "id": "scalar_string",
+      "temperature": "cold",
+      "field": "movie_categories",
+      "source": {
+        "value": []
+      },
+      "target": {
+        "value": null
+      },
+      "equal": false
+    },
+    {
+      "id": "scalar_string",
+      "temperature": "cold",
+      "field": "movie_match",
+      "source": {
+        "value": ""
+      },
+      "target": {
+        "value": null
+      },
+      "equal": false
+    },
+    {
+      "id": "nonempty_sequence",
+      "temperature": "cold",
+      "field": "getter_query_error",
+      "source": false,
+      "target": true,
+      "equal": false
+    },
+    {
+      "id": "nonempty_sequence",
+      "temperature": "cold",
+      "field": "movie_categories",
+      "source": {
+        "value": []
+      },
+      "target": {
+        "value": null
+      },
+      "equal": false
+    },
+    {
+      "id": "nonempty_sequence",
+      "temperature": "cold",
+      "field": "movie_match",
+      "source": {
+        "value": ""
+      },
+      "target": {
+        "value": null
+      },
+      "equal": false
+    }
+  ],
+  "exclusion_reason": "Original replay explicitly retains __new__ object after failing __init__. This does not prove actual CategoryHelper() / WeakSingleton returns or retains a failed-construction instance. Parent instructed not to change target lifecycle to match this adapter. Actual archived WeakSingleton source not found; current NAS unverified. Raw mismatch exit1 and all observations retained.",
+  "verified_fixes": [
+    "warm cached getters after truthy root failure",
+    "ordinary owned 0200 read failure swallowed with source notification/disable/config order",
+    "explicit init only; no reload after external file edit",
+    "missing default file copy",
+    "scalar section keys/items and scalar rule items delayed errors",
+    "Unicode decimal range and nondecimal digit conversion error timing",
+    "explicit YAML1.1 on boolean condition",
+    "true/1 duplicate handled as parser failure with retained cache",
+    "empty-string list presence in direct matcher",
+    "24019-byte HTML payload",
+    "decoded 65536-byte quote, backslash, and control-character policy wire edges",
+    "invalid-root to IO to parser-failure to IO state sequence"
+  ],
+  "scope_limits": [
+    "real worker.Handle + resource adapter + owned filesystem/parser; BaseUpdateConfig is recorder, scope validator explicit adapter",
+    "not full installed App/SQLite/stdio/auth acceptance; parent owns separate real-chain tests",
+    "not browser, current NAS, config migration, real WeakSingleton, complete YAML1.1 semantics, or all safety-adaptation acceptance",
+    "source symlink contrast retained but target final narrow pass does not remove or retest safety guard",
+    "initial pre-fix target compile raced ongoing production edits; not a semantic failure or product verdict"
+  ],
+  "static_review": [
+    "explicit reload call correctly used after successful file write; cached getters avoid IO on warm helper",
+    "ordinary IO errors typed separately from preserved no-symlink/regular-file/UTF8/size safety errors",
+    "runtime-only section/rule/deferred condition behavior leaves strict parser validation intact",
+    "public category list uses categoryNames; matching uses deferred shape markers",
+    "CategoryApply-specific JSON limit bounded to six times decoded64KiB plus64; generic128KiB unchanged; unknown fields and trailing JSON rejected; decoded64KiB still checked before file mutation"
+  ],
+  "evidence_sha256": {
+    "categoryeditor-independent-narrow-source-20261029.json": "056c0427533200525ffdae7a429208430ca23e2229fae83eb67e99dcf6881841",
+    "categoryeditor-independent-narrow-final-target.json": "85031e72adfcbc6bd51cf3123a8d45947b3638615743ccf121a8c13557e6a985",
+    "categoryeditor-independent-narrow-final-comparison.json": "47c2d4fb8399a6278f1855d989821bfc5b2bf04214d72daabbd349c003395fbf",
+    "categoryeditor-independent-root-read-sequence-20261029.json": "7f022ba37b21a89ce5965b98e8d42ce0914609aacbc734fd8933951db22b8025",
+    "categoryeditor-independent-filesystem-source-20261029.json": "78dde4d87f1a4d15742ad541192900966466507c9979b9e1dad8c10ff7ccdc6a",
+    "categoryeditor-host-source-inventory-20261029.json": "e45f12e6f15f465f6de79e4558162e742a73569927bfe897ecbf5abf49a1256c"
+  }
+}

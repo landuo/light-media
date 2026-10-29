@@ -1,0 +1,38 @@
+{"case": "blank", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "comments", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "null", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "empty_map", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "empty_sequence", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "false", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "zero", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "empty_string", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "parser_failure", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "duplicate_key", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "multiple_documents", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "scalar_true", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "scalar_integer", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "scalar_string", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "nonempty_sequence", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "movie_only", "warm": {"return": {"type": "str", "value": "\u65b0\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": "\u65b0\u7535\u5f71"}}, "bounded_process": null}
+{"case": "tv_only", "warm": {"return": {"type": "str", "value": ""}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "both_empty", "warm": {"return": {"type": "str", "value": ""}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "unknown_only", "warm": {"return": {"type": "str", "value": ""}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "movie_scalar", "warm": {"exception": {"type": "AttributeError", "message": "'int' object has no attribute 'items'"}}, "cold": {"exception": {"type": "AttributeError", "message": "'int' object has no attribute 'items'"}}, "bounded_process": null}
+{"case": "condition_integer", "warm": {"exception": {"type": "AttributeError", "message": "'int' object has no attribute 'split'"}}, "cold": {"exception": {"type": "AttributeError", "message": "'int' object has no attribute 'split'"}}, "bounded_process": null}
+{"case": "condition_false", "warm": {"return": {"type": "str", "value": "\u5047\u503c\u6761\u4ef6"}}, "cold": {"return": {"type": "str", "value": "\u5047\u503c\u6761\u4ef6"}}, "bounded_process": null}
+{"case": "ordered_and_invert", "warm": {"return": {"type": "str", "value": "\u4e2d\u6587\u52a8\u753b"}}, "cold": {"return": {"type": "str", "value": "\u4e2d\u6587\u52a8\u753b"}}, "bounded_process": null}
+{"case": "range_and_countries", "warm": {"return": {"type": "str", "value": "\u533a\u57df\u5e74\u4ee3"}}, "cold": {"return": {"type": "str", "value": "\u533a\u57df\u5e74\u4ee3"}}, "bounded_process": null}
+{"case": "no_trim", "warm": {"return": {"type": "str", "value": "\u540e\u5907"}}, "cold": {"return": {"type": "str", "value": "\u540e\u5907"}}, "bounded_process": null}
+{"case": "malformed_country_items", "warm": {"exception": {"type": "AttributeError", "message": "'str' object has no attribute 'get'"}}, "cold": {"exception": {"type": "AttributeError", "message": "'str' object has no attribute 'get'"}}, "bounded_process": null}
+{"case": "numeric_exact", "warm": {"exception": {"type": "AttributeError", "message": "'int' object has no attribute 'split'"}}, "cold": {"exception": {"type": "AttributeError", "message": "'int' object has no attribute 'split'"}}, "bounded_process": null}
+{"case": "large_comment_65k", "warm": {"return": {"type": "str", "value": "\u5408\u6cd5\u5206\u7c7b"}}, "cold": {"return": {"type": "str", "value": "\u5408\u6cd5\u5206\u7c7b"}}, "bounded_process": null}
+{"case": "path_like_category", "warm": {"return": {"type": "str", "value": "../escape"}}, "cold": {"return": {"type": "str", "value": "../escape"}}, "bounded_process": null}
+{"case": "cycle_bounded", "warm": {"return": {"type": "str", "value": "Recursive"}}, "cold": {"return": {"type": "str", "value": "Recursive"}}, "bounded_process": {"timeout_seconds": 8, "exit_code": 0, "stderr": ""}}
+{"case": "invalid_utf8_replacement", "warm": {"return": {"type": "str", "value": "\ufffd"}}, "cold": {"return": {"type": "str", "value": "\ufffd"}}, "bounded_process": null}
+{"case": "missing_user_copy_default", "warm": {"return": {"type": "str", "value": "\u5185\u7f6e\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": "\u5185\u7f6e\u7535\u5f71"}}, "bounded_process": null}
+{"case": "missing_parent_copy_fails", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "directory_read_fails", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"case": "permission_read_fails", "warm": {"return": {"type": "str", "value": "\u7f13\u5b58\u7535\u5f71"}}, "cold": {"return": {"type": "str", "value": ""}}, "bounded_process": null}
+{"cases": 35, "output_sha256": "9fa95d762b18da0ee90973f4b494bf508a4ce68546834d11d214795df66d78a6", "status": "recorded_not_current_nas_or_target_verdict"}
+
+COMMAND_EXIT=0

@@ -1,0 +1,1404 @@
+=== RUN   TestPluginHTTPDeclarationsPathsAndTransport
+--- PASS: TestPluginHTTPDeclarationsPathsAndTransport (0.00s)
+=== RUN   TestPluginHTTPBodylessStatuses
+--- PASS: TestPluginHTTPBodylessStatuses (0.00s)
+=== RUN   TestPluginHTTPBinaryAndDownloadMetadata
+--- PASS: TestPluginHTTPBinaryAndDownloadMetadata (0.00s)
+=== RUN   TestBaseInstanceMetadataWrapperKeepsRealAndDisplayVersionsSeparate
+--- PASS: TestBaseInstanceMetadataWrapperKeepsRealAndDisplayVersionsSeparate (0.00s)
+=== RUN   TestBaseWrapperPreservesTargetAndNone
+--- PASS: TestBaseWrapperPreservesTargetAndNone (0.00s)
+=== RUN   TestBaseMethodVocabularyIsBounded
+--- PASS: TestBaseMethodVocabularyIsBounded (0.00s)
+=== RUN   TestBroadcastHandlerManifestBindsDeclaredMethods
+--- PASS: TestBroadcastHandlerManifestBindsDeclaredMethods (0.00s)
+=== RUN   TestChainHandlerManifestDeclaration
+--- PASS: TestChainHandlerManifestDeclaration (0.00s)
+=== RUN   TestOwnedConcurrentSameWorkerOverlapAndChunkIsolation
+    concurrent_session_test.go:115: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedConcurrentSameWorkerOverlapAndChunkIsolation (0.00s)
+=== RUN   TestOwnedConcurrentCancelIsolatedAndObjectReusable
+    concurrent_session_test.go:174: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedConcurrentCancelIsolatedAndObjectReusable (0.00s)
+=== RUN   TestOwnedConcurrentErrorsAndRetainedAuthority
+    concurrent_session_test.go:227: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedConcurrentErrorsAndRetainedAuthority (0.00s)
+=== RUN   TestOwnedConcurrentCallbackDeadlineDoesNotKillOtherCalls
+    concurrent_session_test.go:256: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedConcurrentCallbackDeadlineDoesNotKillOtherCalls (0.00s)
+=== RUN   TestOwnedConcurrentStopRevokesJoinsAndUsesFreshCleanup
+    concurrent_session_test.go:268: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedConcurrentStopRevokesJoinsAndUsesFreshCleanup (0.00s)
+=== RUN   TestOwnedConcurrentStopDeadlineReapsUncooperativeWorker
+    concurrent_session_test.go:319: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedConcurrentStopDeadlineReapsUncooperativeWorker (0.00s)
+=== RUN   TestOwnedConcurrentNegotiatesFallbackAndStrictRequirement
+    concurrent_session_test.go:388: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedConcurrentNegotiatesFallbackAndStrictRequirement (0.00s)
+=== RUN   TestOwnedConcurrentCallerDeadlineOnlyIsExplicit
+    concurrent_session_test.go:400: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedConcurrentCallerDeadlineOnlyIsExplicit (0.00s)
+=== RUN   TestOwnedConcurrentFullCapacityDoesNotBlockCleanup
+    concurrent_session_test.go:435: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedConcurrentFullCapacityDoesNotBlockCleanup (0.00s)
+=== RUN   TestOwnedConcurrentShutdownReservedManagerPhasesAtCapacity
+    concurrent_session_test.go:483: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedConcurrentShutdownReservedManagerPhasesAtCapacity (0.00s)
+=== RUN   TestOwnedConcurrentShutdownCloseFailurePolicyStaysInManager
+    concurrent_session_test.go:569: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedConcurrentShutdownCloseFailurePolicyStaysInManager (0.00s)
+=== RUN   TestOwnedConcurrentShutdownAPIAuthorityAndLegacyBoundary
+    concurrent_session_test.go:599: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedConcurrentShutdownAPIAuthorityAndLegacyBoundary (0.00s)
+=== RUN   TestDownloaderTasksSelectionAndSDKPrecision
+--- PASS: TestDownloaderTasksSelectionAndSDKPrecision (0.00s)
+=== RUN   TestModuleFileItemConstructorFixedSource
+=== RUN   TestModuleFileItemConstructorFixedSource/item_defaults/target_item
+=== RUN   TestModuleFileItemConstructorFixedSource/item_coercions/fileitem
+=== RUN   TestModuleFileItemConstructorFixedSource/item_nulls/target_item
+=== RUN   TestModuleFileItemConstructorFixedSource/item_integer_bool_float_time/fileitem
+=== RUN   TestModuleFileItemConstructorFixedSource/item_bad_fraction/fileitem
+=== RUN   TestModuleFileItemConstructorFixedSource/item_bad_path_number/target_item
+=== RUN   TestModuleFileItemConstructorFixedSource/item_bad_storage_bool/target_item
+=== RUN   TestModuleFileItemConstructorFixedSource/item_bad_children_dict/fileitem
+=== RUN   TestModuleFileItemConstructorFixedSource/item_bad_object_list/target_item
+=== RUN   TestModuleFileItemConstructorFixedSource/item_float_underscore/fileitem
+=== RUN   TestModuleFileItemConstructorFixedSource/item_float_hex/fileitem
+=== RUN   TestModuleFileItemConstructorFixedSource/item_nonfinite/fileitem
+--- PASS: TestModuleFileItemConstructorFixedSource (0.02s)
+    --- PASS: TestModuleFileItemConstructorFixedSource/item_defaults/target_item (0.00s)
+    --- PASS: TestModuleFileItemConstructorFixedSource/item_coercions/fileitem (0.00s)
+    --- PASS: TestModuleFileItemConstructorFixedSource/item_nulls/target_item (0.00s)
+    --- PASS: TestModuleFileItemConstructorFixedSource/item_integer_bool_float_time/fileitem (0.00s)
+    --- PASS: TestModuleFileItemConstructorFixedSource/item_bad_fraction/fileitem (0.00s)
+    --- PASS: TestModuleFileItemConstructorFixedSource/item_bad_path_number/target_item (0.00s)
+    --- PASS: TestModuleFileItemConstructorFixedSource/item_bad_storage_bool/target_item (0.00s)
+    --- PASS: TestModuleFileItemConstructorFixedSource/item_bad_children_dict/fileitem (0.00s)
+    --- PASS: TestModuleFileItemConstructorFixedSource/item_bad_object_list/target_item (0.00s)
+    --- PASS: TestModuleFileItemConstructorFixedSource/item_float_underscore/fileitem (0.00s)
+    --- PASS: TestModuleFileItemConstructorFixedSource/item_float_hex/fileitem (0.00s)
+    --- PASS: TestModuleFileItemConstructorFixedSource/item_nonfinite/fileitem (0.00s)
+=== RUN   TestManifestFormModelPolicyIsPresentationOnly
+--- PASS: TestManifestFormModelPolicyIsPresentationOnly (0.00s)
+=== RUN   TestManifestFormModelPolicyRejectsUnknownOrPartialValues
+--- PASS: TestManifestFormModelPolicyRejectsUnknownOrPartialValues (0.00s)
+=== RUN   TestFrontendContractIsOptionalAndBounded
+=== RUN   TestFrontendContractIsOptionalAndBounded/none
+=== RUN   TestFrontendContractIsOptionalAndBounded/auth
+=== RUN   TestFrontendContractIsOptionalAndBounded/custom_auth
+=== RUN   TestFrontendContractIsOptionalAndBounded/contract
+=== RUN   TestFrontendContractIsOptionalAndBounded/root
+=== RUN   TestFrontendContractIsOptionalAndBounded/entry
+=== RUN   TestFrontendContractIsOptionalAndBounded/unsafe_expose
+=== RUN   TestFrontendContractIsOptionalAndBounded/duplicate
+=== RUN   TestFrontendContractIsOptionalAndBounded/shared
+=== RUN   TestFrontendContractIsOptionalAndBounded/missing_vue
+=== RUN   TestFrontendContractIsOptionalAndBounded/api
+--- PASS: TestFrontendContractIsOptionalAndBounded (0.01s)
+    --- PASS: TestFrontendContractIsOptionalAndBounded/none (0.00s)
+    --- PASS: TestFrontendContractIsOptionalAndBounded/auth (0.00s)
+    --- PASS: TestFrontendContractIsOptionalAndBounded/custom_auth (0.00s)
+    --- PASS: TestFrontendContractIsOptionalAndBounded/contract (0.00s)
+    --- PASS: TestFrontendContractIsOptionalAndBounded/root (0.00s)
+    --- PASS: TestFrontendContractIsOptionalAndBounded/entry (0.00s)
+    --- PASS: TestFrontendContractIsOptionalAndBounded/unsafe_expose (0.00s)
+    --- PASS: TestFrontendContractIsOptionalAndBounded/duplicate (0.00s)
+    --- PASS: TestFrontendContractIsOptionalAndBounded/shared (0.00s)
+    --- PASS: TestFrontendContractIsOptionalAndBounded/missing_vue (0.00s)
+    --- PASS: TestFrontendContractIsOptionalAndBounded/api (0.00s)
+=== RUN   TestManifestOriginalOrderAndResetPriority
+--- PASS: TestManifestOriginalOrderAndResetPriority (0.00s)
+=== RUN   TestManifestResetDeclarationsValidate
+--- PASS: TestManifestResetDeclarationsValidate (0.00s)
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/_Copy
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/AAAAAAAAAAAAAAAAAAAAA
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/备份
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/ÉCopy
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/a.b
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/a-b
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/_
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/İCopy
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/ΟΣ
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/K
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/Ａ
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/é
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/a·b
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/💫
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/!
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/a?b
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/a#b
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/a%b
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/a:b
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/a'b
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/a"b
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/a+b
+=== RUN   TestCloneIdentityFixedPythonHTTPOracle/a;b
+--- PASS: TestCloneIdentityFixedPythonHTTPOracle (0.01s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/_Copy (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/AAAAAAAAAAAAAAAAAAAAA (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/备份 (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/ÉCopy (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/a.b (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/a-b (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/_ (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/İCopy (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/ΟΣ (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/K (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/Ａ (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/é (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/a·b (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/💫 (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/! (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/a?b (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/a#b (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/a%b (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/a:b (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/a'b (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/a"b (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/a+b (0.00s)
+    --- PASS: TestCloneIdentityFixedPythonHTTPOracle/a;b (0.00s)
+=== RUN   TestJSONRPCValidationFrozenDependency
+--- PASS: TestJSONRPCValidationFrozenDependency (0.00s)
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/depth_limit
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/null
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/invalid_utf8
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/missing
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/whitespace
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/number
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/string
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/literal_unicode
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/braces_in_string
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/nested
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/duplicate
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/escaped_nested
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/nested_depth_9998
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/nested_depth_9999
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/leading_trailing_space
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/multiple_values
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/extra_comma
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/beyond_depth
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/empty
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/boolean
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/truncated
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/bad_escape
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/call/nonfinite
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/string
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/literal_unicode
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/braces_in_string
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/nested
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/duplicate
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/escaped_nested
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/nested_depth_9998
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/nested_depth_9999
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/leading_trailing_space
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/multiple_values
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/extra_comma
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/beyond_depth
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/empty
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/boolean
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/truncated
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/bad_escape
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/nonfinite
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/depth_limit
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/null
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/invalid_utf8
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/missing
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/whitespace
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_call/number
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/nonfinite
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/depth_limit
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/null
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/invalid_utf8
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/missing
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/whitespace
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/number
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/string
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/literal_unicode
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/braces_in_string
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/nested
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/duplicate
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/escaped_nested
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/nested_depth_9998
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/nested_depth_9999
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/leading_trailing_space
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/multiple_values
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/extra_comma
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/beyond_depth
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/empty
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/boolean
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/truncated
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/result/bad_escape
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/nested_depth_9998
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/nested_depth_9999
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/leading_trailing_space
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/multiple_values
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/extra_comma
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/beyond_depth
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/empty
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/boolean
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/truncated
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/bad_escape
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/nonfinite
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/depth_limit
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/null
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/invalid_utf8
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/missing
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/whitespace
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/number
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/string
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/literal_unicode
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/braces_in_string
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/nested
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/duplicate
+=== RUN   TestJSONRPCValidationMarshalLegacyEquivalence/host_result/escaped_nested
+--- PASS: TestJSONRPCValidationMarshalLegacyEquivalence (0.62s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/depth_limit (0.02s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/null (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/invalid_utf8 (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/missing (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/whitespace (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/number (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/string (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/literal_unicode (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/braces_in_string (0.01s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/nested (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/duplicate (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/escaped_nested (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/nested_depth_9998 (0.02s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/nested_depth_9999 (0.04s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/leading_trailing_space (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/multiple_values (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/extra_comma (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/beyond_depth (0.01s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/empty (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/boolean (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/truncated (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/bad_escape (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/call/nonfinite (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/string (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/literal_unicode (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/braces_in_string (0.01s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/nested (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/duplicate (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/escaped_nested (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/nested_depth_9998 (0.04s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/nested_depth_9999 (0.03s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/leading_trailing_space (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/multiple_values (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/extra_comma (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/beyond_depth (0.02s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/empty (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/boolean (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/truncated (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/bad_escape (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/nonfinite (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/depth_limit (0.02s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/null (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/invalid_utf8 (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/missing (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/whitespace (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_call/number (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/nonfinite (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/depth_limit (0.09s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/null (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/invalid_utf8 (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/missing (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/whitespace (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/number (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/string (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/literal_unicode (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/braces_in_string (0.01s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/nested (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/duplicate (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/escaped_nested (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/nested_depth_9998 (0.03s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/nested_depth_9999 (0.05s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/leading_trailing_space (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/multiple_values (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/extra_comma (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/beyond_depth (0.01s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/empty (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/boolean (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/truncated (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/result/bad_escape (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/nested_depth_9998 (0.04s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/nested_depth_9999 (0.06s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/leading_trailing_space (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/multiple_values (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/extra_comma (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/beyond_depth (0.03s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/empty (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/boolean (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/truncated (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/bad_escape (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/nonfinite (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/depth_limit (0.04s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/null (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/invalid_utf8 (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/missing (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/whitespace (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/number (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/string (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/literal_unicode (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/braces_in_string (0.01s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/nested (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/duplicate (0.00s)
+    --- PASS: TestJSONRPCValidationMarshalLegacyEquivalence/host_result/escaped_nested (0.00s)
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/missing
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/unknown_value
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/duplicate_result
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/error
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/empty
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/duplicate_payload_last_object
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/case_fold_payload
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/lone_surrogate
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/scalar
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/depth_limit
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/trailing_null
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/trailing_garbage
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/invalid_utf8
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/null
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/empty_string
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/invalid
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/multiple
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/nested
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/whitespace
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/duplicate_payload_last_null
+=== RUN   TestJSONRPCValidationUnmarshalLegacyEquivalence/duplicate_nested
+--- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence (0.05s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/missing (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/unknown_value (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/duplicate_result (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/error (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/empty (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/duplicate_payload_last_object (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/case_fold_payload (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/lone_surrogate (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/scalar (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/depth_limit (0.03s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/trailing_null (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/trailing_garbage (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/invalid_utf8 (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/null (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/empty_string (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/invalid (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/multiple (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/nested (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/whitespace (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/duplicate_payload_last_null (0.00s)
+    --- PASS: TestJSONRPCValidationUnmarshalLegacyEquivalence/duplicate_nested (0.00s)
+=== RUN   TestJSONRPCEnvelopeMetadataAndErrorLegacyEquivalence
+--- PASS: TestJSONRPCEnvelopeMetadataAndErrorLegacyEquivalence (0.00s)
+=== RUN   TestJSONRPCEnvelopeStandardDepthBoundary
+--- PASS: TestJSONRPCEnvelopeStandardDepthBoundary (0.01s)
+=== RUN   TestFourWayChunksAndSmallPhysicalFrames
+=== RUN   TestFourWayChunksAndSmallPhysicalFrames/1048576
+=== RUN   TestFourWayChunksAndSmallPhysicalFrames/4096
+--- PASS: TestFourWayChunksAndSmallPhysicalFrames (30.43s)
+    --- PASS: TestFourWayChunksAndSmallPhysicalFrames/1048576 (17.25s)
+    --- PASS: TestFourWayChunksAndSmallPhysicalFrames/4096 (13.19s)
+=== RUN   TestFrozenOldWireBothDirections
+--- PASS: TestFrozenOldWireBothDirections (2.71s)
+=== RUN   TestConcurrentReverseCallsAndClosedCallbackPhase
+=== RUN   TestConcurrentReverseCallsAndClosedCallbackPhase/concurrent
+=== RUN   TestConcurrentReverseCallsAndClosedCallbackPhase/late
+--- PASS: TestConcurrentReverseCallsAndClosedCallbackPhase (5.74s)
+    --- PASS: TestConcurrentReverseCallsAndClosedCallbackPhase/concurrent (4.62s)
+    --- PASS: TestConcurrentReverseCallsAndClosedCallbackPhase/late (1.13s)
+=== RUN   TestCanceledGateWaitDoesNotInterruptActiveExchange
+--- PASS: TestCanceledGateWaitDoesNotInterruptActiveExchange (1.29s)
+=== RUN   TestBudgetsAndErrorsRetainHostCallEvidence
+=== RUN   TestBudgetsAndErrorsRetainHostCallEvidence/send_wire
+=== RUN   TestBudgetsAndErrorsRetainHostCallEvidence/read_wire
+=== RUN   TestBudgetsAndErrorsRetainHostCallEvidence/message
+=== RUN   TestBudgetsAndErrorsRetainHostCallEvidence/worker_output_after_host
+=== RUN   TestBudgetsAndErrorsRetainHostCallEvidence/message_chunks
+=== RUN   TestBudgetsAndErrorsRetainHostCallEvidence/session_chunks
+--- PASS: TestBudgetsAndErrorsRetainHostCallEvidence (24.49s)
+    --- PASS: TestBudgetsAndErrorsRetainHostCallEvidence/send_wire (6.09s)
+    --- PASS: TestBudgetsAndErrorsRetainHostCallEvidence/read_wire (9.61s)
+    --- PASS: TestBudgetsAndErrorsRetainHostCallEvidence/message (0.34s)
+    --- PASS: TestBudgetsAndErrorsRetainHostCallEvidence/worker_output_after_host (7.56s)
+    --- PASS: TestBudgetsAndErrorsRetainHostCallEvidence/message_chunks (0.42s)
+    --- PASS: TestBudgetsAndErrorsRetainHostCallEvidence/session_chunks (0.47s)
+=== RUN   TestBlockedWriteAndACKCancellationReapActualChild
+=== RUN   TestBlockedWriteAndACKCancellationReapActualChild/block_write
+    large_transport_test.go:258: actual child pid=312 ready_after=370.888356ms canceled_and_reaped_after=204.735359ms sent_bytes=70249 sent_chunks=0 child_read_bytes=618
+=== RUN   TestBlockedWriteAndACKCancellationReapActualChild/block_ack
+    large_transport_test.go:258: actual child pid=320 ready_after=608.322008ms canceled_and_reaped_after=202.742934ms sent_bytes=350523 sent_chunks=1 child_read_bytes=350523
+--- PASS: TestBlockedWriteAndACKCancellationReapActualChild (1.51s)
+    --- PASS: TestBlockedWriteAndACKCancellationReapActualChild/block_write (0.63s)
+    --- PASS: TestBlockedWriteAndACKCancellationReapActualChild/block_ack (0.88s)
+=== RUN   TestBlockedTransportStartupDeadlinePrecedesReadiness
+--- PASS: TestBlockedTransportStartupDeadlinePrecedesReadiness (0.20s)
+=== RUN   TestLargeWorker
+--- PASS: TestLargeWorker (0.00s)
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/empty
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/huge
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/first_sequence
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/identity
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/type
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/duplicate
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/skip
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/transfer
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/logical
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/length
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/premature_last
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/missing_last
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/overflow
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/unknown_field
+=== RUN   TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/replay
+--- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch (0.01s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/empty (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/huge (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/first_sequence (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/identity (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/type (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/duplicate (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/skip (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/transfer (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/logical (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/length (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/premature_last (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/missing_last (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/overflow (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/unknown_field (0.00s)
+    --- PASS: TestReassemblyRejectsMalformedTransfersBeforeBusinessDispatch/replay (0.00s)
+=== RUN   TestActiveReverseChunkCancellationStopsBeforeHostDispatch
+--- PASS: TestActiveReverseChunkCancellationStopsBeforeHostDispatch (0.27s)
+=== RUN   TestPhysicalBudgetsCountEveryWireByte
+--- PASS: TestPhysicalBudgetsCountEveryWireByte (0.00s)
+=== RUN   TestChunkSenderRejectsUnexpectedACKs
+=== RUN   TestChunkSenderRejectsUnexpectedACKs/identity
+=== RUN   TestChunkSenderRejectsUnexpectedACKs/id
+=== RUN   TestChunkSenderRejectsUnexpectedACKs/kind
+=== RUN   TestChunkSenderRejectsUnexpectedACKs/transfer
+=== RUN   TestChunkSenderRejectsUnexpectedACKs/sequence
+--- PASS: TestChunkSenderRejectsUnexpectedACKs (0.01s)
+    --- PASS: TestChunkSenderRejectsUnexpectedACKs/identity (0.00s)
+    --- PASS: TestChunkSenderRejectsUnexpectedACKs/id (0.00s)
+    --- PASS: TestChunkSenderRejectsUnexpectedACKs/kind (0.00s)
+    --- PASS: TestChunkSenderRejectsUnexpectedACKs/transfer (0.00s)
+    --- PASS: TestChunkSenderRejectsUnexpectedACKs/sequence (0.00s)
+=== RUN   TestLogicalEnvelopeAllowsFullStorageValueAndRejectsOverflow
+--- PASS: TestLogicalEnvelopeAllowsFullStorageValueAndRejectsOverflow (12.90s)
+=== RUN   TestActualMaximumPayloadFourWays
+--- PASS: TestActualMaximumPayloadFourWays (72.32s)
+=== RUN   TestOversizedInvocationRejectedBeforeStartingWorker
+--- PASS: TestOversizedInvocationRejectedBeforeStartingWorker (0.38s)
+=== RUN   TestWorkerReplyReportsOnlyUnwrittenTransportFailure
+=== RUN   TestWorkerReplyReportsOnlyUnwrittenTransportFailure/message_limit
+=== RUN   TestWorkerReplyReportsOnlyUnwrittenTransportFailure/frame_limit
+=== RUN   TestWorkerReplyReportsOnlyUnwrittenTransportFailure/input_limit
+=== RUN   TestWorkerReplyReportsOnlyUnwrittenTransportFailure/transport_chunk_limit
+--- PASS: TestWorkerReplyReportsOnlyUnwrittenTransportFailure (0.01s)
+    --- PASS: TestWorkerReplyReportsOnlyUnwrittenTransportFailure/message_limit (0.00s)
+    --- PASS: TestWorkerReplyReportsOnlyUnwrittenTransportFailure/frame_limit (0.00s)
+    --- PASS: TestWorkerReplyReportsOnlyUnwrittenTransportFailure/input_limit (0.00s)
+    --- PASS: TestWorkerReplyReportsOnlyUnwrittenTransportFailure/transport_chunk_limit (0.00s)
+=== RUN   TestKnownReadQuotaFailureSurvivesPartialAssembly
+--- PASS: TestKnownReadQuotaFailureSurvivesPartialAssembly (0.00s)
+=== RUN   TestReservedReverseTransportMethodsNeverReachHostHandler
+--- PASS: TestReservedReverseTransportMethodsNeverReachHostHandler (0.00s)
+=== RUN   TestLoggerFinitePayloadAndContext
+--- PASS: TestLoggerFinitePayloadAndContext (0.00s)
+=== RUN   TestModuleBytesRetainsBinaryAndScalarIdentity
+--- PASS: TestModuleBytesRetainsBinaryAndScalarIdentity (0.00s)
+=== RUN   TestModuleTuplePreservesExplicitTypeAndValues
+--- PASS: TestModuleTuplePreservesExplicitTypeAndValues (0.00s)
+=== RUN   TestModuleScopeExcludesOnlyDedicatedWorkflowAndAIEvents
+--- PASS: TestModuleScopeExcludesOnlyDedicatedWorkflowAndAIEvents (0.00s)
+=== RUN   TestModuleTransferInfoFixedSchema
+=== RUN   TestModuleTransferInfoFixedSchema/defaults
+=== RUN   TestModuleTransferInfoFixedSchema/explicit_nulls
+=== RUN   TestModuleTransferInfoFixedSchema/bool_words
+=== RUN   TestModuleTransferInfoFixedSchema/bool_numbers
+=== RUN   TestModuleTransferInfoFixedSchema/bad_success_null
+=== RUN   TestModuleTransferInfoFixedSchema/bad_success_two
+=== RUN   TestModuleTransferInfoFixedSchema/bad_bool_space
+=== RUN   TestModuleTransferInfoFixedSchema/bad_bool_object
+=== RUN   TestModuleTransferInfoFixedSchema/integer_strings
+=== RUN   TestModuleTransferInfoFixedSchema/integer_bool
+=== RUN   TestModuleTransferInfoFixedSchema/integer_float
+=== RUN   TestModuleTransferInfoFixedSchema/integer_big
+=== RUN   TestModuleTransferInfoFixedSchema/integer_huge_float
+=== RUN   TestModuleTransferInfoFixedSchema/bad_integer_fraction
+=== RUN   TestModuleTransferInfoFixedSchema/bad_integer_exponent_string
+=== RUN   TestModuleTransferInfoFixedSchema/bad_integer_object
+=== RUN   TestModuleTransferInfoFixedSchema/negative_integers
+=== RUN   TestModuleTransferInfoFixedSchema/lists_any_values
+=== RUN   TestModuleTransferInfoFixedSchema/bad_list_dict
+=== RUN   TestModuleTransferInfoFixedSchema/bad_list_text
+=== RUN   TestModuleTransferInfoFixedSchema/message_text
+=== RUN   TestModuleTransferInfoFixedSchema/bad_message_number
+=== RUN   TestModuleTransferInfoFixedSchema/bad_type_bool
+=== RUN   TestModuleTransferInfoFixedSchema/empty_items
+=== RUN   TestModuleTransferInfoFixedSchema/item_defaults
+=== RUN   TestModuleTransferInfoFixedSchema/item_coercions
+=== RUN   TestModuleTransferInfoFixedSchema/item_nulls
+=== RUN   TestModuleTransferInfoFixedSchema/item_integer_bool_float_time
+=== RUN   TestModuleTransferInfoFixedSchema/item_bad_fraction
+=== RUN   TestModuleTransferInfoFixedSchema/item_bad_path_number
+=== RUN   TestModuleTransferInfoFixedSchema/item_bad_storage_bool
+=== RUN   TestModuleTransferInfoFixedSchema/item_bad_children_dict
+=== RUN   TestModuleTransferInfoFixedSchema/item_bad_object_list
+=== RUN   TestModuleTransferInfoFixedSchema/item_float_underscore
+=== RUN   TestModuleTransferInfoFixedSchema/item_float_hex
+=== RUN   TestModuleTransferInfoFixedSchema/item_nonfinite
+=== RUN   TestModuleTransferInfoFixedSchema/float_below_i64_max
+=== RUN   TestModuleTransferInfoFixedSchema/float_at_i64_max
+=== RUN   TestModuleTransferInfoFixedSchema/float_at_i64_min
+=== RUN   TestModuleTransferInfoFixedSchema/float_below_i64_min
+=== RUN   TestModuleTransferInfoFixedSchema/float_at_u64
+=== RUN   TestModuleTransferInfoFixedSchema/string_big_zero_decimal
+=== RUN   TestModuleTransferInfoFixedSchema/bad_float_underscore_decimal
+=== RUN   TestModuleTransferInfoFixedSchema/float_zero_underflow
+=== RUN   TestModuleTransferInfoFixedSchema/veto
+--- PASS: TestModuleTransferInfoFixedSchema (0.03s)
+    --- PASS: TestModuleTransferInfoFixedSchema/defaults (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/explicit_nulls (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bool_words (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bool_numbers (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bad_success_null (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bad_success_two (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bad_bool_space (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bad_bool_object (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/integer_strings (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/integer_bool (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/integer_float (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/integer_big (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/integer_huge_float (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bad_integer_fraction (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bad_integer_exponent_string (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bad_integer_object (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/negative_integers (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/lists_any_values (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bad_list_dict (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bad_list_text (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/message_text (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bad_message_number (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bad_type_bool (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/empty_items (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/item_defaults (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/item_coercions (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/item_nulls (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/item_integer_bool_float_time (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/item_bad_fraction (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/item_bad_path_number (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/item_bad_storage_bool (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/item_bad_children_dict (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/item_bad_object_list (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/item_float_underscore (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/item_float_hex (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/item_nonfinite (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/float_below_i64_max (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/float_at_i64_max (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/float_at_i64_min (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/float_below_i64_min (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/float_at_u64 (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/string_big_zero_decimal (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/bad_float_underscore_decimal (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/float_zero_underflow (0.00s)
+    --- PASS: TestModuleTransferInfoFixedSchema/veto (0.00s)
+=== RUN   TestModuleTransferInfoPlainDictionaryRemainsDistinct
+--- PASS: TestModuleTransferInfoPlainDictionaryRemainsDistinct (0.00s)
+=== RUN   TestMutableEventSnapshotArbitraryJSONAndFailure
+--- PASS: TestMutableEventSnapshotArbitraryJSONAndFailure (0.00s)
+=== RUN   TestMutableEventSnapshotBoundary
+--- PASS: TestMutableEventSnapshotBoundary (0.00s)
+=== RUN   TestOwnedPendingCallActualAdmissionAndFullCapacity
+    pending_call_test.go:12: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedPendingCallActualAdmissionAndFullCapacity (0.00s)
+=== RUN   TestOwnedPendingCallLostParentReplyDoesNotRollbackChild
+    pending_call_test.go:35: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedPendingCallLostParentReplyDoesNotRollbackChild (0.00s)
+=== RUN   TestOwnedPendingCallCanceledAdmissionAndLegacy
+    pending_call_test.go:74: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedPendingCallCanceledAdmissionAndLegacy (0.00s)
+=== RUN   TestOwnedPendingCallTransportRetirementInvokesNoHandler
+    pending_call_test.go:87: build cmd/owned-concurrent-fixture and set LIGHT_MEDIA_CONCURRENT_FIXTURE; this is not a passed fixture gate
+--- SKIP: TestOwnedPendingCallTransportRetirementInvokesNoHandler (0.00s)
+=== RUN   TestRunnerSDKLifecycleAndHostIdentity
+--- PASS: TestRunnerSDKLifecycleAndHostIdentity (1.11s)
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources/wrong_identity
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources/wrong_version
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources/wrong_api
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources/wrong_capabilities
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources/host_before_handshake
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources/cross_instance_host
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources/unknown_rpc_field
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources/invalid_json
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources/oversized
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources/many_host_calls
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources/crash
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources/stop_failed
+=== RUN   TestRunnerRejectsWorkerFaultsAndBoundsResources/stderr_flood
+--- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources (1.37s)
+    --- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources/wrong_identity (0.11s)
+    --- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources/wrong_version (0.16s)
+    --- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources/wrong_api (0.12s)
+    --- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources/wrong_capabilities (0.09s)
+    --- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources/host_before_handshake (0.08s)
+    --- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources/cross_instance_host (0.09s)
+    --- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources/unknown_rpc_field (0.10s)
+    --- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources/invalid_json (0.10s)
+    --- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources/oversized (0.09s)
+    --- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources/many_host_calls (0.09s)
+    --- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources/crash (0.13s)
+    --- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources/stop_failed (0.11s)
+    --- PASS: TestRunnerRejectsWorkerFaultsAndBoundsResources/stderr_flood (0.09s)
+=== RUN   TestRunnerCancellationKillsBlockedChild
+--- PASS: TestRunnerCancellationKillsBlockedChild (0.20s)
+=== RUN   TestRunnerHostErrorsAreSanitized
+--- PASS: TestRunnerHostErrorsAreSanitized (0.13s)
+=== RUN   TestManifestRejectsUnsafeOrIncompatibleEntries
+--- PASS: TestManifestRejectsUnsafeOrIncompatibleEntries (0.00s)
+=== RUN   TestManifestConfigDefaultsContract
+--- PASS: TestManifestConfigDefaultsContract (0.00s)
+=== RUN   TestManifestConfigFormProjectionContract
+--- PASS: TestManifestConfigFormProjectionContract (0.00s)
+=== RUN   TestWireIsJSONRPCAndRejectsAmbiguousMessages
+--- PASS: TestWireIsJSONRPCAndRejectsAmbiguousMessages (0.00s)
+=== RUN   TestWorkerFixture
+--- PASS: TestWorkerFixture (0.00s)
+=== RUN   TestRunnerBudgetWorkerFixture
+--- PASS: TestRunnerBudgetWorkerFixture (0.00s)
+=== RUN   TestRunnerBudgetExcludesHostButRetainsLegacyDeadline
+=== RUN   TestRunnerBudgetExcludesHostButRetainsLegacyDeadline/legacy
+=== RUN   TestRunnerBudgetExcludesHostButRetainsLegacyDeadline/exclude-host
+--- PASS: TestRunnerBudgetExcludesHostButRetainsLegacyDeadline (5.85s)
+    --- PASS: TestRunnerBudgetExcludesHostButRetainsLegacyDeadline/legacy (2.01s)
+    --- PASS: TestRunnerBudgetExcludesHostButRetainsLegacyDeadline/exclude-host (3.83s)
+=== RUN   TestRunnerBudgetDoesNotResetAtHostCalls
+--- PASS: TestRunnerBudgetDoesNotResetAtHostCalls (0.84s)
+=== RUN   TestRunnerBudgetParentCancellationDuringHost
+--- PASS: TestRunnerBudgetParentCancellationDuringHost (0.35s)
+=== RUN   TestRunnerBudgetTimerPauseResumeCloseRaces
+--- PASS: TestRunnerBudgetTimerPauseResumeCloseRaces (0.25s)
+=== RUN   TestRunnerObservationActualSDKSequenceAndNilParity
+--- PASS: TestRunnerObservationActualSDKSequenceAndNilParity (2.54s)
+=== RUN   TestRunnerObservationActualFailureAndCancellation
+=== RUN   TestRunnerObservationActualFailureAndCancellation/wrong_version
+=== RUN   TestRunnerObservationActualFailureAndCancellation/blocked
+--- PASS: TestRunnerObservationActualFailureAndCancellation (0.54s)
+    --- PASS: TestRunnerObservationActualFailureAndCancellation/wrong_version (0.33s)
+    --- PASS: TestRunnerObservationActualFailureAndCancellation/blocked (0.21s)
+=== RUN   TestRunnerObservationEarlyReturnAndEnums
+--- PASS: TestRunnerObservationEarlyReturnAndEnums (0.00s)
+=== RUN   TestRuntimeSupportManifestCompatibility
+--- PASS: TestRuntimeSupportManifestCompatibility (0.00s)
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/Linux
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/Linux
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/local,local
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/local,local
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/../local
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/../local
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/a_b
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/a_b
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/<script>
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/<script>
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/linux_
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/linux_
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/,,,,,,,,,,,,,,,,
+=== RUN   TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/,,,,,,,,,,,,,,,,
+--- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/ (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/ (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/Linux (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/Linux (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/local,local (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/local,local (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/../local (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/../local (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/a_b (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/a_b (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/<script> (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/<script> (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/linux_ (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/linux_ (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/platforms/,,,,,,,,,,,,,,,, (0.00s)
+    --- PASS: TestRuntimeSupportManifestRejectsInvalidIdentifiers/storage_types/,,,,,,,,,,,,,,,, (0.00s)
+=== RUN   TestPersistentSessionCallOptionsTimeoutIsPerInvocation
+    session_options_test.go:24: plugin: execution_canceled
+--- FAIL: TestPersistentSessionCallOptionsTimeoutIsPerInvocation (0.51s)
+=== RUN   TestPersistentSessionCallOptionsHostExclusionCanBeEnabled
+--- PASS: TestPersistentSessionCallOptionsHostExclusionCanBeEnabled (1.56s)
+=== RUN   TestPersistentSessionCallOptionsHostExclusionCanBeDisabled
+--- PASS: TestPersistentSessionCallOptionsHostExclusionCanBeDisabled (0.22s)
+=== RUN   TestPersistentSessionCallOptionsValidateBeforeDispatch
+--- PASS: TestPersistentSessionCallOptionsValidateBeforeDispatch (1.74s)
+=== RUN   TestPersistentWorkerFixture
+--- PASS: TestPersistentWorkerFixture (0.00s)
+=== RUN   TestPersistentSessionRetainsObjectAndBusinessError
+--- PASS: TestPersistentSessionRetainsObjectAndBusinessError (1.15s)
+=== RUN   TestPersistentSessionFreshAuthorityAndBudgets
+--- PASS: TestPersistentSessionFreshAuthorityAndBudgets (1.23s)
+=== RUN   TestPersistentSessionIdleDoesNotUseCallTimeout
+--- PASS: TestPersistentSessionIdleDoesNotUseCallTimeout (0.77s)
+=== RUN   TestPersistentSessionCancellationIsTerminal
+--- PASS: TestPersistentSessionCancellationIsTerminal (0.22s)
+=== RUN   TestPersistentSessionConcurrentCallsAreSerialized
+--- PASS: TestPersistentSessionConcurrentCallsAreSerialized (1.17s)
+=== RUN   TestPersistentSessionStopFailureObservable
+--- PASS: TestPersistentSessionStopFailureObservable (0.13s)
+=== RUN   TestPersistentSessionRefusesLegacyWorker
+--- PASS: TestPersistentSessionRefusesLegacyWorker (0.12s)
+=== RUN   TestPersistentSessionQueuedCancellationDoesNotDiscardObject
+--- PASS: TestPersistentSessionQueuedCancellationDoesNotDiscardObject (1.17s)
+=== RUN   TestPersistentSessionCloneObjectsAreSeparate
+--- PASS: TestPersistentSessionCloneObjectsAreSeparate (2.33s)
+=== RUN   TestPersistentSessionLifeCancellationKillsIdleWorker
+--- PASS: TestPersistentSessionLifeCancellationKillsIdleWorker (0.15s)
+=== RUN   TestPersistentSessionRejectsPreviousCallCallback
+--- PASS: TestPersistentSessionRejectsPreviousCallCallback (0.00s)
+=== RUN   TestPersistentSessionChunkEpochIsBoundedAndReusable
+--- PASS: TestPersistentSessionChunkEpochIsBoundedAndReusable (1.36s)
+=== RUN   TestPersistentSessionStopCancellationAbortsActiveCall
+--- PASS: TestPersistentSessionStopCancellationAbortsActiveCall (0.13s)
+=== RUN   TestPersistentSessionStopUsesFreshCleanupAuthority
+--- PASS: TestPersistentSessionStopUsesFreshCleanupAuthority (1.11s)
+=== RUN   TestPersistentSessionStopDefaultDoesNotReuseAuthority
+--- PASS: TestPersistentSessionStopDefaultDoesNotReuseAuthority (0.15s)
+=== RUN   TestTransportCodecDecodeEquivalence
+=== RUN   TestTransportCodecDecodeEquivalence/whitespace
+=== RUN   TestTransportCodecDecodeEquivalence/trailing_object
+=== RUN   TestTransportCodecDecodeEquivalence/unknown_value
+=== RUN   TestTransportCodecDecodeEquivalence/bad_version
+=== RUN   TestTransportCodecDecodeEquivalence/host_result_error
+=== RUN   TestTransportCodecDecodeEquivalence/boolean
+=== RUN   TestTransportCodecDecodeEquivalence/unknown_outer
+=== RUN   TestTransportCodecDecodeEquivalence/wrong_identity
+=== RUN   TestTransportCodecDecodeEquivalence/empty_id
+=== RUN   TestTransportCodecDecodeEquivalence/host_call
+=== RUN   TestTransportCodecDecodeEquivalence/host_result
+=== RUN   TestTransportCodecDecodeEquivalence/truncated
+=== RUN   TestTransportCodecDecodeEquivalence/case_fold
+=== RUN   TestTransportCodecDecodeEquivalence/empty_object
+=== RUN   TestTransportCodecDecodeEquivalence/trailing_garbage
+=== RUN   TestTransportCodecDecodeEquivalence/wrong_protocol
+=== RUN   TestTransportCodecDecodeEquivalence/duplicate_id
+=== RUN   TestTransportCodecDecodeEquivalence/string
+=== RUN   TestTransportCodecDecodeEquivalence/result
+=== RUN   TestTransportCodecDecodeEquivalence/result_error
+=== RUN   TestTransportCodecDecodeEquivalence/result_error_code
+=== RUN   TestTransportCodecDecodeEquivalence/valid
+=== RUN   TestTransportCodecDecodeEquivalence/null
+=== RUN   TestTransportCodecDecodeEquivalence/trailing_null
+=== RUN   TestTransportCodecDecodeEquivalence/null_params
+=== RUN   TestTransportCodecDecodeEquivalence/long_id
+=== RUN   TestTransportCodecDecodeEquivalence/empty
+=== RUN   TestTransportCodecDecodeEquivalence/array
+=== RUN   TestTransportCodecDecodeEquivalence/number
+=== RUN   TestTransportCodecDecodeEquivalence/number_id
+=== RUN   TestTransportCodecDecodeEquivalence/nested_depth
+=== RUN   TestTransportCodecDecodeEquivalence/call
+=== RUN   TestTransportCodecDecodeEquivalence/result_error_unknown
+=== RUN   TestTransportCodecDecodeEquivalence/host_result_error_code
+=== RUN   TestTransportCodecDecodeEquivalence/bad_method
+=== RUN   TestTransportCodecDecodeEquivalence/invalid_utf8_payload
+=== RUN   TestTransportCodecDecodeEquivalence/host_result_error_unknown
+--- PASS: TestTransportCodecDecodeEquivalence (0.03s)
+    --- PASS: TestTransportCodecDecodeEquivalence/whitespace (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/trailing_object (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/unknown_value (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/bad_version (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/host_result_error (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/boolean (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/unknown_outer (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/wrong_identity (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/empty_id (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/host_call (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/host_result (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/truncated (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/case_fold (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/empty_object (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/trailing_garbage (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/wrong_protocol (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/duplicate_id (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/string (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/result (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/result_error (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/result_error_code (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/valid (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/null (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/trailing_null (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/null_params (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/long_id (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/empty (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/array (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/number (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/number_id (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/nested_depth (0.01s)
+    --- PASS: TestTransportCodecDecodeEquivalence/call (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/result_error_unknown (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/host_result_error_code (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/bad_method (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/invalid_utf8_payload (0.00s)
+    --- PASS: TestTransportCodecDecodeEquivalence/host_result_error_unknown (0.00s)
+=== RUN   TestTransportCodecMarshalEquivalence
+=== RUN   TestTransportCodecMarshalEquivalence/call
+=== RUN   TestTransportCodecMarshalEquivalence/host_call
+=== RUN   TestTransportCodecMarshalEquivalence/nil_payload
+=== RUN   TestTransportCodecMarshalEquivalence/null_payload
+=== RUN   TestTransportCodecMarshalEquivalence/whitespace_payload
+=== RUN   TestTransportCodecMarshalEquivalence/literal_unicode
+=== RUN   TestTransportCodecMarshalEquivalence/invalid_payload
+=== RUN   TestTransportCodecMarshalEquivalence/trailing_payload
+=== RUN   TestTransportCodecMarshalEquivalence/invalid_type
+=== RUN   TestTransportCodecMarshalEquivalence/invalid_method
+=== RUN   TestTransportCodecMarshalEquivalence/empty_id
+=== RUN   TestTransportCodecMarshalEquivalence/long_id
+=== RUN   TestTransportCodecMarshalEquivalence/mixed_call
+=== RUN   TestTransportCodecMarshalEquivalence/result
+=== RUN   TestTransportCodecMarshalEquivalence/host_result
+=== RUN   TestTransportCodecMarshalEquivalence/nil_result
+=== RUN   TestTransportCodecMarshalEquivalence/error
+=== RUN   TestTransportCodecMarshalEquivalence/error_result
+--- PASS: TestTransportCodecMarshalEquivalence (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/call (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/host_call (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/nil_payload (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/null_payload (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/whitespace_payload (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/literal_unicode (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/invalid_payload (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/trailing_payload (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/invalid_type (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/invalid_method (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/empty_id (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/long_id (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/mixed_call (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/result (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/host_result (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/nil_result (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/error (0.00s)
+    --- PASS: TestTransportCodecMarshalEquivalence/error_result (0.00s)
+=== RUN   TestTransportCodecPhysicalEquivalence
+=== RUN   TestTransportCodecPhysicalEquivalence/small
+=== RUN   TestTransportCodecPhysicalEquivalence/exact_frame
+=== RUN   TestTransportCodecPhysicalEquivalence/frame_over
+=== RUN   TestTransportCodecPhysicalEquivalence/exact_budget
+=== RUN   TestTransportCodecPhysicalEquivalence/budget_over
+=== RUN   TestTransportCodecPhysicalEquivalence/prior_bytes
+=== RUN   TestTransportCodecPhysicalEquivalence/default_budget
+=== RUN   TestTransportCodecPhysicalEquivalence/canceled
+=== RUN   TestTransportCodecPhysicalEquivalence/aborted
+=== RUN   TestTransportCodecPhysicalEquivalence/short_write
+=== RUN   TestTransportCodecPhysicalEquivalence/io_error
+=== RUN   TestTransportCodecPhysicalEquivalence/invalid
+=== RUN   TestTransportCodecPhysicalEquivalence/read_valid
+=== RUN   TestTransportCodecPhysicalEquivalence/read_trailing
+=== RUN   TestTransportCodecPhysicalEquivalence/read_unknown
+=== RUN   TestTransportCodecPhysicalEquivalence/read_null
+=== RUN   TestTransportCodecPhysicalEquivalence/read_eof
+=== RUN   TestTransportCodecPhysicalEquivalence/read_exact_frame
+=== RUN   TestTransportCodecPhysicalEquivalence/read_exact_output_budget
+=== RUN   TestTransportCodecPhysicalEquivalence/read_frame_over
+=== RUN   TestTransportCodecPhysicalEquivalence/read_budget_over
+=== RUN   TestTransportCodecPhysicalEquivalence/read_prior_bytes
+=== RUN   TestTransportCodecPhysicalEquivalence/read_canceled
+=== RUN   TestTransportCodecPhysicalEquivalence/read_aborted
+--- PASS: TestTransportCodecPhysicalEquivalence (0.01s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/small (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/exact_frame (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/frame_over (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/exact_budget (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/budget_over (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/prior_bytes (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/default_budget (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/canceled (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/aborted (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/short_write (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/io_error (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/invalid (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/read_valid (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/read_trailing (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/read_unknown (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/read_null (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/read_eof (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/read_exact_frame (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/read_exact_output_budget (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/read_frame_over (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/read_budget_over (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/read_prior_bytes (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/read_canceled (0.00s)
+    --- PASS: TestTransportCodecPhysicalEquivalence/read_aborted (0.00s)
+=== RUN   TestTransportCodecWriteAndChunkEquivalence
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_small
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_small_canceled
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_small_aborted
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_small_canceled_invalid
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_small_aborted_invalid
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_large
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_legacy_large
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_logical_limit
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_message_chunks
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_session_chunks
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_wire_limit
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_canceled
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_ack_sequence
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_ack_identity
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_ack_protocol
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_ack_id
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/host_ack_type
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_small
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_small_canceled
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_small_aborted
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_small_canceled_invalid
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_small_aborted_invalid
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_large
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_legacy_large
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_logical_limit
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_message_chunks
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_session_chunks
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_wire_limit
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_canceled
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_ack_sequence
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_ack_identity
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_ack_protocol
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_ack_id
+=== RUN   TestTransportCodecWriteAndChunkEquivalence/worker_ack_type
+--- PASS: TestTransportCodecWriteAndChunkEquivalence (0.23s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_small (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_small_canceled (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_small_aborted (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_small_canceled_invalid (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_small_aborted_invalid (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_large (0.03s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_legacy_large (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_logical_limit (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_message_chunks (0.01s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_session_chunks (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_wire_limit (0.01s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_canceled (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_ack_sequence (0.01s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_ack_identity (0.01s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_ack_protocol (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_ack_id (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/host_ack_type (0.01s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_small (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_small_canceled (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_small_aborted (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_small_canceled_invalid (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_small_aborted_invalid (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_large (0.05s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_legacy_large (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_logical_limit (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_message_chunks (0.01s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_session_chunks (0.01s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_wire_limit (0.02s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_canceled (0.00s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_ack_sequence (0.01s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_ack_identity (0.01s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_ack_protocol (0.01s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_ack_id (0.01s)
+    --- PASS: TestTransportCodecWriteAndChunkEquivalence/worker_ack_type (0.01s)
+=== RUN   TestTransportCodecAssemblyEquivalence
+=== RUN   TestTransportCodecAssemblyEquivalence/valid
+=== RUN   TestTransportCodecAssemblyEquivalence/trailing
+=== RUN   TestTransportCodecAssemblyEquivalence/unknown
+=== RUN   TestTransportCodecAssemblyEquivalence/null
+=== RUN   TestTransportCodecAssemblyEquivalence/identity
+=== RUN   TestTransportCodecAssemblyEquivalence/protocol
+=== RUN   TestTransportCodecAssemblyEquivalence/id
+=== RUN   TestTransportCodecAssemblyEquivalence/type
+=== RUN   TestTransportCodecAssemblyEquivalence/reserved_method
+=== RUN   TestTransportCodecAssemblyEquivalence/sequence
+=== RUN   TestTransportCodecAssemblyEquivalence/length
+=== RUN   TestTransportCodecAssemblyEquivalence/chunk_limit
+=== RUN   TestTransportCodecAssemblyEquivalence/session_limit
+=== RUN   TestTransportCodecAssemblyEquivalence/transfer_limit
+=== RUN   TestTransportCodecAssemblyEquivalence/cancel
+--- PASS: TestTransportCodecAssemblyEquivalence (0.08s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/valid (0.01s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/trailing (0.01s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/unknown (0.01s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/null (0.00s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/identity (0.01s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/protocol (0.01s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/id (0.01s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/type (0.01s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/reserved_method (0.01s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/sequence (0.00s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/length (0.01s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/chunk_limit (0.00s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/session_limit (0.00s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/transfer_limit (0.00s)
+    --- PASS: TestTransportCodecAssemblyEquivalence/cancel (0.00s)
+=== RUN   TestTransportCodecFourKindsSmallAndChunked
+=== RUN   TestTransportCodecFourKindsSmallAndChunked/call_32
+=== RUN   TestTransportCodecFourKindsSmallAndChunked/call_9000
+=== RUN   TestTransportCodecFourKindsSmallAndChunked/host_result_32
+=== RUN   TestTransportCodecFourKindsSmallAndChunked/host_result_9000
+=== RUN   TestTransportCodecFourKindsSmallAndChunked/host_call_32
+=== RUN   TestTransportCodecFourKindsSmallAndChunked/host_call_9000
+=== RUN   TestTransportCodecFourKindsSmallAndChunked/result_32
+=== RUN   TestTransportCodecFourKindsSmallAndChunked/result_9000
+--- PASS: TestTransportCodecFourKindsSmallAndChunked (0.28s)
+    --- PASS: TestTransportCodecFourKindsSmallAndChunked/call_32 (0.00s)
+    --- PASS: TestTransportCodecFourKindsSmallAndChunked/call_9000 (0.08s)
+    --- PASS: TestTransportCodecFourKindsSmallAndChunked/host_result_32 (0.00s)
+    --- PASS: TestTransportCodecFourKindsSmallAndChunked/host_result_9000 (0.05s)
+    --- PASS: TestTransportCodecFourKindsSmallAndChunked/host_call_32 (0.00s)
+    --- PASS: TestTransportCodecFourKindsSmallAndChunked/host_call_9000 (0.06s)
+    --- PASS: TestTransportCodecFourKindsSmallAndChunked/result_32 (0.00s)
+    --- PASS: TestTransportCodecFourKindsSmallAndChunked/result_9000 (0.08s)
+=== RUN   TestTransportCodecOracleDependency
+--- PASS: TestTransportCodecOracleDependency (0.00s)
+=== RUN   FuzzTransportCodecDecodeEquivalence
+=== RUN   FuzzTransportCodecDecodeEquivalence/seed#0
+=== RUN   FuzzTransportCodecDecodeEquivalence/seed#1
+=== RUN   FuzzTransportCodecDecodeEquivalence/seed#2
+=== RUN   FuzzTransportCodecDecodeEquivalence/seed#3
+=== RUN   FuzzTransportCodecDecodeEquivalence/seed#4
+=== RUN   FuzzTransportCodecDecodeEquivalence/seed#5
+--- PASS: FuzzTransportCodecDecodeEquivalence (0.00s)
+    --- PASS: FuzzTransportCodecDecodeEquivalence/seed#0 (0.00s)
+    --- PASS: FuzzTransportCodecDecodeEquivalence/seed#1 (0.00s)
+    --- PASS: FuzzTransportCodecDecodeEquivalence/seed#2 (0.00s)
+    --- PASS: FuzzTransportCodecDecodeEquivalence/seed#3 (0.00s)
+    --- PASS: FuzzTransportCodecDecodeEquivalence/seed#4 (0.00s)
+    --- PASS: FuzzTransportCodecDecodeEquivalence/seed#5 (0.00s)
+FAIL
+FAIL	light-media/internal/plugins	182.430s
+=== RUN   TestManifestIsStandardSourceArtifact
+--- PASS: TestManifestIsStandardSourceArtifact (0.00s)
+=== RUN   TestDefaultsAndNoOpGetters
+=== RUN   TestDefaultsAndNoOpGetters/get_command
+=== RUN   TestDefaultsAndNoOpGetters/get_api
+=== RUN   TestDefaultsAndNoOpGetters/get_page
+=== RUN   TestDefaultsAndNoOpGetters/get_service
+=== RUN   TestDefaultsAndNoOpGetters/get_dashboard
+=== RUN   TestDefaultsAndNoOpGetters/get_dashboard_meta
+=== RUN   TestDefaultsAndNoOpGetters/get_auth_providers
+=== RUN   TestDefaultsAndNoOpGetters/get_module
+=== RUN   TestDefaultsAndNoOpGetters/close
+=== RUN   TestDefaultsAndNoOpGetters/stop_service
+=== RUN   TestDefaultsAndNoOpGetters/stop
+--- PASS: TestDefaultsAndNoOpGetters (0.00s)
+    --- PASS: TestDefaultsAndNoOpGetters/get_command (0.00s)
+    --- PASS: TestDefaultsAndNoOpGetters/get_api (0.00s)
+    --- PASS: TestDefaultsAndNoOpGetters/get_page (0.00s)
+    --- PASS: TestDefaultsAndNoOpGetters/get_service (0.00s)
+    --- PASS: TestDefaultsAndNoOpGetters/get_dashboard (0.00s)
+    --- PASS: TestDefaultsAndNoOpGetters/get_dashboard_meta (0.00s)
+    --- PASS: TestDefaultsAndNoOpGetters/get_auth_providers (0.00s)
+    --- PASS: TestDefaultsAndNoOpGetters/get_module (0.00s)
+    --- PASS: TestDefaultsAndNoOpGetters/close (0.00s)
+    --- PASS: TestDefaultsAndNoOpGetters/stop_service (0.00s)
+    --- PASS: TestDefaultsAndNoOpGetters/stop (0.00s)
+=== RUN   TestFalseyInitDoesNotMutateExistingObject
+=== RUN   TestFalseyInitDoesNotMutateExistingObject/null
+=== RUN   TestFalseyInitDoesNotMutateExistingObject/{}
+=== RUN   TestFalseyInitDoesNotMutateExistingObject/false
+=== RUN   TestFalseyInitDoesNotMutateExistingObject/0
+=== RUN   TestFalseyInitDoesNotMutateExistingObject/-0.0
+=== RUN   TestFalseyInitDoesNotMutateExistingObject/1e-400
+=== RUN   TestFalseyInitDoesNotMutateExistingObject/""
+=== RUN   TestFalseyInitDoesNotMutateExistingObject/[]
+--- PASS: TestFalseyInitDoesNotMutateExistingObject (0.01s)
+    --- PASS: TestFalseyInitDoesNotMutateExistingObject/null (0.00s)
+    --- PASS: TestFalseyInitDoesNotMutateExistingObject/{} (0.00s)
+    --- PASS: TestFalseyInitDoesNotMutateExistingObject/false (0.00s)
+    --- PASS: TestFalseyInitDoesNotMutateExistingObject/0 (0.00s)
+    --- PASS: TestFalseyInitDoesNotMutateExistingObject/-0.0 (0.00s)
+    --- PASS: TestFalseyInitDoesNotMutateExistingObject/1e-400 (0.00s)
+    --- PASS: TestFalseyInitDoesNotMutateExistingObject/"" (0.00s)
+    --- PASS: TestFalseyInitDoesNotMutateExistingObject/[] (0.00s)
+=== RUN   TestNonemptyConfigPreservesRawDisabledState
+=== RUN   TestNonemptyConfigPreservesRawDisabledState/{"other":1}
+=== RUN   TestNonemptyConfigPreservesRawDisabledState/{"content":"retained"}
+=== RUN   TestNonemptyConfigPreservesRawDisabledState/{"enabled":null,"content":"x"}
+=== RUN   TestNonemptyConfigPreservesRawDisabledState/{"enabled":false,"content":42}
+=== RUN   TestNonemptyConfigPreservesRawDisabledState/{"enabled":0,"content":false}
+=== RUN   TestNonemptyConfigPreservesRawDisabledState/{"enabled":-0.0,"content":null}
+=== RUN   TestNonemptyConfigPreservesRawDisabledState/{"enabled":"","content":[]}
+=== RUN   TestNonemptyConfigPreservesRawDisabledState/{"enabled":[],"content":{}}
+=== RUN   TestNonemptyConfigPreservesRawDisabledState/{"enabled":{},"content":[1]}
+=== RUN   TestNonemptyConfigPreservesRawDisabledState/{"action":"init","config":{"enabled":true,"content":"wrong"}}
+--- PASS: TestNonemptyConfigPreservesRawDisabledState (0.00s)
+    --- PASS: TestNonemptyConfigPreservesRawDisabledState/{"other":1} (0.00s)
+    --- PASS: TestNonemptyConfigPreservesRawDisabledState/{"content":"retained"} (0.00s)
+    --- PASS: TestNonemptyConfigPreservesRawDisabledState/{"enabled":null,"content":"x"} (0.00s)
+    --- PASS: TestNonemptyConfigPreservesRawDisabledState/{"enabled":false,"content":42} (0.00s)
+    --- PASS: TestNonemptyConfigPreservesRawDisabledState/{"enabled":0,"content":false} (0.00s)
+    --- PASS: TestNonemptyConfigPreservesRawDisabledState/{"enabled":-0.0,"content":null} (0.00s)
+    --- PASS: TestNonemptyConfigPreservesRawDisabledState/{"enabled":"","content":[]} (0.00s)
+    --- PASS: TestNonemptyConfigPreservesRawDisabledState/{"enabled":[],"content":{}} (0.00s)
+    --- PASS: TestNonemptyConfigPreservesRawDisabledState/{"enabled":{},"content":[1]} (0.00s)
+    --- PASS: TestNonemptyConfigPreservesRawDisabledState/{"action":"init","config":{"enabled":true,"content":"wrong"}} (0.00s)
+=== RUN   TestEnabledTruthinessAndContentForwarding
+=== RUN   TestEnabledTruthinessAndContentForwarding/true
+=== RUN   TestEnabledTruthinessAndContentForwarding/1
+=== RUN   TestEnabledTruthinessAndContentForwarding/-2
+=== RUN   TestEnabledTruthinessAndContentForwarding/0.01
+=== RUN   TestEnabledTruthinessAndContentForwarding/"false"
+=== RUN   TestEnabledTruthinessAndContentForwarding/[false]
+=== RUN   TestEnabledTruthinessAndContentForwarding/{"x":false}
+=== RUN   TestEnabledTruthinessAndContentForwarding/123456789012345678901234567890
+=== RUN   TestEnabledTruthinessAndContentForwarding/content=null
+=== RUN   TestEnabledTruthinessAndContentForwarding/content=false
+=== RUN   TestEnabledTruthinessAndContentForwarding/content=0
+=== RUN   TestEnabledTruthinessAndContentForwarding/content=-0.0
+=== RUN   TestEnabledTruthinessAndContentForwarding/content=1e-400
+=== RUN   TestEnabledTruthinessAndContentForwarding/content=""
+=== RUN   TestEnabledTruthinessAndContentForwarding/content=[]
+=== RUN   TestEnabledTruthinessAndContentForwarding/content={}
+=== RUN   TestEnabledTruthinessAndContentForwarding/content="中文\r\n#_keep\n"
+=== RUN   TestEnabledTruthinessAndContentForwarding/content=true
+=== RUN   TestEnabledTruthinessAndContentForwarding/content=123456789012345678901234567890
+=== RUN   TestEnabledTruthinessAndContentForwarding/content=[0]
+=== RUN   TestEnabledTruthinessAndContentForwarding/content={"a":1}
+--- PASS: TestEnabledTruthinessAndContentForwarding (0.02s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/true (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/1 (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/-2 (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/0.01 (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/"false" (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/[false] (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/{"x":false} (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/123456789012345678901234567890 (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/content=null (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/content=false (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/content=0 (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/content=-0.0 (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/content=1e-400 (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/content="" (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/content=[] (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/content={} (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/content="中文\r\n#_keep\n" (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/content=true (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/content=123456789012345678901234567890 (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/content=[0] (0.00s)
+    --- PASS: TestEnabledTruthinessAndContentForwarding/content={"a":1} (0.00s)
+=== RUN   TestInitializationEffectOrderAndFailureBoundaries
+=== RUN   TestInitializationEffectOrderAndFailureBoundaries/success
+=== RUN   TestInitializationEffectOrderAndFailureBoundaries/update_false_is_not_exception
+=== RUN   TestInitializationEffectOrderAndFailureBoundaries/update_None_is_not_exception
+=== RUN   TestInitializationEffectOrderAndFailureBoundaries/apply_failure_keeps_enabled
+=== RUN   TestInitializationEffectOrderAndFailureBoundaries/message_failure_keeps_enabled
+=== RUN   TestInitializationEffectOrderAndFailureBoundaries/update_exception_already_disabled
+--- PASS: TestInitializationEffectOrderAndFailureBoundaries (0.01s)
+    --- PASS: TestInitializationEffectOrderAndFailureBoundaries/success (0.00s)
+    --- PASS: TestInitializationEffectOrderAndFailureBoundaries/update_false_is_not_exception (0.00s)
+    --- PASS: TestInitializationEffectOrderAndFailureBoundaries/update_None_is_not_exception (0.00s)
+    --- PASS: TestInitializationEffectOrderAndFailureBoundaries/apply_failure_keeps_enabled (0.00s)
+    --- PASS: TestInitializationEffectOrderAndFailureBoundaries/message_failure_keeps_enabled (0.00s)
+    --- PASS: TestInitializationEffectOrderAndFailureBoundaries/update_exception_already_disabled (0.00s)
+=== RUN   TestReloadIsExplicitAndObjectsAreIndependent
+--- PASS: TestReloadIsExplicitAndObjectsAreIndependent (0.00s)
+=== RUN   TestGetFormAlwaysReadsOriginalDefaults
+--- PASS: TestGetFormAlwaysReadsOriginalDefaults (0.01s)
+=== RUN   TestGetFormPropagatesDefaultReadFailure
+--- PASS: TestGetFormPropagatesDefaultReadFailure (0.00s)
+=== RUN   TestInvalidConfigDoesNotMutateMembers
+=== RUN   TestInvalidConfigDoesNotMutateMembers/true
+=== RUN   TestInvalidConfigDoesNotMutateMembers/1
+=== RUN   TestInvalidConfigDoesNotMutateMembers/"text"
+=== RUN   TestInvalidConfigDoesNotMutateMembers/[1]
+=== RUN   TestInvalidConfigDoesNotMutateMembers/{
+=== RUN   TestInvalidConfigDoesNotMutateMembers/{}_{}
+--- PASS: TestInvalidConfigDoesNotMutateMembers (0.00s)
+    --- PASS: TestInvalidConfigDoesNotMutateMembers/true (0.00s)
+    --- PASS: TestInvalidConfigDoesNotMutateMembers/1 (0.00s)
+    --- PASS: TestInvalidConfigDoesNotMutateMembers/"text" (0.00s)
+    --- PASS: TestInvalidConfigDoesNotMutateMembers/[1] (0.00s)
+    --- PASS: TestInvalidConfigDoesNotMutateMembers/{ (0.00s)
+    --- PASS: TestInvalidConfigDoesNotMutateMembers/{}_{} (0.00s)
+=== RUN   TestRawUnicodeIsPreservedForSourceEncodingFailure
+--- PASS: TestRawUnicodeIsPreservedForSourceEncodingFailure (0.00s)
+=== RUN   TestCategoryEditorSourceOracleReplay
+=== RUN   TestCategoryEditorSourceOracleReplay/fresh_getters_and_noops
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_null
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_null
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_object
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_object
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_false
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_false
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_zero
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_zero
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_zero_float
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_zero_float
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_string
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_string
+=== RUN   TestCategoryEditorSourceOracleReplay/falsey_config_list
+=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_list
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_missing
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_null
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_object
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_false
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_zero
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_zero_float
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_string
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_list
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_true
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_true
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_one
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_one
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_negative
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_negative
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_fraction
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_fraction
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_false_string
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_false_string
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_list_nonempty
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_list_nonempty
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_object_nonempty
+=== RUN   TestCategoryEditorSourceOracleReplay/enabled_failure_object_nonempty
+=== RUN   TestCategoryEditorSourceOracleReplay/content_missing
+=== RUN   TestCategoryEditorSourceOracleReplay/content_null
+=== RUN   TestCategoryEditorSourceOracleReplay/content_object
+=== RUN   TestCategoryEditorSourceOracleReplay/content_false
+=== RUN   TestCategoryEditorSourceOracleReplay/content_zero
+=== RUN   TestCategoryEditorSourceOracleReplay/content_zero_float
+=== RUN   TestCategoryEditorSourceOracleReplay/content_string
+=== RUN   TestCategoryEditorSourceOracleReplay/content_list
+=== RUN   TestCategoryEditorSourceOracleReplay/content_unicode
+=== RUN   TestCategoryEditorSourceOracleReplay/content_line_endings
+=== RUN   TestCategoryEditorSourceOracleReplay/content_bom
+=== RUN   TestCategoryEditorSourceOracleReplay/content_integer
+=== RUN   TestCategoryEditorSourceOracleReplay/content_list_nonempty
+=== RUN   TestCategoryEditorSourceOracleReplay/content_object_nonempty
+=== RUN   TestCategoryEditorSourceOracleReplay/content_surrogate
+=== RUN   TestCategoryEditorSourceOracleReplay/nonmapping_config_true
+=== RUN   TestCategoryEditorSourceOracleReplay/nonmapping_config_integer
+=== RUN   TestCategoryEditorSourceOracleReplay/nonmapping_config_string
+=== RUN   TestCategoryEditorSourceOracleReplay/nonmapping_config_list
+=== RUN   TestCategoryEditorSourceOracleReplay/helper_constructor_raise
+=== RUN   TestCategoryEditorSourceOracleReplay/helper_init_raise
+=== RUN   TestCategoryEditorSourceOracleReplay/helper_init_false
+=== RUN   TestCategoryEditorSourceOracleReplay/message_raise
+=== RUN   TestCategoryEditorSourceOracleReplay/message_false
+=== RUN   TestCategoryEditorSourceOracleReplay/update_raise
+=== RUN   TestCategoryEditorSourceOracleReplay/update_false
+=== RUN   TestCategoryEditorSourceOracleReplay/update_none
+=== RUN   TestCategoryEditorSourceOracleReplay/write_failure_missing_parent
+    source_oracle_test.go:367: real user-file path/permission failure belongs to App/filesystem integration, not a mock host
+=== RUN   TestCategoryEditorSourceOracleReplay/write_failure_directory
+    source_oracle_test.go:367: real user-file path/permission failure belongs to App/filesystem integration, not a mock host
+=== RUN   TestCategoryEditorSourceOracleReplay/write_failure_read_only
+    source_oracle_test.go:367: real user-file path/permission failure belongs to App/filesystem integration, not a mock host
+=== RUN   TestCategoryEditorSourceOracleReplay/duplicate_successful_apply
+=== RUN   TestCategoryEditorSourceOracleReplay/disabled_replaces_members_not_file
+=== RUN   TestCategoryEditorSourceOracleReplay/failure_then_repair
+=== RUN   TestCategoryEditorSourceOracleReplay/fresh_object_after_failure
+=== RUN   TestCategoryEditorSourceOracleReplay/form_reads_bundled_not_user_or_member
+    source_oracle_test.go:367: bundled-default file reads/mutations and frozen source settings paths are outside this pure-worker boundary replay
+=== RUN   TestCategoryEditorSourceOracleReplay/form_default_missing
+    source_oracle_test.go:367: real bundled-default read/encoding/permission failure belongs to host integration
+=== RUN   TestCategoryEditorSourceOracleReplay/form_default_directory
+    source_oracle_test.go:367: real bundled-default read/encoding/permission failure belongs to host integration
+=== RUN   TestCategoryEditorSourceOracleReplay/form_default_invalid_utf8
+    source_oracle_test.go:367: real bundled-default read/encoding/permission failure belongs to host integration
+=== RUN   TestCategoryEditorSourceOracleReplay/form_default_read_only
+    source_oracle_test.go:367: real bundled-default read/encoding/permission failure belongs to host integration
+=== RUN   TestCategoryEditorSourceOracleReplay/form_rereads_default
+    source_oracle_test.go:367: bundled-default file reads/mutations and frozen source settings paths are outside this pure-worker boundary replay
+=== RUN   TestCategoryEditorSourceOracleReplay/import_paths_frozen
+    source_oracle_test.go:367: bundled-default file reads/mutations and frozen source settings paths are outside this pure-worker boundary replay
+=== NAME  TestCategoryEditorSourceOracleReplay
+    source_oracle_test.go:532: independent original-source worker differential: 68/68 selected cases passed, 68 cases executed, 196 steps completed; 10 cases / 24 steps explicitly not run; controlled host only
+--- PASS: TestCategoryEditorSourceOracleReplay (0.57s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/fresh_getters_and_noops (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_null (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_null (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_object (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_object (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_false (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_false (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_zero (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_zero (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_zero_float (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_zero_float (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_string (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_string (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/falsey_config_list (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_list (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_missing (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_null (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_object (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_false (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_zero (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_zero_float (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_string (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_list (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_true (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_true (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_one (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_one (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_negative (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_negative (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_fraction (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_fraction (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_false_string (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_false_string (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_list_nonempty (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_list_nonempty (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_object_nonempty (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_failure_object_nonempty (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_missing (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_null (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_object (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_false (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_zero (0.03s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_zero_float (0.02s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_string (0.02s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_list (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_unicode (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_line_endings (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_bom (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_integer (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_list_nonempty (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_object_nonempty (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/content_surrogate (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/nonmapping_config_true (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/nonmapping_config_integer (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/nonmapping_config_string (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/nonmapping_config_list (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/helper_constructor_raise (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/helper_init_raise (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/helper_init_false (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/message_raise (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/message_false (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/update_raise (0.02s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/update_false (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/update_none (0.01s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/write_failure_missing_parent (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/write_failure_directory (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/write_failure_read_only (0.00s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/duplicate_successful_apply (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/disabled_replaces_members_not_file (0.02s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/failure_then_repair (0.01s)
+    --- PASS: TestCategoryEditorSourceOracleReplay/fresh_object_after_failure (0.01s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/form_reads_bundled_not_user_or_member (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/form_default_missing (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/form_default_directory (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/form_default_invalid_utf8 (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/form_default_read_only (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/form_rereads_default (0.00s)
+    --- SKIP: TestCategoryEditorSourceOracleReplay/import_paths_frozen (0.00s)
+=== RUN   TestCategoryEditorSourceComparisonRetainsSurrogatesAndNumericKinds
+--- PASS: TestCategoryEditorSourceComparisonRetainsSurrogatesAndNumericKinds (0.00s)
+PASS
+ok  	light-media/internal/plugins/categoryeditor	1.955s
+FAIL

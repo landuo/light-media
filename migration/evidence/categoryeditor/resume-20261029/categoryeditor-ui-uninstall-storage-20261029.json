@@ -1,0 +1,55 @@
+{
+  "at_utc": "2026-10-29T03:50:43.106880+00:00",
+  "scope": "readonly exact two synthetic plugin_values namespaces; no auth tables, secret.key, decryption or whole DB copy",
+  "before": {
+    "CategoryEditor": [
+      {
+        "kind": "config",
+        "key": "main",
+        "revision": 5,
+        "sealed_sha256": "ced9c52d485cfa6c2aec5f3fc035e8f27b1b74f383fd580bf8edf49814b4cac7"
+      }
+    ],
+    "CategoryEditoruicopy": [
+      {
+        "kind": "config",
+        "key": "main",
+        "revision": 1,
+        "sealed_sha256": "0ca30b7316771b19ab67164127c6ea7cd1e9240a0960e96e68729a56221aa309"
+      }
+    ]
+  },
+  "after_reset_before_new_disabled_config": {
+    "CategoryEditor": [
+      {
+        "kind": "config",
+        "key": "main",
+        "revision": 5,
+        "sealed_sha256": "ced9c52d485cfa6c2aec5f3fc035e8f27b1b74f383fd580bf8edf49814b4cac7"
+      }
+    ],
+    "CategoryEditoruicopy": []
+  },
+  "before_at_utc": "2026-10-29T03:51:17.787551+00:00",
+  "qualification": "Saved a nonempty disabled synthetic clone config through real UI after prior reset; CategoryEditor has no KV-writing business path, so this browser case has zero KV rows before deletion. Seeded nonempty KV deletion is separate backend evidence.",
+  "after": {
+    "CategoryEditor": [
+      {
+        "kind": "config",
+        "key": "main",
+        "revision": 5,
+        "sealed_sha256": "ced9c52d485cfa6c2aec5f3fc035e8f27b1b74f383fd580bf8edf49814b4cac7"
+      }
+    ],
+    "CategoryEditoruicopy": []
+  },
+  "after_at_utc": "2026-10-29T03:53:31.240048+00:00",
+  "checks": {
+    "base_config_unchanged": true,
+    "clone_config_and_KV_rows_absent": true,
+    "clone_nonempty_config_was_present": true,
+    "clone_copied_package_removed": true,
+    "base_package_sha256": "4087b9dbd40320d36afef9fe98e74b3b4b098b36892ab71dd57eb0bb8498cbb1",
+    "global_policy_sha256": "9eee9f3330a23910eba4bc0568ea31111230f5e70a5b8c26607a4d1f53581c09"
+  }
+}

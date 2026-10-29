@@ -1,0 +1,28 @@
+{
+  "command": "go test ./internal/plugins/... ./cmd/category-editor",
+  "exit_code": 1,
+  "status": "failed",
+  "failed_unchanged_packages": {
+    "internal/plugins/autosignin": {
+      "tracked_diff_from_baseline": []
+    },
+    "internal/plugins/builtin": {
+      "tracked_diff_from_baseline": []
+    },
+    "internal/plugins/cleaninvalidseed/host": {
+      "tracked_diff_from_baseline": []
+    },
+    "internal/plugins/larkmessager": {
+      "tracked_diff_from_baseline": []
+    },
+    "internal/plugins/removelink/host": {
+      "tracked_diff_from_baseline": []
+    },
+    "internal/plugins/serverstatus": {
+      "tracked_diff_from_baseline": []
+    }
+  },
+  "missing_owner_present_in_baseline": false,
+  "scope_note": "Broad regression observed unchanged legacy business failures; did not repair or revive other plugins and does not mark them migrated. This is not a full baseline re-run. CategoryEditor and shared SDK/artifacts packages passed in this invocation.",
+  "log_sha256": "05fa81629888fdc8a60c7714efd9b65b41f20e9651084e71ffedf19278cd7a11"
+}

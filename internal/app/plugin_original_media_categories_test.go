@@ -29,6 +29,10 @@ func TestOriginalMediaCategoriesSourceAndActualRuleAPI(t *testing.T) {
 	if err = os.WriteFile(filepath.Join(a.Dir, "category.yaml"), []byte("movie:\n  原生电影: {}\ntv:\n  原生剧集: {}\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
+	// Source helper maps change on init, not when a later getter notices a file.
+	if _, err = a.reloadMediaCategoryPolicy(); err != nil {
+		t.Fatal(err)
+	}
 	for _, c := range oracle.Cases {
 		t.Run(c.Name, func(t *testing.T) {
 			method := "module_execute"
@@ -65,8 +69,13 @@ func TestOriginalMediaCategoriesSourceAndActualRuleAPI(t *testing.T) {
 			}
 		})
 	}
-	// A terminal dict must not read the native policy (nor misclassify it as a title).
-	if err = os.WriteFile(filepath.Join(a.Dir, "category.yaml"), []byte("!unsupported\n"), 0600); err != nil {
+	// A terminal dict must not consult the native category list. A loaded
+	// scalar section raises at keys(), unlike an uninitialized file edit which
+	// a source-correct cached getter intentionally would not read at all.
+	if err = os.WriteFile(filepath.Join(a.Dir, "category.yaml"), []byte("movie: 5\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = a.reloadMediaCategoryPolicy(); err != nil {
 		t.Fatal(err)
 	}
 	saveOwnedModule(t, a, cookie, source, `{"enabled":true,"modules":{"media_category":"module_execute"},"result":{"电影":["独立分类"]}}`)

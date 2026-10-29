@@ -1,0 +1,391 @@
+{
+  "schema_version": 1,
+  "id": "categoryeditor.final.independent_review",
+  "kind": "review",
+  "status": "passed",
+  "feature_ids": [
+    "plugin.CategoryEditor"
+  ],
+  "reviewer": "/root/migrate_installed_plugins/category_final_review",
+  "independent": true,
+  "requested_model": "gpt-6-astra",
+  "requested_reasoning_effort": "xhigh",
+  "reviewed_at_utc": "2026-10-29T04:20:15.984289+00:00",
+  "conclusion": "Accepted within explicitly approved main SDK and disclosed safety boundaries; no new blocking omission found. Not a difference-free replica.",
+  "blocking_findings": [],
+  "binding": {
+    "source_commit": "4419c3ad9fd78f9f8bf90811a5779e6bb3f85417",
+    "target_baseline_head": "10d76660fb78595948d89dccaa034c87a2240206",
+    "target_files": {
+      "cmd/category-editor/main.go": "2e91534eace7accb04d54be3dce9f2b440d29c523ca1de98c0172164e0e693d6",
+      "go.mod": "622569e08ea6fb374e66a0e35f22bc29b276841d7ab74ade1e1d813a6095b5fa",
+      "go.sum": "2166fc925241cdfc675fc78e2e3d2b36152d9eb208a86d6defccec9551c61355",
+      "internal/app/category_conditions.go": "c617f27de62da84d81e745d805a2578a2abf3b59ccf9f8cd83d1d44adc7b8db0",
+      "internal/app/category_conditions_test.go": "7dd07c393dc6ed4ac6c0aeabf0249d2a0335232acdc4c15cd42e0c83b5068855",
+      "internal/app/category_editor_deferred_conditions_test.go": "b5125789f1d36522ac7cbb49c8a17a989c5482ad1f44c1536684207290ed811f",
+      "internal/app/category_editor_runtime_cache_regression_test.go": "eab423eef0d180c9c44cf77576188b3e57740428e2282e8b29e5978bb1ea3fe1",
+      "internal/app/category_editor_semantics_fix_test.go": "c8fcca978143c7b73869548d70803acc33537436f72fffba5e6373c151fe9d32",
+      "internal/app/category_yaml.go": "e86f35596e8823b3229e9a3bcb47664e30c3195c1ace4945c535800d70a35368",
+      "internal/app/core_business_source_facts.go": "52f124dd057ea0d0e79531f24c265ace05c5e3e3c92ecada99b900c2e5c5e62e",
+      "internal/app/defaults/category.yaml": "1095b3aeb315569f541fded31bc77f43fa625cb9ac4844e3a28ba7d7868b2303",
+      "internal/app/media_category.go": "7bc4a56baf0f6611de3f267d876a83b0de1d587a2935e6482723b6d315081ad8",
+      "internal/app/media_category_runtime.go": "f2ad131739f8241bcc61e333e746ad419c1ec79defcc1a245072b84e959ce491",
+      "internal/app/media_category_test.go": "08455123c7cfd59e7ac59b455a968fe2adbc2f0726cb2b9cf1d98354aa05e76b",
+      "internal/app/plugin_categoryeditor_html_wire_test.go": "25a6c5de00c2dc41086979648a1ac298c353f498327d8c5d40324d1face46620",
+      "internal/app/plugin_categoryeditor_organize_copy_test.go": "3e5bcba12bfa429c2396d8712e21fff2141e2b5e5a7733d35cb93ba66da413c3",
+      "internal/app/plugin_categoryeditor_resources.go": "1821eb85c8d1f5104ea709303a7cfa4fbeeee0349144ffa6491b7a0d554db9dd",
+      "internal/app/plugin_categoryeditor_runtime_standard_test.go": "6f73afc003d67dc30e0d2a4067e85ed1151ab34d7c1dcf104a3d6ba96fab294b",
+      "internal/app/plugin_categoryeditor_standard_test.go": "19dc76892fa4b1fbd0db22a7c8afd052c22a73264e72126b561d32b85f75cde0",
+      "internal/app/plugin_categoryeditor_uninstall_identity_test.go": "034b70cacc720279a19588a7f5062be003f8ce3c5485cd6095e8169c1cdbef8b",
+      "internal/app/plugin_categoryeditor_wire.go": "88acdb1a6ee46e011c451e7cf6619440507bacb11cf21aa9560c63afbab77948",
+      "internal/app/plugin_categoryeditor_wire_test.go": "290179e634aac16b808b161b22e0e147808d88a6037eb09a6fe6eb80c151a84d",
+      "internal/app/plugin_original_lifecycle.go": "a479ad6c0c7fdd7d3f24fddf676f956588c94030be1cace2cd72f4476d4cabcd",
+      "internal/app/plugin_original_media_categories.go": "ea1676696b28603c32193eb471b450ff47636283736fae79a5620c706ef9a780",
+      "internal/app/plugin_original_media_categories_test.go": "cdf932dc3c9e3be0251e4d88db259bb5c86b91436c45ecbd83853f9cb689ea43",
+      "internal/app/plugin_original_registry.go": "496d1b2547eea2b7032dd3ff8ac2da9bdd080f2e018e53f004677e07f8833318",
+      "internal/app/plugin_original_resources.go": "25c62dab5b5fe553b844118cce0035dc5b7a96dcf4d5642bba2f21a5b6590b28",
+      "internal/app/plugin_original_uninstall.go": "54f334aace4cb3b91ab4dce76cea8a3ae8276ec2502fa3a3dde222178f0d4d05",
+      "internal/app/system_messages.go": "6c4ba3976744ff0a4c6e0212ab6a00b86e656d3d611b62779588c303edbfb0e2",
+      "internal/catalog/category_fields.go": "85df7e6405acbc55c78e8f217a953872695a23e2dc396051924f84450eddfc2e",
+      "internal/catalog/category_metadata.go": "3723dc0d9181fa9d588196a4bb791b2da81e9080c210b67a6f96044522644366",
+      "internal/plugins/base.go": "88d704b1249fd6af462f8dc8157586f1e30d579e4cc4719abf3289821f311aed",
+      "internal/plugins/category_policy.go": "dd601bff6914b2151f043864b8edc2a640c2fdc0ba98f79565e03489328434b9",
+      "internal/plugins/categoryeditor/categoryeditor.go": "b7f16a9609a8cff0816034896066fc52d376209aa63dac54c1cf92f2f7bb4069",
+      "internal/plugins/categoryeditor/categoryeditor_test.go": "42143c157c9697649f234949c5feaca590780b4dcbff6122b81f73b98252320f",
+      "internal/plugins/categoryeditor/form.json": "80ad278e12525c6b61563468ffa00b32b719ffd56f3029a89f13ccf1db8bb6a6",
+      "internal/plugins/categoryeditor/source_oracle_test.go": "5ed8ff6d72fbf121a01ac9c3817db23d2727afa04462caf9c7cad75184dd5bd5",
+      "testdata/plugins/category-editor-1.3/installed-category-helper.py": "1c0ec53b78caa3a4949dd970931f38430c67c9d46ea2e16c3cc00950fb24c2b2",
+      "testdata/plugins/category-editor-1.3/installed-categoryeditor.py": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+      "testdata/plugins/category-editor-1.3/reload-yaml-provenance.json": "9647c36d4400f72f686e24d5fd1059b1e61df102ae391d0a60c9b4961250cf80"
+    },
+    "fixture_files": {
+      "evidence/categoryeditor/resume-20261029/categoryeditor-20261029-feasible-app.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-20261029-feasible-app.log": "76b2a8f711a7badec4d694d02976ae42dfb3d24f84ce898b376b32336ecef362",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-20261029-feasible-final-app-bindings.json": "04aa605f1d8c5624b20f45ec30bab155d670b6bc1ed61d969d629f4977ab51ae",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-20261029-feasible-final-app.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-20261029-feasible-final-app.log": "f35702d49e6eaddcf9693ffa4207f354413e9490285c787d713b62d3199d46fd",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-20261029-feasible-sdk-worker.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-20261029-feasible-sdk-worker.log": "9bb5a9942db307c7227f7c0ac2fca79ed867c71b5a31ad2a93e0734b18900944",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-20261029-feasible-summary.json": "667cca65922bf8c168669743ea4e64e7fe4a2647502de2ffb07a1d4d35d80023",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-20261029-feasible-vet.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-20261029-feasible-vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-20261029-final-summary.json": "478d0588adb462b012111ad0f836868f034bdc1c34071ce17ad3abd594463f36",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-20261029-sdk-timeout-recheck.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-20261029-sdk-timeout-recheck.log": "b3c3067d08f0d4836cb7e6153676af29cbac85a229e0b302411feda5a5ee6b68",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-github-jxxghp-pinned-20261029.py": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-github-reference-comparison-20261029.json": "c05e11e6c1f3e43456ddd4b1d8e018336f086f7f6af49c93705ea1b78c19dfb4",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-github-reference-raw-20261029.json": "3c51fe185f69d7431d0102cfd43f037aafff7257f4cb8cbcd710a2ab52bcdbb8",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-host-source-inventory-20261029.json": "e45f12e6f15f465f6de79e4558162e742a73569927bfe897ecbf5abf49a1256c",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-filesystem-source-20261029.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-filesystem-source-20261029.json": "78dde4d87f1a4d15742ad541192900966466507c9979b9e1dad8c10ff7ccdc6a",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-filesystem-source-20261029.log": "fd326c9a92181f9b5b916dbe22daa9dff46a135e2309c6f350eff73d2e9e3153",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-filesystem-source-20261029.py": "9c9ca86c05f98f6d5ce9308e4e45468cb27496c18045ed66192f616f065d1434",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-20261029_test.go": "39da081df1bcef38a9ae60773bdc660cb0edd320ec504eb168ac9f52f4ca7462",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-compare-20261029.py": "f5e730b859ee9729b0b9256033a7334a4d47d0d1b9d756e4fd6fbe7e14e4526d",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-final-comparison.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-final-comparison.json": "47c2d4fb8399a6278f1855d989821bfc5b2bf04214d72daabbd349c003395fbf",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-final-comparison.log": "da8d57f7b4d8824921fd71df537cd4f6ba35c5f094b1536d6fc61305f6a8911b",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-final-review-20261029.json": "7c1a4763b97e12a1d5038de5688637153cd1ee834dd1b4581cb12481509342b9",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-final-review-20261029.md": "a7473ce69c1cbacbf5840edb00705aae6c61094f3513fca2be772638b8ca437a",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-final-target.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-final-target.json": "85031e72adfcbc6bd51cf3123a8d45947b3638615743ccf121a8c13557e6a985",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-final-target.log": "3b09824d43895a4fd7d4097afe35428e6f4bb11f57a3c95cd1b5490fc3ac99d8",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-overlay-20261029.json": "a962600d67cd1710a7ef16487fe963068d123e158ef7c7f21ba551c15c596763",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-source-20261029.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-source-20261029.json": "056c0427533200525ffdae7a429208430ca23e2229fae83eb67e99dcf6881841",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-source-20261029.log": "8d5e0e1489af1c668bb61da839a52ec1b78142545e68c6cc279f08af7563afa4",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-narrow-source-20261029.py": "ce25bf1fcdddb5dfa8b30d97560aef6d795977ecc2a7d01e1a3d51c72ee48beb",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-root-read-sequence-20261029.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-root-read-sequence-20261029.json": "7f022ba37b21a89ce5965b98e8d42ce0914609aacbc734fd8933951db22b8025",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-root-read-sequence-20261029.log": "dbff7fe0bbbedec2a78c90b7869f176c42ed0c632a02f2167582e75b1fe310bd",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-root-read-sequence-20261029.py": "02ee653b8bfc52f7a1c05a49ff1999949101bcfc59fe810651dbebdcee166751",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-independent-wire-edge-inputs-20261029.json": "d4a243aa896c2d1e3d382f69a5a0c2704d5a516a91eca217e8f88d405e3efc20",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.bindings.json": "df4dba4db806112a84728d3ba829e16689a601308158f9472b4d444a1e309186",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.dependency-files.txt": "1fd1628bd49f6763c00dd9aa369348546e8bc9efadbf2869c030547fec0b32a9",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.independent-review.json": "14985306de07790f7a3977db220e2a1b6c554544f3650e589bb82b8963394187",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.race-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.race-final.log": "b2a5b1bccd26ded56466b81fcddaaa39f38b7681b66320741f41fa0b837e2c5a",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.race.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.race.log": "283dd8d86a9337ae09dcfc82f503e18074340c3ca576c1781e9b563a2db91c2e",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.receipt.json": "ffd85ee63e214ea5358122b1116653bc6f650a24795d9ca926e6f84852f09505",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.synthetic.ffprobe.json": "4a9df79bc55ddf982b836432f7aaed830499f6daa5cc8c547230c35fdd4d87e3",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.synthetic.mp4": "d1fdbcf944d537ff68bb8b6724b2fb92c8855c368a1a39dea5d9e05ef6978217",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.vet.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-real-ui-inputs-20261029.json": "2ce921e162a484d9437651d6ab5295f1d2713ef07cd63073e757fbeed86a9aa3",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-real-ui-observations-20261029.json": "c254f9504248e56865954f7596a1f3c5d0c17013abf35aa9f959b5a9feb03c1f",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-ui-auth-current.json": "c2b5fdb36a640564c50339ff06d0dc15531df348bbbfa5b7a176f1f8a122ee1f",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-ui-local-artifact-preparation.json": "7fad3dd9e9e44bd3747e16fbf29da86f49ae841a761a74324dfe729677e2456f",
+      "evidence/categoryeditor/resume-20261029/categoryeditor-ui-uninstall-storage-20261029.json": "c993ad9a6bcadc63d4b35f1ec3c7141def9809288ba795022fa8175420309f12",
+      "evidence/categoryeditor/review/categoryeditor-review-artifact-manifest.json": "d154025ab7dcedb9e7a5d9ab3e41db58f2ac1210b16d2f4c6765a26aed30abf0",
+      "evidence/categoryeditor/review/categoryeditor-review-comparison.json": "ec4561d1c39a2b6d5feaf6cef4a44772e69be7aa55b37e2e1e85411f72cc7cb1",
+      "evidence/categoryeditor/review/categoryeditor-review-filesystem-source.json": "9691bc9e4251f7b4a545f350275bacb962cadc2ce60762e42ee30d948a4e5da9",
+      "evidence/categoryeditor/review/categoryeditor-review-filesystem-source.log": "64a9473c29fe2af3089af6142f8b067ea4ca99be34f6af57da9f5ad8ed1a6f39",
+      "evidence/categoryeditor/review/categoryeditor-review-filesystem-source.py": "ed1c6cbcfce4d4e435f88904bc009a145f0184fb1aefd366f0c34e37553946fd",
+      "evidence/categoryeditor/review/categoryeditor-review-overlay.json": "5f1c7ad9dccb066583900032e344873b2e6c8eef02fd1e661fafb68b8b1a46c3",
+      "evidence/categoryeditor/review/categoryeditor-review-probe_test.go": "d49036b68a91cccc1d33f6f0aff3d169740e412d15f07364c7bd9afeffd9df0a",
+      "evidence/categoryeditor/review/categoryeditor-review-report.md": "5ec4d95013ab95065ab8095131e0eee1b632157ece33375e74a1830401b103ce",
+      "evidence/categoryeditor/review/categoryeditor-review-source-extra-initial.log": "d85c691edf4f5a35bf3232ce205718e14171e94a8ec4c2ac74f7085455de1a21",
+      "evidence/categoryeditor/review/categoryeditor-review-source-extra-inputs.json": "492e88e417dcb0ff3c5754ea030ba4fd5ab9cda594149c42cf498dfc74003454",
+      "evidence/categoryeditor/review/categoryeditor-review-source-extra-oracle-initial.json": "8bbc0ea13575cb9e01976c9ae733d21ded2f1cff479398f6c581874a5fb21817",
+      "evidence/categoryeditor/review/categoryeditor-review-source-extra-oracle.json": "148b80c44e632626d8379e786fee4603a1adefcc7ade9b9b2d6f07a6ffd6dbb5",
+      "evidence/categoryeditor/review/categoryeditor-review-source-extra.log": "c22b50b17fab6dd978bbf8fd08d1d1638cfe45e5ce6748e7fd958b81f8192ce6",
+      "evidence/categoryeditor/review/categoryeditor-review-source-extra.py": "a01061021d3c157c89b7cbb13d868f14055045bb78d9ab7b4e7a68d3b23428b5",
+      "evidence/categoryeditor/review/categoryeditor-review-target-probe-initial.json": "61ef5a708886e5962d69e8d8f5da55f440314a8362823067bb990d2ecd8ed075",
+      "evidence/categoryeditor/review/categoryeditor-review-target-probe-initial.log": "fd6de56bd9637d779c23bfd4e3ad2cc2c724fbac389ce895aee39d6fb23e594d",
+      "evidence/categoryeditor/review/categoryeditor-review-target-probe.json": "8d1edeed3f204957efcf450e239190fd04e6c4530acb901d5b8ac8d7ae270e11",
+      "evidence/categoryeditor/review/categoryeditor-review-target-probe.log": "6b6c3d562a90d160a427d3763c3cb0671f89adf3eec7aaaa5fffc925ae6fedf3",
+      "evidence/categoryeditor/review/categoryeditor-review-uninstall-negative.log": "0ad222b2b82ea73e16985ea5515b0035fe0967008dad7fed971ba668f0574f3e",
+      "evidence/categoryeditor/source/categoryeditor-source-artifact-manifest.json": "4a4a6c2a349fdc7610f8208e187db5d8c24fe5540b9c67229acb7a775cb2f72c",
+      "evidence/categoryeditor/source/categoryeditor-source-audit.md": "d78e86ea9f6dc51933fd59258238f5922acba23b73dddb4a7e2335aacf17d5d9",
+      "evidence/categoryeditor/source/categoryeditor-source-check-results.json": "d0b3153f82f8f3b28a7acfcc7e39e8183c516a76b50b6d8960a5b37cb26550b0",
+      "evidence/categoryeditor/source/categoryeditor-source-checks.log": "ccb6b38af5044b72ad30babde5a6a3bfb0b6b6a89f03d2e5a11e86dadfea23c5",
+      "evidence/categoryeditor/source/categoryeditor-source-checks.py": "ab668c550d7506d462dd90beda2beff4512718a1d6bd5b2759321c658e5ab22a",
+      "evidence/categoryeditor/source/categoryeditor-source-helper-inputs.json": "a9224f02261b09a20d780099463201b74d198a2370e68bec58290f39a874c780",
+      "evidence/categoryeditor/source/categoryeditor-source-helper-oracle.json": "9fa95d762b18da0ee90973f4b494bf508a4ce68546834d11d214795df66d78a6",
+      "evidence/categoryeditor/source/categoryeditor-source-helper-replay.log": "6a4718b6d3ff30f9ee3e9b3a9ed380abd13d71bfd5c8bc399d8525e0f72d5e24",
+      "evidence/categoryeditor/source/categoryeditor-source-helper-replay.py": "22f7d52c170d358cd2b6b53e2d3c0c781119a5d82f0664196182f0bcbaf0ef21",
+      "evidence/categoryeditor/source/categoryeditor-source-inputs.json": "2d3a4cdf9ef8af9431181bcb419961f3aa10b1fa5c4668ee3839482b2edb32b0",
+      "evidence/categoryeditor/source/categoryeditor-source-oracle.json": "a92f0462e1708e293baa21203029e78071512a4afc78a3a038b3774733b02aca",
+      "evidence/categoryeditor/source/categoryeditor-source-replay.log": "4e2ea10ca896d682425041ea1d5384d928656242f170050824cbb7b067d5df92",
+      "evidence/categoryeditor/source/categoryeditor-source-replay.py": "d1d7ad9d06a3da07f6ef172407414257599957b7cfa5574279c968daea8194d0",
+      "evidence/categoryeditor/source/categoryeditor-source-yaml-dependency.log": "230bd9d89d854a8d9616590dc29851f89112497d7b62054f05247a820e72e4c0",
+      "evidence/categoryeditor/target/categoryeditor-worker-differential-final-coverage.json": "d8784d363a70c2a41fcccdbb16d9bc2a22f0de2697b41fb553c2a92d2a424839",
+      "evidence/categoryeditor/target/categoryeditor-worker-differential-final-observations.json": "29c17c4f21f632048f7a06e2057c2c572b537aae1b3e6818fb38f3ecd4721105",
+      "evidence/categoryeditor/target/categoryeditor-worker-differential-final-package-test.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "evidence/categoryeditor/target/categoryeditor-worker-differential-final-package-test.log": "4856eac580017edf819e21f7d3806752dc33f4234e9969c5ce980e24627556a3",
+      "evidence/categoryeditor/target/categoryeditor-worker-differential-final-summary.json": "cfe5338eef161b764ead00f85937b52b979ecd5ce337ee78e64123110c247b5a",
+      "evidence/categoryeditor/target/categoryeditor-worker-differential-final-test.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "evidence/categoryeditor/target/categoryeditor-worker-differential-final-test.log": "6e54dc05fcdac431d590bd22ce73669eedfc591f98daa19d6ceff21f541bfed4",
+      "evidence/categoryeditor/target/categoryeditor-worker-differential-final-vet.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "evidence/categoryeditor/target/categoryeditor-worker-differential-final-vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "environment": {
+      "os": "cloud Linux/amd64",
+      "go": "go1.26.2",
+      "isolation": "read-only production/test/evidence inspection; independent controlled HostCaller sample tests; no browser/auth/NAS operation",
+      "sample_execution_log_location": "embedded in this review JSON under independent_reexecution",
+      "existing_real_app_evidence": "owned App/SQLite/SDK subprocess, synthetic media and fail-closed metadata; formal prior CUA observations separately qualified"
+    }
+  },
+  "artifacts": {
+    "evidence/categoryeditor/resume-20261029/categoryeditor-final-independent-review-20261029.md": "05f4ebec38029df7fdc2bcc56fbe243ee63ba52798d417778e20ef8e9ef80f24"
+  },
+  "source_file": {
+    "path": "installed-plugin-sources/categoryeditor/__init__.py",
+    "sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27"
+  },
+  "feature_target_files": {
+    "cmd/category-editor/main.go": "2e91534eace7accb04d54be3dce9f2b440d29c523ca1de98c0172164e0e693d6",
+    "internal/plugins/categoryeditor/categoryeditor.go": "b7f16a9609a8cff0816034896066fc52d376209aa63dac54c1cf92f2f7bb4069",
+    "internal/plugins/categoryeditor/form.json": "80ad278e12525c6b61563468ffa00b32b719ffd56f3029a89f13ccf1db8bb6a6",
+    "internal/plugins/category_policy.go": "dd601bff6914b2151f043864b8edc2a640c2fdc0ba98f79565e03489328434b9",
+    "internal/app/plugin_categoryeditor_resources.go": "1821eb85c8d1f5104ea709303a7cfa4fbeeee0349144ffa6491b7a0d554db9dd",
+    "internal/app/plugin_original_resources.go": "25c62dab5b5fe553b844118cce0035dc5b7a96dcf4d5642bba2f21a5b6590b28",
+    "internal/app/media_category.go": "7bc4a56baf0f6611de3f267d876a83b0de1d587a2935e6482723b6d315081ad8",
+    "internal/app/media_category_runtime.go": "f2ad131739f8241bcc61e333e746ad419c1ec79defcc1a245072b84e959ce491",
+    "internal/app/category_conditions.go": "c617f27de62da84d81e745d805a2578a2abf3b59ccf9f8cd83d1d44adc7b8db0",
+    "internal/app/core_business_source_facts.go": "52f124dd057ea0d0e79531f24c265ace05c5e3e3c92ecada99b900c2e5c5e62e",
+    "internal/app/plugin_original_registry.go": "496d1b2547eea2b7032dd3ff8ac2da9bdd080f2e018e53f004677e07f8833318",
+    "internal/app/plugin_original_lifecycle.go": "a479ad6c0c7fdd7d3f24fddf676f956588c94030be1cace2cd72f4476d4cabcd",
+    "internal/app/plugin_original_uninstall.go": "54f334aace4cb3b91ab4dce76cea8a3ae8276ec2502fa3a3dde222178f0d4d05",
+    "internal/app/plugin_categoryeditor_wire.go": "88acdb1a6ee46e011c451e7cf6619440507bacb11cf21aa9560c63afbab77948",
+    "internal/app/plugin_original_media_categories.go": "ea1676696b28603c32193eb471b450ff47636283736fae79a5620c706ef9a780"
+  },
+  "reviewed_behavioral_evidence_ids": [
+    "categoryeditor.worker.source_differential",
+    "categoryeditor.browser.managed_preview_auth",
+    "categoryeditor.organizer.actual_copy"
+  ],
+  "reviewed_behavioral_input_and_result_files": {
+    "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.bindings.json": "df4dba4db806112a84728d3ba829e16689a601308158f9472b4d444a1e309186",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.dependency-files.txt": "1fd1628bd49f6763c00dd9aa369348546e8bc9efadbf2869c030547fec0b32a9",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.independent-review.json": "14985306de07790f7a3977db220e2a1b6c554544f3650e589bb82b8963394187",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.race-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.race-final.log": "b2a5b1bccd26ded56466b81fcddaaa39f38b7681b66320741f41fa0b837e2c5a",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.race.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.race.log": "283dd8d86a9337ae09dcfc82f503e18074340c3ca576c1781e9b563a2db91c2e",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.receipt.json": "ffd85ee63e214ea5358122b1116653bc6f650a24795d9ca926e6f84852f09505",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.synthetic.ffprobe.json": "4a9df79bc55ddf982b836432f7aaed830499f6daa5cc8c547230c35fdd4d87e3",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.synthetic.mp4": "d1fdbcf944d537ff68bb8b6724b2fb92c8855c368a1a39dea5d9e05ef6978217",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.vet.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-organize-copy-20261029.vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-real-ui-inputs-20261029.json": "2ce921e162a484d9437651d6ab5295f1d2713ef07cd63073e757fbeed86a9aa3",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-real-ui-observations-20261029.json": "c254f9504248e56865954f7596a1f3c5d0c17013abf35aa9f959b5a9feb03c1f",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-ui-auth-current.json": "c2b5fdb36a640564c50339ff06d0dc15531df348bbbfa5b7a176f1f8a122ee1f",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-ui-local-artifact-preparation.json": "7fad3dd9e9e44bd3747e16fbf29da86f49ae841a761a74324dfe729677e2456f",
+    "evidence/categoryeditor/resume-20261029/categoryeditor-ui-uninstall-storage-20261029.json": "c993ad9a6bcadc63d4b35f1ec3c7141def9809288ba795022fa8175420309f12",
+    "evidence/categoryeditor/source/categoryeditor-source-helper-inputs.json": "a9224f02261b09a20d780099463201b74d198a2370e68bec58290f39a874c780",
+    "evidence/categoryeditor/source/categoryeditor-source-helper-oracle.json": "9fa95d762b18da0ee90973f4b494bf508a4ce68546834d11d214795df66d78a6",
+    "evidence/categoryeditor/source/categoryeditor-source-inputs.json": "2d3a4cdf9ef8af9431181bcb419961f3aa10b1fa5c4668ee3839482b2edb32b0",
+    "evidence/categoryeditor/source/categoryeditor-source-oracle.json": "a92f0462e1708e293baa21203029e78071512a4afc78a3a038b3774733b02aca",
+    "evidence/categoryeditor/source/categoryeditor-source-replay.py": "d1d7ad9d06a3da07f6ef172407414257599957b7cfa5574279c968daea8194d0",
+    "evidence/categoryeditor/target/categoryeditor-worker-differential-final-coverage.json": "d8784d363a70c2a41fcccdbb16d9bc2a22f0de2697b41fb553c2a92d2a424839",
+    "evidence/categoryeditor/target/categoryeditor-worker-differential-final-observations.json": "29c17c4f21f632048f7a06e2057c2c572b537aae1b3e6818fb38f3ecd4721105",
+    "evidence/categoryeditor/target/categoryeditor-worker-differential-final-package-test.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/categoryeditor/target/categoryeditor-worker-differential-final-package-test.log": "4856eac580017edf819e21f7d3806752dc33f4234e9969c5ce980e24627556a3",
+    "evidence/categoryeditor/target/categoryeditor-worker-differential-final-summary.json": "cfe5338eef161b764ead00f85937b52b979ecd5ce337ee78e64123110c247b5a",
+    "evidence/categoryeditor/target/categoryeditor-worker-differential-final-test.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/categoryeditor/target/categoryeditor-worker-differential-final-test.log": "6e54dc05fcdac431d590bd22ce73669eedfc591f98daa19d6ceff21f541bfed4",
+    "evidence/categoryeditor/target/categoryeditor-worker-differential-final-vet.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/categoryeditor/target/categoryeditor-worker-differential-final-vet.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "other_reviewed_evidence_ids": [
+    "categoryeditor.independent.review",
+    "categoryeditor.resume.actual_final_integration",
+    "categoryeditor.resume.independent_review",
+    "categoryeditor.resume.source_references",
+    "categoryeditor.source.fixed_replays"
+  ],
+  "integrity": {
+    "hash_checks": 2696,
+    "hash_mismatches": [],
+    "copy_dependency_files": 2550,
+    "source_form_ast_equals_target_json": true,
+    "git_diff_check_exit": 0,
+    "ledger_nonfinal_integrity_check_exit": 0,
+    "final_gate_not_run": "Other plugin slices and delivery revision remain coordinator work; nonfinal checker is integrity only."
+  },
+  "independent_reexecution": {
+    "comparator": {
+      "command": "source ../toolchain/env.sh && env -u CATEGORYEDITOR_WORKER_DIFFERENTIAL_OUTPUT -u CATEGORYEDITOR_SOURCE_EVIDENCE go test -race ./internal/plugins/categoryeditor -run '^(TestCategoryEditorSourceOracleReplay/(fresh_getters_and_noops|retained_falsey_config_object|enabled_false_string|content_surrogate|helper_init_raise|message_raise|update_raise|duplicate_successful_apply|failure_then_repair)|TestCategoryEditorSourceComparisonRetainsSurrogatesAndNumericKinds)$' -count=1 -v",
+      "chunk_id": "ab34e7",
+      "wall_time_seconds": 2.446139275,
+      "exit_code": 0,
+      "original_token_count": 56,
+      "output": "=== RUN   TestCategoryEditorSourceComparisonRetainsSurrogatesAndNumericKinds\n--- PASS: TestCategoryEditorSourceComparisonRetainsSurrogatesAndNumericKinds (0.00s)\nPASS\nok  \tlight-media/internal/plugins/categoryeditor\t1.127s\n",
+      "qualification": "Initial combined filter executed only the comparator; no source-case execution claimed from this command."
+    },
+    "differential_sample": {
+      "command": "source ../toolchain/env.sh && env -u CATEGORYEDITOR_WORKER_DIFFERENTIAL_OUTPUT -u CATEGORYEDITOR_SOURCE_EVIDENCE go test -race ./internal/plugins/categoryeditor -run '^TestCategoryEditorSourceOracleReplay$/^(fresh_getters_and_noops|retained_falsey_config_object|enabled_false_string|content_surrogate|helper_init_raise|message_raise|update_raise|duplicate_successful_apply|failure_then_repair)$' -count=1 -v",
+      "chunk_id": "e2090e",
+      "wall_time_seconds": 1.919780178,
+      "exit_code": 0,
+      "original_token_count": 436,
+      "output": "=== RUN   TestCategoryEditorSourceOracleReplay\n=== RUN   TestCategoryEditorSourceOracleReplay/fresh_getters_and_noops\n=== RUN   TestCategoryEditorSourceOracleReplay/retained_falsey_config_object\n=== RUN   TestCategoryEditorSourceOracleReplay/enabled_false_string\n=== RUN   TestCategoryEditorSourceOracleReplay/content_surrogate\n=== RUN   TestCategoryEditorSourceOracleReplay/helper_init_raise\n=== RUN   TestCategoryEditorSourceOracleReplay/message_raise\n=== RUN   TestCategoryEditorSourceOracleReplay/update_raise\n=== RUN   TestCategoryEditorSourceOracleReplay/duplicate_successful_apply\n=== RUN   TestCategoryEditorSourceOracleReplay/failure_then_repair\n=== NAME  TestCategoryEditorSourceOracleReplay\n    source_oracle_test.go:532: independent original-source worker differential: 9/68 selected cases passed, 9 cases executed, 33 steps completed; 69 cases / 187 steps explicitly not run; controlled host only\n--- PASS: TestCategoryEditorSourceOracleReplay (0.29s)\n    --- PASS: TestCategoryEditorSourceOracleReplay/fresh_getters_and_noops (0.00s)\n    --- PASS: TestCategoryEditorSourceOracleReplay/retained_falsey_config_object (0.00s)\n    --- PASS: TestCategoryEditorSourceOracleReplay/enabled_false_string (0.01s)\n    --- PASS: TestCategoryEditorSourceOracleReplay/content_surrogate (0.00s)\n    --- PASS: TestCategoryEditorSourceOracleReplay/helper_init_raise (0.00s)\n    --- PASS: TestCategoryEditorSourceOracleReplay/message_raise (0.00s)\n    --- PASS: TestCategoryEditorSourceOracleReplay/update_raise (0.00s)\n    --- PASS: TestCategoryEditorSourceOracleReplay/duplicate_successful_apply (0.01s)\n    --- PASS: TestCategoryEditorSourceOracleReplay/failure_then_repair (0.00s)\nPASS\nok  \tlight-media/internal/plugins/categoryeditor\t1.391s\n",
+      "qualification": "9 source-grounded cases / 33 steps, controlled HostCaller only; not another full App or browser run."
+    }
+  },
+  "approval": {
+    "decision_id": "category.current_host_bounds",
+    "source": "Trusted parent transcript provided in task assignment",
+    "assistant_message_id": "Sentinel_0d118aca6c608191a2abaa69b98a9131",
+    "user_message_id": "Sentinel_d78e452a35188191817f889f86446d8a",
+    "user_reply": "保留吧",
+    "scope": [
+      "64 KiB policy; 64 categories per type; 128 extra fields",
+      "unsafe directory-name rejection",
+      "designated regular file access; no symlink following",
+      "bounded YAML nesting/nodes/merges; cycle and specified special-structure rejection"
+    ],
+    "not_authorized": [
+      "new exclusions",
+      "broader deletion",
+      "persistent permission changes",
+      "deployment"
+    ]
+  },
+  "facet_review": {
+    "data": {
+      "status": "passed_with_limits",
+      "evidence": [
+        "categoryeditor.worker.source_differential",
+        "categoryeditor.resume.actual_final_integration",
+        "categoryeditor.organizer.actual_copy"
+      ],
+      "finding": "Raw JSON truthiness/types, form tree, exact applied policy bytes, YAML/Unicode/deferred shapes and source-expected category path inspected."
+    },
+    "state": {
+      "status": "passed_with_limits",
+      "evidence": [
+        "categoryeditor.resume.actual_final_integration",
+        "categoryeditor.browser.managed_preview_auth",
+        "categoryeditor.organizer.actual_copy"
+      ],
+      "finding": "File/helper/message/member/full-config order; partial failure and warm cache; actual SQLite clone namespace isolation, durable copy plan/job/receipt/history."
+    },
+    "errors": {
+      "status": "passed_with_limits",
+      "evidence": [
+        "categoryeditor.worker.source_differential",
+        "categoryeditor.resume.independent_review",
+        "categoryeditor.browser.managed_preview_auth"
+      ],
+      "finding": "Non-string/UTF8 surrogate/write/read/wrong-root/deferred condition phases and repair covered; Python-vs-Go exception text not claimed identical; 12 cold failed-constructor adapter mismatches remain preserved."
+    },
+    "concurrency": {
+      "status": "passed_with_limits",
+      "evidence": [
+        "categoryeditor.resume.actual_final_integration",
+        "categoryeditor.organizer.actual_copy"
+      ],
+      "finding": "Serialized standard object calls, shared file/helper locks, actual race-enabled host+worker, isolated clone processes, stop/join; not full original NAS scheduler equivalence."
+    },
+    "restart": {
+      "status": "passed_with_limits",
+      "evidence": [
+        "categoryeditor.resume.actual_final_integration",
+        "categoryeditor.browser.managed_preview_auth"
+      ],
+      "finding": "Cold App and actual normal preview stop/start retain disabled config without replay; normal restart not exhaustive crash-atomicity proof."
+    },
+    "compatibility": {
+      "status": "passed_with_limits",
+      "evidence": [
+        "categoryeditor.resume.actual_final_integration",
+        "categoryeditor.browser.managed_preview_auth"
+      ],
+      "finding": "User-directed main SDK, central clone exact ID, same-version reacquire/reinstall and wrong-ID rejection; immutable default resource packaging documented; no authentic newer release upgrade claim."
+    },
+    "security": {
+      "status": "passed_with_approved_adaptation",
+      "evidence": [
+        "categoryeditor.resume.actual_final_integration",
+        "categoryeditor.browser.managed_preview_auth"
+      ],
+      "finding": "Explicit four-category safety decision retained; active capability/instance validation and clone deletion isolation inspected; secrets scan negative within finite patterns."
+    },
+    "performance": {
+      "status": "passed_with_limits",
+      "evidence": [
+        "categoryeditor.resume.actual_final_integration",
+        "categoryeditor.organizer.actual_copy"
+      ],
+      "finding": "Current bounded parser/wire/count budgets retained, numeric range represented without unbounded expansion, no added schedule/background business service; no throughput-equivalence claim."
+    }
+  },
+  "evidence_authenticity": {
+    "copy": "Source input/oracle hard-bound by SHA, expected category decoded from archived source return; test invokes real authenticated HTTP handler and production worker to publish distinct-inode copy with full terminal assertions, not target-computed expected value or preview.",
+    "ui": "Reviewed prior formal CUA chronological observations plus exact input, independent file/storage digests and binary hashes; no browser replay by this reviewer. Test credentials not recorded. KV UI 0-to-0 not misrepresented as nonempty deletion.",
+    "historical_failures": "Earlier browser/auth failures, initial fixture/SDK timeout failures and raw cold-constructor comparison exit 1 remain historical records, not silently changed to passed.",
+    "secrets": {
+      "text_files_scanned": 141,
+      "high_confidence_secret_findings": [],
+      "sensitive_named_artifacts": [],
+      "patterns": [
+        "private-key PEM",
+        "GitHub tokens",
+        "OpenAI keys",
+        "JWT",
+        "credential-valued Authorization/Cookie headers"
+      ],
+      "limitation": "Finite pattern/content review, not mathematical proof that arbitrary hidden credentials are absent."
+    }
+  },
+  "limitations": [
+    "Approved adaptations mean no strict difference-free replication claim.",
+    "Archived 2026-10-20 helper and controlled WeakSingleton adapter are not current NAS identity or original singleton lifetime proof.",
+    "12 cold failed-constructor getter mismatches preserved; not runtime equivalence claims.",
+    "Immutable embedded default resource does not implement arbitrary mutable source INNER_CONFIG_PATH IO failures.",
+    "No new-version upgrade/rollback acceptance; only genuine pinned 1.3 same-version reacquisition/reinstall and central clone ID isolation.",
+    "No NAS deployment or private production configuration/KV migration.",
+    "COPY is synthetic media plus controlled metadata; not remote TMDB, actual download, move/hardlink/scraping or browser-organize interaction.",
+    "No own live browser/auth observation or destructive action in this final review."
+  ],
+  "coordinator_actions": [
+    "Record the exact latest user approval, remove stale pending/blocked current status while retaining original historical raw evidence.",
+    "Import this review and MD into canonical migration evidence; reference this review from feature review and populate applicable facets with scoped evidence.",
+    "Save tested source/test/fixture bindings in fixed main delivery revision, then actual push/readback/required CI; this report does not pre-certify remote delivery."
+  ],
+  "ledger_observed_sha256": "045dba114ecedb0d50b2819004fa653084a9553fe8f71ded0df2c6cd94baf02c"
+}

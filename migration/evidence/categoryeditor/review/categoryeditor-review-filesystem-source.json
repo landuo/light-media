@@ -1,0 +1,145 @@
+{
+  "kind": "controlled_original_filesystem_source_contrasts",
+  "helper_current_nas_verified": false,
+  "source_bindings": {
+    "light-media/testdata/plugins/category-editor-1.3/installed-category-helper.py": "1c0ec53b78caa3a4949dd970931f38430c67c9d46ea2e16c3cc00950fb24c2b2",
+    "source-snapshot/installed-plugin-sources/categoryeditor/__init__.py": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+    "evidence/categoryeditor-review-filesystem-source.py": "ed1c6cbcfce4d4e435f88904bc009a145f0184fb1aefd366f0c34e37553946fd"
+  },
+  "fixtures": "evidence/categoryeditor-review-filesystem-source-fixtures-hqy66zzg",
+  "initial": "movie:\n  \u7f13\u5b58\u7535\u5f71:\n    original_language: 'zh'\n  \u5176\u5b83\u7535\u5f71:\ntv:\n  \u7f13\u5b58\u5267\u96c6:\n",
+  "default": "movie:\n  \u9ed8\u8ba4\u7535\u5f71:\n",
+  "applied": "movie:\n  New:\n",
+  "cases": [
+    {
+      "id": "write_only",
+      "file_before_constructor": true,
+      "file_after_constructor": true,
+      "initial_match": "\u7f13\u5b58\u7535\u5f71",
+      "apply_return": null,
+      "enabled": false,
+      "match_after_apply": "\u7f13\u5b58\u7535\u5f71",
+      "trace": [
+        {
+          "event": "put",
+          "args": [
+            "\u4e8c\u7ea7\u5206\u7c7b\u7b56\u7565\u5df2\u66f4\u65b0\uff0c\u8bf7\u6ce8\u610f\u540c\u6b65\u8c03\u6574\u76ee\u5f55\u8bbe\u7f6e\uff0c\u63d2\u4ef6\u5c06\u6062\u590d\u5173\u95ed\u72b6\u6001\uff01"
+          ],
+          "kwargs": {
+            "title": "\u4e8c\u7ea7\u5206\u7c7b\u7b56\u7565"
+          }
+        },
+        {
+          "event": "update_config",
+          "config": {
+            "enabled": false,
+            "content": "movie:\n  New:\n"
+          }
+        }
+      ],
+      "mode_at_observation": "0o200",
+      "is_symlink": false,
+      "inspection_permission_change_after_observation": "0200 -> 0600 -> 0200, owned fixture only",
+      "actual_bytes_base64": "bW92aWU6CiAgTmV3Ogo=",
+      "logs": [
+        {
+          "level": "info",
+          "args": [
+            "\u5df2\u52a0\u8f7d\u4e8c\u7ea7\u5206\u7c7b\u7b56\u7565 category.yaml"
+          ]
+        },
+        {
+          "level": "warn",
+          "args": [
+            "\u4e8c\u7ea7\u5206\u7c7b\u7b56\u7565\u914d\u7f6e\u6587\u4ef6\u52a0\u8f7d\u51fa\u9519\uff1a[Errno 13] Permission denied: '$CASE/config/category.yaml'"
+          ]
+        },
+        {
+          "level": "info",
+          "args": [
+            "\u5df2\u52a0\u8f7d\u4e8c\u7ea7\u5206\u7c7b\u7b56\u7565 category.yaml"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "symlink",
+      "file_before_constructor": true,
+      "file_after_constructor": true,
+      "initial_match": "\u7f13\u5b58\u7535\u5f71",
+      "apply_return": null,
+      "enabled": false,
+      "match_after_apply": "New",
+      "trace": [
+        {
+          "event": "put",
+          "args": [
+            "\u4e8c\u7ea7\u5206\u7c7b\u7b56\u7565\u5df2\u66f4\u65b0\uff0c\u8bf7\u6ce8\u610f\u540c\u6b65\u8c03\u6574\u76ee\u5f55\u8bbe\u7f6e\uff0c\u63d2\u4ef6\u5c06\u6062\u590d\u5173\u95ed\u72b6\u6001\uff01"
+          ],
+          "kwargs": {
+            "title": "\u4e8c\u7ea7\u5206\u7c7b\u7b56\u7565"
+          }
+        },
+        {
+          "event": "update_config",
+          "config": {
+            "enabled": false,
+            "content": "movie:\n  New:\n"
+          }
+        }
+      ],
+      "mode_at_observation": "0o644",
+      "is_symlink": true,
+      "actual_bytes_base64": "bW92aWU6CiAgTmV3Ogo=",
+      "logs": [
+        {
+          "level": "info",
+          "args": [
+            "\u5df2\u52a0\u8f7d\u4e8c\u7ea7\u5206\u7c7b\u7b56\u7565 category.yaml"
+          ]
+        },
+        {
+          "level": "info",
+          "args": [
+            "\u5df2\u52a0\u8f7d\u4e8c\u7ea7\u5206\u7c7b\u7b56\u7565 category.yaml"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "missing_file",
+      "file_before_constructor": false,
+      "file_after_constructor": true,
+      "initial_match": "\u9ed8\u8ba4\u7535\u5f71",
+      "mode_at_observation": "0o644",
+      "is_symlink": false,
+      "actual_bytes_base64": "bW92aWU6CiAg6buY6K6k55S15b2xOgo=",
+      "logs": [
+        {
+          "level": "info",
+          "args": [
+            "\u5df2\u52a0\u8f7d\u4e8c\u7ea7\u5206\u7c7b\u7b56\u7565 category.yaml"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "external_change_without_init",
+      "file_before_constructor": true,
+      "file_after_constructor": true,
+      "initial_match": "\u7f13\u5b58\u7535\u5f71",
+      "match_without_reloading": "\u7f13\u5b58\u7535\u5f71",
+      "mode_at_observation": "0o644",
+      "is_symlink": false,
+      "actual_bytes_base64": "bW92aWU6CiAgTmV3Ogo=",
+      "logs": [
+        {
+          "level": "info",
+          "args": [
+            "\u5df2\u52a0\u8f7d\u4e8c\u7ea7\u5206\u7c7b\u7b56\u7565 category.yaml"
+          ]
+        }
+      ]
+    }
+  ]
+}

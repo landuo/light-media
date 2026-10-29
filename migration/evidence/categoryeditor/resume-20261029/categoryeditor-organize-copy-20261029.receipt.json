@@ -1,0 +1,96 @@
+{
+  "status": "passed",
+  "test": "TestCategoryEditorStandardActualOrganizeCopyConsumesSourcePolicy",
+  "command": "source ../toolchain/env.sh && CATEGORYEDITOR_WORKER_BINARY=\"$PWD/work/category-editor-20261029-race\" go test -race ./internal/app -run ^TestCategoryEditorStandardActualOrganizeCopyConsumesSourcePolicy$ -count=1 -v",
+  "target_head": "10d76660fb78595948d89dccaa034c87a2240206",
+  "test_file": {
+    "path": "internal/app/plugin_categoryeditor_organize_copy_test.go",
+    "sha256": "3e5bcba12bfa429c2396d8712e21fff2141e2b5e5a7733d35cb93ba66da413c3"
+  },
+  "worker": {
+    "path": "work/category-editor-20261029-race",
+    "sha256": "83be658a70b7793e07704a19cd2d92e556576785fe3e0dbd1b2ed7fba252353a",
+    "prior_build_binding": "migration/evidence/categoryeditor/resume-20261029/categoryeditor-20261029-feasible-final-app-bindings.json",
+    "prior_binding_sha256": "04aa605f1d8c5624b20f45ec30bab155d670b6bc1ed61d969d629f4977ab51ae",
+    "recorded_worker_input_drift": []
+  },
+  "environment": {
+    "go": "go version go1.26.2 linux/amd64",
+    "platform": "Linux 6.18.55 x86_64",
+    "isolation": "fresh Go t.TempDir App/SQLite, source and library; real standard worker installed from owned loopback artifact server; production a.worker queue loop; strictly rejecting in-memory metadata transport; no production credentials",
+    "media": "904-byte 16x16 black single-frame MPEG-4/MP4 generated with ffmpeg; NOT a real movie; embedded base64 creates a fresh per-test file",
+    "limitations": [
+      "Archived helper controlled replay dated 2026-10-20 uses WeakSingleton type adapter, not current NAS/source identity or original singleton lifecycle evidence.",
+      "One ordinary COPY with explicit category enabled and scraping=false; not move/hardlink, remote TMDB, real download, NAS deployment, private config migration or scrape acceptance."
+    ]
+  },
+  "source": {
+    "categoryeditor_sha256": "24a8109b5c15bb73b845e42653933d09eb83b608a53303fbab9ebff39b801c27",
+    "archived_helper_sha256": "1c0ec53b78caa3a4949dd970931f38430c67c9d46ea2e16c3cc00950fb24c2b2",
+    "oracle_case": "ordered_and_invert",
+    "oracle_category": "中文动画",
+    "source_method": "reused hash-bound original archived helper controlled replay, not calculated from target classifier"
+  },
+  "call_chain": [
+    "authenticated PUT /api/plugins/CategoryEditor",
+    "real standard SDK subprocess init_plugin -> host plugin.category.apply",
+    "write owned App category.yaml -> reloadMediaCategoryPolicy",
+    "authenticated POST /api/files/organize (preview=false, mode=copy, scraping=false, library_type_folder=true)",
+    "fileManagerAPI -> manualOrganize -> prepareManualImport -> previewImport (internal preparation, not final result)",
+    "sourceRecognizeTMDBCore -> catalog.SourceInformation (strict in-memory fixture) -> policy.categoryWithError -> importMediaCategory",
+    "executeImport persists queued import plan and job",
+    "production App.worker -> claim -> safeRun -> runImport -> publishImport (actual filesystem COPY/stage/publish) -> finishJob",
+    "persisted plan, job, import_receipt and transfer history read-back plus original/target bytes and inode checks"
+  ],
+  "observations": {
+    "metadata_responses": 1,
+    "plan_id": "plan_0dWlkZGG2UktyOOJHfeqgqap",
+    "plan_transition": [
+      "queued",
+      "complete"
+    ],
+    "file_status": "imported",
+    "job_id": "job_ZHsso5QSw5tveSOxX5XEl_ju",
+    "job_transition": [
+      "queued",
+      "succeeded"
+    ],
+    "job_attempt": 1,
+    "job_generation": 1,
+    "receipt_state": "published",
+    "target_relative_path": "中文动画/SYNTHETIC CategoryEditor Copy (2020)/SYNTHETIC CategoryEditor Copy (2020).mp4",
+    "source_and_target_sha256": "d1fdbcf944d537ff68bb8b6724b2fb92c8855c368a1a39dea5d9e05ef6978217",
+    "source_and_target_size": 904,
+    "source_inode_mtime_bytes_preserved": true,
+    "target_inode_distinct": true,
+    "history_status": "success",
+    "job_count": 1,
+    "scraping": false,
+    "background_worker_joined": true,
+    "standard_worker_stop_verified_by_fixture_cleanup": true,
+    "durability_observation": "Read back actual SQLite persisted plan/job/receipt/history before test cleanup, not a cold-restart claim. Owned Go t.TempDir App/source/library are removed by test cleanup; standalone synthetic input MP4 retained as evidence."
+  },
+  "runs": [
+    {
+      "log": "work/categoryeditor-organize-copy-20261029.race.log",
+      "exit": 0,
+      "note": "Initial executable acceptance before comment-only qualifier addition."
+    },
+    {
+      "log": "work/categoryeditor-organize-copy-20261029.race-final.log",
+      "exit": 0,
+      "note": "Final exact file hash, -race host test and -race standard worker; before/after bound source/test/embed/fixture drift empty."
+    }
+  ],
+  "artifact_sha256": {
+    "work/categoryeditor-organize-copy-20261029.bindings.json": "df4dba4db806112a84728d3ba829e16689a601308158f9472b4d444a1e309186",
+    "work/categoryeditor-organize-copy-20261029.race.log": "283dd8d86a9337ae09dcfc82f503e18074340c3ca576c1781e9b563a2db91c2e",
+    "work/categoryeditor-organize-copy-20261029.race.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "work/categoryeditor-organize-copy-20261029.race-final.log": "b2a5b1bccd26ded56466b81fcddaaa39f38b7681b66320741f41fa0b837e2c5a",
+    "work/categoryeditor-organize-copy-20261029.race-final.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "work/categoryeditor-organize-copy-20261029.synthetic.mp4": "d1fdbcf944d537ff68bb8b6724b2fb92c8855c368a1a39dea5d9e05ef6978217",
+    "work/categoryeditor-organize-copy-20261029.synthetic.ffprobe.json": "4a9df79bc55ddf982b836432f7aaed830499f6daa5cc8c547230c35fdd4d87e3",
+    "work/categoryeditor-organize-copy-20261029.dependency-files.txt": "1fd1628bd49f6763c00dd9aa369348546e8bc9efadbf2869c030547fec0b32a9"
+  },
+  "independent_review": "Pending separate reviewer; this receipt does not self-approve review."
+}

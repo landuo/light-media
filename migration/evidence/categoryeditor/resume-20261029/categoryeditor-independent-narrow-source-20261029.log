@@ -1,0 +1,21 @@
+{"id": "blank", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"return": {"type": "str", "value": "缓存电影"}}}
+{"id": "parser_failure", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"return": {"type": "str", "value": "缓存电影"}}}
+{"id": "scalar_true", "apply": {"exception": {"type": "AttributeError", "message": "'bool' object has no attribute 'get'"}}, "match": {"return": {"type": "str", "value": "缓存电影"}}}
+{"id": "scalar_integer", "apply": {"exception": {"type": "AttributeError", "message": "'int' object has no attribute 'get'"}}, "match": {"return": {"type": "str", "value": "缓存电影"}}}
+{"id": "scalar_string", "apply": {"exception": {"type": "AttributeError", "message": "'str' object has no attribute 'get'"}}, "match": {"return": {"type": "str", "value": "缓存电影"}}}
+{"id": "nonempty_sequence", "apply": {"exception": {"type": "AttributeError", "message": "'CommentedSeq' object has no attribute 'get'"}}, "match": {"return": {"type": "str", "value": "缓存电影"}}}
+{"id": "movie_scalar", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"exception": {"type": "AttributeError", "message": "'int' object has no attribute 'items'"}}}
+{"id": "condition_integer", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"exception": {"type": "AttributeError", "message": "'int' object has no attribute 'split'"}}}
+{"id": "condition_bool", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"exception": {"type": "AttributeError", "message": "'bool' object has no attribute 'split'"}}}
+{"id": "truthy_empty_string_list_string_condition", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"return": {"type": "str", "value": "First"}}}
+{"id": "unicode_decimal_range", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"return": {"type": "str", "value": "ArabicRange"}}}
+{"id": "unicode_superscript_range", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"exception": {"type": "ValueError", "message": "invalid literal for int() with base 10: '²'"}}}
+{"id": "section_scalar", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"exception": {"type": "AttributeError", "message": "'int' object has no attribute 'items'"}}}
+{"id": "rule_scalar", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"exception": {"type": "AttributeError", "message": "'int' object has no attribute 'items'"}}}
+{"id": "yaml11_boolean_condition", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"exception": {"type": "AttributeError", "message": "'bool' object has no attribute 'split'"}}}
+{"id": "duplicate_true_and_one", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"return": {"type": "str", "value": "缓存电影"}}}
+{"id": "html_escaped_payload_under_64k", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"return": {"type": "str", "value": "Normal"}}}
+{"id": "exact_64k_quotes_comment", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"return": {"type": "str", "value": "缓存电影"}}}
+{"id": "exact_64k_backslashes_comment", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"return": {"type": "str", "value": "缓存电影"}}}
+{"id": "exact_64k_control_comment", "apply": {"return": {"type": "NoneType", "value": null}}, "match": {"return": {"type": "str", "value": "缓存电影"}}}
+recorded 20 056c0427533200525ffdae7a429208430ca23e2229fae83eb67e99dcf6881841
