@@ -182,6 +182,17 @@ func id(prefix string) string {
 }
 func now() string { return time.Now().UTC().Format(time.RFC3339Nano) }
 func (s *Store) Put(ctx context.Context, kind, key string, value any) error {
+	if kind == "subscription" {
+		tx, e := s.DB.BeginTx(ctx, nil)
+		if e != nil {
+			return e
+		}
+		defer tx.Rollback()
+		if e = txPut(ctx, tx, kind, key, value); e != nil {
+			return e
+		}
+		return tx.Commit()
+	}
 	b, e := json.Marshal(value)
 	if e != nil {
 		return e
@@ -233,6 +244,13 @@ func (s *Store) Delete(ctx context.Context, kind, key string) error {
 	return e
 }
 func txPut(ctx context.Context, tx *sql.Tx, kind, key string, value any) error {
+	if kind == "subscription" {
+		var e error
+		value, e = prepareSharedSubscriptionWrite(ctx, tx, value)
+		if e != nil {
+			return e
+		}
+	}
 	b, e := json.Marshal(value)
 	if e != nil {
 		return e

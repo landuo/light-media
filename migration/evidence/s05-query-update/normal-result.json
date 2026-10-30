@@ -1,0 +1,80 @@
+{
+  "command": "go test ./internal/app -count=1 -run '^TestSharedSubscriptions' -v",
+  "exit": 0,
+  "cases": [
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsVersionReplacementCloseKeepsActiveDAO",
+      "duration": "0.98s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsActualCloneCASRollbackAndNativeABA",
+      "duration": "1.13s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsPermissionDeniedActualWorker",
+      "duration": "0.59s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsLargeActualWorkerCold",
+      "duration": "2.71s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsNativeEditorPreservesUnrelatedSourceFacts",
+      "duration": "0.68s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsCancelledActualWorkerDoesNotWrite",
+      "duration": "0.58s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsIndependentSourceOracle",
+      "duration": "3.24s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsIndependentFloatGrammar",
+      "duration": "0.67s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsIndependentExponentOverflow",
+      "duration": "0.59s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsIndependentNestedJSON",
+      "duration": "1.31s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsIndependentAllJSONColumnsCold",
+      "duration": "0.75s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsActualServerProcessCold",
+      "duration": "8.08s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsActualWorkerSmoke",
+      "duration": "0.74s"
+    }
+  ],
+  "package_result": [
+    "ok  \tlight-media/internal/app\t22.231s"
+  ],
+  "raw_log": {
+    "private_path": "evidence/s05-owner/final-normal-run03.log",
+    "sha256": "0c5810c59c997761da764d01497522eb52c64cacdbb73ada13440407bb2df354"
+  },
+  "candidate_manifest_sha256": "048c0268b94e7eb4078e754b043c66a801293e1647bc212cf60aac46e503eebd",
+  "boundary": "Fresh actual execution. Synthetic owned test data only; raw log retained separately, not this Git artifact."
+}

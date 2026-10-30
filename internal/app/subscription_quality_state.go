@@ -29,6 +29,10 @@ func setSubscriptionQualityState(s *Subscription, state subscriptionquality.Stat
 	s.TotalEpisodes = state.TotalEpisode
 }
 func applySubscriptionQualityState(s *Subscription, old Subscription, in SubscriptionRequest) {
+	s.SharedSourceFields = cloneSharedSubscriptionFields(old.SharedSourceFields)
+	if len(in.CustomWords) != 0 {
+		delete(s.SharedSourceFields, "custom_words")
+	}
 	s.SourceContextSHA, s.SourceState = old.SourceContextSHA, old.SourceState
 	s.SourceNote, s.SourceSearchIMDb = qualityCopyNote(old.SourceNote), old.SourceSearchIMDb
 	state := subscriptionQualityState(old)

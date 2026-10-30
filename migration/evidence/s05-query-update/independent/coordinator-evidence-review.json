@@ -1,0 +1,51 @@
+{
+  "candidate_manifest_sha256": "048c0268b94e7eb4078e754b043c66a801293e1647bc212cf60aac46e503eebd",
+  "reviewed_files": [
+    {
+      "path": "evidence/s05-query-update/browser-steps.json",
+      "bytes": 1930,
+      "sha256": "dc62037a974bf84c296f7de1f90c24264c50b4ed98c84bbc4c62895dcc1af9f0"
+    },
+    {
+      "path": "evidence/s05-query-update/browser-observations.json",
+      "bytes": 16612,
+      "sha256": "4c5489202f57ff83ff39d2e8efcd1f14009ea609f4d1584987f4c5e72d3ca3f2"
+    },
+    {
+      "path": "evidence/s05-query-update/normal-result.json",
+      "bytes": 2288,
+      "sha256": "e674f9bed78aae1b0edfdaa3cbe62f2a5dc600f562037b8663290e0cdf47b05e"
+    },
+    {
+      "path": "evidence/s05-query-update/race-result.json",
+      "bytes": 2324,
+      "sha256": "a035d3101043d55f4bde2d8601dcc620d872fab907518c9cedf71a00a25d7ff9"
+    },
+    {
+      "path": "evidence/s05-query-update/sdk-result.json",
+      "bytes": 547,
+      "sha256": "09177d07f7984806e8f292c4641dca511f4fdf2cc870d11e7f1c304d478e3fe8"
+    },
+    {
+      "path": "evidence/s05-query-update/native-regression-result.json",
+      "bytes": 5955,
+      "sha256": "67b3af4a93c4d69ca496dafcc321d4b73d8196529829841caf02f873a56345d6"
+    },
+    {
+      "path": "evidence/s05-query-update/candidate-files.json",
+      "bytes": 11167,
+      "sha256": "048c0268b94e7eb4078e754b043c66a801293e1647bc212cf60aac46e503eebd"
+    }
+  ],
+  "source_fixture_copies_verified": 36,
+  "source_copy_bytes_identical_to_frozen_candidate": true,
+  "normal_and_race_raw_logs_rechecked": true,
+  "native_regression_raw_log_rechecked": {
+    "roots": 38,
+    "duration_seconds": 24.105,
+    "sha256": "f8afb09923b1f18e35db9bfb59039b71bed65ad3383484c0b7f4c5cdb135ff35"
+  },
+  "sdk_raw_log_sha256": "1deff1d276a727d7d1e59e75081ca7e3b380cc4db93decb2d549d6fd224c8af9",
+  "browser_review": "Coordinator-produced DOM/AX observations inspected, not personally replayed by this reviewer. Get/list/state/TMDB success, rejected stale revision preserves full row, successful update revision4 to5, separate clone PID/shared row, both cold init_count1/last_operation null and revision5; normal server hash agrees with actual build log.",
+  "browser_observation_sha256": "4c5489202f57ff83ff39d2e8efcd1f14009ea609f4d1584987f4c5e72d3ca3f2"
+}

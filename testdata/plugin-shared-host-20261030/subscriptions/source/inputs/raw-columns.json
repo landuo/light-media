@@ -1,0 +1,331 @@
+{
+  "seed": [
+    {
+      "id": 1,
+      "name": "Owned mutable",
+      "type": "电视剧",
+      "tmdbid": 7001,
+      "season": 1,
+      "state": "N"
+    }
+  ],
+  "operations": [
+    {
+      "case": "all-text",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "name": "中文🎞️\u0000name",
+          "year": "02026",
+          "type": "ordinary-custom",
+          "keyword": "关键字",
+          "imdbid": "tt-owned",
+          "doubanid": "db-owned",
+          "mediaid": "m-01",
+          "media_source": "custom-source",
+          "media_id": "custom-id",
+          "poster": "/owned/poster",
+          "backdrop": "/owned/backdrop",
+          "description": "owned\nline",
+          "filter": "raw-filter",
+          "include": "[owned]",
+          "exclude": "excluded",
+          "quality": "raw-quality",
+          "resolution": "raw-resolution",
+          "effect": "raw-effect",
+          "last_update": "not-a-time",
+          "date": "raw-date",
+          "username": "owned-user",
+          "downloader": "missing-downloader",
+          "save_path": "/owned/does-not-exist",
+          "custom_words": "原文=>新词\nsecond",
+          "media_category": "custom-cat",
+          "episode_group": "grp-owned"
+        }
+      }
+    },
+    {
+      "case": "integer-fields",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "tmdbid": -123,
+          "tvdbid": 0,
+          "bangumiid": 9,
+          "anilistid": 10,
+          "season": 0,
+          "total_episode": -2,
+          "start_episode": 0,
+          "lack_episode": -1,
+          "best_version": 2,
+          "best_version_full": -3,
+          "current_priority": -8,
+          "search_imdbid": 4,
+          "manual_total_episode": 5
+        }
+      }
+    },
+    {
+      "case": "bool-flags",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "best_version": true,
+          "best_version_full": false,
+          "search_imdbid": true,
+          "manual_total_episode": false
+        }
+      }
+    },
+    {
+      "case": "integer-affinity",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "tmdbid": "00042",
+          "season": "2.5",
+          "total_episode": "3e2",
+          "current_priority": "ordinary",
+          "tvdbid": 1.5
+        }
+      }
+    },
+    {
+      "case": "text-affinity",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "year": 2026,
+          "name": 42,
+          "type": true,
+          "keyword": false
+        }
+      }
+    },
+    {
+      "case": "float-affinity",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "vote": "9.25"
+        }
+      }
+    },
+    {
+      "case": "json-object",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "note": {
+            "episode": "not-list",
+            "nested": [
+              1,
+              null,
+              true
+            ]
+          },
+          "sites": {
+            "999": 1
+          },
+          "filter_groups": {
+            "owned": false
+          },
+          "episode_priority": {
+            "1": 90
+          }
+        }
+      }
+    },
+    {
+      "case": "json-list",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "note": [
+            1,
+            "2",
+            null,
+            {
+              "nested": [
+                true
+              ]
+            }
+          ],
+          "sites": [
+            999,
+            999,
+            "999",
+            null
+          ],
+          "filter_groups": [
+            "unknown-group",
+            null
+          ],
+          "episode_priority": [
+            1,
+            2
+          ]
+        }
+      }
+    },
+    {
+      "case": "json-string",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "note": "not-json-text",
+          "sites": "999",
+          "filter_groups": "ordinary",
+          "episode_priority": "literal"
+        }
+      }
+    },
+    {
+      "case": "json-number",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "note": 2.5,
+          "sites": 42,
+          "filter_groups": 0,
+          "episode_priority": -1
+        }
+      }
+    },
+    {
+      "case": "json-bool",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "note": true,
+          "sites": false,
+          "filter_groups": true,
+          "episode_priority": false
+        }
+      }
+    },
+    {
+      "case": "json-null",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "note": null,
+          "sites": null,
+          "filter_groups": null,
+          "episode_priority": null
+        }
+      }
+    },
+    {
+      "case": "json-empty",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "note": {},
+          "sites": [],
+          "filter_groups": {},
+          "episode_priority": []
+        }
+      }
+    },
+    {
+      "case": "unknown-only",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "extension_note": {
+            "ordinary": [
+              1,
+              2
+            ]
+          }
+        }
+      },
+      "observe_unknown_attributes": [
+        "extension_note"
+      ]
+    },
+    {
+      "case": "unknown-plus-known",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "extension_note": "transient",
+          "state": "outside-NRPS"
+        }
+      },
+      "observe_unknown_attributes": [
+        "extension_note"
+      ]
+    },
+    {
+      "case": "empty-payload",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {}
+      }
+    },
+    {
+      "case": "aba-a",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "note": {
+            "raw": "A"
+          },
+          "state": "A"
+        }
+      }
+    },
+    {
+      "case": "aba-b",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "note": [
+            "B"
+          ],
+          "state": "B"
+        }
+      }
+    },
+    {
+      "case": "aba-a-again",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "note": {
+            "raw": "A"
+          },
+          "state": "A"
+        }
+      }
+    },
+    {
+      "case": "raw-final",
+      "method": "get",
+      "arguments": {
+        "sid": 1
+      }
+    }
+  ]
+}

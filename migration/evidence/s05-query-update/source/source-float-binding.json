@@ -1,0 +1,51 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "driver": {
+    "path": "../source_driver.py",
+    "sha256": "7402cdd455841a1d07ffa7762805618f340011e597fd345ffe88ae173d684e48"
+  },
+  "plugin": {
+    "path": "../ordinary_plugin.py",
+    "sha256": "81e6fea9328aad7b4759899e66cfaf9d0d02c7eda2fdf8109a46acd3da5342b3"
+  },
+  "files": [
+    {
+      "path": "input.json",
+      "size": 2617,
+      "sha256": "a96a642e9924bbe2368229bd011cab4c858f71156c3b56371d20b035d8ae5331"
+    },
+    {
+      "path": "source-run01.json",
+      "size": 244712,
+      "sha256": "1ac8c015031c95f0e14b6a651fbb0f1d03258dbbbc0ca0bc89fb4d896827c830"
+    },
+    {
+      "path": "source-run01.command.json",
+      "size": 1058,
+      "sha256": "7600b24d5b7fef26eb04c82b161918963e42c29808f3e1e0421c64f414e5c014"
+    },
+    {
+      "path": "source-run01.log",
+      "size": 88,
+      "sha256": "4bf00df54188d7b4ecdaf234f9ac1ef336b8b3fe6828ed95bbdebe6eda5a5771"
+    },
+    {
+      "path": "source-run01.exit",
+      "size": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "canonical.json",
+      "size": 33290,
+      "sha256": "7cda25ab8d108dcfc4d29c4cba0e2dc54e47ee5940e74a4c1e7495fe87ed4d1d"
+    }
+  ],
+  "excluded": [
+    "owned-config/**"
+  ],
+  "runtime": {
+    "python": "3.12.14",
+    "sqlite": "3.53.1",
+    "sqlalchemy": "2.0.55"
+  }
+}

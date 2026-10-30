@@ -1,0 +1,277 @@
+{
+  "seed": [
+    {
+      "id": 10,
+      "name": "Owned C",
+      "state": "N",
+      "tmdbid": 7001,
+      "season": null,
+      "type": "电影"
+    },
+    {
+      "id": 2,
+      "name": "Owned A",
+      "state": "R",
+      "tmdbid": 7001,
+      "season": 0,
+      "type": "电视剧"
+    },
+    {
+      "id": 7,
+      "name": "Owned B",
+      "state": "P",
+      "tmdbid": 7001,
+      "season": 1,
+      "type": "电视剧"
+    },
+    {
+      "id": 12,
+      "name": "Owned D",
+      "state": "",
+      "tmdbid": null,
+      "season": 2,
+      "type": "custom"
+    },
+    {
+      "id": 15,
+      "name": "Owned E",
+      "state": " R",
+      "tmdbid": -5,
+      "season": -1,
+      "type": null
+    }
+  ],
+  "operations": [
+    {
+      "case": "get-existing",
+      "method": "get",
+      "arguments": {
+        "sid": 2
+      }
+    },
+    {
+      "case": "get-missing",
+      "method": "get",
+      "arguments": {
+        "sid": 999
+      }
+    },
+    {
+      "case": "get-null",
+      "method": "get",
+      "arguments": {
+        "sid": null
+      }
+    },
+    {
+      "case": "list-state-00",
+      "method": "list",
+      "arguments": {
+        "state": null
+      }
+    },
+    {
+      "case": "list-state-01",
+      "method": "list",
+      "arguments": {
+        "state": ""
+      }
+    },
+    {
+      "case": "list-state-02",
+      "method": "list",
+      "arguments": {
+        "state": "N"
+      }
+    },
+    {
+      "case": "list-state-03",
+      "method": "list",
+      "arguments": {
+        "state": "N,R"
+      }
+    },
+    {
+      "case": "list-state-04",
+      "method": "list",
+      "arguments": {
+        "state": "R,P"
+      }
+    },
+    {
+      "case": "list-state-05",
+      "method": "list",
+      "arguments": {
+        "state": "N, R"
+      }
+    },
+    {
+      "case": "list-state-06",
+      "method": "list",
+      "arguments": {
+        "state": "R,R"
+      }
+    },
+    {
+      "case": "list-state-07",
+      "method": "list",
+      "arguments": {
+        "state": ","
+      }
+    },
+    {
+      "case": "list-state-08",
+      "method": "list",
+      "arguments": {
+        "state": ""
+      }
+    },
+    {
+      "case": "list-state-09",
+      "method": "list",
+      "arguments": {
+        "state": false
+      }
+    },
+    {
+      "case": "list-state-10",
+      "method": "list",
+      "arguments": {
+        "state": 0
+      }
+    },
+    {
+      "case": "list-state-11",
+      "method": "list",
+      "arguments": {
+        "state": []
+      }
+    },
+    {
+      "case": "list-state-12",
+      "method": "list",
+      "arguments": {
+        "state": {}
+      }
+    },
+    {
+      "case": "list-state-13",
+      "method": "list",
+      "arguments": {
+        "state": "custom"
+      }
+    },
+    {
+      "case": "list-state-14",
+      "method": "list",
+      "arguments": {
+        "state": true
+      }
+    },
+    {
+      "case": "list-state-15",
+      "method": "list",
+      "arguments": {
+        "state": [
+          "N"
+        ]
+      }
+    },
+    {
+      "case": "list-tmdb-00",
+      "method": "list_by_tmdbid",
+      "arguments": {
+        "tmdbid": 7001,
+        "season": null
+      }
+    },
+    {
+      "case": "list-tmdb-01",
+      "method": "list_by_tmdbid",
+      "arguments": {
+        "tmdbid": 7001,
+        "season": 0
+      }
+    },
+    {
+      "case": "list-tmdb-02",
+      "method": "list_by_tmdbid",
+      "arguments": {
+        "tmdbid": 7001,
+        "season": 1
+      }
+    },
+    {
+      "case": "list-tmdb-03",
+      "method": "list_by_tmdbid",
+      "arguments": {
+        "tmdbid": 7001,
+        "season": "0"
+      }
+    },
+    {
+      "case": "list-tmdb-04",
+      "method": "list_by_tmdbid",
+      "arguments": {
+        "tmdbid": "7001",
+        "season": null
+      }
+    },
+    {
+      "case": "list-tmdb-05",
+      "method": "list_by_tmdbid",
+      "arguments": {
+        "tmdbid": null,
+        "season": null
+      }
+    },
+    {
+      "case": "list-tmdb-06",
+      "method": "list_by_tmdbid",
+      "arguments": {
+        "tmdbid": -5,
+        "season": -1
+      }
+    },
+    {
+      "case": "list-tmdb-07",
+      "method": "list_by_tmdbid",
+      "arguments": {
+        "tmdbid": false,
+        "season": null
+      }
+    },
+    {
+      "case": "list-tmdb-08",
+      "method": "list_by_tmdbid",
+      "arguments": {
+        "tmdbid": "missing",
+        "season": null
+      }
+    },
+    {
+      "case": "list-tmdb-09",
+      "method": "list_by_tmdbid",
+      "arguments": {
+        "tmdbid": 7001,
+        "season": false
+      }
+    },
+    {
+      "case": "list-tmdb-10",
+      "method": "list_by_tmdbid",
+      "arguments": {
+        "tmdbid": 7001,
+        "season": ""
+      }
+    },
+    {
+      "case": "list-tmdb-11",
+      "method": "list_by_tmdbid",
+      "arguments": {
+        "tmdbid": 7001,
+        "season": []
+      }
+    }
+  ]
+}

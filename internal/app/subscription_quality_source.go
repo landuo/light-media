@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -28,7 +29,9 @@ func (a *App) subscriptionSourceProjectionReferences(ctx context.Context, q Plug
 		return nil, e
 	}
 	if state.State != "N" && state.State != "R" && state.State != "P" && state.State != "S" {
-		return nil, bad("SUBSCRIPTION_SOURCE_STATE_MISSING", "订阅缺少原始N/R/P/S运行状态")
+		if _, ok := s.SharedSourceFields["state"]; !ok {
+			return nil, bad("SUBSCRIPTION_SOURCE_STATE_MISSING", "订阅缺少原始N/R/P/S运行状态")
+		}
 	}
 	row := map[string]any{}
 	for _, key := range []string{"tvdbid", "doubanid", "bangumiid", "anilistid", "filter", "include", "exclude", "quality", "resolution", "effect", "last_update", "username", "downloader", "custom_words", "media_category", "episode_group"} {
@@ -68,6 +71,13 @@ func (a *App) subscriptionSourceProjectionReferences(ctx context.Context, q Plug
 	row["sites"] = []int64{}
 	sites := []int64{}
 	for _, id := range s.SiteIDs {
+		if sourceID, ok := sharedSubscriptionSourceID(id); ok {
+			sites = append(sites, sourceID)
+			continue
+		}
+		if strings.HasPrefix(id, "source-unrepresentable:") {
+			continue
+		}
 		identity, e := a.Store.readNativeSiteIdentity(ctx, q, "site_id", id)
 		if e != nil {
 			return nil, e
@@ -75,7 +85,7 @@ func (a *App) subscriptionSourceProjectionReferences(ctx context.Context, q Plug
 		sites = append(sites, identity.SourceID)
 	}
 	row["sites"] = sites
-	if s.DownloaderID != "" {
+	if s.DownloaderID != "" && !strings.HasPrefix(s.DownloaderID, "source-downloader:") {
 		d, e := a.configuredDownloader(s.DownloaderID)
 		if e != nil {
 			if !missingDownloaderAsNull {
@@ -114,7 +124,8 @@ func (a *App) subscriptionSourceProjectionReferences(ctx context.Context, q Plug
 			}
 		}
 	}
-	return mustCleanSeedJSON(row), nil
+	overlaySharedSubscription(s, row)
+	return json.Marshal(row)
 }
 func sourceSubscriptionDate(value string) any {
 	instant, e := time.Parse(time.RFC3339Nano, value)

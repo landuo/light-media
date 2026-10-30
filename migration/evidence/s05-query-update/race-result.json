@@ -1,0 +1,80 @@
+{
+  "command": "OWNED_SHARED_HOST_RACE=1 go test -race ./internal/app -count=1 -run '^TestSharedSubscriptions' -v",
+  "exit": 0,
+  "cases": [
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsVersionReplacementCloseKeepsActiveDAO",
+      "duration": "9.75s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsActualCloneCASRollbackAndNativeABA",
+      "duration": "14.13s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsPermissionDeniedActualWorker",
+      "duration": "7.47s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsLargeActualWorkerCold",
+      "duration": "25.36s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsNativeEditorPreservesUnrelatedSourceFacts",
+      "duration": "8.03s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsCancelledActualWorkerDoesNotWrite",
+      "duration": "7.73s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsIndependentSourceOracle",
+      "duration": "42.53s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsIndependentFloatGrammar",
+      "duration": "7.77s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsIndependentExponentOverflow",
+      "duration": "7.22s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsIndependentNestedJSON",
+      "duration": "17.16s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsIndependentAllJSONColumnsCold",
+      "duration": "12.18s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsActualServerProcessCold",
+      "duration": "33.83s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSharedSubscriptionsActualWorkerSmoke",
+      "duration": "6.66s"
+    }
+  ],
+  "package_result": [
+    "ok  \tlight-media/internal/app\t201.250s"
+  ],
+  "raw_log": {
+    "private_path": "evidence/s05-owner/final-race-run03.log",
+    "sha256": "c7653235bb02aa9a4121d016b431970d6615de677457952762bf37a1d9a62037"
+  },
+  "candidate_manifest_sha256": "048c0268b94e7eb4078e754b043c66a801293e1647bc212cf60aac46e503eebd",
+  "boundary": "Fresh actual execution. Synthetic owned test data only; raw log retained separately, not this Git artifact."
+}

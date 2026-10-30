@@ -1,0 +1,108 @@
+{
+  "exit": 0,
+  "tests": [
+    {
+      "status": "PASS",
+      "name": "TestAuditS05UnrelatedFilterEditPreservesNull",
+      "duration": "7.03s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestAuditS05NativeStaleABAAndRawPrecision",
+      "duration": "7.02s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestAuditS05FloatGrammarFromRealSource",
+      "duration": "7.51s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestAuditS05NativeFailedWriteDoesNotInvalidateSourceNull",
+      "duration": "8.19s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestAuditS05DeclaredReadOnlyAndExpiredCallback",
+      "duration": "7.66s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestAuditS05ValidJSONExponentOverflowHasSourceSideEffects",
+      "duration": "8.08s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestAuditS05NestedJSONExponentPreservesCommitAndBoundary",
+      "duration": "7.64s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestAuditS05JSONFiniteNumberUsesSourceDecode",
+      "duration": "7.32s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestAuditS05AllJSONColumnsWithSourceCold",
+      "duration": "11.66s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestAuditS05VersionReplacementCloseKeepsActiveDAO",
+      "duration": "10.70s"
+    }
+  ],
+  "log_sha256": "66855ff854e60fe8448bf1c9393c04b0757f4388c44e86a12d67758348cd2026",
+  "fixture_files": [
+    {
+      "path": "canonical-four.json",
+      "bytes": 43968,
+      "sha256": "7be94a54fef6d1c44eb8881917c66a702d7a5d0db8560c58ab3cd2f09f10cf03"
+    },
+    {
+      "path": "close_upgrade_test.go",
+      "bytes": 4499,
+      "sha256": "83e86a4bbaba30841cf5b0e6347bb787ed57841272e2483050f41ecc7aa0011e"
+    },
+    {
+      "path": "independent_semantics_test.go",
+      "bytes": 16452,
+      "sha256": "54f9b50bffccd83b70ee3e4db0555f1e294a5283669b332d7386da38b36da97c"
+    },
+    {
+      "path": "input-four-finite.json",
+      "bytes": 591,
+      "sha256": "db699c2973e791130eaaaa9aadffa11463d62690a081c18d36e7767d61b4ee95"
+    },
+    {
+      "path": "input-four-mixed.json",
+      "bytes": 653,
+      "sha256": "468bb335760196b13621491055f88d4b7cf61619d477817a13d0cb840698aace"
+    },
+    {
+      "path": "input-four-null.json",
+      "bytes": 165,
+      "sha256": "b2cdc4a443480715e5978a3db6bfde175e7d0fad4619d32e3d08dc3b721dffb6"
+    },
+    {
+      "path": "run_independent.py",
+      "bytes": 2377,
+      "sha256": "1ab08f33201e97c60af5db72b760db9c9f310f1ee0fe0e192cc1044958ab5961"
+    },
+    {
+      "path": "source-finite.json",
+      "bytes": 1352,
+      "sha256": "4f6721d8d45b6ed2aa9ba374b73fceef8c918efda0a5928ea0d33f8090947666"
+    },
+    {
+      "path": "source-float.json",
+      "bytes": 33290,
+      "sha256": "7cda25ab8d108dcfc4d29c4cba0e2dc54e47ee5940e74a4c1e7495fe87ed4d1d"
+    },
+    {
+      "path": "worker_main.go",
+      "bytes": 9683,
+      "sha256": "9b1d2b057fafe1c8b5d3088c5d984daa52c2779657b13d4c55da63af885f4202"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "seed": [
+    {
+      "id": 1,
+      "name": "Owned primary"
+    },
+    {
+      "id": 2,
+      "name": "Owned collision"
+    }
+  ],
+  "operations": [
+    {
+      "case": "id-move",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "id": 3
+        }
+      },
+      "fresh_sid": 3
+    },
+    {
+      "case": "old-id-gone",
+      "method": "get",
+      "arguments": {
+        "sid": 1
+      }
+    },
+    {
+      "case": "new-id-get",
+      "method": "get",
+      "arguments": {
+        "sid": 3
+      }
+    },
+    {
+      "case": "id-collision-rollback",
+      "method": "update",
+      "arguments": {
+        "sid": 3,
+        "payload": {
+          "id": 2,
+          "name": "not-committed"
+        }
+      }
+    },
+    {
+      "case": "id-null-rollback",
+      "method": "update",
+      "arguments": {
+        "sid": 3,
+        "payload": {
+          "id": null
+        }
+      }
+    }
+  ]
+}

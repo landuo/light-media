@@ -43,6 +43,9 @@ func (a *App) saveSubscriptionWordsTx(ctx context.Context, tx *sql.Tx, key strin
 	if text == nil {
 		return nil
 	}
+	if err := clearSharedSubscriptionWordsTx(ctx, tx, key); err != nil {
+		return err
+	}
 	if *text == "" {
 		_, err := tx.ExecContext(ctx, `DELETE FROM subscription_words WHERE subscription_id=?`, key)
 		return err

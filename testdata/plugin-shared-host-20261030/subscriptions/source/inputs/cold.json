@@ -1,0 +1,32 @@
+{
+  "seed": [],
+  "operations": [
+    {
+      "case": "cold-all",
+      "method": "list",
+      "arguments": {}
+    },
+    {
+      "case": "cold-first",
+      "method": "get",
+      "arguments": {
+        "sid": 1
+      }
+    },
+    {
+      "case": "cold-state",
+      "method": "list",
+      "arguments": {
+        "state": "R,N,A"
+      }
+    },
+    {
+      "case": "cold-tmdb",
+      "method": "list_by_tmdbid",
+      "arguments": {
+        "tmdbid": 7001,
+        "season": null
+      }
+    }
+  ]
+}

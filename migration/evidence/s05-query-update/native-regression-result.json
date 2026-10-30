@@ -1,0 +1,200 @@
+{
+  "command": "go test ./internal/app -count=1 -run '^TestSubscription' -v",
+  "exit": 0,
+  "package_elapsed": "24.105s",
+  "cases": [
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionSingleSeasonSkipsMultiSeasonBeforeMaterialOrAdd",
+      "duration": "0.05s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionSiteControlsOriginalFallbackAndDeletion",
+      "duration": "0.02s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionQualityActualCustomAudioUsesFrozenExtensionSnapshots",
+      "duration": "0.14s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionAcquisitionOriginalFailureHelpers",
+      "duration": "0.09s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionStatsDisabledIsLazyBeforeInvalidPayload",
+      "duration": "0.01s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionAddedFactAndFrozenIdentityShareActualCreation",
+      "duration": "0.02s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionAddedLateOutboxFailureRollsBackActualSubscription",
+      "duration": "0.02s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionSiteSelectionAndTotalEpisodesPersist",
+      "duration": "0.01s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionOnlyQueriesSelectedSites",
+      "duration": "0.01s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionDefaultDestinationSavesWithoutContactingDownloader",
+      "duration": "0.01s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionQualityActualBatchFullPackFirstKnownFailureFallbackUnknownStops",
+      "duration": "1.86s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionQualityActualFullModeNonePackFinishesAndThenOrganizes",
+      "duration": "1.17s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionQualityActualDirectoryOverwriteAndCoexistence",
+      "duration": "1.33s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionQualitySingleSeasonPackOnlyImprovesSelectedEpisodeThroughRealDownloadAndImport",
+      "duration": "0.23s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionQualityExistingMovieStillPlansHigherResource",
+      "duration": "0.05s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionQualityActualMovieAcceptedReplacedScrapedAndSourceRetained",
+      "duration": "0.61s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionQualityActualMovieSubtitlesReplaceWithVideo",
+      "duration": "0.83s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionRecognitionRawReplacementAndConcurrentIsolation",
+      "duration": "0.02s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionRecognitionPriorityFilterUsesGlobalsWhileSortAndPackUseLocalScope",
+      "duration": "0.03s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionRecognitionActualSelectionContextSurvivesRestartAndRecheck",
+      "duration": "0.18s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionPersistenceRevisionAndInflightReservation",
+      "duration": "0.01s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionUnknownEpisodeAndPolicyValidation",
+      "duration": "0.01s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionCoverageSubtractsLibraryReservationsAndExclusions",
+      "duration": "0.01s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionCoverageExplainsUnreleasedUnknownAndPendingImport",
+      "duration": "0.01s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionStatsActualCoreCompletionHTTPAsyncColdAndLostACK",
+      "duration": "4.36s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionStatsActualCompletionAcceptedFactsNoticeAndHTTP",
+      "duration": "2.23s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionStatsAdmissionFailureRollsBackSourceCompletion",
+      "duration": "0.40s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionStatsActualHTTPReceiptWriteFailureBecomesUnknownWithoutRetry",
+      "duration": "0.41s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionStatsSealedProxyEnvironmentAndJobGeneration",
+      "duration": "0.48s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionStatsCloseCancelsOwnedHTTPAndSealsUnknownBeforeDatabaseClosure",
+      "duration": "0.45s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionWordsLargeHTTPFormPersistsEditsAndReopens",
+      "duration": "5.59s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionWordsHTTPBoundsRejectWithoutChangingCurrentValue",
+      "duration": "1.47s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionWordsEditorRawRoundTripOmissionAndExplicitClear",
+      "duration": "0.42s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionWordsAuthenticationAndInvalidValuesPreserveCurrentRevision",
+      "duration": "0.43s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionWordsInvalidUTF8RejectedBeforeJSONNormalization",
+      "duration": "0.44s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionWordsCiphertextCannotMoveBetweenRealSubscriptionIDs",
+      "duration": "0.01s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionWordsLateSQLFailureRollsBackCorePrivateValueAndOutbox",
+      "duration": "0.02s"
+    },
+    {
+      "status": "PASS",
+      "name": "TestSubscriptionWordsPersistAcrossActualApplicationRestart",
+      "duration": "0.49s"
+    }
+  ],
+  "raw_log_sha256": "f8afb09923b1f18e35db9bfb59039b71bed65ad3383484c0b7f4c5cdb135ff35",
+  "candidate_manifest_sha256": "048c0268b94e7eb4078e754b043c66a801293e1647bc212cf60aac46e503eebd",
+  "scope": "local native subscription regression only; does not attest a real external downloader/website"
+}

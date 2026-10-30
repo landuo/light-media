@@ -1,0 +1,214 @@
+{
+  "seed": [
+    {
+      "id": 1,
+      "name": "Owned mutable",
+      "type": "电视剧",
+      "tmdbid": 7001,
+      "season": 1,
+      "state": "N"
+    }
+  ],
+  "operations": [
+    {
+      "case": "all-nullable-null",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "year": null,
+          "type": null,
+          "keyword": null,
+          "tmdbid": null,
+          "imdbid": null,
+          "tvdbid": null,
+          "doubanid": null,
+          "bangumiid": null,
+          "anilistid": null,
+          "mediaid": null,
+          "media_source": null,
+          "media_id": null,
+          "season": null,
+          "poster": null,
+          "backdrop": null,
+          "vote": null,
+          "description": null,
+          "filter": null,
+          "include": null,
+          "exclude": null,
+          "quality": null,
+          "resolution": null,
+          "effect": null,
+          "total_episode": null,
+          "start_episode": null,
+          "lack_episode": null,
+          "note": null,
+          "last_update": null,
+          "date": null,
+          "username": null,
+          "sites": null,
+          "downloader": null,
+          "best_version": null,
+          "best_version_full": null,
+          "current_priority": null,
+          "episode_priority": null,
+          "save_path": null,
+          "search_imdbid": null,
+          "manual_total_episode": null,
+          "custom_words": null,
+          "media_category": null,
+          "filter_groups": null,
+          "episode_group": null
+        }
+      }
+    },
+    {
+      "case": "name-null-rollback",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "name": null,
+          "state": "should-not-commit"
+        }
+      }
+    },
+    {
+      "case": "state-null-rollback",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "state": null,
+          "name": "should-not-commit"
+        }
+      }
+    },
+    {
+      "case": "missing-null-payload",
+      "method": "update",
+      "arguments": {
+        "sid": 404,
+        "payload": null
+      }
+    },
+    {
+      "case": "existing-null-payload",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": null
+      }
+    },
+    {
+      "case": "missing-invalid-payload",
+      "method": "update",
+      "arguments": {
+        "sid": 404,
+        "payload": {
+          "name": []
+        }
+      }
+    },
+    {
+      "case": "existing-invalid-text",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "name": {
+            "owned": 1
+          },
+          "state": "should-not-commit"
+        }
+      }
+    },
+    {
+      "case": "invalid-float",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "vote": "invalid",
+          "state": "should-not-commit"
+        }
+      }
+    },
+    {
+      "case": "int64-overflow",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "tmdbid": 9223372036854775808,
+          "state": "should-not-commit"
+        }
+      }
+    },
+    {
+      "case": "pairlist-payload",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": [
+          [
+            "keyword",
+            "pairs-accepted"
+          ]
+        ]
+      }
+    },
+    {
+      "case": "int64-max",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "tmdbid": 9223372036854775807
+        }
+      }
+    },
+    {
+      "case": "int64-min",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "tmdbid": -9223372036854775808
+        }
+      }
+    },
+    {
+      "case": "sqlite-trigger-rollback",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "name": "blocked-owned",
+          "state": "should-not-commit"
+        }
+      },
+      "fixture_sql": "CREATE TRIGGER owned_update_abort BEFORE UPDATE ON subscribe BEGIN SELECT RAISE(ABORT, 'owned synthetic failure'); END;"
+    },
+    {
+      "case": "after-trigger-removal",
+      "method": "update",
+      "arguments": {
+        "sid": 1,
+        "payload": {
+          "name": "recovered-owned",
+          "state": "R"
+        }
+      },
+      "fixture_sql": "DROP TRIGGER owned_update_abort;"
+    },
+    {
+      "case": "sql-null-json",
+      "method": "get",
+      "arguments": {
+        "sid": 1
+      },
+      "fixture_sql": "UPDATE subscribe SET note=NULL,sites=NULL,filter_groups=NULL,episode_priority=NULL WHERE id=1;"
+    }
+  ]
+}

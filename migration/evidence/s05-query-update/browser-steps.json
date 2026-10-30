@@ -1,0 +1,21 @@
+{
+  "server_sha256": "c7ec7ab129e5f5269ff0e6e234226c34d664454b3b87c8795b27e8f8b9e43d72",
+  "worker_sha256": "e965522fc0ccd4a6e114880435af722e5bbc4269d7bbf68862efeacdfcfff8b5",
+  "candidate_manifest_sha256": "048c0268b94e7eb4078e754b043c66a801293e1647bc212cf60aac46e503eebd",
+  "tool": "official CUA with official sites-preview at returned http://127.0.0.1:4173/",
+  "data": "Owned synthetic subscription owned-s05-browser, TMDB 7001; two installed actual native SDK artifacts OwnedSharedHost and OwnedSharedHostqa",
+  "commands": [
+    "Retain existing normal user-created QA login; stop/start official preview with compiled candidate03 server, same owned data directory.",
+    "Reload page; open original plugin card; observe cold init_count=1, last_operation=null, revision=4.",
+    "Click get, list, state (N,R), tmdb (7001) and observe successful actual worker result.",
+    "Click update with expected_revision=3 while current row revision=4; observe 422 alert, then GET again and observe row/revision unchanged.",
+    "Open native plugin settings, set patch to {\"keyword\":\"owned candidate03 accepted write\",\"note\":{\"candidate\":3},\"state\":\"R\"}, expected_revision=4; save, open detail, click update; observe revision=5.",
+    "Open clone detail: distinct PID, same revision=5 and shared row. Original and clone config isolation had been observed via native settings; no copy of runtime DB.",
+    "Stop and start official preview without rebuilding; reload both cards; observe distinct workers, each init_count=1,last_operation=null, same revision=5/row (no update replay)."
+  ],
+  "boundaries": [
+    "No authentication injection or direct secret read.",
+    "No screenshot uploaded. Safe visible DOM/AX synthetic-data observations only.",
+    "Preview process namespace can reuse PID numbers across starts; cold claim is bound to actual official stop/start and object initialization, not PID change alone."
+  ]
+}
