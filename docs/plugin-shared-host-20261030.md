@@ -58,3 +58,13 @@
 ## 现有平台 01–05 复用验证
 
 既有代码/运行对象/配置数据分离、安装加载、同对象保存、换代码重载、Base 配置/KV/本地文件五组已按固定源重新独立复核，无须重写产品。原12项真实组件观察、当前已发布 dcbf8d72 生产进程 race 门及精确适用的旧证据分开记录；不会将旧测试改标为新代码运行。固定前端没有独立 reload 按钮，其他行完整升级/重置/卸载 UI 仍待各自行验收。此为已有功能确认，不增加新开发功能数量，也不认领其它共享宿主组完成。
+
+## S01 Transmission有限查询契约
+
+标准SDK通过`downloader.transmission.torrents.query`查询显式启用配置的全部原始任务字段，保持daemon顺序、null/空ids、原status/tags及错误标记；两个便捷方法保留固定源pending拼写，不擅自纠正。它与既有下载管理的owned/downloading投影相互独立，不提供任意RPC、凭据、种子文件或任务变更。
+
+原证据为完整固定Transmission leaf与UrlUtils模块、真实vendor及独占daemon；父包/helper/Base和完整业务插件启动不在此认领。辅助AST程序明确只作补充。128KiB请求、16MiB结果、调用deadline、原生禁止重定向与显式配置ID是已列明的有限适配，不能称任意Python调用严格等价。qB原生会话仍环境受限，S01总组不完成。
+
+本片实际当前主树race/标准worker/daemon及官方浏览器正向、失败502、修复、分身隔离、同数据冷恢复分别绑定。首次官方预览停止缺少QA stop回执，随后冷启动守卫拒绝；原失败保留。仅QA harness增加启动前完整性checkpoint，严格原字节核对后同目录恢复，未修改账户/认证/业务配置，不虚构优雅退出。受影响旧八条证据保留原hash并标historical；新增真实跨片回归，不把旧日志换hash冒充重跑。
+
+精简证据位于`migration/evidence/transmission-query/`，原始AX/安全隔离证明和日志另行按精确白名单保留备份，不声称全部原始材料已在Git。每次交付仍以实际commit/ref读回为准。

@@ -1,0 +1,98 @@
+{
+  "reviewer": "independent Transmission integration reviewer",
+  "at_utc": "2026-10-30T05:37:44.497499+00:00",
+  "scope": "仅 S01 有限 Transmission 查询子片：当前主树集成 gate",
+  "verdict": "passed",
+  "binding": {
+    "coordinator_base_commit": "28f3b78c39a227ee82ed4b0ba9be28d80fd782fd",
+    "integration_selection_sha256": "1cb3554b86bc5fe43b01d9f181254d17f7a27dcc3f006cb330462c3fd3c29e59",
+    "selected_paths": 17,
+    "current_input_closure_files": 6059,
+    "current_input_closure_sha256": "85c5b038b6e10cb423ab17e8853d34328dfe8e177e0da69033abd297ab168182",
+    "postflight_all_inputs_unchanged": true
+  },
+  "verified": [
+    "17 路径哈希匹配；资源文件仅两个 hook，逆变换精确匹配集成前哈希，保留已有三个共享能力",
+    "当前主树重新编译标准 allowed/denied worker、SDK/app race 测试及 normal server",
+    "完整原 leaf/vendor/真实 daemon：active 47 组、queued 47 组全字段/顺序/error 差分通过；非父包/helper/完整业务插件启动",
+    "全部 TestSharedTransmissionQuery 顶层测试及 SDK unit 通过：授权/身份/过期调用、取消/撤销/配置变化/停用、16MiB 显式拒绝、鉴权失败/恢复、clone/cold",
+    "真实 source 与 target 各 21 秒 read-only 代理延迟、fresh recently-active，以及普通 form/config/page/HTTP API→SDK→daemon 集成通过"
+  ],
+  "runs": [
+    {
+      "run": "s01-main-independent-active-01",
+      "phase": "active",
+      "source_cases": 47,
+      "source_execution": "entire fixed leaf+UrlUtils spec import; parent initialization bypassed, logger-only fixture",
+      "passed_top_level_tests": [
+        "TestSharedTransmissionQueryRealSourceWorker (12.94s)"
+      ],
+      "exit": 0,
+      "raw_log_sha256": "639e40417b84b35051fa87b5ddbf298ca69775926409ee5f3083ad7fb03ee904",
+      "raw_oracle_sha256": "ca00dea8ec6e76672cb8f30fb576b8d93d8be0d9ffe1f2be0fb8a9fdea68bdb7"
+    },
+    {
+      "run": "s01-main-independent-queued-02",
+      "phase": "queued",
+      "source_cases": 47,
+      "source_execution": "entire fixed leaf+UrlUtils spec import; parent initialization bypassed, logger-only fixture",
+      "passed_top_level_tests": [
+        "TestSharedTransmissionQueryRealSourceWorker (13.30s)"
+      ],
+      "exit": 0,
+      "raw_log_sha256": "dd3020704e3f44e7e944e21c791954c7660f066e357f2311489e9397cdc69715",
+      "raw_oracle_sha256": "9a47989cabafe507c80be65b770d82d6e15652bce89bdfdd9608d843d589cdd7"
+    },
+    {
+      "run": "s01-main-independent-full-paused-03",
+      "phase": "paused",
+      "source_cases": 28,
+      "source_execution": "current auxiliary original class/method AST snippets; NOT complete parent/plugin initialization",
+      "passed_top_level_tests": [
+        "TestSharedTransmissionQueryWorkerPermissionAndWire (12.89s)",
+        "TestSharedTransmissionQueryDispatchScopeBoundaries (26.73s)",
+        "TestSharedTransmissionQueryWireLimitExplicitFailure (7.62s)",
+        "TestSharedTransmissionQueryRealSourceWorker (12.76s)",
+        "TestSharedTransmissionQueryRealSlowAndRecentlyActive (49.45s)",
+        "TestSharedTransmissionQueryRealUIHTTP (13.33s)"
+      ],
+      "exit": 0,
+      "raw_log_sha256": "d8e3d45579b6e4db48ada1258147582eb2b61708fba193e2b00b155c28c18c4b",
+      "raw_oracle_sha256": "de3c8c538e24d3e518822eb422b9f1033ee753b56e0c78b021d40f486d40ad68"
+    }
+  ],
+  "sdk_unit_tests": [
+    "TestTransmissionQueryTypedPreservesRawFieldsAndNumericPrecision (0.00s)",
+    "TestTransmissionQueryTypedRejectsLossyInputAndInvalidResponse (0.00s)",
+    "TestTransmissionQueryConvenienceNoneAndExactSourcePending (0.00s)"
+  ],
+  "normal_browser_binary_hashes": {
+    "server": "6d76790fdf693ee7f37ad85a8d618d10cb90d02e3150ada8f45fb2ac04753d35",
+    "allowed-normal": "29dea46cb827fdf2704c7007df0308692f25edbd5242e77f50bffb9b9a9c77a1"
+  },
+  "safety": {
+    "all_three_reviewer_daemons_stopped_exit_zero": true,
+    "synthetic_source_data_retained": true,
+    "zero_peers": true,
+    "source_bytecode_not_regenerated": true,
+    "runtime_config_or_database_or_credentials_in_backup": false,
+    "binaries_in_backup": false,
+    "normal_server_started_by_reviewer": false
+  },
+  "evidence_classification": "47-case independent component is full-leaf spec import. Separate 28-case auxiliary source is original AST snippet execution. Neither is complete original application/helper/plugin startup. HTTP is not browser.",
+  "adaptations_not_erased": [
+    "128KiB request /16MiB response-result explicit limits",
+    "native no-redirect policy differs from source requests",
+    "60s socket-idle transport remains subject to caller deadline; slow test uses70s runner",
+    "explicit enabled downloader ID rather than service-name binding"
+  ],
+  "outside_this_verdict": [
+    "qBittorrent / whole S01",
+    "browser visual interaction (coordinator owns)",
+    "full parent/helper/_PluginBase or CleanInvalidSeed migration",
+    "commit/push/remote readback and accepted cross-slice regressions (coordinator owns)"
+  ],
+  "product_failures": [],
+  "new_test_design_failures": [],
+  "prior_red_evidence": "Earlier independent component audit retains its initial duplicate-ID assertion and expired recently-active mutation campaign failures; not overwritten or repackaged in this gate."
+}

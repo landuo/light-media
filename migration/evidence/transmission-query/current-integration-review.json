@@ -1,0 +1,81 @@
+{
+  "schema_version": 2,
+  "at_utc": "2026-10-30T06:12:49.194766+00:00",
+  "scope": "S01.transmission_queries 与受影响既有有限切片的当前集成/浏览器终审",
+  "verdict": "passed",
+  "actual_current_gates": {
+    "source_component": "此前当前主树 full-leaf/vendor/真实 daemon active47+queued47、SDK和全部共享查询-race通过，保持原组件边界",
+    "coexistence": "history6、S05 18、clear9、manager14+Base6、真实生产生命周期及vet全部通过；无skip/fail/data-race",
+    "browser": "独立读回19步官方CUA原始AX；全部3任务、subset1、clone非法ID明确502后恢复2、source保持1；同数据冷恢复后仍2/1",
+    "cold_order": "daemon冷启动自然顺序2,1与clone页面完全一致，未排序归一化",
+    "prior_ui": "冷S05修复行revision7/Unicode值、history36B记录、Manager8个实例含新母体/分身均有实际浏览器观察"
+  },
+  "recovery_boundary": {
+    "initial_graceful_stop_proven": false,
+    "original_guard_failure_preserved": true,
+    "accepted_recovery": "精确批准的同一owned实例/SHA完整性证明＋QA V2 ready-checkpoint＋同目录真实正常重启＋新冷浏览器观察",
+    "attestation_only_mutation": "仅新增证明文件；不改settings/data/torrent/resume。此描述限attestation操作，不断言daemon后续永不修改其运行文件。"
+  },
+  "binding": {
+    "base_commit": "28f3b78c39a227ee82ed4b0ba9be28d80fd782fd",
+    "browser_ax_sha256": "dc0cf15d9eeff8cb3afad5578bc9a94836bbd2ccaa675e33adbcba76458349a1",
+    "qa_v2_manifest_sha256": "f678231a59df112cc44e3e668e41357567309b37d60c0c95b37f5228c94c30d1",
+    "current_runtime_files_still_frozen": true,
+    "final_review_binding_sha256": "ac2727251b56ae7bb64e9098c5922102d25c0392a5a1b84a3d628fd7168cbd5e",
+    "reviewed_fixture_files": {
+      "evidence/plugin-manager-query/contract.json": "8b9b744c3aee3855d44459cf46d53204f4e6c163d666de8fbaa5244d4745cd7b",
+      "evidence/plugin-manager-query/coexistence-result.json": "3d625a284a74c7647786cdd469604cdb07f1fd8bd5a62977813b4553852a5346",
+      "evidence/plugin-manager-query/browser-result.json": "38915fb331ee3488c1c7aa34426807321fc21898a68b08d66d842f6f08611c6b",
+      "evidence/plugin-manager-query/independent-closeout.json": "75274a7fc084d6d59ef6c1e356992eae4c8a22eab31fd5649d52b113de8c0116",
+      "evidence/transfer-history-query/contract.json": "92ad90ee774d7e35a9487d9dc4e71345a8d1a37790fb1824f52e3abb0861d653",
+      "evidence/s05-unicode-followup/contract.json": "30521af3ee249d201a8ef57efc6a1c0c7b3626c15f42eee45915a00d594ebc22",
+      "evidence/s05-unicode-followup/browser-result.json": "66a1459dab3058bc829714df45e17382cc6e8ff6a333c8b2f1de90dfd0da8308",
+      "evidence/s05-unicode-followup/integrated-result.json": "be8cb6d2f0fe5edc3b5d27e1549343d950bdff9871f13d0c8ec6f4dbeddf1670",
+      "evidence/s05-unicode-followup/independent-review.json": "d9cdd2857343049aa02d25a55c429b833c777d94535770bccdb9ec9361f8db4c",
+      "evidence/existing-platform-01-05/reuse-review.json": "2a5a355b9650d338ddd3a7dcbcc50d3b857470b740fb794417e090e0b936fa5b",
+      "evidence/transmission-query/browser-result.json": "af7b30af4db54e0bbcd50183eab56f2a14a32bcdcc9cd6406078a48258282485",
+      "evidence/transmission-query/coexistence-result.json": "d4de41d6b7568294a2506635d764f0005b423a3596b2f1dbf8cf075505bff022",
+      "evidence/transmission-query/integrated-source-review.json": "e7496a207171235b2d000662dc1b8e7cb037d205a456922c4d73227e057c7f41"
+    }
+  },
+  "reuse_and_ledger_treatment": {
+    "historical_records_preserved": 8,
+    "old_dependency_union_files": 103,
+    "only_changed_old_dependency": "internal/app/plugin_original_resources.go",
+    "new_actual_integration_required_and_reviewed": true,
+    "permitted_existing_scopes": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "S05.query_update",
+      "S06.transfer_queries",
+      "S10.manager_queries"
+    ],
+    "treatment": "保留旧bindings/artifacts作为historical；新增当前实际integration real_e2e/review并绑定新报告、当前closure及未变语义证据。各feature/facet引用新增证据，不以换hash冒充旧运行。clear旧pass未失效，本次仅新增交互回归。"
+  },
+  "not_claimed": [
+    "parent S01完成（仍implementing）",
+    "qBittorrent或整个插件平台完成",
+    "完整原父包/helper/_PluginBase或业务插件启动",
+    "初次停止graceful",
+    "像素级视觉一致性",
+    "未经实际远端读回的提交/推送完成"
+  ],
+  "adaptations_remain": [
+    "显式启用downloader ID绑定",
+    "128KiB请求/16MiB响应显式上限",
+    "native禁重定向",
+    "60s socket-idle仍受调用deadline约束"
+  ],
+  "product_changes_by_reviewer": false,
+  "metadata_followup": {
+    "supersedes_public_review_sha256": "cf3e45124fe1c8650ef66221b5f2f180507f22f63c89af83faaee2ff5cdd79a1",
+    "browser_summary_single_text_delta_verified": true,
+    "runtime_test_or_raw_observation_changes": false,
+    "current_local_input_hashes_rechecked": 2613,
+    "target_dependency_union_size": 2630,
+    "added_dependency_coverage": "Actual current native/logging/legacyanime/downloader/settings/secret source-code dependencies; no runtime secret values. Full local input closure bound as support, not all-feature acceptance."
+  }
+}

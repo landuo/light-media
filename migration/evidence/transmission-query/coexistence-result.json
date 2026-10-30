@@ -1,0 +1,109 @@
+{
+  "base_commit": "28f3b78c39a227ee82ed4b0ba9be28d80fd782fd",
+  "scope": "Current main tree with only17 selected Transmission files; exact old implementations plus new two resource hooks",
+  "driver_sha256": "e6c90c23e18684e01b2d9026b9da5f840965cb479dd2615d4c48ca23fc3bdc60",
+  "driver_exit": 0,
+  "runs": [
+    {
+      "suite": "history",
+      "passed_top_level_tests": [
+        "TestHistoryIntegrationIndependentLiveUIAndSharedHost (20.27s)",
+        "TestHistoryIndependentNativeRetryUpdatesFrozenRecord (10.60s)",
+        "TestHistoryIndependentRawInputsAreNotRewritten (6.19s)",
+        "TestHistoryIndependentExactQuerySourceMatrix (8.90s)",
+        "TestHistoryIndependentLegacyQueuedRetryPreservesKnownRecord (9.42s)",
+        "TestHistoryIndependentTypedSDKDoesNotRewriteInvalidStrings (7.88s)"
+      ],
+      "raw_log_sha256": "ae04adec07d9821c4118e86308de5a31c09736d41a70453021226ca45928a4e3",
+      "exit": 0
+    },
+    {
+      "suite": "s05",
+      "passed_top_level_tests": [
+        "TestSharedSubscriptionsVersionReplacementCloseKeepsActiveDAO (9.59s)",
+        "TestSharedSubscriptionsActualCloneCASRollbackAndNativeABA (13.08s)",
+        "TestSharedSubscriptionsPermissionDeniedActualWorker (6.62s)",
+        "TestSharedSubscriptionsLargeActualWorkerCold (27.77s)",
+        "TestSharedSubscriptionsNativeEditorPreservesUnrelatedSourceFacts (6.82s)",
+        "TestSharedSubscriptionsCancelledActualWorkerDoesNotWrite (6.91s)",
+        "TestSharedSubscriptionsIndependentSourceOracle (40.19s)",
+        "TestSharedSubscriptionsIndependentFloatGrammar (7.69s)",
+        "TestSharedSubscriptionsIndependentExponentOverflow (7.28s)",
+        "TestSharedSubscriptionsIndependentNestedJSON (16.35s)",
+        "TestSharedSubscriptionsIndependentAllJSONColumnsCold (11.67s)",
+        "TestSharedSubscriptionsActualServerProcessCold (33.47s)",
+        "TestSharedSubscriptionsActualWorkerSmoke (7.50s)",
+        "TestSharedSubscriptionsUnicodeCommittedBeforeResponseFailure (7.13s)",
+        "TestSharedSubscriptionsUnicodeFourColumnsColdRecovery (9.44s)",
+        "TestSharedSubscriptionsUnicodeScalarBindingRollsBack (8.58s)",
+        "TestSharedSubscriptionsUnicodeNativeABAAndCodepointIdentity (7.27s)",
+        "TestSharedSubscriptionsUnicodeJSONValueSemantics (0.00s)"
+      ],
+      "raw_log_sha256": "7f1756a9e09174d14f250f94f391ea787bd0c9be21d10ffc62222ed0d18fda57",
+      "exit": 0
+    },
+    {
+      "suite": "clear",
+      "passed_top_level_tests": [
+        "TestIndependentClearCacheDirectoryRecognition (1.00s)",
+        "TestIndependentClearCacheAcceptedCancellation (4.46s)",
+        "TestIndependentClearCacheConcurrentHTTP (4.16s)",
+        "TestOriginalClearCacheProductionProcess (12.85s)",
+        "TestOriginalClearCacheActualSDKSemantics (4.78s)",
+        "TestOriginalClearCacheFailuresOverrideAuthAndCold (5.91s)",
+        "TestOriginalClearCacheNativeNoPluginAndRecommendation (0.96s)",
+        "TestOriginalClearCacheTwoActualWorkersOrder (7.42s)",
+        "TestOriginalClearCacheAcceptedRequestCancellation (4.09s)"
+      ],
+      "raw_log_sha256": "1561c8648fdb1bdf9f573364b5c1e9aa623f0a26f2f54012a71245033400f4bd",
+      "exit": 0
+    },
+    {
+      "suite": "manager",
+      "passed_top_level_tests": [
+        "TestSharedManagerQueriesWarmCacheOutageValues (4.65s)",
+        "TestSharedManagerQueriesCacheNeverHidesInvalidSeal (3.53s)",
+        "TestSharedManagerQueriesPrefetchAtomicAndScoped (0.33s)",
+        "TestSharedManagerQueriesHTTPFailedSavePublishesConfiguration (3.49s)",
+        "TestSharedManagerQueriesHTTPReadFailurePublishesConfiguration (3.52s)",
+        "TestSharedManagerQueriesHTTPSameFalseyAndCold (4.79s)",
+        "TestSharedManagerQueriesIndependentReadOutageCache (3.77s)",
+        "TestSharedManagerQueriesIndependentJSONEdgesAndReadOnly (9.73s)",
+        "TestSharedManagerQueriesIndependentFailedClassAndStoppingConfig (8.55s)",
+        "TestSharedManagerQueriesIndependentColdUnreadClassOutage (8.80s)",
+        "TestSharedManagerQueriesProductionProcessCold (27.15s)",
+        "TestSharedManagerQueriesActualRegistryAndLifecycle (12.73s)",
+        "TestSharedManagerQueriesActualConfigSourceAndFailure (5.12s)",
+        "TestSharedManagerQueriesActualHTTPAuthConcurrencyAndScopes (6.01s)",
+        "TestOriginalBaseConfigHTTPUsesCurrentCacheWithoutInitialization (3.56s)",
+        "TestOriginalBaseSDKConfigUpdateThenSameCallRead (3.47s)",
+        "TestOriginalBaseSDKEmptyCacheReloadResetAndFreshStop (5.95s)",
+        "TestOriginalBaseSDKResetSecondFailureStillInvalidatesConfigCache (4.84s)",
+        "TestOriginalBaseConfigObservesExternalWrites (3.45s)",
+        "TestOriginalBaseFailedWriteRetainsCacheUntilExternalChange (3.56s)"
+      ],
+      "raw_log_sha256": "15ca175e23cbc8448fcb6b6bda375755aec688668cb85124dc0a9b7ac578043b",
+      "exit": 0
+    },
+    {
+      "suite": "lifecycle",
+      "passed_top_level_tests": [
+        "TestPluginModuleProductionProcessLifecycle (44.39s)"
+      ],
+      "raw_log_sha256": "efad2f81dc44d7d046242c16299ec778f5bc118b0b1250ce2ff954008e9a2a80",
+      "exit": 0
+    }
+  ],
+  "vet": {
+    "packages": [
+      "internal/app",
+      "internal/plugins",
+      "cmd/owned-transmission-query-fixture",
+      "cmd/server"
+    ],
+    "empty_output": true,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "source_reuse": "Fixed source and existing independently reviewed component inputs reused only where unchanged; current history source replay and real target/worker/SQLite/lifecycle gates executed again. Historical logs and target hashes are not replaced.",
+  "boundary": "Selected affected slices, not a whole-platform regression. Source-component boundaries remain those in the original slice reports; source full server/authentication is not certified."
+}

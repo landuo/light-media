@@ -1,0 +1,66 @@
+{
+  "at_utc": "2026-10-30T05:58:18Z",
+  "mode": "actual official cloud CUA; normal existing authenticated UI; same preview account/data; no session injection",
+  "url": "http://127.0.0.1:4173/",
+  "raw_ax": {
+    "private_relative_path": "evidence/coordinator/transmission-browser-final.json",
+    "sha256": "dc0cf15d9eeff8cb3afad5578bc9a94836bbd2ccaa675e33adbcba76458349a1",
+    "steps": 19,
+    "step_names": [
+      "save-new-default-no-account-loopback-downloader",
+      "existing-download-ui-owned-filter-empty",
+      "ordinary-authenticated-readonly-management-page-shows-generated-id-and-no-credentials",
+      "installed-unconfigured-query-is-error",
+      "configured-null-all-three-real-tasks",
+      "query-button-clicked-await-result",
+      "query-button-settled",
+      "empty-ids-all-with-alpha-beta-subset-one",
+      "clone-inherits-independent-config-one-real-task",
+      "clone-invalid-native-id-is-explicit-error-not-empty-success",
+      "clone-query-button-failure",
+      "clone-recovered-two-alpha-tasks",
+      "source-config-isolated-still-alpha-beta-one",
+      "same-owned-daemon-data-and-app-cold-restart-clone-two-alpha-tasks",
+      "cold-clone-query-button-settled-no-error",
+      "cold-source-still-one-beta-task",
+      "current-host-cold-S05-repaired-row-retained",
+      "current-host-cold-history-existing-query",
+      "current-host-cold-manager-live-registry-includes-new-workers"
+    ]
+  },
+  "actual_artifacts": {
+    "server_sha256": "6d76790fdf693ee7f37ad85a8d618d10cb90d02e3150ada8f45fb2ac04753d35",
+    "worker_sha256": "29dea46cb827fdf2704c7007df0308692f25edbd5242e77f50bffb9b9a9c77a1"
+  },
+  "observations": [
+    "Normal settings saved a new owned default-no-account loopback Transmission address; password/api-key configured flags false. Existing authenticated management GET visibly returned generated config ID; no hidden fetch or credential read.",
+    "Existing downloads UI displayed no downloading tasks; separately installed standard SDK fixture returned all three actual stopped tasks, proving it is not the owned/download UI projection.",
+    "Unconfigured query was a host error. Null IDs returned3; empty IDs plus alpha,beta labels returned1. Query-button loading settled without error.",
+    "Ordinary clone inherited its config; invalid native ID visibly failed instead of empty success, query action showed502. Repair to alpha returned2 while source retained alpha,beta and1.",
+    "Same app and owned daemon data restarted; clone retained2 and source1. Cold daemon order changed to task2,task1 and was retained, not normalized away.",
+    "Current cold S05 clone retained revision7, repaired keyword and genuine replacement/pair JSON; history clone returned its actual36-byte local-copy record; Manager clone listed eight live instances including new source/clone workers."
+  ],
+  "cold_recovery": {
+    "before_daemon_pid": 43,
+    "after_daemon_pid": 30,
+    "same_task_hashes": true,
+    "existing_tasks_on_cold_start": 3,
+    "before_ready_sha256": "609790dba031ae60b54046bd4726c55decc953b05f16f9c5b7a3f9a7031452b2",
+    "after_ready_sha256": "3b8a17c6fdcdb3efa9dcfa66ff0cf6add25acbe50489d62a76146cce89d36b83",
+    "ready_checkpoint_sha256": "d8f79b51f0c9485d3acb3dd6e33368e8d272478c3b4b9076b48a9074100be324",
+    "config_whitelist_sha256": "fd8b6147748b99ad2e121098c81cc128feb437024610f98ae32d09372d707fd1",
+    "initial_official_stop_has_helper_stop_receipt": false,
+    "initial_cold_start": "failed QA guard: exact shutdown checkpoint absent; original failure retained",
+    "resolution": "QA V2 adds ready checkpoint before child. The approved exact owned-integrity attestation operation wrote only new evidence, not settings/data/torrent/resume; this does not claim a running daemon never updates its own files. Same-directory recovery succeeded. Separate actual SIGKILL-recovery rehearsal passed. Not a graceful-exit claim.",
+    "qa_v2_manifest_sha256": "f678231a59df112cc44e3e668e41357567309b37d60c0c95b37f5228c94c30d1",
+    "original_failure_sha256": "23921d2a3fc52eeec5192e8b022eeed7b2ace58a99ed41d81b64194252dde40a"
+  },
+  "safety": {
+    "default_no_account_not_authentication_disabled": true,
+    "all_observed_rpc_peer_tcp_udp_sockets_loopback": true,
+    "private_no_tracker_paused_zero_peer_synthetic_tasks": true,
+    "existing_account_preserved": true,
+    "raw_runtime_config_or_database_published": false
+  },
+  "evidence_boundary": "This file publishes a minimal observation summary and exact raw-evidence hashes. Raw AX and exact safe QA evidence are retained separately; no screenshot, runtime database/configuration, credential or binary is claimed to exist in Git."
+}
