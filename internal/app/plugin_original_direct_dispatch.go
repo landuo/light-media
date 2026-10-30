@@ -31,6 +31,7 @@ type originalDirectJob struct {
 	running                              bool
 	provider                             string
 	lastStarted, lastFinished, lastError string
+	lastErrorSet                         bool
 	registrationOrder                    uint64
 	coalesceDisabled, misfireUnlimited   bool
 	executorUnavailable, clockRegistered bool

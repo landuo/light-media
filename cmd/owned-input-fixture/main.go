@@ -67,9 +67,13 @@ func (o *object) handle(ctx context.Context, method string, raw json.RawMessage,
 			return nil, err
 		}
 		var options struct {
-			Services json.RawMessage `json:"services"`
+			Services    json.RawMessage `json:"services"`
+			GetterError bool            `json:"getter_error"`
 		}
 		_ = json.Unmarshal(config, &options)
+		if options.GetterError {
+			return nil, errors.New("owned getter failure")
+		}
 		if len(options.Services) > 0 {
 			return options.Services, nil
 		}
@@ -107,6 +111,10 @@ func (o *object) handle(ctx context.Context, method string, raw json.RawMessage,
 			return json.RawMessage(`[false,"ordinary list"]`), nil
 		case "error":
 			return nil, errors.New("owned callback error")
+		case "error-empty":
+			return nil, errors.New("")
+		case "error-sensitive":
+			return nil, errors.New("owned callback password=OWNED_PASSWORD token=OWNED_TOKEN https://owned.invalid/private")
 		}
 		return plugins.ServiceResultTuple(true)
 	case "get_command":

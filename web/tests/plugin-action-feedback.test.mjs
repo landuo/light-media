@@ -22,7 +22,7 @@ const { descriptor } = parse(
 const compiled = transpile(compileScript(descriptor, { id: 'Plugins' }).content);
 const apiSource = transpile(readFileSync(new URL('../src/api.ts', import.meta.url), 'utf8'));
 
-function fixture(data, { status = 200, envelopeError, marketFetch, installedCards } = {}) {
+function fixture(data, { status = 200, envelopeError, marketFetch, installedCards, statisticsFetch } = {}) {
   const requests = [],
     toasts = [];
   const apiModule = { exports: {} };
@@ -36,9 +36,10 @@ function fixture(data, { status = 200, envelopeError, marketFetch, installedCard
     async (path, options) => {
       requests.push({ path, ...options });
       if (path.startsWith('/plugins/market?') && marketFetch) return marketFetch(path);
+      if (path === '/plugins/statistic' && statisticsFetch) return statisticsFetch(path);
       const reading = options.method === 'GET';
       const result =
-        path === '/plugins/organization' ? { revision: 0, folders: {}, order: [] } : path.startsWith('/plugins/market?') ? { items: [], sources: [] } : path === '/plugins?state=installed' && installedCards ? installedCards : [];
+        path === '/plugins/organization' ? { revision: 0, folders: {}, order: [] } : path === '/plugins/statistic' ? {} : path.startsWith('/plugins/market?') ? { items: [], sources: [] } : path === '/plugins?state=installed' && installedCards ? installedCards : [];
       return {
         ok: reading || status < 400,
         status: reading ? 200 : status,
@@ -612,4 +613,56 @@ test('fixed market sort selection and Enter close the filter menu, IME compositi
   assert.equal(f.state.marketFilterMenu.value, true);
   f.state.submitMarketFilter({ isComposing: false });
   assert.equal(f.state.marketFilterMenu.value, false);
+});
+
+
+const statisticsSource = JSON.parse(readFileSync(new URL('../../testdata/plugin-statistics-frontend/source-function.json', import.meta.url), 'utf8'));
+function sourceStatisticsFixture(next) {
+  const state = { value: {} }, errors = [];
+  const load = new Function('PluginStatistics', 'api', 'console', statisticsSource.function + '; return getPluginStatistics;')(
+    state, { get: async (path) => { assert.equal(path, 'plugin/statistic'); return next(); } }, { error: (error) => errors.push(error) },
+  );
+  return { state, errors, load };
+}
+function statisticsResponse(data) {
+  return { ok: true, status: 200, json: async () => ({ data }) };
+}
+
+test('statistics source success, failure retention and recovery do not add status text', async (t) => {
+  const failure = new Error('owned statistic failure');
+  const observations = [{ First: 5, Second: 1200 }, failure, { First: 2000, Second: 1 }, {}];
+  let sourceIndex = 0, targetIndex = 0;
+  const source = sourceStatisticsFixture(() => { const value = observations[sourceIndex++]; if (value instanceof Error) throw value; return value; });
+  const targetErrors = [];
+  t.mock.method(console, 'error', (error) => targetErrors.push(error));
+  const f = fixture(undefined, { statisticsFetch: async () => { const value = observations[targetIndex++]; if (value instanceof Error) throw value; return statisticsResponse(value); } });
+  t.after(f.stop);
+  for (let n = 0; n < observations.length; n++) {
+    await source.load();
+    await f.state.load();
+    assert.deepEqual(f.state.marketStatistics.value, source.state.value, 'frame ' + n);
+    assert.equal(f.state.error.value, '', 'statistics failure is not the global plugin error');
+    assert.equal(targetErrors.length, source.errors.length, 'source console-only failure frame ' + n);
+  }
+  assert.equal(targetErrors[0], failure);
+  assert.equal(f.state.marketStatisticsError, undefined);
+  assert.doesNotMatch(descriptor.template.content, /marketStatisticsError|当前使用上次取得的统计数据|当前保留市场返回顺序/);
+});
+
+test('statistics source initial failure stays empty and a later request can recover', async (t) => {
+  const failure = new Error('owned initial statistic failure');
+  let fail = true;
+  const source = sourceStatisticsFixture(() => { if (fail) throw failure; return { Second: 1001 }; });
+  const errors = [];
+  t.mock.method(console, 'error', (error) => errors.push(error));
+  const f = fixture(undefined, { statisticsFetch: async () => { if (fail) throw failure; return statisticsResponse({ Second: 1001 }); } });
+  t.after(f.stop);
+  await source.load(); await f.state.load();
+  assert.deepEqual(f.state.marketStatistics.value, source.state.value);
+  assert.equal(f.state.marketStatisticsError, undefined);
+  fail = false;
+  await source.load(); await f.state.load();
+  assert.deepEqual(f.state.marketStatistics.value, source.state.value);
+  assert.deepEqual(errors, source.errors);
+  assert.equal(f.state.loading.value, false);
 });

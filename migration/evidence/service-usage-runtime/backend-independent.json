@@ -1,0 +1,91 @@
+{
+  "status": "PASS_CURRENT_FINITE_BACKEND_GATE_UI_PENDING",
+  "at": "2026-10-30T15:14:17.259852+00:00",
+  "base": "51719d2f37fa4c37bf008c2ac3deae9ff702783b",
+  "candidate_sha256": "bd30bc25e3fb5b98a9c670ce121c46d3b6b7770152fc9dcfb1a2423a16279a87",
+  "owner_runtime_result_sha256": "95a852bbe7aca6cc26ccf7b0c0fe48cc94ef4c288f1b45bb534e110fce3c2de2",
+  "owner_verified_roots": {
+    "normal": 100,
+    "race": 100,
+    "skip": 0
+  },
+  "independent_exact_roots": {
+    "normal": 8,
+    "race": 8,
+    "skip": 0
+  },
+  "independent_input_count": 469,
+  "independent_input_drift": [],
+  "source_and_dist_drift": [],
+  "delivered_s09_36_drift": [],
+  "frozen_binaries_count": 26,
+  "current_server_sha256": "65eb917a297d81e96e3e160f47ae6a025ba03501fd01178ef0c2493f3bdde61b",
+  "current_race_server_sha256": "62d72336fb10be7c8ed6e36b165afa37b7d655a328ac182fd47b13eeaada8c6d",
+  "source_observation_comparison_groups": 18,
+  "source_observation_differences": [],
+  "compiler_binding_scope": {
+    "normal": 6448,
+    "race": 6457,
+    "definition": "recorded go-list Go/C/assembly/embed + explicit inputs, NOT all native build/OS inputs",
+    "historical_bindings_no_drift": true,
+    "current_cache_missing_at_owner_audit": {
+      "normal": [
+        "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/5e/5e8d21a93e6149de6e44de37eabc54fe7366c77645bc5e010bd410c67129ef9d-d",
+        "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/84/84009d566e2b1bb01614e60d60b47c1fdb7e635d5ea9827132603d79f43eab78-d"
+      ],
+      "race": [
+        "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/5e/5e8d21a93e6149de6e44de37eabc54fe7366c77645bc5e010bd410c67129ef9d-d",
+        "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/84/84009d566e2b1bb01614e60d60b47c1fdb7e635d5ea9827132603d79f43eab78-d"
+      ]
+    }
+  },
+  "native_supplement": "current external exec namespace only; historical CC/CXX and managed preview actual libraries not proven; no retroactive binding",
+  "harness_corrections_preserved": true,
+  "no_go_or_compiler_invoked": true,
+  "no_forbidden_probes": true,
+  "no_browser": true,
+  "main_or_ledger_modified": false,
+  "remaining": [
+    "Current official UI plus same-namespace binary/loader/library binding remains separate gate",
+    "Not SDK126 whole package; not complete S09/trigger/clone/platform",
+    "Unapproved runtime differences remain differences, not user approval"
+  ],
+  "artifacts": {
+    "REVIEW.md": "620d1cd4af5c62acdb091cc8f38ebb328fa12d7d126bc20b1443a119a5d63235",
+    "audit-owner.attempt01.py": "d963fee9c0acea7c00390ec0967130d95b1bd4363ace48efbf4b6cef3cdf7d8b",
+    "audit-owner.py": "31761f9bdc43b8314c7c8901978d459e68141ecda23e78524dab09939052d8cb",
+    "binary-buildinfo.json": "dec1a8cdae9e599ea0905702e52cce859b543dd258120a39e3fbd6c260164db5",
+    "compare-observations.attempt01.py": "277c4624bfdca0d251ead621a4be620e32e802bdc996458bbb46bb34742f2fe6",
+    "compare-observations.attempt02.py": "b293aca23ec0474043134694ee18449a1f5d90af50abdb906fdd935131bd2a91",
+    "compare-observations.py": "9146db10476f686228c8c0505106f3c8b1b9992d11c82346b7f6b967dc6eed35",
+    "harness-correction.json": "8c1db2d35fff4fe799b66c40f6a184e30869a65394e06211d5fd04cbb11ccd6b",
+    "independent-result.json": "027a0977c9f0386df1b2a48655480117a5b08d8aaed333f6652085514acc1f16",
+    "inputs-after.json": "23be8d974a11728ce154960660eb83276a4ac147e47f0877e3152ef980c35b4a",
+    "inputs-before.json": "23be8d974a11728ce154960660eb83276a4ac147e47f0877e3152ef980c35b4a",
+    "native-dependency-supplement.json": "c95be98bc5bad50ebe21f6776fc749867f0fe9d3fb2905f3cc391ef8c4e211b1",
+    "native-environment-current.json": "4455db07d805ae19f4b4ef309367f75ff87a665791a73082cb36457fc4520b01",
+    "normal/app-command.json": "d571066fb063de104f52c5e43e768b369fea1af3ec93a7c701b1a41ffdd9a273",
+    "normal/app.log": "bcf2e229b1c5bdf587e3aadf511dc1f010c2ecff403649a03d24f390e488f7cd",
+    "normal/environment.json": "8d31881387398edfad1d914c8ba33523a60132189756fb43635eb1a251afd256",
+    "normal/plugins-command.json": "34254c688c1248b79f04c4260a35c9550be037bcb0e404975b3c5f948f0209ad",
+    "normal/plugins.log": "14f0596922ee2d819058d7529e26ad329148c88e8b90a8b72301ca5f631d15af",
+    "normal/service-process/events36-service-process.log": "5723535d74dc0f069867b86f9b38603b7e7b28ecfc8da487ce7fa1f2a0770edd",
+    "normal/usage116.json": "8a645baeb24978841ed895d317ced552879491fdd5166a73582cef993fedeb89",
+    "normal/wire108.json": "d61cbaba645fe794f8336c2038bdb18b61994ec662eae6d00cc3872ec0f050d2",
+    "normal/wire66.json": "c71302f7aadb7c97fb8e14bbc21e9d200b40efa152ad498a96dfd62cb25b68b3",
+    "observation-comparison.attempt02.json": "b0ceef63bc547a3a1c1e79fc28abad9500965eaf28ce903a7a91db5f7fd2d6bd",
+    "observation-comparison.json": "ee8f6f0456ba3c1927eaaadf39310df0131ef02f8c1e9bbe8a8296660f079da7",
+    "owner-evidence-bindings.json": "44f24bcdada5c87a70efc187414c5a0213c0d2f4bb9d259a081e1eb470bbe1c3",
+    "owner-runtime-audit.json": "6bd9438d987deae5dbd9618f3a292683287abc2d77bd9673a772674b9dfc0bab",
+    "race/app-command.json": "4ca80b19b001e7a921baf046c1b43c45f5b0d659c51b869cb4dc7bb9fcbcbd0a",
+    "race/app.log": "174f3c916112f3bb16ee7eacfdf004eeca957a24a3faa29d5bbaabe678a211ba",
+    "race/environment.json": "e71e0e56c476d72d60cf608ba181b81a2dd029aa5f86b7d5606afca93aa62dfb",
+    "race/plugins-command.json": "b7285aada7e8188bf4c203508c6a83c825b393046e296c455b94fa52daac8570",
+    "race/plugins.log": "5736f929743166af2139aa1b6ccacbc70f029a3cb0873993e698d691a73a8c7f",
+    "race/service-process/events36-service-process.log": "ca85a79b48f12e40e56070e049d787350d8cacb43932040f93dab75c50b7f2a2",
+    "race/usage116.json": "8a645baeb24978841ed895d317ced552879491fdd5166a73582cef993fedeb89",
+    "race/wire108.json": "fb7232f082f895d705f705de6d4ac3fbeaac1d11e16b432b9453e27015d354a7",
+    "race/wire66.json": "ab99a741143bce34a08ce85341c1700ef78dc29cfc62dff5f983fa608af688f5",
+    "run-independent.py": "f8e166c633da06404dc5ce41ec2a6e5bfbd233c2c590223f1f7a2e0e556d3cdf"
+  }
+}

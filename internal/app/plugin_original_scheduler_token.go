@@ -15,6 +15,20 @@ func (a *App) serveOriginalSchedulerTokenAPI(w http.ResponseWriter, r *http.Requ
 		return false
 	}
 	path := strings.TrimPrefix(r.URL.Path, "/api/")
+	if route, ok := originalServiceWirePath(path); ok && route.token {
+		// Keep the token endpoint's existing method-before-authority ordering
+		// on canonical routes, without losing the original v1/v2 wire version.
+		if !route.redirect && r.Method != http.MethodGet {
+			writeOriginalServiceWireMethod(w, route.version)
+			return true
+		}
+		if !apiKeyEqual(plugins.LastQuery(r.URL.Query(), "token"), a.Settings().APIToken) {
+			a.writeError(w, r, &APIError{"UNAUTHORIZED", "token 校验不通过", http.StatusUnauthorized})
+			return true
+		}
+		a.originalServiceWireHTTP(w, r, route)
+		return true
+	}
 	if strings.HasPrefix(path, "v1/") || strings.HasPrefix(path, "v2/") {
 		path = path[3:]
 	}

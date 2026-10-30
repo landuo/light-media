@@ -1,0 +1,201 @@
+{
+  "kind": "actual installed fixed Starlette QueryParams(bytes) calling Python parse_qsl; no model replacement",
+  "python": "3.12.14",
+  "starlette": "1.3.1",
+  "source_files": {
+    "datastructures.py": "f9e310036299d6a427443ca96ba118e58486e5927cd4c3bac0ffb815626e52cd",
+    "parse.py": "e6af7f475262f1de335bb2e41e26adb94d6103977cf5fe1ddc430dc6a3b1623f"
+  },
+  "cases": [
+    {
+      "raw_hex": "",
+      "present": false,
+      "value": ""
+    },
+    {
+      "raw_hex": "26",
+      "present": false,
+      "value": ""
+    },
+    {
+      "raw_hex": "6a6f626964",
+      "present": true,
+      "value": ""
+    },
+    {
+      "raw_hex": "6a6f6269643d",
+      "present": true,
+      "value": ""
+    },
+    {
+      "raw_hex": "6a6f6269643d78266a6f6269643d",
+      "present": true,
+      "value": ""
+    },
+    {
+      "raw_hex": "6a6f6269643d266a6f6269643d756e6b6e6f776e",
+      "present": true,
+      "value": "unknown"
+    },
+    {
+      "raw_hex": "6a6f25363269643d612b6225324263",
+      "present": true,
+      "value": "a b+c"
+    },
+    {
+      "raw_hex": "6a6f6269643d6669727374266a6f6269643d6c617374257a7a",
+      "present": true,
+      "value": "last%zz"
+    },
+    {
+      "raw_hex": "6a6f6269643d66697273743b6a6f6269643d6c617374",
+      "present": true,
+      "value": "first;jobid=last"
+    },
+    {
+      "raw_hex": "783d6a6f6269643d756e6b6e6f776e",
+      "present": false,
+      "value": ""
+    },
+    {
+      "raw_hex": "6a6f6269643d783d79",
+      "present": true,
+      "value": "x=y"
+    },
+    {
+      "raw_hex": "6a6f6269643d253030",
+      "present": true,
+      "value": "\u0000"
+    },
+    {
+      "raw_hex": "6a6f6269643d2545342542442541302532462532422b253236",
+      "present": true,
+      "value": "你/+ &"
+    },
+    {
+      "raw_hex": "6a6f6269643d756e6b6e6f776e3b",
+      "present": true,
+      "value": "unknown;"
+    },
+    {
+      "raw_hex": "6a6f6269643d756e6b6e6f776e3b783d79",
+      "present": true,
+      "value": "unknown;x=y"
+    },
+    {
+      "raw_hex": "6a6f6269643d253342",
+      "present": true,
+      "value": ";"
+    },
+    {
+      "raw_hex": "6a6f6269643d756e6b6e6f776e",
+      "present": true,
+      "value": "unknown"
+    },
+    {
+      "raw_hex": "6a6f6269643d756e6b6e6f776e257a7a",
+      "present": true,
+      "value": "unknown%zz"
+    },
+    {
+      "raw_hex": "6a6f6269643d756e6b6e6f776e25",
+      "present": true,
+      "value": "unknown%"
+    },
+    {
+      "raw_hex": "6a6f6269643d756e6b6e6f776e2532",
+      "present": true,
+      "value": "unknown%2"
+    },
+    {
+      "raw_hex": "6a6f6269643d756e6b6e6f776e254646",
+      "present": true,
+      "value": "unknown�"
+    },
+    {
+      "raw_hex": "6a6f6269643d254646254646",
+      "present": true,
+      "value": "��"
+    },
+    {
+      "raw_hex": "6a6f6269643d254531253830",
+      "present": true,
+      "value": "�"
+    },
+    {
+      "raw_hex": "6a6f6269643d25453125383078",
+      "present": true,
+      "value": "�x"
+    },
+    {
+      "raw_hex": "6a6f6269643d254530253830253830",
+      "present": true,
+      "value": "���"
+    },
+    {
+      "raw_hex": "6a6f6269643d254544254130253830",
+      "present": true,
+      "value": "���"
+    },
+    {
+      "raw_hex": "6a6f6269643d254634253930253830253830",
+      "present": true,
+      "value": "����"
+    },
+    {
+      "raw_hex": "6a6f6269643d254630253930253830",
+      "present": true,
+      "value": "�"
+    },
+    {
+      "raw_hex": "6a6f6269643d254330253830",
+      "present": true,
+      "value": "��"
+    },
+    {
+      "raw_hex": "6a6f6269643d254630253946253938253830",
+      "present": true,
+      "value": "😀"
+    },
+    {
+      "raw_hex": "6a6f6269643d254546254246254244",
+      "present": true,
+      "value": "�"
+    },
+    {
+      "raw_hex": "6a6f6269643de9",
+      "present": true,
+      "value": "é"
+    },
+    {
+      "raw_hex": "6a6f6269643d254333a9",
+      "present": true,
+      "value": "�©"
+    },
+    {
+      "raw_hex": "6a6f6269643dc3a9",
+      "present": true,
+      "value": "Ã©"
+    },
+    {
+      "raw_hex": "6a6f6269643d256333256139",
+      "present": true,
+      "value": "é"
+    },
+    {
+      "raw_hex": "6a6f6269643d2561253431",
+      "present": true,
+      "value": "%aA"
+    },
+    {
+      "raw_hex": "6a6f6269643d25253431",
+      "present": true,
+      "value": "%A"
+    },
+    {
+      "raw_hex": "6a6f6269643d2532622b",
+      "present": true,
+      "value": "+ "
+    }
+  ]
+}

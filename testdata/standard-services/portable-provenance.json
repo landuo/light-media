@@ -1,0 +1,37 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "frontend_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "frontend_scope": "unchanged; these fixtures validate backend services and APS leaf algorithms only",
+  "origin": {
+    "whole_source_v5_runner_sha256": "d8f32d5bcef646c7a5084257cc21922ab17e22c855611ce2ac58d0ca83fa8930",
+    "whole_source_run05_raw_sha256": "6a102e060be9fe3b6025fb8c73ff6fdf85d3379cbb4b6169508a04652c8908ea",
+    "independent_aps312_raw_sha256": "4cadf2fbd81db7c9fea2b6382a70c7855609374e7f9ea7321542b2d8aabd5c5f"
+  },
+  "relative_files": {
+    "testdata/standard-services/whole-source-progress.json": "ea7b6cd5f2d124f0050ae70eee758fef6cfb9d003373b1421e9e311451b4049d",
+    "testdata/standard-services/whole-source-bindings.json": "8e8a855b856ef8f2d40e7f8d2da5a3d727ae229c22cac0030f45342657fbedec",
+    "testdata/standard-services/replay-requirements.txt": "ae311c7d8f3e8337fc698f6db38f5198c1734b0b3476298c15c6474befadd186",
+    "testdata/plugins/apscheduler-3.11.3-times.json": "fa09e3ff20e61d7f8fe7a87419948b337f0becbd76e24a9f648bd37d7853fae2",
+    "testdata/standard-services/jitter-oracle.json": "6ee5137da98cc0c1938a8aeea54137a490d6f1f5b43197d19d76b7a9d8aaee28",
+    "testdata/standard-services/generate_jitter_oracle.py": "0a38823db00eb5cd89379b8fa59c4e140e0e357214503c05d8e10a3245fe9d49",
+    "testdata/standard-services/calendar-jitter-aps312.json": "67998377fc8223692da0863b9149163453be9f54f1334969f503641f46f0cb48"
+  },
+  "bridge": {
+    "calendar_cases": 33,
+    "jitter_cases": 4,
+    "frozen_observation_file": "testdata/standard-services/calendar-jitter-aps312.json",
+    "frozen_observation_sha256": "67998377fc8223692da0863b9149163453be9f54f1334969f503641f46f0cb48",
+    "fresh_result_sha256": "ee6c653b8279551fde3c330f0823d4c82b762969964fb44ba9552d7e89af414c",
+    "fresh_result_scope": "portable source runner evidence, relative dependency labels; complete import/zoneinfo hash provenance is emitted at replay time"
+  },
+  "whole_source_replay": {
+    "scenarios": 15,
+    "manual_compared_cases": 6,
+    "fresh_result_sha256": "6a3190e21339cc893a4a404ef7df2f757662cf5be3d7a530cdf0d664ca3f0d32",
+    "network_attempts": []
+  },
+  "worker": {
+    "change": "get_service getter_error only relative to pre-portable candidate",
+    "run_service_sha256": "b21afec8a667089fd8e55746ba2eaf1f233047313136f2abfeaa92916e6f6a74"
+  }
+}

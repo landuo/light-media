@@ -171,12 +171,12 @@ func TestOriginalServiceActualSDKPausedSourceFailure(t *testing.T) {
 			}
 			continue
 		}
-		var listed struct{ Data []PluginServiceInfo }
-		if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &listed) != nil || len(listed.Data) != 1 || listed.Data[0].NextRun == nil || *listed.Data[0].NextRun != *sample.Expected[0].NextRun {
+		var listed []PluginServiceInfo
+		if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &listed) != nil || len(listed) != 1 || listed[0].NextRun == nil || *listed[0].NextRun != *sample.Expected[0].NextRun {
 			t.Fatal("single paused timer source projection", response.Code, response.Body.String())
 		}
 		response = callTest(t, a.Handler(), "GET", "/api/v1/system/runscheduler?jobid=OwnedInput_0", "", cookie, "")
-		assertOriginalRegistrySuccess(t, response.Code, response.Body.Bytes())
+		assertOriginalServiceWireSuccess(t, response.Code, response.Body.Bytes())
 		if string(a.originalServiceProgressSnapshot("OwnedInput_0")["status"].(json.RawMessage)) != `"success"` {
 			t.Fatal("paused clock lost its manually callable method")
 		}

@@ -61,6 +61,10 @@ func pluginServiceTimeDifference(due, at time.Time) string {
 // Called inside a.api, after its standard authentication and POST origin guard.
 // Original MoviePilot's GET executor also receives the write-origin guard.
 func (a *App) pluginServicesHTTP(w http.ResponseWriter, r *http.Request, path string) bool {
+	if route, ok := originalServiceWirePath(path); ok {
+		a.originalServiceWireHTTP(w, r, route)
+		return true
+	}
 	compat := path
 	if strings.HasPrefix(path, "v1/") || strings.HasPrefix(path, "v2/") {
 		compat = path[3:]

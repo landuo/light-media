@@ -96,7 +96,7 @@ func TestOriginalServiceActualSDKAsyncReplacementSource(t *testing.T) {
 		}()
 		select {
 		case response := <-done:
-			assertOriginalRegistrySuccess(t, response.Code, response.Body.Bytes())
+			assertOriginalServiceWireSuccess(t, response.Code, response.Body.Bytes())
 		case <-time.After(2 * time.Second):
 			t.Fatal("coroutine-mapped method did not acknowledge before real SDK completion")
 		}

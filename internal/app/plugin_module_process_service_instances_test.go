@@ -111,12 +111,10 @@ func verifyOwnedProductionServiceInstances(t *testing.T,
 			// The worker records the actual received JSON in its genuine progress
 			// callback, proving clock kwargs were not substituted for func_kwargs.
 			var state struct {
-				Data struct {
-					Success bool
-					Data    struct{ Data map[string]json.RawMessage }
-				}
+				Success bool
+				Data    struct{ Data map[string]json.RawMessage }
 			}
-			if json.Unmarshal(request("GET", "/api/v1/dashboard/schedule/OwnedInput_limit/progress", nil, 200), &state) != nil || !state.Data.Success {
+			if json.Unmarshal(request("GET", "/api/v1/dashboard/schedule/OwnedInput_limit/progress", nil, 200), &state) != nil || !state.Success {
 				t.Fatal("actual method argument readback unavailable")
 			}
 			expected := old["input"]
@@ -124,7 +122,7 @@ func verifyOwnedProductionServiceInstances(t *testing.T,
 				expected = newDefinition["input"]
 			}
 			expectedRaw, _ := json.Marshal(expected)
-			if !originalBaseJSONEqual(state.Data.Data.Data["actual_input"], expectedRaw) {
+			if !originalBaseJSONEqual(state.Data.Data["actual_input"], expectedRaw) {
 				t.Fatal("clock kwargs changed actual method input")
 			}
 			close(oldRelease)

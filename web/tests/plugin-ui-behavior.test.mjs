@@ -199,7 +199,8 @@ test('actual dashboard keeps previous widget and does not create one when get_da
   t.after(f.stop);
   const meta = { id: 'Demo', key: 'summary', name: 'Demo' };
   await f.state.loadItem(meta);
-  assert.deepEqual(f.state.items.value, []);
+  assert.deepEqual(f.state.items.value.map((item) => item.id), ['scheduler']);
+  assert.equal(f.state.visible.value.length, 0, 'built-in scheduler defaults off');
   const existing = {
     ...meta,
     cols: { md: 6 },
@@ -209,6 +210,20 @@ test('actual dashboard keeps previous widget and does not create one when get_da
   await f.state.loadItem(meta);
   assert.deepEqual(JSON.parse(JSON.stringify(f.state.items.value)), [existing]);
   assert.equal(f.state.timers.size, 0);
+});
+
+test('built-in scheduler shares ordinary settings and never calls a fake plugin getter', async (t) => {
+  const calls = [];
+  const f = component('PluginDashboard', {}, { api: async (path) => { calls.push(path); return []; } });
+  t.after(f.stop);
+  const builtin = f.state.items.value[0];
+  assert.deepEqual(JSON.parse(JSON.stringify(builtin)), { id: 'scheduler', key: '', name: '后台任务', attrs: {}, cols: { cols: 12, md: 4 }, rows: 11, elements: [] });
+  f.state.openSettings();
+  assert.equal(f.state.settingItems.value[0].id, 'scheduler');
+  f.state.layout.value.enabled = { scheduler: true };
+  assert.equal(f.state.visible.value[0].id, 'scheduler');
+  await f.state.loadItem(builtin);
+  assert.deepEqual(calls, []);
 });
 
 test('fixed dashboard saves local snapshots before remote and closes/refetches after persistence failure', async (t) => {

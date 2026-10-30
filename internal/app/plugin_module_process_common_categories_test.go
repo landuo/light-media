@@ -116,7 +116,7 @@ func verifyOwnedProductionCommonCategories(t *testing.T, dir, origin string, req
 	set(manifest.PluginID, nil, false)
 	set(clone, map[string]any{"电影": []string{"分身电影"}, "电视剧": []string{"分身剧集"}}, false)
 	before := [2]ownedModuleSnapshot{read(manifest.PluginID), read(clone)}
-	success("GET", "/api/v1/system/runscheduler?jobid=scheduler_job", nil)
+	assertOriginalServiceWireSuccess(t, 200, request("GET", "/api/v1/system/runscheduler?jobid=scheduler_job", nil, 200))
 	after := [2]ownedModuleSnapshot{read(manifest.PluginID), read(clone)}
 	for i := range after {
 		if after[i].Calls["module_execute"]-before[i].Calls["module_execute"] != 1 {
@@ -178,6 +178,6 @@ func verifyOwnedProductionCommonCategories(t *testing.T, dir, origin string, req
 	success("DELETE", "/api/plugins/"+manifest.PluginID, nil)
 	request("GET", "/api/v1/plugin/"+clone+"/snapshot", nil, 404)
 	request("GET", "/api/v1/plugin/"+manifest.PluginID+"/snapshot", nil, 404)
-	success("GET", "/api/v1/system/runscheduler?jobid=scheduler_job", nil)
+	assertOriginalServiceWireSuccess(t, 200, request("GET", "/api/v1/system/runscheduler?jobid=scheduler_job", nil, 200))
 	t.Log("actual category source cases, common manual/cold/optional actual10minute trigger and uninstall passed")
 }

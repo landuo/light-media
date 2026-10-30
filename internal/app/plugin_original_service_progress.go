@@ -77,6 +77,7 @@ func (a *App) prepareOriginalServiceLocked(job *originalDirectJob) {
 		delete(state.progress, oldest)
 	}
 	job.running = true
+	job.lastErrorSet = false
 	job.lastStarted, job.lastFinished, job.lastError = at.Format("2006-01-02 15:04:05"), "", ""
 	state.progress[originalServiceID(job)] = &originalServiceProgress{enabled: true, text: job.definition.Name + " 开始执行 ...", updated: at, data: map[string]json.RawMessage{
 		"id": originalServiceEncode(originalServiceID(job)), "name": originalServiceEncode(job.definition.Name), "provider": originalServiceEncode(originalServiceProvider(job)), "status": originalServiceEncode("running"), "success": json.RawMessage(`null`), "started_at": originalServiceEncode(job.lastStarted), "finished_at": json.RawMessage(`null`), "error": json.RawMessage(`null`),
@@ -118,10 +119,10 @@ func (a *App) executeOriginalService(ctx context.Context, job *originalDirectJob
 		result, err = job.object.callOriginalMethod(ctx, job.definition.Handler, input)
 	}
 	errorText := originalServiceResultError(result.Result)
+	failed := err != nil || errorText != ""
 	if err != nil {
-		errorText = "插件定时方法执行失败" // SDK errors are intentionally opaque, not fabricated tracebacks.
+		errorText = a.reportOriginalServiceExecutionError(ctx, job, err)
 		a.log("ERROR", "plugins", "service_failed", errorText, "", "")
-		a.reportOriginalPluginExecutionError(ctx, "system", job.definition.Name+" 执行失败", map[string]any{"type": "scheduler", "scheduler_id": originalServiceID(job), "scheduler_name": job.definition.Name}, err)
 	}
 	errorText = a.clean(errorText)
 	state := &a.pluginOriginalDirectJobs
@@ -138,6 +139,7 @@ func (a *App) executeOriginalService(ctx context.Context, job *originalDirectJob
 	if current != nil {
 		current.running = false
 		current.lastFinished, current.lastError = finishedAt, errorText
+		current.lastErrorSet = failed
 		name, provider = current.definition.Name, originalServiceProvider(current)
 	}
 	progress := a.originalServiceProgressGetLocked(originalServiceID(job), time.Now())
@@ -148,20 +150,20 @@ func (a *App) executeOriginalService(ctx context.Context, job *originalDirectJob
 	progress.updated = time.Now()
 	status := "success"
 	progress.text = name + " 执行完成"
-	if errorText == "" {
+	if !failed {
 		progress.value = 100
 	} else {
 		status = "failed"
 		progress.text = name + " 执行失败"
 	}
 	progress.data["status"] = originalServiceEncode(status)
-	progress.data["success"] = originalServiceEncode(errorText == "")
+	progress.data["success"] = originalServiceEncode(!failed)
 	progress.data["finished_at"] = originalServiceEncode(finishedAt)
 	progress.data["id"] = originalServiceEncode(jobID)
 	progress.data["name"] = originalServiceEncode(name)
 	progress.data["provider"] = originalServiceEncode(provider)
 	progress.data["error"] = json.RawMessage(`null`)
-	if errorText != "" {
+	if failed {
 		progress.data["error"] = originalServiceEncode(errorText)
 	}
 }
@@ -241,6 +243,10 @@ func (a *App) originalServiceProgressSnapshotLocked(jobID string) map[string]any
 				out[key] = value
 			}
 		}
+	}
+	if job != nil && job.lastErrorSet {
+		// Source distinguishes a present empty exception from None.
+		out["error"] = job.lastError
 	}
 	if progress != nil {
 		data := map[string]json.RawMessage{}

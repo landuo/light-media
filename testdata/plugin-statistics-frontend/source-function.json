@@ -1,0 +1,10 @@
+{
+  "source_revision": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source_path": "src/views/plugin/PluginCardListView.vue",
+  "source_file_sha256": "60fc3baeb5b4f1a39842214aa06bc7c7d49955311b29ddde44c2e576b0dfb88a",
+  "line_start": 859,
+  "line_end": 865,
+  "function": "async function getPluginStatistics() {\n  try {\n    PluginStatistics.value = await api.get('plugin/statistic')\n  } catch (error) {\n    console.error(error)\n  }\n}",
+  "function_sha256": "4eec94d523434c7a02299d49012d0a22bd231039e2a136d8a07ecdbaba2a3598",
+  "scope": "Exact source function executed as a controlled JavaScript component observation; backend actualHTTP and officialbrowser are separate gates"
+}

@@ -30,6 +30,7 @@ type rpcValue struct {
 	Kind    string          `json:"kind,omitempty"`
 	Payload json.RawMessage `json:"payload,omitempty"`
 	Code    string          `json:"code,omitempty"`
+	Detail  *string         `json:"detail,omitempty"`
 }
 
 func strictJSON(raw []byte, value any) error {
@@ -68,7 +69,10 @@ func (f Frame) MarshalJSON() ([]byte, error) {
 		}
 		value.Kind = f.Type
 		if f.Error != nil {
-			value.Code = f.Error.Code
+			if !validCallbackErrorDetail(f.Type, f.Error.Code, f.Error.Detail) {
+				return nil, failure("invalid_frame")
+			}
+			value.Code, value.Detail = f.Error.Code, f.Error.Detail
 			raw, err := json.Marshal(value)
 			if err != nil {
 				return nil, failure("invalid_frame")
@@ -138,7 +142,7 @@ func (f *Frame) UnmarshalJSON(raw []byte) error {
 	var value rpcValue
 	decoded := Frame{ID: message.ID}
 	if message.Method != "" {
-		if message.Result != nil || message.Error != nil || strictJSON(message.Params, &value) != nil || value.Kind != "" || value.Code != "" {
+		if message.Result != nil || message.Error != nil || strictJSON(message.Params, &value) != nil || value.Kind != "" || value.Code != "" || value.Detail != nil {
 			return failure("invalid_frame")
 		}
 		switch {
@@ -161,9 +165,12 @@ func (f *Frame) UnmarshalJSON(raw []byte) error {
 			if message.Error.Code != -32000 || message.Error.Message != "plugin operation failed" || strictJSON(message.Error.Data, &value) != nil || value.Payload != nil || !identityPattern.MatchString(value.Code) {
 				return failure("invalid_frame")
 			}
-			decoded.Error = &ReplyError{Code: value.Code}
+			if !validCallbackErrorDetail(value.Kind, value.Code, value.Detail) {
+				return failure("invalid_frame")
+			}
+			decoded.Error = &ReplyError{Code: value.Code, Detail: value.Detail}
 		} else {
-			if strictJSON(message.Result, &value) != nil || !json.Valid(value.Payload) || value.Code != "" {
+			if strictJSON(message.Result, &value) != nil || !json.Valid(value.Payload) || value.Code != "" || value.Detail != nil {
 				return failure("invalid_frame")
 			}
 			decoded.Result = value.Payload

@@ -140,6 +140,10 @@ func (m *concurrentClient) readLoop() {
 				m.abort(failure("invalid_reply"))
 				return
 			}
+			if !validNegotiatedCallbackReply(frame.Error, m.transport.wire.callbackErrors) {
+				m.abort(failure("invalid_frame"))
+				return
+			}
 			call.mu.Lock()
 			if call.received {
 				call.mu.Unlock()
@@ -410,7 +414,7 @@ func (m *concurrentClient) callStarted(ctx context.Context, method string, paylo
 		if outcome.frame.Error.Code == "EXECUTION_CANCELED" {
 			return out, failure("execution_canceled")
 		}
-		return out, workerReplyFailure(outcome.frame.Error.Code)
+		return out, workerReplyCallbackFailure(outcome.frame.Error, m.transport.wire.callbackErrors)
 	}
 	out.Result = outcome.frame.Result
 	return out, nil

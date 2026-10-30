@@ -1,0 +1,158 @@
+{
+  "schema": "light-media.finite-ui-independent-review/v1",
+  "status": "PASS_FINITE_FUNCTIONAL_UI_AND_STATIC_ASSET_GATE_WITH_NATIVE_OBSERVATION_LIMIT",
+  "scope": [
+    "current joint services UI",
+    "scheduler dashboard UI",
+    "owned synthetic usage statistics/reporting UI",
+    "cold cleanup",
+    "static selected-asset closure"
+  ],
+  "source": {
+    "backend_sha": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "frontend_sha": "2829e3b08214348f05ff2f5beae644882eccad58"
+  },
+  "candidate_sha256": "bd30bc25e3fb5b98a9c670ce121c46d3b6b7770152fc9dcfb1a2423a16279a87",
+  "server_sha256": "65eb917a297d81e96e3e160f47ae6a025ba03501fd01178ef0c2493f3bdde61b",
+  "launcher_sha256": "8fdcaeec9d5aa0cf63f541070a5a3148cb20cbd2dfb4a71488304b6375ad39d9",
+  "candidate_paths_verified": 82,
+  "inherited_backend": {
+    "normal": {
+      "inherited_roots": 100,
+      "skip": 0,
+      "fail": 0,
+      "data_race": false,
+      "result_sha256": "161f61830c1e0f7b4949718d754aae3a061fee322d5421b11fe11b024cfd7603",
+      "log_binding_drift": []
+    },
+    "race": {
+      "inherited_roots": 100,
+      "skip": 0,
+      "fail": 0,
+      "data_race": false,
+      "result_sha256": "edb86006243ec448c25bc8452b66e4d31d0039dfbad42fac03cfe03036b7df97",
+      "log_binding_drift": []
+    }
+  },
+  "observed": {
+    "service": {
+      "held_running_first": true,
+      "held_next_time_empty": true,
+      "held_execute_disabled": true,
+      "gate_arrivals": 1,
+      "after_release_waiting_and_enabled": true,
+      "error_and_list_fail_clicks": "actual coordinator input transcriptions bound to successful tool receipts; waiting rows only",
+      "numeric_progress_visible": false
+    },
+    "dashboard": {
+      "initially_off": true,
+      "observed_grid_width": 4,
+      "observed_grid_height": 23,
+      "run_buttons": 0,
+      "countdowns_changed": true,
+      "capture_interval_seconds": 62.349086873,
+      "exact_60_second_browser_timing_claim": false,
+      "cold_persisted": true,
+      "restored_off": true
+    },
+    "statistics": {
+      "visible_A": [
+        {
+          "card": "OwnedHigher",
+          "count": "2.4k"
+        },
+        {
+          "card": "OwnedStandardFixture",
+          "count": "1.2k"
+        },
+        {
+          "card": "OwnedBase",
+          "count": "7"
+        }
+      ],
+      "visible_B": [
+        {
+          "card": "OwnedBase",
+          "count": "3.0k"
+        },
+        {
+          "card": "OwnedStandardFixture",
+          "count": "9"
+        },
+        {
+          "card": "OwnedHigher",
+          "count": "3"
+        }
+      ],
+      "malformed_fixture_200": "prior B retained",
+      "unavailable_fixture_503": "counts cleared",
+      "single_install_report_fixture_status": 503,
+      "install_success_toast": true,
+      "installed_artifact_sha256": "42f649334296b66910688735d23469d5807e93852257129a06607d404f8304ab",
+      "cold_bulk_fixture_status": 200,
+      "standard_occurrences_in_cold_bulk": 1,
+      "raw_uid_recorded": false,
+      "uid_comparison_scope": "within generation only"
+    }
+  },
+  "cleanup": {
+    "cold_proxy_empty": true,
+    "cold_center_empty": true,
+    "cold_sharing_enabled": false,
+    "cold_owned_service_rows": 0,
+    "dashboard_off": true,
+    "official_preview_stop_exit": 0,
+    "helper_shutdown_scope": "official managed lifecycle/IPC, not cross-namespace process inspection"
+  },
+  "asset_delivery": {
+    "embedded_files": 358,
+    "tracked_files_at_pre_stage_review": 194,
+    "emitted_files": 111,
+    "new_emitted_files": 47,
+    "older_untracked_not_emitted_retained_locally": 117,
+    "conservative_reachable_files": 134,
+    "reachable_older_untracked_files": 0,
+    "reachable_outside_tracked_union_emitted": 0,
+    "binary_bit_identical_clean_rebuild_claim": false,
+    "graph_sha256": "fd9c68036cf076c7786e4110b22e1513f6ff213684141032489c6615b282bbdf"
+  },
+  "limits": [
+    "Three native recorder attempts failed during descendant discovery; no same-runtime mapped executable/loader/libc observation is claimed.",
+    "Backend results are inherited actual executions, not new independent reruns.",
+    "Immediate outputs in service steps126/133 were read before clicking; no visible37/100 or inner callback outcome is claimed.",
+    "Fixture HTTP status is not asserted to be the app-facing HTTP status.",
+    "Action journal is a coordinator transcription of executed inputs, not an automatic per-request network trace.",
+    "Candidate excludes complete newer trigger-family and clone05c integration; no whole-platform completion claim."
+  ],
+  "selected_raw_result_sha256": {
+    "step85-owned-service-ready.json": "cf02c1597a112a52cb5e8bf91fe90f6561f0560af96f95e7fb3c4e2f22ec0bd7",
+    "step86-authorized-held-execute-retry.json": "9490b9b91d40a41bc42522e6dccef36af97cab66cd5ab41617e2233e95aaf856",
+    "step87-held-running-disabled.json": "a236fb167cecdf90b7cbc1caf71e5a00aa6687b4ee34c7bf2e5bd504e393c0cc",
+    "step90-held-still-running.json": "44e06e5b030ac85f48b7331e1dfa4ef2d81a296de8a60b2aed28f021e7faf288",
+    "step91-held-failure-waiting.json": "d6bdb42df13583919800f10c02914d25a08f0ea4953bd33e24bbdf9932ba159a",
+    "step114-statistics-market-a.json": "ea9ecb3dca782fd9f14dd88c7190c61b6907aeda650c92150e226696ae5f5a1c",
+    "step116-statistics-b-result.json": "0f8cda036f9a6e0fab96de39741597f892eb74e69c70799fac7a9b29c8d5c570",
+    "step118-malformed-statistics-keeps-b.json": "0f8cda036f9a6e0fab96de39741597f892eb74e69c70799fac7a9b29c8d5c570",
+    "step120-statistics-503-cleared.json": "6e14eafb0e886c5a4a689a9d729bf19471ea560f318280e3cc9e9039be2d3f2f",
+    "step122-standard-install-report-failure.json": "0602af409981b26fad6948507b2d07da43eada09000a18866ed67f3ff3805bb8",
+    "step123-standard-installed.json": "48f0efd1e3cf7a318f388896cd26e5f34d96c2d21ef09ab75d5135d07f9d163b",
+    "step126-service-cold-execute-error.json": "c309a08165a422304b86f83676df74a4617d4354cd259ae7bff9c7c08dd8365b",
+    "step127-service-error-returned.json": "97a0543368263cc865b6a35a3fc20e4dcbd2e7c0b6dac2cf26f367d06d69cb79",
+    "step128-service-recovery-options.json": "bbc32430bd99fdee4fa3d892a84d81b468d26bbcc9ad952dbc785faf81b2a51a",
+    "step133-service-recovery-execute.json": "d3c323f1e71d57ac7ee5fd8e011017b859524282bd387b1191685c842b1ef00f",
+    "step134-recovery-waiting-dashboard-nav.json": "9fddbf7eb8f18055c8e0941b762da0e002c60595a64b9bba5b92b2960a27b22f",
+    "step136-dashboard-loaded.json": "6805d2c0c07951f9b618330df281f34d21ce138a475e967ab616b58919725007",
+    "step138-dashboard-scheduler-enable.json": "084d0f5ac52f6d44d7870e2dcbd6d39d92623363e2b247057d4b5f5e9f4448ee",
+    "step139-dashboard-scheduler-live.json": "96652e952406a49575a2095adf914cb7f71fe78f5a95df31a103d602bc50b62f",
+    "step140-dashboard-after-minute.json": "569e206afd1b7454f210d882665a2d179a3efa58ccfae6eafbf74c166d79cc4e",
+    "step142-dashboard-cold-persisted.json": "60861a689bbc19b42a4c82247eb969be1681fb2373fc961e6a49959e9d13cf2a",
+    "step145-dashboard-off-confirm.json": "844fb3ae6e3cefc597e1f7e1aae3b043710335a570fdf17bfcb28b0945878280",
+    "step152-owned-tasks-removed.json": "f53ca6ae41e5273a41181f2527668401e91bc1fb2265fc5f8084b854aafb3952",
+    "step161-proxy-cold-empty.json": "03ea9df7e1208d9259f2c31e27366a4410be84c9b941f52c8d5d0e378ad4b99d",
+    "step163-statistics-cold-restored.json": "a19602bf8454d421d56236238025533ab798e07e375f15812e4948daa1d9459b",
+    "step165-disabled-tasks-cold-confirmed.json": "f5d544530d647020a9c4b341db2716bb1759a3b66d5a5d4cfc84e410cbdb21b8",
+    "official-start-cleanup-cold-ready.json": "2df99569fa7d8201fd56d9db37e5f30c7edc9d5dd2638c82523c937306a16736",
+    "official-stop-final-cleanup.json": "d09881ea83b0a0945046436f9e984ac7bdbad5409cea2b22010fb3c6667e85c1"
+  },
+  "publication_boundary": "Only owned fixture key values and hashes; no account data, credentials, raw UID, rejected full-settings material, raw logs or private runtime records included."
+}

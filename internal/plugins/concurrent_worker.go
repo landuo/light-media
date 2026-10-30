@@ -250,7 +250,7 @@ func (w *concurrentWorker) invoke(call *concurrentWorkerCall) {
 	if canceled {
 		reply.Error = &ReplyError{Code: "EXECUTION_CANCELED"}
 	} else if err != nil {
-		reply.Error = &ReplyError{Code: workerHandlerFailureCode(err)}
+		reply.Error = workerCallbackFailure(err, w.transport.wire.callbackErrors)
 	} else {
 		if len(result) == 0 {
 			result = json.RawMessage(`null`)

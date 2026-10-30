@@ -25,7 +25,13 @@ func TestOriginalServiceAPITokenActualSDK(t *testing.T) {
 		var result struct {
 			Data []PluginServiceInfo `json:"data"`
 		}
-		if r.Code != 200 || json.Unmarshal(r.Body.Bytes(), &result) != nil || len(result.Data) != 1 || result.Data[0].ID != "OwnedInput_owned_progress" {
+		var decodeErr error
+		if prefix == "/api/v1/" {
+			decodeErr = json.Unmarshal(r.Body.Bytes(), &result.Data)
+		} else {
+			decodeErr = json.Unmarshal(r.Body.Bytes(), &result)
+		}
+		if r.Code != 200 || decodeErr != nil || len(result.Data) != 1 || result.Data[0].ID != "OwnedInput_owned_progress" {
 			t.Fatal("API token could not query actual registered service", r.Code, r.Body.String())
 		}
 	}
@@ -63,17 +69,15 @@ func TestOriginalServiceAPITokenActualSDK(t *testing.T) {
 	}
 	r = callTest(t, a.Handler(), http.MethodGet, "/api/v2/dashboard/schedule2/OwnedInput_owned_progress/progress?token="+token, "", nil, "")
 	var progress struct {
-		Data struct {
-			Success bool `json:"success"`
-			Data    struct {
-				Status  string  `json:"status"`
-				Value   float64 `json:"value"`
-				Success bool    `json:"success"`
-				Error   string  `json:"error"`
-			} `json:"data"`
+		Success bool `json:"success"`
+		Data    struct {
+			Status  string  `json:"status"`
+			Value   float64 `json:"value"`
+			Success bool    `json:"success"`
+			Error   string  `json:"error"`
 		} `json:"data"`
 	}
-	if r.Code != 200 || json.Unmarshal(r.Body.Bytes(), &progress) != nil || !progress.Data.Success || progress.Data.Data.Status != "failed" || progress.Data.Data.Value != 37 || progress.Data.Data.Success || progress.Data.Data.Error != "owned service failure" {
+	if r.Code != 200 || json.Unmarshal(r.Body.Bytes(), &progress) != nil || !progress.Success || progress.Data.Status != "failed" || progress.Data.Value != 37 || progress.Data.Success || progress.Data.Error != "owned service failure" {
 		t.Fatal("token API returned before real worker result", r.Code, r.Body.String())
 	}
 	r = callTest(t, a.Handler(), http.MethodGet, "/api/dashboard/schedule2/missing/progress?token="+token, "", nil, "")

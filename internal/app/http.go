@@ -53,6 +53,9 @@ func writeJSON(w http.ResponseWriter, r *http.Request, data any) {
 	_ = json.NewEncoder(w).Encode(map[string]any{"data": data, "request_id": w.Header().Get("X-Request-ID")})
 }
 func (a *App) writeError(w http.ResponseWriter, r *http.Request, e error) {
+	if writeOriginalPluginServerError(w, e) {
+		return
+	}
 	var marketQuery *originalMarketQueryError
 	if errors.As(e, &marketQuery) {
 		w.Header().Set("Content-Type", "application/json")
@@ -130,7 +133,7 @@ func (a *App) handler() http.Handler {
 		w.Header().Set("X-Content-Type-Options", "nosniff")
 		w.Header().Set("Referrer-Policy", "same-origin")
 		w.Header().Set("X-Frame-Options", "DENY")
-		if a.servePluginOrganizationCompatAPI(w, r) || a.servePluginCustomAPI(w, r) || a.serveOriginalSchedulerTokenAPI(w, r) {
+		if a.serveOriginalPluginServerAPI(w, r) || a.servePluginOrganizationCompatAPI(w, r) || a.servePluginCustomAPI(w, r) || a.serveOriginalSchedulerTokenAPI(w, r) {
 			return
 		}
 		if strings.HasPrefix(r.URL.Path, "/api/") {
@@ -149,6 +152,15 @@ func (a *App) handler() http.Handler {
 					return
 				}
 				a.writeError(w, r, &APIError{"UNAUTHORIZED", "请先登录", 401})
+				return
+			}
+		}
+		// Known source service paths must reach their own slash redirect before
+		// ServeMux canonicalizes repeated slashes. Existing origin/session checks
+		// above still run first; token routes keep their separate authority path.
+		if strings.HasPrefix(r.URL.Path, "/api/") {
+			if route, ok := originalServiceWirePath(strings.TrimPrefix(r.URL.Path, "/api/")); ok && !route.token {
+				a.originalServiceWireHTTP(w, r, route)
 				return
 			}
 		}

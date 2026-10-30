@@ -25,15 +25,13 @@ func ownedProgressRead(t *testing.T, a *App, cookie *http.Cookie) map[string]jso
 	t.Helper()
 	r := callTest(t, a.Handler(), "GET", "/api/v1/dashboard/schedule/OwnedInput_owned_progress/progress", "", cookie, "")
 	var result struct {
-		Data struct {
-			Success bool                       `json:"success"`
-			Data    map[string]json.RawMessage `json:"data"`
-		} `json:"data"`
+		Success bool                       `json:"success"`
+		Data    map[string]json.RawMessage `json:"data"`
 	}
-	if r.Code != 200 || json.Unmarshal(r.Body.Bytes(), &result) != nil || !result.Data.Success {
+	if r.Code != 200 || json.Unmarshal(r.Body.Bytes(), &result) != nil || !result.Success {
 		t.Fatal("progress query", r.Code, r.Body.String())
 	}
-	return result.Data.Data
+	return result.Data
 }
 func TestOriginalServiceActualSDKProgressFailureAndNoop(t *testing.T) {
 	a, cookie := installOwnedInputFixture(t)
@@ -72,7 +70,7 @@ func TestOriginalServiceActualSDKProgressFailureAndNoop(t *testing.T) {
 		t.Fatal("worker progress not consumed", active)
 	}
 	r = callTest(t, a.Handler(), "GET", "/api/v1/system/runscheduler?jobid=OwnedInput_owned_progress", "", cookie, "")
-	assertOriginalRegistrySuccess(t, r.Code, r.Body.Bytes())
+	assertOriginalServiceWireSuccess(t, r.Code, r.Body.Bytes())
 	r = callTest(t, a.Handler(), "POST", "/api/plugins/services/run", `{"instance_id":"OwnedInput","service_id":"owned_progress"}`, cookie, "")
 	if r.Code != 400 || !strings.Contains(r.Body.String(), "PLUGIN_BUSY") {
 		t.Fatal("native busy semantics", r.Code, r.Body.String())
@@ -103,10 +101,10 @@ func TestOriginalServiceActualSDKProgressFailureAndNoop(t *testing.T) {
 }
 func TestOriginalServiceActualSDKResultTupleAndClock(t *testing.T) {
 	a, cookie := installOwnedInputFixture(t)
-	for _, sample := range []struct{ mode, status, err string }{{"list-fail", "success", "null"}, {"tuple-empty", "failed", `"定时任务返回失败"`}, {"error", "failed", `"插件定时方法执行失败"`}} {
+	for _, sample := range []struct{ mode, status, err string }{{"list-fail", "success", "null"}, {"tuple-empty", "failed", `"定时任务返回失败"`}, {"error", "failed", `"owned callback error"`}, {"error-empty", "failed", `""`}, {"error-sensitive", "failed", `"owned callback [REDACTED] [REDACTED] [URL]"`}} {
 		ownedProgressConfig(t, a, cookie, sample.mode, "", 3600000)
 		r := callTest(t, a.Handler(), "GET", "/api/v1/system/runscheduler?jobid=OwnedInput_owned_progress", "", cookie, "")
-		assertOriginalRegistrySuccess(t, r.Code, r.Body.Bytes())
+		assertOriginalServiceWireSuccess(t, r.Code, r.Body.Bytes())
 		a.wg.Wait()
 		progress := ownedProgressRead(t, a, cookie)
 		if string(progress["status"]) != `"`+sample.status+`"` || string(progress["error"]) != sample.err {
@@ -115,15 +113,15 @@ func TestOriginalServiceActualSDKResultTupleAndClock(t *testing.T) {
 		if sample.status == "success" && string(progress["value"]) != "100" {
 			t.Fatal("successful list must complete", progress)
 		}
-		if sample.mode == "error" {
+		if strings.HasPrefix(sample.mode, "error") {
 			message := a.systemMessages.get("system")
-			if !strings.Contains(string(message), "Go 插件执行失败") || strings.Contains(string(message), "owned callback error") {
+			if strings.Contains(string(message), "OWNED_PASSWORD") || strings.Contains(string(message), "OWNED_TOKEN") || (sample.mode == "error" && !strings.Contains(string(message), "owned callback error")) {
 				t.Fatal("safe system message missing", string(message))
 			}
 			events := ownedInputEvents(t, a, cookie, "OwnedInput")
 			found := false
 			for _, event := range events {
-				if strings.Contains(string(event), `"type":"scheduler"`) && strings.Contains(string(event), `"diagnostic_source":"go-sdk-error-code/v1"`) && strings.Contains(string(event), `"traceback":""`) {
+				if strings.Contains(string(event), `"type":"scheduler"`) && strings.Contains(string(event), `"diagnostic_source":"go-sdk-callback-detail/v1"`) && strings.Contains(string(event), `"traceback":""`) && strings.Contains(string(event), `"error":`+sample.err) {
 					found = true
 				}
 			}
@@ -180,7 +178,7 @@ func TestOriginalServiceActualSDKSuffixReplacementAndSyncWait(t *testing.T) {
 			t.Fatal("invalid last declaration retained old clock", services)
 		}
 		r = callTest(t, a.Handler(), "GET", "/api/v1/system/runscheduler?jobid=OwnedInput_shared", "", cookie, "")
-		assertOriginalRegistrySuccess(t, r.Code, r.Body.Bytes())
+		assertOriginalServiceWireSuccess(t, r.Code, r.Body.Bytes())
 		progress := a.originalServiceProgressSnapshot("OwnedInput_shared")
 		status, _ := json.Marshal(progress["status"])
 		if string(status) != `"failed"` {

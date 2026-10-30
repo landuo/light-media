@@ -29,7 +29,7 @@ func TestOriginalPluginServerRatingDefaultsAndExplicitNullMatchSource(t *testing
 		status         int
 	}{
 		{"/api/plugins/rating/Owned", `{"plugin_id":"Owned"}`, http.StatusOK},
-		{"/api/plugins/rating/Owned", `{"plugin_id":"Owned","average_rating":null,"rating_count":0,"user_rating":null}`, http.StatusBadGateway},
+		{"/api/plugins/rating/Owned", `{"plugin_id":"Owned","average_rating":null,"rating_count":0,"user_rating":null}`, http.StatusInternalServerError},
 		{"/api/plugins/rating", `{"Owned":{"plugin_id":"Owned"}}`, http.StatusOK},
 	} {
 		body.Store(entry.response)

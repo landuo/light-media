@@ -108,7 +108,8 @@ func TestPluginServicesProductionCLI(t *testing.T) {
 		t.Fatal(err)
 	}
 	token := hex.EncodeToString(entropy[:])
-	bootstrap, _ := json.Marshal(map[string]any{"username": "service-acceptance", "password": "owned-service-browser-password", "settings": Settings{APIToken: token, PluginMarkets: []string{repository.URL + "/index"}}})
+	disabled, emptyServer := false, ""
+	bootstrap, _ := json.Marshal(map[string]any{"username": "service-acceptance", "password": "owned-service-browser-password", "settings": Settings{APIToken: token, PluginMarkets: []string{repository.URL + "/index"}, PluginStatisticShare: &disabled, PluginServerURL: &emptyServer}})
 	setup := exec.Command(serverBinary, "--data-dir", dir, "--bootstrap-stdin")
 	setup.Stdin = bytes.NewReader(bootstrap)
 	if output, err := setup.CombinedOutput(); err != nil || !bytes.Contains(output, []byte("bootstrap_complete")) {
@@ -216,15 +217,13 @@ func TestPluginServicesProductionCLI(t *testing.T) {
 	progress := func(id string) map[string]json.RawMessage {
 		t.Helper()
 		var response struct {
-			Data struct {
-				Success bool
-				Data    map[string]json.RawMessage
-			}
+			Success bool
+			Data    map[string]json.RawMessage
 		}
-		if json.Unmarshal(request("GET", "/api/v1/dashboard/schedule/"+id+"/progress", nil, 200), &response) != nil || !response.Data.Success {
+		if json.Unmarshal(request("GET", "/api/v1/dashboard/schedule/"+id+"/progress", nil, 200), &response) != nil || !response.Success {
 			t.Fatal("actual progress not available", id)
 		}
-		return response.Data.Data
+		return response.Data
 	}
 	list := func() []PluginServiceInfo {
 		t.Helper()
@@ -250,6 +249,7 @@ func TestPluginServicesProductionCLI(t *testing.T) {
 		success("PUT", "/api/plugins/"+id, map[string]any{"enabled": true, "services": defs})
 	}
 	start()
+	assertOriginalServiceWireBoundaryCLI(t, client, origin, token)
 	success("POST", "/api/plugins/install", map[string]any{"plugin_id": "OwnedInput", "repo_url": repository.URL + "/index"})
 	defs := []map[string]any{definition("a-slow", 7200, "tuple-fail", "/manual"), definition("z-fast", 3600, "list-fail", "/manual"), definition("held", 10800, "tuple-fail", "/held")}
 	configure("OwnedInput", defs)

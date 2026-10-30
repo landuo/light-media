@@ -1,0 +1,3976 @@
+{
+  "source_sha": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_kind": "normally imported complete factory+router+helper+schemas+SQLite with actual owned HTTP center; no full daemon/JWT/browser",
+  "versions": {
+    "fastapi": "0.136.3",
+    "pydantic": "2.14.2",
+    "pydantic-core": "2.50.2",
+    "httpx": "0.28.1",
+    "cachetools": "7.1.8"
+  },
+  "source_result_sha256": "2d720bc3f91a1b346fa27911c3a4391a6f1c2545fbc074e6e536963e4df122d5",
+  "driver_sha256": "6ba1be7ef57fa32b86cd44efaa755ef99ecdff6720d313d0a995056ac19381d2",
+  "scope": "Actual source HTTP; native target success data wrapper is unwrapped for comparing API adapter semantics; error500 body/content-type exact; no browser/auth/daemon claim",
+  "observations": [
+    {
+      "case": "request-value-0",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": null}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"float_type\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a valid number\",\"input\":null}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-1",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": true}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.0
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-2",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": false}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be greater than or equal to 0.1\",\"input\":false,\"ctx\":{\"ge\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-3",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be greater than or equal to 0.1\",\"input\":0,\"ctx\":{\"ge\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-4",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.1}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.1
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-5",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 5}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 5.0
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-6",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 5.1}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be less than or equal to 5\",\"input\":5.1,\"ctx\":{\"le\":5.0}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-7",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": -0.1}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be greater than or equal to 0.1\",\"input\":-0.1,\"ctx\":{\"ge\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-8",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.55}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":4.55,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-9",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": []}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"float_type\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a valid number\",\"input\":[]}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-10",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": {}}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"float_type\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a valid number\",\"input\":{}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-11",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"float_parsing\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a valid number, unable to parse string as a number\",\"input\":\"\"}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-12",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"bad\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"float_parsing\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a valid number, unable to parse string as a number\",\"input\":\"bad\"}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-13",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"nan\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be less than or equal to 5\",\"input\":\"nan\",\"ctx\":{\"le\":5.0}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-14",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"NaN\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be less than or equal to 5\",\"input\":\"NaN\",\"ctx\":{\"le\":5.0}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-15",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"+NaN\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be less than or equal to 5\",\"input\":\"+NaN\",\"ctx\":{\"le\":5.0}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-16",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"-NaN\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be less than or equal to 5\",\"input\":\"-NaN\",\"ctx\":{\"le\":5.0}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-17",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"inf\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be less than or equal to 5\",\"input\":\"inf\",\"ctx\":{\"le\":5.0}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-18",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"Infinity\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be less than or equal to 5\",\"input\":\"Infinity\",\"ctx\":{\"le\":5.0}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-19",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"-Infinity\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be greater than or equal to 0.1\",\"input\":\"-Infinity\",\"ctx\":{\"ge\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-20",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"+inf\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be less than or equal to 5\",\"input\":\"+inf\",\"ctx\":{\"le\":5.0}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-21",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"1e999\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be less than or equal to 5\",\"input\":\"1e999\",\"ctx\":{\"le\":5.0}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-22",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"1e-999\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be greater than or equal to 0.1\",\"input\":\"1e-999\",\"ctx\":{\"ge\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-23",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"4.5\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-24",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \" 4.5 \"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-25",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"4.5 \"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-26",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"4.5\\u001c\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"float_parsing\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a valid number, unable to parse string as a number\",\"input\":\"4.5\\u001c\"}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-27",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"٤.٥\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"float_parsing\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a valid number, unable to parse string as a number\",\"input\":\"٤.٥\"}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-28",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"４.５\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"float_parsing\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a valid number, unable to parse string as a number\",\"input\":\"４.５\"}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-29",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"1_.0\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.0
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-30",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"1._0\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.0
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-31",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"1e_0\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.0
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-32",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"1_e0\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.0
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-33",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"_1\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"float_parsing\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a valid number, unable to parse string as a number\",\"input\":\"_1\"}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-34",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"1_\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"float_parsing\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a valid number, unable to parse string as a number\",\"input\":\"1_\"}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-35",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"1__0\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"float_parsing\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a valid number, unable to parse string as a number\",\"input\":\"1__0\"}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-36",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": \"1_0e-1\"}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.0
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-37",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 123456789012345678901234567890}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be less than or equal to 5\",\"input\":123456789012345678901234567890,\"ctx\":{\"le\":5.0}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-38",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.1}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.1
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-39",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.2}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.2
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-40",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.3}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.3
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-41",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.4}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.4
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-42",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.5}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-43",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.6}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.6
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-44",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.7}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.7
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-45",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.8}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.8
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-46",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.9}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.9
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-47",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.0}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.0
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-48",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.1}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.1
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-49",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.2}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.2
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-50",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.3}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.3
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-51",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.4}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.4
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-52",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.5}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-53",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.6}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.6
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-54",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.7}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.7
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-55",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.8}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.8
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-56",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.9}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.9
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-57",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.0}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.0
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-58",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.1}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.1
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-59",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.2}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.2
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-60",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.3}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.3
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-61",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.4}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.4
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-62",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.5}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-63",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.6}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.6
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-64",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.7}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.7
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-65",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.8}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.8
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-66",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.9}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.9
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-67",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 3.0}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 3.0
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-68",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 3.1}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 3.1
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-69",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 3.2}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 3.2
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-70",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 3.3}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 3.3
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-71",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 3.4}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 3.4
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-72",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 3.5}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 3.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-73",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 3.6}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 3.6
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-74",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 3.7}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 3.7
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-75",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 3.8}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 3.8
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-76",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 3.9}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 3.9
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-77",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.0}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.0
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-78",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.1}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.1
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-79",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.2}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.2
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-80",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.3}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.3
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-81",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.4}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.4
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-82",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.5}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-83",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.6}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.6
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-84",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.7}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.7
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-85",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.8}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.8
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-86",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.9}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.9
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-87",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 5.0}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 5.0
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-88",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.10000000000100001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.10000000000100001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-89",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.099999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be greater than or equal to 0.1\",\"input\":0.099999999999,\"ctx\":{\"ge\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-90",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.10000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.10000000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-91",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.09999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be greater than or equal to 0.1\",\"input\":0.09999999999,\"ctx\":{\"ge\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-92",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.1000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.1000000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-93",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.09999999990000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be greater than or equal to 0.1\",\"input\":0.09999999990000001,\"ctx\":{\"ge\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-94",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.100000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.100000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-95",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.099999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"greater_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be greater than or equal to 0.1\",\"input\":0.099999999,\"ctx\":{\"ge\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-96",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.10000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":0.10000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-97",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.09999999000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":0.09999999000000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-98",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.10000010000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":0.10000010000000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-99",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.0999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":0.0999999,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-100",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.20000000000100002}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.20000000000100002
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-101",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.199999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.199999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-102",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.20000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.20000000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-103",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.19999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.19999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-104",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.20000000010000002}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.20000000010000002
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-105",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.1999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.1999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-106",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.200000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.200000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-107",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.199999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.199999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-108",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.20000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":0.20000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-109",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.19999999000000002}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":0.19999999000000002,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-110",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.20000010000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":0.20000010000000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-111",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.1999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":0.1999999,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-112",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.000000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.000000000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-113",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.999999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.999999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-114",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.00000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.00000000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-115",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.99999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.99999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-116",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.0000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 1.0000000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-117",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.9999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.9999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-118",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":1.000000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-119",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 0.999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-120",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.00000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":1.00000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-121",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.99999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":0.99999999,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-122",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1.0000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":1.0000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-123",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 0.9999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":0.9999999,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-124",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.500000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.500000000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-125",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.499999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.499999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-126",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.50000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.50000000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-127",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.49999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.49999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-128",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.5000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.5000000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-129",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.4999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 2.4999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-130",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.500000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":2.500000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-131",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.499999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":2.499999999,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-132",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.50000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":2.50000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-133",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.49999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":2.49999999,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-134",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.5000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":2.5000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-135",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 2.4999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":2.4999999,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-136",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.500000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.500000000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-137",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.499999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.499999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-138",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.50000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.50000000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-139",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.49999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.49999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-140",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.5000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5000000001
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-141",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.4999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.4999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-142",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.500000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":4.500000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-143",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.499999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":4.499999999,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-144",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.50000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":4.50000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-145",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.49999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":4.49999999,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-146",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.5000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":4.5000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-147",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.4999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":4.4999999,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-148",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 5.000000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be less than or equal to 5\",\"input\":5.000000000001,\"ctx\":{\"le\":5.0}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-149",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.999999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.999999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-150",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 5.00000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be less than or equal to 5\",\"input\":5.00000000001,\"ctx\":{\"le\":5.0}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-151",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.99999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.99999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-152",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 5.0000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be less than or equal to 5\",\"input\":5.0000000001,\"ctx\":{\"le\":5.0}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-153",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.9999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"plugin_id\":\"Owned\",\"average_rating\":4.5}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.9999999999
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "request-value-154",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 5.000000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":5.000000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-155",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.999999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":4.999999999,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-156",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 5.00000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":5.00000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-157",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.99999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":4.99999999,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-158",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 5.0000001}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":5.0000001,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-value-159",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 4.9999999}",
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":4.5}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"multiple_of\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Input should be a multiple of 0.1\",\"input\":4.9999999,\"ctx\":{\"multiple_of\":0.1}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-0",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{}",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"rating\"],\"msg\":\"Field required\",\"input\":{}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-1",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "null",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-2",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "[]",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"model_attributes_type\",\"loc\":[\"body\"],\"msg\":\"Input should be a valid dictionary or object to extract fields from\",\"input\":[]}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-3",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "0",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"model_attributes_type\",\"loc\":[\"body\"],\"msg\":\"Input should be a valid dictionary or object to extract fields from\",\"input\":0}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-4",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "\"text\"",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"model_attributes_type\",\"loc\":[\"body\"],\"msg\":\"Input should be a valid dictionary or object to extract fields from\",\"input\":\"text\"}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-5",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "true",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"model_attributes_type\",\"loc\":[\"body\"],\"msg\":\"Input should be a valid dictionary or object to extract fields from\",\"input\":true}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-6",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\"],\"msg\":\"Field required\",\"input\":null}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-7",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": " ",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"json_invalid\",\"loc\":[\"body\",1],\"msg\":\"JSON decode error\",\"input\":{},\"ctx\":{\"error\":\"Expecting value\"}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-8",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"json_invalid\",\"loc\":[\"body\",1],\"msg\":\"JSON decode error\",\"input\":{},\"ctx\":{\"error\":\"Expecting property name enclosed in double quotes\"}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-9",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"json_invalid\",\"loc\":[\"body\",10],\"msg\":\"JSON decode error\",\"input\":{},\"ctx\":{\"error\":\"Expecting value\"}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-10",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\": 1,}",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"json_invalid\",\"loc\":[\"body\",13],\"msg\":\"JSON decode error\",\"input\":{},\"ctx\":{\"error\":\"Expecting property name enclosed in double quotes\"}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-11",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":1} null",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"json_invalid\",\"loc\":[\"body\",13],\"msg\":\"JSON decode error\",\"input\":{},\"ctx\":{\"error\":\"Extra data\"}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-12",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "broken",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 422,
+      "content_type": "application/json",
+      "body": "{\"detail\":[{\"type\":\"json_invalid\",\"loc\":[\"body\",0],\"msg\":\"JSON decode error\",\"input\":{},\"ctx\":{\"error\":\"Expecting value\"}}]}",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-13",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":NaN}",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-14",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":Infinity}",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-15",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":-Infinity}",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-16",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":1e999}",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": []
+    },
+    {
+      "case": "request-shape-17",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":1,\"rating\":4.5}",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-0",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-1",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "null",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-2",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "[]",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-3",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "true",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-4",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "\"text\"",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-5",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "broken",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"plugin_id\":\"Owned\",\"average_rating\":0.0,\"rating_count\":0,\"user_rating\":null}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-6",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":\"Owned\"}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"plugin_id\":\"Owned\",\"average_rating\":0.0,\"rating_count\":0,\"user_rating\":null}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-7",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":null}",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-8",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":3}",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-9",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":true}",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-10",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":null}",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-11",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":\"NaN\"}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"plugin_id\":\"Owned\",\"average_rating\":null,\"rating_count\":0,\"user_rating\":null}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-12",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":\"Infinity\",\"user_rating\":\"-inf\"}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"plugin_id\":\"Owned\",\"average_rating\":null,\"rating_count\":0,\"user_rating\":null}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-13",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":NaN}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"plugin_id\":\"Owned\",\"average_rating\":null,\"rating_count\":0,\"user_rating\":null}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-14",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":\"Owned\",\"average_rating\":1e999}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"plugin_id\":\"Owned\",\"average_rating\":null,\"rating_count\":0,\"user_rating\":null}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-15",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":\"Owned\",\"rating_count\":99999999999999999999999999999999999}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"plugin_id\":\"Owned\",\"average_rating\":0.0,\"rating_count\":99999999999999999999999999999999999,\"user_rating\":null}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-16",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":\"Owned\",\"rating_count\":1.0}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"plugin_id\":\"Owned\",\"average_rating\":0.0,\"rating_count\":1,\"user_rating\":null}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-17",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":\"Owned\",\"rating_count\":1e19}",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-18",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":\"Owned\",\"rating_count\":\"1_000\"}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"plugin_id\":\"Owned\",\"average_rating\":0.0,\"rating_count\":1000,\"user_rating\":null}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-19",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":\"Owned\",\"rating_count\":\"４\"}",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-20",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":\"Owned\",\"rating_count\":null}",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "response-21",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{\"plugin_id\":\"Owned\",\"extra\":true}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"plugin_id\":\"Owned\",\"average_rating\":0.0,\"rating_count\":0,\"user_rating\":null}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "statistics-0",
+      "method": "GET",
+      "path": "statistic",
+      "request_body": null,
+      "remote_body": "{\"Owned\":23}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"Owned\":23}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/statistic",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "statistics-1",
+      "method": "GET",
+      "path": "statistic",
+      "request_body": null,
+      "remote_body": "[]",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/statistic",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "statistics-2",
+      "method": "GET",
+      "path": "statistic",
+      "request_body": null,
+      "remote_body": "null",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/statistic",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "statistics-3",
+      "method": "GET",
+      "path": "statistic",
+      "request_body": null,
+      "remote_body": "broken",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/statistic",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "statistics-4",
+      "method": "GET",
+      "path": "statistic",
+      "request_body": null,
+      "remote_body": "{\"Owned\":NaN}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"Owned\":null}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/statistic",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "statistics-5",
+      "method": "GET",
+      "path": "statistic",
+      "request_body": null,
+      "remote_body": "{\"Owned\":1e999}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"Owned\":null}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/statistic",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "statistics-6",
+      "method": "GET",
+      "path": "statistic",
+      "request_body": null,
+      "remote_body": "{\"Owned\":9999999999999999999999999999999999}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"Owned\":9999999999999999999999999999999999}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/statistic",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "batch-0",
+      "method": "GET",
+      "path": "rating",
+      "request_body": null,
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "batch-1",
+      "method": "GET",
+      "path": "rating?plugin_ids=Owned,Other",
+      "request_body": null,
+      "remote_body": "{\"Owned\":{\"plugin_id\":\"Owned\"}}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"Owned\":{\"plugin_id\":\"Owned\",\"average_rating\":0.0,\"rating_count\":0,\"user_rating\":null}}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=Owned%2COther",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "batch-2",
+      "method": "GET",
+      "path": "rating?plugin_ids=",
+      "request_body": null,
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "batch-3",
+      "method": "GET",
+      "path": "rating?plugin_ids=First&plugin_ids=Last,Owned",
+      "request_body": null,
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=Last%2COwned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "batch-4",
+      "method": "GET",
+      "path": "rating",
+      "request_body": null,
+      "remote_body": "[]",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "batch-5",
+      "method": "GET",
+      "path": "rating",
+      "request_body": null,
+      "remote_body": "null",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "batch-6",
+      "method": "GET",
+      "path": "rating",
+      "request_body": null,
+      "remote_body": "broken",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "batch-7",
+      "method": "GET",
+      "path": "rating",
+      "request_body": null,
+      "remote_body": "{\"Owned\":null}",
+      "remote_status": 200,
+      "status": 500,
+      "content_type": "text/plain; charset=utf-8",
+      "body": "Internal Server Error",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "batch-8",
+      "method": "GET",
+      "path": "rating",
+      "request_body": null,
+      "remote_body": "{\"Owned\":{\"plugin_id\":\"Owned\",\"average_rating\":\"NaN\"}}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"Owned\":{\"plugin_id\":\"Owned\",\"average_rating\":null,\"rating_count\":0,\"user_rating\":null}}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "submit-result-0",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":4.5}",
+      "remote_body": "null",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":false,\"message\":\"连接MoviePilot服务器失败\",\"message_i18n\":\"连接MoviePilot服务器失败\",\"data\":{}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "submit-result-1",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":4.5}",
+      "remote_body": "[]",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":[]}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "submit-result-2",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":4.5}",
+      "remote_body": "false",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":false}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "submit-result-3",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":4.5}",
+      "remote_body": "0",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":0}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "submit-result-4",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":4.5}",
+      "remote_body": "\"text\"",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":\"text\"}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "submit-result-5",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":4.5}",
+      "remote_body": "broken",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":false,\"message\":\"连接MoviePilot服务器失败\",\"message_i18n\":\"连接MoviePilot服务器失败\",\"data\":{}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "submit-result-6",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":4.5}",
+      "remote_body": "{\"success\":false}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"success\":false}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "submit-result-7",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":4.5}",
+      "remote_body": "NaN",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":null}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "submit-result-8",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":4.5}",
+      "remote_body": "{\"value\":NaN}",
+      "remote_status": 200,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{\"value\":null}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "center503-0",
+      "method": "GET",
+      "path": "statistic",
+      "request_body": null,
+      "remote_body": "{}",
+      "remote_status": 503,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/statistic",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "center503-1",
+      "method": "GET",
+      "path": "rating",
+      "request_body": null,
+      "remote_body": "{}",
+      "remote_status": 503,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "center503-2",
+      "method": "GET",
+      "path": "rating/Owned",
+      "request_body": null,
+      "remote_body": "{}",
+      "remote_status": 503,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"plugin_id\":\"Owned\",\"average_rating\":0.0,\"rating_count\":0,\"user_rating\":null}",
+      "peer_calls": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "center503-3",
+      "method": "POST",
+      "path": "rating/Owned",
+      "request_body": "{\"rating\":4.5}",
+      "remote_body": "{}",
+      "remote_status": 503,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":false,\"message\":\"连接MoviePilot服务器失败\",\"message_i18n\":\"连接MoviePilot服务器失败\",\"data\":{}}",
+      "peer_calls": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.5
+          },
+          "uid": true
+        }
+      ]
+    },
+    {
+      "case": "missing-install",
+      "method": "POST",
+      "path": "rating/Missing",
+      "request_body": "{\"rating\":4.5}",
+      "remote_body": "{}",
+      "remote_status": 200,
+      "status": 400,
+      "content_type": "application/json",
+      "body": "{\"success\":false,\"message\":\"插件 Missing 未安装，无法评分\",\"data\":{}}",
+      "peer_calls": []
+    }
+  ]
+}

@@ -86,15 +86,13 @@ func verifyOwnedProductionAsyncServices(t *testing.T,
 	progress := func() map[string]json.RawMessage {
 		t.Helper()
 		var value struct {
-			Data struct {
-				Success bool
-				Data    map[string]json.RawMessage
-			}
+			Success bool
+			Data    map[string]json.RawMessage
 		}
-		if json.Unmarshal(request("GET", "/api/v1/dashboard/schedule/OwnedInput_async/progress", nil, 200), &value) != nil || !value.Data.Success {
+		if json.Unmarshal(request("GET", "/api/v1/dashboard/schedule/OwnedInput_async/progress", nil, 200), &value) != nil || !value.Success {
 			t.Fatal("actual asynchronous progress unavailable")
 		}
-		return value.Data.Data
+		return value.Data
 	}
 	waitStatus := func(status string) map[string]json.RawMessage {
 		t.Helper()

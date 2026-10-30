@@ -228,6 +228,8 @@ type Identity struct {
 
 type ReplyError struct {
 	Code string `json:"code"`
+	// Detail is negotiated callback data, never a transport or host error.
+	Detail *string `json:"detail,omitempty"`
 }
 
 // Frame is a single bounded JSON line. All calls, including reverse host calls,
@@ -244,6 +246,7 @@ type Frame struct {
 }
 
 type Handshake struct {
+	CallbackErrors    int                     `json:"callback_errors,omitempty"`
 	TransportClose    int                     `json:"transport_close,omitempty"`
 	ConcurrentSession int                     `json:"concurrent_session,omitempty"`
 	Protocol          int                     `json:"protocol"`
@@ -256,9 +259,13 @@ type Handshake struct {
 	PersistentSession int                     `json:"persistent_session,omitempty"`
 }
 
-// Error deliberately contains only a local code. Worker output, command paths,
-// stderr and wrapped transport errors never become public error messages.
-type Error struct{ Code string }
+// Error exposes only a local code through Error(). Callback detail is private
+// transport data and requires an explicit host-side redaction/authorization path.
+// Transport errors, stderr and host failures never carry callback detail.
+type Error struct {
+	Code           string
+	callbackDetail *string
+}
 
 func (e *Error) Error() string  { return "plugin: " + e.Code }
 func failure(code string) error { return &Error{Code: code} }
@@ -408,6 +415,9 @@ func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest
 	if json.Unmarshal(raw, &agreed) != nil || agreed.Protocol != ProtocolVersion || agreed.HostAPI != HostAPIVersion || agreed.PluginID != manifest.PluginID || agreed.Version != manifest.Version || !sameSet(agreed.Methods, manifest.Methods) || !sameSet(agreed.Capabilities, manifest.Capabilities) {
 		return out, failure("handshake_mismatch")
 	}
+	if err := session.negotiateCallbackErrors(agreed.CallbackErrors); err != nil {
+		return out, err
+	}
 	if agreed.Transport != nil {
 		if agreed.Transport.Version != 1 {
 			return out, failure("transport_mismatch")
@@ -509,6 +519,7 @@ type wireSession struct {
 	hostBudget                                                *runnerBudget
 	businessFailure                                           bool
 	scopedCallbacks                                           bool
+	callbackErrors                                            bool
 }
 
 func (s *wireSession) exchange(method string, payload json.RawMessage) (json.RawMessage, error) {
@@ -562,8 +573,11 @@ func (s *wireSession) exchange(method string, payload json.RawMessage) (json.Raw
 			return nil, failure("invalid_reply")
 		}
 		if frame.Error != nil {
+			if !validNegotiatedCallbackReply(frame.Error, s.callbackErrors) {
+				return nil, failure("invalid_frame")
+			}
 			s.businessFailure = frame.Error.Code == "OPERATION_FAILED" || frame.Error.Code == "MODULE_RATE_LIMITED"
-			return nil, workerReplyFailure(frame.Error.Code)
+			return nil, workerReplyCallbackFailure(frame.Error, s.callbackErrors)
 		}
 		if !json.Valid(frame.Result) {
 			return nil, failure("invalid_reply")
@@ -739,6 +753,9 @@ func (runner Runner) Start(lifeCtx context.Context, command Command, manifest Ma
 	var agreed Handshake
 	if json.Unmarshal(raw, &agreed) != nil || agreed.Protocol != ProtocolVersion || agreed.HostAPI != HostAPIVersion || agreed.PluginID != manifest.PluginID || agreed.Version != manifest.Version || !sameSet(agreed.Methods, manifest.Methods) || !sameSet(agreed.Capabilities, manifest.Capabilities) {
 		return nil, failure("handshake_mismatch")
+	}
+	if err := s.negotiateCallbackErrors(agreed.CallbackErrors); err != nil {
+		return nil, err
 	}
 	if agreed.PersistentSession != 1 {
 		return nil, failure("persistent_session_unsupported")

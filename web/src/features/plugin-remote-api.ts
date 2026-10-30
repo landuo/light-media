@@ -39,7 +39,8 @@ function cleanupRequest(config?: AxiosRequestConfig) {
   if (controller) activeRequests.delete(controller);
 }
 
-function routePluginAPI(value: string) {
+function routePluginAPI(value: string, method = 'get') {
+  method = method.toLowerCase();
   let path = value.replace(/^\//, '');
   if (path.startsWith('api/')) path = path.slice(4);
   let version = 'v1';
@@ -77,6 +78,15 @@ function routePluginAPI(value: string) {
     if (parts[0] === 'file') {
       return { path: '/' + version + '/plugin/' + parts.join('/') + query, host: false };
     }
+    // Preserve source statistics/rating v1/v2 wire rather than routing these
+    // through the native host envelope. Root PUT/DELETE are the generic
+    // configuration/uninstall operations and retain their existing adapter.
+    const serverParts = pathname.slice(7).replace(/\/+$/, '').split('/');
+    if (
+      ((serverParts[0] === 'statistic' || serverParts[0] === 'rating') && serverParts.length === 1 &&
+        method !== 'put' && method !== 'delete') ||
+      (serverParts[0] === 'rating' && serverParts.length === 2 && serverParts[1] !== '')
+    ) return { path: '/' + version + '/' + path, host: false };
     if (['sidebar_nav', 'remotes', 'folders'].includes(parts[0]!))
       return { path: '/' + version + '/' + path, host: false };
     if (pathname === 'plugin/installed') return { path: '/plugins/installed' + query, host: true };
@@ -89,15 +99,9 @@ function routePluginAPI(value: string) {
     return { path: '/' + version + '/' + path, host: false };
   if (pathname.startsWith('plugins/'))
     return { path: '/' + path, host: !/^plugins\/[^/]+\/api\//.test(pathname) };
-  if (
-    [
-      'system/runscheduler',
-      'system/runscheduler2',
-      'system/progress',
-      'dashboard/schedule',
-    ].includes(pathname)
-  )
-    return { path: '/' + version + '/' + path, host: true };
+  if (/^(?:system\/runscheduler2?|dashboard\/schedule2?(?:\/[^/]+\/progress)?)\/*$/.test(pathname))
+    return { path: '/' + version + '/' + path, host: false };
+  if (pathname === 'system/progress') return { path: '/' + version + '/' + path, host: true };
   return { path: '/' + path, host: true };
 }
 function resolvePluginRequest(config: AxiosRequestConfig) {
@@ -118,7 +122,7 @@ function resolvePluginRequest(config: AxiosRequestConfig) {
     throw new PluginRemoteError('插件接口地址无效：仅支持同源地址');
   const apiRoot = defaultBase.slice(0, -1);
   if (target.pathname === apiRoot || target.pathname.startsWith(apiRoot + '/')) {
-    const mapped = routePluginAPI(target.pathname.slice(apiRoot.length) + target.search);
+    const mapped = routePluginAPI(target.pathname.slice(apiRoot.length) + target.search, config.method);
     return { ...mapped, url: apiRoot + mapped.path, baseURL: '' };
   }
   // An explicit same-origin absolute URL or baseURL outside /api retains its
@@ -134,11 +138,11 @@ export function remotePluginAPIPath(
   pluginID: string,
   instance: string,
   path: string,
-  _method: string,
+  method: string,
 ) {
   if (!validPluginInstance(pluginID) || !validPluginInstance(instance))
     throw new PluginRemoteError('插件实例无效');
-  return resolvePluginRequest({ url: path }).path;
+  return resolvePluginRequest({ url: path, method }).path;
 }
 function configureClient(api: AxiosInstance, changed?: () => void | Promise<void>) {
   api.interceptors.request.use((config) => {

@@ -1,0 +1,717 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "kind": "whole normally imported dashboard/system routers, actual Scheduler/Manager/Progress and source create_app middleware; owned auth override/no lifespan/allother routes not included",
+  "versions": {
+    "fastapi": "0.136.3",
+    "starlette": "1.3.1",
+    "pydantic": "2.14.2",
+    "APScheduler": "3.11.2",
+    "cachetools": "7.1.8",
+    "httpx": "0.28.1"
+  },
+  "observations": [
+    {
+      "case": "v1dashboard/schedule_double_slash",
+      "path": "/api/v1/dashboard/schedule//?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v1/dashboard/schedule?jobid=unknown",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v1dashboard/schedule_head",
+      "path": "/api/v1/dashboard/schedule?jobid=unknown",
+      "method": "HEAD",
+      "allow": "GET",
+      "location": null,
+      "status": 405,
+      "content_type": "application/json",
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v1dashboard/schedule2_double_slash",
+      "path": "/api/v1/dashboard/schedule2//?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v1/dashboard/schedule2?jobid=unknown",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v1dashboard/schedule2_head",
+      "path": "/api/v1/dashboard/schedule2?jobid=unknown",
+      "method": "HEAD",
+      "allow": "GET",
+      "location": null,
+      "status": 405,
+      "content_type": "application/json",
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v1dashboard/schedule/unknown/progress_double_slash",
+      "path": "/api/v1/dashboard/schedule/unknown/progress//?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v1/dashboard/schedule/unknown/progress?jobid=unknown",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v1dashboard/schedule/unknown/progress_head",
+      "path": "/api/v1/dashboard/schedule/unknown/progress?jobid=unknown",
+      "method": "HEAD",
+      "allow": "GET",
+      "location": null,
+      "status": 405,
+      "content_type": "application/json",
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v1dashboard/schedule2/unknown/progress_double_slash",
+      "path": "/api/v1/dashboard/schedule2/unknown/progress//?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v1/dashboard/schedule2/unknown/progress?jobid=unknown",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v1dashboard/schedule2/unknown/progress_head",
+      "path": "/api/v1/dashboard/schedule2/unknown/progress?jobid=unknown",
+      "method": "HEAD",
+      "allow": "GET",
+      "location": null,
+      "status": 405,
+      "content_type": "application/json",
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v1system/runscheduler_double_slash",
+      "path": "/api/v1/system/runscheduler//?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v1/system/runscheduler?jobid=unknown",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v1system/runscheduler_head",
+      "path": "/api/v1/system/runscheduler?jobid=unknown",
+      "method": "HEAD",
+      "allow": "GET",
+      "location": null,
+      "status": 405,
+      "content_type": "application/json",
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v1system/runscheduler2_double_slash",
+      "path": "/api/v1/system/runscheduler2//?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v1/system/runscheduler2?jobid=unknown",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v1system/runscheduler2_head",
+      "path": "/api/v1/system/runscheduler2?jobid=unknown",
+      "method": "HEAD",
+      "allow": "GET",
+      "location": null,
+      "status": 405,
+      "content_type": "application/json",
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v1system/runscheduler_query_unknown;",
+      "path": "/api/v1/system/runscheduler?jobid=unknown;",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler_query_unknown;x=y",
+      "path": "/api/v1/system/runscheduler?jobid=unknown;x=y",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler_query_%3B",
+      "path": "/api/v1/system/runscheduler?jobid=%3B",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler_query_unknown",
+      "path": "/api/v1/system/runscheduler?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler_query_unknown%zz",
+      "path": "/api/v1/system/runscheduler?jobid=unknown%zz",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler_query_unknown%",
+      "path": "/api/v1/system/runscheduler?jobid=unknown%",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler_query_unknown%2",
+      "path": "/api/v1/system/runscheduler?jobid=unknown%2",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler_query_unknown%FF",
+      "path": "/api/v1/system/runscheduler?jobid=unknown%FF",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler2_query_unknown;",
+      "path": "/api/v1/system/runscheduler2?jobid=unknown;",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler2_query_unknown;x=y",
+      "path": "/api/v1/system/runscheduler2?jobid=unknown;x=y",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler2_query_%3B",
+      "path": "/api/v1/system/runscheduler2?jobid=%3B",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler2_query_unknown",
+      "path": "/api/v1/system/runscheduler2?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler2_query_unknown%zz",
+      "path": "/api/v1/system/runscheduler2?jobid=unknown%zz",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler2_query_unknown%",
+      "path": "/api/v1/system/runscheduler2?jobid=unknown%",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler2_query_unknown%2",
+      "path": "/api/v1/system/runscheduler2?jobid=unknown%2",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v1system/runscheduler2_query_unknown%FF",
+      "path": "/api/v1/system/runscheduler2?jobid=unknown%FF",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2dashboard/schedule_double_slash",
+      "path": "/api/v2/dashboard/schedule//?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v2/dashboard/schedule?jobid=unknown",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v2dashboard/schedule_head",
+      "path": "/api/v2/dashboard/schedule?jobid=unknown",
+      "method": "HEAD",
+      "allow": "GET",
+      "location": null,
+      "status": 405,
+      "content_type": "application/json",
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v2dashboard/schedule2_double_slash",
+      "path": "/api/v2/dashboard/schedule2//?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v2/dashboard/schedule2?jobid=unknown",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v2dashboard/schedule2_head",
+      "path": "/api/v2/dashboard/schedule2?jobid=unknown",
+      "method": "HEAD",
+      "allow": "GET",
+      "location": null,
+      "status": 405,
+      "content_type": "application/json",
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v2dashboard/schedule/unknown/progress_double_slash",
+      "path": "/api/v2/dashboard/schedule/unknown/progress//?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v2/dashboard/schedule/unknown/progress?jobid=unknown",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v2dashboard/schedule/unknown/progress_head",
+      "path": "/api/v2/dashboard/schedule/unknown/progress?jobid=unknown",
+      "method": "HEAD",
+      "allow": "GET",
+      "location": null,
+      "status": 405,
+      "content_type": "application/json",
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v2dashboard/schedule2/unknown/progress_double_slash",
+      "path": "/api/v2/dashboard/schedule2/unknown/progress//?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v2/dashboard/schedule2/unknown/progress?jobid=unknown",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v2dashboard/schedule2/unknown/progress_head",
+      "path": "/api/v2/dashboard/schedule2/unknown/progress?jobid=unknown",
+      "method": "HEAD",
+      "allow": "GET",
+      "location": null,
+      "status": 405,
+      "content_type": "application/json",
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v2system/runscheduler_double_slash",
+      "path": "/api/v2/system/runscheduler//?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v2/system/runscheduler?jobid=unknown",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v2system/runscheduler_head",
+      "path": "/api/v2/system/runscheduler?jobid=unknown",
+      "method": "HEAD",
+      "allow": "GET",
+      "location": null,
+      "status": 405,
+      "content_type": "application/json",
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v2system/runscheduler2_double_slash",
+      "path": "/api/v2/system/runscheduler2//?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v2/system/runscheduler2?jobid=unknown",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v2system/runscheduler2_head",
+      "path": "/api/v2/system/runscheduler2?jobid=unknown",
+      "method": "HEAD",
+      "allow": "GET",
+      "location": null,
+      "status": 405,
+      "content_type": "application/json",
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "v2system/runscheduler_query_unknown;",
+      "path": "/api/v2/system/runscheduler?jobid=unknown;",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler_query_unknown;x=y",
+      "path": "/api/v2/system/runscheduler?jobid=unknown;x=y",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler_query_%3B",
+      "path": "/api/v2/system/runscheduler?jobid=%3B",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler_query_unknown",
+      "path": "/api/v2/system/runscheduler?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler_query_unknown%zz",
+      "path": "/api/v2/system/runscheduler?jobid=unknown%zz",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler_query_unknown%",
+      "path": "/api/v2/system/runscheduler?jobid=unknown%",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler_query_unknown%2",
+      "path": "/api/v2/system/runscheduler?jobid=unknown%2",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler_query_unknown%FF",
+      "path": "/api/v2/system/runscheduler?jobid=unknown%FF",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler2_query_unknown;",
+      "path": "/api/v2/system/runscheduler2?jobid=unknown;",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler2_query_unknown;x=y",
+      "path": "/api/v2/system/runscheduler2?jobid=unknown;x=y",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler2_query_%3B",
+      "path": "/api/v2/system/runscheduler2?jobid=%3B",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler2_query_unknown",
+      "path": "/api/v2/system/runscheduler2?jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler2_query_unknown%zz",
+      "path": "/api/v2/system/runscheduler2?jobid=unknown%zz",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler2_query_unknown%",
+      "path": "/api/v2/system/runscheduler2?jobid=unknown%",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler2_query_unknown%2",
+      "path": "/api/v2/system/runscheduler2?jobid=unknown%2",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "v2system/runscheduler2_query_unknown%FF",
+      "path": "/api/v2/system/runscheduler2?jobid=unknown%FF",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    }
+  ],
+  "fixtures": [
+    {
+      "module": "app.chain",
+      "boundary": "non-plugin host business not executed"
+    },
+    {
+      "module": "app.chain.mediaserver",
+      "boundary": "non-plugin builtin jobs not initialized"
+    },
+    {
+      "module": "app.chain.recommend",
+      "boundary": "non-plugin builtin jobs not initialized"
+    },
+    {
+      "module": "app.chain.site",
+      "boundary": "non-plugin builtin jobs not initialized"
+    },
+    {
+      "module": "app.chain.subscribe",
+      "boundary": "non-plugin builtin jobs not initialized"
+    },
+    {
+      "module": "app.chain.transfer",
+      "boundary": "non-plugin builtin jobs not initialized"
+    },
+    {
+      "module": "app.chain.workflow",
+      "boundary": "non-plugin builtin jobs not initialized"
+    },
+    {
+      "module": "watchfiles",
+      "boundary": "not a watcher slice"
+    },
+    {
+      "module": "app.helper.sites",
+      "boundary": "official licensing excluded"
+    },
+    {
+      "module": "app.helper.image",
+      "boundary": "wallpaper not in plugin jobs"
+    },
+    {
+      "module": "app.helper.message",
+      "boundary": "record notice boundary only"
+    },
+    {
+      "module": "app.chain.dashboard",
+      "boundary": "unrelated endpoint business never executed"
+    },
+    {
+      "module": "app.chain.storage",
+      "boundary": "unrelated endpoint business never executed"
+    },
+    {
+      "module": "app.chain.media",
+      "boundary": "unrelated endpoint business never executed"
+    },
+    {
+      "module": "app.chain.search",
+      "boundary": "unrelated endpoint business never executed"
+    },
+    {
+      "module": "app.chain.system",
+      "boundary": "unrelated endpoint business never executed"
+    },
+    {
+      "module": "pillow_avif",
+      "boundary": "unused image codec"
+    },
+    {
+      "module": "app.core.metainfo",
+      "boundary": "unrelated media metadata"
+    },
+    {
+      "module": "app.core.module",
+      "boundary": "unrelated module dispatch"
+    },
+    {
+      "module": "app.startup.lifecycle",
+      "boundary": "source full daemon startup not executed"
+    }
+  ],
+  "network_attempts": [],
+  "independent_origin": {
+    "result_sha256": "9aa856e2530e52f7a9873949fc3b024a83f213c4fcd26564fd5da40353f034aa",
+    "script_sha256": "aac51130fdc3eae985ce167a5ee20dca2be58468667b094d1ae8e29ba915ff58"
+  }
+}

@@ -24,7 +24,7 @@ func originalPluginDefaultServerURL(lookup func(string) (string, bool)) string {
 
 // This implements the observable MoviePilotServerHelper HTTP contract, not
 // the closed-source center's identity, authorization or aggregation algorithms.
-// No default remote is contacted by this independent Go application.
+// Runtime calls use the configured source-compatible endpoint and sharing gate.
 func originalPluginStatisticShared(settings Settings) bool {
 	return settings.PluginStatisticShare == nil || *settings.PluginStatisticShare
 }
@@ -125,36 +125,61 @@ type originalPluginRating struct {
 }
 
 func (rating *originalPluginRating) UnmarshalJSON(raw []byte) error {
-	var fields map[string]json.RawMessage
-	if json.Unmarshal(raw, &fields) != nil || fields == nil {
+	value, err := parseOriginalCenterJSON(raw)
+	if err != nil {
+		return err
+	}
+	return rating.fromCenterValue(value)
+}
+func (rating *originalPluginRating) fromCenterValue(value any) error {
+	fields, ok := value.(map[string]any)
+	if !ok {
 		return errors.New("invalid rating object")
 	}
 	*rating = originalPluginRating{RatingCount: json.Number("0")}
-	id, exists := fields["plugin_id"]
-	if !exists || bytes.Equal(bytes.TrimSpace(id), []byte("null")) || json.Unmarshal(id, &rating.PluginID) != nil {
+	id, ok := fields["plugin_id"].(string)
+	if !ok {
 		return errors.New("missing rating plugin ID")
 	}
-	var err error
+	rating.PluginID = id
 	if value, exists := fields["average_rating"]; exists {
-		rating.AverageRating, err = originalRatingFloat(value)
-		if err != nil {
-			return err
+		v, kind := originalCenterFloat(value)
+		if kind != "" {
+			return errors.New("invalid average rating")
 		}
+		rating.AverageRating = v
 	}
 	if value, exists := fields["rating_count"]; exists {
-		rating.RatingCount, err = originalRatingInteger(value)
+		raw, err := json.Marshal(value)
+		if err != nil {
+			return errors.New("invalid rating count")
+		}
+		rating.RatingCount, err = originalRatingInteger(raw)
 		if err != nil {
 			return err
 		}
 	}
-	if value, exists := fields["user_rating"]; exists && !bytes.Equal(bytes.TrimSpace(value), []byte("null")) {
-		parsed, err := originalRatingFloat(value)
-		if err != nil {
-			return err
+	if value, exists := fields["user_rating"]; exists && value != nil {
+		v, kind := originalCenterFloat(value)
+		if kind != "" {
+			return errors.New("invalid user rating")
 		}
-		rating.UserRating = &parsed
+		rating.UserRating = &v
 	}
 	return nil
+}
+func (rating originalPluginRating) MarshalJSON() ([]byte, error) {
+	average, _ := originalCenterJSONValue(rating.AverageRating)
+	var user any
+	if rating.UserRating != nil {
+		user, _ = originalCenterJSONValue(*rating.UserRating)
+	}
+	return json.Marshal(struct {
+		PluginID      string      `json:"plugin_id"`
+		AverageRating any         `json:"average_rating"`
+		RatingCount   json.Number `json:"rating_count"`
+		UserRating    any         `json:"user_rating"`
+	}{rating.PluginID, average, rating.RatingCount, user})
 }
 
 func validOriginalPluginRating(value float64) bool {
@@ -167,7 +192,7 @@ func originalPluginServerRoute(path, method string) bool {
 
 func (a *App) originalPluginServerHTTP(w http.ResponseWriter, r *http.Request, path string) (any, error) {
 	invalid := func() (any, error) {
-		return nil, &APIError{"PLUGIN_SERVER_INVALID_RESPONSE", "插件统计与评分服务返回了无效数据", http.StatusBadGateway}
+		return nil, originalPluginServerFailure()
 	}
 	if path == "statistic" {
 		if !originalPluginStatisticShared(a.Settings()) {
@@ -177,28 +202,50 @@ func (a *App) originalPluginServerHTTP(w http.ResponseWriter, r *http.Request, p
 		if err != nil {
 			return map[string]any{}, nil
 		}
-		var values map[string]json.RawMessage
-		if json.Unmarshal(body, &values) != nil || values == nil {
+		value, err := parseOriginalCenterJSON(body)
+		values, ok := value.(map[string]any)
+		if err != nil || !ok {
 			return invalid()
 		}
-		return values, nil
+		output, err := originalCenterJSONValue(values)
+		if err != nil {
+			return invalid()
+		}
+		return output, nil
 	}
 	if path == "rating" {
 		query := url.Values{}
-		if raw, exists := r.URL.Query()["plugin_ids"]; exists {
-			ids := strings.Split(raw[len(raw)-1], ",")
+		// Only the fixed versioned adapter adopts source QueryParams decoding.
+		// Native extensions retain their established URL.Query contract.
+		queryValue, present := "", false
+		if r.URL.Path == "/api/v1/plugin/rating" || r.URL.Path == "/api/v2/plugin/rating" {
+			queryValue, present = originalPluginServerQuery(r.URL.RawQuery, "plugin_ids")
+		} else if raw, exists := r.URL.Query()["plugin_ids"]; exists {
+			queryValue, present = raw[len(raw)-1], true
+		}
+		if present {
+			ids := strings.Split(queryValue, ",")
 			query.Set("plugin_ids", strings.Join(ids, ","))
 		}
 		body, err := a.requestOriginalPluginServer(r.Context(), http.MethodGet, "/plugin/rating", query, nil, 10*time.Second)
 		if err != nil {
 			return map[string]originalPluginRating{}, nil
 		}
-		var ratings map[string]originalPluginRating
-		if !json.Valid(body) {
+		value, err := parseOriginalCenterJSON(body)
+		if err != nil {
 			return map[string]originalPluginRating{}, nil
 		}
-		if json.Unmarshal(body, &ratings) != nil || ratings == nil {
+		fields, ok := value.(map[string]any)
+		if !ok {
 			return invalid()
+		}
+		ratings := make(map[string]originalPluginRating, len(fields))
+		for id, value := range fields {
+			var rating originalPluginRating
+			if rating.fromCenterValue(value) != nil {
+				return invalid()
+			}
+			ratings[id] = rating
 		}
 		return ratings, nil
 	}
@@ -208,42 +255,49 @@ func (a *App) originalPluginServerHTTP(w http.ResponseWriter, r *http.Request, p
 	}
 	var payload any
 	if r.Method == http.MethodPost {
-		var input struct {
-			Rating json.RawMessage `json:"rating"`
+		rating, err := originalPluginRatingRequest(w, r)
+		if err != nil {
+			return nil, err
 		}
-		r.Body = http.MaxBytesReader(w, r.Body, 2<<20)
-		decoder := json.NewDecoder(r.Body)
-		if decoder.Decode(&input) != nil || decoder.Decode(new(any)) != io.EOF {
-			return nil, bad("INVALID_PLUGIN_JSON", "插件评分请求无效")
+		ids, err := a.originalInstalledPluginIDs(r.Context())
+		if err != nil {
+			return nil, err
 		}
-		rating, parseErr := originalRatingFloat(input.Rating)
-		if parseErr != nil || !validOriginalPluginRating(rating) {
-			return nil, bad("INVALID_PLUGIN_RATING", "评分须为0.1至5.0，步长0.1")
+		installed := false
+		for _, candidate := range ids {
+			if candidate == id {
+				installed = true
+				break
+			}
 		}
-		in, err := a.pluginStore.Installation(r.Context(), id)
-		if err != nil || !in.Installed {
-			return nil, bad("PLUGIN_NOT_INSTALLED", "插件未安装，无法评分")
+		if !installed {
+			return nil, &originalPluginServerHTTPError{400, map[string]any{"success": false, "message": "插件 " + id + " 未安装，无法评分", "data": map[string]any{}}, false}
 		}
 		payload = map[string]any{"rating": rating}
 	}
-	body, err := a.requestOriginalPluginServer(r.Context(), r.Method, "/plugin/rating/"+url.PathEscape(id), nil, payload, 10*time.Second)
+	body, err := a.requestOriginalPluginServer(r.Context(), r.Method, "/plugin/rating/"+strings.ReplaceAll(url.QueryEscape(id), "+", "%20"), nil, payload, 10*time.Second)
 	if err != nil {
 		if r.Method == http.MethodPost {
-			return map[string]any{"success": false, "message": "连接MoviePilot服务器失败"}, nil
+			return originalPluginCenterResponse(false, "连接MoviePilot服务器失败", map[string]any{}), nil
 		}
 		return originalPluginRating{PluginID: id, RatingCount: json.Number("0")}, nil
 	}
+	value, parseErr := parseOriginalCenterJSON(body)
 	if r.Method == http.MethodPost {
-		if !json.Valid(body) || bytes.Equal(bytes.TrimSpace(body), []byte("null")) {
-			return map[string]any{"success": false, "message": "连接MoviePilot服务器失败"}, nil
+		if parseErr != nil || value == nil {
+			return originalPluginCenterResponse(false, "连接MoviePilot服务器失败", map[string]any{}), nil
 		}
-		return map[string]any{"success": true, "data": json.RawMessage(body)}, nil
+		output, err := originalCenterJSONValue(value)
+		if err != nil {
+			return invalid()
+		}
+		return originalPluginCenterResponse(true, "", output), nil
 	}
-	if !json.Valid(body) {
+	if parseErr != nil {
 		return originalPluginRating{PluginID: id, RatingCount: json.Number("0")}, nil
 	}
 	var rating originalPluginRating
-	if json.Unmarshal(body, &rating) != nil {
+	if rating.fromCenterValue(value) != nil {
 		return invalid()
 	}
 	return rating, nil
@@ -251,18 +305,10 @@ func (a *App) originalPluginServerHTTP(w http.ResponseWriter, r *http.Request, p
 
 func originalPluginReportedRepository(raw string) any {
 	if raw == "" {
-		return nil
+		return ""
 	}
 	if strings.HasPrefix(raw, "local://") {
-		u, err := url.Parse(raw)
-		if err != nil {
-			return nil
-		}
-		query := url.Values{}
-		if version := u.Query().Get("version"); version != "" {
-			query.Set("version", version)
-		}
-		return (&url.URL{Scheme: "local", Host: u.Host, RawQuery: query.Encode()}).String()
+		return originalPluginLocalReportRepository(raw)
 	}
 	u, err := url.Parse(raw)
 	if err != nil {

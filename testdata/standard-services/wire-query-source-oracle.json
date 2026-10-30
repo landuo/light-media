@@ -1,0 +1,227 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_fixture_sha256": "670917efd2feade55471e7016d3626123f8b13cd07bf6b6147111d499d2312d7",
+  "observations": [
+    {
+      "case": "redirect_query_v1_dashboard/schedule",
+      "path": "/api/v1/dashboard/schedule/?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v1/dashboard/schedule?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "redirect_query_v1_dashboard/schedule2",
+      "path": "/api/v1/dashboard/schedule2/?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v1/dashboard/schedule2?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "redirect_query_v1_dashboard/schedule/unknown/progress",
+      "path": "/api/v1/dashboard/schedule/unknown/progress/?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v1/dashboard/schedule/unknown/progress?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "redirect_query_v1_dashboard/schedule2/unknown/progress",
+      "path": "/api/v1/dashboard/schedule2/unknown/progress/?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v1/dashboard/schedule2/unknown/progress?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "redirect_query_v1_system/runscheduler",
+      "path": "/api/v1/system/runscheduler/?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v1/system/runscheduler?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "redirect_query_v1_system/runscheduler2",
+      "path": "/api/v1/system/runscheduler2/?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v1/system/runscheduler2?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "duplicate_empty_last_v1_system/runscheduler",
+      "path": "/api/v1/system/runscheduler?jobid=unknown&jobid=",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":false,\"message\":\"命令不能为空！\",\"message_i18n\":\"命令不能为空！\",\"data\":{}}",
+      "body_sha256": "4c8ed6d4ba46446b4478b196ebc41becb22ef170e5f3656faa64836d6103c2a6"
+    },
+    {
+      "case": "duplicate_unknown_last_v1_system/runscheduler",
+      "path": "/api/v1/system/runscheduler?jobid=&jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "duplicate_empty_last_v1_system/runscheduler2",
+      "path": "/api/v1/system/runscheduler2?jobid=unknown&jobid=",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":false,\"message\":\"命令不能为空！\",\"message_i18n\":\"命令不能为空！\",\"data\":{}}",
+      "body_sha256": "4c8ed6d4ba46446b4478b196ebc41becb22ef170e5f3656faa64836d6103c2a6"
+    },
+    {
+      "case": "duplicate_unknown_last_v1_system/runscheduler2",
+      "path": "/api/v1/system/runscheduler2?jobid=&jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "redirect_query_v2_dashboard/schedule",
+      "path": "/api/v2/dashboard/schedule/?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v2/dashboard/schedule?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "redirect_query_v2_dashboard/schedule2",
+      "path": "/api/v2/dashboard/schedule2/?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v2/dashboard/schedule2?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "redirect_query_v2_dashboard/schedule/unknown/progress",
+      "path": "/api/v2/dashboard/schedule/unknown/progress/?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v2/dashboard/schedule/unknown/progress?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "redirect_query_v2_dashboard/schedule2/unknown/progress",
+      "path": "/api/v2/dashboard/schedule2/unknown/progress/?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v2/dashboard/schedule2/unknown/progress?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "redirect_query_v2_system/runscheduler",
+      "path": "/api/v2/system/runscheduler/?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v2/system/runscheduler?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "redirect_query_v2_system/runscheduler2",
+      "path": "/api/v2/system/runscheduler2/?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "method": "GET",
+      "allow": null,
+      "location": "http://owned-asgi.invalid/api/v2/system/runscheduler2?jobid=%E4%BD%A0%2F%2B+%26&jobid=&token=owned%2Btoken&x=1&x=2",
+      "status": 307,
+      "content_type": null,
+      "body": "",
+      "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "duplicate_empty_last_v2_system/runscheduler",
+      "path": "/api/v2/system/runscheduler?jobid=unknown&jobid=",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":false,\"message\":\"命令不能为空！\",\"message_i18n\":\"命令不能为空！\",\"data\":{}}",
+      "body_sha256": "4c8ed6d4ba46446b4478b196ebc41becb22ef170e5f3656faa64836d6103c2a6"
+    },
+    {
+      "case": "duplicate_unknown_last_v2_system/runscheduler",
+      "path": "/api/v2/system/runscheduler?jobid=&jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    },
+    {
+      "case": "duplicate_empty_last_v2_system/runscheduler2",
+      "path": "/api/v2/system/runscheduler2?jobid=unknown&jobid=",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":false,\"message\":\"命令不能为空！\",\"message_i18n\":\"命令不能为空！\",\"data\":{}}",
+      "body_sha256": "4c8ed6d4ba46446b4478b196ebc41becb22ef170e5f3656faa64836d6103c2a6"
+    },
+    {
+      "case": "duplicate_unknown_last_v2_system/runscheduler2",
+      "path": "/api/v2/system/runscheduler2?jobid=&jobid=unknown",
+      "method": "GET",
+      "allow": null,
+      "location": null,
+      "status": 200,
+      "content_type": "application/json",
+      "body": "{\"success\":true,\"message\":null,\"message_i18n\":null,\"data\":{}}",
+      "body_sha256": "b2def73c0fc1e504aa573cd93553867779974bf1d8528c2afc1c2afb8dc6702e"
+    }
+  ],
+  "scope": "Actual immutable source ASGI run05 extra20 query cases; same fixed source files as wire-source-bindings, no callback instrumentation in these queries."
+}

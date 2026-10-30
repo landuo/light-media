@@ -1,0 +1,280 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "versions": {
+    "cachetools": "7.1.8",
+    "apscheduler": "3.11.2",
+    "pydantic": "2.14.2",
+    "sqlalchemy": "2.0.55"
+  },
+  "kind": "whole normal-import components, owned plugin object, actual APS clock and default MemoryBackend; not full app startup/auth/browser",
+  "provenance": {
+    "source_run_sha256": "6a102e060be9fe3b6025fb8c73ff6fdf85d3379cbb4b6169508a04652c8908ea",
+    "source_runner_v5_sha256": "d8f32d5bcef646c7a5084257cc21922ab17e22c855611ce2ac58d0ca83fa8930",
+    "normalization": "Only started_at and finished_at removed from raw_source_progress and its data; identity/name remain raw. safe_projection selects stable shared fields, preserving empty string versus null and the integer payload. Only error-sensitive applies separately stated host redaction, not source behavior."
+  },
+  "cases": [
+    {
+      "case": "manual_tuple-fail",
+      "input": {
+        "mode": "tuple-fail",
+        "progress": 37,
+        "text": "owned progress"
+      },
+      "raw_source_progress": {
+        "id": "OwnedServices_manual",
+        "name": "Owned manual",
+        "name_i18n": "Owned manual",
+        "provider": "Owned services",
+        "provider_i18n": "Owned services",
+        "enable": false,
+        "value": 37.0,
+        "text": "Owned manual 执行失败",
+        "text_i18n": "Owned manual 执行失败",
+        "status": "failed",
+        "success": false,
+        "error": "owned service failure",
+        "error_i18n": "owned service failure",
+        "data": {
+          "id": "OwnedServices_manual",
+          "name": "Owned manual",
+          "provider": "Owned services",
+          "status": "failed",
+          "success": false,
+          "error": "owned service failure",
+          "owned": 9007199254740993,
+          "error_i18n": "owned service failure"
+        }
+      },
+      "safe_projection": {
+        "status": "failed",
+        "success": false,
+        "enable": false,
+        "value": 37.0,
+        "error": "owned service failure",
+        "data": {
+          "owned": 9007199254740993
+        }
+      },
+      "safety_boundary": null
+    },
+    {
+      "case": "manual_tuple-empty",
+      "input": {
+        "mode": "tuple-empty",
+        "progress": 37,
+        "text": "owned progress"
+      },
+      "raw_source_progress": {
+        "id": "OwnedServices_manual",
+        "name": "Owned manual",
+        "name_i18n": "Owned manual",
+        "provider": "Owned services",
+        "provider_i18n": "Owned services",
+        "enable": false,
+        "value": 37.0,
+        "text": "Owned manual 执行失败",
+        "text_i18n": "Owned manual 执行失败",
+        "status": "failed",
+        "success": false,
+        "error": "定时任务返回失败",
+        "error_i18n": "定时任务返回失败",
+        "data": {
+          "id": "OwnedServices_manual",
+          "name": "Owned manual",
+          "provider": "Owned services",
+          "status": "failed",
+          "success": false,
+          "error": "定时任务返回失败",
+          "owned": 9007199254740993,
+          "error_i18n": "定时任务返回失败"
+        }
+      },
+      "safe_projection": {
+        "status": "failed",
+        "success": false,
+        "enable": false,
+        "value": 37.0,
+        "error": "定时任务返回失败",
+        "data": {
+          "owned": 9007199254740993
+        }
+      },
+      "safety_boundary": null
+    },
+    {
+      "case": "manual_list-fail",
+      "input": {
+        "mode": "list-fail",
+        "progress": 37,
+        "text": "owned progress"
+      },
+      "raw_source_progress": {
+        "id": "OwnedServices_manual",
+        "name": "Owned manual",
+        "name_i18n": "Owned manual",
+        "provider": "Owned services",
+        "provider_i18n": "Owned services",
+        "enable": false,
+        "value": 100.0,
+        "text": "Owned manual 执行完成",
+        "text_i18n": "Owned manual 执行完成",
+        "status": "success",
+        "success": true,
+        "error": null,
+        "error_i18n": null,
+        "data": {
+          "id": "OwnedServices_manual",
+          "name": "Owned manual",
+          "provider": "Owned services",
+          "status": "success",
+          "success": true,
+          "error": null,
+          "owned": 9007199254740993
+        }
+      },
+      "safe_projection": {
+        "status": "success",
+        "success": true,
+        "enable": false,
+        "value": 100.0,
+        "error": null,
+        "data": {
+          "owned": 9007199254740993
+        }
+      },
+      "safety_boundary": null
+    },
+    {
+      "case": "manual_error",
+      "input": {
+        "mode": "error",
+        "progress": 37,
+        "text": "owned progress"
+      },
+      "raw_source_progress": {
+        "id": "OwnedServices_manual",
+        "name": "Owned manual",
+        "name_i18n": "Owned manual",
+        "provider": "Owned services",
+        "provider_i18n": "Owned services",
+        "enable": false,
+        "value": 37.0,
+        "text": "Owned manual 执行失败",
+        "text_i18n": "Owned manual 执行失败",
+        "status": "failed",
+        "success": false,
+        "error": "owned callback error",
+        "error_i18n": "owned callback error",
+        "data": {
+          "id": "OwnedServices_manual",
+          "name": "Owned manual",
+          "provider": "Owned services",
+          "status": "failed",
+          "success": false,
+          "error": "owned callback error",
+          "owned": 9007199254740993,
+          "error_i18n": "owned callback error"
+        }
+      },
+      "safe_projection": {
+        "status": "failed",
+        "success": false,
+        "enable": false,
+        "value": 37.0,
+        "error": "owned callback error",
+        "data": {
+          "owned": 9007199254740993
+        }
+      },
+      "safety_boundary": null
+    },
+    {
+      "case": "manual_error-empty",
+      "input": {
+        "mode": "error-empty",
+        "progress": 37,
+        "text": "owned progress"
+      },
+      "raw_source_progress": {
+        "id": "OwnedServices_manual",
+        "name": "Owned manual",
+        "name_i18n": "Owned manual",
+        "provider": "Owned services",
+        "provider_i18n": "Owned services",
+        "enable": false,
+        "value": 37.0,
+        "text": "Owned manual 执行失败",
+        "text_i18n": "Owned manual 执行失败",
+        "status": "failed",
+        "success": false,
+        "error": "",
+        "error_i18n": null,
+        "data": {
+          "id": "OwnedServices_manual",
+          "name": "Owned manual",
+          "provider": "Owned services",
+          "status": "failed",
+          "success": false,
+          "error": "",
+          "owned": 9007199254740993,
+          "error_i18n": ""
+        }
+      },
+      "safe_projection": {
+        "status": "failed",
+        "success": false,
+        "enable": false,
+        "value": 37.0,
+        "error": "",
+        "data": {
+          "owned": 9007199254740993
+        }
+      },
+      "safety_boundary": null
+    },
+    {
+      "case": "manual_error-sensitive",
+      "input": {
+        "mode": "error-sensitive",
+        "progress": 37,
+        "text": "owned progress"
+      },
+      "raw_source_progress": {
+        "id": "OwnedServices_manual",
+        "name": "Owned manual",
+        "name_i18n": "Owned manual",
+        "provider": "Owned services",
+        "provider_i18n": "Owned services",
+        "enable": false,
+        "value": 37.0,
+        "text": "Owned manual 执行失败",
+        "text_i18n": "Owned manual 执行失败",
+        "status": "failed",
+        "success": false,
+        "error": "owned callback password=OWNED_PASSWORD token=OWNED_TOKEN https://owned.invalid/private",
+        "error_i18n": "owned callback password=OWNED_PASSWORD token=OWNED_TOKEN https://owned.invalid/private",
+        "data": {
+          "id": "OwnedServices_manual",
+          "name": "Owned manual",
+          "provider": "Owned services",
+          "status": "failed",
+          "success": false,
+          "error": "owned callback password=OWNED_PASSWORD token=OWNED_TOKEN https://owned.invalid/private",
+          "owned": 9007199254740993,
+          "error_i18n": "owned callback password=OWNED_PASSWORD token=OWNED_TOKEN https://owned.invalid/private"
+        }
+      },
+      "safe_projection": {
+        "status": "failed",
+        "success": false,
+        "enable": false,
+        "value": 37.0,
+        "error": "owned callback [REDACTED] [REDACTED] [URL]",
+        "data": {
+          "owned": 9007199254740993
+        }
+      },
+      "safety_boundary": "synthetic password/token and URL are redacted by established host safety contract"
+    }
+  ]
+}

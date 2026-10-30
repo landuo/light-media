@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {
   ref,
+  defineAsyncComponent,
   computed,
   nextTick,
   onMounted,
@@ -35,9 +36,12 @@ import {
   type DashboardLayout,
 } from '../features/plugin-dashboard';
 import PluginDashboardWidget from './PluginDashboardWidget.vue';
+const PluginSchedulerDashboard = defineAsyncComponent(() => import('./PluginSchedulerDashboard.vue'));
 const display = useDisplay();
 const container = ref<HTMLElement>(),
-  items = ref<DashboardItem[]>([]),
+  // Fixed dashboard.vue's built-in scheduler is initially disabled and shares
+  // the ordinary persisted visibility/order/profile layout with plugin cards.
+  items = ref<DashboardItem[]>([{ id: 'scheduler', key: '', name: '后台任务', attrs: {}, cols: { cols: 12, md: 4 }, rows: 11, elements: [] }]),
   layout = ref<DashboardLayout>({ items: {} }),
   profile = ref(dashboardProfile(window.innerWidth));
 const requesting = ref(true),
@@ -153,6 +157,7 @@ function schedule(item: DashboardItem) {
     );
 }
 async function loadItem(meta: DashboardMeta) {
+  if (meta.id === 'scheduler' && !meta.key) return;
   const id = dashboardID(meta);
   if (!active || inflight.has(id)) return;
   inflight.add(id);
@@ -490,7 +495,13 @@ onUnmounted(() => {
                   >{{ errors[dashboardID(item)]
                   }}<VBtn variant="text" @click="loadItem(item)">重试</VBtn></VAlert
                 >
+                <PluginSchedulerDashboard
+                  v-if="item.id === 'scheduler' && !item.key"
+                  :allow-refresh="requesting"
+                  @loaded="syncGrid"
+                />
                 <PluginDashboardWidget
+                  v-else
                   :item="item"
                   :allow-refresh="requesting"
                   @loaded="syncGrid"
@@ -616,6 +627,9 @@ onUnmounted(() => {
 }
 .grid-stack-item-content :deep(.v-card-text) {
   overflow: auto;
+}
+.plugin-dashboard-grid:not(.is-editing) .dashboard-grid-item:not(.is-manual-height) :deep(.plugin-scheduler-dashboard) {
+  min-block-size: 352px;
 }
 .dashboard-actions {
   position: fixed;

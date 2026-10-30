@@ -1,0 +1,201 @@
+{
+  "kind": "actual fixed Starlette QueryParams(bytes) on plugin_ids; shared algorithm, independent usage oracle",
+  "python": "3.12.14",
+  "starlette": "1.3.1",
+  "source_files": {
+    "datastructures.py": "f9e310036299d6a427443ca96ba118e58486e5927cd4c3bac0ffb815626e52cd",
+    "parse.py": "e6af7f475262f1de335bb2e41e26adb94d6103977cf5fe1ddc430dc6a3b1623f"
+  },
+  "cases": [
+    {
+      "raw_hex": "",
+      "present": false,
+      "value": ""
+    },
+    {
+      "raw_hex": "26",
+      "present": false,
+      "value": ""
+    },
+    {
+      "raw_hex": "706c7567696e5f696473",
+      "present": true,
+      "value": ""
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d",
+      "present": true,
+      "value": ""
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d7826706c7567696e5f6964733d",
+      "present": true,
+      "value": ""
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d26706c7567696e5f6964733d756e6b6e6f776e",
+      "present": true,
+      "value": "unknown"
+    },
+    {
+      "raw_hex": "2537306c7567696e5f6964733d612b6225324263",
+      "present": true,
+      "value": "a b+c"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d666972737426706c7567696e5f6964733d6c617374257a7a",
+      "present": true,
+      "value": "last%zz"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d66697273743b706c7567696e5f6964733d6c617374",
+      "present": true,
+      "value": "first;plugin_ids=last"
+    },
+    {
+      "raw_hex": "783d706c7567696e5f6964733d756e6b6e6f776e",
+      "present": false,
+      "value": ""
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d783d79",
+      "present": true,
+      "value": "x=y"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d253030",
+      "present": true,
+      "value": "\u0000"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d2545342542442541302532462532422b253236",
+      "present": true,
+      "value": "你/+ &"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d756e6b6e6f776e3b",
+      "present": true,
+      "value": "unknown;"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d756e6b6e6f776e3b783d79",
+      "present": true,
+      "value": "unknown;x=y"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d253342",
+      "present": true,
+      "value": ";"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d756e6b6e6f776e",
+      "present": true,
+      "value": "unknown"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d756e6b6e6f776e257a7a",
+      "present": true,
+      "value": "unknown%zz"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d756e6b6e6f776e25",
+      "present": true,
+      "value": "unknown%"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d756e6b6e6f776e2532",
+      "present": true,
+      "value": "unknown%2"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d756e6b6e6f776e254646",
+      "present": true,
+      "value": "unknown�"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d254646254646",
+      "present": true,
+      "value": "��"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d254531253830",
+      "present": true,
+      "value": "�"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d25453125383078",
+      "present": true,
+      "value": "�x"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d254530253830253830",
+      "present": true,
+      "value": "���"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d254544254130253830",
+      "present": true,
+      "value": "���"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d254634253930253830253830",
+      "present": true,
+      "value": "����"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d254630253930253830",
+      "present": true,
+      "value": "�"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d254330253830",
+      "present": true,
+      "value": "��"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d254630253946253938253830",
+      "present": true,
+      "value": "😀"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d254546254246254244",
+      "present": true,
+      "value": "�"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733de9",
+      "present": true,
+      "value": "é"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d254333a9",
+      "present": true,
+      "value": "�©"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733dc3a9",
+      "present": true,
+      "value": "Ã©"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d256333256139",
+      "present": true,
+      "value": "é"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d2561253431",
+      "present": true,
+      "value": "%aA"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d25253431",
+      "present": true,
+      "value": "%A"
+    },
+    {
+      "raw_hex": "706c7567696e5f6964733d2532622b",
+      "present": true,
+      "value": "+ "
+    }
+  ]
+}

@@ -1,0 +1,4298 @@
+{
+  "source_sha": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "driver_sha256": "a8227787edeb8e4ff36e7b827576d93b0f658ce7a02b6b2bf1272768ca143fa6",
+  "kind": "full normally imported source factory/router/helper/schema/SQLite plus owned HTTP peer, no daemon/JWT/browser acceptance",
+  "fixtures": [
+    {
+      "module": "app.startup.lifecycle",
+      "reason": "daemon lifecycle outside slice"
+    },
+    {
+      "module": "app.helper.sites",
+      "reason": "external official resource absent and excluded; constructor raises"
+    },
+    {
+      "module": "app.chain",
+      "reason": "not executing business plugins"
+    },
+    {
+      "module": "app.helper.message",
+      "reason": "no user message or business plugin"
+    },
+    {
+      "module": "app.command",
+      "reason": "install/start registration outside API rating witness"
+    },
+    {
+      "module": "app.scheduler",
+      "reason": "no scheduled business plugins"
+    }
+  ],
+  "versions": {
+    "fastapi": "0.136.3",
+    "pydantic": "2.14.2",
+    "httpx": "0.28.1",
+    "cachetools": "7.1.8"
+  },
+  "observations": [
+    {
+      "case": "query-absent",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": ""
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-empty",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-no-equals",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f696473"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-duplicate-last",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=Last",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d466972737426706c7567696e5f6964733d4c617374"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=First&plugin_ids=Last",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-duplicate-empty-last",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d466972737426706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=First&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-duplicate-empty-first",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=Last",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d26706c7567696e5f6964733d4c617374"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=&plugin_ids=Last",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-semicolon-value",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=A%3BB",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d413b42"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=A;B",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-semicolon-last",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=A%3BB",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d466972737426706c7567696e5f6964733d413b42"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=First&plugin_ids=A;B",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-semicolon-other",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=Last",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "6f746865723d413b4226706c7567696e5f6964733d4c617374"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?other=A;B&plugin_ids=Last",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-semicolon-key-separator",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "6f746865723d413b706c7567696e5f6964733d4c617374"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?other=A;plugin_ids=Last",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-encoded-semicolon",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=A%3BB",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d4125334242"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=A%3BB",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-percent-lone",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%25",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d25"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=%",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-percent-short",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%252",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d2532"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=%2",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-percent-invalidhex",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%25GG",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d254747"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=%GG",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-percent-invalid-last",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%25GG",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d466972737426706c7567696e5f6964733d254747"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=First&plugin_ids=%GG",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-utf8-invalid",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%EF%BF%BD",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d254646"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=%FF",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-utf8-truncated",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%EF%BF%BD",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d254534254238"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=%E4%B8",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-utf8-surrogate",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%EF%BF%BD%EF%BF%BD%EF%BF%BD",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d254544254130253830"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=%ED%A0%80",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-utf8-invalid-last",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%EF%BF%BD",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d466972737426706c7567696e5f6964733d254646"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=First&plugin_ids=%FF",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-encoded-key",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=Last",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "2537306c7567696e5f6964733d4c617374"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?%70lugin_ids=Last",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-double-percent",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%25GG",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d2532354747"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=%25GG",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-plus-space",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=A+B%2BC",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d412b4225324243"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=A+B%2BC",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-GET-0",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/statistic",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/statistic",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f737461746973746963",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "statistic?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-GET-1",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/statistic/",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f7374617469737469632f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "statistic/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-GET-2",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/statistic//",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f7374617469737469632f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "statistic//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-GET-3",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/statistic///",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f7374617469737469632f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "statistic///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-HEAD-0",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 405,
+      "body_hex": "",
+      "content_type": "application/json",
+      "location": null,
+      "allow": "GET",
+      "scope": {
+        "path": "/api/v1/plugin/statistic",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f737461746973746963",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "HEAD",
+        "route": "statistic?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-HEAD-1",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/statistic/",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f7374617469737469632f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "HEAD",
+        "route": "statistic/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-HEAD-2",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/statistic//",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f7374617469737469632f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "HEAD",
+        "route": "statistic//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-HEAD-3",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/statistic///",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f7374617469737469632f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "HEAD",
+        "route": "statistic///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-POST-0",
+      "result": {
+        "detail": "Method Not Allowed"
+      },
+      "wire": [],
+      "version": "v1",
+      "status": 405,
+      "body_hex": "7b2264657461696c223a224d6574686f64204e6f7420416c6c6f776564227d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": "GET",
+      "scope": {
+        "path": "/api/v1/plugin/statistic",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f737461746973746963",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "POST",
+        "route": "statistic?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-POST-1",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/statistic/",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f7374617469737469632f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "POST",
+        "route": "statistic/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-POST-2",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/statistic//",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f7374617469737469632f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "POST",
+        "route": "statistic//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-POST-3",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/statistic///",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f7374617469737469632f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "POST",
+        "route": "statistic///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-GET-0",
+      "result": {},
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-GET-1",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-GET-2",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating//",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-GET-3",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating///",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-HEAD-0",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 405,
+      "body_hex": "",
+      "content_type": "application/json",
+      "location": null,
+      "allow": "GET",
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "HEAD",
+        "route": "rating?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-HEAD-1",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "HEAD",
+        "route": "rating/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-HEAD-2",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating//",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "HEAD",
+        "route": "rating//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-HEAD-3",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating///",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "HEAD",
+        "route": "rating///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-POST-0",
+      "result": {
+        "detail": "Method Not Allowed"
+      },
+      "wire": [],
+      "version": "v1",
+      "status": 405,
+      "body_hex": "7b2264657461696c223a224d6574686f64204e6f7420416c6c6f776564227d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": "GET",
+      "scope": {
+        "path": "/api/v1/plugin/rating",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "POST",
+        "route": "rating?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-POST-1",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "POST",
+        "route": "rating/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-POST-2",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating//",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "POST",
+        "route": "rating//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-POST-3",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating///",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "POST",
+        "route": "rating///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-GET-0",
+      "result": {
+        "plugin_id": "Owned",
+        "average_rating": 0.0,
+        "rating_count": 0,
+        "user_rating": null
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b22706c7567696e5f6964223a224f776e6564222c22617665726167655f726174696e67223a302e302c22726174696e675f636f756e74223a302c22757365725f726174696e67223a6e756c6c7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/Owned",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f4f776e6564",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-GET-1",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/Owned/",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f4f776e65642f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating/Owned/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-GET-2",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/Owned//",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f4f776e65642f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating/Owned//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-GET-3",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/Owned///",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f4f776e65642f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "GET",
+        "route": "rating/Owned///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-HEAD-0",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 405,
+      "body_hex": "",
+      "content_type": "application/json",
+      "location": null,
+      "allow": "GET",
+      "scope": {
+        "path": "/api/v1/plugin/rating/Owned",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f4f776e6564",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "HEAD",
+        "route": "rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-HEAD-1",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/Owned/",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f4f776e65642f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "HEAD",
+        "route": "rating/Owned/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-HEAD-2",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/Owned//",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f4f776e65642f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "HEAD",
+        "route": "rating/Owned//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-HEAD-3",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/Owned///",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f4f776e65642f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "HEAD",
+        "route": "rating/Owned///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-POST-0",
+      "result": {
+        "success": true,
+        "message": null,
+        "message_i18n": null,
+        "data": {
+          "plugin_id": "Owned"
+        }
+      },
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.1
+          },
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": "application/json"
+        }
+      ],
+      "version": "v1",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a6e756c6c2c226d6573736167655f6931386e223a6e756c6c2c2264617461223a7b22706c7567696e5f6964223a224f776e6564227d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/Owned",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f4f776e6564",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "POST",
+        "route": "rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-POST-1",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/Owned/",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f4f776e65642f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "POST",
+        "route": "rating/Owned/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-POST-2",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/Owned//",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f4f776e65642f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "POST",
+        "route": "rating/Owned//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-POST-3",
+      "result": "",
+      "wire": [],
+      "version": "v1",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v1/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v1/plugin/rating/Owned///",
+        "raw_path_hex": "2f6170692f76312f706c7567696e2f726174696e672f4f776e65642f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v1",
+        "method": "POST",
+        "route": "rating/Owned///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-absent",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": ""
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-empty",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-no-equals",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f696473"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-duplicate-last",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=Last",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d466972737426706c7567696e5f6964733d4c617374"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=First&plugin_ids=Last",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-duplicate-empty-last",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d466972737426706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=First&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-duplicate-empty-first",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=Last",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d26706c7567696e5f6964733d4c617374"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=&plugin_ids=Last",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-semicolon-value",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=A%3BB",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d413b42"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=A;B",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-semicolon-last",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=A%3BB",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d466972737426706c7567696e5f6964733d413b42"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=First&plugin_ids=A;B",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-semicolon-other",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=Last",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "6f746865723d413b4226706c7567696e5f6964733d4c617374"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?other=A;B&plugin_ids=Last",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-semicolon-key-separator",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "6f746865723d413b706c7567696e5f6964733d4c617374"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?other=A;plugin_ids=Last",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-encoded-semicolon",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=A%3BB",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d4125334242"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=A%3BB",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-percent-lone",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%25",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d25"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=%",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-percent-short",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%252",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d2532"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=%2",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-percent-invalidhex",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%25GG",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d254747"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=%GG",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-percent-invalid-last",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%25GG",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d466972737426706c7567696e5f6964733d254747"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=First&plugin_ids=%GG",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-utf8-invalid",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%EF%BF%BD",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d254646"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=%FF",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-utf8-truncated",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%EF%BF%BD",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d254534254238"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=%E4%B8",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-utf8-surrogate",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%EF%BF%BD%EF%BF%BD%EF%BF%BD",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d254544254130253830"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=%ED%A0%80",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-utf8-invalid-last",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%EF%BF%BD",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d466972737426706c7567696e5f6964733d254646"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=First&plugin_ids=%FF",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-encoded-key",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=Last",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "2537306c7567696e5f6964733d4c617374"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?%70lugin_ids=Last",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-double-percent",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=%25GG",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d2532354747"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=%25GG",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "query-plus-space",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=A+B%2BC",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d412b4225324243"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=A+B%2BC",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-GET-0",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/statistic",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/statistic",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f737461746973746963",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "statistic?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-GET-1",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/statistic/",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f7374617469737469632f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "statistic/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-GET-2",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/statistic//",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f7374617469737469632f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "statistic//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-GET-3",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/statistic///",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f7374617469737469632f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "statistic///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-HEAD-0",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 405,
+      "body_hex": "",
+      "content_type": "application/json",
+      "location": null,
+      "allow": "GET",
+      "scope": {
+        "path": "/api/v2/plugin/statistic",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f737461746973746963",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "HEAD",
+        "route": "statistic?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-HEAD-1",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/statistic/",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f7374617469737469632f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "HEAD",
+        "route": "statistic/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-HEAD-2",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/statistic//",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f7374617469737469632f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "HEAD",
+        "route": "statistic//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-HEAD-3",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/statistic///",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f7374617469737469632f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "HEAD",
+        "route": "statistic///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-POST-0",
+      "result": {
+        "success": false,
+        "message": "Method Not Allowed",
+        "data": {}
+      },
+      "wire": [],
+      "version": "v2",
+      "status": 405,
+      "body_hex": "7b2273756363657373223a66616c73652c226d657373616765223a224d6574686f64204e6f7420416c6c6f776564222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": "GET",
+      "scope": {
+        "path": "/api/v2/plugin/statistic",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f737461746973746963",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "POST",
+        "route": "statistic?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-POST-1",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/statistic/",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f7374617469737469632f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "POST",
+        "route": "statistic/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-POST-2",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/statistic//",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f7374617469737469632f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "POST",
+        "route": "statistic//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-statistic-POST-3",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/statistic?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/statistic///",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f7374617469737469632f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "POST",
+        "route": "statistic///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-GET-0",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {}
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating?plugin_ids=",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-GET-1",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-GET-2",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating//",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-GET-3",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating///",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-HEAD-0",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 405,
+      "body_hex": "",
+      "content_type": "application/json",
+      "location": null,
+      "allow": "GET",
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "HEAD",
+        "route": "rating?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-HEAD-1",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "HEAD",
+        "route": "rating/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-HEAD-2",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating//",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "HEAD",
+        "route": "rating//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-HEAD-3",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating///",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "HEAD",
+        "route": "rating///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-POST-0",
+      "result": {
+        "success": false,
+        "message": "Method Not Allowed",
+        "data": {}
+      },
+      "wire": [],
+      "version": "v2",
+      "status": 405,
+      "body_hex": "7b2273756363657373223a66616c73652c226d657373616765223a224d6574686f64204e6f7420416c6c6f776564222c2264617461223a7b7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": "GET",
+      "scope": {
+        "path": "/api/v2/plugin/rating",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e67",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "POST",
+        "route": "rating?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-POST-1",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "POST",
+        "route": "rating/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-POST-2",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating//",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "POST",
+        "route": "rating//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-POST-3",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating///",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "POST",
+        "route": "rating///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-GET-0",
+      "result": {
+        "success": true,
+        "message": "",
+        "data": {
+          "plugin_id": "Owned",
+          "average_rating": 0.0,
+          "rating_count": 0,
+          "user_rating": null
+        }
+      },
+      "wire": [
+        {
+          "method": "GET",
+          "path": "/plugin/rating/Owned",
+          "body": null,
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": null
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a22222c2264617461223a7b22706c7567696e5f6964223a224f776e6564222c22617665726167655f726174696e67223a302e302c22726174696e675f636f756e74223a302c22757365725f726174696e67223a6e756c6c7d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/Owned",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f4f776e6564",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-GET-1",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/Owned/",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f4f776e65642f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating/Owned/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-GET-2",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/Owned//",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f4f776e65642f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating/Owned//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-GET-3",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/Owned///",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f4f776e65642f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "GET",
+        "route": "rating/Owned///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-HEAD-0",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 405,
+      "body_hex": "",
+      "content_type": "application/json",
+      "location": null,
+      "allow": "GET",
+      "scope": {
+        "path": "/api/v2/plugin/rating/Owned",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f4f776e6564",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "HEAD",
+        "route": "rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-HEAD-1",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/Owned/",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f4f776e65642f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "HEAD",
+        "route": "rating/Owned/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-HEAD-2",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/Owned//",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f4f776e65642f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "HEAD",
+        "route": "rating/Owned//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-HEAD-3",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/Owned///",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f4f776e65642f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "HEAD",
+        "route": "rating/Owned///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": null,
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-POST-0",
+      "result": {
+        "success": true,
+        "message": null,
+        "message_i18n": null,
+        "data": {
+          "plugin_id": "Owned"
+        }
+      },
+      "wire": [
+        {
+          "method": "POST",
+          "path": "/plugin/rating/Owned",
+          "body": {
+            "rating": 4.1
+          },
+          "uid_present": true,
+          "uid_length": 64,
+          "user_agent_equal": true,
+          "content_type": "application/json"
+        }
+      ],
+      "version": "v2",
+      "status": 200,
+      "body_hex": "7b2273756363657373223a747275652c226d657373616765223a6e756c6c2c226d6573736167655f6931386e223a6e756c6c2c2264617461223a7b22706c7567696e5f6964223a224f776e6564227d7d",
+      "content_type": "application/json",
+      "location": null,
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/Owned",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f4f776e6564",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "POST",
+        "route": "rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-POST-1",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/Owned/",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f4f776e65642f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "POST",
+        "route": "rating/Owned/?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-POST-2",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/Owned//",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f4f776e65642f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "POST",
+        "route": "rating/Owned//?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    },
+    {
+      "case": "slash-rating-Owned-POST-3",
+      "result": "",
+      "wire": [],
+      "version": "v2",
+      "status": 307,
+      "body_hex": "",
+      "content_type": null,
+      "location": "http://owned-asgi/api/v2/plugin/rating/Owned?plugin_ids=A%3BB&plugin_ids=",
+      "allow": null,
+      "scope": {
+        "path": "/api/v2/plugin/rating/Owned///",
+        "raw_path_hex": "2f6170692f76322f706c7567696e2f726174696e672f4f776e65642f2f2f",
+        "query_hex": "706c7567696e5f6964733d412533424226706c7567696e5f6964733d"
+      },
+      "request": {
+        "version": "v2",
+        "method": "POST",
+        "route": "rating/Owned///?plugin_ids=A%3BB&plugin_ids=",
+        "raw": "{\"rating\":4.1}",
+        "raw_hex": null,
+        "peer_body_hex": null,
+        "installed_ids": [
+          "Owned"
+        ],
+        "peer_body": "{\"plugin_id\":\"Owned\"}",
+        "peer_status": 200,
+        "share": true,
+        "content_type": "application/json"
+      }
+    }
+  ],
+  "all_uid_present_equal": true,
+  "network_rejections": [],
+  "independent_result_sha256": "aa55698a72a6c5ce1f7794f3ce8773cd3dfb769373836a6af61a1d6781a599f1"
+}

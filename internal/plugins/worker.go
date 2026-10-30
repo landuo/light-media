@@ -67,7 +67,7 @@ func serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 	if concurrent {
 		advertisedConcurrent = 1
 	}
-	helloResult, _ := json.Marshal(Handshake{TransportClose: advertisedConcurrent, ConcurrentSession: advertisedConcurrent, Protocol: ProtocolVersion, PluginID: manifest.PluginID, Version: manifest.Version, HostAPI: HostAPIVersion, Methods: manifest.Methods, Capabilities: manifest.Capabilities, Transport: &transportAdvertisement{Version: 1}, PersistentSession: 1})
+	helloResult, _ := json.Marshal(Handshake{CallbackErrors: 1, TransportClose: advertisedConcurrent, ConcurrentSession: advertisedConcurrent, Protocol: ProtocolVersion, PluginID: manifest.PluginID, Version: manifest.Version, HostAPI: HostAPIVersion, Methods: manifest.Methods, Capabilities: manifest.Capabilities, Transport: &transportAdvertisement{Version: 1}, PersistentSession: 1})
 	if err = s.write(Frame{Protocol: ProtocolVersion, ID: first.ID, Type: "result", Identity: s.identity, Result: helloResult}); err != nil {
 		return err
 	}
@@ -81,6 +81,16 @@ func serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 		}
 		if request.Protocol != ProtocolVersion || request.Identity != s.identity || request.Type != "call" {
 			return failure("invalid_invocation")
+		}
+		if request.Method == "transport.callback_errors" {
+			if invoked || s.callbackErrors || !validCallbackErrorVersion(request.Payload) {
+				return failure("callback_error_mismatch")
+			}
+			if err = s.write(Frame{Protocol: ProtocolVersion, ID: request.ID, Type: "result", Identity: s.identity, Result: json.RawMessage(`{"version":1}`)}); err != nil {
+				return err
+			}
+			s.callbackErrors = true
+			continue
 		}
 		if request.Method == "transport.negotiate" {
 			var limits transportLimits
@@ -181,7 +191,7 @@ func serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 		}
 		reply := Frame{Protocol: ProtocolVersion, ID: request.ID, Type: "result", Identity: s.identity}
 		if handleErr != nil {
-			reply.Error = &ReplyError{Code: workerHandlerFailureCode(handleErr)}
+			reply.Error = workerCallbackFailure(handleErr, s.callbackErrors)
 		} else {
 			if len(result) == 0 {
 				result = json.RawMessage("null")
