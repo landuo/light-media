@@ -33,3 +33,11 @@
 - 遵循源模块优先级与结果判定：None/全 None tuple/list 继续，false、零、空字符串/对象有效。完成消息走普通通知链，`save_history=false`，不虚构 WebPush 密钥或兜底。
 - 仅删除现有提供方所有的元数据缓存；保留推荐外层缓存、AniList 翻译词典、图像/站点/插件缓存及业务数据。当前无 Fanart/TVDB 原生持久缓存，不为测试发明存储。
 - 已接受的命令不随 HTTP 断开中断，仍受 SDK 每次调用的既有有限时限约束。源完整服务和 Redis 未运行，组件 witness 与目标真实 CLI/SDK/SQLite/浏览器门严格分开记录。
+
+## S06 整理历史精确查询契约
+
+- 仅 `history.transfer.get_by_src` / `history.transfer.get_by_dest` 两个有限能力，通过标准 `plugins.Histories` SDK 访问当前宿主记录；不另建插件历史库。源/目标路径精确匹配，storage 空值不筛选，缺失返回 null。
+- 普通原生单文件 copy 在现有事务中冻结已完成事实；重试排队不隐藏上一完成结果，最终快照绑定实际 job/generation。legacy 不可知的日期、FileItem 等保持 null。
+- 原整数主键适配稳定 opaque handle；typed UTF-8/null string 以及严格 JSON 参数是有限 Go 传输边界，不冒充任意 Python/SQLAlchemy 类型或异常。
+- 源证据是完整 DAO/SQLAlchemy/SQLite 与原 MetaInfoPath/FileItem/MediaInfo/add_success 组件；不是运行完整原整理服务或外部元数据。物理复制由真实目标原生任务证明；浏览器的独占历史读取 fixture 不冒充 HTTP 导入。
+- 下载历史、删除、附属材料、自定义模块 TransferInfo 和其它 producer 依赖仍开放；这两个查询的子切片不计 S06 总组完成。

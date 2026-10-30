@@ -69,16 +69,17 @@ type importSidecar struct {
 }
 
 type importMetadata struct {
-	OriginalPreview     bool                                   `json:"original_preview,omitempty"`
-	OriginalNamingBases map[string]string                      `json:"original_naming_bases,omitempty"`
-	OriginalTransfer    map[string]originalTransferFileContext `json:"original_transfer,omitempty"`
-	ExtensionInputSHA   string                                 `json:"extension_input_sha,omitempty"`
-	Overwrite           *importOverwritePolicy                 `json:"overwrite,omitempty"`
-	Reorganize          *importReorganize                      `json:"reorganize,omitempty"`
-	RootPath            string                                 `json:"root_path"`
-	Methods             map[string]string                      `json:"methods"`
-	Episodes            map[string]catalog.Episode             `json:"episodes"`
-	Sidecars            map[string][]importSidecar             `json:"sidecars"`
+	SharedHistory       map[string]sharedTransferHistorySnapshot `json:"shared_history,omitempty"`
+	OriginalPreview     bool                                     `json:"original_preview,omitempty"`
+	OriginalNamingBases map[string]string                        `json:"original_naming_bases,omitempty"`
+	OriginalTransfer    map[string]originalTransferFileContext   `json:"original_transfer,omitempty"`
+	ExtensionInputSHA   string                                   `json:"extension_input_sha,omitempty"`
+	Overwrite           *importOverwritePolicy                   `json:"overwrite,omitempty"`
+	Reorganize          *importReorganize                        `json:"reorganize,omitempty"`
+	RootPath            string                                   `json:"root_path"`
+	Methods             map[string]string                        `json:"methods"`
+	Episodes            map[string]catalog.Episode               `json:"episodes"`
+	Sidecars            map[string][]importSidecar               `json:"sidecars"`
 }
 
 type importScanFile struct {
@@ -719,6 +720,9 @@ func (a *App) previewImport(ctx context.Context, request ImportRequest) (ImportP
 				plan.Files[index].Reason = "媒体库可用空间不足，请释放空间后重新预览"
 			}
 		}
+	}
+	if err = a.freezeSharedTransferHistory(ctx, plan, &meta, originalMedia, category); err != nil {
+		return ImportPlan{}, err
 	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {

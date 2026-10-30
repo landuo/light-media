@@ -35,6 +35,7 @@ type Media struct {
 	// when TMDB leaves classification fields empty. Older cache entries lack it.
 	CategoryMetadataKnown bool                     `json:"category_metadata_known,omitempty"`
 	CategoryFields        map[string]CategoryField `json:"category_fields,omitempty"`
+	TVDBID                *int64                   `json:"tvdb_id,omitempty"`
 	IMDbID                string                   `json:"imdb_id"`
 	Aliases               []string                 `json:"aliases"`
 	Year                  int                      `json:"year"`

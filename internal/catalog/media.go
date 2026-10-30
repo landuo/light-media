@@ -225,6 +225,9 @@ func (c *Client) media(raw wireMedia, kind string, includeRelated bool) (Media, 
 		return Media{}, err
 	}
 	result.IMDbID, result.Aliases = imdbID, aliases
+	if raw.ExternalIDs != nil {
+		result.TVDBID = raw.ExternalIDs.TVDBID
+	}
 	if raw.Credits == nil || raw.Credits.Cast == nil || raw.Recommendations == nil || raw.Recommendations.Results == nil {
 		return Media{}, &Error{Code: "invalid_response"}
 	}

@@ -11,15 +11,21 @@ import (
 // host reserves media slots before publication; release only this manual plan's
 // unpublished selected slots so a new explicit action can use the new config.
 // Download-owned reservations and any actual/uncertain publication stay owned.
-func (a *App) persistOriginalTransferFailure(ctx context.Context, plan ImportPlan, meta importMetadata, selected []int, failure error) error {
+func (a *App) persistOriginalTransferFailure(ctx context.Context, job Job, plan ImportPlan, meta importMetadata, selected []int, failure error) error {
+	for _, index := range selected {
+		file := plan.Files[index]
+		if file.Status == "error" {
+			finishSharedTransferHistory(&meta, job, file, importReceipt{}, false, file.Reason)
+		}
+	}
 	var api *APIError
 	if !errors.As(failure, &api) || plan.IntentID != "" {
-		return a.Store.Put(ctx, "import_plan", plan.ID, plan)
+		return a.persistSharedHistoryFailedPlan(ctx, plan, meta)
 	}
 	switch api.Code {
 	case "PLUGIN_TRANSFER_FAILED", "PLUGIN_TRANSFER_RESULT_INVALID", "REVIEW_PLUGIN_TRANSFER_TARGET":
 	default:
-		return a.Store.Put(ctx, "import_plan", plan.ID, plan)
+		return a.persistSharedHistoryFailedPlan(ctx, plan, meta)
 	}
 	release := []PlanFile{}
 	for _, index := range selected {
@@ -65,7 +71,7 @@ func (a *App) persistOriginalTransferFailure(ctx context.Context, plan ImportPla
 		return err
 	}
 	defer tx.Rollback()
-	if err := txPut(ctx, tx, "import_plan", plan.ID, plan); err != nil {
+	if err := persistSharedHistoryPlan(ctx, tx, plan, meta); err != nil {
 		return err
 	}
 	for _, file := range release {

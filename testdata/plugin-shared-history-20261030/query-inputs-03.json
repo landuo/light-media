@@ -1,0 +1,442 @@
+{
+  "seed": {
+    "downloadhistory": [
+      {
+        "id": 1,
+        "path": "/owned/a",
+        "type": "电影",
+        "title": "old",
+        "download_hash": "AbC",
+        "date": "2025-01-01 00:00:00"
+      },
+      {
+        "id": 2,
+        "path": "/owned/b",
+        "type": "电视剧",
+        "title": "new",
+        "download_hash": "AbC",
+        "date": "2025-02-01 00:00:00",
+        "note": {
+          "x": [
+            null,
+            false,
+            0,
+            ""
+          ]
+        }
+      },
+      {
+        "id": 3,
+        "path": "/owned/c",
+        "type": "电影",
+        "title": "null-hash",
+        "date": null
+      },
+      {
+        "id": 4,
+        "path": "/owned/d",
+        "type": "电影",
+        "title": "empty-hash",
+        "download_hash": ""
+      }
+    ],
+    "transferhistory": [
+      {
+        "id": 1,
+        "src": "/owned/a.mkv",
+        "dest": "/owned/library/shared.mkv",
+        "src_storage": "local",
+        "dest_storage": "local",
+        "title": "first",
+        "status": true
+      },
+      {
+        "id": 2,
+        "src": "/owned/b.mkv",
+        "dest": "/owned/library/shared.mkv",
+        "src_storage": "local",
+        "dest_storage": "local",
+        "title": "second",
+        "status": false,
+        "errmsg": "fixture failure",
+        "date": "2025-12-30 12:00:00"
+      },
+      {
+        "id": 3,
+        "src": "/owned/c.mkv",
+        "dest": null,
+        "src_storage": "local",
+        "dest_storage": null,
+        "title": "no target"
+      },
+      {
+        "id": 4,
+        "src": null,
+        "dest": "",
+        "src_storage": null,
+        "dest_storage": "",
+        "title": "null source"
+      }
+    ]
+  },
+  "operations": [
+    {
+      "case": "hash-'AbC'",
+      "family": "download",
+      "method": "get_by_hash",
+      "arguments": {
+        "download_hash": "AbC"
+      }
+    },
+    {
+      "case": "hash-'abc'",
+      "family": "download",
+      "method": "get_by_hash",
+      "arguments": {
+        "download_hash": "abc"
+      }
+    },
+    {
+      "case": "hash-'missing'",
+      "family": "download",
+      "method": "get_by_hash",
+      "arguments": {
+        "download_hash": "missing"
+      }
+    },
+    {
+      "case": "hash-''",
+      "family": "download",
+      "method": "get_by_hash",
+      "arguments": {
+        "download_hash": ""
+      }
+    },
+    {
+      "case": "hash-None",
+      "family": "download",
+      "method": "get_by_hash",
+      "arguments": {
+        "download_hash": null
+      }
+    },
+    {
+      "case": "hash-123",
+      "family": "download",
+      "method": "get_by_hash",
+      "arguments": {
+        "download_hash": 123
+      }
+    },
+    {
+      "case": "hash-['AbC']",
+      "family": "download",
+      "method": "get_by_hash",
+      "arguments": {
+        "download_hash": [
+          "AbC"
+        ]
+      }
+    },
+    {
+      "case": "get_by_src-'/owned/a.mkv'",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": "/owned/a.mkv"
+      }
+    },
+    {
+      "case": "get_by_src-'/owned/a.mkv/'",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": "/owned/a.mkv/"
+      }
+    },
+    {
+      "case": "get_by_src-'/OWNED/A.MKV'",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": "/OWNED/A.MKV"
+      }
+    },
+    {
+      "case": "get_by_src-''",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": ""
+      }
+    },
+    {
+      "case": "get_by_src-None",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": null
+      }
+    },
+    {
+      "case": "get_by_src-'/owned/missing'",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": "/owned/missing"
+      }
+    },
+    {
+      "case": "get_by_src-storage-None",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": "/owned/a.mkv",
+        "storage": null
+      }
+    },
+    {
+      "case": "get_by_src-storage-''",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": "/owned/a.mkv",
+        "storage": ""
+      }
+    },
+    {
+      "case": "get_by_src-storage-'local'",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": "/owned/a.mkv",
+        "storage": "local"
+      }
+    },
+    {
+      "case": "get_by_src-storage-'LOCAL'",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": "/owned/a.mkv",
+        "storage": "LOCAL"
+      }
+    },
+    {
+      "case": "get_by_src-storage-'excluded-storage'",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": "/owned/a.mkv",
+        "storage": "excluded-storage"
+      }
+    },
+    {
+      "case": "get_by_src-invalid-list",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": [
+          "/owned/a.mkv"
+        ]
+      }
+    },
+    {
+      "case": "get_by_dest-'/owned/library/shared.mkv'",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": "/owned/library/shared.mkv"
+      }
+    },
+    {
+      "case": "get_by_dest-'/owned/library/shared.mkv/'",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": "/owned/library/shared.mkv/"
+      }
+    },
+    {
+      "case": "get_by_dest-'/OWNED/LIBRARY/SHARED.MKV'",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": "/OWNED/LIBRARY/SHARED.MKV"
+      }
+    },
+    {
+      "case": "get_by_dest-''",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": ""
+      }
+    },
+    {
+      "case": "get_by_dest-None",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": null
+      }
+    },
+    {
+      "case": "get_by_dest-'/owned/missing'",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": "/owned/missing"
+      }
+    },
+    {
+      "case": "get_by_dest-storage-None",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": "/owned/library/shared.mkv",
+        "storage": null
+      }
+    },
+    {
+      "case": "get_by_dest-storage-''",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": "/owned/library/shared.mkv",
+        "storage": ""
+      }
+    },
+    {
+      "case": "get_by_dest-storage-'local'",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": "/owned/library/shared.mkv",
+        "storage": "local"
+      }
+    },
+    {
+      "case": "get_by_dest-storage-'LOCAL'",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": "/owned/library/shared.mkv",
+        "storage": "LOCAL"
+      }
+    },
+    {
+      "case": "get_by_dest-storage-'excluded-storage'",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": "/owned/library/shared.mkv",
+        "storage": "excluded-storage"
+      }
+    },
+    {
+      "case": "get_by_dest-invalid-list",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": [
+          "/owned/library/shared.mkv"
+        ]
+      }
+    },
+    {
+      "case": "get_by_src-null-storage-edge-None",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": null,
+        "storage": null
+      }
+    },
+    {
+      "case": "get_by_src-null-storage-edge-''",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": null,
+        "storage": ""
+      }
+    },
+    {
+      "case": "get_by_src-null-storage-edge-'local'",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": null,
+        "storage": "local"
+      }
+    },
+    {
+      "case": "get_by_dest-null-storage-edge-None",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": "",
+        "storage": null
+      }
+    },
+    {
+      "case": "get_by_dest-null-storage-edge-''",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": "",
+        "storage": ""
+      }
+    },
+    {
+      "case": "get_by_dest-null-storage-edge-'local'",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": "",
+        "storage": "local"
+      }
+    },
+    {
+      "case": "delete-2",
+      "family": "transfer",
+      "method": "delete",
+      "arguments": {
+        "historyid": 2
+      }
+    },
+    {
+      "case": "delete-999",
+      "family": "transfer",
+      "method": "delete",
+      "arguments": {
+        "historyid": 999
+      }
+    },
+    {
+      "case": "delete-None",
+      "family": "transfer",
+      "method": "delete",
+      "arguments": {
+        "historyid": null
+      }
+    },
+    {
+      "case": "delete-'not-an-id'",
+      "family": "transfer",
+      "method": "delete",
+      "arguments": {
+        "historyid": "not-an-id"
+      }
+    },
+    {
+      "case": "after-delete",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": "/owned/b.mkv"
+      }
+    }
+  ]
+}

@@ -1,0 +1,744 @@
+{
+  "scope": "actual source history Oper/ORM with real isolated SQLite; no Manager or source file-transfer chain execution",
+  "python": "3.12.14",
+  "sqlite": "3.53.1",
+  "dependencies": {
+    "SQLAlchemy": "2.0.55",
+    "pydantic": "2.14.2",
+    "pydantic-settings": "2.16.2"
+  },
+  "timezone": "Asia/Shanghai",
+  "network_attempts": [],
+  "schema": {
+    "downloadhistory": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false
+      },
+      {
+        "name": "path",
+        "type": "VARCHAR",
+        "nullable": false
+      },
+      {
+        "name": "type",
+        "type": "VARCHAR",
+        "nullable": false
+      },
+      {
+        "name": "title",
+        "type": "VARCHAR",
+        "nullable": false
+      },
+      {
+        "name": "year",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "tmdbid",
+        "type": "INTEGER",
+        "nullable": true
+      },
+      {
+        "name": "imdbid",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "tvdbid",
+        "type": "INTEGER",
+        "nullable": true
+      },
+      {
+        "name": "doubanid",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "bangumiid",
+        "type": "INTEGER",
+        "nullable": true
+      },
+      {
+        "name": "anilistid",
+        "type": "INTEGER",
+        "nullable": true
+      },
+      {
+        "name": "media_source",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "media_id",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "seasons",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "episodes",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "image",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "poster",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "downloader",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "download_hash",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "torrent_name",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "torrent_description",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "torrent_site",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "userid",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "username",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "channel",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "date",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "note",
+        "type": "JSON",
+        "nullable": true
+      },
+      {
+        "name": "media_category",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "episode_group",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "custom_words",
+        "type": "VARCHAR",
+        "nullable": true
+      }
+    ],
+    "transferhistory": [
+      {
+        "name": "id",
+        "type": "INTEGER",
+        "nullable": false
+      },
+      {
+        "name": "src",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "src_storage",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "src_fileitem",
+        "type": "JSON",
+        "nullable": true
+      },
+      {
+        "name": "dest",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "dest_storage",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "dest_fileitem",
+        "type": "JSON",
+        "nullable": true
+      },
+      {
+        "name": "mode",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "type",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "category",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "title",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "year",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "tmdbid",
+        "type": "INTEGER",
+        "nullable": true
+      },
+      {
+        "name": "imdbid",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "tvdbid",
+        "type": "INTEGER",
+        "nullable": true
+      },
+      {
+        "name": "doubanid",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "bangumiid",
+        "type": "INTEGER",
+        "nullable": true
+      },
+      {
+        "name": "anilistid",
+        "type": "INTEGER",
+        "nullable": true
+      },
+      {
+        "name": "media_source",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "media_id",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "seasons",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "episodes",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "image",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "downloader",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "download_hash",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "status",
+        "type": "BOOLEAN",
+        "nullable": true
+      },
+      {
+        "name": "errmsg",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "date",
+        "type": "VARCHAR",
+        "nullable": true
+      },
+      {
+        "name": "files",
+        "type": "JSON",
+        "nullable": true
+      },
+      {
+        "name": "episode_group",
+        "type": "VARCHAR",
+        "nullable": true
+      }
+    ]
+  },
+  "observations": [
+    {
+      "case": "success",
+      "family": "transfer",
+      "method": "add_success",
+      "arguments": {
+        "mode": "copy",
+        "downloader": "Owned Downloader",
+        "download_hash": "AbC"
+      },
+      "before_local_date": "2026-10-30 10:21:22",
+      "returned": {
+        "id": 1,
+        "src": "/owned/a.mkv",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "/owned/a.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "a.mkv",
+          "basename": "a",
+          "extension": "mkv",
+          "size": 7,
+          "modify_time": 1234567890.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": "/owned/library/a.mkv",
+        "dest_storage": "local",
+        "dest_fileitem": {
+          "path": "/owned/library/a.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "a.mkv",
+          "basename": "a",
+          "extension": "mkv",
+          "size": 7,
+          "modify_time": 1234567890.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "mode": "copy",
+        "type": "电视剧",
+        "category": "剧集",
+        "title": "Owned",
+        "year": "2025",
+        "tmdbid": 123,
+        "imdbid": "tt123",
+        "tvdbid": 456,
+        "doubanid": "789",
+        "bangumiid": 111,
+        "anilistid": 222,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": "S01",
+        "episodes": "E02",
+        "image": "https://owned.invalid/w500/p.jpg",
+        "downloader": "Owned Downloader",
+        "download_hash": "AbC",
+        "status": true,
+        "errmsg": null,
+        "date": "2026-10-30 10:21:22",
+        "files": [
+          "/owned/a.mkv"
+        ],
+        "episode_group": null
+      },
+      "after_local_date": "2026-10-30 10:21:22",
+      "database": {
+        "downloadhistory": [],
+        "transferhistory": [
+          {
+            "id": 1,
+            "src": "/owned/a.mkv",
+            "src_storage": "local",
+            "src_fileitem": "{\"path\": \"/owned/a.mkv\", \"storage\": \"local\", \"type\": \"file\", \"name\": \"a.mkv\", \"basename\": \"a\", \"extension\": \"mkv\", \"size\": 7, \"modify_time\": 1234567890.0, \"children\": [], \"fileid\": null, \"parent_fileid\": null, \"thumbnail\": null, \"pickcode\": null, \"drive_id\": null, \"url\": null}",
+            "dest": "/owned/library/a.mkv",
+            "dest_storage": "local",
+            "dest_fileitem": "{\"path\": \"/owned/library/a.mkv\", \"storage\": \"local\", \"type\": \"file\", \"name\": \"a.mkv\", \"basename\": \"a\", \"extension\": \"mkv\", \"size\": 7, \"modify_time\": 1234567890.0, \"children\": [], \"fileid\": null, \"parent_fileid\": null, \"thumbnail\": null, \"pickcode\": null, \"drive_id\": null, \"url\": null}",
+            "mode": "copy",
+            "type": "电视剧",
+            "category": "剧集",
+            "title": "Owned",
+            "year": "2025",
+            "tmdbid": 123,
+            "imdbid": "tt123",
+            "tvdbid": 456,
+            "doubanid": "789",
+            "bangumiid": 111,
+            "anilistid": 222,
+            "media_source": "themoviedb",
+            "media_id": "123",
+            "seasons": "S01",
+            "episodes": "E02",
+            "image": "https://owned.invalid/w500/p.jpg",
+            "downloader": "Owned Downloader",
+            "download_hash": "AbC",
+            "status": 1,
+            "errmsg": null,
+            "date": "2026-10-30 10:21:22",
+            "files": "[\"/owned/a.mkv\"]",
+            "episode_group": null
+          }
+        ]
+      }
+    },
+    {
+      "case": "failed-with-media",
+      "family": "transfer",
+      "method": "add_fail",
+      "arguments": {
+        "mode": "copy",
+        "downloader": "Owned Downloader",
+        "download_hash": "AbC"
+      },
+      "before_local_date": "2026-10-30 10:21:22",
+      "returned": {
+        "id": 1,
+        "src": "/owned/a.mkv",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "/owned/a.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "a.mkv",
+          "basename": "a",
+          "extension": "mkv",
+          "size": 7,
+          "modify_time": 1234567890.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": "/owned/library/a.mkv",
+        "dest_storage": "local",
+        "dest_fileitem": {
+          "path": "/owned/library/a.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "a.mkv",
+          "basename": "a",
+          "extension": "mkv",
+          "size": 7,
+          "modify_time": 1234567890.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "mode": "copy",
+        "type": "电视剧",
+        "category": "剧集",
+        "title": "Owned",
+        "year": "2025",
+        "tmdbid": 123,
+        "imdbid": "tt123",
+        "tvdbid": 456,
+        "doubanid": "789",
+        "bangumiid": 111,
+        "anilistid": 222,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": "S01",
+        "episodes": "E02",
+        "image": "https://owned.invalid/w500/p.jpg",
+        "downloader": "Owned Downloader",
+        "download_hash": "AbC",
+        "status": false,
+        "errmsg": "未知错误",
+        "date": "2026-10-30 10:21:22",
+        "files": [
+          "/owned/a.mkv"
+        ],
+        "episode_group": "group-id"
+      },
+      "after_local_date": "2026-10-30 10:21:22",
+      "database": {
+        "downloadhistory": [],
+        "transferhistory": [
+          {
+            "id": 1,
+            "src": "/owned/a.mkv",
+            "src_storage": "local",
+            "src_fileitem": "{\"path\": \"/owned/a.mkv\", \"storage\": \"local\", \"type\": \"file\", \"name\": \"a.mkv\", \"basename\": \"a\", \"extension\": \"mkv\", \"size\": 7, \"modify_time\": 1234567890.0, \"children\": [], \"fileid\": null, \"parent_fileid\": null, \"thumbnail\": null, \"pickcode\": null, \"drive_id\": null, \"url\": null}",
+            "dest": "/owned/library/a.mkv",
+            "dest_storage": "local",
+            "dest_fileitem": "{\"path\": \"/owned/library/a.mkv\", \"storage\": \"local\", \"type\": \"file\", \"name\": \"a.mkv\", \"basename\": \"a\", \"extension\": \"mkv\", \"size\": 7, \"modify_time\": 1234567890.0, \"children\": [], \"fileid\": null, \"parent_fileid\": null, \"thumbnail\": null, \"pickcode\": null, \"drive_id\": null, \"url\": null}",
+            "mode": "copy",
+            "type": "电视剧",
+            "category": "剧集",
+            "title": "Owned",
+            "year": "2025",
+            "tmdbid": 123,
+            "imdbid": "tt123",
+            "tvdbid": 456,
+            "doubanid": "789",
+            "bangumiid": 111,
+            "anilistid": 222,
+            "media_source": "themoviedb",
+            "media_id": "123",
+            "seasons": "S01",
+            "episodes": "E02",
+            "image": "https://owned.invalid/w500/p.jpg",
+            "downloader": "Owned Downloader",
+            "download_hash": "AbC",
+            "status": 0,
+            "errmsg": "未知错误",
+            "date": "2026-10-30 10:21:22",
+            "files": "[\"/owned/a.mkv\"]",
+            "episode_group": "group-id"
+          }
+        ]
+      }
+    },
+    {
+      "case": "success-null-target",
+      "family": "transfer",
+      "method": "add_success",
+      "arguments": {
+        "mode": "copy",
+        "downloader": "Owned Downloader",
+        "download_hash": "AbC"
+      },
+      "before_local_date": "2026-10-30 10:21:22",
+      "returned": {
+        "id": 1,
+        "src": "/owned/a.mkv",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "/owned/a.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "a.mkv",
+          "basename": "a",
+          "extension": "mkv",
+          "size": 7,
+          "modify_time": 1234567890.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": null,
+        "dest_storage": null,
+        "dest_fileitem": null,
+        "mode": "copy",
+        "type": "电视剧",
+        "category": "剧集",
+        "title": "Owned",
+        "year": "2025",
+        "tmdbid": 123,
+        "imdbid": "tt123",
+        "tvdbid": 456,
+        "doubanid": "789",
+        "bangumiid": 111,
+        "anilistid": 222,
+        "media_source": "themoviedb",
+        "media_id": "123",
+        "seasons": "S01",
+        "episodes": "E02",
+        "image": "https://owned.invalid/w500/p.jpg",
+        "downloader": "Owned Downloader",
+        "download_hash": "AbC",
+        "status": true,
+        "errmsg": null,
+        "date": "2026-10-30 10:21:22",
+        "files": [
+          "/owned/a.mkv"
+        ],
+        "episode_group": null
+      },
+      "after_local_date": "2026-10-30 10:21:22",
+      "database": {
+        "downloadhistory": [],
+        "transferhistory": [
+          {
+            "id": 1,
+            "src": "/owned/a.mkv",
+            "src_storage": "local",
+            "src_fileitem": "{\"path\": \"/owned/a.mkv\", \"storage\": \"local\", \"type\": \"file\", \"name\": \"a.mkv\", \"basename\": \"a\", \"extension\": \"mkv\", \"size\": 7, \"modify_time\": 1234567890.0, \"children\": [], \"fileid\": null, \"parent_fileid\": null, \"thumbnail\": null, \"pickcode\": null, \"drive_id\": null, \"url\": null}",
+            "dest": null,
+            "dest_storage": null,
+            "dest_fileitem": "null",
+            "mode": "copy",
+            "type": "电视剧",
+            "category": "剧集",
+            "title": "Owned",
+            "year": "2025",
+            "tmdbid": 123,
+            "imdbid": "tt123",
+            "tvdbid": 456,
+            "doubanid": "789",
+            "bangumiid": 111,
+            "anilistid": 222,
+            "media_source": "themoviedb",
+            "media_id": "123",
+            "seasons": "S01",
+            "episodes": "E02",
+            "image": "https://owned.invalid/w500/p.jpg",
+            "downloader": "Owned Downloader",
+            "download_hash": "AbC",
+            "status": 1,
+            "errmsg": null,
+            "date": "2026-10-30 10:21:22",
+            "files": "[\"/owned/a.mkv\"]",
+            "episode_group": null
+          }
+        ]
+      }
+    },
+    {
+      "case": "failed-unrecognized",
+      "family": "transfer",
+      "method": "add_fail",
+      "arguments": {
+        "mode": "link"
+      },
+      "before_local_date": "2026-10-30 10:21:22",
+      "returned": {
+        "id": 1,
+        "src": "/owned/a.mkv",
+        "src_storage": "local",
+        "src_fileitem": {
+          "path": "/owned/a.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "a.mkv",
+          "basename": "a",
+          "extension": "mkv",
+          "size": 7,
+          "modify_time": 1234567890.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        "dest": null,
+        "dest_storage": null,
+        "dest_fileitem": {},
+        "mode": "link",
+        "type": null,
+        "category": null,
+        "title": "Owned",
+        "year": "2025",
+        "tmdbid": null,
+        "imdbid": null,
+        "tvdbid": null,
+        "doubanid": null,
+        "bangumiid": null,
+        "anilistid": null,
+        "media_source": null,
+        "media_id": null,
+        "seasons": "S01",
+        "episodes": "E02",
+        "image": null,
+        "downloader": null,
+        "download_hash": null,
+        "status": false,
+        "errmsg": "未识别到媒体信息",
+        "date": "2026-10-30 10:21:22",
+        "files": [],
+        "episode_group": null
+      },
+      "after_local_date": "2026-10-30 10:21:22",
+      "database": {
+        "downloadhistory": [],
+        "transferhistory": [
+          {
+            "id": 1,
+            "src": "/owned/a.mkv",
+            "src_storage": "local",
+            "src_fileitem": "{\"path\": \"/owned/a.mkv\", \"storage\": \"local\", \"type\": \"file\", \"name\": \"a.mkv\", \"basename\": \"a\", \"extension\": \"mkv\", \"size\": 7, \"modify_time\": 1234567890.0, \"children\": [], \"fileid\": null, \"parent_fileid\": null, \"thumbnail\": null, \"pickcode\": null, \"drive_id\": null, \"url\": null}",
+            "dest": null,
+            "dest_storage": null,
+            "dest_fileitem": "{}",
+            "mode": "link",
+            "type": null,
+            "category": null,
+            "title": "Owned",
+            "year": "2025",
+            "tmdbid": null,
+            "imdbid": null,
+            "tvdbid": null,
+            "doubanid": null,
+            "bangumiid": null,
+            "anilistid": null,
+            "media_source": null,
+            "media_id": null,
+            "seasons": "S01",
+            "episodes": "E02",
+            "image": null,
+            "downloader": null,
+            "download_hash": null,
+            "status": 0,
+            "errmsg": "未识别到媒体信息",
+            "date": "2026-10-30 10:21:22",
+            "files": "[]",
+            "episode_group": null
+          }
+        ]
+      }
+    }
+  ]
+}

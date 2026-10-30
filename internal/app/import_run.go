@@ -124,6 +124,9 @@ func (a *App) executeImport(ctx context.Context, planID string, fileIDs []string
 			return Job{}, err
 		}
 	}
+	if err = captureSharedHistoryLegacyTx(ctx, tx, plan, &meta, selected); err != nil {
+		return Job{}, err
+	}
 	plan.State = "queued"
 	if err = txPut(ctx, tx, "import_plan", plan.ID, plan); err != nil {
 		return Job{}, err
@@ -331,7 +334,7 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 			plan.State = "partial"
 			cleanupCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 			defer cancel()
-			if err := a.persistOriginalTransferFailure(cleanupCtx, plan, meta, indices, returnErr); err == nil && originalFailedFile != nil {
+			if err := a.persistOriginalTransferFailure(cleanupCtx, job, plan, meta, indices, returnErr); err == nil && originalFailedFile != nil {
 				var callbackFailure *originalTransferCallbackError
 				if errors.As(returnErr, &callbackFailure) {
 					return
@@ -497,6 +500,11 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 				failures.Messages = append(failures.Messages, a.clean(err.Error()))
 			}
 			file = &plan.Files[index]
+			historyMessage := ""
+			if mainFailure != nil {
+				historyMessage = a.clean(mainFailure.Error())
+			}
+			finishSharedTransferHistory(&meta, job, *file, receipt, mainSucceeded, historyMessage)
 			inPlace = meta.Reorganize != nil && !meta.Reorganize.TargetRemoved && file.Target == meta.Reorganize.Asset.Path && (!meta.Reorganize.SingleHistory || file.Source == file.Target)
 			completeTask := func(task PlanFile, source originalTransferFileContext, success bool, message string) {
 				if callbackErr := a.completeOriginalTransferCallback(ctx, job, plan, file.ID, task, source, success, message); callbackErr != nil {
@@ -675,7 +683,7 @@ func (a *App) runImport(ctx context.Context, job Job, planID string, fileIDs []s
 			if err = txPut(ctx, tx, "original_transfer_task_failures", plan.ID+"/"+file.ID, failures); err != nil {
 				return err
 			}
-			if err = txPut(ctx, tx, "import_plan", plan.ID, plan); err != nil {
+			if err = persistSharedHistoryPlan(ctx, tx, plan, meta); err != nil {
 				return err
 			}
 			var qualityCleanupCount int

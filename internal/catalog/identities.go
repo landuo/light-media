@@ -8,6 +8,7 @@ import (
 )
 
 type wireExternalIDs struct {
+	TVDBID  *int64 `json:"tvdb_id"`
 	ID      int64  `json:"id"`
 	IMDbID  string `json:"imdb_id"`
 	Success *bool  `json:"success"`

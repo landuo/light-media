@@ -1,0 +1,126 @@
+{
+  "status": "passed_scoped_s06_integrated_review",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "target_base_commit": "e0258042f5196a5d94753f7dceaed9a8ad261d9e",
+  "candidate_content_sha256": "777196046860b370587514eb8ac43a4bd848e8c66a337556db3d8a6475d2880a",
+  "new_review_files": {
+    "internal/app/history_integration_independent_test.go": "6318a30e3efcdfd3fae1140c0d05f7930b0b8ead18d492cced0e65b56d404f74",
+    "testdata/plugin-shared-history-20261030/run-independent.sh": "8ae869cc6608bbfc7f5ab9baffa0d5d12b1a23e773019ca5cc80ddca75b553ab",
+    "testdata/plugin-shared-history-20261030/independent/query-inputs.json": "e7e6f51f785bc8333a86ebc5788ec2105a64dba585c28e7d6e519b368e24ae8c"
+  },
+  "closure": {
+    "normal_target_files": 2585,
+    "normal_external_files": 3344,
+    "normal_target_closure_sha256": "df53274420d3db6c5f4a2b44f3b2b57e3eceaa5af29a2b5d5a77bc76dd472701",
+    "normal_external_closure_sha256": "5913f788d00982eb0e65a6f93229119b9be16ea26cd3a117ff4785de990d2311",
+    "race_target_files": 2582,
+    "race_external_files": 3343,
+    "race_target_closure_sha256": "160a4e2f2b493099ca0b8e8bd58cbe162e08480a8bda3324523e1b8f133de73f",
+    "race_external_closure_sha256": "058cac615ab1c9625fd9c478bba76f9e05a22f5573af94782144fb4e1a178228",
+    "normal_only": [
+      "cmd/server/big_memory_test.go",
+      "cmd/server/main.go",
+      "cmd/server/safe_mode_test.go"
+    ],
+    "race_only": [],
+    "common_changed": [],
+    "rule": "Normal capture additionally included cmd/server; portable race captures actual app/history/UI/S05 build inputs, shared files identical.",
+    "normal_complete_closure_sha256": "2117228f934ab774af7a69fd7a815c31a54a2f67b66c54ec33a5806c0ba21ddb",
+    "race_complete_closure_sha256": "990681fb6e983927a218e05ddf4d9821a40623ba08f2110ffd18e3e1b4f75403",
+    "complete_digest_definition": "normal: canonical JSON object {target:relative-path map,external:absolute-path map}; race: canonical actual absolute-path map from portable go-list closure; no before/after differences."
+  },
+  "runs": {
+    "integrated-normal-01": {
+      "exit": 0,
+      "root_passes": 6,
+      "skips": 0,
+      "race_reports": 0,
+      "log_sha256": "7356983d13ede2f13da1dac04055b60c27ebec8f3a947dff07eb7c12627f4569"
+    },
+    "integrated-portable-race-02": {
+      "exit": 0,
+      "root_passes": 6,
+      "skips": 0,
+      "race_reports": 0,
+      "log_sha256": "c3b65bf6d574c115ac09aed93902799f124db9d1fcc292a9c79299caf4879524"
+    },
+    "integrated-s05-clear-race-02": {
+      "exit": 0,
+      "root_passes": 22,
+      "skips": 0,
+      "race_reports": 0,
+      "log_sha256": "73ff80540ea2391a8d617409a7ceab35748e3c900711088214173886aeeccb8b"
+    }
+  },
+  "mutation": {
+    "overlay_only_stale_ui_worker": "expected_fail",
+    "expected_assertion": "UI page cached failure instead of current host record",
+    "log_sha256": "4a6da65d7a439c2f1d1d78f320d72736c4f1a3edd0e80cc5763bc6558e158c9e",
+    "product_tree_modified": false
+  },
+  "browser": {
+    "coordinator_performed": true,
+    "independently_compared_DOM_records": 4,
+    "record_fields": 30,
+    "all_equal": true,
+    "normal_worker_binary_matches_reviewer": true,
+    "synthetic_read_fixture_not_native_producer": true
+  },
+  "scope": [
+    "two exact transfer-history queries",
+    "ordinary observer-free regular-file native copy success/failure/retry producer",
+    "legacy known/null checkpoint retention",
+    "ordinary installable UI consumer live SDK reads, authenticated finite POST routes, clone/cold",
+    "same-host S05 read/update/cold and clear-cache coexistence; existing regression coverage only"
+  ],
+  "not_claimed": [
+    "full S06",
+    "download query/delete capability",
+    "auxiliary/custom callback/early preparation failure/full source organizer chain",
+    "full S05 equivalence",
+    "independently operated browser: coordinator performed browser, reviewer independently checked DOM record bytes",
+    "Mac/NAS",
+    "full platform performance or all repository tests"
+  ],
+  "known_open_issue": "Coordinator real source/worker counterexample confirms unpaired surrogate value/key becomes U+FFFD in S05 note persistence. Remains open; existing 13 S05 tests passing does not establish complete S05 equivalence. Not introduced by the S06 merge and not silently accepted as an adaptation.",
+  "reproduction": {
+    "normal": {
+      "command": "bash audits/history-integration-independent-20261030/run-integrated-review.sh integrated-normal-01 normal",
+      "script_sha256": "1a35a3ace324ba0df3ddd03fc8a6765bba832f5927c639d119ad87a4335be11a"
+    },
+    "race": {
+      "command": "bash testdata/plugin-shared-history-20261030/run-independent.sh NEW_OWNED_OUTPUT_DIR --race",
+      "script_sha256": "8ae869cc6608bbfc7f5ab9baffa0d5d12b1a23e773019ca5cc80ddca75b553ab",
+      "environment": "HISTORY_SOURCE_ROOT=read-only pinned checkout; HISTORY_SOURCE_PYTHON=compatible source-only Python; Go 1.26 on PATH"
+    },
+    "regression": {
+      "command": "bash audits/history-integration-independent-20261030/run-regression.sh",
+      "script_sha256": "51d332282298d77cf8afed9abe2b67c8e8f4cf4914b2aaa2dd9018e072df6620"
+    },
+    "capture_script_sha256": "29430a93c691ddd0a5e57f0bbfcccc117b123c427c1c9fd31b1654f020f73fe7"
+  },
+  "executed_binary_hashes": {
+    "integrated-normal-01": {
+      "history-worker": "c2dc0bb10aced9fd96edd5aab2723e6fd59edc2f591d928698bd57967b5882b6",
+      "ui-worker": "a06cdaddc164efcd8454ce8f8cf6326052ec3a77ea193c863ce30122439d571d",
+      "review.test": "b0356154cb1cddf6d3f7f8b2b68e90373166ec85a746eeccc10adbda075a2962"
+    },
+    "integrated-portable-race-02": {
+      "history-worker": "789ab6ecfbce224bbe9ab3c95235a1b6258e49f02603836ab84f163a80715e72",
+      "ui-worker": "73bbae590ddd6c91ca1d04d61fc6e992de7f615025245ea1be0d6ac2fe30b0f8",
+      "review.test": "bbb42e44141cb7316b83b5536494fcfcee0afa3adc4a4b448a110778ce250be9"
+    },
+    "integrated-s05-clear-race-02": {
+      "server": "40d7b2581bb4d3badea1795a0f2b1fd41e22b4978fdcb3162290182310059248",
+      "clear-worker": "3f822f23ab70c717cd32f33ed52f5969f78e618b6fe0d2b5c526f19366ea18c4",
+      "review.test": "bbb42e44141cb7316b83b5536494fcfcee0afa3adc4a4b448a110778ce250be9"
+    }
+  },
+  "verified_artifacts": {
+    "migration/evidence/transfer-history-query/contract.json": "92ad90ee774d7e35a9487d9dc4e71345a8d1a37790fb1824f52e3abb0861d653",
+    "migration/evidence/transfer-history-query/history-integrated-results.json": "6d63c6bcaaab324ea466ab794568ffece866ada4f8a3462759f41a2cc5549f08",
+    "migration/evidence/transfer-history-query/history-browser-result.json": "9ff3cbb24c5e0c302fbdeda373af5679dfcaee196c7f7d04298dbe4270c9c7ad",
+    "migration/evidence/transfer-history-query/history-browser-seed.json": "79db9a70f121aa2d1ed76f5e39ebca38626d2e1ffcf0e08f0feff56002279cf8",
+    "migration/evidence/transfer-history-query/history-browser-cold-db.json": "8a7d26901add06d0008b10a591413816c130c6c49770a70782648f50c7fdd582"
+  }
+}

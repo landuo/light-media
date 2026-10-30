@@ -1,0 +1,199 @@
+{
+  "operations": [
+    {
+      "case": "success",
+      "family": "transfer",
+      "method": "add_success",
+      "arguments": {
+        "mode": "copy",
+        "downloader": "Owned Downloader",
+        "download_hash": "AbC"
+      },
+      "producer": {
+        "fileitem": {
+          "path": "/owned/a.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "a.mkv",
+          "basename": "a",
+          "extension": "mkv",
+          "size": 7,
+          "modify_time": 1234567890
+        },
+        "meta": {
+          "en_name": "Owned",
+          "year": "2025",
+          "type": "电视剧",
+          "begin_season": 1,
+          "begin_episode": 2
+        },
+        "media": {
+          "source": "themoviedb",
+          "type": "电视剧",
+          "title": "Owned",
+          "year": "2025",
+          "tmdb_id": 123,
+          "imdb_id": "tt123",
+          "tvdb_id": 456,
+          "douban_id": "789",
+          "bangumi_id": 111,
+          "anilist_id": 222,
+          "category": "剧集",
+          "poster_path": "https://owned.invalid/original/p.jpg",
+          "episode_group": "group-id"
+        },
+        "transferinfo": {
+          "target_item": {
+            "path": "/owned/library/a.mkv",
+            "type": "file",
+            "name": "a.mkv",
+            "basename": "a",
+            "extension": "mkv",
+            "size": 7,
+            "modify_time": 1234567890
+          },
+          "file_list": [
+            "/owned/a.mkv"
+          ]
+        }
+      }
+    },
+    {
+      "case": "failed-with-media",
+      "family": "transfer",
+      "method": "add_fail",
+      "arguments": {
+        "mode": "copy",
+        "downloader": "Owned Downloader",
+        "download_hash": "AbC"
+      },
+      "producer": {
+        "fileitem": {
+          "path": "/owned/a.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "a.mkv",
+          "basename": "a",
+          "extension": "mkv",
+          "size": 7,
+          "modify_time": 1234567890
+        },
+        "meta": {
+          "en_name": "Owned",
+          "year": "2025",
+          "type": "电视剧",
+          "begin_season": 1,
+          "begin_episode": 2
+        },
+        "media": {
+          "source": "themoviedb",
+          "type": "电视剧",
+          "title": "Owned",
+          "year": "2025",
+          "tmdb_id": 123,
+          "imdb_id": "tt123",
+          "tvdb_id": 456,
+          "douban_id": "789",
+          "bangumi_id": 111,
+          "anilist_id": 222,
+          "category": "剧集",
+          "poster_path": "https://owned.invalid/original/p.jpg",
+          "episode_group": "group-id"
+        },
+        "transferinfo": {
+          "target_item": {
+            "path": "/owned/library/a.mkv",
+            "type": "file",
+            "name": "a.mkv",
+            "basename": "a",
+            "extension": "mkv",
+            "size": 7,
+            "modify_time": 1234567890
+          },
+          "file_list": [
+            "/owned/a.mkv"
+          ],
+          "message": "",
+          "success": false
+        }
+      }
+    },
+    {
+      "case": "success-null-target",
+      "family": "transfer",
+      "method": "add_success",
+      "arguments": {
+        "mode": "copy",
+        "downloader": "Owned Downloader",
+        "download_hash": "AbC"
+      },
+      "producer": {
+        "fileitem": {
+          "path": "/owned/a.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "a.mkv",
+          "basename": "a",
+          "extension": "mkv",
+          "size": 7,
+          "modify_time": 1234567890
+        },
+        "meta": {
+          "en_name": "Owned",
+          "year": "2025",
+          "type": "电视剧",
+          "begin_season": 1,
+          "begin_episode": 2
+        },
+        "media": {
+          "source": "themoviedb",
+          "type": "电视剧",
+          "title": "Owned",
+          "year": "2025",
+          "tmdb_id": 123,
+          "imdb_id": "tt123",
+          "tvdb_id": 456,
+          "douban_id": "789",
+          "bangumi_id": 111,
+          "anilist_id": 222,
+          "category": "剧集",
+          "poster_path": "https://owned.invalid/original/p.jpg",
+          "episode_group": "group-id"
+        },
+        "transferinfo": {
+          "target_item": null,
+          "file_list": [
+            "/owned/a.mkv"
+          ]
+        }
+      }
+    },
+    {
+      "case": "failed-unrecognized",
+      "family": "transfer",
+      "method": "add_fail",
+      "arguments": {
+        "mode": "link"
+      },
+      "producer": {
+        "fileitem": {
+          "path": "/owned/a.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "a.mkv",
+          "basename": "a",
+          "extension": "mkv",
+          "size": 7,
+          "modify_time": 1234567890
+        },
+        "meta": {
+          "en_name": "Owned",
+          "year": "2025",
+          "type": "电视剧",
+          "begin_season": 1,
+          "begin_episode": 2
+        }
+      }
+    }
+  ]
+}

@@ -15,8 +15,8 @@
     "remote": "https://github.com/landuo/light-media.git",
     "branch": "plugins-refactor",
     "baseline_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-    "revision": "42fd80dc13e989a947babd5a40a41560877413f9",
-    "remote_revision": "42fd80dc13e989a947babd5a40a41560877413f9",
+    "revision": "e0258042f5196a5d94753f7dceaed9a8ad261d9e",
+    "remote_revision": "e0258042f5196a5d94753f7dceaed9a8ad261d9e",
     "delivery_mode": "remote",
     "delivery_reason": "Per accepted functional slice commit, push and readback; no merge or deployment.",
     "metadata_paths": [
@@ -24,7 +24,7 @@
       "docs/plugin-module-parity-matrix.md",
       "docs/plugin-shared-host-20261030.md"
     ],
-    "revision_note": "Last completed remote delivery receipt; current clear-cache candidate is file-hash bound pending its own commit/push/readback, never a self-referential candidate SHA."
+    "revision_note": "Last completed remote receipt; current S06 integration file-bound until its own commit/push/readback, not a self-referential candidate SHA."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -3134,7 +3134,8 @@
       "feature_ids": [
         "43",
         "S11",
-        "S12"
+        "S12",
+        "S06.transfer_queries"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3215,7 +3216,8 @@
       "reason": "运行源码或数据，可能由插件直接调用/导入，不能仅因没有 RPC 名称移出宿主范围。",
       "feature_ids": [
         "43",
-        "S11"
+        "S11",
+        "S06.transfer_queries"
       ],
       "feature_link_reason": "MetaInfo parser fields consumed by plugin recognition/dispatch contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3280,7 +3282,8 @@
       "reason": "运行源码或数据，可能由插件直接调用/导入，不能仅因没有 RPC 名称移出宿主范围。",
       "feature_ids": [
         "43",
-        "S11"
+        "S11",
+        "S06.transfer_queries"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3375,7 +3378,8 @@
         "S05",
         "S05.query_update",
         "S06",
-        "S07"
+        "S07",
+        "S06.transfer_queries"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3677,7 +3681,8 @@
       "scope": "persistence",
       "reason": "数据库对象/Oper/迁移承载持久化与查询语义，单用户与本地落地是适配，不是功能消失。",
       "feature_ids": [
-        "S06"
+        "S06",
+        "S06.transfer_queries"
       ],
       "feature_link_reason": "persistent model/Oper underlying the named state capability",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3798,7 +3803,8 @@
       "scope": "persistence",
       "reason": "数据库对象/Oper/迁移承载持久化与查询语义，单用户与本地落地是适配，不是功能消失。",
       "feature_ids": [
-        "S06"
+        "S06",
+        "S06.transfer_queries"
       ],
       "feature_link_reason": "persistent model/Oper underlying the named state capability",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -6600,7 +6606,8 @@
       "reason": "运行源码或数据，可能由插件直接调用/导入，不能仅因没有 RPC 名称移出宿主范围。",
       "feature_ids": [
         "43",
-        "S09"
+        "S09",
+        "S06.transfer_queries"
       ],
       "feature_link_reason": "shared input/output DTO and enum contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -6829,7 +6836,8 @@
         "37",
         "43",
         "S06",
-        "S09"
+        "S09",
+        "S06.transfer_queries"
       ],
       "feature_link_reason": "shared input/output DTO and enum contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -8600,7 +8608,8 @@
       "scope": "ordinary-host",
       "reason": "运行源码或数据，可能由插件直接调用/导入，不能仅因没有 RPC 名称移出宿主范围。",
       "feature_ids": [
-        "13"
+        "13",
+        "S06.transfer_queries"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -8612,7 +8621,8 @@
       "scope": "ordinary-host",
       "reason": "运行源码或数据，可能由插件直接调用/导入，不能仅因没有 RPC 名称移出宿主范围。",
       "feature_ids": [
-        "13"
+        "13",
+        "S06.transfer_queries"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -16573,7 +16583,8 @@
       "line": 81,
       "end_line": 90,
       "feature_ids": [
-        "S06"
+        "S06",
+        "S06.transfer_queries"
       ],
       "chain": {
         "ingress": "ordinary plugin import/helper/Oper call, or source builtin cache command",
@@ -16596,7 +16607,8 @@
       "line": 92,
       "end_line": 100,
       "feature_ids": [
-        "S06"
+        "S06",
+        "S06.transfer_queries"
       ],
       "chain": {
         "ingress": "ordinary plugin import/helper/Oper call, or source builtin cache command",
@@ -19454,7 +19466,7 @@
       "id": "S05.query_update",
       "parent_feature": "S05",
       "description": "Complete four-method native SDK subscription DAO query/update slice; parent S05 remains incomplete",
-      "status": "verified",
+      "status": "implementing",
       "owner": "site_subscription_shared_host",
       "source_paths": [
         "app/db/subscribe_oper.py",
@@ -19511,7 +19523,7 @@
         "s05.query-update.real-e2e"
       ],
       "review": {
-        "status": "passed",
+        "status": "pending",
         "independent": true,
         "reviewer": "independent_source_audit",
         "evidence_ids": [
@@ -19590,12 +19602,17 @@
             "s05.query-update.real-e2e"
           ]
         }
+      },
+      "reopened": {
+        "reason": "New real source/SDK unpaired-surrogate JSON column counterexample",
+        "artifact": "evidence/s05-query-update/unicode-counterexample-20261030.json",
+        "previous_delivery": "42fd80dc13e989a947babd5a40a41560877413f9"
       }
     },
     {
       "id": "S06",
       "description": "S06 · 下载与整理历史查询/删除",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/history.py",
         "app/api/endpoints/transfer.py",
@@ -19638,7 +19655,10 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "delivery_slices": [
+        "S06.transfer_queries"
+      ]
     },
     {
       "id": "S07",
@@ -20246,6 +20266,153 @@
           ]
         }
       }
+    },
+    {
+      "id": "S06.transfer_queries",
+      "parent_feature": "S06",
+      "description": "Two exact transfer-history queries over authoritative native records, with ordinary single-file producer freezing/retry/legacy facts; not download/deletion or all S06",
+      "status": "verified",
+      "owner": "library_history_shared_host",
+      "source_paths": [
+        "app/db/transferhistory_oper.py",
+        "app/db/models/transferhistory.py",
+        "app/db/__init__.py",
+        "app/core/context.py",
+        "app/core/meta/metabase.py",
+        "app/core/metainfo.py",
+        "app/schemas/file.py",
+        "app/schemas/transfer.py",
+        "requirements.txt",
+        "requirements.in"
+      ],
+      "entrypoint_ids": [
+        "scope.sdk.app.db.transferhistory_oper.TransferHistoryOper.get_by_src",
+        "scope.sdk.app.db.transferhistory_oper.TransferHistoryOper.get_by_dest"
+      ],
+      "dependencies": [
+        "02",
+        "05"
+      ],
+      "target_paths": [
+        "cmd/owned-history-fixture/main.go",
+        "internal/app/import_plan.go",
+        "internal/app/import_run.go",
+        "internal/app/plugin_original_resources.go",
+        "internal/app/plugin_original_transfer_failure.go",
+        "internal/app/plugin_shared_history.go",
+        "internal/app/plugin_shared_history_decode.go",
+        "internal/app/plugin_shared_history_fixture_test.go",
+        "internal/app/plugin_shared_history_legacy_test.go",
+        "internal/app/plugin_shared_history_oracle_test.go",
+        "internal/app/plugin_shared_history_producer_oracle_test.go",
+        "internal/app/plugin_shared_history_snapshot.go",
+        "internal/app/plugin_shared_history_test.go",
+        "internal/catalog/identities.go",
+        "internal/catalog/media.go",
+        "internal/catalog/shared_history_test.go",
+        "internal/catalog/types.go",
+        "internal/plugins/shared_history.go",
+        "internal/plugins/shared_history_test.go",
+        "internal/app/history_query_independent_test.go",
+        "cmd/owned-history-ui-fixture/main.go",
+        "internal/app/history_integration_independent_test.go"
+      ],
+      "scenarios": [
+        "fixed real source Oper/SQLAlchemy/SQLite precise path/storage/null and all-column observations",
+        "actual native physical copy/failure/retry/generation and preserved legacy facts",
+        "real SDK worker permissions, malformed data, stale callbacks, clone and cold SQLite",
+        "normal CLI and official browser market/form/buttons, missing/storage match, clone/cold; synthetic read fixture explicitly distinguished"
+      ],
+      "evidence_ids": [
+        "history-query.differential",
+        "history-query.real-e2e"
+      ],
+      "review": {
+        "status": "passed",
+        "independent": true,
+        "reviewer": "history_query_independent_review_20261030",
+        "evidence_ids": [
+          "history-query.independent-review"
+        ]
+      },
+      "boundaries": [
+        "Source integer ID -> stable opaque host handle; source add_force deletes/reinserts and changes integer ID, host same-resource handle remains stable. Current consumers forward ID as a future delete handle.",
+        "Legacy known native facts are retained, including native planned target; unavailable historical date/FileItem/category/season/etc remain null. No current cache/settings reconstruction. A legacy already-running ambiguous plan is not guessed from an older job.",
+        "Typed API accepts nullable UTF-8 strings. SDK rejects invalid Go string bytes before JSON marshal. Host rejects malformed UTF-8, unpaired Unicode surrogates, nonstring values, non-object/trailing data, unknown/case-alias/duplicate decoded keys, and >128KiB input. Legitimate U+FFFD/emoji/Unicode pairs remain exact. These are finite transport adaptations, not claims of identical SQLAlchemy exception classes.",
+        "All-column source/native producer comparison normalizes only opaque row ID and independently bounded real wall-clock instant; no business fields dropped. Source SQLite3.53.1 and target SQLite3.53.4 are explicitly distinct tested engines.",
+        "Auxiliary subtitle/audio producer rows without observer",
+        "Plugin module callback custom TransferInfo result fields and date commit boundary",
+        "Early manual preparation failure full source context",
+        "Download-backed transfer downloader/hash context",
+        "Full four-source metadata producer equivalence belongs to broader recognition work; this slice tests known native TMDB identity facts",
+        "DownloadHistory get_by_hash and source-only DB history delete not yet exposed"
+      ],
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "Source nullable fields and precise lookup compared against actual DAO; completed metadata frozen, legacy unknown fields null, no second history DB.",
+          "evidence_ids": [
+            "history-query.differential",
+            "history-query.real-e2e"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Actual completion job/generation, queued retry retains previous outcome, stale attempt cannot replace current record.",
+          "evidence_ids": [
+            "history-query.differential",
+            "history-query.real-e2e"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Actual filesystem collision then successful retry, SQLite errors, malformed arguments and capability denial.",
+          "evidence_ids": [
+            "history-query.differential",
+            "history-query.real-e2e"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "Actual claim generation/stale concurrent execution under race detector; query is one bound SQLite statement.",
+          "evidence_ids": [
+            "history-query.differential",
+            "history-query.real-e2e"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Actual App and worker cold recovery; official cmd/server stop/start and browser clone returns unchanged record.",
+          "evidence_ids": [
+            "history-query.differential",
+            "history-query.real-e2e"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "Actual fixed source DAO and metadata producer components, not full original organizer; exact merged S05/clear covered cases replayed, S05 Unicode counterexample separately reopened.",
+          "evidence_ids": [
+            "history-query.differential",
+            "history-query.real-e2e"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "Active scoped worker and finite capabilities; no SQL/path-normalization/file-access query surface; typed invalid UTF8 rejected pre-marshalling.",
+          "evidence_ids": [
+            "history-query.differential",
+            "history-query.real-e2e"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Measured finite race regression and bounded wire/query sample only; no general history-volume throughput claim.",
+          "evidence_ids": [
+            "history-query.differential",
+            "history-query.real-e2e"
+          ]
+        }
+      }
     }
   ],
   "decisions": [
@@ -20260,7 +20427,7 @@
     {
       "id": "s05.query-update.differential",
       "kind": "differential",
-      "status": "passed",
+      "status": "historical_passed_reopened",
       "feature_ids": [
         "S05.query_update"
       ],
@@ -20379,12 +20546,14 @@
       ],
       "observations": [
         "13 ordinary and 13 race roots passed; all-row source comparisons, rollback/CAS/native ABA, 45 mutable columns, decimal/Nd/nested JSON, source nonfinite committed facts and JSON failure, three actual cold cycles."
-      ]
+      ],
+      "original_status": "passed",
+      "status_note": "Previous exact passed execution retained; current integrated dispatcher and new Unicode counterexample require supplemental binding/review, not unconditional current equivalence."
     },
     {
       "id": "s05.query-update.real-e2e",
       "kind": "real_e2e",
-      "status": "passed",
+      "status": "historical_passed_reopened",
       "feature_ids": [
         "S05.query_update"
       ],
@@ -20506,12 +20675,14 @@
       "observations": [
         "Four query controls, committed update, CAS422 then fresh read unchanged, corrected revision update succeeds, distinct source/clone worker and configuration; actual stop/start preserves row revision5 with init_count1 and no operation replay.",
         "38 existing native subscription roots passed; no real external account/downloader equivalence claimed."
-      ]
+      ],
+      "original_status": "passed",
+      "status_note": "Previous exact passed execution retained; current integrated dispatcher and new Unicode counterexample require supplemental binding/review, not unconditional current equivalence."
     },
     {
       "id": "s05.query-update.independent-review",
       "kind": "review",
-      "status": "passed",
+      "status": "historical_passed_reopened",
       "feature_ids": [
         "S05.query_update"
       ],
@@ -20645,7 +20816,9 @@
       "observations": [
         "Ten independent actual-worker race tests plus independent full13 race re-run, all passed; five true counterexample classes red then fixed; full build dependency closure unchanged.",
         "Browser was run by coordinator and evidence independently read/hash-bound, not personally rerun by reviewer."
-      ]
+      ],
+      "original_status": "passed",
+      "status_note": "Previous exact passed execution retained; current integrated dispatcher and new Unicode counterexample require supplemental binding/review, not unconditional current equivalence."
     },
     {
       "id": "clear-cache.differential",
@@ -20766,6 +20939,179 @@
         "Second independent integration reviewer rebuilt identical worker/server; four real race roots passed23.037s; 5920 build dependencies unchanged; all58 accepted S05 files unchanged; exact coordinator browser observations reviewed, not personally rerun."
       ],
       "reviewer": "clear_cache_independent_review_20261030"
+    },
+    {
+      "id": "s05.query-update.unicode-counterexample",
+      "kind": "differential",
+      "status": "failed",
+      "feature_ids": [
+        "S05.query_update"
+      ],
+      "artifacts": {
+        "evidence/s05-query-update/unicode-counterexample-20261030.json": "9ce27d76b397c3f1708e6ceb6de878d6aeb05d9eacff84b7995f69c83cbfe701"
+      },
+      "observations": [
+        "Real source stores D800/DC00 in JSON; real Go SDK silently stores and returns U+FFFD. Reopened; no source repair yet."
+      ]
+    },
+    {
+      "id": "history-query.differential",
+      "kind": "differential",
+      "status": "passed",
+      "feature_ids": [
+        "S06.transfer_queries"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Owned Linux/amd64 Go1.26 actual SDK workers/native SQLite/source component; actual cmd/server via official preview/CUA; no complete original daemon or external service",
+        "target_files": {
+          "cmd/owned-history-fixture/main.go": "5aa60e4bf2155cd748919b2b80a39d92d0a5e0e105c2ed9deade0e9195038747",
+          "internal/app/import_plan.go": "402cdcb4fe4eaaa151e23b1880a83ad09a14e4703fdfa5b87f26e17ae38a30f9",
+          "internal/app/import_run.go": "15b961bd1e9de0dabe9b7658b4dbcb3045e6738bc69a30b645cab99462b13f63",
+          "internal/app/plugin_original_resources.go": "39ed1c5e704262413f5fe92a9a434227acad25bded85f0ca676c8723a3513024",
+          "internal/app/plugin_original_transfer_failure.go": "8e07008ad56cc72c9f0cd6bad509f69a26fb6e5576a6272bb8c756bb6f1b48d4",
+          "internal/app/plugin_shared_history.go": "f864e84c1f0b6e33141b1549ecc94b14bf1a3ab76405433ea9280232265c59a8",
+          "internal/app/plugin_shared_history_decode.go": "eee54a55cfdc689a312c54930a24461b9a1c7b88b66aa22454d18a7d7c6668d1",
+          "internal/app/plugin_shared_history_fixture_test.go": "7235ad062e76706d41370f303cdb761261993cdf874084222094b5e60acb48c8",
+          "internal/app/plugin_shared_history_legacy_test.go": "ff188abdfc5f760641979d14fe4a465589ba0b84c3b4bee0d281872a1ea99889",
+          "internal/app/plugin_shared_history_oracle_test.go": "35e24c6466741dbbe24d02c1088eac5119e10547c694b4dfea9315f9e1b30f78",
+          "internal/app/plugin_shared_history_producer_oracle_test.go": "b53cf19decb8d328406825669b510510785c4bca80534bb10614c4c2f50e5ef5",
+          "internal/app/plugin_shared_history_snapshot.go": "df8094933931c2c70f9bd3ea9dfb560eab58346d7b0bf981a2dc1492e45fecdc",
+          "internal/app/plugin_shared_history_test.go": "055d39881e0f2cb7ea4f3cd58d0d38a8fe8338706023f5ff2e5f70cb9d933a5d",
+          "internal/catalog/identities.go": "025fb13a71eb10770d65d1e98e18c693fa011198f4f0cfae26be30b9a8657286",
+          "internal/catalog/media.go": "e9c8db2fd156758b0a21c30c778c6614cb3c83815b5d351cc4fe658f8385d951",
+          "internal/catalog/shared_history_test.go": "6bd89e2c466badad21e1bf481f646a0165df327bdecf814fbc2829d3480d061a",
+          "internal/catalog/types.go": "619d1a307020282b472e774283899f363db4d595c2a4a6ad74ddb8b674eac66a",
+          "internal/plugins/shared_history.go": "0c9583304284b1f88b130216ebab7afe387b183e6f0f8998c9571e30070bda77",
+          "internal/plugins/shared_history_test.go": "5e30a69e66d33557fceadc0da0864d5f0ea241c87b4a1f741a520284872dd999",
+          "internal/app/history_query_independent_test.go": "69399d69a3f4ed0faab15e985b6103953cfb4c89063ebec125032cda3c57dea4",
+          "cmd/owned-history-ui-fixture/main.go": "b32ec1ea083d95101159813f349d421261bab661f079535a43aedb570252dd0b",
+          "internal/app/history_integration_independent_test.go": "6318a30e3efcdfd3fae1140c0d05f7930b0b8ead18d492cced0e65b56d404f74"
+        },
+        "fixture_files": {
+          "evidence/transfer-history-query/contract.json": "92ad90ee774d7e35a9487d9dc4e71345a8d1a37790fb1824f52e3abb0861d653"
+        }
+      },
+      "artifacts": {
+        "evidence/transfer-history-query/history-integrated-results.json": "6d63c6bcaaab324ea466ab794568ffece866ada4f8a3462759f41a2cc5549f08",
+        "evidence/transfer-history-query/contract.json": "92ad90ee774d7e35a9487d9dc4e71345a8d1a37790fb1824f52e3abb0861d653"
+      },
+      "observations": [
+        "Fresh 39 native/import app race roots and 3 catalog/SDK roots; all-column actual source producer/query comparison, no skips/races.",
+        "Existing 13 S05 and 9 clear race roots pass on the new merged tree; this does not cover or close the separately confirmed S05 Unicode counterexample."
+      ],
+      "commands": [
+        "HISTORY_SOURCE_ROOT=<fixed source> HISTORY_SOURCE_PYTHON=<source Python> bash testdata/plugin-shared-history-20261030/run.sh NEW_OUTPUT --race"
+      ],
+      "inputs": [
+        "Portable independently observed source inputs and actual read-only pinned source; real owned physical files/SQLite/tasks; actual compiled SDK consumer."
+      ]
+    },
+    {
+      "id": "history-query.real-e2e",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "S06.transfer_queries"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Owned Linux/amd64 Go1.26 actual SDK workers/native SQLite/source component; actual cmd/server via official preview/CUA; no complete original daemon or external service",
+        "target_files": {
+          "cmd/owned-history-fixture/main.go": "5aa60e4bf2155cd748919b2b80a39d92d0a5e0e105c2ed9deade0e9195038747",
+          "internal/app/import_plan.go": "402cdcb4fe4eaaa151e23b1880a83ad09a14e4703fdfa5b87f26e17ae38a30f9",
+          "internal/app/import_run.go": "15b961bd1e9de0dabe9b7658b4dbcb3045e6738bc69a30b645cab99462b13f63",
+          "internal/app/plugin_original_resources.go": "39ed1c5e704262413f5fe92a9a434227acad25bded85f0ca676c8723a3513024",
+          "internal/app/plugin_original_transfer_failure.go": "8e07008ad56cc72c9f0cd6bad509f69a26fb6e5576a6272bb8c756bb6f1b48d4",
+          "internal/app/plugin_shared_history.go": "f864e84c1f0b6e33141b1549ecc94b14bf1a3ab76405433ea9280232265c59a8",
+          "internal/app/plugin_shared_history_decode.go": "eee54a55cfdc689a312c54930a24461b9a1c7b88b66aa22454d18a7d7c6668d1",
+          "internal/app/plugin_shared_history_fixture_test.go": "7235ad062e76706d41370f303cdb761261993cdf874084222094b5e60acb48c8",
+          "internal/app/plugin_shared_history_legacy_test.go": "ff188abdfc5f760641979d14fe4a465589ba0b84c3b4bee0d281872a1ea99889",
+          "internal/app/plugin_shared_history_oracle_test.go": "35e24c6466741dbbe24d02c1088eac5119e10547c694b4dfea9315f9e1b30f78",
+          "internal/app/plugin_shared_history_producer_oracle_test.go": "b53cf19decb8d328406825669b510510785c4bca80534bb10614c4c2f50e5ef5",
+          "internal/app/plugin_shared_history_snapshot.go": "df8094933931c2c70f9bd3ea9dfb560eab58346d7b0bf981a2dc1492e45fecdc",
+          "internal/app/plugin_shared_history_test.go": "055d39881e0f2cb7ea4f3cd58d0d38a8fe8338706023f5ff2e5f70cb9d933a5d",
+          "internal/catalog/identities.go": "025fb13a71eb10770d65d1e98e18c693fa011198f4f0cfae26be30b9a8657286",
+          "internal/catalog/media.go": "e9c8db2fd156758b0a21c30c778c6614cb3c83815b5d351cc4fe658f8385d951",
+          "internal/catalog/shared_history_test.go": "6bd89e2c466badad21e1bf481f646a0165df327bdecf814fbc2829d3480d061a",
+          "internal/catalog/types.go": "619d1a307020282b472e774283899f363db4d595c2a4a6ad74ddb8b674eac66a",
+          "internal/plugins/shared_history.go": "0c9583304284b1f88b130216ebab7afe387b183e6f0f8998c9571e30070bda77",
+          "internal/plugins/shared_history_test.go": "5e30a69e66d33557fceadc0da0864d5f0ea241c87b4a1f741a520284872dd999",
+          "internal/app/history_query_independent_test.go": "69399d69a3f4ed0faab15e985b6103953cfb4c89063ebec125032cda3c57dea4",
+          "cmd/owned-history-ui-fixture/main.go": "b32ec1ea083d95101159813f349d421261bab661f079535a43aedb570252dd0b",
+          "internal/app/history_integration_independent_test.go": "6318a30e3efcdfd3fae1140c0d05f7930b0b8ead18d492cced0e65b56d404f74"
+        },
+        "fixture_files": {
+          "evidence/transfer-history-query/contract.json": "92ad90ee774d7e35a9487d9dc4e71345a8d1a37790fb1824f52e3abb0861d653"
+        }
+      },
+      "artifacts": {
+        "evidence/transfer-history-query/history-browser-result.json": "9ff3cbb24c5e0c302fbdeda373af5679dfcaee196c7f7d04298dbe4270c9c7ad",
+        "evidence/transfer-history-query/history-browser-seed.json": "79db9a70f121aa2d1ed76f5e39ebca38626d2e1ffcf0e08f0feff56002279cf8",
+        "evidence/transfer-history-query/history-browser-cold-db.json": "8a7d26901add06d0008b10a591413816c130c6c49770a70782648f50c7fdd582"
+      },
+      "observations": [
+        "Official browser existing-session install/settings/source+destination buttons/miss/exact storage/clone/cold; four visible 30-field records deeply equal the isolated read fixture.",
+        "Physical copy producer is independently executed in backend tests, not claimed from inserted browser history rows. Same real CLI and worker build bound by SHA256; no new login or session injection."
+      ],
+      "commands": [
+        "Build real cmd/server and owned-history-ui-fixture; official sites-preview start/stop same authorized data; CUA native market/form/buttons."
+      ],
+      "inputs": [
+        "Only INSERT unique owned import_plan/import_meta/job read fixture and owned files; no account/settings/allowed-root modifications; exact read fixture hash retained."
+      ]
+    },
+    {
+      "id": "history-query.independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "S06.transfer_queries"
+      ],
+      "reviewer": "history_query_independent_review_20261030",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Owned Linux/amd64 Go1.26 actual SDK workers/native SQLite/source component; actual cmd/server via official preview/CUA; no complete original daemon or external service",
+        "target_files": {
+          "cmd/owned-history-fixture/main.go": "5aa60e4bf2155cd748919b2b80a39d92d0a5e0e105c2ed9deade0e9195038747",
+          "internal/app/import_plan.go": "402cdcb4fe4eaaa151e23b1880a83ad09a14e4703fdfa5b87f26e17ae38a30f9",
+          "internal/app/import_run.go": "15b961bd1e9de0dabe9b7658b4dbcb3045e6738bc69a30b645cab99462b13f63",
+          "internal/app/plugin_original_resources.go": "39ed1c5e704262413f5fe92a9a434227acad25bded85f0ca676c8723a3513024",
+          "internal/app/plugin_original_transfer_failure.go": "8e07008ad56cc72c9f0cd6bad509f69a26fb6e5576a6272bb8c756bb6f1b48d4",
+          "internal/app/plugin_shared_history.go": "f864e84c1f0b6e33141b1549ecc94b14bf1a3ab76405433ea9280232265c59a8",
+          "internal/app/plugin_shared_history_decode.go": "eee54a55cfdc689a312c54930a24461b9a1c7b88b66aa22454d18a7d7c6668d1",
+          "internal/app/plugin_shared_history_fixture_test.go": "7235ad062e76706d41370f303cdb761261993cdf874084222094b5e60acb48c8",
+          "internal/app/plugin_shared_history_legacy_test.go": "ff188abdfc5f760641979d14fe4a465589ba0b84c3b4bee0d281872a1ea99889",
+          "internal/app/plugin_shared_history_oracle_test.go": "35e24c6466741dbbe24d02c1088eac5119e10547c694b4dfea9315f9e1b30f78",
+          "internal/app/plugin_shared_history_producer_oracle_test.go": "b53cf19decb8d328406825669b510510785c4bca80534bb10614c4c2f50e5ef5",
+          "internal/app/plugin_shared_history_snapshot.go": "df8094933931c2c70f9bd3ea9dfb560eab58346d7b0bf981a2dc1492e45fecdc",
+          "internal/app/plugin_shared_history_test.go": "055d39881e0f2cb7ea4f3cd58d0d38a8fe8338706023f5ff2e5f70cb9d933a5d",
+          "internal/catalog/identities.go": "025fb13a71eb10770d65d1e98e18c693fa011198f4f0cfae26be30b9a8657286",
+          "internal/catalog/media.go": "e9c8db2fd156758b0a21c30c778c6614cb3c83815b5d351cc4fe658f8385d951",
+          "internal/catalog/shared_history_test.go": "6bd89e2c466badad21e1bf481f646a0165df327bdecf814fbc2829d3480d061a",
+          "internal/catalog/types.go": "619d1a307020282b472e774283899f363db4d595c2a4a6ad74ddb8b674eac66a",
+          "internal/plugins/shared_history.go": "0c9583304284b1f88b130216ebab7afe387b183e6f0f8998c9571e30070bda77",
+          "internal/plugins/shared_history_test.go": "5e30a69e66d33557fceadc0da0864d5f0ea241c87b4a1f741a520284872dd999",
+          "internal/app/history_query_independent_test.go": "69399d69a3f4ed0faab15e985b6103953cfb4c89063ebec125032cda3c57dea4",
+          "cmd/owned-history-ui-fixture/main.go": "b32ec1ea083d95101159813f349d421261bab661f079535a43aedb570252dd0b",
+          "internal/app/history_integration_independent_test.go": "6318a30e3efcdfd3fae1140c0d05f7930b0b8ead18d492cced0e65b56d404f74"
+        },
+        "fixture_files": {
+          "evidence/transfer-history-query/contract.json": "92ad90ee774d7e35a9487d9dc4e71345a8d1a37790fb1824f52e3abb0861d653",
+          "evidence/transfer-history-query/history-integrated-results.json": "6d63c6bcaaab324ea466ab794568ffece866ada4f8a3462759f41a2cc5549f08",
+          "evidence/transfer-history-query/history-browser-result.json": "9ff3cbb24c5e0c302fbdeda373af5679dfcaee196c7f7d04298dbe4270c9c7ad",
+          "evidence/transfer-history-query/history-browser-seed.json": "79db9a70f121aa2d1ed76f5e39ebca38626d2e1ffcf0e08f0feff56002279cf8",
+          "evidence/transfer-history-query/history-browser-cold-db.json": "8a7d26901add06d0008b10a591413816c130c6c49770a70782648f50c7fdd582"
+        }
+      },
+      "artifacts": {
+        "evidence/transfer-history-query/independent-integration-summary.json": "b0dbf41baaf8a18dad4ec069cc81e64bfbbde84ed3ce899a6e7d757e8b902097"
+      },
+      "observations": [
+        "Independent normal6/race6 actual source+SDK+native-copy/legacy; deliberate stale-UI worker mutation correctly fails; current22 existing S05+clear roots race pass with no skips.",
+        "All five coordinator artifacts independently read/parsed/hash-bound. Browser operated by coordinator, its four visible full rows independently compared; not a source full daemon or browser producer claim.",
+        "Known S05 unpaired-surrogate persistence counterexample remains reopened, not covered by regression green."
+      ]
     }
   ],
   "execution_contract": {
@@ -20776,9 +21122,9 @@
     "no_deployment": true
   },
   "resume": {
-    "next_slice": "Commit/push/readback accepted 40.clear_cache, then independently reviewed S06 transfer-history query subset; S07/S10 isolated discovery ongoing.",
+    "next_slice": "Commit/push/readback accepted S06 two-query slice now; then repair S05 Unicode counterexample, integrate independently frozen S07/S10 slices. Full platform remains incomplete.",
     "dirty_work": [
-      "Only accepted clear_cache integration and current metadata selected; S06/S07/S10 unaccepted isolated worktrees excluded."
+      "Current S06 query candidate+needed tests/new concise evidence and metadata only; unrelated S07/S10 product worktrees excluded."
     ],
     "workers": [
       "coordinator",
@@ -20826,17 +21172,25 @@
         "sha256": "d22551535ad90bb8e7e07ba5bc9c199ad83d52843b85712d3740b075aa032b48",
         "bytes": 2062468,
         "boundary": "269 checked members; no credentials/runtime databases/dependencies/clear-cache candidates/old rejected material or screenshots."
+      },
+      {
+        "purpose": "Accepted clear-cache exact24 committed paths, current new owner/reviewer/coordinator evidence and Git blob map",
+        "library_file_id": "libfile_6e3d16c0ffb88191983b7cc22d6a8eac",
+        "filename": "light-media-clear-cache-accepted-e0258042-20261030.tar.gz",
+        "sha256": "ddb9a090afeaffebd4ae7bfb67ff1bea709831953c0dc899eb92dcae8dff5395",
+        "bytes": 1178201,
+        "boundary": "170 checked members; no runtime accounts/config/DB/deps/binaries, screenshots or old rejected materials."
       }
     ],
     "last_delivery": {
-      "commit": "42fd80dc13e989a947babd5a40a41560877413f9",
+      "commit": "e0258042f5196a5d94753f7dceaed9a8ad261d9e",
       "branch": "plugins-refactor",
-      "readback": "42fd80dc13e989a947babd5a40a41560877413f9",
+      "readback": "e0258042f5196a5d94753f7dceaed9a8ad261d9e",
       "main_unchanged": "97476582910dc4b696f7ccd5010f28d823812d40",
-      "paths": 122,
-      "mapping_path": "migration/delivery/s05-delivery-path-git-sha-map.json",
-      "mapping_sha256": "2d73e12c2805f17278e8ba2e491bf2853fb2d7695429f3691be4dfc63c71f9d8",
-      "ci": "No workflow/check-run/status exists for the commit; not a CI pass."
+      "paths": 24,
+      "mapping_path": "migration/delivery/clear-cache-delivery-path-git-sha-map.json",
+      "mapping_sha256": "f2108b5b05f6f3407484c14d546d157ed2c77889af89017e7ff6bcebf3372bc9",
+      "ci": "0 check-runs and 0 statuses; baseline has no workflow. Not a CI pass or running check."
     }
   },
   "external_inventory": [

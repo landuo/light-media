@@ -1,0 +1,151 @@
+{
+  "base_commit": "e0258042f5196a5d94753f7dceaed9a8ad261d9e",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "target_files": {
+    "cmd/owned-history-fixture/main.go": "5aa60e4bf2155cd748919b2b80a39d92d0a5e0e105c2ed9deade0e9195038747",
+    "internal/app/import_plan.go": "402cdcb4fe4eaaa151e23b1880a83ad09a14e4703fdfa5b87f26e17ae38a30f9",
+    "internal/app/import_run.go": "15b961bd1e9de0dabe9b7658b4dbcb3045e6738bc69a30b645cab99462b13f63",
+    "internal/app/plugin_original_resources.go": "39ed1c5e704262413f5fe92a9a434227acad25bded85f0ca676c8723a3513024",
+    "internal/app/plugin_original_transfer_failure.go": "8e07008ad56cc72c9f0cd6bad509f69a26fb6e5576a6272bb8c756bb6f1b48d4",
+    "internal/app/plugin_shared_history.go": "f864e84c1f0b6e33141b1549ecc94b14bf1a3ab76405433ea9280232265c59a8",
+    "internal/app/plugin_shared_history_decode.go": "eee54a55cfdc689a312c54930a24461b9a1c7b88b66aa22454d18a7d7c6668d1",
+    "internal/app/plugin_shared_history_fixture_test.go": "7235ad062e76706d41370f303cdb761261993cdf874084222094b5e60acb48c8",
+    "internal/app/plugin_shared_history_legacy_test.go": "ff188abdfc5f760641979d14fe4a465589ba0b84c3b4bee0d281872a1ea99889",
+    "internal/app/plugin_shared_history_oracle_test.go": "35e24c6466741dbbe24d02c1088eac5119e10547c694b4dfea9315f9e1b30f78",
+    "internal/app/plugin_shared_history_producer_oracle_test.go": "b53cf19decb8d328406825669b510510785c4bca80534bb10614c4c2f50e5ef5",
+    "internal/app/plugin_shared_history_snapshot.go": "df8094933931c2c70f9bd3ea9dfb560eab58346d7b0bf981a2dc1492e45fecdc",
+    "internal/app/plugin_shared_history_test.go": "055d39881e0f2cb7ea4f3cd58d0d38a8fe8338706023f5ff2e5f70cb9d933a5d",
+    "internal/catalog/identities.go": "025fb13a71eb10770d65d1e98e18c693fa011198f4f0cfae26be30b9a8657286",
+    "internal/catalog/media.go": "e9c8db2fd156758b0a21c30c778c6614cb3c83815b5d351cc4fe658f8385d951",
+    "internal/catalog/shared_history_test.go": "6bd89e2c466badad21e1bf481f646a0165df327bdecf814fbc2829d3480d061a",
+    "internal/catalog/types.go": "619d1a307020282b472e774283899f363db4d595c2a4a6ad74ddb8b674eac66a",
+    "internal/plugins/shared_history.go": "0c9583304284b1f88b130216ebab7afe387b183e6f0f8998c9571e30070bda77",
+    "internal/plugins/shared_history_test.go": "5e30a69e66d33557fceadc0da0864d5f0ea241c87b4a1f741a520284872dd999",
+    "internal/app/history_query_independent_test.go": "69399d69a3f4ed0faab15e985b6103953cfb4c89063ebec125032cda3c57dea4",
+    "cmd/owned-history-ui-fixture/main.go": "b32ec1ea083d95101159813f349d421261bab661f079535a43aedb570252dd0b"
+  },
+  "runs": [
+    {
+      "name": "history-native-race",
+      "exit": 0,
+      "sha256": "62a16aa04c8c82e9b62d4f1b829c49934ae1ec11cce38f25081abeddf27f1de8",
+      "root_passes": [
+        "TestImportedMovieSubscriptionCompletesWithoutFurtherSiteChecks (0.23s)",
+        "TestHistoryUpsertHiddenCutoffSurvivesVacuumBackupAndRestore (0.72s)",
+        "TestHistoryUpsertChronologyNormalizesRFC3339FractionLengths (0.39s)",
+        "TestHistoryUpsertDeleteUsesLatestExecutionAndPreservesOldTarget (1.11s)",
+        "TestHistoryUpsertDeleteRejectsStaleDialogWithoutTouchingFiles (3.06s)",
+        "TestHistoryUpsertDeleteNeverResumesPreviousExecutionSourceReceipt (0.72s)",
+        "TestHistoryUpsertDeleteOldClientCannotDeleteUpdatedFiles (0.84s)",
+        "TestHistoryUpsertRepeatedFailuresThenSuccessUpdatesOriginalRecord (0.93s)",
+        "TestHistoryUpsertNewFailureReplacesSuccessBeforeStatusFiltering (0.74s)",
+        "TestHistoryUpsertChangedIdentityAndTargetSearchOnlyCurrentResult (1.20s)",
+        "TestHistoryUpsertPreviewCannotReplaceExecutedHistory (1.45s)",
+        "TestHistoryUpsertSameSeriesSeparateEpisodeFilesRemainSeparate (1.76s)",
+        "TestHistoryUpsertOldExecutionFinishingLateCannotReplaceNewAttempt (1.55s)",
+        "TestHistoryUpsertQueueCancelAddressesOldExecutionNotLatestHistory (0.81s)",
+        "TestHistoryUpsertLegacyDuplicatePlansConsolidateWithoutMutation (0.39s)",
+        "TestHistoryUpsertHiddenDuplicateCannotResurrectButNewSubmissionCan (0.54s)",
+        "TestHistoryUpsertHistoryFallbackAndFileManagerTargetInheritOriginalResource (2.47s)",
+        "TestImportRepeatedConfirmationReturnsOriginalJob (0.25s)",
+        "TestImportRenameScrapeAndTypeFolderOptionsPublishRealFiles (5.66s)",
+        "TestImportPreflightSpaceAndProbeLeavesNoFormalTarget (0.23s)",
+        "TestImportCompletionQueuesOnlyCurrentActiveSubscription (0.58s)",
+        "TestImportRequestOwnerAndManualFieldsCannotBeSuppliedByJSON (0.00s)",
+        "TestImportPreviewPublishResumeAndSourceRetention (1.07s)",
+        "TestImportRejectsChangedSourceAndNoOverwrite (0.77s)",
+        "TestImportEpisodeRequiresAuthoritativeSingleEpisode (0.24s)",
+        "TestImportCopyCancellationAndReceiptReconciliation (0.20s)",
+        "TestImportSourceSymlinkAndScanContainment (0.19s)",
+        "TestImportOriginalIntentCompletesEvenWhenUnselectedExtrasRemain (0.35s)",
+        "TestImportExclusionRechecksAtomicallyBeforeQueue (0.22s)",
+        "TestImportPartRejectsPathFragmentsWithoutPublishing (0.23s)",
+        "TestSharedHistoryLegacyRetryLifecycle (8.40s)",
+        "TestSharedHistoryRealSourceQueryOracle (7.74s)",
+        "TestSharedHistorySQLiteFailurePropagates (6.38s)",
+        "TestSharedHistoryNativeProducerWorkerQueries (14.19s)",
+        "TestSharedHistoryCapabilityDenied (6.33s)",
+        "TestSharedHistoryRejectsMalformedReadRequest (6.13s)",
+        "TestSharedHistoryLegacyUnknownFieldsRemainNull (6.38s)",
+        "TestSharedHistoryNativeFailureIsDurable (8.27s)",
+        "TestSharedHistoryActualClaimGenerationAndStaleAttempt (6.88s)"
+      ],
+      "root_fails": [],
+      "skips": [],
+      "race_reports": 0,
+      "summaries": [
+        "PASS"
+      ]
+    },
+    {
+      "name": "history-catalog-sdk-race",
+      "exit": 0,
+      "sha256": "fa0fa52163bf7c749e79c2d779c5646bb4554d1d0a777aac97ded361a36cd9af",
+      "root_passes": [
+        "TestSharedHistoryDetailPreservesTVDBWithoutAnotherRequest (0.01s)",
+        "TestSharedHistoryTypedQueryRejectsInvalidUTF8BeforeHost (0.00s)",
+        "TestSharedHistoryTypedQueryPreservesUnicodeAndNull (0.00s)"
+      ],
+      "root_fails": [],
+      "skips": [],
+      "race_reports": 0,
+      "summaries": [
+        "PASS",
+        "ok  \tlight-media/internal/catalog\t1.028s",
+        "PASS",
+        "ok  \tlight-media/internal/plugins\t1.092s"
+      ]
+    },
+    {
+      "name": "s05-regression-race",
+      "exit": 0,
+      "sha256": "a223f334e3e2d67eb5f2615d12de8d7c6d17aca54ec782e154300429f749753a",
+      "root_passes": [
+        "TestSharedSubscriptionsVersionReplacementCloseKeepsActiveDAO (10.35s)",
+        "TestSharedSubscriptionsActualCloneCASRollbackAndNativeABA (13.90s)",
+        "TestSharedSubscriptionsPermissionDeniedActualWorker (6.67s)",
+        "TestSharedSubscriptionsLargeActualWorkerCold (26.26s)",
+        "TestSharedSubscriptionsNativeEditorPreservesUnrelatedSourceFacts (6.98s)",
+        "TestSharedSubscriptionsCancelledActualWorkerDoesNotWrite (6.88s)",
+        "TestSharedSubscriptionsIndependentSourceOracle (39.22s)",
+        "TestSharedSubscriptionsIndependentFloatGrammar (7.10s)",
+        "TestSharedSubscriptionsIndependentExponentOverflow (6.76s)",
+        "TestSharedSubscriptionsIndependentNestedJSON (15.78s)",
+        "TestSharedSubscriptionsIndependentAllJSONColumnsCold (10.90s)",
+        "TestSharedSubscriptionsActualServerProcessCold (20.82s)",
+        "TestSharedSubscriptionsActualWorkerSmoke (6.67s)"
+      ],
+      "root_fails": [],
+      "skips": [],
+      "race_reports": 0,
+      "summaries": [
+        "PASS",
+        "ok  \tlight-media/internal/app\t179.707s"
+      ]
+    },
+    {
+      "name": "clear-regression-race",
+      "exit": 0,
+      "sha256": "fd16301abe68408e0ebcb4c116eafb9f1e76a8c55e09e9b1e2e2dbaca852daeb",
+      "root_passes": [
+        "TestIndependentClearCacheDirectoryRecognition (0.94s)",
+        "TestIndependentClearCacheAcceptedCancellation (4.07s)",
+        "TestIndependentClearCacheConcurrentHTTP (4.16s)",
+        "TestOriginalClearCacheProductionProcess (12.21s)",
+        "TestOriginalClearCacheActualSDKSemantics (5.06s)",
+        "TestOriginalClearCacheFailuresOverrideAuthAndCold (5.75s)",
+        "TestOriginalClearCacheNativeNoPluginAndRecommendation (1.01s)",
+        "TestOriginalClearCacheTwoActualWorkersOrder (7.42s)",
+        "TestOriginalClearCacheAcceptedRequestCancellation (3.99s)"
+      ],
+      "root_fails": [],
+      "skips": [],
+      "race_reports": 0,
+      "summaries": [
+        "PASS",
+        "ok  \tlight-media/internal/app\t46.072s"
+      ]
+    }
+  ],
+  "boundary": "Fresh integrated Linux actual race workers/SQLite and source component, real CLI S05 and clear regression; not a full source daemon or browser evidence."
+}

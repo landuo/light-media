@@ -1,0 +1,28 @@
+{
+  "operations": [
+    {
+      "case": "cold-deleted-source",
+      "family": "transfer",
+      "method": "get_by_src",
+      "arguments": {
+        "src": "/owned/b.mkv"
+      }
+    },
+    {
+      "case": "cold-surviving-destination",
+      "family": "transfer",
+      "method": "get_by_dest",
+      "arguments": {
+        "dest": "/owned/library/shared.mkv"
+      }
+    },
+    {
+      "case": "cold-download-latest",
+      "family": "download",
+      "method": "get_by_hash",
+      "arguments": {
+        "download_hash": "AbC"
+      }
+    }
+  ]
+}

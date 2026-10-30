@@ -1,0 +1,73 @@
+{
+  "seed": {
+    "transferhistory": [
+      {
+        "id": 1,
+        "src": "/independent/�😀%_' OR 1=1.mkv",
+        "src_storage": "local",
+        "dest": "/independent/dest-shared.mkv",
+        "dest_storage": "local",
+        "src_fileitem": {"future_field": {"opaque": "kept", "number": 9007199254740993}, "children": []},
+        "dest_fileitem": {"path": "/independent/dest-shared.mkv", "unknown_flag": false},
+        "files": ["/independent/source A.mkv"],
+        "status": false,
+        "title": "first destination occupant",
+        "date": "2000-01-01 00:00:01"
+      },
+      {
+        "id": 2,
+        "src": "/independent/other.mkv",
+        "src_storage": " ",
+        "dest": "/independent/dest-shared.mkv",
+        "dest_storage": " ",
+        "src_fileitem": null,
+        "dest_fileitem": null,
+        "files": null,
+        "status": true,
+        "title": "second destination occupant",
+        "date": "2000-01-01 00:00:02"
+      },
+      {
+        "id": 3,
+        "src": "",
+        "src_storage": "",
+        "dest": "",
+        "dest_storage": "",
+        "src_fileitem": {},
+        "dest_fileitem": {},
+        "files": [],
+        "status": true,
+        "title": "empty path is not null"
+      },
+      {
+        "id": 4,
+        "src": null,
+        "src_storage": null,
+        "dest": null,
+        "dest_storage": null,
+        "src_fileitem": null,
+        "dest_fileitem": null,
+        "files": null,
+        "status": false,
+        "title": null
+      }
+    ]
+  },
+  "operations": [
+    {"case":"replacement-character-astral-and-literal-sql","family":"transfer","method":"get_by_src","arguments":{"src":"/independent/�😀%_' OR 1=1.mkv"}},
+    {"case":"same-exact-src-empty-storage","family":"transfer","method":"get_by_src","arguments":{"src":"/independent/�😀%_' OR 1=1.mkv","storage":""}},
+    {"case":"wrong-src-case","family":"transfer","method":"get_by_src","arguments":{"src":"/INDEPENDENT/�😀%_' OR 1=1.mkv"}},
+    {"case":"unmatched-percent-not-pattern","family":"transfer","method":"get_by_src","arguments":{"src":"/independent/%"}},
+    {"case":"src-empty","family":"transfer","method":"get_by_src","arguments":{"src":""}},
+    {"case":"src-null","family":"transfer","method":"get_by_src","arguments":{"src":null}},
+    {"case":"src-whitespace-storage","family":"transfer","method":"get_by_src","arguments":{"src":"/independent/other.mkv","storage":" "}},
+    {"case":"src-storage-no-trim","family":"transfer","method":"get_by_src","arguments":{"src":"/independent/other.mkv","storage":"local"}},
+    {"case":"dest-first-row","family":"transfer","method":"get_by_dest","arguments":{"dest":"/independent/dest-shared.mkv"}},
+    {"case":"dest-empty-storage","family":"transfer","method":"get_by_dest","arguments":{"dest":"/independent/dest-shared.mkv","storage":""}},
+    {"case":"dest-whitespace-storage","family":"transfer","method":"get_by_dest","arguments":{"dest":"/independent/dest-shared.mkv","storage":" "}},
+    {"case":"dest-case-sensitive-storage","family":"transfer","method":"get_by_dest","arguments":{"dest":"/independent/dest-shared.mkv","storage":"LOCAL"}},
+    {"case":"dest-empty","family":"transfer","method":"get_by_dest","arguments":{"dest":""}},
+    {"case":"dest-null","family":"transfer","method":"get_by_dest","arguments":{"dest":null}},
+    {"case":"dest-trailing-slash-no-clean","family":"transfer","method":"get_by_dest","arguments":{"dest":"/independent/dest-shared.mkv/"}}
+  ]
+}

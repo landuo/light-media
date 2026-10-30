@@ -1,0 +1,42 @@
+{
+  "status": "confirmed_new_counterexample_open",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "delivered_slice_commit": "42fd80dc13e989a947babd5a40a41560877413f9",
+  "input": {
+    "note": {
+      "value": "\ud800",
+      "\udc00": "key-value"
+    }
+  },
+  "source": {
+    "note": {
+      "value": "\ud800",
+      "\udc00": "key-value"
+    },
+    "database_note": "{\"value\": \"\\ud800\", \"\\udc00\": \"key-value\"}",
+    "network_attempts": []
+  },
+  "target": {
+    "actual_sdk_update_error": null,
+    "returned_replacement_character": true,
+    "persisted_replacement_character": true,
+    "persisted_original_surrogate_escape": false,
+    "test_exit": 1
+  },
+  "execution_boundary": "Fresh actual fixed ordinary plugin/DAO/SQLAlchemy/SQLite and actual Go SDK worker. External Go overlay adds audit test only; product unchanged. Not inherited S07 evidence.",
+  "files_sha256": {
+    "source.py": "98134e4443e86f439a6bc00ca4f8a1f6dfadcc523c2e37a160c3fbf164b1f887",
+    "source.json": "0c2111162ff45cc03491941d45ada51ef79cde9be6cb1c8dbf91e991f4a69fb1",
+    "source.log": "4bf00df54188d7b4ecdaf234f9ac1ef336b8b3fe6828ed95bbdebe6eda5a5771",
+    "target_test.go": "57b3b415c9c034cc0196733a2a07a69696854c351823f6b7f1da8335b065e5ba",
+    "target.log": "a839a0dab530edafdc3203d7ca13e79245ccf394e0d7170884d7809d28980458",
+    "overlay.json": "f6c8cf6d93034681788421edb51ff79e3797468f0e2b83db4153aad0e543575a"
+  },
+  "target_affected_sha256": {
+    "internal/app/plugin_shared_subscriptions_json.go": "5701cc217f9b701a03ad15773b27f96b3a674505cf9eb15929ef45df65606a06",
+    "internal/app/plugin_shared_subscriptions.go": "98ac3838248de3867e63d3d55bd6c985953d8e24ce51b8e1a8e40caf3df969c9",
+    "internal/app/plugin_shared_subscriptions_apply.go": "e44e48d1fa0dc7b04d468c3fafff22ea4b912039eb412dd5bc939c294508007a",
+    "internal/plugins/shared_subscriptions.go": "21d6cd1141f75a1623ad6faed8124c9dbd6e7bb5356687fc3a483b388a5a6b6e"
+  },
+  "next": "Reopen JSON-column Unicode fidelity; no silent U+FFFD, no discard of committed source facts. Existing delivered commit and prior executed evidence remain historical facts; prior 13-case regression does not cover this counterexample."
+}

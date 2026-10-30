@@ -1,0 +1,75 @@
+{
+  "scope": "Two exact transfer-history queries, existing authorized native session, market install/settings/normal buttons/clone and official preview cold restart; synthetic read fixture only, native copy tested separately.",
+  "observed_steps": [
+    {
+      "step": "source_page",
+      "row_id_visible": true,
+      "worker_pid": 81
+    },
+    {
+      "step": "source_button"
+    },
+    {
+      "step": "destination_using_source_path_is_null",
+      "null_count": 1
+    },
+    {
+      "step": "destination_page",
+      "lookup": [
+        "Instance: OwnedHistoryUI | worker PID: 81 | lookup: destination. Save the exact path/storage in Settings; both buttons read the authoritative host history."
+      ]
+    },
+    {
+      "step": "destination_button",
+      "record_count": 1
+    },
+    {
+      "step": "storage_uppercase_miss",
+      "null_count": 1
+    },
+    {
+      "step": "empty_storage_matches",
+      "record_count": 1
+    },
+    {
+      "step": "clone_live_query",
+      "labels": [
+        "Instance: OwnedHistoryUIqa | worker PID: 95 | lookup: destination. Save the exact path/storage in Settings; both buttons read the authoritative host history."
+      ]
+    },
+    {
+      "step": "official_cold_restart_clone",
+      "labels": [
+        "Instance: OwnedHistoryUIqa | worker PID: 67 | lookup: destination. Save the exact path/storage in Settings; both buttons read the authoritative host history."
+      ]
+    }
+  ],
+  "all_visible_record_fields_equal_seed": true,
+  "compared_observations": 4,
+  "row_field_count": 30,
+  "server_sha256": "d7924d5e570226b3ce60b7edeedbe98118a22ab0dca1eb5007b9954d6853c1a4",
+  "worker_sha256": "a06cdaddc164efcd8454ce8f8cf6326052ec3a77ea193c863ce30122439d571d",
+  "raw_dom_sha256": "1003e66e53522bf77182bf8b4f02a15c3318ded8d3fc3eafb5db78a603a7439f",
+  "database": {
+    "history_records": [
+      {
+        "kind": "import_plan",
+        "id": "owned-history-browser-plan-01",
+        "sha256": "c370d169ad4bf11e1e8e534fcc12d1879543bfcd8583adb79f53ba25c5357fbf",
+        "unchanged": true
+      },
+      {
+        "kind": "import_meta",
+        "id": "owned-history-browser-plan-01",
+        "sha256": "3a2b12ed85eb2b27c23a2b4e82189376c78204e5d77d681347ea67ab7d3ce2c4",
+        "unchanged": true
+      }
+    ],
+    "same_source_destination_bytes": true,
+    "job_state": "succeeded",
+    "s05_owned_subscription_count": 1,
+    "boundary": "Selected owned records/file bytes only. No account/session/key material inspected."
+  },
+  "screenshots": "none generated or uploaded; real browser DOM observations retained",
+  "account_boundary": "Existing user-created session reused; no credential output, new account, token injection, settings/allowed-root changes"
+}

@@ -1,0 +1,65 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_files_sha256": {
+    "app/db/transferhistory_oper.py": "da1aa87d7d904a5ba9ef08549797674aab2a81702e9ce017f414fd01114e23c7",
+    "app/db/models/transferhistory.py": "194fadb0ece7bedeccd286e9ba1af76abe19f3d79358d31b77fce9a39ea68df2",
+    "app/db/__init__.py": "6da490f32d0de67839249b4e318fecbf4c877ec5acde4eef08634738c4cfafc9",
+    "app/core/context.py": "70a088bd54c748ab44ec467e6a1f1fc5bb5368f818bb16288eca0d15cf98877e",
+    "app/core/meta/metabase.py": "0156c105bf92991332a8742b9a4af4e1f3a74cf4b6f08107e0ed6de9d546f292",
+    "app/core/metainfo.py": "dd66c3a9aa59bfbc8c8df87fd24393140982b0f133176f20dcb786203df55817",
+    "app/schemas/file.py": "676486e635bc9d0dfc0e589b514a6627c3330bf961a566c2cd8872b79f74aba0",
+    "app/schemas/transfer.py": "b0c1e7bdc15d5041094d1be9050de5a279a5f5651bbfc32de85a001ecb56b2bd",
+    "requirements.txt": "0b6a108308bb6b9e0def4eb5afe9cefd6dd92e155c41f89cbfea97599989a482",
+    "requirements.in": "060c85ee9a2023df9216f255b0a8deac5771b304ef2705950f694045be99aab1"
+  },
+  "source_requirements_compatibility": {
+    "SQLAlchemy": "2.0.55",
+    "pydantic": "2.14.2",
+    "pydantic-settings": "2.16.2"
+  },
+  "candidate_manifest_sha256": "68d1abb893af0f40d34a40baa3d89b443ed932e9e534fc3acca41d27d7cf4f34",
+  "scope": "TransferHistoryOper.get_by_src/get_by_dest. Native ordinary regular-file producer and read-only source ORM selection slice only; not full S06.",
+  "source_execution": "Real unmodified source Oper/SQLAlchemy/SQLite, MetaInfoPath/FileItem/MediaInfo and add_success. Does not execute the full source transfer/naming chain or external TMDB service. Python is test-only.",
+  "adaptations": [
+    "source integer ID becomes stable opaque host history handle; source add_force reallocates row ID while target retains handle",
+    "finite nullable-string typed SDK and bounded strict wire; malformed UTF-8/Unicode/duplicate/case-alias fields reject rather than source SQLAlchemy runtime coercion",
+    "legacy unrecorded fields remain null; known legacy native target remains planned target fact, not reconstructed source TransferInfo",
+    "only row ID and wall-clock instant normalized in producer all-column comparison; both actual producer date ranges separately asserted"
+  ],
+  "portable_projections": {
+    "query-observed-03.json": {
+      "raw_sha256": "2e17fcdd8bef06280ad1ca7e95719ea3cb76913a1e07fcbb6faadc0b9b012edc",
+      "projection": "preserve scope/python/sqlite/dependencies/timezone/network_attempts/schema/observations; omit absolute imported-module file locations only"
+    },
+    "producer-observed-02.json": {
+      "raw_sha256": "f213c7627a764bf08904e87612f19ddd55b8b65b89e834dd3e492fc2d9c967e0",
+      "projection": "preserve scope/python/sqlite/dependencies/timezone/network_attempts/schema/observations; omit absolute imported-module file locations only"
+    },
+    "cold-observed-01.json": {
+      "raw_sha256": "ac361f40e73ee59d9c4556fadb1fe5fd7eb521c47b208b7a4a67709076b0ce19",
+      "projection": "preserve scope/python/sqlite/dependencies/timezone/network_attempts/schema/observations; omit absolute imported-module file locations only"
+    }
+  },
+  "reproduce": "Supply a read-only checkout of the pinned MoviePilot source and a compatible Python environment via HISTORY_SOURCE_ROOT/HISTORY_SOURCE_PYTHON. With Go 1.26 available, bash testdata/plugin-shared-history-20261030/run.sh NEW_OWNED_OUTPUT_DIR [--race]. No absolute workspace path is required by runner or tests.",
+  "safety": "Only isolated owned SQLite/temp files and loopback protocol servers. Python audit hook rejects socket network operations, not a syscall firewall. Never upload generated config subdirectories; they may contain generated local tokens.",
+  "not_in_scope": [
+    "download get_by_hash",
+    "delete capability",
+    "auxiliary-file observer-free producer",
+    "custom TransferInfo plugin callback producer",
+    "early manual preparation failure",
+    "download-backed transfer context",
+    "full four-source metadata recognition",
+    "browser query page"
+  ],
+  "fixture": "Actual acquired standard compiled worker. No get_form/get_page, get_api is empty; snapshot/resource entry points only for tests.",
+  "fixture_snapshot_fields": {
+    "src": "nullable string",
+    "dest": "nullable string",
+    "storage": "nullable string",
+    "by_destination": "bool",
+    "source_bytes_for_sdk_probe": "optional base64 JSON []byte, test-only constructs Go string within worker",
+    "dest_bytes_for_sdk_probe": "optional base64 JSON []byte",
+    "storage_bytes_for_sdk_probe": "optional base64 JSON []byte"
+  }
+}

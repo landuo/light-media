@@ -1,0 +1,77 @@
+{
+  "scope": {
+    "submitted_candidate": "S06 transfer.get_by_src/get_by_dest readonly, native regular-file history producer sub-slice",
+    "not_complete": "No full S06 acceptance. No download query or delete capability in candidate."
+  },
+  "source": {
+    "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "files": [
+      "app/db/transferhistory_oper.py",
+      "app/db/models/transferhistory.py",
+      "app/db/__init__.py",
+      "app/core/meta/metabase.py",
+      "app/core/metainfo.py",
+      "app/core/context.py",
+      "app/schemas/file.py",
+      "app/schemas/transfer.py"
+    ],
+    "get_by_src": "Exact SQL equality, optional truthy src_storage filter, first extant matching row, missing=None",
+    "get_by_dest": "Exact SQL equality, optional truthy dest_storage filter, first extant matching row, missing=None",
+    "add_force": "Delete first old same-src row when src truthy, then real local date, insert, return get_by_src",
+    "delete": "DB-only row delete; return None for present/absent; no storage/file unlink"
+  },
+  "consumers": {
+    "removelink": [
+      "get_by_src(path) -> row.id -> delete",
+      "get_by_dest(dest_path) -> row.id -> delete"
+    ],
+    "scrapefileclean": [
+      "get_by_dest then get_by_src -> row.id -> delete"
+    ],
+    "subscribegroup": "download get_by_hash -> type/title/tmdbid/seasons; not implemented by this candidate"
+  },
+  "target": {
+    "sdk": "internal/plugins/shared_history.go",
+    "caps": [
+      "history.transfer.get_by_src",
+      "history.transfer.get_by_dest"
+    ],
+    "authoritative_storage": "Existing records(import_plan/import_meta/original_transfer_callback/transfer_history_hidden) + jobs; no plugin KV or second current-history table",
+    "query": "One SQLite statement selects record and frozen context atomically; prepared bound operands; no path normalization or filesystem reads",
+    "producer": "Separate optional frozen context in existing import_meta.shared_history; real terminal outcome/date and existing plan commit atomically. Checkpoint binds JobID+Generation, idempotent only for that attempt. Previous completed facts remain visible while queued/running/cancelled. executeImport legacy capture uses its existing tx+importMu, only latest completed terminal facts; no nested Store.Get/transaction, guessed date, observer, new metadata network or jobstate change.",
+    "scope": "Active manager identity/scope before read and before returning a record; standard scoped HostCaller, finite capabilities only."
+  },
+  "approved_adaptations": [
+    "Source integer ID -> stable opaque host handle; source add_force deletes/reinserts and changes integer ID, host same-resource handle remains stable. Current consumers forward ID as a future delete handle.",
+    "Legacy known native facts are retained, including native planned target; unavailable historical date/FileItem/category/season/etc remain null. No current cache/settings reconstruction. A legacy already-running ambiguous plan is not guessed from an older job.",
+    "Typed API accepts nullable UTF-8 strings. SDK rejects invalid Go string bytes before JSON marshal. Host rejects malformed UTF-8, unpaired Unicode surrogates, nonstring values, non-object/trailing data, unknown/case-alias/duplicate decoded keys, and >128KiB input. Legitimate U+FFFD/emoji/Unicode pairs remain exact. These are finite transport adaptations, not claims of identical SQLAlchemy exception classes.",
+    "All-column source/native producer comparison normalizes only opaque row ID and independently bounded real wall-clock instant; no business fields dropped. Source SQLite3.53.1 and target SQLite3.53.4 are explicitly distinct tested engines."
+  ],
+  "remaining_gaps": [
+    "Auxiliary subtitle/audio producer rows without observer",
+    "Plugin module callback custom TransferInfo result fields and date commit boundary",
+    "Early manual preparation failure full source context",
+    "Download-backed transfer downloader/hash context",
+    "Full four-source metadata producer equivalence belongs to broader recognition work; this slice tests known native TMDB identity facts",
+    "DownloadHistory get_by_hash and source-only DB history delete not yet exposed"
+  ],
+  "evidence_integrity_disclosures": [
+    "Owner fix-v2-01 accidentally reused reviewer output root and overwrote fixed-name v1 observation JSON. This was disclosed immediately; red-v1 raw log/exit/test text/random original-source runs remain, reviewer bindings expose mismatches. Do not treat overwritten JSON as original v1 proof. All subsequent runs use fresh exclusive dirs.",
+    "frozen-v3-race initial launch rejected a stale reviewer-test hash after reviewer added SQLite version observation; retained. Companion binding recorded new test hash. Next launch failed go list VCS stamping; retained. Third fresh run used -buildvcs=false and all gates passed. V3 outputs are not presented as V4."
+  ],
+  "source_runtime": "Real unmodified source Oper/SQLAlchemy/SQLite, MetaInfoPath/FileItem/MediaInfo and add_success. Does not execute the full source transfer/naming chain or external TMDB service. Python is test-only.",
+  "source_files_sha256": {
+    "app/db/transferhistory_oper.py": "da1aa87d7d904a5ba9ef08549797674aab2a81702e9ce017f414fd01114e23c7",
+    "app/db/models/transferhistory.py": "194fadb0ece7bedeccd286e9ba1af76abe19f3d79358d31b77fce9a39ea68df2",
+    "app/db/__init__.py": "6da490f32d0de67839249b4e318fecbf4c877ec5acde4eef08634738c4cfafc9",
+    "app/core/context.py": "70a088bd54c748ab44ec467e6a1f1fc5bb5368f818bb16288eca0d15cf98877e",
+    "app/core/meta/metabase.py": "0156c105bf92991332a8742b9a4af4e1f3a74cf4b6f08107e0ed6de9d546f292",
+    "app/core/metainfo.py": "dd66c3a9aa59bfbc8c8df87fd24393140982b0f133176f20dcb786203df55817",
+    "app/schemas/file.py": "676486e635bc9d0dfc0e589b514a6627c3330bf961a566c2cd8872b79f74aba0",
+    "app/schemas/transfer.py": "b0c1e7bdc15d5041094d1be9050de5a279a5f5651bbfc32de85a001ecb56b2bd",
+    "requirements.txt": "0b6a108308bb6b9e0def4eb5afe9cefd6dd92e155c41f89cbfea97599989a482",
+    "requirements.in": "060c85ee9a2023df9216f255b0a8deac5771b304ef2705950f694045be99aab1"
+  },
+  "historical_v4_manifest_sha256": "68d1abb893af0f40d34a40baa3d89b443ed932e9e534fc3acca41d27d7cf4f34",
+  "integration": "New main-tree execution and independent review must be used for merged content; old v4 binaries are not integration evidence."
+}
