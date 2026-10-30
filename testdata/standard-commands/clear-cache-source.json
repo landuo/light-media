@@ -1,0 +1,113 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_component_scope": "whole source command/chain/cache components with explicit unrelated import and registry fixtures; provider/API clear-method excerpts with source cache decorators; not daemon/API/auth integration",
+  "raw_sha256": "0128ccce767d230522306e89748f93546c714cd19294b016cbda402755ff7b3c",
+  "cases": [
+    {
+      "name": "none",
+      "input": null,
+      "native_fallback": true,
+      "plugin_trace": [
+        "plugin:0",
+        "plugin:1"
+      ],
+      "title": "缓存清理完成！",
+      "save_history": false
+    },
+    {
+      "name": "false",
+      "input": false,
+      "native_fallback": false,
+      "plugin_trace": [
+        "plugin:0"
+      ],
+      "title": "缓存清理完成！",
+      "save_history": false
+    },
+    {
+      "name": "zero",
+      "input": 0,
+      "native_fallback": false,
+      "plugin_trace": [
+        "plugin:0"
+      ],
+      "title": "缓存清理完成！",
+      "save_history": false
+    },
+    {
+      "name": "empty_string",
+      "input": "",
+      "native_fallback": false,
+      "plugin_trace": [
+        "plugin:0"
+      ],
+      "title": "缓存清理完成！",
+      "save_history": false
+    },
+    {
+      "name": "empty_object",
+      "input": {},
+      "native_fallback": false,
+      "plugin_trace": [
+        "plugin:0"
+      ],
+      "title": "缓存清理完成！",
+      "save_history": false
+    },
+    {
+      "name": "list",
+      "input": [],
+      "native_fallback": true,
+      "plugin_trace": [
+        "plugin:0",
+        "plugin:1"
+      ],
+      "title": "缓存清理完成！",
+      "save_history": false
+    },
+    {
+      "name": "list_nonempty",
+      "input": [
+        false,
+        null
+      ],
+      "native_fallback": true,
+      "plugin_trace": [
+        "plugin:0",
+        "plugin:1"
+      ],
+      "title": "缓存清理完成！",
+      "save_history": false
+    },
+    {
+      "name": "all_none_tuple",
+      "input": {
+        "__plugin_module_tuple": [
+          null,
+          null
+        ]
+      },
+      "native_fallback": true,
+      "plugin_trace": [
+        "plugin:0",
+        "plugin:1"
+      ],
+      "title": "缓存清理完成！",
+      "save_history": false
+    },
+    {
+      "name": "tuple_false",
+      "input": {
+        "__plugin_module_tuple": [
+          false
+        ]
+      },
+      "native_fallback": false,
+      "plugin_trace": [
+        "plugin:0"
+      ],
+      "title": "缓存清理完成！",
+      "save_history": false
+    }
+  ]
+}

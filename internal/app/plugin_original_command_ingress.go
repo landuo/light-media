@@ -46,7 +46,7 @@ func (a *App) dispatchOriginalCommand(ctx context.Context, input originalCommand
 	row, found := a.pluginOriginalCommands[name]
 	if !found {
 		a.pluginOriginalCommandsMu.Unlock()
-		return false, nil
+		return a.dispatchOriginalPresetCommand(ctx, name, input)
 	}
 	instance, _ := row["pid"].(string)
 	loaded, present := a.pluginRunningInstances.Load(instance)
@@ -168,7 +168,7 @@ func (a *App) standardWebCommandHTTP(w http.ResponseWriter, r *http.Request, pat
 	}
 	name, _ := commandrouter.Split(text)
 	if _, preset := commandrouter.Lookup(name); preset {
-		if _, _, registered := a.lookupOriginalPluginCommand(name); !registered {
+		if _, _, registered := a.lookupOriginalPluginCommand(name); !registered && name != "/clear_cache" {
 			a.writeError(w, r, &APIError{"MESSAGE_ROUTE_UNAVAILABLE", "本入口尚未接入内建命令", http.StatusNotImplemented})
 			return true
 		}

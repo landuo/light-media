@@ -1,0 +1,596 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "frontend_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "source_files": [
+    {
+      "path": "app/command.py",
+      "sha256": "e178d40ba65ee3fdd9fdce9f198f6a4433c8ddd8e3c73496bd843a40a4e7af3f",
+      "symbols": [
+        {
+          "name": "Command.execute",
+          "lines": [
+            392,
+            432
+          ]
+        },
+        {
+          "name": "Command.command_event",
+          "lines": [
+            442,
+            473
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/chain/system.py",
+      "sha256": "4522008f452ce98c1089c07fde49431f7a1a2ddb55609176c2f03701cdf05472",
+      "symbols": [
+        {
+          "name": "SystemChain.remote_clear_cache",
+          "lines": [
+            25,
+            35
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/chain/__init__.py",
+      "sha256": "afff04531e8ea7e312998f033f169114f785361bdc65fe7445df6cbc0d39c753",
+      "symbols": [
+        {
+          "name": "ChainBase.__is_valid_empty",
+          "lines": [
+            225,
+            232
+          ]
+        },
+        {
+          "name": "ChainBase.__execute_plugin_modules",
+          "lines": [
+            298,
+            329
+          ]
+        },
+        {
+          "name": "ChainBase.__async_execute_plugin_modules",
+          "lines": [
+            331,
+            370
+          ]
+        },
+        {
+          "name": "ChainBase.__execute_system_modules",
+          "lines": [
+            372,
+            414
+          ]
+        },
+        {
+          "name": "ChainBase.__async_execute_system_modules",
+          "lines": [
+            416,
+            468
+          ]
+        },
+        {
+          "name": "ChainBase.run_module",
+          "lines": [
+            470,
+            490
+          ]
+        },
+        {
+          "name": "ChainBase.clear_cache",
+          "lines": [
+            2045,
+            2049
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/core/event.py",
+      "sha256": "7aec5ea981f14f582b9a2946eb2184814b26c530a6b8494ce9a776f83060c98d",
+      "symbols": [
+        {
+          "name": "EventManager.send_event",
+          "lines": [
+            139,
+            155
+          ]
+        },
+        {
+          "name": "EventManager.__trigger_broadcast_event",
+          "lines": [
+            367,
+            373
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/core/module.py",
+      "sha256": "3d0a57719f3040e985c54aad91fef5cf7e8d72d91acb6a5faf86c2c21b370b32",
+      "symbols": []
+    },
+    {
+      "path": "app/core/cache.py",
+      "sha256": "fbcd0a557be024741891b539321fd06d09e0025c15f699d3bfdab5cebec2a91d",
+      "symbols": [
+        {
+          "name": "CacheBackend.clear",
+          "lines": [
+            128,
+            134
+          ]
+        },
+        {
+          "name": "AsyncCacheBackend.clear",
+          "lines": [
+            276,
+            282
+          ]
+        },
+        {
+          "name": "MemoryBackend.clear",
+          "lines": [
+            500,
+            517
+          ]
+        },
+        {
+          "name": "AsyncMemoryBackend.clear",
+          "lines": [
+            601,
+            607
+          ]
+        },
+        {
+          "name": "RedisBackend.clear",
+          "lines": [
+            686,
+            692
+          ]
+        },
+        {
+          "name": "AsyncRedisBackend.clear",
+          "lines": [
+            770,
+            776
+          ]
+        },
+        {
+          "name": "FileBackend.clear",
+          "lines": [
+            864,
+            885
+          ]
+        },
+        {
+          "name": "AsyncFileBackend.clear",
+          "lines": [
+            980,
+            1001
+          ]
+        },
+        {
+          "name": "CacheProxy.clear",
+          "lines": [
+            1436,
+            1441
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/api/endpoints/message.py",
+      "sha256": "b635fee943af5d867532133d96550ac840c0dbac847fe5fde2e230c567191bbd",
+      "symbols": [
+        {
+          "name": "web_message",
+          "lines": [
+            113,
+            148
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/chain/message.py",
+      "sha256": "4377fcdd22c03365d44f0018661302c48e94b61a34336025f9d4ad2fed21b9c1",
+      "symbols": [
+        {
+          "name": "MediaInteractionChain._execute_pending_download",
+          "lines": [
+            2915,
+            2964
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/chain/recommend.py",
+      "sha256": "fd92c1df2008410519ddf90c7c44b18651bef7b69fa364c56fd0ac313d70c4ea",
+      "symbols": []
+    },
+    {
+      "path": "app/modules/themoviedb/__init__.py",
+      "sha256": "383dee3ab7ae88a569b1b772cd86731a64d9f624b384c011338ef55d78ac44d6",
+      "symbols": [
+        {
+          "name": "TheMovieDbModule.get_name",
+          "lines": [
+            47,
+            48
+          ]
+        },
+        {
+          "name": "TheMovieDbModule.get_priority",
+          "lines": [
+            65,
+            69
+          ]
+        },
+        {
+          "name": "TheMovieDbModule.clear_cache",
+          "lines": [
+            1465,
+            1472
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/modules/themoviedb/tmdbapi.py",
+      "sha256": "6606d2cee1c26780386e96798a0b2dd779dcde1d9b6c78c20ff69b95d6048585",
+      "symbols": [
+        {
+          "name": "TmdbApi.clear_cache",
+          "lines": [
+            1483,
+            1489
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/modules/themoviedb/tmdb_cache.py",
+      "sha256": "6e7977eb58c57c9821901f5647bfd4a6a7f485b122d5d4342abecd8b2165582e",
+      "symbols": [
+        {
+          "name": "TmdbCache.clear",
+          "lines": [
+            103,
+            111
+          ]
+        },
+        {
+          "name": "TmdbCache.save",
+          "lines": [
+            221,
+            275
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/modules/themoviedb/tmdbv3api/tmdb.py",
+      "sha256": "cf868d6d0d50a17b710ba4bac6c41f8ec51aa6ac3acf4fc89f7c7d642a4746a6",
+      "symbols": [
+        {
+          "name": "TMDb.cache_clear",
+          "lines": [
+            293,
+            294
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/modules/themoviedb/tmdbv3api/objs/discover.py",
+      "sha256": "c7eeb81f3a12398278c6a51f82c402dacaa65f18c40b2ca98104c45368409def",
+      "symbols": []
+    },
+    {
+      "path": "app/modules/douban/__init__.py",
+      "sha256": "fe7f0f4dbf6e53761c0bceb939b06b7627ca55f876ad74a8a18e76a28a3ab0f8",
+      "symbols": [
+        {
+          "name": "DoubanModule.get_name",
+          "lines": [
+            47,
+            48
+          ]
+        },
+        {
+          "name": "DoubanModule.get_priority",
+          "lines": [
+            65,
+            69
+          ]
+        },
+        {
+          "name": "DoubanModule.clear_cache",
+          "lines": [
+            1171,
+            1177
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/modules/douban/apiv2.py",
+      "sha256": "f085678f627dbbcd6955cdfd6f49c83f7812693bc3199ea5c297c16d7e3aec06",
+      "symbols": [
+        {
+          "name": "DoubanApi.clear_cache",
+          "lines": [
+            859,
+            864
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/modules/bangumi/__init__.py",
+      "sha256": "1f8affd239c51c0f7c0f13303787b2a2b95b38d8cae7811832670c1ad428f68d",
+      "symbols": [
+        {
+          "name": "BangumiModule.get_name",
+          "lines": [
+            54,
+            58
+          ]
+        },
+        {
+          "name": "BangumiModule.get_priority",
+          "lines": [
+            75,
+            79
+          ]
+        },
+        {
+          "name": "BangumiModule.clear_cache",
+          "lines": [
+            444,
+            450
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/modules/bangumi/bangumi.py",
+      "sha256": "739f6fff6bc3e12738dccf4395d6d1849af6b407743303e0fc9cded51998081b",
+      "symbols": [
+        {
+          "name": "BangumiApi.clear_cache",
+          "lines": [
+            312,
+            316
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/modules/anilist/__init__.py",
+      "sha256": "aba67f40823d931f1cc5a9a4d5810516d39d8f590347dc4520516299b8268e35",
+      "symbols": [
+        {
+          "name": "AniListModule.get_name",
+          "lines": [
+            43,
+            45
+          ]
+        },
+        {
+          "name": "AniListModule.get_priority",
+          "lines": [
+            58,
+            60
+          ]
+        },
+        {
+          "name": "AniListModule.clear_cache",
+          "lines": [
+            565,
+            567
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/modules/anilist/anilist.py",
+      "sha256": "c5ffb203dcba59bc0c2096b542f724e06dd8ba0dd3172d3d4142e405748d8aeb",
+      "symbols": [
+        {
+          "name": "AniListApi.clear_cache",
+          "lines": [
+            788,
+            799
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/modules/fanart/__init__.py",
+      "sha256": "708924569323678a1d75aa9715cf4ee6d8b06964e4368a27d455b6d39c387451",
+      "symbols": [
+        {
+          "name": "FanartModule.get_name",
+          "lines": [
+            339,
+            340
+          ]
+        },
+        {
+          "name": "FanartModule.get_priority",
+          "lines": [
+            357,
+            361
+          ]
+        },
+        {
+          "name": "FanartModule.clear_cache",
+          "lines": [
+            626,
+            638
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/modules/thetvdb/__init__.py",
+      "sha256": "77467602ba22fba1f480f4a64e14eb042f845f63ecd415cd8b2410ee00d0aab8",
+      "symbols": [
+        {
+          "name": "TheTvDbModule.get_name",
+          "lines": [
+            92,
+            93
+          ]
+        },
+        {
+          "name": "TheTvDbModule.get_priority",
+          "lines": [
+            110,
+            114
+          ]
+        },
+        {
+          "name": "TheTvDbModule.clear_cache",
+          "lines": [
+            165,
+            172
+          ]
+        }
+      ]
+    },
+    {
+      "path": "app/modules/thetvdb/tvdb_v4_official.py",
+      "sha256": "d1d132621b6b19d33084a08cf047f311b294757de0b92ace3d7875af81cd3ee8",
+      "symbols": [
+        {
+          "name": "TVDB.clear_cache",
+          "lines": [
+            622,
+            626
+          ]
+        }
+      ]
+    }
+  ],
+  "discovery": {
+    "plugin_short_circuit": [
+      "false",
+      "0",
+      "empty_string",
+      "empty_object",
+      "non_all_none_tuple"
+    ],
+    "native_fallback": [
+      "None",
+      "list including empty",
+      "all_None_tuple including empty tuple"
+    ],
+    "completion": {
+      "title": "缓存清理完成！",
+      "save_history": false,
+      "forward": [
+        "channel",
+        "source",
+        "userid"
+      ]
+    },
+    "providers": {
+      "FanartModule": {
+        "priority": 0,
+        "clears": [
+          "sync request region",
+          "async request region"
+        ],
+        "target": "no retained metadata cache"
+      },
+      "TheMovieDbModule": {
+        "priority": 1,
+        "clears": [
+          "discover movies",
+          "discover TV",
+          "TMDB requests",
+          "recognition memory and persistent file"
+        ],
+        "target_prefixes": [
+          "browse:",
+          "search:",
+          "directory-identify:",
+          "media:",
+          "season:",
+          "source-detail:",
+          "source-search:",
+          "source-person:",
+          "source-credits:",
+          "explore:v1:themoviedb:",
+          "explore-detail:v1:themoviedb:"
+        ]
+      },
+      "DoubanModule": {
+        "priority": 2,
+        "clears": [
+          "get region",
+          "post region"
+        ],
+        "target_prefixes": [
+          "explore:v1:douban:",
+          "explore-detail:v1:douban:"
+        ]
+      },
+      "BangumiModule": {
+        "priority": 3,
+        "clears": [
+          "get region"
+        ],
+        "target_prefixes": [
+          "explore:v1:bangumi:",
+          "explore-detail:v1:bangumi:"
+        ]
+      },
+      "AniListModule": {
+        "priority": 4,
+        "clears": [
+          "detail",
+          "search",
+          "discover",
+          "credits",
+          "recommendations",
+          "person_detail",
+          "person_credits"
+        ],
+        "target_prefixes": [
+          "explore:v1:anilist:",
+          "explore-detail:v1:anilist:"
+        ]
+      },
+      "TheTvDbModule": {
+        "priority": 4,
+        "clears": [
+          "request region if client exists"
+        ],
+        "target": "no retained metadata cache"
+      }
+    },
+    "preserve": [
+      "RecommendChain own outer cache region",
+      "image files",
+      "AniList translation dictionary",
+      "unrelated plugin-owned data",
+      "credentials",
+      "durable business records"
+    ],
+    "request_lifetime": "CommandExcute is broadcast-queued independently of HTTP request after admission"
+  },
+  "execution_boundary": {
+    "source_components": "Whole unmodified Command/SystemChain/ChainBase/core.cache/TmdbCache imports with explicit unrelated-import and registry fixtures; six provider/five API clear methods execute unchanged AST over actual source cached decorators and owned payloads. Real memory and FileBackend. Not full source daemon, HTTP auth, provider initialization, real upstream clients, Redis, or external service validation.",
+    "target": "Go host uses native SQLite-backed cache namespaces, not Python cache storage. No Go runtime Python dependency."
+  }
+}

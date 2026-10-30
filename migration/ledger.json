@@ -15,15 +15,16 @@
     "remote": "https://github.com/landuo/light-media.git",
     "branch": "plugins-refactor",
     "baseline_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-    "revision": "",
-    "remote_revision": "",
+    "revision": "42fd80dc13e989a947babd5a40a41560877413f9",
+    "remote_revision": "42fd80dc13e989a947babd5a40a41560877413f9",
     "delivery_mode": "remote",
     "delivery_reason": "Per accepted functional slice commit, push and readback; no merge or deployment.",
     "metadata_paths": [
       "migration/ledger.json",
       "docs/plugin-module-parity-matrix.md",
       "docs/plugin-shared-host-20261030.md"
-    ]
+    ],
+    "revision_note": "Last completed remote delivery receipt; current clear-cache candidate is file-hash bound pending its own commit/push/readback, never a self-referential candidate SHA."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -2414,7 +2415,8 @@
         "36",
         "40",
         "41",
-        "42"
+        "42",
+        "40.clear_cache"
       ],
       "feature_link_reason": "HTTP host entry driving concrete module/event/helper chain; not all endpoint business UI declared in scope",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -2733,7 +2735,8 @@
       "feature_ids": [
         "42",
         "43",
-        "S11"
+        "S11",
+        "40.clear_cache"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -2845,7 +2848,8 @@
         "36",
         "40",
         "41",
-        "42"
+        "42",
+        "40.clear_cache"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -2858,7 +2862,8 @@
       "reason": "业务链及 run_module/async_run_module 动态插件覆盖入口；本地存储分支保留。",
       "feature_ids": [
         "37",
-        "43"
+        "43",
+        "40.clear_cache"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -2941,7 +2946,8 @@
         "20",
         "21",
         "40",
-        "43"
+        "43",
+        "40.clear_cache"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract; exact representative entrypoint reverse-link",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3061,7 +3067,8 @@
       "reason": "普通事件、命令、调度保留；混合文件中的 AI/工作流专用分支逐符号排除，非整文件排除。",
       "feature_ids": [
         "40",
-        "43"
+        "43",
+        "40.clear_cache"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract; exact representative entrypoint reverse-link",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3096,7 +3103,8 @@
       "reason": "运行源码或数据，可能由插件直接调用/导入，不能仅因没有 RPC 名称移出宿主范围。",
       "feature_ids": [
         "10",
-        "43"
+        "43",
+        "40.clear_cache"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3141,7 +3149,8 @@
         "36",
         "37",
         "41",
-        "49"
+        "49",
+        "40.clear_cache"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract; exact representative entrypoint reverse-link",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3284,7 +3293,8 @@
       "reason": "运行源码或数据，可能由插件直接调用/导入，不能仅因没有 RPC 名称移出宿主范围。",
       "feature_ids": [
         "02",
-        "43"
+        "43",
+        "40.clear_cache"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4523,7 +4533,8 @@
       "scope": "ordinary-module",
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
-        "43"
+        "43",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family anilist; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4535,7 +4546,8 @@
       "scope": "ordinary-module",
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
-        "43"
+        "43",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family anilist; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4547,7 +4559,8 @@
       "scope": "ordinary-module",
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
-        "43"
+        "43",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family bangumi; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4559,7 +4572,8 @@
       "scope": "ordinary-module",
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
-        "43"
+        "43",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family bangumi; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4599,7 +4613,8 @@
       "scope": "ordinary-module",
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
-        "43"
+        "43",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family douban; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4611,7 +4626,8 @@
       "scope": "ordinary-module",
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
-        "43"
+        "43",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family douban; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4662,7 +4678,8 @@
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
         "43",
-        "S11"
+        "S11",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family fanart; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -5591,7 +5608,8 @@
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
         "43",
-        "S11"
+        "S11",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family themoviedb; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -5630,7 +5648,8 @@
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
         "43",
-        "S11"
+        "S11",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family themoviedb; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -5643,7 +5662,8 @@
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
         "43",
-        "S11"
+        "S11",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family themoviedb; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -5812,7 +5832,8 @@
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
         "43",
-        "S11"
+        "S11",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family themoviedb; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -6020,7 +6041,8 @@
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
         "43",
-        "S11"
+        "S11",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family themoviedb; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -6033,7 +6055,8 @@
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
         "43",
-        "S11"
+        "S11",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family thetvdb; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -6046,7 +6069,8 @@
       "reason": "系统模块及适配器：插件覆盖、实例直调、默认回退与模块生命周期的真实宿主实现。",
       "feature_ids": [
         "43",
-        "S11"
+        "S11",
+        "40.clear_cache"
       ],
       "feature_link_reason": "system provider/client family thetvdb; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -16967,7 +16991,8 @@
       "end_line": 35,
       "feature_ids": [
         "40",
-        "43"
+        "43",
+        "40.clear_cache"
       ],
       "chain": {
         "ingress": "ordinary plugin import/helper/Oper call, or source builtin cache command",
@@ -18462,7 +18487,7 @@
     {
       "id": "40",
       "description": "40 · 4.5 插件命令：把“/daily”转换成插件自己的业务事件",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/message.py",
         "app/chain/message.py",
@@ -18517,7 +18542,10 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "delivery_slices": [
+        "40.clear_cache"
+      ]
     },
     {
       "id": "41",
@@ -20082,6 +20110,142 @@
         "independent": false
       },
       "external_source_paths": []
+    },
+    {
+      "id": "40.clear_cache",
+      "parent_feature": "40",
+      "description": "Complete ordinary builtin /clear_cache through existing native provider caches and plugin module priority; not all preset commands or providers",
+      "status": "verified",
+      "owner": "lifecycle_recognition_shared_host",
+      "source_paths": [
+        "app/command.py",
+        "app/chain/system.py",
+        "app/chain/__init__.py",
+        "app/core/event.py",
+        "app/core/module.py",
+        "app/core/cache.py",
+        "app/api/endpoints/message.py",
+        "app/chain/message.py",
+        "app/chain/recommend.py",
+        "app/modules/themoviedb/__init__.py",
+        "app/modules/themoviedb/tmdbapi.py",
+        "app/modules/themoviedb/tmdb_cache.py",
+        "app/modules/themoviedb/tmdbv3api/tmdb.py",
+        "app/modules/themoviedb/tmdbv3api/objs/discover.py",
+        "app/modules/douban/__init__.py",
+        "app/modules/douban/apiv2.py",
+        "app/modules/bangumi/__init__.py",
+        "app/modules/bangumi/bangumi.py",
+        "app/modules/anilist/__init__.py",
+        "app/modules/anilist/anilist.py",
+        "app/modules/fanart/__init__.py",
+        "app/modules/thetvdb/__init__.py",
+        "app/modules/thetvdb/tvdb_v4_official.py"
+      ],
+      "entrypoint_ids": [
+        "scope.sdk.app.chain.system.SystemChain.remote_clear_cache"
+      ],
+      "dependencies": [
+        "40",
+        "43"
+      ],
+      "target_paths": [
+        "internal/app/plugin_original_command_ingress.go",
+        "internal/app/plugin_original_command_clear_cache.go",
+        "internal/app/plugin_original_command_clear_cache_test.go",
+        "internal/app/plugin_original_command_clear_cache_process_test.go",
+        "internal/app/plugin_original_command_clear_cache_independent_test.go",
+        "cmd/owned-clear-cache-fixture/main.go"
+      ],
+      "scenarios": [
+        "fixed-source command/module return-type and notification differential",
+        "actual SDK override/failure/two-worker ordering/cancellation/concurrent authenticated ingress",
+        "native cache consumer before/after, ownership isolation and cold recovery",
+        "official browser normal command and native cache consumer"
+      ],
+      "evidence_ids": [
+        "clear-cache.differential",
+        "clear-cache.real-e2e"
+      ],
+      "review": {
+        "status": "passed",
+        "independent": true,
+        "reviewer": "clear_cache_independent_review_20261030",
+        "evidence_ids": [
+          "clear-cache.independent-review"
+        ]
+      },
+      "boundaries": [
+        "Source full daemon/API/auth integration was not run; original full import probe lacked qbittorrentapi. Component execution is not relabeled as daemon E2E.",
+        "No real upstream provider, Redis, NAS, Mac, WebPush key, or production credential was used. Go SQL failure robustness does not prove every source cache-backend partial failure equivalent.",
+        "Broader message clients and whole provider-cache migrations are outside this slice; Fanart/TVDB have no retained metadata cache in this Go host."
+      ],
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "Provider-owned cache rows removed; recommendation, unrelated cache, business file and subscription preserved.",
+          "evidence_ids": [
+            "clear-cache.differential",
+            "clear-cache.real-e2e"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Plugin override and source None/false/list aggregation; ordinary command accepted state.",
+          "evidence_ids": [
+            "clear-cache.differential",
+            "clear-cache.real-e2e"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Actual worker fault, SQL trigger/provider errors and cancellation after admission; later providers and notification continue.",
+          "evidence_ids": [
+            "clear-cache.differential",
+            "clear-cache.real-e2e"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "Eight actual concurrent HTTP commands and two real worker priority order under race detector.",
+          "evidence_ids": [
+            "clear-cache.differential",
+            "clear-cache.real-e2e"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Actual cmd/server and worker replacement; same SQLite/file facts; official preview cold restart.",
+          "evidence_ids": [
+            "clear-cache.differential",
+            "clear-cache.real-e2e"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "Pinned source full chain components plus explicit fixture/provider excerpts; existing 14 command/module roots under race.",
+          "evidence_ids": [
+            "clear-cache.differential",
+            "clear-cache.real-e2e"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "Authenticated ingress pins sender; no arbitrary method dispatch or plugin-supplied cache prefix; owned data only.",
+          "evidence_ids": [
+            "clear-cache.differential",
+            "clear-cache.real-e2e"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Eight-command finite concurrent sample and measured race runtimes; no general throughput claim.",
+          "evidence_ids": [
+            "clear-cache.differential",
+            "clear-cache.real-e2e"
+          ]
+        }
+      }
     }
   ],
   "decisions": [
@@ -20482,6 +20646,126 @@
         "Ten independent actual-worker race tests plus independent full13 race re-run, all passed; five true counterexample classes red then fixed; full build dependency closure unchanged.",
         "Browser was run by coordinator and evidence independently read/hash-bound, not personally rerun by reviewer."
       ]
+    },
+    {
+      "id": "clear-cache.differential",
+      "kind": "differential",
+      "status": "passed",
+      "feature_ids": [
+        "40.clear_cache"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "assistant-owned cloud Linux/amd64 Go1.26 actual SDK/server/SQLite and official browser; fixed source component execution, not full source daemon",
+        "target_files": {
+          "internal/app/plugin_original_command_ingress.go": "feaaadcec64c1e5a38a11b59760eac8ff967292beee83087cec720026733068a",
+          "internal/app/plugin_original_command_clear_cache.go": "4ce22d39bb6f07f8d49ac3f92889ec936c7f92b0f2f6b2155b29e22007a73460",
+          "internal/app/plugin_original_command_clear_cache_test.go": "21b3c0086d7cc99f3f0bf14eca07ad2ae6cf27cb5c889bc7c8259e896068a590",
+          "internal/app/plugin_original_command_clear_cache_process_test.go": "a89efe469910c684efd5827367aa9fc4ca4e9053a7e49dedc61c46dbb9b6f730",
+          "internal/app/plugin_original_command_clear_cache_independent_test.go": "1629aa632d6f3cc7fe567806dd06510418eaed3af00c42d9a3fed96080d07b91",
+          "cmd/owned-clear-cache-fixture/main.go": "e877d8f04e641287eeec0dd0ea88e459b77d56f61efb40bcbfe54c1e291e37b1"
+        },
+        "fixture_files": {
+          "evidence/clear-cache/clear-cache-source-binding.json": "89047c669f2d7e3361187c287b527827b7b1e38cc441ea4f4711d8cb0883de9b",
+          "evidence/clear-cache/clear-cache-source.json": "05919f86c9d744dcf8eee25faa4ecd93b86825f040d8306c649ea32679dd3ae7"
+        }
+      },
+      "artifacts": {
+        "evidence/clear-cache/clear-cache-source.json": "05919f86c9d744dcf8eee25faa4ecd93b86825f040d8306c649ea32679dd3ae7",
+        "evidence/clear-cache/clear-cache-source-binding.json": "89047c669f2d7e3361187c287b527827b7b1e38cc441ea4f4711d8cb0883de9b",
+        "evidence/clear-cache/clear-cache-integrated-results.json": "3c3bae7b739269cd181ae461112a8db31d6330e878bc0efaba92e132b9419e7d"
+      },
+      "observations": [
+        "Nine actual source-derived result forms compared; independent source component replay and actual target SDK workers. Nine integrated race roots passed, no skips/races; 14 existing command/module regression roots passed."
+      ],
+      "commands": [
+        "OWNED_CLEAR_CACHE_BINARY=work/commands/worker OWNED_CLEAR_CACHE_SERVER_BINARY=work/commands/server go test -race ./internal/app -run '^Test(Original|Independent)ClearCache' -count=1 -v"
+      ],
+      "inputs": [
+        "Nine fixed-source command/module return cases with real source memory/file cache components, explicitly bounded import fixtures; real native SDK/SQLite/file fixtures in independent test processes."
+      ]
+    },
+    {
+      "id": "clear-cache.real-e2e",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "40.clear_cache"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "assistant-owned cloud Linux/amd64 Go1.26 actual SDK/server/SQLite and official browser; fixed source component execution, not full source daemon",
+        "target_files": {
+          "internal/app/plugin_original_command_ingress.go": "feaaadcec64c1e5a38a11b59760eac8ff967292beee83087cec720026733068a",
+          "internal/app/plugin_original_command_clear_cache.go": "4ce22d39bb6f07f8d49ac3f92889ec936c7f92b0f2f6b2155b29e22007a73460",
+          "internal/app/plugin_original_command_clear_cache_test.go": "21b3c0086d7cc99f3f0bf14eca07ad2ae6cf27cb5c889bc7c8259e896068a590",
+          "internal/app/plugin_original_command_clear_cache_process_test.go": "a89efe469910c684efd5827367aa9fc4ca4e9053a7e49dedc61c46dbb9b6f730",
+          "internal/app/plugin_original_command_clear_cache_independent_test.go": "1629aa632d6f3cc7fe567806dd06510418eaed3af00c42d9a3fed96080d07b91",
+          "cmd/owned-clear-cache-fixture/main.go": "e877d8f04e641287eeec0dd0ea88e459b77d56f61efb40bcbfe54c1e291e37b1"
+        },
+        "fixture_files": {
+          "evidence/clear-cache/clear-cache-source-binding.json": "89047c669f2d7e3361187c287b527827b7b1e38cc441ea4f4711d8cb0883de9b",
+          "evidence/clear-cache/clear-cache-source.json": "05919f86c9d744dcf8eee25faa4ecd93b86825f040d8306c649ea32679dd3ae7"
+        }
+      },
+      "artifacts": {
+        "evidence/clear-cache/clear-cache-integrated-results.json": "3c3bae7b739269cd181ae461112a8db31d6330e878bc0efaba92e132b9419e7d",
+        "evidence/clear-cache/clear-cache-browser-seed.json": "cdb12e55a03c6fc833315c9d002c6e1869b5221d42fd6ca3a9c18954c1f26165",
+        "evidence/clear-cache/clear-cache-browser-after.json": "50525c2ea39d10b106b22592d7ba39ed975b2741dff912628cb6b98b4ec8b285",
+        "evidence/clear-cache/clear-cache-browser-cold.json": "b87e880c1fe9975a963358fdfe3e481633f9f12c0846b7496e0bb731cf111460",
+        "evidence/clear-cache/clear-cache-browser-steps.json": "857a49add2a19e03147451a1fe20cb0ab3a64827f016ba735127ed57c3f1f7a4",
+        "evidence/clear-cache/clear-cache-browser-final.json": "5177d594a9c36c7c5e983974da8375a5fbc21340213ccf6e61389bc903fb519b"
+      },
+      "observations": [
+        "Real CLI authenticated HTTP, compiled SDK workers, owned file/SQLite caches, callback override, failure, permissions and cold restart.",
+        "Official CUA: native search fixture visible; normal message /clear_cache; exact two provider cache rows disappeared, recommendation/unrelated cache stayed byte-identical and S05 subscription remained; new search empty and official stop/start preserves absence. No upstream credentials or successful external-provider claim. Reopening message center after cold start visibly shows one /clear_cache ingress and zero completion messages, matching save_history=false; account text omitted."
+      ],
+      "commands": [
+        "Build -race real cmd/server and owned-clear-cache-fixture; tests start actual processes.",
+        "sites-preview stop/start same owned data; native existing-session UI, no token injection."
+      ],
+      "inputs": [
+        "Owned temporary HTTP test account fixtures in isolated harness; browser uses existing user-completed native first-setup account. Only four owned synthetic cache rows seeded; no credentials/settings/session modifications."
+      ]
+    },
+    {
+      "id": "clear-cache.independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "40.clear_cache"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "assistant-owned cloud Linux/amd64 Go1.26 actual SDK/server/SQLite and official browser; fixed source component execution, not full source daemon",
+        "target_files": {
+          "internal/app/plugin_original_command_ingress.go": "feaaadcec64c1e5a38a11b59760eac8ff967292beee83087cec720026733068a",
+          "internal/app/plugin_original_command_clear_cache.go": "4ce22d39bb6f07f8d49ac3f92889ec936c7f92b0f2f6b2155b29e22007a73460",
+          "internal/app/plugin_original_command_clear_cache_test.go": "21b3c0086d7cc99f3f0bf14eca07ad2ae6cf27cb5c889bc7c8259e896068a590",
+          "internal/app/plugin_original_command_clear_cache_process_test.go": "a89efe469910c684efd5827367aa9fc4ca4e9053a7e49dedc61c46dbb9b6f730",
+          "internal/app/plugin_original_command_clear_cache_independent_test.go": "1629aa632d6f3cc7fe567806dd06510418eaed3af00c42d9a3fed96080d07b91",
+          "cmd/owned-clear-cache-fixture/main.go": "e877d8f04e641287eeec0dd0ea88e459b77d56f61efb40bcbfe54c1e291e37b1"
+        },
+        "fixture_files": {
+          "evidence/clear-cache/clear-cache-source-binding.json": "89047c669f2d7e3361187c287b527827b7b1e38cc441ea4f4711d8cb0883de9b",
+          "evidence/clear-cache/clear-cache-source.json": "05919f86c9d744dcf8eee25faa4ecd93b86825f040d8306c649ea32679dd3ae7",
+          "evidence/clear-cache/clear-cache-integrated-results.json": "3c3bae7b739269cd181ae461112a8db31d6330e878bc0efaba92e132b9419e7d",
+          "evidence/clear-cache/clear-cache-browser-seed.json": "cdb12e55a03c6fc833315c9d002c6e1869b5221d42fd6ca3a9c18954c1f26165",
+          "evidence/clear-cache/clear-cache-browser-after.json": "50525c2ea39d10b106b22592d7ba39ed975b2741dff912628cb6b98b4ec8b285",
+          "evidence/clear-cache/clear-cache-browser-cold.json": "b87e880c1fe9975a963358fdfe3e481633f9f12c0846b7496e0bb731cf111460",
+          "evidence/clear-cache/clear-cache-browser-steps.json": "857a49add2a19e03147451a1fe20cb0ab3a64827f016ba735127ed57c3f1f7a4",
+          "evidence/clear-cache/clear-cache-browser-final.json": "5177d594a9c36c7c5e983974da8375a5fbc21340213ccf6e61389bc903fb519b"
+        }
+      },
+      "artifacts": {
+        "evidence/clear-cache/clear-cache-independent-acceptance.json": "9455dd0f074e8b0b60022a75a219333451c7751e69aeac92cfdfd41eee70d015",
+        "evidence/clear-cache/coordinator-integration-review.json": "3fbeb5161b2e64bc9678e8330f8a1459075c39c80a1f73f61a61a9bbc67a2c5d"
+      },
+      "observations": [
+        "Independent reviewer source replay and actual SDK/server race9; two true regressions red before fix and green after: directory-recognition cache and HTTP cancellation after acceptance.",
+        "Second independent integration reviewer rebuilt identical worker/server; four real race roots passed23.037s; 5920 build dependencies unchanged; all58 accepted S05 files unchanged; exact coordinator browser observations reviewed, not personally rerun."
+      ],
+      "reviewer": "clear_cache_independent_review_20261030"
     }
   ],
   "execution_contract": {
@@ -20492,14 +20776,16 @@
     "no_deployment": true
   },
   "resume": {
-    "next_slice": "Commit/push/readback accepted S05.query_update, then integrate separately accepted builtin clear_cache slice.",
+    "next_slice": "Commit/push/readback accepted 40.clear_cache, then independently reviewed S06 transfer-history query subset; S07/S10 isolated discovery ongoing.",
     "dirty_work": [
-      "Accepted S05.query_update and current metadata awaiting normal Git delivery; no parent-group completion claimed."
+      "Only accepted clear_cache integration and current metadata selected; S06/S07/S10 unaccepted isolated worktrees excluded."
     ],
     "workers": [
+      "coordinator",
+      "library_history_shared_host",
+      "history_query_independent_review_20261030",
       "site_subscription_shared_host",
-      "independent_source_audit",
-      "platform_inventory_recheck_20261030"
+      "lifecycle_recognition_shared_host"
     ],
     "blockers": [],
     "commands": [
@@ -20532,8 +20818,26 @@
         "sha256": "138c5d6d261e2ea53c120e4338bfea8f161088dd3704367c10627ecaaa4e6acc",
         "bytes": 120524,
         "boundary": "46 new source/test files and candidate status, no accounts/runtime DB/config or old denied material"
+      },
+      {
+        "purpose": "Accepted S05 exact122 committed paths,142 independently frozen raw evidence files and delivery Git blob map",
+        "library_file_id": "libfile_fb09fd04e3508191b1d49525c5fee0f9",
+        "filename": "light-media-S05-query-update-accepted-42fd80dc-20261030.tar.gz",
+        "sha256": "d22551535ad90bb8e7e07ba5bc9c199ad83d52843b85712d3740b075aa032b48",
+        "bytes": 2062468,
+        "boundary": "269 checked members; no credentials/runtime databases/dependencies/clear-cache candidates/old rejected material or screenshots."
       }
-    ]
+    ],
+    "last_delivery": {
+      "commit": "42fd80dc13e989a947babd5a40a41560877413f9",
+      "branch": "plugins-refactor",
+      "readback": "42fd80dc13e989a947babd5a40a41560877413f9",
+      "main_unchanged": "97476582910dc4b696f7ccd5010f28d823812d40",
+      "paths": 122,
+      "mapping_path": "migration/delivery/s05-delivery-path-git-sha-map.json",
+      "mapping_sha256": "2d73e12c2805f17278e8ba2e491bf2853fb2d7695429f3691be4dfc63c71f9d8",
+      "ci": "No workflow/check-run/status exists for the commit; not a CI pass."
+    }
   },
   "external_inventory": [
     {

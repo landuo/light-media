@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "review_status": "accepted_for_integration",
+  "scope": "Builtin /clear_cache command through the existing Go plugin host and native cache ownership; not whole-platform equivalence",
+  "independent": true,
+  "reviewer": "clear_cache_independent_review_20261030",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "frontend_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "target_base": "97476582910dc4b696f7ccd5010f28d823812d40",
+  "target_files": {
+    "internal/app/plugin_original_command_ingress.go": "feaaadcec64c1e5a38a11b59760eac8ff967292beee83087cec720026733068a",
+    "internal/app/plugin_original_command_clear_cache.go": "4ce22d39bb6f07f8d49ac3f92889ec936c7f92b0f2f6b2155b29e22007a73460",
+    "internal/app/plugin_original_command_clear_cache_test.go": "21b3c0086d7cc99f3f0bf14eca07ad2ae6cf27cb5c889bc7c8259e896068a590",
+    "internal/app/plugin_original_command_clear_cache_process_test.go": "a89efe469910c684efd5827367aa9fc4ca4e9053a7e49dedc61c46dbb9b6f730",
+    "cmd/owned-clear-cache-fixture/main.go": "e877d8f04e641287eeec0dd0ea88e459b77d56f61efb40bcbfe54c1e291e37b1",
+    "testdata/standard-commands/clear-cache-source.json": "05919f86c9d744dcf8eee25faa4ecd93b86825f040d8306c649ea32679dd3ae7"
+  },
+  "fixed_findings": [
+    {
+      "id": "CC-01",
+      "finding": "TMDB-backed directory-identify cache survived clear and continued selecting the stale media identity",
+      "verification": "Independent actual directoryFileIdentity -> authenticated Web command -> directoryFileIdentity: old implementation failed; frozen implementation passed"
+    },
+    {
+      "id": "CC-02",
+      "finding": "Canceling HTTP after SDK clear admission preserved native cache and lost completion notice",
+      "verification": "Real worker entry marker, then cancellation: old clear delta=1/native rows=1/notice delta=0; frozen implementation completed native invalidation and notification"
+    }
+  ],
+  "executed": {
+    "independent_race": "PASS: directory cache consumer, accepted-request cancellation, 8 concurrent real HTTP commands with empty-tuple fallback",
+    "owner_tests_independently_rebuilt_and_replayed": "PASS: production server/worker/cold restart, 9 source-derived result forms, failures/override/auth/cold, no-plugin cache consumer, two-worker order, cancellation",
+    "real_process": "Native browse hit before and after false override; miss with NOT_CONFIGURED after None; recommendation preserved; host and worker replaced on cold restart; 3 incoming messages and 0 completion-history records",
+    "source": "Unmodified full Command/SystemChain/ChainBase/cache/TmdbCache imports with explicit fixtures; unchanged provider/API AST clear methods over source cached decorators; actual memory/FileBackend and separate-process cold restore",
+    "source_contract": "9 checked-in cases matched owner raw SHA and independent source replay field-for-field",
+    "mutation_sensitivity": "Both discovered regressions fail against saved old-product overlays and pass against frozen product",
+    "duration_seconds": 50.947
+  },
+  "limits": [
+    "Source full daemon/API/auth integration was not run; original full import probe lacked qbittorrentapi. Component execution is not relabeled as daemon E2E.",
+    "No real upstream provider, Redis, NAS, Mac, WebPush key, or production credential was used. Go SQL failure robustness does not prove every source cache-backend partial failure equivalent.",
+    "Broader message clients and whole provider-cache migrations are outside this slice; Fanart/TVDB have no retained metadata cache in this Go host."
+  ],
+  "source_binding_sha256": "89047c669f2d7e3361187c287b527827b7b1e38cc441ea4f4711d8cb0883de9b",
+  "independent_test_sha256": "1629aa632d6f3cc7fe567806dd06510418eaed3af00c42d9a3fed96080d07b91",
+  "reproduce_sha256": "61106e7a7f7dc679f14acd3436db310bd5ab87b736150b5b7461341fec081967",
+  "private_evidence_manifest": "private-artifacts.json",
+  "unresolved_slice_findings": [],
+  "final_validation": {
+    "passed_log_sha256": "c3fbb389eab764a57f85a294f20fac83f317a690411308052c412738cce9f1a0",
+    "failed_old_overlay_log_sha256": "8531f25ef63bff4d6e09506c442dadafe6f8804fa192127934d35da8d5bcabac",
+    "production_observations_sha256": "dd6bf69e533d4619b8163b54d5ed06ebd5d9ce066e10b535902b8c49972d5af2",
+    "target_dependency_binding_sha256": "eea16e97b55e0e11db6fbfcb8488aafa902fae671d5bf61e930db6f0e0f6c8bf",
+    "checked_bound_target_files": 2198
+  },
+  "finalized_utc": "2026-10-30T02:24:30Z"
+}

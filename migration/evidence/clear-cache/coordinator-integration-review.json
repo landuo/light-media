@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "feature_id": "40.clear_cache",
+  "review_status": "passed_for_declared_integrated_slice",
+  "reviewer": "independent_source_audit; integration verification after separate same-day source/target review",
+  "base_commit": "42fd80dc13e989a947babd5a40a41560877413f9",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "target_files": {
+    "internal/app/plugin_original_command_ingress.go": "feaaadcec64c1e5a38a11b59760eac8ff967292beee83087cec720026733068a",
+    "internal/app/plugin_original_command_clear_cache.go": "4ce22d39bb6f07f8d49ac3f92889ec936c7f92b0f2f6b2155b29e22007a73460",
+    "internal/app/plugin_original_command_clear_cache_test.go": "21b3c0086d7cc99f3f0bf14eca07ad2ae6cf27cb5c889bc7c8259e896068a590",
+    "internal/app/plugin_original_command_clear_cache_process_test.go": "a89efe469910c684efd5827367aa9fc4ca4e9053a7e49dedc61c46dbb9b6f730",
+    "internal/app/plugin_original_command_clear_cache_independent_test.go": "1629aa632d6f3cc7fe567806dd06510418eaed3af00c42d9a3fed96080d07b91",
+    "cmd/owned-clear-cache-fixture/main.go": "e877d8f04e641287eeec0dd0ea88e459b77d56f61efb40bcbfe54c1e291e37b1"
+  },
+  "fixture_files": {
+    "evidence/clear-cache/clear-cache-source.json": "05919f86c9d744dcf8eee25faa4ecd93b86825f040d8306c649ea32679dd3ae7",
+    "evidence/clear-cache/clear-cache-source-binding.json": "89047c669f2d7e3361187c287b527827b7b1e38cc441ea4f4711d8cb0883de9b",
+    "evidence/clear-cache/clear-cache-independent-acceptance.json": "9455dd0f074e8b0b60022a75a219333451c7751e69aeac92cfdfd41eee70d015",
+    "evidence/clear-cache/clear-cache-integrated-results.json": "3c3bae7b739269cd181ae461112a8db31d6330e878bc0efaba92e132b9419e7d",
+    "evidence/clear-cache/clear-cache-browser-steps.json": "857a49add2a19e03147451a1fe20cb0ab3a64827f016ba735127ed57c3f1f7a4",
+    "evidence/clear-cache/clear-cache-browser-seed.json": "cdb12e55a03c6fc833315c9d002c6e1869b5221d42fd6ca3a9c18954c1f26165",
+    "evidence/clear-cache/clear-cache-browser-after.json": "50525c2ea39d10b106b22592d7ba39ed975b2741dff912628cb6b98b4ec8b285",
+    "evidence/clear-cache/clear-cache-browser-cold.json": "b87e880c1fe9975a963358fdfe3e481633f9f12c0846b7496e0bb731cf111460",
+    "evidence/clear-cache/clear-cache-browser-final.json": "5177d594a9c36c7c5e983974da8375a5fbc21340213ccf6e61389bc903fb519b"
+  },
+  "checks": {
+    "accepted_source_and_target_binding": "Six integrated product/fixture/test hashes match the prior independent accepted selection (independent test uses its dedicated hash). Fixed source 23-file binding unchanged; all nine compact source cases match the raw source-03 projection field-for-field.",
+    "entrypoint_diff": "Only two ingress substitutions versus committed S05 base: undeclared preset delegates to explicit clear handler, and only /clear_cache is admitted as newly supported builtin. Existing plugin command override/auth/user pinning retained.",
+    "coordinator_logs": "Read actual raw logs, verified SHA, pass-root list, no FAIL/SKIP/race reports: 9 cache roots 46.506s; 14 command/module roots 68.036s; router/notice race and vet exit0.",
+    "browser": "Reviewed coordinator-produced actual DOM/AX and read-only SQLite inspection snapshots/scripts. Seeded native search was visibly consumed; after command, search/directory-identify rows absent; recommendation/unrelated cache hashes unchanged; S05 owned subscription count1; cold same post-state. Final cold-reopened message center recorded exact text counts /clear_cache=1 and completion title=0; initial open panel did not immediately refresh. Reviewer did not personally operate browser.",
+    "native_ownership": "Source-derived native provider cache ownership only; no arbitrary plugin-supplied path/prefix/SQL, no global records/cache wipe. Fanart/TVDB have no retained equivalent cache here.",
+    "dependencies": "Compared actual Go/embed/test compilation closures before and after independent execution: zero changes; 30 module identities unchanged versus S05; 58 S05 candidate files unchanged. Common repository input changed only command ingress; exactly five new Go inputs."
+  },
+  "independently_executed": {
+    "build_commands": [
+      "go build -buildvcs=false -race -o OWNED_WORKER ./cmd/owned-clear-cache-fixture",
+      "go build -buildvcs=false -race -o OWNED_SERVER ./cmd/server"
+    ],
+    "test_command": "OWNED_CLEAR_CACHE_BINARY=OWNED_WORKER OWNED_CLEAR_CACHE_SERVER_BINARY=OWNED_SERVER go test -race ./internal/app -run '^(TestIndependentClearCache.*|TestOriginalClearCacheProductionProcess)$' -count=1 -v",
+    "exit": 0,
+    "elapsed_seconds": 23.037,
+    "tests": [
+      {
+        "status": "PASS",
+        "name": "TestIndependentClearCacheDirectoryRecognition",
+        "duration": "0.99s"
+      },
+      {
+        "status": "PASS",
+        "name": "TestIndependentClearCacheAcceptedCancellation",
+        "duration": "4.47s"
+      },
+      {
+        "status": "PASS",
+        "name": "TestIndependentClearCacheConcurrentHTTP",
+        "duration": "4.17s"
+      },
+      {
+        "status": "PASS",
+        "name": "TestOriginalClearCacheProductionProcess",
+        "duration": "11.98s"
+      }
+    ],
+    "worker_sha256": "9f1cdb843ecd09055df7ce5f2a40b25be184fa0a9ce36cf2e589b782a784a91b",
+    "server_sha256": "fb38ad1754d42104b77c4d683e55e96d971a3ca77b769828f575a3028310ef76",
+    "same_binary_hashes_as_coordinator": true,
+    "actual_process_change": {
+      "host": [
+        288,
+        313
+      ],
+      "worker": [
+        303,
+        328
+      ]
+    },
+    "raw_log_sha256": "da7fc138be90320ca84512c636060883f4973547f1d2c3c3f3a8e3d5ed6e11ba"
+  },
+  "dependency_binding": {
+    "bound_files": 5920,
+    "modules": 30,
+    "before_after_changed": [],
+    "vs_s05_common_repo_changed": [
+      "internal/app/plugin_original_command_ingress.go"
+    ],
+    "vs_s05_added_go_inputs": [
+      "cmd/owned-clear-cache-fixture/main.go",
+      "internal/app/plugin_original_command_clear_cache.go",
+      "internal/app/plugin_original_command_clear_cache_independent_test.go",
+      "internal/app/plugin_original_command_clear_cache_process_test.go",
+      "internal/app/plugin_original_command_clear_cache_test.go"
+    ],
+    "vs_s05_module_versions_changed": false,
+    "s05_candidate_58_changed": [],
+    "before_sha256": "ab8d068a152d241245ca6e2db9381b2a8b3b157f514ececeac848c5d09d3d96c",
+    "after_sha256": "ab8d068a152d241245ca6e2db9381b2a8b3b157f514ececeac848c5d09d3d96c"
+  },
+  "source_boundary": {
+    "reviewed_witness": "Whole original Command/SystemChain/ChainBase/cache imports with explicit unrelated import/registry fixtures; provider/API unchanged AST method excerpts over source cached decorators; real source memory/file cache and separate-process cold observations.",
+    "raw_source_sha256": "0128ccce767d230522306e89748f93546c714cd19294b016cbda402755ff7b3c",
+    "integration_reviewer_reexecuted_source": false,
+    "full_source_daemon_api_auth_run": false,
+    "note": "Existing same-day independent source review retained and byte-bound; integration review does not relabel its component/AST witness as full original service."
+  },
+  "limits": [
+    "No whole-platform or all-command/provider-cache equivalence claim.",
+    "No source full server/auth/bootstrap, Redis, real upstream providers, NAS/Mac, external credentials or production account test.",
+    "Browser search miss appeared as empty results, not successful upstream retrieval or an explicit UI error. Completion notification was not visibly rendered; no browser notice-display claim.",
+    "Worker/provider cache partial-failure and runtime budget behavior beyond the existing host contract are not newly certified.",
+    "No S05 accepted archive modification: subsequent clear changes remain outside that fixed commit recovery package."
+  ],
+  "new_unresolved_slice_findings": [],
+  "retention": {
+    "small_git_artifact": "migration/evidence/clear-cache/coordinator-integration-review.json",
+    "full_dependency_bindings_and_raw_independent_log": "Private audit directory; no runtime/config/account data copied."
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "base_commit": "42fd80dc13e989a947babd5a40a41560877413f9",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "environment": "Owned cloud Linux; Go 1.26.0; actual race SDK workers and real cmd/server HTTP; isolated SQLite; no external service credentials",
+  "target_files": {
+    "internal/app/plugin_original_command_ingress.go": "feaaadcec64c1e5a38a11b59760eac8ff967292beee83087cec720026733068a",
+    "internal/app/plugin_original_command_clear_cache.go": "4ce22d39bb6f07f8d49ac3f92889ec936c7f92b0f2f6b2155b29e22007a73460",
+    "internal/app/plugin_original_command_clear_cache_test.go": "21b3c0086d7cc99f3f0bf14eca07ad2ae6cf27cb5c889bc7c8259e896068a590",
+    "internal/app/plugin_original_command_clear_cache_process_test.go": "a89efe469910c684efd5827367aa9fc4ca4e9053a7e49dedc61c46dbb9b6f730",
+    "internal/app/plugin_original_command_clear_cache_independent_test.go": "1629aa632d6f3cc7fe567806dd06510418eaed3af00c42d9a3fed96080d07b91",
+    "cmd/owned-clear-cache-fixture/main.go": "e877d8f04e641287eeec0dd0ea88e459b77d56f61efb40bcbfe54c1e291e37b1"
+  },
+  "binaries": {
+    "work/qa/server": "bb243da0f1a57b2ee31e42ece7ef2f96292274274a2b4ae977fb5f872d66dd3d",
+    "work/commands/worker": "9f1cdb843ecd09055df7ce5f2a40b25be184fa0a9ce36cf2e589b782a784a91b",
+    "work/commands/server": "fb38ad1754d42104b77c4d683e55e96d971a3ca77b769828f575a3028310ef76"
+  },
+  "runs": [
+    {
+      "name": "clear-cache-integrated-race",
+      "exit": 0,
+      "raw_log_sha256": "0e8dae0411ba6d048e3363178bd1a529061eb51574a93684c7fcae27e28fbd48",
+      "root_passes": [
+        "TestIndependentClearCacheDirectoryRecognition (1.01s)",
+        "TestIndependentClearCacheAcceptedCancellation (4.36s)",
+        "TestIndependentClearCacheConcurrentHTTP (4.15s)",
+        "TestOriginalClearCacheProductionProcess (12.82s)",
+        "TestOriginalClearCacheActualSDKSemantics (4.68s)",
+        "TestOriginalClearCacheFailuresOverrideAuthAndCold (5.69s)",
+        "TestOriginalClearCacheNativeNoPluginAndRecommendation (0.98s)",
+        "TestOriginalClearCacheTwoActualWorkersOrder (7.21s)",
+        "TestOriginalClearCacheAcceptedRequestCancellation (4.15s)"
+      ],
+      "root_fails": [],
+      "skips": [],
+      "race_reports": 0,
+      "go_summary": [
+        "ok  \tlight-media/internal/app\t46.506s"
+      ]
+    },
+    {
+      "name": "clear-cache-regression",
+      "exit": 0,
+      "raw_log_sha256": "ef10ec72d8ccae324ca77187e4f794a31a699870a51647ea92da87af603d5cb6",
+      "root_passes": [
+        "TestOriginalWebCommandActualSDKIngress (3.49s)",
+        "TestOriginalWebCommandTextSourceRules (0.00s)",
+        "TestOriginalWebCommandMediaTextRoutingActualSDK (3.82s)",
+        "TestOriginalCommandMenuProviderActualWorker (4.50s)",
+        "TestOriginalCommandRegisterSourceCommandShapes (3.67s)",
+        "TestOriginalCommandRegisterShapeFixPreservesSubsetAndCancel (0.73s)",
+        "TestOriginalCommandMenuProjection (0.00s)",
+        "TestOriginalChainRegistrationReplacementSnapshot (0.18s)",
+        "TestOriginalCommandRegisterActualWorkers (14.23s)",
+        "TestOriginalModulesRegistryActualClonesLifecycle (9.05s)",
+        "TestOriginalModulesJSONAggregationActualWorkers (10.51s)",
+        "TestOriginalModulesRateLimitPreservesWorkerAndSkipsSystemError (6.31s)",
+        "TestOriginalModulesFailureAndBindingIsolation (6.66s)",
+        "TestOriginalModulesMissingDeclarationBeforeState (3.40s)"
+      ],
+      "root_fails": [],
+      "skips": [],
+      "race_reports": 0,
+      "go_summary": [
+        "ok  \tlight-media/internal/app\t68.036s"
+      ]
+    },
+    {
+      "name": "clear-cache-router-notice",
+      "exit": 0,
+      "raw_log_sha256": "84de0bbfb0f1b5b005eccc8e3a8072bdb4baa75198d0ff1faf40ec3d281d2d8b",
+      "root_passes": [],
+      "root_fails": [],
+      "skips": [],
+      "race_reports": 0,
+      "go_summary": [
+        "ok  \tlight-media/internal/commandrouter\t1.033s",
+        "ok  \tlight-media/internal/notice\t2.259s"
+      ]
+    },
+    {
+      "name": "clear-cache-vet",
+      "exit": 0,
+      "raw_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "root_passes": [],
+      "root_fails": [],
+      "skips": [],
+      "race_reports": 0,
+      "go_summary": []
+    }
+  ]
+}
