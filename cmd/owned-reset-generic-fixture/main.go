@@ -23,9 +23,11 @@ func manifest() plugins.Manifest {
 	n, _ := strconv.Atoi(order)
 	p, _ := strconv.Atoi(priority)
 	m := plugins.Manifest{SchemaVersion: 1, PluginID: pluginID, Name: "Owned handler order fixture", Version: "1.0", Runtime: "go-executable", Entry: "owned-reset-generic-fixture", HostAPIMin: 1, HostAPIMax: 1, PluginOrder: n,
-		Methods: []string{"init", "get_state", "get_service", "get_command", "get_api", "get_render_mode", "get_form", "get_page", "get_dashboard", "get_sidebar_nav", "event", "reset_first", "reset_second", "close", "stop_service", "stop"}, Capabilities: plugins.BaseMethods(),
+		Methods: []string{"init", "get_state", "get_service", "get_command", "get_api", "get_render_mode", "get_form", "get_page", "get_dashboard", "get_sidebar_nav", "event", "reset_first", "reset_second", "system_error", "http", "close", "stop_service", "stop"}, Capabilities: plugins.BaseMethods(),
 		ResetHandlers: []plugins.PluginDataResetHandler{{Method: "reset_first", Priority: &p}, {Method: "reset_second", Priority: &p}}}
 	// Explicit generic declarations must win over BOTH compatibility formats.
+	m.BroadcastHandlers = []plugins.BroadcastHandler{{Event: "system.error", Method: "system_error"}}
+	m.APIs = []plugins.HTTPAPI{{Key: "snapshot", Path: "/snapshot", Methods: []string{"GET"}, Auth: "bear"}}
 	m.ChainHandlers = []plugins.ChainHandler{{Event: "plugin.data.reset", Method: "reset_first", Priority: &p}, {Event: "plugin.data.reset", Method: "reset_second", Priority: &p}}
 	m.ResetHandlers = []plugins.PluginDataResetHandler{{Method: "event"}}
 	m.Events = []string{"plugin.data.reset"}
@@ -38,15 +40,21 @@ func manifest() plugins.Manifest {
 }
 
 type options struct {
-	Enabled    bool   `json:"enabled"`
-	Trace      string `json:"trace_path"`
-	Label      string `json:"label"`
-	FailInit   bool   `json:"fail_init"`
-	FailMethod string `json:"fail_method"`
-	Mode       string `json:"mode"`
-	Payload    string `json:"payload"`
+	Enabled    bool            `json:"enabled"`
+	Trace      string          `json:"trace_path"`
+	Label      string          `json:"label"`
+	FailInit   bool            `json:"fail_init"`
+	FailMethod string          `json:"fail_method"`
+	Mode       string          `json:"mode"`
+	Payload    string          `json:"payload"`
+	NameCase   string          `json:"name_case"`
+	NameValue  json.RawMessage `json:"name_value"`
+	SeedData   bool            `json:"seed_data"`
 }
-type fixture struct{ mu sync.Mutex }
+type fixture struct {
+	mu          sync.Mutex
+	namePresent bool
+}
 
 func (f *fixture) handle(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
 	f.mu.Lock()
@@ -74,6 +82,12 @@ func (f *fixture) handle(ctx context.Context, method string, raw json.RawMessage
 	}
 	switch method {
 	case "init":
+		if o.SeedData {
+			if err := (plugins.Base{Host: host}).SaveData(ctx, "marker", "retained-data"); err != nil {
+				return nil, err
+			}
+		}
+		f.namePresent = o.NameCase != "missing" && o.NameCase != ""
 		if err = record(); err != nil {
 			return nil, err
 		}
@@ -101,11 +115,14 @@ func (f *fixture) handle(ctx context.Context, method string, raw json.RawMessage
 				return nil, errors.New("owned transport handler failure")
 			}
 		}
-		return plugins.HandleMutableEvent(raw, func(event *plugins.MutableEvent) (json.RawMessage, error) {
+		return plugins.HandleMutableEventWithName(raw, func(event *plugins.MutableEvent) (json.RawMessage, error) {
 			if method == "reset_first" {
 				event.Data = json.RawMessage(`{"plugin_id":"changed-event-only","reset_config":false,"reset_data":false,"large":9007199254740993123456789,"extra":{"nested":[null,false,0,"owned"]}}`)
 			} else {
 				event.Data = append(json.RawMessage(nil), o.Payload...)
+				if o.NameCase == "dynamic-delete" {
+					f.namePresent = false
+				}
 				if o.Mode == "error" {
 					return nil, errors.New("owned failure after mutation")
 				}
@@ -114,7 +131,42 @@ func (f *fixture) handle(ctx context.Context, method string, raw json.RawMessage
 				}
 			}
 			return json.RawMessage(`{"data":"ignored-return"}`), nil
+		}, func() (json.RawMessage, bool, error) {
+			if !f.namePresent {
+				return nil, false, nil
+			}
+			old := method
+			method = "name_access"
+			err := record()
+			method = old
+			if err != nil {
+				return nil, false, err
+			}
+			if o.NameCase == "getter-error" || o.NameCase == "success-with-getter-error" {
+				return nil, false, errors.New("owned getter failure")
+			}
+			return o.NameValue, true, nil
 		})
+	case "system_error":
+		if observer == "true" && o.NameCase != "" {
+			if err := record(); err != nil {
+				return nil, err
+			}
+		}
+		return json.RawMessage(`null`), nil
+	case "http":
+		key := "marker"
+		value, err := (plugins.Base{Host: host}).GetData(ctx, &key)
+		if err != nil {
+			return nil, err
+		}
+		body, err := json.Marshal(map[string]any{"config": json.RawMessage(config), "data": value, "pid": os.Getpid(), "name_present": f.namePresent})
+		if err != nil {
+			return nil, err
+		}
+		return json.Marshal(plugins.HTTPResponse{Status: 200, Body: body})
+	case "get_api":
+		return json.Marshal(manifest().APIs)
 	case "get_state":
 		return json.Marshal(o.Enabled)
 	case "get_render_mode":
@@ -123,9 +175,14 @@ func (f *fixture) handle(ctx context.Context, method string, raw json.RawMessage
 		return json.RawMessage(`[[],{}]`), nil
 	case "get_dashboard":
 		return json.RawMessage(`[{},{},[]]`), nil
-	case "get_service", "get_command", "get_api", "get_page", "get_sidebar_nav":
+	case "get_service", "get_command", "get_page", "get_sidebar_nav":
 		return json.RawMessage(`[]`), nil
 	case "close", "stop_service", "stop":
+		if o.NameCase != "" {
+			if err := record(); err != nil {
+				return nil, err
+			}
+		}
 		return json.RawMessage(`null`), nil
 	default:
 		return nil, errors.New("unsupported method")

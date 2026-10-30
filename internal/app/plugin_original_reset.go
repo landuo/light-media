@@ -9,7 +9,9 @@ import "context"
 // original PluginDataReset compensation/data deletion binding before this slice
 // can be described as full-catalog Reset support.
 func (a *App) resetOriginalPluginData(ctx context.Context, instance string) error {
-	a.sendOriginalPluginDataReset(ctx, instance)
+	if err := a.sendOriginalPluginDataResetChecked(ctx, instance); err != nil {
+		return err
+	}
 	if err := a.stopOriginalPlugin(ctx, instance); err != nil {
 		return err
 	}

@@ -57,6 +57,9 @@ func (a *App) originalBoundChainHandler(object *originalPluginInstance, method s
 		Enabled: func() bool { return object.originalEventMethodEnabled(method) },
 		Invoke: func(ctx context.Context, event *plugins.MutableEvent) error {
 			err := invokeOriginalMutableEvent(ctx, object, method, event)
+			if err != nil && originalCheckedReset(ctx) {
+				return a.reportOriginalResetEventError(ctx, object, event.Type, method, err)
+			}
 			if err != nil {
 				a.reportOriginalEventError(ctx, object, event.Type, method, err)
 			}

@@ -19,9 +19,10 @@ type MutableEvent struct {
 }
 
 type mutableEventSnapshot struct {
-	Contract string       `json:"event_mutation_contract"`
-	Event    MutableEvent `json:"event"`
-	Failed   bool         `json:"handler_failed"`
+	Contract  string                 `json:"event_mutation_contract"`
+	Event     MutableEvent           `json:"event"`
+	Failed    bool                   `json:"handler_failed"`
+	ErrorName *MutableEventErrorName `json:"source_error_name,omitempty"`
 }
 
 // HandleMutableEvent explicitly bridges event mutation, not callback returns.
@@ -29,6 +30,10 @@ type mutableEventSnapshot struct {
 // mutations made before a callback error or panic are still transported. This
 // helper is generic: it knows no plugin IDs, Reset flags or business schemas.
 func HandleMutableEvent(input json.RawMessage, handle func(*MutableEvent) (json.RawMessage, error)) (json.RawMessage, error) {
+	return handleMutableEvent(input, handle, nil)
+}
+
+func handleMutableEvent(input json.RawMessage, handle func(*MutableEvent) (json.RawMessage, error), name MutableEventNameReader) (json.RawMessage, error) {
 	event, err := decodeMutableEvent(input)
 	if err != nil || handle == nil {
 		return nil, errors.New("invalid mutable event")
@@ -43,6 +48,11 @@ func HandleMutableEvent(input json.RawMessage, handle func(*MutableEvent) (json.
 		_, err := handle(&event)
 		failed = err != nil
 	}()
+	var errorName *MutableEventErrorName
+	if failed && name != nil {
+		value := readMutableEventErrorName(name)
+		errorName = &value
+	}
 	// A nil RawMessage has the same JSON representation as null.
 	if len(event.Data) == 0 {
 		event.Data = json.RawMessage(`null`)
@@ -50,7 +60,7 @@ func HandleMutableEvent(input json.RawMessage, handle func(*MutableEvent) (json.
 	if !json.Valid(event.Data) {
 		return nil, errors.New("invalid mutable event data")
 	}
-	return json.Marshal(mutableEventSnapshot{Contract: mutableEventContract, Event: event, Failed: failed})
+	return json.Marshal(mutableEventSnapshot{Contract: mutableEventContract, Event: event, Failed: failed, ErrorName: errorName})
 }
 
 // DecodeMutableEventSnapshot recognizes only the explicit SDK mutation

@@ -7,6 +7,18 @@ import (
 	"light-media/internal/plugins"
 )
 
+// Only the public reset chain opts into the original secondary .name failure.
+// Existing bool dispatch wrappers and every other event retain their policy.
+type originalCheckedResetKey struct{}
+type originalResetAbort struct{ error }
+type originalMutableCallbackFailure struct{ name plugins.MutableEventErrorName }
+
+func (originalMutableCallbackFailure) Error() string { return "event handler failed" }
+func originalCheckedReset(ctx context.Context) bool {
+	value, _ := ctx.Value(originalCheckedResetKey{}).(bool)
+	return value
+}
+
 // Registries own ordering, identity and lifecycle. The shared dispatcher owns
 // only enabled-snapshot selection and synchronous mutation/exception behavior.
 type originalMutableEventHandler struct {
@@ -37,6 +49,13 @@ func invokeOriginalMutableEvent(ctx context.Context, object *originalPluginInsta
 	} // Ordinary returns never replace the shared event.
 	*event = next // Commit mutation before reporting callback failure.
 	if failed {
+		if originalCheckedReset(ctx) {
+			name, err := plugins.DecodeMutableEventErrorName(result.Result)
+			if err != nil {
+				return originalResetAbort{bad("PLUGIN_EVENT_SNAPSHOT_INVALID", "插件重置事件失败快照无效")}
+			}
+			return originalMutableCallbackFailure{name: name}
+		}
 		return errors.New("event handler failed")
 	}
 	return nil
@@ -49,6 +68,11 @@ func invokeOriginalMutableEvent(ctx context.Context, object *originalPluginInsta
 // later subscriber during an earlier callback prevents that later invocation.
 // Failures never stop remaining handlers or roll back a valid event mutation.
 func dispatchOriginalMutableEvent(ctx context.Context, handlers []originalMutableEventHandler, event *plugins.MutableEvent, onError func(error)) bool {
+	called, _ := dispatchOriginalMutableEventResult(ctx, handlers, event, onError)
+	return called
+}
+
+func dispatchOriginalMutableEventResult(ctx context.Context, handlers []originalMutableEventHandler, event *plugins.MutableEvent, onError func(error)) (bool, error) {
 	enabled := make([]originalMutableEventHandler, 0, len(handlers))
 	for _, handler := range handlers {
 		if handler.Enabled == nil || handler.Enabled() {
@@ -59,9 +83,15 @@ func dispatchOriginalMutableEvent(ctx context.Context, handlers []originalMutabl
 		if handler.Enabled != nil && !handler.Enabled() {
 			continue
 		}
-		if err := handler.Invoke(ctx, event); err != nil && onError != nil {
-			onError(err)
+		if err := handler.Invoke(ctx, event); err != nil {
+			var abort originalResetAbort
+			if originalCheckedReset(ctx) && errors.As(err, &abort) {
+				return len(enabled) > 0, abort.error
+			}
+			if onError != nil {
+				onError(err)
+			}
 		}
 	}
-	return len(enabled) > 0
+	return len(enabled) > 0, nil
 }

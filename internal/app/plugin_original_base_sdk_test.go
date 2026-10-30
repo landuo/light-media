@@ -68,6 +68,7 @@ func originalBaseSDKFixture(t *testing.T) (*App, *http.Cookie, *originalPluginIn
 	t.Cleanup(server.Close)
 	index.Releases[0].Artifacts[0].URL = server.URL + "/owned-base-fixture"
 	a := newTestApp(t)
+	disableResetFixtureStatistics(t, a)
 	t.Cleanup(a.closeOriginalSessions)
 	cookie := setupTestAdmin(t, a)
 	body, _ := json.Marshal(map[string]any{"plugin_id": manifest.PluginID, "repo_url": server.URL + "/index"})

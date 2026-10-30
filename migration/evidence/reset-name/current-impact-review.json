@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "kind": "row16-current-shared-impact-and-historical-reuse",
+  "outcome": "passed_limited_delta_revalidation_not_full_prior_suites_rerun",
+  "base_head": "57037d045d2a507c3e70fc99cf470d4a96204add",
+  "integration": "exact frozen22 reset candidate on base; no row15/09 candidate mixed",
+  "candidate_sha256": "67f95bb4633dd5adc8e086e350a342c1e0afc4575fd9d9321e677aef7b8dace7",
+  "stale_records": [
+    "folder-failure.current-e2e",
+    "folder-failure.current-review"
+  ],
+  "historical_basis": {
+    "prior_proofs": {
+      "migration/evidence/uninstall-folder-failure/impact-mapping.json": "8b84c086456f61ab071370d148fcf8886b4628f04007ed68d95223f7005067f3",
+      "migration/evidence/uninstall-folder-failure/browser-summary.json": "28554c53f04ac4b2b092df671c8fa67a44c1bca793bce740a56f64f556329208",
+      "migration/evidence/uninstall-folder-failure/final-integration-review.json": "0e889106b8df88d449360a4d26bab4f5b124de1f54475ffcf3013a5d8db18c54",
+      "migration/evidence/uninstall-folder-failure/candidate.json": "5dac8247fe2dd7733bdc0815eb8c1fb3f0ba4e734e23b87148dd2ed12a6c838f",
+      "migration/evidence/uninstall-folder-failure/current-backend-review.json": "395cc6d3db37fa5b8f8a07ceda38361ee8a5a93610c3d928e5621d740b07617c",
+      "migration/evidence/uninstall-folder-failure/transmission-browser-summary.json": "696916099bd87aa97aa24384eca7508685c1b46dd9ecbd0b6baaa85c8d0106dc",
+      "migration/evidence/uninstall-folder-failure/independent-candidate-review.json": "e2f89b13ff5cfe3b650810ce7f6c8d70a7876836bb06be3a20a5aaed3b4cfd89"
+    },
+    "prior_target_file_count": 305,
+    "unchanged_prior_target_files": 303,
+    "changed_bound_files": {
+      "internal/app/plugin_original_reset.go": {
+        "old": "87e8b09e781867d7bdbae540d1b2e3487422d33ea107028fb3f5467995fb701d",
+        "current": "b2ca2079600533156fb9dcccec5f79989eed14e0f07a2b05e828eaee16b5773f"
+      },
+      "internal/app/plugin_original_base_sdk_test.go": {
+        "old": "e6263b134514e7fefffc05cb5a1e5f73781ea6c9b8abb177584e5d17f64cadc4",
+        "current": "16ea3f559bf8323f5a2454ec28c1869f2c08967e03034e52c593fa952d3a111c"
+      }
+    },
+    "prior_51_safe_fixture_proofs_unchanged": true,
+    "prior_complete_target_map_canonical_sha256": "c7d57953ea553cbd8b53793b4aeb4f36b6a08bedeb42f0cf88a0c98036b66a9c",
+    "prior51_fixture_map_canonical_sha256": "c3063ebeb61b492649c9f83afaea75c916ca209c576c903e98625cb40bf23a0d",
+    "prior_actual_selected_compile_manifest_sha256": "531e35544b7714a59e1a9df9964e6fefc11dbcf541ceb0bece5eb8cc93f8b316",
+    "prior_actual_compile_inputs": 4406,
+    "current_changed_existing_inputs": [
+      {
+        "path": "internal/app/plugin_original_base_sdk_test.go",
+        "prior": "e6263b134514e7fefffc05cb5a1e5f73781ea6c9b8abb177584e5d17f64cadc4",
+        "current": "16ea3f559bf8323f5a2454ec28c1869f2c08967e03034e52c593fa952d3a111c"
+      },
+      {
+        "path": "internal/app/plugin_original_chain_event.go",
+        "prior": "3dc6115f969c8819231750f454ad0be9de81a9f2afa91705f7a379c7558185c4",
+        "current": "7d254fa045aeba9d58c25228d74b4cbad782508c15926472ef0810b9f735fc34"
+      },
+      {
+        "path": "internal/app/plugin_original_error.go",
+        "prior": "899fc43c2828e68ed3fd62e6f3b64915ad5f5ad7f26bb9c917c37949cff7dc00",
+        "current": "6837e80e4f5929b7d398baa2ada6cd372553fb4a6dda7905b930f39f8998bba2"
+      },
+      {
+        "path": "internal/app/plugin_original_event_registry.go",
+        "prior": "261bd3d1f6d8e059aa09516898410203e292c791a9acb49fe7fb20e58818fb4a",
+        "current": "22bacff619859992c14a911b29dd1983200a6176df121f7989069bd3bfd00c30"
+      },
+      {
+        "path": "internal/app/plugin_original_event_resource.go",
+        "prior": "32c76041c8f62185db6b051363c8d6f34bb1598419da306ecc8c0846783232e2",
+        "current": "441ae47ba4cfadf11148ab0f03967eef5e897903c35860ac409a89bbe70dd290"
+      },
+      {
+        "path": "internal/app/plugin_original_handler_order_test.go",
+        "prior": "ea95a35be583e5227a9698920398a8533cedcad73f66e978c9d780b8cf1d3365",
+        "current": "257d95344b7a0cacaff98bfe5d0c57bb139ec07ed90b44e429cc27cb7daa22a4"
+      },
+      {
+        "path": "internal/app/plugin_original_input_test.go",
+        "prior": "b7304a819ab4b3c89f0886fa5260328f2016f5dc3071c8fbb699a7bc05e7f6e9",
+        "current": "74e51b9cee792abb2d2f85ddf008b2e1c0833691d82b3a59a9d4e0cec5771e87"
+      },
+      {
+        "path": "internal/app/plugin_original_mutable_event.go",
+        "prior": "d7cc5ea774f8774620e6894a2e20451c2718668071b542286e1914d984da5a4a",
+        "current": "e2ef8f11bdfb98576ef2f00fd08121fde4a253b812183c2f6a81d15efbc17f98"
+      },
+      {
+        "path": "internal/app/plugin_original_reset.go",
+        "prior": "87e8b09e781867d7bdbae540d1b2e3487422d33ea107028fb3f5467995fb701d",
+        "current": "b2ca2079600533156fb9dcccec5f79989eed14e0f07a2b05e828eaee16b5773f"
+      },
+      {
+        "path": "internal/app/plugin_original_reset_chain_test.go",
+        "prior": "9e1a0337f38f6b2027df1a5e210c07d35d5b93c279ce003f5e18a78a348655a7",
+        "current": "ed1b53ccd78e2d86023985b6f5cc7711a0a1f7c6e52d7c163315fcdc2ed4a1ae"
+      },
+      {
+        "path": "internal/app/plugin_original_reset_event.go",
+        "prior": "3e3ca06a7339d97078e6c32a03375e112bb07bbe0965e464fcd66792373dcb20",
+        "current": "108d1d88e87c0db1c4a91cfdeb2ea24beac7246cd8f6cca71a67f762db536183"
+      },
+      {
+        "path": "internal/plugins/mutable_event.go",
+        "prior": "f530e1d8e0c478b530fc796064b9484d0562ea9d00dbbadb5eeb65adde4a38a5",
+        "current": "47c463982dabcdc648dda37c89c9048e2df119547dd1c714dc58138fe9890338"
+      }
+    ],
+    "other4394_inputs_unchanged": true,
+    "added_product": "internal/plugins/mutable_event_name.go is new and included in current actual closure; newtests/sourcefixtures are also candidate-bound",
+    "private_full_delta_sha256": "cf309d862e147d083cd1b627cb702d1226b2b3805b85f50e6a0345bbfc219515"
+  },
+  "behavioral_delta": "Only checked reset interprets source_error_name and propagates secondary getter failure before stop/delete/reload. Legacy boolean chain clears checked context. Ordinary broadcast unchanged. Default HandleMutableEvent calls same implementation with nil reader and omits new field. New optional reader only runs after callback failure. These are semantic call-path arguments plus actual current gates, not merely AST/compile acceptance.",
+  "per_feature_mapping": [
+    {
+      "features": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "S10.manager_queries"
+      ],
+      "reuse": "Manager/Base config,K/V,recognition,loader/reload/upgrade implementations unchanged. Public reset is intentionally changed and verified by current15 App roots+6 new subcases, actual31 HTTP/4 process starts, and explicit concurrent cancellation/stop roots. Prior lifecycle upgrade corpus remains historical; its upgrade/rollback body is untouched."
+    },
+    {
+      "features": [
+        "S05.query_update",
+        "S06.transfer_queries",
+        "S01.transmission_queries",
+        "S07.CustomIdentifiers"
+      ],
+      "reuse": "Their query/DAO/Unicode/CAS/wire/native-producer/schema code, shared clone path and ordinary broadcast remain byte-unchanged. New checked marker is introduced only by public reset or typed plugin.data.reset; ordinary bool chain explicitly clears it. Existing event-chain/mutation/dynamic registration and default no-name SDK helper paths actually exercised in current selected roots. Source/target complete corpora and old official UI keep old execution hashes, not called current full reruns."
+    },
+    {
+      "features": [
+        "40.clear_cache"
+      ],
+      "reuse": "Command ingress/clear provider and cache enumeration unchanged. Clear command broadcast does not use checked reset decoding. Shared cancellation/stop/worker handling exercised by current16 App+12concurrent; original source/9-root and row17 addon remain historical."
+    },
+    {
+      "features": [
+        "11.mirror_response"
+      ],
+      "reuse": "HTTP transport/mirror HTTP-response-vs-exception branch, token-domain/TLS/cancel guards unchanged. No dependency on reset checked context or typed mutable-event name. Keep exact original mirror source,3-phase installation and official UI proof hashes; no mirror re-execution claimed."
+    },
+    {
+      "features": [
+        "17.folder_failure"
+      ],
+      "reuse": "All11 row17 files unchanged. Ordinary uninstall does not send PluginDataReset or call checked dispatcher; it continues stop after folders failure. New current3 race SQLite/cache roots and normal19 HTTP/2 starts exercise failed warm publication,retry,cold,actual worker stop,clone isolation,config/KV/code retention. Historical object/duplicate full-process cases reused unchanged; current3 SQLite cases cover all three folder shapes."
+    }
+  ],
+  "current_folder_gate": {
+    "roots": [
+      {
+        "name": "TestOriginalFolderFailedUninstallSourceWarmRetryCold",
+        "seconds": 0.59
+      },
+      {
+        "name": "TestOriginalFolderCacheOrderOnlyAndExplicitNativeRepair",
+        "seconds": 0.95
+      },
+      {
+        "name": "TestOriginalFolderCacheConcurrentOrderWritesKeepFailedWarmValue",
+        "seconds": 0.97
+      }
+    ],
+    "root_seconds_sum": 2.51,
+    "exit": 0,
+    "skips": 0,
+    "race_findings": 0,
+    "log_sha256": "d16e7ecd36057ce7db1b814043cc4bba705c2a83892bd4eba68ba62e89ea6aae"
+  },
+  "current_normal_uninstall": {
+    "result_sha256": "3f83377ede1559f48432d65b554b082bfce5d3709d165e0859634a9b63ccf569",
+    "binary_binding_sha256": "4663dd281ee6063ca916bc41530272fb837cef8822e72b2a2999cc7e2655e019",
+    "requests": 19,
+    "server_starts_and_SIGTERM_exit0": 2,
+    "case": "list; original object/duplicate prior actual process proofs not relabelled",
+    "observations": [
+      {
+        "operation": "same-input public uninstall folder failure and retry",
+        "input": {
+          "source": "OwnedBaseFixture",
+          "clone": "OwnedBaseFixturetwin",
+          "folders": {
+            "owned-folder": [
+              "OwnedBaseFixture",
+              "OwnedBaseFixturetwin"
+            ]
+          }
+        },
+        "first_success": true,
+        "public_after_failure": {
+          "folders": {
+            "owned-folder": [
+              "OwnedBaseFixturetwin"
+            ]
+          },
+          "order": [],
+          "revision": 1
+        },
+        "retry_success": true,
+        "public_after_retry": {
+          "folders": {
+            "owned-folder": [
+              "OwnedBaseFixturetwin"
+            ]
+          },
+          "order": [],
+          "revision": 1
+        },
+        "source_stopped": true,
+        "source_config_KV_retained": true,
+        "clone_init_count_unchanged": true,
+        "public_read_keeps_source_warm_semantics": true,
+        "no_sealed_SQL_or_secret_values_read": true
+      },
+      {
+        "operation": "actual server/worker cold recovery",
+        "folders": {
+          "owned-folder": [
+            "OwnedBaseFixture",
+            "OwnedBaseFixturetwin"
+          ]
+        },
+        "ordinary_config_KV_files_code_retained": true,
+        "clone_config_KV_files_code_retained": true
+      }
+    ],
+    "rejected": []
+  },
+  "historical_source_reuse": {
+    "cases": [
+      "list",
+      "object-with-opaque-fields",
+      "duplicate-first-occurrence"
+    ],
+    "original_source_files_rehashed": 97,
+    "dependency_files_rehashed": 856,
+    "source_result_hashes": {
+      "source-folder-failure-result-03.json": "f6d7f58a048a8634358f4e19cb226e8ecdbce65bfe7eec58e2d55e95425c9cdc",
+      "source-folder-object-result01.json": "f1257e30d427af5bc725ea384d8085e407bec7482f82b847df5462721f39cc10",
+      "source-folder-duplicate-result01.json": "b26708516199516aedf3388ca12f9db614a43c4dd98586b36889f7f5d9c66dab"
+    },
+    "postflight_sha256": "793fbe3727213c3693b9de1d9727953905c7bebf4aed11d28de9b6ebb4ba36ca",
+    "source_reexecuted": false
+  },
+  "target_files": {
+    "internal/app/plugin_original_uninstall.go": "54f334aace4cb3b91ab4dce76cea8a3ae8276ec2502fa3a3dde222178f0d4d05",
+    "internal/app/plugin_original_folder_cache.go": "306b375050c0c2f2420232acc1c041ddacbeb1244eb4b1eabbe279129acd7c6f",
+    "internal/app/plugin_original_folder_cache_test.go": "9bc4460a4aa86852141e8ac92c59082525ffa4ca7bbf345ed91023d40527db95",
+    "internal/app/plugin_original_folders.go": "d56bb1194126be5b0012dcd4d6650183a4f3caa407d664489764e5e4d46d3a4c",
+    "internal/app/plugin_store.go": "ecbc18a5ef880e21c3e5d5f21c2a7234237a1a6d1c1c6928f53a83c605af6fec",
+    "internal/app/plugin_instances.go": "17e373d4827599afec0a0c2a2be2896734976cce1f0f81f1c4f1ace4880ec6e3",
+    "internal/app/plugin_organization.go": "d3f42d06cbca0e3a09512384b00cb013821a784a945e53cb7ca4d8e730d5319c",
+    "internal/app/plugin_organization_compat.go": "0a6d0788bff43f9269701bc23a94d021cde3b6d9b8e84deba06bbfaa364b81ac",
+    "internal/app/plugin_original_base.go": "0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b",
+    "internal/app/plugin_original_config.go": "6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64",
+    "internal/app/plugin_original_resources.go": "51948b249db53dc98984733dc0fdef09634d1bec22f93423c47ae1d26fd9e488",
+    "internal/app/plugin_shared_manager_queries.go": "38b4da535d21151fc93217aaa6e9402460c4cd0631c87afe6ff3c517b39632ff",
+    "internal/plugins/shared_plugin_manager.go": "b06e281afb735fe69fb69a70c3635f9b69eb1ac705f347c753b8aa93fd3080d9",
+    "internal/app/runtime.go": "4fcab0b50f7a18a2266ecbb6200c8159f376498e4ddbf04c957047603223324e",
+    "cmd/owned-base-fixture/main.go": "7fc6370adcdd5fd6b0f949c5b3b170ac73ed595f6167853a0bf8c2b6cd9f1766",
+    "internal/plugins/concurrent_session_test.go": "42122fdbb521a5bd610bc9320b620b267f0b9dfb3dd7d4d189303346e7bea5cb",
+    "cmd/owned-concurrent-fixture/main.go": "7520fc5513ad5c9201332896a0fe0d9fc941da9ad18876bbc235587b11e6d34e",
+    "testdata/plugin-uninstall-folder-20261030/target-process.py": "18c80662d27e67d1b08755e60e1c3cb95ceb2b8715c132bd9bcbb24bd209b14a",
+    "testdata/plugin-uninstall-folder-20261030/source-observations.json": "a0439124f624f6cb301d19c5fff55f4b62a51a9cec2f5260b9c67016abbba2eb"
+  },
+  "retained_new_harness_red": {
+    "receipt_sha256": "12ecfbe1b130cff43ce47774b7bf357d09bf6d357574233f4373ca64091e08f3",
+    "old_exit": 1,
+    "reason": "Reviewer omitted existing fixtureProcessAPI linker flag; pre-uninstall snapshot404. Fresh output with original documented flag passed; no product/assertion changed."
+  },
+  "preservation_rule": "Retain old49 successful executions/34 distinct roots,57HTTP/6starts,old normal binary and old UI hashes as historical. This delta does not turn those into newly executed49/54 or complete old corpora. Current selected reset/event/SDK gates supplement unchanged source and targeted implementation reuse."
+}

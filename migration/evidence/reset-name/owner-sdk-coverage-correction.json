@@ -1,0 +1,15 @@
+{
+  "corrects_owner_report_sha256": "18e70558c365a7f44132619a7b336fbaeb38551c82a734bbe96b543a188e1a2e",
+  "corrects_chat_claim": "SDK whole package race zero skips",
+  "retained_result": {
+    "command": "go test -buildvcs=false -mod=readonly -race -count=1 -timeout=3m ./internal/plugins",
+    "exit": 0,
+    "package_seconds": 129.411,
+    "log_sha256": "9c696ceec22ad7b0dc79dc4273731bdb199589ef71caf11bb5c549537565b9e2"
+  },
+  "scope_correction": "LIGHT_MEDIA_CONCURRENT_FIXTURE was not set by owner driver; terse package log cannot prove conditional concurrent roots executed. Do not treat this owner SDK package run as all-root/no-skip acceptance.",
+  "unchanged_valid_evidence": "15 App roots normal/race logs are verbose, explicitly all 15 passed with no skips; SDK helper unit tests and actual workers are separately recorded.",
+  "pending": "independent manager reviewer explicitly builds owned-concurrent-fixture and executes 12 concurrent roots with -race -v, plus new name roots; no result presumed",
+  "no_original_log_or_report_rewrite": true,
+  "product_candidate_unchanged": true
+}

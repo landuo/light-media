@@ -11,6 +11,7 @@ import (
 
 func TestOriginalResetChainActualWorkers(t *testing.T) {
 	a := newTestApp(t)
+	disableResetFixtureStatistics(t, a)
 	t.Cleanup(a.closeOriginalSessions)
 	cookie := setupTestAdmin(t, a)
 	mutator := installOrderWorker(t, a, cookie, os.Getenv("OWNED_RESET_MUTATOR"))
@@ -71,6 +72,12 @@ func TestOriginalResetChainActualWorkers(t *testing.T) {
 	beforeSource := originalBaseSDKLoaded(t, a, mutator.PluginID)
 	beforeObserver := originalBaseSDKLoaded(t, a, observer.PluginID)
 	response := callTest(t, a.Handler(), "POST", "/api/plugins/"+mutator.PluginID+"/reset", `{}`, cookie, "")
+	if response.Code < 400 || originalBaseSDKLoaded(t, a, mutator.PluginID) != beforeSource {
+		t.Fatal("missing source name did not abort HTTP reset", response.Code, response.Body.String())
+	}
+	configure(mutator.PluginID, "return", "null")
+	beforeSource = originalBaseSDKLoaded(t, a, mutator.PluginID)
+	response = callTest(t, a.Handler(), "POST", "/api/plugins/"+mutator.PluginID+"/reset", `{}`, cookie, "")
 	assertOriginalRegistrySuccess(t, response.Code, response.Body.Bytes())
 	a.wg.Wait()
 	if originalBaseSDKLoaded(t, a, mutator.PluginID) == beforeSource {

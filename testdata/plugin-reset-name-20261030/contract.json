@@ -1,0 +1,40 @@
+{
+  "scope": "row16 checked plugin.data.reset failure-name lookup; not all event exception policies",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "entrypoints": [
+    "authenticated POST /api/plugins/{id}/reset",
+    "scoped SDK SendEvent chain plugin.data.reset"
+  ],
+  "wire": {
+    "extension": "source_error_name",
+    "states": [
+      "missing",
+      "value",
+      "failed"
+    ],
+    "omitted": "missing (older worker/ordinary Base has no name)",
+    "value": "valid finite JSON projection; explicit null and empty string remain present",
+    "access_timing": "only after callback error/panic, after mutation; getter called once",
+    "no_manifest_fallback": true
+  },
+  "adaptations": [
+    "Go ordinary plugins explicitly model source .name via MutableEventNameReader; no arbitrary Python attributes/reflection",
+    "raw JSON name value converted with existing ordered sourcejson.String, not arbitrary object __str__",
+    "safe error code/empty traceback instead of copying worker exception or fabricating Python stack",
+    "canonical plugin.data.reset event ID replaces source enum spelling in notification title",
+    "invalid snapshot or transport error aborts with explicit Go callback-boundary code, not claimed Python AttributeError",
+    "old internal boolean dispatcher and unrelated event failure policies unchanged; general event name behavior remains outside this fix"
+  ],
+  "source_probe_boundaries": [
+    "normal fixed endpoint/Manager/Base/DAO/EventManager and full MessageHelper with real local queue",
+    "direct endpoint function, not authenticated original daemon/browser",
+    "Sites authlevel fixture, unused business ChainBase inert, scheduler/command registration traced",
+    "all socket connections forbidden",
+    "fresh original default DAO process on same owned SQLite for cold, not whole source-host restart"
+  ],
+  "target_probe": [
+    "actual compiled standard workers/artifact install/authenticated HTTP",
+    "real cmd/server restart and typed Base snapshots",
+    "owned-only repositories/proxy, plugin stats false and server URL empty"
+  ]
+}

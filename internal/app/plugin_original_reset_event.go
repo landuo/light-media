@@ -44,3 +44,9 @@ func (a *App) sendOriginalPluginDataReset(ctx context.Context, instance string) 
 	data, _ := json.Marshal(originalPluginDataResetEvent{PluginID: instance, ResetConfig: true, ResetData: true})
 	return a.sendOriginalChainEvent(ctx, &plugins.MutableEvent{Type: "plugin.data.reset", Data: data})
 }
+
+func (a *App) sendOriginalPluginDataResetChecked(ctx context.Context, instance string) error {
+	data, _ := json.Marshal(originalPluginDataResetEvent{PluginID: instance, ResetConfig: true, ResetData: true})
+	_, err := a.sendOriginalResetChainEventChecked(ctx, &plugins.MutableEvent{Type: "plugin.data.reset", Data: data})
+	return err
+}

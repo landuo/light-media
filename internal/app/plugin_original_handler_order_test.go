@@ -111,6 +111,7 @@ func installOrderWorker(t *testing.T, a *App, cookie *http.Cookie, binary string
 }
 func TestOriginalManifestStartupAndResetActualWorkers(t *testing.T) {
 	a := newTestApp(t)
+	disableResetFixtureStatistics(t, a)
 	t.Cleanup(a.closeOriginalSessions)
 	cookie := setupTestAdmin(t, a)
 	ctx := context.Background()

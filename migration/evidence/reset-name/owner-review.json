@@ -1,0 +1,172 @@
+{
+  "status": "owner verified finite row16 candidate; independent review / main integration pending",
+  "candidate_sha256": "67f95bb4633dd5adc8e086e350a342c1e0afc4575fd9d9321e677aef7b8dace7",
+  "base": "294e52dd904f3e7d6538d0e51ffe42365b93e266",
+  "paths": 22,
+  "scope": [
+    "authenticated reset .name secondary-exception abort",
+    "typed SDK SendEvent plugin.data.reset checked propagation",
+    "mutation preserved before error; valid name error notification/remaining subscribers/reset continue",
+    "source missing/null/empty/dynamic deletion/getter failure/success-with-unused-getter controls",
+    "old boolean dispatch and unrelated events preserved"
+  ],
+  "source": {
+    "manifest": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/evidence/reset-event-name-owner/source-binding01.json",
+    "sha256": "d86d4e9b1858ec135bfb4e1cdd1a41d21ee1204c0c604f35090ae05bea556740",
+    "warm_processes": 7,
+    "cold_fresh_DAO_processes": 7,
+    "original_imports": 145,
+    "dependency_imports": 1020,
+    "source_byte_closure": 1166,
+    "network": "driver denies every socket connection; attempted-connection count was not separately collected",
+    "boundaries": [
+      "normal source endpoint function/Manager/Base/default DAOs/real EventManager consumers/MessageHelper queues",
+      "source auth dependency and full daemon startup not executed",
+      "unrelated Sites/ChainBase/command/scheduler seams explicitly fixture-limited",
+      "cold original DAO only, not full source host restart"
+    ]
+  },
+  "target": {
+    "tests": [
+      {
+        "kind": "normal",
+        "roots": [
+          "TestOriginalBaseSDKEmptyCacheReloadResetAndFreshStop",
+          "TestOriginalBaseSDKResetSecondFailureStillInvalidatesConfigCache",
+          "TestOriginalInputActualSDKEventErrorDelivery",
+          "TestOriginalEventSDKActualMultipleAndDynamicHandlers",
+          "TestOriginalEventSDKActualDynamicChainCloneAndReload",
+          "TestOriginalEventSDKActualInitOverridesStaticDeclaration",
+          "TestOriginalEventSDKActualBroadcastChainAndCheck",
+          "TestOriginalManifestStartupAndResetActualWorkers",
+          "TestOriginalMutableEventDispatchSnapshotAndFailure",
+          "TestOriginalResetChainActualWorkers",
+          "TestOriginalResetGenericDeclarationsActualWorkers",
+          "TestOriginalResetGenericCompatibilityPrecedence",
+          "TestOriginalResetSourceNameActualWorkers",
+          "TestOriginalResetCheckedBoundaryAndCancellation",
+          "TestOriginalResetTypedSendEventChecked"
+        ],
+        "package_seconds": 107.476,
+        "log": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/evidence/reset-event-name-owner/final-app-normal-01.log",
+        "sha256": "543216f857c4a7cced870eaa93efd931da76c09bebc7354a9bd1dec7caf5a5dd",
+        "exit": 0,
+        "skip": 0
+      },
+      {
+        "kind": "race",
+        "roots": [
+          "TestOriginalBaseSDKEmptyCacheReloadResetAndFreshStop",
+          "TestOriginalBaseSDKResetSecondFailureStillInvalidatesConfigCache",
+          "TestOriginalInputActualSDKEventErrorDelivery",
+          "TestOriginalEventSDKActualMultipleAndDynamicHandlers",
+          "TestOriginalEventSDKActualDynamicChainCloneAndReload",
+          "TestOriginalEventSDKActualInitOverridesStaticDeclaration",
+          "TestOriginalEventSDKActualBroadcastChainAndCheck",
+          "TestOriginalManifestStartupAndResetActualWorkers",
+          "TestOriginalMutableEventDispatchSnapshotAndFailure",
+          "TestOriginalResetChainActualWorkers",
+          "TestOriginalResetGenericDeclarationsActualWorkers",
+          "TestOriginalResetGenericCompatibilityPrecedence",
+          "TestOriginalResetSourceNameActualWorkers",
+          "TestOriginalResetCheckedBoundaryAndCancellation",
+          "TestOriginalResetTypedSendEventChecked"
+        ],
+        "package_seconds": 149.733,
+        "log": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/evidence/reset-event-name-owner/final-app-race-01.log",
+        "sha256": "b94c53263dd2bee1283e4c614f2cf97dd5bc75cc93829aff959ac4ec07a259c5",
+        "exit": 0,
+        "skip": 0
+      },
+      {
+        "kind": "SDK package race",
+        "package_seconds": 129.411,
+        "log": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/evidence/reset-event-name-owner/final-sdk-race-01.log",
+        "sha256": "9c696ceec22ad7b0dc79dc4273731bdb199589ef71caf11bb5c549537565b9e2",
+        "exit": 0
+      }
+    ],
+    "actual_process": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/evidence/reset-event-name-owner/process03/result.json",
+      "sha256": "7e9ee1327f25536a86e20297eea8b7a6f1156a066a0f5c5fd6d374860ec36d6e",
+      "http_requests": 31,
+      "normal_starts": 4,
+      "normal_stops": 4,
+      "cases": [
+        {
+          "case": "missing-name",
+          "mutation_callback_sequence": true,
+          "same_worker_config_KV": true,
+          "observer_clone_unchanged": true
+        },
+        {
+          "case": "missing-name-cold",
+          "same_persisted_config_KV": true,
+          "fresh_worker": true,
+          "failure_preserved": true
+        },
+        {
+          "case": "named-sql-second-phase-failure",
+          "config_committed_deleted": true,
+          "KV_retained": true
+        },
+        {
+          "case": "named-success",
+          "reset_only_route_target": true,
+          "fresh_worker": true,
+          "config_KV_deleted": true
+        },
+        {
+          "case": "success-cold",
+          "config_KV_absence_retained": true,
+          "clone_retained": true
+        }
+      ],
+      "network": {
+        "rejected": [],
+        "forwarded": [],
+        "stats": false,
+        "server_url": ""
+      }
+    },
+    "final_rebuilt_same_server_sha256": "3b171de5eb864d797617f5b3162c103f0fde8b666ec39e183b468838c859626e",
+    "closure": {
+      "before": "5575ef2cf48632632f34e534714d57137f8299d8225f8194f5433cc295b23982",
+      "after": "5575ef2cf48632632f34e534714d57137f8299d8225f8194f5433cc295b23982",
+      "go_embed_test_inputs": 6048,
+      "source_inputs": 1166,
+      "drift": 0
+    },
+    "candidate_drift": 0
+  },
+  "original_red": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/evidence/reset-event-name-owner/baseline-actual-red01.log",
+    "sha256": "57224d1f0cdb34a698ed3dbc64fbf83a36b696fe3af362b032eb3f9dd3b54cb1",
+    "exit": 1,
+    "mechanism": "seven App source files via test-only git-HEAD overlay; actual compiled updated worker and unchanged new assertion; original host wrongly reports reset success and reloads despite missing name",
+    "seconds": 7.65
+  },
+  "explicit_adaptations": [
+    "optional backward-compatible snapshot; omission maps to missing, never Manifest.Name",
+    "limited JSON name projection through unchanged sourcejson.String; real witnesses cover string/None/empty, not arbitrary Python __str__/reflection",
+    "safe Go error codes and no synthetic Python traceback; canonical event string in title",
+    "transport/protocol failure without valid snapshot explicitly aborts as Go boundary, not asserted source AttributeError",
+    "pre-cancelled reset was tested; no new claim for every in-flight scheduling interleaving"
+  ],
+  "remaining": [
+    "independent review and integrated-main/UI not yet accepted",
+    "all other event error-name policies still unchanged/open",
+    "native full-catalog reset compensation/data stores not completed by this fix"
+  ],
+  "preserved_failed_runs": [
+    "source-string-run01.log (missing test-only jinja dependency)",
+    "source-string-run02.log (source Enum output serialization)",
+    "source-missing-run04.log (cold child log prefix JSON parse)",
+    "unit01.log (initial test helper compile mismatch)",
+    "process02.log (harness expected 400 rather than actual SQL failure 500)",
+    "actual-name02-race.log (sender artifact chosen wrong Base contract; first two roots passed, full run failed)"
+  ],
+  "integration_plan_sha256": "2b4421e284225bfb61de3cf5bcd509a141eb9018f90bdc5e72bcb1d1cbf633f3",
+  "no_main_or_ledger_writes": true,
+  "no_commit_or_push": true
+}

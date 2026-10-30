@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"light-media/internal/plugins"
+	"light-media/internal/sourcejson"
 )
 
 // Publish the source helper/event sequence using a safe transport error code.
@@ -47,4 +48,33 @@ func (a *App) reportOriginalEventError(ctx context.Context, object *originalPlug
 		name = current
 	}
 	a.reportOriginalPluginExecutionError(ctx, "system", name+" 处理事件 "+event+" 时出错", map[string]any{"type": "event", "event_type": event, "event_handle": object.installation.InstanceID + "." + method}, err)
+}
+
+// Checked reset alone follows the source exception-handler .name access.
+// Mutations have already been applied. Missing/failed access stops dispatch
+// before the original notification/SystemError and before reset's stop/delete.
+func (a *App) reportOriginalResetEventError(ctx context.Context, object *originalPluginInstance, event, method string, err error) error {
+	var abort originalResetAbort
+	if errors.As(err, &abort) {
+		return abort
+	}
+	var failure originalMutableCallbackFailure
+	if !errors.As(err, &failure) {
+		return originalResetAbort{bad("PLUGIN_EVENT_CALLBACK_BOUNDARY", "插件重置事件未返回有效失败快照")}
+	}
+	switch failure.name.State {
+	case "missing":
+		return originalResetAbort{bad("PLUGIN_EVENT_NAME_MISSING", "插件重置事件错误处理所需的 name 属性不存在")}
+	case "failed":
+		return originalResetAbort{bad("PLUGIN_EVENT_NAME_FAILED", "插件重置事件错误处理读取 name 属性失败")}
+	case "value":
+		name, nameErr := sourcejson.String(failure.name.Value)
+		if nameErr != nil {
+			return originalResetAbort{bad("PLUGIN_EVENT_SNAPSHOT_INVALID", "插件重置事件失败快照无效")}
+		}
+		a.reportOriginalPluginExecutionError(ctx, "system", name+" 处理事件 "+event+" 时出错", map[string]any{"type": "event", "event_type": event, "event_handle": object.installation.InstanceID + "." + method}, err)
+		return err
+	default:
+		return originalResetAbort{bad("PLUGIN_EVENT_SNAPSHOT_INVALID", "插件重置事件失败快照无效")}
+	}
 }

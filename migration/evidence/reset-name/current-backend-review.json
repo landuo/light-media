@@ -1,0 +1,329 @@
+{
+  "schema_version": 1,
+  "kind": "independent-row16-current-main-backend-review",
+  "status": "passed_backend_pending_official_browser_review",
+  "reviewer": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "ultra",
+    "product_or_ledger_edits": false
+  },
+  "base_head": "57037d045d2a507c3e70fc99cf470d4a96204add",
+  "candidate_manifest_sha256": "67f95bb4633dd5adc8e086e350a342c1e0afc4575fd9d9321e677aef7b8dace7",
+  "candidate_review_sha256": "8f7cca4d52ad21c009655a759431ffd7aa1121aae3fc3dc9cb114aa4ec18f4ea",
+  "candidate_results_not_relabelled": true,
+  "scope": "Finite typed reset failure-name snapshot and checked propagation through authenticated reset and SDK plugin.data.reset. Not arbitrary Python attribute/object reflection, all event failure policies, or complete installed business-plugin reset compensation.",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_paths": {
+    "app/api/endpoints/plugin.py": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+    "app/core/event.py": "7aec5ea981f14f582b9a2946eb2184814b26c530a6b8494ce9a776f83060c98d",
+    "app/core/plugin.py": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+    "app/plugins/__init__.py": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+    "app/helper/message.py": "c2b3626b9efb4de5e698a67ebd4624d8f684f8618a29a925d8c8d5001f052e89",
+    "app/db/systemconfig_oper.py": "87bff2e7c63d2ba98c72d92d6aed2018548730215de017330019bb54478634a2",
+    "app/db/plugindata_oper.py": "31043788d1ced9a311a0034074b71d34e97f78f644583ed02522602feffa01ec"
+  },
+  "source_reuse": {
+    "independently_executed_cases": 13,
+    "fresh_DAO_processes": 13,
+    "imported_source_dependency_inputs_rehashed": 1165,
+    "raw_results": {
+      "source-dynamic-delete-run-independent01.json": "e9d16d0d3e2e1c9a1734b39b83a17014fafce648f42477c492db11cbe89e3ce2",
+      "source-empty-run-independent01.json": "1c4a95d79bb80bca107fcf820e7eb4a28a7e3c3c7e59c5478a0c3eaa03955c1c",
+      "source-false-run-independent01.json": "4b229dbeacbbc857b03151b90bd9283114fed0dc1404ece9af83779e2d8f094d",
+      "source-getter-error-run-independent01.json": "4a568a8a127ff9f18c123e6b33747b4193646d9b711470e7c15c846912ac58dc",
+      "source-integer-run-independent01.json": "62a2b1b3a4ad3fb46bef64e319572ff554128f5304313b191a0e469bf62ba889",
+      "source-late-getter-error-run-independent01.json": "5173ecda0065a05a03b8424c4964e106dba97b1eb014538e42a8dea3d856940e",
+      "source-late-missing-run-independent01.json": "e96340ca4b3ee45e210eb79e633f98365def79a4bf706b22d2d367b884f71f59",
+      "source-late-null-run-independent01.json": "3fe687e506dcedc4c40b5e5d55e87d30551ae9c1fe8d7503c1a2ed0a3151e017",
+      "source-list-run-independent01.json": "ad69720e6a7c051fc19fa1e5fb3af8d120c45c35acfa4b7852183452170ecce7",
+      "source-missing-run-independent01.json": "5e6fe48397e48adf4d20f289511efbb41a657bbdad88a573ea8ded100cbb3626",
+      "source-null-run-independent01.json": "1a8d4f2156589c519678e38e4873a245b1c5e64645416493c5b5eb9821a9ec1c",
+      "source-string-run-independent01.json": "2b7e47dca99ce34e4733b8f6cfb29215299c2910a08ef6b479ad448a16a27d16",
+      "source-success-with-getter-error-run-independent01.json": "b4f2a2ce0a178668bc2cc76228a8d09348ad1527de39546e6e74b7ea99031811"
+    },
+    "summary_sha256": "a0e41e84d6395b2d3f50df01b837ecaed7edd81a8d9dd69466a10e2207a537d4",
+    "driver_sha256": "09c208da455ca3cc89a86d09718a3b8052e22875c68eae8aabfedc265615b170",
+    "boundary": "Full normal original endpoint/Manager/Base/defaultDAO/EventManager/MessageHelper modules. Fixture classes are physically loaded by source Manager. Authentication/full original daemon, real command/scheduler/business ChainBase integrations are not claimed. Every socket connection is denied; attempt count was not instrumented. Cold is fresh DAO, not a complete original-host restart.",
+    "new_source_execution_during_main_gate": false
+  },
+  "target_files": {
+    "cmd/owned-reset-generic-fixture/main.go": "273158a7b3dbe1d8b1112c0e0958b6870bdb962ba7110a898cbdfa77e997866a",
+    "internal/app/plugin_original_base_sdk_test.go": "16ea3f559bf8323f5a2454ec28c1869f2c08967e03034e52c593fa952d3a111c",
+    "internal/app/plugin_original_chain_event.go": "7d254fa045aeba9d58c25228d74b4cbad782508c15926472ef0810b9f735fc34",
+    "internal/app/plugin_original_error.go": "6837e80e4f5929b7d398baa2ada6cd372553fb4a6dda7905b930f39f8998bba2",
+    "internal/app/plugin_original_event_registry.go": "22bacff619859992c14a911b29dd1983200a6176df121f7989069bd3bfd00c30",
+    "internal/app/plugin_original_event_resource.go": "441ae47ba4cfadf11148ab0f03967eef5e897903c35860ac409a89bbe70dd290",
+    "internal/app/plugin_original_handler_order_test.go": "257d95344b7a0cacaff98bfe5d0c57bb139ec07ed90b44e429cc27cb7daa22a4",
+    "internal/app/plugin_original_input_test.go": "74e51b9cee792abb2d2f85ddf008b2e1c0833691d82b3a59a9d4e0cec5771e87",
+    "internal/app/plugin_original_mutable_event.go": "e2ef8f11bdfb98576ef2f00fd08121fde4a253b812183c2f6a81d15efbc17f98",
+    "internal/app/plugin_original_reset.go": "b2ca2079600533156fb9dcccec5f79989eed14e0f07a2b05e828eaee16b5773f",
+    "internal/app/plugin_original_reset_chain_test.go": "ed1b53ccd78e2d86023985b6f5cc7711a0a1f7c6e52d7c163315fcdc2ed4a1ae",
+    "internal/app/plugin_original_reset_event.go": "108d1d88e87c0db1c4a91cfdeb2ea24beac7246cd8f6cca71a67f762db536183",
+    "internal/app/plugin_original_reset_name_test.go": "ce85a3db18aa4319cb2f2949fa573ae84ddaf9165032f1d7d5d7dcd94e80b9f5",
+    "internal/plugins/mutable_event.go": "47c463982dabcdc648dda37c89c9048e2df119547dd1c714dc58138fe9890338",
+    "internal/plugins/mutable_event_name.go": "90b3e53b44c33369f9f6dd4355b37a44c2fa6c04183825e1e05f65d593a0500d",
+    "internal/plugins/mutable_event_name_test.go": "7f63d89bc97315200d544b0f48980c8261770a92d79ae65d05991fe9065af272",
+    "testdata/plugin-reset-name-20261030/contract.json": "25a162065cc376b4e1631e6d5f741f870af48074ce14ace70f670b6d21f41a84",
+    "testdata/plugin-reset-name-20261030/replay-source.py": "d6e271bdd4d15c88caa3ac9a10460e400f6d238c0677a491c6276fc5cc9e27b0",
+    "testdata/plugin-reset-name-20261030/source-observations.json": "4d9d7ea077a8dd7ac9d353c8e8cc2ea71845d235992eb2e7558d425be33eb4d2",
+    "testdata/plugin-reset-name-20261030/source_named_reset_v5.py": "e0acbe9ef06984b746d8ca698a987ba329bc1e9bc5a6b791b2f587f669e3a97c",
+    "testdata/plugin-reset-name-20261030/source_reset_cold_read_v2.py": "24e5f7b7917b66bbcd9de6c78b74fbe67c8527a6b57144bbe7d2b93d586c6a93",
+    "testdata/plugin-reset-name-20261030/target-process.py": "c07fa3c83d500213fbd59a85197f8a18c015cf130de99100405f4538c8b47c34",
+    "internal/app/plugin_original_uninstall.go": "54f334aace4cb3b91ab4dce76cea8a3ae8276ec2502fa3a3dde222178f0d4d05",
+    "internal/app/plugin_original_folder_cache.go": "306b375050c0c2f2420232acc1c041ddacbeb1244eb4b1eabbe279129acd7c6f",
+    "internal/app/plugin_original_folder_cache_test.go": "9bc4460a4aa86852141e8ac92c59082525ffa4ca7bbf345ed91023d40527db95",
+    "internal/app/plugin_original_folders.go": "d56bb1194126be5b0012dcd4d6650183a4f3caa407d664489764e5e4d46d3a4c",
+    "internal/app/plugin_store.go": "ecbc18a5ef880e21c3e5d5f21c2a7234237a1a6d1c1c6928f53a83c605af6fec",
+    "internal/app/plugin_instances.go": "17e373d4827599afec0a0c2a2be2896734976cce1f0f81f1c4f1ace4880ec6e3",
+    "internal/app/plugin_organization.go": "d3f42d06cbca0e3a09512384b00cb013821a784a945e53cb7ca4d8e730d5319c",
+    "internal/app/plugin_organization_compat.go": "0a6d0788bff43f9269701bc23a94d021cde3b6d9b8e84deba06bbfaa364b81ac",
+    "internal/app/plugin_original_base.go": "0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b",
+    "internal/app/plugin_original_config.go": "6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64",
+    "internal/app/plugin_original_resources.go": "51948b249db53dc98984733dc0fdef09634d1bec22f93423c47ae1d26fd9e488",
+    "internal/app/plugin_shared_manager_queries.go": "38b4da535d21151fc93217aaa6e9402460c4cd0631c87afe6ff3c517b39632ff",
+    "internal/plugins/shared_plugin_manager.go": "b06e281afb735fe69fb69a70c3635f9b69eb1ac705f347c753b8aa93fd3080d9",
+    "internal/app/runtime.go": "4fcab0b50f7a18a2266ecbb6200c8159f376498e4ddbf04c957047603223324e",
+    "cmd/owned-base-fixture/main.go": "7fc6370adcdd5fd6b0f949c5b3b170ac73ed595f6167853a0bf8c2b6cd9f1766",
+    "internal/plugins/concurrent_session_test.go": "42122fdbb521a5bd610bc9320b620b267f0b9dfb3dd7d4d189303346e7bea5cb",
+    "cmd/owned-concurrent-fixture/main.go": "7520fc5513ad5c9201332896a0fe0d9fc941da9ad18876bbc235587b11e6d34e",
+    "testdata/plugin-uninstall-folder-20261030/target-process.py": "18c80662d27e67d1b08755e60e1c3cb95ceb2b8715c132bd9bcbb24bd209b14a",
+    "testdata/plugin-uninstall-folder-20261030/source-observations.json": "a0439124f624f6cb301d19c5fff55f4b62a51a9cec2f5260b9c67016abbba2eb"
+  },
+  "actual_current_gates": {
+    "app_race": {
+      "roots": [
+        {
+          "name": "TestOriginalBaseSDKEmptyCacheReloadResetAndFreshStop",
+          "seconds": 6.33
+        },
+        {
+          "name": "TestOriginalBaseSDKResetSecondFailureStillInvalidatesConfigCache",
+          "seconds": 4.77
+        },
+        {
+          "name": "TestOriginalInputActualSDKEventErrorDelivery",
+          "seconds": 3.8
+        },
+        {
+          "name": "TestOriginalEventSDKActualMultipleAndDynamicHandlers",
+          "seconds": 3.99
+        },
+        {
+          "name": "TestOriginalEventSDKActualDynamicChainCloneAndReload",
+          "seconds": 8.36
+        },
+        {
+          "name": "TestOriginalEventSDKActualInitOverridesStaticDeclaration",
+          "seconds": 5.24
+        },
+        {
+          "name": "TestOriginalEventSDKActualBroadcastChainAndCheck",
+          "seconds": 7.46
+        },
+        {
+          "name": "TestOriginalManifestStartupAndResetActualWorkers",
+          "seconds": 23.49
+        },
+        {
+          "name": "TestOriginalMutableEventDispatchSnapshotAndFailure",
+          "seconds": 0.0
+        },
+        {
+          "name": "TestOriginalResetChainActualWorkers",
+          "seconds": 10.86
+        },
+        {
+          "name": "TestOriginalResetGenericDeclarationsActualWorkers",
+          "seconds": 12.94
+        },
+        {
+          "name": "TestOriginalResetGenericCompatibilityPrecedence",
+          "seconds": 0.0
+        },
+        {
+          "name": "TestOriginalResetSourceNameActualWorkers",
+          "seconds": 51.53
+        },
+        {
+          "name": "TestOriginalResetCheckedBoundaryAndCancellation",
+          "seconds": 6.47
+        },
+        {
+          "name": "TestOriginalResetTypedSendEventChecked",
+          "seconds": 7.27
+        },
+        {
+          "name": "TestIndependentResetNameMultiFailureAndFiniteValues",
+          "seconds": 51.07
+        }
+      ],
+      "root_seconds_sum": 203.58,
+      "exit": 0,
+      "skips": 0,
+      "race_findings": 0,
+      "log_sha256": "9cee534fe8ae182d720ad2a79e6bfedc576189e81b4e1353e56122764ea70ce6"
+    },
+    "sdk_race": {
+      "roots": [
+        {
+          "name": "TestOwnedConcurrentSameWorkerOverlapAndChunkIsolation",
+          "seconds": 1.9
+        },
+        {
+          "name": "TestOwnedConcurrentCancelIsolatedAndObjectReusable",
+          "seconds": 1.1
+        },
+        {
+          "name": "TestOwnedConcurrentErrorsAndRetainedAuthority",
+          "seconds": 1.08
+        },
+        {
+          "name": "TestOwnedConcurrentCallbackDeadlineDoesNotKillOtherCalls",
+          "seconds": 1.1
+        },
+        {
+          "name": "TestOwnedConcurrentStopRevokesJoinsAndUsesFreshCleanup",
+          "seconds": 1.07
+        },
+        {
+          "name": "TestOwnedConcurrentStopDeadlineReapsUncooperativeWorker",
+          "seconds": 0.19
+        },
+        {
+          "name": "TestOwnedConcurrentNegotiatesFallbackAndStrictRequirement",
+          "seconds": 1.16
+        },
+        {
+          "name": "TestOwnedConcurrentCallerDeadlineOnlyIsExplicit",
+          "seconds": 3.22
+        },
+        {
+          "name": "TestOwnedConcurrentFullCapacityDoesNotBlockCleanup",
+          "seconds": 1.1
+        },
+        {
+          "name": "TestOwnedConcurrentShutdownReservedManagerPhasesAtCapacity",
+          "seconds": 1.09
+        },
+        {
+          "name": "TestOwnedConcurrentShutdownCloseFailurePolicyStaysInManager",
+          "seconds": 1.08
+        },
+        {
+          "name": "TestOwnedConcurrentShutdownAPIAuthorityAndLegacyBoundary",
+          "seconds": 2.16
+        },
+        {
+          "name": "TestMutableEventSourceNameAccess",
+          "seconds": 0.0
+        },
+        {
+          "name": "TestMutableEventSourceNameWireValidation",
+          "seconds": 0.0
+        },
+        {
+          "name": "TestMutableEventSnapshotArbitraryJSONAndFailure",
+          "seconds": 0.0
+        },
+        {
+          "name": "TestMutableEventSnapshotBoundary",
+          "seconds": 0.0
+        }
+      ],
+      "root_seconds_sum": 16.25,
+      "exit": 0,
+      "skips": 0,
+      "race_findings": 0,
+      "log_sha256": "cf07d09ce625a0833b956a8e34f66b046ebe2c8b65d43fba0d5e2fd6c437d25f"
+    },
+    "sdk_conditional_environment": "LIGHT_MEDIA_CONCURRENT_FIXTURE explicitly points to independently rebuilt current race worker.12 actual concurrent roots plus4 mutable roots, not fullpackage/no-skips claim.",
+    "normal_production": {
+      "result_sha256": "932c80997483cc6dafe8d92d287f16bced3969789269812692ff4ebd80bd6d52",
+      "requests": 31,
+      "server_starts_and_SIGTERM_exit0": 4,
+      "normal_server_sha256": "877c5c246367afecf239fd0ed37bda6d5b827306513b65348b00f6602b327a03",
+      "worker_binary_hashes": {
+        "mutator-normal": "06bae55577596895f578d63d9987084cd04141586c1706b066149b5170f3eb34",
+        "observer-normal": "b0f80b4b653e4df390cfed045c9ce56b74ba723d03301972844751b174fcaf74"
+      },
+      "observations": [
+        {
+          "case": "missing-name",
+          "mutation_callback_sequence": true,
+          "same_worker_config_KV": true,
+          "observer_clone_unchanged": true
+        },
+        {
+          "case": "missing-name-cold",
+          "same_persisted_config_KV": true,
+          "fresh_worker": true,
+          "failure_preserved": true
+        },
+        {
+          "case": "named-sql-second-phase-failure",
+          "config_committed_deleted": true,
+          "KV_retained": true
+        },
+        {
+          "case": "named-success",
+          "reset_only_route_target": true,
+          "fresh_worker": true,
+          "config_KV_deleted": true
+        },
+        {
+          "case": "success-cold",
+          "config_KV_absence_retained": true,
+          "clone_retained": true
+        }
+      ],
+      "network": {
+        "rejected": [],
+        "forwarded": [],
+        "stats": false,
+        "server_url": ""
+      }
+    },
+    "folder_delta_impact_review_sha256": "0eac23d4f23e2156f25d6fa7a397ae697790a1b37e731aab254b39d3b9763deb"
+  },
+  "bindings": {
+    "before_after_sha256": "c163dbc658441ff82392129087376c2a8bd62ede92f4b45dbd2e6b4013fa951c",
+    "compile_fixture_inputs": 6079,
+    "separate_UI_compile_inputs": 1747,
+    "source_dependency_inputs": 1165,
+    "unchanged_before_after_build_and_all_gates": true,
+    "normal_and_race_dependency_closures": true,
+    "actual_overlay_replacement_bytes_hashed": true,
+    "build_and_test_driver_sha256": "8588ab37f21444728ae5388afd738367886788af0c0e7af030233df2025866ec",
+    "binder_sha256": "64f13aa5318775e16bff2ff09de13621016e2fed1cb8eb732f2541d4e0f94237",
+    "binary_manifest_sha256": "84f078dfd1a089e192ce4393156789431959bd49f7936f311452b107a07a51e4",
+    "buildinfo_sha256": "b6a4d6bbbd8648020ff20ac2b352ea5139cfbc0f409b109377492b44d484a898",
+    "app_new6_test_sha256": "171a58e0707184fbfefad935e01bb8e3505c6e53107957ff20def38aeb437248",
+    "folder_runner_sha256": "f290a844d5cc3cc4ba2ff2382cf504222ea75a7e5131d2e1b57fa45f3f334a73",
+    "normal_uninstall_runner_sha256": "85d8dd1c4962a1be64e1f1b1d39914d1a8d71820bee2fe9ad6c6d130fc6758fb",
+    "environment": {
+      "CGO_ENABLED": "1",
+      "GOARCH": "amd64",
+      "GOOS": "linux",
+      "GOVERSION": "go1.26.0"
+    }
+  },
+  "browser_build_ready": {
+    "normal_server_sha256": "877c5c246367afecf239fd0ed37bda6d5b827306513b65348b00f6602b327a03",
+    "server_overlay": false,
+    "worker_sha256": "19a51068bdce8d067f170549badcdebe012e71c248ba98254cf5e2a6f6833b48",
+    "worker_manifest_sha256": "2bbb7d761b712bd583547422b3fcefa86c29be055cedfc0efc36af81936ce5e8",
+    "worker_id": "OwnedResetBrowser",
+    "worker_overlay": "get_form only; existing handler/caps/events/API/auth unchanged; linker pluginID differs intentionally",
+    "replacement_sha256": "785ed2ccf361a179b59ef2b32f1efdf82cd5bdd16d0f4e0f772e094626ee3be7",
+    "diff_sha256": "7c70002281a382aeac6051238b3476089203c3dfca3cd8b99c53466b975fb917",
+    "no_browser_execution_claim_here": true
+  },
+  "owner_SDK_correction_preserved": "3cfd4f5f0fd8ae30e27d9c9e63d4cb3474c22d9c660446d2efdd7da926fa951f",
+  "limits": [
+    "Official native browser observation will be separately reviewed and bound; ready binary is not browser proof.",
+    "Not arbitrary Python object reflection or all event-error policies; only finite typed failure-name projection and checked reset.",
+    "Not complete77 business plugin reset compensations or full original auth/daemon deployment.",
+    "No new pass for row15,09,other unfinished work; unchanged scoped historical evidence is not a full-platform completion claim."
+  ],
+  "service_state": "All independent current reset/folder servers/workers/repositories/proxies stopped; parent official preview intentionally untouched."
+}

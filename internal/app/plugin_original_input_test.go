@@ -56,6 +56,7 @@ func installOwnedInputFixture(t *testing.T) (*App, *http.Cookie) {
 	t.Cleanup(server.Close)
 	index.Releases[0].Artifacts[0].URL = server.URL + "/worker"
 	a := newTestApp(t)
+	disableResetFixtureStatistics(t, a)
 	cookie := setupTestAdmin(t, a)
 	settings := a.Settings()
 	settings.APIToken = "owned-input-synthetic-api-key"

@@ -76,6 +76,16 @@ func (a *App) originalEventResource(ctx context.Context, scope originalBaseCallS
 		return nil, bad("APP_STOPPING", "服务正在停止")
 	}
 	defer a.wg.Done()
+	if input.Type == "plugin.data.reset" {
+		called, err := a.sendOriginalResetChainEventChecked(ctx, &event)
+		if err != nil {
+			return nil, err
+		}
+		if !called {
+			return json.RawMessage(`null`), nil
+		}
+		return json.Marshal(event)
+	}
 	if !a.sendOriginalChainEvent(ctx, &event) {
 		return json.RawMessage(`null`), nil
 	}

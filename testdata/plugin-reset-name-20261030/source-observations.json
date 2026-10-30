@@ -1,0 +1,628 @@
+[
+  {
+    "case": "dynamic-delete",
+    "input": {
+      "enabled": true,
+      "marker": "retained",
+      "raise_handler": true,
+      "name_value": null,
+      "name_getter_error": false,
+      "dynamic_delete": true
+    },
+    "source_raw_sha256": "272130e36c9b7d1a3e6d633bd213350d347d62118b69f2dfa76518beb66381fa",
+    "observation": {
+      "success": null,
+      "error": {
+        "class": "AttributeError",
+        "message": "'OwnedResetMutator' object has no attribute 'name'"
+      },
+      "trace": [
+        [
+          "reset_first",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "OwnedResetMutator",
+            "reset_config": true,
+            "reset_data": true
+          }
+        ],
+        [
+          "reset_second",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "NOT_THE_ROUTE_TARGET",
+            "reset_config": false,
+            "reset_data": false
+          }
+        ]
+      ],
+      "event_data_after": null,
+      "same_target_object": true,
+      "same_observer_object": true,
+      "config": {
+        "enabled": true,
+        "marker": "retained",
+        "raise_handler": true,
+        "name_value": null,
+        "name_getter_error": false,
+        "dynamic_delete": true
+      },
+      "data": "retained-data",
+      "observer_config": {
+        "enabled": true,
+        "marker": "other"
+      },
+      "observer_data": "other-data",
+      "notifications": [],
+      "system_error_count": 0
+    },
+    "cold": {
+      "OwnedResetMutator": {
+        "config": {
+          "enabled": true,
+          "marker": "retained",
+          "raise_handler": true,
+          "name_value": null,
+          "name_getter_error": false,
+          "dynamic_delete": true
+        },
+        "data": "retained-data"
+      },
+      "OwnedResetObserver": {
+        "config": {
+          "enabled": true,
+          "marker": "other"
+        },
+        "data": "other-data"
+      }
+    }
+  },
+  {
+    "case": "empty",
+    "input": {
+      "enabled": true,
+      "marker": "retained",
+      "raise_handler": true,
+      "name_value": "",
+      "name_getter_error": false,
+      "dynamic_delete": false
+    },
+    "source_raw_sha256": "9cb7d7defa8d5def474e61397c0b2851cf13a303cbd16ca779e850d012e139ae",
+    "observation": {
+      "success": true,
+      "error": null,
+      "trace": [
+        [
+          "reset_first",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "OwnedResetMutator",
+            "reset_config": true,
+            "reset_data": true
+          }
+        ],
+        [
+          "reset_second",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "NOT_THE_ROUTE_TARGET",
+            "reset_config": false,
+            "reset_data": false
+          }
+        ],
+        [
+          "name_access",
+          "OwnedResetMutator"
+        ],
+        [
+          "reset_first",
+          "OwnedResetObserver",
+          null
+        ],
+        [
+          "reset_second",
+          "OwnedResetObserver",
+          null
+        ],
+        [
+          "close",
+          "OwnedResetMutator"
+        ],
+        [
+          "stop",
+          "OwnedResetMutator"
+        ],
+        [
+          "init",
+          "OwnedResetMutator"
+        ],
+        [
+          "register_jobs_boundary",
+          "OwnedResetMutator"
+        ],
+        [
+          "register_commands_boundary",
+          "OwnedResetMutator"
+        ]
+      ],
+      "event_data_after": null,
+      "same_target_object": false,
+      "same_observer_object": true,
+      "config": null,
+      "data": null,
+      "observer_config": {
+        "enabled": true,
+        "marker": "other"
+      },
+      "observer_data": "other-data",
+      "notifications": [
+        {
+          "title": " 处理事件 ChainEventType.PluginDataReset 时出错"
+        }
+      ],
+      "system_error_count": 1
+    },
+    "cold": {
+      "OwnedResetMutator": {
+        "config": null,
+        "data": null
+      },
+      "OwnedResetObserver": {
+        "config": {
+          "enabled": true,
+          "marker": "other"
+        },
+        "data": "other-data"
+      }
+    }
+  },
+  {
+    "case": "getter-error",
+    "input": {
+      "enabled": true,
+      "marker": "retained",
+      "raise_handler": true,
+      "name_value": null,
+      "name_getter_error": true,
+      "dynamic_delete": false
+    },
+    "source_raw_sha256": "514c43bb3402a5432f9588adbc9a8340d7108417a948cb7481133da0e9a80bc5",
+    "observation": {
+      "success": null,
+      "error": {
+        "class": "RuntimeError",
+        "message": "owned name getter failure"
+      },
+      "trace": [
+        [
+          "reset_first",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "OwnedResetMutator",
+            "reset_config": true,
+            "reset_data": true
+          }
+        ],
+        [
+          "reset_second",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "NOT_THE_ROUTE_TARGET",
+            "reset_config": false,
+            "reset_data": false
+          }
+        ],
+        [
+          "name_access",
+          "OwnedResetMutator"
+        ]
+      ],
+      "event_data_after": null,
+      "same_target_object": true,
+      "same_observer_object": true,
+      "config": {
+        "enabled": true,
+        "marker": "retained",
+        "raise_handler": true,
+        "name_value": null,
+        "name_getter_error": true,
+        "dynamic_delete": false
+      },
+      "data": "retained-data",
+      "observer_config": {
+        "enabled": true,
+        "marker": "other"
+      },
+      "observer_data": "other-data",
+      "notifications": [],
+      "system_error_count": 0
+    },
+    "cold": {
+      "OwnedResetMutator": {
+        "config": {
+          "enabled": true,
+          "marker": "retained",
+          "raise_handler": true,
+          "name_value": null,
+          "name_getter_error": true,
+          "dynamic_delete": false
+        },
+        "data": "retained-data"
+      },
+      "OwnedResetObserver": {
+        "config": {
+          "enabled": true,
+          "marker": "other"
+        },
+        "data": "other-data"
+      }
+    }
+  },
+  {
+    "case": "missing",
+    "input": {
+      "enabled": true,
+      "marker": "retained",
+      "raise_handler": true,
+      "name_value": null,
+      "name_getter_error": false,
+      "dynamic_delete": false
+    },
+    "source_raw_sha256": "cd42c48b6cd5e6dcf383bb066538a26be0c614f708306f81ad6d4533908f0c2c",
+    "observation": {
+      "success": null,
+      "error": {
+        "class": "AttributeError",
+        "message": "'OwnedResetMutator' object has no attribute 'name'"
+      },
+      "trace": [
+        [
+          "reset_first",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "OwnedResetMutator",
+            "reset_config": true,
+            "reset_data": true
+          }
+        ],
+        [
+          "reset_second",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "NOT_THE_ROUTE_TARGET",
+            "reset_config": false,
+            "reset_data": false
+          }
+        ]
+      ],
+      "event_data_after": null,
+      "same_target_object": true,
+      "same_observer_object": true,
+      "config": {
+        "enabled": true,
+        "marker": "retained",
+        "raise_handler": true,
+        "name_value": null,
+        "name_getter_error": false,
+        "dynamic_delete": false
+      },
+      "data": "retained-data",
+      "observer_config": {
+        "enabled": true,
+        "marker": "other"
+      },
+      "observer_data": "other-data",
+      "notifications": [],
+      "system_error_count": 0
+    },
+    "cold": {
+      "OwnedResetMutator": {
+        "config": {
+          "enabled": true,
+          "marker": "retained",
+          "raise_handler": true,
+          "name_value": null,
+          "name_getter_error": false,
+          "dynamic_delete": false
+        },
+        "data": "retained-data"
+      },
+      "OwnedResetObserver": {
+        "config": {
+          "enabled": true,
+          "marker": "other"
+        },
+        "data": "other-data"
+      }
+    }
+  },
+  {
+    "case": "null",
+    "input": {
+      "enabled": true,
+      "marker": "retained",
+      "raise_handler": true,
+      "name_value": null,
+      "name_getter_error": false,
+      "dynamic_delete": false
+    },
+    "source_raw_sha256": "7169daeee4a9dfb04664c2e3776586ec1b186dd1e4058da25d47b7cdf3ed6167",
+    "observation": {
+      "success": true,
+      "error": null,
+      "trace": [
+        [
+          "reset_first",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "OwnedResetMutator",
+            "reset_config": true,
+            "reset_data": true
+          }
+        ],
+        [
+          "reset_second",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "NOT_THE_ROUTE_TARGET",
+            "reset_config": false,
+            "reset_data": false
+          }
+        ],
+        [
+          "name_access",
+          "OwnedResetMutator"
+        ],
+        [
+          "reset_first",
+          "OwnedResetObserver",
+          null
+        ],
+        [
+          "reset_second",
+          "OwnedResetObserver",
+          null
+        ],
+        [
+          "close",
+          "OwnedResetMutator"
+        ],
+        [
+          "stop",
+          "OwnedResetMutator"
+        ],
+        [
+          "init",
+          "OwnedResetMutator"
+        ],
+        [
+          "register_jobs_boundary",
+          "OwnedResetMutator"
+        ],
+        [
+          "register_commands_boundary",
+          "OwnedResetMutator"
+        ]
+      ],
+      "event_data_after": null,
+      "same_target_object": false,
+      "same_observer_object": true,
+      "config": null,
+      "data": null,
+      "observer_config": {
+        "enabled": true,
+        "marker": "other"
+      },
+      "observer_data": "other-data",
+      "notifications": [
+        {
+          "title": "None 处理事件 ChainEventType.PluginDataReset 时出错"
+        }
+      ],
+      "system_error_count": 1
+    },
+    "cold": {
+      "OwnedResetMutator": {
+        "config": null,
+        "data": null
+      },
+      "OwnedResetObserver": {
+        "config": {
+          "enabled": true,
+          "marker": "other"
+        },
+        "data": "other-data"
+      }
+    }
+  },
+  {
+    "case": "string",
+    "input": {
+      "enabled": true,
+      "marker": "retained",
+      "raise_handler": true,
+      "name_value": "ordinary source name",
+      "name_getter_error": false,
+      "dynamic_delete": false
+    },
+    "source_raw_sha256": "56819a1d7cfc9c301ab22602942ffc8b86b417253da4f63f304aa65f3ddc029d",
+    "observation": {
+      "success": true,
+      "error": null,
+      "trace": [
+        [
+          "reset_first",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "OwnedResetMutator",
+            "reset_config": true,
+            "reset_data": true
+          }
+        ],
+        [
+          "reset_second",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "NOT_THE_ROUTE_TARGET",
+            "reset_config": false,
+            "reset_data": false
+          }
+        ],
+        [
+          "name_access",
+          "OwnedResetMutator"
+        ],
+        [
+          "reset_first",
+          "OwnedResetObserver",
+          null
+        ],
+        [
+          "reset_second",
+          "OwnedResetObserver",
+          null
+        ],
+        [
+          "close",
+          "OwnedResetMutator"
+        ],
+        [
+          "stop",
+          "OwnedResetMutator"
+        ],
+        [
+          "init",
+          "OwnedResetMutator"
+        ],
+        [
+          "register_jobs_boundary",
+          "OwnedResetMutator"
+        ],
+        [
+          "register_commands_boundary",
+          "OwnedResetMutator"
+        ]
+      ],
+      "event_data_after": null,
+      "same_target_object": false,
+      "same_observer_object": true,
+      "config": null,
+      "data": null,
+      "observer_config": {
+        "enabled": true,
+        "marker": "other"
+      },
+      "observer_data": "other-data",
+      "notifications": [
+        {
+          "title": "ordinary source name 处理事件 ChainEventType.PluginDataReset 时出错"
+        }
+      ],
+      "system_error_count": 1
+    },
+    "cold": {
+      "OwnedResetMutator": {
+        "config": null,
+        "data": null
+      },
+      "OwnedResetObserver": {
+        "config": {
+          "enabled": true,
+          "marker": "other"
+        },
+        "data": "other-data"
+      }
+    }
+  },
+  {
+    "case": "success-with-getter-error",
+    "input": {
+      "enabled": true,
+      "marker": "retained",
+      "raise_handler": false,
+      "name_value": null,
+      "name_getter_error": true,
+      "dynamic_delete": false
+    },
+    "source_raw_sha256": "9d81740fc7d4c12f98e12c4660bd664f32c636671a7a82f67d8b28560bcb725e",
+    "observation": {
+      "success": true,
+      "error": null,
+      "trace": [
+        [
+          "reset_first",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "OwnedResetMutator",
+            "reset_config": true,
+            "reset_data": true
+          }
+        ],
+        [
+          "reset_second",
+          "OwnedResetMutator",
+          {
+            "plugin_id": "NOT_THE_ROUTE_TARGET",
+            "reset_config": false,
+            "reset_data": false
+          }
+        ],
+        [
+          "reset_first",
+          "OwnedResetObserver",
+          null
+        ],
+        [
+          "reset_second",
+          "OwnedResetObserver",
+          null
+        ],
+        [
+          "close",
+          "OwnedResetMutator"
+        ],
+        [
+          "stop",
+          "OwnedResetMutator"
+        ],
+        [
+          "init",
+          "OwnedResetMutator"
+        ],
+        [
+          "register_jobs_boundary",
+          "OwnedResetMutator"
+        ],
+        [
+          "register_commands_boundary",
+          "OwnedResetMutator"
+        ]
+      ],
+      "event_data_after": null,
+      "same_target_object": false,
+      "same_observer_object": true,
+      "config": null,
+      "data": null,
+      "observer_config": {
+        "enabled": true,
+        "marker": "other"
+      },
+      "observer_data": "other-data",
+      "notifications": [],
+      "system_error_count": 0
+    },
+    "cold": {
+      "OwnedResetMutator": {
+        "config": null,
+        "data": null
+      },
+      "OwnedResetObserver": {
+        "config": {
+          "enabled": true,
+          "marker": "other"
+        },
+        "data": "other-data"
+      }
+    }
+  }
+]

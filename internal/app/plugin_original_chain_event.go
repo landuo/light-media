@@ -85,10 +85,19 @@ func (a *App) sendOriginalChainEvent(ctx context.Context, event *plugins.Mutable
 // Storage selection retains the concrete object that supplied its callable
 // methods. Observation does not change callback ordering or ordinary returns.
 func (a *App) sendOriginalChainEventObserved(ctx context.Context, event *plugins.MutableEvent, observe func(originalMutableEventHandler, *plugins.MutableEvent)) bool {
+	called, _ := a.sendOriginalChainEventResult(context.WithValue(ctx, originalCheckedResetKey{}, false), event, observe)
+	return called
+}
+
+func (a *App) sendOriginalResetChainEventChecked(ctx context.Context, event *plugins.MutableEvent) (bool, error) {
+	return a.sendOriginalChainEventResult(context.WithValue(ctx, originalCheckedResetKey{}, true), event, nil)
+}
+
+func (a *App) sendOriginalChainEventResult(ctx context.Context, event *plugins.MutableEvent, observe func(originalMutableEventHandler, *plugins.MutableEvent)) (bool, error) {
 	data, err := originalNewEventData(event.Data)
 	if err != nil {
 		a.logOriginalPluginContext(ctx, "ERROR", "event_invalid", "插件事件数据编码失败")
-		return false
+		return false, err
 	}
 	event.Data = data
 	if event.EventID == "" {
@@ -111,7 +120,7 @@ func (a *App) sendOriginalChainEventObserved(ctx context.Context, event *plugins
 			}
 		}
 	}
-	return dispatchOriginalMutableEvent(ctx, handlers, event, func(error) {
+	return dispatchOriginalMutableEventResult(ctx, handlers, event, func(error) {
 		a.logOriginalPluginContext(ctx, "ERROR", "chain_handler_failed", "插件链式事件处理失败")
 	})
 }

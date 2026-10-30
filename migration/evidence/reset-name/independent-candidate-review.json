@@ -1,0 +1,304 @@
+{
+  "schema_version": 1,
+  "kind": "independent-row16-reset-failure-name-candidate-review",
+  "status": "passed_candidate_pending_current_main_and_native_browser",
+  "reviewer": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "ultra",
+    "product_edits": false,
+    "ledger_edits": false
+  },
+  "scope": "Finite typed reset failure-name snapshot and checked propagation through authenticated reset and SDK plugin.data.reset. Not arbitrary Python attribute/object reflection, all event failure policies, or complete installed business-plugin reset compensation.",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_paths": {
+    "app/api/endpoints/plugin.py": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+    "app/core/event.py": "7aec5ea981f14f582b9a2946eb2184814b26c530a6b8494ce9a776f83060c98d",
+    "app/core/plugin.py": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+    "app/plugins/__init__.py": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+    "app/helper/message.py": "c2b3626b9efb4de5e698a67ebd4624d8f684f8618a29a925d8c8d5001f052e89",
+    "app/db/systemconfig_oper.py": "87bff2e7c63d2ba98c72d92d6aed2018548730215de017330019bb54478634a2",
+    "app/db/plugindata_oper.py": "31043788d1ced9a311a0034074b71d34e97f78f644583ed02522602feffa01ec"
+  },
+  "source_chain": "reset_plugin -> EventManager.send_event/real synchronous chain -> actual loaded plugin callbacks -> failure-only plugin.name -> real MessageHelper queue and SystemError consumer; only then stop/config deletion/KV deletion/reload. Separate fresh DAO subprocess reads same owned SQLite.",
+  "candidate_base": "294e52dd904f3e7d6538d0e51ffe42365b93e266",
+  "candidate_manifest_sha256": "67f95bb4633dd5adc8e086e350a342c1e0afc4575fd9d9321e677aef7b8dace7",
+  "target_files": {
+    "cmd/owned-reset-generic-fixture/main.go": "273158a7b3dbe1d8b1112c0e0958b6870bdb962ba7110a898cbdfa77e997866a",
+    "internal/app/plugin_original_base_sdk_test.go": "16ea3f559bf8323f5a2454ec28c1869f2c08967e03034e52c593fa952d3a111c",
+    "internal/app/plugin_original_chain_event.go": "7d254fa045aeba9d58c25228d74b4cbad782508c15926472ef0810b9f735fc34",
+    "internal/app/plugin_original_error.go": "6837e80e4f5929b7d398baa2ada6cd372553fb4a6dda7905b930f39f8998bba2",
+    "internal/app/plugin_original_event_registry.go": "22bacff619859992c14a911b29dd1983200a6176df121f7989069bd3bfd00c30",
+    "internal/app/plugin_original_event_resource.go": "441ae47ba4cfadf11148ab0f03967eef5e897903c35860ac409a89bbe70dd290",
+    "internal/app/plugin_original_handler_order_test.go": "257d95344b7a0cacaff98bfe5d0c57bb139ec07ed90b44e429cc27cb7daa22a4",
+    "internal/app/plugin_original_input_test.go": "74e51b9cee792abb2d2f85ddf008b2e1c0833691d82b3a59a9d4e0cec5771e87",
+    "internal/app/plugin_original_mutable_event.go": "e2ef8f11bdfb98576ef2f00fd08121fde4a253b812183c2f6a81d15efbc17f98",
+    "internal/app/plugin_original_reset.go": "b2ca2079600533156fb9dcccec5f79989eed14e0f07a2b05e828eaee16b5773f",
+    "internal/app/plugin_original_reset_chain_test.go": "ed1b53ccd78e2d86023985b6f5cc7711a0a1f7c6e52d7c163315fcdc2ed4a1ae",
+    "internal/app/plugin_original_reset_event.go": "108d1d88e87c0db1c4a91cfdeb2ea24beac7246cd8f6cca71a67f762db536183",
+    "internal/app/plugin_original_reset_name_test.go": "ce85a3db18aa4319cb2f2949fa573ae84ddaf9165032f1d7d5d7dcd94e80b9f5",
+    "internal/plugins/mutable_event.go": "47c463982dabcdc648dda37c89c9048e2df119547dd1c714dc58138fe9890338",
+    "internal/plugins/mutable_event_name.go": "90b3e53b44c33369f9f6dd4355b37a44c2fa6c04183825e1e05f65d593a0500d",
+    "internal/plugins/mutable_event_name_test.go": "7f63d89bc97315200d544b0f48980c8261770a92d79ae65d05991fe9065af272",
+    "testdata/plugin-reset-name-20261030/contract.json": "25a162065cc376b4e1631e6d5f741f870af48074ce14ace70f670b6d21f41a84",
+    "testdata/plugin-reset-name-20261030/replay-source.py": "d6e271bdd4d15c88caa3ac9a10460e400f6d238c0677a491c6276fc5cc9e27b0",
+    "testdata/plugin-reset-name-20261030/source-observations.json": "4d9d7ea077a8dd7ac9d353c8e8cc2ea71845d235992eb2e7558d425be33eb4d2",
+    "testdata/plugin-reset-name-20261030/source_named_reset_v5.py": "e0acbe9ef06984b746d8ca698a987ba329bc1e9bc5a6b791b2f587f669e3a97c",
+    "testdata/plugin-reset-name-20261030/source_reset_cold_read_v2.py": "24e5f7b7917b66bbcd9de6c78b74fbe67c8527a6b57144bbe7d2b93d586c6a93",
+    "testdata/plugin-reset-name-20261030/target-process.py": "c07fa3c83d500213fbd59a85197f8a18c015cf130de99100405f4538c8b47c34"
+  },
+  "independent_source": {
+    "processes": 13,
+    "fresh_DAO_processes": 13,
+    "same_prior_seven_observations": [
+      "dynamic-delete",
+      "empty",
+      "getter-error",
+      "missing",
+      "null",
+      "string",
+      "success-with-getter-error"
+    ],
+    "new_cases": [
+      "late-missing",
+      "late-getter-error",
+      "late-null",
+      "integer",
+      "false",
+      "list"
+    ],
+    "new_findings": "A first named callback failure emits one real notification/SystemError before a later missing/throwing name aborts the chain and preserves reset target config/KV. A later present null permits two notifications and reset continuation. Finite17/False/list names use actual source formatting.",
+    "summary_sha256": "a0e41e84d6395b2d3f50df01b837ecaed7edd81a8d9dd69466a10e2207a537d4",
+    "driver_sha256": "09c208da455ca3cc89a86d09718a3b8052e22875c68eae8aabfedc265615b170",
+    "cold_driver_sha256": "266a6bda8fe371f212c75ff6c882e847a0d186ac1683139950e82dd043618b62",
+    "runner_sha256": "08e4019c5f501293f3328da5b75ff0e0057b8579c3355aad215c750475e4f093",
+    "log_sha256": "91f56eeb4f61610ffcea6b8755f8068c37c573c49f4ec1ee7c6fe1fab863d70c",
+    "exit": 0,
+    "boundary": "Full normal original endpoint/Manager/Base/defaultDAO/EventManager/MessageHelper modules. Fixture classes are physically loaded by source Manager. Authentication/full original daemon, real command/scheduler/business ChainBase integrations are not claimed. Every socket connection is denied; attempt count was not instrumented. Cold is fresh DAO, not a complete original-host restart."
+  },
+  "independent_target": {
+    "app_race_roots": [
+      {
+        "name": "TestOriginalResetSourceNameActualWorkers",
+        "seconds": 47.94
+      },
+      {
+        "name": "TestOriginalResetCheckedBoundaryAndCancellation",
+        "seconds": 6.12
+      },
+      {
+        "name": "TestOriginalResetTypedSendEventChecked",
+        "seconds": 7.05
+      },
+      {
+        "name": "TestIndependentResetNameMultiFailureAndFiniteValues",
+        "seconds": 49.35
+      }
+    ],
+    "app_root_seconds_sum": 110.46,
+    "app_log_sha256": "05d27f8ad1529a8457fd3acadc0fa10214ccc745063112d0916dd72a4b088635",
+    "private_new_overlay_sha256": "171a58e0707184fbfefad935e01bb8e3505c6e53107957ff20def38aeb437248",
+    "focused_sdk_race_roots": [
+      {
+        "name": "TestOwnedConcurrentSameWorkerOverlapAndChunkIsolation",
+        "seconds": 1.93
+      },
+      {
+        "name": "TestOwnedConcurrentCancelIsolatedAndObjectReusable",
+        "seconds": 1.09
+      },
+      {
+        "name": "TestOwnedConcurrentErrorsAndRetainedAuthority",
+        "seconds": 1.09
+      },
+      {
+        "name": "TestOwnedConcurrentCallbackDeadlineDoesNotKillOtherCalls",
+        "seconds": 1.13
+      },
+      {
+        "name": "TestOwnedConcurrentStopRevokesJoinsAndUsesFreshCleanup",
+        "seconds": 1.07
+      },
+      {
+        "name": "TestOwnedConcurrentStopDeadlineReapsUncooperativeWorker",
+        "seconds": 0.17
+      },
+      {
+        "name": "TestOwnedConcurrentNegotiatesFallbackAndStrictRequirement",
+        "seconds": 1.17
+      },
+      {
+        "name": "TestOwnedConcurrentCallerDeadlineOnlyIsExplicit",
+        "seconds": 3.23
+      },
+      {
+        "name": "TestOwnedConcurrentFullCapacityDoesNotBlockCleanup",
+        "seconds": 1.1
+      },
+      {
+        "name": "TestOwnedConcurrentShutdownReservedManagerPhasesAtCapacity",
+        "seconds": 1.1
+      },
+      {
+        "name": "TestOwnedConcurrentShutdownCloseFailurePolicyStaysInManager",
+        "seconds": 1.08
+      },
+      {
+        "name": "TestOwnedConcurrentShutdownAPIAuthorityAndLegacyBoundary",
+        "seconds": 2.16
+      },
+      {
+        "name": "TestMutableEventSourceNameAccess",
+        "seconds": 0.0
+      },
+      {
+        "name": "TestMutableEventSourceNameWireValidation",
+        "seconds": 0.0
+      },
+      {
+        "name": "TestMutableEventSnapshotArbitraryJSONAndFailure",
+        "seconds": 0.0
+      },
+      {
+        "name": "TestMutableEventSnapshotBoundary",
+        "seconds": 0.0
+      }
+    ],
+    "concurrent_roots": 12,
+    "mutable_event_roots": 4,
+    "sdk_log_sha256": "8123318bb8f4cb6d1acd51de1320554ec04a70feb1e4073ea79006605bf250e0",
+    "skips": 0,
+    "race_findings": 0,
+    "test_runner_sha256": "5d83e53033e83e1e4683e0d7c7fb63d61e92651bb51e531253f48713e867e97f",
+    "build_runner_sha256": "9f27c555e5b0285ee737b4e4f585e00cf4bf0a7fcb3b8d1a7862181ac4280fb5",
+    "binaries_manifest_sha256": "07a8167b72cb86de3e07e85776883dd2902bd679f9a5474e0944a7c310dcf3ea",
+    "server_sha256": "3b171de5eb864d797617f5b3162c103f0fde8b666ec39e183b468838c859626e",
+    "mutator_sha256": "c0a295842cbb41d35814984f6d16eaebf4b58686fa300062b256ec9f514e66e3",
+    "observer_sha256": "198f2d447b0a4c3af5a268ed444133a0e3c8fc7b44f11f785d4da857fd8208f3",
+    "server_mutator_observer_equal_owner_build": true,
+    "actual_production_result_sha256": "866b69e316343a8b063f83120fe28267d628df10f85407a14c9210d3d85859b9",
+    "actual_production_driver_sha256": "c07fa3c83d500213fbd59a85197f8a18c015cf130de99100405f4538c8b47c34",
+    "actual_http_requests": 31,
+    "actual_server_starts": 4,
+    "graceful_stops": 4,
+    "production_observations": [
+      {
+        "case": "missing-name",
+        "mutation_callback_sequence": true,
+        "same_worker_config_KV": true,
+        "observer_clone_unchanged": true
+      },
+      {
+        "case": "missing-name-cold",
+        "same_persisted_config_KV": true,
+        "fresh_worker": true,
+        "failure_preserved": true
+      },
+      {
+        "case": "named-sql-second-phase-failure",
+        "config_committed_deleted": true,
+        "KV_retained": true
+      },
+      {
+        "case": "named-success",
+        "reset_only_route_target": true,
+        "fresh_worker": true,
+        "config_KV_deleted": true
+      },
+      {
+        "case": "success-cold",
+        "config_KV_absence_retained": true,
+        "clone_retained": true
+      }
+    ],
+    "unowned_proxy_attempts": 0,
+    "statistics_share": false,
+    "statistics_server_empty": true,
+    "credentials": "Fresh synthetic in-memory/stdin bootstrap only; no existing QA account/config read. No account/security-setting changes."
+  },
+  "independent_red": {
+    "kind": "Old App7 exact HEAD preimages, new explicit SDK fixture retained; diagnostic mixed boundary, not a historical full-release binary.",
+    "binding_sha256": "45982d8c6f0c043420a4c652c7cd0d32c3f48d34e11fed80bdbcc1e2459c3e3b",
+    "overlay_sha256": "8dcd00e81ec4b4e74236368ba6fa8d59d6b7923603156047301d7f7de8fa5757",
+    "log_sha256": "37dff196073c3d84526fbdf13c4e53039062ac263900647e53fa80ea54b432ec",
+    "test_binary_manifest_sha256": "f583caa3aced0dc507d4431c9d6b9edaf28244b41cc41223ab7a195b6702062d",
+    "exit": 1,
+    "observed": "Actual SDK worker missing-name error incorrectly allows HTTP200 successful reset with old App boundary; source-based assertion fails. Frozen candidate passes same case."
+  },
+  "binding": {
+    "before_after_sha256": "0467fa6b32d044c43eb9e9eb708174ceb3b35858fb6efcdca0daa78b7c61eb03",
+    "compile_fixture_inputs": 6075,
+    "source_dependency_inputs": 1165,
+    "source_result_files": 13,
+    "source_results": {
+      "source-dynamic-delete-run-independent01.json": "e9d16d0d3e2e1c9a1734b39b83a17014fafce648f42477c492db11cbe89e3ce2",
+      "source-empty-run-independent01.json": "1c4a95d79bb80bca107fcf820e7eb4a28a7e3c3c7e59c5478a0c3eaa03955c1c",
+      "source-false-run-independent01.json": "4b229dbeacbbc857b03151b90bd9283114fed0dc1404ece9af83779e2d8f094d",
+      "source-getter-error-run-independent01.json": "4a568a8a127ff9f18c123e6b33747b4193646d9b711470e7c15c846912ac58dc",
+      "source-integer-run-independent01.json": "62a2b1b3a4ad3fb46bef64e319572ff554128f5304313b191a0e469bf62ba889",
+      "source-late-getter-error-run-independent01.json": "5173ecda0065a05a03b8424c4964e106dba97b1eb014538e42a8dea3d856940e",
+      "source-late-missing-run-independent01.json": "e96340ca4b3ee45e210eb79e633f98365def79a4bf706b22d2d367b884f71f59",
+      "source-late-null-run-independent01.json": "3fe687e506dcedc4c40b5e5d55e87d30551ae9c1fe8d7503c1a2ed0a3151e017",
+      "source-list-run-independent01.json": "ad69720e6a7c051fc19fa1e5fb3af8d120c45c35acfa4b7852183452170ecce7",
+      "source-missing-run-independent01.json": "5e6fe48397e48adf4d20f289511efbb41a657bbdad88a573ea8ded100cbb3626",
+      "source-null-run-independent01.json": "1a8d4f2156589c519678e38e4873a245b1c5e64645416493c5b5eb9821a9ec1c",
+      "source-string-run-independent01.json": "2b7e47dca99ce34e4733b8f6cfb29215299c2910a08ef6b479ad448a16a27d16",
+      "source-success-with-getter-error-run-independent01.json": "b4f2a2ce0a178668bc2cc76228a8d09348ad1527de39546e6e74b7ea99031811"
+    },
+    "unchanged": true,
+    "timing": "Captured before and after the actual target gates, after initial compilation. Frozen22 checked; independently rebuilt server/workers match owner bytes. Logical overlay path binds actual executed replacement bytes.",
+    "environment": {
+      "CGO_ENABLED": "1",
+      "GOARCH": "amd64",
+      "GOOS": "linux",
+      "GOVERSION": "go1.26.0"
+    },
+    "source_environment": {
+      "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+      "sqlalchemy": "2.0.55",
+      "sqlite": "3.53.1"
+    }
+  },
+  "owner_evidence_reviewed_not_relabelled": {
+    "acceptance_sha256": "18e70558c365a7f44132619a7b336fbaeb38551c82a734bbe96b543a188e1a2e",
+    "normal15_log_sha256": "543216f857c4a7cced870eaa93efd931da76c09bebc7354a9bd1dec7caf5a5dd",
+    "race15_log_sha256": "b94c53263dd2bee1283e4c614f2cf97dd5bc75cc93829aff959ac4ec07a259c5",
+    "sdk_package_log_sha256": "9c696ceec22ad7b0dc79dc4273731bdb199589ef71caf11bb5c549537565b9e2",
+    "sdk_coverage_correction_sha256": "3cfd4f5f0fd8ae30e27d9c9e63d4cb3474c22d9c660446d2efdd7da926fa951f",
+    "correction": "Owner129.411s SDK package exit0 did not set the conditional concurrent fixture and cannot establish all roots/no skips. Original report/log preserved; this independent explicit12 concurrent plus4 mutable-event gate closes the selected missing branches, not a new full-package rerun."
+  },
+  "reviewed_adaptations": [
+    "Present null and empty string are not missing. Only callback failure calls the name reader once; success never calls a throwing reader.",
+    "Name lookup failure aborts before notice/SystemError/remaining reset handlers/stop/deletions/reload. Prior valid notifications are not rolled back.",
+    "Malformed failure envelope/transport failure is an explicit Go boundary abort, not a fabricated Python exception.",
+    "Existing finite ordered sourcejson.String formats valid JSON name projections; no arbitrary __str__ or descriptor introspection.",
+    "Safe Go error code and empty traceback remain an explicit pre-existing adaptation; raw worker error text is not copied.",
+    "Legacy boolean dispatcher and unrelated event error behavior remain their prior policy; generic event-name equivalence is not claimed."
+  ],
+  "current_main_plan": {
+    "preflight_head": "57037d045d2a507c3e70fc99cf470d4a96204add",
+    "preflight_sha256": "6f8268bf9f0a66ce8d2466e0a82a5fce9cde1e4fb77af3a9a3c45c12a89490dc",
+    "all22_preimages_match": true,
+    "integration": "Coordinator applies only frozen22 exact paths after17 delivery; no overlapping main path found. Recheck preimages if main changes.",
+    "necessary_current_gates": [
+      "Fresh current-main normal/race dependency and binary bindings; do not label the candidate3b171 server as current.",
+      "Verbose owner15 relevant App roots plus independent6 multi-failure/finite-value subcases using same immutable source observations; SDK focused12 concurrent+4 mutable-event with explicit freshly built concurrent worker.",
+      "Actual current-server31 HTTP/4 cold process runner; retain stats=false/server empty and exact workers.",
+      "Normal native UI install/config/reset failure/correction/success/cold using separately bound get_form-only worker overlay."
+    ],
+    "unchanged_source_reuse": "13 actual source cases may be reused if exact1165 imported source/dependency bytes,13 raw results and fixture drivers remain unchanged; no source rerun is required solely for main integration."
+  },
+  "private_browser_fixture_review": {
+    "status": "form-only preparation statically reviewed, build/run/browser not yet executed",
+    "original_sha256": "273158a7b3dbe1d8b1112c0e0958b6870bdb962ba7110a898cbdfa77e997866a",
+    "replacement_sha256": "785ed2ccf361a179b59ef2b32f1efdf82cd5bdd16d0f4e0f772e094626ee3be7",
+    "diff_sha256": "7c70002281a382aeac6051238b3476089203c3dfca3cd8b99c53466b975fb917",
+    "preparation_sha256": "28c4f8e30114ca0d8498f2b9ecb4ab7f5f764a333e81d47a65286e27c9a46d29",
+    "delta": "Only get_form returns ordinary enabled/mode/name_case/name_value/seed_data/payload controls/defaults. Manifest,HasPage,handler,capabilities,events,API,auth remain unchanged. This is an instrumented synthetic worker, not the original mutator binary.",
+    "ui_boundary": "Use normal native Reset and already declared snapshot GET; compare worker identity within each reset attempt, not across configuration edits that legitimately reload it."
+  },
+  "remaining": [
+    "Current-main integration gates and exact normal browser binary/worker binding remain pending.",
+    "Not all event semantics, all arbitrary Python values, unbounded SDK behavior, all77 business-plugin compensations or complete original daemon/auth startup.",
+    "Source replay fixture retains the staged fixed-source/dependency layout; it is not a standalone remotely runnable Python deployment."
+  ]
+}

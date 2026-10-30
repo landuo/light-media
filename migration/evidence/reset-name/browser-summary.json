@@ -1,0 +1,30 @@
+{
+  "scope": "Finite16 reset handler failure-only instance name; normal current server, standard SDK worker with get_form-only QA overlay; existing official cloud preview account/data/browser cookie.",
+  "utc": "2026-10-30T09:39:48.752733+00:00",
+  "raw_steps": 46,
+  "raw_sha256": "2ab402d0a2a3e70177b448670be1390a937f47646c83e8bda4ec22ecc071f34c",
+  "server_sha256": "877c5c246367afecf239fd0ed37bda6d5b827306513b65348b00f6602b327a03",
+  "worker_sha256": "19a51068bdce8d067f170549badcdebe012e71c248ba98254cf5e2a6f6833b48",
+  "launch_sha256": "32c4d73b6aab71bcd1cf60a5ce59feb6dc5298bcdb3cfd9ae9355fa1ae9f24d3",
+  "facts": [
+    "Native market install, normal settings seed data with modeerror/name missing, native clone and normal clone settings mode return.",
+    "Native Reset/Confirm fails visibly for missing name. Source config/data/PID260 and clone config/data/PID275 remain exactly unchanged.",
+    "Normal settings changes only source name_case to string; same handler still fails. Native Reset/Confirm succeeds, source config/data null and PID284; clone config/data/PID275 unchanged.",
+    "Official preview stop/start same account/data/normal binary. Source config/data still null PID132, clone original config/data retained PID142; both still installed in native UI."
+  ],
+  "source_failure_pid": 260,
+  "source_success_pid": 284,
+  "source_cold_pid": 132,
+  "clone_warm_pid": 275,
+  "clone_cold_pid": 142,
+  "assertions": "Programmatic checks derive from actual saved browser AX JSON bodies, not generated expected-only results. Every stated before/after equality checked.",
+  "network": {
+    "owned_loopback_only": true,
+    "cold_denied": [],
+    "cold_facts_sha256": "5639d8061702b3e79df59922a7d6e1421a655e24ad9ef3d9bd4fbb53ca332e4f",
+    "warm_counter": "Not snapshotted before cold restart; not claimed preserved. Existing hard-deny launcher unchanged."
+  },
+  "execution_boundary": "Browser native action is primary. Declared authenticated read-only /snapshot API navigation is supplemental observation, not native UI coverage. No hidden fetch/POST/session injection/new account. Official manager stop exit0 is not child graceful-exit proof; independent normal server gates separately prove actual stops.",
+  "diagnostic_boundary": "Initial summary derivation mistakenly searched final diff-only AX for unchanged plugin names; assertion failed and was retained. Extra actual final full AX46 provides those names; no product assertion relaxed. Separate shell loopback read refused and is not acceptance.",
+  "remote_boundary": "Only this concise field-derived summary planned for Git. Full AX, current launcher and control receipts retained privately and backed up separately; no screenshot or previously refused material uploaded."
+}
