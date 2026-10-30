@@ -1,0 +1,167 @@
+{
+  "status": "passed_scoped",
+  "reviewer": "independent gpt-6-astra / ultra",
+  "scope": "S05 query/update Unicode correction for standard UTF-8 JSON wire containing escaped isolated surrogate codepoints; not complete S05 or all transport bytes.",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "owner_base": "e0258042f5196a5d94753f7dceaed9a8ad261d9e",
+  "integrated_base": "9d1473b74e5db9b34817f55580c1d3807101b99f",
+  "candidate_manifest_sha256": "3b6e645a2453c37c998e0ab9c61bd4deed3aa61a61f7bc255d377696759398a1",
+  "candidate_paths_verified": 13,
+  "verified_public_artifacts": {
+    "migration/evidence/s05-unicode-followup/contract.json": "30521af3ee249d201a8ef57efc6a1c0c7b3626c15f42eee45915a00d594ebc22",
+    "migration/evidence/s05-unicode-followup/browser-result.json": "66a1459dab3058bc829714df45e17382cc6e8ff6a333c8b2f1de90dfd0da8308",
+    "migration/evidence/s05-unicode-followup/integrated-result.json": "be8cb6d2f0fe5edc3b5d27e1549343d950bdff9871f13d0c8ec6f4dbeddf1670"
+  },
+  "findings": [
+    "Independent exact envelopes expose the e025 loss: distinct isolated codepoints and keys become U+FFFD; the same inputs pass on the frozen correction and integrated main.",
+    "All four JSON columns retain values and decoded-key identity in SQLite. Response encoding failure occurs after successful commit; cold reads still fail and an ordinary valid update repairs.",
+    "Valid surrogate pairs, literal Unicode, real U+FFFD, duplicate decoded keys with last-value wins, nested arbitrary integers, IEEE/nonfinite behavior and ignored unknown transient attributes are distinguished.",
+    "TEXT/scalar and state/tmdbid/season operand binding failures roll back the whole record. A real deferred foreign-key COMMIT failure also rolls back; it is not a mocked or immediate statement error.",
+    "Stale CAS cannot modify or repair these rows; original clone/native ABA, permission and actual process-cold gates ran on the integrated main."
+  ],
+  "independent_inputs": {
+    "cases": 19,
+    "sha256": "131123e6bbef58ad02bbcaa0f13dd0e208acefb5b6ce026c33cceef77a7c8884",
+    "reviewer_test_sha256": "3bac2393b1507308e806de74f2602c200fc01f94b7947ae1157c0f776c33e874",
+    "source_driver_sha256": "209dc29221962a2318c74bfb0cf80e1f158f5a5a8081b807f97b8d65e3f6e08e",
+    "comparator_sha256": "91c2c092d8c062c4d9735d5693d0fbb3494d31bd0f25abe1beb1b8eb89530d88",
+    "source_runs": {
+      "warm": {
+        "exit": 0,
+        "observations": 19,
+        "sha256": "c8e2169b9b47fda254387e6c2978b375c6f885d20b09eaa4041b1574bb5fa744",
+        "imported_files": 805,
+        "imported_closure_sha256": "c122098a80cd5c8c0b8c308f58d1be77ef20f60b843b070f9fb63cb0946ac19d"
+      },
+      "cold": {
+        "exit": 0,
+        "observations": 19,
+        "sha256": "30e9efccc3a8ddc6e593a9a49536eeb5a882b7ef3445f44c91de118b5bc14a56",
+        "imported_files": 805,
+        "imported_closure_sha256": "c122098a80cd5c8c0b8c308f58d1be77ef20f60b843b070f9fb63cb0946ac19d"
+      },
+      "repair": {
+        "exit": 0,
+        "observations": 19,
+        "sha256": "da6bff82d9057c1832fc52e484f56b9ccb020d932b4d5c90f5141ced76549235",
+        "imported_files": 805,
+        "imported_closure_sha256": "c122098a80cd5c8c0b8c308f58d1be77ef20f60b843b070f9fb63cb0946ac19d"
+      }
+    }
+  },
+  "host_entry_proof": {
+    "payloads_byte_equal": 19,
+    "host_callbacks": 76,
+    "evidence_sha256": "db25396aa90fbd596b04676eb6a953526aa3f78b74bed0f8795bf30c9a933684",
+    "method": "Read-only host-entry observer overlay; final normal/race suites separately uninstrumented."
+  },
+  "runs": {
+    "host-wire-observation-01": {
+      "exit": 0,
+      "passed_roots": 1,
+      "skipped_roots": 0,
+      "race_reports": 0,
+      "log_sha256": "401c39ef4be7b523e92d56354607e96a4ef48d6d497b4dc0c73c69d68729b54d",
+      "runner_sha256": "190f39c30a44c18cdec5e94255f74b16d8b97244b679a159839ede961e2380d5",
+      "standard_worker_sha256": "76af7cec1b8128f9b1dce6bca4495a0c52ed82dad01e1f1a24b555c3c30c0c3b",
+      "go_list_source_closure_sha256": "96aed4df519e00f2d5c5359e5c5114f229367d4b80dd9c49405b7ede6cbc3caa",
+      "before_after_equal": true
+    },
+    "baseline-exact-01": {
+      "exit": 1,
+      "passed_roots": 0,
+      "skipped_roots": 0,
+      "race_reports": 0,
+      "log_sha256": "b6dae963ed6e6166d6af679eb84a996a6474f55adba327a8aa89f996457c177c",
+      "runner_sha256": "9de4d158a787f235a78b95425fec61599543235daf53f29b55d1e337c696ea83",
+      "standard_worker_sha256": "76af7cec1b8128f9b1dce6bca4495a0c52ed82dad01e1f1a24b555c3c30c0c3b",
+      "go_list_source_closure_sha256": "b7a7fba1316517834d7cf6a24cf708d99a559d24dfc2a2f06dd4a070cc3f618a",
+      "before_after_equal": true
+    },
+    "final-normal-02": {
+      "exit": 0,
+      "passed_roots": 19,
+      "skipped_roots": 0,
+      "race_reports": 0,
+      "log_sha256": "ef24d482afc9ffd23cdfb4b47c8e0222bdd290edad9e95e208c5e5503b2fd536",
+      "runner_sha256": "08ed40df28f6ff4978cdc5e58dc5bb5896aefd6d997784774e8a01ba531acc3c",
+      "standard_worker_sha256": "76af7cec1b8128f9b1dce6bca4495a0c52ed82dad01e1f1a24b555c3c30c0c3b",
+      "go_list_source_closure_sha256": "94807ef1482506c370185c2ffb9a98bd9fb35a777ea9bd0b3f50b05b887605cb",
+      "before_after_equal": true,
+      "source_sql_observations": 57
+    },
+    "final-race-01": {
+      "exit": 0,
+      "passed_roots": 19,
+      "skipped_roots": 0,
+      "race_reports": 0,
+      "log_sha256": "1bbf010f37a249e14f884d6230191fea871d07529370db8b57a23ea6c11911f4",
+      "runner_sha256": "8b92b288640f8f9e69ee93e2b6f35fd82439b34cd986bdce97a61d12d04a9578",
+      "standard_worker_sha256": "6f98cf54dcc54fbf315727316136d1424e4e151467103090f5c35ed634cc4725",
+      "go_list_source_closure_sha256": "94807ef1482506c370185c2ffb9a98bd9fb35a777ea9bd0b3f50b05b887605cb",
+      "before_after_equal": true,
+      "source_sql_observations": 57
+    },
+    "integrated-normal-01": {
+      "exit": 0,
+      "passed_roots": 9,
+      "skipped_roots": 0,
+      "race_reports": 0,
+      "log_sha256": "72a65786fc842aeb5f309dc376d6268e97e759f913f9d7309a83e39627415433",
+      "runner_sha256": "8f55f993f7656b247329110d81aea8ce4d9235131c4e81708d99dcf01fba4dc8",
+      "standard_worker_sha256": "3f8f4105448235249442f71eaea995e354ec6a8ad69a3e9202bc863917a8c804",
+      "go_list_source_closure_sha256": "9b0cf68a0bd5a9d007069631d6dffa9830274549752d6ba23c28153e48987552",
+      "before_after_equal": true,
+      "source_sql_observations": 57
+    },
+    "integrated-race-01": {
+      "exit": 0,
+      "passed_roots": 9,
+      "skipped_roots": 0,
+      "race_reports": 0,
+      "log_sha256": "32694cb06ef105ec1fa054eee87ddd7e1337eb30ac108b2517306af3ccb3dab4",
+      "runner_sha256": "1f068409806f228b68c04174bcfe721ad55921bd2f327a05b812392d4654504f",
+      "standard_worker_sha256": "522917d3ea41cbd2522992010ad885bec60c9fb85c7bb644842ac278db7c76cb",
+      "go_list_source_closure_sha256": "9b0cf68a0bd5a9d007069631d6dffa9830274549752d6ba23c28153e48987552",
+      "before_after_equal": true,
+      "source_sql_observations": 57
+    }
+  },
+  "build_binding_limit": "Saved go list -deps -test source closures cover app, standard worker, server, overlays and dependencies. Capture uses normal build tags, not an exhaustive race-specific compiler-input manifest. Actual race runners/workers and their executions are separately SHA-bound.",
+  "commands": {
+    "candidate": "bash run-final.sh <fresh-output-name> normal|race",
+    "main": "bash run-main.sh <fresh-output-name> normal|race",
+    "script_sha256": {
+      "run-final.sh": "bf754e490d987df13c0827210769cf028de49eae11056c15aef58e77bae5bb82",
+      "run-main.sh": "10e6d52adcba116ef35a4532e31727443ce01017f729c25053d820bde2bbc44f",
+      "capture-bindings.py": "8ba17f97a6f414009f8c28ba953ce2cf407da8663f69aa0ed7b31e07319d86e2"
+    }
+  },
+  "browser_evidence_review": {
+    "performed_by": "coordinator; independently reviewed inputs, SQL readbacks and official stop/start receipts",
+    "rebuilt_normal_server_sha256": "0bb7c909e3f995f389e0295a194da40caae05d94c06ccb2011aab5af8c063dec",
+    "recovered_build_session": 41593,
+    "build_and_modverify_exit": 0,
+    "modverify_log_sha256": "b4537ed75f533f993f371954de47e42a793b8e5b0587577de7e27fb3e50696bd",
+    "checks": "UI error with committed revision 5->6; cold preserves raw codepoints; ordinary UI repair to 7; clone and final cold preserve repaired row.",
+    "worker_boundary": "Existing installed standard worker is not the newly compiled test worker; no replacement or full source daemon/auth claim."
+  },
+  "portable_replay": {
+    "files_sha256": {
+      "run.sh": "e3be5cf46926bdbff98c35e50ad9dec11faf798049c48874b1c2273280c8bb6f",
+      "reviewer_test.go": "3bac2393b1507308e806de74f2602c200fc01f94b7947ae1157c0f776c33e874",
+      "inputs.json": "131123e6bbef58ad02bbcaa0f13dd0e208acefb5b6ce026c33cceef77a7c8884",
+      "observe_source.py": "209dc29221962a2318c74bfb0cf80e1f158f5a5a8081b807f97b8d65e3f6e08e",
+      "compare.py": "bbb1bf3b8b0d3aa6513e3b927b68442e948be24790d6ddee29cce19694a025a7"
+    },
+    "already_executed": "portable-normal-01: fresh real source warm/cold/repair plus actual compiled standard worker, exit 0, 57 semantic observations",
+    "command": "With the selected Go toolchain and S05_TARGET_ROOT, S05_SOURCE_ROOT, S05_SOURCE_PYTHON set: bash <bundle>/run.sh <fresh-owned-output> normal (or --race). Only normal portable recipe was executed; race was executed by the bound main/candidate scripts."
+  },
+  "limits": [
+    "Opaque stable host ID, immutable primary key, fresh-row response and optional CAS are declared adaptations; no arbitrary Python identity or exception text equivalence.",
+    "Previously lost U+FFFD data cannot be inferred or reconstructed.",
+    "Original helper-normalized historical red is not host-causation evidence; this review uses independent raw envelopes and an exact host-entry check.",
+    "Additional out-of-scope byte diagnostic execution state remains unknown. It was not retried, inspected or counted as passed during this closeout.",
+    "No full source daemon/auth, malformed-byte transport or unbounded Python-object parity claim. No product, ledger, Git or account change by this reviewer."
+  ]
+}

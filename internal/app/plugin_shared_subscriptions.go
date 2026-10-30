@@ -46,6 +46,12 @@ func (a *App) sharedSubscriptionScopeTx(ctx context.Context, tx *sql.Tx, scope o
 }
 func (a *App) sharedSubscriptionRow(ctx context.Context, tx *sql.Tx, s Subscription) (plugins.SharedSubscriptionV1, error) {
 	raw, e := a.subscriptionSourceProjectionReferences(ctx, tx, s, true)
+	if e == nil {
+		var row map[string]json.RawMessage
+		if e = json.Unmarshal(raw, &row); e == nil {
+			e = sharedSubscriptionUnicodeRowError(row)
+		}
+	}
 	return plugins.SharedSubscriptionV1{ID: s.ID, Revision: s.Revision, Row: raw}, e
 }
 func (a *App) originalSharedSubscriptionsResource(ctx context.Context, scope originalBaseCallScope, method string, raw json.RawMessage) (json.RawMessage, error) {
@@ -155,7 +161,7 @@ func (a *App) originalSharedSubscriptionsResource(ctx context.Context, scope ori
 			}
 			result, e = a.sharedSubscriptionRow(ctx, tx, sub)
 			if e != nil {
-				if method == plugins.SharedSubscriptionsUpdate && len(sharedSubscriptionNonfinite(sub)) > 0 {
+				if method == plugins.SharedSubscriptionsUpdate && (len(sharedSubscriptionNonfinite(sub)) > 0 || sharedSubscriptionHasUnpaired(sub)) {
 					boundaryErr = e
 				} else {
 					return nil, e
@@ -174,6 +180,13 @@ func (a *App) originalSharedSubscriptionsResource(ctx context.Context, scope ori
 				var state string
 				if json.Unmarshal(in.State, &state) != nil {
 					return nil, bad("SUBSCRIPTION_STATE_TYPE", "原订阅状态筛选不支持该值")
+				}
+				value, err := parseSharedSubscriptionJSON(in.State)
+				if err != nil {
+					return nil, err
+				}
+				if value.hasUnpaired() {
+					return nil, bad("SUBSCRIPTION_BIND_ERROR", "原订阅状态字符串含孤立代理码点，无法绑定SQLite UTF-8")
 				}
 				states := strings.Split(state, ",")
 				marks := []string{}
@@ -263,6 +276,13 @@ func (a *App) originalSharedSubscriptionsResource(ctx context.Context, scope ori
 			}
 			out = append(out, plugins.SharedSubscriptionV1{ID: id, Revision: byID[id].Revision, Row: mustCleanSeedJSON(rows[i])})
 		}
+		// JSONResponse rejects nonfinite numbers during JSON serialization,
+		// before the complete serialized string reaches its UTF-8 encoder.
+		for _, row := range rows {
+			if e = sharedSubscriptionUnicodeRowError(row); e != nil {
+				return nil, e
+			}
+		}
 		result = out
 		if _, e = tx.ExecContext(ctx, `DELETE FROM shared_subscription_projection`); e != nil {
 			return nil, e
@@ -280,44 +300,7 @@ func (a *App) originalSharedSubscriptionsResource(ctx context.Context, scope ori
 	return json.Marshal(result)
 }
 func sharedSubscriptionPatch(raw json.RawMessage) (map[string]json.RawMessage, error) {
-	value, e := sharedSubscriptionDecode(raw)
-	if e != nil {
-		return nil, bad("INVALID_SUBSCRIPTION_PATCH", "订阅patch无法解码")
-	}
-	out := map[string]json.RawMessage{}
-	switch v := value.(type) {
-	case map[string]any:
-		for k, x := range v {
-			out[k] = mustCleanSeedJSON(x)
-		}
-	case []any:
-		for _, pair := range v {
-			entry, ok := pair.([]any)
-			if !ok || len(entry) != 2 {
-				return nil, bad("INVALID_SUBSCRIPTION_PATCH", "原订阅patch序列须为键值对")
-			}
-			key, ok := entry[0].(string)
-			if !ok {
-				return nil, bad("INVALID_SUBSCRIPTION_PATCH", "原订阅属性名须为字符串")
-			}
-			out[key] = mustCleanSeedJSON(entry[1])
-		}
-	case string:
-		if v != "" {
-			return nil, bad("INVALID_SUBSCRIPTION_PATCH", "原订阅patch不是映射")
-		}
-	default:
-		return nil, bad("INVALID_SUBSCRIPTION_PATCH", "原订阅patch不是映射")
-	}
-	for k := range out {
-		if k == "id" {
-			return nil, bad("SUBSCRIPTION_ID_IMMUTABLE", "宿主订阅身份不能通过普通列patch改变")
-		}
-		if _, ok := sharedSubscriptionColumnTypes[k]; !ok {
-			delete(out, k)
-		}
-	}
-	return out, nil
+	return sharedSubscriptionRawPatch(raw)
 }
 
 func sharedSubscriptionDecodeRequest(raw json.RawMessage, out any) error {
@@ -349,5 +332,8 @@ func (a *App) sharedSubscriptionWorkingRow(ctx context.Context, tx *sql.Tx, s Su
 		v.Nonfinite = ""
 		s.SharedSourceFields[k] = v
 	}
-	return a.sharedSubscriptionRow(ctx, tx, s)
+	// Internal persistence/recovery may carry Python code points which cannot
+	// pass the public UTF-8 response boundary. Do not erase or block repair.
+	raw, e := a.subscriptionSourceProjectionReferences(ctx, tx, s, true)
+	return plugins.SharedSubscriptionV1{ID: s.ID, Revision: s.Revision, Row: raw}, e
 }

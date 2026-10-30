@@ -1,0 +1,61 @@
+{
+  "status": "passed_scoped",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "scope": "Official cloud browser existing user-created account/native fixture form and action buttons; only owned-s05-browser record. SQL readback is read-only, not a hidden update.",
+  "host_sha256": "0bb7c909e3f995f389e0295a194da40caae05d94c06ccb2011aab5af8c063dec",
+  "installed_original_sdk_worker_sha256": "e965522fc0ccd4a6e114880435af722e5bbc4269d7bbf68862efeacdfcfff8b5",
+  "worker_boundary": "Existing installed standard fixture from accepted original S05, not silently replaced with newly compiled candidate fixture; new compiled workers tested separately in actual race suites.",
+  "checks": {
+    "before_revision": 5,
+    "failed_response_but_committed_revision": 6,
+    "value_codepoint": 55296,
+    "key_codepoint": 56320,
+    "cold_failed_row_bytes_unchanged": true,
+    "normal_ui_repair_revision": 7,
+    "valid_replacement_and_pair_distinct": true,
+    "clone_full_record_equal": true,
+    "final_cold_no_replay": true
+  },
+  "processes": {
+    "update_worker": 46,
+    "first_cold_worker": 45,
+    "clone_worker": 51,
+    "final_cold_clone_worker": 50
+  },
+  "raw_bindings": {
+    "s05-unicode-browser-before.json": "2aba8692aea64972609fb2f222898fef66be67b6f36402834e8ef4e2cbf9df66",
+    "s05-unicode-browser-cold.json": "86aa2a67a5960d9b7bd8b202eac852c8006329421ca28cec8e6685cf4ce79553",
+    "s05-unicode-browser-committed.json": "66959107b1deaa11425f37f46cfd2bb7bcada33e87258b96c170a581003e2f2e",
+    "s05-unicode-browser-final-cold.json": "8ca01e211dd0115c45723cf902247420461f9a60c2bf7c79ce95f28bd4166716",
+    "s05-unicode-browser-repair.json": "d86377383b905ae2a8bf80778d3df1b17e9c9da53bed9423c2fd3eca2e6352b3",
+    "s05-unicode-browser-steps.json": "3e2fd94a5794327795569a17528abc6272792852934c3b835f5a8417921135e9"
+  },
+  "official_preview_receipts": {
+    "s05-unicode-preview-after.txt": "f9393e80b0c26ca24f28a0b25f4c1d032efe90dfc75ec07d9690b4627ec1d1a7",
+    "s05-unicode-preview-before.txt": "f9393e80b0c26ca24f28a0b25f4c1d032efe90dfc75ec07d9690b4627ec1d1a7",
+    "s05-unicode-preview-cold-stop.txt": "45fce2face59c97f95454e6f74029696846e8e839404f9c69c8a954a3fc89764",
+    "s05-unicode-preview-repair-stop.txt": "45fce2face59c97f95454e6f74029696846e8e839404f9c69c8a954a3fc89764",
+    "s05-unicode-preview-stop.txt": "45fce2face59c97f95454e6f74029696846e8e839404f9c69c8a954a3fc89764"
+  },
+  "launch_sha256": "c0c6d274dad32ba8beb9606ec5f4d82fc32a4ea307a470b83ce5cf77b6a25fdd",
+  "target_files": {
+    "internal/app/plugin_shared_subscriptions.go": "32cbca1e6bcd6bf0128bad490babebf8903c9499fa33198a14998baca5704553",
+    "internal/app/plugin_shared_subscriptions_fields.go": "171aaba0117a24fc125d03dc470262a00c74475701041d814251bd3fbb5442bc",
+    "internal/app/plugin_shared_subscriptions_json.go": "c114f4eae68a2158ac55b9c1c3471a35c364ba5a61807d4c46cda6786239b4ba",
+    "internal/app/plugin_shared_subscriptions_sql.go": "f890d028f578bcdf3dc8201d1ff0476730b22b31404b8abdb2090e4da23dd73f",
+    "internal/app/plugin_shared_subscriptions_json_raw.go": "e737612119f2f7d2d540faa633a4be95397054ff0b43038d410ca925129fd83c",
+    "internal/app/plugin_shared_subscriptions_unicode.go": "8bfe9d486b5427c05c6c6deb56b12b6246b066346c9f2dc2038fb17f00e94fd0",
+    "internal/app/plugin_shared_subscriptions_unicode_test.go": "97762dd7e1059f8fcbe54e753ecb9e341d1dde3dd0826e76d83d25e7ce15f0e4",
+    "testdata/plugin-shared-host-20261030/subscriptions/unicode/README.md": "891573e8f1b8fb01bd4540a7c86c5ad37052395d77bebb5156ab8f70301738ea",
+    "testdata/plugin-shared-host-20261030/subscriptions/unicode/manifest.json": "5ed5dba6f1cd6c4bfaf673ef47d85a92f376cbb1bfc977805118c10e126597fa",
+    "testdata/plugin-shared-host-20261030/subscriptions/unicode/observe_source.py": "6f2e9fdb06a89a30fcebb85765c8c72c05de7cd6f5a375c2d27d97b1d7ace8dd",
+    "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-cold.json": "e1f4cd6fa32955b9c5a9f164a7743a51dccadd1c857f5f044aba483545350245",
+    "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-recover.json": "2393c75fb95810539af9908cebab49de1ad94530dcc826ee6e6054ee54fdba12",
+    "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-warm.json": "9726b46df66d8acb84179d6d976c9a4e165682c08a4a341b641e873d24656b5d"
+  },
+  "limits": [
+    "Not full source daemon/auth E2E",
+    "No account/DB/config secret or screenshot published",
+    "Previously lossy data cannot be guessed back; source original failed helper proof remains explicitly invalidated"
+  ]
+}

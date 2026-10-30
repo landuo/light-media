@@ -1,13 +1,11 @@
 package app
 
 import (
-	"bytes"
 	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
 	"math"
-	"reflect"
 	"strconv"
 	"strings"
 )
@@ -187,14 +185,7 @@ func sharedSubscriptionSourceID(s string) (int64, bool) {
 // Source JSON columns distinguish booleans from numbers. The plugin Base KV's
 // Python equality (false == 0) is intentionally not appropriate here.
 func sharedSubscriptionJSONEqual(a, b json.RawMessage) bool {
-	decode := func(raw json.RawMessage) (any, error) {
-		var v any
-		d := json.NewDecoder(bytes.NewReader(raw))
-		d.UseNumber()
-		e := d.Decode(&v)
-		return v, e
-	}
-	av, ae := decode(a)
-	bv, be := decode(b)
-	return ae == nil && be == nil && reflect.DeepEqual(av, bv)
+	av, ae := parseSharedSubscriptionJSON(a)
+	bv, be := parseSharedSubscriptionJSON(b)
+	return ae == nil && be == nil && av.equal(bv)
 }

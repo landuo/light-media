@@ -15,8 +15,8 @@
     "remote": "https://github.com/landuo/light-media.git",
     "branch": "plugins-refactor",
     "baseline_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-    "revision": "c313c3ef20148b36e819db597bcd3a8a455be5c2",
-    "remote_revision": "c313c3ef20148b36e819db597bcd3a8a455be5c2",
+    "revision": "9d1473b74e5db9b34817f55580c1d3807101b99f",
+    "remote_revision": "9d1473b74e5db9b34817f55580c1d3807101b99f",
     "delivery_mode": "remote",
     "delivery_reason": "Per accepted functional slice commit, push and readback; no merge or deployment.",
     "metadata_paths": [
@@ -24,7 +24,7 @@
       "docs/plugin-module-parity-matrix.md",
       "docs/plugin-shared-host-20261030.md"
     ],
-    "revision_note": "Last completed remote receipt; current S10 slice bound by files until its own commit/push/readback, not a self-referential commit."
+    "revision_note": "Last completed remote receipt; current S05 repair file-bound until its own commit/push/readback."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -19610,8 +19610,8 @@
     {
       "id": "S05.query_update",
       "parent_feature": "S05",
-      "description": "Complete four-method native SDK subscription DAO query/update slice; parent S05 remains incomplete",
-      "status": "implementing",
+      "description": "Four native SDK subscription DAO query/update methods, including revalidated Unicode JSON/SQLite commit boundary; parent S05 remains incomplete",
+      "status": "verified",
       "owner": "library_history_shared_host",
       "source_paths": [
         "app/db/subscribe_oper.py",
@@ -19654,7 +19654,16 @@
         "internal/app/subscription_quality_state.go",
         "internal/app/subscription_words.go",
         "internal/app/types.go",
-        "internal/plugins/shared_subscriptions.go"
+        "internal/plugins/shared_subscriptions.go",
+        "internal/app/plugin_shared_subscriptions_json_raw.go",
+        "internal/app/plugin_shared_subscriptions_unicode.go",
+        "internal/app/plugin_shared_subscriptions_unicode_test.go",
+        "testdata/plugin-shared-host-20261030/subscriptions/unicode/README.md",
+        "testdata/plugin-shared-host-20261030/subscriptions/unicode/manifest.json",
+        "testdata/plugin-shared-host-20261030/subscriptions/unicode/observe_source.py",
+        "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-cold.json",
+        "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-recover.json",
+        "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-warm.json"
       ],
       "scenarios": [
         "source default DAO full-row query/update differential",
@@ -19664,15 +19673,14 @@
         "native browser queries/update/error recovery/clone/cold"
       ],
       "evidence_ids": [
-        "s05.query-update.differential",
-        "s05.query-update.real-e2e"
+        "s05.query-update.unicode-revalidated"
       ],
       "review": {
-        "status": "pending",
+        "status": "passed",
         "independent": true,
-        "reviewer": "independent_source_audit",
+        "reviewer": "history_query_independent_review_20261030",
         "evidence_ids": [
-          "s05.query-update.independent-review"
+          "s05.query-update.unicode-independent-review"
         ]
       },
       "boundaries": [
@@ -19680,71 +19688,67 @@
         "Update returns fresh committed JSON projection, not expired Python ORM instance.",
         "Existing 16 MiB SDK frame boundary; no arbitrary SQL.",
         "Source actual component chain: ordinary plugin -> real SubscribeOper -> SQLAlchemy -> SQLite; not complete source server/auth.",
-        "Platform parent S05 and remaining migration groups are not claimed complete."
+        "Platform parent S05 and remaining migration groups are not claimed complete.",
+        "Previously lost U+FFFD data is indistinguishable from legitimate replacement characters and cannot be guessed back.",
+        "No generic Python object/exception/ORM identity parity; opaque native handle, fresh-row response and optional CAS remain declared adaptations.",
+        "No complete source HTTP/auth system, malformed byte transport or unbounded Python-object claim.",
+        "Historical first helper-mutated red is invalid as host-causation proof; exact-input corrected source/host-entry evidence and independent raw tests are separate."
       ],
       "facet_checks": {
         "data": {
           "applicable": true,
           "reason": "Independent complete source row/JSON/NULL/affinity comparison.",
           "evidence_ids": [
-            "s05.query-update.differential",
-            "s05.query-update.real-e2e"
+            "s05.query-update.unicode-revalidated"
           ]
         },
         "state": {
           "applicable": true,
           "reason": "Native writer/source overrides, revisions, CAS, clones and legitimate cleanup scope.",
           "evidence_ids": [
-            "s05.query-update.differential",
-            "s05.query-update.real-e2e"
+            "s05.query-update.unicode-revalidated"
           ]
         },
         "errors": {
           "applicable": true,
           "reason": "Real SQL fault rollback, rejected permission, invalid bind, nonfinite postcommit JSON boundary and recovery.",
           "evidence_ids": [
-            "s05.query-update.differential",
-            "s05.query-update.real-e2e"
+            "s05.query-update.unicode-revalidated"
           ]
         },
         "concurrency": {
           "applicable": true,
           "reason": "Actual two workers, concurrent updates, native ABA and cancellation under race detector.",
           "evidence_ids": [
-            "s05.query-update.differential",
-            "s05.query-update.real-e2e"
+            "s05.query-update.unicode-revalidated"
           ]
         },
         "restart": {
           "applicable": true,
           "reason": "New real processes and same owned SQLite; source/target cold observations, no replay.",
           "evidence_ids": [
-            "s05.query-update.differential",
-            "s05.query-update.real-e2e"
+            "s05.query-update.unicode-revalidated"
           ]
         },
         "compatibility": {
           "applicable": true,
           "reason": "Pinned source and explicit opaque-ID/fresh-row/16MiB adaptations; native subscription regression.",
           "evidence_ids": [
-            "s05.query-update.differential",
-            "s05.query-update.real-e2e"
+            "s05.query-update.unicode-revalidated"
           ]
         },
         "security": {
           "applicable": true,
           "reason": "Declared finite capabilities, real current-object closure and stale callback/anonymous denial; no arbitrary SQL or secret publication.",
           "evidence_ids": [
-            "s05.query-update.differential",
-            "s05.query-update.real-e2e"
+            "s05.query-update.unicode-revalidated"
           ]
         },
         "performance": {
           "applicable": true,
           "reason": "Real 1.84 MiB typed-worker roundtrip and cold read, bounded SDK frames; timings retained, not a general throughput claim.",
           "evidence_ids": [
-            "s05.query-update.differential",
-            "s05.query-update.real-e2e"
+            "s05.query-update.unicode-revalidated"
           ]
         }
       },
@@ -19753,7 +19757,8 @@
         "artifact": "evidence/s05-query-update/unicode-counterexample-20261030.json",
         "previous_delivery": "42fd80dc13e989a947babd5a40a41560877413f9"
       },
-      "reopened_by": "s05.query-update.unicode-exact-input-counterexample"
+      "reopened_by": "s05.query-update.unicode-exact-input-counterexample",
+      "revalidated_by": "s05.query-update.unicode-revalidated"
     },
     {
       "id": "S06",
@@ -21613,6 +21618,130 @@
       },
       "observations": [
         "Same exact envelope hash on original and target; observer only at host method entry proves untouched escaped D800/DC00 payload. Actual worker response succeeds and SQLite stores U+FFFD; source stores original codepoints. Strict corrected target test fails. S05 remains reopened."
+      ],
+      "fixed_by": "s05.query-update.unicode-revalidated",
+      "status_note": "Actual historical old-target failure retained as failure, not overwritten with green."
+    },
+    {
+      "id": "s05.query-update.unicode-revalidated",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "S05.query_update"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant cloud Linux/amd64 Go1.26 actual compiled SDK workers, normal cmd/server, SQLite and official existing-session browser; fixed original default DAO/SQLAlchemy/SQLite and JSONResponse component, not whole source daemon/auth E2E",
+        "target_files": {
+          "cmd/owned-shared-host-fixture/main.go": "a2605474eec2cfa012bc6d6fcd6a5711897e7a4bb41966357b4b7337fafbe0fe",
+          "internal/app/plugin_original_resources.go": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+          "internal/app/plugin_shared_subscriptions.go": "32cbca1e6bcd6bf0128bad490babebf8903c9499fa33198a14998baca5704553",
+          "internal/app/plugin_shared_subscriptions_apply.go": "e44e48d1fa0dc7b04d468c3fafff22ea4b912039eb412dd5bc939c294508007a",
+          "internal/app/plugin_shared_subscriptions_close_test.go": "c4c6542384ca3365de4fc689dac239837839ba151d31ee237ffb993a6d88424b",
+          "internal/app/plugin_shared_subscriptions_fields.go": "171aaba0117a24fc125d03dc470262a00c74475701041d814251bd3fbb5442bc",
+          "internal/app/plugin_shared_subscriptions_fixture_test.go": "3f97fd1cfc9083bee9abdfddd1535a8088cd608fd12a40854fb7eb5f1da2db54",
+          "internal/app/plugin_shared_subscriptions_float.go": "3f62274b082ee7d257b7c8e92dc0205cab28ad44da20a5f45e0b3dfffea493b3",
+          "internal/app/plugin_shared_subscriptions_integration_test.go": "5abd3b6aea580dbc7b448b21552234aeb27e4b6b6fb514c60e0a5c210fbe3f05",
+          "internal/app/plugin_shared_subscriptions_json.go": "c114f4eae68a2158ac55b9c1c3471a35c364ba5a61807d4c46cda6786239b4ba",
+          "internal/app/plugin_shared_subscriptions_oracle_test.go": "afdb5f7b32977f52fbea481a836f9ad1358452caad31c50c3e56ed556fc228e5",
+          "internal/app/plugin_shared_subscriptions_process_test.go": "8d08c72ce06791994068c145fbf23273703f6331f1ddd022978397c3a79e06c2",
+          "internal/app/plugin_shared_subscriptions_sql.go": "f890d028f578bcdf3dc8201d1ff0476730b22b31404b8abdb2090e4da23dd73f",
+          "internal/app/plugin_shared_subscriptions_test.go": "489197e63496b635a422b09b17b3305660674ead34fee050c254515cfc0b4402",
+          "internal/app/store.go": "44ffeb5c61ed9d1828b97f2c11918c77072711e069983584b3bdaa2f4d601dde",
+          "internal/app/subscription_quality_source.go": "e090ea62be1b0f44fd8a8f70db0d1ff0215b287787d83047b14a4699f656d50e",
+          "internal/app/subscription_quality_state.go": "6bee438964a518942445713bab12d1ccabb14fb1c9d71ba43589f589d02feb1c",
+          "internal/app/subscription_words.go": "5b4f50319d719c04d36b928eb0d9295f84ee375902f635a32adb081f0cd237d4",
+          "internal/app/types.go": "33bd210f927ebf45f1162c2a6cbe7301c9c15e4edfd192525eca9b61d09cc011",
+          "internal/plugins/shared_subscriptions.go": "21d6cd1141f75a1623ad6faed8124c9dbd6e7bb5356687fc3a483b388a5a6b6e",
+          "internal/app/plugin_shared_subscriptions_json_raw.go": "e737612119f2f7d2d540faa633a4be95397054ff0b43038d410ca925129fd83c",
+          "internal/app/plugin_shared_subscriptions_unicode.go": "8bfe9d486b5427c05c6c6deb56b12b6246b066346c9f2dc2038fb17f00e94fd0",
+          "internal/app/plugin_shared_subscriptions_unicode_test.go": "97762dd7e1059f8fcbe54e753ecb9e341d1dde3dd0826e76d83d25e7ce15f0e4",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/README.md": "891573e8f1b8fb01bd4540a7c86c5ad37052395d77bebb5156ab8f70301738ea",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/manifest.json": "5ed5dba6f1cd6c4bfaf673ef47d85a92f376cbb1bfc977805118c10e126597fa",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/observe_source.py": "6f2e9fdb06a89a30fcebb85765c8c72c05de7cd6f5a375c2d27d97b1d7ace8dd",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-cold.json": "e1f4cd6fa32955b9c5a9f164a7743a51dccadd1c857f5f044aba483545350245",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-recover.json": "2393c75fb95810539af9908cebab49de1ad94530dcc826ee6e6054ee54fdba12",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-warm.json": "9726b46df66d8acb84179d6d976c9a4e165682c08a4a341b641e873d24656b5d"
+        },
+        "fixture_files": {
+          "evidence/s05-unicode-followup/contract.json": "30521af3ee249d201a8ef57efc6a1c0c7b3626c15f42eee45915a00d594ebc22"
+        }
+      },
+      "artifacts": {
+        "evidence/s05-unicode-followup/browser-result.json": "66a1459dab3058bc829714df45e17382cc6e8ff6a333c8b2f1de90dfd0da8308",
+        "evidence/s05-unicode-followup/integrated-result.json": "be8cb6d2f0fe5edc3b5d27e1549343d950bdff9871f13d0c8ec6f4dbeddf1670"
+      },
+      "commands": [
+        "GOFLAGS=-buildvcs=false OWNED_SHARED_HOST_RACE=1 go test -race -count=1 ./internal/app -run ^TestSharedSubscriptions -v",
+        "Fresh three-process fixed-source Unicode component observations; independent literal-envelope source/target matrix and integrated normal/race closure.",
+        "Official preview same account: normal form patch -> update error after commit -> cold read error -> ordinary legal repair -> clone -> cold no replay."
+      ],
+      "inputs": [
+        "Existing unchanged13 subscription behavioral regressions plus5 Unicode gates; exact literal envelopes, no mustCleanSeedJSON cleanup.",
+        "Fixed-source four JSON columns, scalar/query invalid Unicode, actual SQL failures and independent COMMIT rollback; full ordinary query/update source row fixture reused for unchanged behavior.",
+        "Only owned synthetic browser subscription; raw SQL is readback, not hidden UI mutation."
+      ],
+      "observations": [
+        "Frozen owner normal/race18 and current main race18/230.100s all pass; independent broader real-codepoint, SQL/commit and integrated cases audited in separately bound report.",
+        "Browser response422 does not imply rollback: revision5->6 and raw D800/DC00 persist across cold; normal UI repair->7, legitimate U+FFFD and valid pair distinct; clone/cold no replay.",
+        "Original lossy helper red invalidated; exact same-input source/host boundary and unchanged old-code red separately prove defect.",
+        "No guess-based repair of previously replaced historical data; native identity and finite SDK/JSON boundaries remain explicit."
+      ]
+    },
+    {
+      "id": "s05.query-update.unicode-independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "S05.query_update"
+      ],
+      "reviewer": "history_query_independent_review_20261030",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant cloud Linux/amd64 Go1.26 actual compiled SDK workers, normal cmd/server, SQLite and official existing-session browser; fixed original default DAO/SQLAlchemy/SQLite and JSONResponse component, not whole source daemon/auth E2E",
+        "target_files": {
+          "cmd/owned-shared-host-fixture/main.go": "a2605474eec2cfa012bc6d6fcd6a5711897e7a4bb41966357b4b7337fafbe0fe",
+          "internal/app/plugin_original_resources.go": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+          "internal/app/plugin_shared_subscriptions.go": "32cbca1e6bcd6bf0128bad490babebf8903c9499fa33198a14998baca5704553",
+          "internal/app/plugin_shared_subscriptions_apply.go": "e44e48d1fa0dc7b04d468c3fafff22ea4b912039eb412dd5bc939c294508007a",
+          "internal/app/plugin_shared_subscriptions_close_test.go": "c4c6542384ca3365de4fc689dac239837839ba151d31ee237ffb993a6d88424b",
+          "internal/app/plugin_shared_subscriptions_fields.go": "171aaba0117a24fc125d03dc470262a00c74475701041d814251bd3fbb5442bc",
+          "internal/app/plugin_shared_subscriptions_fixture_test.go": "3f97fd1cfc9083bee9abdfddd1535a8088cd608fd12a40854fb7eb5f1da2db54",
+          "internal/app/plugin_shared_subscriptions_float.go": "3f62274b082ee7d257b7c8e92dc0205cab28ad44da20a5f45e0b3dfffea493b3",
+          "internal/app/plugin_shared_subscriptions_integration_test.go": "5abd3b6aea580dbc7b448b21552234aeb27e4b6b6fb514c60e0a5c210fbe3f05",
+          "internal/app/plugin_shared_subscriptions_json.go": "c114f4eae68a2158ac55b9c1c3471a35c364ba5a61807d4c46cda6786239b4ba",
+          "internal/app/plugin_shared_subscriptions_oracle_test.go": "afdb5f7b32977f52fbea481a836f9ad1358452caad31c50c3e56ed556fc228e5",
+          "internal/app/plugin_shared_subscriptions_process_test.go": "8d08c72ce06791994068c145fbf23273703f6331f1ddd022978397c3a79e06c2",
+          "internal/app/plugin_shared_subscriptions_sql.go": "f890d028f578bcdf3dc8201d1ff0476730b22b31404b8abdb2090e4da23dd73f",
+          "internal/app/plugin_shared_subscriptions_test.go": "489197e63496b635a422b09b17b3305660674ead34fee050c254515cfc0b4402",
+          "internal/app/store.go": "44ffeb5c61ed9d1828b97f2c11918c77072711e069983584b3bdaa2f4d601dde",
+          "internal/app/subscription_quality_source.go": "e090ea62be1b0f44fd8a8f70db0d1ff0215b287787d83047b14a4699f656d50e",
+          "internal/app/subscription_quality_state.go": "6bee438964a518942445713bab12d1ccabb14fb1c9d71ba43589f589d02feb1c",
+          "internal/app/subscription_words.go": "5b4f50319d719c04d36b928eb0d9295f84ee375902f635a32adb081f0cd237d4",
+          "internal/app/types.go": "33bd210f927ebf45f1162c2a6cbe7301c9c15e4edfd192525eca9b61d09cc011",
+          "internal/plugins/shared_subscriptions.go": "21d6cd1141f75a1623ad6faed8124c9dbd6e7bb5356687fc3a483b388a5a6b6e",
+          "internal/app/plugin_shared_subscriptions_json_raw.go": "e737612119f2f7d2d540faa633a4be95397054ff0b43038d410ca925129fd83c",
+          "internal/app/plugin_shared_subscriptions_unicode.go": "8bfe9d486b5427c05c6c6deb56b12b6246b066346c9f2dc2038fb17f00e94fd0",
+          "internal/app/plugin_shared_subscriptions_unicode_test.go": "97762dd7e1059f8fcbe54e753ecb9e341d1dde3dd0826e76d83d25e7ce15f0e4",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/README.md": "891573e8f1b8fb01bd4540a7c86c5ad37052395d77bebb5156ab8f70301738ea",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/manifest.json": "5ed5dba6f1cd6c4bfaf673ef47d85a92f376cbb1bfc977805118c10e126597fa",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/observe_source.py": "6f2e9fdb06a89a30fcebb85765c8c72c05de7cd6f5a375c2d27d97b1d7ace8dd",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-cold.json": "e1f4cd6fa32955b9c5a9f164a7743a51dccadd1c857f5f044aba483545350245",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-recover.json": "2393c75fb95810539af9908cebab49de1ad94530dcc826ee6e6054ee54fdba12",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-warm.json": "9726b46df66d8acb84179d6d976c9a4e165682c08a4a341b641e873d24656b5d"
+        },
+        "fixture_files": {
+          "evidence/s05-unicode-followup/contract.json": "30521af3ee249d201a8ef57efc6a1c0c7b3626c15f42eee45915a00d594ebc22",
+          "evidence/s05-unicode-followup/browser-result.json": "66a1459dab3058bc829714df45e17382cc6e8ff6a333c8b2f1de90dfd0da8308",
+          "evidence/s05-unicode-followup/integrated-result.json": "be8cb6d2f0fe5edc3b5d27e1549343d950bdff9871f13d0c8ec6f4dbeddf1670"
+        }
+      },
+      "artifacts": {
+        "evidence/s05-unicode-followup/independent-review.json": "d9cdd2857343049aa02d25a55c429b833c777d94535770bccdb9ec9361f8db4c"
+      },
+      "observations": [
+        "Independent original default source/SQLite vs actual uncleaned standard-worker input, precise input-to-host byte binding, true old-code red and main normal/race replay.",
+        "Coordinator browser observations, read-only SQL, official cold receipts and actual normal server hash separately inspected; reviewer did not operate browser."
       ]
     }
   ],
@@ -21625,9 +21754,9 @@
     "existing_platform_reuse": "46 existing applicable platform groups are not 46 rewrites. Preserve/reuse implementation and unchanged sufficiently bound source/test evidence. 15 new shared-host groups are discovery buckets, not 15 automatically missing features."
   },
   "resume": {
-    "next_slice": "Commit/push/readback accepted S10 three-query slice; independently verify S05 Unicode repair, continue S01 Transmission query and source global configuration identity dependency. Full groups remain incomplete.",
+    "next_slice": "Commit/push/readback accepted S05 Unicode follow-up; continue bounded real RemoteIdentifiers config/UI, Transmission enumeration and precise existing-platform reuse verification. Whole S05/S10/S06 and platform remain incomplete.",
     "dirty_work": [
-      "Only accepted current Manager query product/tests/minimal current proofs selected; S05/S07/S01 candidate products remain isolated."
+      "Only accepted S05 Unicode repair, necessary tests/minimal evidence/current metadata; S07/S01 candidate products remain isolated."
     ],
     "workers": [
       "coordinator",
@@ -21691,17 +21820,25 @@
         "sha256": "55989b014508e85ad1e3359a243c04ed86868024537a65669de65a6f7c8558a0",
         "bytes": 6005906,
         "boundary": "410 members individually SHA256 checked. No accounts/runtime configs/DB/deps/binaries/screenshots/old rejected materials. Contains initial S05 confounded witness only as known-open historical evidence; corrected exact-input evidence generated later and separately retained."
+      },
+      {
+        "purpose": "Accepted Manager three-query exact27 committed paths, fixed-source/independent/current integrated raw evidence and corrected S05 exact-input counterexample",
+        "library_file_id": "libfile_0b13123ff6cc8191b0203a9024bafbe9",
+        "filename": "light-media-manager-query-accepted-9d1473b7-20261030.tar.gz",
+        "sha256": "a6cd7f597d860378d74428ea2df1b72ef6203bf4fe7f9e4d426238fc8077ea2f",
+        "bytes": 4175555,
+        "boundary": "384 checked members. No persistent accounts/runtime config/DB/dependencies/binaries/screenshots/old rejected material. S05 repaired candidate is not contained or accepted by this prior archive."
       }
     ],
     "last_delivery": {
-      "commit": "c313c3ef20148b36e819db597bcd3a8a455be5c2",
+      "commit": "9d1473b74e5db9b34817f55580c1d3807101b99f",
       "branch": "plugins-refactor",
-      "readback": "c313c3ef20148b36e819db597bcd3a8a455be5c2",
+      "readback": "9d1473b74e5db9b34817f55580c1d3807101b99f",
       "main_unchanged": "97476582910dc4b696f7ccd5010f28d823812d40",
-      "paths": 46,
-      "mapping_path": "migration/delivery/history-c313c3ef-paths.json",
-      "mapping_sha256": "99ccb5dec5dc682d0d45553a9e9bba5c091f7e2bd35c073e7c2c7fb47b155256",
-      "ci": "0 check-runs and 0 statuses; no CI workflow. Not a CI pass or running job."
+      "paths": 27,
+      "mapping_path": "migration/delivery/manager-9d1473b7-paths.json",
+      "mapping_sha256": "9671c1cf1cc4b7a3eec9a1dff56d0ee5629a9605d76bb025e54c32f24c8711e0",
+      "ci": "0 check-runs and 0 statuses. No workflow; not a CI pass or running check."
     }
   },
   "external_inventory": [

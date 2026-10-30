@@ -9,69 +9,50 @@ import (
 
 const sharedSubscriptionNestedNonfinite = "source-json-nonfinite"
 
-// SQLAlchemy JSON's Python decoder has arbitrary-precision integers but IEEE
-// doubles for decimal/exponent tokens. Keep those distinct recursively. The
-// valid JSON 1e999 token below is only a private persistence representation of
-// a nonfinite Python float; a separate internal marker prevents exposing it as
-// a successful raw-row response. It is not a public tagged JSON convention.
+// SQLAlchemy JSON keeps Python code points and arbitrary-precision integers,
+// while decimal/exponent tokens become IEEE doubles. The valid JSON 1e999
+// spelling is internal persistence for nonfinite values; response failure is
+// separately enforced, just as isolated surrogates persist before UTF-8 fails.
 func sharedSubscriptionNormalizeJSON(raw json.RawMessage) (json.RawMessage, bool, error) {
-	value, e := sharedSubscriptionDecode(raw)
-	if e != nil {
-		return nil, false, e
+	value, err := parseSharedSubscriptionJSON(raw)
+	if err != nil {
+		return nil, false, err
 	}
 	nonfinite := false
-	var normalize func(any) (any, error)
-	normalize = func(v any) (any, error) {
-		switch x := v.(type) {
-		case json.Number:
-			if !strings.ContainsAny(string(x), ".eE") {
-				return x, nil
-			}
-			f, e := x.Float64()
+	var normalize func(*sharedSubscriptionJSONValue) error
+	normalize = func(v *sharedSubscriptionJSONValue) error {
+		if v.kind == '0' && strings.ContainsAny(v.text, ".eE") {
+			f, e := strconv.ParseFloat(v.text, 64)
 			if e != nil && !math.IsInf(f, 0) {
-				return nil, e
+				return e
 			}
 			if math.IsInf(f, 0) {
 				nonfinite = true
+				v.text = "1e999"
 				if math.IsInf(f, -1) {
-					return json.RawMessage(`-1e999`), nil
+					v.text = "-1e999"
 				}
-				return json.RawMessage(`1e999`), nil
-			}
-			// Keep an IEEE float token a float on the next JSON decode,
-			// including -0.0 and integral finite floats; integer input tokens
-			// never pass through this conversion.
-			text := strconv.FormatFloat(f, 'g', -1, 64)
-			if !strings.ContainsAny(text, ".eE") {
-				text += ".0"
-			}
-			return json.Number(text), nil
-		case map[string]any:
-			for k, item := range x {
-				next, e := normalize(item)
-				if e != nil {
-					return nil, e
+			} else {
+				v.text = strconv.FormatFloat(f, 'g', -1, 64)
+				if !strings.ContainsAny(v.text, ".eE") {
+					v.text += ".0"
 				}
-				x[k] = next
 			}
-			return x, nil
-		case []any:
-			for i, item := range x {
-				next, e := normalize(item)
-				if e != nil {
-					return nil, e
-				}
-				x[i] = next
-			}
-			return x, nil
-		default:
-			return x, nil
 		}
+		for _, item := range v.items {
+			if e := normalize(item); e != nil {
+				return e
+			}
+		}
+		for _, member := range v.members {
+			if e := normalize(member.value); e != nil {
+				return e
+			}
+		}
+		return nil
 	}
-	value, e = normalize(value)
-	if e != nil {
-		return nil, false, e
+	if err = normalize(value); err != nil {
+		return nil, false, err
 	}
-	encoded, e := json.Marshal(value)
-	return encoded, nonfinite, e
+	return json.RawMessage(value.appendJSON(nil)), nonfinite, nil
 }

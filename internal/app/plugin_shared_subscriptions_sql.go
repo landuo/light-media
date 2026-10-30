@@ -39,6 +39,15 @@ func sharedSubscriptionBind(raw json.RawMessage, kind string) (any, error) {
 	if e != nil {
 		return nil, e
 	}
+	if kind != "JSON" {
+		value, err := parseSharedSubscriptionJSON(raw)
+		if err != nil {
+			return nil, err
+		}
+		if value.kind == '"' && value.hasUnpaired() {
+			return nil, bad("SUBSCRIPTION_BIND_ERROR", "原订阅标量字符串含孤立代理码点，无法绑定SQLite UTF-8")
+		}
+	}
 	if kind == "JSON" {
 		normalized, _, err := sharedSubscriptionNormalizeJSON(raw)
 		return string(normalized), err
