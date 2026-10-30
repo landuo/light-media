@@ -1,0 +1,73 @@
+{
+  "scope": "S09 finite local StorageChain exists/list_files/delete_file and ordinary RemoveLink default-local public consumer; not all storage/transfer/monitor business",
+  "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_components": [
+    "normally imported and constructed StorageChain, ModuleManager, FileManagerModule, LocalStorage",
+    "only dynamic discovery limited to real FileManagerModule and LocalStorage classes",
+    "whole installed RemoveLink import; object.__new__ bypasses unrelated Base constructor; normal public handle_strm_deleted; notify/history/scrap configured false",
+    "owned module callbacks inserted into real manager registry, not substituted chain results",
+    "Normal default SystemConfigOper/SQLite and MessageQueueManager lifecycle; current ordinary source does not invoke OS-permission error branches."
+  ],
+  "api": [
+    "storage.local.exists",
+    "storage.local.list",
+    "storage.local.delete_file"
+  ],
+  "wire": {
+    "fileitem": "All 15 source FileItem fields/default-null projection for standard values actually produced by LocalStorage/RemoveLink, using existing NewModuleFileItem. Not arbitrary Pydantic value equivalence.",
+    "exists": "bool from original module-result truthiness",
+    "list_delete": "raw JSON retains null, scalar terminal override, list accumulation; not a fabricated strict list/bool DTO",
+    "limits": "existing negotiated SDK chunk/logical limits; no added 128KiB resource decoder or native browser 10k list cap"
+  },
+  "observable_semantics": [
+    "OS iteration order: directories then files, no lexical business sorting; recursive depth-first files only",
+    "hidden directories and @eaDir skipped by listing; dotfiles retained",
+    "list(file) singleton; missing list [] / exists false / delete true",
+    "delete ignores FileItem.type and uses current physical kind",
+    "ordinary file unlink failure false; rmtree ignore_errors permits true with survivors",
+    "ordinary list errors return null plus real system notification and SystemError",
+    "module scalar results stop native provider, including true delete with no physical mutation; native effects are tested independently",
+    "cold reflects filesystem, no parallel inventory/KV proxy",
+    "Explicit null storage still invokes module callbacks; absent native provider yields null, exists truthiness false, and prior module scalar/list results are retained.",
+    "Local delete with null or empty path still invokes module callbacks; only native fallback returns false without filesystem access.",
+    "A descendant below a real ordinary file is absent: exists false/list []/delete true; modules still override before native fallback. ENOTDIR is normalized only after no-follow inspection proves a regular-file ancestor, not for symlinks or other guarded types.",
+    "ENAMETOOLONG is a normal native-query error, not pre-dispatch denial: source exists=false/list=null/delete=null, scalar module overrides stop native work, list overrides retain their list while the native merge reports its error. Each native failure reports one real SystemError and the normal de-duplicated system notification; the next normal exists call recovers.",
+    "Filesystem-supported finite mtime beyond the Go UnixNano interval preserves source stat().st_mtime: seconds plus fractional nanoseconds; the year-2300 file list and a subsequent ordinary timestamp recovery are source-bound.",
+    "Finite mtime preserves source two-step floating rounding: seconds plus float64(nanoseconds * 1e-9). An explicit intermediate conversion prevents fused multiply-add. Independent source cases include 3ns after epoch, -3ns, 2038, UnixNano overflow edge, year2300 and ordinary recovery; SDK list and shared metadata both compare complete source rows."
+  ],
+  "explicit_platform_boundaries": [
+    "current configured managed local roots only; default /, relative/noncanonical and outside-root access denied",
+    "no symlink traversal or special-file access; hidden internal paths excluded",
+    "no app private data, even if an allowed root is its ancestor; no deletion of managed root or a directory containing app private data",
+    "current authentic owner/capability/invocation/generation/cancellation revalidated before native effects; clone grants remain independent",
+    "safe Go protocol error codes and sanitized event diagnostics rather than Python exception object/traceback reconstruction",
+    "external storage excluded; explicit null storage preserves source module dispatch and absent-native-provider behavior without authorizing any external backend",
+    "Unpaired JSON surrogate path tokens are rejected before UTF-8 replacement, including escaped-equivalent storage local; ordinary source returned missing false/[]/true but retained U+FFFD. This is an explicit filesystem encoding boundary, not equal return semantics.",
+    "Existing moduleTransferFloat constructor accepts a narrower ASCII finite modify_time grammar than all source Pydantic values. Arbitrary Unicode numeric/nonfinite metadata input is an open shared-constructor dependency, not claimed by this producer slice.",
+    "Native POSIX filenames that are not valid UTF-8 fail closed before FileItem JSON encoding. Source retains surrogate-escaped identity. The current protocol guarantees valid UTF-8 paths and does not implement an explicit byte-preserving encoding for native non-UTF8 names: never alias a native byte-FF filename to a distinct genuine U+FFFD file. This is a current safety boundary, not a claim that Go/JSON inherently cannot represent byte identity. Read-only tests retain both originals and verify the valid-name next operation."
+  ],
+  "oracle_normalization": [
+    "replace only synthetic root path in checked-in canonical",
+    "fixture ordinary mtimes set to 1700000000",
+    "cross-fixture directory ordering not claimed fixed; full row content compared by path and physical OS order separately asserted",
+    "Current ordinary-source.json comes only from approved new standalone source_ordinary.py raw warm/cold runs; old source-oracle/source-supplement are excluded historical inputs.",
+    "null-module-source.json and pathless-module-source.json are source-only canonical observations from separate ordinary no-file-effect module drivers; provenance SHA retained in each.",
+    "enotdir-source.json preserves an independent actual source six-case oracle (native and real module overrides), normalized only the synthetic root.",
+    "longname-source.json preserves independent actual source six-case native/module results, per-step error event counts, and notification observations; target diagnostics are checked via the documented sanitized adaptation, not Python tracebacks.",
+    "mtime-source.json and native-encoding-source.json derive only from standalone actual source-chain observations, replacing the owned synthetic root. Distant timestamp precision and the two distinct native filename codepoint/byte sequences are retained; failclosed native encoding is a safety adaptation, not source return equivalence.",
+    "mtime-precision-source.json is the independent source raw output with only 12 exact synthetic-root replacements; all numeric tokens, complete FileItems and imported-input hashes are preserved. source_mtime_precision.py is byte-identical to the independent executed driver."
+  ],
+  "not_claimed": [
+    "full original Manager/auth/daemon startup",
+    "all RemoveLink business paths or schedules",
+    "cloud/SMB/rclone or arbitrary host filesystem",
+    "atomic rollback of partial file deletion",
+    "Python runtime in shipped product"
+  ],
+  "acceptance_limitations": [
+    "The ordinary verification contract excludes all OS permission, inode replacement, symlink/path-escape probe gates. Historical candidate01 outputs retained privately, not newly accepted.",
+    "Source model field defaults are projected without executing default path / access.",
+    "All changed synthetic content is first preserved by content SHA outside managed root and remains recoverable.",
+    "The 11,003-file list and 700 KiB metadata request retain the original 20s request deadline; target run evidence must bind the current complete implementation and real worker/server binaries."
+  ]
+}

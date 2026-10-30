@@ -1,0 +1,170 @@
+{
+  "scope": "Read-only native filename encoding observation on newly created ordinary copies.\nNames are independent byte-FF and genuine U+FFFD; no delete operation is invoked.\nNo permission, link, identity replacement, or race manipulation occurs.\n",
+  "network_attempts": [],
+  "cold": false,
+  "operations": [
+    {
+      "case": "native-output-list",
+      "method": "list_files",
+      "input": {
+        "path": "$ROOT"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": [
+        {
+          "path": "$ROOT/\ufffd.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "\ufffd.mkv",
+          "basename": "\ufffd",
+          "extension": "mkv",
+          "size": 37,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/\udcff.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "\udcff.mkv",
+          "basename": "\udcff",
+          "extension": "mkv",
+          "size": 35,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ]
+    },
+    {
+      "case": "valid-recovery-exists",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/\ufffd.mkv"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/\ufffd.mkv",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true
+    },
+    {
+      "case": "valid-recovery-list",
+      "method": "list_files",
+      "input": {
+        "path": "$ROOT/\ufffd.mkv"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/\ufffd.mkv",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": [
+        {
+          "path": "$ROOT/\ufffd.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "\ufffd.mkv",
+          "basename": "\ufffd",
+          "extension": "mkv",
+          "size": 37,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ]
+    }
+  ],
+  "discovery": [
+    "app.modules",
+    "app.modules.filemanager.storages"
+  ],
+  "module_ids": [
+    "FileManagerModule"
+  ],
+  "native_filename_codepoints": [
+    [
+      65533,
+      46,
+      109,
+      107,
+      118
+    ],
+    [
+      56575,
+      46,
+      109,
+      107,
+      118
+    ]
+  ],
+  "invalid_name_fs_bytes": "ff2e6d6b76",
+  "replacement_name_fs_bytes": "efbfbd2e6d6b76",
+  "content_unchanged": true,
+  "pristine": {
+    "b3abee69c6786b7f4685175200df8b27dafd2b558f3202eb370b2329e76a5487": "b3abee69c6786b7f4685175200df8b27dafd2b558f3202eb370b2329e76a5487",
+    "c37d557aaa930e2c6dfbb452533e0aaa14e341d1ca738b38e6a291df821298e4": "c37d557aaa930e2c6dfbb452533e0aaa14e341d1ca738b38e6a291df821298e4"
+  },
+  "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_result_sha256": "9c7ad82c0251cab95014096893852aec0c3a6c56f45e27e9a356047c84a8d252"
+}

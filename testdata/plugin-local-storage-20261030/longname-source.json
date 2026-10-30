@@ -1,0 +1,112 @@
+{
+  "network_attempts": [],
+  "operations": [
+    {
+      "case": "native-exists",
+      "path": "$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "method": "exists",
+      "returned": false,
+      "callback_count": 0,
+      "event_count": 1,
+      "notification": "{\"type\": \"system\", \"title\": \"\\u6587\\u4ef6\\u6574\\u7406\\u53d1\\u751f\\u4e86\\u9519\\u8bef\", \"text\": \"[Errno 36] File name too long: '$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'\", \"date\": \"2026-10-30 10:48:50\", \"note\": null}"
+    },
+    {
+      "case": "native-list_files",
+      "path": "$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "method": "list_files",
+      "returned": null,
+      "callback_count": 0,
+      "event_count": 2,
+      "notification": null
+    },
+    {
+      "case": "native-delete_file",
+      "path": "$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "method": "delete_file",
+      "returned": null,
+      "callback_count": 0,
+      "event_count": 3,
+      "notification": null
+    },
+    {
+      "case": "override-exists",
+      "path": "$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "method": "exists",
+      "returned": true,
+      "callback_count": 1,
+      "event_count": 3,
+      "notification": null
+    },
+    {
+      "case": "override-list_files",
+      "path": "$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "method": "list_files",
+      "returned": [
+        "override"
+      ],
+      "callback_count": 1,
+      "event_count": 4,
+      "notification": null
+    },
+    {
+      "case": "override-delete_file",
+      "path": "$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "method": "delete_file",
+      "returned": false,
+      "callback_count": 1,
+      "event_count": 4,
+      "notification": null
+    }
+  ],
+  "system_events": [
+    {
+      "type": "system.error",
+      "data": {
+        "type": "module",
+        "module_id": "FileManagerModule",
+        "module_name": "\u6587\u4ef6\u6574\u7406",
+        "module_method": "get_file_item",
+        "error": "[Errno 36] File name too long: '$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'",
+        "traceback": "Traceback (most recent call last):\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/__init__.py\", line 393, in __execute_system_modules\n    result = func(*args, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/filemanager/__init__.py\", line 372, in get_file_item\n    return storage_oper.get_item(path)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/filemanager/storages/local.py\", line 146, in get_item\n    if not path.exists():\n           ^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py\", line 860, in exists\n    self.stat(follow_symlinks=follow_symlinks)\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py\", line 840, in stat\n    return os.stat(self, follow_symlinks=follow_symlinks)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 36] File name too long: '$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'\n"
+      }
+    },
+    {
+      "type": "system.error",
+      "data": {
+        "type": "module",
+        "module_id": "FileManagerModule",
+        "module_name": "\u6587\u4ef6\u6574\u7406",
+        "module_method": "list_files",
+        "error": "[Errno 36] File name too long: '$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'",
+        "traceback": "Traceback (most recent call last):\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/__init__.py\", line 393, in __execute_system_modules\n    result = func(*args, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/filemanager/__init__.py\", line 251, in list_files\n    __get_files(fileitem, recursion)\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/filemanager/__init__.py\", line 238, in __get_files\n    _items = storage_oper.list(_item)\n             ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/filemanager/storages/local.py\", line 103, in list\n    if not path_obj.exists():\n           ^^^^^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py\", line 860, in exists\n    self.stat(follow_symlinks=follow_symlinks)\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py\", line 840, in stat\n    return os.stat(self, follow_symlinks=follow_symlinks)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 36] File name too long: '$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'\n"
+      }
+    },
+    {
+      "type": "system.error",
+      "data": {
+        "type": "module",
+        "module_id": "FileManagerModule",
+        "module_name": "\u6587\u4ef6\u6574\u7406",
+        "module_method": "delete_file",
+        "error": "[Errno 36] File name too long: '$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'",
+        "traceback": "Traceback (most recent call last):\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/__init__.py\", line 393, in __execute_system_modules\n    result = func(*args, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/filemanager/__init__.py\", line 324, in delete_file\n    return storage_oper.delete(fileitem)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/filemanager/storages/local.py\", line 185, in delete\n    if not path_obj.exists():\n           ^^^^^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py\", line 860, in exists\n    self.stat(follow_symlinks=follow_symlinks)\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py\", line 840, in stat\n    return os.stat(self, follow_symlinks=follow_symlinks)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 36] File name too long: '$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'\n"
+      }
+    },
+    {
+      "type": "system.error",
+      "data": {
+        "type": "module",
+        "module_id": "FileManagerModule",
+        "module_name": "\u6587\u4ef6\u6574\u7406",
+        "module_method": "list_files",
+        "error": "[Errno 36] File name too long: '$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'",
+        "traceback": "Traceback (most recent call last):\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/__init__.py\", line 399, in __execute_system_modules\n    temp = func(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/filemanager/__init__.py\", line 251, in list_files\n    __get_files(fileitem, recursion)\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/filemanager/__init__.py\", line 238, in __get_files\n    _items = storage_oper.list(_item)\n             ^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/filemanager/storages/local.py\", line 103, in list\n    if not path_obj.exists():\n           ^^^^^^^^^^^^^^^^^\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py\", line 860, in exists\n    self.stat(follow_symlinks=follow_symlinks)\n  File \"/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py\", line 840, in stat\n    return os.stat(self, follow_symlinks=follow_symlinks)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nOSError: [Errno 36] File name too long: '$ROOT/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'\n"
+      }
+    }
+  ],
+  "recovery_exists": true,
+  "content_unchanged": true,
+  "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_result_sha256": "c7bcac50cc58ce05fd75d512d590615d178df01119bf9c42609f99d1b2f06c5e",
+  "source_driver_sha256": "b37eeea6b91833d0e838555cb211e6e82658e03bcfc6c12b1d533a70606268cf"
+}

@@ -1,0 +1,327 @@
+{
+  "scope": "Independent no-path local delete/module contract. No permission/identity replacement probes.\nOnly null and empty deletion paths reach the native provider; its first guard returns\nfalse without reading filesystem paths. No empty-path exists/list operations run.\nOnly new synthetic fixture files are changed; every original content is preserved\nunder pristine/ with a SHA256 receipt. No TLS/proxy/CA configuration or networking.\n",
+  "network_attempts": [],
+  "cold": false,
+  "operations": [
+    {
+      "case": "delete-null-0",
+      "method": "delete_file",
+      "input": {
+        "path": null,
+        "storage": "local"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": null,
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": false,
+      "override_value": null,
+      "callback_count": 1,
+      "file_retained": true
+    },
+    {
+      "case": "delete-null-1",
+      "method": "delete_file",
+      "input": {
+        "path": null,
+        "storage": "local"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": null,
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": false,
+      "override_value": false,
+      "callback_count": 1,
+      "file_retained": true
+    },
+    {
+      "case": "delete-null-2",
+      "method": "delete_file",
+      "input": {
+        "path": null,
+        "storage": "local"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": null,
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true,
+      "override_value": true,
+      "callback_count": 1,
+      "file_retained": true
+    },
+    {
+      "case": "delete-null-3",
+      "method": "delete_file",
+      "input": {
+        "path": null,
+        "storage": "local"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": null,
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": {
+        "ordinary": "value"
+      },
+      "override_value": {
+        "ordinary": "value"
+      },
+      "callback_count": 1,
+      "file_retained": true
+    },
+    {
+      "case": "delete-null-4",
+      "method": "delete_file",
+      "input": {
+        "path": null,
+        "storage": "local"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": null,
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": [],
+      "override_value": [],
+      "callback_count": 1,
+      "file_retained": true
+    },
+    {
+      "case": "delete-empty-0",
+      "method": "delete_file",
+      "input": {
+        "path": "",
+        "storage": "local"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": false,
+      "override_value": null,
+      "callback_count": 1,
+      "file_retained": true
+    },
+    {
+      "case": "delete-empty-1",
+      "method": "delete_file",
+      "input": {
+        "path": "",
+        "storage": "local"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": false,
+      "override_value": false,
+      "callback_count": 1,
+      "file_retained": true
+    },
+    {
+      "case": "delete-empty-2",
+      "method": "delete_file",
+      "input": {
+        "path": "",
+        "storage": "local"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true,
+      "override_value": true,
+      "callback_count": 1,
+      "file_retained": true
+    },
+    {
+      "case": "delete-empty-3",
+      "method": "delete_file",
+      "input": {
+        "path": "",
+        "storage": "local"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": {
+        "ordinary": "value"
+      },
+      "override_value": {
+        "ordinary": "value"
+      },
+      "callback_count": 1,
+      "file_retained": true
+    },
+    {
+      "case": "delete-empty-4",
+      "method": "delete_file",
+      "input": {
+        "path": "",
+        "storage": "local"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": [],
+      "override_value": [],
+      "callback_count": 1,
+      "file_retained": true
+    }
+  ],
+  "discovery": [
+    "app.modules",
+    "app.modules.filemanager.storages"
+  ],
+  "module_ids": [
+    "FileManagerModule"
+  ],
+  "pristine": {
+    "a29e4c27c439264911bfa013afce44831b787c21ff8d49acd9236b2b124a33df": "a29e4c27c439264911bfa013afce44831b787c21ff8d49acd9236b2b124a33df"
+  },
+  "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_result_sha256": "dce3417ca490c01654072e98e5f08fea048131152deb6c6344b9b57fad3cd40d"
+}

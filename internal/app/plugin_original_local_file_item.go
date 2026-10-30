@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode/utf8"
 
 	"light-media/internal/plugins"
 	"light-media/internal/transferextensions"
@@ -14,6 +15,9 @@ import (
 // constructors. This helper neither creates folders nor grants access to a
 // plugin-supplied path; each concrete operation retains its existing guard.
 func originalLocalFileItem(path string) (*plugins.ModuleFileItem, error) {
+	if !utf8.ValidString(path) {
+		return nil, bad("INVALID_PATH", "本地文件路径编码无效")
+	}
 	if !importPath(path) {
 		return nil, bad("INVALID_PATH", "本地文件路径必须规范且为绝对路径")
 	}
@@ -44,7 +48,12 @@ func originalLocalFileItemFromStat(path string, stat os.FileInfo) *plugins.Modul
 	}
 	fields["type"], fields["name"], fields["basename"] = "file", name, stem
 	fields["extension"], fields["size"] = ext, stat.Size()
-	fields["modify_time"] = float64(stat.ModTime().UnixNano()) / 1e9
+	// Match stat().st_mtime without UnixNano's 1678–2262 overflow window.
+	stamp := stat.ModTime()
+	// CPython's stat float multiplies nanoseconds by 1e-9 before adding the
+	// seconds. Division differs at subsecond boundaries; the explicit conversion
+	// also preserves that rounded intermediate rather than allowing an FMA.
+	fields["modify_time"] = float64(stamp.Unix()) + float64(float64(stamp.Nanosecond())*1e-9)
 	if stat.IsDir() {
 		fields["type"], fields["path"] = "dir", path+"/"
 		fields["extension"], fields["size"] = nil, nil

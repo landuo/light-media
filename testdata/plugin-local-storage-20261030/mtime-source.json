@@ -1,0 +1,178 @@
+{
+  "scope": "Ordinary local mtime projection using two finite filesystem-supported timestamps.\nOnly owned regular synthetic files and their pristine copy are used. No permission,\nlink, identity replacement, or race probing. Full source StorageChain/FileManager.\n",
+  "network_attempts": [],
+  "cold": false,
+  "operations": [
+    {
+      "case": "far-future-exists",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/timestamp.mkv"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/timestamp.mkv",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true
+    },
+    {
+      "case": "far-future-list",
+      "method": "list_files",
+      "input": {
+        "path": "$ROOT/timestamp.mkv"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/timestamp.mkv",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": [
+        {
+          "path": "$ROOT/timestamp.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "timestamp.mkv",
+          "basename": "timestamp",
+          "extension": "mkv",
+          "size": 32,
+          "modify_time": 10413792000.123457,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ]
+    },
+    {
+      "case": "ordinary-recovery-exists",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/timestamp.mkv"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/timestamp.mkv",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true
+    },
+    {
+      "case": "ordinary-recovery-list",
+      "method": "list_files",
+      "input": {
+        "path": "$ROOT/timestamp.mkv"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/timestamp.mkv",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": [
+        {
+          "path": "$ROOT/timestamp.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "timestamp.mkv",
+          "basename": "timestamp",
+          "extension": "mkv",
+          "size": 32,
+          "modify_time": 1700000000.1234567,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ]
+    }
+  ],
+  "discovery": [
+    "app.modules",
+    "app.modules.filemanager.storages"
+  ],
+  "module_ids": [
+    "FileManagerModule"
+  ],
+  "timestamps": [
+    {
+      "label": "far-future",
+      "seconds": 10413792000,
+      "nanoseconds": 123456789,
+      "requested_ns": 10413792000123456789,
+      "actual_ns": 10413792000123456789,
+      "actual_float": 10413792000.123457
+    },
+    {
+      "label": "ordinary-recovery",
+      "seconds": 1700000000,
+      "nanoseconds": 123456789,
+      "requested_ns": 1700000000123456789,
+      "actual_ns": 1700000000123456789,
+      "actual_float": 1700000000.1234567
+    }
+  ],
+  "content_unchanged": true,
+  "pristine": {
+    "7c3dff1eddb6c09cc0dcd0a5668bcb66b4e5bc0f520778c4d47e2b62c78e1f5d": "7c3dff1eddb6c09cc0dcd0a5668bcb66b4e5bc0f520778c4d47e2b62c78e1f5d"
+  },
+  "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_result_sha256": "6b0054ae1d720b16512b8db232f2131f08314a57d2b9b98514723419740aab82"
+}

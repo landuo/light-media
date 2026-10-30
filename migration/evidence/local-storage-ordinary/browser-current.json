@@ -1,0 +1,105 @@
+{
+  "candidate_base": "122fafc7b4ee93589250cb82be849fead48e79d1",
+  "server_sha256": "dc80a1fb14d303707e0ac970e8c1d43e0401274bae5cb429d83380172fd46780",
+  "candidate35_sha256": "3efc473d0c18cab2c0ca46d19b804d3da4f27a4ca283d19d97076b5133bd779c",
+  "official_preview": "http://127.0.0.1:4173/",
+  "authorization": {
+    "reply_id": "Sentinel_404fd37a73cc8191a13e658dbc070be6",
+    "reply_utc": "2026-10-30T13:46:03Z",
+    "reply": "允许",
+    "question_id": "Sentinel_875db47c8734819183cd556b44160f33",
+    "recovery_action": "one relevant-new-evidence retry cua.rewriteDocumentation succeeded; no bypass"
+  },
+  "facts": {
+    "first_cold": {
+      "source_pid": 154,
+      "clone_pid": 163,
+      "source_init_count": 1,
+      "clone_init_count": 1,
+      "roots": "both exact taskowned root",
+      "exists": false,
+      "list": [],
+      "last_action": null
+    },
+    "failure": {
+      "source_configured_root": "",
+      "source_init_count": 2,
+      "detail_exists_and_list_errors": "plugin: host_operation_failed",
+      "explicit_exists_visible_alert": "Request failed with status code 422",
+      "clone_while_sourcefailed": {
+        "pid": 163,
+        "init_count": 1,
+        "root_preserved": true,
+        "exists": false,
+        "list": [],
+        "last_action": null
+      }
+    },
+    "recovery": {
+      "source_pid": 154,
+      "source_init_count": 3,
+      "root_restored": true,
+      "exists": true,
+      "list_size_bytes": 70,
+      "explicit_exists": {
+        "result": true,
+        "success": true
+      },
+      "explicit_list": {
+        "success": true,
+        "single_basename": "s09-ui-owned-delete.mkv",
+        "bytes": 70
+      }
+    },
+    "clone_deletion": {
+      "instance_id": "OwnedLocalStorageordinary06",
+      "pid": 163,
+      "init_count": 1,
+      "last_action_before": null,
+      "method": "storage.local.delete_file",
+      "result": true,
+      "success": true,
+      "exists_after": false,
+      "list_after": [],
+      "physical_absence_check": true,
+      "source_last_action_remains": "storage.local.list successtrue70bytepreviousresult; currentlist[]"
+    },
+    "second_cold": {
+      "same_persistent_account_and_data": true,
+      "source_pid": 155,
+      "clone_pid": 162,
+      "source_and_clone_init_count": 1,
+      "source_and_clone_last_action": null,
+      "both_roots_persisted": true,
+      "both_exists": false,
+      "both_list": []
+    }
+  },
+  "steps": 35,
+  "input_binding_count": 9,
+  "input_drift": [],
+  "harness_history": [
+    "One overescaped regex wait assertion timed out after successful exists action; following freshvisibleDOM showed success true; action not retried. Error preserved in rawsteps.",
+    "First screenshot taken duringmenu->dialogtransition showed prior menu; final freshDOM+PNG afterpaint shows actualcoldclone data. Not used as failed product or final proof.",
+    "First sites-preview status command accidentally included unsupported --project-dir; usage returned and no start/change. Correct documented status/start subsequently used."
+  ],
+  "boundaries": [
+    "Only exactnew70byteowned synthetic file created whenabsent anddeleted viaUI; no other/userfile mutation.",
+    "Existing cloneordinary06 used for localstorage isolation, not newclone metadata05 equivalence.",
+    "No browser hiddenfetch, backendlogin/cookie extraction, newpersistentcredentials, NAS/deployment or forbiddenprobes.",
+    "Current server embeds122 frontend; later mainservices/usage web588 not relabeled currentS09 proof.",
+    "RawAX/PNG/preview runtime/launcher remainprivate evidence, not selectedGit payload."
+  ],
+  "scope": "S09.ordinary_storage finite real GoSDK managed-local chain; not wholeS09 or newclone metadata",
+  "gate": "current frozen122+35 official UI passed; independentfinal/commit/push separate",
+  "private_raw_bindings": {
+    "summary": "356ff12312a123f849e26912e01d9749f00e02bcbd2dbac6049566a025ef1e48",
+    "rawsteps": "6239d874835c1a4fa9f5a694b0080235e3fbfa52d2ec8dff77ac0543b8159332",
+    "input_before": "700fc6aa99bb6bfc1296221ccc07bd947372709c2fd16bb422ec1e8093a35e31",
+    "input_after": "700fc6aa99bb6bfc1296221ccc07bd947372709c2fd16bb422ec1e8093a35e31",
+    "final_screenshot": "eac3883d2b11100ec15af76e8e708abd7512bb48ec68bd2e32403533efd724f3",
+    "synthetic_created": "84ca6004e240ba14c056358696767a9f50fc6d1ce0096c41719505b28e75ea1e",
+    "physical_absence": "135526739990578f0354f83bcaaeeefade7fc822a8322df66cf7cfbf2daf2c23"
+  },
+  "privacy": "Raw browserAX/PNG/previewlauncher and persistentaccount/config/DB not included in Git."
+}

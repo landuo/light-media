@@ -1,0 +1,103 @@
+{
+  "feature_id": "S09.ordinary_storage",
+  "decision": "PASS: independently reviewed complete finite ordinary-storage slice, including current-binary official UI; delivery still requires coordinator commit/push/readback",
+  "whole_S09": "OPEN",
+  "scope": "Managed local UTF-8 ordinary FileItem exists/list_files/delete_file through real Go SDK/module/native host, ordinary persistence/clone isolation and tested failure recovery; not all source runtime inputs or S09 business",
+  "base": "122fafc7b4ee93589250cb82be849fead48e79d1",
+  "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "selected_code_test_fixture_count": 35,
+  "readme_sha256": "d94f01c02011390dc2eb1459f415a312a581ee3f3bfff39333ad8b5868b2fe24",
+  "candidate35_manifest_sha256": "3efc473d0c18cab2c0ca46d19b804d3da4f27a4ca283d19d97076b5133bd779c",
+  "server_sha256": "dc80a1fb14d303707e0ac970e8c1d43e0401274bae5cb429d83380172fd46780",
+  "binary_scope": "122fafc7 plus exactly reviewed ordinary35; later main service/clone/usage changes are not represented",
+  "backend_evidence": {
+    "prior_independent_final_sha256": "ddf331f78e2909996bc8fdd620bc91774139e49c4bd6370083975db98914a0ff",
+    "independent_existing_binary_cold": "PASS; two cold starts/two normal stops, authentication, clone/owned delete/cold absence",
+    "independent_affected_race": "PASS; actual module overrides and long-component system-event/notice/recovery roots",
+    "current_normal15": "PASS/0SKIP; coordinator source-bound run",
+    "sdk_race": "PASS/0SKIP",
+    "prior_race_reuse": "unchanged leaf contracts plus reviewed dependency impact; not relabeled as a current all-root race rerun",
+    "historical_execution_bound_inputs": 7304,
+    "historical_execution_drift_count": 0,
+    "currently_existing_bound_inputs": 7301,
+    "currently_existing_input_hash_drift_count": 0,
+    "initially_missing_go_cache_records": 4,
+    "currently_missing_go_cache_records": 3,
+    "shared_cache_records_returned_byte_identical": 1,
+    "cache_note": "Only content-addressed Go cache artifacts were removed in recorded cache maintenance after successful runs; original hashes/evidence and binary retained. Shared parallel work subsequently returned one at the exact original hash; this reviewer did not regenerate anything. No source change. Current 7304-file presence is not claimed.",
+    "source_recordings": 9,
+    "unchanged_source_imports": 1132,
+    "runtime_read_oracles": 9,
+    "oracles_bound": true,
+    "main_and_worktree_selected35_exact": true,
+    "default_storage_test_roots": 14,
+    "excluded_cancellation_generation_root_compiled": false
+  },
+  "current_official_ui": {
+    "result": "PASS",
+    "new_current_binary_evidence": true,
+    "observations": 35,
+    "input_bindings": 9,
+    "input_drift_count": 0,
+    "test_worker_sha256": "75d6166094e76ddf61237509b98fc33f7601b42892d7807a00af5a7728e02be5",
+    "coordinator_summary_sha256": "356ff12312a123f849e26912e01d9749f00e02bcbd2dbac6049566a025ef1e48",
+    "raw_steps_sha256": "6239d874835c1a4fa9f5a694b0080235e3fbfa52d2ec8dff77ac0543b8159332",
+    "first_cold_source_clone": {
+      "source_pid": 154,
+      "clone_pid": 163,
+      "init_counts": [
+        1,
+        1
+      ],
+      "configured_roots_preserved": true,
+      "exists": false,
+      "list": []
+    },
+    "source_failure_and_clone_isolation": {
+      "source_empty_config_init_count": 2,
+      "actual_exists_alert_status": 422,
+      "clone_pid": 163,
+      "clone_init_count": 1,
+      "clone_root_unchanged": true
+    },
+    "source_recovery": {
+      "source_init_count": 3,
+      "explicit_exists": true,
+      "explicit_list_count": 1,
+      "fileitem_fields": 15,
+      "only_file_bytes": 70
+    },
+    "owned_clone_delete": {
+      "result": true,
+      "physical_absence": true,
+      "source_last_action_not_overwritten": true
+    },
+    "second_cold": {
+      "source_pid": 155,
+      "clone_pid": 162,
+      "init_counts": [
+        1,
+        1
+      ],
+      "last_action_null": true,
+      "both_roots_persisted": true,
+      "exists": false,
+      "list": []
+    },
+    "harness_failure_retained": "One overescaped wait locator timed out after exists action; next fresh DOM independently shows action success; no repeated mutation. Loading/transition observations are not final outcomes.",
+    "old06_UI_relabelled": false,
+    "safe_browser_summary_path": "migration/evidence/local-storage-ordinary/browser-current.json",
+    "safe_browser_summary_sha256": "f8a51db5015aa189992a3b89738ac7796ddb1886c100416b327c4aa1103e8a57",
+    "preview_normal_stop_after_acceptance": true,
+    "preview_final_stop_receipt_sha256": "45fce2face59c97f95454e6f74029696846e8e839404f9c69c8a954a3fc89764"
+  },
+  "unapproved_runtime_differences_and_limits": [
+    "Native non-UTF8 and unpaired-surrogate failclosed prevent aliasing another valid name but are not source return equivalence or user-approved differences",
+    "Managed-root/no-follow/private-path guards and sanitized diagnostic adaptation remain explicit; do not weaken them to pretend parity",
+    "Arbitrary Pydantic numeric/Unicode coercions, unexecuted native syscall cases, external storage, arbitrary host paths, transfer/monitor and paused business plugins remain outside this accepted finite slice",
+    "No Python production runtime; source replay and preview harness are test-only",
+    "No denied permission/inode/identity-replacement/link/TLS/proxy probe was executed by this review; no browser tool, Go build, main-tree write, commit or push during this final review"
+  ],
+  "publication": "Select exactly the 35 implementation/test/oracle paths plus the reviewed README, this sanitized independent-final record and the reviewed browser-current record. Keep the selection map local; do not publish private runtime/accounts/cookies, raw accessibility observations, screenshots, launcher, binaries, recovery or rejected-probe material.",
+  "precommit_code_document_allowlist36_exact": true
+}

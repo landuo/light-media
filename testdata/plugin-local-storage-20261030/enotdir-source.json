@@ -1,0 +1,54 @@
+{
+  "network_attempts": [],
+  "operations": [
+    {
+      "case": "native-exists",
+      "path": "$ROOT/regular.mkv/missing-child",
+      "method": "exists",
+      "returned": false,
+      "callback_count": 0
+    },
+    {
+      "case": "native-list_files",
+      "path": "$ROOT/regular.mkv/missing-child",
+      "method": "list_files",
+      "returned": [],
+      "callback_count": 0
+    },
+    {
+      "case": "native-delete_file",
+      "path": "$ROOT/regular.mkv/missing-child",
+      "method": "delete_file",
+      "returned": true,
+      "callback_count": 0
+    },
+    {
+      "case": "override-exists",
+      "path": "$ROOT/regular.mkv/missing-child",
+      "method": "exists",
+      "returned": true,
+      "callback_count": 1
+    },
+    {
+      "case": "override-list_files",
+      "path": "$ROOT/regular.mkv/missing-child",
+      "method": "list_files",
+      "returned": [
+        "override"
+      ],
+      "callback_count": 1
+    },
+    {
+      "case": "override-delete_file",
+      "path": "$ROOT/regular.mkv/missing-child",
+      "method": "delete_file",
+      "returned": false,
+      "callback_count": 1
+    }
+  ],
+  "recovery_exists": true,
+  "content_unchanged": true,
+  "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_result_sha256": "a3062e0566dca4481a08cebc7f018ed82f65c343c4bb824b2e5bca27cbe65695",
+  "source_driver_sha256": "e3e1329d309bdafcebd819de97da744d0283c99e42b5d6093c048c265a08d274"
+}

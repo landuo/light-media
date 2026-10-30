@@ -1,0 +1,1575 @@
+{
+  "scope": "Independent ordinary local-storage contract. No permission/identity replacement probes.\nOnly new synthetic fixture files are changed; every original content is preserved\nunder pristine/ with a SHA256 receipt. No TLS/proxy/CA configuration or networking.\n",
+  "defaults": [
+    {
+      "path": "/",
+      "storage": "local",
+      "type": null,
+      "name": null,
+      "basename": null,
+      "extension": null,
+      "size": null,
+      "modify_time": null,
+      "children": [],
+      "fileid": null,
+      "parent_fileid": null,
+      "thumbnail": null,
+      "pickcode": null,
+      "drive_id": null,
+      "url": null
+    },
+    {
+      "path": null,
+      "storage": null,
+      "type": null,
+      "name": null,
+      "basename": null,
+      "extension": null,
+      "size": null,
+      "modify_time": null,
+      "children": null,
+      "fileid": null,
+      "parent_fileid": null,
+      "thumbnail": null,
+      "pickcode": null,
+      "drive_id": null,
+      "url": null
+    }
+  ],
+  "operations": [
+    {
+      "case": "exists-file",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/z.mkv"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/z.mkv",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true
+    },
+    {
+      "case": "exists-dir",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/dir.z",
+        "type": "file"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/dir.z",
+        "storage": "local",
+        "type": "file",
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true
+    },
+    {
+      "case": "exists-missing",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/missing"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/missing",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": false
+    },
+    {
+      "case": "exists-null-path",
+      "method": "exists",
+      "input": {
+        "path": null
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": null,
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "error": {
+        "type": "TypeError",
+        "message": "argument should be a str or an os.PathLike object where __fspath__ returns a str, not 'NoneType'"
+      }
+    },
+    {
+      "case": "exists-null-storage",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/z.mkv",
+        "storage": null
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/z.mkv",
+        "storage": null,
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": false
+    },
+    {
+      "case": "exists-both-null",
+      "method": "exists",
+      "input": {
+        "path": null,
+        "storage": null
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": null,
+        "storage": null,
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "error": {
+        "type": "TypeError",
+        "message": "argument should be a str or an os.PathLike object where __fspath__ returns a str, not 'NoneType'"
+      }
+    },
+    {
+      "case": "list-shallow",
+      "method": "list_files",
+      "input": {
+        "path": "$ROOT",
+        "type": "file"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT",
+        "storage": "local",
+        "type": "file",
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": [
+        {
+          "path": "$ROOT/empty/",
+          "storage": "local",
+          "type": "dir",
+          "name": "empty",
+          "basename": "empty",
+          "extension": null,
+          "size": null,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/tree/",
+          "storage": "local",
+          "type": "dir",
+          "name": "tree",
+          "basename": "tree",
+          "extension": null,
+          "size": null,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/dir.z/",
+          "storage": "local",
+          "type": "dir",
+          "name": "dir.z",
+          "basename": "dir",
+          "extension": null,
+          "size": null,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/dir.a/",
+          "storage": "local",
+          "type": "dir",
+          "name": "dir.a",
+          "basename": "dir",
+          "extension": null,
+          "size": null,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/.dot",
+          "storage": "local",
+          "type": "file",
+          "name": ".dot",
+          "basename": ".dot",
+          "extension": "",
+          "size": 1,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/a.TXT",
+          "storage": "local",
+          "type": "file",
+          "name": "a.TXT",
+          "basename": "a",
+          "extension": "TXT",
+          "size": 3,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/plain",
+          "storage": "local",
+          "type": "file",
+          "name": "plain",
+          "basename": "plain",
+          "extension": "",
+          "size": 1,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/z.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "z.mkv",
+          "basename": "z",
+          "extension": "mkv",
+          "size": 1,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ]
+    },
+    {
+      "case": "list-recursive",
+      "method": "list_files",
+      "input": {
+        "path": "$ROOT"
+      },
+      "kwargs": {
+        "recursion": true
+      },
+      "fileitem": {
+        "path": "$ROOT",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": [
+        {
+          "path": "$ROOT/tree/child",
+          "storage": "local",
+          "type": "file",
+          "name": "child",
+          "basename": "child",
+          "extension": "",
+          "size": 4,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/dir.z/nested.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "nested.mkv",
+          "basename": "nested",
+          "extension": "mkv",
+          "size": 6,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/dir.a/child.nfo",
+          "storage": "local",
+          "type": "file",
+          "name": "child.nfo",
+          "basename": "child",
+          "extension": "nfo",
+          "size": 3,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/.dot",
+          "storage": "local",
+          "type": "file",
+          "name": ".dot",
+          "basename": ".dot",
+          "extension": "",
+          "size": 1,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/a.TXT",
+          "storage": "local",
+          "type": "file",
+          "name": "a.TXT",
+          "basename": "a",
+          "extension": "TXT",
+          "size": 3,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/plain",
+          "storage": "local",
+          "type": "file",
+          "name": "plain",
+          "basename": "plain",
+          "extension": "",
+          "size": 1,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/z.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "z.mkv",
+          "basename": "z",
+          "extension": "mkv",
+          "size": 1,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ]
+    },
+    {
+      "case": "list-file",
+      "method": "list_files",
+      "input": {
+        "path": "$ROOT/z.mkv",
+        "type": "dir"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/z.mkv",
+        "storage": "local",
+        "type": "dir",
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": [
+        {
+          "path": "$ROOT/z.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "z.mkv",
+          "basename": "z",
+          "extension": "mkv",
+          "size": 1,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ]
+    },
+    {
+      "case": "list-missing",
+      "method": "list_files",
+      "input": {
+        "path": "$ROOT/missing"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/missing",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": []
+    },
+    {
+      "case": "list-null-storage",
+      "method": "list_files",
+      "input": {
+        "path": "$ROOT",
+        "storage": null
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT",
+        "storage": null,
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": null
+    },
+    {
+      "case": "delete-null-path",
+      "method": "delete_file",
+      "input": {
+        "path": null
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": null,
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": false
+    },
+    {
+      "case": "delete-empty-path",
+      "method": "delete_file",
+      "input": {
+        "path": ""
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": false
+    },
+    {
+      "case": "delete-missing",
+      "method": "delete_file",
+      "input": {
+        "path": "$ROOT/missing"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/missing",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true
+    },
+    {
+      "case": "delete-null-storage",
+      "method": "delete_file",
+      "input": {
+        "path": "$ROOT/z.mkv",
+        "storage": null
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/z.mkv",
+        "storage": null,
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": null
+    },
+    {
+      "case": "delete-file-wrong-type",
+      "method": "delete_file",
+      "input": {
+        "path": "$ROOT/a.TXT",
+        "type": "dir"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/a.TXT",
+        "storage": "local",
+        "type": "dir",
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true
+    },
+    {
+      "case": "delete-tree",
+      "method": "delete_file",
+      "input": {
+        "path": "$ROOT/tree",
+        "type": "file"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/tree",
+        "storage": "local",
+        "type": "file",
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true
+    },
+    {
+      "case": "delete-repeat",
+      "method": "delete_file",
+      "input": {
+        "path": "$ROOT/tree"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/tree",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true
+    }
+  ],
+  "unicode_operations": [
+    {
+      "case": "json-0xd800-exists",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/\ud800"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/\ud800",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": false,
+      "raw_input": "{\"path\":\"$ROOT/\\ud800\"}",
+      "raw_sha256": "8c6ac15316b3df84f9e4b8b9341f7fe7c2f45dcb3cf9b6a5beb0906956dcdc76",
+      "filename_codepoints": [
+        55296
+      ],
+      "replacement_retained": true
+    },
+    {
+      "case": "json-0xd800-list_files",
+      "method": "list_files",
+      "input": {
+        "path": "$ROOT/\ud800"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/\ud800",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": [],
+      "raw_input": "{\"path\":\"$ROOT/\\ud800\"}",
+      "raw_sha256": "8c6ac15316b3df84f9e4b8b9341f7fe7c2f45dcb3cf9b6a5beb0906956dcdc76",
+      "filename_codepoints": [
+        55296
+      ],
+      "replacement_retained": true
+    },
+    {
+      "case": "json-0xd800-delete_file",
+      "method": "delete_file",
+      "input": {
+        "path": "$ROOT/\ud800"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/\ud800",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true,
+      "raw_input": "{\"path\":\"$ROOT/\\ud800\"}",
+      "raw_sha256": "8c6ac15316b3df84f9e4b8b9341f7fe7c2f45dcb3cf9b6a5beb0906956dcdc76",
+      "filename_codepoints": [
+        55296
+      ],
+      "replacement_retained": true
+    },
+    {
+      "case": "json-0xdcff-exists",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/\udcff"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/\udcff",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": false,
+      "raw_input": "{\"path\":\"$ROOT/\\udcff\"}",
+      "raw_sha256": "738e714ebd4f38a33613d4f960a7b5d29e2e746623be949d82f4ad45057c3134",
+      "filename_codepoints": [
+        56575
+      ],
+      "replacement_retained": true
+    },
+    {
+      "case": "json-0xdcff-list_files",
+      "method": "list_files",
+      "input": {
+        "path": "$ROOT/\udcff"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/\udcff",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": [],
+      "raw_input": "{\"path\":\"$ROOT/\\udcff\"}",
+      "raw_sha256": "738e714ebd4f38a33613d4f960a7b5d29e2e746623be949d82f4ad45057c3134",
+      "filename_codepoints": [
+        56575
+      ],
+      "replacement_retained": true
+    },
+    {
+      "case": "json-0xdcff-delete_file",
+      "method": "delete_file",
+      "input": {
+        "path": "$ROOT/\udcff"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/\udcff",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true,
+      "raw_input": "{\"path\":\"$ROOT/\\udcff\"}",
+      "raw_sha256": "738e714ebd4f38a33613d4f960a7b5d29e2e746623be949d82f4ad45057c3134",
+      "filename_codepoints": [
+        56575
+      ],
+      "replacement_retained": true
+    },
+    {
+      "case": "json-0x1f600-exists",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/\ud83d\ude00"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/\ud83d\ude00",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true,
+      "raw_input": "{\"path\":\"$ROOT/\\ud83d\\ude00\"}",
+      "raw_sha256": "4ce95b8bc0664a8378c77c11c3ca6246d3490c5b28ff420bef73adea6792510f",
+      "filename_codepoints": [
+        128512
+      ],
+      "replacement_retained": true
+    },
+    {
+      "case": "json-0x1f600-list_files",
+      "method": "list_files",
+      "input": {
+        "path": "$ROOT/\ud83d\ude00"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/\ud83d\ude00",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": [
+        {
+          "path": "$ROOT/\ud83d\ude00",
+          "storage": "local",
+          "type": "file",
+          "name": "\ud83d\ude00",
+          "basename": "\ud83d\ude00",
+          "extension": "",
+          "size": 19,
+          "modify_time": 1793354823.6044867,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ],
+      "raw_input": "{\"path\":\"$ROOT/\\ud83d\\ude00\"}",
+      "raw_sha256": "4ce95b8bc0664a8378c77c11c3ca6246d3490c5b28ff420bef73adea6792510f",
+      "filename_codepoints": [
+        128512
+      ],
+      "replacement_retained": true
+    },
+    {
+      "case": "json-0x1f600-delete_file",
+      "method": "delete_file",
+      "input": {
+        "path": "$ROOT/\ud83d\ude00"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/\ud83d\ude00",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true,
+      "raw_input": "{\"path\":\"$ROOT/\\ud83d\\ude00\"}",
+      "raw_sha256": "4ce95b8bc0664a8378c77c11c3ca6246d3490c5b28ff420bef73adea6792510f",
+      "filename_codepoints": [
+        128512
+      ],
+      "replacement_retained": true
+    },
+    {
+      "case": "json-0x70-exists",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/plain"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/plain",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true,
+      "raw_input": "{\"path\":\"$ROOT/plain\"}",
+      "raw_sha256": "f8b7e9834987015b0c399bd7b64acebcabe4315f4b799d805e30713c0f1e839e",
+      "filename_codepoints": [
+        112,
+        108,
+        97,
+        105,
+        110
+      ],
+      "replacement_retained": true
+    },
+    {
+      "case": "json-0x70-list_files",
+      "method": "list_files",
+      "input": {
+        "path": "$ROOT/plain"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/plain",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": [
+        {
+          "path": "$ROOT/plain",
+          "storage": "local",
+          "type": "file",
+          "name": "plain",
+          "basename": "plain",
+          "extension": "",
+          "size": 1,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ],
+      "raw_input": "{\"path\":\"$ROOT/plain\"}",
+      "raw_sha256": "f8b7e9834987015b0c399bd7b64acebcabe4315f4b799d805e30713c0f1e839e",
+      "filename_codepoints": [
+        112,
+        108,
+        97,
+        105,
+        110
+      ],
+      "replacement_retained": true
+    },
+    {
+      "case": "json-0x70-delete_file",
+      "method": "delete_file",
+      "input": {
+        "path": "$ROOT/plain"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/plain",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true,
+      "raw_input": "{\"path\":\"$ROOT/plain\"}",
+      "raw_sha256": "f8b7e9834987015b0c399bd7b64acebcabe4315f4b799d805e30713c0f1e839e",
+      "filename_codepoints": [
+        112,
+        108,
+        97,
+        105,
+        110
+      ],
+      "replacement_retained": true
+    }
+  ],
+  "consumer": {
+    "mapping": {
+      "$STRM": [
+        "local",
+        "$ROOT"
+      ]
+    },
+    "before_exists": true,
+    "returned": null,
+    "after_exists": false
+  },
+  "module_operations": [
+    {
+      "case": "exists-false",
+      "method": "exists",
+      "override_method": "get_file_item",
+      "override_value": false,
+      "returned": false,
+      "file_exists": true
+    },
+    {
+      "case": "exists-empty-dict",
+      "method": "exists",
+      "override_method": "get_file_item",
+      "override_value": {},
+      "returned": false,
+      "file_exists": true
+    },
+    {
+      "case": "exists-truthy",
+      "method": "exists",
+      "override_method": "get_file_item",
+      "override_value": {
+        "ordinary": "value"
+      },
+      "returned": true,
+      "file_exists": true
+    },
+    {
+      "case": "delete-false",
+      "method": "delete_file",
+      "override_method": "delete_file",
+      "override_value": false,
+      "returned": false,
+      "file_exists": true
+    },
+    {
+      "case": "delete-true",
+      "method": "delete_file",
+      "override_method": "delete_file",
+      "override_value": true,
+      "returned": true,
+      "file_exists": true
+    },
+    {
+      "case": "delete-null-native",
+      "method": "delete_file",
+      "override_method": "delete_file",
+      "override_value": null,
+      "returned": true,
+      "file_exists": false
+    },
+    {
+      "case": "list-empty-merge",
+      "method": "list_files",
+      "override_method": "list_files",
+      "override_value": [],
+      "returned": [
+        {
+          "path": "$ROOT/empty/",
+          "storage": "local",
+          "type": "dir",
+          "name": "empty",
+          "basename": "empty",
+          "extension": null,
+          "size": null,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/dir.z/",
+          "storage": "local",
+          "type": "dir",
+          "name": "dir.z",
+          "basename": "dir",
+          "extension": null,
+          "size": null,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/dir.a/",
+          "storage": "local",
+          "type": "dir",
+          "name": "dir.a",
+          "basename": "dir",
+          "extension": null,
+          "size": null,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/.dot",
+          "storage": "local",
+          "type": "file",
+          "name": ".dot",
+          "basename": ".dot",
+          "extension": "",
+          "size": 1,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/z.mkv",
+          "storage": "local",
+          "type": "file",
+          "name": "z.mkv",
+          "basename": "z",
+          "extension": "mkv",
+          "size": 1,
+          "modify_time": 1700000000.0,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        },
+        {
+          "path": "$ROOT/\ufffd",
+          "storage": "local",
+          "type": "file",
+          "name": "\ufffd",
+          "basename": "\ufffd",
+          "extension": "",
+          "size": 23,
+          "modify_time": 1793354823.6000078,
+          "children": [],
+          "fileid": null,
+          "parent_fileid": null,
+          "thumbnail": null,
+          "pickcode": null,
+          "drive_id": null,
+          "url": null
+        }
+      ],
+      "file_exists": false
+    },
+    {
+      "case": "list-scalar-terminal",
+      "method": "list_files",
+      "override_method": "list_files",
+      "override_value": false,
+      "returned": false,
+      "file_exists": false
+    }
+  ],
+  "large": {
+    "count": 11003,
+    "large_name_length": 716800,
+    "large_name_exists": true
+  },
+  "pristine": {
+    "d0758941d3c03bdad891cce907436f15eed2d47c32cab4fab1e72caacab7733a": "d0758941d3c03bdad891cce907436f15eed2d47c32cab4fab1e72caacab7733a",
+    "18ac3e7343f016890c510e93f935261169d9e3f565436429830faf0934f4f8e4": "18ac3e7343f016890c510e93f935261169d9e3f565436429830faf0934f4f8e4",
+    "cf5dd5aafe2a12e78208f777d6d3f8c19b3b32c3c161fee84f883c0e29775a80": "cf5dd5aafe2a12e78208f777d6d3f8c19b3b32c3c161fee84f883c0e29775a80",
+    "46544e37e96c7942252866aaaa41a86dc5791f483d8e7bedfd5f23d8f361c55d": "46544e37e96c7942252866aaaa41a86dc5791f483d8e7bedfd5f23d8f361c55d",
+    "2c243e2f35af5835f5dc8ef1b15f96d4cf85b0cca80e481fe736e64150fbb680": "2c243e2f35af5835f5dc8ef1b15f96d4cf85b0cca80e481fe736e64150fbb680",
+    "594e519ae499312b29433b7dd8a97ff068defcba9755b6d5d00e84c524d67b06": "594e519ae499312b29433b7dd8a97ff068defcba9755b6d5d00e84c524d67b06",
+    "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    "233562de1a0288b139c4fa40b7d189f806e906eeb048517aeb67f34ac0e2faf1": "233562de1a0288b139c4fa40b7d189f806e906eeb048517aeb67f34ac0e2faf1",
+    "9253970bdba671e4b1a0d5f8dccbf2f7c48ccfb095c56c34e41971e50ae7545b": "9253970bdba671e4b1a0d5f8dccbf2f7c48ccfb095c56c34e41971e50ae7545b",
+    "dc9c5edb8b2d479e697b4b0b8ab874f32b325138598ce9e7b759eb8292110622": "dc9c5edb8b2d479e697b4b0b8ab874f32b325138598ce9e7b759eb8292110622",
+    "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881": "2d711642b726b04401627ca9fbac32f5c8530fb1903cc4db02258717921a4881",
+    "148de9c5a7a44d19e56cd9ae1a554bf67847afb0c58f6e12fa29ac7ddfca9940": "148de9c5a7a44d19e56cd9ae1a554bf67847afb0c58f6e12fa29ac7ddfca9940"
+  },
+  "network_attempts": [],
+  "cold_operations": [
+    {
+      "case": "cold-a.TXT",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/a.TXT"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/a.TXT",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": false
+    },
+    {
+      "case": "cold-tree",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/tree"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/tree",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": false
+    },
+    {
+      "case": "cold-Consumer.2026.mkv",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/Consumer.2026.mkv"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/Consumer.2026.mkv",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": false
+    },
+    {
+      "case": "cold-z.mkv",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/z.mkv"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/z.mkv",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true
+    },
+    {
+      "case": "cold-\ufffd",
+      "method": "exists",
+      "input": {
+        "path": "$ROOT/\ufffd"
+      },
+      "kwargs": {},
+      "fileitem": {
+        "path": "$ROOT/\ufffd",
+        "storage": "local",
+        "type": null,
+        "name": null,
+        "basename": null,
+        "extension": null,
+        "size": null,
+        "modify_time": null,
+        "children": [],
+        "fileid": null,
+        "parent_fileid": null,
+        "thumbnail": null,
+        "pickcode": null,
+        "drive_id": null,
+        "url": null
+      },
+      "returned": true
+    }
+  ],
+  "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_driver_sha256": "340c6502a4ee26589c599d2df544a5a807ae029ce52f3c26d0c70aedef5e787f",
+  "raw_sources": {
+    "warm.json": "16bd5b6bf0f7cc6f77e88957fd615ea1f7be9e52e007c55f9c463290296ce327",
+    "cold.json": "36071968f7513b51eddd0d00dad9289d755aa92cac880bd6e954615f7ffd595d"
+  }
+}

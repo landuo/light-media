@@ -15,8 +15,8 @@
     "remote": "https://github.com/landuo/light-media.git",
     "branch": "plugins-refactor",
     "baseline_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-    "revision": "985d957c3889dcbacffc271abe02cad8b827f6af",
-    "remote_revision": "985d957c3889dcbacffc271abe02cad8b827f6af",
+    "revision": "122fafc7b4ee93589250cb82be849fead48e79d1",
+    "remote_revision": "122fafc7b4ee93589250cb82be849fead48e79d1",
     "delivery_mode": "remote",
     "delivery_reason": "Per accepted functional slice commit, push and readback; no merge or deployment.",
     "metadata_paths": [
@@ -31,9 +31,10 @@
       "migration/delivery/existing-sources-294e52dd-paths.json",
       "migration/delivery/mirror-response-ad0a1d3d-paths.json",
       "migration/delivery/folder-failure-57037d04-paths.json",
-      "migration/delivery/reset-name-985d957c-paths.json"
+      "migration/delivery/reset-name-985d957c-paths.json",
+      "migration/delivery/market-pipeline-122fafc7-paths.json"
     ],
-    "revision_note": "Latest actualremote plugins-refactor985d957c/main97476582 read back before new finite marketcommit. Current accepted candidate111/d011 and safe summaries are staged separately; otherworktrees notdelivered."
+    "revision_note": "Actualremote122fafc7 remainslastdelivered; S09ordinary finite nowacceptedlocally andpendingselectivecommit/push/readback. Othercandidates notdelivered."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -2749,7 +2750,8 @@
         "42",
         "43",
         "S11",
-        "40.clear_cache"
+        "40.clear_cache",
+        "S09.ordinary_storage"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -2930,7 +2932,8 @@
       "feature_ids": [
         "37",
         "43",
-        "S09"
+        "S09",
+        "S09.ordinary_storage"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract; exact representative entrypoint reverse-link",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3314,7 +3317,8 @@
       "feature_ids": [
         "02",
         "43",
-        "40.clear_cache"
+        "40.clear_cache",
+        "S09.ordinary_storage"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4187,7 +4191,8 @@
       "scope": "ordinary-helper",
       "reason": "普通插件可直接实例化/import 的 Helper；按真实依赖链评估，不要求人为新增同名 RPC。",
       "feature_ids": [
-        "02"
+        "02",
+        "S09.ordinary_storage"
       ],
       "feature_link_reason": "helper directly supports named SDK/platform chain",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4764,7 +4769,8 @@
       "feature_ids": [
         "37",
         "43",
-        "S09"
+        "S09",
+        "S09.ordinary_storage"
       ],
       "feature_link_reason": "system provider/client family filemanager; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4837,7 +4843,8 @@
       "feature_ids": [
         "37",
         "43",
-        "S09"
+        "S09",
+        "S09.ordinary_storage"
       ],
       "feature_link_reason": "system provider/client family filemanager; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -6647,7 +6654,8 @@
       "feature_ids": [
         "43",
         "S09",
-        "S06.transfer_queries"
+        "S06.transfer_queries",
+        "S09.ordinary_storage"
       ],
       "feature_link_reason": "shared input/output DTO and enum contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -7440,7 +7448,8 @@
         "19",
         "21",
         "23",
-        "S09"
+        "S09",
+        "S09.ordinary_storage"
       ],
       "feature_link_reason": "ordinary utility dependency; native Go implementation allowed, no same-name RPC obligation",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -17000,7 +17009,8 @@
       "line": 88,
       "end_line": 92,
       "feature_ids": [
-        "S09"
+        "S09",
+        "S09.ordinary_storage"
       ],
       "chain": {
         "ingress": "ordinary plugin import/helper/Oper call, or source builtin cache command",
@@ -17023,7 +17033,8 @@
       "line": 100,
       "end_line": 104,
       "feature_ids": [
-        "S09"
+        "S09",
+        "S09.ordinary_storage"
       ],
       "chain": {
         "ingress": "ordinary plugin import/helper/Oper call, or source builtin cache command",
@@ -17241,6 +17252,33 @@
       "feature_ids": [
         "09.market_pipeline"
       ]
+    },
+    {
+      "id": "scope.sdk.app.chain.storage.StorageChain.list_files",
+      "source_repository": "backend",
+      "source_location": "app/chain/storage.py:46#StorageChain.list_files",
+      "source_path": "app/chain/storage.py",
+      "symbol": "StorageChain.list_files",
+      "line": 46,
+      "end_line": 50,
+      "feature_ids": [
+        "S09",
+        "S09.ordinary_storage"
+      ],
+      "chain": {
+        "ingress": "Go SDK local-list capability / ordinary source StorageChain helper",
+        "symbol": "StorageChain.list_files",
+        "source_doc": "查询当前目录下所有目录和文件",
+        "signature": "self, fileitem: schemas.FileItem, recursion: bool = False",
+        "direct_call_fanout": [
+          "ChainBase.run_module",
+          "ModuleManager",
+          "FileManagerModule.list_files",
+          "LocalStorage.list"
+        ],
+        "note": "Actual normally imported source module/native observations plus real Go worker/server; finite ordinary values only."
+      },
+      "validation": "source executed; candidate35 backend independently revalidated; final current official browser pending"
     }
   ],
   "features": [
@@ -18725,7 +18763,7 @@
     {
       "id": "23",
       "description": "23 · 2.18 安装统计：安装事件上报，列表查询汇总后展示",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/plugin.py",
         "app/core/config.py",
@@ -18740,22 +18778,46 @@
         "scope.http.plugin.statistic"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "docs/plugin-usage-rating-20261030.md",
+        "internal/app/http.go",
+        "internal/app/plugin_original_server.go",
+        "internal/app/plugin_original_server_compat.go",
+        "internal/app/plugin_original_server_encoding.go",
+        "internal/app/plugin_original_server_json.go",
+        "internal/app/plugin_original_server_lifecycle_test.go",
+        "internal/app/plugin_original_server_shape_test.go",
+        "internal/app/plugin_original_server_source_test.go",
+        "internal/app/plugin_original_server_validation.go",
+        "testdata/plugin-server-20261030/source-http.json",
+        "testdata/plugin-server-20261030/source-wire.json",
+        "testdata/plugin-server-20261030/source_http_replay.py",
+        "testdata/plugin-server-20261030/source_http_wire_replay.py",
+        "testdata/plugin-server-20261030/source_http_wire_replay_v2.py",
+        "testdata/plugin-server-20261030/source_http_wire_replay_v3.py",
+        "testdata/plugin-server-20261030/source_http_wire_replay_v4.py",
+        "testdata/plugin-server-20261030/source_http_wire_replay_v5.py",
+        "testdata/plugin-server-20261030/source_http_wire_replay_v6.py",
+        "web/src/features/plugin-remote-api.ts",
+        "web/tests/plugin-axios-source.test.mjs"
+      ],
       "owner": "coordinator",
       "scenarios": [],
       "evidence_ids": [],
       "review": {
         "status": "pending",
-        "independent": false
+        "independent": true,
+        "reviewer": "rating_independent",
+        "note": "candidate02 finitebackend and statisticsUI component reviewpass; source08 uncovered ordinaryquery/slash gaps; currentintegratedbinary/browser gates pending"
       },
       "external_source_paths": [],
-      "work_kind": "reuse_verification",
-      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Existing platform reused, concrete sourcewire/schema/codec/installed-membership fixes implemented in candidate02 and integratedmain. Independent220 rawwire/9report plus realSDK/cold and source-derivedstatisticsUI component passed. Directed common-cause source08 query/slash gaps nowconfirmed, repair pending; nonsecretrepoquery safety-policy difference and officialUI remainopen. Notcomplete or delivered."
     },
     {
       "id": "24",
       "description": "24 · 2.19 插件评分：后端有接口，当前前端没有已接通的评分控件",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/plugin.py",
         "app/core/plugin.py",
@@ -18772,17 +18834,41 @@
         "scope.http.plugin.rate_plugin"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "docs/plugin-usage-rating-20261030.md",
+        "internal/app/http.go",
+        "internal/app/plugin_original_server.go",
+        "internal/app/plugin_original_server_compat.go",
+        "internal/app/plugin_original_server_encoding.go",
+        "internal/app/plugin_original_server_json.go",
+        "internal/app/plugin_original_server_lifecycle_test.go",
+        "internal/app/plugin_original_server_shape_test.go",
+        "internal/app/plugin_original_server_source_test.go",
+        "internal/app/plugin_original_server_validation.go",
+        "testdata/plugin-server-20261030/source-http.json",
+        "testdata/plugin-server-20261030/source-wire.json",
+        "testdata/plugin-server-20261030/source_http_replay.py",
+        "testdata/plugin-server-20261030/source_http_wire_replay.py",
+        "testdata/plugin-server-20261030/source_http_wire_replay_v2.py",
+        "testdata/plugin-server-20261030/source_http_wire_replay_v3.py",
+        "testdata/plugin-server-20261030/source_http_wire_replay_v4.py",
+        "testdata/plugin-server-20261030/source_http_wire_replay_v5.py",
+        "testdata/plugin-server-20261030/source_http_wire_replay_v6.py",
+        "web/src/features/plugin-remote-api.ts",
+        "web/tests/plugin-axios-source.test.mjs"
+      ],
       "owner": "coordinator",
       "scenarios": [],
       "evidence_ids": [],
       "review": {
         "status": "pending",
-        "independent": false
+        "independent": true,
+        "reviewer": "rating_independent",
+        "note": "candidate02 finitebackend and statisticsUI component reviewpass; source08 uncovered ordinaryquery/slash gaps; currentintegratedbinary/browser gates pending"
       },
       "external_source_paths": [],
-      "work_kind": "reuse_verification",
-      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Existing platform reused, concrete sourcewire/schema/codec/installed-membership fixes implemented in candidate02 and integratedmain. Independent220 rawwire/9report plus realSDK/cold and source-derivedstatisticsUI component passed. Directed common-cause source08 query/slash gaps nowconfirmed, repair pending; nonsecretrepoquery safety-policy difference and officialUI remainopen. Notcomplete or delivered."
     },
     {
       "id": "25",
@@ -19372,7 +19458,7 @@
     {
       "id": "38",
       "description": "38 · 4.3 插件定时服务：把一个真实函数交给系统时钟",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/dashboard.py",
         "app/core/plugin.py",
@@ -19394,22 +19480,36 @@
         "scope.discovery.40"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "internal/app/http.go",
+        "internal/app/plugin_module_process_services_test.go",
+        "internal/app/plugin_services_wire.go",
+        "internal/app/plugin_services_wire_boundaries_test.go",
+        "internal/app/plugin_services_wire_test.go",
+        "testdata/standard-services/README-wire.md",
+        "testdata/standard-services/replay_wire_source.py",
+        "testdata/standard-services/wire-boundary-source-oracle.json",
+        "testdata/standard-services/wire-query-decoding-source-oracle.json",
+        "web/src/features/plugin-remote-api.ts",
+        "web/tests/plugin-services-wire.test.mjs"
+      ],
       "owner": "coordinator",
       "scenarios": [],
       "evidence_ids": [],
       "review": {
         "status": "pending",
-        "independent": false
+        "independent": true,
+        "reviewer": "services_independent",
+        "note": "wire2 frozen source142/QueryParams38+normal/race24 and actualCLI108 each; independent after inprogress. Missing completeCalendarInterval/And/Or/defaulttrigger families beingimplemented, officialUI/mainbinary notaccepted."
       },
       "external_source_paths": [],
-      "work_kind": "reuse_verification",
-      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Service lifecycle/progress/callbackdiag/nativeUI behavior retained or source-aligned; complete actualsource/Scheduler missingtrigger families being ported in services-triggers isolatedtree. Wire2 sourcequery/slash fixes merged withusage02 and mainfrontend588/buildpass. Whole38/39 remainopen until fulltrigger/hostchain/regression/independent/browser."
     },
     {
       "id": "39",
       "description": "39 · 4.4 手动运行服务：立即走同一个运行入口，不另造一套任务",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/dashboard.py",
         "app/api/endpoints/system.py",
@@ -19426,17 +19526,31 @@
         "scope.discovery.41"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "internal/app/http.go",
+        "internal/app/plugin_module_process_services_test.go",
+        "internal/app/plugin_services_wire.go",
+        "internal/app/plugin_services_wire_boundaries_test.go",
+        "internal/app/plugin_services_wire_test.go",
+        "testdata/standard-services/README-wire.md",
+        "testdata/standard-services/replay_wire_source.py",
+        "testdata/standard-services/wire-boundary-source-oracle.json",
+        "testdata/standard-services/wire-query-decoding-source-oracle.json",
+        "web/src/features/plugin-remote-api.ts",
+        "web/tests/plugin-services-wire.test.mjs"
+      ],
       "owner": "coordinator",
       "scenarios": [],
       "evidence_ids": [],
       "review": {
         "status": "pending",
-        "independent": false
+        "independent": true,
+        "reviewer": "services_independent",
+        "note": "wire2 frozen source142/QueryParams38+normal/race24 and actualCLI108 each; independent after inprogress. Missing completeCalendarInterval/And/Or/defaulttrigger families beingimplemented, officialUI/mainbinary notaccepted."
       },
       "external_source_paths": [],
-      "work_kind": "reuse_verification",
-      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Service lifecycle/progress/callbackdiag/nativeUI behavior retained or source-aligned; complete actualsource/Scheduler missingtrigger families being ported in services-triggers isolatedtree. Wire2 sourcequery/slash fixes merged withusage02 and mainfrontend588/buildpass. Whole38/39 remainopen until fulltrigger/hostchain/regression/independent/browser."
     },
     {
       "id": "40",
@@ -20847,7 +20961,7 @@
     {
       "id": "S09",
       "description": "S09 · 受管本地存储exists/list/delete",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/storage.py",
         "app/api/endpoints/transfer.py",
@@ -20928,8 +21042,11 @@
         "independent": false
       },
       "external_source_paths": [],
-      "work_kind": "unclassified_shared_host",
-      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent."
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Finite ordinary local exists/list/delete implemented and source/independent backend verified; wholeS09 arbitrary constructor/encoding and widerstorage dependencies remainopen.",
+      "delivery_slices": [
+        "S09.ordinary_storage"
+      ]
     },
     {
       "id": "S10",
@@ -22543,6 +22660,163 @@
           ]
         }
       }
+    },
+    {
+      "id": "S09.ordinary_storage",
+      "parent_feature": "S09",
+      "description": "Finite ordinary managed-local exists/list/delete SDK→module→native chains, source-produced FileItem projection, owned consumer and cold/clone recovery; not arbitrary storage inputs or wholeS09",
+      "status": "verified",
+      "owner": "coordinator",
+      "source_paths": [
+        "app/chain/storage.py",
+        "app/chain/__init__.py",
+        "app/core/module.py",
+        "app/helper/module.py",
+        "app/modules/filemanager/__init__.py",
+        "app/modules/filemanager/storages/local.py",
+        "app/schemas/file.py",
+        "app/utils/system.py"
+      ],
+      "external_source_paths": [],
+      "entrypoint_ids": [
+        "scope.sdk.app.chain.storage.StorageChain.exists",
+        "scope.sdk.app.chain.storage.StorageChain.list_files",
+        "scope.sdk.app.chain.storage.StorageChain.delete_file"
+      ],
+      "dependencies": [
+        "02",
+        "05"
+      ],
+      "target_paths": [
+        "internal/app/plugin_shared_local_storage_fixture_test.go",
+        "internal/app/plugin_shared_local_storage_lifecycle_test.go",
+        "internal/app/plugin_shared_local_storage.go",
+        "internal/app/plugin_shared_local_storage_process_test.go",
+        "internal/app/plugin_shared_local_storage_fs.go",
+        "internal/app/plugin_shared_local_storage_large_test.go",
+        "internal/app/plugin_shared_local_storage_encoding_test.go",
+        "internal/app/plugin_shared_local_storage_test.go",
+        "internal/plugins/shared_local_storage_test.go",
+        "internal/plugins/shared_local_storage.go",
+        "cmd/owned-local-storage-fixture/main.go",
+        "internal/app/plugin_original_resources.go",
+        "testdata/plugin-local-storage-20261030/source_ordinary.py",
+        "testdata/plugin-local-storage-20261030/replay-source.py",
+        "testdata/plugin-local-storage-20261030/ordinary-source.json",
+        "testdata/plugin-local-storage-20261030/contract.json",
+        "internal/app/plugin_shared_local_storage_null_module_test.go",
+        "testdata/plugin-local-storage-20261030/null-module-source.json",
+        "testdata/plugin-local-storage-20261030/pathless-module-source.json",
+        "testdata/plugin-local-storage-20261030/source_null_module.py",
+        "testdata/plugin-local-storage-20261030/source_pathless_module.py",
+        "internal/app/plugin_shared_local_storage_descendant_test.go",
+        "testdata/plugin-local-storage-20261030/enotdir-source.json",
+        "internal/app/plugin_shared_local_storage_longname_test.go",
+        "testdata/plugin-local-storage-20261030/longname-source.json",
+        "internal/app/plugin_original_local_file_item.go",
+        "internal/app/plugin_shared_local_storage_mtime_test.go",
+        "internal/app/plugin_shared_local_storage_native_encoding_test.go",
+        "testdata/plugin-local-storage-20261030/mtime-source.json",
+        "testdata/plugin-local-storage-20261030/native-encoding-source.json",
+        "testdata/plugin-local-storage-20261030/source_mtime.py",
+        "testdata/plugin-local-storage-20261030/source_native_encoding.py",
+        "internal/app/plugin_shared_local_storage_mtime_precision_test.go",
+        "testdata/plugin-local-storage-20261030/mtime-precision-source.json",
+        "testdata/plugin-local-storage-20261030/source_mtime_precision.py",
+        "testdata/plugin-local-storage-20261030/README.md"
+      ],
+      "scenarios": [
+        "actual module scalar/list/native dispatch, physical file/directory/list/delete and repeatedmissing results",
+        "nullstorage and pathlessdelete module-first semantics; native ENOTDIR/ENAMETOOLONG error/event/notification and recovery",
+        "large11003file list/700KiB request with existing SDK transport and requestbudget",
+        "year2300 and six independent precise mtime floatingroundings through SDK+sharedmetadata",
+        "native invalidUTF8 failclosed safety versus source surrogateescape, no wrongvalidname alias; explicitnot-equivalent",
+        "real normal/race SDK worker, clone independent state/capability and actualcmdserver doublecold",
+        "current122+ordinary35 officialbrowser cold/failure422/recovery/realexists/list/cloneowneddelete/separateinstanceaction/twoactualservercold cycles"
+      ],
+      "evidence_ids": [
+        "storage-ordinary.source-current",
+        "storage-ordinary.browser-current",
+        "storage-ordinary.independent-final"
+      ],
+      "review": {
+        "status": "passed",
+        "independent": true,
+        "reviewer": "storage_independent",
+        "evidence_ids": [
+          "storage-ordinary.independent-final"
+        ],
+        "note": "Completefiniteordinaryscope only; newdc80officialUI independentlyreviewed, no oldUIrelabel."
+      },
+      "boundaries": [
+        "Managed root/private/no-follow/capability revocation preserved; old denied probes excluded and not executed.",
+        "Native nonUTF8 and unpairedsurrogate path source return values differ; safety retained, not approved or sourceequivalent.",
+        "Source-created ordinary15field FileItem projection only; arbitrary Pydantic numeric/Unicode inputs remainopen.",
+        "No pausedbusiness plugin restoration; owned consumer test has unrelatedeffectsdisabled. No externalstorage/transfer/monitor/fullsource daemon claim.",
+        "Python sourceoracle tooling only; product and Go regression have no Python runtime dependency."
+      ],
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "Sourceordinary15field FileItem/nativefilesystem/module scalar/list projections compared;arbitrarycoercions remainoutsidefinite.",
+          "evidence_ids": [
+            "storage-ordinary.source-current"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Module-first selection, scopedinstance config/runtime andphysicaldelete state verified.",
+          "evidence_ids": [
+            "storage-ordinary.source-current",
+            "storage-ordinary.browser-current"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Missingdescendant/null/pathless/longcomponent event/notification andactualUI422→recovery verified.",
+          "evidence_ids": [
+            "storage-ordinary.source-current",
+            "storage-ordinary.browser-current"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "SDKrace+currentaffectedhost/worker race roots andunchangedfullraceleaf impactreuse; notclaimallcurrentfullrace rerun.",
+          "evidence_ids": [
+            "storage-ordinary.source-current"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Exactdc80 doublecold independentandtwoofficialpreview coldcycles preserveconfig/absence.",
+          "evidence_ids": [
+            "storage-ordinary.source-current",
+            "storage-ordinary.browser-current"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "StandardSDK/native/moduleordinaryinputs andindependentclone state preserved; noPythonruntime.",
+          "evidence_ids": [
+            "storage-ordinary.source-current",
+            "storage-ordinary.browser-current"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "Currentauth/root/no-follow/private/capability guards retained andpositive/negativeownedcases; deniedprobes excluded; encodingreturnmismatchoutsidefinite notapproved.",
+          "evidence_ids": [
+            "storage-ordinary.source-current"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Actual11003item/700KiB ordinarypayload andnormaldeadline verified withinexistingresourcebudgets, notunboundedsourceinputs.",
+          "evidence_ids": [
+            "storage-ordinary.source-current"
+          ]
+        }
+      }
     }
   ],
   "decisions": [
@@ -22644,6 +22918,20 @@
         }
       ],
       "remaining": "Complete relevant slices only after exact current independent/backend/browser/recovery gates; safe bounded deviations explicitly recorded, not claimed source-equivalent."
+    },
+    {
+      "id": "browser.recovery_20261030_134603",
+      "status": "approved",
+      "description": "Resume official cloud test preview browser documentation recovery and final acceptance only; noNAS or new persistentcredentials/access/securityweakening.",
+      "authorization": {
+        "user_message_id": "Sentinel_404fd37a73cc8191a13e658dbc070be6",
+        "user_message_utc": "2026-10-30T13:46:03Z",
+        "user_reply": "允许",
+        "preceding_question_id": "Sentinel_875db47c8734819183cd556b44160f33",
+        "preceding_question_utc": "2026-10-30T12:36:50Z",
+        "preceding_question": "浏览器最终验收暂时被工具审批拦住：恢复浏览器工具说明的读取操作被误判为修改文档，未执行。允许我恢复官方预览浏览器并继续验收吗？只操作云端测试实例，不涉及你的 NAS；其他开发继续。"
+      },
+      "execution": "One new-evidence retry of cua.rewriteDocumentation succeeded13:46:50; officialsites-preview4173 resumed frozenS09dc80, UIacceptance inprogress."
     }
   ],
   "evidence": [
@@ -33832,6 +34120,216 @@
         "Current v3 UI correction included official restart after malformed fixture; no browser-only uninterrupted-recovery claim. Exact168 HTTP and frontendtests independently prove ordinary failure recovery."
       ],
       "reviewer": "market_acceptance"
+    },
+    {
+      "status": "passed",
+      "feature_ids": [
+        "S09.ordinary_storage"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Owned cloudLinux Go1.26.0; pinned normally imported MoviePilot StorageChain/module/native components,9recordings/1132imports; exact122+ordinary35 GoSDK/app/cmdserver dc80; official CUA preview4173 samepersistenttestaccount/data; noNAS/fullsourceauthdaemon claim.",
+        "target_files": {
+          "internal/app/plugin_shared_local_storage_fixture_test.go": "4a20efcdf9d96fa80b0960f202d3396eed728954b6c37784892827ccc810c687",
+          "internal/app/plugin_shared_local_storage_lifecycle_test.go": "de793830803e7ed091e6779f90565932828436f3655d8ac373ae0756e8eed977",
+          "internal/app/plugin_shared_local_storage.go": "301910cf8f824c39f449f166e96e5ebe3eb67a5b0881242c32dc11db4bb0404a",
+          "internal/app/plugin_shared_local_storage_process_test.go": "23f18a67eec7267d90b0b80f069fd1fa0d87fa9ee9d1f36641827eb26baa72af",
+          "internal/app/plugin_shared_local_storage_fs.go": "9196700cb9bec3f03499e201a81a0477f9275a68a70e5461832b5330468221cf",
+          "internal/app/plugin_shared_local_storage_large_test.go": "d51c56703ad2658a09872ac7b65c1e77c5caaa42558ae08b229ea25cab1192f2",
+          "internal/app/plugin_shared_local_storage_encoding_test.go": "75c7d4ab540364aff5651b38469456d813a92ee896eeea953cdcfafb511cd876",
+          "internal/app/plugin_shared_local_storage_test.go": "7da5603f444db3d2dc4aba2575f7e052525b3b2a3ce09970235801a2c604ace0",
+          "internal/plugins/shared_local_storage_test.go": "b617db033ef90a6499bfe18f10bf219fff13f9f3ddeeea6b1c0b2455867a3bb2",
+          "internal/plugins/shared_local_storage.go": "0dd4031d0ee1abbf7e223fa018ba79866177032511d813dfdab9a6dc14f85690",
+          "cmd/owned-local-storage-fixture/main.go": "306de0d9cad0a881550b92692a1d268bed0154d440b634f34864ba9e9064687f",
+          "internal/app/plugin_original_resources.go": "10d324bce28e38e331b5c971c6c6e7146e2bfbfc27b24ae42c857af537ee5008",
+          "testdata/plugin-local-storage-20261030/source_ordinary.py": "340c6502a4ee26589c599d2df544a5a807ae029ce52f3c26d0c70aedef5e787f",
+          "testdata/plugin-local-storage-20261030/replay-source.py": "3f74ae375981c8d9596d6b3a36a23c34f8b8e3a5ae6fba13b6e949fd6ea6b142",
+          "testdata/plugin-local-storage-20261030/ordinary-source.json": "7dd17cef7ec3828773db3abb0fa0a95edf85c34fc3f5561672be854c88a7fec1",
+          "testdata/plugin-local-storage-20261030/contract.json": "9be5c5436bbfb4bacd591f7905e11f89931858cb3ab6c5bacd7925af0aaf3ade",
+          "internal/app/plugin_shared_local_storage_null_module_test.go": "4eb95a21af3a6623a940394d8475a09676f64936cc2bb085c3c8e9d9cdb45e42",
+          "testdata/plugin-local-storage-20261030/null-module-source.json": "c256c361e9e90fbaada012235f6767eed5b56c73f29b899d632ebbc6715b1594",
+          "testdata/plugin-local-storage-20261030/pathless-module-source.json": "facb1a7d400e547c13aa8fea55220453d6e3bc7e376bc21b39ce8e8d20cd8841",
+          "testdata/plugin-local-storage-20261030/source_null_module.py": "e39e1ee01d32fb4b41b096eda6789de466b1d76f6ee3932d498571dcc38b2d4d",
+          "testdata/plugin-local-storage-20261030/source_pathless_module.py": "3153fff0655c1d0e2b6b64ed83c7200db77902f82628870c8a0e58229618fc43",
+          "internal/app/plugin_shared_local_storage_descendant_test.go": "cb17e341e6791d2d9dc9a3eeb5d3d54b5f600d4c9f7d13f9f6a4d1bac55fd628",
+          "testdata/plugin-local-storage-20261030/enotdir-source.json": "b7f1d0fdfd332ebb877330a7d0cc8bf6bc7b1de990146a4948815ff111755320",
+          "internal/app/plugin_shared_local_storage_longname_test.go": "89d1394c2402dd0ad983961ad871e7f7f4659c022aa03fd46a3b694cf60e73c9",
+          "testdata/plugin-local-storage-20261030/longname-source.json": "4ebf4d3625811347f27e90ac11e80563cc886b25f9bb67cb42310b7f51a681d2",
+          "internal/app/plugin_original_local_file_item.go": "5508c7dc2e72236c88bd41b6307a9bac39366385ce541119b47e27f99af5a9a3",
+          "internal/app/plugin_shared_local_storage_mtime_test.go": "fb33cb4d2c7362120079db7f0624661c18027a5f3987f184dfa504153279e939",
+          "internal/app/plugin_shared_local_storage_native_encoding_test.go": "020be12021aa6ee16ba0b84d2d97cc0f40759f13955e4997f86163894afd38b2",
+          "testdata/plugin-local-storage-20261030/mtime-source.json": "42342736a9b7d12faaa9650f2ea5decfd4738549b7e0cc7f31e1bd8f5dbcc20b",
+          "testdata/plugin-local-storage-20261030/native-encoding-source.json": "a1855e392062cf6be354e3befed3df43aab46621f0ab7c530b9251d09ddedb76",
+          "testdata/plugin-local-storage-20261030/source_mtime.py": "8e97da3d551c62fefbed781eca32237364f987a1181b8d6c83e0a4dac0ca5e7e",
+          "testdata/plugin-local-storage-20261030/source_native_encoding.py": "dc75737f79adcc598b9c86b3a70771bbb4d4c6b5fc4f59d75a67dfe519cfc9a3",
+          "internal/app/plugin_shared_local_storage_mtime_precision_test.go": "fe188e1df570d4f3ce45d40363a07ccbaf0814c6c322613e194026f50d7e8892",
+          "testdata/plugin-local-storage-20261030/mtime-precision-source.json": "cf19944bdc9b482182c9d662e3bbbcae6257f20f8df00b2c5b5d2830ad05be51",
+          "testdata/plugin-local-storage-20261030/source_mtime_precision.py": "82637551928388f991e280dd2749ba6bafecb639f669cc74a001227e6d9c3fa6",
+          "testdata/plugin-local-storage-20261030/README.md": "d94f01c02011390dc2eb1459f415a312a581ee3f3bfff39333ad8b5868b2fe24"
+        },
+        "fixture_files": {
+          "evidence/local-storage-ordinary/independent-final.json": "db3b94b197420ade2b4761c84f0c85d9208a6477fed648318d7bbf370310cdeb",
+          "evidence/local-storage-ordinary/browser-current.json": "f8a51db5015aa189992a3b89738ac7796ddb1886c100416b327c4aa1103e8a57"
+        }
+      },
+      "artifacts": {
+        "evidence/local-storage-ordinary/independent-final.json": "db3b94b197420ade2b4761c84f0c85d9208a6477fed648318d7bbf370310cdeb",
+        "evidence/local-storage-ordinary/browser-current.json": "f8a51db5015aa189992a3b89738ac7796ddb1886c100416b327c4aa1103e8a57"
+      },
+      "id": "storage-ordinary.source-current",
+      "kind": "differential",
+      "commands": [
+        "Current122+ordinary35 15normal roots23.264s/0skip and SDKrace; command/inputs/log hashes in preserved storage-delivery-candidate receipts.",
+        "Independent currentdc80 existingbinary two coldstarts/two normalstops, actualmoduleoverride and longcomponent twoimpactrace roots16.524s; previousfull15race leaves reused only with exacthash/impactaudit.",
+        "Normally imported original source nine recordings including ordinary/module-null/pathless/ENOTDIR/ENAMETOOLONG/mtime/encoding; allruntime9oracles matched and1132actualsourceimports fixed."
+      ],
+      "inputs": [
+        "Exact36 targetpaths including35code/test/fixture plusREADME; inherited122 dependencies and executabledc80a1fb14d303707e0ac970e8c1d43e0401274bae5cb429d83380172fd46780.",
+        "Historical7304executioninputs before/afterzero drift; lateronlydocumentedGo cacheartifacts removed, oneexacthash regeneratedbyotherbuild. No source/toolchain/binary/oracle drift.",
+        "Only owned synthetic filesystem objects; no deniedinode/identity/permission/TLS/CONNECT probes, no restoredbusinessactivation."
+      ],
+      "observations": [
+        "Complete finiteexists/list_files/delete_file SDK→module→native paths withoriginal15fieldordinary FileItem, module-first/nullstorage/pathless behaviors.",
+        "Ordinarymissingdescendant, longcomponentSystemError+notification and recovery; exactmtime sourcefloat rounding throughyear2300; large11003list/700KiB withinexistingbudget.",
+        "Realworker persistedconfiguration andclone isolation/capability/reload/cold behavior; actualnormalserver auth andcoldabsence.",
+        "Native invalidUTF8/unpairedsurrogate failclosed remainsexplicit safetydifference outsideacceptedordinaryUTF8semanticdomain; arbitrary Pydanticinputs/widerS09 remainopen."
+      ]
+    },
+    {
+      "status": "passed",
+      "feature_ids": [
+        "S09.ordinary_storage"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Owned cloudLinux Go1.26.0; pinned normally imported MoviePilot StorageChain/module/native components,9recordings/1132imports; exact122+ordinary35 GoSDK/app/cmdserver dc80; official CUA preview4173 samepersistenttestaccount/data; noNAS/fullsourceauthdaemon claim.",
+        "target_files": {
+          "internal/app/plugin_shared_local_storage_fixture_test.go": "4a20efcdf9d96fa80b0960f202d3396eed728954b6c37784892827ccc810c687",
+          "internal/app/plugin_shared_local_storage_lifecycle_test.go": "de793830803e7ed091e6779f90565932828436f3655d8ac373ae0756e8eed977",
+          "internal/app/plugin_shared_local_storage.go": "301910cf8f824c39f449f166e96e5ebe3eb67a5b0881242c32dc11db4bb0404a",
+          "internal/app/plugin_shared_local_storage_process_test.go": "23f18a67eec7267d90b0b80f069fd1fa0d87fa9ee9d1f36641827eb26baa72af",
+          "internal/app/plugin_shared_local_storage_fs.go": "9196700cb9bec3f03499e201a81a0477f9275a68a70e5461832b5330468221cf",
+          "internal/app/plugin_shared_local_storage_large_test.go": "d51c56703ad2658a09872ac7b65c1e77c5caaa42558ae08b229ea25cab1192f2",
+          "internal/app/plugin_shared_local_storage_encoding_test.go": "75c7d4ab540364aff5651b38469456d813a92ee896eeea953cdcfafb511cd876",
+          "internal/app/plugin_shared_local_storage_test.go": "7da5603f444db3d2dc4aba2575f7e052525b3b2a3ce09970235801a2c604ace0",
+          "internal/plugins/shared_local_storage_test.go": "b617db033ef90a6499bfe18f10bf219fff13f9f3ddeeea6b1c0b2455867a3bb2",
+          "internal/plugins/shared_local_storage.go": "0dd4031d0ee1abbf7e223fa018ba79866177032511d813dfdab9a6dc14f85690",
+          "cmd/owned-local-storage-fixture/main.go": "306de0d9cad0a881550b92692a1d268bed0154d440b634f34864ba9e9064687f",
+          "internal/app/plugin_original_resources.go": "10d324bce28e38e331b5c971c6c6e7146e2bfbfc27b24ae42c857af537ee5008",
+          "testdata/plugin-local-storage-20261030/source_ordinary.py": "340c6502a4ee26589c599d2df544a5a807ae029ce52f3c26d0c70aedef5e787f",
+          "testdata/plugin-local-storage-20261030/replay-source.py": "3f74ae375981c8d9596d6b3a36a23c34f8b8e3a5ae6fba13b6e949fd6ea6b142",
+          "testdata/plugin-local-storage-20261030/ordinary-source.json": "7dd17cef7ec3828773db3abb0fa0a95edf85c34fc3f5561672be854c88a7fec1",
+          "testdata/plugin-local-storage-20261030/contract.json": "9be5c5436bbfb4bacd591f7905e11f89931858cb3ab6c5bacd7925af0aaf3ade",
+          "internal/app/plugin_shared_local_storage_null_module_test.go": "4eb95a21af3a6623a940394d8475a09676f64936cc2bb085c3c8e9d9cdb45e42",
+          "testdata/plugin-local-storage-20261030/null-module-source.json": "c256c361e9e90fbaada012235f6767eed5b56c73f29b899d632ebbc6715b1594",
+          "testdata/plugin-local-storage-20261030/pathless-module-source.json": "facb1a7d400e547c13aa8fea55220453d6e3bc7e376bc21b39ce8e8d20cd8841",
+          "testdata/plugin-local-storage-20261030/source_null_module.py": "e39e1ee01d32fb4b41b096eda6789de466b1d76f6ee3932d498571dcc38b2d4d",
+          "testdata/plugin-local-storage-20261030/source_pathless_module.py": "3153fff0655c1d0e2b6b64ed83c7200db77902f82628870c8a0e58229618fc43",
+          "internal/app/plugin_shared_local_storage_descendant_test.go": "cb17e341e6791d2d9dc9a3eeb5d3d54b5f600d4c9f7d13f9f6a4d1bac55fd628",
+          "testdata/plugin-local-storage-20261030/enotdir-source.json": "b7f1d0fdfd332ebb877330a7d0cc8bf6bc7b1de990146a4948815ff111755320",
+          "internal/app/plugin_shared_local_storage_longname_test.go": "89d1394c2402dd0ad983961ad871e7f7f4659c022aa03fd46a3b694cf60e73c9",
+          "testdata/plugin-local-storage-20261030/longname-source.json": "4ebf4d3625811347f27e90ac11e80563cc886b25f9bb67cb42310b7f51a681d2",
+          "internal/app/plugin_original_local_file_item.go": "5508c7dc2e72236c88bd41b6307a9bac39366385ce541119b47e27f99af5a9a3",
+          "internal/app/plugin_shared_local_storage_mtime_test.go": "fb33cb4d2c7362120079db7f0624661c18027a5f3987f184dfa504153279e939",
+          "internal/app/plugin_shared_local_storage_native_encoding_test.go": "020be12021aa6ee16ba0b84d2d97cc0f40759f13955e4997f86163894afd38b2",
+          "testdata/plugin-local-storage-20261030/mtime-source.json": "42342736a9b7d12faaa9650f2ea5decfd4738549b7e0cc7f31e1bd8f5dbcc20b",
+          "testdata/plugin-local-storage-20261030/native-encoding-source.json": "a1855e392062cf6be354e3befed3df43aab46621f0ab7c530b9251d09ddedb76",
+          "testdata/plugin-local-storage-20261030/source_mtime.py": "8e97da3d551c62fefbed781eca32237364f987a1181b8d6c83e0a4dac0ca5e7e",
+          "testdata/plugin-local-storage-20261030/source_native_encoding.py": "dc75737f79adcc598b9c86b3a70771bbb4d4c6b5fc4f59d75a67dfe519cfc9a3",
+          "internal/app/plugin_shared_local_storage_mtime_precision_test.go": "fe188e1df570d4f3ce45d40363a07ccbaf0814c6c322613e194026f50d7e8892",
+          "testdata/plugin-local-storage-20261030/mtime-precision-source.json": "cf19944bdc9b482182c9d662e3bbbcae6257f20f8df00b2c5b5d2830ad05be51",
+          "testdata/plugin-local-storage-20261030/source_mtime_precision.py": "82637551928388f991e280dd2749ba6bafecb639f669cc74a001227e6d9c3fa6",
+          "testdata/plugin-local-storage-20261030/README.md": "d94f01c02011390dc2eb1459f415a312a581ee3f3bfff39333ad8b5868b2fe24"
+        },
+        "fixture_files": {
+          "evidence/local-storage-ordinary/independent-final.json": "db3b94b197420ade2b4761c84f0c85d9208a6477fed648318d7bbf370310cdeb",
+          "evidence/local-storage-ordinary/browser-current.json": "f8a51db5015aa189992a3b89738ac7796ddb1886c100416b327c4aa1103e8a57"
+        }
+      },
+      "artifacts": {
+        "evidence/local-storage-ordinary/independent-final.json": "db3b94b197420ade2b4761c84f0c85d9208a6477fed648318d7bbf370310cdeb",
+        "evidence/local-storage-ordinary/browser-current.json": "f8a51db5015aa189992a3b89738ac7796ddb1886c100416b327c4aa1103e8a57"
+      },
+      "id": "storage-ordinary.browser-current",
+      "kind": "real_e2e",
+      "commands": [
+        "Official sites-preview start/stop/start only, existingCUA browser1/tab3 nativepluginsettings/detail/buttons,35recorded observations.",
+        "One70byteexactpristine taskowned filecreatedO_EXCLonlywhenabsent; deletedonlybyrealcloneUI action; physicalabsence read-onlyverified."
+      ],
+      "inputs": [
+        "Same frozenserverdc80/ownedworker75d6166094e76ddf61237509b98fc33f7601b42892d7807a00af5a7728e02be5;9launcher/artifact/inputbindings beforeafterequal.",
+        "User13:46:03 explicitofficialcloudbrowserrestoration approval; priorblockedaction retriedonce successfully; noalternativebrowserbypass."
+      ],
+      "observations": [
+        "Sourcecold154/init1; saveemptyroot init2 thenactualexists422; clone163/init1 originalroot preserved.",
+        "Restoreexactownedroot init3; realexists true/list one15field70byteitem; clonedelete returns true thenphysicallyabsent; source last_action stayslist whilecurrentlistempty.",
+        "Normalactualservercold restart source155/clone162, bothinit1/lastnull/rootspersisted/existsfalse/listempty.",
+        "Oneoverescapedregexwait harness timeout retained; subsequentfreshvisibleDOMprovedactualsuccess, no repeatedmutation. Oldcandidate06UI not relabeled. RawAX/PNG/runtimeprivateonly."
+      ]
+    },
+    {
+      "status": "passed",
+      "feature_ids": [
+        "S09.ordinary_storage"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Owned cloudLinux Go1.26.0; pinned normally imported MoviePilot StorageChain/module/native components,9recordings/1132imports; exact122+ordinary35 GoSDK/app/cmdserver dc80; official CUA preview4173 samepersistenttestaccount/data; noNAS/fullsourceauthdaemon claim.",
+        "target_files": {
+          "internal/app/plugin_shared_local_storage_fixture_test.go": "4a20efcdf9d96fa80b0960f202d3396eed728954b6c37784892827ccc810c687",
+          "internal/app/plugin_shared_local_storage_lifecycle_test.go": "de793830803e7ed091e6779f90565932828436f3655d8ac373ae0756e8eed977",
+          "internal/app/plugin_shared_local_storage.go": "301910cf8f824c39f449f166e96e5ebe3eb67a5b0881242c32dc11db4bb0404a",
+          "internal/app/plugin_shared_local_storage_process_test.go": "23f18a67eec7267d90b0b80f069fd1fa0d87fa9ee9d1f36641827eb26baa72af",
+          "internal/app/plugin_shared_local_storage_fs.go": "9196700cb9bec3f03499e201a81a0477f9275a68a70e5461832b5330468221cf",
+          "internal/app/plugin_shared_local_storage_large_test.go": "d51c56703ad2658a09872ac7b65c1e77c5caaa42558ae08b229ea25cab1192f2",
+          "internal/app/plugin_shared_local_storage_encoding_test.go": "75c7d4ab540364aff5651b38469456d813a92ee896eeea953cdcfafb511cd876",
+          "internal/app/plugin_shared_local_storage_test.go": "7da5603f444db3d2dc4aba2575f7e052525b3b2a3ce09970235801a2c604ace0",
+          "internal/plugins/shared_local_storage_test.go": "b617db033ef90a6499bfe18f10bf219fff13f9f3ddeeea6b1c0b2455867a3bb2",
+          "internal/plugins/shared_local_storage.go": "0dd4031d0ee1abbf7e223fa018ba79866177032511d813dfdab9a6dc14f85690",
+          "cmd/owned-local-storage-fixture/main.go": "306de0d9cad0a881550b92692a1d268bed0154d440b634f34864ba9e9064687f",
+          "internal/app/plugin_original_resources.go": "10d324bce28e38e331b5c971c6c6e7146e2bfbfc27b24ae42c857af537ee5008",
+          "testdata/plugin-local-storage-20261030/source_ordinary.py": "340c6502a4ee26589c599d2df544a5a807ae029ce52f3c26d0c70aedef5e787f",
+          "testdata/plugin-local-storage-20261030/replay-source.py": "3f74ae375981c8d9596d6b3a36a23c34f8b8e3a5ae6fba13b6e949fd6ea6b142",
+          "testdata/plugin-local-storage-20261030/ordinary-source.json": "7dd17cef7ec3828773db3abb0fa0a95edf85c34fc3f5561672be854c88a7fec1",
+          "testdata/plugin-local-storage-20261030/contract.json": "9be5c5436bbfb4bacd591f7905e11f89931858cb3ab6c5bacd7925af0aaf3ade",
+          "internal/app/plugin_shared_local_storage_null_module_test.go": "4eb95a21af3a6623a940394d8475a09676f64936cc2bb085c3c8e9d9cdb45e42",
+          "testdata/plugin-local-storage-20261030/null-module-source.json": "c256c361e9e90fbaada012235f6767eed5b56c73f29b899d632ebbc6715b1594",
+          "testdata/plugin-local-storage-20261030/pathless-module-source.json": "facb1a7d400e547c13aa8fea55220453d6e3bc7e376bc21b39ce8e8d20cd8841",
+          "testdata/plugin-local-storage-20261030/source_null_module.py": "e39e1ee01d32fb4b41b096eda6789de466b1d76f6ee3932d498571dcc38b2d4d",
+          "testdata/plugin-local-storage-20261030/source_pathless_module.py": "3153fff0655c1d0e2b6b64ed83c7200db77902f82628870c8a0e58229618fc43",
+          "internal/app/plugin_shared_local_storage_descendant_test.go": "cb17e341e6791d2d9dc9a3eeb5d3d54b5f600d4c9f7d13f9f6a4d1bac55fd628",
+          "testdata/plugin-local-storage-20261030/enotdir-source.json": "b7f1d0fdfd332ebb877330a7d0cc8bf6bc7b1de990146a4948815ff111755320",
+          "internal/app/plugin_shared_local_storage_longname_test.go": "89d1394c2402dd0ad983961ad871e7f7f4659c022aa03fd46a3b694cf60e73c9",
+          "testdata/plugin-local-storage-20261030/longname-source.json": "4ebf4d3625811347f27e90ac11e80563cc886b25f9bb67cb42310b7f51a681d2",
+          "internal/app/plugin_original_local_file_item.go": "5508c7dc2e72236c88bd41b6307a9bac39366385ce541119b47e27f99af5a9a3",
+          "internal/app/plugin_shared_local_storage_mtime_test.go": "fb33cb4d2c7362120079db7f0624661c18027a5f3987f184dfa504153279e939",
+          "internal/app/plugin_shared_local_storage_native_encoding_test.go": "020be12021aa6ee16ba0b84d2d97cc0f40759f13955e4997f86163894afd38b2",
+          "testdata/plugin-local-storage-20261030/mtime-source.json": "42342736a9b7d12faaa9650f2ea5decfd4738549b7e0cc7f31e1bd8f5dbcc20b",
+          "testdata/plugin-local-storage-20261030/native-encoding-source.json": "a1855e392062cf6be354e3befed3df43aab46621f0ab7c530b9251d09ddedb76",
+          "testdata/plugin-local-storage-20261030/source_mtime.py": "8e97da3d551c62fefbed781eca32237364f987a1181b8d6c83e0a4dac0ca5e7e",
+          "testdata/plugin-local-storage-20261030/source_native_encoding.py": "dc75737f79adcc598b9c86b3a70771bbb4d4c6b5fc4f59d75a67dfe519cfc9a3",
+          "internal/app/plugin_shared_local_storage_mtime_precision_test.go": "fe188e1df570d4f3ce45d40363a07ccbaf0814c6c322613e194026f50d7e8892",
+          "testdata/plugin-local-storage-20261030/mtime-precision-source.json": "cf19944bdc9b482182c9d662e3bbbcae6257f20f8df00b2c5b5d2830ad05be51",
+          "testdata/plugin-local-storage-20261030/source_mtime_precision.py": "82637551928388f991e280dd2749ba6bafecb639f669cc74a001227e6d9c3fa6",
+          "testdata/plugin-local-storage-20261030/README.md": "d94f01c02011390dc2eb1459f415a312a581ee3f3bfff39333ad8b5868b2fe24"
+        },
+        "fixture_files": {
+          "evidence/local-storage-ordinary/independent-final.json": "db3b94b197420ade2b4761c84f0c85d9208a6477fed648318d7bbf370310cdeb",
+          "evidence/local-storage-ordinary/browser-current.json": "f8a51db5015aa189992a3b89738ac7796ddb1886c100416b327c4aa1103e8a57"
+        }
+      },
+      "artifacts": {
+        "evidence/local-storage-ordinary/independent-final.json": "db3b94b197420ade2b4761c84f0c85d9208a6477fed648318d7bbf370310cdeb",
+        "evidence/local-storage-ordinary/browser-current.json": "f8a51db5015aa189992a3b89738ac7796ddb1886c100416b327c4aa1103e8a57"
+      },
+      "id": "storage-ordinary.independent-final",
+      "kind": "review",
+      "reviewer": "storage_independent",
+      "observations": [
+        "Independent completefinite PASS after rawsource/backend/currentUI and exact36bindings audit; wholeS09OPEN.",
+        "Publishedindependent-final originalbytesdb3b94b1 and coordinatorbrowser-current f8a51db5 separately reviewed; privatefinalreceipt a752a045 retained.",
+        "All ordinarydata/state/error/recovery/restart/clone/security/performance facets explicitlybounded; no new fullrace/currentallcachepresence or entireplatform equivalence claim."
+      ]
     }
   ],
   "execution_contract": {
@@ -33843,21 +34341,25 @@
     "existing_platform_reuse": "46 existing applicable platform groups are not 46 rewrites. Preserve/reuse implementation and unchanged sufficiently bound source/test evidence. 15 new shared-host groups are discovery buckets, not 15 automatically missing features."
   },
   "resume": {
-    "next_slice": "Deliver accepted finite09.market_pipeline with selective normal Git and actual remote readback; then integrate complete ordinary services/homepage and S09 storage candidates with current main/officialUI gates. Clone remains implementing for independently confirmed literal/name lookup/raw-surrogate boundaries.",
+    "next_slice": "S09.ordinary_storage complete finite independentlyverified; selectivecommit/push/readback now. Mainservicewire2+usage03+statisticsUI/clone05c/completeAPS triggers remain separateuncommitted candidates.",
     "dirty_work": [
-      "Market111 candidate accepted on exact d011; selected evidence/ledger pending currentcommit/readback.",
-      "Services backend SDK retirement and homepage scheduler v2 independently green; main integration/nativeUI pending.",
-      "S09 ordinary35-file candidate06 independently finalizing; nativeUI05 success/failure/delete already observed, current06 cold and main integration pending.",
-      "Clone metadata03 finite52pass, independent70cases exposes sixold+eightnew unresolved literal cases; owner repairing, no completeclone claim.",
-      "Only coordinator owns main/ledger; preserve unselected old dirty/evidence files."
+      "Market09.market_pipeline delivered122fafc7 actualreadback; main unchanged97476582; 6/61 groups+10 finite slices.0checks/0statuses/0workflows; noCI. No new delivery claimed.",
+      "Servicewire v2 frozen11manifest9d9e46c8/receipt1a67ab8d; source142+QueryParams38,normal24/race24+CLI108each/frontend580 pass; independently rechecking old26rawquery/slash failures. Nine exact paths+http/remote manualdiff integratedmain. Main candidate not built yet.",
+      "Usage/rating02 frozen21manifest8325412e; source660wire/230native,normal/race10roots,SDKinstall/5coldstartup. Independent220strictwire/rawURI zero differences plus9report/persistence andSDK/coldrerun pass. Co-owned main30path merge recorded e008cd5b32; two shared files manual, Axios test append preserves source-service test.",
+      "StatisticsUI threepath narrow sourcefunction-derived fix removes non-source inlineerror and preserves console+oldvalue;94relatedpassed, independentexactsourcebyte+2component pass. Not browser. Full mainfrontend+dist rebuild running against7030boundinputs.",
+      "Usage common-cause followup: targetsourcecompat TrimSuffix single trailing slash and URL.Query decoding plugin_ids likely differ sameasjustfixedservicepaths; independent source08 actualreplay running, not fixed/accepted. Nonsecret repoquery stripping remains realunapproveddifference within credentialguard; preserveguard, do not declare strictwhole23/24.",
+      "Clone05a frozen98files manifest380a26d5,105authorsourcecases; independent73warm/freshsource frozen a1fb4541. Name/description directJSONunpairedsurrogate realsource200/falsecleanup whilevalidpairworks; approvedplaintext doesnot authorize U+FFFD repair. NewplainownedHTTP driver only; oldTLS/proxy driver neverrerun. FullcandidateSDK/HTTP/race validation running, not accepted.",
+      "New necessary isolation worktrees/services-triggers branchwork/services-triggers-20261030 base122 with41service nonweb prerequisites; baseline40ad1c2d verified. Authorimplementing CalendarInterval object/alias,And/Or/nested,defaultdate and cancellable NextFire preservingmanualregistration and paused/failure distinction. Whole38/39open, no arbitraryPythonruntime.",
+      "Only coordinatorwritesmain/ledger; old rejectedTLS/inodeprobe/private runtime material neverstaged; frozenpriorcandidates, source/testevidence andrecoveryretained. Browserrestoration not retried after denial; noalternate.",
+      "S09.ordinary_storage currentdc80 officialUI andfinalindependent accepted;36source/test/README+2publicevidence selected, pendingnormalcommit/pushactualremote. WholeS09OPEN;6/61topgroups unchanged."
     ],
     "workers": [
-      "complete_plugin_platform: coordinator",
-      "market_acceptance: audits/recovery-market-acceptance",
-      "clone_independent: audits/recovery-clone-independent",
-      "local_storage_finish: worktrees/local-storage",
-      "storage_independent: audits/recovery-storage-independent",
-      "platform_reuse_next: services38/39 source-first reuse"
+      "complete_plugin_platform: sole main/ledger integration; source-independent gate coordination; officialbrowserrestored; S09currentUIcomplete",
+      "services_independent: wire2 final report, old26plus16383decoder independentlyclosed; mainruntime notclaimed",
+      "services_ui_finish: usage03 source116/query38+12normal/race candidate; currently owns serialGo build slot",
+      "clone_finish: preparing05c sourceCloneFlag lifecycle repair,05a/b frozen evidence retained; noGo untilusage03terminal",
+      "clone_independent: same-input flag fullsource consumer closure and oldSDK impact review; onlyuninstall uses sourceflag, physicalidentity remains",
+      "platform_reuse_next: complete trigger family host接线; smallschedulepackage new21/legacy pass only; noGo untilusage03terminal"
     ],
     "blockers": [
       "qB native AF_NETLINK restriction remains; no bypass.",
@@ -33986,14 +34488,54 @@
       }
     ],
     "last_delivery": {
-      "commit": "985d957c3889dcbacffc271abe02cad8b827f6af",
+      "commit": "122fafc7b4ee93589250cb82be849fead48e79d1",
       "branch": "plugins-refactor",
-      "readback": "985d957c3889dcbacffc271abe02cad8b827f6af",
+      "readback": "122fafc7b4ee93589250cb82be849fead48e79d1",
       "main_unchanged": "97476582910dc4b696f7ccd5010f28d823812d40",
-      "paths": 34,
-      "mapping_path": "migration/delivery/reset-name-985d957c-paths.json",
-      "mapping_sha256": "e315d2405f6ab77dbec5dd0bf309301521a7867ec0c00b981f39d373b57671c3",
-      "ci": "0check-runs and0statuses on prior exact readback; not CI pass or running."
+      "paths": 123,
+      "mapping_path": "migration/delivery/market-pipeline-122fafc7-paths.json",
+      "mapping_sha256": "1f269528e0fdd6844b08b2f9c1cfb59071ae18272ed755636f444ae4574ec451",
+      "ci": "0check-runs/0statuses/0workflows; not CIpass or running"
+    },
+    "updated_at": "2026-10-30T14:06:30Z",
+    "latest_integrations": {
+      "services_portable": "../evidence/coordinator/services-main-integration/portable-integration.json",
+      "services_web": "../evidence/coordinator/services-main-integration/web-v3-result.json",
+      "storage": "../evidence/coordinator/storage-main-integration/result.json",
+      "storage_browser06": "../evidence/coordinator/recovery-storage-browser/current06/summary.json",
+      "service_source_wire_red": "../audits/recovery-services-independent/error-wire/wire-before66-bindings.json",
+      "storage_delivery_candidate": "../evidence/coordinator/storage-delivery-candidate/result.json",
+      "services_wire": "../evidence/coordinator/services-main-integration/wire-integration.json",
+      "storage_independent": "../audits/recovery-storage-independent/delivery122/final.json",
+      "service_wire2_usage02": "../evidence/coordinator/platform-wire-usage-integration/integration.json",
+      "statistics_ui": "../evidence/coordinator/statistics-ui-source/result.json",
+      "usage_independent": "../audits/usage-rating-independent/independent-final-binding.json",
+      "triggers_baseline": "../evidence/coordinator/services-triggers/baseline.json",
+      "clone05a": "../evidence/clone-recovery-owner/candidate-metadata05a.json",
+      "main_web_current": "../evidence/coordinator/platform-wire-usage-integration/web-result.json",
+      "remote_readback_current": "../evidence/coordinator/platform-wire-usage-integration/remote-readback-1334.txt",
+      "usage_source08": "../audits/usage-rating-independent/QUERY-SLASH-COMMON-CAUSE-REVIEW.md",
+      "sourceflag_boundary": "../evidence/clone-recovery-owner/metadata-05/sdk-display-contract.md",
+      "storage_official_ui_current": "../evidence/coordinator/recovery-storage-browser/delivery122/summary.json",
+      "storage_final_review": "../audits/recovery-storage-independent/delivery122-ui/final.json"
+    },
+    "cache_maintenance": {
+      "at": "2026-10-30T13:43:02Z",
+      "action": "go clean -cache only; allGoowners confirmedterminal; ps no compile/build",
+      "before": "480MiB",
+      "free_after": "1.6GiB",
+      "preserved": "allsource/dependencies/evidence/recovery/binaries/runtime",
+      "receipt": "../evidence/coordinator/cache-maintenance-1343.log"
+    },
+    "delivery_pending": {
+      "feature_id": "S09.ordinary_storage",
+      "status": "independentlyverified;notyetcommittedorpushed",
+      "base": "122fafc7b4ee93589250cb82be849fead48e79d1",
+      "source_document_paths": 36,
+      "public_evidence_paths": 2,
+      "topgroups_verified": 6,
+      "topgroups_total": 61,
+      "finite_verified_slices": 11
     }
   },
   "external_inventory": [
