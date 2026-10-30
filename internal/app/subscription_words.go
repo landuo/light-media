@@ -29,7 +29,21 @@ func subscriptionWordsInput(raw json.RawMessage) (*string, error) {
 	if !utf8.ValidString(text) {
 		return nil, bad("INVALID_SUBSCRIPTION_WORDS", "订阅识别词不是有效文本")
 	}
-	if _, err := words.New(strings.Split(text, "\n")); err != nil {
+	// The native subscription form has its own existing raw-input budget.
+	// Source global words may contain arbitrarily large ignored comments, so
+	// the matcher's executable-rule budget must not relax this editor boundary.
+	lines := strings.Split(text, "\n")
+	total := 0
+	for _, line := range lines {
+		total += len(line)
+		if len(line) > 64<<10 {
+			return nil, bad("INVALID_SUBSCRIPTION_WORDS", "订阅识别词超过允许范围")
+		}
+	}
+	if total > words.MaxBytes || len(lines) > 100000 {
+		return nil, bad("INVALID_SUBSCRIPTION_WORDS", "订阅识别词超过允许范围")
+	}
+	if _, err := words.New(lines); err != nil {
 		return nil, bad("INVALID_SUBSCRIPTION_WORDS", "订阅识别词超过允许范围")
 	}
 	encoded, _ := json.Marshal(text)

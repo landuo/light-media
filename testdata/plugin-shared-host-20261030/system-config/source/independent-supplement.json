@@ -1,0 +1,728 @@
+{
+  "source_oracle_sha256": "9fe00c30320e6877d449ac8ca9f35e5b11c50fb2ec45b6fa359de4202c04c564",
+  "source_manifest_sha256": "71a9789cffa49bd01fa1f3c29bc900d46974900ecb4ab98ea5ba115184b10af3",
+  "scope": "Real original default SystemConfigOper + WordsMatcher, normal imports; owned plugin wrapper; no Manager/Base/full daemon; Starlette JSONResponse boundary is direct renderer, not original full endpoint",
+  "groups": {
+    "dict-reorder": [
+      {
+        "input_literal": "{\n  \"operations\": [\n    {\n      \"case\": \"initial-order\",\n      \"method\": \"set\",\n      \"value\": {\n        \"A => B\": 1,\n        \"B => C\": 2\n      }\n    },\n    {\n      \"case\": \"original-prepare\",\n      \"method\": \"prepare\"\n    },\n    {\n      \"case\": \"equal-reordered\",\n      \"method\": \"set\",\n      \"value\": {\n        \"B => C\": 2,\n        \"A => B\": 1\n      }\n    },\n    {\n      \"case\": \"hot-reordered-prepare\",\n      \"method\": \"prepare\"\n    },\n    {\n      \"case\": \"deepcopy-return\",\n      \"method\": \"mutate_return\"\n    },\n    {\n      \"case\": \"after-mutated-return\",\n      \"method\": \"prepare\"\n    }\n  ]\n}\n",
+        "initial": {
+          "get": null,
+          "python_type": "NoneType",
+          "raw_json": "null"
+        },
+        "observations": [
+          {
+            "case": "initial-order",
+            "method": "set",
+            "returned": true,
+            "state": {
+              "get": {
+                "A => B": 1,
+                "B => C": 2
+              },
+              "python_type": "dict",
+              "iteration_order": [
+                "A => B",
+                "B => C"
+              ],
+              "raw_json": "{\"A => B\":1,\"B => C\":2}"
+            }
+          },
+          {
+            "case": "original-prepare",
+            "method": "prepare",
+            "returned": [
+              "C",
+              [
+                "A => B",
+                "B => C"
+              ]
+            ],
+            "state": {
+              "get": {
+                "A => B": 1,
+                "B => C": 2
+              },
+              "python_type": "dict",
+              "iteration_order": [
+                "A => B",
+                "B => C"
+              ],
+              "raw_json": "{\"A => B\":1,\"B => C\":2}"
+            }
+          },
+          {
+            "case": "equal-reordered",
+            "method": "set",
+            "returned": null,
+            "state": {
+              "get": {
+                "B => C": 2,
+                "A => B": 1
+              },
+              "python_type": "dict",
+              "iteration_order": [
+                "B => C",
+                "A => B"
+              ],
+              "raw_json": "{\"B => C\":2,\"A => B\":1}"
+            }
+          },
+          {
+            "case": "hot-reordered-prepare",
+            "method": "prepare",
+            "returned": [
+              "B",
+              [
+                "A => B"
+              ]
+            ],
+            "state": {
+              "get": {
+                "B => C": 2,
+                "A => B": 1
+              },
+              "python_type": "dict",
+              "iteration_order": [
+                "B => C",
+                "A => B"
+              ],
+              "raw_json": "{\"B => C\":2,\"A => B\":1}"
+            }
+          },
+          {
+            "case": "deepcopy-return",
+            "method": "mutate_return",
+            "mutated_only_return": {
+              "B => C": 2,
+              "A => B": 1,
+              "injected => BAD": 1
+            },
+            "state": {
+              "get": {
+                "B => C": 2,
+                "A => B": 1
+              },
+              "python_type": "dict",
+              "iteration_order": [
+                "B => C",
+                "A => B"
+              ],
+              "raw_json": "{\"B => C\":2,\"A => B\":1}"
+            }
+          },
+          {
+            "case": "after-mutated-return",
+            "method": "prepare",
+            "returned": [
+              "B",
+              [
+                "A => B"
+              ]
+            ],
+            "state": {
+              "get": {
+                "B => C": 2,
+                "A => B": 1
+              },
+              "python_type": "dict",
+              "iteration_order": [
+                "B => C",
+                "A => B"
+              ],
+              "raw_json": "{\"B => C\":2,\"A => B\":1}"
+            }
+          }
+        ]
+      },
+      {
+        "input_literal": "{\n  \"operations\": [\n    {\n      \"case\": \"cold-get\",\n      \"method\": \"get\"\n    },\n    {\n      \"case\": \"cold-prepare\",\n      \"method\": \"prepare\"\n    }\n  ]\n}\n",
+        "initial": {
+          "get": {
+            "A => B": 1,
+            "B => C": 2
+          },
+          "python_type": "dict",
+          "iteration_order": [
+            "A => B",
+            "B => C"
+          ],
+          "raw_json": "{\"A => B\":1,\"B => C\":2}"
+        },
+        "observations": [
+          {
+            "case": "cold-get",
+            "method": "get",
+            "returned": {
+              "A => B": 1,
+              "B => C": 2
+            },
+            "state": {
+              "get": {
+                "A => B": 1,
+                "B => C": 2
+              },
+              "python_type": "dict",
+              "iteration_order": [
+                "A => B",
+                "B => C"
+              ],
+              "raw_json": "{\"A => B\":1,\"B => C\":2}"
+            }
+          },
+          {
+            "case": "cold-prepare",
+            "method": "prepare",
+            "returned": [
+              "C",
+              [
+                "A => B",
+                "B => C"
+              ]
+            ],
+            "state": {
+              "get": {
+                "A => B": 1,
+                "B => C": 2
+              },
+              "python_type": "dict",
+              "iteration_order": [
+                "A => B",
+                "B => C"
+              ],
+              "raw_json": "{\"A => B\":1,\"B => C\":2}"
+            }
+          }
+        ]
+      }
+    ],
+    "bool-number-equality": [
+      {
+        "input_literal": "{\n  \"operations\": [\n    {\n      \"case\": \"seed-bool\",\n      \"method\": \"set\",\n      \"value\": true\n    },\n    {\n      \"case\": \"equal-number\",\n      \"method\": \"set\",\n      \"value\": 1\n    },\n    {\n      \"case\": \"equal-float\",\n      \"method\": \"set\",\n      \"value\": 1.0\n    }\n  ]\n}\n",
+        "initial": {
+          "get": null,
+          "python_type": "NoneType",
+          "raw_json": "null"
+        },
+        "observations": [
+          {
+            "case": "seed-bool",
+            "method": "set",
+            "returned": true,
+            "state": {
+              "get": true,
+              "python_type": "bool",
+              "raw_json": "true"
+            }
+          },
+          {
+            "case": "equal-number",
+            "method": "set",
+            "returned": null,
+            "state": {
+              "get": 1,
+              "python_type": "int",
+              "raw_json": "1"
+            }
+          },
+          {
+            "case": "equal-float",
+            "method": "set",
+            "returned": null,
+            "state": {
+              "get": 1.0,
+              "python_type": "float",
+              "raw_json": "1.0"
+            }
+          }
+        ]
+      },
+      {
+        "input_literal": "{\n  \"operations\": [\n    {\n      \"case\": \"cold-type\",\n      \"method\": \"get\"\n    }\n  ]\n}\n",
+        "initial": {
+          "get": true,
+          "python_type": "bool",
+          "raw_json": "true"
+        },
+        "observations": [
+          {
+            "case": "cold-type",
+            "method": "get",
+            "returned": true,
+            "state": {
+              "get": true,
+              "python_type": "bool",
+              "raw_json": "true"
+            }
+          }
+        ]
+      },
+      {
+        "input_literal": "{\n  \"operations\": [\n    {\n      \"case\": \"false\",\n      \"method\": \"set\",\n      \"value\": false\n    },\n    {\n      \"case\": \"zero\",\n      \"method\": \"set\",\n      \"value\": 0\n    },\n    {\n      \"case\": \"null\",\n      \"method\": \"set\",\n      \"value\": null\n    },\n    {\n      \"case\": \"empty-array\",\n      \"method\": \"set\",\n      \"value\": []\n    },\n    {\n      \"case\": \"empty-object\",\n      \"method\": \"set\",\n      \"value\": {}\n    }\n  ]\n}\n",
+        "initial": {
+          "get": true,
+          "python_type": "bool",
+          "raw_json": "true"
+        },
+        "observations": [
+          {
+            "case": "false",
+            "method": "set",
+            "returned": true,
+            "state": {
+              "get": false,
+              "python_type": "bool",
+              "raw_json": "false"
+            }
+          },
+          {
+            "case": "zero",
+            "method": "set",
+            "returned": true,
+            "state": {
+              "get": 0,
+              "python_type": "int",
+              "raw_json": "0"
+            }
+          },
+          {
+            "case": "null",
+            "method": "set",
+            "returned": true,
+            "state": {
+              "get": null,
+              "python_type": "NoneType",
+              "raw_json": "null"
+            }
+          },
+          {
+            "case": "empty-array",
+            "method": "set",
+            "returned": true,
+            "state": {
+              "get": [],
+              "python_type": "list",
+              "raw_json": "[]"
+            }
+          },
+          {
+            "case": "empty-object",
+            "method": "set",
+            "returned": true,
+            "state": {
+              "get": {},
+              "python_type": "dict",
+              "iteration_order": [],
+              "raw_json": "{}"
+            }
+          }
+        ]
+      },
+      {
+        "input_literal": "{\n  \"operations\": [\n    {\n      \"case\": \"final-cold\",\n      \"method\": \"get\"\n    }\n  ]\n}\n",
+        "initial": {
+          "get": null,
+          "python_type": "NoneType",
+          "raw_json": "null"
+        },
+        "observations": [
+          {
+            "case": "final-cold",
+            "method": "get",
+            "returned": null,
+            "state": {
+              "get": null,
+              "python_type": "NoneType",
+              "raw_json": "null"
+            }
+          }
+        ]
+      }
+    ],
+    "numeric-float-integral": [
+      {
+        "input_literal": "{\"operations\":[{\"case\":\"set-literal\",\"method\":\"set\",\"value\":2.0},{\"case\":\"get-hot\",\"method\":\"get\"}]}\n",
+        "initial": {
+          "get": null,
+          "python_type": "NoneType",
+          "raw_json": "null"
+        },
+        "observations": [
+          {
+            "case": "set-literal",
+            "method": "set",
+            "returned": true,
+            "state": {
+              "get": 2.0,
+              "python_type": "float",
+              "raw_json": "2.0"
+            }
+          },
+          {
+            "case": "get-hot",
+            "method": "get",
+            "returned": 2.0,
+            "state": {
+              "get": 2.0,
+              "python_type": "float",
+              "raw_json": "2.0"
+            }
+          }
+        ]
+      },
+      {
+        "input_literal": "{\"operations\":[{\"case\":\"get-cold\",\"method\":\"get\"}]}\n",
+        "initial": {
+          "get": 2,
+          "python_type": "int",
+          "raw_json": "2"
+        },
+        "observations": [
+          {
+            "case": "get-cold",
+            "method": "get",
+            "returned": 2,
+            "state": {
+              "get": 2,
+              "python_type": "int",
+              "raw_json": "2"
+            }
+          }
+        ]
+      }
+    ],
+    "numeric-negative-zero": [
+      {
+        "input_literal": "{\"operations\":[{\"case\":\"set-literal\",\"method\":\"set\",\"value\":-0.0},{\"case\":\"get-hot\",\"method\":\"get\"}]}\n",
+        "initial": {
+          "get": null,
+          "python_type": "NoneType",
+          "raw_json": "null"
+        },
+        "observations": [
+          {
+            "case": "set-literal",
+            "method": "set",
+            "returned": true,
+            "state": {
+              "get": -0.0,
+              "python_type": "float",
+              "raw_json": "-0.0"
+            }
+          },
+          {
+            "case": "get-hot",
+            "method": "get",
+            "returned": -0.0,
+            "state": {
+              "get": -0.0,
+              "python_type": "float",
+              "raw_json": "-0.0"
+            }
+          }
+        ]
+      },
+      {
+        "input_literal": "{\"operations\":[{\"case\":\"get-cold\",\"method\":\"get\"}]}\n",
+        "initial": {
+          "get": 0,
+          "python_type": "int",
+          "raw_json": "0"
+        },
+        "observations": [
+          {
+            "case": "get-cold",
+            "method": "get",
+            "returned": 0,
+            "state": {
+              "get": 0,
+              "python_type": "int",
+              "raw_json": "0"
+            }
+          }
+        ]
+      }
+    ],
+    "numeric-integer-precise": [
+      {
+        "input_literal": "{\"operations\":[{\"case\":\"set-literal\",\"method\":\"set\",\"value\":9007199254740993},{\"case\":\"get-hot\",\"method\":\"get\"}]}\n",
+        "initial": {
+          "get": null,
+          "python_type": "NoneType",
+          "raw_json": "null"
+        },
+        "observations": [
+          {
+            "case": "set-literal",
+            "method": "set",
+            "returned": true,
+            "state": {
+              "get": 9007199254740993,
+              "python_type": "int",
+              "raw_json": "9007199254740993"
+            }
+          },
+          {
+            "case": "get-hot",
+            "method": "get",
+            "returned": 9007199254740993,
+            "state": {
+              "get": 9007199254740993,
+              "python_type": "int",
+              "raw_json": "9007199254740993"
+            }
+          }
+        ]
+      },
+      {
+        "input_literal": "{\"operations\":[{\"case\":\"get-cold\",\"method\":\"get\"}]}\n",
+        "initial": {
+          "get": 9007199254740993,
+          "python_type": "int",
+          "raw_json": "9007199254740993"
+        },
+        "observations": [
+          {
+            "case": "get-cold",
+            "method": "get",
+            "returned": 9007199254740993,
+            "state": {
+              "get": 9007199254740993,
+              "python_type": "int",
+              "raw_json": "9007199254740993"
+            }
+          }
+        ]
+      }
+    ],
+    "numeric-integer-large": [
+      {
+        "input_literal": "{\"operations\":[{\"case\":\"set-literal\",\"method\":\"set\",\"value\":1234567890123456789012345678901234567890},{\"case\":\"get-hot\",\"method\":\"get\"}]}\n",
+        "initial": {
+          "get": null,
+          "python_type": "NoneType",
+          "raw_json": "null"
+        },
+        "observations": [
+          {
+            "case": "set-literal",
+            "method": "set",
+            "returned": true,
+            "state": {
+              "get": 1234567890123456789012345678901234567890,
+              "python_type": "int",
+              "raw_json": "1234567890123456789012345678901234567890"
+            }
+          },
+          {
+            "case": "get-hot",
+            "method": "get",
+            "returned": 1234567890123456789012345678901234567890,
+            "state": {
+              "get": 1234567890123456789012345678901234567890,
+              "python_type": "int",
+              "raw_json": "1234567890123456789012345678901234567890"
+            }
+          }
+        ]
+      },
+      {
+        "input_literal": "{\"operations\":[{\"case\":\"get-cold\",\"method\":\"get\"}]}\n",
+        "initial": {
+          "get": 1.2345678901234568e+39,
+          "python_type": "float",
+          "raw_json": "1.2345678901234568e+39"
+        },
+        "observations": [
+          {
+            "case": "get-cold",
+            "method": "get",
+            "returned": 1.2345678901234568e+39,
+            "state": {
+              "get": 1.2345678901234568e+39,
+              "python_type": "float",
+              "raw_json": "1.2345678901234568e+39"
+            }
+          }
+        ]
+      }
+    ],
+    "numeric-nonfinite": [
+      {
+        "input_literal": "{\"operations\":[{\"case\":\"set-literal\",\"method\":\"set\",\"value\":1e400},{\"case\":\"get-hot\",\"method\":\"get\"}]}\n",
+        "initial": {
+          "get": null,
+          "python_type": "NoneType",
+          "raw_json": "null"
+        },
+        "observations": [
+          {
+            "case": "set-literal",
+            "method": "set",
+            "returned": true,
+            "state": {
+              "get": {
+                "$python_float": "inf"
+              },
+              "python_type": "float",
+              "raw_json_error": {
+                "class": "ValueError",
+                "module": "builtins"
+              }
+            }
+          },
+          {
+            "case": "get-hot",
+            "method": "get",
+            "returned": {
+              "$python_float": "inf"
+            },
+            "state": {
+              "get": {
+                "$python_float": "inf"
+              },
+              "python_type": "float",
+              "raw_json_error": {
+                "class": "ValueError",
+                "module": "builtins"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "input_literal": "{\"operations\":[{\"case\":\"get-cold\",\"method\":\"get\"}]}\n",
+        "initial": {
+          "get": {
+            "$python_float": "inf"
+          },
+          "python_type": "float",
+          "raw_json_error": {
+            "class": "ValueError",
+            "module": "builtins"
+          }
+        },
+        "observations": [
+          {
+            "case": "get-cold",
+            "method": "get",
+            "returned": {
+              "$python_float": "inf"
+            },
+            "state": {
+              "get": {
+                "$python_float": "inf"
+              },
+              "python_type": "float",
+              "raw_json_error": {
+                "class": "ValueError",
+                "module": "builtins"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "numeric-nested-nonfinite": [
+      {
+        "input_literal": "{\"operations\":[{\"case\":\"set-literal\",\"method\":\"set\",\"value\":{\"A => B\":1e400}},{\"case\":\"get-hot\",\"method\":\"get\"}]}\n",
+        "initial": {
+          "get": null,
+          "python_type": "NoneType",
+          "raw_json": "null"
+        },
+        "observations": [
+          {
+            "case": "set-literal",
+            "method": "set",
+            "returned": true,
+            "state": {
+              "get": {
+                "A => B": {
+                  "$python_float": "inf"
+                }
+              },
+              "python_type": "dict",
+              "iteration_order": [
+                "A => B"
+              ],
+              "raw_json_error": {
+                "class": "ValueError",
+                "module": "builtins"
+              }
+            }
+          },
+          {
+            "case": "get-hot",
+            "method": "get",
+            "returned": {
+              "A => B": {
+                "$python_float": "inf"
+              }
+            },
+            "state": {
+              "get": {
+                "A => B": {
+                  "$python_float": "inf"
+                }
+              },
+              "python_type": "dict",
+              "iteration_order": [
+                "A => B"
+              ],
+              "raw_json_error": {
+                "class": "ValueError",
+                "module": "builtins"
+              }
+            }
+          }
+        ]
+      },
+      {
+        "input_literal": "{\"operations\":[{\"case\":\"get-cold\",\"method\":\"get\"}]}\n",
+        "initial": {
+          "get": {
+            "A => B": {
+              "$python_float": "inf"
+            }
+          },
+          "python_type": "dict",
+          "iteration_order": [
+            "A => B"
+          ],
+          "raw_json_error": {
+            "class": "ValueError",
+            "module": "builtins"
+          }
+        },
+        "observations": [
+          {
+            "case": "get-cold",
+            "method": "get",
+            "returned": {
+              "A => B": {
+                "$python_float": "inf"
+              }
+            },
+            "state": {
+              "get": {
+                "A => B": {
+                  "$python_float": "inf"
+                }
+              },
+              "python_type": "dict",
+              "iteration_order": [
+                "A => B"
+              ],
+              "raw_json_error": {
+                "class": "ValueError",
+                "module": "builtins"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

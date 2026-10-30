@@ -1,0 +1,125 @@
+{
+  "feature_id": "S07.CustomIdentifiers",
+  "driver_exit": 0,
+  "script_sha256": "621d4b1d6fc2b85b46ab508fb81f52a0bd7e1d3ca6c1ebc60a15abe1394aa5b6",
+  "logs": [
+    {
+      "name": "history",
+      "log_sha256": "7e02be6b641d440eaec6aa38f8a5cb176d59499582735bd319991d4e0264cfc3",
+      "root_passes_in_driver_log": 6,
+      "roots": [
+        "TestHistoryIntegrationIndependentLiveUIAndSharedHost",
+        "TestHistoryIndependentNativeRetryUpdatesFrozenRecord",
+        "TestHistoryIndependentRawInputsAreNotRewritten",
+        "TestHistoryIndependentExactQuerySourceMatrix",
+        "TestHistoryIndependentLegacyQueuedRetryPreservesKnownRecord",
+        "TestHistoryIndependentTypedSDKDoesNotRewriteInvalidStrings"
+      ],
+      "fail_or_skip": [],
+      "race_findings": 0,
+      "package_results": []
+    },
+    {
+      "name": "s05",
+      "log_sha256": "3b1dd44931dce531c3a0bda2466c2c4c074534dd2125a9afba3ee2db4a48458e",
+      "root_passes_in_driver_log": 18,
+      "roots": [
+        "TestSharedSubscriptionsVersionReplacementCloseKeepsActiveDAO",
+        "TestSharedSubscriptionsActualCloneCASRollbackAndNativeABA",
+        "TestSharedSubscriptionsPermissionDeniedActualWorker",
+        "TestSharedSubscriptionsLargeActualWorkerCold",
+        "TestSharedSubscriptionsNativeEditorPreservesUnrelatedSourceFacts",
+        "TestSharedSubscriptionsCancelledActualWorkerDoesNotWrite",
+        "TestSharedSubscriptionsIndependentSourceOracle",
+        "TestSharedSubscriptionsIndependentFloatGrammar",
+        "TestSharedSubscriptionsIndependentExponentOverflow",
+        "TestSharedSubscriptionsIndependentNestedJSON",
+        "TestSharedSubscriptionsIndependentAllJSONColumnsCold",
+        "TestSharedSubscriptionsActualServerProcessCold",
+        "TestSharedSubscriptionsActualWorkerSmoke",
+        "TestSharedSubscriptionsUnicodeCommittedBeforeResponseFailure",
+        "TestSharedSubscriptionsUnicodeFourColumnsColdRecovery",
+        "TestSharedSubscriptionsUnicodeScalarBindingRollsBack",
+        "TestSharedSubscriptionsUnicodeNativeABAAndCodepointIdentity",
+        "TestSharedSubscriptionsUnicodeJSONValueSemantics"
+      ],
+      "fail_or_skip": [],
+      "race_findings": 0,
+      "package_results": [
+        "ok  \tlight-media/internal/app\t219.273s"
+      ]
+    },
+    {
+      "name": "clear",
+      "log_sha256": "23e6241d35ce1a2b20f6e839d318605aff16fa7dffbd2056c8435588c02365f0",
+      "root_passes_in_driver_log": 9,
+      "roots": [
+        "TestIndependentClearCacheDirectoryRecognition",
+        "TestIndependentClearCacheAcceptedCancellation",
+        "TestIndependentClearCacheConcurrentHTTP",
+        "TestOriginalClearCacheProductionProcess",
+        "TestOriginalClearCacheActualSDKSemantics",
+        "TestOriginalClearCacheFailuresOverrideAuthAndCold",
+        "TestOriginalClearCacheNativeNoPluginAndRecommendation",
+        "TestOriginalClearCacheTwoActualWorkersOrder",
+        "TestOriginalClearCacheAcceptedRequestCancellation"
+      ],
+      "fail_or_skip": [],
+      "race_findings": 0,
+      "package_results": [
+        "ok  \tlight-media/internal/app\t47.004s"
+      ]
+    },
+    {
+      "name": "manager",
+      "log_sha256": "e7246bed999c576a4960eb4780fc6ed261b0a3c0985275a1f35c5d63c785b2b0",
+      "root_passes_in_driver_log": 20,
+      "roots": [
+        "TestSharedManagerQueriesWarmCacheOutageValues",
+        "TestSharedManagerQueriesCacheNeverHidesInvalidSeal",
+        "TestSharedManagerQueriesPrefetchAtomicAndScoped",
+        "TestSharedManagerQueriesHTTPFailedSavePublishesConfiguration",
+        "TestSharedManagerQueriesHTTPReadFailurePublishesConfiguration",
+        "TestSharedManagerQueriesHTTPSameFalseyAndCold",
+        "TestSharedManagerQueriesIndependentReadOutageCache",
+        "TestSharedManagerQueriesIndependentJSONEdgesAndReadOnly",
+        "TestSharedManagerQueriesIndependentFailedClassAndStoppingConfig",
+        "TestSharedManagerQueriesIndependentColdUnreadClassOutage",
+        "TestSharedManagerQueriesProductionProcessCold",
+        "TestSharedManagerQueriesActualRegistryAndLifecycle",
+        "TestSharedManagerQueriesActualConfigSourceAndFailure",
+        "TestSharedManagerQueriesActualHTTPAuthConcurrencyAndScopes",
+        "TestOriginalBaseConfigHTTPUsesCurrentCacheWithoutInitialization",
+        "TestOriginalBaseSDKConfigUpdateThenSameCallRead",
+        "TestOriginalBaseSDKEmptyCacheReloadResetAndFreshStop",
+        "TestOriginalBaseSDKResetSecondFailureStillInvalidatesConfigCache",
+        "TestOriginalBaseConfigObservesExternalWrites",
+        "TestOriginalBaseFailedWriteRetainsCacheUntilExternalChange"
+      ],
+      "fail_or_skip": [],
+      "race_findings": 0,
+      "package_results": []
+    },
+    {
+      "name": "lifecycle",
+      "log_sha256": "81e1d05c889cf1bc019a807c53c51306beca03c3a9a79be0e599ea237a9cec62",
+      "root_passes_in_driver_log": 1,
+      "roots": [
+        "TestPluginModuleProductionProcessLifecycle"
+      ],
+      "fail_or_skip": [],
+      "race_findings": 0,
+      "package_results": []
+    },
+    {
+      "name": "vet",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "root_passes_in_driver_log": 0,
+      "roots": [],
+      "fail_or_skip": [],
+      "race_findings": 0,
+      "package_results": []
+    }
+  ],
+  "boundary": "Coordinator executed these scoped gates; independent reviewer read actual logs. Nested source/real-process bindings pending final coordinator summary."
+}

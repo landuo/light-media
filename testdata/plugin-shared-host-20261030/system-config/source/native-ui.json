@@ -1,0 +1,40 @@
+{
+  "operations": [
+    {
+      "case": "ui-remove-empty",
+      "method": "ui_set",
+      "value": [
+        "Raw => UI",
+        "",
+        "# keep",
+        "  "
+      ]
+    },
+    {
+      "case": "ui-consumer",
+      "method": "prepare",
+      "title": "Raw.S01E02"
+    },
+    {
+      "case": "plugin-after-ui",
+      "method": "set",
+      "value": [
+        "Raw => Plugin"
+      ]
+    },
+    {
+      "case": "ui-empty-deletes",
+      "method": "ui_set",
+      "value": [
+        ""
+      ]
+    },
+    {
+      "case": "ui-empty-recreates",
+      "method": "ui_set",
+      "value": [
+        ""
+      ]
+    }
+  ]
+}

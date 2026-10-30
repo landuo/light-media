@@ -1,0 +1,30 @@
+{
+  "feature_id": "S07.CustomIdentifiers",
+  "main_head": "a110eabd0f6bb99a4c0a2cb6f32cb94c1efe2d12",
+  "cwd": "light-media",
+  "commands": [
+    "GOFLAGS='-mod=readonly -buildvcs=false' go build -o <owned-output>/rebuilt-browser-server ./cmd/server",
+    "GOFLAGS='-mod=readonly -buildvcs=false' go build -o <owned-output>/rebuilt-browser-worker ./cmd/owned-system-config-fixture",
+    "<owned-output>/rebuilt-browser-worker --manifest"
+  ],
+  "result": "both independent builds match coordinator actual binaries exactly",
+  "binaries": [
+    {
+      "artifact": "rebuilt-browser-server",
+      "sha256": "75620e7df60dd1b5b492e71e7a61464485fd93ab67d7627554a05de2ff66d59d",
+      "equals_coordinator_binary": true
+    },
+    {
+      "artifact": "rebuilt-browser-worker",
+      "sha256": "d0d9cb952b07a685b842045c353bf64332eede72e0dc0a2db579d5214b8ea853",
+      "equals_coordinator_binary": true
+    }
+  ],
+  "worker_manifest_sha256": "23845d98fc324facdaedd250b66a25240845d8b5018796dfa0b019a83a9cfa91",
+  "coordinator_build_record_sha256": "0269b1a33e26b420a3a54f2888400e6b5bef0add17b010770bd6b2134cae6d71",
+  "browser_operated": false,
+  "exclude_from_backup": [
+    "rebuilt-browser-server",
+    "rebuilt-browser-worker"
+  ]
+}

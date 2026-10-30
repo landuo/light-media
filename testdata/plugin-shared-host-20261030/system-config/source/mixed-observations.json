@@ -1,0 +1,512 @@
+{
+  "scope": "Actual fixed normal DAO/SQLite concurrency witnesses. source_other_key_identity is recorded but not claimed closed by supported-key target.",
+  "groups": {
+    "source-output": {
+      "scope": "Normal default original DAO. SQLAlchemy after_cursor_execute event only pauses the real async SELECT after execution; no mocked query, result, or DAO implementation. No full HTTP endpoint.",
+      "observations": {
+        "sync_result": true,
+        "between_sync_and_async_publish": [
+          "A => PluginNew"
+        ],
+        "async_result": null,
+        "final_hot": [
+          "A => DiskInitial"
+        ],
+        "final_database": [
+          [
+            "[\"A => PluginNew\"]"
+          ]
+        ]
+      },
+      "timing": [
+        "actual asynchronous SELECT completed before returning DAO result"
+      ],
+      "network_attempts": []
+    },
+    "delete-existing": {
+      "mode": "delete-existing",
+      "observations": {
+        "sync_delete": true,
+        "before_async_resume": {
+          "get": null,
+          "rows": []
+        },
+        "async_error": {
+          "class": "StaleDataError",
+          "module": "sqlalchemy.orm.exc"
+        },
+        "after_async": {
+          "get": null,
+          "rows": []
+        },
+        "next_async_set": true,
+        "after_followup": {
+          "get": [
+            "D"
+          ],
+          "rows": [
+            [
+              1,
+              "CustomIdentifiers",
+              "[\"D\"]"
+            ]
+          ]
+        }
+      },
+      "timing": [
+        "actual async SELECT completed"
+      ],
+      "network_attempts": [],
+      "scope": "Unmodified source default synchronous/asynchronous DAO, real SQLite, event hook only holds actual SELECT completion; not a mocked query/DAO/result or full authenticated UI."
+    },
+    "delete-recreate": {
+      "mode": "delete-recreate",
+      "observations": {
+        "sync_delete": true,
+        "sync_recreate": true,
+        "before_async_resume": {
+          "get": [
+            "B"
+          ],
+          "rows": [
+            [
+              1,
+              "CustomIdentifiers",
+              "[\"B\"]"
+            ]
+          ]
+        },
+        "async_result": true,
+        "after_async": {
+          "get": [
+            "C"
+          ],
+          "rows": [
+            [
+              1,
+              "CustomIdentifiers",
+              "[\"C\"]"
+            ]
+          ]
+        },
+        "next_async_set": true,
+        "after_followup": {
+          "get": [
+            "D"
+          ],
+          "rows": [
+            [
+              1,
+              "CustomIdentifiers",
+              "[\"D\"]"
+            ]
+          ]
+        }
+      },
+      "timing": [
+        "actual async SELECT completed"
+      ],
+      "network_attempts": [],
+      "scope": "Unmodified source default synchronous/asynchronous DAO, real SQLite, event hook only holds actual SELECT completion; not a mocked query/DAO/result or full authenticated UI."
+    },
+    "absent-insert": {
+      "mode": "absent-insert",
+      "observations": {
+        "sync_insert": true,
+        "before_async_resume": {
+          "get": [
+            "B"
+          ],
+          "rows": [
+            [
+              1,
+              "CustomIdentifiers",
+              "[\"B\"]"
+            ]
+          ]
+        },
+        "async_result": true,
+        "after_async": {
+          "get": [
+            "A"
+          ],
+          "rows": [
+            [
+              1,
+              "CustomIdentifiers",
+              "[\"B\"]"
+            ],
+            [
+              2,
+              "CustomIdentifiers",
+              "[\"A\"]"
+            ]
+          ]
+        },
+        "next_async_set_error": {
+          "class": "MultipleResultsFound",
+          "module": "sqlalchemy.exc"
+        },
+        "after_followup": {
+          "get": [
+            "A"
+          ],
+          "rows": [
+            [
+              1,
+              "CustomIdentifiers",
+              "[\"B\"]"
+            ],
+            [
+              2,
+              "CustomIdentifiers",
+              "[\"A\"]"
+            ]
+          ]
+        }
+      },
+      "timing": [
+        "actual async SELECT completed"
+      ],
+      "network_attempts": [],
+      "scope": "Unmodified source default synchronous/asynchronous DAO, real SQLite, event hook only holds actual SELECT completion; not a mocked query/DAO/result or full authenticated UI."
+    },
+    "other-high-id": {
+      "mode": "other-high-id",
+      "observations": {
+        "initial": {
+          "get": [
+            "A"
+          ],
+          "rows": [
+            [
+              1,
+              "CustomIdentifiers",
+              "[\"A\"]"
+            ],
+            [
+              100,
+              "OwnedOtherOrdinary",
+              "[\"synthetic\"]"
+            ]
+          ]
+        },
+        "sync_delete": true,
+        "sync_recreate": true,
+        "before_async_resume": {
+          "get": [
+            "B"
+          ],
+          "rows": [
+            [
+              100,
+              "OwnedOtherOrdinary",
+              "[\"synthetic\"]"
+            ],
+            [
+              101,
+              "CustomIdentifiers",
+              "[\"B\"]"
+            ]
+          ]
+        },
+        "first_error": {
+          "class": "StaleDataError",
+          "module": "sqlalchemy.orm.exc"
+        },
+        "after_async": {
+          "get": [
+            "B"
+          ],
+          "rows": [
+            [
+              100,
+              "OwnedOtherOrdinary",
+              "[\"synthetic\"]"
+            ],
+            [
+              101,
+              "CustomIdentifiers",
+              "[\"B\"]"
+            ]
+          ]
+        }
+      },
+      "timing": [
+        "actual async SELECT completed"
+      ],
+      "network_attempts": [],
+      "scope": "Normal default source SystemConfigOper and actual SQLAlchemy SQLite. Other key is owned synthetic ORM seed, not a new SDK key. Timing hook holds actual SELECT completion only. Two-row result is NOT a schema-wide upper bound."
+    },
+    "two-queued": {
+      "mode": "two-queued",
+      "observations": {
+        "initial": {
+          "get": null,
+          "rows": []
+        },
+        "second_async_entered_before_release": true,
+        "sync_insert": true,
+        "before_async_resume": {
+          "get": [
+            "B"
+          ],
+          "rows": [
+            [
+              1,
+              "CustomIdentifiers",
+              "[\"B\"]"
+            ]
+          ]
+        },
+        "first_result": true,
+        "second_error": {
+          "class": "MultipleResultsFound",
+          "module": "sqlalchemy.exc"
+        },
+        "after_async": {
+          "get": [
+            "A"
+          ],
+          "rows": [
+            [
+              1,
+              "CustomIdentifiers",
+              "[\"B\"]"
+            ],
+            [
+              2,
+              "CustomIdentifiers",
+              "[\"A\"]"
+            ]
+          ]
+        }
+      },
+      "timing": [
+        "actual async SELECT completed"
+      ],
+      "network_attempts": [],
+      "scope": "Normal default source SystemConfigOper and actual SQLAlchemy SQLite. Other key is owned synthetic ORM seed, not a new SDK key. Timing hook holds actual SELECT completion only. Two-row result is NOT a schema-wide upper bound."
+    },
+    "duplicate-delete": {
+      "mode": "duplicate-delete",
+      "observations": {
+        "initial": {
+          "get": null,
+          "rows": []
+        },
+        "sync_insert": true,
+        "before_async_resume": {
+          "get": [
+            "B"
+          ],
+          "rows": [
+            [
+              1,
+              "CustomIdentifiers",
+              "[\"B\"]"
+            ]
+          ]
+        },
+        "first_result": true,
+        "after_async": {
+          "get": [
+            "A"
+          ],
+          "rows": [
+            [
+              1,
+              "CustomIdentifiers",
+              "[\"B\"]"
+            ],
+            [
+              2,
+              "CustomIdentifiers",
+              "[\"A\"]"
+            ]
+          ]
+        },
+        "sync_first_null": true,
+        "after_first_null": {
+          "get": null,
+          "rows": [
+            [
+              2,
+              "CustomIdentifiers",
+              "[\"A\"]"
+            ]
+          ]
+        },
+        "sync_equal_null": null,
+        "after_equal_null": {
+          "get": null,
+          "rows": [
+            [
+              2,
+              "CustomIdentifiers",
+              "[\"A\"]"
+            ]
+          ]
+        }
+      },
+      "timing": [
+        "actual async SELECT completed"
+      ],
+      "network_attempts": [],
+      "scope": "Normal default source SystemConfigOper and actual SQLAlchemy SQLite. Other key is owned synthetic ORM seed, not a new SDK key. Timing hook holds actual SELECT completion only. Two-row result is NOT a schema-wide upper bound."
+    },
+    "duplicate-delete-cold": {
+      "mode": "cold",
+      "observations": {
+        "cold_get": [
+          "A"
+        ],
+        "rows": [
+          [
+            2,
+            "CustomIdentifiers",
+            "[\"A\"]"
+          ]
+        ]
+      },
+      "network_attempts": [],
+      "scope": "Normal default source SystemConfigOper and actual SQLAlchemy SQLite. Other key is owned synthetic ORM seed, not a new SDK key. Timing hook holds actual SELECT completion only. Two-row result is NOT a schema-wide upper bound."
+    }
+  },
+  "bindings": [
+    {
+      "file": "mixed-set-extra/source-output.json",
+      "sha256": "c83948d9e3d6df2cf26252289549619beb122e46bf72ee63117e57dd908f51c7"
+    },
+    {
+      "file": "mixed-set-extra/delete-existing.json",
+      "sha256": "4d4b043025bea173f87939d9e6fb23bd5d474255a070d337d108c3621b2b6cfd"
+    },
+    {
+      "file": "mixed-set-extra/delete-recreate.json",
+      "sha256": "e23742e01712b77b2d2be390ca5ebbd4ea6d9008756511aa4bc5e21002ef9106"
+    },
+    {
+      "file": "mixed-set-extra/absent-insert.json",
+      "sha256": "958447e88e8f56fc9acc147521fc00babcd7b958a2ced3aa9a321d5c47f8a957"
+    },
+    {
+      "file": "mixed-set-extra/other-high-id.json",
+      "sha256": "e370ab433ff3e960f89a170719351ccb95ba45726673ad101df4688775ea75df"
+    },
+    {
+      "file": "mixed-set-extra/two-queued.json",
+      "sha256": "2671b9c15f4244990562132ef28d4b471130f8483d4ef44a104487394bc21fea"
+    },
+    {
+      "file": "dirty-check-extra/source-output.json",
+      "sha256": "7e08d078cd7681545dfbf06c429aefd8fb092460d4f11e0552a3a4bf6c4fa0cc"
+    },
+    {
+      "file": "mixed-set-extra/duplicate-delete.json",
+      "sha256": "ea3535121f732d94fcbd65e09521718a78b32399dfd861bea47e04d4884306ca"
+    },
+    {
+      "file": "mixed-set-extra/duplicate-delete-cold.json",
+      "sha256": "08946ba4f33aa8a8e812c845c2f4b7843d0a7c3e69064bf016a74df1bb87aa4f"
+    }
+  ],
+  "dirty": {
+    "initial": {
+      "get": null,
+      "python_type": "NoneType",
+      "database": [],
+      "raw_json": "null"
+    },
+    "observations": [
+      {
+        "case": "store-A",
+        "method": "set",
+        "returned": true,
+        "state": {
+          "get": [
+            "A"
+          ],
+          "python_type": "list",
+          "database": [
+            {
+              "id": 1,
+              "value": "[\"A\"]",
+              "sqlite_type": "text"
+            }
+          ],
+          "raw_json": "[\"A\"]"
+        }
+      },
+      {
+        "case": "fail-B",
+        "method": "set",
+        "error": {
+          "class": "IntegrityError",
+          "module": "sqlalchemy.exc",
+          "driver_class": "IntegrityError",
+          "sqlite_errorname": "SQLITE_CONSTRAINT_TRIGGER"
+        },
+        "state": {
+          "get": [
+            "B"
+          ],
+          "python_type": "list",
+          "database": [
+            {
+              "id": 1,
+              "value": "[\"A\"]",
+              "sqlite_type": "text"
+            }
+          ],
+          "raw_json": "[\"B\"]"
+        }
+      },
+      {
+        "case": "restore-A-while-trigger-active",
+        "method": "set",
+        "returned": true,
+        "state": {
+          "get": [
+            "A"
+          ],
+          "python_type": "list",
+          "database": [
+            {
+              "id": 1,
+              "value": "[\"A\"]",
+              "sqlite_type": "text"
+            }
+          ],
+          "raw_json": "[\"A\"]"
+        }
+      },
+      {
+        "case": "check-A",
+        "method": "get",
+        "returned": [
+          "A"
+        ],
+        "state": {
+          "get": [
+            "A"
+          ],
+          "python_type": "list",
+          "database": [
+            {
+              "id": 1,
+              "value": "[\"A\"]",
+              "sqlite_type": "text"
+            }
+          ],
+          "raw_json": "[\"A\"]"
+        }
+      }
+    ],
+    "scope": "Owned ordinary plugin -> normal unmodified SystemConfigOper default sessions -> SQLite; normal WordsMatcher; raw JSONResponse probe is not original full HTTP endpoint",
+    "network_attempts": [],
+    "python": "3.12.14",
+    "sqlite": "3.53.1",
+    "sqlalchemy": "2.0.55"
+  }
+}

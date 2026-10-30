@@ -1,0 +1,47 @@
+{
+  "seed": [
+    [
+      "Raw => Persisted"
+    ]
+  ],
+  "operations": [
+    {
+      "case": "delete-fails",
+      "method": "set",
+      "value": [],
+      "fixture_sql": "CREATE TRIGGER owned_config_fail BEFORE DELETE ON systemconfig BEGIN SELECT RAISE(ABORT,'owned delete failure'); END;"
+    },
+    {
+      "case": "failed-delete-hot",
+      "method": "prepare",
+      "title": "Raw.S01E02"
+    },
+    {
+      "case": "failed-delete-same",
+      "method": "set",
+      "value": []
+    },
+    {
+      "case": "async-delete-fails-cache-unchanged",
+      "method": "async_set",
+      "value": null
+    },
+    {
+      "case": "drop",
+      "method": "get",
+      "fixture_sql": "DROP TRIGGER owned_config_fail;"
+    },
+    {
+      "case": "async-repair",
+      "method": "async_set",
+      "value": [
+        "Raw => Persisted"
+      ]
+    },
+    {
+      "case": "async-repaired-consumer",
+      "method": "prepare",
+      "title": "Raw.S01E02"
+    }
+  ]
+}

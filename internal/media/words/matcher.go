@@ -14,6 +14,7 @@ import (
 
 	"github.com/dlclark/regexp2/v2"
 	"light-media/internal/pyregex"
+	"light-media/internal/releasemeta/legacyanime"
 )
 
 const MaxBytes = 8 << 20
@@ -26,10 +27,11 @@ type cached struct {
 	err     error
 }
 type Matcher struct {
-	words []string
-	mu    sync.Mutex
-	cache map[string]*list.Element
-	lru   list.List
+	sourceUnicode bool
+	words         []string
+	mu            sync.Mutex
+	cache         map[string]*list.Element
+	lru           list.List
 }
 type Result struct {
 	Title   string
@@ -39,14 +41,20 @@ type Result struct {
 }
 
 func New(rules []string) (*Matcher, error) {
-	total := 0
+	total, executable := 0, 0
 	for _, rule := range rules {
+		// Source WordsMatcher skips these before compiling/parsing. Keep the
+		// complete list (and Applied indexes), but charge only executable rules.
+		if legacyanime.Strip(rule) == "" || strings.HasPrefix(rule, "#") {
+			continue
+		}
+		executable++
 		total += len(rule)
 		if len(rule) > 64<<10 {
 			return nil, errors.New("recognition rule too large")
 		}
 	}
-	if total > MaxBytes || len(rules) > 100000 {
+	if total > MaxBytes || executable > 100000 {
 		return nil, errors.New("recognition word list too large")
 	}
 	return &Matcher{words: append([]string(nil), rules...), cache: map[string]*list.Element{}}, nil
@@ -62,7 +70,11 @@ func (m *Matcher) compile(pattern string) (*regexp2.Regexp, error) {
 		c := hit.Value.(cached)
 		return c.re, c.err
 	}
-	re, err := pyregex.Compile(pattern, false)
+	compilePattern := pattern
+	if m.sourceUnicode {
+		compilePattern = sourcePattern(pattern)
+	}
+	re, err := pyregex.Compile(compilePattern, false)
 	m.cache[pattern] = m.lru.PushFront(cached{pattern, re, err})
 	if m.lru.Len() > 1024 {
 		tail := m.lru.Back()
@@ -103,7 +115,7 @@ func (m *Matcher) Prepare(title string) Result {
 				continue
 			}
 			for n := 1; n < len(fields); n++ {
-				fields[n] = strings.TrimSpace(fields[n])
+				fields[n] = legacyanime.Strip(fields[n])
 			}
 			out.Title, applied, err = m.replace(out.Title, fields[1], fields[2])
 			if applied {
@@ -120,7 +132,7 @@ func (m *Matcher) Prepare(title string) Result {
 				continue
 			}
 			out.Title, applied, err = m.offset(out.Title, fields[0], offset[0], offset[1])
-		case strings.TrimSpace(word) != "":
+		case legacyanime.Strip(word) != "":
 			out.Title, applied, err = m.replace(out.Title, word, "")
 		}
 		if err != nil {
@@ -228,6 +240,9 @@ func replacement(re *regexp2.Regexp, value string) ([]replacementPart, error) {
 }
 
 func (m *Matcher) replace(title, pattern, value string) (string, bool, error) {
+	if m.sourceUnicode {
+		return m.replaceCodepoints(title, pattern, value)
+	}
 	re, err := m.compile(pattern)
 	if err != nil {
 		return title, false, err
@@ -264,7 +279,12 @@ func (m *Matcher) offset(title, front, back, expression string) (string, bool, e
 			if err != nil {
 				return title, false, err
 			}
-			found, err := re.MatchString(title)
+			var found bool
+			if m.sourceUnicode {
+				found, err = re.MatchRunes(decodeSourceRunes(title))
+			} else {
+				found, err = re.MatchString(title)
+			}
 			if err != nil {
 				return title, false, errRecognitionLimit
 			}
@@ -282,7 +302,12 @@ func (m *Matcher) offset(title, front, back, expression string) (string, bool, e
 	if len(re.GetGroupNumbers()) > 1 {
 		return title, false, errors.New("capturing offset locator")
 	}
-	match, err := re.FindStringMatch(title)
+	var match *regexp2.Match
+	if m.sourceUnicode {
+		match, err = re.FindRunesMatch(decodeSourceRunes(title))
+	} else {
+		match, err = re.FindStringMatch(title)
+	}
 	if err != nil {
 		return title, false, errRecognitionLimit
 	}

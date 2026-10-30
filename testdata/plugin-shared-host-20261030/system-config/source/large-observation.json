@@ -1,0 +1,59 @@
+{
+  "generation": {
+    "comment_count": 24,
+    "comment_bytes_each": 30721,
+    "comment": "# followed by x repeated 30<<10",
+    "last_rule": "Raw => Large"
+  },
+  "records": [
+    {
+      "case": "large-set",
+      "method": "set",
+      "returned": true,
+      "get_canonical_sha256": "9209f0fa2e2b394efc19a5691cfa2862d696f86164565131a7df39503d19eaa2",
+      "rule_count": 25
+    },
+    {
+      "case": "large-prepare",
+      "method": "prepare",
+      "returned": [
+        "Large.S01E02",
+        [
+          "Raw => Large"
+        ]
+      ],
+      "get_canonical_sha256": "9209f0fa2e2b394efc19a5691cfa2862d696f86164565131a7df39503d19eaa2",
+      "rule_count": 25
+    },
+    {
+      "case": "large-cold-get",
+      "method": "get",
+      "get_canonical_sha256": "9209f0fa2e2b394efc19a5691cfa2862d696f86164565131a7df39503d19eaa2",
+      "rule_count": 25
+    },
+    {
+      "case": "large-cold-prepare",
+      "method": "prepare",
+      "returned": [
+        "Large.S01E02",
+        [
+          "Raw => Large"
+        ]
+      ],
+      "get_canonical_sha256": "9209f0fa2e2b394efc19a5691cfa2862d696f86164565131a7df39503d19eaa2",
+      "rule_count": 25
+    }
+  ],
+  "bindings": [
+    {
+      "path": "evidence/large-run01.json",
+      "bytes": 3110904,
+      "sha256": "613603eb39da4e78c4020112b22cba8fdd13205f4d4d429127318f4d12a37e39"
+    },
+    {
+      "path": "evidence/large-cold01.json",
+      "bytes": 5323697,
+      "sha256": "0bb97df709be67a27bd958e9032c54d442683916123c03591410ef3d7770bf10"
+    }
+  ]
+}

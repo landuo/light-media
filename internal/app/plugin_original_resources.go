@@ -17,7 +17,7 @@ func originalStandardCapabilityAllowed(contract, method string) bool {
 			return true
 		}
 	}
-	return contract == pluginResourcesSDKContract && (method == plugins.BrushInventoryReadCapability || method == plugins.LogWriteCapability || method == plugins.DownloaderTasksReadCapability || method == plugins.BackgroundSubmitCapability || method == plugins.ServicesRefreshCapability || method == plugins.ServiceProgressCapability || method == plugins.AuthTicketCreateCapability || method == plugins.PostMessageCapability || method == plugins.EventSendCapability || method == plugins.EventCheckCapability || method == plugins.EventManageCapability || originalInputCapability(method) || categoryEditorCapability(method) || originalSharedSubscriptionsCapability(method) || originalSharedHistoryCapability(method) || originalSharedManagerQueryCapability(method) || originalSharedTransmissionQueryCapability(method))
+	return contract == pluginResourcesSDKContract && (method == plugins.BrushInventoryReadCapability || method == plugins.LogWriteCapability || method == plugins.DownloaderTasksReadCapability || method == plugins.BackgroundSubmitCapability || method == plugins.ServicesRefreshCapability || method == plugins.ServiceProgressCapability || method == plugins.AuthTicketCreateCapability || method == plugins.PostMessageCapability || method == plugins.EventSendCapability || method == plugins.EventCheckCapability || method == plugins.EventManageCapability || originalInputCapability(method) || categoryEditorCapability(method) || originalSharedSubscriptionsCapability(method) || originalSharedSystemConfigCapability(method) || originalSharedHistoryCapability(method) || originalSharedManagerQueryCapability(method) || originalSharedTransmissionQueryCapability(method))
 }
 
 func originalResourceDecode(raw json.RawMessage, output any) error {
@@ -50,6 +50,9 @@ func (a *App) pluginOriginalResourceHost(ctx context.Context, scope originalBase
 		return nil, bad("PLUGIN_IDENTITY_MISMATCH", "插件执行身份不匹配")
 	}
 	ctx = withOriginalPluginLogContext(ctx, scope)
+	if originalSharedSystemConfigCapability(method) {
+		return a.originalSharedSystemConfigResource(ctx, scope, method, raw)
+	}
 	if originalSharedTransmissionQueryCapability(method) {
 		return a.originalSharedTransmissionQueryResource(ctx, scope, method, raw)
 	}

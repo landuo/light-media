@@ -1,0 +1,358 @@
+package app
+
+import (
+	"context"
+	"encoding/json"
+	"net/http/httptest"
+	"os"
+	"strings"
+	"sync"
+	"testing"
+	"time"
+)
+
+type ownedConfigSnapshotObserverKey struct{}
+
+func TestOwnedSharedSystemConfigMixed(t *testing.T) {
+	ownedRemoteReachableInterleavings(t)
+	data, e := os.ReadFile("../../testdata/plugin-shared-host-20261030/system-config/source/mixed-observations.json")
+	if e != nil {
+		t.Fatal(e)
+	}
+	var source struct {
+		Groups map[string]struct {
+			Observations map[string]json.RawMessage `json:"observations"`
+		} `json:"groups"`
+	}
+	if e = json.Unmarshal(data, &source); e != nil {
+		t.Fatal(e)
+	}
+	for _, name := range []string{"source-output", "delete-existing", "delete-recreate", "absent-insert"} {
+		t.Run(name, func(t *testing.T) {
+			dir := t.TempDir()
+			markets := []string{}
+			a, e := New(Options{DataDir: dir, PluginMarketsOverride: &markets})
+			if e != nil {
+				t.Fatal(e)
+			}
+			defer func() { a.Close() }()
+			cookie := setupTestAdmin(t, a)
+			p := installSharedSystemConfigFixture(t, a, cookie, sharedSystemConfigAll)
+			initial, ui := "A", "C"
+			if name == "source-output" {
+				initial = "A => DiskInitial"
+				ui = initial
+			}
+			if name == "absent-insert" {
+				initial = ""
+				ui = "A"
+			}
+			if initial != "" {
+				raw, _ := json.Marshal([]string{initial})
+				if _, e := systemConfigSet(t, p, string(raw)); e != nil {
+					t.Fatal(e)
+				}
+			}
+			selected, resume := make(chan struct{}), make(chan struct{})
+			var once sync.Once
+			observe := func() { once.Do(func() { close(selected); <-resume }) }
+			requestBody, _ := json.Marshal(map[string]string{"text": ui})
+			request := httptest.NewRequest("PUT", "/api/settings/recognition-words", strings.NewReader(string(requestBody)))
+			request.Header.Set("Content-Type", "application/json")
+			request.AddCookie(cookie)
+			request = request.WithContext(context.WithValue(request.Context(), ownedConfigSnapshotObserverKey{}, observe))
+			done := make(chan *httptest.ResponseRecorder, 1)
+			go func() { w := httptest.NewRecorder(); a.Handler().ServeHTTP(w, request); done <- w }()
+			select {
+			case <-selected:
+			case <-time.After(5 * time.Second):
+				t.Fatal("UI did not reach actual SELECT")
+			}
+			synced := make(chan error, 1)
+			go func() {
+				var e error
+				if name == "delete-existing" || name == "delete-recreate" {
+					_, e = systemConfigSet(t, p, `null`)
+				}
+				if e == nil && name != "delete-existing" {
+					v := `["B"]`
+					if name == "source-output" {
+						v = `["A => PluginNew"]`
+					}
+					_, e = systemConfigSet(t, p, v)
+				}
+				synced <- e
+			}()
+			select {
+			case e := <-synced:
+				if e != nil {
+					close(resume)
+					t.Fatal(e)
+				}
+			case <-time.After(5 * time.Second):
+				close(resume)
+				t.Fatal("sync setter blocked behind async SELECT")
+			}
+			close(resume)
+			var response *httptest.ResponseRecorder
+			select {
+			case response = <-done:
+			case <-time.After(5 * time.Second):
+				t.Fatal("UI did not complete")
+			}
+			wantStatus := 200
+			if name == "delete-existing" {
+				wantStatus = 400
+			}
+			if response.Code != wantStatus {
+				t.Fatal(response.Code, response.Body)
+			}
+			observation := source.Groups[name].Observations
+			if name == "source-output" {
+				assertSharedOracleJSON(t, systemConfigGet(t, p), observation["final_hot"])
+				var rows [][]json.RawMessage
+				if e = json.Unmarshal(observation["final_database"], &rows); e != nil {
+					t.Fatal(e)
+				}
+				var raw string
+				if e = json.Unmarshal(rows[0][0], &raw); e != nil {
+					t.Fatal(e)
+				}
+				assertSystemConfigStored(t, a, []json.RawMessage{json.RawMessage(raw)})
+				// Native metadata reads DB revision, but must not change source hot value.
+				revision, _, e := a.recognitionWords(context.Background())
+				if e != nil {
+					t.Fatal(e)
+				}
+				assertSharedOracleJSON(t, systemConfigGet(t, p), observation["final_hot"])
+				if e = a.saveRecognitionWords(context.Background(), revision, []string{"Native => Explicit"}); e != nil {
+					t.Fatal(e)
+				}
+			} else {
+				var want struct {
+					Get  json.RawMessage     `json:"get"`
+					Rows [][]json.RawMessage `json:"rows"`
+				}
+				if e = json.Unmarshal(observation["after_async"], &want); e != nil {
+					t.Fatal(e)
+				}
+				assertSharedOracleJSON(t, systemConfigGet(t, p), want.Get)
+				_, actual, e := a.readSharedSystemConfigRows(context.Background(), a.Store.DB)
+				if e != nil {
+					t.Fatal(e)
+				}
+				if len(actual) != len(want.Rows) {
+					t.Fatal(actual, want.Rows)
+				}
+				for i, row := range actual {
+					var id int64
+					var raw string
+					json.Unmarshal(want.Rows[i][0], &id)
+					json.Unmarshal(want.Rows[i][2], &raw)
+					if row.ID != id {
+						t.Fatal(row.ID, id)
+					}
+					assertSharedOracleJSON(t, row.Value, json.RawMessage(raw))
+				}
+				if name == "absent-insert" {
+					before := systemConfigGet(t, p)
+					r := callTest(t, a.Handler(), "PUT", "/api/settings/recognition-words", `{"text":"D"}`, cookie, "")
+					if r.Code != 400 || !strings.Contains(r.Body.String(), "SYSTEM_CONFIG_MULTIPLE_RESULTS") {
+						t.Fatal(r.Code, r.Body)
+					}
+					revision, _, e := a.recognitionWords(context.Background())
+					if e != nil {
+						t.Fatal(e)
+					}
+					if e = a.saveRecognitionWords(context.Background(), revision, []string{"must-not-drop-row"}); e == nil {
+						t.Fatal("native writer lost duplicate fact")
+					}
+					assertSharedOracleJSON(t, systemConfigGet(t, p), before)
+				}
+			}
+			if e = a.Close(); e != nil {
+				t.Fatal(e)
+			}
+			a, e = New(Options{DataDir: dir, PluginMarketsOverride: &markets})
+			if e != nil {
+				t.Fatal(e)
+			}
+			p = a.startOriginalPlugin(context.Background(), "OwnedSystemConfig")
+			if p == nil {
+				t.Fatal("cold actual worker absent")
+			}
+			switch name {
+			case "source-output":
+				assertSharedOracleJSON(t, systemConfigGet(t, p), json.RawMessage(`["Native => Explicit"]`))
+			case "delete-existing":
+				assertSharedOracleJSON(t, systemConfigGet(t, p), json.RawMessage(`null`))
+			case "delete-recreate":
+				assertSharedOracleJSON(t, systemConfigGet(t, p), json.RawMessage(`["C"]`))
+			}
+			if name == "absent-insert" {
+				assertSharedOracleJSON(t, systemConfigGet(t, p), json.RawMessage(`["A"]`))
+				r := callTest(t, a.Handler(), "PUT", "/api/settings/recognition-words", `{"text":"D"}`, cookie, "")
+				if r.Code != 400 {
+					t.Fatal(r.Code, r.Body)
+				}
+				if _, e = systemConfigSet(t, p, `null`); e != nil {
+					t.Fatal(e)
+				} // Source deletes first row only.
+				result, e := systemConfigSet(t, p, `null`)
+				if e != nil || string(result) != "null" {
+					t.Fatal("source same-hot null must not remove the residual row", string(result), e)
+				}
+				assertSharedOracleJSON(t, systemConfigGet(t, p), json.RawMessage(`null`))
+				if e = a.Close(); e != nil {
+					t.Fatal(e)
+				}
+				a, e = New(Options{DataDir: dir, PluginMarketsOverride: &markets})
+				if e != nil {
+					t.Fatal(e)
+				}
+				p = a.startOriginalPlugin(context.Background(), "OwnedSystemConfig")
+				if p == nil {
+					t.Fatal("residual cold worker")
+				}
+				var cold struct {
+					Get json.RawMessage `json:"cold_get"`
+				}
+				if e = json.Unmarshal(source.Groups["duplicate-delete-cold"].Observations["cold_get"], &cold.Get); e != nil {
+					t.Fatal(e)
+				}
+				assertSharedOracleJSON(t, systemConfigGet(t, p), cold.Get)
+				_, rows, e := a.readSharedSystemConfigRows(context.Background(), a.Store.DB)
+				if e != nil || len(rows) != 1 || rows[0].ID != 2 {
+					t.Fatal(rows, e)
+				}
+				r = callTest(t, a.Handler(), "PUT", "/api/settings/recognition-words", `{"text":"D"}`, cookie, "")
+				if r.Code != 200 {
+					t.Fatal(r.Code, r.Body)
+				}
+				revision, _, e := a.recognitionWords(context.Background())
+				if e != nil {
+					t.Fatal(e)
+				}
+				if e = a.saveRecognitionWords(context.Background(), revision, []string{"Native => KeptID"}); e != nil {
+					t.Fatal(e)
+				}
+				_, rows, e = a.readSharedSystemConfigRows(context.Background(), a.Store.DB)
+				if e != nil || len(rows) != 1 || rows[0].ID != 2 {
+					t.Fatal(rows, e)
+				}
+			}
+		})
+	}
+	t.Run("dirty-check", func(t *testing.T) {
+		a, _, p := sharedSystemConfigFixture(t, sharedSystemConfigAll)
+		if _, e := systemConfigSet(t, p, `["A"]`); e != nil {
+			t.Fatal(e)
+		}
+		if _, e := a.Store.DB.Exec(`CREATE TRIGGER owned_mixed_dirty BEFORE UPDATE ON recognition_words BEGIN SELECT RAISE(ABORT,'owned reject update'); END;`); e != nil {
+			t.Fatal(e)
+		}
+		if _, e := systemConfigSet(t, p, `["B"]`); e == nil {
+			t.Fatal("source dirty failure absent")
+		}
+		result, e := systemConfigSet(t, p, `["A"]`)
+		if e != nil || string(result) != "true" {
+			t.Fatal(string(result), e)
+		}
+		assertSystemConfigStored(t, a, []json.RawMessage{json.RawMessage(`["A"]`)})
+	})
+}
+
+// Real installed RemoteIdentifiers empty-URL producer behavior, with independent
+// original callbacks/DAO/WordsMatcher outputs. No extra sync delete producer.
+func ownedRemoteReachableInterleavings(t *testing.T) {
+	source := sharedRemoteSource(t)
+	for _, mode := range []string{"equal", "absent", "existing-empty-ui", "absent-empty-ui"} {
+		t.Run("remote-"+mode, func(t *testing.T) {
+			groupKey := mode + "-" + mode
+			if strings.HasSuffix(mode, "empty-ui") {
+				groupKey = "extra-" + groupKey
+			}
+			group := source[groupKey]
+			dir := t.TempDir()
+			markets := []string{}
+			a, e := New(Options{DataDir: dir, PluginMarketsOverride: &markets})
+			if e != nil {
+				t.Fatal(e)
+			}
+			defer func() { a.Close() }()
+			cookie := setupTestAdmin(t, a)
+			p := installSharedSystemConfigFixture(t, a, cookie, sharedSystemConfigAll)
+			initial := sharedRemoteObserved(t, group, "initial")
+			if mode == "equal" || mode == "existing-empty-ui" {
+				if _, e = systemConfigSet(t, p, string(initial.Get)); e != nil {
+					t.Fatal(e)
+				}
+			}
+			assertSharedRemoteSnapshot(t, a, p, initial)
+			selected, resume := make(chan struct{}), make(chan struct{})
+			var once, releaseOnce sync.Once
+			release := func() { releaseOnce.Do(func() { close(resume) }) }
+			defer release()
+			observe := func() { once.Do(func() { close(selected); <-resume }) }
+			raw, _ := json.Marshal(map[string]string{"text": strings.Join(group.UIInput, "\n")})
+			request := httptest.NewRequest("PUT", "/api/settings/recognition-words", strings.NewReader(string(raw)))
+			request.Header.Set("Content-Type", "application/json")
+			request.AddCookie(cookie)
+			request = request.WithContext(context.WithValue(request.Context(), ownedConfigSnapshotObserverKey{}, observe))
+			done := make(chan *httptest.ResponseRecorder, 1)
+			go func() { w := httptest.NewRecorder(); a.Handler().ServeHTTP(w, request); done <- w }()
+			select {
+			case <-selected:
+			case <-time.After(5 * time.Second):
+				t.Fatal("real UI SELECT absent")
+			}
+			sharedRemoteRun(t, p)
+			assertSharedRemoteSnapshot(t, a, p, sharedRemoteObserved(t, group, "before_ui_resume"))
+			release()
+			select {
+			case response := <-done:
+				if response.Code != 200 {
+					t.Fatal(response.Code, response.Body)
+				}
+			case <-time.After(5 * time.Second):
+				t.Fatal("real UI did not resume")
+			}
+			assertSharedRemoteSnapshot(t, a, p, sharedRemoteObserved(t, group, "after_ui"))
+			if strings.HasSuffix(mode, "empty-ui") {
+				sharedRemoteRun(t, p)
+				assertSharedRemoteSnapshot(t, a, p, sharedRemoteObserved(t, group, "after_next_remote"))
+				response := callTest(t, a.Handler(), "PUT", "/api/settings/recognition-words", `{"text":"A => Later"}`, cookie, "")
+				_, sourceError := group.Observations["next_ui_error"]
+				if (response.Code != 200) != sourceError {
+					t.Fatal(response.Code, response.Body)
+				}
+				assertSharedRemoteSnapshot(t, a, p, sharedRemoteObserved(t, group, "after_next_ui"))
+			}
+			if mode == "absent" {
+				if !strings.Contains(string(group.Observations["next_ui_error"]), "MultipleResultsFound") {
+					t.Fatal("source failure evidence absent")
+				}
+				response := callTest(t, a.Handler(), "PUT", "/api/settings/recognition-words", `{"text":"A => Next"}`, cookie, "")
+				if response.Code != 400 || !strings.Contains(response.Body.String(), "SYSTEM_CONFIG_MULTIPLE_RESULTS") {
+					t.Fatal(response.Code, response.Body)
+				}
+			}
+			if e = a.Close(); e != nil {
+				t.Fatal(e)
+			}
+			a, e = New(Options{DataDir: dir, PluginMarketsOverride: &markets})
+			if e != nil {
+				t.Fatal(e)
+			}
+			p = a.startOriginalPlugin(context.Background(), "OwnedSystemConfig")
+			if p == nil {
+				t.Fatal("cold actual worker absent")
+			}
+			coldKey := mode + "-cold"
+			if strings.HasSuffix(mode, "empty-ui") {
+				coldKey = "extra-" + coldKey
+			}
+			assertSharedRemoteSnapshot(t, a, p, sharedRemoteObserved(t, source[coldKey], "cold"))
+		})
+	}
+}

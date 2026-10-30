@@ -1,0 +1,168 @@
+{
+  "schema": 1,
+  "feature_id": "S07.CustomIdentifiers",
+  "status": "independent_candidate_passed_pending_coordinator_integration_and_browser",
+  "scope": "Actual fixed RemoteIdentifiers truthy producer -> one-key internal shared Get/Set -> ordinary native async words UI -> selected local title preprocessing. Not whole S07/S11 or the complete RemoteIdentifiers plugin.",
+  "candidate": {
+    "base": "42fd80dc13e989a947babd5a40a41560877413f9",
+    "manifest_sha256": "3f2aeb1c3cb8ca9e1d5ca6e7e75d1781b96e710cf66ea4357eaaf8529cf2e12e",
+    "files": 104,
+    "product_drift": []
+  },
+  "independence": {
+    "model": "same assigned Astra/ultra reviewer; no model switch",
+    "product_edits": false,
+    "ledger_edits": false,
+    "source_expected_values": "actual normal source components, not target calculations",
+    "browser_operated_by_reviewer": false
+  },
+  "executed": {
+    "independent_app_race": {
+      "roots": 20,
+      "own_roots": 17,
+      "actual_host_roots": 3,
+      "seconds": 317.528,
+      "exit": 0,
+      "skips": 0,
+      "races": 0,
+      "log_sha256": "7ffa3cbcacd496b58e3469eeeaa55e257bc492f1804004a630cc2cde035518b0"
+    },
+    "sdk_codec_race": {
+      "exit": 0,
+      "seconds": 1.092,
+      "log_sha256": "bac639de7952ff7a147f0984b100db8e8ba36b8e53954d6f2289b7dd5a43f032"
+    },
+    "words_package_race": {
+      "exit": 0,
+      "seconds": 1.284,
+      "log_sha256": "559111b99bf67b391b47e93f266362161b93e546fb83ab452a7cb85394d78864"
+    },
+    "source_new_processes": 16,
+    "existing_source_replay": {
+      "groups": 12,
+      "operations": 92,
+      "phases": 28
+    },
+    "actual_server": "Built real cmd/server -race, three process starts; real authenticated HTTP/SQLite/clone shared state/trigger failure/hot-dirty/equal-no-repair/cold recovery. Not just httptest.",
+    "cancellation": "Actual pre-cancelled worker invocation and cancelled changed UI request after actual SELECT leave state unchanged; subsequent normal write and cold recovery succeed. Original ASGI client-disconnect behavior is not claimed."
+  },
+  "observed_binaries": {
+    "worker_sha256": [
+      "cdc8ad2e2f1d6b97a7b851a20e6d3ec32ecccd28709451b4754e34ba6e1db433",
+      "e98e77ec1346eafab335dd8e2fd2134beca4e3d6bb65ab66a35b1eb0a819cfaa"
+    ],
+    "server_sha256": [
+      "5f5be737060d386991bfb33632304239261666d4591e7e6e976c4636a69dbd58"
+    ]
+  },
+  "binding": {
+    "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "target_binding_file": "target-binding.json",
+    "target_binding_sha256": "6c71bb4f2978e68077a8ebe5941406e3541a2a32f903a12fad1377e557195db5",
+    "before_inputs": 7257,
+    "after_inputs": 7258,
+    "changed_or_removed": 0,
+    "added_after_test": "One nonexecuted portable overlay generator; all nine generated overlay file bytes equal the actual gate. No second shell-run execution claimed.",
+    "dependency_manifest_sha256": "38f023e6b368979764a8c3f376112171e740e3566ed73c745482a84a6ed4a7a8",
+    "source_import_files": 1130,
+    "source_import_drift": 0,
+    "web_source_inputs": 168,
+    "web_build_outputs_matched": 138
+  },
+  "counterexamples_closed": [
+    {
+      "issue": "Internal surrogate Get misidentified as HTTP JSON rendering",
+      "red": "candidate04-final/reachable-run01.log",
+      "red_sha256": "1d0e526df11bdd55813f65cf0055585f1f9ca8e0af5911f4b1b4f064e5456bc0",
+      "fix": "Escaped internal RawMessage and source codepoint SDK codec; actual Remote complete values/rows/cold compared independently. External UI/fixture HTTP rendering remains separate."
+    },
+    {
+      "issue": "Python strip versus Go TrimSpace combined fields",
+      "red": "candidate05-final/exploratory-run01.log",
+      "red_sha256": "ec5735b24a8a273f60e4c3ffeb731eebf8a460134e370e9e14e7ad2cf893f998",
+      "fix": "Only original strip-equivalent positions reuse Python strip semantics."
+    },
+    {
+      "issue": "Ignored whitespace incorrectly consumes executable-rule budget",
+      "red": "candidate05-final/strip-whitespace-run02.log",
+      "red_sha256": "6b53473c237c24102b31d5aab54e3cfee96abf9d30136f4b471215296ab45b35",
+      "fix": "Python-strip-empty lines are not executable. Actual regex budgets and separate subscription raw-editor limits unchanged."
+    },
+    {
+      "issue": "Earlier mixed snapshot/dirty-check/order/JSON/ignored-comment findings",
+      "evidence": "private-handoff-20261030-0445.json",
+      "evidence_sha256": "e9a83cd0590ad72c865fdc1bf615d8e837ecb40eed987ba83f5e4b607c0be9ea",
+      "status": "Replayed on candidate05; no inheritance of earlier candidate acceptance."
+    }
+  ],
+  "remaining_boundaries": [
+    "Generic SystemConfig DAO sync falsey/delete/recreate versus other-key table-global IDs remains independently disproven/unclosed. Real Remote producer always writes a nonempty marker list on success; UI writers share one async lock. This narrowed actual producer scope does not erase the generic counterexample.",
+    "Cross-key shared async locking, arbitrary multi-process/previously imported duplicate-row states and NAS database import are not verified.",
+    "Full Remote HTTP fetching/scheduling, Manager/Base/auth bootstrap and original full HTTP endpoint/event dispatch were not run or migrated by this slice.",
+    "Full S11/Rust parser/options/all recognition consumers and original unbounded executable-regex/resource behavior remain open. Existing local resource limits are retained and not called strict original unlimited equivalence.",
+    "Broader JSON serial/failure fixtures are auxiliary coverage, not approval of full internal DAO equivalence; nonfinite internal Get remains outside this string-list producer contract.",
+    "Native Go error/HTTP envelopes and checked title UTF-8 errors are explicit adapter boundaries, not Python exception/status byte identity.",
+    "Candidate worktree is based on 42fd80dc; main integration is not yet independently accepted. Merge subscription_words.go only by its exact raw-limit hunk; do not overwrite coordinator newer S05 Unicode code.",
+    "Coordinator must use rebuilt/reinstalled candidate05 worker for final browser acceptance. No reviewer-operated browser or final pushed commit claim."
+  ],
+  "owner_results_read_and_hash_checked": [
+    {
+      "name": "candidate05-normal-run01",
+      "sha256": "aab3c3b5f7d5477fbc86ac4416fac61a7098e83c38821a4304e4df57d1820f0d",
+      "exit": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/app\t49.601s"
+      ]
+    },
+    {
+      "name": "candidate05-race-run01",
+      "sha256": "efd03105c25b89c266a29e24887acb656e506430ab30f23b63c2add4c06280ad",
+      "exit": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/app\t388.531s"
+      ]
+    },
+    {
+      "name": "candidate05-native-cross-run01",
+      "sha256": "176cc9e373c10ffaff92774f8bf7ac37f55af97a9e61ebb9fbfaf40e653dbd68",
+      "exit": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/app\t74.680s"
+      ]
+    },
+    {
+      "name": "candidate05-words-final-run01",
+      "sha256": "d944ebc9143138dd49cf5232556ec1dd8774e7f04dad0753b1a3588645345cde",
+      "exit": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/media/words\t1.268s"
+      ]
+    },
+    {
+      "name": "candidate05-sdk-final-run01",
+      "sha256": "9396fc3be98eb2f4a615e43e2a5f57f90c08da545ee66befe79dce55e054498f",
+      "exit": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/plugins\t21.774s"
+      ]
+    },
+    {
+      "name": "candidate05-web-final-run01",
+      "sha256": "8f1aafee0df28e5650ec035d354f186f9607e4c2baaeb709734cb5e3da82c381",
+      "exit": 0,
+      "package_result": []
+    },
+    {
+      "name": "candidate05-remote-fixes-run01",
+      "sha256": "f4f0b0a01e81bf3854b2506ce228e5ab47ed9022b8f17773cb09affefc4e8b1f",
+      "exit": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/app\t25.827s"
+      ]
+    }
+  ],
+  "source_summary_sha256": "5725158de40e1a786164a2877707dcb670ff2265a718722370a441e18fdf1551",
+  "final_result_sha256": "f5dd70ebd8193adc7c9d3116ae7764ebe52f688f7c63a7e07503ba102266970f",
+  "web_provenance_check_sha256": "93270ec3b39250c9499d3dfa4f3456c7ead3307350dad708c632ec79dc11d33e",
+  "recommendation": "Accept this exact candidate for the stated shared-configuration integration sub-slice after coordinator integration/regression/browser gates. Keep parent S07 implementing and retain the explicit general-API/S11 dependencies."
+}

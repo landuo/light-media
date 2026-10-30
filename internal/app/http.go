@@ -182,6 +182,8 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 		out = a.publicSettings()
 	case p == "settings/rules" || strings.HasPrefix(p, "settings/rules/"):
 		out, e = a.priorityRulesAPI(w, r, strings.TrimPrefix(strings.TrimPrefix(p, "settings/rules"), "/"))
+	case p == "settings/recognition-words":
+		out, e = a.sharedSystemConfigWordsAPI(w, r)
 	case p == "settings/resource-metadata":
 		out, e = a.resourceMetadataSettingsAPI(w, r)
 	case p == "settings" && method == "PUT":

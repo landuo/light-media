@@ -1,0 +1,867 @@
+{
+  "schema": 1,
+  "feature_id": "S07.CustomIdentifiers",
+  "main_head": "a110eabd0f6bb99a4c0a2cb6f32cb94c1efe2d12",
+  "plan_sha256": "8d335150f7fbc29e6b659880bf6be1a350a0fa1fc13f2706cc883bf5f2f33184",
+  "executor_sha256": "d5aaccb9beec25135076a214f9f247de13b3c4d2984b8b9ac68f3dee66166929",
+  "shared_patch_sha256": "8d0d1e8b793254dc996d813fa0c4fdf195317cd69d46d3da201b82272cf95d9a",
+  "applied_receipt_sha256": "b26f72d86332170e463a0da91a12acd2958107b9834bee10c8da436c359f128c",
+  "operations": [
+    {
+      "path": "cmd/owned-system-config-fixture/main.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "65b6bbe5fb3f14f7360a2996d2b30f09ab9bf7317f7783a182d2450b82b28615",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "cmd/owned-system-config-fixture/remote.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "2566fc299e9ce8b493260efdbff683d9afc80476b51ea65a7ed7d4438bb8193b",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/http.go",
+      "operation": "exact_patch",
+      "head_sha256": "7dbe46f289feb68d40eac17525e40d4edd647570e93b86d29f4c4352afb5a527",
+      "integrated_sha256": "d8d3b9d8506a28948967ce06538f90294a81730653823f66e6feb939bbe82d3d",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_original_resources.go",
+      "operation": "exact_patch",
+      "head_sha256": "cd03da14cb5c2578f053e684a4d46d4758af731fb26661cef8fff10fab9d7d2d",
+      "integrated_sha256": "51948b249db53dc98984733dc0fdef09634d1bec22f93423c47ae1d26fd9e488",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "191486ef4919c181d977831ac1dbed298b1d384838c723c9a265925c7b3dd80d",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_codepoints_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "77421121e0a7407835f505c44ad059071e6e549faa7334557bf735efce47d64c",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_fixture_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "dd4bb13d15cc957eb76017564e9efa38ed783fd782b057659e93b4bd142ca74f",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_http.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "b8642b5a1dfaad201ea64fe264f0e81a70e796a597180fe48a728c475f44c243",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_integration_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "90c671423a19dd99197775b359db8a2a679e9653e0baca4daf979280313237a1",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_json.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "c2d010d3c5df0172e686f6b18b435e3bc2491d7e1c967279b83b34983fe2c7a0",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_lifecycle_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "46a8ff86f20a6fb01db6841b82aee45f5b3df879506775639611caeae549c8ee",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_mixed_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "00645940d528e46cee6d37c4d79378a4bec008c6c5868a67de8e44c883cae9f1",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_oracle_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "7e1a9a1e69849bfa394b5093d94034e9ca60f34f4a089ed921153d929e1d5767",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_process_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "4f61fec621eccc8659e10c4a466d99f448ebe58a61e56e2129432b0798d2ee11",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_remote_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "bff3782e9cb2c22b6b0815efb89315207b597a42432ffd5cc13bdca64090eff2",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_rows.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "f45190d2b4f8caff69c1641e71f440dc54e84cce559f3ccdb6e39e2d41cb8d6b",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_rows_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "3191f3654313511c8a53c0362b4553ed12c0c0ddb105bba7a8d824cbba50d277",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_state.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "557eaa567529b481ee507a875ee574414bcb63ffe9ff360d4aab6c9f5f67c73e",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_supplement_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "ec4bd89db5cccb1b823cd6611c0ede28f0571ac34e25f4b0d8fe76a9aff13925",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "f54140a0a7012cc6ebbed1cae94cd765379a86c96d0858a2f086901001c92af6",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/plugin_shared_system_config_unicode_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "1c40358a8067e750a20551c4e203acd755229ac5cad18645550c5f4541b2c6d7",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/recognition_words.go",
+      "operation": "replace_if_unchanged",
+      "head_sha256": "49919f9b4d9435f24fa4f94c19123096e5048e7657df6970f0d1321ef15ad685",
+      "integrated_sha256": "8ddc9b09a0546f557a1522fa9b78ec2efb82066610856e44b5d38f24f63ebd64",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/runtime.go",
+      "operation": "exact_patch",
+      "head_sha256": "cfe34da3a7e5c36b3f32fd9d8f991bab9029d05fe4e3c9816b5964561cc36d31",
+      "integrated_sha256": "4fcab0b50f7a18a2266ecbb6200c8159f376498e4ddbf04c957047603223324e",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/app/subscription_words.go",
+      "operation": "exact_patch",
+      "head_sha256": "5b4f50319d719c04d36b928eb0d9295f84ee375902f635a32adb081f0cd237d4",
+      "integrated_sha256": "e20a3613d297927b0ee384a31ac113ea95620b94f9426804396d9d584a2cce65",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/media/words/matcher.go",
+      "operation": "replace_if_unchanged",
+      "head_sha256": "7002624891a888833925475888fc994a2b93c54f46c1b2146b324cbbdd18ba3d",
+      "integrated_sha256": "abf621e22fd3177949ea8b2a8740d015e67bda6758ad94dd874fd9bc80898b62",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/media/words/shared_system_config_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "bf2de8ff941c012ff2a0d73ee79a6e2ad89ba082146af095800e8d94e6af96fa",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/media/words/source_unicode.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "ccdd40197765c2386fc8bbae57c0181c55c2acd891ac7dc67e9c3c895736d13c",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/media/words/source_unicode_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "5580ea023f28021ff243276c7869b99e23c6441268246d2a311d2b716fac2e01",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/plugins/shared_system_config.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "e650df39ce52e94479fffb559867e540df8747e49771db31902c1d14dd914065",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/plugins/shared_system_config_strings.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "b8d65fa7c07fc0910ca74088dde3a3c4aa64c54da969cb58ab0760060a9bdd0e",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/plugins/shared_system_config_strings_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "b5955b751d65a6496d308b9a9a1e65326f1c99a49f096370dc3636a595e21bef",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "internal/plugins/shared_system_config_test.go",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "6c212eded1d0959d823eb70d7e632ecd6ebfc77be105bc2f70508af11abd4e39",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/CONTRACT.md",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "975f15d9e24597409989d3116a2ce0ce69da02956f4f58c609196b428044fc24",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/mixed_test.go.txt",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "6f3371d1a95e75d282454dbd5711b1dc50992cc858ba3bde9263ae726ac9b311",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/cold.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "3823c577a0fb303101f045b394872f6315cabbe5672043e462200e8d3fe8723d",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/extra-manifest.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "b0bc7a224769a2a88cfc49226dfa072c84a784e15bcbe40da87f5b114450088b",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/failure-delete.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "778d3bcf13426352b45422bd5d798a732030e89f9dac74cbb7e061b8f423f023",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/failure-hot.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "7c1893681f35b89cee85e50a759996ba1311a8e0f299d422a7132b6b28ad50b5",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/failure-insert.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "6471b2790e7e652308d78881b681507050caf98538eba56372d083f8ceb07260",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/independent-supplement.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "7d532ba5ba3c184498da2ad311f802f17669e5071d651fea16454f61385b4d4d",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/independent/binding.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "0e2d78d4d1c6f04e5e5dcc634c54a225e784d787a786576d18cb0e55199ee9d5",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/independent/dirty-input.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "af4a781eb81cd6e6f11778e4125a033432494c97640ebba24e783b5dc4e4dd10",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/independent/source_driver.py",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "d8d4030850efe3bf02d7f40566b83497d4728eb88227aa94cf58bee073d2f379",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/independent/source_duplicate_delete_probe.py",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "75b4d1eeec69074a0c3ecf77d238b807e0efa98f6a10d8693974fceabcb9ce69",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/independent/source_mixed_identity_probe.py",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "9a9a74513cda70dd3a040094f90efb17068ddeaf8ebe1b105b831d161ec6e68f",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/independent/source_mixed_set_cases.py",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "25ea26a8c840b9ee64791242447ba61b5487a621f5ae33aaeff80327bc521a5b",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/independent/source_mixed_set_interleaving.py",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "2eb06a52ca50bd3b1a3c6962ee8e28cf6002b601e77539fb46dda90dfeba3dae",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/installed-call-discovery.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "5114273418436df5d68cc61552a7ceeb833c1c9e920d1fd775d57faff0e40aaa",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/json-numbers.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "3da65144b8e743304e0e755dddfd1cbdd1e62ee99f2da03731f428b403f1af2f",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/large-observation.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "2bca5616c3b5a85fd2cc2217b71a09043400cb3ae68a4a51a0f681bf225d70bd",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/mixed-observations.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "681eff35af0b37e8bac4b4dc6f08c8031833e3c304b2874dc8710ade928f3956",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/native-ui.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "0d0df44fc67006d3cee0bc4fba34659f007284dca8f4c895655df5779f0f9944",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/oracle.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "8b2a302a95974ea841b1fd522c8afd96491fc0de73c9b6a3d54f9832d7eaffe4",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/ordinary.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "28f1859b6aea1786b9672792d194d3c6c9329e32dc5e3774ff964e6fe9d5b5ef",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/python-freeze.txt",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "99486829529a690669b17cb2995fe7f8cae5b2087138376903f39c301b44991a",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/raw-values.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "464558c4681b88277b974c1441c8eb0b179c0901a2a381d5162ac919c5b56fcf",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/remote-python-freeze.txt",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "1ab5aee0103ea01bcd11f5fc550c66930d614aaa5a5db98f0f162c290bb7a71a",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/remote-reachable-binding.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "8a1075ffa77b2a70cf08e45f27e69590fb4e9e175a1a1f69a31adad47739541a",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/remote-reachable.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "a464a3c69a83609a9b47ac4124613f4409e95baa76592c8d7bb4403c45c27a48",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/remote_reachable_driver.py",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "d4713f3b19ee593fd51cdf72d90bdb565d976c2abe8e256b8834d2fa80181e13",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/source-constraints.txt",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "e7943102980801b8eb075b76c986c6e69ceb7718cff86a0ecf8afa2c67ac4cbd",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/source-manifest.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "8f4a18c382201e53f94299c9dd0ccd0c5b087c5e5799dc9eba252f116fb304c7",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/source_driver.py",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "8dbe0dad71f42088a1e5693f57931f7e23051c4c248f559781fdb358086b485d",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/source_reachable_extra.py",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "8735cb4cf6311a1bd7d9c30d50b56322f552f7e661f739a894d5d859af91421f",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/source_reachable_ignored_whitespace.py",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "b59e3b9ca5452fe276c06da9a8b3df074ef81bb882decc1b56635249d8e45140",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/source_reachable_strip.py",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "87950fd1932e63b34ebdd31c3a6e37b90da202b74895ba9580f2f8f8242aff64",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/source_unicode_consumer.py",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "228271f81483cf3abbeb77350d8c533e6769456ddf9efdb4598455362ff5b67d",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/unicode-consumer-input.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "734dc6e475755a135ebf20b6a4a917c0050d3df5d549228affc0714e707fbecb",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "testdata/plugin-shared-host-20261030/system-config/source/unicode-consumer.json",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "b82478dba328fa1fab56a7a7deb487a9f34012f670a3f2d3357abfb7e2976b37",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/AppModeFooter-B-wABO7N.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "1716da80b6db7f019444d6ae7dfc510400ab5ce9d17fcbb2af0b46a0f7a1963d",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/DownloaderConfigDialog-YB_fecQM.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "c08a3d326d8c33095e63859ae25123227921718eb33210a3a7a0fa4c24752477",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/InterfaceModeMenu-Bofu0lbn.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "f26a2f0543d1f0178626169c0bfa82d05ee2adbba95e0a681ff95269ca1211be",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginAppPage-CCqdNm88.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "e9f8e4e7717dd19f7825c1e16043313be39ab5198b155357308f1b119d564516",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginApplicationCenter-B2O61Z9d.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "32cc9990461673959221c775b4d0d9eaba1fea74c3be883c5152f7b3a5aac50b",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginAuthLogin-DR-bOlrY.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "9849611dde5ff48229ea91ad75bf0e064c2ae6faa0ebbebcd745cb9403dc91cd",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginCloneDialog-BI4JDEDe.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "a8e7b19bf965f4d5a3c8d8b3306577dcea421399ef53a363fc18b9e5c8650d38",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginConfigDialog-DpiArVQ6.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "7f3e7904b1cc411e1e24fd5bf4a0cd2e487d5a24474f1ead184358f65629ca3a",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginCronField-CQJoKoaA.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "cd209e2ed6c04d8ed94c0ca29f7ab9f1566c73b8f3cbeacffe1d02d66c5d7aab",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginDashboard-0vGjeOtl.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "ea0fe4b67dc79ea71aaf4840d0002ce7550a5ba9f778265e09ecfa8ce93a7963",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginDataDialog-BMW_Whnn.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "427dedef191cc1e91e02571e5b6ac5d2e7a93300852c1ae7a0f4430894739d65",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginFolderDialog-7BwUiQq7.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "e731e3c4dbb14297dd486cc0cba11aec30ee01faf496d90cbe4dc8bfef3826a9",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginLogDialog-6hBvQb__.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "2159dd7d0ad9787800528dcaba52a81ae643022769a1c41d8913759ecf764c95",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginMarketSettingDialog-DkiylmXq.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "dabf19f28cd12937a94968f2cc6bc8e3fdc6581eda2ca9ad5beefcb173fff84f",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginQuickAccess-CS9Iqr1f.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "f185879aadd874cb31b86f127e0458007754189362814df598b68ddc72ddb7a1",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginSearchDialog-CekLvm7c.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "3aba091be05fa725553c93efcd3bcdce3b40d1a3704e045819ca10bc1ccf6018",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginServices-DRW6QE1f.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "960a218bd0f88f876e28a14bfe512bc311807e66fad32bd4e3487e561c054f7c",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/PluginVersionHistoryDialog-By2ZGnJ1.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "7057f06aa02cc60df34e826a7318c1adf515c611c56116f532237369c1b2a0f2",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/Plugins-sJatAS2W.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "ddda1c3f79e768cbbc541ff976d27ce40339240b4ce39b7a342368ba8bcbf061",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/RecognitionWordsSettings-BzBEXST7.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "b18872b6bca4aa674a713989df7369a0238cf32832441217e93a3a9b3efe2788",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/RecognitionWordsSettings-CXsV6u7l.css",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "0bba7ac18019c351af47591968159b053b1cea26f0bb8c450132175ef48f0fed",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/ResourceMetadataSettings-BEehmGUe.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "e2d8a94495cec33afe94a7c76a83f1f249edb228ad2c0e82ae1983d47e20e77f",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/RuleManager-DUldqPzA.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "051abf3ec31b2093cd0ceee9323e4c33e41de5cd72bfb97ed187e7fa6df93d84",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/ShortcutMessageDialog-Bpl1cFLW.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "436f4a2745007d0824b76be14faf4111e7bb1ac4e117cb6e5ebfacb3f0cc244a",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/ShortcutTools-A-OnFsBY.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "3219d3255e2736254ad18fed8f8db147bcbf8251dc72308a4f8689cc84770162",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/SiteUserDataDialog-Cmui4swN.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "d7ab278a4042afddebd56ed42187f1c52360b65375fe24159df3aa80f235a0b4",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/index-3x7tMIUd.css",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "836e752c7b1c59ef6dc02caf376357b2a9795d5ff9626ead8e011c62378ae897",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/index-Cs6qe8Uk.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "e66aabc1c4c4f9e3cb5742a3ea6fce0d3df9468722560cccf210c1205086ded9",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/plugin-clone-cdM4ouFE.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "0711cf62383f389bec9c35f81568ed7daf1f6658db5de53ac8d5f2b6da0b534d",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/assets/plugin-federation-Dtn_H0tZ.js",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "48f6138a3c6bb1c5a77ff8d36208bdc3e31ce7bd9397a543b1e1060f602e646c",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/dist/index.html",
+      "operation": "replace_if_unchanged",
+      "head_sha256": "b4bba3d0f51539b91e36e6998579af36db75e1a1a9d2aa83fe63a2553068929d",
+      "integrated_sha256": "4cad404314d0d2ad9671aeb3061cc9d78b60f2365370e21b2c9fe308af0afc80",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/src/assets/material-design-icons.json",
+      "operation": "replace_if_unchanged",
+      "head_sha256": "1fffc8bbde357a739220c0b111859c7e620d536269d61ce8bf3f208e803bf55c",
+      "integrated_sha256": "ddaa9054198b165f4620ff2ba8da56008a46699fe68ae3f3b67f8d50a4e3d3bd",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/src/components/RecognitionWordsSettings.vue",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "2e9d692b20cfe6b38cf599614ddf1e476ebb5ec8b1f69ecab2419b6c929d6a7c",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/src/components/Settings.vue",
+      "operation": "replace_if_unchanged",
+      "head_sha256": "4415db1dbd8b1b76cdc766c1329e7c816e580273859d51ef80ccc180cb64edaa",
+      "integrated_sha256": "58a9fad08c06a5a985f903bba9de2aff863c1403509ded18b9f0bc3aae17e7f1",
+      "head_equals_reviewed_preimage": true
+    },
+    {
+      "path": "web/tests/shared-system-config-words.test.mjs",
+      "operation": "add",
+      "head_sha256": null,
+      "integrated_sha256": "7ddbf64bafec87d5cfd0d7dd2c0ee094e69467b72e5557691c1458edd217832b",
+      "head_equals_reviewed_preimage": true
+    }
+  ],
+  "four_exact_patches": {
+    "match_plan": true,
+    "preserve_all_other_head_bytes": true
+  },
+  "protected_cross_slice_files": [
+    {
+      "path": "internal/app/plugin_shared_history.go",
+      "sha256": "f864e84c1f0b6e33141b1549ecc94b14bf1a3ab76405433ea9280232265c59a8",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_history_decode.go",
+      "sha256": "eee54a55cfdc689a312c54930a24461b9a1c7b88b66aa22454d18a7d7c6668d1",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_history_fixture_test.go",
+      "sha256": "7235ad062e76706d41370f303cdb761261993cdf874084222094b5e60acb48c8",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_history_legacy_test.go",
+      "sha256": "ff188abdfc5f760641979d14fe4a465589ba0b84c3b4bee0d281872a1ea99889",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_history_oracle_test.go",
+      "sha256": "35e24c6466741dbbe24d02c1088eac5119e10547c694b4dfea9315f9e1b30f78",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_history_producer_oracle_test.go",
+      "sha256": "b53cf19decb8d328406825669b510510785c4bca80534bb10614c4c2f50e5ef5",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_history_snapshot.go",
+      "sha256": "df8094933931c2c70f9bd3ea9dfb560eab58346d7b0bf981a2dc1492e45fecdc",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_history_test.go",
+      "sha256": "055d39881e0f2cb7ea4f3cd58d0d38a8fe8338706023f5ff2e5f70cb9d933a5d",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_manager_queries.go",
+      "sha256": "38b4da535d21151fc93217aaa6e9402460c4cd0631c87afe6ff3c517b39632ff",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_manager_queries_cache.go",
+      "sha256": "66d5939907f65a7e71099c21a7fb1ace4b462138c50335ecdb318802a6cae1ef",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_manager_queries_cache_test.go",
+      "sha256": "b4598a319af812e2bfab71ea021c40ca317359c263e10a32d62886328cd62e88",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_manager_queries_config_failure_test.go",
+      "sha256": "18c927a2a84bf4d6fbb29b354f43094a110c90518f7ef9c08eb9e55cecf95692",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_manager_queries_independent_test.go",
+      "sha256": "fbeb59ccfd6314b101d429e4fda8689917e7f512374847d892d3f4cb96728fb1",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_manager_queries_process_test.go",
+      "sha256": "969abbad4712452f9e5df22c518fe2571902d94af85d3476b5a9f5f88a9fb0b6",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_manager_queries_test.go",
+      "sha256": "bbf7a8050e5cf602a989aa302afce684f711d73f848cbd0b317d08ea95f1d704",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_subscriptions_unicode.go",
+      "sha256": "8bfe9d486b5427c05c6c6deb56b12b6246b066346c9f2dc2038fb17f00e94fd0",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_subscriptions_unicode_test.go",
+      "sha256": "97762dd7e1059f8fcbe54e753ecb9e341d1dde3dd0826e76d83d25e7ce15f0e4",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_transmission_query.go",
+      "sha256": "6326d3591314351604717121bc00573c76ce5192af7dfee41b857d1b6e5760c8",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_transmission_query_boundary_test.go",
+      "sha256": "53c3c199302f89a8ff9a75894106a2434bb398dded46bfb78234264c71b11b94",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_transmission_query_decode.go",
+      "sha256": "abeafd702cdb3db1847bbaf4074f886da25309c1aa25468f8ed0d2128755f191",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_transmission_query_fixture_test.go",
+      "sha256": "6fad11dba4ff33568e270172c0be8c9e21d92462487d748eb6ee848b1b089e00",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_transmission_query_real_test.go",
+      "sha256": "bdafe60b91efd82368c5029e217240d3837d7172926c339815fe45328d8bf30a",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_transmission_query_slow_test.go",
+      "sha256": "bbc7278a40d85151113e8ff78826ace418502c919d6e9825a2a7fb7a64523860",
+      "equals_head": true
+    },
+    {
+      "path": "internal/app/plugin_shared_transmission_query_ui_test.go",
+      "sha256": "26d03a899cda1650878772652203b82b6009cadb1293ee058e7417e68035b034",
+      "equals_head": true
+    }
+  ],
+  "tracked_changes_outside_plan": [],
+  "assessment": "All 104 integrated paths match reviewed planned outputs. Four shared hunks reconstruct exactly from current committed HEAD, preserving all other bytes. No production write by independent reviewer. Integrated test gate still running; not final acceptance."
+}

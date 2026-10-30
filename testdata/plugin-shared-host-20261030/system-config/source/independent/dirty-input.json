@@ -1,0 +1,30 @@
+{
+  "operations": [
+    {
+      "case": "store-A",
+      "method": "set",
+      "value": [
+        "A"
+      ]
+    },
+    {
+      "case": "fail-B",
+      "method": "set",
+      "value": [
+        "B"
+      ],
+      "sql": "CREATE TRIGGER owned_dirty BEFORE UPDATE ON systemconfig BEGIN SELECT RAISE(ABORT,'owned reject update'); END;"
+    },
+    {
+      "case": "restore-A-while-trigger-active",
+      "method": "set",
+      "value": [
+        "A"
+      ]
+    },
+    {
+      "case": "check-A",
+      "method": "get"
+    }
+  ]
+}

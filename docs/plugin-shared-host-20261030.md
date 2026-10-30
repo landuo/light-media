@@ -68,3 +68,15 @@
 本片实际当前主树race/标准worker/daemon及官方浏览器正向、失败502、修复、分身隔离、同数据冷恢复分别绑定。首次官方预览停止缺少QA stop回执，随后冷启动守卫拒绝；原失败保留。仅QA harness增加启动前完整性checkpoint，严格原字节核对后同目录恢复，未修改账户/认证/业务配置，不虚构优雅退出。受影响旧八条证据保留原hash并标historical；新增真实跨片回归，不把旧日志换hash冒充重跑。
 
 精简证据位于`migration/evidence/transmission-query/`，原始AX/安全隔离证明和日志另行按精确白名单保留备份，不声称全部原始材料已在Git。每次交付仍以实际commit/ref读回为准。
+
+## S07 CustomIdentifiers 有限共享配置契约
+
+已完成普通 RemoteIdentifiers truthy 写入→标准 SDK Get/Set→原生识别词 UI→选定本地 WordsMatcher 的完整子链。只授权 CustomIdentifiers，不开放账户、凭据或任意全局配置。两个 SDK 方法、原生异步编辑和现有消费者共享同一受管识别事实，保留源热缓存/数据库失败差异、真实混合写入、Unicode 码点与冷恢复；不新增第二套插件词表。
+
+完整原生产组件、当前主树真实 worker/SQLite/server/race、42 项前端及官方浏览器 25 步分别绑定。浏览器涵盖双向读写、多行/空值/Unicode、422 后恢复、分身自身配置隔离与全局共享、同数据冷启动和已交付切片回归。源完整 HTTP 认证/事件调度/Manager Base 启动、Remote 下载与调度、全 S11 识别及通用跨 key 行身份不在此子片；原高 ID 反例保留，不改变全 Settings 以虚构等价。源依赖与官方历史资源选择不冒充原 NAS 镜像。
+
+精简证明在 `migration/evidence/s07-custom-identifiers/`；其中原始日志/完整 AX 的引用是独立私有保留索引，不表示每个原始文件都已发布 Git。初始缺前端依赖与 trace 失败保留，最终同 lock 只读模块解析补验与独立重跑才计通过。所有普通交付继续标准 Git 选择文件、提交、推送固定分支、读回；不逐 blob 上传。
+
+## 本轮既有安装状态更正
+
+既有安装 11 的正向 source/SDK/冷恢复记录未修改，但无 token 的真实镜像 HTTP503 反例证明共同网络层与固定源不等价：源不访问 origin，目标错误降级并安装成功。整 11 已重开，13 同边界待修；S07 验收不为镜像层背书。26.2 继续为已明确选择的固定依赖重现实验输入，源 requirements 本身不精确 lock；26.3 只另列兼容实验，不默默漂移基准。

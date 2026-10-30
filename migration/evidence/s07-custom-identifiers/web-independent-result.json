@@ -1,0 +1,29 @@
+{
+  "feature_id": "S07.CustomIdentifiers",
+  "result": "pass",
+  "reviewer_executed": true,
+  "tests": 42,
+  "pass": 42,
+  "fail": 0,
+  "skipped": 0,
+  "duration_ms": 853.470975,
+  "exact_command": "node --import <owned-output>/web-readonly-dependencies.mjs --experimental-transform-types --disable-warning=ExperimentalWarning --test tests/shared-system-config-words.test.mjs tests/settings-app-domain.test.mjs tests/settings-connection.test.mjs tests/plugin-market-settings.test.mjs",
+  "cwd": "light-media/web",
+  "loader_change_from_owner": "Only trace output filename; no mapping, conditions, source or test logic changes.",
+  "owner_loader_sha256": "ee70ccd9b2134fcbd8c1ae7280c889a230bd6b3a8df831df6d729cb4d38e9fc6",
+  "own_loader_sha256": "829c05b16961c7e395c9c04cae12edc418a635921cbe7d98e22ea838767ec823",
+  "log_sha256": "cfaad3b5a615bc09a28545e8b849bcc16b101b59f736d23e6c4014557f441abe",
+  "trace_sha256": "89f686fc080df41b4803f4fa6670b443ffa09ba4c1fb04ba8617a504416eb28b",
+  "owner_final_result_sha256": "220edc573cc0cf67e1f262d5f6d3a2bdba56961155f0a37921209cd6d7a824f5",
+  "prior_bound_dependency_inputs": 6977,
+  "current_input_hash_mismatches": [],
+  "prior_input_binding_sha256": "5116ea17528bf164a6a63f9a8e34304dcc76ae74515324200c941e8fc978f3d2",
+  "actual_resolved_files": 74,
+  "root_redirects": 12,
+  "redirect_packages": [
+    "@vue/compiler-sfc",
+    "typescript",
+    "vue"
+  ],
+  "dependency_boundary": "Existing identical-lock worktree npm dependencies read-only; no install/network and no product edits. Existing owner input binding reused, all 6977 hashes independently checked after this execution; own trace-only loader substitution separately bound."
+}

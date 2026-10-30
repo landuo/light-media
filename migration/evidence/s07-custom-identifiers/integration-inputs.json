@@ -1,0 +1,72 @@
+{
+  "feature_id": "S07.CustomIdentifiers",
+  "main_head": "a110eabd0f6bb99a4c0a2cb6f32cb94c1efe2d12",
+  "command": {
+    "cwd": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/light-media",
+    "toolchain": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh",
+    "invoked_script": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/system-config-independent/candidate05-final/run-independent.sh",
+    "args": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/light-media",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/system-config-independent",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/system-config-independent/integrated-main05"
+    ]
+  },
+  "overlay_file_sha256": "47f01125a9694a5573b263edc7d02e4f2106c88233e5d4adb2eeb0f1ad32b40f",
+  "script_sha256": "c84df7a3080c394b31d62316459694087e9f2cff05d0d48be28656424fb42875",
+  "generator_sha256": "d88a05dfd4bdde2b516be75eb843196acb3a612df2374394666e39d45d53b651",
+  "fixtures": [
+    {
+      "virtual_target": "internal/app/plugin_shared_system_config_state.go",
+      "fixture_path": "integrated-main05/observed_state.go",
+      "sha256": "d8a1080a7b443574373c4404831abfbdb600608e01fa1105ddc55068d24e8b9d"
+    },
+    {
+      "virtual_target": "internal/app/zz_independent_system_config_test.go",
+      "fixture_path": "candidate05-final/target_review_test.go",
+      "sha256": "daed37a68fa5ba72b76270edbb200d7baa3d8054ad1c289dc90d7f2de6f1d1ba"
+    },
+    {
+      "virtual_target": "internal/app/zz_independent_system_config_oracle_test.go",
+      "fixture_path": "target_oracle_test.go",
+      "sha256": "24d9d0d798fb4d9775e75b6af5f174d07423db5823883a0fe3c99b69d0ce9e05"
+    },
+    {
+      "virtual_target": "internal/app/zz_independent_system_config_dirty_test.go",
+      "fixture_path": "dirty-check-extra/target_test.go",
+      "sha256": "27af4bf9a0d0a0774ea087d07fce5dc7c46d50d5e7024376545b8d363d197875"
+    },
+    {
+      "virtual_target": "internal/app/zz_independent_system_config_mixed_test.go",
+      "fixture_path": "mixed-set-extra/target_mixed_test.go",
+      "sha256": "66d66946f48dbbf989c731cb7af68b77a7c22e5af8dfc264a5192d41579d4090"
+    },
+    {
+      "virtual_target": "internal/app/zz_independent_system_config_mixed_rows_test.go",
+      "fixture_path": "mixed-set-extra/target_mixed_cases_test.go",
+      "sha256": "be616e0bdbbb59ea0663931adba3f6faa199d6da4a5a2acae3b0990e61a196a5"
+    },
+    {
+      "virtual_target": "internal/app/zz_independent_system_config_reachable_test.go",
+      "fixture_path": "candidate05-final/reachable_test.go",
+      "sha256": "e0cbe051b510ee9d48e5080c08d2caf78c9b8db2ba186f71169de49c44696eb3"
+    },
+    {
+      "virtual_target": "internal/app/zz_independent_codepoint_assert_test.go",
+      "fixture_path": "candidate05-final/codepoint_assert_test.go",
+      "sha256": "c04fec6dd3c1e1591d589fe40fd2d94297bef84a3a814d8cee1c08d238a1479e"
+    },
+    {
+      "virtual_target": "internal/app/zz_independent_cancellation_test.go",
+      "fixture_path": "candidate05-final/cancellation_test.go",
+      "sha256": "fc66f096517ecf553564c4ae13beabd5235b0c427131adeb01936324eafa014a"
+    }
+  ],
+  "scope": "Only SQL read completion observation in test overlay plus new tests. No target product writes.",
+  "input_binding_file": "dependencies-before.json",
+  "input_binding_sha256": "505f7b8955c1951a085974501e6293d4e8874efae6d6de0ce6804ec939d4f51f",
+  "source_expected_reuse": {
+    "reason": "Fixed original imports and fixture hashes remain unchanged; actual target reruns compare original observations. No repeated source execution claimed.",
+    "original_independent_review_sha256": "3405fc7778256953301ca61ce1c38609d323f84bed67be35bdfdcfec1e9d0416",
+    "source_observation_summary_sha256": "5725158de40e1a786164a2877707dcb670ff2265a718722370a441e18fdf1551"
+  }
+}

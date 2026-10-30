@@ -1,0 +1,75 @@
+{
+  "feature_id": "S07.CustomIdentifiers",
+  "browser_operator": "coordinator, not independent reviewer",
+  "raw_observation_sha256": "0d95f74164a2a3b668717923097c3959b7eba35aaf3455436e27d22ac311e447",
+  "steps": 25,
+  "step_names": [
+    "install-shared-system-config",
+    "new-worker-empty-shared-value",
+    "sdk-set-default-raw-shared",
+    "native-words-panel-reads-sdk-value",
+    "native-words-save-multiline",
+    "native-words-reload-drops-empty-retains-spaces",
+    "sdk-after-native-ui-save-no-reinit",
+    "malformed-config-set-rejected-keeps-global-value",
+    "valid-sdk-write-recovers-after-422",
+    "clone-new-pid-shared-global-value",
+    "clone-sdk-write-global-value",
+    "source-reads-clone-global-write",
+    "source-own-config-not-overwritten-by-clone",
+    "before-controlled-cold-restart",
+    "cold-clone-new-process-shared-persisted",
+    "cold-source-new-process-shared-persisted",
+    "cold-sdk-get-success",
+    "cold-native-ui-shared-persisted",
+    "native-ui-empty-saved",
+    "sdk-observes-native-clear-null",
+    "cold-source-own-config-restored-set",
+    "cold-existing-s05-unicode-readback",
+    "cold-existing-history-readback",
+    "cold-existing-transmission-real-query",
+    "cold-existing-manager-ten-instances"
+  ],
+  "build_record_sha256": "0269b1a33e26b420a3a54f2888400e6b5bef0add17b010770bd6b2134cae6d71",
+  "actual_server_sha256": "75620e7df60dd1b5b492e71e7a61464485fd93ab67d7627554a05de2ff66d59d",
+  "actual_worker_sha256": "d0d9cb952b07a685b842045c353bf64332eede72e0dc0a2db579d5214b8ea853",
+  "independent_rebuild_both_identical": true,
+  "verified_from_raw_AX": {
+    "initial_global_null": true,
+    "sdk_set_native_read_and_native_write_sdk_read": true,
+    "empty_line_removed_but_spaces_unicode_preserved": [
+      "  Raw => Shared UI  ",
+      "# owned browser 配置",
+      "Shared UI => 最终😀"
+    ],
+    "native_edit_did_not_reinit_worker": true,
+    "malformed_config_set_422_preserved_global_value": true,
+    "source_clone_independent_pid_and_config_shared_global": true,
+    "cold_source_pid": [
+      263,
+      95
+    ],
+    "cold_clone_pid": [
+      278,
+      104
+    ],
+    "cold_init_counts": [
+      1,
+      1
+    ],
+    "cold_last_operations": [
+      null,
+      null
+    ],
+    "native_clear_then_sdk_null": true,
+    "source_independent_config_restored_value": true,
+    "cold_existing_s05_revision": 7,
+    "cold_existing_history_src_dest_bytes": [
+      36,
+      36
+    ],
+    "cold_existing_transmission_tasks": 2,
+    "cold_existing_manager_instances": 10
+  },
+  "boundary": "Raw AX was independently read and its displayed values checked. Reviewer did not operate browser or read account/runtime data. Remote service callback and WordsMatcher are proven by actual source/component/worker tests, not an unexposed browser action. Malformed plugin configuration may reinitialize the plugin; only native words edits are claimed no-reinit."
+}

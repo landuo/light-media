@@ -27,6 +27,7 @@ import (
 )
 
 type App struct {
+	sharedSystemConfig               sharedSystemConfigRuntime
 	pluginOriginalBase               originalBaseState
 	pluginOriginalMarkets            originalMarketCache
 	pluginOriginalInput              originalPluginInputRuntime

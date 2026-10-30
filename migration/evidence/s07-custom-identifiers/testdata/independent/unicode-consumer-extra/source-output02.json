@@ -1,0 +1,196 @@
+{
+  "scope": "Unmodified default source DAO + normal WordsMatcher -> real JSONResponse; no source daemon or original authentication",
+  "observations": [
+    {
+      "case": "surrogate-not-replacement-character",
+      "input": {
+        "case": "surrogate-not-replacement-character",
+        "value": [
+          "\ud800"
+        ],
+        "title": "\ufffdA"
+      },
+      "set_return": true,
+      "prepared": [
+        "\ufffdA",
+        []
+      ],
+      "title_json": "\"\ufffdA\"",
+      "prepared_json": "[\"\ufffdA\",[]]"
+    },
+    {
+      "case": "intermediate-surrogate-recovers",
+      "input": {
+        "case": "intermediate-surrogate-recovers",
+        "value": [
+          "A => \ud800",
+          "\ud800 => B"
+        ],
+        "title": "A"
+      },
+      "set_return": true,
+      "prepared": [
+        "B",
+        [
+          "A => \ud800",
+          "\ud800 => B"
+        ]
+      ],
+      "title_json": "\"B\"",
+      "prepared_json_error": "UnicodeEncodeError"
+    },
+    {
+      "case": "scalar-codepoint-iteration",
+      "input": {
+        "case": "scalar-codepoint-iteration",
+        "value": "\ud800A",
+        "title": "\ufffdA"
+      },
+      "set_return": true,
+      "prepared": [
+        "\ufffd",
+        [
+          "A"
+        ]
+      ],
+      "title_json": "\"\ufffd\"",
+      "prepared_json": "[\"\ufffd\",[\"A\"]]"
+    },
+    {
+      "case": "distinct-object-keys",
+      "input": {
+        "case": "distinct-object-keys",
+        "value": {
+          "\ud800": 1,
+          "\ufffd": 2
+        },
+        "title": "\ufffdA"
+      },
+      "set_return": true,
+      "prepared": [
+        "A",
+        [
+          "\ufffd"
+        ]
+      ],
+      "title_json": "\"A\"",
+      "prepared_json": "[\"A\",[\"\ufffd\"]]"
+    },
+    {
+      "case": "captured-group-and-surrogate",
+      "input": {
+        "case": "captured-group-and-surrogate",
+        "value": [
+          "(A) => \\1\ud800",
+          "\ud800 => B"
+        ],
+        "title": "A"
+      },
+      "set_return": true,
+      "prepared": [
+        "AB",
+        [
+          "(A) => \\1\ud800",
+          "\ud800 => B"
+        ]
+      ],
+      "title_json": "\"AB\"",
+      "prepared_json_error": "UnicodeEncodeError"
+    },
+    {
+      "case": "final-surrogate-unrenderable",
+      "input": {
+        "case": "final-surrogate-unrenderable",
+        "value": [
+          "A => \ud800"
+        ],
+        "title": "A"
+      },
+      "set_return": true,
+      "prepared": [
+        "\ud800",
+        [
+          "A => \ud800"
+        ]
+      ],
+      "title_json_error": "UnicodeEncodeError",
+      "prepared_json_error": "UnicodeEncodeError"
+    }
+  ],
+  "network_attempts": [],
+  "source_imports": {
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/__init__.py": "9de94c38a509ac688ecb6dce99436976693323ef238de8e840ac6384d28233ce",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/utils/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/agent.py": "1e28f5d952753e2a07489fb8d1cbbf7979aec761b7baebb5a8392e2c6d1a000f",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/context.py": "4450abd267664ddef80c52889ca9fe9bade48ff473161d162c539836e0a7cc6e",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/locale.py": "3fdc78c7e7478a79f6a472716d7d4fc1b57b5306100d9e5c3cf6c8703117bd69",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/dashboard.py": "5a0d3289a088678fda12c233a79d953a0d2f353dfaaa050d85454483a6374213",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/download.py": "57190ac9efde957fe449c3b856ddd870314b56c357ff313fe0b7ff5bb29b8bdb",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/types.py": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/message.py": "e5b2f504e2c5d470b74a33756e577e19ce3f9b5284f9a0e1e2d522d1e3955597",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/file.py": "676486e635bc9d0dfc0e589b514a6627c3330bf961a566c2cd8872b79f74aba0",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/event.py": "d5134476edc76096098b85ee32d2f96eb5db2441c873c80729a46b91386687d6",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/exception.py": "582dcf618b3438aca72dd3d31e2ca3d31eee6576bf9f62ab6c6de5c090ffdfae",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/history.py": "6e7eed3d8d6f16cd54ad97601465f48336074e608a296a84f9845ebe99765982",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/mediaserver.py": "250a4c0d703af9d05b8a3b5508444339edab473c9f535ee7a86f81f954db0ebd",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/monitoring.py": "e0fc60bb381262338fed539119d9d447f43edf014394bb8d81dcf671facccc0a",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/plugin.py": "d57a96c4ab5ec4525ce56e40dccffa93da719626449ed9bf7be80f47809e0f1a",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/response.py": "0afd53be12ee3a6f513e74e10c98344b0d9f66e01c250e66a74ccee604bc1970",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/rule.py": "7921ff3b00b93c953b0a8ff8448111dd4cbeea38dbcdd8c803b11c78308c22cc",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/openai.py": "f2a56c39dd75567f424fe9ae11ee44bf04747b2860b0c8ef0078d1122df03607",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/servarr.py": "b79e4afe083ce71e0aae9fbc1223a06592ff5ce6779b1d4c484d1af38a51488c",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/servcookie.py": "b370de7ca26ae020ccca13b92deb7b128927e5375ae00a3bda6c2be14dfcae86",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/site.py": "aa759e3f1348863b109acdecb765c87a14822a14fbf63bab3fc93584d51bfaa6",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/subscribe.py": "0856ac5bfa7b57e099ffba39124336b2d7f491c8216b9166630b4b44e30208a1",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/system.py": "9393ff3506aec1a6d87cc26780fc7304897d8f52a2b1e3cabbd8aad65d6e3b3d",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/tmdb.py": "e1f6a6f57dabbc506a842956ab43b71a9862af0f0d9c4257382d99612096303c",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/token.py": "06e894a4c967c27a050e9c6f18870f6276a77e74697142f53b104982397f126a",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/transfer.py": "b0c1e7bdc15d5041094d1be9050de5a279a5f5651bbfc32de85a001ecb56b2bd",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/user.py": "ac726888f6dae10dea9a150e79cfe4eb9376795615d82ce56a4695339ab821d7",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/workflow.py": "605d8c1b0532779e609ad2fa891cccdc5703cc95eb592fe500bca074e2faae42",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/mcp.py": "d721c46e3a5242b3dddae4adfb64c7004216f3de26d1aa981bbdc048ed41b084",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/__init__.py": "80a2439bee6d7d365795a8626f3b635ee7e0488c5a6711784d2d5969ae66573b",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/worker.py": "b22da88375b2c8fca8db21f8b1efc5e09ec0ec1fbf1b7c18b337105f1043d91b",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/version.py": "eee2f1420ca9ab7af63226cfaaf4f7eea4de246c2ae422d0a527feff3b5bcb31",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/utils/system.py": "3477c8585dd955bcb42f7180e5fabaae05c528af8ddb0cbae0935dbdb0c031db",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/log.py": "f79dd36510403966a3989fbbfcc315eedde943bee6665693d4f7bd1c5a4c8ad6",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/utils/url.py": "0b83efc129ebc3a08e658ae61929e999bee671148680901d5150db8efb9e504b",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/core/config.py": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/__init__.py": "6da490f32d0de67839249b4e318fecbf4c877ec5acde4eef08634738c4cfafc9",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/agentchat.py": "1cb064a9b5272283e43c62f4ca4b8a9724e304ab878bf0cc41c6b7961f9d60a3",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/agenttask.py": "019d28d3ad0e0077a004b407ff70bdc1316393f26fa75956f12b83a345a0302c",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/downloadfailure.py": "af1c7d8326dbe3a7e3ad6369c7bb73e205d9dbb7f52fa4e6876bdca69bbd683d",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/downloadhistory.py": "b9a886916c8427296c7c09ce39736211324f6d01439ac0c34a81489e419252bc",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/mediaserver.py": "950bce604bb82bb359ff839c1aab81ccc5b59943f5dbf6e9bcf6babe72cb7746",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/message.py": "451912f0353a4553dd6b5dafd8a9d2ff68a466d99382f55bc7e57161c1e982b2",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/passkey.py": "d19566baedbf979711d12708b54fdc223b42801017e285b98454dbd5e36cdc5b",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/plugindata.py": "ae52a13e2e2ec13ed10a632c601e0bacf173df430c6d273866bda4c783926622",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/site.py": "5cda6b9eb37de3cc25c66abfd41832341ea5270bc73971a24425bd00ef63c8e4",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/siteicon.py": "5338f69113bf2deada98c24000be19cc52e2f1aaf85bcbd8f8d7f7a2e8d3a60c",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/sitestatistic.py": "492fb63635c0e55b988b5022f146344bfed24108b5ff7c605de1123a909d043c",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/siteuserdata.py": "380180dfd4d8d2e4941f59ba0f68fa9a5c1421ed980d2d244c661b70c0dee3a1",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/subscribe.py": "efa92d87ca839f42e2f2c38f591dc0635c21ce93fe5cb5120cd0d261e694a67e",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/subscribehistory.py": "e782948c473646cbf63ce6527daa530f6269d05ebc92a49cc2d6a175a334f8f3",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/systemconfig.py": "56c948af28f482b39e0d599b6889fd803c375aff50ecdde2d5b4583dca581164",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/transferhistory.py": "194fadb0ece7bedeccd286e9ba1af76abe19f3d79358d31b77fce9a39ea68df2",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/user.py": "ae5e681df2953c35b5bb2abfc7fff7c925f8d93bb967c44271f37003ec3a2123",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/userconfig.py": "12789ddb097a009ba38213b6ae59e1c691eb2d10da4ac04c0a9a3cfcb2bd3e08",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/workflow.py": "2904e6a9128263ed164dd7fa1e77185cd59d3a673d9b72b6e2c1cacecdeaeb6a",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/models/__init__.py": "c71361c303f4343865803beb79f0c619703407e847a428daefd9419fe9a44be4",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/utils/singleton.py": "36453247c99d0acd190956b72e1f566c3c3c2250ec310eb680f1ea882cd2fec4",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/db/systemconfig_oper.py": "87bff2e7c63d2ba98c72d92d6aed2018548730215de017330019bb54478634a2",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/utils/string.py": "b21856bf4b309d20fe9d5a68538fbb0ddc7a2c23bbde424e5700caf57587297a",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/core/meta/metabase.py": "0156c105bf92991332a8742b9a4af4e1f3a74cf4b6f08107e0ed6de9d546f292",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/core/meta/customization.py": "6ff9692f267b6d5ec8eac5d2a47523fef22a55f4566f252c86e0595c2213ba67",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/core/meta/releasegroup.py": "adecb60bcfe3772d71fabbf1cbd45146e7577c9be1c22f1ae4af74ab771da13f",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/utils/tokens.py": "6b1547583adae77bffd2002660dd718ad60929926bf814e548741deb8aaea8ec",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/core/meta/streamingplatform.py": "6aa9c8a21a6b2e257a8ab4cb5b99a535ab799378d58bcf95bfa6a3d326d6542a",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/core/meta/metavideo.py": "88d364f27d223163fcc4248e21d4f5e4f34d069eb5b689014667f715bab42ff4",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/utils/zhconv.py": "f21b834f3c3d619697383e37ebe795517bdf5237ba8efa0f6ca0c22b6d8320ff",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/core/meta/metaanime.py": "d45433c77656bba3203326943c9fe5b3ae6cbe8c7514e631fb16cc7dc1f4afca",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/core/meta/__init__.py": "df825989837949f70e6d14446136537b072b4d5f06519cd18e196ef77fb6a160",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/core/meta/words.py": "798759c94919636c94b690786b9d68a8b7f2f2815be611b04f7c857491d40277"
+  }
+}

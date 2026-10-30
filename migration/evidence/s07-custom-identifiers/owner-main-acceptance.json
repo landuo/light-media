@@ -1,0 +1,146 @@
+{
+  "schema": 1,
+  "created_utc": "2026-10-30T06:39:03.448750+00:00",
+  "status": "owner_integrated_selected_gates_passed_after_explicit_test_dependency_environment_repair",
+  "scope": "S07.CustomIdentifiers selected RemoteIdentifiers producer/shared get-set/native async editing/WordsMatcher; not all S07/S11 or generic DAO equivalence",
+  "main_head": "a110eabd0f6bb99a4c0a2cb6f32cb94c1efe2d12",
+  "integrated_product_manifest": {
+    "path": "evidence/system-config-owner/integration-plan05.json",
+    "bytes": 57655,
+    "sha256": "8d335150f7fbc29e6b659880bf6be1a350a0fa1fc13f2706cc883bf5f2f33184"
+  },
+  "original_driver_result_retained": {
+    "path": "evidence/system-config-main-owner05/result.json",
+    "bytes": 15660,
+    "sha256": "8f1aa43556e9c134ade14d84ce00d49d6554dda3f8407af9010ae39c328c0e10"
+  },
+  "backend_compact": {
+    "path": "evidence/system-config-main-owner05/backend-result-compact.json",
+    "bytes": 4891,
+    "sha256": "7e4f36d962a98ef9371e664f74ceb27313fc1442071e4a14abef19a77126dce9"
+  },
+  "backend_results": [
+    {
+      "name": "main-s07-normal",
+      "exit": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/app\t56.841s"
+      ],
+      "passed_roots": 17,
+      "any_skips": [],
+      "log": {
+        "path": "evidence/system-config-main-owner05/main-s07-normal.log",
+        "bytes": 131287,
+        "sha256": "10c1604881fdd845c224d072e85cf9463937e20d953bb733607488171d4b0d85"
+      }
+    },
+    {
+      "name": "main-s07-race",
+      "exit": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/app\t394.516s"
+      ],
+      "passed_roots": 17,
+      "any_skips": [],
+      "log": {
+        "path": "evidence/system-config-main-owner05/main-s07-race.log",
+        "bytes": 131675,
+        "sha256": "3cf5d1ee0a162e4b605ac44dbccb64c55ee31034b4f712c94ec65f90c6850d41"
+      }
+    },
+    {
+      "name": "main-native12-race",
+      "exit": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/app\t71.608s"
+      ],
+      "passed_roots": 12,
+      "any_skips": [],
+      "log": {
+        "path": "evidence/system-config-main-owner05/main-native12-race.log",
+        "bytes": 28205,
+        "sha256": "32b2765a71b7d0884d5462ca8c4eeae5cc6ae846afbc0e1d02d8f1a428abda46"
+      }
+    },
+    {
+      "name": "main-words-race",
+      "exit": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/media/words\t1.323s"
+      ],
+      "passed_roots": 0,
+      "any_skips": [],
+      "log": {
+        "path": "evidence/system-config-main-owner05/main-words-race.log",
+        "bytes": 45,
+        "sha256": "6d3029f0e71e6e92baa53777b6e8a1616a91ed7cc4c48d4c8f975cf058235605"
+      }
+    },
+    {
+      "name": "main-sdk",
+      "exit": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/plugins\t21.495s"
+      ],
+      "passed_roots": 0,
+      "any_skips": [],
+      "log": {
+        "path": "evidence/system-config-main-owner05/main-sdk.log",
+        "bytes": 42,
+        "sha256": "bc97a97b0c0bed7b92b42ab827350518caf66280c17e078f8e47dc32080d7076"
+      }
+    }
+  ],
+  "closure_before": {
+    "path": "evidence/system-config-main-owner05/before-closure.json",
+    "bytes": 3766969,
+    "sha256": "eb7215e39cf92ddc7864b1538b957003b31c14e234071bd34bba846262e99ff8"
+  },
+  "closure_after": {
+    "path": "evidence/system-config-main-owner05/after-closure.json",
+    "bytes": 3766969,
+    "sha256": "eb7215e39cf92ddc7864b1538b957003b31c14e234071bd34bba846262e99ff8"
+  },
+  "main_closure_count": 13431,
+  "main_closure_drift": [],
+  "manifest_drift": [],
+  "source_imports_count": 1130,
+  "source_imports_drift_at_finish": [],
+  "source_import_manifest": {
+    "path": "audits/system-config-source/reachability/actual-source-dependencies-binding.json",
+    "bytes": 270198,
+    "sha256": "50785ae988833bdf116112d8233974ff76bd881522aa55ced389f6a9dc54691f"
+  },
+  "source_not_rerun": true,
+  "web_environment_repair": {
+    "original_failure": "main web/node_modules absent; @vue/compiler-sfc import failed before 42 test bodies. Initial driver exit1/result preserved unchanged.",
+    "authorization": "Coordinator explicitly approved exact three main-test entry bare imports @vue/compiler-sfc,typescript,vue resolving against this run npm-ci worktree identical package lock; no product or dependency writes.",
+    "final_result": {
+      "path": "evidence/system-config-main-owner05/web-readonly-deps-run04/result.json",
+      "bytes": 3377,
+      "sha256": "220edc573cc0cf67e1f262d5f6d3a2bdba56961155f0a37921209cd6d7a824f5"
+    },
+    "tests": 42,
+    "pass": 42,
+    "fail": 0,
+    "skipped": 0,
+    "duration_ms": 831.196317,
+    "node_version": "v24.22.1",
+    "package_lock_sha256": "b51c3ace9f776731ae4d814868395cfe4b7f0494089a0e1d3643f3e893b41bbc",
+    "installed_packages_verified": 139,
+    "input_files_before_after": 6977,
+    "actual_resolved_module_files": 74,
+    "redirected_root_imports": 12,
+    "drift": [],
+    "old_runs": "run02/03 successful test logs retained; run03 post-run trace aggregation caught mutable Node context. run04 snapshots trace metadata before delegating; no test assertions or implementation changed."
+  },
+  "product_code_modified_by_owner": false,
+  "dependencies_modified_by_owner": false,
+  "npm_install_or_network_used": false,
+  "all_owner_test_processes_finished": true,
+  "remaining": [
+    "Coordinator browser against exact integrated binary/assets and ordinary authenticated session.",
+    "Independent integrated review final metadata and other delivered-slice cross regression are coordinator/reviewer-owned.",
+    "Selective commit/push and remote readback are coordinator-owned."
+  ]
+}

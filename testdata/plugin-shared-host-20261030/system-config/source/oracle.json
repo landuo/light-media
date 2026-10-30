@@ -1,0 +1,1688 @@
+{
+  "scope": "owned ordinary plugin -> default SystemConfigOper -> actual SQLAlchemy SQLite; normal WordsMatcher consumer; ui_set is endpoint normalization plus actual async_set, not whole HTTP route",
+  "backend_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "python": "3.12.14",
+  "sqlite": "3.53.1",
+  "sqlalchemy": "2.0.55",
+  "nonfinite_tag": "$source_python_float is an observation only, never a public request format",
+  "groups": {
+    "ordinary": {
+      "initial_rows": [],
+      "operations": [
+        {
+          "input": {
+            "case": "absent",
+            "method": "get"
+          },
+          "source": {
+            "case": "absent",
+            "method": "get",
+            "returned": null,
+            "get": null
+          },
+          "persisted": []
+        },
+        {
+          "input": {
+            "case": "null-creates",
+            "method": "set",
+            "value": null
+          },
+          "source": {
+            "case": "null-creates",
+            "method": "set",
+            "returned": true,
+            "get": null
+          },
+          "persisted": [
+            null
+          ]
+        },
+        {
+          "input": {
+            "case": "null-equal",
+            "method": "set",
+            "value": null
+          },
+          "source": {
+            "case": "null-equal",
+            "method": "set",
+            "returned": null,
+            "get": null
+          },
+          "persisted": [
+            null
+          ]
+        },
+        {
+          "input": {
+            "case": "rules",
+            "method": "set",
+            "value": [
+              "Raw => Native",
+              "# comment",
+              ""
+            ]
+          },
+          "source": {
+            "case": "rules",
+            "method": "set",
+            "returned": true,
+            "get": [
+              "Raw => Native",
+              "# comment",
+              ""
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => Native",
+              "# comment",
+              ""
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "actual-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "actual-consumer",
+            "method": "prepare",
+            "returned": [
+              "Native.S01E02",
+              [
+                "Raw => Native"
+              ]
+            ],
+            "get": [
+              "Raw => Native",
+              "# comment",
+              ""
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => Native",
+              "# comment",
+              ""
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "same",
+            "method": "set",
+            "value": [
+              "Raw => Native",
+              "# comment",
+              ""
+            ]
+          },
+          "source": {
+            "case": "same",
+            "method": "set",
+            "returned": null,
+            "get": [
+              "Raw => Native",
+              "# comment",
+              ""
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => Native",
+              "# comment",
+              ""
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "deepcopy-get",
+            "method": "deepcopy_get"
+          },
+          "source": {
+            "case": "deepcopy-get",
+            "method": "deepcopy_get",
+            "returned": [
+              "Raw => Native",
+              "# comment",
+              "",
+              "mutated external result"
+            ],
+            "get": [
+              "Raw => Native",
+              "# comment",
+              ""
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => Native",
+              "# comment",
+              ""
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "deepcopy-set",
+            "method": "deepcopy_set",
+            "value": [
+              "Native => Shared"
+            ]
+          },
+          "source": {
+            "case": "deepcopy-set",
+            "method": "deepcopy_set",
+            "returned": true,
+            "get": [
+              "Native => Shared"
+            ]
+          },
+          "persisted": [
+            [
+              "Native => Shared"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "empty-list",
+            "method": "set",
+            "value": []
+          },
+          "source": {
+            "case": "empty-list",
+            "method": "set",
+            "returned": true,
+            "get": []
+          },
+          "persisted": []
+        },
+        {
+          "input": {
+            "case": "empty-again",
+            "method": "set",
+            "value": []
+          },
+          "source": {
+            "case": "empty-again",
+            "method": "set",
+            "returned": true,
+            "get": []
+          },
+          "persisted": [
+            []
+          ]
+        },
+        {
+          "input": {
+            "case": "false",
+            "method": "set",
+            "value": false
+          },
+          "source": {
+            "case": "false",
+            "method": "set",
+            "returned": true,
+            "get": false
+          },
+          "persisted": []
+        },
+        {
+          "input": {
+            "case": "false-equal-zero",
+            "method": "set",
+            "value": 0
+          },
+          "source": {
+            "case": "false-equal-zero",
+            "method": "set",
+            "returned": true,
+            "get": 0
+          },
+          "persisted": [
+            0
+          ]
+        },
+        {
+          "input": {
+            "case": "false-equal-floatzero",
+            "method": "set",
+            "value": 0.0
+          },
+          "source": {
+            "case": "false-equal-floatzero",
+            "method": "set",
+            "returned": null,
+            "get": 0.0
+          },
+          "persisted": [
+            0
+          ]
+        },
+        {
+          "input": {
+            "case": "empty-string",
+            "method": "set",
+            "value": ""
+          },
+          "source": {
+            "case": "empty-string",
+            "method": "set",
+            "returned": true,
+            "get": ""
+          },
+          "persisted": []
+        },
+        {
+          "input": {
+            "case": "empty-object",
+            "method": "set",
+            "value": {}
+          },
+          "source": {
+            "case": "empty-object",
+            "method": "set",
+            "returned": true,
+            "get": {}
+          },
+          "persisted": [
+            {}
+          ]
+        },
+        {
+          "input": {
+            "case": "null",
+            "method": "set",
+            "value": null
+          },
+          "source": {
+            "case": "null",
+            "method": "set",
+            "returned": true,
+            "get": null
+          },
+          "persisted": []
+        },
+        {
+          "input": {
+            "case": "empty-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "empty-consumer",
+            "method": "prepare",
+            "returned": [
+              "Raw.S01E02",
+              []
+            ],
+            "get": null
+          },
+          "persisted": []
+        }
+      ],
+      "cold": [
+        {
+          "case": "cold-get",
+          "method": "get",
+          "returned": null,
+          "get": null,
+          "persisted": []
+        },
+        {
+          "case": "cold-consumer",
+          "method": "prepare",
+          "returned": [
+            "Raw.S01E02",
+            []
+          ],
+          "get": null,
+          "persisted": []
+        }
+      ]
+    },
+    "raw-values": {
+      "initial_rows": [],
+      "operations": [
+        {
+          "input": {
+            "case": "string",
+            "method": "set",
+            "value": "Raw"
+          },
+          "source": {
+            "case": "string",
+            "method": "set",
+            "returned": true,
+            "get": "Raw"
+          },
+          "persisted": [
+            "Raw"
+          ]
+        },
+        {
+          "input": {
+            "case": "string-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "string-consumer",
+            "method": "prepare",
+            "returned": [
+              ".S01E02",
+              [
+                "R",
+                "a",
+                "w"
+              ]
+            ],
+            "get": "Raw"
+          },
+          "persisted": [
+            "Raw"
+          ]
+        },
+        {
+          "input": {
+            "case": "object",
+            "method": "set",
+            "value": {
+              "Raw => First": 1,
+              "First => Second": 2
+            }
+          },
+          "source": {
+            "case": "object",
+            "method": "set",
+            "returned": true,
+            "get": {
+              "Raw => First": 1,
+              "First => Second": 2
+            }
+          },
+          "persisted": [
+            {
+              "Raw => First": 1,
+              "First => Second": 2
+            }
+          ]
+        },
+        {
+          "input": {
+            "case": "object-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "object-consumer",
+            "method": "prepare",
+            "returned": [
+              "Second.S01E02",
+              [
+                "Raw => First",
+                "First => Second"
+              ]
+            ],
+            "get": {
+              "Raw => First": 1,
+              "First => Second": 2
+            }
+          },
+          "persisted": [
+            {
+              "Raw => First": 1,
+              "First => Second": 2
+            }
+          ]
+        },
+        {
+          "input": {
+            "case": "false-items",
+            "method": "set",
+            "value": [
+              null,
+              false,
+              0,
+              "Raw => Kept"
+            ]
+          },
+          "source": {
+            "case": "false-items",
+            "method": "set",
+            "returned": true,
+            "get": [
+              null,
+              false,
+              0,
+              "Raw => Kept"
+            ]
+          },
+          "persisted": [
+            [
+              null,
+              false,
+              0,
+              "Raw => Kept"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "false-items-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "false-items-consumer",
+            "method": "prepare",
+            "returned": [
+              "Kept.S01E02",
+              [
+                "Raw => Kept"
+              ]
+            ],
+            "get": [
+              null,
+              false,
+              0,
+              "Raw => Kept"
+            ]
+          },
+          "persisted": [
+            [
+              null,
+              false,
+              0,
+              "Raw => Kept"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "true-item",
+            "method": "set",
+            "value": [
+              true
+            ]
+          },
+          "source": {
+            "case": "true-item",
+            "method": "set",
+            "returned": true,
+            "get": [
+              true
+            ]
+          },
+          "persisted": [
+            [
+              true
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "true-item-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "true-item-consumer",
+            "method": "prepare",
+            "error": {
+              "class": "AttributeError",
+              "module": "builtins"
+            },
+            "get": [
+              true
+            ]
+          },
+          "persisted": [
+            [
+              true
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "object-item",
+            "method": "set",
+            "value": [
+              {
+                "value": 1
+              }
+            ]
+          },
+          "source": {
+            "case": "object-item",
+            "method": "set",
+            "returned": true,
+            "get": [
+              {
+                "value": 1
+              }
+            ]
+          },
+          "persisted": [
+            [
+              {
+                "value": 1
+              }
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "object-item-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "object-item-consumer",
+            "method": "prepare",
+            "error": {
+              "class": "AttributeError",
+              "module": "builtins"
+            },
+            "get": [
+              {
+                "value": 1
+              }
+            ]
+          },
+          "persisted": [
+            [
+              {
+                "value": 1
+              }
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "number",
+            "method": "set",
+            "value": 42
+          },
+          "source": {
+            "case": "number",
+            "method": "set",
+            "returned": true,
+            "get": 42
+          },
+          "persisted": [
+            42
+          ]
+        },
+        {
+          "input": {
+            "case": "number-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "number-consumer",
+            "method": "prepare",
+            "error": {
+              "class": "TypeError",
+              "module": "builtins"
+            },
+            "get": 42
+          },
+          "persisted": [
+            42
+          ]
+        },
+        {
+          "input": {
+            "case": "float",
+            "method": "set",
+            "value": 2.5
+          },
+          "source": {
+            "case": "float",
+            "method": "set",
+            "returned": true,
+            "get": 2.5
+          },
+          "persisted": [
+            2.5
+          ]
+        },
+        {
+          "input": {
+            "case": "float-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "float-consumer",
+            "method": "prepare",
+            "error": {
+              "class": "TypeError",
+              "module": "builtins"
+            },
+            "get": 2.5
+          },
+          "persisted": [
+            2.5
+          ]
+        },
+        {
+          "input": {
+            "case": "nested",
+            "method": "set",
+            "value": [
+              [
+                1
+              ]
+            ]
+          },
+          "source": {
+            "case": "nested",
+            "method": "set",
+            "returned": true,
+            "get": [
+              [
+                1
+              ]
+            ]
+          },
+          "persisted": [
+            [
+              [
+                1
+              ]
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "nested-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "nested-consumer",
+            "method": "prepare",
+            "error": {
+              "class": "AttributeError",
+              "module": "builtins"
+            },
+            "get": [
+              [
+                1
+              ]
+            ]
+          },
+          "persisted": [
+            [
+              [
+                1
+              ]
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "boolean",
+            "method": "set",
+            "value": true
+          },
+          "source": {
+            "case": "boolean",
+            "method": "set",
+            "returned": true,
+            "get": true
+          },
+          "persisted": [
+            true
+          ]
+        },
+        {
+          "input": {
+            "case": "boolean-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "boolean-consumer",
+            "method": "prepare",
+            "error": {
+              "class": "TypeError",
+              "module": "builtins"
+            },
+            "get": true
+          },
+          "persisted": [
+            true
+          ]
+        },
+        {
+          "input": {
+            "case": "array-rules",
+            "method": "set",
+            "value": [
+              "Raw => Native"
+            ]
+          },
+          "source": {
+            "case": "array-rules",
+            "method": "set",
+            "returned": true,
+            "get": [
+              "Raw => Native"
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => Native"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "array-rules-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "array-rules-consumer",
+            "method": "prepare",
+            "returned": [
+              "Native.S01E02",
+              [
+                "Raw => Native"
+              ]
+            ],
+            "get": [
+              "Raw => Native"
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => Native"
+            ]
+          ]
+        }
+      ],
+      "cold": [
+        {
+          "case": "cold-get",
+          "method": "get",
+          "returned": [
+            "Raw => Native"
+          ],
+          "get": [
+            "Raw => Native"
+          ],
+          "persisted": [
+            [
+              "Raw => Native"
+            ]
+          ]
+        },
+        {
+          "case": "cold-consumer",
+          "method": "prepare",
+          "returned": [
+            "Native.S01E02",
+            [
+              "Raw => Native"
+            ]
+          ],
+          "get": [
+            "Raw => Native"
+          ],
+          "persisted": [
+            [
+              "Raw => Native"
+            ]
+          ]
+        }
+      ]
+    },
+    "failure-hot": {
+      "initial_rows": [
+        [
+          "Raw => Persisted"
+        ]
+      ],
+      "operations": [
+        {
+          "input": {
+            "case": "fail-update",
+            "method": "set",
+            "value": [
+              "Raw => FailedHot"
+            ],
+            "fixture_sql": "CREATE TRIGGER owned_config_fail BEFORE UPDATE ON systemconfig WHEN NEW.key='CustomIdentifiers' BEGIN SELECT RAISE(ABORT,'owned failure'); END;"
+          },
+          "source": {
+            "case": "fail-update",
+            "method": "set",
+            "error": {
+              "class": "IntegrityError",
+              "module": "sqlalchemy.exc",
+              "driver_class": "IntegrityError",
+              "sqlite_errorname": "SQLITE_CONSTRAINT_TRIGGER"
+            },
+            "get": [
+              "Raw => FailedHot"
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "failed-hot-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "failed-hot-consumer",
+            "method": "prepare",
+            "returned": [
+              "FailedHot.S01E02",
+              [
+                "Raw => FailedHot"
+              ]
+            ],
+            "get": [
+              "Raw => FailedHot"
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "equal-after-failure-no-db",
+            "method": "set",
+            "value": [
+              "Raw => FailedHot"
+            ]
+          },
+          "source": {
+            "case": "equal-after-failure-no-db",
+            "method": "set",
+            "returned": null,
+            "get": [
+              "Raw => FailedHot"
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "drop-trigger",
+            "method": "get",
+            "fixture_sql": "DROP TRIGGER owned_config_fail;"
+          },
+          "source": {
+            "case": "drop-trigger",
+            "method": "get",
+            "returned": [
+              "Raw => FailedHot"
+            ],
+            "get": [
+              "Raw => FailedHot"
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        }
+      ],
+      "cold": [
+        {
+          "case": "cold-get",
+          "method": "get",
+          "returned": [
+            "Raw => Persisted"
+          ],
+          "get": [
+            "Raw => Persisted"
+          ],
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        },
+        {
+          "case": "cold-consumer",
+          "method": "prepare",
+          "returned": [
+            "Persisted.S01E02",
+            [
+              "Raw => Persisted"
+            ]
+          ],
+          "get": [
+            "Raw => Persisted"
+          ],
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        }
+      ]
+    },
+    "failure-delete": {
+      "initial_rows": [
+        [
+          "Raw => Persisted"
+        ]
+      ],
+      "operations": [
+        {
+          "input": {
+            "case": "delete-fails",
+            "method": "set",
+            "value": [],
+            "fixture_sql": "CREATE TRIGGER owned_config_fail BEFORE DELETE ON systemconfig BEGIN SELECT RAISE(ABORT,'owned delete failure'); END;"
+          },
+          "source": {
+            "case": "delete-fails",
+            "method": "set",
+            "error": {
+              "class": "IntegrityError",
+              "module": "sqlalchemy.exc",
+              "driver_class": "IntegrityError",
+              "sqlite_errorname": "SQLITE_CONSTRAINT_TRIGGER"
+            },
+            "get": []
+          },
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "failed-delete-hot",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "failed-delete-hot",
+            "method": "prepare",
+            "returned": [
+              "Raw.S01E02",
+              []
+            ],
+            "get": []
+          },
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "failed-delete-same",
+            "method": "set",
+            "value": []
+          },
+          "source": {
+            "case": "failed-delete-same",
+            "method": "set",
+            "returned": null,
+            "get": []
+          },
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "async-delete-fails-cache-unchanged",
+            "method": "async_set",
+            "value": null
+          },
+          "source": {
+            "case": "async-delete-fails-cache-unchanged",
+            "method": "async_set",
+            "error": {
+              "class": "IntegrityError",
+              "module": "sqlalchemy.exc",
+              "driver_class": "IntegrityError",
+              "sqlite_errorname": "SQLITE_CONSTRAINT_TRIGGER"
+            },
+            "get": []
+          },
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "drop",
+            "method": "get",
+            "fixture_sql": "DROP TRIGGER owned_config_fail;"
+          },
+          "source": {
+            "case": "drop",
+            "method": "get",
+            "returned": [],
+            "get": []
+          },
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "async-repair",
+            "method": "async_set",
+            "value": [
+              "Raw => Persisted"
+            ]
+          },
+          "source": {
+            "case": "async-repair",
+            "method": "async_set",
+            "returned": null,
+            "get": [
+              "Raw => Persisted"
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "async-repaired-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "async-repaired-consumer",
+            "method": "prepare",
+            "returned": [
+              "Persisted.S01E02",
+              [
+                "Raw => Persisted"
+              ]
+            ],
+            "get": [
+              "Raw => Persisted"
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        }
+      ],
+      "cold": [
+        {
+          "case": "cold-get",
+          "method": "get",
+          "returned": [
+            "Raw => Persisted"
+          ],
+          "get": [
+            "Raw => Persisted"
+          ],
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        },
+        {
+          "case": "cold-consumer",
+          "method": "prepare",
+          "returned": [
+            "Persisted.S01E02",
+            [
+              "Raw => Persisted"
+            ]
+          ],
+          "get": [
+            "Raw => Persisted"
+          ],
+          "persisted": [
+            [
+              "Raw => Persisted"
+            ]
+          ]
+        }
+      ]
+    },
+    "failure-insert": {
+      "initial_rows": [],
+      "operations": [
+        {
+          "input": {
+            "case": "insert-fails",
+            "method": "set",
+            "value": [
+              "Raw => FailedInsert"
+            ],
+            "fixture_sql": "CREATE TRIGGER owned_config_fail BEFORE INSERT ON systemconfig BEGIN SELECT RAISE(ABORT,'owned insert failure'); END;"
+          },
+          "source": {
+            "case": "insert-fails",
+            "method": "set",
+            "error": {
+              "class": "IntegrityError",
+              "module": "sqlalchemy.exc",
+              "driver_class": "IntegrityError",
+              "sqlite_errorname": "SQLITE_CONSTRAINT_TRIGGER"
+            },
+            "get": [
+              "Raw => FailedInsert"
+            ]
+          },
+          "persisted": []
+        },
+        {
+          "input": {
+            "case": "failed-insert-hot",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "failed-insert-hot",
+            "method": "prepare",
+            "returned": [
+              "FailedInsert.S01E02",
+              [
+                "Raw => FailedInsert"
+              ]
+            ],
+            "get": [
+              "Raw => FailedInsert"
+            ]
+          },
+          "persisted": []
+        },
+        {
+          "input": {
+            "case": "async-insert-fails",
+            "method": "async_set",
+            "value": [
+              "Raw => AsyncFailed"
+            ]
+          },
+          "source": {
+            "case": "async-insert-fails",
+            "method": "async_set",
+            "error": {
+              "class": "IntegrityError",
+              "module": "sqlalchemy.exc",
+              "driver_class": "IntegrityError",
+              "sqlite_errorname": "SQLITE_CONSTRAINT_TRIGGER"
+            },
+            "get": [
+              "Raw => FailedInsert"
+            ]
+          },
+          "persisted": []
+        },
+        {
+          "input": {
+            "case": "cache-still-sync-failure",
+            "method": "get"
+          },
+          "source": {
+            "case": "cache-still-sync-failure",
+            "method": "get",
+            "returned": [
+              "Raw => FailedInsert"
+            ],
+            "get": [
+              "Raw => FailedInsert"
+            ]
+          },
+          "persisted": []
+        },
+        {
+          "input": {
+            "case": "drop",
+            "method": "get",
+            "fixture_sql": "DROP TRIGGER owned_config_fail;"
+          },
+          "source": {
+            "case": "drop",
+            "method": "get",
+            "returned": [
+              "Raw => FailedInsert"
+            ],
+            "get": [
+              "Raw => FailedInsert"
+            ]
+          },
+          "persisted": []
+        },
+        {
+          "input": {
+            "case": "same-missing-row-repairs",
+            "method": "set",
+            "value": [
+              "Raw => FailedInsert"
+            ]
+          },
+          "source": {
+            "case": "same-missing-row-repairs",
+            "method": "set",
+            "returned": true,
+            "get": [
+              "Raw => FailedInsert"
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => FailedInsert"
+            ]
+          ]
+        }
+      ],
+      "cold": [
+        {
+          "case": "cold-get",
+          "method": "get",
+          "returned": [
+            "Raw => FailedInsert"
+          ],
+          "get": [
+            "Raw => FailedInsert"
+          ],
+          "persisted": [
+            [
+              "Raw => FailedInsert"
+            ]
+          ]
+        },
+        {
+          "case": "cold-consumer",
+          "method": "prepare",
+          "returned": [
+            "FailedInsert.S01E02",
+            [
+              "Raw => FailedInsert"
+            ]
+          ],
+          "get": [
+            "Raw => FailedInsert"
+          ],
+          "persisted": [
+            [
+              "Raw => FailedInsert"
+            ]
+          ]
+        }
+      ]
+    },
+    "native-ui": {
+      "initial_rows": [],
+      "operations": [
+        {
+          "input": {
+            "case": "ui-remove-empty",
+            "method": "ui_set",
+            "value": [
+              "Raw => UI",
+              "",
+              "# keep",
+              "  "
+            ]
+          },
+          "source": {
+            "case": "ui-remove-empty",
+            "method": "ui_set",
+            "returned": true,
+            "get": [
+              "Raw => UI",
+              "# keep",
+              "  "
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => UI",
+              "# keep",
+              "  "
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "ui-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "ui-consumer",
+            "method": "prepare",
+            "returned": [
+              "UI.S01E02",
+              [
+                "Raw => UI"
+              ]
+            ],
+            "get": [
+              "Raw => UI",
+              "# keep",
+              "  "
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => UI",
+              "# keep",
+              "  "
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "plugin-after-ui",
+            "method": "set",
+            "value": [
+              "Raw => Plugin"
+            ]
+          },
+          "source": {
+            "case": "plugin-after-ui",
+            "method": "set",
+            "returned": true,
+            "get": [
+              "Raw => Plugin"
+            ]
+          },
+          "persisted": [
+            [
+              "Raw => Plugin"
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "ui-empty-deletes",
+            "method": "ui_set",
+            "value": [
+              ""
+            ]
+          },
+          "source": {
+            "case": "ui-empty-deletes",
+            "method": "ui_set",
+            "returned": true,
+            "get": null
+          },
+          "persisted": []
+        },
+        {
+          "input": {
+            "case": "ui-empty-recreates",
+            "method": "ui_set",
+            "value": [
+              ""
+            ]
+          },
+          "source": {
+            "case": "ui-empty-recreates",
+            "method": "ui_set",
+            "returned": true,
+            "get": null
+          },
+          "persisted": [
+            null
+          ]
+        }
+      ],
+      "cold": [
+        {
+          "case": "cold-get",
+          "method": "get",
+          "returned": null,
+          "get": null,
+          "persisted": [
+            null
+          ]
+        },
+        {
+          "case": "cold-consumer",
+          "method": "prepare",
+          "returned": [
+            "Raw.S01E02",
+            []
+          ],
+          "get": null,
+          "persisted": [
+            null
+          ]
+        }
+      ]
+    },
+    "json-numbers": {
+      "initial_rows": [],
+      "operations": [
+        {
+          "input": {
+            "case": "precision",
+            "method": "set",
+            "value": {
+              "z": 1.0000000000000001e+18,
+              "a": 9007199254740993,
+              "n": 1.2345678901234567,
+              "negative-zero": -0.0
+            }
+          },
+          "source": {
+            "case": "precision",
+            "method": "set",
+            "returned": true,
+            "get": {
+              "z": 1.0000000000000001e+18,
+              "a": 9007199254740993,
+              "n": 1.2345678901234567,
+              "negative-zero": -0.0
+            }
+          },
+          "persisted": [
+            {
+              "z": 1.0000000000000001e+18,
+              "a": 9007199254740993,
+              "n": 1.2345678901234567,
+              "negative-zero": -0.0
+            }
+          ]
+        },
+        {
+          "input": {
+            "case": "positive-infinity",
+            "method": "set",
+            "value": [
+              {
+                "$source_python_float": "inf"
+              }
+            ]
+          },
+          "source": {
+            "case": "positive-infinity",
+            "method": "set",
+            "returned": true,
+            "get": [
+              {
+                "$source_python_float": "inf"
+              }
+            ]
+          },
+          "persisted": [
+            [
+              {
+                "$source_python_float": "inf"
+              }
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "positive-infinity-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "positive-infinity-consumer",
+            "method": "prepare",
+            "error": {
+              "class": "AttributeError",
+              "module": "builtins"
+            },
+            "get": [
+              {
+                "$source_python_float": "inf"
+              }
+            ]
+          },
+          "persisted": [
+            [
+              {
+                "$source_python_float": "inf"
+              }
+            ]
+          ]
+        },
+        {
+          "input": {
+            "case": "negative-infinity",
+            "method": "set",
+            "value": {
+              "Raw => Inf": {
+                "$source_python_float": "-inf"
+              }
+            }
+          },
+          "source": {
+            "case": "negative-infinity",
+            "method": "set",
+            "returned": true,
+            "get": {
+              "Raw => Inf": {
+                "$source_python_float": "-inf"
+              }
+            }
+          },
+          "persisted": [
+            {
+              "Raw => Inf": {
+                "$source_python_float": "-inf"
+              }
+            }
+          ]
+        },
+        {
+          "input": {
+            "case": "infinity-object-consumer",
+            "method": "prepare",
+            "title": "Raw.S01E02"
+          },
+          "source": {
+            "case": "infinity-object-consumer",
+            "method": "prepare",
+            "returned": [
+              "Inf.S01E02",
+              [
+                "Raw => Inf"
+              ]
+            ],
+            "get": {
+              "Raw => Inf": {
+                "$source_python_float": "-inf"
+              }
+            }
+          },
+          "persisted": [
+            {
+              "Raw => Inf": {
+                "$source_python_float": "-inf"
+              }
+            }
+          ]
+        }
+      ],
+      "cold": [
+        {
+          "case": "cold-get",
+          "method": "get",
+          "returned": {
+            "Raw => Inf": {
+              "$source_python_float": "-inf"
+            }
+          },
+          "get": {
+            "Raw => Inf": {
+              "$source_python_float": "-inf"
+            }
+          },
+          "persisted": [
+            {
+              "Raw => Inf": {
+                "$source_python_float": "-inf"
+              }
+            }
+          ]
+        },
+        {
+          "case": "cold-consumer",
+          "method": "prepare",
+          "returned": [
+            "Inf.S01E02",
+            [
+              "Raw => Inf"
+            ]
+          ],
+          "get": {
+            "Raw => Inf": {
+              "$source_python_float": "-inf"
+            }
+          },
+          "persisted": [
+            {
+              "Raw => Inf": {
+                "$source_python_float": "-inf"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

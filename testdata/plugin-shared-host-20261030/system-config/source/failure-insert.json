@@ -1,0 +1,40 @@
+{
+  "operations": [
+    {
+      "case": "insert-fails",
+      "method": "set",
+      "value": [
+        "Raw => FailedInsert"
+      ],
+      "fixture_sql": "CREATE TRIGGER owned_config_fail BEFORE INSERT ON systemconfig BEGIN SELECT RAISE(ABORT,'owned insert failure'); END;"
+    },
+    {
+      "case": "failed-insert-hot",
+      "method": "prepare",
+      "title": "Raw.S01E02"
+    },
+    {
+      "case": "async-insert-fails",
+      "method": "async_set",
+      "value": [
+        "Raw => AsyncFailed"
+      ]
+    },
+    {
+      "case": "cache-still-sync-failure",
+      "method": "get"
+    },
+    {
+      "case": "drop",
+      "method": "get",
+      "fixture_sql": "DROP TRIGGER owned_config_fail;"
+    },
+    {
+      "case": "same-missing-row-repairs",
+      "method": "set",
+      "value": [
+        "Raw => FailedInsert"
+      ]
+    }
+  ]
+}

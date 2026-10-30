@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"encoding/json"
-	"errors"
 	"path/filepath"
 
 	"light-media/internal/decision"
@@ -17,37 +16,28 @@ import (
 const remoteIdentifiersMarker = "#========以下识别词由 RemoteIdentifiers 插件添加========#"
 
 func (a *App) loadRecognitionWords(ctx context.Context) error {
-	_, rules, err := a.recognitionWords(ctx)
-	if err != nil {
-		return err
-	}
-	matcher, err := words.New(rules)
-	if err != nil {
-		return bad("INVALID_RECOGNITION_WORDS", "识别词超过允许范围")
-	}
-	a.recognitionMatcher.Store(matcher)
-	return nil
+	a.recognitionMu.Lock()
+	defer a.recognitionMu.Unlock()
+	_, _, err := a.readSharedSystemConfigLocked(ctx, a.Store.DB)
+	return err // Legal stored JSON may be invalid rules; report at consumption, not startup.
 }
-
 func (a *App) recognitionWords(ctx context.Context) (int64, []string, error) {
-	var revision int64
-	var sealed []byte
-	err := a.Store.DB.QueryRowContext(ctx, `SELECT revision,sealed FROM recognition_words WHERE id='CustomIdentifiers'`).Scan(&revision, &sealed)
-	if errors.Is(err, sql.ErrNoRows) {
-		return 0, []string{}, nil
+	a.recognitionMu.Lock()
+	defer a.recognitionMu.Unlock()
+	_, raw, e := a.readSharedSystemConfigLocked(ctx, a.Store.DB)
+	if e != nil {
+		return 0, nil, e
 	}
-	if err != nil {
-		return 0, nil, err
+	// Native CAS metadata comes from current storage, not the source hot value.
+	observed, e := readSharedSystemConfigRow(ctx, a.Store.DB)
+	if e != nil {
+		return 0, nil, e
 	}
-	raw, err := a.pluginStore.unseal("core_words", "system", "CustomIdentifiers", sealed)
-	if err != nil {
-		return 0, nil, err
+	rules, e := sharedSystemConfigRules(raw)
+	if e == nil {
+		_, e = words.New(rules)
 	}
-	var rules []string
-	if json.Unmarshal(raw, &rules) != nil {
-		return 0, nil, bad("INVALID_RECOGNITION_WORDS", "识别词存储无法读取")
-	}
-	return revision, rules, nil
+	return observed.revision, rules, e
 }
 
 // Called under recognitionMu. The CAS and cache publication are serialized
@@ -61,7 +51,7 @@ func (a *App) commitRecognitionWords(ctx context.Context, revision int64, rules 
 	if revision < 0 {
 		return bad("RECOGNITION_REVISION_CONFLICT", "识别词版本无效")
 	}
-	matcher, err := words.New(rules)
+	_, err := words.New(rules)
 	if err != nil {
 		return bad("INVALID_RECOGNITION_WORDS", "识别词超过允许范围")
 	}
@@ -72,15 +62,27 @@ func (a *App) commitRecognitionWords(ctx context.Context, revision int64, rules 
 	if len(raw) > pluginDataValueLimit {
 		return bad("INVALID_RECOGNITION_WORDS", "识别词超过允许范围")
 	}
-	sealed, err := a.pluginStore.seal("core_words", "system", "CustomIdentifiers", raw)
-	if err != nil {
-		return err
-	}
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
 	}
 	defer tx.Rollback()
+	_, rows, err := a.readSharedSystemConfigRows(ctx, tx)
+	if err != nil {
+		return err
+	}
+	if len(rows) > 1 {
+		return bad("SYSTEM_CONFIG_MULTIPLE_RESULTS", "原生词表不能静默覆盖重复源行")
+	}
+	if len(rows) == 0 {
+		rows = []sharedSystemConfigSourceRow{{ID: 1, Value: raw}}
+	} else {
+		rows[0].Value = raw
+	}
+	sealed, err := a.sealSharedSystemConfigRows(rows)
+	if err != nil {
+		return err
+	}
 
 	var result sql.Result
 	if revision == 0 {
@@ -99,8 +101,9 @@ func (a *App) commitRecognitionWords(ctx context.Context, revision int64, rules 
 	if err := tx.Commit(); err != nil {
 		return err
 	}
-	a.recognitionMatcher.Store(matcher)
-	return nil
+	a.sharedSystemConfig.loaded = false
+	_, _, err = a.readSharedSystemConfigLocked(ctx, a.Store.DB)
+	return err
 }
 
 func (a *App) saveRecognitionWords(ctx context.Context, revision int64, rules []string) error {
@@ -113,18 +116,32 @@ func (a *App) prepareRecognitionTitle(title string) string {
 	return a.prepareRecognitionTitleContext(context.Background(), title)
 }
 func (a *App) prepareRecognitionTitleContext(ctx context.Context, title string) string {
-	matcher := a.recognitionMatcher.Load()
+	prepared, _ := a.prepareRecognitionTitleChecked(ctx, title)
+	return prepared // Existing string-only helpers retain their fail-closed contract.
+}
+func (a *App) prepareRecognitionTitleChecked(ctx context.Context, title string) (string, error) {
+	var matcher *words.Matcher
 	if scope, ok := ctx.Value(resourceRecognitionKey{}).(resourceRecognition); ok {
 		matcher = scope.matcher
+	} else {
+		a.recognitionMu.Lock()
+		matcher = a.recognitionMatcher.Load()
+		failure := a.sharedSystemConfig.consumerError.Load()
+		a.recognitionMu.Unlock()
+		if failure != nil {
+			return "", failure.err
+		}
 	}
-	result := matcher.Prepare(title)
+	result, e := matcher.PrepareChecked(title)
+	if e != nil {
+		return "", bad("SYSTEM_CONFIG_TITLE_UNICODE", "识别结果不能编码为Unicode标题")
+	}
 	if result.Limited {
-		// Incomplete preprocessing must not silently download or file a
-		// different episode using the unadjusted name. Physical paths stay intact.
-		return ""
+		return "", bad("INVALID_RECOGNITION_WORDS", "识别预处理超过现有执行范围")
 	}
-	return result.Title
+	return result.Title, nil
 }
+
 func (a *App) parseMediaName(name string) media.ParseResult {
 	return a.parseMediaNameContext(context.Background(), name)
 }

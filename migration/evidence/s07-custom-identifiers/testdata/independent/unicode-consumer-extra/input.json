@@ -1,0 +1,45 @@
+[
+  {
+    "case": "surrogate-not-replacement-character",
+    "value": [
+      "\ud800"
+    ],
+    "title": "\ufffdA"
+  },
+  {
+    "case": "intermediate-surrogate-recovers",
+    "value": [
+      "A => \ud800",
+      "\ud800 => B"
+    ],
+    "title": "A"
+  },
+  {
+    "case": "scalar-codepoint-iteration",
+    "value": "\ud800A",
+    "title": "\ufffdA"
+  },
+  {
+    "case": "distinct-object-keys",
+    "value": {
+      "\ud800": 1,
+      "\ufffd": 2
+    },
+    "title": "\ufffdA"
+  },
+  {
+    "case": "captured-group-and-surrogate",
+    "value": [
+      "(A) => \\1\ud800",
+      "\ud800 => B"
+    ],
+    "title": "A"
+  },
+  {
+    "case": "final-surrogate-unrenderable",
+    "value": [
+      "A => \ud800"
+    ],
+    "title": "A"
+  }
+]

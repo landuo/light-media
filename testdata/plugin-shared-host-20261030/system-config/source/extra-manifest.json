@@ -1,0 +1,46 @@
+{
+  "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "files": [
+    {
+      "path": "source_unicode_consumer.py",
+      "bytes": 2185,
+      "sha256": "228271f81483cf3abbeb77350d8c533e6769456ddf9efdb4598455362ff5b67d"
+    },
+    {
+      "path": "inputs/unicode-consumer.json",
+      "bytes": 1362,
+      "sha256": "734dc6e475755a135ebf20b6a4a917c0050d3df5d549228affc0714e707fbecb"
+    },
+    {
+      "path": "inputs/large.json",
+      "bytes": 737555,
+      "sha256": "d96f406f2fc2221a631e8592f89d16244d2c2951bb508f612c7e463b442f11d7"
+    },
+    {
+      "path": "inputs/large-cold.json",
+      "bytes": 138,
+      "sha256": "6a32d7a7a2fa6fcb867d40f927b09ef0699a04aeecf5e83fe07d1a52143fa4de"
+    },
+    {
+      "path": "evidence/unicode-consumer-run01.json",
+      "bytes": 166003,
+      "sha256": "3b13ca8d9cdc8aa1537dd23705b18d4cf7467a7fd66630cd92616d3a277f40e0"
+    },
+    {
+      "path": "evidence/unicode-consumer-run02.json",
+      "bytes": 166478,
+      "sha256": "020cd9d29804e52c74c507940f538225ea820079b5f854778f2441615906dcf0"
+    },
+    {
+      "path": "evidence/large-run01.json",
+      "bytes": 3110904,
+      "sha256": "613603eb39da4e78c4020112b22cba8fdd13205f4d4d429127318f4d12a37e39"
+    },
+    {
+      "path": "evidence/large-cold01.json",
+      "bytes": 5323697,
+      "sha256": "0bb97df709be67a27bd958e9032c54d442683916123c03591410ef3d7770bf10"
+    }
+  ],
+  "large_input_generation": "24 strings: # plus x repeated (30<<10), followed by Raw => Large; compact UTF8 JSON; cold new process"
+}

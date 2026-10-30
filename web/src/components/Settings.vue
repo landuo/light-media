@@ -9,6 +9,9 @@ import DirectoryManager from './DirectoryManager.vue';
 import ApiTokenSettings from './ApiTokenSettings.vue';
 import ProxySettings from './ProxySettings.vue';
 import PluginSystemSettings from './PluginSystemSettings.vue';
+const RecognitionWordsSettings = defineAsyncComponent(
+  () => import('./RecognitionWordsSettings.vue'),
+);
 const RuleManager = defineAsyncComponent(() => import('./RuleManager.vue'));
 const ResourceMetadataSettings = defineAsyncComponent(
   () => import('./ResourceMetadataSettings.vue'),
@@ -294,6 +297,7 @@ onBeforeUnmount(() => window.removeEventListener('hashchange', syncTab));
     </div>
     <div v-if="visitedTabs.has('rule')" v-show="tab === 'rule'">
       <RuleManager />
+      <RecognitionWordsSettings />
       <ResourceMetadataSettings />
     </div>
     <div v-if="visitedTabs.has('maintenance')" v-show="tab === 'maintenance'" class="settings-page">

@@ -1,0 +1,77 @@
+{
+  "feature_id": "S07.CustomIdentifiers",
+  "scope": "Read-only independent review of coordinator S01 Transmission coexistence gates on integrated main; not a new migration claim.",
+  "coordinator_execution": true,
+  "reviewer_reran_daemon": false,
+  "phases": [
+    {
+      "phase": "active",
+      "source_cases": 47,
+      "matched_full_field_leaves": 47,
+      "target_roots": [
+        "TestSharedTransmissionQueryRealSourceWorker"
+      ],
+      "source_sha256": "d845c97a0d47a7e2d8cd4d08bb97a90ac6d85209abe5850d55cfe07a135adbaa",
+      "log_sha256": "dedebe23d368c30db47b31ab955a8eb9f69ce7c10077a8d52a3cfcb410cf833a",
+      "screen_sha256": "d4fbda49f23f1aa7137ff59a49ad186db50833022a6a66a031ea04140ecd7a76",
+      "postflight_sha256": "adda3dc3150af3afb820105da161b7585fa920ce465d6f2e1575ce9948a0f98d",
+      "zero_peers": true,
+      "retained_owned_data": true,
+      "exact_secret_scan_passed_as_reported": true
+    },
+    {
+      "phase": "queued",
+      "source_cases": 47,
+      "matched_full_field_leaves": 47,
+      "target_roots": [
+        "TestSharedTransmissionQueryRealSourceWorker"
+      ],
+      "source_sha256": "a8bbf9254216db9122c474a81a52dad7ee954324a1ffe993b3053f73bf547699",
+      "log_sha256": "2fd98e9b3f5f3f1e9a29e0a80041d5e84ed3e95add8edf0203831942e51abefb",
+      "screen_sha256": "09656cc55a4b8255f8dbbd62e6a3ce66ece7dccbc2c9597eedea445eeeeaaeef",
+      "postflight_sha256": "adda3dc3150af3afb820105da161b7585fa920ce465d6f2e1575ce9948a0f98d",
+      "zero_peers": true,
+      "retained_owned_data": true,
+      "exact_secret_scan_passed_as_reported": true
+    },
+    {
+      "phase": "paused",
+      "source_cases": 28,
+      "matched_full_field_leaves": 28,
+      "target_roots": [
+        "TestSharedTransmissionQueryWorkerPermissionAndWire",
+        "TestSharedTransmissionQueryDispatchScopeBoundaries",
+        "TestSharedTransmissionQueryWireLimitExplicitFailure",
+        "TestSharedTransmissionQueryRealSourceWorker",
+        "TestSharedTransmissionQueryRealSlowAndRecentlyActive",
+        "TestSharedTransmissionQueryRealUIHTTP"
+      ],
+      "source_sha256": "db8a243acf6b11544e4b743ffb1f1582e53168c47cc452df9be02e1e2c0e5564",
+      "log_sha256": "91755e1c6fb21fe46d95e2ed5a08f87b2353cfe721c789c01c8518fdc5a7a719",
+      "screen_sha256": "ec433c60b25b30e4018f5cdb7f0b2ec316c07c53b42df652605ec9fb73f1ba44",
+      "postflight_sha256": "958bc437980c3f43d836fc461f06ca07417e67f7c7caf41e3273c3418ee5eb47",
+      "zero_peers": true,
+      "retained_owned_data": true,
+      "exact_secret_scan_passed_as_reported": true
+    }
+  ],
+  "auxiliary_ordinary_consumer_observations": [
+    {
+      "source_cases": 28,
+      "ordinary_consumer_equal": true,
+      "real_daemon": true,
+      "zero_peers": true,
+      "oracle_sha256": "db8a243acf6b11544e4b743ffb1f1582e53168c47cc452df9be02e1e2c0e5564"
+    }
+  ],
+  "sdk": {
+    "roots": [
+      "TestTransmissionQueryTypedPreservesRawFieldsAndNumericPrecision",
+      "TestTransmissionQueryTypedRejectsLossyInputAndInvalidResponse",
+      "TestTransmissionQueryConvenienceNoneAndExactSourcePending"
+    ],
+    "log_sha256": "67e2873a7a9a332d8be7c6c04745329d0ef3468f79da57e7372acbc0e9c21683",
+    "seconds": 1.077
+  },
+  "privacy": "Only coordinator explicitly screened logs/source/postflight/screen artifacts were read. Runtime/credentials were not accessed. Raw source artifacts retain owned local paths; this compact review omits task payloads and local runtime paths."
+}

@@ -1,0 +1,97 @@
+{
+  "operations": [
+    {
+      "case": "absent",
+      "method": "get"
+    },
+    {
+      "case": "null-creates",
+      "method": "set",
+      "value": null
+    },
+    {
+      "case": "null-equal",
+      "method": "set",
+      "value": null
+    },
+    {
+      "case": "rules",
+      "method": "set",
+      "value": [
+        "Raw => Native",
+        "# comment",
+        ""
+      ]
+    },
+    {
+      "case": "actual-consumer",
+      "method": "prepare",
+      "title": "Raw.S01E02"
+    },
+    {
+      "case": "same",
+      "method": "set",
+      "value": [
+        "Raw => Native",
+        "# comment",
+        ""
+      ]
+    },
+    {
+      "case": "deepcopy-get",
+      "method": "deepcopy_get"
+    },
+    {
+      "case": "deepcopy-set",
+      "method": "deepcopy_set",
+      "value": [
+        "Native => Shared"
+      ]
+    },
+    {
+      "case": "empty-list",
+      "method": "set",
+      "value": []
+    },
+    {
+      "case": "empty-again",
+      "method": "set",
+      "value": []
+    },
+    {
+      "case": "false",
+      "method": "set",
+      "value": false
+    },
+    {
+      "case": "false-equal-zero",
+      "method": "set",
+      "value": 0
+    },
+    {
+      "case": "false-equal-floatzero",
+      "method": "set",
+      "value": 0.0
+    },
+    {
+      "case": "empty-string",
+      "method": "set",
+      "value": ""
+    },
+    {
+      "case": "empty-object",
+      "method": "set",
+      "value": {}
+    },
+    {
+      "case": "null",
+      "method": "set",
+      "value": null
+    },
+    {
+      "case": "empty-consumer",
+      "method": "prepare",
+      "title": "Raw.S01E02"
+    }
+  ]
+}

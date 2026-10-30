@@ -1,0 +1,89 @@
+{
+  "feature_id": "S07.CustomIdentifiers",
+  "reviewer_execution": false,
+  "source": "Actual owner-main logs and command results read and SHA verified, not owner summary alone.",
+  "results": [
+    {
+      "name": "main-s07-normal",
+      "result_sha256": "81eada6eeda7400d27ea0e03383ed121299e0c49c8b0d5190f851283b55b08f9",
+      "log_sha256": "10c1604881fdd845c224d072e85cf9463937e20d953bb733607488171d4b0d85",
+      "exit": 0,
+      "actual_root_passes": 17,
+      "actual_root_skips": 0,
+      "race_findings": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/app\t56.841s"
+      ],
+      "accepted": true,
+      "reason": null
+    },
+    {
+      "name": "main-s07-race",
+      "result_sha256": "0d2d2272d8f72b59b2475c248e2b4f2788c9c53e6a1e0cbf4d8e6232cabb0c96",
+      "log_sha256": "3cf5d1ee0a162e4b605ac44dbccb64c55ee31034b4f712c94ec65f90c6850d41",
+      "exit": 0,
+      "actual_root_passes": 17,
+      "actual_root_skips": 0,
+      "race_findings": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/app\t394.516s"
+      ],
+      "accepted": true,
+      "reason": null
+    },
+    {
+      "name": "main-native12-race",
+      "result_sha256": "14e08b92c95a43e0beec27268baa523ef65098f850f8974b9345c86c3b7225a4",
+      "log_sha256": "32b2765a71b7d0884d5462ca8c4eeae5cc6ae846afbc0e1d02d8f1a428abda46",
+      "exit": 0,
+      "actual_root_passes": 12,
+      "actual_root_skips": 0,
+      "race_findings": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/app\t71.608s"
+      ],
+      "accepted": true,
+      "reason": null
+    },
+    {
+      "name": "main-words-race",
+      "result_sha256": "a8a060487d3bf6a6057b73f3000d4068b9f5ffa1de5b9204a89868a438bf8528",
+      "log_sha256": "6d3029f0e71e6e92baa53777b6e8a1616a91ed7cc4c48d4c8f975cf058235605",
+      "exit": 0,
+      "actual_root_passes": 0,
+      "actual_root_skips": 0,
+      "race_findings": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/media/words\t1.323s"
+      ],
+      "accepted": true,
+      "reason": null
+    },
+    {
+      "name": "main-sdk",
+      "result_sha256": "0a1e249c7b9b4c777d04d686016db56369bc559ef65cf951ef1863c143a8cd55",
+      "log_sha256": "bc97a97b0c0bed7b92b42ab827350518caf66280c17e078f8e47dc32080d7076",
+      "exit": 0,
+      "actual_root_passes": 0,
+      "actual_root_skips": 0,
+      "race_findings": 0,
+      "package_result": [
+        "ok  \tlight-media/internal/plugins\t21.495s"
+      ],
+      "accepted": true,
+      "reason": null
+    },
+    {
+      "name": "main-web",
+      "result_sha256": "e678b700711e08558b84b9fa5c712cc0dab7cd3ba3ef73906b8b3987be244c7d",
+      "log_sha256": "96f4f688853a9c429a5f97e3c67c02b1631ebb3f5f38c89cfc9fc5c07819dd72",
+      "exit": 1,
+      "actual_root_passes": 0,
+      "actual_root_skips": 0,
+      "race_findings": 0,
+      "package_result": [],
+      "accepted": false,
+      "reason": "Module loader could not find @vue/compiler-sfc; no web test logic executed. Waiting environment-only rerun."
+    }
+  ]
+}

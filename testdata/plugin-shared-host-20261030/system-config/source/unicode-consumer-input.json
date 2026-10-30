@@ -1,0 +1,87 @@
+[
+  {
+    "case": "unmatched-literal",
+    "rules": [
+      "\ud800",
+      "A => B"
+    ],
+    "title": "A"
+  },
+  {
+    "case": "surrogate-output",
+    "rules": [
+      "A => \ud800"
+    ],
+    "title": "A"
+  },
+  {
+    "case": "intermediate-repaired",
+    "rules": [
+      "A => \ud800",
+      "\ud800 => B"
+    ],
+    "title": "A"
+  },
+  {
+    "case": "unicode-category",
+    "rules": [
+      "A => \ud800",
+      "\\p{Cs} => C"
+    ],
+    "title": "A"
+  },
+  {
+    "case": "surrogate-capture",
+    "rules": [
+      "(?P<all>A) => \\g<all>\ud800"
+    ],
+    "title": "A"
+  },
+  {
+    "case": "escaped-surrogate-pattern",
+    "rules": [
+      "A => \ud800",
+      "\\\ud800 => E"
+    ],
+    "title": "A"
+  },
+  {
+    "case": "surrogate-offset",
+    "rules": [
+      "A => \ud800 S01E02",
+      "\ud800 S01E <>  >> 1"
+    ],
+    "title": "A"
+  },
+  {
+    "case": "surrogate-offset-repair",
+    "rules": [
+      "A => \ud800 S01E02",
+      "\ud800 S01E <>  >> 1",
+      "\ud800 => Show"
+    ],
+    "title": "A"
+  },
+  {
+    "case": "literal-not-replacement",
+    "rules": [
+      "\ud800"
+    ],
+    "title": "\ufffd"
+  },
+  {
+    "case": "surrogate-dict-values-irrelevant",
+    "rules": {
+      "A => B": "\ud800"
+    },
+    "title": "A"
+  },
+  {
+    "case": "surrogate-in-comment",
+    "rules": [
+      "#\ud800",
+      "A => B"
+    ],
+    "title": "A"
+  }
+]

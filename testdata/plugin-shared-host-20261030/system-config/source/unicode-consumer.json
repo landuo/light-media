@@ -1,0 +1,325 @@
+{
+  "scope": "ordinary default SystemConfigOper -> normal WordsMatcher -> actual JSONResponse; no original HTTP authentication route",
+  "observations": [
+    {
+      "case": "unmatched-literal",
+      "input": {
+        "case": "unmatched-literal",
+        "rules": [
+          "\ud800",
+          "A => B"
+        ],
+        "title": "A"
+      },
+      "set_return": true,
+      "raw": [
+        "\ud800",
+        "A => B"
+      ],
+      "prepared": [
+        "B",
+        [
+          "A => B"
+        ]
+      ],
+      "title_response_body": "\"B\"",
+      "response_body": "[\"B\",[\"A => B\"]]",
+      "database": [
+        [
+          "[\"\\ud800\", \"A => B\"]"
+        ]
+      ]
+    },
+    {
+      "case": "surrogate-output",
+      "input": {
+        "case": "surrogate-output",
+        "rules": [
+          "A => \ud800"
+        ],
+        "title": "A"
+      },
+      "set_return": true,
+      "raw": [
+        "A => \ud800"
+      ],
+      "prepared": [
+        "\ud800",
+        [
+          "A => \ud800"
+        ]
+      ],
+      "title_response_error": "UnicodeEncodeError",
+      "response_error": "UnicodeEncodeError",
+      "database": [
+        [
+          "[\"A => \\ud800\"]"
+        ]
+      ]
+    },
+    {
+      "case": "intermediate-repaired",
+      "input": {
+        "case": "intermediate-repaired",
+        "rules": [
+          "A => \ud800",
+          "\ud800 => B"
+        ],
+        "title": "A"
+      },
+      "set_return": true,
+      "raw": [
+        "A => \ud800",
+        "\ud800 => B"
+      ],
+      "prepared": [
+        "B",
+        [
+          "A => \ud800",
+          "\ud800 => B"
+        ]
+      ],
+      "title_response_body": "\"B\"",
+      "response_error": "UnicodeEncodeError",
+      "database": [
+        [
+          "[\"A => \\ud800\", \"\\ud800 => B\"]"
+        ]
+      ]
+    },
+    {
+      "case": "unicode-category",
+      "input": {
+        "case": "unicode-category",
+        "rules": [
+          "A => \ud800",
+          "\\p{Cs} => C"
+        ],
+        "title": "A"
+      },
+      "set_return": true,
+      "raw": [
+        "A => \ud800",
+        "\\p{Cs} => C"
+      ],
+      "prepared": [
+        "C",
+        [
+          "A => \ud800",
+          "\\p{Cs} => C"
+        ]
+      ],
+      "title_response_body": "\"C\"",
+      "response_error": "UnicodeEncodeError",
+      "database": [
+        [
+          "[\"A => \\ud800\", \"\\\\p{Cs} => C\"]"
+        ]
+      ]
+    },
+    {
+      "case": "surrogate-capture",
+      "input": {
+        "case": "surrogate-capture",
+        "rules": [
+          "(?P<all>A) => \\g<all>\ud800"
+        ],
+        "title": "A"
+      },
+      "set_return": true,
+      "raw": [
+        "(?P<all>A) => \\g<all>\ud800"
+      ],
+      "prepared": [
+        "A\ud800",
+        [
+          "(?P<all>A) => \\g<all>\ud800"
+        ]
+      ],
+      "title_response_error": "UnicodeEncodeError",
+      "response_error": "UnicodeEncodeError",
+      "database": [
+        [
+          "[\"(?P<all>A) => \\\\g<all>\\ud800\"]"
+        ]
+      ]
+    },
+    {
+      "case": "escaped-surrogate-pattern",
+      "input": {
+        "case": "escaped-surrogate-pattern",
+        "rules": [
+          "A => \ud800",
+          "\\\ud800 => E"
+        ],
+        "title": "A"
+      },
+      "set_return": true,
+      "raw": [
+        "A => \ud800",
+        "\\\ud800 => E"
+      ],
+      "prepared": [
+        "E",
+        [
+          "A => \ud800",
+          "\\\ud800 => E"
+        ]
+      ],
+      "title_response_body": "\"E\"",
+      "response_error": "UnicodeEncodeError",
+      "database": [
+        [
+          "[\"A => \\ud800\", \"\\\\\\ud800 => E\"]"
+        ]
+      ]
+    },
+    {
+      "case": "surrogate-offset",
+      "input": {
+        "case": "surrogate-offset",
+        "rules": [
+          "A => \ud800 S01E02",
+          "\ud800 S01E <>  >> 1"
+        ],
+        "title": "A"
+      },
+      "set_return": true,
+      "raw": [
+        "A => \ud800 S01E02",
+        "\ud800 S01E <>  >> 1"
+      ],
+      "prepared": [
+        "\ud800 S01E01",
+        [
+          "A => \ud800 S01E02",
+          "\ud800 S01E <>  >> 1"
+        ]
+      ],
+      "title_response_error": "UnicodeEncodeError",
+      "response_error": "UnicodeEncodeError",
+      "database": [
+        [
+          "[\"A => \\ud800 S01E02\", \"\\ud800 S01E <>  >> 1\"]"
+        ]
+      ]
+    },
+    {
+      "case": "surrogate-offset-repair",
+      "input": {
+        "case": "surrogate-offset-repair",
+        "rules": [
+          "A => \ud800 S01E02",
+          "\ud800 S01E <>  >> 1",
+          "\ud800 => Show"
+        ],
+        "title": "A"
+      },
+      "set_return": true,
+      "raw": [
+        "A => \ud800 S01E02",
+        "\ud800 S01E <>  >> 1",
+        "\ud800 => Show"
+      ],
+      "prepared": [
+        "Show S01E01",
+        [
+          "A => \ud800 S01E02",
+          "\ud800 S01E <>  >> 1",
+          "\ud800 => Show"
+        ]
+      ],
+      "title_response_body": "\"Show S01E01\"",
+      "response_error": "UnicodeEncodeError",
+      "database": [
+        [
+          "[\"A => \\ud800 S01E02\", \"\\ud800 S01E <>  >> 1\", \"\\ud800 => Show\"]"
+        ]
+      ]
+    },
+    {
+      "case": "literal-not-replacement",
+      "input": {
+        "case": "literal-not-replacement",
+        "rules": [
+          "\ud800"
+        ],
+        "title": "\ufffd"
+      },
+      "set_return": true,
+      "raw": [
+        "\ud800"
+      ],
+      "prepared": [
+        "\ufffd",
+        []
+      ],
+      "title_response_body": "\"\ufffd\"",
+      "response_body": "[\"\ufffd\",[]]",
+      "database": [
+        [
+          "[\"\\ud800\"]"
+        ]
+      ]
+    },
+    {
+      "case": "surrogate-dict-values-irrelevant",
+      "input": {
+        "case": "surrogate-dict-values-irrelevant",
+        "rules": {
+          "A => B": "\ud800"
+        },
+        "title": "A"
+      },
+      "set_return": true,
+      "raw": {
+        "A => B": "\ud800"
+      },
+      "prepared": [
+        "B",
+        [
+          "A => B"
+        ]
+      ],
+      "title_response_body": "\"B\"",
+      "response_body": "[\"B\",[\"A => B\"]]",
+      "database": [
+        [
+          "{\"A => B\": \"\\ud800\"}"
+        ]
+      ]
+    },
+    {
+      "case": "surrogate-in-comment",
+      "input": {
+        "case": "surrogate-in-comment",
+        "rules": [
+          "#\ud800",
+          "A => B"
+        ],
+        "title": "A"
+      },
+      "set_return": true,
+      "raw": [
+        "#\ud800",
+        "A => B"
+      ],
+      "prepared": [
+        "B",
+        [
+          "A => B"
+        ]
+      ],
+      "title_response_body": "\"B\"",
+      "response_body": "[\"B\",[\"A => B\"]]",
+      "database": [
+        [
+          "[\"#\\ud800\", \"A => B\"]"
+        ]
+      ]
+    }
+  ],
+  "network_attempts": [],
+  "source_output_sha256": "020cd9d29804e52c74c507940f538225ea820079b5f854778f2441615906dcf0",
+  "driver_sha256": "228271f81483cf3abbeb77350d8c533e6769456ddf9efdb4598455362ff5b67d"
+}
