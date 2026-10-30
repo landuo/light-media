@@ -1,0 +1,260 @@
+{
+  "slice": "GitHub mirror HTTP response versus transport exception",
+  "status": "owner gates passed; independent review and coordinator main integration pending",
+  "base": "a110eabd0f6bb99a4c0a2cb6f32cb94c1efe2d12",
+  "candidate": {
+    "path": "candidate01.json",
+    "bytes": 906,
+    "sha256": "5cacd05a9949aa28cecb85e7853f3d974702c1325c92c3a5c7117048b97e2473"
+  },
+  "files": [
+    {
+      "path": "internal/app/plugin_module_process_github_test.go",
+      "bytes": 15089,
+      "sha256": "e84aac732ce572c59664623bac97086a69ee965afabd0a79f4745bb90aeec999"
+    },
+    {
+      "path": "internal/app/plugin_original_github_network.go",
+      "bytes": 5295,
+      "sha256": "6ed81226bcde845223527ae593ae8c40d18986242b3d328af419be27d7ec5728"
+    },
+    {
+      "path": "internal/app/plugin_original_github_network_test.go",
+      "bytes": 12525,
+      "sha256": "820bb7afa92bbab6f2789dfab4037a32fa240ad80ac6b1045d6de48ccbd55a9a"
+    }
+  ],
+  "change": "Return every successfully received mirror HTTP response unchanged. Only a transport error may fall back to trusted origin; cancellation and credential/TLS boundaries are unchanged.",
+  "original_source": {
+    "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "paths": [
+      "app/helper/plugin.py:__request_with_fallback",
+      "app/helper/plugin.py:__async_request_with_fallback",
+      "app/utils/http.py:RequestUtils.request/get_res",
+      "app/utils/http.py:AsyncRequestUtils._make_request/get_res"
+    ],
+    "component_boundary": "Original PluginHelper, HTTP clients, settings/cache/DAO imports run normally. Unused unrelated integration/auth startup helpers are inert bootstrap stubs that are not exercised. This is not a full Manager or authenticated source daemon gate.",
+    "public_read_install_observations": [
+      {
+        "mode": "sync",
+        "mirror_status": 503,
+        "result": null,
+        "origin_http_requests": 0
+      },
+      {
+        "mode": "async",
+        "mirror_status": 503,
+        "result": null,
+        "origin_http_requests": 0
+      },
+      {
+        "mode": "sync public install",
+        "success": false,
+        "mirror_requests": 2,
+        "origin_http_requests": 0,
+        "code_directory_created": false
+      },
+      {
+        "mode": "async public install",
+        "success": false,
+        "mirror_requests": 2,
+        "origin_http_requests": 0,
+        "code_directory_created": false
+      }
+    ],
+    "response_exception_observations": [
+      {
+        "api": "sync",
+        "case": "http200",
+        "value": {
+          "OwnedModuleFixture": {
+            "v2": true,
+            "name": "Mirror",
+            "version": "1.0"
+          }
+        },
+        "mirror_requests": 1,
+        "origin_requests": 0
+      },
+      {
+        "api": "sync",
+        "case": "http400",
+        "value": null,
+        "mirror_requests": 1,
+        "origin_requests": 0
+      },
+      {
+        "api": "sync",
+        "case": "http503",
+        "value": null,
+        "mirror_requests": 1,
+        "origin_requests": 0
+      },
+      {
+        "api": "sync",
+        "case": "eof",
+        "value": {
+          "OwnedModuleFixture": {
+            "v2": true,
+            "name": "Origin",
+            "version": "1.0"
+          }
+        },
+        "mirror_requests": 1,
+        "origin_requests": 1
+      },
+      {
+        "api": "async",
+        "case": "http200",
+        "value": {
+          "OwnedModuleFixture": {
+            "v2": true,
+            "name": "Mirror",
+            "version": "1.0"
+          }
+        },
+        "mirror_requests": 1,
+        "origin_requests": 0
+      },
+      {
+        "api": "async",
+        "case": "http400",
+        "value": null,
+        "mirror_requests": 1,
+        "origin_requests": 0
+      },
+      {
+        "api": "async",
+        "case": "http503",
+        "value": null,
+        "mirror_requests": 1,
+        "origin_requests": 0
+      },
+      {
+        "api": "async",
+        "case": "eof",
+        "value": {
+          "OwnedModuleFixture": {
+            "v2": true,
+            "name": "Origin",
+            "version": "1.0"
+          }
+        },
+        "mirror_requests": 2,
+        "origin_requests": 1
+      }
+    ],
+    "raw_bindings": [
+      {
+        "path": "source-run01/source-mirror-install-result.json",
+        "bytes": 200805,
+        "sha256": "a602f9c9a4c6a4779fc061d8e45e90239627454eeb0dc682827c141cb3722016"
+      },
+      {
+        "path": "source-run02/source-result.json",
+        "bytes": 200845,
+        "sha256": "d7c796e455f278f66085d0b8fa6d29b5c3a0c0109e71631a4b83f30843487758"
+      }
+    ],
+    "source_imports_each": 988
+  },
+  "actual_target": {
+    "server_sha256": "7e26c23f2260a0f2a8167d12c8c08aad3b757833307b4c91bf17151862f5bde6",
+    "standard_v1_sha256": "a91aee98096d7d74ad837060d246bfddad69b3c210651709b484b8ebe62fb347",
+    "standard_v2_sha256": "c6c208e16f88b781af2d8f08017a5d7005411aab8006d74a0dde10999b8e3aa6",
+    "install_worker_sha256": "f0fb67e105f48e3f0fb4877933c237492bac9afa62f2ba3ded71b3735d1b83b2",
+    "protocol_race": {
+      "roots": 2,
+      "seconds": 1.414,
+      "log": {
+        "path": "final-protocol-race-run01.log",
+        "bytes": 314,
+        "sha256": "2b7585db902d84a6ec664aac2af54b95bbb886b2ceb967c084ed2fa4ddcd3c2e"
+      }
+    },
+    "production_process_race": {
+      "root": "TestPluginModuleProductionProcessLifecycle",
+      "seconds": 35.84,
+      "log": {
+        "path": "final-production-github-process-run01.log",
+        "bytes": 970,
+        "sha256": "15268418c64a902c8b0a476485fef7f26ea3d7a6a9f8f4ebacf73a904ebf7720"
+      },
+      "coverage": [
+        "actual authenticated install and SDK worker",
+        "HTTP503 preserves original response and avoids origin",
+        "real TCP EOF falls back",
+        "failed force install retains live worker/config/KV",
+        "strict owned TLS and official-host credential binding",
+        "API bypasses mirror",
+        "context cancellation does not fall back",
+        "cold server restart restores encrypted settings and worker"
+      ]
+    },
+    "independent_authored_replay_owner_execution": {
+      "observations": [
+        {
+          "name": "received_http503_is_not_transport_failure",
+          "passed": true,
+          "source_success": false,
+          "installed": false,
+          "origin_requests": 0
+        },
+        {
+          "name": "actual_mirror_transport_EOF_falls_back_to_trusted_owned_origin_and_loads_real_worker",
+          "passed": true
+        },
+        {
+          "name": "later_HTTP503_force_install_fails_preflight_and_retains_same_live_worker_snapshot",
+          "passed": true
+        }
+      ],
+      "unexpected_proxy_targets": [],
+      "statistics_share": false,
+      "statistics_server_empty": true,
+      "result": {
+        "path": "target-install-run02/result.json",
+        "bytes": 1822,
+        "sha256": "b2e2fae46b8cce2da365ad85010399c216ee386811d47249041f1857c0c66fd2"
+      }
+    },
+    "reproducible_server": {
+      "path": "rebuild-verify.json",
+      "bytes": 653,
+      "sha256": "9d5bcba84a6e811803d052f45b7e860d01491428384f4b995799af6dfa1ebb91"
+    }
+  },
+  "closure": {
+    "files": 7030,
+    "changed": [],
+    "before": {
+      "path": "before-closure01.json",
+      "bytes": 1800215,
+      "sha256": "d391da04050027b5ce7f7669569321286e9ac6b5b89a64e581803e44eeb50939"
+    },
+    "after": {
+      "path": "after-closure01.json",
+      "bytes": 1800215,
+      "sha256": "d391da04050027b5ce7f7669569321286e9ac6b5b89a64e581803e44eeb50939"
+    },
+    "source_and_target_files_bound": true
+  },
+  "preserved_negative_evidence": [
+    {
+      "path": "target-before-fix.log",
+      "bytes": 338,
+      "sha256": "1a4e99e4c4058412b2b87dc0efe70756c7e1e1aa2d33dfd422e630c1c0664bc8"
+    },
+    {
+      "path": "target-install-run01-boundary.json",
+      "bytes": 924,
+      "sha256": "7a1701e4dc6745ae40760b707a0a7fd79d94633d00048a04427d849abe4f0795"
+    }
+  ],
+  "limitations": [
+    "Go/RPC platform and approved origin-only PAT policy are retained; this does not claim byte-for-byte Python transport retry behavior. Source async EOF made two mirror requests before origin, while sync made one.",
+    "Other originalPluginFallbackTransport status fallback is not changed or accepted by this patch.",
+    "The first owner v1 replay passed its three business phases but attempted default statistics through an owned proxy, which rejected it without opening an external socket. It is not clean network acceptance; v2 explicitly disables statistics and has no rejected targets.",
+    "The candidate is isolated from later main changes; main must rebuild and rerun before integration acceptance."
+  ]
+}

@@ -15,8 +15,8 @@
     "remote": "https://github.com/landuo/light-media.git",
     "branch": "plugins-refactor",
     "baseline_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-    "revision": "e9ebb8b4e9274d531bd2e5156c69e8a5ba33de67",
-    "remote_revision": "743b17cb2d1fe42e70fbe98626d99e3515244177",
+    "revision": "294e52dd904f3e7d6538d0e51ffe42365b93e266",
+    "remote_revision": "294e52dd904f3e7d6538d0e51ffe42365b93e266",
     "delivery_mode": "remote",
     "delivery_reason": "Per accepted functional slice commit, push and readback; no merge or deployment.",
     "metadata_paths": [
@@ -27,9 +27,10 @@
       "migration/delivery/existing-reuse-28f3b78c-paths.json",
       "migration/delivery/transmission-743b17cb-paths.json",
       "migration/delivery/existing-install-a110eabd-paths.json",
-      "migration/delivery/system-config-e9ebb8b4-paths.json"
+      "migration/delivery/system-config-e9ebb8b4-paths.json",
+      "migration/delivery/existing-sources-294e52dd-paths.json"
     ],
-    "revision_note": "Latest accepted actual product/readback e9ebb8b4; this06 reuse commit only changes metadata and does not change product execution inputs."
+    "revision_note": "Latest completed remote readback294e52dd. This accepted current mirror3path worktree is precisely byte-bound in current evidence; its resulting commit/readback is recorded by next delivery receipt, never preclaimed."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -3126,7 +3127,8 @@
         "06",
         "13",
         "23",
-        "S02"
+        "S02",
+        "11.mirror_response"
       ],
       "feature_link_reason": "existing precise feature source_paths reverse-link",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4253,7 +4255,8 @@
         "18",
         "19",
         "20",
-        "21"
+        "21",
+        "11.mirror_response"
       ],
       "feature_link_reason": "helper directly supports named SDK/platform chain",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -7192,7 +7195,8 @@
         "23",
         "24",
         "S12",
-        "S14"
+        "S14",
+        "11.mirror_response"
       ],
       "feature_link_reason": "ordinary utility dependency; native Go implementation allowed, no same-name RPC obligation",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -17171,6 +17175,18 @@
       "feature_ids": [
         "S07.CustomIdentifiers"
       ]
+    },
+    {
+      "id": "scope.11.mirror_response",
+      "source_location": "app/helper/plugin.py __request_with_fallback/__async_request_with_fallback -> app/utils/http.py get_res -> public market/install",
+      "chain": [
+        "Configured GitHub source -> received mirror HTTP response or actual transport exception",
+        "Native originalGitHubTransport -> real market/install caller -> validated artifact -> persistent SDK worker",
+        "Normal authenticated market retry/install/error UI and same-data cold"
+      ],
+      "feature_ids": [
+        "11.mirror_response"
+      ]
     }
   ],
   "features": [
@@ -18119,7 +18135,7 @@
         "frontend:src/components/cards/PluginCard.vue"
       ],
       "work_kind": "confirmed_delta",
-      "work_kind_note": "Complete original helper sync/async and actual native market/install entry confirm mirror HTTP503 must return failure without origin fallback. Finite common transport repair underway; prior positive observations retained, not whole implementation rewrite.",
+      "work_kind_note": "Finite received-response mirror defect repaired and accepted as11.mirror_response; earlier positive evidence retained.09 package-band/cache dependency and remaining whole-group synthesis are still open.",
       "reused_existing_implementation": true,
       "acceptance_scope": "Original install flow adapted to validated Go artifacts and persistent native workers; unchanged existing implementation, not new rewrite.",
       "facet_checks": {
@@ -18303,7 +18319,7 @@
       },
       "external_source_paths": [],
       "work_kind": "confirmed_delta",
-      "work_kind_note": "Complete original helper sync/async and actual native market/install entry confirm mirror HTTP503 must return failure without origin fallback. Finite common transport repair underway; prior positive observations retained, not whole implementation rewrite.",
+      "work_kind_note": "Finite received-response mirror defect repaired and accepted as11.mirror_response; earlier positive evidence retained.09 package-band/cache dependency and remaining whole-group synthesis are still open.",
       "counterexample": {
         "contract_sha256": "ea3d48769e45725478fa7ef9a12f1b1502d00f91d0c2f9f23d27ea2192532148",
         "source_install_sha256": "5015bf9bf59990081b52a6a1965bbcab80d2e3471907a7a0dd31745446979cb6",
@@ -18373,7 +18389,7 @@
     {
       "id": "16",
       "description": "16 · 2.11 重置 怎样清除设置和运行记录但保留插件",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/plugin.py",
         "app/core/plugin.py",
@@ -18391,18 +18407,23 @@
       "evidence_ids": [],
       "review": {
         "status": "pending",
-        "independent": false
+        "independent": true,
+        "reviewer": "transmission_query_independent_review_20261030"
       },
       "external_source_paths": [
         "frontend:src/components/cards/PluginCard.vue"
       ],
-      "work_kind": "reuse_verification",
-      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Real public reset: legal Base plugin without.name and failing PluginDataReset handler causes source error path to abort remaining reset; old target incorrectly continues cleanup/reload. Finite repair not yet accepted.",
+      "counterexample": {
+        "review_sha256": "6873b4c90102118252568b9128c98feedb6826eed7fc747d65a636c05f3a223b",
+        "boundary": "New independent real fixed-source/actual target evidence retained privately; pending implementation/revalidation, not new whole-group acceptance."
+      }
     },
     {
       "id": "17",
       "description": "17 · 2.12 卸载 怎样让插件退出系统以及为什么还有残留文件",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/plugin.py",
         "app/core/plugin.py"
@@ -18419,13 +18440,18 @@
       "evidence_ids": [],
       "review": {
         "status": "pending",
-        "independent": false
+        "independent": true,
+        "reviewer": "transmission_query_independent_review_20261030"
       },
       "external_source_paths": [
         "frontend:src/components/cards/PluginCard.vue"
       ],
-      "work_kind": "reuse_verification",
-      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Real public uninstall folder-only SQL failure: source updates warm folder cache before failed persistence; old target reads old disk and retries differently. Source list/object/duplicate/cold red preserved; candidate independently tested but not current-main/browser accepted.",
+      "counterexample": {
+        "review_sha256": "e902980dc7b09b68b587413e491c17930a0b1f9196fb59375783a594904c6001",
+        "boundary": "New independent real fixed-source/actual target evidence retained privately; pending implementation/revalidation, not new whole-group acceptance."
+      }
     },
     {
       "id": "18",
@@ -21805,14 +21831,14 @@
         "Official normal install/Get/Set/native settings multi-line Unicode/save/reload/422 recovery/clone/config isolation/shared global/empty-null/same-data cold."
       ],
       "evidence_ids": [
-        "system-config.real-e2e"
+        "mirror-response.current-e2e"
       ],
       "review": {
         "status": "passed",
         "independent": true,
-        "reviewer": "independent_source_audit",
+        "reviewer": "manager_queries_independent_review_20261030",
         "evidence_ids": [
-          "system-config.independent-review"
+          "mirror-response.current-review"
         ]
       },
       "facet_checks": {
@@ -21820,56 +21846,56 @@
           "applicable": true,
           "reason": "Actual original DAO JSON ordering/equality/numbers/codepoints and SQLite affinity; selected producer input/output/full persisted rows and matching titles; source warm/cold observations.",
           "evidence_ids": [
-            "system-config.real-e2e"
+            "mirror-response.current-e2e"
           ]
         },
         "state": {
           "applicable": true,
           "reason": "One authoritative encrypted native recognition fact shared by SDK Get/Set and native UI; cache-before-DB sync versus DB-first async, changed-only native config.updated; no second plugin KV store.",
           "evidence_ids": [
-            "system-config.real-e2e"
+            "mirror-response.current-e2e"
           ]
         },
         "errors": {
           "applicable": true,
           "reason": "Real SQL trigger update/delete/insert failures, source cache/DB divergence, outer UTF8-render failure distinct from internal codepoint transport; UI422 malformed fixture then valid recovery.",
           "evidence_ids": [
-            "system-config.real-e2e"
+            "mirror-response.current-e2e"
           ]
         },
         "concurrency": {
           "applicable": true,
           "reason": "Actual original reachable RemoteIdentifiers callback/UI SELECT interleavings, absent duplicate rows, lifecycle race/permissions/current identity; general other-key row-ID delete/recreate explicitly outside verified contract.",
           "evidence_ids": [
-            "system-config.real-e2e"
+            "mirror-response.current-e2e"
           ]
         },
         "restart": {
           "applicable": true,
           "reason": "Independent source cold processes and real native server/worker graceful stops; actual official same-data cold source/clone new PIDs, shared persisted value and isolated configurations.",
           "evidence_ids": [
-            "system-config.real-e2e"
+            "mirror-response.current-e2e"
           ]
         },
         "compatibility": {
           "applicable": true,
           "reason": "Fixed source/frontend and explicit historical helper revision/dependency records, Go native capability/JSON/codepoint adaptation. No complete original authenticated server, Remote HTTP fetch/scheduler or S11 parser claim.",
           "evidence_ids": [
-            "system-config.real-e2e"
+            "mirror-response.current-e2e"
           ]
         },
         "security": {
           "applicable": true,
           "reason": "Only CustomIdentifiers get/set capabilities and current lifecycle grants, denied other global/credential/account keys; existing authenticated UI/session with synthetic local data, no new credentials or exposure.",
           "evidence_ids": [
-            "system-config.real-e2e"
+            "mirror-response.current-e2e"
           ]
         },
         "performance": {
           "applicable": true,
           "reason": "Existing platform16MiB logical value/session envelope and native regex budgets explicit; actual700KiB ignored comments and65537-space ignored line; no source-unbounded throughput claim.",
           "evidence_ids": [
-            "system-config.real-e2e"
+            "mirror-response.current-e2e"
           ]
         }
       },
@@ -21879,7 +21905,110 @@
         "Full RemoteIdentifiers fetching/scheduling and full S11 recognition/parser/cache are not this slice.",
         "Source component uses real full callback and actual DAO/matcher but explicit Base/global-startup boundary; no source HTTP authentication/event-dispatch claim.",
         "Standard JSON RawMessage/codepoint helpers preserve internal surrogate strings; outer UTF8 rendering can fail. Platform size/deadline and regex budgets remain explicit adaptations."
-      ]
+      ],
+      "integration_reuse": "e9ebb exact original full acceptance retained; mirror-only3path change independently scoped and current selected3race/browser revalidated, not a full20/17 rerun."
+    },
+    {
+      "id": "11.mirror_response",
+      "parent_feature": "11",
+      "description": "Received GitHub mirror HTTP responses versus real transport exceptions, shared market/install failure and recovery",
+      "status": "verified",
+      "owner": "site_subscription_shared_host",
+      "source_paths": [
+        "app/helper/plugin.py",
+        "app/utils/http.py",
+        "app/core/config.py"
+      ],
+      "external_source_paths": [],
+      "entrypoint_ids": [
+        "scope.11.mirror_response"
+      ],
+      "dependencies": [
+        "02"
+      ],
+      "target_paths": [
+        "internal/app/plugin_original_github_network.go",
+        "internal/app/plugin_original_github_network_test.go",
+        "internal/app/plugin_module_process_github_test.go"
+      ],
+      "scenarios": [
+        "Received503 must not fall through; caller fails without installing or replacing existing object.",
+        "ActualEOF exception fallback succeeds; keep API routing, token-origin restriction, verifiedTLS and cancellation.",
+        "Normal official retry/install, subsequentfailure, same-data cold and existing shared-config coexistence."
+      ],
+      "evidence_ids": [
+        "mirror-response.current-e2e"
+      ],
+      "review": {
+        "status": "passed",
+        "independent": true,
+        "reviewer": "manager_queries_independent_review_20261030",
+        "evidence_ids": [
+          "mirror-response.current-review"
+        ]
+      },
+      "boundaries": [
+        "Not entire11/12/13;09 half-package and cache selection still open.",
+        "No source/target arbitrary retry-count or authenticated-mirror-token equivalence; existing credential-origin boundary deliberately retained."
+      ],
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "Actual response status/header/body reaches caller;503 and200 with real compiled artifact.",
+          "evidence_ids": [
+            "mirror-response.current-e2e"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Install lifecycle and preflight failure retain existing worker/config; ordinary native browser separately observed.",
+          "evidence_ids": [
+            "mirror-response.current-e2e"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Received503 versus actualEOF, missing/invalid acquisition and cancellation remain distinct.",
+          "evidence_ids": [
+            "mirror-response.current-e2e"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "Real race protocol and production gates; current lifecycle concurrency reuse supplement.",
+          "evidence_ids": [
+            "mirror-response.current-e2e"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Official same-data nativeSDK cold and selected real S07 server cold; no fresh-account substitution.",
+          "evidence_ids": [
+            "mirror-response.current-e2e"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "Complete fixed sync/async Helper components versus finite native Goartifact adaptation; source retry counts not generalized.",
+          "evidence_ids": [
+            "mirror-response.current-e2e"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "No credential forwarding to mirror; official API/TLS/origin/cancel checks unchanged, owned-loopback-only synthetic fixtures.",
+          "evidence_ids": [
+            "mirror-response.current-e2e"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Existing bounded HTTP/SDK acquisition and no unnecessary origin request after received error; no unbounded throughput claim.",
+          "evidence_ids": [
+            "mirror-response.current-e2e"
+          ]
+        }
+      }
     }
   ],
   "decisions": [
@@ -25002,7 +25131,7 @@
     {
       "id": "system-config.real-e2e",
       "kind": "real_e2e",
-      "status": "passed",
+      "status": "historical_reused_after_mirror_change",
       "feature_ids": [
         "S07.CustomIdentifiers"
       ],
@@ -27775,12 +27904,13 @@
         "Warm/failedSQL/nativeUI and cold observations kept distinct. Final HTTP/API rendering behavior is not confused with internal RawMessage transport.",
         "Web initial missing dependency failure and intermediate trace failures retained; final same-lock readonly module resolution independently rerun with42 tests passed, no dependency/source rewrite.",
         "Published minimal fixtures can reproduce owner17 and extra source6; full independent20 replay fixture set is separately retained in private recovery, not claimed runnable from minimal Git alone."
-      ]
+      ],
+      "reuse_note": "Exact e9ebb full17/20/main/browser evidence remains unchanged. Only mirror transport and its2tests changed; new independently reviewed impact analysis, current3-race roots and normal browser/cold supplement support finite reuse. This is not a rerun or rewritten old binding."
     },
     {
       "id": "system-config.independent-review",
       "kind": "review",
-      "status": "passed",
+      "status": "historical_reused_after_mirror_change",
       "feature_ids": [
         "S07.CustomIdentifiers"
       ],
@@ -30552,7 +30682,8 @@
         "Source internal-Get surrogate, combined-strip and ignored-whitespace counterexamples independently reproduced and repaired; complete producer/component chains executed, not copied AST as sole oracle.",
         "Warm/failedSQL/nativeUI and cold observations kept distinct. Final HTTP/API rendering behavior is not confused with internal RawMessage transport.",
         "Web initial missing dependency failure and intermediate trace failures retained; final same-lock readonly module resolution independently rerun with42 tests passed, no dependency/source rewrite."
-      ]
+      ],
+      "reuse_note": "Exact e9ebb full17/20/main/browser evidence remains unchanged. Only mirror transport and its2tests changed; new independently reviewed impact analysis, current3-race roots and normal browser/cold supplement support finite reuse. This is not a rerun or rewritten old binding."
     },
     {
       "id": "existing-06.real-e2e",
@@ -30671,6 +30802,366 @@
         "Commit-only event, same-value no-op, real failed SQL preserves live/persisted settings and emits no event; cold prior value retained.",
         "Market/Wiki/compatibility/transport remain separate; no mirror503 acceptance implied."
       ]
+    },
+    {
+      "status": "passed",
+      "feature_ids": [
+        "11.mirror_response",
+        "S07.CustomIdentifiers"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant cloud Linux Go1.26; actual complete fixed original Helper/HTTP sync+async components and owned HTTP/TLS, real native SDK/server/SQLite; official existing-user cloud browser. Current mirror integration plus explicitly limited reuse of e9ebb S07, not a full source authenticated business server or rerun of17/20 roots.",
+        "target_files": {
+          "cmd/owned-system-config-fixture/main.go": "65b6bbe5fb3f14f7360a2996d2b30f09ab9bf7317f7783a182d2450b82b28615",
+          "cmd/owned-system-config-fixture/remote.go": "2566fc299e9ce8b493260efdbff683d9afc80476b51ea65a7ed7d4438bb8193b",
+          "internal/app/http.go": "d8d3b9d8506a28948967ce06538f90294a81730653823f66e6feb939bbe82d3d",
+          "internal/app/plugin_original_resources.go": "51948b249db53dc98984733dc0fdef09634d1bec22f93423c47ae1d26fd9e488",
+          "internal/app/plugin_shared_system_config.go": "191486ef4919c181d977831ac1dbed298b1d384838c723c9a265925c7b3dd80d",
+          "internal/app/plugin_shared_system_config_codepoints_test.go": "77421121e0a7407835f505c44ad059071e6e549faa7334557bf735efce47d64c",
+          "internal/app/plugin_shared_system_config_fixture_test.go": "dd4bb13d15cc957eb76017564e9efa38ed783fd782b057659e93b4bd142ca74f",
+          "internal/app/plugin_shared_system_config_http.go": "b8642b5a1dfaad201ea64fe264f0e81a70e796a597180fe48a728c475f44c243",
+          "internal/app/plugin_shared_system_config_integration_test.go": "90c671423a19dd99197775b359db8a2a679e9653e0baca4daf979280313237a1",
+          "internal/app/plugin_shared_system_config_json.go": "c2d010d3c5df0172e686f6b18b435e3bc2491d7e1c967279b83b34983fe2c7a0",
+          "internal/app/plugin_shared_system_config_lifecycle_test.go": "46a8ff86f20a6fb01db6841b82aee45f5b3df879506775639611caeae549c8ee",
+          "internal/app/plugin_shared_system_config_mixed_test.go": "00645940d528e46cee6d37c4d79378a4bec008c6c5868a67de8e44c883cae9f1",
+          "internal/app/plugin_shared_system_config_oracle_test.go": "7e1a9a1e69849bfa394b5093d94034e9ca60f34f4a089ed921153d929e1d5767",
+          "internal/app/plugin_shared_system_config_process_test.go": "4f61fec621eccc8659e10c4a466d99f448ebe58a61e56e2129432b0798d2ee11",
+          "internal/app/plugin_shared_system_config_remote_test.go": "bff3782e9cb2c22b6b0815efb89315207b597a42432ffd5cc13bdca64090eff2",
+          "internal/app/plugin_shared_system_config_rows.go": "f45190d2b4f8caff69c1641e71f440dc54e84cce559f3ccdb6e39e2d41cb8d6b",
+          "internal/app/plugin_shared_system_config_rows_test.go": "3191f3654313511c8a53c0362b4553ed12c0c0ddb105bba7a8d824cbba50d277",
+          "internal/app/plugin_shared_system_config_state.go": "557eaa567529b481ee507a875ee574414bcb63ffe9ff360d4aab6c9f5f67c73e",
+          "internal/app/plugin_shared_system_config_supplement_test.go": "ec4bd89db5cccb1b823cd6611c0ede28f0571ac34e25f4b0d8fe76a9aff13925",
+          "internal/app/plugin_shared_system_config_test.go": "f54140a0a7012cc6ebbed1cae94cd765379a86c96d0858a2f086901001c92af6",
+          "internal/app/plugin_shared_system_config_unicode_test.go": "1c40358a8067e750a20551c4e203acd755229ac5cad18645550c5f4541b2c6d7",
+          "internal/app/recognition_words.go": "8ddc9b09a0546f557a1522fa9b78ec2efb82066610856e44b5d38f24f63ebd64",
+          "internal/app/runtime.go": "4fcab0b50f7a18a2266ecbb6200c8159f376498e4ddbf04c957047603223324e",
+          "internal/app/subscription_words.go": "e20a3613d297927b0ee384a31ac113ea95620b94f9426804396d9d584a2cce65",
+          "internal/media/words/matcher.go": "abf621e22fd3177949ea8b2a8740d015e67bda6758ad94dd874fd9bc80898b62",
+          "internal/media/words/shared_system_config_test.go": "bf2de8ff941c012ff2a0d73ee79a6e2ad89ba082146af095800e8d94e6af96fa",
+          "internal/media/words/source_unicode.go": "ccdd40197765c2386fc8bbae57c0181c55c2acd891ac7dc67e9c3c895736d13c",
+          "internal/media/words/source_unicode_test.go": "5580ea023f28021ff243276c7869b99e23c6441268246d2a311d2b716fac2e01",
+          "internal/plugins/shared_system_config.go": "e650df39ce52e94479fffb559867e540df8747e49771db31902c1d14dd914065",
+          "internal/plugins/shared_system_config_strings.go": "b8d65fa7c07fc0910ca74088dde3a3c4aa64c54da969cb58ab0760060a9bdd0e",
+          "internal/plugins/shared_system_config_strings_test.go": "b5955b751d65a6496d308b9a9a1e65326f1c99a49f096370dc3636a595e21bef",
+          "internal/plugins/shared_system_config_test.go": "6c212eded1d0959d823eb70d7e632ecd6ebfc77be105bc2f70508af11abd4e39",
+          "testdata/plugin-shared-host-20261030/system-config/CONTRACT.md": "975f15d9e24597409989d3116a2ce0ce69da02956f4f58c609196b428044fc24",
+          "testdata/plugin-shared-host-20261030/system-config/mixed_test.go.txt": "6f3371d1a95e75d282454dbd5711b1dc50992cc858ba3bde9263ae726ac9b311",
+          "testdata/plugin-shared-host-20261030/system-config/source/cold.json": "3823c577a0fb303101f045b394872f6315cabbe5672043e462200e8d3fe8723d",
+          "testdata/plugin-shared-host-20261030/system-config/source/extra-manifest.json": "b0bc7a224769a2a88cfc49226dfa072c84a784e15bcbe40da87f5b114450088b",
+          "testdata/plugin-shared-host-20261030/system-config/source/failure-delete.json": "778d3bcf13426352b45422bd5d798a732030e89f9dac74cbb7e061b8f423f023",
+          "testdata/plugin-shared-host-20261030/system-config/source/failure-hot.json": "7c1893681f35b89cee85e50a759996ba1311a8e0f299d422a7132b6b28ad50b5",
+          "testdata/plugin-shared-host-20261030/system-config/source/failure-insert.json": "6471b2790e7e652308d78881b681507050caf98538eba56372d083f8ceb07260",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent-supplement.json": "7d532ba5ba3c184498da2ad311f802f17669e5071d651fea16454f61385b4d4d",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/binding.json": "0e2d78d4d1c6f04e5e5dcc634c54a225e784d787a786576d18cb0e55199ee9d5",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/dirty-input.json": "af4a781eb81cd6e6f11778e4125a033432494c97640ebba24e783b5dc4e4dd10",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/source_driver.py": "d8d4030850efe3bf02d7f40566b83497d4728eb88227aa94cf58bee073d2f379",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/source_duplicate_delete_probe.py": "75b4d1eeec69074a0c3ecf77d238b807e0efa98f6a10d8693974fceabcb9ce69",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/source_mixed_identity_probe.py": "9a9a74513cda70dd3a040094f90efb17068ddeaf8ebe1b105b831d161ec6e68f",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/source_mixed_set_cases.py": "25ea26a8c840b9ee64791242447ba61b5487a621f5ae33aaeff80327bc521a5b",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/source_mixed_set_interleaving.py": "2eb06a52ca50bd3b1a3c6962ee8e28cf6002b601e77539fb46dda90dfeba3dae",
+          "testdata/plugin-shared-host-20261030/system-config/source/installed-call-discovery.json": "5114273418436df5d68cc61552a7ceeb833c1c9e920d1fd775d57faff0e40aaa",
+          "testdata/plugin-shared-host-20261030/system-config/source/json-numbers.json": "3da65144b8e743304e0e755dddfd1cbdd1e62ee99f2da03731f428b403f1af2f",
+          "testdata/plugin-shared-host-20261030/system-config/source/large-observation.json": "2bca5616c3b5a85fd2cc2217b71a09043400cb3ae68a4a51a0f681bf225d70bd",
+          "testdata/plugin-shared-host-20261030/system-config/source/mixed-observations.json": "681eff35af0b37e8bac4b4dc6f08c8031833e3c304b2874dc8710ade928f3956",
+          "testdata/plugin-shared-host-20261030/system-config/source/native-ui.json": "0d0df44fc67006d3cee0bc4fba34659f007284dca8f4c895655df5779f0f9944",
+          "testdata/plugin-shared-host-20261030/system-config/source/oracle.json": "8b2a302a95974ea841b1fd522c8afd96491fc0de73c9b6a3d54f9832d7eaffe4",
+          "testdata/plugin-shared-host-20261030/system-config/source/ordinary.json": "28f1859b6aea1786b9672792d194d3c6c9329e32dc5e3774ff964e6fe9d5b5ef",
+          "testdata/plugin-shared-host-20261030/system-config/source/python-freeze.txt": "99486829529a690669b17cb2995fe7f8cae5b2087138376903f39c301b44991a",
+          "testdata/plugin-shared-host-20261030/system-config/source/raw-values.json": "464558c4681b88277b974c1441c8eb0b179c0901a2a381d5162ac919c5b56fcf",
+          "testdata/plugin-shared-host-20261030/system-config/source/remote-python-freeze.txt": "1ab5aee0103ea01bcd11f5fc550c66930d614aaa5a5db98f0f162c290bb7a71a",
+          "testdata/plugin-shared-host-20261030/system-config/source/remote-reachable-binding.json": "8a1075ffa77b2a70cf08e45f27e69590fb4e9e175a1a1f69a31adad47739541a",
+          "testdata/plugin-shared-host-20261030/system-config/source/remote-reachable.json": "a464a3c69a83609a9b47ac4124613f4409e95baa76592c8d7bb4403c45c27a48",
+          "testdata/plugin-shared-host-20261030/system-config/source/remote_reachable_driver.py": "d4713f3b19ee593fd51cdf72d90bdb565d976c2abe8e256b8834d2fa80181e13",
+          "testdata/plugin-shared-host-20261030/system-config/source/source-constraints.txt": "e7943102980801b8eb075b76c986c6e69ceb7718cff86a0ecf8afa2c67ac4cbd",
+          "testdata/plugin-shared-host-20261030/system-config/source/source-manifest.json": "8f4a18c382201e53f94299c9dd0ccd0c5b087c5e5799dc9eba252f116fb304c7",
+          "testdata/plugin-shared-host-20261030/system-config/source/source_driver.py": "8dbe0dad71f42088a1e5693f57931f7e23051c4c248f559781fdb358086b485d",
+          "testdata/plugin-shared-host-20261030/system-config/source/source_reachable_extra.py": "8735cb4cf6311a1bd7d9c30d50b56322f552f7e661f739a894d5d859af91421f",
+          "testdata/plugin-shared-host-20261030/system-config/source/source_reachable_ignored_whitespace.py": "b59e3b9ca5452fe276c06da9a8b3df074ef81bb882decc1b56635249d8e45140",
+          "testdata/plugin-shared-host-20261030/system-config/source/source_reachable_strip.py": "87950fd1932e63b34ebdd31c3a6e37b90da202b74895ba9580f2f8f8242aff64",
+          "testdata/plugin-shared-host-20261030/system-config/source/source_unicode_consumer.py": "228271f81483cf3abbeb77350d8c533e6769456ddf9efdb4598455362ff5b67d",
+          "testdata/plugin-shared-host-20261030/system-config/source/unicode-consumer-input.json": "734dc6e475755a135ebf20b6a4a917c0050d3df5d549228affc0714e707fbecb",
+          "testdata/plugin-shared-host-20261030/system-config/source/unicode-consumer.json": "b82478dba328fa1fab56a7a7deb487a9f34012f670a3f2d3357abfb7e2976b37",
+          "web/dist/assets/AppModeFooter-B-wABO7N.js": "1716da80b6db7f019444d6ae7dfc510400ab5ce9d17fcbb2af0b46a0f7a1963d",
+          "web/dist/assets/DownloaderConfigDialog-YB_fecQM.js": "c08a3d326d8c33095e63859ae25123227921718eb33210a3a7a0fa4c24752477",
+          "web/dist/assets/InterfaceModeMenu-Bofu0lbn.js": "f26a2f0543d1f0178626169c0bfa82d05ee2adbba95e0a681ff95269ca1211be",
+          "web/dist/assets/PluginAppPage-CCqdNm88.js": "e9f8e4e7717dd19f7825c1e16043313be39ab5198b155357308f1b119d564516",
+          "web/dist/assets/PluginApplicationCenter-B2O61Z9d.js": "32cc9990461673959221c775b4d0d9eaba1fea74c3be883c5152f7b3a5aac50b",
+          "web/dist/assets/PluginAuthLogin-DR-bOlrY.js": "9849611dde5ff48229ea91ad75bf0e064c2ae6faa0ebbebcd745cb9403dc91cd",
+          "web/dist/assets/PluginCloneDialog-BI4JDEDe.js": "a8e7b19bf965f4d5a3c8d8b3306577dcea421399ef53a363fc18b9e5c8650d38",
+          "web/dist/assets/PluginConfigDialog-DpiArVQ6.js": "7f3e7904b1cc411e1e24fd5bf4a0cd2e487d5a24474f1ead184358f65629ca3a",
+          "web/dist/assets/PluginCronField-CQJoKoaA.js": "cd209e2ed6c04d8ed94c0ca29f7ab9f1566c73b8f3cbeacffe1d02d66c5d7aab",
+          "web/dist/assets/PluginDashboard-0vGjeOtl.js": "ea0fe4b67dc79ea71aaf4840d0002ce7550a5ba9f778265e09ecfa8ce93a7963",
+          "web/dist/assets/PluginDataDialog-BMW_Whnn.js": "427dedef191cc1e91e02571e5b6ac5d2e7a93300852c1ae7a0f4430894739d65",
+          "web/dist/assets/PluginFolderDialog-7BwUiQq7.js": "e731e3c4dbb14297dd486cc0cba11aec30ee01faf496d90cbe4dc8bfef3826a9",
+          "web/dist/assets/PluginLogDialog-6hBvQb__.js": "2159dd7d0ad9787800528dcaba52a81ae643022769a1c41d8913759ecf764c95",
+          "web/dist/assets/PluginMarketSettingDialog-DkiylmXq.js": "dabf19f28cd12937a94968f2cc6bc8e3fdc6581eda2ca9ad5beefcb173fff84f",
+          "web/dist/assets/PluginQuickAccess-CS9Iqr1f.js": "f185879aadd874cb31b86f127e0458007754189362814df598b68ddc72ddb7a1",
+          "web/dist/assets/PluginSearchDialog-CekLvm7c.js": "3aba091be05fa725553c93efcd3bcdce3b40d1a3704e045819ca10bc1ccf6018",
+          "web/dist/assets/PluginServices-DRW6QE1f.js": "960a218bd0f88f876e28a14bfe512bc311807e66fad32bd4e3487e561c054f7c",
+          "web/dist/assets/PluginVersionHistoryDialog-By2ZGnJ1.js": "7057f06aa02cc60df34e826a7318c1adf515c611c56116f532237369c1b2a0f2",
+          "web/dist/assets/Plugins-sJatAS2W.js": "ddda1c3f79e768cbbc541ff976d27ce40339240b4ce39b7a342368ba8bcbf061",
+          "web/dist/assets/RecognitionWordsSettings-BzBEXST7.js": "b18872b6bca4aa674a713989df7369a0238cf32832441217e93a3a9b3efe2788",
+          "web/dist/assets/RecognitionWordsSettings-CXsV6u7l.css": "0bba7ac18019c351af47591968159b053b1cea26f0bb8c450132175ef48f0fed",
+          "web/dist/assets/ResourceMetadataSettings-BEehmGUe.js": "e2d8a94495cec33afe94a7c76a83f1f249edb228ad2c0e82ae1983d47e20e77f",
+          "web/dist/assets/RuleManager-DUldqPzA.js": "051abf3ec31b2093cd0ceee9323e4c33e41de5cd72bfb97ed187e7fa6df93d84",
+          "web/dist/assets/ShortcutMessageDialog-Bpl1cFLW.js": "436f4a2745007d0824b76be14faf4111e7bb1ac4e117cb6e5ebfacb3f0cc244a",
+          "web/dist/assets/ShortcutTools-A-OnFsBY.js": "3219d3255e2736254ad18fed8f8db147bcbf8251dc72308a4f8689cc84770162",
+          "web/dist/assets/SiteUserDataDialog-Cmui4swN.js": "d7ab278a4042afddebd56ed42187f1c52360b65375fe24159df3aa80f235a0b4",
+          "web/dist/assets/index-3x7tMIUd.css": "836e752c7b1c59ef6dc02caf376357b2a9795d5ff9626ead8e011c62378ae897",
+          "web/dist/assets/index-Cs6qe8Uk.js": "e66aabc1c4c4f9e3cb5742a3ea6fce0d3df9468722560cccf210c1205086ded9",
+          "web/dist/assets/plugin-clone-cdM4ouFE.js": "0711cf62383f389bec9c35f81568ed7daf1f6658db5de53ac8d5f2b6da0b534d",
+          "web/dist/assets/plugin-federation-Dtn_H0tZ.js": "48f6138a3c6bb1c5a77ff8d36208bdc3e31ce7bd9397a543b1e1060f602e646c",
+          "web/dist/index.html": "4cad404314d0d2ad9671aeb3061cc9d78b60f2365370e21b2c9fe308af0afc80",
+          "web/src/assets/material-design-icons.json": "ddaa9054198b165f4620ff2ba8da56008a46699fe68ae3f3b67f8d50a4e3d3bd",
+          "web/src/components/RecognitionWordsSettings.vue": "2e9d692b20cfe6b38cf599614ddf1e476ebb5ec8b1f69ecab2419b6c929d6a7c",
+          "web/src/components/Settings.vue": "58a9fad08c06a5a985f903bba9de2aff863c1403509ded18b9f0bc3aae17e7f1",
+          "web/tests/shared-system-config-words.test.mjs": "7ddbf64bafec87d5cfd0d7dd2c0ee094e69467b72e5557691c1458edd217832b",
+          "internal/app/plugin_original_github_network.go": "6ed81226bcde845223527ae593ae8c40d18986242b3d328af419be27d7ec5728",
+          "internal/app/plugin_original_github_network_test.go": "820bb7afa92bbab6f2789dfab4037a32fa240ad80ac6b1045d6de48ccbd55a9a",
+          "internal/app/plugin_module_process_github_test.go": "e84aac732ce572c59664623bac97086a69ee965afabd0a79f4745bb90aeec999"
+        },
+        "fixture_files": {
+          "evidence/s07-custom-identifiers/integration-gate-review.json": "c0d53d41ed13d892ad6c158b1fb5c79426a4cecfa84852859bb84cf109c4a1b1",
+          "evidence/s07-custom-identifiers/web-independent-result.json": "67fcd3c615b3b92e56e613271c74b6e8e59d21217cc37ad7bd9648a762627294",
+          "evidence/s07-custom-identifiers/browser-observation-summary.json": "ef151052c141a295ad093b97f16e8a0b42ffebc896e1004a9a2f66db6d24c37f",
+          "evidence/s07-custom-identifiers/transmission-coexistence-review.json": "127452a1db8189d5be4312f5eae6c08e96045309de237273decfc34d32fbdfcf",
+          "evidence/s07-custom-identifiers/coexistence-logs-readback.json": "8adab9febb82b84330f95bcd8655ce5926a3eecb65b49d14668d1dfa10e8e264",
+          "evidence/s07-custom-identifiers/source-observations.json": "5725158de40e1a786164a2877707dcb670ff2265a718722370a441e18fdf1551",
+          "evidence/s07-custom-identifiers/integration-review.json": "d0c236c26fe76ef3b7630c7d5d3c92f741fdaa2cec414949b4ae97862e484863",
+          "evidence/s07-custom-identifiers/owner-main-acceptance.json": "c0765f901cb7b6a24d385712a82be46c46e9930561a46e0bd87368ffc4ab525a",
+          "evidence/s07-custom-identifiers/integrated-target-binding.json": "d864ac1141e8a9ae367401294a75339cc87764c19bc246f5f6b738010ff25b94",
+          "evidence/s07-custom-identifiers/integrated-result.json": "4a942f7fc24d33543a7ade12f2a6b297a314f1a11063af7c608caf188058ffd2",
+          "evidence/s07-custom-identifiers/source-component-review.json": "3405fc7778256953301ca61ce1c38609d323f84bed67be35bdfdcfec1e9d0416",
+          "evidence/s07-custom-identifiers/integration-plan-review.json": "480c0552e33ca502add95f0036a3e78d416545bdcf2cb4b81e28c74eb42db228",
+          "evidence/s07-custom-identifiers/browser-rebuild-result.json": "403dd671146321a72bf13a8ac1f4144ef4cb632047ff5d921da9de2b7fe56cd0",
+          "evidence/s07-custom-identifiers/web-source-binding-check.json": "93270ec3b39250c9499d3dfa4f3456c7ead3307350dad708c632ec79dc11d33e",
+          "evidence/s07-custom-identifiers/integration-inputs.json": "3d8bba836ddb747001c90c47b8205588a395124649a1cb86029a2009aa9efeb5",
+          "evidence/s07-custom-identifiers/owner-main-backend-readback.json": "95ec37b4a774233e1007a51da0fc636c57047d71eb6a9628159cd090ebc7a8bf",
+          "evidence/s07-custom-identifiers/final-current-binding.json": "e8ab34eb5b81f098080b166305d6fb2c0255eb8fde2d832e83c4e0a38bd3c7b4",
+          "evidence/s07-custom-identifiers/testdata/independent/source_unicode_consumer_probe.py": "916feb8a60dd76a56b5a510071681eea159d948e272ee82022e2ddd243282c21",
+          "evidence/s07-custom-identifiers/testdata/independent/unicode-consumer-extra/input.json": "043137dbe710230b0b5c011e7adbe8fc5452f7627e2688b52079263c99f04d33",
+          "evidence/s07-custom-identifiers/testdata/independent/unicode-consumer-extra/source-output02.json": "24f7028ee2dc344075c1e685cf612fdb49fe11f14c6974721df028900e4d2ea1",
+          "evidence/mirror-response/browser-summary.json": "b9fa738c5216b970b08b225c63ccb07bab2490fee915b48a69ecc147316fd906",
+          "evidence/mirror-response/candidate.json": "5cacd05a9949aa28cecb85e7853f3d974702c1325c92c3a5c7117048b97e2473",
+          "evidence/mirror-response/current-backend-result.json": "b17789b1c6b6a21eff3d3ac4ff395e7c867e7d411531ec2006d28ea9d9d5211c",
+          "evidence/mirror-response/current-integration-review.json": "f3a3fe566a5b9348e69880288d2091c45d4d9225fdef653f88e20f293a433337",
+          "evidence/mirror-response/independent-candidate-review.json": "7b0eefb9f9b03c1c011efcbb7298f99bcd1db9fddc070b4e55a4a849e3f6115c",
+          "evidence/mirror-response/owner-acceptance.json": "2cb62e3b1e1a349a571d42aca18f41d61c8e83c3170dd6c3edac50581a8daa3b",
+          "evidence/mirror-response/s07-impact-review.json": "aae25f554d8faeeaaa2a4da2ae54f6549ba932cb1625685dbd66cd40e395e7be",
+          "evidence/mirror-response/s07-overlay-revalidation.json": "9e19626e58d47a5c64faf0c6fdc7b342a39f4fc5140a2bdec26f7192e4aed90b"
+        }
+      },
+      "artifacts": {
+        "evidence/mirror-response/browser-summary.json": "b9fa738c5216b970b08b225c63ccb07bab2490fee915b48a69ecc147316fd906",
+        "evidence/mirror-response/candidate.json": "5cacd05a9949aa28cecb85e7853f3d974702c1325c92c3a5c7117048b97e2473",
+        "evidence/mirror-response/current-backend-result.json": "b17789b1c6b6a21eff3d3ac4ff395e7c867e7d411531ec2006d28ea9d9d5211c",
+        "evidence/mirror-response/current-integration-review.json": "f3a3fe566a5b9348e69880288d2091c45d4d9225fdef653f88e20f293a433337",
+        "evidence/mirror-response/independent-candidate-review.json": "7b0eefb9f9b03c1c011efcbb7298f99bcd1db9fddc070b4e55a4a849e3f6115c",
+        "evidence/mirror-response/owner-acceptance.json": "2cb62e3b1e1a349a571d42aca18f41d61c8e83c3170dd6c3edac50581a8daa3b",
+        "evidence/mirror-response/s07-impact-review.json": "aae25f554d8faeeaaa2a4da2ae54f6549ba932cb1625685dbd66cd40e395e7be",
+        "evidence/mirror-response/s07-overlay-revalidation.json": "9e19626e58d47a5c64faf0c6fdc7b342a39f4fc5140a2bdec26f7192e4aed90b"
+      },
+      "commands": [
+        "Owner complete source sync/async HTTP status/EOF and public install; independent old-server red/newcandidate actual3phase and exact rebuild. Original revision-bound evidence retained.",
+        "Current coordinator go build normal/race; real mirror3phase owned TLS/SDK and2protocol-race roots. Independent normal rebuild byte-identical e2325c5a79911add7b335b6774ddda123f7454c3001da26b73eb94e610f803d6,6015 inputs unchanged.",
+        "Independent corrected test-only overlay02 preserves a.Settings except two stats fields; actual S07 UI/clone/events/concurrency10.92s, server/cold25.97s, RemoteSourceProducer9.04s;6012 actual compiler inputs stable. Prior clear-other-settings diagnostic remains private, not minimum-change evidence.",
+        "Official browser15 observations: native503 failure, normal retry200/install, declaredSDK status,503 refresh retention, same-data cold, existing S07 clone GET. No invented browser force-install control."
+      ],
+      "inputs": [
+        "Fixed backend8a83efe/frontend2829e3b; reviewed exact3path candidate; complete compile/dependency/overlay inputs privately hashed in published review.",
+        "Owned native fixture/module/index/HTTP/TLS responses; existing QA account/session and no credential/header export; statistics off, all fixture endpoints loopback, deny-proxy attempts empty.",
+        "S07 unchanged104 source/test/UI files and original source/fixture witnesses are reused through independent impact analysis; current3root/browser supplement, not replacement of historical17/20 logs."
+      ],
+      "observations": [
+        "Received mirror HTTP503 remains caller response; zero origin fallback. Real transport EOF still falls back to actual owned trusted origin; API/PAT-origin/TLS/cancellation protections unchanged.",
+        "Current real force-install503 preserves worker/config; official UI normal install and subsequent503/cold prove failure/recovery. Browser state_count9->21/init1/stop0 not mislabeled as PID assertion.",
+        "S07 mirror branch not reached by its owned loopback acquisition; actual current3roots and cold clone GET retain accepted shared-config behavior.",
+        "Only finite mirror response repair;09 package-band/cache and entire11/12/13 groups remain open."
+      ],
+      "id": "mirror-response.current-e2e",
+      "kind": "real_e2e",
+      "reviewer": "coordinator"
+    },
+    {
+      "status": "passed",
+      "feature_ids": [
+        "11.mirror_response",
+        "S07.CustomIdentifiers"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant cloud Linux Go1.26; actual complete fixed original Helper/HTTP sync+async components and owned HTTP/TLS, real native SDK/server/SQLite; official existing-user cloud browser. Current mirror integration plus explicitly limited reuse of e9ebb S07, not a full source authenticated business server or rerun of17/20 roots.",
+        "target_files": {
+          "cmd/owned-system-config-fixture/main.go": "65b6bbe5fb3f14f7360a2996d2b30f09ab9bf7317f7783a182d2450b82b28615",
+          "cmd/owned-system-config-fixture/remote.go": "2566fc299e9ce8b493260efdbff683d9afc80476b51ea65a7ed7d4438bb8193b",
+          "internal/app/http.go": "d8d3b9d8506a28948967ce06538f90294a81730653823f66e6feb939bbe82d3d",
+          "internal/app/plugin_original_resources.go": "51948b249db53dc98984733dc0fdef09634d1bec22f93423c47ae1d26fd9e488",
+          "internal/app/plugin_shared_system_config.go": "191486ef4919c181d977831ac1dbed298b1d384838c723c9a265925c7b3dd80d",
+          "internal/app/plugin_shared_system_config_codepoints_test.go": "77421121e0a7407835f505c44ad059071e6e549faa7334557bf735efce47d64c",
+          "internal/app/plugin_shared_system_config_fixture_test.go": "dd4bb13d15cc957eb76017564e9efa38ed783fd782b057659e93b4bd142ca74f",
+          "internal/app/plugin_shared_system_config_http.go": "b8642b5a1dfaad201ea64fe264f0e81a70e796a597180fe48a728c475f44c243",
+          "internal/app/plugin_shared_system_config_integration_test.go": "90c671423a19dd99197775b359db8a2a679e9653e0baca4daf979280313237a1",
+          "internal/app/plugin_shared_system_config_json.go": "c2d010d3c5df0172e686f6b18b435e3bc2491d7e1c967279b83b34983fe2c7a0",
+          "internal/app/plugin_shared_system_config_lifecycle_test.go": "46a8ff86f20a6fb01db6841b82aee45f5b3df879506775639611caeae549c8ee",
+          "internal/app/plugin_shared_system_config_mixed_test.go": "00645940d528e46cee6d37c4d79378a4bec008c6c5868a67de8e44c883cae9f1",
+          "internal/app/plugin_shared_system_config_oracle_test.go": "7e1a9a1e69849bfa394b5093d94034e9ca60f34f4a089ed921153d929e1d5767",
+          "internal/app/plugin_shared_system_config_process_test.go": "4f61fec621eccc8659e10c4a466d99f448ebe58a61e56e2129432b0798d2ee11",
+          "internal/app/plugin_shared_system_config_remote_test.go": "bff3782e9cb2c22b6b0815efb89315207b597a42432ffd5cc13bdca64090eff2",
+          "internal/app/plugin_shared_system_config_rows.go": "f45190d2b4f8caff69c1641e71f440dc54e84cce559f3ccdb6e39e2d41cb8d6b",
+          "internal/app/plugin_shared_system_config_rows_test.go": "3191f3654313511c8a53c0362b4553ed12c0c0ddb105bba7a8d824cbba50d277",
+          "internal/app/plugin_shared_system_config_state.go": "557eaa567529b481ee507a875ee574414bcb63ffe9ff360d4aab6c9f5f67c73e",
+          "internal/app/plugin_shared_system_config_supplement_test.go": "ec4bd89db5cccb1b823cd6611c0ede28f0571ac34e25f4b0d8fe76a9aff13925",
+          "internal/app/plugin_shared_system_config_test.go": "f54140a0a7012cc6ebbed1cae94cd765379a86c96d0858a2f086901001c92af6",
+          "internal/app/plugin_shared_system_config_unicode_test.go": "1c40358a8067e750a20551c4e203acd755229ac5cad18645550c5f4541b2c6d7",
+          "internal/app/recognition_words.go": "8ddc9b09a0546f557a1522fa9b78ec2efb82066610856e44b5d38f24f63ebd64",
+          "internal/app/runtime.go": "4fcab0b50f7a18a2266ecbb6200c8159f376498e4ddbf04c957047603223324e",
+          "internal/app/subscription_words.go": "e20a3613d297927b0ee384a31ac113ea95620b94f9426804396d9d584a2cce65",
+          "internal/media/words/matcher.go": "abf621e22fd3177949ea8b2a8740d015e67bda6758ad94dd874fd9bc80898b62",
+          "internal/media/words/shared_system_config_test.go": "bf2de8ff941c012ff2a0d73ee79a6e2ad89ba082146af095800e8d94e6af96fa",
+          "internal/media/words/source_unicode.go": "ccdd40197765c2386fc8bbae57c0181c55c2acd891ac7dc67e9c3c895736d13c",
+          "internal/media/words/source_unicode_test.go": "5580ea023f28021ff243276c7869b99e23c6441268246d2a311d2b716fac2e01",
+          "internal/plugins/shared_system_config.go": "e650df39ce52e94479fffb559867e540df8747e49771db31902c1d14dd914065",
+          "internal/plugins/shared_system_config_strings.go": "b8d65fa7c07fc0910ca74088dde3a3c4aa64c54da969cb58ab0760060a9bdd0e",
+          "internal/plugins/shared_system_config_strings_test.go": "b5955b751d65a6496d308b9a9a1e65326f1c99a49f096370dc3636a595e21bef",
+          "internal/plugins/shared_system_config_test.go": "6c212eded1d0959d823eb70d7e632ecd6ebfc77be105bc2f70508af11abd4e39",
+          "testdata/plugin-shared-host-20261030/system-config/CONTRACT.md": "975f15d9e24597409989d3116a2ce0ce69da02956f4f58c609196b428044fc24",
+          "testdata/plugin-shared-host-20261030/system-config/mixed_test.go.txt": "6f3371d1a95e75d282454dbd5711b1dc50992cc858ba3bde9263ae726ac9b311",
+          "testdata/plugin-shared-host-20261030/system-config/source/cold.json": "3823c577a0fb303101f045b394872f6315cabbe5672043e462200e8d3fe8723d",
+          "testdata/plugin-shared-host-20261030/system-config/source/extra-manifest.json": "b0bc7a224769a2a88cfc49226dfa072c84a784e15bcbe40da87f5b114450088b",
+          "testdata/plugin-shared-host-20261030/system-config/source/failure-delete.json": "778d3bcf13426352b45422bd5d798a732030e89f9dac74cbb7e061b8f423f023",
+          "testdata/plugin-shared-host-20261030/system-config/source/failure-hot.json": "7c1893681f35b89cee85e50a759996ba1311a8e0f299d422a7132b6b28ad50b5",
+          "testdata/plugin-shared-host-20261030/system-config/source/failure-insert.json": "6471b2790e7e652308d78881b681507050caf98538eba56372d083f8ceb07260",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent-supplement.json": "7d532ba5ba3c184498da2ad311f802f17669e5071d651fea16454f61385b4d4d",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/binding.json": "0e2d78d4d1c6f04e5e5dcc634c54a225e784d787a786576d18cb0e55199ee9d5",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/dirty-input.json": "af4a781eb81cd6e6f11778e4125a033432494c97640ebba24e783b5dc4e4dd10",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/source_driver.py": "d8d4030850efe3bf02d7f40566b83497d4728eb88227aa94cf58bee073d2f379",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/source_duplicate_delete_probe.py": "75b4d1eeec69074a0c3ecf77d238b807e0efa98f6a10d8693974fceabcb9ce69",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/source_mixed_identity_probe.py": "9a9a74513cda70dd3a040094f90efb17068ddeaf8ebe1b105b831d161ec6e68f",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/source_mixed_set_cases.py": "25ea26a8c840b9ee64791242447ba61b5487a621f5ae33aaeff80327bc521a5b",
+          "testdata/plugin-shared-host-20261030/system-config/source/independent/source_mixed_set_interleaving.py": "2eb06a52ca50bd3b1a3c6962ee8e28cf6002b601e77539fb46dda90dfeba3dae",
+          "testdata/plugin-shared-host-20261030/system-config/source/installed-call-discovery.json": "5114273418436df5d68cc61552a7ceeb833c1c9e920d1fd775d57faff0e40aaa",
+          "testdata/plugin-shared-host-20261030/system-config/source/json-numbers.json": "3da65144b8e743304e0e755dddfd1cbdd1e62ee99f2da03731f428b403f1af2f",
+          "testdata/plugin-shared-host-20261030/system-config/source/large-observation.json": "2bca5616c3b5a85fd2cc2217b71a09043400cb3ae68a4a51a0f681bf225d70bd",
+          "testdata/plugin-shared-host-20261030/system-config/source/mixed-observations.json": "681eff35af0b37e8bac4b4dc6f08c8031833e3c304b2874dc8710ade928f3956",
+          "testdata/plugin-shared-host-20261030/system-config/source/native-ui.json": "0d0df44fc67006d3cee0bc4fba34659f007284dca8f4c895655df5779f0f9944",
+          "testdata/plugin-shared-host-20261030/system-config/source/oracle.json": "8b2a302a95974ea841b1fd522c8afd96491fc0de73c9b6a3d54f9832d7eaffe4",
+          "testdata/plugin-shared-host-20261030/system-config/source/ordinary.json": "28f1859b6aea1786b9672792d194d3c6c9329e32dc5e3774ff964e6fe9d5b5ef",
+          "testdata/plugin-shared-host-20261030/system-config/source/python-freeze.txt": "99486829529a690669b17cb2995fe7f8cae5b2087138376903f39c301b44991a",
+          "testdata/plugin-shared-host-20261030/system-config/source/raw-values.json": "464558c4681b88277b974c1441c8eb0b179c0901a2a381d5162ac919c5b56fcf",
+          "testdata/plugin-shared-host-20261030/system-config/source/remote-python-freeze.txt": "1ab5aee0103ea01bcd11f5fc550c66930d614aaa5a5db98f0f162c290bb7a71a",
+          "testdata/plugin-shared-host-20261030/system-config/source/remote-reachable-binding.json": "8a1075ffa77b2a70cf08e45f27e69590fb4e9e175a1a1f69a31adad47739541a",
+          "testdata/plugin-shared-host-20261030/system-config/source/remote-reachable.json": "a464a3c69a83609a9b47ac4124613f4409e95baa76592c8d7bb4403c45c27a48",
+          "testdata/plugin-shared-host-20261030/system-config/source/remote_reachable_driver.py": "d4713f3b19ee593fd51cdf72d90bdb565d976c2abe8e256b8834d2fa80181e13",
+          "testdata/plugin-shared-host-20261030/system-config/source/source-constraints.txt": "e7943102980801b8eb075b76c986c6e69ceb7718cff86a0ecf8afa2c67ac4cbd",
+          "testdata/plugin-shared-host-20261030/system-config/source/source-manifest.json": "8f4a18c382201e53f94299c9dd0ccd0c5b087c5e5799dc9eba252f116fb304c7",
+          "testdata/plugin-shared-host-20261030/system-config/source/source_driver.py": "8dbe0dad71f42088a1e5693f57931f7e23051c4c248f559781fdb358086b485d",
+          "testdata/plugin-shared-host-20261030/system-config/source/source_reachable_extra.py": "8735cb4cf6311a1bd7d9c30d50b56322f552f7e661f739a894d5d859af91421f",
+          "testdata/plugin-shared-host-20261030/system-config/source/source_reachable_ignored_whitespace.py": "b59e3b9ca5452fe276c06da9a8b3df074ef81bb882decc1b56635249d8e45140",
+          "testdata/plugin-shared-host-20261030/system-config/source/source_reachable_strip.py": "87950fd1932e63b34ebdd31c3a6e37b90da202b74895ba9580f2f8f8242aff64",
+          "testdata/plugin-shared-host-20261030/system-config/source/source_unicode_consumer.py": "228271f81483cf3abbeb77350d8c533e6769456ddf9efdb4598455362ff5b67d",
+          "testdata/plugin-shared-host-20261030/system-config/source/unicode-consumer-input.json": "734dc6e475755a135ebf20b6a4a917c0050d3df5d549228affc0714e707fbecb",
+          "testdata/plugin-shared-host-20261030/system-config/source/unicode-consumer.json": "b82478dba328fa1fab56a7a7deb487a9f34012f670a3f2d3357abfb7e2976b37",
+          "web/dist/assets/AppModeFooter-B-wABO7N.js": "1716da80b6db7f019444d6ae7dfc510400ab5ce9d17fcbb2af0b46a0f7a1963d",
+          "web/dist/assets/DownloaderConfigDialog-YB_fecQM.js": "c08a3d326d8c33095e63859ae25123227921718eb33210a3a7a0fa4c24752477",
+          "web/dist/assets/InterfaceModeMenu-Bofu0lbn.js": "f26a2f0543d1f0178626169c0bfa82d05ee2adbba95e0a681ff95269ca1211be",
+          "web/dist/assets/PluginAppPage-CCqdNm88.js": "e9f8e4e7717dd19f7825c1e16043313be39ab5198b155357308f1b119d564516",
+          "web/dist/assets/PluginApplicationCenter-B2O61Z9d.js": "32cc9990461673959221c775b4d0d9eaba1fea74c3be883c5152f7b3a5aac50b",
+          "web/dist/assets/PluginAuthLogin-DR-bOlrY.js": "9849611dde5ff48229ea91ad75bf0e064c2ae6faa0ebbebcd745cb9403dc91cd",
+          "web/dist/assets/PluginCloneDialog-BI4JDEDe.js": "a8e7b19bf965f4d5a3c8d8b3306577dcea421399ef53a363fc18b9e5c8650d38",
+          "web/dist/assets/PluginConfigDialog-DpiArVQ6.js": "7f3e7904b1cc411e1e24fd5bf4a0cd2e487d5a24474f1ead184358f65629ca3a",
+          "web/dist/assets/PluginCronField-CQJoKoaA.js": "cd209e2ed6c04d8ed94c0ca29f7ab9f1566c73b8f3cbeacffe1d02d66c5d7aab",
+          "web/dist/assets/PluginDashboard-0vGjeOtl.js": "ea0fe4b67dc79ea71aaf4840d0002ce7550a5ba9f778265e09ecfa8ce93a7963",
+          "web/dist/assets/PluginDataDialog-BMW_Whnn.js": "427dedef191cc1e91e02571e5b6ac5d2e7a93300852c1ae7a0f4430894739d65",
+          "web/dist/assets/PluginFolderDialog-7BwUiQq7.js": "e731e3c4dbb14297dd486cc0cba11aec30ee01faf496d90cbe4dc8bfef3826a9",
+          "web/dist/assets/PluginLogDialog-6hBvQb__.js": "2159dd7d0ad9787800528dcaba52a81ae643022769a1c41d8913759ecf764c95",
+          "web/dist/assets/PluginMarketSettingDialog-DkiylmXq.js": "dabf19f28cd12937a94968f2cc6bc8e3fdc6581eda2ca9ad5beefcb173fff84f",
+          "web/dist/assets/PluginQuickAccess-CS9Iqr1f.js": "f185879aadd874cb31b86f127e0458007754189362814df598b68ddc72ddb7a1",
+          "web/dist/assets/PluginSearchDialog-CekLvm7c.js": "3aba091be05fa725553c93efcd3bcdce3b40d1a3704e045819ca10bc1ccf6018",
+          "web/dist/assets/PluginServices-DRW6QE1f.js": "960a218bd0f88f876e28a14bfe512bc311807e66fad32bd4e3487e561c054f7c",
+          "web/dist/assets/PluginVersionHistoryDialog-By2ZGnJ1.js": "7057f06aa02cc60df34e826a7318c1adf515c611c56116f532237369c1b2a0f2",
+          "web/dist/assets/Plugins-sJatAS2W.js": "ddda1c3f79e768cbbc541ff976d27ce40339240b4ce39b7a342368ba8bcbf061",
+          "web/dist/assets/RecognitionWordsSettings-BzBEXST7.js": "b18872b6bca4aa674a713989df7369a0238cf32832441217e93a3a9b3efe2788",
+          "web/dist/assets/RecognitionWordsSettings-CXsV6u7l.css": "0bba7ac18019c351af47591968159b053b1cea26f0bb8c450132175ef48f0fed",
+          "web/dist/assets/ResourceMetadataSettings-BEehmGUe.js": "e2d8a94495cec33afe94a7c76a83f1f249edb228ad2c0e82ae1983d47e20e77f",
+          "web/dist/assets/RuleManager-DUldqPzA.js": "051abf3ec31b2093cd0ceee9323e4c33e41de5cd72bfb97ed187e7fa6df93d84",
+          "web/dist/assets/ShortcutMessageDialog-Bpl1cFLW.js": "436f4a2745007d0824b76be14faf4111e7bb1ac4e117cb6e5ebfacb3f0cc244a",
+          "web/dist/assets/ShortcutTools-A-OnFsBY.js": "3219d3255e2736254ad18fed8f8db147bcbf8251dc72308a4f8689cc84770162",
+          "web/dist/assets/SiteUserDataDialog-Cmui4swN.js": "d7ab278a4042afddebd56ed42187f1c52360b65375fe24159df3aa80f235a0b4",
+          "web/dist/assets/index-3x7tMIUd.css": "836e752c7b1c59ef6dc02caf376357b2a9795d5ff9626ead8e011c62378ae897",
+          "web/dist/assets/index-Cs6qe8Uk.js": "e66aabc1c4c4f9e3cb5742a3ea6fce0d3df9468722560cccf210c1205086ded9",
+          "web/dist/assets/plugin-clone-cdM4ouFE.js": "0711cf62383f389bec9c35f81568ed7daf1f6658db5de53ac8d5f2b6da0b534d",
+          "web/dist/assets/plugin-federation-Dtn_H0tZ.js": "48f6138a3c6bb1c5a77ff8d36208bdc3e31ce7bd9397a543b1e1060f602e646c",
+          "web/dist/index.html": "4cad404314d0d2ad9671aeb3061cc9d78b60f2365370e21b2c9fe308af0afc80",
+          "web/src/assets/material-design-icons.json": "ddaa9054198b165f4620ff2ba8da56008a46699fe68ae3f3b67f8d50a4e3d3bd",
+          "web/src/components/RecognitionWordsSettings.vue": "2e9d692b20cfe6b38cf599614ddf1e476ebb5ec8b1f69ecab2419b6c929d6a7c",
+          "web/src/components/Settings.vue": "58a9fad08c06a5a985f903bba9de2aff863c1403509ded18b9f0bc3aae17e7f1",
+          "web/tests/shared-system-config-words.test.mjs": "7ddbf64bafec87d5cfd0d7dd2c0ee094e69467b72e5557691c1458edd217832b",
+          "internal/app/plugin_original_github_network.go": "6ed81226bcde845223527ae593ae8c40d18986242b3d328af419be27d7ec5728",
+          "internal/app/plugin_original_github_network_test.go": "820bb7afa92bbab6f2789dfab4037a32fa240ad80ac6b1045d6de48ccbd55a9a",
+          "internal/app/plugin_module_process_github_test.go": "e84aac732ce572c59664623bac97086a69ee965afabd0a79f4745bb90aeec999"
+        },
+        "fixture_files": {
+          "evidence/s07-custom-identifiers/integration-gate-review.json": "c0d53d41ed13d892ad6c158b1fb5c79426a4cecfa84852859bb84cf109c4a1b1",
+          "evidence/s07-custom-identifiers/web-independent-result.json": "67fcd3c615b3b92e56e613271c74b6e8e59d21217cc37ad7bd9648a762627294",
+          "evidence/s07-custom-identifiers/browser-observation-summary.json": "ef151052c141a295ad093b97f16e8a0b42ffebc896e1004a9a2f66db6d24c37f",
+          "evidence/s07-custom-identifiers/transmission-coexistence-review.json": "127452a1db8189d5be4312f5eae6c08e96045309de237273decfc34d32fbdfcf",
+          "evidence/s07-custom-identifiers/coexistence-logs-readback.json": "8adab9febb82b84330f95bcd8655ce5926a3eecb65b49d14668d1dfa10e8e264",
+          "evidence/s07-custom-identifiers/source-observations.json": "5725158de40e1a786164a2877707dcb670ff2265a718722370a441e18fdf1551",
+          "evidence/s07-custom-identifiers/integration-review.json": "d0c236c26fe76ef3b7630c7d5d3c92f741fdaa2cec414949b4ae97862e484863",
+          "evidence/s07-custom-identifiers/owner-main-acceptance.json": "c0765f901cb7b6a24d385712a82be46c46e9930561a46e0bd87368ffc4ab525a",
+          "evidence/s07-custom-identifiers/integrated-target-binding.json": "d864ac1141e8a9ae367401294a75339cc87764c19bc246f5f6b738010ff25b94",
+          "evidence/s07-custom-identifiers/integrated-result.json": "4a942f7fc24d33543a7ade12f2a6b297a314f1a11063af7c608caf188058ffd2",
+          "evidence/s07-custom-identifiers/source-component-review.json": "3405fc7778256953301ca61ce1c38609d323f84bed67be35bdfdcfec1e9d0416",
+          "evidence/s07-custom-identifiers/integration-plan-review.json": "480c0552e33ca502add95f0036a3e78d416545bdcf2cb4b81e28c74eb42db228",
+          "evidence/s07-custom-identifiers/browser-rebuild-result.json": "403dd671146321a72bf13a8ac1f4144ef4cb632047ff5d921da9de2b7fe56cd0",
+          "evidence/s07-custom-identifiers/web-source-binding-check.json": "93270ec3b39250c9499d3dfa4f3456c7ead3307350dad708c632ec79dc11d33e",
+          "evidence/s07-custom-identifiers/integration-inputs.json": "3d8bba836ddb747001c90c47b8205588a395124649a1cb86029a2009aa9efeb5",
+          "evidence/s07-custom-identifiers/owner-main-backend-readback.json": "95ec37b4a774233e1007a51da0fc636c57047d71eb6a9628159cd090ebc7a8bf",
+          "evidence/s07-custom-identifiers/final-current-binding.json": "e8ab34eb5b81f098080b166305d6fb2c0255eb8fde2d832e83c4e0a38bd3c7b4",
+          "evidence/s07-custom-identifiers/testdata/independent/source_unicode_consumer_probe.py": "916feb8a60dd76a56b5a510071681eea159d948e272ee82022e2ddd243282c21",
+          "evidence/s07-custom-identifiers/testdata/independent/unicode-consumer-extra/input.json": "043137dbe710230b0b5c011e7adbe8fc5452f7627e2688b52079263c99f04d33",
+          "evidence/s07-custom-identifiers/testdata/independent/unicode-consumer-extra/source-output02.json": "24f7028ee2dc344075c1e685cf612fdb49fe11f14c6974721df028900e4d2ea1",
+          "evidence/mirror-response/browser-summary.json": "b9fa738c5216b970b08b225c63ccb07bab2490fee915b48a69ecc147316fd906",
+          "evidence/mirror-response/candidate.json": "5cacd05a9949aa28cecb85e7853f3d974702c1325c92c3a5c7117048b97e2473",
+          "evidence/mirror-response/current-backend-result.json": "b17789b1c6b6a21eff3d3ac4ff395e7c867e7d411531ec2006d28ea9d9d5211c",
+          "evidence/mirror-response/current-integration-review.json": "f3a3fe566a5b9348e69880288d2091c45d4d9225fdef653f88e20f293a433337",
+          "evidence/mirror-response/independent-candidate-review.json": "7b0eefb9f9b03c1c011efcbb7298f99bcd1db9fddc070b4e55a4a849e3f6115c",
+          "evidence/mirror-response/owner-acceptance.json": "2cb62e3b1e1a349a571d42aca18f41d61c8e83c3170dd6c3edac50581a8daa3b",
+          "evidence/mirror-response/s07-impact-review.json": "aae25f554d8faeeaaa2a4da2ae54f6549ba932cb1625685dbd66cd40e395e7be",
+          "evidence/mirror-response/s07-overlay-revalidation.json": "9e19626e58d47a5c64faf0c6fdc7b342a39f4fc5140a2bdec26f7192e4aed90b"
+        }
+      },
+      "artifacts": {
+        "evidence/mirror-response/browser-summary.json": "b9fa738c5216b970b08b225c63ccb07bab2490fee915b48a69ecc147316fd906",
+        "evidence/mirror-response/candidate.json": "5cacd05a9949aa28cecb85e7853f3d974702c1325c92c3a5c7117048b97e2473",
+        "evidence/mirror-response/current-backend-result.json": "b17789b1c6b6a21eff3d3ac4ff395e7c867e7d411531ec2006d28ea9d9d5211c",
+        "evidence/mirror-response/current-integration-review.json": "f3a3fe566a5b9348e69880288d2091c45d4d9225fdef653f88e20f293a433337",
+        "evidence/mirror-response/independent-candidate-review.json": "7b0eefb9f9b03c1c011efcbb7298f99bcd1db9fddc070b4e55a4a849e3f6115c",
+        "evidence/mirror-response/owner-acceptance.json": "2cb62e3b1e1a349a571d42aca18f41d61c8e83c3170dd6c3edac50581a8daa3b",
+        "evidence/mirror-response/s07-impact-review.json": "aae25f554d8faeeaaa2a4da2ae54f6549ba932cb1625685dbd66cd40e395e7be",
+        "evidence/mirror-response/s07-overlay-revalidation.json": "9e19626e58d47a5c64faf0c6fdc7b342a39f4fc5140a2bdec26f7192e4aed90b"
+      },
+      "commands": [
+        "Owner complete source sync/async HTTP status/EOF and public install; independent old-server red/newcandidate actual3phase and exact rebuild. Original revision-bound evidence retained.",
+        "Current coordinator go build normal/race; real mirror3phase owned TLS/SDK and2protocol-race roots. Independent normal rebuild byte-identical e2325c5a79911add7b335b6774ddda123f7454c3001da26b73eb94e610f803d6,6015 inputs unchanged.",
+        "Independent corrected test-only overlay02 preserves a.Settings except two stats fields; actual S07 UI/clone/events/concurrency10.92s, server/cold25.97s, RemoteSourceProducer9.04s;6012 actual compiler inputs stable. Prior clear-other-settings diagnostic remains private, not minimum-change evidence.",
+        "Official browser15 observations: native503 failure, normal retry200/install, declaredSDK status,503 refresh retention, same-data cold, existing S07 clone GET. No invented browser force-install control."
+      ],
+      "inputs": [
+        "Fixed backend8a83efe/frontend2829e3b; reviewed exact3path candidate; complete compile/dependency/overlay inputs privately hashed in published review.",
+        "Owned native fixture/module/index/HTTP/TLS responses; existing QA account/session and no credential/header export; statistics off, all fixture endpoints loopback, deny-proxy attempts empty.",
+        "S07 unchanged104 source/test/UI files and original source/fixture witnesses are reused through independent impact analysis; current3root/browser supplement, not replacement of historical17/20 logs."
+      ],
+      "observations": [
+        "Received mirror HTTP503 remains caller response; zero origin fallback. Real transport EOF still falls back to actual owned trusted origin; API/PAT-origin/TLS/cancellation protections unchanged.",
+        "Current real force-install503 preserves worker/config; official UI normal install and subsequent503/cold prove failure/recovery. Browser state_count9->21/init1/stop0 not mislabeled as PID assertion.",
+        "S07 mirror branch not reached by its owned loopback acquisition; actual current3roots and cold clone GET retain accepted shared-config behavior.",
+        "Only finite mirror response repair;09 package-band/cache and entire11/12/13 groups remain open."
+      ],
+      "id": "mirror-response.current-review",
+      "kind": "review",
+      "reviewer": "manager_queries_independent_review_20261030"
     }
   ],
   "execution_contract": {
@@ -30682,9 +31173,9 @@
     "existing_platform_reuse": "46 existing applicable platform groups are not 46 rewrites. Preserve/reuse implementation and unchanged sufficiently bound source/test evidence. 15 new shared-host groups are discovery buckets, not 15 automatically missing features."
   },
   "resume": {
-    "next_slice": "Deliver06 verified reuse metadata; integrate independently accepted mirror-response repair and finish09 whole selection error/caching chain; continue other platform/shared-host coverage.",
+    "next_slice": "Deliver accepted finite mirror response fix; independently verified17 folder-cache candidate next current integration/browser; continue09 band/cache candidate02 and remaining source-led reuse/shared-host work.",
     "dirty_work": [
-      "Only06 verified reuse/report and prior actual delivery/recovery receipts; other candidates remain isolated."
+      "Only accepted mirror3source/test paths and compact current review/ledger metadata;09/17/16 candidates isolated."
     ],
     "workers": [
       "coordinator",
@@ -30694,8 +31185,8 @@
       "manager_queries_independent_review_20261030"
     ],
     "blockers": [
-      "qB native AF_NETLINK restriction remains; no bypass.",
-      "Known no-token mirror503 fallback defect reopens11 and13; original positive evidence remains historical."
+      "qB native AF_NETLINK restriction remains, no bypass.",
+      "09 package-band/cache and reset16/uninstall17 counterexamples remain finite pending groups; mirror defect repaired only within explicit child."
     ],
     "commands": [
       "git status --short",
@@ -30791,16 +31282,24 @@
         "sha256": "a4324a1f91997282138850b7d0ba247a055ef2398e912d2017dec36dbc6eb45f",
         "bytes": 7612449,
         "boundary": "752 checked members/750 payload; no credentials/runtime/deps/binaries/screenshots/old refused material."
+      },
+      {
+        "purpose": "Exact294e52dd5 delivered metadata paths/readback and owned source-settings/browser recovery; no live account data.",
+        "library_file_id": "libfile_795ab696d0e88191a07c789fef8c744f",
+        "filename": "light-media-existing-sources-accepted-294e52dd-20261030.tar.gz",
+        "sha256": "580b9106eba890a6a4c5075c6f43aa368e16a280fc665c4220c03a7c109db101",
+        "bytes": 2199755,
+        "boundary": "51checked members/49payload; no credentials/runtime/deps/binaries/screenshots/old refused material."
       }
     ],
     "last_delivery": {
-      "commit": "e9ebb8b4e9274d531bd2e5156c69e8a5ba33de67",
+      "commit": "294e52dd904f3e7d6538d0e51ffe42365b93e266",
       "branch": "plugins-refactor",
-      "readback": "e9ebb8b4e9274d531bd2e5156c69e8a5ba33de67",
+      "readback": "294e52dd904f3e7d6538d0e51ffe42365b93e266",
       "main_unchanged": "97476582910dc4b696f7ccd5010f28d823812d40",
-      "paths": 128,
-      "mapping_path": "migration/delivery/system-config-e9ebb8b4-paths.json",
-      "mapping_sha256": "f6ac96da2eeab0250e2429fdccb4d10e939a50901b2f7d36d2435c2444daa069",
+      "paths": 5,
+      "mapping_path": "migration/delivery/existing-sources-294e52dd-paths.json",
+      "mapping_sha256": "b3bdb349a20976c2b16aba525367d43d58fb2957d574f3ee8b05e5f4e4d262a8",
       "ci": "0 check-runs and0statuses; not CI pass or running."
     }
   },

@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "kind": "official-cloud-native-browser-mirror-response-acceptance",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "frontend_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "status": "observed_pending_independent_final_review",
+  "server_sha256": "e2325c5a79911add7b335b6774ddda123f7454c3001da26b73eb94e610f803d6",
+  "worker_sha256": "f0fb67e105f48e3f0fb4877933c237492bac9afa62f2ba3ded71b3735d1b83b2",
+  "raw_ax_steps": 15,
+  "raw_ax_sha256": "9032fb8e63c619b7222b5481dd930635029c54516b55397bdb45abc5fadcdf0d",
+  "fixture_bindings": {
+    "preparation.json": "efd7e3e86c37a5ba28611b707c1dae52757170fb2b626b59d1183f9fd059a2f1",
+    "same-data-preview-launch.mjs": "18c9607a4e237fd5f4ffdeea5b4401e94a083a4a5519ff6933b1d7d7d118b4c6",
+    "owned-mirror-fixture.mjs": "1544672029b58bce64168b11c459093afa8a2979e03d0df75b978cce80147765",
+    "before-cold-facts.json": "7d8f282a09bdaaebf1ce2cc834bdf3b9a98e42eedc9954be5bc3b011fa0df351",
+    "after-cold-facts.json": "5639d8061702b3e79df59922a7d6e1421a655e24ad9ef3d9bd4fbb53ca332e4f"
+  },
+  "observations": [
+    {
+      "phase": "same_user_session",
+      "actual": "Same previous account and exclusive QA directory, no account bootstrap/new credentials/session injection."
+    },
+    {
+      "phase": "HTTP503",
+      "actual": "Native source save -> repository failure message and no installable card; one received503, zero origin/deny-proxy attempts."
+    },
+    {
+      "phase": "recover200",
+      "actual": "Owned external fixture changed response only; ordinary Retry -> real1.0 card -> Install -> existing authenticated cookie GET declared SDK status: init_count1,state_count9,stop_count0,config{}."
+    },
+    {
+      "phase": "HTTP503_again",
+      "actual": "Ordinary Refresh shows source failure; declared live SDK status retains init1/stop0/config{}, state_count advances9 to21. This does not claim browser force-install or PID measurement."
+    },
+    {
+      "phase": "same_data_cold",
+      "actual": "Official preview stop/start, same account/data/binary. Native declared SDK status1.0 init1/state3; installed record restored."
+    },
+    {
+      "phase": "S07_coexistence",
+      "actual": "Current cold source snapshot PID100/init1; existing clone native page GET true, PID106/init1, shared persisted [Raw => SDK 恢复😀,# owned source marker]."
+    }
+  ],
+  "security_boundary": {
+    "mirror": "127.0.0.1:39125",
+    "deny_proxy": "127.0.0.1:39126",
+    "artifact": "127.0.0.1:39123",
+    "nonowned_proxy_attempts": 0,
+    "no_credentials_used_in_fixture": true,
+    "no_auth_or_TLS_changes": true,
+    "child_process_proxy_only": true,
+    "statistics_ui": false,
+    "statistics_server_ui_empty": true
+  },
+  "publication_boundary": "This compact report is intended for Git after review. Raw AX, exact fixture/control/phase files and binary bindings retained privately and separately recoverable; no claim all raw artifacts/screenshots are in Git. Rejected historical screenshots/material never reused.",
+  "remaining": [
+    "No whole09/11/12/13 closure; separate package-band/cache defect remains.",
+    "Transport-exception fallback and force-install retention proved by real current backend3phase, not invented native UI controls.",
+    "CurrentS07 regression is explicit limited reuse with new3-race roots; old full17/20 suite remains historical revision-bound."
+  ]
+}

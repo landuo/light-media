@@ -11,6 +11,8 @@ import (
 	"crypto/x509/pkix"
 	"encoding/json"
 	"encoding/pem"
+	"errors"
+	"io"
 	"math/big"
 	"net"
 	"net/http"
@@ -179,6 +181,10 @@ func TestOriginalGitHubActualTLSMirrorFallbackAPIAndCredentialOrigin(t *testing.
 	defer origin.Close()
 	var mirrorHits atomic.Int32
 	var mirrorOK atomic.Bool
+	var mirrorHTTPError atomic.Bool
+	var mirrorWait atomic.Bool
+	mirrorStarted := make(chan struct{}, 1)
+	mirrorHTTPError.Store(true)
 	mirror := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		mirrorHits.Add(1)
 		if r.Header.Get("Authorization") != "" {
@@ -187,8 +193,19 @@ func TestOriginalGitHubActualTLSMirrorFallbackAPIAndCredentialOrigin(t *testing.
 		if !strings.HasPrefix(r.URL.Path, "/prefix/https://raw.githubusercontent.com/") {
 			t.Error("mirror URL did not preserve source prefix plus absolute original URL")
 		}
+		if mirrorWait.Load() {
+			mirrorStarted <- struct{}{}
+			<-r.Context().Done()
+			return
+		}
+		w.Header().Set("Connection", "close")
+		if mirrorHTTPError.Load() {
+			w.Header().Set("X-Owned-Mirror", "received-response")
+			http.Error(w, "owned mirror failure", http.StatusServiceUnavailable)
+			return
+		}
 		if !mirrorOK.Load() {
-			http.Error(w, "owned mirror failure", 503)
+			closeOwnedGitHubMirrorConnection(t, w)
 			return
 		}
 		_, _ = w.Write([]byte(`{"mirror":true}`))
@@ -210,24 +227,37 @@ func TestOriginalGitHubActualTLSMirrorFallbackAPIAndCredentialOrigin(t *testing.
 	transport := &originalGitHubTransport{base: base, mirror: mirrorTransport, settings: Settings{GitHubProxy: mirror.URL + "/prefix", GitHubToken: "owned-default", RepoGitHubToken: "owner/repo:owned-specific"}}
 	defer transport.CloseIdleConnections()
 	client := &http.Client{Transport: transport, Timeout: 5 * time.Second}
-	fetch := func(address string) {
+	fetch := func(address string) (int, string, http.Header) {
 		t.Helper()
 		request, _ := http.NewRequest(http.MethodGet, address, nil)
 		response, err := client.Do(request)
 		if err != nil {
 			t.Fatal("actual verified TLS request failed", err)
 		}
+		body, readErr := io.ReadAll(response.Body)
 		response.Body.Close()
+		if readErr != nil {
+			t.Fatal("response body was closed before its caller consumed it", readErr)
+		}
 		if request.Header.Get("Authorization") != "" {
 			t.Fatal("transport mutated the original redirect header source")
 		}
+		return response.StatusCode, string(body), response.Header
 	}
+	status, body, headers := fetch("https://raw.githubusercontent.com/owner/repo/main/index")
+	mu.Lock()
+	firstOriginHits := len(seen)
+	mu.Unlock()
+	if status != 503 || body != "owned mirror failure\n" || headers.Get("X-Owned-Mirror") != "received-response" || firstOriginHits != 0 || mirrorHits.Load() != 1 {
+		t.Fatal("received mirror HTTP503 must remain the caller's response, not origin fallback", status, firstOriginHits, mirrorHits.Load())
+	}
+	mirrorHTTPError.Store(false)
 	fetch("https://raw.githubusercontent.com/owner/repo/main/index")
-	if mirrorHits.Load() != 1 {
+	if mirrorHits.Load() != 2 {
 		t.Fatal("non-API request did not try mirror first")
 	}
 	fetch("https://api.github.com/repos/owner/repo/releases/assets/1")
-	if mirrorHits.Load() != 1 {
+	if mirrorHits.Load() != 2 {
 		t.Fatal("GitHub API request incorrectly used mirror")
 	}
 	fetch("https://raw.githubusercontent.com/other/repo/main/index")
@@ -236,7 +266,51 @@ func TestOriginalGitHubActualTLSMirrorFallbackAPIAndCredentialOrigin(t *testing.
 	mu.Lock()
 	count := len(seen)
 	mu.Unlock()
-	if count != 3 || mirrorHits.Load() != 3 {
+	if count != 3 || mirrorHits.Load() != 4 {
 		t.Fatal("mirror success did not short-circuit origin fallback", count, mirrorHits.Load())
 	}
+	mirrorWait.Store(true)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	request, _ := http.NewRequestWithContext(ctx, http.MethodGet, "https://raw.githubusercontent.com/owner/repo/main/canceled", nil)
+	completed := make(chan error, 1)
+	go func() {
+		response, e := client.Do(request)
+		if response != nil {
+			response.Body.Close()
+		}
+		completed <- e
+	}()
+	select {
+	case <-mirrorStarted:
+	case <-time.After(5 * time.Second):
+		t.Fatal("owned mirror was not reached")
+	}
+	cancel()
+	select {
+	case e := <-completed:
+		if !errors.Is(e, context.Canceled) {
+			t.Fatal("canceled mirror request did not retain cancellation", e)
+		}
+	case <-time.After(5 * time.Second):
+		t.Fatal("canceled request did not finish")
+	}
+	mu.Lock()
+	count = len(seen)
+	mu.Unlock()
+	if count != 3 || mirrorHits.Load() != 5 {
+		t.Fatal("cancellation attempted an origin fallback", count, mirrorHits.Load())
+	}
+}
+
+// An owned server closes its accepted connection without an HTTP response.
+// This is a real transport failure, not an HTTP error response.
+func closeOwnedGitHubMirrorConnection(t *testing.T, w http.ResponseWriter) {
+	t.Helper()
+	connection, _, err := w.(http.Hijacker).Hijack()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	_ = connection.Close()
 }

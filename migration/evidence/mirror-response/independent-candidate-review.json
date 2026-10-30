@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "kind": "independent-limited-mirror-response-review",
+  "status": "verified_candidate_fix_not_current_main_acceptance",
+  "scope": "Only the received-HTTP-response versus transport-exception fallback defect affecting existing GitHub market/install transport. Not complete rows09/10/11/12/13 equivalence.",
+  "reviewer": {
+    "model": "gpt-6-astra",
+    "reasoning_effort": "ultra"
+  },
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_paths": {
+    "app/helper/plugin.py": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+    "app/utils/http.py": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "app/core/config.py": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e"
+  },
+  "source_entrypoints": [
+    "PluginHelper.__request_with_fallback",
+    "PluginHelper.__async_request_with_fallback",
+    "PluginHelper.get_plugins and async_get_plugins",
+    "PluginHelper.install and async_install",
+    "RequestUtils.get_res and AsyncRequestUtils.get_res"
+  ],
+  "source_contract": "HTTP200/400/503 are received responses. Strategy fallback happens on thrown transport exceptions, not on status>=400. Callers then decide whether a response constitutes success.",
+  "actual_source_evidence": {
+    "independent_status_sha256": "0b096b880f27320fc903c2acc3e838272828e3dcf2c76fac06f948922cbceb25",
+    "independent_public_install_sha256": "5015bf9bf59990081b52a6a1965bbcab80d2e3471907a7a0dd31745446979cb6",
+    "independent_drivers": {
+      "source_mirror_status_probe.py": "748b16b712b82a173518af75f96eefcc9107866faedc17967a73c6b51c27a76f",
+      "source_mirror_install_probe.py": "43139349d3614b2e607606e6e7a1c69def1da5de8dad919c6aa30ec3effa2470"
+    },
+    "owner_additional_status_EOF_observations_sha256": "d7c796e455f278f66085d0b8fa6d29b5c3a0c0109e71631a4b83f30843487758",
+    "boundary": "Full fixed Helper/RequestUtils/AsyncRequestUtils/Settings with real owned HTTP/TLS and physical install result; unrelated integrations explicit fixtures. No original authentication HTTP or complete business startup claim."
+  },
+  "candidate_base": "a110eabd0f6bb99a4c0a2cb6f32cb94c1efe2d12",
+  "candidate_manifest_sha256": "5cacd05a9949aa28cecb85e7853f3d974702c1325c92c3a5c7117048b97e2473",
+  "target_files": {
+    "internal/app/plugin_module_process_github_test.go": "e84aac732ce572c59664623bac97086a69ee965afabd0a79f4745bb90aeec999",
+    "internal/app/plugin_original_github_network.go": "6ed81226bcde845223527ae593ae8c40d18986242b3d328af419be27d7ec5728",
+    "internal/app/plugin_original_github_network_test.go": "820bb7afa92bbab6f2789dfab4037a32fa240ad80ac6b1045d6de48ccbd55a9a"
+  },
+  "reviewed_product_delta": "Only removes the status<400 condition from the err==nil mirror-return branch. Keeps caller-owned response body/header, existing approved PAT-origin restriction, TLS verification, context cancellation and exception fallback.",
+  "independent_red": {
+    "binary_sha256": "6d76790fdf693ee7f37ad85a8d618d10cb90d02e3150ada8f45fb2ac04753d35",
+    "result_sha256": "82e3ac8d3263c0420fa3ceddf1b53ef231aa271e94ebc2af88855004273de719",
+    "log_sha256": "d5748bbd69a406097cb3fd0f9ca88a6b41210a11fb8961b5fd70e5f3531615e0",
+    "exit": 1,
+    "observed": "With real mirror503, old production market and install fall through to available owned origin and succeed."
+  },
+  "independent_green": {
+    "fresh_rebuild_sha256": "7e26c23f2260a0f2a8167d12c8c08aad3b757833307b4c91bf17151862f5bde6",
+    "owner_binary_equal": true,
+    "command": "go build -race -buildvcs=false -o <fresh-output>/server ./cmd/server; OWNED_MIRROR_OUT=<fresh-output> OWNED_MIRROR_SERVER=<binary> OWNED_MIRROR_SERVER_SHA256=<hash> python3 target_mirror_fix_replay_v2.py",
+    "runner_sha256": "725acaba2f3577f59b927e7b8a55a922dc8217e900624c64eaa9e293367eb7ed",
+    "fixture_sha256": "261cba3aec332e74f60bf2eb788ee2e2af26339df7bd2dbcd99fc18798147997",
+    "result_sha256": "dec032b0eb7b0dddbbbdb7fb13a60e6c7e615bbc0067761fa08e5d56beebf7e7",
+    "log_sha256": "8f4d34e3252d7a8282c124474c09c811293354476d690d50e6f1d0b4e35603ae",
+    "exit": 0,
+    "actual_phases": [
+      "received_http503_is_not_transport_failure",
+      "actual_mirror_transport_EOF_falls_back_to_trusted_owned_origin_and_loads_real_worker",
+      "later_HTTP503_force_install_fails_preflight_and_retains_same_live_worker_snapshot"
+    ],
+    "actual_worker_sha256": "f0fb67e105f48e3f0fb4877933c237492bac9afa62f2ba3ded71b3735d1b83b2",
+    "nonowned_proxy_attempts": 0,
+    "statistics_disabled": true,
+    "before_binding_sha256": "932662b0083b133d45aa7eb6e9c04bb9b29d52fb6050a6c50331263a30d23a67",
+    "after_binding_sha256": "648aae9034736b5b56749e605636031401b3959021d23a9d16e99ef29511af99",
+    "compile_source_dependency_driver_inputs": 7030,
+    "all_inputs_rehashed_unchanged_before_after": true,
+    "owner_input_manifest_sha256": "d391da04050027b5ce7f7669569321286e9ac6b5b89a64e581803e44eeb50939"
+  },
+  "necessary_reused_regression": {
+    "owner_protocol_race_log_sha256": "2b7585db902d84a6ec664aac2af54b95bbb886b2ceb967c084ed2fa4ddcd3c2e",
+    "owner_production_process_race_log_sha256": "15268418c64a902c8b0a476485fef7f26ea3d7a6a9f8f4ebacf73a904ebf7720",
+    "owner_closure_result_sha256": "1f215c01eb166ecc6ddf071bbc05f67635856b8d61114637861a781239b3c2d7",
+    "boundary": "Owner executed protocol and production gates, independently read/bound here; not described as reviewer-run. Reviewer independently rebuilt and executed the three production phases above."
+  },
+  "remaining": [
+    "Coordinator current-main integration and its real failure/recovery browser flow remain.",
+    "Original asynchronous request library retries EOF differently; this fix does not claim equality of all retries.",
+    "The separate market per-package partial-failure/cache defect remains open under09; no row-wide status is upgraded by this review.",
+    "No product, ledger, security setting or original evidence was modified by this reviewer."
+  ]
+}

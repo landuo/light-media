@@ -1,0 +1,54 @@
+{
+  "proxy_rejected": [],
+  "statistics_share": false,
+  "statistics_server_empty": true,
+  "server_sha256": "e83da4657de677f959f91246e0bf66061a862a9defee03845199d3f4b4979798",
+  "worker_sha256": "f0fb67e105f48e3f0fb4877933c237492bac9afa62f2ba3ded71b3735d1b83b2",
+  "driver_sha256": "725acaba2f3577f59b927e7b8a55a922dc8217e900624c64eaa9e293367eb7ed",
+  "observations": [
+    {
+      "name": "received_http503_is_not_transport_failure",
+      "passed": true,
+      "source_success": false,
+      "installed": false,
+      "origin_requests": 0
+    },
+    {
+      "name": "actual_mirror_transport_EOF_falls_back_to_trusted_owned_origin_and_loads_real_worker",
+      "passed": true
+    },
+    {
+      "name": "later_HTTP503_force_install_fails_preflight_and_retains_same_live_worker_snapshot",
+      "passed": true
+    }
+  ],
+  "mirror_requests": [
+    {
+      "path": "/prefix/https://raw.githubusercontent.com/Owned/Mirror/main/go-plugins.v1.json",
+      "status": 503
+    },
+    {
+      "path": "/prefix/https://raw.githubusercontent.com/Owned/Mirror/main/go-plugins.v1.json?_refresh=1793345558784025594",
+      "status": 503
+    },
+    {
+      "path": "/prefix/https://raw.githubusercontent.com/Owned/Mirror/main/go-plugins.v1.json",
+      "status": 503
+    },
+    {
+      "path": "/prefix/https://raw.githubusercontent.com/Owned/Mirror/main/go-plugins.v1.json",
+      "status": 503
+    }
+  ],
+  "origin_requests": [
+    {
+      "method": "GET",
+      "path": "/Owned/Mirror/main/go-plugins.v1.json"
+    },
+    {
+      "method": "GET",
+      "path": "/Owned/Mirror/main/worker"
+    }
+  ],
+  "scope": "Actual authenticated production HTTP/SQLite/real SDK artifact; HTTP error versus actual TCP EOF; no configured tokens or existing QA data. Bind this server separately to its exact author/reviewer source input closure."
+}

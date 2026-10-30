@@ -1,0 +1,38 @@
+{
+  "feature_id": "S07.CustomIdentifiers",
+  "review_type": "proposed_mirror_change_impact_scope_not_test_execution",
+  "base_acceptance_commit": "e9ebb8b4e9274d531bd2e5156c69e8a5ba33de67",
+  "changed_product": {
+    "path": "internal/app/plugin_original_github_network.go",
+    "old_sha256": "9da712e31c2b568574ea77da5fcda544ddfe3ee7fdd7dfa391afa3cddc7e8633",
+    "new_sha256": "6ed81226bcde845223527ae593ae8c40d18986242b3d328af419be27d7ec5728",
+    "change": "Only return every received mirror HTTP response when err==nil, rather than treating status>=400 as fallback. No non-GitHub branch change."
+  },
+  "static_reachability": {
+    "changed_branch_conditions": [
+      "official GitHub HTTPS host",
+      "GET",
+      "non-API GitHub URL",
+      "configured nonempty GitHub mirror"
+    ],
+    "unchanged_bypass": "if !github || request.Method != http.MethodGet { return t.base.RoundTrip(request) }",
+    "s07_fixture_acquisition": "plugin_shared_system_config_fixture_test.go:88-101 creates ordinary httptest HTTP loopback index/artifact URLs; no redirect handler; therefore !github bypass.",
+    "s07_actual_server": "plugin_shared_system_config_process_test.go uses same loopback install fixture, then genuine process restart against persisted artifacts; browser fixture uses explicit owned loopback sources.",
+    "shared_data_calls": "Shared Get/Set, SQLite cache/rowset, native words HTTP and selected title matcher do not invoke the changed GitHub mirror branch.",
+    "source_remote_scope": "The accepted real Remote producer uses emptyURL; remote file fetching/complete Remote plugin was not accepted by S07."
+  },
+  "recommended_current_gate": [
+    "TestSharedSystemConfigActualServerProcessCold",
+    "TestSharedSystemConfigUICloneEventsAndConcurrency",
+    "TestSharedSystemConfigRemoteSourceProducer"
+  ],
+  "recommended_flags": "OWNED_SYSTEM_CONFIG_RACE=1 go test -buildvcs=false -race ./internal/app -count=1 -v -run \"^(TestSharedSystemConfigActualServerProcessCold|TestSharedSystemConfigUICloneEventsAndConcurrency|TestSharedSystemConfigRemoteSourceProducer)$\"",
+  "requirements": [
+    "Fresh actual integrated Go/embed closure and compiled server/worker binding.",
+    "Exact unchanged S07104/source1130/independent fixtures compared to accepted e9ebb binding.",
+    "No source/core settings/recognition/matcher/S07 SDK changes hidden in integration.",
+    "Original20/17 long gates retain exact old hashes/commit and are not relabeled as newly executed.",
+    "Changed mirror branch gets its separate real-process/race/browser gates under its own feature."
+  ],
+  "assessment": "Impact-scoped S07 current integration verification is justified if these conditions hold and the three current actual roots pass. This report does not itself mark the changed-main S07 gate passed."
+}

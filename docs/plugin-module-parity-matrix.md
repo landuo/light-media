@@ -16,11 +16,13 @@
 
 本轮固定交付分支 `plugins-refactor`，重新开发基线为实际远端 `main@97476582910dc4b696f7ccd5010f28d823812d40`。本轮只做全 Go、Linux、单用户、本机存储；AI、工作流、外部存储及专用扩展点排除，普通事件、命令、调度保留。
 
-**当前6/61总组完成本轮验收（既有01–06复用），另4项明确排除；55组尚未闭合不等于55个待开发功能。11原安装正向观察保留，但新镜像HTTP503失败反例已撤回整组通过。已完成子切片为40.clear_cache、S05.query_update（含Unicode修复）、S06.transfer_queries、S10.manager_queries、S01.transmission_queries及S07.CustomIdentifiers；子片不额外计为总组通过。** 当前main旧表46/46不是本轮结论；旧证据仅按未变实现与精确绑定复用。
+**当前6/61总组完成本轮验收（既有01–06复用），另4项明确排除；55组尚未闭合不等于55个待开发功能。11原安装正向观察保留，但新镜像HTTP503失败反例已撤回整组通过。已完成子切片为40.clear_cache、S05.query_update（含Unicode修复）、S06.transfer_queries、S10.manager_queries、S01.transmission_queries、S07.CustomIdentifiers及11.mirror_response；子片不额外计为总组通过。** 当前main旧表46/46不是本轮结论；旧证据仅按未变实现与精确绑定复用。
 
 上一环境的 2026-10-29 平台源码、测试、原始证据和预览数据在本次执行环境不可读，亦没有形成远程交付提交。已恢复的少量孤立文档/日志不能重建源码。本轮从上述 main 重新实现；旧 S05 四方法验收不沿用，旧日志不充作新证据。首先完成 S05 查询/更新完整切片，再逐片正常 Git 提交、推送、读回 SHA。总组与已交付子切片分别计证。S05 首片已推送并读回 `42fd80dc13e989a947babd5a40a41560877413f9`；该提交没有 CI workflow/check/status，不能称 CI 通过。`40.clear_cache` 已推送并读回 `e0258042f5196a5d94753f7dceaed9a8ad261d9e`（24 路径核对；无 CI check/status）。S06 两查询已推送并读回 `c313c3ef20148b36e819db597bcd3a8a455be5c2`（46 路径核对；无 CI check/status）。S05 JSON 孤立代理码点边界曾重开，现已修复并重新验收：首个测试 helper 提前改写输入，原红不能证明宿主因果，已明确作废该证明。后以源/目标相同 envelope SHA 和主机入口原始 payload 独立重跑，确证修复前主机错误存成 U+FFFD；新纠正证据另列，旧文件原样保留。
 
-**工作量口径**：61组＝46个既有平台大类＋15个共享宿主核对组。当前6组验证复用、9组有已证明增量（09/11/13/40/S01/S05/S06/S07/S10）、46组待复用核对或差异裁定，不把它们全部当缺失代码。09合法ID+版本拼接与包层级选择正在最小修复；11/13无token镜像HTTP503被错误回退origin的真实入口反例另行有限修复。S07仅普通RemoteIdentifiers→CustomIdentifiers→原生UI/本地标题完整子链通过，其他key和通用DAO高ID反例保留；S01仅有限Transmission查询通过，qB原生会话仍环境受限。
+**工作量口径**：61组＝46个既有平台大类＋15个共享宿主核对组。当前6组验证复用、11组有已证明增量（09/11/13/16/17/40/S01/S05/S06/S07/S10）、44组待复用核对或差异裁定，不把它们全部当缺失代码。09合法ID+版本拼接、包层级半失败与各band缓存正在最小修复；11/13镜像HTTP503不再错误回源，完整有限子片已验收，但整组仍待09依赖与最终对账。16重置异常后中断链、17卸载SQL失败的hot/DB差异是新真实反例，不把其余44组当缺失。S07仅普通RemoteIdentifiers→CustomIdentifiers→原生UI/本地标题完整子链通过，其他key和通用DAO高ID反例保留；S01仅有限Transmission查询通过，qB原生会话仍环境受限。
+
+镜像子片 `11.mirror_response`：固定完整source sync/async和真实install反例→仅共同transport收到HTTP响应即返回；只有真实传输异常才fallback。当前真实SDK/server三阶段、协议2根、官方浏览器15步503→重试/安装→再次失败保对象→同数据冷启动通过；当前S07只做独立影响复用＋新3根race及clone GET，不将旧17/20日志换hash。精简证据在 `migration/evidence/mirror-response/`，原始AX/完整输入与失败历史私有另备；没有上传被拒旧材料，也不声称整个11/12/13通过。
 
 S05 Unicode 修复本片：四 JSON 列原始码点与键保留，提交后响应编码失败不回滚；真正标量/查询绑定失败及延迟外键 COMMIT 失败整笔回滚。Owner normal/race 各18根，独立19输入/57暖冷修复观察、候选normal/race各19根、主树独立normal/race各9根；协调者当前主树18 race/230.100s与vet通过。实际官方浏览器422但rev5→6持久、cold同字节、普通UI修复→7、分身/再次cold无重放。标准 UTF-8 JSON 合同之外的额外字节诊断状态未知，未重试、未计通过；旧有损数据不猜测恢复。精简绑定见 `migration/evidence/s05-unicode-followup/`，独立可重复程序见 `testdata/plugin-shared-host-20261030/subscriptions/unicode/independent/`。
 

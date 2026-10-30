@@ -34,7 +34,7 @@ type ownedGitHubRequest struct {
 }
 type ownedGitHubProcessFixture struct {
 	CAFile, Mirror, PreferredProxy, EnvironmentProxy string
-	mirrorOK, originFailed                           atomic.Bool
+	mirrorOK, mirrorHTTPError, originFailed          atomic.Bool
 	mu                                               sync.Mutex
 	requests                                         []ownedGitHubRequest
 	tunnels                                          []net.Conn
@@ -130,8 +130,13 @@ func newOwnedGitHubProcessFixture(t *testing.T, dir string, repositoryURL string
 			http.Error(w, "owned mirror request invalid", 400)
 			return
 		}
+		w.Header().Set("Connection", "close")
+		if f.mirrorHTTPError.Load() {
+			http.Error(w, "owned mirror HTTP response unavailable", http.StatusServiceUnavailable)
+			return
+		}
 		if !f.mirrorOK.Load() {
-			http.Error(w, "owned mirror unavailable", 503)
+			closeOwnedGitHubMirrorConnection(t, w)
 			return
 		}
 		_ = json.NewEncoder(w).Encode(copied)
@@ -266,6 +271,25 @@ func verifyOwnedGitHubProductionNetwork(t *testing.T, f *ownedGitHubProcessFixtu
 	if json.Unmarshal(request("GET", "/api/v1/plugin/"+ownedStandardFixtureID+"/echo", nil, 200), &workerBefore) != nil {
 		t.Fatal("installed owned SDK unavailable")
 	}
+	// A complete mirror HTTP error is not a transport exception. A forced
+	// install must fail without contacting origin or disturbing the live worker.
+	f.mirrorHTTPError.Store(true)
+	f.resetRequests()
+	response = request("POST", "/api/plugins/install", map[string]any{"plugin_id": ownedStandardFixtureID, "repo_url": ownedGitHubRepository, "force": true}, 200)
+	if json.Unmarshal(response, &installed) != nil || installed.Data.Success {
+		t.Fatal("mirror HTTP503 incorrectly fell back and installed")
+	}
+	f.check(t, []string{"mirror"})
+	var httpFailureWorker map[string]any
+	if json.Unmarshal(request("GET", "/api/v1/plugin/"+ownedStandardFixtureID+"/echo", nil, 200), &httpFailureWorker) != nil {
+		t.Fatal("mirror HTTP response failure stopped the worker")
+	}
+	for _, field := range []string{"nonce", "init_count", "config", "value"} {
+		if !originalBaseJSONEqual(mustCleanSeedJSON(workerBefore[field]), mustCleanSeedJSON(httpFailureWorker[field])) {
+			t.Fatal("mirror HTTP response failure changed live worker/config/KV", field)
+		}
+	}
+	f.mirrorHTTPError.Store(false)
 	f.mirrorOK.Store(true)
 	f.resetRequests()
 	request("GET", "/api/plugins/history/"+ownedStandardFixtureID+"?force=true", nil, 200)

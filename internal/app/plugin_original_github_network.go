@@ -124,7 +124,9 @@ func (t *originalGitHubTransport) RoundTrip(request *http.Request) (*http.Respon
 		if request.Context().Err() != nil {
 			return response, err
 		}
-		if err == nil && response.StatusCode < http.StatusBadRequest {
+		// Source get_res(raise_exception=True) raises transport errors, not
+		// HTTP errors. Preserve every received response for the caller.
+		if err == nil {
 			return response, nil
 		}
 		if response != nil && response.Body != nil {
