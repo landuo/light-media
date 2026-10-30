@@ -104,6 +104,14 @@ export async function api<T = any>(path: string, body?: any, method?: string): P
       headers: body === undefined ? {} : { 'Content-Type': 'application/json' },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
+    // Original-compatible endpoints can fail with a plain-text HTTP error
+    // (FastAPI's serialization failure is "Internal Server Error"). Do not
+    // reinterpret this as a successful response or require a JSON envelope.
+    if (!r.ok && r.headers?.get('Content-Type')?.split(';')[0].trim().toLowerCase() === 'text/plain') {
+      const message = (await r.text()).trim();
+      if (r.status === 401) window.dispatchEvent(new Event('session-expired'));
+      throw new APIError('request_failed', message.slice(0, 2048) || '请求失败', '');
+    }
     let j: any;
     try {
       j = await r.json();

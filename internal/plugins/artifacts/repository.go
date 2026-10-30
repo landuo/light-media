@@ -90,13 +90,29 @@ func fetchPluginIndex(ctx context.Context, repository, id string, client *http.C
 // author order. An incompatible candidate remains metadata only: it cannot
 // grant installation authority or hide compatible siblings in the same source.
 func DiscoverRepository(ctx context.Context, repository, platform string, validate func(plugins.Manifest, string) error, client *http.Client, roots ...string) ([]Discovery, error) {
+	return discoverRepository(ctx, repository, platform, validate, client, nil, roots...)
+}
+
+// DiscoverRepositoryWithSourcePackages keeps native index preference and every
+// validation boundary of DiscoverRepository. Only a validated GitHub root whose
+// native index returned 404 may use the trusted host's source-package loader.
+// This is an in-process cache integration point, never a plugin-supplied RPC,
+// URL resolver, or alternate artifact acquisition path.
+func DiscoverRepositoryWithSourcePackages(ctx context.Context, repository, platform string, validate func(plugins.Manifest, string) error, client *http.Client, sourcePackages func(context.Context, string, *http.Client) ([]Discovery, error), roots ...string) ([]Discovery, error) {
+	return discoverRepository(ctx, repository, platform, validate, client, sourcePackages, roots...)
+}
+
+func discoverRepository(ctx context.Context, repository, platform string, validate func(plugins.Manifest, string) error, client *http.Client, sourcePackages func(context.Context, string, *http.Client) ([]Discovery, error), roots ...string) ([]Discovery, error) {
 	if validate == nil || (platform != "" && !platformPattern.MatchString(platform)) {
 		return nil, errors.New("valid platform and trusted host validator required")
 	}
 	body, err := fetchIndexBody(ctx, repository, client, roots)
 	if err != nil {
 		var status *downloadStatusError
-		if _, github := githubRepositoryBase(repository); github && errors.As(err, &status) && status.Code == http.StatusNotFound {
+		if _, github := githubSourceRepositoryFile(repository, "package.json"); github && errors.As(err, &status) && status.Code == http.StatusNotFound {
+			if sourcePackages != nil {
+				return sourcePackages(ctx, repository, client)
+			}
 			return discoverGitHubPythonMetadata(ctx, repository, client)
 		}
 		return nil, err

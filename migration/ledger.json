@@ -15,8 +15,8 @@
     "remote": "https://github.com/landuo/light-media.git",
     "branch": "plugins-refactor",
     "baseline_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-    "revision": "57037d045d2a507c3e70fc99cf470d4a96204add",
-    "remote_revision": "57037d045d2a507c3e70fc99cf470d4a96204add",
+    "revision": "985d957c3889dcbacffc271abe02cad8b827f6af",
+    "remote_revision": "985d957c3889dcbacffc271abe02cad8b827f6af",
     "delivery_mode": "remote",
     "delivery_reason": "Per accepted functional slice commit, push and readback; no merge or deployment.",
     "metadata_paths": [
@@ -30,9 +30,10 @@
       "migration/delivery/system-config-e9ebb8b4-paths.json",
       "migration/delivery/existing-sources-294e52dd-paths.json",
       "migration/delivery/mirror-response-ad0a1d3d-paths.json",
-      "migration/delivery/folder-failure-57037d04-paths.json"
+      "migration/delivery/folder-failure-57037d04-paths.json",
+      "migration/delivery/reset-name-985d957c-paths.json"
     ],
-    "revision_note": "Latest completed remote readback57037d04. Current accepted22path reset change is byte-bound; its futurecommit/readback not preclaimed."
+    "revision_note": "Latest actualremote plugins-refactor985d957c/main97476582 read back before new finite marketcommit. Current accepted candidate111/d011 and safe summaries are staged separately; otherworktrees notdelivered."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -2507,7 +2508,8 @@
         "49",
         "50",
         "17.folder_failure",
-        "16.failure_name"
+        "16.failure_name",
+        "09.market_pipeline"
       ],
       "feature_link_reason": "existing precise feature source_paths reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3365,7 +3367,8 @@
         "S10",
         "S10.manager_queries",
         "17.folder_failure",
-        "16.failure_name"
+        "16.failure_name",
+        "09.market_pipeline"
       ],
       "feature_link_reason": "existing precise feature source_paths reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4268,7 +4271,8 @@
         "19",
         "20",
         "21",
-        "11.mirror_response"
+        "11.mirror_response",
+        "09.market_pipeline"
       ],
       "feature_link_reason": "helper directly supports named SDK/platform chain",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -7405,7 +7409,8 @@
       "feature_ids": [
         "09",
         "43",
-        "S11"
+        "S11",
+        "09.market_pipeline"
       ],
       "feature_link_reason": "ordinary utility dependency; native Go implementation allowed, no same-name RPC obligation",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -17224,6 +17229,18 @@
       "feature_ids": [
         "16.failure_name"
       ]
+    },
+    {
+      "id": "scope.09.market_pipeline",
+      "source_location": "plugin /all and market refresh -> PluginManager/PluginHelper package.v2/base bands -> original dictionary selection/version -> response serialization and native PluginCardListView",
+      "chain": [
+        "Native source settings define ordered repositories; normal product mirror supplies only owned static test payloads.",
+        "Complete fixed-source Manager/helper/cache/router and target Go discovery preserve successful band cache, force failure and ordinary/cold state.",
+        "Raw display-only metadata selected by source rules; strict native executable admission remains separate; source serialization500 is surfaced by actual UI without fabricated success."
+      ],
+      "feature_ids": [
+        "09.market_pipeline"
+      ]
     }
   ],
   "features": [
@@ -18044,7 +18061,9 @@
       "target_paths": [],
       "owner": "coordinator",
       "scenarios": [],
-      "evidence_ids": [],
+      "evidence_ids": [
+        "market-pipeline.current-e2e"
+      ],
       "review": {
         "status": "pending",
         "independent": false
@@ -18053,13 +18072,19 @@
         "frontend:src/views/plugin/PluginCardListView.vue"
       ],
       "work_kind": "confirmed_delta",
-      "work_kind_note": "Actual complete original Manager/Helper/SQLite and published target HTTP expose valid ID+version concatenation collision and package/source precedence difference. Existing implementation retained; minimal selection-chain repair underway, not all marketplace rewrite.",
+      "work_kind_note": "Finite09.market_pipeline now independently verified; preserve parent open for retained2MiB budget/source mismatch and other full-scope branches.",
       "counterexample": {
         "source_contract_sha256": "ad5b9b1138d0389c42749425f8939e81575acb3fecad33d093368ec98787882c",
         "source_result_sha256": "a2961f0efb537a39c0c4d33509584b95c2de27f7233138ce118cb09ca37bd260",
         "target_result_sha256": "419a801c2eb8144797ea771e4b8e9d8bff8e16d2ec0dbe5b4c775192b85310f4",
         "storage": "New independent private audit; raw counterproof not claimed published here."
-      }
+      },
+      "remaining_boundaries": [
+        "Finite cache/selection/display pipeline, not all08/09/10/12/20. Legal metadata bodies over2MiB still differ and keep parent09 open; no user approval inferred.",
+        "Official MoviePilot auth/full daemon startup not exercised; complete source components/ASGI with declared boundary fixtures. Go server/SDK/native browser are real.",
+        "Existing safety limits/executable validation/credentials/path guards unchanged. Python is source-test-only, never product runtime.",
+        "Old denied TLS/CA/CONNECT/inode/permission materials remain excluded; no raw preview account/runtime/DB/screenshots in Git."
+      ]
     },
     {
       "id": "10",
@@ -22302,6 +22327,222 @@
           ]
         }
       }
+    },
+    {
+      "id": "09.market_pipeline",
+      "parent_feature": "09",
+      "description": "Complete finite market package cache, source candidate selection and raw display/error pipeline, preserving strict native acquisition",
+      "status": "verified",
+      "owner": "coordinator",
+      "source_paths": [
+        "app/api/endpoints/plugin.py",
+        "app/core/plugin.py",
+        "app/helper/plugin.py",
+        "app/utils/string.py"
+      ],
+      "external_source_paths": [
+        "frontend:src/views/plugin/PluginCardListView.vue"
+      ],
+      "entrypoint_ids": [
+        "scope.09.market_pipeline"
+      ],
+      "dependencies": [
+        "06"
+      ],
+      "target_paths": [
+        "internal/app/http.go",
+        "internal/app/plugin_http.go",
+        "internal/app/plugin_original_history.go",
+        "internal/app/plugin_original_local_repositories.go",
+        "internal/app/plugin_original_market_cache.go",
+        "internal/app/plugin_original_market_cards.go",
+        "internal/app/plugin_original_market_display.go",
+        "internal/app/plugin_original_market_package_cache.go",
+        "internal/app/plugin_original_market_package_cache_test.go",
+        "internal/app/plugin_original_market_parity_test.go",
+        "internal/app/plugin_original_market_query_test.go",
+        "internal/app/plugin_original_market_selection_collision_test.go",
+        "internal/app/plugin_original_market_version.go",
+        "internal/app/plugin_original_market_version_test.go",
+        "internal/app/plugin_original_markets.go",
+        "internal/plugins/artifacts/discover.go",
+        "internal/plugins/artifacts/github_repository.go",
+        "internal/plugins/artifacts/github_source_package_test.go",
+        "internal/plugins/artifacts/python_display.go",
+        "internal/plugins/artifacts/python_display_duplicates_test.go",
+        "internal/plugins/artifacts/python_display_test.go",
+        "internal/plugins/artifacts/python_json.go",
+        "internal/plugins/artifacts/python_metadata.go",
+        "internal/plugins/artifacts/python_pipeline_test.go",
+        "internal/plugins/artifacts/repository.go",
+        "testdata/market-selection-collision/README.md",
+        "testdata/market-selection-collision/browser-cache-three-phases.json",
+        "testdata/market-selection-collision/half-package/cache-edge-inputs.json",
+        "testdata/market-selection-collision/half-package/cache-edge-oracle.json",
+        "testdata/market-selection-collision/half-package/display-wire-oracle.json",
+        "testdata/market-selection-collision/half-package/duplicate-wire-inputs.json",
+        "testdata/market-selection-collision/half-package/duplicate-wire-oracle.json",
+        "testdata/market-selection-collision/half-package/expiry-lru-source.json",
+        "testdata/market-selection-collision/half-package/history-wire-inputs.json",
+        "testdata/market-selection-collision/half-package/mixed-entry-inputs.json",
+        "testdata/market-selection-collision/half-package/number-wire-inputs.json",
+        "testdata/market-selection-collision/half-package/number-wire-oracle.json",
+        "testdata/market-selection-collision/half-package/production_cache_edges.py",
+        "testdata/market-selection-collision/half-package/production_history_wire.py",
+        "testdata/market-selection-collision/half-package/production_surrogate_selector.py",
+        "testdata/market-selection-collision/half-package/production_wire_cold.py",
+        "testdata/market-selection-collision/half-package/source_cache_edges.py",
+        "testdata/market-selection-collision/half-package/source_history_wire.py",
+        "testdata/market-selection-collision/half-package/source_seeded.py",
+        "testdata/market-selection-collision/half-package/source_surrogate_selector.py",
+        "testdata/market-selection-collision/half-package/source_wire_cold.py",
+        "testdata/market-selection-collision/half-package/surrogate-selector-inputs.json",
+        "testdata/market-selection-collision/half-package/surrogate-selector-oracle.json",
+        "testdata/market-selection-collision/independent-wire/duplicate/half-package/mixed-entry-inputs.json",
+        "testdata/market-selection-collision/independent-wire/duplicate/half-package/production_wire_cold.py",
+        "testdata/market-selection-collision/independent-wire/duplicate/half-package/source_wire_cold.py",
+        "testdata/market-selection-collision/independent-wire/duplicate/owned_http_mirror.py",
+        "testdata/market-selection-collision/independent-wire/duplicate/source_bootstrap.py",
+        "testdata/market-selection-collision/independent-wire/duplicate/upstream-inputs.json",
+        "testdata/market-selection-collision/independent-wire/numbers/half-package/mixed-entry-inputs.json",
+        "testdata/market-selection-collision/independent-wire/numbers/half-package/production_wire_cold.py",
+        "testdata/market-selection-collision/independent-wire/numbers/half-package/source_wire_cold.py",
+        "testdata/market-selection-collision/independent-wire/numbers/owned_http_mirror.py",
+        "testdata/market-selection-collision/independent-wire/numbers/source_bootstrap.py",
+        "testdata/market-selection-collision/independent-wire/numbers/upstream-inputs.json",
+        "testdata/market-selection-collision/independent-wire/surrogate/half-package/mixed-entry-inputs.json",
+        "testdata/market-selection-collision/independent-wire/surrogate/half-package/production_wire_cold.py",
+        "testdata/market-selection-collision/independent-wire/surrogate/half-package/source_wire_cold.py",
+        "testdata/market-selection-collision/independent-wire/surrogate/owned_http_mirror.py",
+        "testdata/market-selection-collision/independent-wire/surrogate/source_bootstrap.py",
+        "testdata/market-selection-collision/independent-wire/surrogate/upstream-inputs.json",
+        "testdata/market-selection-collision/owned_http_mirror.py",
+        "testdata/market-selection-collision/production_upstream.py",
+        "testdata/market-selection-collision/source-additional-cases.json",
+        "testdata/market-selection-collision/source-cases.json",
+        "testdata/market-selection-collision/source_bootstrap.py",
+        "testdata/market-selection-collision/source_upstream.py",
+        "testdata/market-selection-collision/upstream-inputs.json",
+        "testdata/market-version-unicode/README.md",
+        "testdata/market-version-unicode/market-inputs.json",
+        "testdata/market-version-unicode/production_market.py",
+        "testdata/market-version-unicode/source-oracle.json",
+        "testdata/market-version-unicode/source_market.py",
+        "testdata/market-version-unicode/source_pure.py",
+        "web/dist/assets/AppModeFooter-Bhyrzjzp.js",
+        "web/dist/assets/DownloaderConfigDialog-Cls0ztm8.js",
+        "web/dist/assets/InterfaceModeMenu-DWBggWJE.js",
+        "web/dist/assets/PluginAppPage-DAG3d2DL.js",
+        "web/dist/assets/PluginApplicationCenter-BNNd5iUT.js",
+        "web/dist/assets/PluginAuthLogin-CkmVuAwx.js",
+        "web/dist/assets/PluginCloneDialog-CWLG2qJB.js",
+        "web/dist/assets/PluginConfigDialog-BVJHkieI.js",
+        "web/dist/assets/PluginCronField-BI6Uvz_J.js",
+        "web/dist/assets/PluginDashboard-JLyZr9Rl.js",
+        "web/dist/assets/PluginDataDialog-DJc58FSa.js",
+        "web/dist/assets/PluginFolderDialog-RExRnbOt.js",
+        "web/dist/assets/PluginLogDialog-DAmIDEFl.js",
+        "web/dist/assets/PluginMarketSettingDialog-flaGspAw.js",
+        "web/dist/assets/PluginQuickAccess-Db3ai8DK.js",
+        "web/dist/assets/PluginSearchDialog-AQDep5rx.js",
+        "web/dist/assets/PluginServices-CWudnOWe.js",
+        "web/dist/assets/PluginVersionHistoryDialog-DIFhBfSi.js",
+        "web/dist/assets/Plugins-BPeCgKo-.js",
+        "web/dist/assets/RecognitionWordsSettings-dfdMqziz.js",
+        "web/dist/assets/ResourceMetadataSettings-B2Rz6LT3.js",
+        "web/dist/assets/RuleManager-D90zLs8C.js",
+        "web/dist/assets/ShortcutMessageDialog-Dkufyd1P.js",
+        "web/dist/assets/ShortcutTools-DxVMsdpB.js",
+        "web/dist/assets/SiteUserDataDialog-Qo9i6FAm.js",
+        "web/dist/assets/index-h2Rqg3w2.js",
+        "web/dist/assets/plugin-clone-Dj_kfQhl.js",
+        "web/dist/assets/plugin-federation-CHnPbrU8.js",
+        "web/dist/index.html",
+        "web/src/api.ts",
+        "web/tests/api-response.test.mjs",
+        "internal/plugins/artifacts/python_display_native_guard_test.go"
+      ],
+      "scenarios": [
+        "Complete ordinary metadata acquisition, package-band success-cache, forced partial failure, original ordinary cached return, expiry/LRU and same-data cold recovery.",
+        "Source package/repository ordering, delimiter-free identity/version collisions, Unicode version comparison, raw display/history values and source500 exact text with ordinary correction.",
+        "Duplicate/case-sensitive dictionary keys, inert display fields versus strict native executable guard; current real worker install/history/cold regression.",
+        "Actual native frontend failure, correction, cached return, cold3/3, Unicode choice and duplicate/case cards on exact d011 server."
+      ],
+      "evidence_ids": [
+        "market-pipeline.current-e2e"
+      ],
+      "review": {
+        "status": "passed",
+        "independent": true,
+        "reviewer": "market_acceptance",
+        "evidence_ids": [
+          "market-pipeline.current-review"
+        ]
+      },
+      "boundaries": [
+        "Finite cache/selection/display pipeline, not all08/09/10/12/20. Legal metadata bodies over2MiB still differ and keep parent09 open; no user approval inferred.",
+        "Official MoviePilot auth/full daemon startup not exercised; complete source components/ASGI with declared boundary fixtures. Go server/SDK/native browser are real.",
+        "Existing safety limits/executable validation/credentials/path guards unchanged. Python is source-test-only, never product runtime.",
+        "Old denied TLS/CA/CONNECT/inode/permission materials remain excluded; no raw preview account/runtime/DB/screenshots in Git."
+      ],
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "Original actual raw package bytes/16 fields/history/errors and independent source observations; exact Unicode scalar classifications and numeric limits.",
+          "evidence_ids": [
+            "market-pipeline.current-e2e"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Separate band success cache with failed force read retaining prior cached band; current source/target ordinary no-network transition and expiry/LRU roots.",
+          "evidence_ids": [
+            "market-pipeline.current-e2e"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Malformed raw serialization status500/plain exact body; cache partial failure, corrected refresh and strict generic native fallback.",
+          "evidence_ids": [
+            "market-pipeline.current-e2e"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "Current15 app race roots/0skip and explicit guard artifact race; version/cache synchronization finite components only, not general throughput equivalence.",
+          "evidence_ids": [
+            "market-pipeline.current-e2e"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Independent current168 recovery warm/cold and actual SIGTERM0/newPID;264 install/history/cold; official same-account preview stop/start.",
+          "evidence_ids": [
+            "market-pipeline.current-e2e"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "Display-only parsing separated from strict native Go indexes/identity; two independent native guard regressions restored; existing15 scope leaf hashes retained with explicit impact bridge.",
+          "evidence_ids": [
+            "market-pipeline.current-e2e"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "No Python execution, no broadened native identifier/download/path contract, finite normal nonforwarding localhost mirror; no trust/auth changes.",
+          "evidence_ids": [
+            "market-pipeline.current-e2e"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Real finite cache TTL/LRU roots, 984comparison vectors/Unicode tables and current test timings; 2MiB limit is disclosed non-equivalence outside finite verified domain.",
+          "evidence_ids": [
+            "market-pipeline.current-e2e"
+          ]
+        }
+      }
     }
   ],
   "decisions": [
@@ -22310,6 +22551,99 @@
       "status": "approved",
       "authorization": "User explicitly excludes AI/workflows, external storage and their dedicated extension points; ordinary events/commands/scheduling remain. Historical official authorization exclusion retained.",
       "description": "Platform scope exclusions; no deletion of source or historical evidence."
+    },
+    {
+      "id": "clone.name_plain_text",
+      "status": "approved",
+      "description": "Go clone names are ordinary text; do not reproduce Python source-rewrite escapes or quote-induced generation/load failures.",
+      "source_evidence": [
+        "app/core/plugin.py clone_plugin source replacement",
+        "audits/platform-existing-reuse-02/clone15-independent/source-oracle-candidate01.json"
+      ],
+      "authorization": {
+        "user_message_utc": "2026-10-30T10:20:25Z",
+        "user_reply": "可以",
+        "preceding_question_utc": "2026-10-30T09:58:46Z",
+        "approved_scope": "分身名称按普通文本保存，不复刻 Python 源码改写对反斜杠/引号的副作用。",
+        "user_message_id": "Sentinel_c8907ed54bdc819180efd0d7ece41391"
+      },
+      "impact": "Literal backslash and quote names round-trip unchanged and may load successfully where source generation failed. The separately approved description decision has its own exact authorization.",
+      "verification": "Actual native cloneHTTP/cold round-trip plus UI/independent gate; pending current integration, not completion."
+    },
+    {
+      "id": "clone.description_plain_text",
+      "status": "approved",
+      "description": "Whether editable clone description also remains ordinary text instead of Python re.sub/source-literal effects.",
+      "source_evidence": [
+        "frontend PluginCloneDialog.vue114-120, PluginCard.vue390-404",
+        "app/core/plugin.py2085-2091",
+        "audits/platform-existing-reuse-02/clone15-independent TextDescTab"
+      ],
+      "impact": "Literal backslash+t is converted into a tab by source; Go retains the literal text. Other quote/escape strings may fail original generation/load.",
+      "authorization": {
+        "user_message_utc": "2026-10-30T10:59:04Z",
+        "user_message_id": "Sentinel_426b5ccc2a988191bb8c117f21731522",
+        "user_reply": "按普通文本",
+        "preceding_question_utc": "2026-10-30T10:32:34Z",
+        "preceding_question_id": "Sentinel_3a7ab82157ec8191abaf8244982621b5",
+        "preceding_question": "分身的“描述”输入框也发现同样的转义问题：原版会改写特殊字符，甚至导致加载失败。描述是否也和你刚批准的名称一样，按普通文本保存？其他验收继续，不受影响。",
+        "approved_scope": "分身可编辑描述与名称同样按普通文本保存；不扩展到其他字段或HTTP错误合同。"
+      },
+      "verification": "Independent source-difference evidence retained; current integration and official UI still pending, not completion."
+    },
+    {
+      "id": "market.serialization_error_envelope",
+      "status": "not_approved_align_source",
+      "description": "Retain HTTP500 for unserializable raw source metadata while using the Go application standard JSON error envelope instead of FastAPI plain Internal Server Error.",
+      "source_evidence": [
+        "audits/recovery-market-acceptance/combined-contract-review.json",
+        "internal/app/plugin_original_market_display.go",
+        "web/src/api.ts107-121"
+      ],
+      "impact": "Rejected JSON-envelope candidate replaced by exact source HTTP500 text/plain Internal Server Error; frontend now accepts non2xx text while JSON behavior remains. Earlier mismatch retained.",
+      "authorization": {
+        "user_message_utc": "2026-10-30T10:59:27Z",
+        "user_message_id": "Sentinel_400f89908c24819183b04953918d00f3",
+        "user_reply": "与原版保持一致的行为即可",
+        "scope": "Use source actual behavior for other unapproved differences; name and description ordinary-text exceptions remain. No approval for Go market500 JSON."
+      },
+      "resolution": "Source-aligned current d011 verified by independent actual HTTP, error-body equality and official native UI. No JSON-adaptation approval claimed.",
+      "verification_evidence_ids": [
+        "market-pipeline.current-e2e",
+        "market-pipeline.current-review"
+      ]
+    },
+    {
+      "id": "faithfulness.current_rule_20261030",
+      "status": "approved",
+      "description": "其他未批准的非安全行为以原版实际行为为准，名称和描述普通文本为明确特例；必要安全guard/隔离撤销不得为了对齐而削弱，差异逐条准确记录，不拿已有Go实现视为批准。",
+      "authorization": {
+        "user_message_utc": "2026-10-30T10:59:27Z",
+        "user_message_id": "Sentinel_400f89908c24819183b04953918d00f3",
+        "user_reply": "与原版保持一致的行为即可",
+        "assistant_ack_utc": "2026-10-30T10:59:32Z"
+      }
+    },
+    {
+      "id": "host.runtime_security_boundaries",
+      "status": "preserved_pending_independent_verification",
+      "description": "Consolidated source→target runtime/security boundaries; no blanket adaptation authorization. Nonsecurity differences align source, mandatory guards and capability revocation remain.",
+      "document": "migration/runtime-safety-boundaries.md",
+      "user_evidence": [
+        {
+          "message_id": "Sentinel_08ce7e2f43048191b8f265afe662e0d9",
+          "utc": "2026-10-25T14:39:40Z",
+          "text": "不需要考虑用户和权限，这个系统仅单用户使用",
+          "verified": "Direct read_messages this recovery"
+        },
+        {
+          "message_id": "Sentinel_b5a6087277508191a8f7ba54e94238c4",
+          "utc": "2026-10-25T15:30:14Z",
+          "summary": "只迁移插件模块及必需前后端；固定源；Go/Linux/local/single-user；排除workflow/AI，复用现有宿主。",
+          "verified": "Direct full message read this recovery, not memory alone"
+        }
+      ],
+      "remaining": "Complete relevant slices only after exact current independent/backend/browser/recovery gates; safe bounded deviations explicitly recorded, not claimed source-equivalent."
     }
   ],
   "evidence": [
@@ -33165,6 +33499,339 @@
       "id": "reset-name.current-review",
       "kind": "review",
       "reviewer": "manager_queries_independent_review_20261030"
+    },
+    {
+      "id": "market-pipeline.current-e2e",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "09.market_pipeline"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant cloud Linux Go1.26; fixed original complete normally imported Manager/helper/router/cache/ASGI with declared source boundary fixtures, normal owned HTTP mirror only. Exact Go d011 normal authenticated server/SDK/native official preview; no full source auth daemon claim.",
+        "target_files": {
+          "internal/app/http.go": "5775fe63a244740d2bfd9a79113159e718ccefc9421ace517e92555c08c4f566",
+          "internal/app/plugin_http.go": "c524491160b66c42762b01a5fb44e43b6b201e73641ac1ba951f55e2e60da974",
+          "internal/app/plugin_original_history.go": "d178fc835e14dda8108ebc4cce4308eb543d573722b28f3d4546caf50aec9c11",
+          "internal/app/plugin_original_local_repositories.go": "465ab7f58fe46a1a1c10e2bf3436f616e753a4deb5e31e08434b73c327f5cb85",
+          "internal/app/plugin_original_market_cache.go": "590b12e89b0af1d6960e92d81b807c6ac6153eb8d0e5a7e3b4be2f0908874a91",
+          "internal/app/plugin_original_market_cards.go": "4b9c500f47a49a9d92d62d13a4f459a012c65f97a0ce5d3ac7763834d63c038c",
+          "internal/app/plugin_original_market_display.go": "40bddea4eff9765f1fc50a88258c8a612df5358bd82eee291a83d6c5998d122f",
+          "internal/app/plugin_original_market_package_cache.go": "a92d3ee60a24685c19c31e19e20ad0577db9114244c1ed0655f96980fe8abaa0",
+          "internal/app/plugin_original_market_package_cache_test.go": "54169c8a7a076198e9eddd83d843ee2b723d8ed599cdab6b5cd5bbe070169d5b",
+          "internal/app/plugin_original_market_parity_test.go": "3fcb03d6404793cca5d3f0533d4a489c6a273623985a6c0b9df09eacd033f37b",
+          "internal/app/plugin_original_market_query_test.go": "fdaeba65da2279331f992d420c04679adc25e068e6020998fa7ba88f21ace5ca",
+          "internal/app/plugin_original_market_selection_collision_test.go": "1bf6237cf42cbbf33462f0749e1864037b38a687eca6a69b93dbffc4274ea6a2",
+          "internal/app/plugin_original_market_version.go": "8fecf000d043a29ecf41bdc9dc07abb374014af18478cb90d2c7c03fde2dceb5",
+          "internal/app/plugin_original_market_version_test.go": "b90ac942c6396bdaedf739342bf5ca46e68a84da06d24d084e8634bab98737f6",
+          "internal/app/plugin_original_markets.go": "098c28fff390d0dcf6e8c9d18dab922909c63ae24bb92487b43394d2c4b1b9d4",
+          "internal/plugins/artifacts/discover.go": "340b8a360483b75ac5f6fb03b312d20b733575b8aa38bf8ae2a5ed5f3f01c395",
+          "internal/plugins/artifacts/github_repository.go": "f562ff2544b60bd9cde4d5305ce4613b53037d7e749604636a065fc188fbedd7",
+          "internal/plugins/artifacts/github_source_package_test.go": "6e630a3c36cef338ad3cca0d17f5e6b2938d413279cae0a57cb4f07ee358d0a5",
+          "internal/plugins/artifacts/python_display.go": "9b7269de759f90524f5e454fd7d9f85a10ea705a88ec9a38c088ac6d8057687d",
+          "internal/plugins/artifacts/python_display_duplicates_test.go": "a22601f1252e89ce6711fbf3dadeaf38111894d2cc242a9ce3becae7bf0247a3",
+          "internal/plugins/artifacts/python_display_test.go": "ccfba3a636e60d9153119bfa5ca01caee599097d36dcb055ee4c1f2440e01095",
+          "internal/plugins/artifacts/python_json.go": "8aa8b8dea3ecb30110897ff1d605fc51ca3cf48468f6600c7a1ea48bca4758d6",
+          "internal/plugins/artifacts/python_metadata.go": "957c3079a20b5de3479f7e153b3a654c3098a88c17d03ad9cc663010754689c0",
+          "internal/plugins/artifacts/python_pipeline_test.go": "42feaf01db51e74422c6fe0723063cd79da84055d2e162a4a580948b7c3d7188",
+          "internal/plugins/artifacts/repository.go": "1ff605d683871fa9b3e0462485aab3ca2e99d9595113b7c86b4417c2058aa0f8",
+          "testdata/market-selection-collision/README.md": "7dcf318815256b9f8dd96235f5862a77d8aa9f8753d3398b8697e092a2bd2132",
+          "testdata/market-selection-collision/browser-cache-three-phases.json": "a4be425c2551ebfc1b05903f575bd762c2c48862a0a2fa761ffa5501194d369a",
+          "testdata/market-selection-collision/half-package/cache-edge-inputs.json": "e6afb67f96a739d0495370b61542333661df233b09314a5e0f07d8ec364d5b47",
+          "testdata/market-selection-collision/half-package/cache-edge-oracle.json": "d114757b8bf39c8bb5efb40081de9a99ef6477cdccdddc995b2ee268015975c2",
+          "testdata/market-selection-collision/half-package/display-wire-oracle.json": "51518a9cf81cff2b410d0c76e1a1ca6681a355aae881e79983cc57f7983ddc03",
+          "testdata/market-selection-collision/half-package/duplicate-wire-inputs.json": "57be1d607d2c797d4eeaf221031144f22fee024308e3e9eac003de03cd5a0cc8",
+          "testdata/market-selection-collision/half-package/duplicate-wire-oracle.json": "ab38e1fcb5b43625c93af3fe0355c3f28de735099d7a0bcee16d686b2740ede2",
+          "testdata/market-selection-collision/half-package/expiry-lru-source.json": "f9c6cfc923a137e09a8cef9f09ba8e2687b4755e4baa066e6f9b688ee446c27d",
+          "testdata/market-selection-collision/half-package/history-wire-inputs.json": "be8df7bc56098fc6c7290d9808056ca4a635ebb25d630c819b6855ff3f258947",
+          "testdata/market-selection-collision/half-package/mixed-entry-inputs.json": "a6c9292c78bef735d16fceb05541262afcfda734607fa02e099bed22a6a03749",
+          "testdata/market-selection-collision/half-package/number-wire-inputs.json": "0860d90cd69dd8154e2d4c87a6edc4a9a34651b33fce5b3f0ea3ab3752ef7b04",
+          "testdata/market-selection-collision/half-package/number-wire-oracle.json": "662642092ce46ab0ffa82145a88c2911ed6b5928159303bbcebccd3d3761e1dc",
+          "testdata/market-selection-collision/half-package/production_cache_edges.py": "dc45c7b3984677c2ca26c67461eb5a46871dc4112fc4d26e414915d6036b9ef3",
+          "testdata/market-selection-collision/half-package/production_history_wire.py": "c40f721abae674b558e7080dc5485260a08463684b7941d3f14142e3694e5c84",
+          "testdata/market-selection-collision/half-package/production_surrogate_selector.py": "177a6dc0454f0c560bf4dadf09c929dfb68587ef5ae718c23ad11264c33555f7",
+          "testdata/market-selection-collision/half-package/production_wire_cold.py": "4a56e1ab48b0838fc1d8ed5e69bd94a14b2f9368058fc9f5c1a76e4ac41ab333",
+          "testdata/market-selection-collision/half-package/source_cache_edges.py": "7e4c80ea965b08fe82fae12d02a423406b2580b57c754c3380412b66a52d70f9",
+          "testdata/market-selection-collision/half-package/source_history_wire.py": "6fbd1e31600a42519ee6dfb2cbf4ad0ee05009f03077930e10c794178564e6a2",
+          "testdata/market-selection-collision/half-package/source_seeded.py": "bf2e028f44b4997bcfa7ba9c15e24191c955e63223d281f06dc8b6a560e1a4d5",
+          "testdata/market-selection-collision/half-package/source_surrogate_selector.py": "73449feab206f60e663ef94b8a5767592d80b9a9d7a0739297f96777badb461b",
+          "testdata/market-selection-collision/half-package/source_wire_cold.py": "3fbff3d5a4595e46597683fa2e97435176ad037a17d691a4c35119345e47b599",
+          "testdata/market-selection-collision/half-package/surrogate-selector-inputs.json": "e148ba8e61213bd94f1cdd21c0a881504316047fd40599b7915eb20aafc74b0f",
+          "testdata/market-selection-collision/half-package/surrogate-selector-oracle.json": "2579773b416a4dbe8172941b25f5de5d31f45e079ce94eb26415f5d9b79f303b",
+          "testdata/market-selection-collision/independent-wire/duplicate/half-package/mixed-entry-inputs.json": "57be1d607d2c797d4eeaf221031144f22fee024308e3e9eac003de03cd5a0cc8",
+          "testdata/market-selection-collision/independent-wire/duplicate/half-package/production_wire_cold.py": "441fb7ef636a74af0eaa91d65c9c194787d93c41d04be668fbae75f30e16ca90",
+          "testdata/market-selection-collision/independent-wire/duplicate/half-package/source_wire_cold.py": "23c6fca178c5dd1656897a1591e1bc178e8a11aa0d3f3eb74d0c8f21db0c49d1",
+          "testdata/market-selection-collision/independent-wire/duplicate/owned_http_mirror.py": "0bae3287997f7c95a998998c9eab52480da0d9aa490349270af43e20d5d9b87b",
+          "testdata/market-selection-collision/independent-wire/duplicate/source_bootstrap.py": "3e909a58a784e50838b1082d94b9a430716fc638ec30558a31a834d9eefdf4b0",
+          "testdata/market-selection-collision/independent-wire/duplicate/upstream-inputs.json": "e61c7316d947e1726f55d32c03f40f8fee645806926aac39292530525e02acaa",
+          "testdata/market-selection-collision/independent-wire/numbers/half-package/mixed-entry-inputs.json": "0860d90cd69dd8154e2d4c87a6edc4a9a34651b33fce5b3f0ea3ab3752ef7b04",
+          "testdata/market-selection-collision/independent-wire/numbers/half-package/production_wire_cold.py": "da87714dff1e3b526965e11e8c7885789f6daa3c83e167816b6f3a7713be6dcc",
+          "testdata/market-selection-collision/independent-wire/numbers/half-package/source_wire_cold.py": "23c6fca178c5dd1656897a1591e1bc178e8a11aa0d3f3eb74d0c8f21db0c49d1",
+          "testdata/market-selection-collision/independent-wire/numbers/owned_http_mirror.py": "0bae3287997f7c95a998998c9eab52480da0d9aa490349270af43e20d5d9b87b",
+          "testdata/market-selection-collision/independent-wire/numbers/source_bootstrap.py": "3e909a58a784e50838b1082d94b9a430716fc638ec30558a31a834d9eefdf4b0",
+          "testdata/market-selection-collision/independent-wire/numbers/upstream-inputs.json": "e61c7316d947e1726f55d32c03f40f8fee645806926aac39292530525e02acaa",
+          "testdata/market-selection-collision/independent-wire/surrogate/half-package/mixed-entry-inputs.json": "a8bc1ddea27515f371c50df0e9eb672a9a076be9421105ae8014a68e7c6f2c24",
+          "testdata/market-selection-collision/independent-wire/surrogate/half-package/production_wire_cold.py": "441fb7ef636a74af0eaa91d65c9c194787d93c41d04be668fbae75f30e16ca90",
+          "testdata/market-selection-collision/independent-wire/surrogate/half-package/source_wire_cold.py": "23c6fca178c5dd1656897a1591e1bc178e8a11aa0d3f3eb74d0c8f21db0c49d1",
+          "testdata/market-selection-collision/independent-wire/surrogate/owned_http_mirror.py": "0bae3287997f7c95a998998c9eab52480da0d9aa490349270af43e20d5d9b87b",
+          "testdata/market-selection-collision/independent-wire/surrogate/source_bootstrap.py": "3e909a58a784e50838b1082d94b9a430716fc638ec30558a31a834d9eefdf4b0",
+          "testdata/market-selection-collision/independent-wire/surrogate/upstream-inputs.json": "e61c7316d947e1726f55d32c03f40f8fee645806926aac39292530525e02acaa",
+          "testdata/market-selection-collision/owned_http_mirror.py": "0bae3287997f7c95a998998c9eab52480da0d9aa490349270af43e20d5d9b87b",
+          "testdata/market-selection-collision/production_upstream.py": "4e8b7772150de332cc8eb23c72647ebb2a7e9e25dc155ddb0158098053d887c3",
+          "testdata/market-selection-collision/source-additional-cases.json": "acb474bee9249f72580ab3263e2c84d6bef2a664c86243fd98d0f44ce26cb45a",
+          "testdata/market-selection-collision/source-cases.json": "3c223e6caa2b60a5c5501454b03d7911750a798756bd153760911e564f778d1e",
+          "testdata/market-selection-collision/source_bootstrap.py": "3e909a58a784e50838b1082d94b9a430716fc638ec30558a31a834d9eefdf4b0",
+          "testdata/market-selection-collision/source_upstream.py": "0cda947bfe2516f88310c078a66c57ecffc410b511ded70ab2b8493be75dd60a",
+          "testdata/market-selection-collision/upstream-inputs.json": "e61c7316d947e1726f55d32c03f40f8fee645806926aac39292530525e02acaa",
+          "testdata/market-version-unicode/README.md": "6941327e1bdf580956c9e22d8379f2d3267fc46bd1b6ef8078ca8946d6e0facb",
+          "testdata/market-version-unicode/market-inputs.json": "a9f0e46d040224bacea6d06fa4a347d2a9a1ae1f82b1d3843c2f437643bb21bd",
+          "testdata/market-version-unicode/production_market.py": "9fa12458675e8c305f217eba6a41236885d1e3e7fbb14a54e63b9283753a9eb7",
+          "testdata/market-version-unicode/source-oracle.json": "685e3af60d218dff1217d73dfa0fb4466cf67f655d409a95897cebcb5f7f593c",
+          "testdata/market-version-unicode/source_market.py": "cee3f6bdb5e6db3cef7f6a5d1b67f8e3539c3c75cc86f0d7c25db9b76f38a2aa",
+          "testdata/market-version-unicode/source_pure.py": "58a54980f21da57cd8fedc156553947460c18906dbccf4c840f121843ecd3a8f",
+          "web/dist/assets/AppModeFooter-Bhyrzjzp.js": "84d0b8ec4389b90c8a1df8a55669fb3d9468913dbfc2c150656482b479e68706",
+          "web/dist/assets/DownloaderConfigDialog-Cls0ztm8.js": "ce1ac61bfaa2684004d71f5cf48c37dd95adf156f9d7e3ffd1ffdc6ea593a17d",
+          "web/dist/assets/InterfaceModeMenu-DWBggWJE.js": "f018440509e4401dfef77f2e33471733ba55cfab8c78ce049a5c989fad0e4927",
+          "web/dist/assets/PluginAppPage-DAG3d2DL.js": "384dcb683b51ac71bec428583bd4d29c970ad939a5f678ee276f8cae3b5fe6fc",
+          "web/dist/assets/PluginApplicationCenter-BNNd5iUT.js": "0174f599d9bdfb8c2834cacba8231fdbb632af14007b0437cf8ea1932999c2ff",
+          "web/dist/assets/PluginAuthLogin-CkmVuAwx.js": "efff4c3f8765608f7340d19740c18777b8944ba872070a39cedf3932cf005395",
+          "web/dist/assets/PluginCloneDialog-CWLG2qJB.js": "7f5ebb41cba0c4df3f107bc44cb6b2390666160e078d83dcade4e6f6a5809b2f",
+          "web/dist/assets/PluginConfigDialog-BVJHkieI.js": "75d69d19ec3f8394c67acbc448088990a1c2b20f0fab4aee2c0bfae68ebff586",
+          "web/dist/assets/PluginCronField-BI6Uvz_J.js": "cfa56269f311a1000c5ea6617fb9ca1a1d5130e1e4ad63d31f148dbf5e41f8c6",
+          "web/dist/assets/PluginDashboard-JLyZr9Rl.js": "55574a7a568a7df3296ee557ca3d6b00c0e2f68ecf0e7f9d30fabb076915b0dc",
+          "web/dist/assets/PluginDataDialog-DJc58FSa.js": "52b9361604303de7ac924299bbf6eec3e3ce5e14a2772e897f2caad101b7d992",
+          "web/dist/assets/PluginFolderDialog-RExRnbOt.js": "4ba84607285213a7c807a4d11fc7d07ff0db86558561ddb4fc4203c43460ed46",
+          "web/dist/assets/PluginLogDialog-DAmIDEFl.js": "60de8e3b54bd9938cbedc18869e42a16e2766f1bce2f00ece2daa69550f4fc3c",
+          "web/dist/assets/PluginMarketSettingDialog-flaGspAw.js": "222997a6ed782b04e06c561bf5cd7d94635270466ecd12879afd723d1372b39d",
+          "web/dist/assets/PluginQuickAccess-Db3ai8DK.js": "89423d00fabe2366f8750009dd38d3f30b87ca7ebd0579575bd1bf243a21771d",
+          "web/dist/assets/PluginSearchDialog-AQDep5rx.js": "eb3d7a4f51ad3593fd86f89cd33385cfa3d12dae450762c78bad9abb89c50f8b",
+          "web/dist/assets/PluginServices-CWudnOWe.js": "f20e33dc64f09bef4fecfba3e46f9e7c8eecfdf0b0fc05709bfdc4d43dc5591a",
+          "web/dist/assets/PluginVersionHistoryDialog-DIFhBfSi.js": "bad6163435f0ae03e79ab1592fe60f1f33d468e90cd14f848a1b21cc63f4599d",
+          "web/dist/assets/Plugins-BPeCgKo-.js": "5983b56a8c2538c441189153b4a9e99dc9c6749dd3c55a0a4fbf7798f952c280",
+          "web/dist/assets/RecognitionWordsSettings-dfdMqziz.js": "f04a2126d74fbadb703a6c13f1807555a976bc8680ba3c21551f63f55ad472fe",
+          "web/dist/assets/ResourceMetadataSettings-B2Rz6LT3.js": "1070d0bac4d461d0a07b24a267c91bad63a8c6c5ee6a7c530c8392eb8aeaa16e",
+          "web/dist/assets/RuleManager-D90zLs8C.js": "008f9abff26e0be5c6c69a043989dfd1a6b9ba9c82d0505d470f06aab5ce11f0",
+          "web/dist/assets/ShortcutMessageDialog-Dkufyd1P.js": "3a3d2b87f3a0638bdcfa963ee3aaaff85f68b3af9d8e20f338af4e97e3d09189",
+          "web/dist/assets/ShortcutTools-DxVMsdpB.js": "8d5da8a8641ce1d32b58cf4a8f7dd10c54d267ce0660f8d2d2c490e3ded0b76e",
+          "web/dist/assets/SiteUserDataDialog-Qo9i6FAm.js": "513fd675982c263dd9336ec91e4e2b83700b5ce230b6c317f7cca4724f17c7f0",
+          "web/dist/assets/index-h2Rqg3w2.js": "6fe31a4107f1c74f0f93ab3b01ff87e0db4bbb2b2e62872e8d749cb4271c899f",
+          "web/dist/assets/plugin-clone-Dj_kfQhl.js": "e103b780c376b9ac1ce93d9d34bae58a48fda6f0f98ccc897626426f0f925223",
+          "web/dist/assets/plugin-federation-CHnPbrU8.js": "75b2ad64cde673a76e01420babe0074a4b83683eda3c173b49280e0bc381c537",
+          "web/dist/index.html": "b943a932275eb45d3e38a71fe1ed741b8ae563c93d7fcd0a959f6a13fe0c223e",
+          "web/src/api.ts": "7b8fe05fcc7fe5c9cd03ac3af21b7d2edd17c346e2411d5ca3be3ccdf3774d0f",
+          "web/tests/api-response.test.mjs": "8e632a8959e9458bda3ea1759f1aa453bf3fe6fd36488361246fae8b162e494c",
+          "internal/plugins/artifacts/python_display_native_guard_test.go": "f4ea456ca8a83d0e79a95794c27c025df01545db94415b63eef4b4a39f08fd0c"
+        },
+        "fixture_files": {
+          "evidence/market-pipeline/browser-review.json": "943b3f07168e7f8420d89954124c8f0f4216a48a72e62372bd2dd017972b2661",
+          "evidence/market-pipeline/browser-summary.json": "2117d14a868e5575d87acc53179af44b1148dc998fe59ab85f4b6e59386449c6",
+          "evidence/market-pipeline/candidate.json": "7b0d88d64ae4fde979bb9ff7a37403e4ae0674e5e39790daeb813bef93960e17",
+          "evidence/market-pipeline/coordinator-regression.json": "643acfc8bc9187dbf90c5cbcfa509911e9f0e3526a1a5cdd260efec4bdb16d61",
+          "evidence/market-pipeline/frontend-result.json": "f7ca261142a53d24b3db8ecbd19b6dd0fe601be15fd2972c9f8a4ae1042d5d40",
+          "evidence/market-pipeline/frontend-review.json": "19a2f751401185eb90b53f98f318e1d332ad72d74e6ff29448f91d8b479e1567",
+          "evidence/market-pipeline/independent-review.json": "76c1e15f5a3b1e92eee5bcce3a1fa1412427da36a2fdb15ffcdcd707910d5b0e",
+          "evidence/market-pipeline/shared-impact.json": "5bb54c42e0b1efb779d9c330c43c092095f31b62a8324432024eebb7f49ccaa0"
+        }
+      },
+      "artifacts": {
+        "evidence/market-pipeline/browser-review.json": "943b3f07168e7f8420d89954124c8f0f4216a48a72e62372bd2dd017972b2661",
+        "evidence/market-pipeline/browser-summary.json": "2117d14a868e5575d87acc53179af44b1148dc998fe59ab85f4b6e59386449c6",
+        "evidence/market-pipeline/candidate.json": "7b0d88d64ae4fde979bb9ff7a37403e4ae0674e5e39790daeb813bef93960e17",
+        "evidence/market-pipeline/coordinator-regression.json": "643acfc8bc9187dbf90c5cbcfa509911e9f0e3526a1a5cdd260efec4bdb16d61",
+        "evidence/market-pipeline/frontend-result.json": "f7ca261142a53d24b3db8ecbd19b6dd0fe601be15fd2972c9f8a4ae1042d5d40",
+        "evidence/market-pipeline/frontend-review.json": "19a2f751401185eb90b53f98f318e1d332ad72d74e6ff29448f91d8b479e1567",
+        "evidence/market-pipeline/independent-review.json": "76c1e15f5a3b1e92eee5bcce3a1fa1412427da36a2fdb15ffcdcd707910d5b0e",
+        "evidence/market-pipeline/shared-impact.json": "5bb54c42e0b1efb779d9c330c43c092095f31b62a8324432024eebb7f49ccaa0"
+      },
+      "commands": [
+        "Coordinator current9 suites264observations and4943closure0drift; current native guard artifactrace after preserved initial nil-validator harness failure.",
+        "Independent current184observations (172finite matches,10official auth exclusions,2budget deviations not counted as finite pass),168recovery,2nativeguard,60published relative-HERE driver observations;4959closure0drift and exactbinary rebuild.",
+        "Existing app15race roots/0skip/freshsource400,984version vectors and artifact components explicitly byte-bound/reused; not all historical tests rerun.",
+        "Current frontend565tests0skip, typecheck/build; 12recorded official UI steps include two preserved harness/locator failures and successful corrected readbacks."
+      ],
+      "inputs": [
+        "111 individually whitelisted candidate paths; fixed source8a83 and frontend2829; actual normal mirror source-v3 and new independent source inputs.",
+        "No runtime/account/config/credential/DB,binary,screenshot,old refused materials in this Git evidence set. Full private raw receipts remain hash-linked."
+      ],
+      "observations": [
+        "Complete ordinary metadata acquisition, package-band success-cache, forced partial failure, original ordinary cached return, expiry/LRU and same-data cold recovery.",
+        "Source package/repository ordering, delimiter-free identity/version collisions, Unicode version comparison, raw display/history values and source500 exact text with ordinary correction.",
+        "Duplicate/case-sensitive dictionary keys, inert display fields versus strict native executable guard; current real worker install/history/cold regression.",
+        "Actual native frontend failure, correction, cached return, cold3/3, Unicode choice and duplicate/case cards on exact d011 server.",
+        "Finite cache/selection/display pipeline, not all08/09/10/12/20. Legal metadata bodies over2MiB still differ and keep parent09 open; no user approval inferred.",
+        "Official MoviePilot auth/full daemon startup not exercised; complete source components/ASGI with declared boundary fixtures. Go server/SDK/native browser are real.",
+        "Existing safety limits/executable validation/credentials/path guards unchanged. Python is source-test-only, never product runtime.",
+        "Old denied TLS/CA/CONNECT/inode/permission materials remain excluded; no raw preview account/runtime/DB/screenshots in Git.",
+        "Current v3 UI correction included official restart after malformed fixture; no browser-only uninterrupted-recovery claim. Exact168 HTTP and frontendtests independently prove ordinary failure recovery."
+      ]
+    },
+    {
+      "id": "market-pipeline.current-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "09.market_pipeline"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant cloud Linux Go1.26; fixed original complete normally imported Manager/helper/router/cache/ASGI with declared source boundary fixtures, normal owned HTTP mirror only. Exact Go d011 normal authenticated server/SDK/native official preview; no full source auth daemon claim.",
+        "target_files": {
+          "internal/app/http.go": "5775fe63a244740d2bfd9a79113159e718ccefc9421ace517e92555c08c4f566",
+          "internal/app/plugin_http.go": "c524491160b66c42762b01a5fb44e43b6b201e73641ac1ba951f55e2e60da974",
+          "internal/app/plugin_original_history.go": "d178fc835e14dda8108ebc4cce4308eb543d573722b28f3d4546caf50aec9c11",
+          "internal/app/plugin_original_local_repositories.go": "465ab7f58fe46a1a1c10e2bf3436f616e753a4deb5e31e08434b73c327f5cb85",
+          "internal/app/plugin_original_market_cache.go": "590b12e89b0af1d6960e92d81b807c6ac6153eb8d0e5a7e3b4be2f0908874a91",
+          "internal/app/plugin_original_market_cards.go": "4b9c500f47a49a9d92d62d13a4f459a012c65f97a0ce5d3ac7763834d63c038c",
+          "internal/app/plugin_original_market_display.go": "40bddea4eff9765f1fc50a88258c8a612df5358bd82eee291a83d6c5998d122f",
+          "internal/app/plugin_original_market_package_cache.go": "a92d3ee60a24685c19c31e19e20ad0577db9114244c1ed0655f96980fe8abaa0",
+          "internal/app/plugin_original_market_package_cache_test.go": "54169c8a7a076198e9eddd83d843ee2b723d8ed599cdab6b5cd5bbe070169d5b",
+          "internal/app/plugin_original_market_parity_test.go": "3fcb03d6404793cca5d3f0533d4a489c6a273623985a6c0b9df09eacd033f37b",
+          "internal/app/plugin_original_market_query_test.go": "fdaeba65da2279331f992d420c04679adc25e068e6020998fa7ba88f21ace5ca",
+          "internal/app/plugin_original_market_selection_collision_test.go": "1bf6237cf42cbbf33462f0749e1864037b38a687eca6a69b93dbffc4274ea6a2",
+          "internal/app/plugin_original_market_version.go": "8fecf000d043a29ecf41bdc9dc07abb374014af18478cb90d2c7c03fde2dceb5",
+          "internal/app/plugin_original_market_version_test.go": "b90ac942c6396bdaedf739342bf5ca46e68a84da06d24d084e8634bab98737f6",
+          "internal/app/plugin_original_markets.go": "098c28fff390d0dcf6e8c9d18dab922909c63ae24bb92487b43394d2c4b1b9d4",
+          "internal/plugins/artifacts/discover.go": "340b8a360483b75ac5f6fb03b312d20b733575b8aa38bf8ae2a5ed5f3f01c395",
+          "internal/plugins/artifacts/github_repository.go": "f562ff2544b60bd9cde4d5305ce4613b53037d7e749604636a065fc188fbedd7",
+          "internal/plugins/artifacts/github_source_package_test.go": "6e630a3c36cef338ad3cca0d17f5e6b2938d413279cae0a57cb4f07ee358d0a5",
+          "internal/plugins/artifacts/python_display.go": "9b7269de759f90524f5e454fd7d9f85a10ea705a88ec9a38c088ac6d8057687d",
+          "internal/plugins/artifacts/python_display_duplicates_test.go": "a22601f1252e89ce6711fbf3dadeaf38111894d2cc242a9ce3becae7bf0247a3",
+          "internal/plugins/artifacts/python_display_test.go": "ccfba3a636e60d9153119bfa5ca01caee599097d36dcb055ee4c1f2440e01095",
+          "internal/plugins/artifacts/python_json.go": "8aa8b8dea3ecb30110897ff1d605fc51ca3cf48468f6600c7a1ea48bca4758d6",
+          "internal/plugins/artifacts/python_metadata.go": "957c3079a20b5de3479f7e153b3a654c3098a88c17d03ad9cc663010754689c0",
+          "internal/plugins/artifacts/python_pipeline_test.go": "42feaf01db51e74422c6fe0723063cd79da84055d2e162a4a580948b7c3d7188",
+          "internal/plugins/artifacts/repository.go": "1ff605d683871fa9b3e0462485aab3ca2e99d9595113b7c86b4417c2058aa0f8",
+          "testdata/market-selection-collision/README.md": "7dcf318815256b9f8dd96235f5862a77d8aa9f8753d3398b8697e092a2bd2132",
+          "testdata/market-selection-collision/browser-cache-three-phases.json": "a4be425c2551ebfc1b05903f575bd762c2c48862a0a2fa761ffa5501194d369a",
+          "testdata/market-selection-collision/half-package/cache-edge-inputs.json": "e6afb67f96a739d0495370b61542333661df233b09314a5e0f07d8ec364d5b47",
+          "testdata/market-selection-collision/half-package/cache-edge-oracle.json": "d114757b8bf39c8bb5efb40081de9a99ef6477cdccdddc995b2ee268015975c2",
+          "testdata/market-selection-collision/half-package/display-wire-oracle.json": "51518a9cf81cff2b410d0c76e1a1ca6681a355aae881e79983cc57f7983ddc03",
+          "testdata/market-selection-collision/half-package/duplicate-wire-inputs.json": "57be1d607d2c797d4eeaf221031144f22fee024308e3e9eac003de03cd5a0cc8",
+          "testdata/market-selection-collision/half-package/duplicate-wire-oracle.json": "ab38e1fcb5b43625c93af3fe0355c3f28de735099d7a0bcee16d686b2740ede2",
+          "testdata/market-selection-collision/half-package/expiry-lru-source.json": "f9c6cfc923a137e09a8cef9f09ba8e2687b4755e4baa066e6f9b688ee446c27d",
+          "testdata/market-selection-collision/half-package/history-wire-inputs.json": "be8df7bc56098fc6c7290d9808056ca4a635ebb25d630c819b6855ff3f258947",
+          "testdata/market-selection-collision/half-package/mixed-entry-inputs.json": "a6c9292c78bef735d16fceb05541262afcfda734607fa02e099bed22a6a03749",
+          "testdata/market-selection-collision/half-package/number-wire-inputs.json": "0860d90cd69dd8154e2d4c87a6edc4a9a34651b33fce5b3f0ea3ab3752ef7b04",
+          "testdata/market-selection-collision/half-package/number-wire-oracle.json": "662642092ce46ab0ffa82145a88c2911ed6b5928159303bbcebccd3d3761e1dc",
+          "testdata/market-selection-collision/half-package/production_cache_edges.py": "dc45c7b3984677c2ca26c67461eb5a46871dc4112fc4d26e414915d6036b9ef3",
+          "testdata/market-selection-collision/half-package/production_history_wire.py": "c40f721abae674b558e7080dc5485260a08463684b7941d3f14142e3694e5c84",
+          "testdata/market-selection-collision/half-package/production_surrogate_selector.py": "177a6dc0454f0c560bf4dadf09c929dfb68587ef5ae718c23ad11264c33555f7",
+          "testdata/market-selection-collision/half-package/production_wire_cold.py": "4a56e1ab48b0838fc1d8ed5e69bd94a14b2f9368058fc9f5c1a76e4ac41ab333",
+          "testdata/market-selection-collision/half-package/source_cache_edges.py": "7e4c80ea965b08fe82fae12d02a423406b2580b57c754c3380412b66a52d70f9",
+          "testdata/market-selection-collision/half-package/source_history_wire.py": "6fbd1e31600a42519ee6dfb2cbf4ad0ee05009f03077930e10c794178564e6a2",
+          "testdata/market-selection-collision/half-package/source_seeded.py": "bf2e028f44b4997bcfa7ba9c15e24191c955e63223d281f06dc8b6a560e1a4d5",
+          "testdata/market-selection-collision/half-package/source_surrogate_selector.py": "73449feab206f60e663ef94b8a5767592d80b9a9d7a0739297f96777badb461b",
+          "testdata/market-selection-collision/half-package/source_wire_cold.py": "3fbff3d5a4595e46597683fa2e97435176ad037a17d691a4c35119345e47b599",
+          "testdata/market-selection-collision/half-package/surrogate-selector-inputs.json": "e148ba8e61213bd94f1cdd21c0a881504316047fd40599b7915eb20aafc74b0f",
+          "testdata/market-selection-collision/half-package/surrogate-selector-oracle.json": "2579773b416a4dbe8172941b25f5de5d31f45e079ce94eb26415f5d9b79f303b",
+          "testdata/market-selection-collision/independent-wire/duplicate/half-package/mixed-entry-inputs.json": "57be1d607d2c797d4eeaf221031144f22fee024308e3e9eac003de03cd5a0cc8",
+          "testdata/market-selection-collision/independent-wire/duplicate/half-package/production_wire_cold.py": "441fb7ef636a74af0eaa91d65c9c194787d93c41d04be668fbae75f30e16ca90",
+          "testdata/market-selection-collision/independent-wire/duplicate/half-package/source_wire_cold.py": "23c6fca178c5dd1656897a1591e1bc178e8a11aa0d3f3eb74d0c8f21db0c49d1",
+          "testdata/market-selection-collision/independent-wire/duplicate/owned_http_mirror.py": "0bae3287997f7c95a998998c9eab52480da0d9aa490349270af43e20d5d9b87b",
+          "testdata/market-selection-collision/independent-wire/duplicate/source_bootstrap.py": "3e909a58a784e50838b1082d94b9a430716fc638ec30558a31a834d9eefdf4b0",
+          "testdata/market-selection-collision/independent-wire/duplicate/upstream-inputs.json": "e61c7316d947e1726f55d32c03f40f8fee645806926aac39292530525e02acaa",
+          "testdata/market-selection-collision/independent-wire/numbers/half-package/mixed-entry-inputs.json": "0860d90cd69dd8154e2d4c87a6edc4a9a34651b33fce5b3f0ea3ab3752ef7b04",
+          "testdata/market-selection-collision/independent-wire/numbers/half-package/production_wire_cold.py": "da87714dff1e3b526965e11e8c7885789f6daa3c83e167816b6f3a7713be6dcc",
+          "testdata/market-selection-collision/independent-wire/numbers/half-package/source_wire_cold.py": "23c6fca178c5dd1656897a1591e1bc178e8a11aa0d3f3eb74d0c8f21db0c49d1",
+          "testdata/market-selection-collision/independent-wire/numbers/owned_http_mirror.py": "0bae3287997f7c95a998998c9eab52480da0d9aa490349270af43e20d5d9b87b",
+          "testdata/market-selection-collision/independent-wire/numbers/source_bootstrap.py": "3e909a58a784e50838b1082d94b9a430716fc638ec30558a31a834d9eefdf4b0",
+          "testdata/market-selection-collision/independent-wire/numbers/upstream-inputs.json": "e61c7316d947e1726f55d32c03f40f8fee645806926aac39292530525e02acaa",
+          "testdata/market-selection-collision/independent-wire/surrogate/half-package/mixed-entry-inputs.json": "a8bc1ddea27515f371c50df0e9eb672a9a076be9421105ae8014a68e7c6f2c24",
+          "testdata/market-selection-collision/independent-wire/surrogate/half-package/production_wire_cold.py": "441fb7ef636a74af0eaa91d65c9c194787d93c41d04be668fbae75f30e16ca90",
+          "testdata/market-selection-collision/independent-wire/surrogate/half-package/source_wire_cold.py": "23c6fca178c5dd1656897a1591e1bc178e8a11aa0d3f3eb74d0c8f21db0c49d1",
+          "testdata/market-selection-collision/independent-wire/surrogate/owned_http_mirror.py": "0bae3287997f7c95a998998c9eab52480da0d9aa490349270af43e20d5d9b87b",
+          "testdata/market-selection-collision/independent-wire/surrogate/source_bootstrap.py": "3e909a58a784e50838b1082d94b9a430716fc638ec30558a31a834d9eefdf4b0",
+          "testdata/market-selection-collision/independent-wire/surrogate/upstream-inputs.json": "e61c7316d947e1726f55d32c03f40f8fee645806926aac39292530525e02acaa",
+          "testdata/market-selection-collision/owned_http_mirror.py": "0bae3287997f7c95a998998c9eab52480da0d9aa490349270af43e20d5d9b87b",
+          "testdata/market-selection-collision/production_upstream.py": "4e8b7772150de332cc8eb23c72647ebb2a7e9e25dc155ddb0158098053d887c3",
+          "testdata/market-selection-collision/source-additional-cases.json": "acb474bee9249f72580ab3263e2c84d6bef2a664c86243fd98d0f44ce26cb45a",
+          "testdata/market-selection-collision/source-cases.json": "3c223e6caa2b60a5c5501454b03d7911750a798756bd153760911e564f778d1e",
+          "testdata/market-selection-collision/source_bootstrap.py": "3e909a58a784e50838b1082d94b9a430716fc638ec30558a31a834d9eefdf4b0",
+          "testdata/market-selection-collision/source_upstream.py": "0cda947bfe2516f88310c078a66c57ecffc410b511ded70ab2b8493be75dd60a",
+          "testdata/market-selection-collision/upstream-inputs.json": "e61c7316d947e1726f55d32c03f40f8fee645806926aac39292530525e02acaa",
+          "testdata/market-version-unicode/README.md": "6941327e1bdf580956c9e22d8379f2d3267fc46bd1b6ef8078ca8946d6e0facb",
+          "testdata/market-version-unicode/market-inputs.json": "a9f0e46d040224bacea6d06fa4a347d2a9a1ae1f82b1d3843c2f437643bb21bd",
+          "testdata/market-version-unicode/production_market.py": "9fa12458675e8c305f217eba6a41236885d1e3e7fbb14a54e63b9283753a9eb7",
+          "testdata/market-version-unicode/source-oracle.json": "685e3af60d218dff1217d73dfa0fb4466cf67f655d409a95897cebcb5f7f593c",
+          "testdata/market-version-unicode/source_market.py": "cee3f6bdb5e6db3cef7f6a5d1b67f8e3539c3c75cc86f0d7c25db9b76f38a2aa",
+          "testdata/market-version-unicode/source_pure.py": "58a54980f21da57cd8fedc156553947460c18906dbccf4c840f121843ecd3a8f",
+          "web/dist/assets/AppModeFooter-Bhyrzjzp.js": "84d0b8ec4389b90c8a1df8a55669fb3d9468913dbfc2c150656482b479e68706",
+          "web/dist/assets/DownloaderConfigDialog-Cls0ztm8.js": "ce1ac61bfaa2684004d71f5cf48c37dd95adf156f9d7e3ffd1ffdc6ea593a17d",
+          "web/dist/assets/InterfaceModeMenu-DWBggWJE.js": "f018440509e4401dfef77f2e33471733ba55cfab8c78ce049a5c989fad0e4927",
+          "web/dist/assets/PluginAppPage-DAG3d2DL.js": "384dcb683b51ac71bec428583bd4d29c970ad939a5f678ee276f8cae3b5fe6fc",
+          "web/dist/assets/PluginApplicationCenter-BNNd5iUT.js": "0174f599d9bdfb8c2834cacba8231fdbb632af14007b0437cf8ea1932999c2ff",
+          "web/dist/assets/PluginAuthLogin-CkmVuAwx.js": "efff4c3f8765608f7340d19740c18777b8944ba872070a39cedf3932cf005395",
+          "web/dist/assets/PluginCloneDialog-CWLG2qJB.js": "7f5ebb41cba0c4df3f107bc44cb6b2390666160e078d83dcade4e6f6a5809b2f",
+          "web/dist/assets/PluginConfigDialog-BVJHkieI.js": "75d69d19ec3f8394c67acbc448088990a1c2b20f0fab4aee2c0bfae68ebff586",
+          "web/dist/assets/PluginCronField-BI6Uvz_J.js": "cfa56269f311a1000c5ea6617fb9ca1a1d5130e1e4ad63d31f148dbf5e41f8c6",
+          "web/dist/assets/PluginDashboard-JLyZr9Rl.js": "55574a7a568a7df3296ee557ca3d6b00c0e2f68ecf0e7f9d30fabb076915b0dc",
+          "web/dist/assets/PluginDataDialog-DJc58FSa.js": "52b9361604303de7ac924299bbf6eec3e3ce5e14a2772e897f2caad101b7d992",
+          "web/dist/assets/PluginFolderDialog-RExRnbOt.js": "4ba84607285213a7c807a4d11fc7d07ff0db86558561ddb4fc4203c43460ed46",
+          "web/dist/assets/PluginLogDialog-DAmIDEFl.js": "60de8e3b54bd9938cbedc18869e42a16e2766f1bce2f00ece2daa69550f4fc3c",
+          "web/dist/assets/PluginMarketSettingDialog-flaGspAw.js": "222997a6ed782b04e06c561bf5cd7d94635270466ecd12879afd723d1372b39d",
+          "web/dist/assets/PluginQuickAccess-Db3ai8DK.js": "89423d00fabe2366f8750009dd38d3f30b87ca7ebd0579575bd1bf243a21771d",
+          "web/dist/assets/PluginSearchDialog-AQDep5rx.js": "eb3d7a4f51ad3593fd86f89cd33385cfa3d12dae450762c78bad9abb89c50f8b",
+          "web/dist/assets/PluginServices-CWudnOWe.js": "f20e33dc64f09bef4fecfba3e46f9e7c8eecfdf0b0fc05709bfdc4d43dc5591a",
+          "web/dist/assets/PluginVersionHistoryDialog-DIFhBfSi.js": "bad6163435f0ae03e79ab1592fe60f1f33d468e90cd14f848a1b21cc63f4599d",
+          "web/dist/assets/Plugins-BPeCgKo-.js": "5983b56a8c2538c441189153b4a9e99dc9c6749dd3c55a0a4fbf7798f952c280",
+          "web/dist/assets/RecognitionWordsSettings-dfdMqziz.js": "f04a2126d74fbadb703a6c13f1807555a976bc8680ba3c21551f63f55ad472fe",
+          "web/dist/assets/ResourceMetadataSettings-B2Rz6LT3.js": "1070d0bac4d461d0a07b24a267c91bad63a8c6c5ee6a7c530c8392eb8aeaa16e",
+          "web/dist/assets/RuleManager-D90zLs8C.js": "008f9abff26e0be5c6c69a043989dfd1a6b9ba9c82d0505d470f06aab5ce11f0",
+          "web/dist/assets/ShortcutMessageDialog-Dkufyd1P.js": "3a3d2b87f3a0638bdcfa963ee3aaaff85f68b3af9d8e20f338af4e97e3d09189",
+          "web/dist/assets/ShortcutTools-DxVMsdpB.js": "8d5da8a8641ce1d32b58cf4a8f7dd10c54d267ce0660f8d2d2c490e3ded0b76e",
+          "web/dist/assets/SiteUserDataDialog-Qo9i6FAm.js": "513fd675982c263dd9336ec91e4e2b83700b5ce230b6c317f7cca4724f17c7f0",
+          "web/dist/assets/index-h2Rqg3w2.js": "6fe31a4107f1c74f0f93ab3b01ff87e0db4bbb2b2e62872e8d749cb4271c899f",
+          "web/dist/assets/plugin-clone-Dj_kfQhl.js": "e103b780c376b9ac1ce93d9d34bae58a48fda6f0f98ccc897626426f0f925223",
+          "web/dist/assets/plugin-federation-CHnPbrU8.js": "75b2ad64cde673a76e01420babe0074a4b83683eda3c173b49280e0bc381c537",
+          "web/dist/index.html": "b943a932275eb45d3e38a71fe1ed741b8ae563c93d7fcd0a959f6a13fe0c223e",
+          "web/src/api.ts": "7b8fe05fcc7fe5c9cd03ac3af21b7d2edd17c346e2411d5ca3be3ccdf3774d0f",
+          "web/tests/api-response.test.mjs": "8e632a8959e9458bda3ea1759f1aa453bf3fe6fd36488361246fae8b162e494c",
+          "internal/plugins/artifacts/python_display_native_guard_test.go": "f4ea456ca8a83d0e79a95794c27c025df01545db94415b63eef4b4a39f08fd0c"
+        },
+        "fixture_files": {
+          "evidence/market-pipeline/browser-review.json": "943b3f07168e7f8420d89954124c8f0f4216a48a72e62372bd2dd017972b2661",
+          "evidence/market-pipeline/browser-summary.json": "2117d14a868e5575d87acc53179af44b1148dc998fe59ab85f4b6e59386449c6",
+          "evidence/market-pipeline/candidate.json": "7b0d88d64ae4fde979bb9ff7a37403e4ae0674e5e39790daeb813bef93960e17",
+          "evidence/market-pipeline/coordinator-regression.json": "643acfc8bc9187dbf90c5cbcfa509911e9f0e3526a1a5cdd260efec4bdb16d61",
+          "evidence/market-pipeline/frontend-result.json": "f7ca261142a53d24b3db8ecbd19b6dd0fe601be15fd2972c9f8a4ae1042d5d40",
+          "evidence/market-pipeline/frontend-review.json": "19a2f751401185eb90b53f98f318e1d332ad72d74e6ff29448f91d8b479e1567",
+          "evidence/market-pipeline/independent-review.json": "76c1e15f5a3b1e92eee5bcce3a1fa1412427da36a2fdb15ffcdcd707910d5b0e",
+          "evidence/market-pipeline/shared-impact.json": "5bb54c42e0b1efb779d9c330c43c092095f31b62a8324432024eebb7f49ccaa0"
+        }
+      },
+      "artifacts": {
+        "evidence/market-pipeline/browser-review.json": "943b3f07168e7f8420d89954124c8f0f4216a48a72e62372bd2dd017972b2661",
+        "evidence/market-pipeline/browser-summary.json": "2117d14a868e5575d87acc53179af44b1148dc998fe59ab85f4b6e59386449c6",
+        "evidence/market-pipeline/candidate.json": "7b0d88d64ae4fde979bb9ff7a37403e4ae0674e5e39790daeb813bef93960e17",
+        "evidence/market-pipeline/coordinator-regression.json": "643acfc8bc9187dbf90c5cbcfa509911e9f0e3526a1a5cdd260efec4bdb16d61",
+        "evidence/market-pipeline/frontend-result.json": "f7ca261142a53d24b3db8ecbd19b6dd0fe601be15fd2972c9f8a4ae1042d5d40",
+        "evidence/market-pipeline/frontend-review.json": "19a2f751401185eb90b53f98f318e1d332ad72d74e6ff29448f91d8b479e1567",
+        "evidence/market-pipeline/independent-review.json": "76c1e15f5a3b1e92eee5bcce3a1fa1412427da36a2fdb15ffcdcd707910d5b0e",
+        "evidence/market-pipeline/shared-impact.json": "5bb54c42e0b1efb779d9c330c43c092095f31b62a8324432024eebb7f49ccaa0"
+      },
+      "commands": [
+        "Coordinator current9 suites264observations and4943closure0drift; current native guard artifactrace after preserved initial nil-validator harness failure.",
+        "Independent current184observations (172finite matches,10official auth exclusions,2budget deviations not counted as finite pass),168recovery,2nativeguard,60published relative-HERE driver observations;4959closure0drift and exactbinary rebuild.",
+        "Existing app15race roots/0skip/freshsource400,984version vectors and artifact components explicitly byte-bound/reused; not all historical tests rerun.",
+        "Current frontend565tests0skip, typecheck/build; 12recorded official UI steps include two preserved harness/locator failures and successful corrected readbacks."
+      ],
+      "inputs": [
+        "111 individually whitelisted candidate paths; fixed source8a83 and frontend2829; actual normal mirror source-v3 and new independent source inputs.",
+        "No runtime/account/config/credential/DB,binary,screenshot,old refused materials in this Git evidence set. Full private raw receipts remain hash-linked."
+      ],
+      "observations": [
+        "Complete ordinary metadata acquisition, package-band success-cache, forced partial failure, original ordinary cached return, expiry/LRU and same-data cold recovery.",
+        "Source package/repository ordering, delimiter-free identity/version collisions, Unicode version comparison, raw display/history values and source500 exact text with ordinary correction.",
+        "Duplicate/case-sensitive dictionary keys, inert display fields versus strict native executable guard; current real worker install/history/cold regression.",
+        "Actual native frontend failure, correction, cached return, cold3/3, Unicode choice and duplicate/case cards on exact d011 server.",
+        "Finite cache/selection/display pipeline, not all08/09/10/12/20. Legal metadata bodies over2MiB still differ and keep parent09 open; no user approval inferred.",
+        "Official MoviePilot auth/full daemon startup not exercised; complete source components/ASGI with declared boundary fixtures. Go server/SDK/native browser are real.",
+        "Existing safety limits/executable validation/credentials/path guards unchanged. Python is source-test-only, never product runtime.",
+        "Old denied TLS/CA/CONNECT/inode/permission materials remain excluded; no raw preview account/runtime/DB/screenshots in Git.",
+        "Current v3 UI correction included official restart after malformed fixture; no browser-only uninterrupted-recovery claim. Exact168 HTTP and frontendtests independently prove ordinary failure recovery."
+      ],
+      "reviewer": "market_acceptance"
     }
   ],
   "execution_contract": {
@@ -33176,26 +33843,31 @@
     "existing_platform_reuse": "46 existing applicable platform groups are not 46 rewrites. Preserve/reuse implementation and unchanged sufficiently bound source/test evidence. 15 new shared-host groups are discovery buckets, not 15 automatically missing features."
   },
   "resume": {
-    "next_slice": "Deliver accepted16.failure_name by normalGit/readback; then frozen09packagecache/metadata projection with currentmain/UI acceptance; independent15clone repair andS09localstorage continue separately.",
+    "next_slice": "Deliver accepted finite09.market_pipeline with selective normal Git and actual remote readback; then integrate complete ordinary services/homepage and S09 storage candidates with current main/officialUI gates. Clone remains implementing for independently confirmed literal/name lookup/raw-surrogate boundaries.",
     "dirty_work": [
-      "Only accepted reset22paths,8compact current reports, prior deliverymap and current docs/ledger.09/15/S09 isolated candidates not mixed."
+      "Market111 candidate accepted on exact d011; selected evidence/ledger pending currentcommit/readback.",
+      "Services backend SDK retirement and homepage scheduler v2 independently green; main integration/nativeUI pending.",
+      "S09 ordinary35-file candidate06 independently finalizing; nativeUI05 success/failure/delete already observed, current06 cold and main integration pending.",
+      "Clone metadata03 finite52pass, independent70cases exposes sixold+eightnew unresolved literal cases; owner repairing, no completeclone claim.",
+      "Only coordinator owns main/ledger; preserve unselected old dirty/evidence files."
     ],
     "workers": [
-      "coordinator",
-      "site_subscription_shared_host",
-      "independent_source_audit",
-      "downloader_shared_host",
-      "manager_queries_independent_review_20261030"
+      "complete_plugin_platform: coordinator",
+      "market_acceptance: audits/recovery-market-acceptance",
+      "clone_independent: audits/recovery-clone-independent",
+      "local_storage_finish: worktrees/local-storage",
+      "storage_independent: audits/recovery-storage-independent",
+      "platform_reuse_next: services38/39 source-first reuse"
     ],
     "blockers": [
       "qB native AF_NETLINK restriction remains; no bypass.",
-      "07normal Wiki browser read blocked by existing harddeny; failure observed with7source addresses unchanged. NoCA/trust/proxy bypass.",
-      "09Unicode comparator remains separate realdelta; finite packagecache/projection still pending currentmain/UI.15clone andS09localstorage candidates notyetaccepted.",
-      "Old explicitly denied inode/race-replacement/permission probes remain stopped; no retry or alternative-tool bypass."
+      "07Wiki browser harddeny remains; noCA/trust/proxybypass.",
+      "Old explicitly denied inode/race-replacement/permission probes remain stopped; no retry or toolbypass. Old TLS/CA/CONNECT acceptance remains historicalonly."
     ],
     "commands": [
-      "git status --short",
-      "git ls-remote origin refs/heads/main refs/heads/plugins-refactor"
+      "GH_CONFIG_DIR=/workspace/shared/cloud-git-auth GIT_CONFIG_GLOBAL=/workspace/shared/cloud-git-auth/gitconfig git status --short",
+      "GH_CONFIG_DIR=/workspace/shared/cloud-git-auth GIT_CONFIG_GLOBAL=/workspace/shared/cloud-git-auth/gitconfig git ls-remote origin refs/heads/main refs/heads/plugins-refactor",
+      "source /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh; export GOFLAGS=\"-mod=readonly -buildvcs=false\" GOPROXY=off"
     ],
     "prior_environment": "2026-10-29 implementation/test files unavailable; four recovered orphan documents/logs are not current acceptance.",
     "recovery_backups": [
@@ -33314,14 +33986,14 @@
       }
     ],
     "last_delivery": {
-      "commit": "57037d045d2a507c3e70fc99cf470d4a96204add",
+      "commit": "985d957c3889dcbacffc271abe02cad8b827f6af",
       "branch": "plugins-refactor",
-      "readback": "57037d045d2a507c3e70fc99cf470d4a96204add",
+      "readback": "985d957c3889dcbacffc271abe02cad8b827f6af",
       "main_unchanged": "97476582910dc4b696f7ccd5010f28d823812d40",
-      "paths": 22,
-      "mapping_path": "migration/delivery/folder-failure-57037d04-paths.json",
-      "mapping_sha256": "2651609e45f472f678a1626819834a270ef4bccce5c8a8b6ae2b5c7a9dec900a",
-      "ci": "0check-runs and0statuses; not CI pass or running."
+      "paths": 34,
+      "mapping_path": "migration/delivery/reset-name-985d957c-paths.json",
+      "mapping_sha256": "e315d2405f6ab77dbec5dd0bf309301521a7867ec0c00b981f39d373b57671c3",
+      "ci": "0check-runs and0statuses on prior exact readback; not CI pass or running."
     }
   },
   "external_inventory": [

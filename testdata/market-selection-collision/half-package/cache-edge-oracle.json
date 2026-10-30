@@ -1,0 +1,767 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "input_sha256": "e6afb67f96a739d0495370b61542333661df233b09314a5e0f07d8ec364d5b47",
+  "driver_sha256": "7e4c80ea965b08fe82fae12d02a423406b2580b57c754c3380412b66a52d70f9",
+  "sequences": [
+    {
+      "name": "higher-500",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgehigher500"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgehigher500"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedBase",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgehigher500"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgehigher500"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgehigher500"
+            }
+          ],
+          "requests": []
+        }
+      ]
+    },
+    {
+      "name": "base-500",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgebase500"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgebase500"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgebase500"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgebase500"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgebase500"
+            }
+          ],
+          "requests": []
+        }
+      ]
+    },
+    {
+      "name": "higher-malformed",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgehighermalformed"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgehighermalformed"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedBase",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgehighermalformed"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgehighermalformed"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgehighermalformed"
+            }
+          ],
+          "requests": []
+        }
+      ]
+    },
+    {
+      "name": "base-malformed",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgebasemalformed"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgebasemalformed"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgebasemalformed"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgebasemalformed"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgebasemalformed"
+            }
+          ],
+          "requests": []
+        }
+      ]
+    },
+    {
+      "name": "higher-404",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgehigher404"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgehigher404"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedBase",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgehigher404"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "rows": [
+            {
+              "id": "OwnedBase",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgehigher404"
+            }
+          ],
+          "requests": []
+        }
+      ]
+    },
+    {
+      "name": "base-404",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgebase404"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgebase404"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgebase404"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgebase404"
+            }
+          ],
+          "requests": []
+        }
+      ]
+    },
+    {
+      "name": "higher-empty",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgehigherempty"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgehigherempty"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedBase",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgehigherempty"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "rows": [
+            {
+              "id": "OwnedBase",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgehigherempty"
+            }
+          ],
+          "requests": []
+        }
+      ]
+    },
+    {
+      "name": "base-empty",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgebaseempty"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgebaseempty"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgebaseempty"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgebaseempty"
+            }
+          ],
+          "requests": []
+        }
+      ]
+    },
+    {
+      "name": "cold-higher-failure",
+      "phases": [
+        {
+          "name": "cold-force",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedBase",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgecoldhigherfailure"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "recovered-ordinary",
+          "force": false,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgecoldhigherfailure"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgecoldhigherfailure"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cold-base-failure",
+      "phases": [
+        {
+          "name": "cold-force",
+          "force": true,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgecoldbasefailure"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            },
+            {
+              "request_observed": true
+            }
+          ]
+        },
+        {
+          "name": "recovered-ordinary",
+          "force": false,
+          "rows": [
+            {
+              "id": "OwnedHigher",
+              "version": "1.0",
+              "repo": "https://github.com/Owned/Edgecoldbasefailure"
+            },
+            {
+              "id": "OwnedBase",
+              "version": "2.0",
+              "repo": "https://github.com/Owned/Edgecoldbasefailure"
+            }
+          ],
+          "requests": [
+            {
+              "request_observed": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "ttl": {
+    "initial": {
+      "rows": [
+        {
+          "id": "OwnedHigher",
+          "version": "1.0",
+          "repo": "https://github.com/Owned/TTLClock"
+        },
+        {
+          "id": "OwnedBase",
+          "version": "1.0",
+          "repo": "https://github.com/Owned/TTLClock"
+        }
+      ],
+      "requests": [
+        {
+          "request_observed": true
+        },
+        {
+          "request_observed": true
+        }
+      ]
+    },
+    "observed_configuration": {
+      "maxsize": 128,
+      "ttl": 1800,
+      "type": "_MemoryTLRUCache"
+    },
+    "base_refreshed_at_1000": {
+      "rows": [
+        {
+          "id": "OwnedBase",
+          "version": "2.0",
+          "repo": "https://github.com/Owned/TTLClock"
+        }
+      ],
+      "requests": [
+        {
+          "request_observed": true
+        },
+        {
+          "request_observed": true
+        }
+      ]
+    },
+    "ordinary_at_1799": {
+      "rows": [
+        {
+          "id": "OwnedHigher",
+          "version": "1.0",
+          "repo": "https://github.com/Owned/TTLClock"
+        },
+        {
+          "id": "OwnedBase",
+          "version": "2.0",
+          "repo": "https://github.com/Owned/TTLClock"
+        }
+      ],
+      "requests": []
+    },
+    "ordinary_at_1801": {
+      "rows": [
+        {
+          "id": "OwnedHigher",
+          "version": "3.0",
+          "repo": "https://github.com/Owned/TTLClock"
+        },
+        {
+          "id": "OwnedBase",
+          "version": "2.0",
+          "repo": "https://github.com/Owned/TTLClock"
+        }
+      ],
+      "requests": [
+        {
+          "request_observed": true
+        }
+      ]
+    },
+    "ordinary_at_2801": {
+      "rows": [
+        {
+          "id": "OwnedHigher",
+          "version": "3.0",
+          "repo": "https://github.com/Owned/TTLClock"
+        },
+        {
+          "id": "OwnedBase",
+          "version": "3.0",
+          "repo": "https://github.com/Owned/TTLClock"
+        }
+      ],
+      "requests": [
+        {
+          "request_observed": true
+        }
+      ]
+    }
+  },
+  "lru": {
+    "initial_fetches": 128,
+    "touch_oldest": {
+      "requests": [],
+      "ids": [
+        "OwnedBase"
+      ]
+    },
+    "insert_129th": {
+      "requests": [
+        {
+          "request_observed": true
+        }
+      ],
+      "ids": [
+        "OwnedBase"
+      ]
+    },
+    "touched_survives": {
+      "requests": [],
+      "ids": [
+        "OwnedBase"
+      ]
+    },
+    "next_oldest_refetched": {
+      "requests": [
+        {
+          "request_observed": true
+        }
+      ],
+      "ids": [
+        "OwnedBase"
+      ]
+    }
+  },
+  "expiry_lru": {
+    "touch_expiring": {
+      "requests": [],
+      "ids": [
+        "OwnedBase"
+      ]
+    },
+    "insert_after_expiry": {
+      "requests": [
+        {
+          "request_observed": true
+        }
+      ],
+      "ids": [
+        "OwnedBase"
+      ]
+    },
+    "valid_oldest_survives": {
+      "requests": [],
+      "ids": [
+        "OwnedBase"
+      ]
+    },
+    "expired_refetched": {
+      "requests": [
+        {
+          "request_observed": true
+        }
+      ],
+      "ids": [
+        "OwnedBase"
+      ]
+    }
+  },
+  "source_result_sha256": "a89dbf14b3e338160f3e26b3e5f3d715da3c273e7f7631d204cc619985175de5",
+  "method": "Authorized normal mirror source cache; request arrays retain exact count, not transport URLs. Timer-controlled TTL, not 30 minute wall time."
+}

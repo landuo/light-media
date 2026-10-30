@@ -1,0 +1,456 @@
+{
+  "sequences": [
+    {
+      "name": "higher-500",
+      "repository": "https://github.com/Owned/Edgehigher500",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "1.0"
+            },
+            "base": {
+              "status": 200,
+              "version": "1.0"
+            }
+          }
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 500,
+              "body": null
+            },
+            "base": {
+              "status": 200,
+              "version": "2.0"
+            }
+          }
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "bands": {
+            "higher": {
+              "status": 500,
+              "body": null
+            },
+            "base": {
+              "status": 200,
+              "version": "2.0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "base-500",
+      "repository": "https://github.com/Owned/Edgebase500",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "1.0"
+            },
+            "base": {
+              "status": 200,
+              "version": "1.0"
+            }
+          }
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "2.0"
+            },
+            "base": {
+              "status": 500,
+              "body": null
+            }
+          }
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "2.0"
+            },
+            "base": {
+              "status": 500,
+              "body": null
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "higher-malformed",
+      "repository": "https://github.com/Owned/Edgehighermalformed",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "1.0"
+            },
+            "base": {
+              "status": 200,
+              "version": "1.0"
+            }
+          }
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "body": "{broken"
+            },
+            "base": {
+              "status": 200,
+              "version": "2.0"
+            }
+          }
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "body": "{broken"
+            },
+            "base": {
+              "status": 200,
+              "version": "2.0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "base-malformed",
+      "repository": "https://github.com/Owned/Edgebasemalformed",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "1.0"
+            },
+            "base": {
+              "status": 200,
+              "version": "1.0"
+            }
+          }
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "2.0"
+            },
+            "base": {
+              "status": 200,
+              "body": "{broken"
+            }
+          }
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "2.0"
+            },
+            "base": {
+              "status": 200,
+              "body": "{broken"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "higher-404",
+      "repository": "https://github.com/Owned/Edgehigher404",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "1.0"
+            },
+            "base": {
+              "status": 200,
+              "version": "1.0"
+            }
+          }
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 404,
+              "body": "{}"
+            },
+            "base": {
+              "status": 200,
+              "version": "2.0"
+            }
+          }
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "bands": {
+            "higher": {
+              "status": 404,
+              "body": "{}"
+            },
+            "base": {
+              "status": 200,
+              "version": "2.0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "base-404",
+      "repository": "https://github.com/Owned/Edgebase404",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "1.0"
+            },
+            "base": {
+              "status": 200,
+              "version": "1.0"
+            }
+          }
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "2.0"
+            },
+            "base": {
+              "status": 404,
+              "body": "{}"
+            }
+          }
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "2.0"
+            },
+            "base": {
+              "status": 404,
+              "body": "{}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "higher-empty",
+      "repository": "https://github.com/Owned/Edgehigherempty",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "1.0"
+            },
+            "base": {
+              "status": 200,
+              "version": "1.0"
+            }
+          }
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "body": "{}"
+            },
+            "base": {
+              "status": 200,
+              "version": "2.0"
+            }
+          }
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "body": "{}"
+            },
+            "base": {
+              "status": 200,
+              "version": "2.0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "base-empty",
+      "repository": "https://github.com/Owned/Edgebaseempty",
+      "phases": [
+        {
+          "name": "initial",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "1.0"
+            },
+            "base": {
+              "status": 200,
+              "version": "1.0"
+            }
+          }
+        },
+        {
+          "name": "changed-force",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "2.0"
+            },
+            "base": {
+              "status": 200,
+              "body": "{}"
+            }
+          }
+        },
+        {
+          "name": "ordinary",
+          "force": false,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "2.0"
+            },
+            "base": {
+              "status": 200,
+              "body": "{}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "cold-higher-failure",
+      "repository": "https://github.com/Owned/Edgecoldhigherfailure",
+      "phases": [
+        {
+          "name": "cold-force",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 500,
+              "body": "{}"
+            },
+            "base": {
+              "status": 200,
+              "version": "1.0"
+            }
+          }
+        },
+        {
+          "name": "recovered-ordinary",
+          "force": false,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "2.0"
+            },
+            "base": {
+              "status": 200,
+              "version": "2.0"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "cold-base-failure",
+      "repository": "https://github.com/Owned/Edgecoldbasefailure",
+      "phases": [
+        {
+          "name": "cold-force",
+          "force": true,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "1.0"
+            },
+            "base": {
+              "status": 500,
+              "body": "{}"
+            }
+          }
+        },
+        {
+          "name": "recovered-ordinary",
+          "force": false,
+          "bands": {
+            "higher": {
+              "status": 200,
+              "version": "2.0"
+            },
+            "base": {
+              "status": 200,
+              "version": "2.0"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

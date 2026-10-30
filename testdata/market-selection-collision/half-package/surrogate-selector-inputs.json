@@ -1,0 +1,43 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "cases": [
+    {
+      "name": "root-surrogate-distinct-from-replacement",
+      "packages": {
+        "higher": {
+          "OwnedA1": {
+            "name": "Owned valid",
+            "version": "\ufffd"
+          }
+        },
+        "base": {
+          "OwnedA": {
+            "name": "Owned isolated",
+            "version": "1\ud800",
+            "v2": true
+          }
+        }
+      }
+    },
+    {
+      "name": "nested-repr-collides-with-literal-string",
+      "packages": {
+        "higher": {
+          "OwnedA": {
+            "name": "Owned literal",
+            "version": "1['A\\ud800']"
+          }
+        },
+        "base": {
+          "OwnedA1": {
+            "name": "Owned nested",
+            "version": [
+              "A\ud800"
+            ],
+            "v2": true
+          }
+        }
+      }
+    }
+  ]
+}

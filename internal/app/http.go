@@ -53,6 +53,30 @@ func writeJSON(w http.ResponseWriter, r *http.Request, data any) {
 	_ = json.NewEncoder(w).Encode(map[string]any{"data": data, "request_id": w.Header().Get("X-Request-ID")})
 }
 func (a *App) writeError(w http.ResponseWriter, r *http.Request, e error) {
+	var marketQuery *originalMarketQueryError
+	if errors.As(e, &marketQuery) {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusUnprocessableEntity)
+		// The source router validates the query before dispatch, using its last
+		// value (including an explicitly empty value), not Go's first-value Get.
+		payload, _ := json.Marshal(struct {
+			Detail []struct {
+				Type    string   `json:"type"`
+				Loc     []string `json:"loc"`
+				Message string   `json:"msg"`
+				Input   string   `json:"input"`
+			} `json:"detail"`
+		}{
+			Detail: []struct {
+				Type    string   `json:"type"`
+				Loc     []string `json:"loc"`
+				Message string   `json:"msg"`
+				Input   string   `json:"input"`
+			}{{"bool_parsing", []string{"query", "force"}, "Input should be a valid boolean, unable to interpret input", marketQuery.Value}},
+		})
+		_, _ = w.Write(payload)
+		return
+	}
 	out := &APIError{Code: "INTERNAL_ERROR", Message: "操作失败，请查看关联日志", Status: 500}
 	var api *APIError
 	var cat *catalog.Error
@@ -71,6 +95,15 @@ func (a *App) writeError(w http.ResponseWriter, r *http.Request, e error) {
 	}
 	if out.Status >= 500 {
 		a.writeLog(map[string]any{"time": now(), "id": id("log_"), "level": "ERROR", "module": "api", "event": "request_failed", "message": e.Error(), "error_code": out.Code, "http_status": out.Status, "request_id": w.Header().Get("X-Request-ID"), "app_version": appVersion})
+	}
+	// Fixed FastAPI emits this exact text for a surviving source display
+	// serialization failure. Do not expose metadata or substitute the JSON API
+	// envelope; unrelated application failures retain their existing contract.
+	if out.Code == "PLUGIN_MARKET_SERIALIZATION_FAILED" {
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		w.WriteHeader(http.StatusInternalServerError)
+		_, _ = io.WriteString(w, "Internal Server Error")
+		return
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	w.WriteHeader(out.Status)

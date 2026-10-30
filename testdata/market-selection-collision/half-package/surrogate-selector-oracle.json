@@ -1,0 +1,47 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_result_sha256": "08d499994cfa4a4b08f464a1b9e7fb9a152ef9dc165472015c5ae259a15876c2",
+  "driver_sha256": "73449feab206f60e663ef94b8a5767592d80b9a9d7a0739297f96777badb461b",
+  "input_sha256": "e148ba8e61213bd94f1cdd21c0a881504316047fd40599b7915eb20aafc74b0f",
+  "observations": [
+    {
+      "name": "root-surrogate-distinct-from-replacement",
+      "keys": [
+        {
+          "band": "higher",
+          "id": "OwnedA1",
+          "key_surrogatepass_hex": "4f776e65644131efbfbd"
+        },
+        {
+          "band": "base",
+          "id": "OwnedA",
+          "key_surrogatepass_hex": "4f776e65644131eda080"
+        }
+      ],
+      "statuses": [
+        500,
+        500
+      ]
+    },
+    {
+      "name": "nested-repr-collides-with-literal-string",
+      "keys": [
+        {
+          "band": "higher",
+          "id": "OwnedA",
+          "key_surrogatepass_hex": "4f776e656441315b27415c7564383030275d"
+        },
+        {
+          "band": "base",
+          "id": "OwnedA1",
+          "key_surrogatepass_hex": "4f776e656441315b27415c7564383030275d"
+        }
+      ],
+      "statuses": [
+        200,
+        200
+      ]
+    }
+  ],
+  "method": "Authorized normal product mirror source readback; key byte hex retained."
+}

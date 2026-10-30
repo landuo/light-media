@@ -1,0 +1,183 @@
+{
+  "status": "accepted_finite_09.market_pipeline_slice_not_whole_row09",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "frontend_source_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+  "target_base": "985d957c3889dcbacffc271abe02cad8b827f6af",
+  "branch": "plugins-refactor",
+  "candidate_sha256": "7b0d88d64ae4fde979bb9ff7a37403e4ae0674e5e39790daeb813bef93960e17",
+  "candidate_files": 111,
+  "server_sha256": "d0118b00f30c594cf38c59372d6e49a192af27aa105de75b29eebaae55dcbeec",
+  "independent_build_exact_match": true,
+  "current_input_count": 4959,
+  "current_input_drift": [],
+  "independent_current": {
+    "newboundaries": {
+      "observations": 184,
+      "strict_matches": 172,
+      "official_auth_exclusion": 10,
+      "unapproved_body_budget": 2
+    },
+    "recovery": {
+      "observations": 168,
+      "phases": "warm6x12x2+same-data-cold12x2",
+      "status": "All 16 explicitly mapped source fields, status, error body, upstream bytes, and ordinary zero-request phases match.",
+      "pids": [
+        18,
+        249
+      ],
+      "stops": [
+        {
+          "pid": 18,
+          "exit": 0
+        },
+        {
+          "pid": 249,
+          "exit": 0
+        }
+      ],
+      "mapped_fields": [
+        "id",
+        "plugin_name",
+        "plugin_desc",
+        "plugin_icon",
+        "plugin_version",
+        "plugin_author",
+        "history",
+        "add_time",
+        "plugin_label",
+        "author_url",
+        "plugin_public_key",
+        "auth_level",
+        "system_version",
+        "system_version_compatible",
+        "system_version_message",
+        "release"
+      ]
+    },
+    "native_guard": {
+      "observations": 2,
+      "status": "source-specificGoindexcontrolsuccessEmpty;unknownnativeobjectfailureEmpty;prior2fe5classificationrestored;noinstall"
+    },
+    "published_relative_drivers": {
+      "history": 56,
+      "key": 4,
+      "status": "actualmainpublishedpaths,exactd011binary,sourcev3errorbodyexactmatch;historyactualworkerrestart"
+    }
+  },
+  "coordinator_current264": {
+    "status": "rawreceiptsindependentlyrehashedandreviewed",
+    "observations": 264,
+    "input_count": 4943,
+    "executed_drift": [],
+    "result_sha256": "643acfc8bc9187dbf90c5cbcfa509911e9f0e3526a1a5cdd260efec4bdb16d61",
+    "attribution": "coordinatorexecuted,notindependentreviewer"
+  },
+  "component_reuse": {
+    "owner_v2": "15apprace roots/0skip+freshsource400;artifactsprefixandlicensepass;allproductionbranchbytesexceptwrapperunchanged",
+    "coordinator_v3": "newgenericguardroot+artifactsprefixrace-v2exit0;firstunitnilvalidatorfailurepreserved",
+    "source_imports_unchanged": 992
+  },
+  "shared_impact": {
+    "prior_bindings": 364,
+    "unchanged_prior_files": 354,
+    "changed_prior_files": [
+      "internal/app/http.go",
+      "web/dist/index.html",
+      "internal/app/plugin_original_markets.go",
+      "web/src/api.ts",
+      "internal/app/plugin_original_history.go",
+      "internal/app/plugin_original_market_display.go",
+      "internal/plugins/artifacts/github_repository.go",
+      "internal/plugins/artifacts/repository.go",
+      "internal/plugins/artifacts/python_metadata.go",
+      "internal/plugins/artifacts/python_display.go"
+    ],
+    "current_bound_files": 397,
+    "functions": "shared-functions-current.json Go AST exactold/currentfunction hashes;alloldfilesmatcholdbindinginUnicodeworktree",
+    "feature_reuse": {
+      "01/02/04": "Unchangednative acquire/inspect/load/reload/protocol/rollback leaves + current264actualworkerinstall/cold + nativeguard2classifiedsourcefail correctly;Python displayneverexecutes.",
+      "03/05/S10.manager_queries": "NativeSourceDisplay=nil branch unchangedsemantics;settings/managerRPC returntheir directvalues,notPythonmetadata;JSONerrorbranchunchangedexceptreservedmarketfailures.",
+      "06": "pluginMarketsHTTP exactfunctionbytes unchanged;newcurrentmarket integration coversstoredsourcestoloadbridge. Oldwholefilehash retainedas historical,do notoverwrite.",
+      "S05.query_update/S06.transfer_queries/S01.transmission_queries/S07.CustomIdentifiers": "DAO,Unicode/CAS/protocol/producerleaves unchanged;noPythonSourceDisplay/selector dependency in theirdirectresponses. KeeppriortrueSQL/cold/worker evidence plusthisexplicitshareddelta.",
+      "40.clear_cache": "Directclearcommand leavesunchanged andexplicitlyexcludeplugin/marketcaches;notclaimingclearcommandrerun.",
+      "11.mirror_response": "Credentialorigin/response-vs-exception transportunchanged;normalmirror/nativeprobe/package paths current;priorrestrictedTLS neverpromoted;realexternaltransportfallback untested.",
+      "16.failure_name/17.folder_failure": "Mutation/reset/uninstall/folder/event bodiesunchanged;normalnativeerrorcodes do notenternewmarkettyped422/500branches;nativecards remainSourceDisplay=nil."
+    },
+    "frontend": "Shared api.ts changes only non-2xx text/plain handling. Current 31 files, 6989 stable inputs and 565 tests reviewed; exact d011 same-byte native UI now reviewed in browser-final-independent-review.json.",
+    "native_safety": "Display IDs/rawfields are neverpassedtoAcquire/Inspect;HTTPinstall validatespluginStorageID thenstrictacquire. New genericnativefallbackguardrestoresoldnativeparseerrorclassification. Sourceflags/authdisplaycannotgrantpermissions.",
+    "ledger_action": "Keep15finiteexistingverifiedscopes usingoldleafproofs+newexplicitdelta/currentbindings;preserveoldhashes. Row09/08/10/12/20 notgloballyclosed;recordremaining2MiB difference."
+  },
+  "frontend_receipt": "frontend-independent-review.json",
+  "browser": {
+    "current_server_sha256": "d0118b00f30c594cf38c59372d6e49a192af27aa105de75b29eebaae55dcbeec",
+    "current_steps": 12,
+    "current_summary_sha256": "2117d14a868e5575d87acc53179af44b1148dc998fe59ab85f4b6e59386449c6",
+    "independent_review": "browser-final-independent-review.json",
+    "independent_review_sha256": "943b3f07168e7f8420d89954124c8f0f4216a48a72e62372bd2dd017972b2661",
+    "attribution": "Coordinator executed; independently reviewed all 32 immutable hashes and raw steps. Two harness failures preserved, not converted to passes.",
+    "prior_v2_receipt": "browser-current-independent-review.json remains historical 366ab evidence."
+  },
+  "remaining_blockers": [
+    "Source metadata over2MiB returnscandidate;targetretainedbudgetreturnsnone. Thisdifferenceisnotapprovedandpreventswhole-row09/strictmarketcompletion.",
+    "ArbitraryJSON/runtime/resource/inputURLspace notexhaustivelycertified. HTTPS/credentialorigin/nativeexecutable/pathguardsretained;do notconvertboundsintoimplicituserapproval.",
+    "Whole08UIsearch/filter,10schedulerprogress/cancel,12fullRelease/historysurface,20startupsyncrepair haveownledgercontracts;thisfiniteintegrationdoesnotcloseall."
+  ],
+  "resolved_findings": [
+    "Exactsource500plainbodyrestoredwithoutchangingunrelatedJSONerrors;nativeUIclientacceptsplaintextfailure.",
+    "OrdinarysourceJSONdictlastvalue/case-sensitivekeys/arbitraryinertID/1025/v2identity/ignoredauthorURL/systemtruthiness/labels/IDsurrogates/nonfinite/integerbudget/queryaliases-lastvalues-restoredinfiniteobservedcases.",
+    "Newlexicalunquotedconstantkeybugcaughtbeforefreezeandfixed;source6/current6actualchecks.",
+    "Newgenericnativefallbackregressioncaughtbyindependentold/newrealHTTPandfixedinwrapperonly;currentexplicitpackage/rootcasesstillpass."
+  ],
+  "publication": {
+    "exact_candidate_paths": "all111filesincandidate111manifestareindividuallyhashverified;includesonlyGo/UI/source-testdata,noprivateuserdata",
+    "old52whitelist": "50byte-identical;2productionHTTPerrorreaderpathsupdatedandreviewed;2READMEoutsideoriginal52updatedseparately;oldrawTLS/evidenceexcluded",
+    "test_only_python": "SourceoraclesandHTTPdriversonly;productionruntimeGo-only",
+    "do_not_publish": [
+      "auditprivate-home/runtime/DB/accountconfig",
+      "binaries",
+      "rawshell/serviceconfig",
+      "oldTLS/CA/CONNECTdrivers/material",
+      "historicalrawoutputasnewpass"
+    ]
+  },
+  "failure_history": "Alloldproductcounterexamples,wrapperfalsepositivebodyreceipt,driverurlencodefailure,ownertextJSONreaderfailure,seededskip,frontmock/timezonefailure,andv3unitnilvalidatorfailurekept;notrewrittenaspasses. Current v3 browser malformed-fixture failure, exact-space locator timeout, and premature summary are also retained; final fresh AX is separate evidence.",
+  "artifacts": {
+    "independent-current02/execution.json": "8169aec39fae1ba485dfa7ef743ec2459aaa0ea06ddeb455c49e5315f4a3d740",
+    "independent-current02/comparison.json": "db9c400ba18181ce77865a7a8944772afedbf653ad96670c4eb491fe9dd7037c",
+    "independent-recovery03/result.json": "2912318c2e822f3b801fd5fe435193c840ac98c7f0d9680d9232ec494b45b878",
+    "independent-recovery03/stop-receipt.json": "b20bc99c1f8b779b0c2c4ccb7dcc73a56e78b8ae35656273314b86ea11aa1d81",
+    "target_recovery_final.py": "cb8844be0373bf9a136d4640c7efc10cc7e01bae46d8bdff0126cfda87f5fa59",
+    "published-history-01/result.json": "42398a43eaf7b10de67666c4aff3e4b331795634eb118f9a159bf0365075def9",
+    "published-key-01/result.json": "3c1ac1d2677cb005aa0f7b94c3d282659af226796a68695b4909a39191e0bd4f",
+    "native-guard-final01/result.json": "1a46415585f4087d35439aa0b1c0dcd1fbfe244c7e511196aeac493e4a65f7b7",
+    "native-guard-regression.json": "55f0d5be6dd6a7355d3a218982e9ca532715b2751372d9e2be0737cb1c2c37b0",
+    "frontend-independent-review.json": "19a2f751401185eb90b53f98f318e1d332ad72d74e6ff29448f91d8b479e1567",
+    "owner-evidence-independent-review.json": "7f655c9c2974d71fc9344e569f2dd067a14b1050569bfc213c757906f0a122e8",
+    "browser-current-independent-review.json": "3267f8afea86ed2c049415353ad5da7d57f9bb5165de51cd890fe921aabee631",
+    "compact-report-v2.json": "2db963a896d467774a71f5975426a7c6eb883fec3826d0405bde3a64571ac732",
+    "shared-functions-current.json": "2a1c44b8174ac5c9ca72fb966f47e2c6977455022ed724fd4c0132face40a06e",
+    "shared-final-target-bindings.json": "36a2ca3346d7d7e62f46761ef7186ab8ae6a0fb3bcf377dc1b9e8de9debcf131",
+    "browser-final-independent-review.json": "943b3f07168e7f8420d89954124c8f0f4216a48a72e62372bd2dd017972b2661",
+    "shared-impact-final-v4.json": "5bb54c42e0b1efb779d9c330c43c092095f31b62a8324432024eebb7f49ccaa0",
+    "finalize_browser.py": "00e9f963b42f6f78dc60d8595868744a41fd85d3a6af52055eeef5a233603db9"
+  },
+  "shared_impact_report_sha256": "5bb54c42e0b1efb779d9c330c43c092095f31b62a8324432024eebb7f49ccaa0",
+  "scope_id": "09.market_pipeline",
+  "supersedes_report": {
+    "path": "final-report-v3.json",
+    "sha256": "e056d7d6b5035196cbfedf9c4f2cbd4b99ab60e05fa18b90078bb3f2cbd9d68f",
+    "reason": "Final exact-v3 native-browser readback now reviewed; correct mapped recovery-field count without altering original receipts."
+  },
+  "corrections": [
+    "Prior report v3 said 18 recovery fields. The preserved comparison script actually maps 16, listed here. The status/body/upstream/cache checks are additional independent comparisons, not extra field names."
+  ],
+  "shared_impact_report_path": "shared-impact-final-v4.json",
+  "delivery_decision": "The finite 09.market_pipeline implementation and its explicit evidence domain may be delivered. This is not acceptance of the retained 2 MiB difference, not whole-market equivalence, and not closure of row09 or adjacent complete feature contracts.",
+  "final_readback": {
+    "candidate_files": 111,
+    "candidate_drift": [],
+    "execution_closure_inputs": 4959,
+    "execution_closure_drift": [],
+    "same_binary_verified": true
+  }
+}

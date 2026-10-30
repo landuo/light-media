@@ -1,0 +1,15 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "cases": [
+    {
+      "name": "finite-decimal-integer",
+      "package": {},
+      "package_json": "{\"OwnedJSON\":{\"name\":{\"n\":1.234567890123456789,\"i\":9007199254740993,\"big\":1234567890123456789012345678901234567890},\"history\":{\"nested\":[1.234567890123456789,9007199254740993]},\"version\":\"1\",\"v2\":true}}"
+    },
+    {
+      "name": "overflow-exponent",
+      "package": {},
+      "package_json": "{\"OwnedInf\":{\"name\":\"Owned\",\"version\":1e400,\"history\":{\"nested\":[1e400,-1e400]},\"v2\":true}}"
+    }
+  ]
+}

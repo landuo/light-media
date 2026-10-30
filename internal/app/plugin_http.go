@@ -4,23 +4,25 @@ import (
 	"encoding/json"
 	"io"
 	"light-media/internal/plugins"
+	"light-media/internal/plugins/artifacts"
 	"net/http"
 )
 
 type pluginCard struct {
-	SystemVersion           json.RawMessage `json:"system_version,omitempty"`
-	SystemVersionCompatible *bool           `json:"system_version_compatible,omitempty"`
-	SystemVersionMessage    string          `json:"system_version_message,omitempty"`
-	Label                   string          `json:"plugin_label,omitempty"`
-	AddTime                 int             `json:"add_time,omitempty"`
-	Available               bool            `json:"available"`
-	UnavailableReason       string          `json:"unavailable_reason,omitempty"`
-	RepositoryURL           string          `json:"repo_url,omitempty"`
-	RepositoryVersion       string          `json:"repository_version,omitempty"`
-	UpdateBlockedReason     string          `json:"update_blocked_reason,omitempty"`
-	HasUpdate               bool            `json:"has_update,omitempty"`
-	DisplayVersion          string          `json:"display_version,omitempty"`
-	SourceInstanceID        string          `json:"source_instance_id,omitempty"`
+	SourceDisplay           *artifacts.PythonDisplay `json:"-"`
+	SystemVersion           json.RawMessage          `json:"system_version,omitempty"`
+	SystemVersionCompatible *bool                    `json:"system_version_compatible,omitempty"`
+	SystemVersionMessage    string                   `json:"system_version_message,omitempty"`
+	Label                   string                   `json:"plugin_label,omitempty"`
+	AddTime                 int                      `json:"add_time,omitempty"`
+	Available               bool                     `json:"available"`
+	UnavailableReason       string                   `json:"unavailable_reason,omitempty"`
+	RepositoryURL           string                   `json:"repo_url,omitempty"`
+	RepositoryVersion       string                   `json:"repository_version,omitempty"`
+	UpdateBlockedReason     string                   `json:"update_blocked_reason,omitempty"`
+	HasUpdate               bool                     `json:"has_update,omitempty"`
+	DisplayVersion          string                   `json:"display_version,omitempty"`
+	SourceInstanceID        string                   `json:"source_instance_id,omitempty"`
 	plugins.Manifest
 	InstanceID string `json:"instance_id"`
 	Installed  bool   `json:"installed"`

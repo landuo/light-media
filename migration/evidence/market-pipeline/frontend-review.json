@@ -1,0 +1,73 @@
+{
+  "status": "current_source_dist_evidence_hashes_verified_static_review_passed_browser_pending_new_server",
+  "receipt": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/evidence/coordinator/recovery-20261030/frontend/final-result.json",
+  "receipt_sha256": "f7ca261142a53d24b3db8ecbd19b6dd0fe601be15fd2972c9f8a4ae1042d5d40",
+  "input_count": 6989,
+  "current_delivery_files": 31,
+  "current_drift": [],
+  "tests_reused": {
+    "total": 565,
+    "pass": 565,
+    "fail": 0,
+    "skip": 0,
+    "timezone": "Asia/Shanghai",
+    "reason": "Unchanged fixed-source log oracle encodes Shanghai-local timestamps, not current OS JST. v1/v2 harness failures retained, no production log changes."
+  },
+  "review": [
+    "Only !HTTP.ok plus normalized Content-Type=text/plain enters text failure branch; never turns failed status into success.",
+    "Exact source Internal Server Error remains Error.message; JSON envelope path and request id remain unchanged.",
+    "text/plain401 emits existing session-expired; all paths finally decrement busy; tests cover immediate next successful request.",
+    "HTML failures and successful nonJSON stay invalid_response; text diagnostics bounded2048 for display; source500text length20 unaffected.",
+    "Optional r.headers guards legacy Response-shaped mocks; real Response Headers unchanged.",
+    "Shared api.ts affects all application calls, not only plugin cards; full565 test pass reused rather than extrapolating only five added tests.",
+    "Generated frontend assets must be embedded in newly frozen server; browser old2fe5 result is not this dist."
+  ],
+  "retained_history": [
+    "v1 missing Headers mock failures retained, corrected optional guard.",
+    "v2 one-hour fixed log oracle timezone failure retained; same product log code, explicitAsia/Shanghai all565pass.",
+    "Initial independent attempt rehashing obsolete frontend/result.json found removed AppModeFooter-DQa2CzGH.js; corrected binding to final-result.json; no claim oldv1 assets equal current."
+  ],
+  "publication_note": "Listed old generated assets preserved by coordinator separately. This review validates31current files, does not authorize deletions or stage assets.",
+  "files": {
+    "web/src/api.ts": "7b8fe05fcc7fe5c9cd03ac3af21b7d2edd17c346e2411d5ca3be3ccdf3774d0f",
+    "web/tests/api-response.test.mjs": "8e632a8959e9458bda3ea1759f1aa453bf3fe6fd36488361246fae8b162e494c",
+    "web/dist/index.html": "b943a932275eb45d3e38a71fe1ed741b8ae563c93d7fcd0a959f6a13fe0c223e",
+    "web/dist/assets/AppModeFooter-Bhyrzjzp.js": "84d0b8ec4389b90c8a1df8a55669fb3d9468913dbfc2c150656482b479e68706",
+    "web/dist/assets/DownloaderConfigDialog-Cls0ztm8.js": "ce1ac61bfaa2684004d71f5cf48c37dd95adf156f9d7e3ffd1ffdc6ea593a17d",
+    "web/dist/assets/InterfaceModeMenu-DWBggWJE.js": "f018440509e4401dfef77f2e33471733ba55cfab8c78ce049a5c989fad0e4927",
+    "web/dist/assets/PluginAppPage-DAG3d2DL.js": "384dcb683b51ac71bec428583bd4d29c970ad939a5f678ee276f8cae3b5fe6fc",
+    "web/dist/assets/PluginApplicationCenter-BNNd5iUT.js": "0174f599d9bdfb8c2834cacba8231fdbb632af14007b0437cf8ea1932999c2ff",
+    "web/dist/assets/PluginAuthLogin-CkmVuAwx.js": "efff4c3f8765608f7340d19740c18777b8944ba872070a39cedf3932cf005395",
+    "web/dist/assets/PluginCloneDialog-CWLG2qJB.js": "7f5ebb41cba0c4df3f107bc44cb6b2390666160e078d83dcade4e6f6a5809b2f",
+    "web/dist/assets/PluginConfigDialog-BVJHkieI.js": "75d69d19ec3f8394c67acbc448088990a1c2b20f0fab4aee2c0bfae68ebff586",
+    "web/dist/assets/PluginCronField-BI6Uvz_J.js": "cfa56269f311a1000c5ea6617fb9ca1a1d5130e1e4ad63d31f148dbf5e41f8c6",
+    "web/dist/assets/PluginDashboard-JLyZr9Rl.js": "55574a7a568a7df3296ee557ca3d6b00c0e2f68ecf0e7f9d30fabb076915b0dc",
+    "web/dist/assets/PluginDataDialog-DJc58FSa.js": "52b9361604303de7ac924299bbf6eec3e3ce5e14a2772e897f2caad101b7d992",
+    "web/dist/assets/PluginFolderDialog-RExRnbOt.js": "4ba84607285213a7c807a4d11fc7d07ff0db86558561ddb4fc4203c43460ed46",
+    "web/dist/assets/PluginLogDialog-DAmIDEFl.js": "60de8e3b54bd9938cbedc18869e42a16e2766f1bce2f00ece2daa69550f4fc3c",
+    "web/dist/assets/PluginMarketSettingDialog-flaGspAw.js": "222997a6ed782b04e06c561bf5cd7d94635270466ecd12879afd723d1372b39d",
+    "web/dist/assets/PluginQuickAccess-Db3ai8DK.js": "89423d00fabe2366f8750009dd38d3f30b87ca7ebd0579575bd1bf243a21771d",
+    "web/dist/assets/PluginSearchDialog-AQDep5rx.js": "eb3d7a4f51ad3593fd86f89cd33385cfa3d12dae450762c78bad9abb89c50f8b",
+    "web/dist/assets/PluginServices-CWudnOWe.js": "f20e33dc64f09bef4fecfba3e46f9e7c8eecfdf0b0fc05709bfdc4d43dc5591a",
+    "web/dist/assets/PluginVersionHistoryDialog-DIFhBfSi.js": "bad6163435f0ae03e79ab1592fe60f1f33d468e90cd14f848a1b21cc63f4599d",
+    "web/dist/assets/Plugins-BPeCgKo-.js": "5983b56a8c2538c441189153b4a9e99dc9c6749dd3c55a0a4fbf7798f952c280",
+    "web/dist/assets/RecognitionWordsSettings-dfdMqziz.js": "f04a2126d74fbadb703a6c13f1807555a976bc8680ba3c21551f63f55ad472fe",
+    "web/dist/assets/ResourceMetadataSettings-B2Rz6LT3.js": "1070d0bac4d461d0a07b24a267c91bad63a8c6c5ee6a7c530c8392eb8aeaa16e",
+    "web/dist/assets/RuleManager-D90zLs8C.js": "008f9abff26e0be5c6c69a043989dfd1a6b9ba9c82d0505d470f06aab5ce11f0",
+    "web/dist/assets/ShortcutMessageDialog-Dkufyd1P.js": "3a3d2b87f3a0638bdcfa963ee3aaaff85f68b3af9d8e20f338af4e97e3d09189",
+    "web/dist/assets/ShortcutTools-DxVMsdpB.js": "8d5da8a8641ce1d32b58cf4a8f7dd10c54d267ce0660f8d2d2c490e3ded0b76e",
+    "web/dist/assets/SiteUserDataDialog-Qo9i6FAm.js": "513fd675982c263dd9336ec91e4e2b83700b5ce230b6c317f7cca4724f17c7f0",
+    "web/dist/assets/index-h2Rqg3w2.js": "6fe31a4107f1c74f0f93ab3b01ff87e0db4bbb2b2e62872e8d749cb4271c899f",
+    "web/dist/assets/plugin-clone-Dj_kfQhl.js": "e103b780c376b9ac1ce93d9d34bae58a48fda6f0f98ccc897626426f0f925223",
+    "web/dist/assets/plugin-federation-CHnPbrU8.js": "75b2ad64cde673a76e01420babe0074a4b83683eda3c173b49280e0bc381c537"
+  },
+  "evidence": {
+    "v2/before.json": "9b869b9fd932a9ad44a1359b1c29689a41ba936f9a8e420835eaf47a5e682b60",
+    "v3/after.json": "9b869b9fd932a9ad44a1359b1c29689a41ba936f9a8e420835eaf47a5e682b60",
+    "v3/all-tests.log": "bd5932062b0fcf2c90953e479be7da5493fa804b179825704303401f896b8aff",
+    "v3/all-tests.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "v2/build.log": "86300a342148f863c82bb6d5233845f1592ed1d5d1ec97a6f223a6912e1000d8",
+    "v2/build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "logs-shanghai.log": "bf111f589fdb19465c0ab7fd4aeb40d4b573fad282c7d3c426efc8869c3c7dc9"
+  }
+}

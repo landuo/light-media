@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"net/url"
 	"slices"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -153,13 +152,23 @@ func (a *App) originalOnlineMarketDeclarations(ctx context.Context, force bool, 
 	workers.Wait()
 	for _, result := range results {
 		statuses = append(statuses, result.status)
-		if !result.status.Success {
-			continue
-		}
+		// A source package failure does not discard its successful sibling.
+		// Status still reports the failure; only validated discoveries survive.
 		a.readOriginalMarketPluginStates(ctx, result.discoveries, observed...)
 		out = append(out, result.discoveries...)
 	}
-	return out, statuses
+	// Preserve package provenance across repositories before global selection.
+	// A native Go index has no package layer: it is the unlayered/base input,
+	// never inferred from plugin version, HostContract, or authorization level.
+	var higher, base []artifacts.Discovery
+	for _, source := range out {
+		if source.SourcePackageVersion != "" {
+			higher = append(higher, source)
+		} else {
+			base = append(base, source)
+		}
+	}
+	return selectOriginalMarketDeclarations(higher, base, settings.PluginMarkets), statuses
 }
 
 func (a *App) originalLocalMarketDeclarations(ctx context.Context, observed ...map[string]bool) ([]artifacts.Discovery, []originalMarketSourceStatus) {
@@ -181,7 +190,7 @@ func (a *App) originalLocalMarketDeclarations(ctx context.Context, observed ...m
 		}
 		statuses = append(statuses, status)
 	}
-	selected := selectOriginalMarketDeclarations(out)
+	selected := selectOriginalLocalMarketDeclarations(out)
 	// Fixed get_local_plugin_candidates merges roots before _process_plugin_info;
 	// duplicate/local lower-version roots must not repeat a live state getter.
 	a.readOriginalMarketPluginStates(ctx, selected, observed...)
@@ -193,17 +202,13 @@ func (a *App) originalLocalMarketDeclarations(ctx context.Context, observed ...m
 func (a *App) originalMarketDeclarations(ctx context.Context, force bool) ([]artifacts.Discovery, []originalMarketSourceStatus) {
 	online, statuses := a.originalOnlineMarketDeclarations(ctx, force)
 	local, localStatuses := a.originalLocalMarketDeclarations(ctx)
-	return selectOriginalMarketDeclarations(append(online, local...)), append(statuses, localStatuses...)
+	return selectOriginalMarketDeclarations(append(online, local...), nil, a.Settings().PluginMarkets), append(statuses, localStatuses...)
 }
 
 func (a *App) originalPluginMarketHTTP(r *http.Request) (any, error) {
-	var force bool
-	if raw := r.URL.Query().Get("force"); raw != "" {
-		var err error
-		force, err = strconv.ParseBool(raw)
-		if err != nil {
-			return nil, bad("INVALID_PLUGIN_QUERY", "force必须为布尔值")
-		}
+	force, err := originalMarketForceQuery(r, false)
+	if err != nil {
+		return nil, err
 	}
 	_, items, statuses, err := a.originalPluginCatalog(r.Context(), force)
 	if err != nil {
@@ -230,28 +235,27 @@ func (a *App) originalPluginCatalog(ctx context.Context, force bool) ([]pluginCa
 	if err := ctx.Err(); err != nil {
 		return nil, nil, nil, err
 	}
-	sources := selectOriginalMarketDeclarations(append(onlineSources, localSources...))
+	sources := selectOriginalMarketDeclarations(append(onlineSources, localSources...), nil, a.Settings().PluginMarkets)
 	items := a.originalMarketCards(locals, sources, states)
+	if err := originalMarketCardsWireError(items); err != nil {
+		return nil, nil, statuses, err
+	}
 	return locals, items, statuses, nil
 }
 
 func (a *App) originalPluginListHTTP(r *http.Request) (any, error) {
-	force := false
-	if raw := r.URL.Query().Get("force"); raw != "" {
-		var err error
-		force, err = strconv.ParseBool(raw)
-		if err != nil {
-			return nil, bad("INVALID_PLUGIN_QUERY", "force必须为布尔值")
-		}
+	force, err := originalMarketForceQuery(r, false)
+	if err != nil {
+		return nil, err
 	}
-	if r.URL.Query().Get("state") == "installed" {
+	if originalMarketQueryString(r, "state") == "installed" {
 		return a.originalLocalPluginCards(r.Context(), true)
 	}
 	locals, market, _, err := a.originalPluginCatalog(r.Context(), force)
 	if err != nil {
 		return nil, err
 	}
-	if r.URL.Query().Get("state") == "market" {
+	if originalMarketQueryString(r, "state") == "market" {
 		return market, nil
 	}
 	all := []pluginCard{}
@@ -261,4 +265,42 @@ func (a *App) originalPluginListHTTP(r *http.Request) (any, error) {
 		}
 	}
 	return append(all, market...), nil
+}
+
+// FastAPI/Pydantic bool query parsing accepts these exact case-insensitive
+// aliases; strconv.ParseBool alone rejects ordinary source inputs on/off.
+func parseOriginalMarketBool(raw string) (bool, error) {
+	switch strings.ToLower(raw) {
+	case "1", "on", "t", "true", "y", "yes":
+		return true, nil
+	case "0", "off", "f", "false", "n", "no":
+		return false, nil
+	default:
+		return false, bad("INVALID_PLUGIN_QUERY", "force必须为布尔值")
+	}
+}
+
+type originalMarketQueryError struct{ Value string }
+
+func (e *originalMarketQueryError) Error() string { return "invalid plugin force query" }
+func originalMarketForceQuery(r *http.Request, fallback bool) (bool, error) {
+	values, present := r.URL.Query()["force"]
+	if !present || len(values) == 0 {
+		return fallback, nil
+	}
+	raw := values[len(values)-1]
+	value, err := parseOriginalMarketBool(raw)
+	if err != nil {
+		return false, &originalMarketQueryError{Value: raw}
+	}
+	return value, nil
+}
+
+// FastAPI scalar query fields take the last repeated value, not Go's Get first.
+func originalMarketQueryString(r *http.Request, key string) string {
+	values := r.URL.Query()[key]
+	if len(values) == 0 {
+		return ""
+	}
+	return values[len(values)-1]
 }

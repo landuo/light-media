@@ -18,7 +18,7 @@ func (a *App) originalMarketCards(locals []pluginCard, sources []artifacts.Disco
 	seen := make(map[string]bool)
 	for _, source := range sources {
 		local, imported := byID[source.PluginID]
-		card := pluginCard{SystemVersion: source.SystemVersion, SystemVersionCompatible: source.SystemVersionCompatible, SystemVersionMessage: source.SystemVersionMessage, Manifest: source.Current.Manifest, InstanceID: source.PluginID,
+		card := pluginCard{SourceDisplay: source.SourceDisplay, SystemVersion: source.SystemVersion, SystemVersionCompatible: source.SystemVersionCompatible, SystemVersionMessage: source.SystemVersionMessage, Manifest: source.Current.Manifest, InstanceID: source.PluginID,
 			RepositoryURL: source.RepositoryURL, RepositoryVersion: source.CurrentVersion,
 			Label: source.Label, AddTime: source.AddTime, Available: source.UnavailableReason == "", UnavailableReason: source.UnavailableReason,
 			Installed: imported && local.Installed, State: states[source.RepositoryURL+"\x00"+source.PluginID]}
@@ -32,7 +32,7 @@ func (a *App) originalMarketCards(locals []pluginCard, sources []artifacts.Disco
 			if local.DisplayVersion != "" {
 				version = local.DisplayVersion
 			}
-			card.HasUpdate = compareOriginalPluginVersion(source.CurrentVersion, version) > 0
+			card.HasUpdate = originalMarketVersionGreater(source, artifacts.Discovery{CurrentVersion: version})
 			card.SourceInstanceID = local.SourceInstanceID
 			card.UpdateBlockedReason = source.UnavailableReason
 		}

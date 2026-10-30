@@ -1,0 +1,141 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_result_sha256": "6fab74e9c6ef1075f4c4163901fe3af005d9822c1fcb12e1d7d28c7bfa9d19d7",
+  "source_driver_sha256": "0cda947bfe2516f88310c078a66c57ecffc410b511ded70ab2b8493be75dd60a",
+  "cases": [
+    {
+      "name": "unknown precedes local and retains unknown insertion order",
+      "markets": [
+        "https://github.com/Owned/Early",
+        "https://github.com/Owned/Late"
+      ],
+      "higher": [],
+      "base": [
+        {
+          "id": "OwnedX",
+          "version": "1.0",
+          "repo": "local://OwnedX"
+        },
+        {
+          "id": "OwnedX",
+          "version": "1.0",
+          "repo": "https://github.com/Owned/Unknown"
+        },
+        {
+          "id": "OwnedY",
+          "version": "1.0",
+          "repo": "https://github.com/Owned/Other"
+        }
+      ],
+      "selected": [
+        {
+          "id": "OwnedX",
+          "version": "1.0",
+          "repo": "https://github.com/Owned/Unknown"
+        },
+        {
+          "id": "OwnedY",
+          "version": "1.0",
+          "repo": "https://github.com/Owned/Other"
+        }
+      ]
+    },
+    {
+      "name": "duplicate markets use first index and empties omitted",
+      "markets": [
+        "https://github.com/Owned/Early",
+        "",
+        "https://github.com/Owned/Late",
+        "https://github.com/Owned/Early"
+      ],
+      "higher": [],
+      "base": [
+        {
+          "id": "OwnedX",
+          "version": "1.0",
+          "repo": "https://github.com/Owned/Late"
+        },
+        {
+          "id": "OwnedX",
+          "version": "1.0",
+          "repo": "https://github.com/Owned/Early"
+        }
+      ],
+      "selected": [
+        {
+          "id": "OwnedX",
+          "version": "1.0",
+          "repo": "https://github.com/Owned/Early"
+        }
+      ]
+    },
+    {
+      "name": "case sensitive local prefix is not normalized",
+      "markets": [],
+      "higher": [],
+      "base": [
+        {
+          "id": "OwnedX",
+          "version": "1.0",
+          "repo": "local://OwnedX"
+        },
+        {
+          "id": "OwnedX",
+          "version": "1.0",
+          "repo": "LOCAL://OwnedX"
+        }
+      ],
+      "selected": [
+        {
+          "id": "OwnedX",
+          "version": "1.0",
+          "repo": "LOCAL://OwnedX"
+        }
+      ]
+    },
+    {
+      "name": "per ID replacement preserves first insertion position",
+      "markets": [
+        "https://github.com/Owned/Early",
+        "https://github.com/Owned/Late"
+      ],
+      "higher": [],
+      "base": [
+        {
+          "id": "OwnedX",
+          "version": "1.0",
+          "repo": "https://github.com/Owned/Early"
+        },
+        {
+          "id": "OwnedY",
+          "version": "1.0",
+          "repo": "https://github.com/Owned/Early"
+        },
+        {
+          "id": "OwnedX",
+          "version": "2.0",
+          "repo": "https://github.com/Owned/Late"
+        }
+      ],
+      "selected": [
+        {
+          "id": "OwnedX",
+          "version": "2.0",
+          "repo": "https://github.com/Owned/Late"
+        },
+        {
+          "id": "OwnedY",
+          "version": "1.0",
+          "repo": "https://github.com/Owned/Early"
+        }
+      ]
+    },
+    {
+      "name": "empty declarations",
+      "markets": [],
+      "higher": [],
+      "base": [],
+      "selected": []
+    }
+  ]
+}

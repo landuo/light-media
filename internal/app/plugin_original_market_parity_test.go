@@ -49,7 +49,7 @@ func TestOriginalMarketVersionAndSourceOracle(t *testing.T) {
 			candidates = append(candidates, artifacts.Discovery{PluginID: row.ID, CurrentVersion: row.Version, RepositoryURL: row.Repository})
 		}
 		var actual []source
-		for _, row := range selectOriginalMarketDeclarations(candidates) {
+		for _, row := range selectOriginalMarketDeclarations(candidates, nil, nil) {
 			actual = append(actual, source{row.PluginID, row.CurrentVersion, row.RepositoryURL})
 		}
 		if !reflect.DeepEqual(actual, merge.Selected) {

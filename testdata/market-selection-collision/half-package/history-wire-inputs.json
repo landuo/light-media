@@ -1,0 +1,33 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "cases": [
+    {
+      "name": "ordered-object",
+      "package_json": "{\"OwnedA1\":{\"name\":\"Owned\",\"version\":\"3.0\",\"history\":{\"3.0\":\"new\",\"2.0\":\"old\"}}}"
+    },
+    {
+      "name": "list-history",
+      "package_json": "{\"OwnedA1\":{\"name\":\"Owned\",\"version\":\"3.0\",\"history\":[\"first\",\"second\"]}}"
+    },
+    {
+      "name": "nested-number-history",
+      "package_json": "{\"OwnedA1\":{\"name\":\"Owned\",\"version\":\"3.0\",\"history\":{\"nested\":[1.234567890123456789,9007199254740993,1e400]}}}"
+    },
+    {
+      "name": "false-history",
+      "package_json": "{\"OwnedA1\":{\"name\":\"Owned\",\"version\":\"3.0\",\"history\":false}}"
+    },
+    {
+      "name": "bad-name-good-history",
+      "package_json": "{\"OwnedA1\":{\"name\":\"A\\ud800\",\"version\":\"3.0\",\"history\":{\"safe\":\"note\"}}}"
+    },
+    {
+      "name": "bad-history-good-version",
+      "package_json": "{\"OwnedA1\":{\"name\":\"Owned\",\"version\":\"3.0\",\"history\":{\"bad\":\"A\\ud800\"}}}"
+    },
+    {
+      "name": "bad-version-good-history",
+      "package_json": "{\"OwnedA1\":{\"name\":\"Owned\",\"version\":\"A\\ud800\",\"history\":{\"safe\":\"note\"}}}"
+    }
+  ]
+}

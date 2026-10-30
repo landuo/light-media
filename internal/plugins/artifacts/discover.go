@@ -14,6 +14,12 @@ import (
 // Discovery is metadata-only: no artifact is downloaded or executed, and no
 // permission or installed state is established. One URL may describe many IDs.
 type Discovery struct {
+	// SourcePackageVersion records an actually fetched versioned source package
+	// (currently package.v2.json), not a plugin version or permission level.
+	// Native Go indexes have one unlayered declaration set and leave this empty.
+	// This host-only provenance is not part of the public artifact index format.
+	SourceDisplay           *PythonDisplay      `json:"-"`
+	SourcePackageVersion    string              `json:"-"`
 	SystemVersion           json.RawMessage     `json:"system_version,omitempty"`
 	SystemVersionCompatible *bool               `json:"system_version_compatible,omitempty"`
 	SystemVersionMessage    string              `json:"system_version_message,omitempty"`

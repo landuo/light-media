@@ -1,0 +1,95 @@
+{
+  "repository": "https://github.com/Owned/Cache",
+  "product_mirror_prefix": "http://127.0.0.1:39125/prefix/",
+  "logical_upstream_host": "raw.githubusercontent.com",
+  "phases": {
+    "initial": {
+      "/Owned/Cache/main/go-plugins.v1.json": {
+        "status": 404,
+        "body": "{}",
+        "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      "/Owned/Cache/main/package.v2.json": {
+        "status": 200,
+        "body": "{\"OwnedHigher\": {\"name\": \"OwnedHigher\", \"version\": \"1.0\", \"description\": \"Owned synthetic cache metadata\", \"icon\": \"plugin.png\", \"author\": \"Owned fixture\", \"history\": {\"1.0\": \"Owned synthetic release\"}, \"v2\": true}}",
+        "body_sha256": "03f7464a6dfd106fc29ed77bd8329d72d675e663c5e9213a55f8bcf2d1fde1f7"
+      },
+      "/Owned/Cache/main/package.json": {
+        "status": 200,
+        "body": "{\"OwnedBase\": {\"name\": \"OwnedBase\", \"version\": \"1.0\", \"description\": \"Owned synthetic cache metadata\", \"icon\": \"plugin.png\", \"author\": \"Owned fixture\", \"history\": {\"1.0\": \"Owned synthetic release\"}, \"v2\": true}}",
+        "body_sha256": "9eb7dd06aca112c7780e3a7511a9287849b0f2c68937c4b64fe3471cf07a95a1"
+      }
+    },
+    "higher-failed": {
+      "/Owned/Cache/main/go-plugins.v1.json": {
+        "status": 404,
+        "body": "{}",
+        "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      "/Owned/Cache/main/package.v2.json": {
+        "status": 500,
+        "body": "{}",
+        "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      "/Owned/Cache/main/package.json": {
+        "status": 200,
+        "body": "{\"OwnedBase\": {\"name\": \"OwnedBase\", \"version\": \"2.0\", \"description\": \"Owned synthetic cache metadata\", \"icon\": \"plugin.png\", \"author\": \"Owned fixture\", \"history\": {\"2.0\": \"Owned synthetic release\"}, \"v2\": true}}",
+        "body_sha256": "5600145b69881230efbdcad6f410922576ca52ffd018ba2a572a89eab6822d93"
+      }
+    },
+    "healthy-new": {
+      "/Owned/Cache/main/go-plugins.v1.json": {
+        "status": 404,
+        "body": "{}",
+        "body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      "/Owned/Cache/main/package.v2.json": {
+        "status": 200,
+        "body": "{\"OwnedHigher\": {\"name\": \"OwnedHigher\", \"version\": \"3.0\", \"description\": \"Owned synthetic cache metadata\", \"icon\": \"plugin.png\", \"author\": \"Owned fixture\", \"history\": {\"3.0\": \"Owned synthetic release\"}, \"v2\": true}}",
+        "body_sha256": "bcd04a4e8971041c5ed8d3bb598b0690e14c14bfe8909a2709e66750184d463d"
+      },
+      "/Owned/Cache/main/package.json": {
+        "status": 200,
+        "body": "{\"OwnedBase\": {\"name\": \"OwnedBase\", \"version\": \"3.0\", \"description\": \"Owned synthetic cache metadata\", \"icon\": \"plugin.png\", \"author\": \"Owned fixture\", \"history\": {\"3.0\": \"Owned synthetic release\"}, \"v2\": true}}",
+        "body_sha256": "51a4d5cf9dc9f60c13d75944c8c4f220808f045b21ebfd4f24a4da1e89246722"
+      }
+    }
+  },
+  "scenario": [
+    {
+      "phase": "initial",
+      "force": true,
+      "expected": [
+        "OwnedHigher@1.0",
+        "OwnedBase@1.0"
+      ]
+    },
+    {
+      "phase": "higher-failed",
+      "force": true,
+      "expected": [
+        "OwnedBase@2.0"
+      ],
+      "expected_source_success": false
+    },
+    {
+      "phase": "healthy-new",
+      "force": false,
+      "expected": [
+        "OwnedHigher@1.0",
+        "OwnedBase@2.0"
+      ],
+      "expected_mirror_requests": 0
+    },
+    {
+      "phase": "healthy-new",
+      "cold": true,
+      "force": false,
+      "expected": [
+        "OwnedHigher@3.0",
+        "OwnedBase@3.0"
+      ]
+    }
+  ],
+  "boundary": "Static synthetic response bytes for existing normal mirror path; not executed source/target expectations yet. No credentials, executable Python or private data."
+}

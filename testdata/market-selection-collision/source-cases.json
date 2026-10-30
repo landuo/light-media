@@ -1,0 +1,172 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_counterexamples_sha256": "ad5b9b1138d0389c42749425f8939e81575acb3fecad33d093368ec98787882c",
+  "source_execution": {
+    "driver_sha256": "fe6b18ad6f639136341dc5042739220565a2883bad5b7dc52ae9dfa42f4fbcf3",
+    "result_sha256": "a2961f0efb537a39c0c4d33509584b95c2de27f7233138ce118cb09ca37bd260",
+    "stdout_sha256": "8bdf67f0fe9a7ead5873eb57a4ad0854d14ea2fd396b30906a82bb2fdad6d1c9",
+    "exit_code": 0,
+    "imported_file_bindings": 1021
+  },
+  "markets": [
+    "https://github.com/owned/early",
+    "https://github.com/owned/late"
+  ],
+  "cases": [
+    {
+      "name": "version outranks repository order",
+      "higher": [],
+      "base": [
+        {
+          "id": "OwnedChoice",
+          "version": "1.0",
+          "repo": "https://github.com/owned/early"
+        },
+        {
+          "id": "OwnedChoice",
+          "version": "2.0",
+          "repo": "https://github.com/owned/late"
+        }
+      ],
+      "selected": [
+        {
+          "id": "OwnedChoice",
+          "version": "2.0",
+          "repo": "https://github.com/owned/late"
+        }
+      ]
+    },
+    {
+      "name": "online tie precedes local; configured source order stable",
+      "higher": [],
+      "base": [
+        {
+          "id": "OwnedChoice",
+          "version": "2.0",
+          "repo": "local://OwnedChoice"
+        },
+        {
+          "id": "OwnedChoice",
+          "version": "2.0",
+          "repo": "https://github.com/owned/late"
+        },
+        {
+          "id": "OwnedChoice",
+          "version": "2.0",
+          "repo": "https://github.com/owned/early"
+        }
+      ],
+      "selected": [
+        {
+          "id": "OwnedChoice",
+          "version": "2.0",
+          "repo": "https://github.com/owned/early"
+        }
+      ]
+    },
+    {
+      "name": "higher-package duplicate suppresses base same id/version",
+      "higher": [
+        {
+          "id": "OwnedChoice",
+          "version": "2.0",
+          "repo": "https://github.com/owned/late"
+        }
+      ],
+      "base": [
+        {
+          "id": "OwnedChoice",
+          "version": "2.0",
+          "repo": "https://github.com/owned/early"
+        }
+      ],
+      "selected": [
+        {
+          "id": "OwnedChoice",
+          "version": "2.0",
+          "repo": "https://github.com/owned/late"
+        }
+      ]
+    },
+    {
+      "name": "non-SemVer stable precedes rc",
+      "higher": [],
+      "base": [
+        {
+          "id": "OwnedChoice",
+          "version": "2.0-rc",
+          "repo": "https://github.com/owned/early"
+        },
+        {
+          "id": "OwnedChoice",
+          "version": "2.0-stable",
+          "repo": "https://github.com/owned/late"
+        }
+      ],
+      "selected": [
+        {
+          "id": "OwnedChoice",
+          "version": "2.0-stable",
+          "repo": "https://github.com/owned/late"
+        }
+      ]
+    },
+    {
+      "name": "legal concatenated id/version collision within base",
+      "higher": [],
+      "base": [
+        {
+          "id": "OwnedA1",
+          "version": "2.0",
+          "repo": "https://github.com/owned/early"
+        },
+        {
+          "id": "OwnedA",
+          "version": "12.0",
+          "repo": "https://github.com/owned/early"
+        }
+      ],
+      "selected": [
+        {
+          "id": "OwnedA1",
+          "version": "2.0",
+          "repo": "https://github.com/owned/early"
+        }
+      ]
+    },
+    {
+      "name": "legal concatenated id/version collision across package bands",
+      "higher": [
+        {
+          "id": "OwnedA1",
+          "version": "2.0",
+          "repo": "https://github.com/owned/late"
+        }
+      ],
+      "base": [
+        {
+          "id": "OwnedA",
+          "version": "12.0",
+          "repo": "https://github.com/owned/early"
+        }
+      ],
+      "selected": [
+        {
+          "id": "OwnedA1",
+          "version": "2.0",
+          "repo": "https://github.com/owned/late"
+        }
+      ]
+    }
+  ],
+  "contract": [
+    "Higher-package candidates enter first. Before repository sorting, remove every base candidate whose exact concatenated id+version string occurs in the higher candidates; the concatenation has no delimiter.",
+    "Build markets by splitting actual PLUGIN_MARKET on comma and omitting empty strings. This function does not additionally trim/normalize/case-fold repository strings.",
+    "Repository rank: exact configured online repository uses its first markets.index position; other nonlocal/absent repositories use len(markets); local:// repositories use len(markets)+1. Python sorting is stable within a rank.",
+    "First dedup is keyed by exact concatenated id+version, not a tuple and not ID alone. First candidate in ranked order wins, except explicit existing-local/current-online replacement. Cross-ID concatenation collisions therefore suppress a legal candidate.",
+    "Sort the deduplicated values again by repository rank. Second dictionary is keyed by ID. Replace its value only when actual StringUtils.compare_version(candidate.version, \">\", previous.version) returns true, or exact version strings match and previous is local while candidate is online.",
+    "Replacing a dictionary value does not move the ID insertion position. Returned order is the first encounter of each surviving ID in the second ranked pass, not a final resort by selected version/repository.",
+    "For valid repository string values, markets.index is membership-guarded and uses a local immutable list; unlisted and repeated configured URLs have deterministic ranks. The six executed cases do not claim arbitrary malformed-object exception equivalence."
+  ],
+  "scope": "Six observed original full-component selection cases from the new 20261030 independent audit, not Go-derived expected output."
+}

@@ -1,0 +1,40 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_result_sha256": "a89dbf14b3e338160f3e26b3e5f3d715da3c273e7f7631d204cc619985175de5",
+  "driver_sha256": "7e4c80ea965b08fe82fae12d02a423406b2580b57c754c3380412b66a52d70f9",
+  "expiry_lru": {
+    "touch_expiring": {
+      "requests": [],
+      "ids": [
+        "OwnedBase"
+      ]
+    },
+    "insert_after_expiry": {
+      "requests": [
+        {
+          "request_observed": true
+        }
+      ],
+      "ids": [
+        "OwnedBase"
+      ]
+    },
+    "valid_oldest_survives": {
+      "requests": [],
+      "ids": [
+        "OwnedBase"
+      ]
+    },
+    "expired_refetched": {
+      "requests": [
+        {
+          "request_observed": true
+        }
+      ],
+      "ids": [
+        "OwnedBase"
+      ]
+    }
+  },
+  "method": "Authorized normal mirror source cache; request arrays retain exact count, not transport URLs. Timer-controlled TTL, not 30 minute wall time."
+}

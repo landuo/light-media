@@ -73,7 +73,7 @@ func (a *App) scanOriginalLocalRepositories(ctx context.Context, state *original
 		candidates = append(candidates, sources...)
 	}
 	active := map[string]bool{}
-	for _, source := range selectOriginalMarketDeclarations(candidates) {
+	for _, source := range selectOriginalLocalMarketDeclarations(candidates) {
 		active[source.PluginID] = true
 		if source.UnavailableReason != "" {
 			report(source.RepositoryURL, errors.New(source.UnavailableReason))

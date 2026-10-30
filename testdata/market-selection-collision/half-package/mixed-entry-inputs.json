@@ -1,0 +1,159 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "cases": [
+    {
+      "name": "mixed-nondictionaries",
+      "package": {
+        "OwnedFirst": {
+          "name": "Owned first",
+          "version": "1.0",
+          "v2": true
+        },
+        "IgnoredNull": null,
+        "IgnoredList": [],
+        "IgnoredString": "ignored",
+        "IgnoredNumber": 3,
+        "IgnoredBool": true,
+        "OwnedMiddle": {
+          "name": "Owned middle",
+          "version": "2.0",
+          "v2": true
+        },
+        "IgnoredTail": null
+      }
+    },
+    {
+      "name": "all-nondictionaries",
+      "package": {
+        "IgnoredNull": null,
+        "IgnoredList": [],
+        "IgnoredString": "ignored",
+        "IgnoredNumber": 3,
+        "IgnoredBool": true
+      }
+    },
+    {
+      "name": "base-incompatible-position",
+      "package": {
+        "OwnedFirst": {
+          "name": "Owned first",
+          "version": "1.0",
+          "v2": true
+        },
+        "OwnedIncompatible": {
+          "name": "Owned incompatible",
+          "version": "1.0"
+        },
+        "OwnedLast": {
+          "name": "Owned last",
+          "version": "1.0",
+          "v2": true
+        }
+      }
+    },
+    {
+      "name": "object-missing-name",
+      "package": {
+        "OwnedNoName": {
+          "version": "1.0",
+          "v2": true
+        }
+      }
+    },
+    {
+      "name": "object-missing-version",
+      "package": {
+        "OwnedNoVersion": {
+          "name": "Owned no version",
+          "v2": true
+        }
+      }
+    },
+    {
+      "name": "object-numeric-version",
+      "package": {
+        "OwnedNumberVersion": {
+          "name": "Owned version number",
+          "version": 2,
+          "v2": true
+        }
+      }
+    },
+    {
+      "name": "object-list-name",
+      "package": {
+        "OwnedListName": {
+          "name": [
+            "Owned"
+          ],
+          "version": "1.0",
+          "v2": true
+        }
+      }
+    },
+    {
+      "name": "object-list-history",
+      "package": {
+        "OwnedListHistory": {
+          "name": "Owned history",
+          "version": "1.0",
+          "v2": true,
+          "history": [
+            "entry"
+          ]
+        }
+      }
+    },
+    {
+      "name": "object-list-description",
+      "package": {
+        "OwnedListDescription": {
+          "name": "Owned description",
+          "version": "1.0",
+          "v2": true,
+          "description": [
+            "source"
+          ]
+        }
+      }
+    },
+    {
+      "name": "object-object-icon",
+      "package": {
+        "OwnedObjectIcon": {
+          "name": "Owned icon",
+          "version": "1.0",
+          "v2": true,
+          "icon": {
+            "owned": "icon"
+          }
+        }
+      }
+    },
+    {
+      "name": "object-numeric-author",
+      "package": {
+        "OwnedNumericAuthor": {
+          "name": "Owned author",
+          "version": "1.0",
+          "v2": true,
+          "author": 2
+        }
+      }
+    },
+    {
+      "name": "object-falsy-display",
+      "package": {
+        "OwnedFalsy": {
+          "name": false,
+          "version": 0,
+          "v2": true,
+          "description": "",
+          "icon": [],
+          "author": {},
+          "history": false
+        }
+      }
+    }
+  ]
+}

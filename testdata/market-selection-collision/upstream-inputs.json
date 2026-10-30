@@ -1,0 +1,311 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "native_mapping": "Only the target representation changes: explicitly listed native indexes replace that repository base package as its single unlayered/base declaration set. Never infer higher from plugin version or HostContract.",
+  "cases": [
+    {
+      "name": "base-concat-collision",
+      "markets": [
+        "https://github.com/Owned/Early",
+        "https://github.com/Owned/Late"
+      ],
+      "packages": {
+        "Early": {
+          "base": {
+            "OwnedA1": {
+              "v2": true,
+              "name": "OwnedA1",
+              "version": "2.0",
+              "history": {
+                "2.0": "OwnedA1 release 2.0"
+              }
+            },
+            "OwnedA": {
+              "v2": true,
+              "name": "OwnedA",
+              "version": "12.0",
+              "history": {
+                "12.0": "OwnedA release 12.0"
+              }
+            }
+          },
+          "higher": {}
+        },
+        "Late": {
+          "base": {},
+          "higher": {}
+        }
+      },
+      "local": {},
+      "native_indexes": {}
+    },
+    {
+      "name": "reversed-base-concat-collision",
+      "markets": [
+        "https://github.com/Owned/Early",
+        "https://github.com/Owned/Late"
+      ],
+      "packages": {
+        "Early": {
+          "base": {
+            "OwnedA": {
+              "v2": true,
+              "name": "OwnedA",
+              "version": "12.0",
+              "history": {
+                "12.0": "OwnedA release 12.0"
+              }
+            },
+            "OwnedA1": {
+              "v2": true,
+              "name": "OwnedA1",
+              "version": "2.0",
+              "history": {
+                "2.0": "OwnedA1 release 2.0"
+              }
+            }
+          },
+          "higher": {}
+        },
+        "Late": {
+          "base": {},
+          "higher": {}
+        }
+      },
+      "local": {},
+      "native_indexes": {}
+    },
+    {
+      "name": "higher-cross-repository-collision",
+      "markets": [
+        "https://github.com/Owned/Early",
+        "https://github.com/Owned/Late"
+      ],
+      "packages": {
+        "Early": {
+          "base": {
+            "OwnedA": {
+              "v2": true,
+              "name": "OwnedA",
+              "version": "12.0",
+              "history": {
+                "12.0": "OwnedA release 12.0"
+              }
+            }
+          },
+          "higher": {}
+        },
+        "Late": {
+          "base": {},
+          "higher": {
+            "OwnedA1": {
+              "v2": true,
+              "name": "OwnedA1",
+              "version": "2.0",
+              "history": {
+                "2.0": "OwnedA1 release 2.0"
+              }
+            }
+          }
+        }
+      },
+      "local": {},
+      "native_indexes": {}
+    },
+    {
+      "name": "higher-same-key-suppresses-earlier-base",
+      "markets": [
+        "https://github.com/Owned/Early",
+        "https://github.com/Owned/Late"
+      ],
+      "packages": {
+        "Early": {
+          "base": {
+            "OwnedChoice": {
+              "v2": true,
+              "name": "OwnedChoice",
+              "version": "2.0",
+              "history": {
+                "2.0": "OwnedChoice release 2.0"
+              }
+            }
+          },
+          "higher": {}
+        },
+        "Late": {
+          "base": {},
+          "higher": {
+            "OwnedChoice": {
+              "v2": true,
+              "name": "OwnedChoice",
+              "version": "2.0",
+              "history": {
+                "2.0": "OwnedChoice release 2.0"
+              }
+            }
+          }
+        }
+      },
+      "local": {},
+      "native_indexes": {}
+    },
+    {
+      "name": "higher-band-does-not-beat-different-higher-plugin-version",
+      "markets": [
+        "https://github.com/Owned/Early",
+        "https://github.com/Owned/Late"
+      ],
+      "packages": {
+        "Early": {
+          "base": {
+            "OwnedChoice": {
+              "v2": true,
+              "name": "OwnedChoice",
+              "version": "3.0",
+              "history": {
+                "3.0": "OwnedChoice release 3.0"
+              }
+            }
+          },
+          "higher": {}
+        },
+        "Late": {
+          "base": {},
+          "higher": {
+            "OwnedChoice": {
+              "v2": true,
+              "name": "OwnedChoice",
+              "version": "2.0",
+              "history": {
+                "2.0": "OwnedChoice release 2.0"
+              }
+            }
+          }
+        }
+      },
+      "local": {},
+      "native_indexes": {}
+    },
+    {
+      "name": "two-level-replacement-position",
+      "markets": [
+        "https://github.com/Owned/Early",
+        "https://github.com/Owned/Late"
+      ],
+      "packages": {
+        "Early": {
+          "base": {
+            "OwnedChoice": {
+              "v2": true,
+              "name": "OwnedChoice",
+              "version": "1.0",
+              "history": {
+                "1.0": "OwnedChoice release 1.0"
+              }
+            },
+            "OwnedMiddle": {
+              "v2": true,
+              "name": "OwnedMiddle",
+              "version": "1.0",
+              "history": {
+                "1.0": "OwnedMiddle release 1.0"
+              }
+            }
+          },
+          "higher": {}
+        },
+        "Late": {
+          "base": {
+            "OwnedChoice": {
+              "v2": true,
+              "name": "OwnedChoice",
+              "version": "2.0",
+              "history": {
+                "2.0": "OwnedChoice release 2.0"
+              }
+            }
+          },
+          "higher": {}
+        }
+      },
+      "local": {},
+      "native_indexes": {}
+    },
+    {
+      "name": "local-two-identities-before-outer-collision",
+      "markets": [
+        "https://github.com/Owned/Early",
+        "https://github.com/Owned/Late"
+      ],
+      "packages": {
+        "Early": {
+          "base": {},
+          "higher": {}
+        },
+        "Late": {
+          "base": {},
+          "higher": {}
+        }
+      },
+      "local": {
+        "OwnedA1": {
+          "v2": true,
+          "name": "OwnedA1",
+          "version": "2.0",
+          "history": {
+            "2.0": "OwnedA1 release 2.0"
+          }
+        },
+        "OwnedA": {
+          "v2": true,
+          "name": "OwnedA",
+          "version": "12.0",
+          "history": {
+            "12.0": "OwnedA release 12.0"
+          }
+        }
+      },
+      "native_indexes": {}
+    },
+    {
+      "name": "mixed-native-single-base-loses-to-explicit-source-higher",
+      "markets": [
+        "https://github.com/Owned/Early",
+        "https://github.com/Owned/Late"
+      ],
+      "packages": {
+        "Early": {
+          "base": {
+            "OwnedA": {
+              "v2": true,
+              "name": "OwnedA",
+              "version": "12.0",
+              "history": {
+                "12.0": "OwnedA release 12.0"
+              }
+            }
+          },
+          "higher": {}
+        },
+        "Late": {
+          "base": {},
+          "higher": {
+            "OwnedA1": {
+              "v2": true,
+              "name": "OwnedA1",
+              "version": "2.0",
+              "history": {
+                "2.0": "OwnedA1 release 2.0"
+              }
+            }
+          }
+        }
+      },
+      "local": {},
+      "native_indexes": {
+        "Early": [
+          "OwnedA"
+        ]
+      }
+    }
+  ]
+}

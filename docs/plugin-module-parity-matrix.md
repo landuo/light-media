@@ -16,11 +16,13 @@
 
 本轮固定交付分支 `plugins-refactor`，重新开发基线为实际远端 `main@97476582910dc4b696f7ccd5010f28d823812d40`。本轮只做全 Go、Linux、单用户、本机存储；AI、工作流、外部存储及专用扩展点排除，普通事件、命令、调度保留。
 
-**当前6/61总组完成本轮验收（既有01–06复用），另4项明确排除；55组尚未闭合不等于55个待开发功能。11原安装正向观察保留，但新镜像HTTP503失败反例已撤回整组通过。已完成子切片为40.clear_cache、S05.query_update（含Unicode修复）、S06.transfer_queries、S10.manager_queries、S01.transmission_queries、S07.CustomIdentifiers、11.mirror_response、17.folder_failure及16.failure_name；子片不额外计为总组通过。** 当前main旧表46/46不是本轮结论；旧证据仅按未变实现与精确绑定复用。
+**当前6/61总组完成本轮验收（既有01–06复用），另4项明确排除；55组尚未闭合不等于55个待开发功能。11原安装正向观察保留，但新镜像HTTP503失败反例已撤回整组通过。已完成子切片为40.clear_cache、S05.query_update（含Unicode修复）、S06.transfer_queries、S10.manager_queries、S01.transmission_queries、S07.CustomIdentifiers、11.mirror_response、17.folder_failure、16.failure_name及09.market_pipeline（共10个完整有限子切片）；子片不额外计为总组通过。** 当前main旧表46/46不是本轮结论；旧证据仅按未变实现与精确绑定复用。
 
 上一环境的 2026-10-29 平台源码、测试、原始证据和预览数据在本次执行环境不可读，亦没有形成远程交付提交。已恢复的少量孤立文档/日志不能重建源码。本轮从上述 main 重新实现；旧 S05 四方法验收不沿用，旧日志不充作新证据。首先完成 S05 查询/更新完整切片，再逐片正常 Git 提交、推送、读回 SHA。总组与已交付子切片分别计证。S05 首片已推送并读回 `42fd80dc13e989a947babd5a40a41560877413f9`；该提交没有 CI workflow/check/status，不能称 CI 通过。`40.clear_cache` 已推送并读回 `e0258042f5196a5d94753f7dceaed9a8ad261d9e`（24 路径核对；无 CI check/status）。S06 两查询已推送并读回 `c313c3ef20148b36e819db597bcd3a8a455be5c2`（46 路径核对；无 CI check/status）。S05 JSON 孤立代理码点边界曾重开，现已修复并重新验收：首个测试 helper 提前改写输入，原红不能证明宿主因果，已明确作废该证明。后以源/目标相同 envelope SHA 和主机入口原始 payload 独立重跑，确证修复前主机错误存成 U+FFFD；新纠正证据另列，旧文件原样保留。
 
-**工作量口径**：61组＝46个既有平台大类＋15个共享宿主核对组。当前6组验证复用、12组有已证明增量（09/11/13/15/16/17/40/S01/S05/S06/S07/S10）、43组待复用核对或差异裁定，不把它们全部当缺失代码。09合法ID+版本拼接、包层级半失败与各band缓存正在最小修复；11/13镜像HTTP503不再错误回源，完整有限子片已验收，但整组仍待09依赖与最终对账。16重置异常后中断链、17卸载SQL失败的hot/DB差异是新真实反例，不把其余43组当缺失。S07仅普通RemoteIdentifiers→CustomIdentifiers→原生UI/本地标题完整子链通过，其他key和通用DAO高ID反例保留；S01仅有限Transmission查询通过，qB原生会话仍环境受限。
+**工作量口径**：61组＝46个既有平台大类＋15个共享宿主核对组。当前6组验证复用、12组有已证明增量（09/11/13/15/16/17/40/S01/S05/S06/S07/S10）、43组待复用核对或差异裁定，不把它们全部当缺失代码。09合法ID+版本拼接、包层级半失败与各band缓存的完整有限链已修复验收；2MiB元数据预算差异仍明确开放，整09未完成；11/13镜像HTTP503不再错误回源，完整有限子片已验收，但整组仍待09依赖与最终对账。16重置异常后中断链、17卸载SQL失败的hot/DB差异是新真实反例，不把其余43组当缺失。S07仅普通RemoteIdentifiers→CustomIdentifiers→原生UI/本地标题完整子链通过，其他key和通用DAO高ID反例保留；S01仅有限Transmission查询通过，qB原生会话仍环境受限。
+
+市场完整有限链 `09.market_pipeline`：按原版包层级/来源顺序、Unicode 版本、成功缓存与强制读取失败/普通回访/冷恢复、原始字段与更新历史及序列化失败贯通。错误保持 HTTP500、text/plain、Internal Server Error，不替换为光影 JSON。独立当前184项中172相符、10官方授权排除、2大于2MiB预算差异明确未通过；另168恢复、2原生仓库guard、60正式相对路径driver，以及协调者当前264与真实官方UI12步分别绑定。原生可执行制品校验未放宽，Python条目仅展示。独审发现的原生仓库错误分类已修复；旧失败、一次静态fixture封套错误和末次DOM空白locator错均保留。精简证据 `migration/evidence/market-pipeline/`；并非整09或全部市场行为通过。发布仍按固定分支的实际远端读回，不能以本段代替已推送证明。
 
 重置失败名称子片 `16.failure_name`：完整原版公开reset/EventManager/默认DAO的真实异常与实例`.name`读取顺序，经独立13组源与独立冷DAO、当前16 App/16 SDK根race、31次HTTP/4次真实启停及官方浏览器46步验收。缺失/被删除/读取失败的name在清理前中断；合法name的处理器异常按原版通知后继续。正常UI失败保留配置/data/PID，普通设置修正name后重置成功，分身不变，冷恢复保持。仅有限JSON名称与checked reset，不是任意Python反射或全部业务插件补偿。17旧49次/57HTTP等保原hash，当前仅按独立影响补3race+19HTTP/2启停；精简证据 `migration/evidence/reset-name/`。原始AX/源码闭包另私有备份，不上传截图或被拒旧材料。15新完整源/API/SFC反例已进入单独最小修复，未混入本片。
 

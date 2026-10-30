@@ -3,7 +3,6 @@ package app
 import (
 	"encoding/json"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"light-media/internal/plugins/artifacts"
@@ -16,16 +15,18 @@ type originalPluginRelease struct {
 }
 
 type originalPluginHistory struct {
-	PluginID         string                        `json:"plugin_id"`
-	RepositoryURL    string                        `json:"repo_url"`
-	CurrentVersion   string                        `json:"current_version"`
-	LatestVersion    string                        `json:"latest_version"`
-	History          map[string]string             `json:"history"`
-	HistoryJSON      json.RawMessage               `json:"-"`
-	ReleaseSupported bool                          `json:"release_supported"`
-	Items            []originalPluginRelease       `json:"items"`
-	Rejected         []artifacts.ReleaseDiagnostic `json:"rejected"`
-	Source           *originalMarketSourceStatus   `json:"source,omitempty"`
+	SourceDisplayRoute string                        `json:"-"`
+	SourceDisplay      *artifacts.PythonDisplay      `json:"-"`
+	PluginID           string                        `json:"plugin_id"`
+	RepositoryURL      string                        `json:"repo_url"`
+	CurrentVersion     string                        `json:"current_version"`
+	LatestVersion      string                        `json:"latest_version"`
+	History            map[string]string             `json:"history"`
+	HistoryJSON        json.RawMessage               `json:"-"`
+	ReleaseSupported   bool                          `json:"release_supported"`
+	Items              []originalPluginRelease       `json:"items"`
+	Rejected           []artifacts.ReleaseDiagnostic `json:"rejected"`
+	Source             *originalMarketSourceStatus   `json:"source,omitempty"`
 }
 
 func (h originalPluginHistory) MarshalJSON() ([]byte, error) {
@@ -45,12 +46,16 @@ func (h originalPluginHistory) MarshalJSON() ([]byte, error) {
 			return nil, err
 		}
 	}
-	return json.Marshal(struct {
+	raw, err := json.Marshal(struct {
 		plain
 		History        json.RawMessage `json:"history"`
 		CurrentVersion *string         `json:"current_version"`
 		LatestVersion  *string         `json:"latest_version"`
 	}{plain(h), history, current, latest})
+	if err != nil {
+		return nil, err
+	}
+	return originalPythonHistoryJSON(h.SourceDisplay, raw, h.SourceDisplayRoute == "releases")
 }
 
 func originalPluginHistoryRoute(path, method string) bool {
@@ -64,16 +69,12 @@ func (a *App) originalPluginHistoryHTTP(r *http.Request, path string) (any, erro
 	if !pluginStorageID.MatchString(id) {
 		return nil, bad("INVALID_PLUGIN_ID", "插件标识无效")
 	}
-	force := parts[0] == "history"
-	if raw := r.URL.Query().Get("force"); raw != "" {
-		parsed, err := strconv.ParseBool(raw)
-		if err != nil {
-			return nil, bad("INVALID_PLUGIN_QUERY", "force必须为布尔值")
-		}
-		force = parsed
+	force, err := originalMarketForceQuery(r, parts[0] == "history")
+	if err != nil {
+		return nil, err
 	}
 	out := originalPluginHistory{PluginID: id, History: map[string]string{}, Items: []originalPluginRelease{}, Rejected: []artifacts.ReleaseDiagnostic{}}
-	repository := r.URL.Query().Get("repo_url")
+	repository := originalMarketQueryString(r, "repo_url")
 	if parts[0] == "releases" && repository == "" {
 		// plugin_releases returns before asking the manager for a local version.
 		return out, nil
@@ -111,7 +112,9 @@ func (a *App) originalPluginHistoryHTTP(r *http.Request, path string) (any, erro
 		}
 		if source.PluginID == "" {
 			candidates, statuses := a.originalOnlineMarketDeclarations(r.Context(), force)
-			for _, candidate := range selectOriginalMarketDeclarations(candidates) {
+			// Online declarations already passed the original package/repository
+			// selector; repeating it could move a replaced ID's insertion position.
+			for _, candidate := range candidates {
 				if candidate.PluginID == id {
 					source = candidate
 					break
@@ -144,6 +147,17 @@ func (a *App) originalPluginHistoryHTTP(r *http.Request, path string) (any, erro
 		return out, nil
 	}
 	out.RepositoryURL, out.LatestVersion = source.RepositoryURL, source.CurrentVersion
+	out.SourceDisplay = source.SourceDisplay
+	out.SourceDisplayRoute = parts[0]
+	if out.SourceDisplay != nil {
+		fields := []string{"history"}
+		if parts[0] == "releases" {
+			fields = []string{"version"}
+		}
+		if err := out.SourceDisplay.WireError(fields...); err != nil {
+			return nil, originalMarketDisplayFailure()
+		}
+	}
 	if source.History != nil {
 		out.History = source.History
 		out.HistoryJSON = source.HistoryJSON
