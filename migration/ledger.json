@@ -15,7 +15,7 @@
     "remote": "https://github.com/landuo/light-media.git",
     "branch": "plugins-refactor",
     "baseline_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-    "revision": "a110eabd0f6bb99a4c0a2cb6f32cb94c1efe2d12",
+    "revision": "e9ebb8b4e9274d531bd2e5156c69e8a5ba33de67",
     "remote_revision": "743b17cb2d1fe42e70fbe98626d99e3515244177",
     "delivery_mode": "remote",
     "delivery_reason": "Per accepted functional slice commit, push and readback; no merge or deployment.",
@@ -26,9 +26,10 @@
       "migration/delivery/s05-unicode-dcbf8d72-paths.json",
       "migration/delivery/existing-reuse-28f3b78c-paths.json",
       "migration/delivery/transmission-743b17cb-paths.json",
-      "migration/delivery/existing-install-a110eabd-paths.json"
+      "migration/delivery/existing-install-a110eabd-paths.json",
+      "migration/delivery/system-config-e9ebb8b4-paths.json"
     ],
-    "revision_note": "Latest completed remote readback a110eabd; this newly accepted S07 content is bound by actual file hashes. New commit/ref receipt recorded only after push, never predicted."
+    "revision_note": "Latest accepted actual product/readback e9ebb8b4; this06 reuse commit only changes metadata and does not change product execution inputs."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -3156,7 +3157,8 @@
         "37",
         "41",
         "49",
-        "40.clear_cache"
+        "40.clear_cache",
+        "06"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract; exact representative entrypoint reverse-link",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3679,7 +3681,8 @@
         "05",
         "S07",
         "S10.manager_queries",
-        "S07.CustomIdentifiers"
+        "S07.CustomIdentifiers",
+        "06"
       ],
       "feature_link_reason": "persistent model/Oper underlying the named state capability",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3803,7 +3806,8 @@
         "05",
         "S07",
         "S10.manager_queries",
-        "S07.CustomIdentifiers"
+        "S07.CustomIdentifiers",
+        "06"
       ],
       "feature_link_reason": "persistent model/Oper underlying the named state capability",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -17783,11 +17787,14 @@
     {
       "id": "06",
       "description": "06 · 2.1 仓库设置：保存的是来源清单，不是立即安装一批插件",
-      "status": "discovered",
+      "status": "verified",
       "source_paths": [
         "app/api/endpoints/system.py",
         "app/core/config.py",
+        "app/core/event.py",
         "app/core/plugin.py",
+        "app/db/models/systemconfig.py",
+        "app/db/systemconfig_oper.py",
         "app/helper/market.py",
         "app/schemas/system.py",
         "scripts/generate_plugin_market_default.py"
@@ -17797,19 +17804,115 @@
         "scope.discovery.15"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "internal/app/plugin_original_markets.go",
+        "internal/app/plugin_standard_config_events.go",
+        "internal/app/runtime.go",
+        "internal/app/http.go",
+        "internal/app/types.go",
+        "internal/app/store.go",
+        "internal/app/plugin_standard_business_events.go",
+        "internal/app/plugin_original_market_sources_test.go",
+        "internal/app/plugin_original_market_env_test.go",
+        "internal/app/plugin_standard_config_events_test.go",
+        "internal/app/plugin_standard_business_events_test.go",
+        "internal/app/runtime_test.go",
+        "cmd/owned-module-fixture/main.go",
+        "cmd/owned-event-fixture/main.go",
+        "go.mod",
+        "go.sum",
+        "web/src/components/PluginMarketSettingDialog.vue",
+        "web/src/components/Plugins.vue",
+        "web/src/components/PluginSystemSettings.vue",
+        "web/src/api.ts",
+        "web/tests/plugin-market-settings.test.mjs",
+        "web/package.json",
+        "web/package-lock.json",
+        "web/dist/index.html"
+      ],
       "owner": "coordinator",
-      "scenarios": [],
-      "evidence_ids": [],
+      "scenarios": [
+        "Real normal source-settings save/ordered persistence and ordinary runtime independence",
+        "Source and native failure/events/override/cold",
+        "Official list/text forms validation/dedup/edit/drag/cancel/reopen"
+      ],
+      "evidence_ids": [
+        "existing-06.real-e2e"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "manager_queries_independent_review_20261030",
+        "evidence_ids": [
+          "existing-06.independent-review"
+        ]
       },
       "external_source_paths": [
-        "frontend:src/components/dialog/PluginMarketSettingDialog.vue"
+        "frontend:src/components/dialog/PluginMarketSettingDialog.vue",
+        "frontend:src/views/plugin/PluginCardListView.vue"
       ],
       "work_kind": "reuse_verification",
-      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code.",
+      "reused_existing_implementation": true,
+      "acceptance_scope": "Repository settings persist an ordered source list; saving does not install or reinitialize plugins. The native dialog supports list/text editing, validation/deduplication, draft cancellation, ordering and persisted reopen. Environment overrides remain read-only and do not overwrite stored sources.",
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "Exact ordered source URLs, normalization/dedup/invalid values and draft boundaries.",
+          "evidence_ids": [
+            "existing-06.real-e2e"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Saved sources versus environment override, no automatic installation/worker init, committed event only.",
+          "evidence_ids": [
+            "existing-06.real-e2e"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Actual failed SQLite INSERT plus validation reject leaves disk/cache/event unchanged; draft cancellation never writes.",
+          "evidence_ids": [
+            "existing-06.real-e2e"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "Actual race tests, stale full-settings save section guard, same live worker PID/config across changes.",
+          "evidence_ids": [
+            "existing-06.real-e2e"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Original fresh Settings process and real target App/cold official browser same saved order.",
+          "evidence_ids": [
+            "existing-06.real-e2e"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "Native explicit Go index URLs, encrypted SQLite versus dotenv, source/frontend fixed hashes; no Python runtime migration.",
+          "evidence_ids": [
+            "existing-06.real-e2e"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "Existing authentication/credential URL restrictions; owned synthetic URLs only, no account/token export.",
+          "evidence_ids": [
+            "existing-06.real-e2e"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Bounded real source-list operations and event queue with observed no extra repository fetch on save; no arbitrary throughput equivalence.",
+          "evidence_ids": [
+            "existing-06.real-e2e"
+          ]
+        }
+      }
     },
     {
       "id": "07",
@@ -30450,6 +30553,124 @@
         "Warm/failedSQL/nativeUI and cold observations kept distinct. Final HTTP/API rendering behavior is not confused with internal RawMessage transport.",
         "Web initial missing dependency failure and intermediate trace failures retained; final same-lock readonly module resolution independently rerun with42 tests passed, no dependency/source rewrite."
       ]
+    },
+    {
+      "id": "existing-06.real-e2e",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "06"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant cloud Linux amd64 Go1.26 race/real standard SDK, SQLite trigger and official authenticated browser; normally imported fixed original endpoint/Settings/default DAO/ConfigChanged queue with explicit unused-integration fixtures. No source authentication/full-server claim.",
+        "target_files": {
+          "internal/app/plugin_original_markets.go": "1df0ba9372ab0964f9e0990e254917ce21885996fbf36b3097e5d455b4314ee0",
+          "internal/app/plugin_standard_config_events.go": "40e35de082aebd65fd110ed13a3bb0e14b9a850d78b05a932465773c382373b0",
+          "internal/app/runtime.go": "4fcab0b50f7a18a2266ecbb6200c8159f376498e4ddbf04c957047603223324e",
+          "internal/app/http.go": "d8d3b9d8506a28948967ce06538f90294a81730653823f66e6feb939bbe82d3d",
+          "internal/app/types.go": "33bd210f927ebf45f1162c2a6cbe7301c9c15e4edfd192525eca9b61d09cc011",
+          "internal/app/store.go": "44ffeb5c61ed9d1828b97f2c11918c77072711e069983584b3bdaa2f4d601dde",
+          "internal/app/plugin_standard_business_events.go": "6a742b7e3c2a1947b2c9c2feeb971f1679e8a59ac1497246128f7bb588044d1b",
+          "internal/app/plugin_original_market_sources_test.go": "f4ac196d415d0d52128046ce705fae5c948b4a192b840bf2ac15b262c1dc6c3c",
+          "internal/app/plugin_original_market_env_test.go": "06682598b214beaa7bf01d5f280e7641b998590312e8fae4b70f53e3bf3c6d83",
+          "internal/app/plugin_standard_config_events_test.go": "e60214a05ec0181c4c5c49eaa990b340e3457276293784745c1d2eff0ef3b10d",
+          "internal/app/plugin_standard_business_events_test.go": "37ca8a9d872b1d9fa24985e278c0108acf3ab9f67bd134b7c23fc7959ddd5ec6",
+          "internal/app/runtime_test.go": "54171f76d365af5b6395796e3493732f31d05227d11a711c2b7572137e2460e6",
+          "cmd/owned-module-fixture/main.go": "c8487ff9d1d5df5b0afa6a09d6cbfe346ee438ac9965b6936a792612842a808c",
+          "cmd/owned-event-fixture/main.go": "9a9796c05d574f6cc3eb2968585c8aa07ebd3525ddf09dfd403bbabda3fb07ef",
+          "go.mod": "622569e08ea6fb374e66a0e35f22bc29b276841d7ab74ade1e1d813a6095b5fa",
+          "go.sum": "2166fc925241cdfc675fc78e2e3d2b36152d9eb208a86d6defccec9551c61355",
+          "web/src/components/PluginMarketSettingDialog.vue": "fd90a90dcff0ecce76dc5bd7179b3d0e1002c09b15d2c98c7b5db5de75791191",
+          "web/src/components/Plugins.vue": "ccf4effae01b33841eef4633aed65905a92bb6005048d79676b21d4b8b4f6a34",
+          "web/src/components/PluginSystemSettings.vue": "4bcab386c0619024e8ddecda669fa3303214240983c4ea54f260e2885b60d297",
+          "web/src/api.ts": "ff1bb4b84c30d83e52bfb230e17473be9a87b7e06c49fb9b5da0db9136d99187",
+          "web/tests/plugin-market-settings.test.mjs": "047ef8d15ac36380b4b05dd5d8935e5753855da1313c7509d84770d9cd50230f",
+          "web/package.json": "3ad720ab0465495265bdfe4cb103ac980381d95a8132cd01a4de44466d61fa9f",
+          "web/package-lock.json": "b51c3ace9f776731ae4d814868395cfe4b7f0494089a0e1d3643f3e893b41bbc",
+          "web/dist/index.html": "4cad404314d0d2ad9671aeb3061cc9d78b60f2365370e21b2c9fe308af0afc80"
+        },
+        "fixture_files": {
+          "evidence/existing-platform-06/reuse-review.json": "0cad01cd0d51101adbc47efa866a694989e215dc04397ed4102fb5856c8dc90b"
+        }
+      },
+      "artifacts": {
+        "evidence/existing-platform-06/reuse-review.json": "0cad01cd0d51101adbc47efa866a694989e215dc04397ed4102fb5856c8dc90b"
+      },
+      "reviewer": "coordinator",
+      "commands": [
+        "Full original system.set_setting/Settings.update_setting/dotenv/defaultDAO/EventManager6 actual observations,769 imported inputs.",
+        "Current main2 actual race roots/6007 before-after unchanged inputs;3 additional event/real SQLite INSERT failure/cold roots12.285s with explicit private compiler overlay.",
+        "Official normal-source configuration17 observations plus6 list-edit/draft-cancel/remove/re-add/save/readback; current normal server independently rebuilt byte-identical."
+      ],
+      "inputs": [
+        "Fixed backend/frontend and exact owned source-list/form/config fixtures; real current SDK worker/server and independent overlay input separately bound in review."
+      ],
+      "observations": [
+        "Order/dedup/validation/cancel/drag/list/text/save/reopen preserve explicit source URLs; no automatic plugin install or reinitialization.",
+        "Environment override readonly does not overwrite persistent list; stale full form does not overwrite newer sources.",
+        "Commit-only event, same-value no-op, real failed SQL preserves live/persisted settings and emits no event; cold prior value retained.",
+        "Market/Wiki/compatibility/transport remain separate; no mirror503 acceptance implied."
+      ]
+    },
+    {
+      "id": "existing-06.independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "06"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant cloud Linux amd64 Go1.26 race/real standard SDK, SQLite trigger and official authenticated browser; normally imported fixed original endpoint/Settings/default DAO/ConfigChanged queue with explicit unused-integration fixtures. No source authentication/full-server claim.",
+        "target_files": {
+          "internal/app/plugin_original_markets.go": "1df0ba9372ab0964f9e0990e254917ce21885996fbf36b3097e5d455b4314ee0",
+          "internal/app/plugin_standard_config_events.go": "40e35de082aebd65fd110ed13a3bb0e14b9a850d78b05a932465773c382373b0",
+          "internal/app/runtime.go": "4fcab0b50f7a18a2266ecbb6200c8159f376498e4ddbf04c957047603223324e",
+          "internal/app/http.go": "d8d3b9d8506a28948967ce06538f90294a81730653823f66e6feb939bbe82d3d",
+          "internal/app/types.go": "33bd210f927ebf45f1162c2a6cbe7301c9c15e4edfd192525eca9b61d09cc011",
+          "internal/app/store.go": "44ffeb5c61ed9d1828b97f2c11918c77072711e069983584b3bdaa2f4d601dde",
+          "internal/app/plugin_standard_business_events.go": "6a742b7e3c2a1947b2c9c2feeb971f1679e8a59ac1497246128f7bb588044d1b",
+          "internal/app/plugin_original_market_sources_test.go": "f4ac196d415d0d52128046ce705fae5c948b4a192b840bf2ac15b262c1dc6c3c",
+          "internal/app/plugin_original_market_env_test.go": "06682598b214beaa7bf01d5f280e7641b998590312e8fae4b70f53e3bf3c6d83",
+          "internal/app/plugin_standard_config_events_test.go": "e60214a05ec0181c4c5c49eaa990b340e3457276293784745c1d2eff0ef3b10d",
+          "internal/app/plugin_standard_business_events_test.go": "37ca8a9d872b1d9fa24985e278c0108acf3ab9f67bd134b7c23fc7959ddd5ec6",
+          "internal/app/runtime_test.go": "54171f76d365af5b6395796e3493732f31d05227d11a711c2b7572137e2460e6",
+          "cmd/owned-module-fixture/main.go": "c8487ff9d1d5df5b0afa6a09d6cbfe346ee438ac9965b6936a792612842a808c",
+          "cmd/owned-event-fixture/main.go": "9a9796c05d574f6cc3eb2968585c8aa07ebd3525ddf09dfd403bbabda3fb07ef",
+          "go.mod": "622569e08ea6fb374e66a0e35f22bc29b276841d7ab74ade1e1d813a6095b5fa",
+          "go.sum": "2166fc925241cdfc675fc78e2e3d2b36152d9eb208a86d6defccec9551c61355",
+          "web/src/components/PluginMarketSettingDialog.vue": "fd90a90dcff0ecce76dc5bd7179b3d0e1002c09b15d2c98c7b5db5de75791191",
+          "web/src/components/Plugins.vue": "ccf4effae01b33841eef4633aed65905a92bb6005048d79676b21d4b8b4f6a34",
+          "web/src/components/PluginSystemSettings.vue": "4bcab386c0619024e8ddecda669fa3303214240983c4ea54f260e2885b60d297",
+          "web/src/api.ts": "ff1bb4b84c30d83e52bfb230e17473be9a87b7e06c49fb9b5da0db9136d99187",
+          "web/tests/plugin-market-settings.test.mjs": "047ef8d15ac36380b4b05dd5d8935e5753855da1313c7509d84770d9cd50230f",
+          "web/package.json": "3ad720ab0465495265bdfe4cb103ac980381d95a8132cd01a4de44466d61fa9f",
+          "web/package-lock.json": "b51c3ace9f776731ae4d814868395cfe4b7f0494089a0e1d3643f3e893b41bbc",
+          "web/dist/index.html": "4cad404314d0d2ad9671aeb3061cc9d78b60f2365370e21b2c9fe308af0afc80"
+        },
+        "fixture_files": {
+          "evidence/existing-platform-06/reuse-review.json": "0cad01cd0d51101adbc47efa866a694989e215dc04397ed4102fb5856c8dc90b"
+        }
+      },
+      "artifacts": {
+        "evidence/existing-platform-06/reuse-review.json": "0cad01cd0d51101adbc47efa866a694989e215dc04397ed4102fb5856c8dc90b"
+      },
+      "reviewer": "manager_queries_independent_review_20261030",
+      "commands": [
+        "Full original system.set_setting/Settings.update_setting/dotenv/defaultDAO/EventManager6 actual observations,769 imported inputs.",
+        "Current main2 actual race roots/6007 before-after unchanged inputs;3 additional event/real SQLite INSERT failure/cold roots12.285s with explicit private compiler overlay.",
+        "Official normal-source configuration17 observations plus6 list-edit/draft-cancel/remove/re-add/save/readback; current normal server independently rebuilt byte-identical."
+      ],
+      "inputs": [
+        "Fixed backend/frontend and exact owned source-list/form/config fixtures; real current SDK worker/server and independent overlay input separately bound in review."
+      ],
+      "observations": [
+        "Order/dedup/validation/cancel/drag/list/text/save/reopen preserve explicit source URLs; no automatic plugin install or reinitialization.",
+        "Environment override readonly does not overwrite persistent list; stale full form does not overwrite newer sources.",
+        "Commit-only event, same-value no-op, real failed SQL preserves live/persisted settings and emits no event; cold prior value retained.",
+        "Market/Wiki/compatibility/transport remain separate; no mirror503 acceptance implied."
+      ]
     }
   ],
   "execution_contract": {
@@ -30461,9 +30682,9 @@
     "existing_platform_reuse": "46 existing applicable platform groups are not 46 rewrites. Preserve/reuse implementation and unchanged sufficiently bound source/test evidence. 15 new shared-host groups are discovery buckets, not 15 automatically missing features."
   },
   "resume": {
-    "next_slice": "Push/readback accepted CustomIdentifiers slice; then finite mirror-response/whole-market selection repairs and existing-platform reuse gates.",
+    "next_slice": "Deliver06 verified reuse metadata; integrate independently accepted mirror-response repair and finish09 whole selection error/caching chain; continue other platform/shared-host coverage.",
     "dirty_work": [
-      "Only independently accepted S07104 product/test/fixture/UI files and necessary safe reports/docs selected. Other repair candidates isolated; no unverified source enters this commit."
+      "Only06 verified reuse/report and prior actual delivery/recovery receipts; other candidates remain isolated."
     ],
     "workers": [
       "coordinator",
@@ -30562,17 +30783,25 @@
         "sha256": "73738f83d6a433c6fb4c67302c2a2d413bc44bab4cf6ffcc8eaee275d90fc4a5",
         "bytes": 2697650,
         "boundary": "180 verified members/178 payload; no accounts/runtime DB/config/deps/binaries/screenshots/old refused materials."
+      },
+      {
+        "purpose": "Exact e9ebb128 delivered paths/readback plus independently enumerated source/target/AX/failed-history recovery, not live account/data.",
+        "library_file_id": "libfile_0ed2d5455ae08191956fdaa3509aee81",
+        "filename": "light-media-system-config-accepted-e9ebb8b4-20261030.tar.gz",
+        "sha256": "a4324a1f91997282138850b7d0ba247a055ef2398e912d2017dec36dbc6eb45f",
+        "bytes": 7612449,
+        "boundary": "752 checked members/750 payload; no credentials/runtime/deps/binaries/screenshots/old refused material."
       }
     ],
     "last_delivery": {
-      "commit": "a110eabd0f6bb99a4c0a2cb6f32cb94c1efe2d12",
+      "commit": "e9ebb8b4e9274d531bd2e5156c69e8a5ba33de67",
       "branch": "plugins-refactor",
-      "readback": "a110eabd0f6bb99a4c0a2cb6f32cb94c1efe2d12",
+      "readback": "e9ebb8b4e9274d531bd2e5156c69e8a5ba33de67",
       "main_unchanged": "97476582910dc4b696f7ccd5010f28d823812d40",
-      "paths": 4,
-      "mapping_path": "migration/delivery/existing-install-a110eabd-paths.json",
-      "mapping_sha256": "58afbd894b642761d49fb1d952fe6626fd4144d92ce8ba9fda07ddce1f5ed6ba",
-      "ci": "0 check-runs and0statuses; not CI pass/running."
+      "paths": 128,
+      "mapping_path": "migration/delivery/system-config-e9ebb8b4-paths.json",
+      "mapping_sha256": "f6ac96da2eeab0250e2429fdccb4d10e939a50901b2f7d36d2435c2444daa069",
+      "ci": "0 check-runs and0statuses; not CI pass or running."
     }
   },
   "external_inventory": [
