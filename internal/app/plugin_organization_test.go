@@ -260,8 +260,13 @@ func TestPluginOrganizationUninstallRollbackAndInvalidMembership(t *testing.T) {
 		t.Fatal("folder failure incorrectly rolled back original installed-list removal", installation, err)
 	}
 	current, err = a.pluginStore.Organization(ctx)
-	if err != nil || !reflect.DeepEqual(saved, current) {
-		t.Fatal("folder write failure committed partial organization data", current, err)
+	if err != nil || current.Revision != saved.Revision || string(current.Folders["旧格式"]) != `[]` || !bytes.Equal(current.Folders["新格式"], saved.Folders["新格式"]) || !bytes.Equal(current.Order, saved.Order) {
+		t.Fatal("failed folder write did not preserve source warm publication", current, err)
+	}
+	warm := current
+	disk, err := a.pluginStore.organization(ctx, a.Store.DB)
+	if err != nil || !reflect.DeepEqual(saved, disk) {
+		t.Fatal("failed SQL changed persistent folders", disk, err)
 	}
 	if _, ok := a.pluginRunningInstances.Load(ownedStandardFixtureID); ok {
 		t.Fatal("folder failure prevented the original stop step")
@@ -295,19 +300,31 @@ func TestPluginOrganizationUninstallRollbackAndInvalidMembership(t *testing.T) {
 		t.Fatal("blank raw folder accepted")
 	}
 	current, err = a.pluginStore.Organization(ctx)
-	if err != nil || !reflect.DeepEqual(saved, current) {
-		t.Fatal("invalid membership changed persisted organization", current, err)
+	if err != nil || !reflect.DeepEqual(warm, current) {
+		t.Fatal("invalid membership changed warm organization", current, err)
 	}
 	if _, err := a.Store.DB.Exec(`DROP TRIGGER synthetic_org_failure`); err != nil {
 		t.Fatal(err)
 	}
-	// Retrying the actual endpoint repairs the pending folder cleanup; it must
-	// neither reinstall the source nor alter the surviving real instances.
+	// Source retry sees the already-removed warm member and does not repair
+	// disk. It neither reinstalls the source nor alters surviving instances.
 	response = callTest(t, a.Handler(), "POST", "/api/plugins/"+ownedStandardFixtureID+"/uninstall", `{}`, cookie, "")
 	assertOriginalRegistrySuccess(t, response.Code, response.Body.Bytes())
 	current, err = a.pluginStore.Organization(ctx)
-	if err != nil || current.Revision != saved.Revision+1 || string(current.Folders["旧格式"]) != `[]` || !bytes.Equal(current.Folders["新格式"], saved.Folders["新格式"]) || !bytes.Equal(current.Order, saved.Order) {
-		t.Fatal("retry failed to repair only pending folder membership", current, err)
+	if err != nil || !reflect.DeepEqual(warm, current) {
+		t.Fatal("retry changed source warm state", current, err)
+	}
+	disk, err = a.pluginStore.organization(ctx, a.Store.DB)
+	if err != nil || !reflect.DeepEqual(saved, disk) {
+		t.Fatal("absent-member retry silently repaired disk", disk, err)
+	}
+	cold, err := NewPluginStore(ctx, a.Store)
+	if err != nil {
+		t.Fatal(err)
+	}
+	coldValue, err := cold.Organization(ctx)
+	if err != nil || !reflect.DeepEqual(saved, coldValue) {
+		t.Fatal("new store failed to reconstruct old disk folders", coldValue, err)
 	}
 	installation, err = a.pluginStore.Installation(ctx, ownedStandardFixtureID)
 	if err != nil || installation.Installed {

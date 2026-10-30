@@ -301,15 +301,21 @@ func (p *PluginStore) rebindOriginalDeletedCloneTx(ctx context.Context, tx *sql.
 }
 
 func (p *PluginStore) cloneOrganizationMemberTx(ctx context.Context, tx *sql.Tx, source, target string) error {
+	_, err := p.cloneOrganizationMemberStateTx(ctx, tx, source, target)
+	return err
+}
+
+func (p *PluginStore) cloneOrganizationMemberStateTx(ctx context.Context, tx *sql.Tx, source, target string) (*PluginOrganization, error) {
 	org, err := p.organization(ctx, tx)
 	if err != nil {
-		return err
+		return nil, err
 	}
+	org = p.withOriginalFolders(org)
 	for _, name := range originalFolderKeys(org) {
 		value := org.Folders[name]
 		members, e := pluginFolderRawMembers(value)
 		if e != nil {
-			return e
+			return nil, e
 		}
 		found := false
 		for _, member := range members {
@@ -322,36 +328,36 @@ func (p *PluginStore) cloneOrganizationMemberTx(ctx context.Context, tx *sql.Tx,
 			continue
 		}
 		if name == "" {
-			return nil
+			return nil, nil
 		}
 		for _, member := range members {
 			if originalFolderMemberIs(member, target) {
-				return nil
+				return nil, nil
 			}
 		}
 		encodedTarget, _ := json.Marshal(target)
 		members = append(members, encodedTarget)
 		list, e := json.Marshal(members)
 		if e != nil {
-			return e
+			return nil, e
 		}
 		if bytes.TrimSpace(value)[0] == '[' {
 			org.Folders[name] = list
 		} else {
 			var object map[string]json.RawMessage
 			if e = json.Unmarshal(value, &object); e != nil {
-				return e
+				return nil, e
 			}
 			object["plugins"] = list
 			org.Folders[name], e = json.Marshal(object)
 			if e != nil {
-				return e
+				return nil, e
 			}
 		}
-		_, err = p.saveOrganizationTx(ctx, tx, org)
-		return err
+		saved, err := p.saveOrganizationTx(ctx, tx, org)
+		return &saved, err
 	}
-	return nil
+	return nil, nil
 }
 
 func (a *App) pluginCloneHTTP(w http.ResponseWriter, r *http.Request, source string) (any, error) {
@@ -437,16 +443,22 @@ func (a *App) pluginCloneHTTP(w http.ResponseWriter, r *http.Request, source str
 	if err = a.initializeOriginalCloneCalls(ctx, in.InstanceID); err != nil {
 		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
 	}
+	a.pluginStore.folders.operation.Lock()
+	defer a.pluginStore.folders.operation.Unlock()
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
 	}
 	defer tx.Rollback()
-	if err = a.pluginStore.cloneOrganizationMemberTx(ctx, tx, source, in.InstanceID); err != nil {
+	folderState, err := a.pluginStore.cloneOrganizationMemberStateTx(ctx, tx, source, in.InstanceID)
+	if err != nil {
 		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
 	}
 	if err = tx.Commit(); err != nil {
 		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+	}
+	if folderState != nil {
+		a.pluginStore.publishOriginalFolders(*folderState, true)
 	}
 	return map[string]any{"success": true, "message": "插件分身创建成功", "created": true, "instance_id": in.InstanceID, "plugin_id": in.PluginID, "source_instance_id": source}, nil
 }

@@ -1,0 +1,112 @@
+{
+  "row": "17",
+  "outcome": "pass_current_main_limited_uninstall_folder_failure_integration_backend_gate",
+  "fixed_source": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "target_base": "ad0a1d3df62123cba04495a4ce54c376a4b382b0",
+  "target_candidate": "exact frozen 11-path row17 integration, not yet claimed committed",
+  "candidate_sha256": "5dac8247fe2dd7733bdc0815eb8c1fb3f0ba4e734e23b87148dd2ed12a6c838f",
+  "source_evidence_reuse": {
+    "original_component_cases": [
+      "list",
+      "object-with-opaque-fields",
+      "duplicate-first-occurrence"
+    ],
+    "basis": "Previously independently executed whole original endpoint/Manager/default DAO/SQLite plus fresh original DAO cold, not AST. Same original inputs/results and pinned source/dependencies rehashed; no claim source was re-executed in this main gate.",
+    "prior_independent_review_sha256": "e2f89b13ff5cfe3b650810ce7f6c8d70a7876836bb06be3a20a5aaed3b4cfd89",
+    "source_postflight_sha256": "da41a67bb3fed509449bc45bb4749fa6b7496b14b5e0f5e2644ae648dc162135"
+  },
+  "actual_current_runs": [
+    {
+      "suite": "organization-normal",
+      "roots": 15,
+      "seconds": 37.036,
+      "exit": 0,
+      "log_sha256": "5b8c780180182c895f3f1bac842d4d7fb050d4e376d85c4204d5943cd05a2880"
+    },
+    {
+      "suite": "organization-race",
+      "roots": 15,
+      "seconds": 55.363,
+      "exit": 0,
+      "log_sha256": "5744f0c2f81af3ae37152efb6563eb8a48c49ce8c69d5716bded1f20e8209fac"
+    },
+    {
+      "suite": "base-lifecycle-race",
+      "roots": 8,
+      "seconds": 44.955,
+      "exit": 0,
+      "log_sha256": "efbecb705bf6a77188f7845d729f292e8a964cee99365c5bab965f7457987b56"
+    },
+    {
+      "suite": "manager-race",
+      "roots": 4,
+      "seconds": 46.791,
+      "exit": 0,
+      "log_sha256": "acd72534b6703c41565a167d935aa0add5c05451b51cb0d300687fcad5960353"
+    },
+    {
+      "suite": "system-config-race",
+      "roots": 3,
+      "seconds": 154.492,
+      "exit": 0,
+      "log_sha256": "0388808dccc30e2776c1aec369b5e5c99218ccb2664298a7c18c88bf769d8442"
+    }
+  ],
+  "normal_production": {
+    "unmodified_cmd_server": true,
+    "unmodified_actual_Base_SDK": true,
+    "overlay": false,
+    "real_SQLite_failure": true,
+    "cases": [
+      {
+        "case": 0,
+        "requests": 19,
+        "starts": 2,
+        "graceful_stops_exit0": 2,
+        "result_sha256": "d647a804c32618e467f2f3dde800a833e46d39621e7d209a0acb00987502b4e3"
+      },
+      {
+        "case": 1,
+        "requests": 19,
+        "starts": 2,
+        "graceful_stops_exit0": 2,
+        "result_sha256": "16bce785229b6490dee56834eaac2c1dc33ae9d3a6af0982ff1dce340d21df63"
+      },
+      {
+        "case": 2,
+        "requests": 19,
+        "starts": 2,
+        "graceful_stops_exit0": 2,
+        "result_sha256": "afcf98e0569d706907588aff0dcb547158bd6dbde31a986b4c51512e677a3dd8"
+      }
+    ],
+    "network": "ordinary bootstrap sharing=false/serverURL empty; public readback; independent owned-only proxies rejected=[]"
+  },
+  "QA_boundary": [
+    "Main test executables use only three approved private replacements: ordinary settings before installs, exact egress proxy environment in Manager/S07 child process launches. No product algorithm or assertion changed.",
+    "Existing S07 timing child has its original timing source/fixture plus those same three setup replacements, combined without key conflicts by a unique validated nested-go invocation. This child is instrumented, not a normal production proof.",
+    "Separate production cases and browser-supplied server/worker are built normally with no overlay."
+  ],
+  "retained_harness_red": {
+    "initial_gate_exit": 1,
+    "reason": "count assertion expected7 but selected7 SDK roots plus1 lifecycle; all8 actual tests exited0 and passed. Original raw/exit retained.",
+    "correction_sha256": "b2eae1ba3d6b48b29e90bd2064fdbf5501c55d13bf067d51dd55de4b96701020",
+    "resume_gate_exit": 0,
+    "no_product_assertion_relaxed": true
+  },
+  "binding": {
+    "before_after_superset_files": 13147,
+    "before_after_sha256": "8bcbf73e480cb4f2c4b4ba13157b75594a568ee796657d3adb4e19a5b87a25fc",
+    "selected_compilation_code_embed_files": 4406,
+    "selection_sha256": "8e0152e45277ab1c017e8368d40e9be488da152ea274c0ef6c35fdb3c7fa1556",
+    "browser_build_binding_sha256": "ef17f56ca2161c6e94647eba59549cfd5817cde3a069cad72f7ea4c30bba49cb"
+  },
+  "vet_exit": 0,
+  "scope_limits": [
+    "Backend/actual workers/HTTP are not official browser UI. Parent browser evidence remains separate.",
+    "This verifies the finite row17 failure semantics plus explicitly listed affected Base/Manager/S07 interactions, not all14–21 or the whole platform.",
+    "Base snapshot has no worker PID: retention assertions use init_count/config/KV plus genuine server cold lifecycle.",
+    "Historical source and semantic oracles are reused unchanged; stale old target runs are not relabeled current."
+  ],
+  "service_state": "all reviewer-owned production servers/repositories/proxies stopped; official parent preview intentionally not touched"
+}

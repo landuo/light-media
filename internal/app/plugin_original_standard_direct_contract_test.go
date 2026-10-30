@@ -68,6 +68,12 @@ func ownedStandardSDKFixture(t *testing.T) (*App, *http.Cookie, *originalPluginI
 	t.Cleanup(server.Close)
 	index.Releases[0].Artifacts[0].URL = server.URL + "/owned-standard-fixture"
 	a := newTestApp(t)
+	settings := a.Settings()
+	noShare, noServer := false, ""
+	settings.PluginStatisticShare, settings.PluginServerURL = &noShare, &noServer
+	if err := a.saveSettings(context.Background(), settings); err != nil {
+		t.Fatal(err)
+	}
 	t.Cleanup(a.closeOriginalSessions)
 	cookie := setupTestAdmin(t, a)
 	body, _ := json.Marshal(map[string]any{"plugin_id": manifest.PluginID, "repo_url": server.URL + "/index"})

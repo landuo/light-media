@@ -1,0 +1,154 @@
+{
+  "scope": "Impact/reuse audit, not a replacement authoritative completion table",
+  "target_base": "ad0a1d3df62123cba04495a4ce54c376a4b382b0",
+  "candidate_sha256": "5dac8247fe2dd7733bdc0815eb8c1fb3f0ba4e734e23b87148dd2ed12a6c838f",
+  "exact_diff_sha256": "6ec520d033fe683b1c98e88916b432354479865470414beb3ea49046ba9042f7",
+  "new_cache_source_sha256": "306b375050c0c2f2420232acc1c041ddacbeb1244eb4b1eabbe279129acd7c6f",
+  "changed_behavior": [
+    "PluginStore adds only private folders cache state. Existing config/KV/registry method bodies unchanged.",
+    "Organization reads overlay warm folders; explicit folder mutation/clone commits publish. Order-only persistence deliberately does not repair failed warm folders.",
+    "Uninstall publishes removal before SQL, preserves first-occurrence/insertion semantics, and ordinary caller still proceeds to stop after folder write failure.",
+    "Public clone operation lock starts before its folder transaction; initialization before that transaction is unchanged."
+  ],
+  "stale_old_records": [
+    {
+      "id": "system-config.current-cross-e2e",
+      "features": [
+        "S10.manager_queries",
+        "S06.transfer_queries",
+        "S05.query_update",
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "S01.transmission_queries",
+        "40.clear_cache"
+      ],
+      "changed_target_bindings": [
+        "internal/app/plugin_store.go",
+        "internal/app/plugin_instances.go"
+      ],
+      "historical_binding_sha256": "7e7d917529baf9d5490b33e0f3f2413f32a93b086f0e2339de28dd2d21bf9f59",
+      "disposition": "Keep original hashes/artifacts as historical; do not patch its old runtime bindings and claim rerun."
+    },
+    {
+      "id": "system-config.current-cross-review",
+      "features": [
+        "S10.manager_queries",
+        "S06.transfer_queries",
+        "S05.query_update",
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "S01.transmission_queries",
+        "40.clear_cache"
+      ],
+      "changed_target_bindings": [
+        "internal/app/plugin_store.go",
+        "internal/app/plugin_instances.go"
+      ],
+      "historical_binding_sha256": "7e7d917529baf9d5490b33e0f3f2413f32a93b086f0e2339de28dd2d21bf9f59",
+      "disposition": "Keep original hashes/artifacts as historical; do not patch its old runtime bindings and claim rerun."
+    }
+  ],
+  "current_mapping": [
+    {
+      "scope": [
+        "01",
+        "03",
+        "05",
+        "S10.manager_queries"
+      ],
+      "current_coverage": "45-root gate: Base7+direct lifecycle1, Manager4 (actual class registry/config/errors/auth/scopes and normal process cold), organization/cache race. No Base config/KV/data encoding method changed.",
+      "remaining": "No additional row17-induced root needed for these contracts; current official page observations remain separately attributed."
+    },
+    {
+      "scope": [
+        "02",
+        "04"
+      ],
+      "current_coverage": "Base/Manager cold/reinit already run; actual changed executable v1->v2 production lifecycle is separate.",
+      "required_addon": "TestPluginModuleProductionProcessLifecycle"
+    },
+    {
+      "scope": [
+        "S05.query_update"
+      ],
+      "changed_entry": "Shared ordinary clone endpoint final folder transaction/lock, not subscription DAO/JSON/CAS algorithms.",
+      "required_addon": "TestSharedSubscriptionsActualCloneCASRollbackAndNativeABA",
+      "historical_not_repeated": "Original source expectations and exact unchanged query/Unicode algorithms can support source reasoning; old18 target roots remain old runs, not current18."
+    },
+    {
+      "scope": [
+        "S06.transfer_queries"
+      ],
+      "changed_entry": "Shared clone/folder transaction; authoritative history native producer and selectors unchanged.",
+      "required_addon": "TestSharedHistoryNativeProducerWorkerQueries",
+      "historical_not_repeated": "Do not rename one actual native copy/clone/cold root as old history6 rerun."
+    },
+    {
+      "scope": [
+        "40.clear_cache"
+      ],
+      "changed_entry": "PluginStore new private folder state, not cache enumeration/clear command/provider dispatcher.",
+      "required_addon": "TestOriginalClearCacheFailuresOverrideAuthAndCold",
+      "historical_not_repeated": "This actual failure/auth/provider-continuation/cold root supplements unchanged source/semantic expectations; old9 roots are not rerun."
+    },
+    {
+      "scope": [
+        "S01.transmission_queries"
+      ],
+      "changed_entry": "Shared ordinary clone/host lifecycle only; native Transmission selector/filter/complete-fields/timeout/scope code unchanged.",
+      "required_current_observation": "Parent official current normal server + existing real owned daemon: actual source and clone declaration/query after same-data cold, not merely cards.",
+      "historical_not_repeated": "Keep original source47+47/aux28/slow21s and old target wire/permission proofs as historically executed; no need repeat the unmodified whole protocol corpus solely for added folders state, but never call that corpus a current run."
+    },
+    {
+      "scope": [
+        "S07.CustomIdentifiers"
+      ],
+      "changed_entry": "New folders cache is separate from SharedSystemConfig CustomIdentifiers state and domain schema. Ordinary clone endpoint touched.",
+      "current_coverage": "Actual UICloneEventsAndConcurrency, original MixedInterleavings child with explicit instrumentation, ActualServerProcessCold all passed154.492s; original unchanged scalar/Unicode source oracle is not re-executed here."
+    }
+  ],
+  "claim_rule": "Old complete target records keep original hashes and become historical. New current integration covers the explicit touched-path gates plus current browser observations, using unchanged original source oracles for source reasoning. It does not re-label old54/all prior source47+47/aux28/slow cases as rerun.",
+  "addon_state_at_creation": "final: exactly four addon roots passed, initial missing-source-environment red retained and corrected by fresh source execution; current S01 five-step actual browser supplement independently reviewed",
+  "backend_gate_review_sha256": "395cc6d3db37fa5b8f8a07ceda38361ee8a5a93610c3d928e5621d740b07617c",
+  "addons": [
+    {
+      "test": "TestSharedSubscriptionsActualCloneCASRollbackAndNativeABA",
+      "exit": 0,
+      "elapsed_seconds": 14.916,
+      "log_sha256": "afb15655325b689808189c84c09a86ab7cc446032f8d4936a3fddb1d3bd0ceb4",
+      "rejected_count": 0
+    },
+    {
+      "test": "TestSharedHistoryNativeProducerWorkerQueries",
+      "exit": 0,
+      "elapsed_seconds": 15.972,
+      "log_sha256": "ec554d632b659fef30cb3e8608e1ab7af07ef8fbe720e6b890496d1a7b057b55",
+      "rejected_count": 0
+    },
+    {
+      "test": "TestOriginalClearCacheFailuresOverrideAuthAndCold",
+      "exit": 0,
+      "elapsed_seconds": 7.502,
+      "log_sha256": "20cf1f04508c1aa90b9397687bc86477adca7ab32827432120510af35ffe9f32",
+      "rejected_count": 0
+    },
+    {
+      "test": "TestPluginModuleProductionProcessLifecycle",
+      "exit": 0,
+      "elapsed_seconds": 18.335,
+      "log_sha256": "ab8e1384b5cf79aa50ab2a1147e08b5e6384e59f312b42d22dc682b9dfdc4d9e",
+      "rejected_count": 0
+    }
+  ],
+  "current_S01_evidence": {
+    "raw_sha256": "38b30162253eb83fec6702f1c22bbbdbe00ae008f5a51be35dae657a71ea5a3d",
+    "ready_sha256": "0d2b315b55acfd95cc1756635d46452fcbac34d5dd61cf8243885805668f2647",
+    "boundary": "Source page actual query succeeded; subsequent source button snapshot is loading-only, not independently settled. Clone page and subsequent button settlement observed. Same-data current cold, three private paused torrents,0 peers/trackers,5 loopback listeners."
+  }
+}

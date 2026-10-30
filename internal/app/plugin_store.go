@@ -33,6 +33,7 @@ type PluginStoredValue struct {
 type PluginStore struct {
 	store   *Store
 	notices pluginNoticeRuntime
+	folders originalPluginFolderCache
 }
 
 const pluginImportLimit = 64 << 20

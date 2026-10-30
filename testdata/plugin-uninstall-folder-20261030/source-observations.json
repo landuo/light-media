@@ -1,0 +1,178 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "boundary": "Original normally imported endpoint/Manager/Base/DAO/SQLite; unrelated startup integrations explicitly inert. Cold is a fresh original DAO process, not source host restart.",
+  "cases": [
+    {
+      "name": "same-input public uninstall folder failure and retry",
+      "input": {
+        "source": "OwnedBaseFixture",
+        "clone": "OwnedBaseFixturetwin",
+        "folders": {
+          "owned-folder": [
+            "OwnedBaseFixture",
+            "OwnedBaseFixturetwin"
+          ]
+        }
+      },
+      "warm_after_failure": {
+        "owned-folder": [
+          "OwnedBaseFixturetwin"
+        ]
+      },
+      "disk_after_failure": {
+        "owned-folder": [
+          "OwnedBaseFixture",
+          "OwnedBaseFixturetwin"
+        ]
+      },
+      "warm_after_retry": {
+        "owned-folder": [
+          "OwnedBaseFixturetwin"
+        ]
+      },
+      "disk_after_retry": {
+        "owned-folder": [
+          "OwnedBaseFixture",
+          "OwnedBaseFixturetwin"
+        ]
+      },
+      "cold": {
+        "owned-folder": [
+          "OwnedBaseFixture",
+          "OwnedBaseFixturetwin"
+        ]
+      },
+      "raw_sha256": "46f7e15ea43fa39fdb7a235f799cb70122107764f9076ed508013bb35df83e1d",
+      "driver_sha256": "4467d016a1b251b629c725d4d535b778f3835ae4e3c4eb11c746211984533a09"
+    },
+    {
+      "name": "object public uninstall folder failure and retry",
+      "input": {
+        "source": "OwnedBaseFixture",
+        "clone": "OwnedBaseFixturetwin",
+        "folders": {
+          "owned-folder": {
+            "plugins": [
+              "OwnedBaseFixture",
+              "OwnedBaseFixturetwin"
+            ],
+            "icon": "owned-icon",
+            "order": 7,
+            "opaque": {
+              "retained": true
+            }
+          }
+        }
+      },
+      "warm_after_failure": {
+        "owned-folder": {
+          "plugins": [
+            "OwnedBaseFixturetwin"
+          ],
+          "icon": "owned-icon",
+          "order": 7,
+          "opaque": {
+            "retained": true
+          }
+        }
+      },
+      "disk_after_failure": {
+        "owned-folder": {
+          "plugins": [
+            "OwnedBaseFixture",
+            "OwnedBaseFixturetwin"
+          ],
+          "icon": "owned-icon",
+          "order": 7,
+          "opaque": {
+            "retained": true
+          }
+        }
+      },
+      "warm_after_retry": {
+        "owned-folder": {
+          "plugins": [
+            "OwnedBaseFixturetwin"
+          ],
+          "icon": "owned-icon",
+          "order": 7,
+          "opaque": {
+            "retained": true
+          }
+        }
+      },
+      "disk_after_retry": {
+        "owned-folder": {
+          "plugins": [
+            "OwnedBaseFixture",
+            "OwnedBaseFixturetwin"
+          ],
+          "icon": "owned-icon",
+          "order": 7,
+          "opaque": {
+            "retained": true
+          }
+        }
+      },
+      "cold": {
+        "owned-folder": {
+          "plugins": [
+            "OwnedBaseFixture",
+            "OwnedBaseFixturetwin"
+          ],
+          "icon": "owned-icon",
+          "order": 7,
+          "opaque": {
+            "retained": true
+          }
+        }
+      },
+      "raw_sha256": "4bb387284eccb9a5c611ae5a6f2eda15d58bdbe6755882443da85c078923296a",
+      "driver_sha256": "a7753ded519dddfd03a4949cd919802a3c3ddfa2dbf4aac1c9181b5f925b4eea"
+    },
+    {
+      "name": "duplicate public uninstall folder failure and retry",
+      "input": {
+        "source": "OwnedBaseFixture",
+        "clone": "OwnedBaseFixturetwin",
+        "folders": {
+          "owned-folder": [
+            "OwnedBaseFixture",
+            "OwnedBaseFixture",
+            "OwnedBaseFixturetwin"
+          ]
+        }
+      },
+      "warm_after_failure": {
+        "owned-folder": [
+          "OwnedBaseFixture",
+          "OwnedBaseFixturetwin"
+        ]
+      },
+      "disk_after_failure": {
+        "owned-folder": [
+          "OwnedBaseFixture",
+          "OwnedBaseFixture",
+          "OwnedBaseFixturetwin"
+        ]
+      },
+      "warm_after_retry": {
+        "owned-folder": [
+          "OwnedBaseFixturetwin"
+        ]
+      },
+      "disk_after_retry": {
+        "owned-folder": [
+          "OwnedBaseFixturetwin"
+        ]
+      },
+      "cold": {
+        "owned-folder": [
+          "OwnedBaseFixturetwin"
+        ]
+      },
+      "raw_sha256": "46ea16bc4701ed82c8631532011ca862c76e093b62fd05013f9384b05cb07868",
+      "driver_sha256": "a7753ded519dddfd03a4949cd919802a3c3ddfa2dbf4aac1c9181b5f925b4eea"
+    }
+  ]
+}

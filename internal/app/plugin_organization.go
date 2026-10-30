@@ -68,7 +68,13 @@ func (p *PluginStore) organization(ctx context.Context, db pluginOrganizationRea
 }
 
 func (p *PluginStore) Organization(ctx context.Context) (PluginOrganization, error) {
-	return p.organization(ctx, p.store.DB)
+	p.folders.operation.Lock()
+	defer p.folders.operation.Unlock()
+	out, err := p.organization(ctx, p.store.DB)
+	if err == nil {
+		out = p.withOriginalFolders(out)
+	}
+	return out, err
 }
 
 func pluginFolderRawMembers(raw json.RawMessage) ([]json.RawMessage, error) {
@@ -168,6 +174,8 @@ func (p *PluginStore) saveOrganizationTx(ctx context.Context, tx *sql.Tx, in Plu
 
 func (p *PluginStore) SaveOrganization(ctx context.Context, in PluginOrganization) (PluginOrganization, error) {
 	in.orderPresent = true
+	p.folders.operation.Lock()
+	defer p.folders.operation.Unlock()
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return PluginOrganization{}, err
@@ -177,7 +185,11 @@ func (p *PluginStore) SaveOrganization(ctx context.Context, in PluginOrganizatio
 	if err != nil {
 		return PluginOrganization{}, err
 	}
-	return out, tx.Commit()
+	if err = tx.Commit(); err != nil {
+		return PluginOrganization{}, err
+	}
+	p.publishOriginalFolders(out, true)
+	return out, nil
 }
 
 // Both regular uninstall and PluginUnInstall use this same transaction. Folder
@@ -255,7 +267,7 @@ func (a *App) pluginOrganizationHTTP(w http.ResponseWriter, r *http.Request) (an
 			return nil, bad("INVALID_PLUGIN_ORDER", "插件顺序必须是列表")
 		}
 	}
-	if err := a.pluginStore.mutateOrganization(r.Context(), func(current *PluginOrganization) (bool, error) {
+	if err := a.pluginStore.mutateOrganizationFields(r.Context(), len(in.Folders) != 0, func(current *PluginOrganization) (bool, error) {
 		if len(in.Folders) != 0 {
 			current.Folders = folders
 			current.folderKeys = originalFolderInputKeys(in.Folders)

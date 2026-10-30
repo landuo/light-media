@@ -1,0 +1,40 @@
+{
+  "row": "17",
+  "review_outcome": "pass_for_frozen_candidate01_folder_failure_subslice_pending_main_integration_and_official_UI",
+  "candidate_sha256": "5dac8247fe2dd7733bdc0815eb8c1fb3f0ba4e734e23b87148dd2ed12a6c838f",
+  "base_revision": "e9ebb8b4e9274d531bd2e5156c69e8a5ba33de67",
+  "fixed_source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "scope": "Ordinary uninstall -> PluginFolders synchronous warm-before-database failure, retry, then genuine target cold restart. Not all SystemConfig failure modes, not row16, not yet delivered main.",
+  "independent_source": "Original list, object-with-opaque-fields and duplicate-first-occurrence inputs executed through full original endpoint/Manager/default DAO/SQLite. Cold is a fresh original DAO process; unrelated source integrations remain explicit fixtures.",
+  "independent_target": {
+    "actual_production_cases": 3,
+    "authenticated_http_requests": 57,
+    "actual_server_starts": 6,
+    "graceful_SIGTERM_exit0": 6,
+    "real_SQLite_triggers": true,
+    "actual_Base_SDK": true,
+    "owned_only_proxy_rejected": [],
+    "cache_race_tests": 3,
+    "cache_race_elapsed_seconds": 4.367,
+    "skip_or_race_warning": false
+  },
+  "confirmed": [
+    "failed folder SQL publishes source warm removal while disk remains unchanged; uninstall/API removal/stop continue",
+    "list/object retry without remaining target does not repair disk; actual cold re-exposes disk membership",
+    "duplicate list removes only first occurrence; second retry removes remaining duplicate and commits, so cold stays cleaned",
+    "ordinary config/KV/code/files and surviving clone config/KV/files remain intact",
+    "independent race tests also verify order-only updates do not repair failed folders, explicit folder save can repair, getter copies, CAS and concurrent order writers"
+  ],
+  "code_review": "Cache is only folders+insertion keys; order/revision remain database facts. Short state lock contains no SQL; operation lock precedes public transactions. Committed private-transaction folder changes are detected by a separate disk snapshot. No source, settings/schema, identity, authorization or excluded-domain changes.",
+  "limits": [
+    "No worker-PID assertion: existing Base snapshot lacks PID. Real server stop/start and API init/config/KV observations are stated precisely.",
+    "No new official browser test; no main/mirror coexistence gate yet.",
+    "Initial independent old target difference and owner red logs remain retained; old rollback green is not relabeled source-equivalent."
+  ],
+  "evidence_sha256": {
+    "preflight": "69f123b4edf0b14b0062e949653aeec7714c9990807c591b1baa041699a5a2a2",
+    "postflight": "d56e6bffb6de2d65b1f138a72dac8d1592cccdcac8885db2f2851728aa6dc6d4",
+    "owner_frozen_summary": "1aed4213c2456936345e23f47177002f26aa3a37b960b6eaff76ea366e2e6bef"
+  },
+  "service_state": "all reviewer-owned candidate test servers/repositories/proxies stopped"
+}

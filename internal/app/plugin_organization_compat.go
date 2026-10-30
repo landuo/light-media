@@ -29,6 +29,12 @@ func organizationCompatResponse(success bool, message string) pluginOrganization
 // reads and saves in one transaction, so a folder edit cannot overwrite a
 // concurrently saved PluginOrder or unrelated folder properties.
 func (p *PluginStore) mutateOrganization(ctx context.Context, change func(*PluginOrganization) (bool, error)) error {
+	return p.mutateOrganizationFields(ctx, true, change)
+}
+
+func (p *PluginStore) mutateOrganizationFields(ctx context.Context, folders bool, change func(*PluginOrganization) (bool, error)) error {
+	p.folders.operation.Lock()
+	defer p.folders.operation.Unlock()
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -38,14 +44,26 @@ func (p *PluginStore) mutateOrganization(ctx context.Context, change func(*Plugi
 	if err != nil {
 		return err
 	}
+	// Order-only writes must preserve the disk folders, not repair a failed
+	// synchronous uninstall using its newer warm value as an accidental write.
+	if folders {
+		current = p.withOriginalFolders(current)
+	}
 	changed, err := change(&current)
 	if err != nil || !changed {
 		return err
 	}
-	if _, err = p.saveOrganizationTx(ctx, tx, current); err != nil {
+	saved, err := p.saveOrganizationTx(ctx, tx, current)
+	if err != nil {
 		return err
 	}
-	return tx.Commit()
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+	if folders {
+		p.publishOriginalFolders(saved, true)
+	}
+	return nil
 }
 
 func organizationCompatBody(w http.ResponseWriter, r *http.Request) (json.RawMessage, bool) {
@@ -195,7 +213,7 @@ func (a *App) servePluginOrganizationCompatAPI(w http.ResponseWriter, r *http.Re
 		}
 	}
 	out := organizationCompatResponse(true, "")
-	err := a.pluginStore.mutateOrganization(r.Context(), func(current *PluginOrganization) (bool, error) {
+	err := a.pluginStore.mutateOrganizationFields(r.Context(), !order, func(current *PluginOrganization) (bool, error) {
 		switch {
 		case root:
 			current.Folders = folders

@@ -9,6 +9,8 @@ import (
 // Original list.remove removes the first equal member and leaves other fields,
 // duplicate IDs and PluginOrder alone. This is not the native editor validator.
 func (a *App) removeOriginalPluginFromFolders(ctx context.Context, instance string) error {
+	a.pluginStore.folders.operation.Lock()
+	defer a.pluginStore.folders.operation.Unlock()
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return err
@@ -18,8 +20,10 @@ func (a *App) removeOriginalPluginFromFolders(ctx context.Context, instance stri
 	if err != nil {
 		return err
 	}
+	org = a.pluginStore.withOriginalFolders(org)
 	changed := false
-	for name, raw := range org.Folders {
+	for _, name := range originalFolderKeys(org) {
+		raw := org.Folders[name]
 		value := bytes.TrimSpace(raw)
 		if len(value) == 0 {
 			continue
@@ -68,11 +72,14 @@ func (a *App) removeOriginalPluginFromFolders(ctx context.Context, instance stri
 	if !changed {
 		return tx.Commit()
 	}
+	// SystemConfigOper.set publishes its deepcopy before attempting SQL.
+	a.pluginStore.publishOriginalFolders(org, false)
 	org.Revision++
 	raw, err := json.Marshal(struct {
 		PluginOrganization
-		OrderPresent bool `json:"order_present"`
-	}{org, org.orderPresent})
+		OrderPresent bool     `json:"order_present"`
+		FolderKeys   []string `json:"folder_keys"`
+	}{org, org.orderPresent, originalFolderKeys(org)})
 	if err != nil {
 		return err
 	}
@@ -84,5 +91,9 @@ func (a *App) removeOriginalPluginFromFolders(ctx context.Context, instance stri
 	if err != nil {
 		return err
 	}
-	return tx.Commit()
+	if err = tx.Commit(); err != nil {
+		return err
+	}
+	a.pluginStore.publishOriginalFolders(org, true)
+	return nil
 }
