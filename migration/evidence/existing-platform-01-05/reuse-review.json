@@ -1,0 +1,381 @@
+{
+  "schema_version": 1,
+  "kind": "independent_existing_platform_reuse_review",
+  "date_utc": "2026-10-30",
+  "authority": "docs/plugin-module-parity-matrix.md rows 01-05 only; not a replacement ledger or platform-wide completion claim",
+  "reviewer": "manager_queries_independent_review_20261030; gpt-6-astra / ultra; independent of product authors",
+  "source": {
+    "backend_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "frontend_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+    "files": {
+      "app/core/plugin.py": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "app/plugins/__init__.py": "e6ac4a8621e078bf729d34c01188a5ff664ee48ad5e09cb4cf66fc44336a647f",
+      "app/db/plugindata_oper.py": "31043788d1ced9a311a0034074b71d34e97f78f644583ed02522602feffa01ec",
+      "app/db/models/plugindata.py": "ae52a13e2e2ec13ed10a632c601e0bacf173df430c6d273866bda4c783926622",
+      "app/db/systemconfig_oper.py": "87bff2e7c63d2ba98c72d92d6aed2018548730215de017330019bb54478634a2",
+      "app/db/models/systemconfig.py": "56c948af28f482b39e0d599b6889fd803c375aff50ecdde2d5b4583dca581164",
+      "app/core/config.py": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "app/api/endpoints/plugin.py": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce"
+    }
+  },
+  "target_revision": "dcbf8d72f275dded3bdb2280862a4b55059a0f10",
+  "prior_verified_revision": "9d1473b74e5db9b34817f55580c1d3807101b99f",
+  "groups": [
+    {
+      "id": "01",
+      "status": "verified_existing_implementation_reused",
+      "behavior": "Code, runtime object, configuration/KV and local-file separation",
+      "source_paths": [
+        "app/core/plugin.py",
+        "app/db/models/systemconfig.py",
+        "app/db/models/plugindata.py",
+        "app/core/config.py"
+      ],
+      "entrypoints": {
+        "source": [
+          "PluginManager.start/stop",
+          "SystemConfigOper/PluginDataOper -> actual SQLite",
+          "_PluginBase.get_data_path"
+        ],
+        "target": [
+          "cmd/server -> App.Start -> plugin store -> startOriginalPlugin",
+          "HTTP config/reset/uninstall -> SQLite; Base -> owned local data directory"
+        ]
+      },
+      "target_paths": {
+        "internal/app/plugin_store.go": "292ced28e5ea7759aee9dd867f08389469453805e26063b0136824e22b62a908",
+        "internal/app/plugin_original_lifecycle.go": "a479ad6c0c7fdd7d3f24fddf676f956588c94030be1cace2cd72f4476d4cabcd",
+        "internal/app/plugin_original_registry.go": "496d1b2547eea2b7032dd3ff8ac2da9bdd080f2e018e53f004677e07f8833318",
+        "internal/app/plugin_original_base_schema.go": "e8588ee736a4108cbebad93081cbb881fa25966b63744e531fb9c5295cc4ca56",
+        "internal/app/plugin_original_reset.go": "87e8b09e781867d7bdbae540d1b2e3487422d33ea107028fb3f5467995fb701d",
+        "internal/app/plugin_original_uninstall.go": "54f334aace4cb3b91ab4dce76cea8a3ae8276ec2502fa3a3dde222178f0d4d05"
+      },
+      "observations": [
+        "Cold restart retains configuration/KV; reset and uninstall preserve owned files.",
+        "Physical source configuration/data deletion preserves files and other namespaces."
+      ],
+      "evidence_ids": [
+        "source-12",
+        "process-9d",
+        "process-dcbf"
+      ]
+    },
+    {
+      "id": "02",
+      "status": "verified_existing_implementation_reused",
+      "behavior": "Validated installation becomes the same initialized callable object",
+      "source_paths": [
+        "app/core/plugin.py",
+        "app/plugins/__init__.py"
+      ],
+      "entrypoints": {
+        "source": [
+          "PluginManager._load_selective_plugins -> start -> init_plugin",
+          "get_plugin_apis/get_plugin_services -> run_plugin_method/async_run_plugin_method"
+        ],
+        "target": [
+          "POST /api/plugins/install -> artifact acquire/verify -> persistent worker",
+          "GET /api/v1/plugin/{id}/echo; actual clock and POST /api/plugins/services/run -> same object"
+        ]
+      },
+      "target_paths": {
+        "internal/app/plugin_original_install.go": "880bef4fbad5377684a374158178a8d8db84d3a21b639ce326d76410a2015288",
+        "internal/app/plugin_original_lifecycle.go": "a479ad6c0c7fdd7d3f24fddf676f956588c94030be1cace2cd72f4476d4cabcd",
+        "internal/app/plugin_original_api_methods.go": "a74f449b0791595248c0774d6cb996b366510c9301a0f92fd4dafe726a98a4bc",
+        "internal/app/plugin_original_services.go": "cb1c93b92cec031b93a3e1cc0fe127363c2da37d02180804a364295f88f1238c",
+        "internal/app/plugin_original_direct_dispatch.go": "8785a4121a5dbb177798856b8c9ec1bb4da18996baccd796e8769d8d412587d1",
+        "internal/plugins/worker.go": "b91a555c564512af5cf4b5fee799244a21dd3c26e08bf018df1aea1665ecdb57",
+        "internal/plugins/protocol.go": "4dd45fba68965bed4255ecd4382036914b40f45945da6313fbe9ea46c8119454",
+        "internal/plugins/artifacts/acquire.go": "c50fad3f7dd7f9f0ecdcc879dfe8e831b125f9329c4d7387723bf7b5ea99150a",
+        "internal/plugins/artifacts/inspect.go": "b230618f682a921e17151da04a76b3c7e138ff4a9bf237babd099e75a9c026f9"
+      },
+      "observations": [
+        "Actual artifact identity/version and independent PID; initial init count is one.",
+        "Same-object API and clock/manual calls; source actual getters and sync/async calls; disabled object remains callable."
+      ],
+      "evidence_ids": [
+        "source-12",
+        "process-9d",
+        "process-dcbf",
+        "manager-public",
+        "sdk-reuse"
+      ]
+    },
+    {
+      "id": "03",
+      "status": "verified_existing_implementation_reused",
+      "behavior": "Configuration save reinitializes the existing live object",
+      "source_paths": [
+        "app/api/endpoints/plugin.py",
+        "app/core/plugin.py",
+        "app/db/systemconfig_oper.py"
+      ],
+      "entrypoints": {
+        "source": [
+          "set_plugin_config -> save_plugin_config -> SystemConfigOper.set -> init_plugin -> register_plugin"
+        ],
+        "target": [
+          "PUT /api/plugins/{id} -> originalPluginConfigurationHTTP -> originalBaseUpdateConfigLocked -> initOriginalLoadedPlugin"
+        ]
+      },
+      "target_paths": {
+        "internal/app/plugin_original_config.go": "6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64",
+        "internal/app/plugin_original_manager_configuration.go": "15c893520dd5bfb13d4605cf15f598c03423c8f187ef010bc568ea05f7db5b91",
+        "internal/app/plugin_original_base.go": "0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b",
+        "internal/app/plugin_original_state.go": "df30cac11c6965248cc5076c0b31f81a143d7fce7f44377f34a2c840b5bd60d6",
+        "internal/app/plugin_shared_manager_queries_cache.go": "66d5939907f65a7e71099c21a7fb1ace4b462138c50335ecdb318802a6cae1ef",
+        "internal/app/plugin_shared_manager_queries_config_failure_test.go": "18c927a2a84bf4d6fbb29b354f43094a110c90518f7ef9c08eb9e55cecf95692"
+      },
+      "observations": [
+        "Same-object save; initializer failure retains new configuration and partially mutated object; recovery.",
+        "Previously independently executed source HTTP/SQL failure and current cache producer evidence retained; no old result is relabeled as a new execution."
+      ],
+      "evidence_ids": [
+        "source-12",
+        "process-9d",
+        "process-dcbf",
+        "manager-public",
+        "manager-main-reuse",
+        "base-reuse",
+        "browser-reuse"
+      ]
+    },
+    {
+      "id": "04",
+      "status": "verified_existing_implementation_reused",
+      "behavior": "Reload observes replacement code and replaces the intended object",
+      "source_paths": [
+        "app/core/plugin.py",
+        "app/api/endpoints/plugin.py"
+      ],
+      "entrypoints": {
+        "source": [
+          "GET /reload/{plugin_id} -> PluginManager.reload_plugin -> stop/close/stop_service -> start/_load_selective_plugins"
+        ],
+        "target": [
+          "POST /api/plugins/{id}/reload -> originalPluginConfigurationHTTP -> reloadOriginalPlugin",
+          "POST /api/plugins/install with a distinct actual v2 artifact -> replacement worker"
+        ]
+      },
+      "target_paths": {
+        "internal/app/plugin_original_manager_http.go": "b3961f0fbe0c80316e1155eb10de9dc4a6178f9f52dd491805575e2da3d7b88e",
+        "internal/app/plugin_original_config.go": "6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64",
+        "internal/app/plugin_original_lifecycle.go": "a479ad6c0c7fdd7d3f24fddf676f956588c94030be1cace2cd72f4476d4cabcd",
+        "internal/app/plugin_original_install.go": "880bef4fbad5377684a374158178a8d8db84d3a21b639ce326d76410a2015288",
+        "internal/app/plugin_instances.go": "d5544fc148dc8d4ea2b0c9a4069bc91ad290073f891f039099e02908ffc747d8",
+        "internal/plugins/artifacts/clone.go": "a9a251716df82bdbedf5b06d7fbd6ab4475421139b5c55dc4198ebad612ddaa5"
+      },
+      "observations": [
+        "Physical source module replacement 1.0 -> 2.0; close-before-stop and new object.",
+        "Actual target v1 -> v2/new PID, clone remains isolated; failed reload and recovery.",
+        "Pinned frontend has no independent reload action. Complete update/reset/uninstall GUI flows belong other authority rows, not this acceptance."
+      ],
+      "evidence_ids": [
+        "source-12",
+        "process-9d",
+        "process-dcbf",
+        "frontend-scope"
+      ]
+    },
+    {
+      "id": "05",
+      "status": "verified_existing_implementation_reused",
+      "behavior": "Base configuration, records, explicit namespaces and local files",
+      "source_paths": [
+        "app/plugins/__init__.py",
+        "app/db/plugindata_oper.py",
+        "app/db/models/plugindata.py",
+        "app/db/systemconfig_oper.py",
+        "app/db/models/systemconfig.py"
+      ],
+      "entrypoints": {
+        "source": [
+          "_PluginBase update/get_config, save/get/del_data, async_save/get_data and get_data_path -> default DAO -> actual SQLite/local files"
+        ],
+        "target": [
+          "Actual Base worker -> originalBaseSessionHost -> pluginOriginalBaseHost -> config cache/PluginStore/SQLite/local directory"
+        ]
+      },
+      "target_paths": {
+        "internal/app/plugin_original_base.go": "0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b",
+        "internal/app/plugin_original_base_session.go": "aa28d216617d864e7c43a30e6a56805b4f65ee667d7c0309871c7c04deaf2c4e",
+        "internal/app/plugin_original_base_schema.go": "e8588ee736a4108cbebad93081cbb881fa25966b63744e531fb9c5295cc4ca56",
+        "internal/app/plugin_original_base_sdk_test.go": "e6263b134514e7fefffc05cb5a1e5f73781ea6c9b8abb177584e5d17f64cadc4",
+        "internal/app/plugin_shared_manager_queries_cache_test.go": "b4598a319af812e2bfab71ea021c40ca317359c263e10a32d62886328cd62e88",
+        "internal/plugins/base.go": "88d704b1249fd6af462f8dc8157586f1e30d579e4cc4719abf3289821f311aed"
+      },
+      "observations": [
+        "Full replacement, copied cache, stable row identity, false/zero/large integer, keyed/all deletion and explicit uninstalled namespace.",
+        "Clone/file isolation, stale call rejection and cold recovery; finite Go/JSON and existing local-path safety adaptation retained."
+      ],
+      "evidence_ids": [
+        "source-12",
+        "process-9d",
+        "process-dcbf",
+        "base-reuse",
+        "manager-public",
+        "sdk-reuse"
+      ]
+    }
+  ],
+  "shared_target_files": {
+    "go.mod": "622569e08ea6fb374e66a0e35f22bc29b276841d7ab74ade1e1d813a6095b5fa",
+    "go.sum": "2166fc925241cdfc675fc78e2e3d2b36152d9eb208a86d6defccec9551c61355",
+    "cmd/server/main.go": "903e44dd9932bd697fbe0296fee981e63723213b6b5ed49fd30e16d923390d60",
+    "internal/app/runtime.go": "cfe34da3a7e5c36b3f32fd9d8f991bab9029d05fe4e3c9816b5964561cc36d31",
+    "internal/app/http.go": "7dbe46f289feb68d40eac17525e40d4edd647570e93b86d29f4c4352afb5a527",
+    "internal/app/store.go": "44ffeb5c61ed9d1828b97f2c11918c77072711e069983584b3bdaa2f4d601dde",
+    "internal/app/plugin_original_session.go": "d4a62eac3f4d65b65ffc7923d941b925cf7d890e434460410689e2ea3b6f6138",
+    "internal/app/plugin_original_resources.go": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+    "internal/app/plugin_original_commands.go": "12b96e0d9c882e2c3922f82b2badd04c8adfbe1e2b711b89971340ea0c96d28b",
+    "internal/plugins/transport.go": "f36a61b4f9becfd844aef64f4a006665f8791be2e27621b65dbbb13216be249c",
+    "internal/plugins/jsonrpc.go": "ca173d11652bbf2ce186e134a3770ff54987a5631be09043c845d2c35545dc8b",
+    "internal/plugins/identity.go": "3144e5a1efe0e49aaeb8803740487b182967aa3d56c0ccf08a87a3fa7995b620"
+  },
+  "executed_fixture_files": {
+    "cmd/owned-standard-fixture/main.go": "e087e7d0e696ee91feb604e529bde697fc0618b2805cac37691ffbf4a02bb053",
+    "cmd/owned-standard-fixture/rich-form.json": "1c401c164f7370ce7b3623a30e64a7f1a0d7f9eed4cd7e11f8e51bd3fca91c76",
+    "cmd/owned-base-fixture/main.go": "7fc6370adcdd5fd6b0f949c5b3b170ac73ed595f6167853a0bf8c2b6cd9f1766",
+    "internal/app/plugin_module_process_test.go": "1740f25b1267bdba0d28bc71febdb96be8bce69bdf8a53116d9210c60a14b8d7",
+    "internal/app/plugin_module_process_base_test.go": "445e95fc838f79d1e4da51b5f3e5be768c1c650eee8c33c5541874cc160727d9",
+    "internal/app/plugin_module_process_market_test.go": "55127a625ecc98bd2b2ddced138212b5309c1374ec743a42e3f10b3dfd7a7c92"
+  },
+  "evidence": {
+    "source-12": {
+      "kind": "actual_original_component_execution",
+      "passed": 12,
+      "checks": [
+        "full Manager API/service getters and sync/async calls bind the same actual object",
+        "disabled imported object remains callable",
+        "save reinitializes same object",
+        "initializer error retains saved config and mutated object",
+        "actual on-disk module replacement and reload",
+        "close-before-stop ordering",
+        "Base config full replacement/True/None/deepcopy",
+        "actual KV stable upsert row/false/zero/big-int/keyed and empty deletion",
+        "uninstalled namespace isolation",
+        "async Base save/get actual SQL",
+        "stop/start retains KV and data file",
+        "config/data deletion retains data files and other namespaces"
+      ],
+      "driver_sha256": "91f13bb7d7a4ce42ce3fb426598e951d46c4a987ed43e72bb75c01851d018747",
+      "result_sha256": "5d14c19df80d633b569be22b50ffaad92f5f3f4098e70d08af0979621e5d4cea",
+      "log_sha256": "49b7b5b328dc97d4f396878a303bdd138ba977c18913d05eba00469e2268285c",
+      "exit_code": 0,
+      "imported_files_rehashed": 515,
+      "sqlalchemy": "2.0.55",
+      "sqlite": "3.53.1",
+      "boundary": "Complete unchanged Manager/Base/defaultDAO/ORM imports; actual owned SQLite and module/file replacement. Explicit unused integration/config/event fixtures; not the whole original daemon/authentication/scheduler engine. No product methods extracted or rewritten."
+    },
+    "process-9d": {
+      "revision": "9d1473b74e5db9b34817f55580c1d3807101b99f",
+      "test": "TestPluginModuleProductionProcessLifecycle with actual Base process helper",
+      "seconds": 43.48,
+      "race": true,
+      "exit_code": 0,
+      "skips": 0,
+      "log_sha256": "bc25c89c1127d1b8f5a18154736e872dc8855d71c756c7b2c85e2d3e3ef048c3",
+      "test_binary_sha256": "29fc86e230754f6ebbba4bf5ac8cc6f7c4ba51db4e27daad0de23948ac0bec4a",
+      "server_binary_sha256": "ae1f290a8f22b5245c27926f7535082346c28f4e0eeb941663c2d0ea82920566",
+      "input_binding_sha256": "ec382b9357c1798416f7ebfac999762cd0c24bcce4ce71af53f36edfa2126543",
+      "retained_unchanged": true
+    },
+    "process-dcbf": {
+      "revision": "dcbf8d72f275dded3bdb2280862a4b55059a0f10",
+      "test": "TestPluginModuleProductionProcessLifecycle with actual Base process helper",
+      "seconds": 44.44,
+      "race": true,
+      "exit_code": 0,
+      "skips": 0,
+      "actual_artifact_fetches": 4,
+      "fresh_binaries": {
+        "bin/app.test": "e98c2658aa71b94af191f40c80068d19d7ec643f414d8cb3b2855b83dfc3bfe0",
+        "bin/base-process": "4c2f9d0032423753c556fbfbc8299dc4623333a2f33a82f5c350c4ccd503dd32",
+        "bin/server": "1ca84f6df8087077d9eee97e510b84a69d6114755f3590961c943e1077ee5d7b",
+        "bin/standard-v1": "79d2ee9f5346a4b510006ff8e6658fb8c239183a8b7b43d5354460702dcf5ef1",
+        "bin/standard-v2": "170f548392344dc82098109db4538d5a1d82de948a9f9986a17f8db2964d5ae3"
+      },
+      "log_sha256": "d3afece8fb7cfce14c979d0a454d214e9b42cd38cd9c34fe85e7164cad59db04",
+      "driver_sha256": "026bcf32b37c802e715c7ad2732b636d3f50c82167483fa9cd94c4ddaee562d3",
+      "buildinfo_sha256": "7f7202aa7b29ed1e34b2c6cc59602ab86a5fd7d36e66e7fe4a96fd35eb0f1027",
+      "local_input_count": 2596,
+      "external_input_count": 3353,
+      "before_input_sha256": "5a6442fef32ddd9c1a7ee6addb38c804a9399a9a0bcc84975773e9c5135f3420",
+      "after_input_sha256": "5a6442fef32ddd9c1a7ee6addb38c804a9399a9a0bcc84975773e9c5135f3420",
+      "modules_before_sha256": "ec929a889087a00c6b6e764f2ff1edab30555f43ab95a2820fbe8bb3ab2caf30",
+      "modules_after_sha256": "ec929a889087a00c6b6e764f2ff1edab30555f43ab95a2820fbe8bb3ab2caf30",
+      "closure_unchanged_during_execution": true,
+      "environment": "Linux amd64, Go1.26.0, CGO1, race, buildvcs=false; empty inherited environment with owned HOME/TMPDIR; isolated local repository fixture/SQLite/files; no existing user data"
+    },
+    "manager-public": {
+      "artifacts": {
+        "migration/evidence/plugin-manager-query/contract.json": "8b9b744c3aee3855d44459cf46d53204f4e6c163d666de8fbaa5244d4745cd7b",
+        "migration/evidence/plugin-manager-query/browser-result.json": "38915fb331ee3488c1c7aa34426807321fc21898a68b08d66d842f6f08611c6b",
+        "migration/evidence/plugin-manager-query/coexistence-result.json": "3d625a284a74c7647786cdd469604cdb07f1fd8bd5a62977813b4553852a5346",
+        "migration/evidence/plugin-manager-query/independent-closeout.json": "75274a7fc084d6d59ef6c1e356992eae4c8a22eab31fd5649d52b113de8c0116"
+      },
+      "use": "Existing three-query/config-producer source and target evidence; no claim of complete Manager lifecycle/scheduler SDK coverage."
+    },
+    "manager-main-reuse": {
+      "review_sha256": "0d0a93542cb2050b0dd02b7bdbaee0dba466461a633f4a029fcdb0727aceea10",
+      "use": "Previously executed 14 Manager and 6 critical Base race roots; original input/run identity retained, not relabeled as dcbf execution."
+    },
+    "base-reuse": {
+      "log_sha256": "f0a9b7f0cf8c128c046306395dcc1c1e6820bb87c914ea6502ef5e3c74222cc6",
+      "use": "Previously executed 23 Base race roots, including failure/cache boundaries; relevant Base/config paths unchanged, supplemented by current integrated production gate."
+    },
+    "sdk-reuse": {
+      "binding_sha256": "b0df2e502b0ddedd91181df9165a32602846242cdc90792fb3cb639654d159f9",
+      "log_sha256": "b4e215d25818106737396fea1a06c0f035c4dcaa7ddc2548dd079c50db385e55",
+      "use": "110 actual SDK roots including actual concurrent cases; unchanged SDK functional inputs; newly rebuilt standard/Base workers and current process gate supplement reuse."
+    },
+    "browser-reuse": {
+      "public_artifact": "migration/evidence/plugin-manager-query/browser-result.json",
+      "sha256": "38915fb331ee3488c1c7aa34426807321fc21898a68b08d66d842f6f08611c6b",
+      "use": "Already independently reviewed official-browser install/save/clone/cold observations, bound to their recorded binaries; no new browser action or blanket current UI rerun asserted."
+    },
+    "frontend-scope": {
+      "binding_sha256": "b94bf823a1c5e92550dbc1ba5d36bc9d3bec8aea84b4ec3b0d31d5d50df96900",
+      "fixed_source_src_files": 493,
+      "reload_matches": 0,
+      "unchanged_relevant_components": {
+        "web/src/components/Plugins.vue": "ccf4effae01b33841eef4633aed65905a92bb6005048d79676b21d4b8b4f6a34",
+        "web/src/components/PluginManageCard.vue": "02fdb436ceaed732923f27ddb1ee3e06bfcf5efe32e0e6a506d2b05eafff4fec",
+        "web/src/components/PluginConfigDialog.vue": "b10e536b4a0ad2c59c0649aa52af10efb0c0bab9b2ad5fb7efae0a038f046108",
+        "web/src/components/PluginCloneDialog.vue": "45168eaed9167c245ea9665e6119f55915d65d4089d4ece90095db5d3e75fb8d",
+        "web/src/components/PluginFormRenderer.vue": "8d4332efc149aa1a4fc379ad8b5f4a9da92131747867f25005ed689b02446d74"
+      },
+      "boundary": "Later old seal has 236/249 unchanged inputs; changed global/dependency inputs are not ignored. Current browser observation, not old browser relabeling, supplies relevant save/install/clone/cold evidence."
+    }
+  },
+  "s05_integration_boundary": {
+    "prior_execution": "The 9d 43.48s run did not contain the later S05 changes. Its hashes and private assessment remain unchanged.",
+    "current_execution": "The newly compiled dcbf 44.44s gate includes the accepted S05 code in the App package; this is an additional integration witness, not a rewritten old result.",
+    "shared_compilation_inputs": {
+      "internal/app/plugin_shared_subscriptions.go": "32cbca1e6bcd6bf0128bad490babebf8903c9499fa33198a14998baca5704553",
+      "internal/app/plugin_shared_subscriptions_fields.go": "171aaba0117a24fc125d03dc470262a00c74475701041d814251bd3fbb5442bc",
+      "internal/app/plugin_shared_subscriptions_json.go": "c114f4eae68a2158ac55b9c1c3471a35c364ba5a61807d4c46cda6786239b4ba",
+      "internal/app/plugin_shared_subscriptions_sql.go": "f890d028f578bcdf3dc8201d1ff0476730b22b31404b8abdb2090e4da23dd73f",
+      "internal/app/plugin_shared_subscriptions_json_raw.go": "e737612119f2f7d2d540faa633a4be95397054ff0b43038d410ca925129fd83c",
+      "internal/app/plugin_shared_subscriptions_unicode.go": "8bfe9d486b5427c05c6c6deb56b12b6246b066346c9f2dc2038fb17f00e94fd0"
+    },
+    "reachability": "Do not claim these files are wholly outside the compiled dependency closure. originalSharedSubscriptionsCapability is consulted by shared resource admission. The standard/Base fixtures declare Base methods; Base is dispatched before resource handling. No subscription CRUD/Unicode method is selected by this bounded lifecycle/Base fixture.",
+    "acceptance_limit": "This review revalidates rows01-05 after integration; it does not independently accept S05 Unicode semantics or all other feature groups.",
+    "additional_gate_for_rows_01_05": null
+  },
+  "review_chain": {
+    "private_assessment_v2_sha256": "03b3e8788a1ed69f7555d6fb23e6ea0adf942a0493ca636d7f3c8e1a8ee08f7a",
+    "public_summary_v2_sha256": "9c42de0a93d727cad318bd8806d45b980c44c19864dbaf50a562d263d2269b13",
+    "summary_scope": "The retained summary-v2 describes the earlier 9d review; this new JSON adds the current dcbf execution without changing that summary.",
+    "historical_evidence_integrity_review_sha256": "cf1cc8e135868bdbe21bde04164c9a040992e6e0c521db8c7832b2f94723a78f",
+    "historical_input_delta_review_sha256": "04d15bec1bcba73646ed9f04a9fd050bb1de867c4c42f8cf6f40ea39be3149b5",
+    "historical_note": "2142 old inputs compared, 31 changed; selected old raw evidence verified, not wholly discarded and not declared freshly rerun."
+  },
+  "limits": [
+    "Reuse/revalidation of five existing groups, not five newly implemented features.",
+    "Full GUI update/reset/uninstall flows in other rows are not certified here.",
+    "Approved all-Go local Linux single-user adaptation; no original-Python production bridge.",
+    "No product, ledger or Git changes performed by this reviewer.",
+    "Raw evidence, binaries and dependency manifests remain private; only hashes and synthetic observations are published."
+  ]
+}

@@ -15,16 +15,18 @@
     "remote": "https://github.com/landuo/light-media.git",
     "branch": "plugins-refactor",
     "baseline_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-    "revision": "9d1473b74e5db9b34817f55580c1d3807101b99f",
-    "remote_revision": "9d1473b74e5db9b34817f55580c1d3807101b99f",
+    "revision": "dcbf8d72f275dded3bdb2280862a4b55059a0f10",
+    "remote_revision": "dcbf8d72f275dded3bdb2280862a4b55059a0f10",
     "delivery_mode": "remote",
     "delivery_reason": "Per accepted functional slice commit, push and readback; no merge or deployment.",
     "metadata_paths": [
       "migration/ledger.json",
       "docs/plugin-module-parity-matrix.md",
-      "docs/plugin-shared-host-20261030.md"
+      "docs/plugin-shared-host-20261030.md",
+      "migration/evidence/existing-platform-01-05/reuse-review.json",
+      "migration/delivery/s05-unicode-dcbf8d72-paths.json"
     ],
-    "revision_note": "Last completed remote receipt; current S05 repair file-bound until its own commit/push/readback."
+    "revision_note": "Actual latest accepted product commit read back. This additional commit only updates independently revalidated existing-group evidence and metadata; does not rebuild or change product."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -17062,13 +17064,79 @@
         "S10.manager_queries"
       ],
       "chain": "Ordinary plugin -> real PluginManager class/running registry or source-shaped SystemConfig/DAO configuration cache; target active standard SDK capability."
+    },
+    {
+      "id": "scope.existing-01-05.01",
+      "chain": [
+        "PluginManager.start/stop",
+        "SystemConfigOper/PluginDataOper -> actual SQLite",
+        "_PluginBase.get_data_path",
+        "cmd/server -> App.Start -> plugin store -> startOriginalPlugin",
+        "HTTP config/reset/uninstall -> SQLite; Base -> owned local data directory"
+      ],
+      "feature_ids": [
+        "01"
+      ],
+      "source_location": "app/core/plugin.py; app/db/models/systemconfig.py; app/db/models/plugindata.py; app/core/config.py :: PluginManager.start/stop; SystemConfigOper/PluginDataOper -> actual SQLite; _PluginBase.get_data_path",
+      "source_repository": "backend"
+    },
+    {
+      "id": "scope.existing-01-05.02",
+      "chain": [
+        "PluginManager._load_selective_plugins -> start -> init_plugin",
+        "get_plugin_apis/get_plugin_services -> run_plugin_method/async_run_plugin_method",
+        "POST /api/plugins/install -> artifact acquire/verify -> persistent worker",
+        "GET /api/v1/plugin/{id}/echo; actual clock and POST /api/plugins/services/run -> same object"
+      ],
+      "feature_ids": [
+        "02"
+      ],
+      "source_location": "app/core/plugin.py; app/plugins/__init__.py :: PluginManager._load_selective_plugins -> start -> init_plugin; get_plugin_apis/get_plugin_services -> run_plugin_method/async_run_plugin_method",
+      "source_repository": "backend"
+    },
+    {
+      "id": "scope.existing-01-05.03",
+      "chain": [
+        "set_plugin_config -> save_plugin_config -> SystemConfigOper.set -> init_plugin -> register_plugin",
+        "PUT /api/plugins/{id} -> originalPluginConfigurationHTTP -> originalBaseUpdateConfigLocked -> initOriginalLoadedPlugin"
+      ],
+      "feature_ids": [
+        "03"
+      ],
+      "source_location": "app/api/endpoints/plugin.py; app/core/plugin.py; app/db/systemconfig_oper.py :: set_plugin_config -> save_plugin_config -> SystemConfigOper.set -> init_plugin -> register_plugin",
+      "source_repository": "backend"
+    },
+    {
+      "id": "scope.existing-01-05.04",
+      "chain": [
+        "GET /reload/{plugin_id} -> PluginManager.reload_plugin -> stop/close/stop_service -> start/_load_selective_plugins",
+        "POST /api/plugins/{id}/reload -> originalPluginConfigurationHTTP -> reloadOriginalPlugin",
+        "POST /api/plugins/install with a distinct actual v2 artifact -> replacement worker"
+      ],
+      "feature_ids": [
+        "04"
+      ],
+      "source_location": "app/core/plugin.py; app/api/endpoints/plugin.py :: GET /reload/{plugin_id} -> PluginManager.reload_plugin -> stop/close/stop_service -> start/_load_selective_plugins",
+      "source_repository": "backend"
+    },
+    {
+      "id": "scope.existing-01-05.05",
+      "chain": [
+        "_PluginBase update/get_config, save/get/del_data, async_save/get_data and get_data_path -> default DAO -> actual SQLite/local files",
+        "Actual Base worker -> originalBaseSessionHost -> pluginOriginalBaseHost -> config cache/PluginStore/SQLite/local directory"
+      ],
+      "feature_ids": [
+        "05"
+      ],
+      "source_location": "app/plugins/__init__.py; app/db/plugindata_oper.py; app/db/models/plugindata.py; app/db/systemconfig_oper.py; app/db/models/systemconfig.py :: _PluginBase update/get_config, save/get/del_data, async_save/get_data and get_data_path -> default DAO -> actual SQLite/local files",
+      "source_repository": "backend"
     }
   ],
   "features": [
     {
       "id": "01",
       "description": "01 · 1.1 代码 配置 数据和运行对象各放在哪里",
-      "status": "discovered",
+      "status": "verified",
       "source_paths": [
         "app/api/endpoints/plugin.py",
         "app/core/config.py",
@@ -17107,25 +17175,103 @@
       "entrypoint_ids": [
         "scope.01.representative",
         "scope.discovery.04",
-        "scope.http.plugin.installed"
+        "scope.http.plugin.installed",
+        "scope.existing-01-05.01"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "internal/app/plugin_store.go",
+        "internal/app/plugin_original_lifecycle.go",
+        "internal/app/plugin_original_registry.go",
+        "internal/app/plugin_original_base_schema.go",
+        "internal/app/plugin_original_reset.go",
+        "internal/app/plugin_original_uninstall.go"
+      ],
       "owner": "coordinator",
-      "scenarios": [],
-      "evidence_ids": [],
+      "scenarios": [
+        "Cold restart retains configuration/KV; reset and uninstall preserve owned files.",
+        "Physical source configuration/data deletion preserves files and other namespaces."
+      ],
+      "evidence_ids": [
+        "existing-01-05.real-e2e"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "manager_queries_independent_review_20261030",
+        "evidence_ids": [
+          "existing-01-05.independent-review"
+        ]
       },
       "external_source_paths": [],
       "work_kind": "reuse_verification",
-      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code.",
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "Original Base false/zero/large integer and namespace records; config replacement/copy and actual file bytes.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Same actual live object, SQLite/config cache/KV stable row identity, partial initializer failure and callable object registries.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Actual initializer failure, failed reload recovery, stale calls and retained config/file facts; precise source/target boundaries retained.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "Unchanged independently reviewed Base/SDK real concurrency gates plus current integrated race run; no new unbounded nested-call claim.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Actual server/worker cold restart, v1-to-v2 replacement, close/stop ordering, clone isolation and surviving owned files.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "Fixed source full component imports and unchanged finite Go/JSON/HTTP/local single-user adaptations; not arbitrary Python object or old deployment import equivalence.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "Existing authenticated fixture HTTP, finite owned worker identity and namespaces; only synthetic data and loopback test services, no secret publication.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Representative actual lifecycle runtime and unchanged bounded SDK worker protocol; no source throughput SLA or unlimited scale is claimed.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        }
+      },
+      "acceptance_scope": "Code, runtime object, configuration/KV and local-file separation",
+      "source_component_boundary": "Complete unchanged Manager/Base/defaultDAO/ORM imports; actual owned SQLite and module/file replacement. Explicit unused integration/config/event fixtures; not the whole original daemon/authentication/scheduler engine. No product methods extracted or rewritten.",
+      "reused_existing_implementation": true
     },
     {
       "id": "02",
       "description": "02 · 1.2 安装后的代码怎样变成可调用的插件",
-      "status": "discovered",
+      "status": "verified",
       "source_paths": [
         "app/__init__.py",
         "app/core/module.py",
@@ -17143,25 +17289,106 @@
       "entrypoint_ids": [
         "scope.02.representative",
         "scope.discovery.01",
-        "scope.discovery.02"
+        "scope.discovery.02",
+        "scope.existing-01-05.02"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "internal/app/plugin_original_install.go",
+        "internal/app/plugin_original_lifecycle.go",
+        "internal/app/plugin_original_api_methods.go",
+        "internal/app/plugin_original_services.go",
+        "internal/app/plugin_original_direct_dispatch.go",
+        "internal/plugins/worker.go",
+        "internal/plugins/protocol.go",
+        "internal/plugins/artifacts/acquire.go",
+        "internal/plugins/artifacts/inspect.go"
+      ],
       "owner": "coordinator",
-      "scenarios": [],
-      "evidence_ids": [],
+      "scenarios": [
+        "Actual artifact identity/version and independent PID; initial init count is one.",
+        "Same-object API and clock/manual calls; source actual getters and sync/async calls; disabled object remains callable."
+      ],
+      "evidence_ids": [
+        "existing-01-05.real-e2e"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "manager_queries_independent_review_20261030",
+        "evidence_ids": [
+          "existing-01-05.independent-review"
+        ]
       },
       "external_source_paths": [],
       "work_kind": "reuse_verification",
-      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code.",
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "Original Base false/zero/large integer and namespace records; config replacement/copy and actual file bytes.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Same actual live object, SQLite/config cache/KV stable row identity, partial initializer failure and callable object registries.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Actual initializer failure, failed reload recovery, stale calls and retained config/file facts; precise source/target boundaries retained.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "Unchanged independently reviewed Base/SDK real concurrency gates plus current integrated race run; no new unbounded nested-call claim.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Actual server/worker cold restart, v1-to-v2 replacement, close/stop ordering, clone isolation and surviving owned files.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "Fixed source full component imports and unchanged finite Go/JSON/HTTP/local single-user adaptations; not arbitrary Python object or old deployment import equivalence.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "Existing authenticated fixture HTTP, finite owned worker identity and namespaces; only synthetic data and loopback test services, no secret publication.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Representative actual lifecycle runtime and unchanged bounded SDK worker protocol; no source throughput SLA or unlimited scale is claimed.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        }
+      },
+      "acceptance_scope": "Validated installation becomes the same initialized callable object",
+      "source_component_boundary": "Complete unchanged Manager/Base/defaultDAO/ORM imports; actual owned SQLite and module/file replacement. Explicit unused integration/config/event fixtures; not the whole original daemon/authentication/scheduler engine. No product methods extracted or rewritten.",
+      "reused_existing_implementation": true
     },
     {
       "id": "03",
       "description": "03 · 1.3 保存设置为什么能改变正在运行的插件",
-      "status": "discovered",
+      "status": "verified",
       "source_paths": [
         "app/api/endpoints/plugin.py",
         "app/core/plugin.py",
@@ -17172,25 +17399,103 @@
         "scope.03.representative",
         "scope.discovery.03",
         "scope.http.plugin.plugin_config",
-        "scope.http.plugin.set_plugin_config"
+        "scope.http.plugin.set_plugin_config",
+        "scope.existing-01-05.03"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "internal/app/plugin_original_config.go",
+        "internal/app/plugin_original_manager_configuration.go",
+        "internal/app/plugin_original_base.go",
+        "internal/app/plugin_original_state.go",
+        "internal/app/plugin_shared_manager_queries_cache.go",
+        "internal/app/plugin_shared_manager_queries_config_failure_test.go"
+      ],
       "owner": "coordinator",
-      "scenarios": [],
-      "evidence_ids": [],
+      "scenarios": [
+        "Same-object save; initializer failure retains new configuration and partially mutated object; recovery.",
+        "Previously independently executed source HTTP/SQL failure and current cache producer evidence retained; no old result is relabeled as a new execution."
+      ],
+      "evidence_ids": [
+        "existing-01-05.real-e2e"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "manager_queries_independent_review_20261030",
+        "evidence_ids": [
+          "existing-01-05.independent-review"
+        ]
       },
       "external_source_paths": [],
       "work_kind": "reuse_verification",
-      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code.",
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "Original Base false/zero/large integer and namespace records; config replacement/copy and actual file bytes.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Same actual live object, SQLite/config cache/KV stable row identity, partial initializer failure and callable object registries.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Actual initializer failure, failed reload recovery, stale calls and retained config/file facts; precise source/target boundaries retained.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "Unchanged independently reviewed Base/SDK real concurrency gates plus current integrated race run; no new unbounded nested-call claim.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Actual server/worker cold restart, v1-to-v2 replacement, close/stop ordering, clone isolation and surviving owned files.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "Fixed source full component imports and unchanged finite Go/JSON/HTTP/local single-user adaptations; not arbitrary Python object or old deployment import equivalence.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "Existing authenticated fixture HTTP, finite owned worker identity and namespaces; only synthetic data and loopback test services, no secret publication.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Representative actual lifecycle runtime and unchanged bounded SDK worker protocol; no source throughput SLA or unlimited scale is claimed.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        }
+      },
+      "acceptance_scope": "Configuration save reinitializes the existing live object",
+      "source_component_boundary": "Complete unchanged Manager/Base/defaultDAO/ORM imports; actual owned SQLite and module/file replacement. Explicit unused integration/config/event fixtures; not the whole original daemon/authentication/scheduler engine. No product methods extracted or rewritten.",
+      "reused_existing_implementation": true
     },
     {
       "id": "04",
       "description": "04 · 1.4 重载为什么能运行刚换上的代码",
-      "status": "discovered",
+      "status": "verified",
       "source_paths": [
         "app/api/endpoints/plugin.py",
         "app/core/plugin.py"
@@ -17198,25 +17503,104 @@
       "entrypoint_ids": [
         "scope.04.representative",
         "scope.discovery.03",
-        "scope.http.plugin.reload_plugin"
+        "scope.http.plugin.reload_plugin",
+        "scope.existing-01-05.04"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "internal/app/plugin_original_manager_http.go",
+        "internal/app/plugin_original_config.go",
+        "internal/app/plugin_original_lifecycle.go",
+        "internal/app/plugin_original_install.go",
+        "internal/app/plugin_instances.go",
+        "internal/plugins/artifacts/clone.go"
+      ],
       "owner": "coordinator",
-      "scenarios": [],
-      "evidence_ids": [],
+      "scenarios": [
+        "Physical source module replacement 1.0 -> 2.0; close-before-stop and new object.",
+        "Actual target v1 -> v2/new PID, clone remains isolated; failed reload and recovery.",
+        "Pinned frontend has no independent reload action. Complete update/reset/uninstall GUI flows belong other authority rows, not this acceptance."
+      ],
+      "evidence_ids": [
+        "existing-01-05.real-e2e"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "manager_queries_independent_review_20261030",
+        "evidence_ids": [
+          "existing-01-05.independent-review"
+        ]
       },
       "external_source_paths": [],
       "work_kind": "reuse_verification",
-      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code.",
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "Original Base false/zero/large integer and namespace records; config replacement/copy and actual file bytes.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Same actual live object, SQLite/config cache/KV stable row identity, partial initializer failure and callable object registries.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Actual initializer failure, failed reload recovery, stale calls and retained config/file facts; precise source/target boundaries retained.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "Unchanged independently reviewed Base/SDK real concurrency gates plus current integrated race run; no new unbounded nested-call claim.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Actual server/worker cold restart, v1-to-v2 replacement, close/stop ordering, clone isolation and surviving owned files.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "Fixed source full component imports and unchanged finite Go/JSON/HTTP/local single-user adaptations; not arbitrary Python object or old deployment import equivalence.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "Existing authenticated fixture HTTP, finite owned worker identity and namespaces; only synthetic data and loopback test services, no secret publication.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Representative actual lifecycle runtime and unchanged bounded SDK worker protocol; no source throughput SLA or unlimited scale is claimed.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        }
+      },
+      "acceptance_scope": "Reload observes replacement code and replaces the intended object",
+      "source_component_boundary": "Complete unchanged Manager/Base/defaultDAO/ORM imports; actual owned SQLite and module/file replacement. Explicit unused integration/config/event fixtures; not the whole original daemon/authentication/scheduler engine. No product methods extracted or rewritten.",
+      "reused_existing_implementation": true
     },
     {
       "id": "05",
       "description": "05 · 1.5 插件怎样读写配置 记录和文件",
-      "status": "discovered",
+      "status": "verified",
       "source_paths": [
         "app/api/endpoints/plugin.py",
         "app/db/__init__.py",
@@ -17261,20 +17645,98 @@
         "scope.discovery.44",
         "scope.discovery.47",
         "scope.discovery.48",
-        "scope.http.plugin.plugin_config"
+        "scope.http.plugin.plugin_config",
+        "scope.existing-01-05.05"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "internal/app/plugin_original_base.go",
+        "internal/app/plugin_original_base_session.go",
+        "internal/app/plugin_original_base_schema.go",
+        "internal/app/plugin_original_base_sdk_test.go",
+        "internal/app/plugin_shared_manager_queries_cache_test.go",
+        "internal/plugins/base.go"
+      ],
       "owner": "coordinator",
-      "scenarios": [],
-      "evidence_ids": [],
+      "scenarios": [
+        "Full replacement, copied cache, stable row identity, false/zero/large integer, keyed/all deletion and explicit uninstalled namespace.",
+        "Clone/file isolation, stale call rejection and cold recovery; finite Go/JSON and existing local-path safety adaptation retained."
+      ],
+      "evidence_ids": [
+        "existing-01-05.real-e2e"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "manager_queries_independent_review_20261030",
+        "evidence_ids": [
+          "existing-01-05.independent-review"
+        ]
       },
       "external_source_paths": [],
       "work_kind": "reuse_verification",
-      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code.",
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "Original Base false/zero/large integer and namespace records; config replacement/copy and actual file bytes.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Same actual live object, SQLite/config cache/KV stable row identity, partial initializer failure and callable object registries.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Actual initializer failure, failed reload recovery, stale calls and retained config/file facts; precise source/target boundaries retained.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "Unchanged independently reviewed Base/SDK real concurrency gates plus current integrated race run; no new unbounded nested-call claim.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Actual server/worker cold restart, v1-to-v2 replacement, close/stop ordering, clone isolation and surviving owned files.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "Fixed source full component imports and unchanged finite Go/JSON/HTTP/local single-user adaptations; not arbitrary Python object or old deployment import equivalence.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "Existing authenticated fixture HTTP, finite owned worker identity and namespaces; only synthetic data and loopback test services, no secret publication.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Representative actual lifecycle runtime and unchanged bounded SDK worker protocol; no source throughput SLA or unlimited scale is claimed.",
+          "evidence_ids": [
+            "existing-01-05.real-e2e"
+          ]
+        }
+      },
+      "acceptance_scope": "Base configuration, records, explicit namespaces and local files",
+      "source_component_boundary": "Complete unchanged Manager/Base/defaultDAO/ORM imports; actual owned SQLite and module/file replacement. Explicit unused integration/config/event fixtures; not the whole original daemon/authentication/scheduler engine. No product methods extracted or rewritten.",
+      "reused_existing_implementation": true
     },
     {
       "id": "06",
@@ -21743,6 +22205,185 @@
         "Independent original default source/SQLite vs actual uncleaned standard-worker input, precise input-to-host byte binding, true old-code red and main normal/race replay.",
         "Coordinator browser observations, read-only SQL, official cold receipts and actual normal server hash separately inspected; reviewer did not operate browser."
       ]
+    },
+    {
+      "id": "existing-01-05.real-e2e",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant-owned cloud Linux amd64 Go1.26.0/CGO/race; fixed complete original Manager/Base/default DAO modules with explicit unused integration fixtures, actual SQLAlchemy2.0.55 SQLite3.53.1/files; actual compiled cmd/server/native workers and isolated HTTP/SQLite; source full daemon/auth/scheduler not asserted.",
+        "target_files": {
+          "internal/app/plugin_store.go": "292ced28e5ea7759aee9dd867f08389469453805e26063b0136824e22b62a908",
+          "internal/app/plugin_original_lifecycle.go": "a479ad6c0c7fdd7d3f24fddf676f956588c94030be1cace2cd72f4476d4cabcd",
+          "internal/app/plugin_original_registry.go": "496d1b2547eea2b7032dd3ff8ac2da9bdd080f2e018e53f004677e07f8833318",
+          "internal/app/plugin_original_base_schema.go": "e8588ee736a4108cbebad93081cbb881fa25966b63744e531fb9c5295cc4ca56",
+          "internal/app/plugin_original_reset.go": "87e8b09e781867d7bdbae540d1b2e3487422d33ea107028fb3f5467995fb701d",
+          "internal/app/plugin_original_uninstall.go": "54f334aace4cb3b91ab4dce76cea8a3ae8276ec2502fa3a3dde222178f0d4d05",
+          "internal/app/plugin_original_install.go": "880bef4fbad5377684a374158178a8d8db84d3a21b639ce326d76410a2015288",
+          "internal/app/plugin_original_api_methods.go": "a74f449b0791595248c0774d6cb996b366510c9301a0f92fd4dafe726a98a4bc",
+          "internal/app/plugin_original_services.go": "cb1c93b92cec031b93a3e1cc0fe127363c2da37d02180804a364295f88f1238c",
+          "internal/app/plugin_original_direct_dispatch.go": "8785a4121a5dbb177798856b8c9ec1bb4da18996baccd796e8769d8d412587d1",
+          "internal/plugins/worker.go": "b91a555c564512af5cf4b5fee799244a21dd3c26e08bf018df1aea1665ecdb57",
+          "internal/plugins/protocol.go": "4dd45fba68965bed4255ecd4382036914b40f45945da6313fbe9ea46c8119454",
+          "internal/plugins/artifacts/acquire.go": "c50fad3f7dd7f9f0ecdcc879dfe8e831b125f9329c4d7387723bf7b5ea99150a",
+          "internal/plugins/artifacts/inspect.go": "b230618f682a921e17151da04a76b3c7e138ff4a9bf237babd099e75a9c026f9",
+          "internal/app/plugin_original_config.go": "6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64",
+          "internal/app/plugin_original_manager_configuration.go": "15c893520dd5bfb13d4605cf15f598c03423c8f187ef010bc568ea05f7db5b91",
+          "internal/app/plugin_original_base.go": "0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b",
+          "internal/app/plugin_original_state.go": "df30cac11c6965248cc5076c0b31f81a143d7fce7f44377f34a2c840b5bd60d6",
+          "internal/app/plugin_shared_manager_queries_cache.go": "66d5939907f65a7e71099c21a7fb1ace4b462138c50335ecdb318802a6cae1ef",
+          "internal/app/plugin_shared_manager_queries_config_failure_test.go": "18c927a2a84bf4d6fbb29b354f43094a110c90518f7ef9c08eb9e55cecf95692",
+          "internal/app/plugin_original_manager_http.go": "b3961f0fbe0c80316e1155eb10de9dc4a6178f9f52dd491805575e2da3d7b88e",
+          "internal/app/plugin_instances.go": "d5544fc148dc8d4ea2b0c9a4069bc91ad290073f891f039099e02908ffc747d8",
+          "internal/plugins/artifacts/clone.go": "a9a251716df82bdbedf5b06d7fbd6ab4475421139b5c55dc4198ebad612ddaa5",
+          "internal/app/plugin_original_base_session.go": "aa28d216617d864e7c43a30e6a56805b4f65ee667d7c0309871c7c04deaf2c4e",
+          "internal/app/plugin_original_base_sdk_test.go": "e6263b134514e7fefffc05cb5a1e5f73781ea6c9b8abb177584e5d17f64cadc4",
+          "internal/app/plugin_shared_manager_queries_cache_test.go": "b4598a319af812e2bfab71ea021c40ca317359c263e10a32d62886328cd62e88",
+          "internal/plugins/base.go": "88d704b1249fd6af462f8dc8157586f1e30d579e4cc4719abf3289821f311aed",
+          "go.mod": "622569e08ea6fb374e66a0e35f22bc29b276841d7ab74ade1e1d813a6095b5fa",
+          "go.sum": "2166fc925241cdfc675fc78e2e3d2b36152d9eb208a86d6defccec9551c61355",
+          "cmd/server/main.go": "903e44dd9932bd697fbe0296fee981e63723213b6b5ed49fd30e16d923390d60",
+          "internal/app/runtime.go": "cfe34da3a7e5c36b3f32fd9d8f991bab9029d05fe4e3c9816b5964561cc36d31",
+          "internal/app/http.go": "7dbe46f289feb68d40eac17525e40d4edd647570e93b86d29f4c4352afb5a527",
+          "internal/app/store.go": "44ffeb5c61ed9d1828b97f2c11918c77072711e069983584b3bdaa2f4d601dde",
+          "internal/app/plugin_original_session.go": "d4a62eac3f4d65b65ffc7923d941b925cf7d890e434460410689e2ea3b6f6138",
+          "internal/app/plugin_original_resources.go": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+          "internal/app/plugin_original_commands.go": "12b96e0d9c882e2c3922f82b2badd04c8adfbe1e2b711b89971340ea0c96d28b",
+          "internal/plugins/transport.go": "f36a61b4f9becfd844aef64f4a006665f8791be2e27621b65dbbb13216be249c",
+          "internal/plugins/jsonrpc.go": "ca173d11652bbf2ce186e134a3770ff54987a5631be09043c845d2c35545dc8b",
+          "internal/plugins/identity.go": "3144e5a1efe0e49aaeb8803740487b182967aa3d56c0ccf08a87a3fa7995b620",
+          "cmd/owned-standard-fixture/main.go": "e087e7d0e696ee91feb604e529bde697fc0618b2805cac37691ffbf4a02bb053",
+          "cmd/owned-standard-fixture/rich-form.json": "1c401c164f7370ce7b3623a30e64a7f1a0d7f9eed4cd7e11f8e51bd3fca91c76",
+          "cmd/owned-base-fixture/main.go": "7fc6370adcdd5fd6b0f949c5b3b170ac73ed595f6167853a0bf8c2b6cd9f1766",
+          "internal/app/plugin_module_process_test.go": "1740f25b1267bdba0d28bc71febdb96be8bce69bdf8a53116d9210c60a14b8d7",
+          "internal/app/plugin_module_process_base_test.go": "445e95fc838f79d1e4da51b5f3e5be768c1c650eee8c33c5541874cc160727d9",
+          "internal/app/plugin_module_process_market_test.go": "55127a625ecc98bd2b2ddced138212b5309c1374ec743a42e3f10b3dfd7a7c92",
+          "internal/app/plugin_shared_subscriptions.go": "32cbca1e6bcd6bf0128bad490babebf8903c9499fa33198a14998baca5704553",
+          "internal/app/plugin_shared_subscriptions_fields.go": "171aaba0117a24fc125d03dc470262a00c74475701041d814251bd3fbb5442bc",
+          "internal/app/plugin_shared_subscriptions_json.go": "c114f4eae68a2158ac55b9c1c3471a35c364ba5a61807d4c46cda6786239b4ba",
+          "internal/app/plugin_shared_subscriptions_sql.go": "f890d028f578bcdf3dc8201d1ff0476730b22b31404b8abdb2090e4da23dd73f",
+          "internal/app/plugin_shared_subscriptions_json_raw.go": "e737612119f2f7d2d540faa633a4be95397054ff0b43038d410ca925129fd83c",
+          "internal/app/plugin_shared_subscriptions_unicode.go": "8bfe9d486b5427c05c6c6deb56b12b6246b066346c9f2dc2038fb17f00e94fd0"
+        },
+        "fixture_files": {
+          "evidence/existing-platform-01-05/reuse-review.json": "2a5a355b9650d338ddd3a7dcbcc50d3b857470b740fb794417e090e0b936fa5b"
+        }
+      },
+      "artifacts": {
+        "evidence/existing-platform-01-05/reuse-review.json": "2a5a355b9650d338ddd3a7dcbcc50d3b857470b740fb794417e090e0b936fa5b"
+      },
+      "commands": [
+        "Original source_reuse_probe_v2.py with fixed unchanged Manager/Base/default DAOs: 12 actual component observations.",
+        "run-current-process.sh: fresh app.test/server/standard-v1/standard-v2/base-process builds; TestPluginModuleProductionProcessLifecycle -race, 44.44s, exit0, no skips.",
+        "Existing independently reviewed Base/Manager/SDK and official-browser evidence reused only in the recorded unchanged scopes; old hashes retained."
+      ],
+      "inputs": [
+        "Fixed backend/frontend commits; explicit synthetic owned modules, SQLite and local files; 2596 local +3353 external current inputs unchanged before/after.",
+        "Exact source driver/result/log and current lifecycle driver/buildinfo/raw-log/closure hashes appear in the published review; raw new evidence retained separately, not falsely claimed all in Git."
+      ],
+      "observations": [
+        "Five existing authority rows revalidated without product rewrite; physical source module replacement, same-object initialization including failure, source API/service getters/sync+async, actual target artifact replacement/new PID, clone isolation and cold recovery.",
+        "Current dcbf8d72 build includes S05 compilation/resource predicate changes; this new execution supplements, never rewrites, the earlier 9d43.48s execution.",
+        "Pinned frontend has no independent reload button. Complete update/reset/uninstall GUI belongs other rows; source full-host scheduler/auth and other groups are not certified."
+      ]
+    },
+    {
+      "id": "existing-01-05.independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant-owned cloud Linux amd64 Go1.26.0/CGO/race; fixed complete original Manager/Base/default DAO modules with explicit unused integration fixtures, actual SQLAlchemy2.0.55 SQLite3.53.1/files; actual compiled cmd/server/native workers and isolated HTTP/SQLite; source full daemon/auth/scheduler not asserted.",
+        "target_files": {
+          "internal/app/plugin_store.go": "292ced28e5ea7759aee9dd867f08389469453805e26063b0136824e22b62a908",
+          "internal/app/plugin_original_lifecycle.go": "a479ad6c0c7fdd7d3f24fddf676f956588c94030be1cace2cd72f4476d4cabcd",
+          "internal/app/plugin_original_registry.go": "496d1b2547eea2b7032dd3ff8ac2da9bdd080f2e018e53f004677e07f8833318",
+          "internal/app/plugin_original_base_schema.go": "e8588ee736a4108cbebad93081cbb881fa25966b63744e531fb9c5295cc4ca56",
+          "internal/app/plugin_original_reset.go": "87e8b09e781867d7bdbae540d1b2e3487422d33ea107028fb3f5467995fb701d",
+          "internal/app/plugin_original_uninstall.go": "54f334aace4cb3b91ab4dce76cea8a3ae8276ec2502fa3a3dde222178f0d4d05",
+          "internal/app/plugin_original_install.go": "880bef4fbad5377684a374158178a8d8db84d3a21b639ce326d76410a2015288",
+          "internal/app/plugin_original_api_methods.go": "a74f449b0791595248c0774d6cb996b366510c9301a0f92fd4dafe726a98a4bc",
+          "internal/app/plugin_original_services.go": "cb1c93b92cec031b93a3e1cc0fe127363c2da37d02180804a364295f88f1238c",
+          "internal/app/plugin_original_direct_dispatch.go": "8785a4121a5dbb177798856b8c9ec1bb4da18996baccd796e8769d8d412587d1",
+          "internal/plugins/worker.go": "b91a555c564512af5cf4b5fee799244a21dd3c26e08bf018df1aea1665ecdb57",
+          "internal/plugins/protocol.go": "4dd45fba68965bed4255ecd4382036914b40f45945da6313fbe9ea46c8119454",
+          "internal/plugins/artifacts/acquire.go": "c50fad3f7dd7f9f0ecdcc879dfe8e831b125f9329c4d7387723bf7b5ea99150a",
+          "internal/plugins/artifacts/inspect.go": "b230618f682a921e17151da04a76b3c7e138ff4a9bf237babd099e75a9c026f9",
+          "internal/app/plugin_original_config.go": "6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64",
+          "internal/app/plugin_original_manager_configuration.go": "15c893520dd5bfb13d4605cf15f598c03423c8f187ef010bc568ea05f7db5b91",
+          "internal/app/plugin_original_base.go": "0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b",
+          "internal/app/plugin_original_state.go": "df30cac11c6965248cc5076c0b31f81a143d7fce7f44377f34a2c840b5bd60d6",
+          "internal/app/plugin_shared_manager_queries_cache.go": "66d5939907f65a7e71099c21a7fb1ace4b462138c50335ecdb318802a6cae1ef",
+          "internal/app/plugin_shared_manager_queries_config_failure_test.go": "18c927a2a84bf4d6fbb29b354f43094a110c90518f7ef9c08eb9e55cecf95692",
+          "internal/app/plugin_original_manager_http.go": "b3961f0fbe0c80316e1155eb10de9dc4a6178f9f52dd491805575e2da3d7b88e",
+          "internal/app/plugin_instances.go": "d5544fc148dc8d4ea2b0c9a4069bc91ad290073f891f039099e02908ffc747d8",
+          "internal/plugins/artifacts/clone.go": "a9a251716df82bdbedf5b06d7fbd6ab4475421139b5c55dc4198ebad612ddaa5",
+          "internal/app/plugin_original_base_session.go": "aa28d216617d864e7c43a30e6a56805b4f65ee667d7c0309871c7c04deaf2c4e",
+          "internal/app/plugin_original_base_sdk_test.go": "e6263b134514e7fefffc05cb5a1e5f73781ea6c9b8abb177584e5d17f64cadc4",
+          "internal/app/plugin_shared_manager_queries_cache_test.go": "b4598a319af812e2bfab71ea021c40ca317359c263e10a32d62886328cd62e88",
+          "internal/plugins/base.go": "88d704b1249fd6af462f8dc8157586f1e30d579e4cc4719abf3289821f311aed",
+          "go.mod": "622569e08ea6fb374e66a0e35f22bc29b276841d7ab74ade1e1d813a6095b5fa",
+          "go.sum": "2166fc925241cdfc675fc78e2e3d2b36152d9eb208a86d6defccec9551c61355",
+          "cmd/server/main.go": "903e44dd9932bd697fbe0296fee981e63723213b6b5ed49fd30e16d923390d60",
+          "internal/app/runtime.go": "cfe34da3a7e5c36b3f32fd9d8f991bab9029d05fe4e3c9816b5964561cc36d31",
+          "internal/app/http.go": "7dbe46f289feb68d40eac17525e40d4edd647570e93b86d29f4c4352afb5a527",
+          "internal/app/store.go": "44ffeb5c61ed9d1828b97f2c11918c77072711e069983584b3bdaa2f4d601dde",
+          "internal/app/plugin_original_session.go": "d4a62eac3f4d65b65ffc7923d941b925cf7d890e434460410689e2ea3b6f6138",
+          "internal/app/plugin_original_resources.go": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+          "internal/app/plugin_original_commands.go": "12b96e0d9c882e2c3922f82b2badd04c8adfbe1e2b711b89971340ea0c96d28b",
+          "internal/plugins/transport.go": "f36a61b4f9becfd844aef64f4a006665f8791be2e27621b65dbbb13216be249c",
+          "internal/plugins/jsonrpc.go": "ca173d11652bbf2ce186e134a3770ff54987a5631be09043c845d2c35545dc8b",
+          "internal/plugins/identity.go": "3144e5a1efe0e49aaeb8803740487b182967aa3d56c0ccf08a87a3fa7995b620",
+          "cmd/owned-standard-fixture/main.go": "e087e7d0e696ee91feb604e529bde697fc0618b2805cac37691ffbf4a02bb053",
+          "cmd/owned-standard-fixture/rich-form.json": "1c401c164f7370ce7b3623a30e64a7f1a0d7f9eed4cd7e11f8e51bd3fca91c76",
+          "cmd/owned-base-fixture/main.go": "7fc6370adcdd5fd6b0f949c5b3b170ac73ed595f6167853a0bf8c2b6cd9f1766",
+          "internal/app/plugin_module_process_test.go": "1740f25b1267bdba0d28bc71febdb96be8bce69bdf8a53116d9210c60a14b8d7",
+          "internal/app/plugin_module_process_base_test.go": "445e95fc838f79d1e4da51b5f3e5be768c1c650eee8c33c5541874cc160727d9",
+          "internal/app/plugin_module_process_market_test.go": "55127a625ecc98bd2b2ddced138212b5309c1374ec743a42e3f10b3dfd7a7c92",
+          "internal/app/plugin_shared_subscriptions.go": "32cbca1e6bcd6bf0128bad490babebf8903c9499fa33198a14998baca5704553",
+          "internal/app/plugin_shared_subscriptions_fields.go": "171aaba0117a24fc125d03dc470262a00c74475701041d814251bd3fbb5442bc",
+          "internal/app/plugin_shared_subscriptions_json.go": "c114f4eae68a2158ac55b9c1c3471a35c364ba5a61807d4c46cda6786239b4ba",
+          "internal/app/plugin_shared_subscriptions_sql.go": "f890d028f578bcdf3dc8201d1ff0476730b22b31404b8abdb2090e4da23dd73f",
+          "internal/app/plugin_shared_subscriptions_json_raw.go": "e737612119f2f7d2d540faa633a4be95397054ff0b43038d410ca925129fd83c",
+          "internal/app/plugin_shared_subscriptions_unicode.go": "8bfe9d486b5427c05c6c6deb56b12b6246b066346c9f2dc2038fb17f00e94fd0"
+        },
+        "fixture_files": {
+          "evidence/existing-platform-01-05/reuse-review.json": "2a5a355b9650d338ddd3a7dcbcc50d3b857470b740fb794417e090e0b936fa5b"
+        }
+      },
+      "artifacts": {
+        "evidence/existing-platform-01-05/reuse-review.json": "2a5a355b9650d338ddd3a7dcbcc50d3b857470b740fb794417e090e0b936fa5b"
+      },
+      "commands": [
+        "Original source_reuse_probe_v2.py with fixed unchanged Manager/Base/default DAOs: 12 actual component observations.",
+        "run-current-process.sh: fresh app.test/server/standard-v1/standard-v2/base-process builds; TestPluginModuleProductionProcessLifecycle -race, 44.44s, exit0, no skips.",
+        "Existing independently reviewed Base/Manager/SDK and official-browser evidence reused only in the recorded unchanged scopes; old hashes retained."
+      ],
+      "inputs": [
+        "Fixed backend/frontend commits; explicit synthetic owned modules, SQLite and local files; 2596 local +3353 external current inputs unchanged before/after.",
+        "Exact source driver/result/log and current lifecycle driver/buildinfo/raw-log/closure hashes appear in the published review; raw new evidence retained separately, not falsely claimed all in Git."
+      ],
+      "observations": [
+        "Five existing authority rows revalidated without product rewrite; physical source module replacement, same-object initialization including failure, source API/service getters/sync+async, actual target artifact replacement/new PID, clone isolation and cold recovery.",
+        "Current dcbf8d72 build includes S05 compilation/resource predicate changes; this new execution supplements, never rewrites, the earlier 9d43.48s execution.",
+        "Pinned frontend has no independent reload button. Complete update/reset/uninstall GUI belongs other rows; source full-host scheduler/auth and other groups are not certified."
+      ],
+      "reviewer": "manager_queries_independent_review_20261030"
     }
   ],
   "execution_contract": {
@@ -21754,16 +22395,15 @@
     "existing_platform_reuse": "46 existing applicable platform groups are not 46 rewrites. Preserve/reuse implementation and unchanged sufficiently bound source/test evidence. 15 new shared-host groups are discovery buckets, not 15 automatically missing features."
   },
   "resume": {
-    "next_slice": "Commit/push/readback accepted S05 Unicode follow-up; continue bounded real RemoteIdentifiers config/UI, Transmission enumeration and precise existing-platform reuse verification. Whole S05/S10/S06 and platform remain incomplete.",
+    "next_slice": "Integrate independently reviewed Transmission enumeration, actual main race + official browser; finish independent real RemoteIdentifiers config/UI chain. Existing01-05 verified by reuse, not new product rewrites; remaining groups still open.",
     "dirty_work": [
-      "Only accepted S05 Unicode repair, necessary tests/minimal evidence/current metadata; S07/S01 candidate products remain isolated."
+      "Only existing01-05 independent verification metadata. S01/S07 candidate products remain isolated and are not included."
     ],
     "workers": [
       "coordinator",
-      "library_history_shared_host",
-      "history_query_independent_review_20261030",
       "site_subscription_shared_host",
-      "lifecycle_recognition_shared_host"
+      "independent_source_audit",
+      "downloader_shared_host"
     ],
     "blockers": [],
     "commands": [
@@ -21828,6 +22468,14 @@
         "sha256": "a6cd7f597d860378d74428ea2df1b72ef6203bf4fe7f9e4d426238fc8077ea2f",
         "bytes": 4175555,
         "boundary": "384 checked members. No persistent accounts/runtime config/DB/dependencies/binaries/screenshots/old rejected material. S05 repaired candidate is not contained or accepted by this prior archive."
+      },
+      {
+        "purpose": "Accepted S05 Unicode dcbf8d72 exact26 committed paths and exact new owner/independent/coordinator whitelisted evidence; initial helper defect and corrected evidence remain separately identified.",
+        "library_file_id": "libfile_d8ef28dbd2ac8191b826748bdda16cbe",
+        "filename": "light-media-s05-unicode-accepted-dcbf8d72-20261030.tar.gz",
+        "sha256": "99b1f9a947633e4b4edcdd666906ca46e4427e8a12bca44033599bc4bd21ae75",
+        "bytes": 4952462,
+        "boundary": "522 archive members, 520 payloads verified. Four binary entries in owner original whitelist omitted explicitly; no runtime accounts/config/DB/dependencies/screenshots/old rejected or unknown out-of-scope diagnostic materials."
       }
     ],
     "last_delivery": {
