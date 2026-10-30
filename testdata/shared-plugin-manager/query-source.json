@@ -1,0 +1,293 @@
+{
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "scope": "Fresh fixed-source manager + Base + actual SQLAlchemy/SQLite component witness.\nNot a complete daemon: explicit unused integration imports and event sink fixtures.\nClass load/start/stop/config methods run unchanged, not extracted or rewritten.\n",
+  "initial": {
+    "classes": [
+      "OwnedBeta",
+      "OwnedAlpha",
+      "OwnedBroken"
+    ],
+    "running": [
+      "OwnedBeta",
+      "OwnedAlpha"
+    ]
+  },
+  "config_cases": [
+    {
+      "input": null,
+      "manager": {},
+      "error": null,
+      "base": null
+    },
+    {
+      "input": false,
+      "manager": {},
+      "error": null,
+      "base": false
+    },
+    {
+      "input": 0,
+      "manager": {},
+      "error": null,
+      "base": 0
+    },
+    {
+      "input": "",
+      "manager": {},
+      "error": null,
+      "base": ""
+    },
+    {
+      "input": [],
+      "manager": {},
+      "error": null,
+      "base": []
+    },
+    {
+      "input": {},
+      "manager": {},
+      "error": null,
+      "base": {}
+    },
+    {
+      "input": {
+        "": "drop",
+        "zero": 0,
+        "false": false,
+        "nested": {
+          "x": [
+            1,
+            2
+          ]
+        }
+      },
+      "manager": {
+        "zero": 0,
+        "false": false,
+        "nested": {
+          "x": [
+            1,
+            2
+          ]
+        }
+      },
+      "error": null,
+      "base": {
+        "": "drop",
+        "zero": 0,
+        "false": false,
+        "nested": {
+          "x": [
+            1,
+            2
+          ]
+        }
+      }
+    },
+    {
+      "input": [
+        1
+      ],
+      "manager": null,
+      "error": "AttributeError",
+      "base": [
+        1
+      ]
+    },
+    {
+      "input": "value",
+      "manager": null,
+      "error": "AttributeError",
+      "base": "value"
+    },
+    {
+      "input": true,
+      "manager": null,
+      "error": "AttributeError",
+      "base": true
+    },
+    {
+      "input": 4,
+      "manager": null,
+      "error": "AttributeError",
+      "base": 4
+    }
+  ],
+  "id_cases": [
+    {
+      "input": "",
+      "manager": {},
+      "error": null
+    },
+    {
+      "input": null,
+      "manager": {},
+      "error": null
+    },
+    {
+      "input": false,
+      "manager": {},
+      "error": null
+    },
+    {
+      "input": 0,
+      "manager": {},
+      "error": null
+    },
+    {
+      "input": 1.5,
+      "manager": {},
+      "error": null
+    },
+    {
+      "input": [],
+      "manager": null,
+      "error": "TypeError"
+    },
+    {
+      "input": {},
+      "manager": null,
+      "error": "TypeError"
+    },
+    {
+      "input": "ownedalpha",
+      "manager": {},
+      "error": null
+    },
+    {
+      "input": "Missing",
+      "manager": {},
+      "error": null
+    }
+  ],
+  "unimported": {
+    "manager": {},
+    "base": {
+      "ordinary": "stored but no class"
+    }
+  },
+  "copy_isolated": true,
+  "getters_did_not_init": true,
+  "cache_after_failure": {
+    "ordinary": "cache-after-failure"
+  },
+  "before_stop": {
+    "classes": [
+      "OwnedBeta",
+      "OwnedAlpha",
+      "OwnedBroken"
+    ],
+    "running": [
+      "OwnedBeta",
+      "OwnedAlpha"
+    ]
+  },
+  "after_stop": {
+    "classes": [
+      "OwnedAlpha",
+      "OwnedBroken"
+    ],
+    "running": [
+      "OwnedAlpha"
+    ]
+  },
+  "after_restart": {
+    "classes": [
+      "OwnedAlpha",
+      "OwnedBroken",
+      "OwnedBeta"
+    ],
+    "running": [
+      "OwnedAlpha",
+      "OwnedBeta"
+    ]
+  },
+  "raw_sha256": "199c368f2638892d161a6ba2bcf10fccd1b1642480984425bdc50c79a5cd5981",
+  "init_trace": [
+    {
+      "phase": "init",
+      "id": "OwnedBeta",
+      "classes": [
+        "OwnedBeta"
+      ],
+      "running": [],
+      "config": {},
+      "base": null
+    },
+    {
+      "phase": "init",
+      "id": "OwnedAlpha",
+      "classes": [
+        "OwnedBeta",
+        "OwnedAlpha"
+      ],
+      "running": [
+        "OwnedBeta"
+      ],
+      "config": {
+        "enabled": true,
+        "value": "initial"
+      },
+      "base": {
+        "enabled": true,
+        "value": "initial",
+        "": "empty-key"
+      }
+    },
+    {
+      "phase": "init",
+      "id": "OwnedBroken",
+      "classes": [
+        "OwnedBeta",
+        "OwnedAlpha",
+        "OwnedBroken"
+      ],
+      "running": [
+        "OwnedBeta",
+        "OwnedAlpha"
+      ],
+      "config": {},
+      "base": null
+    }
+  ],
+  "stop_trace": [
+    {
+      "phase": "stop",
+      "id": "OwnedBeta",
+      "classes": [
+        "OwnedBeta",
+        "OwnedAlpha",
+        "OwnedBroken"
+      ],
+      "running": [
+        "OwnedBeta",
+        "OwnedAlpha"
+      ]
+    }
+  ],
+  "cold": {
+    "registry": {
+      "classes": [
+        "OwnedBeta",
+        "OwnedAlpha",
+        "OwnedBroken"
+      ],
+      "running": [
+        "OwnedBeta",
+        "OwnedAlpha"
+      ]
+    },
+    "config": {
+      "ordinary": {
+        "list": [
+          1
+        ]
+      },
+      "enabled": true
+    },
+    "base_unimported": {
+      "ordinary": "stored but no class"
+    },
+    "manager_unimported": {}
+  }
+}

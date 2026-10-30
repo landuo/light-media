@@ -183,6 +183,9 @@ func New(opts Options) (*App, error) {
 	}
 	a.pluginStore, e = NewPluginStore(context.Background(), s)
 	if e == nil {
+		e = a.prefetchOriginalPluginConfig(context.Background())
+	}
+	if e == nil {
 		e = a.loadRecognitionWords(context.Background())
 	}
 	if e != nil {

@@ -1,0 +1,56 @@
+{
+  "status": "passed_scoped",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "interface": "Actual official cloud browser, existing user-created login session, native plugin market/settings/page/clone, official preview stop/start; no session injection.",
+  "checks": {
+    "default_manager_empty_vs_base_null": true,
+    "same_object_save_reinitializes": true,
+    "disabled_object_still_running": true,
+    "cross_plugin_configuration_current": true,
+    "missing_class_config_empty": true,
+    "clone_in_actual_registry": true,
+    "cold_process_preserves_config_registry": true,
+    "history_query_on_integrated_host": true
+  },
+  "processes": {
+    "initial_worker": 100,
+    "clone_worker": 119,
+    "cold_clone_worker": 83
+  },
+  "actual_artifacts_sha256": {
+    "cmd/server": "ad07152f8695310907098245080b491fe194787872c440d40de64c21d581ef42",
+    "owned-manager-query-fixture": "b6ddf816c98e286c594ae7afe9b3a49759045499a56b39d03837251ded6b1dda"
+  },
+  "raw_ui_steps_sha256": "b6e6381a234e9399b04ed99b2582c8ef9fa68241116efb6430a134ce54fad29f",
+  "raw_ui_steps_boundary": "Private newly generated synthetic UI text; no screenshot or account/configuration store published. Product-visible synthetic IDs and assertions only in this summary.",
+  "target_files": {
+    "internal/plugins/shared_plugin_manager.go": "b06e281afb735fe69fb69a70c3635f9b69eb1ac705f347c753b8aa93fd3080d9",
+    "internal/app/plugin_shared_manager_queries.go": "38b4da535d21151fc93217aaa6e9402460c4cd0631c87afe6ff3c517b39632ff",
+    "internal/app/plugin_shared_manager_queries_cache.go": "66d5939907f65a7e71099c21a7fb1ace4b462138c50335ecdb318802a6cae1ef",
+    "internal/app/plugin_original_base.go": "0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b",
+    "internal/app/plugin_original_resources.go": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+    "internal/app/plugin_original_config.go": "6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64",
+    "internal/app/runtime.go": "cfe34da3a7e5c36b3f32fd9d8f991bab9029d05fe4e3c9816b5964561cc36d31",
+    "cmd/owned-manager-query-fixture/main.go": "6bd28653ea5816823177ec9ff81aa8e6fa97a3fe41d23c997b0c404f4e5f04d4",
+    "internal/app/plugin_shared_manager_queries_test.go": "bbf7a8050e5cf602a989aa302afce684f711d73f848cbd0b317d08ea95f1d704",
+    "internal/app/plugin_shared_manager_queries_process_test.go": "969abbad4712452f9e5df22c518fe2571902d94af85d3476b5a9f5f88a9fb0b6",
+    "internal/app/plugin_shared_manager_queries_cache_test.go": "b4598a319af812e2bfab71ea021c40ca317359c263e10a32d62886328cd62e88",
+    "internal/app/plugin_shared_manager_queries_config_failure_test.go": "18c927a2a84bf4d6fbb29b354f43094a110c90518f7ef9c08eb9e55cecf95692",
+    "testdata/shared-plugin-manager/query-source.json": "187ecdd6eb191667cb71c1c513a4499c2e8d903082c70745dc01047934241b08",
+    "testdata/shared-plugin-manager/cache-outage-source.json": "86b31c9ebadfa16567aff2068e51c1fe36eaa2aa9a83597c285da50c1f230bdb",
+    "testdata/shared-plugin-manager/README.md": "10eab90ec63e79b9887870434917ced37c8f3ac68f59f47499c125799e998985",
+    "internal/app/plugin_shared_manager_queries_independent_test.go": "fbeb59ccfd6314b101d429e4fda8689917e7f512374847d892d3f4cb96728fb1"
+  },
+  "limits": [
+    "Not source full server/authentication E2E",
+    "No lifecycle-write/scheduler/business-plugin claim",
+    "No complete S10 claim"
+  ],
+  "second_cold": {
+    "from_pid": 83,
+    "to_pid": 88,
+    "all_other_visible_fields_equal": true,
+    "raw_observation_sha256": "4a1a8e454e66d77e9234d75abd37d6d5528782d487262ef00129db0c0760c526",
+    "official_preview_receipt_sha256": "e113edfeb78fffaa3d9b52062310b9387ae144b72bb8dcd4b1134934d1d51585"
+  }
+}

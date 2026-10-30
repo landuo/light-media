@@ -15,8 +15,8 @@
     "remote": "https://github.com/landuo/light-media.git",
     "branch": "plugins-refactor",
     "baseline_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-    "revision": "e0258042f5196a5d94753f7dceaed9a8ad261d9e",
-    "remote_revision": "e0258042f5196a5d94753f7dceaed9a8ad261d9e",
+    "revision": "c313c3ef20148b36e819db597bcd3a8a455be5c2",
+    "remote_revision": "c313c3ef20148b36e819db597bcd3a8a455be5c2",
     "delivery_mode": "remote",
     "delivery_reason": "Per accepted functional slice commit, push and readback; no merge or deployment.",
     "metadata_paths": [
@@ -24,7 +24,7 @@
       "docs/plugin-module-parity-matrix.md",
       "docs/plugin-shared-host-20261030.md"
     ],
-    "revision_note": "Last completed remote receipt; current S06 integration file-bound until its own commit/push/readback, not a self-referential candidate SHA."
+    "revision_note": "Last completed remote receipt; current S10 slice bound by files until its own commit/push/readback, not a self-referential commit."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -3347,7 +3347,8 @@
         "48",
         "49",
         "50",
-        "S10"
+        "S10",
+        "S10.manager_queries"
       ],
       "feature_link_reason": "existing precise feature source_paths reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3669,7 +3670,8 @@
       "feature_ids": [
         "01",
         "05",
-        "S07"
+        "S07",
+        "S10.manager_queries"
       ],
       "feature_link_reason": "persistent model/Oper underlying the named state capability",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -3791,7 +3793,8 @@
         "01",
         "03",
         "05",
-        "S07"
+        "S07",
+        "S10.manager_queries"
       ],
       "feature_link_reason": "persistent model/Oper underlying the named state capability",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -6458,7 +6461,8 @@
       "reason": "插件装载、市场、安装、生命周期、扩展注册或 UI 合约。",
       "feature_ids": [
         "01",
-        "05"
+        "05",
+        "S10.manager_queries"
       ],
       "feature_link_reason": "existing precise feature source_paths reverse-link; exact representative entrypoint reverse-link",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -17019,6 +17023,45 @@
         "note": "Source-backed callable chain. Exact alias and dynamic provider expansion still require scenario observation."
       },
       "validation": "source symbol; not executed"
+    },
+    {
+      "id": "scope.manager-query.get_plugin_config",
+      "source_repository": "backend",
+      "source_path": "app/core/plugin.py",
+      "source_location": "app/core/plugin.py:776#PluginManager.get_plugin_config",
+      "symbol": "PluginManager.get_plugin_config",
+      "line": 776,
+      "feature_ids": [
+        "S10",
+        "S10.manager_queries"
+      ],
+      "chain": "Ordinary plugin -> real PluginManager class/running registry or source-shaped SystemConfig/DAO configuration cache; target active standard SDK capability."
+    },
+    {
+      "id": "scope.manager-query.get_plugin_ids",
+      "source_repository": "backend",
+      "source_path": "app/core/plugin.py",
+      "source_location": "app/core/plugin.py:1320#PluginManager.get_plugin_ids",
+      "symbol": "PluginManager.get_plugin_ids",
+      "line": 1320,
+      "feature_ids": [
+        "S10",
+        "S10.manager_queries"
+      ],
+      "chain": "Ordinary plugin -> real PluginManager class/running registry or source-shaped SystemConfig/DAO configuration cache; target active standard SDK capability."
+    },
+    {
+      "id": "scope.manager-query.get_running_plugin_ids",
+      "source_repository": "backend",
+      "source_path": "app/core/plugin.py",
+      "source_location": "app/core/plugin.py:1326#PluginManager.get_running_plugin_ids",
+      "symbol": "PluginManager.get_running_plugin_ids",
+      "line": 1326,
+      "feature_ids": [
+        "S10",
+        "S10.manager_queries"
+      ],
+      "chain": "Ordinary plugin -> real PluginManager class/running registry or source-shaped SystemConfig/DAO configuration cache; target active standard SDK capability."
     }
   ],
   "features": [
@@ -17075,7 +17118,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "02",
@@ -17109,7 +17154,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "03",
@@ -17136,7 +17183,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "04",
@@ -17160,7 +17209,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "05",
@@ -17221,7 +17272,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "06",
@@ -17250,7 +17303,9 @@
       },
       "external_source_paths": [
         "frontend:src/components/dialog/PluginMarketSettingDialog.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "07",
@@ -17277,7 +17332,9 @@
       },
       "external_source_paths": [
         "frontend:src/components/dialog/PluginMarketSettingDialog.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "08",
@@ -17305,7 +17362,9 @@
       },
       "external_source_paths": [
         "frontend:src/views/plugin/PluginCardListView.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "09",
@@ -17332,7 +17391,9 @@
       },
       "external_source_paths": [
         "frontend:src/views/plugin/PluginCardListView.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "10",
@@ -17363,7 +17424,9 @@
       },
       "external_source_paths": [
         "frontend:src/views/plugin/PluginCardListView.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "11",
@@ -17396,7 +17459,9 @@
       },
       "external_source_paths": [
         "frontend:src/components/cards/PluginCard.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "12",
@@ -17432,7 +17497,9 @@
         "frontend:src/components/cards/PluginAppCard.vue",
         "frontend:src/components/cards/PluginCard.vue",
         "frontend:src/components/dialog/PluginVersionHistoryDialog.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "13",
@@ -17509,7 +17576,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "14",
@@ -17537,7 +17606,9 @@
       },
       "external_source_paths": [
         "frontend:src/components/cards/PluginCard.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "15",
@@ -17564,7 +17635,9 @@
       "external_source_paths": [
         "frontend:src/components/cards/PluginCard.vue",
         "frontend:src/components/dialog/PluginCloneDialog.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "16",
@@ -17591,7 +17664,9 @@
       },
       "external_source_paths": [
         "frontend:src/components/cards/PluginCard.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "17",
@@ -17617,7 +17692,9 @@
       },
       "external_source_paths": [
         "frontend:src/components/cards/PluginCard.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "18",
@@ -17654,7 +17731,9 @@
       },
       "external_source_paths": [
         "frontend:src/components/dialog/PluginMarketSettingDialog.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "19",
@@ -17679,7 +17758,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "20",
@@ -17747,7 +17828,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "21",
@@ -17785,7 +17868,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "22",
@@ -17840,7 +17925,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "24",
@@ -17870,7 +17957,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "25",
@@ -17901,7 +17990,9 @@
         "frontend:src/components/cards/PluginCard.vue",
         "frontend:src/composables/useRecentPlugins.ts",
         "frontend:src/views/plugin/PluginCardListView.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "26",
@@ -17932,7 +18023,9 @@
       },
       "external_source_paths": [
         "frontend:src/views/plugin/PluginCardListView.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "27",
@@ -17962,7 +18055,9 @@
       },
       "external_source_paths": [
         "frontend:src/views/plugin/PluginCardListView.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "28",
@@ -17993,7 +18088,9 @@
       },
       "external_source_paths": [
         "frontend:src/components/dialog/PluginConfigDialog.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "29",
@@ -18025,7 +18122,9 @@
       "external_source_paths": [
         "frontend:src/components/dialog/PluginConfigDialog.vue",
         "frontend:src/components/render/FormRender.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "30",
@@ -18059,7 +18158,9 @@
         "frontend:src/components/dialog/PluginDataDialog.vue",
         "frontend:src/components/render/PageRender.vue",
         "frontend:src/composables/useRecentPlugins.ts"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "31",
@@ -18089,7 +18190,9 @@
         "frontend:src/components/dialog/PluginConfigDialog.vue",
         "frontend:src/components/dialog/PluginDataDialog.vue",
         "frontend:src/utils/federationLoader.ts"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "32",
@@ -18130,7 +18233,9 @@
         "frontend:src/components/render/DashboardRender.vue",
         "frontend:src/pages/dashboard.vue",
         "frontend:src/utils/federationLoader.ts"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "33",
@@ -18164,7 +18269,9 @@
         "frontend:src/utils/federationLoader.ts",
         "frontend:src/utils/pluginSidebarNav.ts",
         "frontend:src/views/plugin/PluginCardListView.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "34",
@@ -18194,7 +18301,9 @@
       "external_source_paths": [
         "frontend:src/components/dialog/PluginLogDialog.vue",
         "frontend:src/views/system/LoggingView.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "35",
@@ -18237,7 +18346,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "36",
@@ -18335,7 +18446,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "37",
@@ -18429,7 +18542,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "38",
@@ -18464,7 +18579,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "39",
@@ -18494,7 +18611,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "40",
@@ -18557,7 +18676,9 @@
       "external_source_paths": [],
       "delivery_slices": [
         "40.clear_cache"
-      ]
+      ],
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Specific source/target behavioral gaps confirmed; partial child-slice delivery does not complete the whole parent."
     },
     {
       "id": "41",
@@ -18613,7 +18734,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "42",
@@ -18673,7 +18796,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "43",
@@ -18828,7 +18953,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "44",
@@ -19146,7 +19273,9 @@
       "external_source_paths": [
         "frontend:src/pages/login.vue",
         "frontend:src/utils/federationLoader.ts"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "48",
@@ -19171,7 +19300,9 @@
       },
       "external_source_paths": [
         "frontend:src/views/plugin/PluginCardListView.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "49",
@@ -19200,7 +19331,9 @@
       },
       "external_source_paths": [
         "frontend:src/views/plugin/PluginCardListView.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "50",
@@ -19227,12 +19360,14 @@
       },
       "external_source_paths": [
         "frontend:src/views/plugin/PluginCardListView.vue"
-      ]
+      ],
+      "work_kind": "reuse_verification",
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
     },
     {
       "id": "S01",
       "description": "S01 · 下载器任务完整枚举",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/download.py",
         "app/chain/download.py",
@@ -19271,7 +19406,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Source ordinary consumers enumerate all Transmission tasks; existing UI owned/downloading list and exact-hash SDK are not equivalent. Reuse native client; scoped query in development, no pass claim."
     },
     {
       "id": "S02",
@@ -19295,7 +19432,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "unclassified_shared_host",
+      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent."
     },
     {
       "id": "S03",
@@ -19328,7 +19467,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "unclassified_shared_host",
+      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent."
     },
     {
       "id": "S04",
@@ -19410,7 +19551,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "unclassified_shared_host",
+      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent."
     },
     {
       "id": "S05",
@@ -19460,14 +19603,16 @@
       "external_source_paths": [],
       "delivery_slices": [
         "S05.query_update"
-      ]
+      ],
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Specific source/target behavioral gaps confirmed; partial child-slice delivery does not complete the whole parent."
     },
     {
       "id": "S05.query_update",
       "parent_feature": "S05",
       "description": "Complete four-method native SDK subscription DAO query/update slice; parent S05 remains incomplete",
       "status": "implementing",
-      "owner": "site_subscription_shared_host",
+      "owner": "library_history_shared_host",
       "source_paths": [
         "app/db/subscribe_oper.py",
         "app/db/models/subscribe.py",
@@ -19607,7 +19752,8 @@
         "reason": "New real source/SDK unpaired-surrogate JSON column counterexample",
         "artifact": "evidence/s05-query-update/unicode-counterexample-20261030.json",
         "previous_delivery": "42fd80dc13e989a947babd5a40a41560877413f9"
-      }
+      },
+      "reopened_by": "s05.query-update.unicode-exact-input-counterexample"
     },
     {
       "id": "S06",
@@ -19658,12 +19804,14 @@
       "external_source_paths": [],
       "delivery_slices": [
         "S06.transfer_queries"
-      ]
+      ],
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Specific source/target behavioral gaps confirmed; partial child-slice delivery does not complete the whole parent."
     },
     {
       "id": "S07",
       "description": "S07 · 限定全局系统配置读写",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/system.py",
         "app/db/__init__.py",
@@ -19689,7 +19837,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Specific source/target behavioral gaps confirmed; partial child-slice delivery does not complete the whole parent."
     },
     {
       "id": "S08",
@@ -19738,7 +19888,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "unclassified_shared_host",
+      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent."
     },
     {
       "id": "S09",
@@ -19823,12 +19975,14 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "unclassified_shared_host",
+      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent."
     },
     {
       "id": "S10",
       "description": "S10 · 跨插件生命周期与关联调度",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/core/plugin.py",
         "app/scheduler.py"
@@ -19846,7 +20000,12 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Specific source/target behavioral gaps confirmed; partial child-slice delivery does not complete the whole parent.",
+      "delivery_slices": [
+        "S10.manager_queries"
+      ]
     },
     {
       "id": "S11",
@@ -19939,7 +20098,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "unclassified_shared_host",
+      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent."
     },
     {
       "id": "S12",
@@ -20036,7 +20197,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "unclassified_shared_host",
+      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent."
     },
     {
       "id": "S13",
@@ -20068,7 +20231,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "unclassified_shared_host",
+      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent."
     },
     {
       "id": "S14",
@@ -20103,7 +20268,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "unclassified_shared_host",
+      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent."
     },
     {
       "id": "S15",
@@ -20129,7 +20296,9 @@
         "status": "pending",
         "independent": false
       },
-      "external_source_paths": []
+      "external_source_paths": [],
+      "work_kind": "unclassified_shared_host",
+      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent."
     },
     {
       "id": "40.clear_cache",
@@ -20324,15 +20493,14 @@
         "normal CLI and official browser market/form/buttons, missing/storage match, clone/cold; synthetic read fixture explicitly distinguished"
       ],
       "evidence_ids": [
-        "history-query.differential",
-        "history-query.real-e2e"
+        "history-query.manager-integration-revalidation"
       ],
       "review": {
         "status": "passed",
         "independent": true,
-        "reviewer": "history_query_independent_review_20261030",
+        "reviewer": "manager_queries_independent_review_20261030",
         "evidence_ids": [
-          "history-query.independent-review"
+          "history-query.manager-integration-review"
         ]
       },
       "boundaries": [
@@ -20352,64 +20520,177 @@
           "applicable": true,
           "reason": "Source nullable fields and precise lookup compared against actual DAO; completed metadata frozen, legacy unknown fields null, no second history DB.",
           "evidence_ids": [
-            "history-query.differential",
-            "history-query.real-e2e"
+            "history-query.manager-integration-revalidation"
           ]
         },
         "state": {
           "applicable": true,
           "reason": "Actual completion job/generation, queued retry retains previous outcome, stale attempt cannot replace current record.",
           "evidence_ids": [
-            "history-query.differential",
-            "history-query.real-e2e"
+            "history-query.manager-integration-revalidation"
           ]
         },
         "errors": {
           "applicable": true,
           "reason": "Actual filesystem collision then successful retry, SQLite errors, malformed arguments and capability denial.",
           "evidence_ids": [
-            "history-query.differential",
-            "history-query.real-e2e"
+            "history-query.manager-integration-revalidation"
           ]
         },
         "concurrency": {
           "applicable": true,
           "reason": "Actual claim generation/stale concurrent execution under race detector; query is one bound SQLite statement.",
           "evidence_ids": [
-            "history-query.differential",
-            "history-query.real-e2e"
+            "history-query.manager-integration-revalidation"
           ]
         },
         "restart": {
           "applicable": true,
           "reason": "Actual App and worker cold recovery; official cmd/server stop/start and browser clone returns unchanged record.",
           "evidence_ids": [
-            "history-query.differential",
-            "history-query.real-e2e"
+            "history-query.manager-integration-revalidation"
           ]
         },
         "compatibility": {
           "applicable": true,
           "reason": "Actual fixed source DAO and metadata producer components, not full original organizer; exact merged S05/clear covered cases replayed, S05 Unicode counterexample separately reopened.",
           "evidence_ids": [
-            "history-query.differential",
-            "history-query.real-e2e"
+            "history-query.manager-integration-revalidation"
           ]
         },
         "security": {
           "applicable": true,
           "reason": "Active scoped worker and finite capabilities; no SQL/path-normalization/file-access query surface; typed invalid UTF8 rejected pre-marshalling.",
           "evidence_ids": [
-            "history-query.differential",
-            "history-query.real-e2e"
+            "history-query.manager-integration-revalidation"
           ]
         },
         "performance": {
           "applicable": true,
           "reason": "Measured finite race regression and bounded wire/query sample only; no general history-volume throughput claim.",
           "evidence_ids": [
-            "history-query.differential",
-            "history-query.real-e2e"
+            "history-query.manager-integration-revalidation"
+          ]
+        }
+      }
+    },
+    {
+      "id": "S10.manager_queries",
+      "parent_feature": "S10",
+      "description": "Three live registry/configuration queries and necessary ordinary configuration cache producers; not complete lifecycle/scheduler S10",
+      "status": "verified",
+      "owner": "lifecycle_recognition_shared_host",
+      "source_paths": [
+        "app/core/plugin.py",
+        "app/plugins/__init__.py",
+        "app/db/systemconfig_oper.py",
+        "app/db/models/systemconfig.py"
+      ],
+      "entrypoint_ids": [
+        "scope.manager-query.get_plugin_config",
+        "scope.manager-query.get_plugin_ids",
+        "scope.manager-query.get_running_plugin_ids"
+      ],
+      "dependencies": [
+        "02",
+        "05"
+      ],
+      "target_paths": [
+        "internal/plugins/shared_plugin_manager.go",
+        "internal/app/plugin_shared_manager_queries.go",
+        "internal/app/plugin_shared_manager_queries_cache.go",
+        "internal/app/plugin_original_base.go",
+        "internal/app/plugin_original_resources.go",
+        "internal/app/plugin_original_config.go",
+        "internal/app/runtime.go",
+        "cmd/owned-manager-query-fixture/main.go",
+        "internal/app/plugin_shared_manager_queries_test.go",
+        "internal/app/plugin_shared_manager_queries_process_test.go",
+        "internal/app/plugin_shared_manager_queries_cache_test.go",
+        "internal/app/plugin_shared_manager_queries_config_failure_test.go",
+        "testdata/shared-plugin-manager/query-source.json",
+        "testdata/shared-plugin-manager/cache-outage-source.json",
+        "testdata/shared-plugin-manager/README.md",
+        "internal/app/plugin_shared_manager_queries_independent_test.go",
+        "testdata/shared-plugin-manager/run-independent.sh"
+      ],
+      "scenarios": [
+        "Actual imported-class and running-instance ordering including failed init and disabled objects.",
+        "Source Manager configuration differs from Base; warm failures/prefetch/seal/cancel boundaries, ordinary save SQL failures and same-object init.",
+        "Real auth/scope denial, clone and worker/server cold recovery; official browser native install/settings/page."
+      ],
+      "evidence_ids": [
+        "manager-query.real-e2e"
+      ],
+      "review": {
+        "status": "passed",
+        "independent": true,
+        "reviewer": "manager_queries_independent_review_20261030",
+        "evidence_ids": [
+          "manager-query.independent-review"
+        ]
+      },
+      "boundaries": [
+        "Only finite current invocation capabilities; no arbitrary settings/credentials/method execution.",
+        "Existing SDK serial/concurrent/frame/budget constraints unchanged.",
+        "State/lifecycle-write/reentry/scheduler and complete S10 still open.",
+        "No ordinary installed-plugin direct calls to these three methods were found in 77 reviewed files; this is a platform capability, not business-plugin delivery."
+      ],
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "Original actual full configuration values and registry ordering; no stored mirror of manager state.",
+          "evidence_ids": [
+            "manager-query.real-e2e"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Class/instance distinction, disabled and failed classes, cache publication and same-object save initialization.",
+          "evidence_ids": [
+            "manager-query.real-e2e"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Actual SQL failure/read outage, malformed inputs, seal corruption and denied scopes, not mocks.",
+          "evidence_ids": [
+            "manager-query.real-e2e"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "Real HTTP/SDK concurrent work and cancellation under race detector; current invocation revalidated after lock.",
+          "evidence_ids": [
+            "manager-query.real-e2e"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Actual new worker/server processes and same SQLite; two official preview cold restarts preserve visible observations.",
+          "evidence_ids": [
+            "manager-query.real-e2e"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "Pinned whole Manager/Base/DAO component observations; existing S05/history/clear scoped regression, not full source daemon.",
+          "evidence_ids": [
+            "manager-query.real-e2e"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "Finite declared current invocation capability, separate ordinary plugin namespaces; no generic Settings or method execution.",
+          "evidence_ids": [
+            "manager-query.real-e2e"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Measured finite integrated race suite and bounded fixture/frame cases; no unbounded throughput or entire registry scale claim.",
+          "evidence_ids": [
+            "manager-query.real-e2e"
           ]
         }
       }
@@ -20943,7 +21224,7 @@
     {
       "id": "s05.query-update.unicode-counterexample",
       "kind": "differential",
-      "status": "failed",
+      "status": "invalidated_input_mutation",
       "feature_ids": [
         "S05.query_update"
       ],
@@ -20951,13 +21232,13 @@
         "evidence/s05-query-update/unicode-counterexample-20261030.json": "9ce27d76b397c3f1708e6ceb6de878d6aeb05d9eacff84b7995f69c83cbfe701"
       },
       "observations": [
-        "Real source stores D800/DC00 in JSON; real Go SDK silently stores and returns U+FFFD. Reopened; no source repair yet."
+        "Original helper silently replaced unpaired codepoints before SDK, so this first target test is invalid as host-causation proof. Original artifact retained unchanged; exact-input corrected proof separately confirms the host defect."
       ]
     },
     {
       "id": "history-query.differential",
       "kind": "differential",
-      "status": "passed",
+      "status": "historical_passed_revalidated",
       "feature_ids": [
         "S06.transfer_queries"
       ],
@@ -21005,12 +21286,14 @@
       ],
       "inputs": [
         "Portable independently observed source inputs and actual read-only pinned source; real owned physical files/SQLite/tasks; actual compiled SDK consumer."
-      ]
+      ],
+      "original_status": "passed",
+      "status_note": "Original c313 execution and exact hashes retained. Shared dispatcher changed for S10; current actual source/target/SDK rerun and independent delta review are separate evidence."
     },
     {
       "id": "history-query.real-e2e",
       "kind": "real_e2e",
-      "status": "passed",
+      "status": "historical_passed_revalidated",
       "feature_ids": [
         "S06.transfer_queries"
       ],
@@ -21059,12 +21342,14 @@
       ],
       "inputs": [
         "Only INSERT unique owned import_plan/import_meta/job read fixture and owned files; no account/settings/allowed-root modifications; exact read fixture hash retained."
-      ]
+      ],
+      "original_status": "passed",
+      "status_note": "Original c313 execution and exact hashes retained. Shared dispatcher changed for S10; current actual source/target/SDK rerun and independent delta review are separate evidence."
     },
     {
       "id": "history-query.independent-review",
       "kind": "review",
-      "status": "passed",
+      "status": "historical_passed_revalidated",
       "feature_ids": [
         "S06.transfer_queries"
       ],
@@ -21111,6 +21396,223 @@
         "Independent normal6/race6 actual source+SDK+native-copy/legacy; deliberate stale-UI worker mutation correctly fails; current22 existing S05+clear roots race pass with no skips.",
         "All five coordinator artifacts independently read/parsed/hash-bound. Browser operated by coordinator, its four visible full rows independently compared; not a source full daemon or browser producer claim.",
         "Known S05 unpaired-surrogate persistence counterexample remains reopened, not covered by regression green."
+      ],
+      "original_status": "passed",
+      "status_note": "Original c313 execution and exact hashes retained. Shared dispatcher changed for S10; current actual source/target/SDK rerun and independent delta review are separate evidence."
+    },
+    {
+      "id": "manager-query.real-e2e",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "S10.manager_queries"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant-owned Linux/amd64, Go1.26 actual standard workers/SQLite, pinned original Python components; official cloud browser and normal cmd/server preview, not full original daemon/auth E2E",
+        "target_files": {
+          "internal/plugins/shared_plugin_manager.go": "b06e281afb735fe69fb69a70c3635f9b69eb1ac705f347c753b8aa93fd3080d9",
+          "internal/app/plugin_shared_manager_queries.go": "38b4da535d21151fc93217aaa6e9402460c4cd0631c87afe6ff3c517b39632ff",
+          "internal/app/plugin_shared_manager_queries_cache.go": "66d5939907f65a7e71099c21a7fb1ace4b462138c50335ecdb318802a6cae1ef",
+          "internal/app/plugin_original_base.go": "0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b",
+          "internal/app/plugin_original_resources.go": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+          "internal/app/plugin_original_config.go": "6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64",
+          "internal/app/runtime.go": "cfe34da3a7e5c36b3f32fd9d8f991bab9029d05fe4e3c9816b5964561cc36d31",
+          "cmd/owned-manager-query-fixture/main.go": "6bd28653ea5816823177ec9ff81aa8e6fa97a3fe41d23c997b0c404f4e5f04d4",
+          "internal/app/plugin_shared_manager_queries_test.go": "bbf7a8050e5cf602a989aa302afce684f711d73f848cbd0b317d08ea95f1d704",
+          "internal/app/plugin_shared_manager_queries_process_test.go": "969abbad4712452f9e5df22c518fe2571902d94af85d3476b5a9f5f88a9fb0b6",
+          "internal/app/plugin_shared_manager_queries_cache_test.go": "b4598a319af812e2bfab71ea021c40ca317359c263e10a32d62886328cd62e88",
+          "internal/app/plugin_shared_manager_queries_config_failure_test.go": "18c927a2a84bf4d6fbb29b354f43094a110c90518f7ef9c08eb9e55cecf95692",
+          "testdata/shared-plugin-manager/query-source.json": "187ecdd6eb191667cb71c1c513a4499c2e8d903082c70745dc01047934241b08",
+          "testdata/shared-plugin-manager/cache-outage-source.json": "86b31c9ebadfa16567aff2068e51c1fe36eaa2aa9a83597c285da50c1f230bdb",
+          "testdata/shared-plugin-manager/README.md": "10eab90ec63e79b9887870434917ced37c8f3ac68f59f47499c125799e998985",
+          "internal/app/plugin_shared_manager_queries_independent_test.go": "fbeb59ccfd6314b101d429e4fda8689917e7f512374847d892d3f4cb96728fb1",
+          "testdata/shared-plugin-manager/run-independent.sh": "12d2b180a7b0e57ac200458625587a19cf8a7363fca74cc97ff68d00d75e4832"
+        },
+        "fixture_files": {
+          "evidence/plugin-manager-query/contract.json": "8b9b744c3aee3855d44459cf46d53204f4e6c163d666de8fbaa5244d4745cd7b"
+        }
+      },
+      "artifacts": {
+        "evidence/plugin-manager-query/coexistence-result.json": "3d625a284a74c7647786cdd469604cdb07f1fd8bd5a62977813b4553852a5346",
+        "evidence/plugin-manager-query/browser-result.json": "38915fb331ee3488c1c7aa34426807321fc21898a68b08d66d842f6f08611c6b"
+      },
+      "commands": [
+        "bash testdata/shared-plugin-manager/run-independent.sh",
+        "Current cmd/server + owned manager fixture through official preview and CUA; same authorized account, no injected session.",
+        "Current merged history source/SDK race, S05 old13 race and clear9 race coexistence runner."
+      ],
+      "inputs": [
+        "Whole pinned original Manager/Base/DAO, actual SQLAlchemy/SQLite with explicit unused integration fixtures; compact source observations tracked under testdata/shared-plugin-manager.",
+        "Owned finite-capability native workers; temporary isolated test DBs; existing official preview synthetic configuration."
+      ],
+      "observations": [
+        "Independent actual main integration14 Manager +6 Base race checks; no skips, vet success; precise closure before/after stable.",
+        "Official browser default/missing/cross-plugin config/disabled still running/clone/two cold process restarts; same-object save increments init_count without replacement.",
+        "S05 new Unicode counterexample still open; 13 old successful cases do not cover it.",
+        "Queries observe actual class/running registries and ordinary source-shaped cache; no lifecycle write or scheduler capability is claimed."
+      ]
+    },
+    {
+      "id": "manager-query.independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "S10.manager_queries"
+      ],
+      "reviewer": "manager_queries_independent_review_20261030",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant-owned Linux/amd64, Go1.26 actual standard workers/SQLite, pinned original Python components; official cloud browser and normal cmd/server preview, not full original daemon/auth E2E",
+        "target_files": {
+          "internal/plugins/shared_plugin_manager.go": "b06e281afb735fe69fb69a70c3635f9b69eb1ac705f347c753b8aa93fd3080d9",
+          "internal/app/plugin_shared_manager_queries.go": "38b4da535d21151fc93217aaa6e9402460c4cd0631c87afe6ff3c517b39632ff",
+          "internal/app/plugin_shared_manager_queries_cache.go": "66d5939907f65a7e71099c21a7fb1ace4b462138c50335ecdb318802a6cae1ef",
+          "internal/app/plugin_original_base.go": "0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b",
+          "internal/app/plugin_original_resources.go": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+          "internal/app/plugin_original_config.go": "6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64",
+          "internal/app/runtime.go": "cfe34da3a7e5c36b3f32fd9d8f991bab9029d05fe4e3c9816b5964561cc36d31",
+          "cmd/owned-manager-query-fixture/main.go": "6bd28653ea5816823177ec9ff81aa8e6fa97a3fe41d23c997b0c404f4e5f04d4",
+          "internal/app/plugin_shared_manager_queries_test.go": "bbf7a8050e5cf602a989aa302afce684f711d73f848cbd0b317d08ea95f1d704",
+          "internal/app/plugin_shared_manager_queries_process_test.go": "969abbad4712452f9e5df22c518fe2571902d94af85d3476b5a9f5f88a9fb0b6",
+          "internal/app/plugin_shared_manager_queries_cache_test.go": "b4598a319af812e2bfab71ea021c40ca317359c263e10a32d62886328cd62e88",
+          "internal/app/plugin_shared_manager_queries_config_failure_test.go": "18c927a2a84bf4d6fbb29b354f43094a110c90518f7ef9c08eb9e55cecf95692",
+          "testdata/shared-plugin-manager/query-source.json": "187ecdd6eb191667cb71c1c513a4499c2e8d903082c70745dc01047934241b08",
+          "testdata/shared-plugin-manager/cache-outage-source.json": "86b31c9ebadfa16567aff2068e51c1fe36eaa2aa9a83597c285da50c1f230bdb",
+          "testdata/shared-plugin-manager/README.md": "10eab90ec63e79b9887870434917ced37c8f3ac68f59f47499c125799e998985",
+          "internal/app/plugin_shared_manager_queries_independent_test.go": "fbeb59ccfd6314b101d429e4fda8689917e7f512374847d892d3f4cb96728fb1",
+          "testdata/shared-plugin-manager/run-independent.sh": "12d2b180a7b0e57ac200458625587a19cf8a7363fca74cc97ff68d00d75e4832"
+        },
+        "fixture_files": {
+          "evidence/plugin-manager-query/contract.json": "8b9b744c3aee3855d44459cf46d53204f4e6c163d666de8fbaa5244d4745cd7b",
+          "evidence/plugin-manager-query/coexistence-result.json": "3d625a284a74c7647786cdd469604cdb07f1fd8bd5a62977813b4553852a5346",
+          "evidence/plugin-manager-query/browser-result.json": "38915fb331ee3488c1c7aa34426807321fc21898a68b08d66d842f6f08611c6b"
+        }
+      },
+      "artifacts": {
+        "evidence/plugin-manager-query/independent-closeout.json": "75274a7fc084d6d59ef6c1e356992eae4c8a22eab31fd5649d52b113de8c0116"
+      },
+      "observations": [
+        "Independent source/candidate review and fresh integrated main actual race runner; coordinator browser observations and binary/official cold receipts separately independently audited.",
+        "Reviewer did not operate the browser; raw source/target evidence stays separately backed up, not implied all published."
+      ]
+    },
+    {
+      "id": "history-query.manager-integration-revalidation",
+      "kind": "differential",
+      "status": "passed",
+      "feature_ids": [
+        "S06.transfer_queries"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant-owned Linux/amd64, Go1.26 actual standard workers/SQLite, pinned original Python components; official cloud browser and normal cmd/server preview, not full original daemon/auth E2E",
+        "target_files": {
+          "cmd/owned-history-fixture/main.go": "5aa60e4bf2155cd748919b2b80a39d92d0a5e0e105c2ed9deade0e9195038747",
+          "internal/app/import_plan.go": "402cdcb4fe4eaaa151e23b1880a83ad09a14e4703fdfa5b87f26e17ae38a30f9",
+          "internal/app/import_run.go": "15b961bd1e9de0dabe9b7658b4dbcb3045e6738bc69a30b645cab99462b13f63",
+          "internal/app/plugin_original_resources.go": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+          "internal/app/plugin_original_transfer_failure.go": "8e07008ad56cc72c9f0cd6bad509f69a26fb6e5576a6272bb8c756bb6f1b48d4",
+          "internal/app/plugin_shared_history.go": "f864e84c1f0b6e33141b1549ecc94b14bf1a3ab76405433ea9280232265c59a8",
+          "internal/app/plugin_shared_history_decode.go": "eee54a55cfdc689a312c54930a24461b9a1c7b88b66aa22454d18a7d7c6668d1",
+          "internal/app/plugin_shared_history_fixture_test.go": "7235ad062e76706d41370f303cdb761261993cdf874084222094b5e60acb48c8",
+          "internal/app/plugin_shared_history_legacy_test.go": "ff188abdfc5f760641979d14fe4a465589ba0b84c3b4bee0d281872a1ea99889",
+          "internal/app/plugin_shared_history_oracle_test.go": "35e24c6466741dbbe24d02c1088eac5119e10547c694b4dfea9315f9e1b30f78",
+          "internal/app/plugin_shared_history_producer_oracle_test.go": "b53cf19decb8d328406825669b510510785c4bca80534bb10614c4c2f50e5ef5",
+          "internal/app/plugin_shared_history_snapshot.go": "df8094933931c2c70f9bd3ea9dfb560eab58346d7b0bf981a2dc1492e45fecdc",
+          "internal/app/plugin_shared_history_test.go": "055d39881e0f2cb7ea4f3cd58d0d38a8fe8338706023f5ff2e5f70cb9d933a5d",
+          "internal/catalog/identities.go": "025fb13a71eb10770d65d1e98e18c693fa011198f4f0cfae26be30b9a8657286",
+          "internal/catalog/media.go": "e9c8db2fd156758b0a21c30c778c6614cb3c83815b5d351cc4fe658f8385d951",
+          "internal/catalog/shared_history_test.go": "6bd89e2c466badad21e1bf481f646a0165df327bdecf814fbc2829d3480d061a",
+          "internal/catalog/types.go": "619d1a307020282b472e774283899f363db4d595c2a4a6ad74ddb8b674eac66a",
+          "internal/plugins/shared_history.go": "0c9583304284b1f88b130216ebab7afe387b183e6f0f8998c9571e30070bda77",
+          "internal/plugins/shared_history_test.go": "5e30a69e66d33557fceadc0da0864d5f0ea241c87b4a1f741a520284872dd999",
+          "internal/app/history_query_independent_test.go": "69399d69a3f4ed0faab15e985b6103953cfb4c89063ebec125032cda3c57dea4",
+          "cmd/owned-history-ui-fixture/main.go": "b32ec1ea083d95101159813f349d421261bab661f079535a43aedb570252dd0b",
+          "internal/app/history_integration_independent_test.go": "6318a30e3efcdfd3fae1140c0d05f7930b0b8ead18d492cced0e65b56d404f74"
+        },
+        "fixture_files": {
+          "evidence/transfer-history-query/contract.json": "92ad90ee774d7e35a9487d9dc4e71345a8d1a37790fb1824f52e3abb0861d653"
+        }
+      },
+      "artifacts": {
+        "evidence/plugin-manager-query/coexistence-result.json": "3d625a284a74c7647786cdd469604cdb07f1fd8bd5a62977813b4553852a5346",
+        "evidence/plugin-manager-query/browser-result.json": "38915fb331ee3488c1c7aa34426807321fc21898a68b08d66d842f6f08611c6b"
+      },
+      "commands": [
+        "HISTORY_SOURCE_ROOT=<fixed source> HISTORY_SOURCE_PYTHON=<owned source Python> bash testdata/plugin-shared-history-20261030/run-independent.sh <fresh output> --race",
+        "Official browser existing history clone queries actual current manager server."
+      ],
+      "inputs": [
+        "Unchanged c313 query/producer implementation except two finite Manager dispatcher hooks; exact old hashes retained in historical records.",
+        "Fresh real fixed source query observations and compiled independent native copy/legacy/worker/cold fixtures; no original browser binary retargeting."
+      ],
+      "observations": [
+        "Fresh6 independent history race roots and real pinned source; runtime/dependency closure before/after/current hash match.",
+        "Current server browser returns one unchanged owned history query record; original four complete browser observations remain historical c313 evidence, not claimed newly repeated.",
+        "Independent minimal dispatcher review found disjoint finite capability hooks; all21 other history bound paths unchanged."
+      ]
+    },
+    {
+      "id": "history-query.manager-integration-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "S06.transfer_queries"
+      ],
+      "reviewer": "manager_queries_independent_review_20261030",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant-owned Linux/amd64, Go1.26 actual standard workers/SQLite, pinned original Python components; official cloud browser and normal cmd/server preview, not full original daemon/auth E2E",
+        "target_files": {
+          "cmd/owned-history-fixture/main.go": "5aa60e4bf2155cd748919b2b80a39d92d0a5e0e105c2ed9deade0e9195038747",
+          "internal/app/import_plan.go": "402cdcb4fe4eaaa151e23b1880a83ad09a14e4703fdfa5b87f26e17ae38a30f9",
+          "internal/app/import_run.go": "15b961bd1e9de0dabe9b7658b4dbcb3045e6738bc69a30b645cab99462b13f63",
+          "internal/app/plugin_original_resources.go": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+          "internal/app/plugin_original_transfer_failure.go": "8e07008ad56cc72c9f0cd6bad509f69a26fb6e5576a6272bb8c756bb6f1b48d4",
+          "internal/app/plugin_shared_history.go": "f864e84c1f0b6e33141b1549ecc94b14bf1a3ab76405433ea9280232265c59a8",
+          "internal/app/plugin_shared_history_decode.go": "eee54a55cfdc689a312c54930a24461b9a1c7b88b66aa22454d18a7d7c6668d1",
+          "internal/app/plugin_shared_history_fixture_test.go": "7235ad062e76706d41370f303cdb761261993cdf874084222094b5e60acb48c8",
+          "internal/app/plugin_shared_history_legacy_test.go": "ff188abdfc5f760641979d14fe4a465589ba0b84c3b4bee0d281872a1ea99889",
+          "internal/app/plugin_shared_history_oracle_test.go": "35e24c6466741dbbe24d02c1088eac5119e10547c694b4dfea9315f9e1b30f78",
+          "internal/app/plugin_shared_history_producer_oracle_test.go": "b53cf19decb8d328406825669b510510785c4bca80534bb10614c4c2f50e5ef5",
+          "internal/app/plugin_shared_history_snapshot.go": "df8094933931c2c70f9bd3ea9dfb560eab58346d7b0bf981a2dc1492e45fecdc",
+          "internal/app/plugin_shared_history_test.go": "055d39881e0f2cb7ea4f3cd58d0d38a8fe8338706023f5ff2e5f70cb9d933a5d",
+          "internal/catalog/identities.go": "025fb13a71eb10770d65d1e98e18c693fa011198f4f0cfae26be30b9a8657286",
+          "internal/catalog/media.go": "e9c8db2fd156758b0a21c30c778c6614cb3c83815b5d351cc4fe658f8385d951",
+          "internal/catalog/shared_history_test.go": "6bd89e2c466badad21e1bf481f646a0165df327bdecf814fbc2829d3480d061a",
+          "internal/catalog/types.go": "619d1a307020282b472e774283899f363db4d595c2a4a6ad74ddb8b674eac66a",
+          "internal/plugins/shared_history.go": "0c9583304284b1f88b130216ebab7afe387b183e6f0f8998c9571e30070bda77",
+          "internal/plugins/shared_history_test.go": "5e30a69e66d33557fceadc0da0864d5f0ea241c87b4a1f741a520284872dd999",
+          "internal/app/history_query_independent_test.go": "69399d69a3f4ed0faab15e985b6103953cfb4c89063ebec125032cda3c57dea4",
+          "cmd/owned-history-ui-fixture/main.go": "b32ec1ea083d95101159813f349d421261bab661f079535a43aedb570252dd0b",
+          "internal/app/history_integration_independent_test.go": "6318a30e3efcdfd3fae1140c0d05f7930b0b8ead18d492cced0e65b56d404f74"
+        },
+        "fixture_files": {
+          "evidence/transfer-history-query/contract.json": "92ad90ee774d7e35a9487d9dc4e71345a8d1a37790fb1824f52e3abb0861d653",
+          "evidence/plugin-manager-query/coexistence-result.json": "3d625a284a74c7647786cdd469604cdb07f1fd8bd5a62977813b4553852a5346",
+          "evidence/plugin-manager-query/browser-result.json": "38915fb331ee3488c1c7aa34426807321fc21898a68b08d66d842f6f08611c6b"
+        }
+      },
+      "artifacts": {
+        "evidence/plugin-manager-query/independent-closeout.json": "75274a7fc084d6d59ef6c1e356992eae4c8a22eab31fd5649d52b113de8c0116"
+      },
+      "observations": [
+        "Independent current merged dispatcher, new source/SDK/native-copy race outputs and official current browser observation examined; prior exact execution artifacts unchanged."
+      ]
+    },
+    {
+      "id": "s05.query-update.unicode-exact-input-counterexample",
+      "kind": "differential",
+      "status": "failed",
+      "feature_ids": [
+        "S05.query_update"
+      ],
+      "artifacts": {
+        "evidence/s05-query-update/unicode-counterexample-correction-20261030.json": "4d0ddbd94430ee290d8ed0f03db6cb879766500cbdb8fad082473966c996bb69"
+      },
+      "observations": [
+        "Same exact envelope hash on original and target; observer only at host method entry proves untouched escaped D800/DC00 payload. Actual worker response succeeds and SQLite stores U+FFFD; source stores original codepoints. Strict corrected target test fails. S05 remains reopened."
       ]
     }
   ],
@@ -21119,12 +21621,13 @@
     "reasoning_effort": "ultra",
     "environment": "assistant-owned cloud Linux",
     "delivery_branch": "plugins-refactor",
-    "no_deployment": true
+    "no_deployment": true,
+    "existing_platform_reuse": "46 existing applicable platform groups are not 46 rewrites. Preserve/reuse implementation and unchanged sufficiently bound source/test evidence. 15 new shared-host groups are discovery buckets, not 15 automatically missing features."
   },
   "resume": {
-    "next_slice": "Commit/push/readback accepted S06 two-query slice now; then repair S05 Unicode counterexample, integrate independently frozen S07/S10 slices. Full platform remains incomplete.",
+    "next_slice": "Commit/push/readback accepted S10 three-query slice; independently verify S05 Unicode repair, continue S01 Transmission query and source global configuration identity dependency. Full groups remain incomplete.",
     "dirty_work": [
-      "Current S06 query candidate+needed tests/new concise evidence and metadata only; unrelated S07/S10 product worktrees excluded."
+      "Only accepted current Manager query product/tests/minimal current proofs selected; S05/S07/S01 candidate products remain isolated."
     ],
     "workers": [
       "coordinator",
@@ -21180,17 +21683,25 @@
         "sha256": "ddb9a090afeaffebd4ae7bfb67ff1bea709831953c0dc899eb92dcae8dff5395",
         "bytes": 1178201,
         "boundary": "170 checked members; no runtime accounts/config/DB/deps/binaries, screenshots or old rejected materials."
+      },
+      {
+        "purpose": "Accepted c313 S06 exact46 committed paths, original independent/integrated evidence, new safe source/target logs and readback map",
+        "library_file_id": "libfile_135be5245a008191bf859d88e360dfad",
+        "filename": "light-media-history-query-accepted-c313c3ef-20261030.tar.gz",
+        "sha256": "55989b014508e85ad1e3359a243c04ed86868024537a65669de65a6f7c8558a0",
+        "bytes": 6005906,
+        "boundary": "410 members individually SHA256 checked. No accounts/runtime configs/DB/deps/binaries/screenshots/old rejected materials. Contains initial S05 confounded witness only as known-open historical evidence; corrected exact-input evidence generated later and separately retained."
       }
     ],
     "last_delivery": {
-      "commit": "e0258042f5196a5d94753f7dceaed9a8ad261d9e",
+      "commit": "c313c3ef20148b36e819db597bcd3a8a455be5c2",
       "branch": "plugins-refactor",
-      "readback": "e0258042f5196a5d94753f7dceaed9a8ad261d9e",
+      "readback": "c313c3ef20148b36e819db597bcd3a8a455be5c2",
       "main_unchanged": "97476582910dc4b696f7ccd5010f28d823812d40",
-      "paths": 24,
-      "mapping_path": "migration/delivery/clear-cache-delivery-path-git-sha-map.json",
-      "mapping_sha256": "f2108b5b05f6f3407484c14d546d157ed2c77889af89017e7ff6bcebf3372bc9",
-      "ci": "0 check-runs and 0 statuses; baseline has no workflow. Not a CI pass or running check."
+      "paths": 46,
+      "mapping_path": "migration/delivery/history-c313c3ef-paths.json",
+      "mapping_sha256": "99ccb5dec5dc682d0d45553a9e9bba5c091f7e2bd35c073e7c2c7fb47b155256",
+      "ci": "0 check-runs and 0 statuses; no CI workflow. Not a CI pass or running job."
     }
   },
   "external_inventory": [

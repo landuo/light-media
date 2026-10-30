@@ -41,3 +41,10 @@
 - 原整数主键适配稳定 opaque handle；typed UTF-8/null string 以及严格 JSON 参数是有限 Go 传输边界，不冒充任意 Python/SQLAlchemy 类型或异常。
 - 源证据是完整 DAO/SQLAlchemy/SQLite 与原 MetaInfoPath/FileItem/MediaInfo/add_success 组件；不是运行完整原整理服务或外部元数据。物理复制由真实目标原生任务证明；浏览器的独占历史读取 fixture 不冒充 HTTP 导入。
 - 下载历史、删除、附属材料、自定义模块 TransferInfo 和其它 producer 依赖仍开放；这两个查询的子切片不计 S06 总组完成。
+
+## S10 管理器三查询契约
+
+- `plugin.manager.get_plugin_ids`、`get_running_plugin_ids`、`get_plugin_config` 是三个独立有限能力，只接受当前实际调用上下文。前两项读当前类/运行对象注册表；disabled 对象仍在 running，初始化失败的类仍在 classes。
+- Manager 配置不是 Base 配置：未知类或 falsey 值返回 `{}`，副本去除空键。普通配置缓存由真实启动预读及保存链维护；SQL 故障后的 warm 值、同对象成功重初始化和失败不初始化按固定源核对，不扩成任意 Settings/凭据读取。
+- 实际主树 race/SQLite/worker/server/官方浏览器与冷恢复分别绑定。源是完整原 Manager/Base/DAO 组件及独占加载类，不宣称完整原服务或业务插件已迁移。状态调用、生命周期写、重入和调度仍是 S10 未完成范围。
+- S05 初始 Unicode 红测试使用了会改输入的 helper，该因果证明已作废；相同原始 envelope 与实际宿主接收边界的新独立红仍确认缺陷。原始文件不覆盖，纠正证据独立列出；修复另行验收交付。

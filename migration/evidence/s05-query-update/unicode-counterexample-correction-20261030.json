@@ -1,0 +1,33 @@
+{
+  "status": "confirmed_with_exact_input_and_received_boundary",
+  "previous_evidence_defect": "The original target_test.go used mustCleanSeedJSON, which modified input before SDK. That original target test is invalid as host-causation proof; retained unchanged.",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "host_product_change": "None. One external observer overlay inserts println at host method entry; it does not change input/SQL/result. Separate prior run without observer also reproduced.",
+  "input_sha256": "fd006dbd4332e11af808f268dc7d313ff83ae262c949f31efd377e8464610648",
+  "source_input_sha256": "fd006dbd4332e11af808f268dc7d313ff83ae262c949f31efd377e8464610648",
+  "host_received_payload_equal_original_raw_payload": true,
+  "host_received_payload_sha256": "d08cb0d213f8363827077aff15ede94dad6d868cdae86f22dcbb0c731aa63cb1",
+  "source_note_codepoints": {
+    "value": 55296,
+    "key": 56320
+  },
+  "target_result": {
+    "response_error": null,
+    "stored_replacement": true,
+    "original_surrogate_preserved": false,
+    "strict_test_exit": 1
+  },
+  "actual_worker_sha256": "00e27ebc0f67c2e11bb3ac1a06b4615b563296fb7ff246e7166eb8b6076d7051",
+  "files_sha256": {
+    "exact-input-envelope.json": "fd006dbd4332e11af808f268dc7d313ff83ae262c949f31efd377e8464610648",
+    "source_exact_input.py": "bbdcf635d697ad7c97fbac00dabad74362df8c65dd0e82a0d346616bc085b594",
+    "source-exact-input.json": "03e6da0d85b7c06b3166f85eebbc95ad77f0dae38e75ca60e8e5c7117a9d075c",
+    "source-exact-input.log": "4bf00df54188d7b4ecdaf234f9ac1ef336b8b3fe6828ed95bbdebe6eda5a5771",
+    "target_raw_envelope_test.go": "939dbe62c3ab1b23001b08a2c38200701fc552ad5940d72981f0185ad6034d0a",
+    "target-raw-envelope.log": "ccb95ea48255b57d06d5c501e89cef75a140476f698e57aff60b05c427831e4e",
+    "target_strict_received_test.go": "d91b96944ad27f0ce865503eac0f24ffee73f6f72730c369de21d3d7b6a1fa02",
+    "host-received-observer.go": "bf1fd6dbe39b30a39b17e1661eb13de27a2957f51b36b288b786806d866889ee",
+    "overlay-received.json": "3ccd629fa438022b2f5c5c94a995449f7f9a95f8813b82dbaecf11e38ee121e5",
+    "target-received.log": "d1734beef6fafaebb60a8b738b81f7b0264b308a7a9265891a64b99fee889bf5"
+  }
+}

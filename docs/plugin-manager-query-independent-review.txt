@@ -1,0 +1,44 @@
+Manager query slice: independent integrated-target verification (2026-10-30)
+
+Reviewed baseline c313c3ef20148b36e819db597bcd3a8a455be5c2 plus the integrated
+Manager-query candidate. Scope: get_plugin_ids, get_running_plugin_ids,
+get_plugin_config, and their necessary ordinary configuration cache producers.
+
+Freshly built and executed from the integration checkout: 14 Manager-query
+cases and 6 critical Base regressions, all with -race, no skips or races; vet
+passed. Real worker processes, authenticated host routes, SQLite failures,
+clone/cold restart, initialization/cleanup observations and cancellation/seal
+rejection were exercised. The merged resource dispatcher preserves the existing
+subscription/history hooks; it grants only the three finite Manager capabilities.
+
+Reproduce the target checks on Linux (Go version from go.mod, C compiler,
+Bash/coreutils; dependencies must be available):
+  bash testdata/shared-plugin-manager/run-independent.sh
+Or pass a different checkout root as the sole argument. OUT_ROOT selects only
+an output parent; each run creates a unique directory and rebuilds every worker,
+server and test binary. Logs and temporary authenticated test observations stay
+private. The runner rejects skips, wrong case counts and changed input hashes.
+
+Runner SHA256: 12d2b180a7b0e57ac200458625587a19cf8a7363fca74cc97ff68d00d75e4832
+Runtime/test closure: 2596 local inputs, unchanged before/after.
+Input manifest SHA256: 2dd8bc172e2d2e3f5bd37db6365c56981f1b41ade47dd7c9502445dfac193d65
+Manager log SHA256: 029edb1b64c334076d354b29f6e56048fcdfcbdc30ffafd2fecceac3ffdb0ae1
+Base log SHA256: 9b83bf17186e66b3a6777f6747c7a6de7c288e68893c1be99ae1d4152273e0c0
+
+Selected production SHA256:
+b06e281afb735fe69fb69a70c3635f9b69eb1ac705f347c753b8aa93fd3080d9  internal/plugins/shared_plugin_manager.go
+38b4da535d21151fc93217aaa6e9402460c4cd0631c87afe6ff3c517b39632ff  internal/app/plugin_shared_manager_queries.go
+66d5939907f65a7e71099c21a7fb1ace4b462138c50335ecdb318802a6cae1ef  internal/app/plugin_shared_manager_queries_cache.go
+0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b  internal/app/plugin_original_base.go
+1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9  internal/app/plugin_original_resources.go
+6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64  internal/app/plugin_original_config.go
+cfe34da3a7e5c36b3f32fd9d8f991bab9029d05fe4e3c9816b5964561cc36d31  internal/app/runtime.go
+
+The committed source observations originate from the pinned MoviePilot
+8a83efeacd3e26b82be495e17d50146e31c96a60 component witness. This portable script
+re-executes the target, not the original source. Full source drivers, dependency
+closure and raw failure/green evidence remain private; source daemon/auth E2E
+is not claimed. Earlier SDK runs are not presented as a new integrated full-SDK
+run. Browser acceptance is separate. State/lifecycle-write/scheduler capabilities
+and business plugins remain outside this slice. S05 Unicode remains open;
+these results do not establish full S05 or S10 equivalence.

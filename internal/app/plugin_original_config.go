@@ -121,12 +121,13 @@ func (a *App) originalPluginConfigurationHTTP(w http.ResponseWriter, r *http.Req
 		}
 		// Original save_plugin_config returns false when its class is absent;
 		// the endpoint deliberately ignores that boolean and still init/registers.
-		if class, exists := a.pluginOriginalClasses.Load(instance); exists {
+		if _, exists := a.pluginOriginalClasses.Load(instance); exists {
 			a.pluginMu.Lock()
-			_, err = a.pluginStore.saveOriginalPluginConfiguration(ctx, class.(originalPluginClass).installation, raw)
-			if err == nil {
-				a.invalidateOriginalBaseConfig(instance)
-			}
+			a.pluginOriginalBase.mu.Lock()
+			// Source's synchronous save_plugin_config shares SystemConfigOper
+			// with Base/manager reads, including publication before SQL failure.
+			_, err = a.originalBaseUpdateConfigLocked(ctx, instance, raw)
+			a.pluginOriginalBase.mu.Unlock()
 			a.pluginMu.Unlock()
 			if err != nil {
 				return nil, err

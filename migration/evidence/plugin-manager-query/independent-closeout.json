@@ -1,0 +1,130 @@
+{
+  "status": "passed_scoped_release_review",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "target_base_commit": "c313c3ef20148b36e819db597bcd3a8a455be5c2",
+  "reviewer": "manager_queries_independent_review_20261030",
+  "scope": "Three read-only Manager queries and necessary ordinary configuration cache producers; preserve previously verified S06.transfer_queries via additive current integration review.",
+  "target_files": {
+    "internal/plugins/shared_plugin_manager.go": "b06e281afb735fe69fb69a70c3635f9b69eb1ac705f347c753b8aa93fd3080d9",
+    "internal/app/plugin_shared_manager_queries.go": "38b4da535d21151fc93217aaa6e9402460c4cd0631c87afe6ff3c517b39632ff",
+    "internal/app/plugin_shared_manager_queries_cache.go": "66d5939907f65a7e71099c21a7fb1ace4b462138c50335ecdb318802a6cae1ef",
+    "internal/app/plugin_original_base.go": "0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b",
+    "internal/app/plugin_original_resources.go": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+    "internal/app/plugin_original_config.go": "6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64",
+    "internal/app/runtime.go": "cfe34da3a7e5c36b3f32fd9d8f991bab9029d05fe4e3c9816b5964561cc36d31",
+    "cmd/owned-manager-query-fixture/main.go": "6bd28653ea5816823177ec9ff81aa8e6fa97a3fe41d23c997b0c404f4e5f04d4",
+    "internal/app/plugin_shared_manager_queries_test.go": "bbf7a8050e5cf602a989aa302afce684f711d73f848cbd0b317d08ea95f1d704",
+    "internal/app/plugin_shared_manager_queries_process_test.go": "969abbad4712452f9e5df22c518fe2571902d94af85d3476b5a9f5f88a9fb0b6",
+    "internal/app/plugin_shared_manager_queries_cache_test.go": "b4598a319af812e2bfab71ea021c40ca317359c263e10a32d62886328cd62e88",
+    "internal/app/plugin_shared_manager_queries_config_failure_test.go": "18c927a2a84bf4d6fbb29b354f43094a110c90518f7ef9c08eb9e55cecf95692",
+    "testdata/shared-plugin-manager/query-source.json": "187ecdd6eb191667cb71c1c513a4499c2e8d903082c70745dc01047934241b08",
+    "testdata/shared-plugin-manager/cache-outage-source.json": "86b31c9ebadfa16567aff2068e51c1fe36eaa2aa9a83597c285da50c1f230bdb",
+    "testdata/shared-plugin-manager/README.md": "10eab90ec63e79b9887870434917ced37c8f3ac68f59f47499c125799e998985",
+    "internal/app/plugin_shared_manager_queries_independent_test.go": "fbeb59ccfd6314b101d429e4fda8689917e7f512374847d892d3f4cb96728fb1"
+  },
+  "reviewed_public_artifacts": {
+    "migration/evidence/plugin-manager-query/contract.json": "8b9b744c3aee3855d44459cf46d53204f4e6c163d666de8fbaa5244d4745cd7b",
+    "migration/evidence/plugin-manager-query/coexistence-result.json": "3d625a284a74c7647786cdd469604cdb07f1fd8bd5a62977813b4553852a5346",
+    "migration/evidence/plugin-manager-query/browser-result.json": "38915fb331ee3488c1c7aa34426807321fc21898a68b08d66d842f6f08611c6b",
+    "migration/evidence/transfer-history-query/contract.json": "92ad90ee774d7e35a9487d9dc4e71345a8d1a37790fb1824f52e3abb0861d653"
+  },
+  "independently_executed_main": {
+    "manager_race_passes": 14,
+    "base_race_passes": 6,
+    "skips": 0,
+    "races": 0,
+    "vet_exit": 0,
+    "runner": "testdata/shared-plugin-manager/run-independent.sh",
+    "runner_sha256": "12d2b180a7b0e57ac200458625587a19cf8a7363fca74cc97ff68d00d75e4832",
+    "manager_log_sha256": "029edb1b64c334076d354b29f6e56048fcdfcbdc30ffafd2fecceac3ffdb0ae1",
+    "base_log_sha256": "9b83bf17186e66b3a6777f6747c7a6de7c288e68893c1be99ae1d4152273e0c0",
+    "unchanged_local_input_count": 2596,
+    "input_manifest_sha256": "2dd8bc172e2d2e3f5bd37db6365c56981f1b41ade47dd7c9502445dfac193d65"
+  },
+  "coordinator_runs_independently_reviewed": {
+    "checks": {
+      "history": {
+        "top_level_passes": 6,
+        "skips": 0,
+        "races": 0,
+        "log_sha256": "cc89dc4b12ea20a57faf655d6772ee365e198496b8bc7791a51d92782a813ed9"
+      },
+      "s05": {
+        "top_level_passes": 13,
+        "skips": 0,
+        "races": 0,
+        "log_sha256": "43ea9cca66f69f3bbcf6494bc1a6536b51e43b3aabad948d6dcf719bcb89a6c4"
+      },
+      "clear": {
+        "top_level_passes": 9,
+        "skips": 0,
+        "races": 0,
+        "log_sha256": "378ffe7b399f600105b9522d508db292478e96e57717ca0b35834c59ca45832f"
+      }
+    },
+    "vet": {
+      "exit": 0,
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit": 0,
+    "actual_coexist_runner_sha256": "7b545055d834e690eee09148f4fa9c46325f1a8e02c56d9bf076e9b2e344e86a",
+    "history_portable_runner_sha256": "8ae869cc6608bbfc7f5ab9baffa0d5d12b1a23e773019ca5cc80ddca75b553ab",
+    "history_source_driver_sha256": "dfc0f4d2ddb1836d7a64181371874d2c2a3b4e032e57a8c8fab11a147d04d9e3",
+    "history_go_closure_files": 5933,
+    "history_before_after_and_current_hashes_match": true,
+    "history_closure_sha256": "a0fbed02432cfedbbb2c81f8a76f00ddd5149ae65f862aec27ba48af7ac7f5d7",
+    "history_source_sha256": "3e3732e47a2ed5f4858ef5a372814b2f4e4670ac11c7ffbb43d1fda3405494cb",
+    "history_target_sha256": "f8735c1b45f8b9d57ceef2dc9842c81cfe02103b6b3d157a212b7e029774aa98"
+  },
+  "s06_delta_review": {
+    "old_resource_sha256_preserved": "39ed1c5e704262413f5fe92a9a434227acad25bded85f0ca676c8723a3513024",
+    "current_resource_sha256": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+    "minimal_change_verified": "Removing only the new Manager capability predicate and dispatch branch reconstructs the old resource SHA exactly. Existing admission, identity, history and subscription dispatch are unchanged; capability names are disjoint.",
+    "other_old_s06_bound_files_unchanged": 21,
+    "historical_execution_hashes_unchanged": {
+      "history_native_39": "62a16aa04c8c82e9b62d4f1b829c49934ae1ec11cce38f25081abeddf27f1de8",
+      "history_catalog_sdk_3": "fa0fa52163bf7c749e79c2d779c5646bb4554d1d0a777aac97ded361a36cd9af",
+      "independent_history_race_6": "c3b65bf6d574c115ac09aed93902799f124db9d1fcc292a9c79299caf4879524"
+    },
+    "prior_review_artifact_sha256": "b0dbf41baaf8a18dad4ec069cc81e64bfbbde84ed3ce899a6e7d757e8b902097",
+    "prior_integrated_artifact_sha256": "6d63c6bcaaab324ea466ab794568ffece866ada4f8a3462759f41a2cc5549f08",
+    "new_observations": "Four fresh full source Oper/ORM/SQLite runs, no network attempts; 15 query observations equal 30 warm/cold target results after opaque-ID normalization only. Native failure/queue/retry/cold and legacy/UI results independently compared; source producer date bounds checked. All 79 imported source and 724 dependency files hash-match.",
+    "sufficiency": "Current real-worker/native-SQLite/source six-case rerun plus same-host S05/clear/UI and unchanged S06 producers sufficiently revalidates this minimal shared-dispatch delta. Preserve historical records/hashes and add this review; do not relabel prior 39+3 executions as current reruns."
+  },
+  "browser_review": {
+    "origin": "Coordinator-operated official CUA; reviewer independently checked persisted observations and receipts, not a separate browser operation.",
+    "steps": 5,
+    "checks": {
+      "default_manager_empty_vs_base_null": true,
+      "same_object_save_reinitializes": true,
+      "disabled_object_still_running": true,
+      "cross_plugin_configuration_current": true,
+      "missing_class_config_empty": true,
+      "clone_in_actual_registry": true,
+      "cold_process_preserves_config_registry": true,
+      "history_query_on_integrated_host": true
+    },
+    "raw_steps_sha256": "b6e6381a234e9399b04ed99b2582c8ef9fa68241116efb6430a134ce54fad29f",
+    "second_cold": {
+      "from_pid": 83,
+      "to_pid": 88,
+      "all_other_fields_equal": true,
+      "observation_sha256": "4a1a8e454e66d77e9234d75abd37d6d5528782d487262ef00129db0c0760c526",
+      "official_receipt_sha256": "e113edfeb78fffaa3d9b52062310b9387ae144b72bb8dcd4b1134934d1d51585"
+    },
+    "history_ui_records": 1,
+    "current_main_independent_rebuild_byte_equals_preview": true,
+    "actual_artifacts_sha256": {
+      "cmd/server": "ad07152f8695310907098245080b491fe194787872c440d40de64c21d581ef42",
+      "owned-manager-query-fixture": "b6ddf816c98e286c594ae7afe9b3a49759045499a56b39d03837251ded6b1dda"
+    },
+    "launcher_sha256": "f63a38133051a83056dc4da5d8133839f7c09d272a68caadedeb2ef939f78c31"
+  },
+  "limits": [
+    "S05 existing thirteen-case regression does not close the confirmed Unicode counterexample.",
+    "Not full S06, full S10, lifecycle-writing, scheduler or business-plugin completion.",
+    "Source component witnesses are not complete original daemon/auth or full source organizer execution.",
+    "Browser history is a synthetic read-fixture regression, not evidence of a browser-executed native producer.",
+    "Raw logs, accounts, runtime stores, source dependency bundles and screenshots are not published by this artifact."
+  ]
+}

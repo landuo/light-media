@@ -1,0 +1,85 @@
+{
+  "status": "passed_scoped",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "race": true,
+  "exit": 0,
+  "checks": {
+    "history": {
+      "top_level_passes": 6,
+      "skips": 0,
+      "races": 0,
+      "log_sha256": "cc89dc4b12ea20a57faf655d6772ee365e198496b8bc7791a51d92782a813ed9",
+      "tests": [
+        "TestHistoryIntegrationIndependentLiveUIAndSharedHost",
+        "TestHistoryIndependentNativeRetryUpdatesFrozenRecord",
+        "TestHistoryIndependentRawInputsAreNotRewritten",
+        "TestHistoryIndependentExactQuerySourceMatrix",
+        "TestHistoryIndependentLegacyQueuedRetryPreservesKnownRecord",
+        "TestHistoryIndependentTypedSDKDoesNotRewriteInvalidStrings"
+      ]
+    },
+    "s05": {
+      "top_level_passes": 13,
+      "skips": 0,
+      "races": 0,
+      "log_sha256": "43ea9cca66f69f3bbcf6494bc1a6536b51e43b3aabad948d6dcf719bcb89a6c4",
+      "tests": [
+        "TestSharedSubscriptionsVersionReplacementCloseKeepsActiveDAO",
+        "TestSharedSubscriptionsActualCloneCASRollbackAndNativeABA",
+        "TestSharedSubscriptionsPermissionDeniedActualWorker",
+        "TestSharedSubscriptionsLargeActualWorkerCold",
+        "TestSharedSubscriptionsNativeEditorPreservesUnrelatedSourceFacts",
+        "TestSharedSubscriptionsCancelledActualWorkerDoesNotWrite",
+        "TestSharedSubscriptionsIndependentSourceOracle",
+        "TestSharedSubscriptionsIndependentFloatGrammar",
+        "TestSharedSubscriptionsIndependentExponentOverflow",
+        "TestSharedSubscriptionsIndependentNestedJSON",
+        "TestSharedSubscriptionsIndependentAllJSONColumnsCold",
+        "TestSharedSubscriptionsActualServerProcessCold",
+        "TestSharedSubscriptionsActualWorkerSmoke"
+      ]
+    },
+    "clear": {
+      "top_level_passes": 9,
+      "skips": 0,
+      "races": 0,
+      "log_sha256": "378ffe7b399f600105b9522d508db292478e96e57717ca0b35834c59ca45832f",
+      "tests": [
+        "TestIndependentClearCacheDirectoryRecognition",
+        "TestIndependentClearCacheAcceptedCancellation",
+        "TestIndependentClearCacheConcurrentHTTP",
+        "TestOriginalClearCacheProductionProcess",
+        "TestOriginalClearCacheActualSDKSemantics",
+        "TestOriginalClearCacheFailuresOverrideAuthAndCold",
+        "TestOriginalClearCacheNativeNoPluginAndRecommendation",
+        "TestOriginalClearCacheTwoActualWorkersOrder",
+        "TestOriginalClearCacheAcceptedRequestCancellation"
+      ]
+    }
+  },
+  "vet_exit": 0,
+  "history_source_sha256": "3e3732e47a2ed5f4858ef5a372814b2f4e4670ac11c7ffbb43d1fda3405494cb",
+  "history_target_sha256": "f8735c1b45f8b9d57ceef2dc9842c81cfe02103b6b3d157a212b7e029774aa98",
+  "history_input_closure_sha256": "a0fbed02432cfedbbb2c81f8a76f00ddd5149ae65f862aec27ba48af7ac7f5d7",
+  "history_before_after_equal": true,
+  "actual_runner_sha256": "7b545055d834e690eee09148f4fa9c46325f1a8e02c56d9bf076e9b2e344e86a",
+  "target_files": {
+    "internal/plugins/shared_plugin_manager.go": "b06e281afb735fe69fb69a70c3635f9b69eb1ac705f347c753b8aa93fd3080d9",
+    "internal/app/plugin_shared_manager_queries.go": "38b4da535d21151fc93217aaa6e9402460c4cd0631c87afe6ff3c517b39632ff",
+    "internal/app/plugin_shared_manager_queries_cache.go": "66d5939907f65a7e71099c21a7fb1ace4b462138c50335ecdb318802a6cae1ef",
+    "internal/app/plugin_original_base.go": "0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b",
+    "internal/app/plugin_original_resources.go": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+    "internal/app/plugin_original_config.go": "6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64",
+    "internal/app/runtime.go": "cfe34da3a7e5c36b3f32fd9d8f991bab9029d05fe4e3c9816b5964561cc36d31",
+    "cmd/owned-manager-query-fixture/main.go": "6bd28653ea5816823177ec9ff81aa8e6fa97a3fe41d23c997b0c404f4e5f04d4",
+    "internal/app/plugin_shared_manager_queries_test.go": "bbf7a8050e5cf602a989aa302afce684f711d73f848cbd0b317d08ea95f1d704",
+    "internal/app/plugin_shared_manager_queries_process_test.go": "969abbad4712452f9e5df22c518fe2571902d94af85d3476b5a9f5f88a9fb0b6",
+    "internal/app/plugin_shared_manager_queries_cache_test.go": "b4598a319af812e2bfab71ea021c40ca317359c263e10a32d62886328cd62e88",
+    "internal/app/plugin_shared_manager_queries_config_failure_test.go": "18c927a2a84bf4d6fbb29b354f43094a110c90518f7ef9c08eb9e55cecf95692",
+    "testdata/shared-plugin-manager/query-source.json": "187ecdd6eb191667cb71c1c513a4499c2e8d903082c70745dc01047934241b08",
+    "testdata/shared-plugin-manager/cache-outage-source.json": "86b31c9ebadfa16567aff2068e51c1fe36eaa2aa9a83597c285da50c1f230bdb",
+    "testdata/shared-plugin-manager/README.md": "10eab90ec63e79b9887870434917ced37c8f3ac68f59f47499c125799e998985",
+    "internal/app/plugin_shared_manager_queries_independent_test.go": "fbeb59ccfd6314b101d429e4fda8689917e7f512374847d892d3f4cb96728fb1"
+  },
+  "boundary": "Fresh actual source DAO/SQLite plus 6 independent history native/SDK tests; 13 existing subscription and 9 clear-cache race roots. S05 newly confirmed Unicode counterexample remains open. Old source/binary/browser hashes retained, not retargeted."
+}

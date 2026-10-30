@@ -25,8 +25,9 @@ import (
 // The manager must add pluginOriginalBase originalBaseState to App. Its zero
 // value is ready for use. A cache entry containing null differs from no entry.
 type originalBaseState struct {
-	mu     sync.Mutex
-	config map[string]originalBaseConfigValue
+	mu            sync.Mutex
+	config        map[string]originalBaseConfigValue
+	snapshotReady bool // Only a complete constructor prefetch establishes missing namespaces.
 }
 
 type originalBaseConfigValue struct {
@@ -245,7 +246,22 @@ func (a *App) originalBaseObserveConfigLocked(target string, observed originalBa
 
 func (a *App) originalBaseConfigLocked(ctx context.Context, target string) (json.RawMessage, error) {
 	observed, sealed, err := readOriginalBaseConfigRow(ctx, a.pluginStore.store.DB, target)
+	if ctxErr := ctx.Err(); ctxErr != nil {
+		return nil, ctxErr
+	}
 	if err != nil {
+		// SystemConfigOper.get returns a copy of its published cache, without a
+		// database read. Our observation also detects native configuration writes;
+		// an unavailable observation must not discard a previously published value
+		// (including null/false or a cached miss). A complete constructor snapshot
+		// establishes absent keys; without one, preserve the actual SQL error.
+		// Never use this fallback for a successfully read but invalid seal.
+		if cached, ok := a.pluginOriginalBase.config[target]; ok {
+			return copyOriginalBaseJSON(cached.value), nil
+		}
+		if a.pluginOriginalBase.snapshotReady {
+			return json.RawMessage("null"), nil
+		}
 		return nil, err
 	}
 	return a.originalBaseObserveConfigLocked(target, observed, sealed)
@@ -274,14 +290,33 @@ func (a *App) originalBaseUpdateConfigLocked(ctx context.Context, target string,
 	if err != nil {
 		return nil, err
 	}
+	// Synchronous SystemConfigOper.set publishes even when its first database
+	// lookup fails. Keep the previously verified observation in that case, so
+	// later native writes can still supersede this cache. Admission is checked
+	// by the caller before taking these locks; cancellation is never publication.
+	publishReadFailure := func(cause error) (json.RawMessage, error) {
+		if err := ctx.Err(); err != nil {
+			return nil, err
+		}
+		cached, known := a.pluginOriginalBase.config[target]
+		if known || a.pluginOriginalBase.snapshotReady {
+			cached.value = copyOriginalBaseJSON(checked)
+			cached.present = true
+			a.pluginOriginalBase.config[target] = cached
+		}
+		return nil, cause
+	}
 	p := a.pluginStore
 	tx, err := p.store.DB.BeginTx(ctx, nil)
 	if err != nil {
-		return nil, err
+		return publishReadFailure(err)
 	}
 	defer tx.Rollback()
 	observed, sealed, err := readOriginalBaseConfigRow(ctx, tx, target)
 	if err != nil {
+		return publishReadFailure(err)
+	}
+	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
 	old, err := a.originalBaseObserveConfigLocked(target, observed, sealed)
