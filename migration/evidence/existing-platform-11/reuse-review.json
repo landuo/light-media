@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "kind": "independent_existing_platform_reuse_review",
+  "date_utc": "2026-10-30",
+  "group": "11",
+  "authority": "docs/plugin-module-parity-matrix.md row 11 only",
+  "status": "verified_existing_implementation_reused",
+  "reviewer": "manager_queries_independent_review_20261030; gpt-6-astra / ultra; not the product author",
+  "delivered_target_revision": "dcbf8d72f275dded3bdb2280862a4b55059a0f10",
+  "metadata_revision": "28f3b78c39a227ee82ed4b0ba9be28d80fd782fd",
+  "source": {
+    "backend_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "frontend_commit": "2829e3b08214348f05ff2f5beae644882eccad58",
+    "paths": {
+      "app/api/endpoints/plugin.py": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce",
+      "app/helper/plugin.py": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+      "app/core/plugin.py": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+      "app/core/config.py": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "app/db/systemconfig_oper.py": "87bff2e7c63d2ba98c72d92d6aed2018548730215de017330019bb54478634a2",
+      "app/db/models/systemconfig.py": "56c948af28f482b39e0d599b6889fd803c375aff50ecdde2d5b4583dca581164"
+    },
+    "frontend_paths": {
+      "src/components/dialog/PluginMarketDetailDialog.vue": "70b8f7ced51f2a5d645b1f320251e6f6433a149c145631d0cfe49950092e137c"
+    },
+    "entrypoints": [
+      "plugin.install -> PluginHelper.async_install -> install_local or remote acquisition -> SystemConfigOper.async_set -> reload_plugin -> PluginManager.reload_plugin/start",
+      "PluginHelper.install(local://...) -> actual package parsing/file copying",
+      "PluginHelper.__install_flow_sync / __install_flow_async -> physical rollback on preparation failure"
+    ]
+  },
+  "target_files": {
+    "internal/app/plugin_original_install.go": "880bef4fbad5377684a374158178a8d8db84d3a21b639ce326d76410a2015288",
+    "internal/app/plugin_original_lifecycle.go": "a479ad6c0c7fdd7d3f24fddf676f956588c94030be1cace2cd72f4476d4cabcd",
+    "internal/app/plugin_original_registry.go": "496d1b2547eea2b7032dd3ff8ac2da9bdd080f2e018e53f004677e07f8833318",
+    "internal/app/plugin_original_session.go": "d4a62eac3f4d65b65ffc7923d941b925cf7d890e434460410689e2ea3b6f6138",
+    "internal/app/plugin_original_class_registry.go": "6cf115e74f5661e54913766e9a3b4ecd0a0789e9713faffa8ace992beb3c8be2",
+    "internal/app/plugin_store.go": "292ced28e5ea7759aee9dd867f08389469453805e26063b0136824e22b62a908",
+    "internal/app/plugin_original_network.go": "e809c6a2ca412854f7c9556f71606b9724bcaab8662f0060e47f5155e5b72196",
+    "internal/app/plugin_original_github_network.go": "9da712e31c2b568574ea77da5fcda544ddfe3ee7fdd7dfa391afa3cddc7e8633",
+    "internal/app/runtime.go": "cfe34da3a7e5c36b3f32fd9d8f991bab9029d05fe4e3c9816b5964561cc36d31",
+    "internal/app/http.go": "7dbe46f289feb68d40eac17525e40d4edd647570e93b86d29f4c4352afb5a527",
+    "internal/plugins/worker.go": "b91a555c564512af5cf4b5fee799244a21dd3c26e08bf018df1aea1665ecdb57",
+    "internal/plugins/protocol.go": "4dd45fba68965bed4255ecd4382036914b40f45945da6313fbe9ea46c8119454",
+    "internal/plugins/identity.go": "3144e5a1efe0e49aaeb8803740487b182967aa3d56c0ccf08a87a3fa7995b620",
+    "internal/plugins/transport.go": "f36a61b4f9becfd844aef64f4a006665f8791be2e27621b65dbbb13216be249c",
+    "internal/plugins/jsonrpc.go": "ca173d11652bbf2ce186e134a3770ff54987a5631be09043c845d2c35545dc8b",
+    "internal/plugins/artifacts/acquire.go": "c50fad3f7dd7f9f0ecdcc879dfe8e831b125f9329c4d7387723bf7b5ea99150a",
+    "internal/plugins/artifacts/inspect.go": "b230618f682a921e17151da04a76b3c7e138ff4a9bf237babd099e75a9c026f9",
+    "internal/plugins/artifacts/repository.go": "b5deaa4cfa79e9e3d842740632e183873e43fc86cfccb08649e5ce79f760c3c3",
+    "internal/plugins/artifacts/local.go": "7df1f1df74ac97a9eeee4918ff1e4c573f5bb90362e4baaf1f086cce8813f73d",
+    "internal/plugins/artifacts/installed.go": "fd2d1bc431fcba12b01be6d985d745ba526da69acc7f96f3d363851f332f8fb3",
+    "internal/plugins/artifacts/files.go": "a2bea1f2f4bb4ad5192f1f1b7f06e231b7477e447dc55c5fcacc9ee0c8a5dade",
+    "internal/plugins/artifacts/backup.go": "99b374d07ad5f7141bd2ba239e1f258f5445e5e45df6c6692ab87247b617b398",
+    "internal/plugins/artifacts/system_version.go": "4c7b1b2aa8e99367e339c3d8a655c531f4c098fa05205c4ffc16a15123aa7859",
+    "internal/app/plugin_original_artifact_force_failure_test.go": "e844089c324fca1ce34223753e751988ff10090f2d277d290a9a2ffcb37f8c20",
+    "internal/app/plugin_original_market_parity_test.go": "668274216c32e4e9bf09d812208a342f86e79b7a8f4fac960bde918369ac1fd8",
+    "internal/app/plugin_module_process_test.go": "1740f25b1267bdba0d28bc71febdb96be8bce69bdf8a53116d9210c60a14b8d7",
+    "internal/app/plugin_module_process_base_test.go": "445e95fc838f79d1e4da51b5f3e5be768c1c650eee8c33c5541874cc160727d9",
+    "internal/app/plugin_module_process_market_test.go": "55127a625ecc98bd2b2ddced138212b5309c1374ec743a42e3f10b3dfd7a7c92",
+    "cmd/owned-standard-fixture/main.go": "e087e7d0e696ee91feb604e529bde697fc0618b2805cac37691ffbf4a02bb053",
+    "cmd/owned-module-fixture/main.go": "c8487ff9d1d5df5b0afa6a09d6cbfe346ee438ac9965b6936a792612842a808c",
+    "cmd/server/main.go": "903e44dd9932bd697fbe0296fee981e63723213b6b5ed49fd30e16d923390d60",
+    "go.mod": "622569e08ea6fb374e66a0e35f22bc29b276841d7ab74ade1e1d813a6095b5fa",
+    "go.sum": "2166fc925241cdfc675fc78e2e3d2b36152d9eb208a86d6defccec9551c61355"
+  },
+  "frontend_files": {
+    "web/src/components/Plugins.vue": "ccf4effae01b33841eef4633aed65905a92bb6005048d79676b21d4b8b4f6a34",
+    "web/src/components/PluginManageCard.vue": "02fdb436ceaed732923f27ddb1ee3e06bfcf5efe32e0e6a506d2b05eafff4fec",
+    "web/src/features/plugin-market.ts": "31431185219c18cffc47f40b70e73120fa24498d2e280f13123ca5af0834e717"
+  },
+  "target_chain": [
+    "authenticated originalPluginInstallHTTP",
+    "acquireOriginalImplementation -> artifacts.Acquire -> validated artifact publication -> pluginStore.Install",
+    "reloadOriginalPlugin -> persistent Go SDK worker handshake and initialization -> registerOriginalPlugin"
+  ],
+  "evidence": {
+    "new_source_install": {
+      "driver_sha256": "fe6b18ad6f639136341dc5042739220565a2883bad5b7dc52ae9dfa42f4fbcf3",
+      "result_sha256": "a2961f0efb537a39c0c4d33509584b95c2de27f7233138ce118cb09ca37bd260",
+      "stdout_sha256": "8bdf67f0fe9a7ead5873eb57a4ad0854d14ea2fd396b30906a82bb2fdad6d1c9",
+      "exit_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "exit_code": 0,
+      "actual_observations": [
+        {
+          "name": "actual public local install proves legal identity OwnedA1",
+          "success": true,
+          "content_sha256": "4ec0fdbe073577be64bd20193d57a14d0b599f11b8488ee282623a7ebe0e4d89",
+          "persistent_backup_exists": false
+        },
+        {
+          "name": "actual public local install proves legal identity OwnedA",
+          "success": true,
+          "content_sha256": "f5fc17542dbd63deccaf0b359e5edcdd59b9997608a532757cca7a5a55a395e0",
+          "persistent_backup_exists": false
+        },
+        {
+          "name": "sync non-force failed content restores actual directory",
+          "success": false,
+          "restored": true
+        },
+        {
+          "name": "sync force failed content removes directory without restoration",
+          "success": false,
+          "directory_absent": true
+        },
+        {
+          "name": "async non-force failed content restores actual directory",
+          "success": false,
+          "restored": true
+        },
+        {
+          "name": "async force failed content removes directory without restoration",
+          "success": false,
+          "directory_absent": true
+        }
+      ],
+      "actual_classes_loaded": {
+        "classes": [
+          "OwnedA1",
+          "OwnedA"
+        ],
+        "running": [
+          "OwnedA1",
+          "OwnedA"
+        ]
+      },
+      "imported_files_rehashed": 1021,
+      "boundary": "Complete original Helper/Manager/Settings/defaultDAO/SQL imports. Owned filesystem roots, no live network. Unrelated watch/auth imports explicitly fixture-bound. Failed prepare callback is an input fault, not a rewritten install algorithm."
+    },
+    "new_target_race": {
+      "test_names": [
+        "TestPluginOriginalArtifactForceDownloadFailureKeepsLoadedObjectUntilReload",
+        "TestOriginalMarketHTTPHighestVersionCacheRefreshAndActualUpgrade"
+      ],
+      "all_selected_roots_passed": 8,
+      "exit_code": 0,
+      "skips": 0,
+      "race": true,
+      "driver_sha256": "dd578c680cfd99b7f021f1b438ac099c30b924d187f74ca6f5eccfea1c59cb8a",
+      "log_sha256": "89baea68531aae4a2c4202910bd1b19f5387a02b72130dc1aed096fa6953bbae",
+      "binding_before_sha256": "a1ca31aad4911ee81c26b56d5c1c2b49f2805d411689621f839cf74135e5a12b",
+      "binding_after_sha256": "007be390ea2c58ffc560c5feb1fad3b2720fb098c239c55ee37c7f88ba20a667",
+      "test_binary_sha256": "e98c2658aa71b94af191f40c80068d19d7ec643f414d8cb3b2855b83dfc3bfe0",
+      "boundary": "Fresh execution of previously compiled exact dcbf test/worker bytes, real HTTP/SDK/SQLite/files. Uncommitted S01 dispatcher not in this frozen binary."
+    },
+    "delivered_production_process": {
+      "test": "TestPluginModuleProductionProcessLifecycle",
+      "seconds": 44.44,
+      "race": true,
+      "exit_code": 0,
+      "log_sha256": "d3afece8fb7cfce14c979d0a454d214e9b42cd38cd9c34fe85e7164cad59db04",
+      "inputs_before_sha256": "5a6442fef32ddd9c1a7ee6addb38c804a9399a9a0bcc84975773e9c5135f3420",
+      "inputs_after_sha256": "5a6442fef32ddd9c1a7ee6addb38c804a9399a9a0bcc84975773e9c5135f3420",
+      "inputs_equal": true,
+      "published_review_path": "migration/evidence/existing-platform-01-05/reuse-review.json",
+      "published_review_sha256": "2a5a355b9650d338ddd3a7dcbcc50d3b857470b740fb794417e090e0b936fa5b"
+    },
+    "official_browser_install_reuse": {
+      "published_proof_path": "migration/evidence/plugin-manager-query/browser-result.json",
+      "published_proof_sha256": "38915fb331ee3488c1c7aa34426807321fc21898a68b08d66d842f6f08611c6b",
+      "raw_steps_sha256": "b6e6381a234e9399b04ed99b2582c8ef9fa68241116efb6430a134ce54fad29f",
+      "reused_step": "installed_default -> actual OwnedAlpha worker, init_count 1; clone and official cold restart independently observed",
+      "boundary": "Native installation entry is unchanged; browser does not establish all upgrade/reset/uninstall workflows.",
+      "frontend_delta_check": {
+        "same_as_manager_delivery_revision": "9d1473b74e5db9b34817f55580c1d3807101b99f",
+        "listed_frontend_files_byte_identical": true,
+        "dcbf_to_current_web_compile_inputs_unchanged": 140
+      }
+    }
+  },
+  "current_integration_supplement": {
+    "status": "row_11_disjoint_dispatcher_delta_revalidated; not S01 acceptance",
+    "uncommitted_candidate_explicit": true,
+    "resource_file": "internal/app/plugin_original_resources.go",
+    "delivered_resource_sha256": "1a79b43053b66be353bc10479a8209234edad710cc9c7741f489e7ac2dd934a9",
+    "candidate_resource_sha256": "cd03da14cb5c2578f053e684a4d46d4758af731fb26661cef8fff10fab9d7d2d",
+    "reviewed_delta": "One exact Transmission capability added to allowlist; matching dispatch inserted before existing branches. Installation, acquire, lifecycle and registry paths are byte-identical. New capability predicate matches only its own method; existing ordinary installation is not redirected.",
+    "actual_production_seconds": 44.39,
+    "race": true,
+    "exit_code": 0,
+    "wrapper_log_sha256": "efad2f81dc44d7d046242c16299ec778f5bc118b0b1250ce2ff954008e9a2a80",
+    "raw_process_log_sha256": "117b5b83441fbb0cb325753b0cff383571cccadef71de5063795a2986db24ea2",
+    "inputs_before_sha256": "8cf07c6ddb50c5df03bc7ef30f76d766ef466492ae326e7908a924e9a1f1b52d",
+    "inputs_after_sha256": "8cf07c6ddb50c5df03bc7ef30f76d766ef466492ae326e7908a924e9a1f1b52d",
+    "input_count": 5959,
+    "input_bytes_equal": true,
+    "current_local_inputs_rehashed": 2606,
+    "official_browser_raw_sha256": "dc0cf15d9eeff8cb3afad5578bc9a94836bbd2ccaa675e33adbcba76458349a1",
+    "official_browser_reused_steps": [
+      "installed-unconfigured-query-is-error",
+      "clone-inherits-independent-config-one-real-task",
+      "same-owned-daemon-data-and-app-cold-restart-clone-two-alpha-tasks",
+      "current-host-cold-manager-live-registry-includes-new-workers"
+    ],
+    "browser_scope": "Ordinary native market installation and clone/cold existence only; no acceptance of downloader semantics."
+  },
+  "adaptations": [
+    "Python source/requirements execution is intentionally replaced by prebuilt Go executable/package validation, platform/API/SDK/SHA gates, and a real long-lived worker; no Python runtime added.",
+    "All observations use owned synthetic packages and configurations, Linux amd64, local single-user storage."
+  ],
+  "limits": [
+    "This reuses existing installation capability; no new product feature was authored.",
+    "No whole-platform, whole-S01, whole-08/09, explicit-history-version UI, or business-plugin completion claim.",
+    "Source component execution is not full original daemon/authentication E2E.",
+    "Unchanged frontend native install flow is reused; no claim of newly rerun complete upgrade UI.",
+    "Current candidate integration evidence is additional; original delivered hashes/logs remain unchanged."
+  ]
+}

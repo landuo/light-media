@@ -15,8 +15,8 @@
     "remote": "https://github.com/landuo/light-media.git",
     "branch": "plugins-refactor",
     "baseline_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-    "revision": "dcbf8d72f275dded3bdb2280862a4b55059a0f10",
-    "remote_revision": "dcbf8d72f275dded3bdb2280862a4b55059a0f10",
+    "revision": "743b17cb2d1fe42e70fbe98626d99e3515244177",
+    "remote_revision": "743b17cb2d1fe42e70fbe98626d99e3515244177",
     "delivery_mode": "remote",
     "delivery_reason": "Per accepted functional slice commit, push and readback; no merge or deployment.",
     "metadata_paths": [
@@ -24,9 +24,10 @@
       "docs/plugin-module-parity-matrix.md",
       "docs/plugin-shared-host-20261030.md",
       "migration/delivery/s05-unicode-dcbf8d72-paths.json",
-      "migration/delivery/existing-reuse-28f3b78c-paths.json"
+      "migration/delivery/existing-reuse-28f3b78c-paths.json",
+      "migration/delivery/transmission-743b17cb-paths.json"
     ],
-    "revision_note": "Last actual accepted product revision remains dcbf8d72; latest completed metadata-only readback28f3b78c recorded in resume. This new Transmission content is bound by file hashes; actual new commit/ref receipt is written only after successful push, not predicted here."
+    "revision_note": "Exact latest accepted product commit pushed/read back; this row11 change is independently verified existing-implementation metadata only."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -17921,7 +17922,7 @@
     {
       "id": "11",
       "description": "11 · 2.6 安装：先把代码放好，再登记和创建运行实例",
-      "status": "discovered",
+      "status": "verified",
       "source_paths": [
         "app/api/endpoints/plugin.py",
         "app/core/plugin.py",
@@ -17939,19 +17940,127 @@
         "scope.http.plugin.install"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "internal/app/plugin_original_install.go",
+        "internal/app/plugin_original_lifecycle.go",
+        "internal/app/plugin_original_registry.go",
+        "internal/app/plugin_original_session.go",
+        "internal/app/plugin_original_class_registry.go",
+        "internal/app/plugin_store.go",
+        "internal/app/plugin_original_network.go",
+        "internal/app/plugin_original_github_network.go",
+        "internal/app/runtime.go",
+        "internal/app/http.go",
+        "internal/plugins/worker.go",
+        "internal/plugins/protocol.go",
+        "internal/plugins/identity.go",
+        "internal/plugins/transport.go",
+        "internal/plugins/jsonrpc.go",
+        "internal/plugins/artifacts/acquire.go",
+        "internal/plugins/artifacts/inspect.go",
+        "internal/plugins/artifacts/repository.go",
+        "internal/plugins/artifacts/local.go",
+        "internal/plugins/artifacts/installed.go",
+        "internal/plugins/artifacts/files.go",
+        "internal/plugins/artifacts/backup.go",
+        "internal/plugins/artifacts/system_version.go",
+        "internal/app/plugin_original_artifact_force_failure_test.go",
+        "internal/app/plugin_original_market_parity_test.go",
+        "internal/app/plugin_module_process_test.go",
+        "internal/app/plugin_module_process_base_test.go",
+        "internal/app/plugin_module_process_market_test.go",
+        "cmd/owned-standard-fixture/main.go",
+        "cmd/owned-module-fixture/main.go",
+        "cmd/server/main.go",
+        "go.mod",
+        "go.sum",
+        "web/src/components/Plugins.vue",
+        "web/src/components/PluginManageCard.vue",
+        "web/src/features/plugin-market.ts"
+      ],
       "owner": "coordinator",
-      "scenarios": [],
-      "evidence_ids": [],
+      "scenarios": [
+        "Native install from real owned repository -> validated artifact -> persisted installed record -> real worker/init",
+        "Complete source public local install and actual module loader",
+        "Actual force/non-force preparation failure/restoration and loaded object separation",
+        "Official ordinary install, clone and same-data cold registry evidence"
+      ],
+      "evidence_ids": [
+        "existing-11.real-e2e"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "manager_queries_independent_review_20261030",
+        "evidence_ids": [
+          "existing-11.independent-review"
+        ]
       },
       "external_source_paths": [
         "frontend:src/components/cards/PluginCard.vue"
       ],
       "work_kind": "reuse_verification",
-      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code."
+      "work_kind_note": "Existing main platform implementation/history is retained. Reuse unchanged source and sufficiently bound applicable evidence; only proven behavioral gaps require code changes. discovered means not yet closed in this round, not missing code.",
+      "reused_existing_implementation": true,
+      "acceptance_scope": "Original install flow adapted to validated Go artifacts and persistent native workers; unchanged existing implementation, not new rewrite.",
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "Source package/module bytes and target validated platform/SDK/hash artifact; actual content and retained directory facts.",
+          "evidence_ids": [
+            "existing-11.real-e2e"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Install records and physical code before registration/actual worker; previous object lifetime until reload.",
+          "evidence_ids": [
+            "existing-11.real-e2e"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Real source sync/async force and non-force preparation failure, target physical acquisition failure and recovery, compatibility denial.",
+          "evidence_ids": [
+            "existing-11.real-e2e"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "Actual process lifecycle and existing install mutex/real race gates; no assertion of arbitrary concurrent source imports.",
+          "evidence_ids": [
+            "existing-11.real-e2e"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Actual current production lifecycle and ordinary official clone/cold restoration; exact unchanged previous observations retained.",
+          "evidence_ids": [
+            "existing-11.real-e2e"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "Python source/requirements intentionally replaced with validated prebuilt Go artifact/SDK; source package layer not confused with plugin version.",
+          "evidence_ids": [
+            "existing-11.real-e2e"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "Owned local/loopback synthetic fixtures, current authenticated normal UI, existing capability/identity/credential protections unchanged; no production endpoints.",
+          "evidence_ids": [
+            "existing-11.real-e2e"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Real lifecycle timings and bounded existing acquisition protocol; no source throughput SLA or unbounded scale claim.",
+          "evidence_ids": [
+            "existing-11.real-e2e"
+          ]
+        }
+      }
     },
     {
       "id": "12",
@@ -23336,6 +23445,332 @@
         "Actual source/target slow response21seconds; invalid/auth errors, scope/cancel/config change, oversize failure, clone/cold and browser repair inspected.",
         "All finite adaptations remain explicit. qB and wholeS01 not certified; raw evidence private separate from minimal Git reports."
       ]
+    },
+    {
+      "id": "existing-11.real-e2e",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "11"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant-owned Linux amd64; actual fixed original complete Helper/Manager/defaultDAO/SQLite and owned files; current normal production server/native workers and race harness, official cloud browser. Explicit unused watch/auth integration fixtures; no whole source daemon claim.",
+        "target_files": {
+          "internal/app/plugin_original_install.go": "880bef4fbad5377684a374158178a8d8db84d3a21b639ce326d76410a2015288",
+          "internal/app/plugin_original_lifecycle.go": "a479ad6c0c7fdd7d3f24fddf676f956588c94030be1cace2cd72f4476d4cabcd",
+          "internal/app/plugin_original_registry.go": "496d1b2547eea2b7032dd3ff8ac2da9bdd080f2e018e53f004677e07f8833318",
+          "internal/app/plugin_original_session.go": "d4a62eac3f4d65b65ffc7923d941b925cf7d890e434460410689e2ea3b6f6138",
+          "internal/app/plugin_original_class_registry.go": "6cf115e74f5661e54913766e9a3b4ecd0a0789e9713faffa8ace992beb3c8be2",
+          "internal/app/plugin_store.go": "292ced28e5ea7759aee9dd867f08389469453805e26063b0136824e22b62a908",
+          "internal/app/plugin_original_network.go": "e809c6a2ca412854f7c9556f71606b9724bcaab8662f0060e47f5155e5b72196",
+          "internal/app/plugin_original_github_network.go": "9da712e31c2b568574ea77da5fcda544ddfe3ee7fdd7dfa391afa3cddc7e8633",
+          "internal/app/runtime.go": "cfe34da3a7e5c36b3f32fd9d8f991bab9029d05fe4e3c9816b5964561cc36d31",
+          "internal/app/http.go": "7dbe46f289feb68d40eac17525e40d4edd647570e93b86d29f4c4352afb5a527",
+          "internal/plugins/worker.go": "b91a555c564512af5cf4b5fee799244a21dd3c26e08bf018df1aea1665ecdb57",
+          "internal/plugins/protocol.go": "4dd45fba68965bed4255ecd4382036914b40f45945da6313fbe9ea46c8119454",
+          "internal/plugins/identity.go": "3144e5a1efe0e49aaeb8803740487b182967aa3d56c0ccf08a87a3fa7995b620",
+          "internal/plugins/transport.go": "f36a61b4f9becfd844aef64f4a006665f8791be2e27621b65dbbb13216be249c",
+          "internal/plugins/jsonrpc.go": "ca173d11652bbf2ce186e134a3770ff54987a5631be09043c845d2c35545dc8b",
+          "internal/plugins/artifacts/acquire.go": "c50fad3f7dd7f9f0ecdcc879dfe8e831b125f9329c4d7387723bf7b5ea99150a",
+          "internal/plugins/artifacts/inspect.go": "b230618f682a921e17151da04a76b3c7e138ff4a9bf237babd099e75a9c026f9",
+          "internal/plugins/artifacts/repository.go": "b5deaa4cfa79e9e3d842740632e183873e43fc86cfccb08649e5ce79f760c3c3",
+          "internal/plugins/artifacts/local.go": "7df1f1df74ac97a9eeee4918ff1e4c573f5bb90362e4baaf1f086cce8813f73d",
+          "internal/plugins/artifacts/installed.go": "fd2d1bc431fcba12b01be6d985d745ba526da69acc7f96f3d363851f332f8fb3",
+          "internal/plugins/artifacts/files.go": "a2bea1f2f4bb4ad5192f1f1b7f06e231b7477e447dc55c5fcacc9ee0c8a5dade",
+          "internal/plugins/artifacts/backup.go": "99b374d07ad5f7141bd2ba239e1f258f5445e5e45df6c6692ab87247b617b398",
+          "internal/plugins/artifacts/system_version.go": "4c7b1b2aa8e99367e339c3d8a655c531f4c098fa05205c4ffc16a15123aa7859",
+          "internal/app/plugin_original_artifact_force_failure_test.go": "e844089c324fca1ce34223753e751988ff10090f2d277d290a9a2ffcb37f8c20",
+          "internal/app/plugin_original_market_parity_test.go": "668274216c32e4e9bf09d812208a342f86e79b7a8f4fac960bde918369ac1fd8",
+          "internal/app/plugin_module_process_test.go": "1740f25b1267bdba0d28bc71febdb96be8bce69bdf8a53116d9210c60a14b8d7",
+          "internal/app/plugin_module_process_base_test.go": "445e95fc838f79d1e4da51b5f3e5be768c1c650eee8c33c5541874cc160727d9",
+          "internal/app/plugin_module_process_market_test.go": "55127a625ecc98bd2b2ddced138212b5309c1374ec743a42e3f10b3dfd7a7c92",
+          "cmd/owned-standard-fixture/main.go": "e087e7d0e696ee91feb604e529bde697fc0618b2805cac37691ffbf4a02bb053",
+          "cmd/owned-module-fixture/main.go": "c8487ff9d1d5df5b0afa6a09d6cbfe346ee438ac9965b6936a792612842a808c",
+          "cmd/server/main.go": "903e44dd9932bd697fbe0296fee981e63723213b6b5ed49fd30e16d923390d60",
+          "go.mod": "622569e08ea6fb374e66a0e35f22bc29b276841d7ab74ade1e1d813a6095b5fa",
+          "go.sum": "2166fc925241cdfc675fc78e2e3d2b36152d9eb208a86d6defccec9551c61355",
+          "web/src/components/Plugins.vue": "ccf4effae01b33841eef4633aed65905a92bb6005048d79676b21d4b8b4f6a34",
+          "web/src/components/PluginManageCard.vue": "02fdb436ceaed732923f27ddb1ee3e06bfcf5efe32e0e6a506d2b05eafff4fec",
+          "web/src/features/plugin-market.ts": "31431185219c18cffc47f40b70e73120fa24498d2e280f13123ca5af0834e717",
+          "internal/plugins/shared_plugin_manager.go": "b06e281afb735fe69fb69a70c3635f9b69eb1ac705f347c753b8aa93fd3080d9",
+          "internal/app/plugin_shared_manager_queries.go": "38b4da535d21151fc93217aaa6e9402460c4cd0631c87afe6ff3c517b39632ff",
+          "internal/app/plugin_shared_manager_queries_cache.go": "66d5939907f65a7e71099c21a7fb1ace4b462138c50335ecdb318802a6cae1ef",
+          "internal/app/plugin_original_base.go": "0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b",
+          "internal/app/plugin_original_resources.go": "cd03da14cb5c2578f053e684a4d46d4758af731fb26661cef8fff10fab9d7d2d",
+          "internal/app/plugin_original_config.go": "6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64",
+          "cmd/owned-manager-query-fixture/main.go": "6bd28653ea5816823177ec9ff81aa8e6fa97a3fe41d23c997b0c404f4e5f04d4",
+          "internal/app/plugin_shared_manager_queries_test.go": "bbf7a8050e5cf602a989aa302afce684f711d73f848cbd0b317d08ea95f1d704",
+          "internal/app/plugin_shared_manager_queries_process_test.go": "969abbad4712452f9e5df22c518fe2571902d94af85d3476b5a9f5f88a9fb0b6",
+          "internal/app/plugin_shared_manager_queries_cache_test.go": "b4598a319af812e2bfab71ea021c40ca317359c263e10a32d62886328cd62e88",
+          "internal/app/plugin_shared_manager_queries_config_failure_test.go": "18c927a2a84bf4d6fbb29b354f43094a110c90518f7ef9c08eb9e55cecf95692",
+          "testdata/shared-plugin-manager/query-source.json": "187ecdd6eb191667cb71c1c513a4499c2e8d903082c70745dc01047934241b08",
+          "testdata/shared-plugin-manager/cache-outage-source.json": "86b31c9ebadfa16567aff2068e51c1fe36eaa2aa9a83597c285da50c1f230bdb",
+          "testdata/shared-plugin-manager/README.md": "10eab90ec63e79b9887870434917ced37c8f3ac68f59f47499c125799e998985",
+          "internal/app/plugin_shared_manager_queries_independent_test.go": "fbeb59ccfd6314b101d429e4fda8689917e7f512374847d892d3f4cb96728fb1",
+          "testdata/shared-plugin-manager/run-independent.sh": "12d2b180a7b0e57ac200458625587a19cf8a7363fca74cc97ff68d00d75e4832",
+          "cmd/owned-history-fixture/main.go": "5aa60e4bf2155cd748919b2b80a39d92d0a5e0e105c2ed9deade0e9195038747",
+          "internal/app/import_plan.go": "402cdcb4fe4eaaa151e23b1880a83ad09a14e4703fdfa5b87f26e17ae38a30f9",
+          "internal/app/import_run.go": "15b961bd1e9de0dabe9b7658b4dbcb3045e6738bc69a30b645cab99462b13f63",
+          "internal/app/plugin_original_transfer_failure.go": "8e07008ad56cc72c9f0cd6bad509f69a26fb6e5576a6272bb8c756bb6f1b48d4",
+          "internal/app/plugin_shared_history.go": "f864e84c1f0b6e33141b1549ecc94b14bf1a3ab76405433ea9280232265c59a8",
+          "internal/app/plugin_shared_history_decode.go": "eee54a55cfdc689a312c54930a24461b9a1c7b88b66aa22454d18a7d7c6668d1",
+          "internal/app/plugin_shared_history_fixture_test.go": "7235ad062e76706d41370f303cdb761261993cdf874084222094b5e60acb48c8",
+          "internal/app/plugin_shared_history_legacy_test.go": "ff188abdfc5f760641979d14fe4a465589ba0b84c3b4bee0d281872a1ea99889",
+          "internal/app/plugin_shared_history_oracle_test.go": "35e24c6466741dbbe24d02c1088eac5119e10547c694b4dfea9315f9e1b30f78",
+          "internal/app/plugin_shared_history_producer_oracle_test.go": "b53cf19decb8d328406825669b510510785c4bca80534bb10614c4c2f50e5ef5",
+          "internal/app/plugin_shared_history_snapshot.go": "df8094933931c2c70f9bd3ea9dfb560eab58346d7b0bf981a2dc1492e45fecdc",
+          "internal/app/plugin_shared_history_test.go": "055d39881e0f2cb7ea4f3cd58d0d38a8fe8338706023f5ff2e5f70cb9d933a5d",
+          "internal/catalog/identities.go": "025fb13a71eb10770d65d1e98e18c693fa011198f4f0cfae26be30b9a8657286",
+          "internal/catalog/media.go": "e9c8db2fd156758b0a21c30c778c6614cb3c83815b5d351cc4fe658f8385d951",
+          "internal/catalog/shared_history_test.go": "6bd89e2c466badad21e1bf481f646a0165df327bdecf814fbc2829d3480d061a",
+          "internal/catalog/types.go": "619d1a307020282b472e774283899f363db4d595c2a4a6ad74ddb8b674eac66a",
+          "internal/plugins/shared_history.go": "0c9583304284b1f88b130216ebab7afe387b183e6f0f8998c9571e30070bda77",
+          "internal/plugins/shared_history_test.go": "5e30a69e66d33557fceadc0da0864d5f0ea241c87b4a1f741a520284872dd999",
+          "internal/app/history_query_independent_test.go": "69399d69a3f4ed0faab15e985b6103953cfb4c89063ebec125032cda3c57dea4",
+          "cmd/owned-history-ui-fixture/main.go": "b32ec1ea083d95101159813f349d421261bab661f079535a43aedb570252dd0b",
+          "internal/app/history_integration_independent_test.go": "6318a30e3efcdfd3fae1140c0d05f7930b0b8ead18d492cced0e65b56d404f74",
+          "cmd/owned-shared-host-fixture/main.go": "a2605474eec2cfa012bc6d6fcd6a5711897e7a4bb41966357b4b7337fafbe0fe",
+          "internal/app/plugin_shared_subscriptions.go": "32cbca1e6bcd6bf0128bad490babebf8903c9499fa33198a14998baca5704553",
+          "internal/app/plugin_shared_subscriptions_apply.go": "e44e48d1fa0dc7b04d468c3fafff22ea4b912039eb412dd5bc939c294508007a",
+          "internal/app/plugin_shared_subscriptions_close_test.go": "c4c6542384ca3365de4fc689dac239837839ba151d31ee237ffb993a6d88424b",
+          "internal/app/plugin_shared_subscriptions_fields.go": "171aaba0117a24fc125d03dc470262a00c74475701041d814251bd3fbb5442bc",
+          "internal/app/plugin_shared_subscriptions_fixture_test.go": "3f97fd1cfc9083bee9abdfddd1535a8088cd608fd12a40854fb7eb5f1da2db54",
+          "internal/app/plugin_shared_subscriptions_float.go": "3f62274b082ee7d257b7c8e92dc0205cab28ad44da20a5f45e0b3dfffea493b3",
+          "internal/app/plugin_shared_subscriptions_integration_test.go": "5abd3b6aea580dbc7b448b21552234aeb27e4b6b6fb514c60e0a5c210fbe3f05",
+          "internal/app/plugin_shared_subscriptions_json.go": "c114f4eae68a2158ac55b9c1c3471a35c364ba5a61807d4c46cda6786239b4ba",
+          "internal/app/plugin_shared_subscriptions_oracle_test.go": "afdb5f7b32977f52fbea481a836f9ad1358452caad31c50c3e56ed556fc228e5",
+          "internal/app/plugin_shared_subscriptions_process_test.go": "8d08c72ce06791994068c145fbf23273703f6331f1ddd022978397c3a79e06c2",
+          "internal/app/plugin_shared_subscriptions_sql.go": "f890d028f578bcdf3dc8201d1ff0476730b22b31404b8abdb2090e4da23dd73f",
+          "internal/app/plugin_shared_subscriptions_test.go": "489197e63496b635a422b09b17b3305660674ead34fee050c254515cfc0b4402",
+          "internal/app/store.go": "44ffeb5c61ed9d1828b97f2c11918c77072711e069983584b3bdaa2f4d601dde",
+          "internal/app/subscription_quality_source.go": "e090ea62be1b0f44fd8a8f70db0d1ff0215b287787d83047b14a4699f656d50e",
+          "internal/app/subscription_quality_state.go": "6bee438964a518942445713bab12d1ccabb14fb1c9d71ba43589f589d02feb1c",
+          "internal/app/subscription_words.go": "5b4f50319d719c04d36b928eb0d9295f84ee375902f635a32adb081f0cd237d4",
+          "internal/app/types.go": "33bd210f927ebf45f1162c2a6cbe7301c9c15e4edfd192525eca9b61d09cc011",
+          "internal/plugins/shared_subscriptions.go": "21d6cd1141f75a1623ad6faed8124c9dbd6e7bb5356687fc3a483b388a5a6b6e",
+          "internal/app/plugin_shared_subscriptions_json_raw.go": "e737612119f2f7d2d540faa633a4be95397054ff0b43038d410ca925129fd83c",
+          "internal/app/plugin_shared_subscriptions_unicode.go": "8bfe9d486b5427c05c6c6deb56b12b6246b066346c9f2dc2038fb17f00e94fd0",
+          "internal/app/plugin_shared_subscriptions_unicode_test.go": "97762dd7e1059f8fcbe54e753ecb9e341d1dde3dd0826e76d83d25e7ce15f0e4",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/README.md": "891573e8f1b8fb01bd4540a7c86c5ad37052395d77bebb5156ab8f70301738ea",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/manifest.json": "5ed5dba6f1cd6c4bfaf673ef47d85a92f376cbb1bfc977805118c10e126597fa",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/observe_source.py": "6f2e9fdb06a89a30fcebb85765c8c72c05de7cd6f5a375c2d27d97b1d7ace8dd",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-cold.json": "e1f4cd6fa32955b9c5a9f164a7743a51dccadd1c857f5f044aba483545350245",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-recover.json": "2393c75fb95810539af9908cebab49de1ad94530dcc826ee6e6054ee54fdba12",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-warm.json": "9726b46df66d8acb84179d6d976c9a4e165682c08a4a341b641e873d24656b5d",
+          "internal/app/plugin_original_base_schema.go": "e8588ee736a4108cbebad93081cbb881fa25966b63744e531fb9c5295cc4ca56",
+          "internal/app/plugin_original_reset.go": "87e8b09e781867d7bdbae540d1b2e3487422d33ea107028fb3f5467995fb701d",
+          "internal/app/plugin_original_uninstall.go": "54f334aace4cb3b91ab4dce76cea8a3ae8276ec2502fa3a3dde222178f0d4d05",
+          "internal/app/plugin_original_api_methods.go": "a74f449b0791595248c0774d6cb996b366510c9301a0f92fd4dafe726a98a4bc",
+          "internal/app/plugin_original_services.go": "cb1c93b92cec031b93a3e1cc0fe127363c2da37d02180804a364295f88f1238c",
+          "internal/app/plugin_original_direct_dispatch.go": "8785a4121a5dbb177798856b8c9ec1bb4da18996baccd796e8769d8d412587d1",
+          "internal/app/plugin_original_manager_configuration.go": "15c893520dd5bfb13d4605cf15f598c03423c8f187ef010bc568ea05f7db5b91",
+          "internal/app/plugin_original_state.go": "df30cac11c6965248cc5076c0b31f81a143d7fce7f44377f34a2c840b5bd60d6",
+          "internal/app/plugin_original_manager_http.go": "b3961f0fbe0c80316e1155eb10de9dc4a6178f9f52dd491805575e2da3d7b88e",
+          "internal/app/plugin_instances.go": "d5544fc148dc8d4ea2b0c9a4069bc91ad290073f891f039099e02908ffc747d8",
+          "internal/plugins/artifacts/clone.go": "a9a251716df82bdbedf5b06d7fbd6ab4475421139b5c55dc4198ebad612ddaa5",
+          "internal/app/plugin_original_base_session.go": "aa28d216617d864e7c43a30e6a56805b4f65ee667d7c0309871c7c04deaf2c4e",
+          "internal/app/plugin_original_base_sdk_test.go": "e6263b134514e7fefffc05cb5a1e5f73781ea6c9b8abb177584e5d17f64cadc4",
+          "internal/plugins/base.go": "88d704b1249fd6af462f8dc8157586f1e30d579e4cc4719abf3289821f311aed",
+          "internal/app/plugin_original_commands.go": "12b96e0d9c882e2c3922f82b2badd04c8adfbe1e2b711b89971340ea0c96d28b",
+          "cmd/owned-standard-fixture/rich-form.json": "1c401c164f7370ce7b3623a30e64a7f1a0d7f9eed4cd7e11f8e51bd3fca91c76",
+          "cmd/owned-base-fixture/main.go": "7fc6370adcdd5fd6b0f949c5b3b170ac73ed595f6167853a0bf8c2b6cd9f1766"
+        },
+        "fixture_files": {
+          "evidence/existing-platform-11/reuse-review.json": "61c363031bc05e9c219ed6bbf92897da73b025c34c046df8fd7cf48f6d7b7870",
+          "evidence/existing-platform-01-05/reuse-review.json": "2a5a355b9650d338ddd3a7dcbcc50d3b857470b740fb794417e090e0b936fa5b",
+          "evidence/plugin-manager-query/browser-result.json": "38915fb331ee3488c1c7aa34426807321fc21898a68b08d66d842f6f08611c6b",
+          "evidence/transmission-query/browser-result.json": "af7b30af4db54e0bbcd50183eab56f2a14a32bcdcc9cd6406078a48258282485",
+          "evidence/transmission-query/coexistence-result.json": "d4de41d6b7568294a2506635d764f0005b423a3596b2f1dbf8cf075505bff022",
+          "evidence/transmission-query/current-integration-review.json": "09a6e1d40d8eb98debde5d015efe9fbe5448890c6152c6d61780639f037e3e9e"
+        }
+      },
+      "artifacts": {
+        "evidence/existing-platform-11/reuse-review.json": "61c363031bc05e9c219ed6bbf92897da73b025c34c046df8fd7cf48f6d7b7870",
+        "evidence/existing-platform-01-05/reuse-review.json": "2a5a355b9650d338ddd3a7dcbcc50d3b857470b740fb794417e090e0b936fa5b",
+        "evidence/plugin-manager-query/browser-result.json": "38915fb331ee3488c1c7aa34426807321fc21898a68b08d66d842f6f08611c6b",
+        "evidence/transmission-query/browser-result.json": "af7b30af4db54e0bbcd50183eab56f2a14a32bcdcc9cd6406078a48258282485",
+        "evidence/transmission-query/coexistence-result.json": "d4de41d6b7568294a2506635d764f0005b423a3596b2f1dbf8cf075505bff022",
+        "evidence/transmission-query/current-integration-review.json": "09a6e1d40d8eb98debde5d015efe9fbe5448890c6152c6d61780639f037e3e9e"
+      },
+      "reviewer": "manager_queries_independent_review_20261030",
+      "commands": [
+        "Complete original source_probe_v6.py: public local install/actual loader and sync+async force/non-force failure six cases; actual1021imports byte-bound.",
+        "Fresh execution of exactly frozen dcbf race test/worker: force-download failure keeps live object until reload; actual upgrade and compatibility gates; eight selected roots,no skip,exit0.",
+        "Current743b17cb production lifecycle-race44.39s,5959 actual inputs, and actual19-step official browser install/clone/cold supplement; unchanged native installation UI previous exact observations reused."
+      ],
+      "inputs": [
+        "Owned synthetic package identities/files and real persistent SQLite; source independent fixed observations, not target-generated expected values.",
+        "Exact old execution hashes retained; reviewed current source/target closure and minimal reports bound separately."
+      ],
+      "observations": [
+        "Installed code publication precedes registration/real worker initialization; ordinary install and clone execute genuine compiled workers.",
+        "Original sync/async non-force failure restores previous physical directory; force failure removes it. Loaded object lifetime and reload ordering are checked separately from filesystem state.",
+        "This verifies row11 existing installation scope, not all version-selection09 or complete upgrade/reset/uninstall UI."
+      ]
+    },
+    {
+      "id": "existing-11.independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "11"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": "Assistant-owned Linux amd64; actual fixed original complete Helper/Manager/defaultDAO/SQLite and owned files; current normal production server/native workers and race harness, official cloud browser. Explicit unused watch/auth integration fixtures; no whole source daemon claim.",
+        "target_files": {
+          "internal/app/plugin_original_install.go": "880bef4fbad5377684a374158178a8d8db84d3a21b639ce326d76410a2015288",
+          "internal/app/plugin_original_lifecycle.go": "a479ad6c0c7fdd7d3f24fddf676f956588c94030be1cace2cd72f4476d4cabcd",
+          "internal/app/plugin_original_registry.go": "496d1b2547eea2b7032dd3ff8ac2da9bdd080f2e018e53f004677e07f8833318",
+          "internal/app/plugin_original_session.go": "d4a62eac3f4d65b65ffc7923d941b925cf7d890e434460410689e2ea3b6f6138",
+          "internal/app/plugin_original_class_registry.go": "6cf115e74f5661e54913766e9a3b4ecd0a0789e9713faffa8ace992beb3c8be2",
+          "internal/app/plugin_store.go": "292ced28e5ea7759aee9dd867f08389469453805e26063b0136824e22b62a908",
+          "internal/app/plugin_original_network.go": "e809c6a2ca412854f7c9556f71606b9724bcaab8662f0060e47f5155e5b72196",
+          "internal/app/plugin_original_github_network.go": "9da712e31c2b568574ea77da5fcda544ddfe3ee7fdd7dfa391afa3cddc7e8633",
+          "internal/app/runtime.go": "cfe34da3a7e5c36b3f32fd9d8f991bab9029d05fe4e3c9816b5964561cc36d31",
+          "internal/app/http.go": "7dbe46f289feb68d40eac17525e40d4edd647570e93b86d29f4c4352afb5a527",
+          "internal/plugins/worker.go": "b91a555c564512af5cf4b5fee799244a21dd3c26e08bf018df1aea1665ecdb57",
+          "internal/plugins/protocol.go": "4dd45fba68965bed4255ecd4382036914b40f45945da6313fbe9ea46c8119454",
+          "internal/plugins/identity.go": "3144e5a1efe0e49aaeb8803740487b182967aa3d56c0ccf08a87a3fa7995b620",
+          "internal/plugins/transport.go": "f36a61b4f9becfd844aef64f4a006665f8791be2e27621b65dbbb13216be249c",
+          "internal/plugins/jsonrpc.go": "ca173d11652bbf2ce186e134a3770ff54987a5631be09043c845d2c35545dc8b",
+          "internal/plugins/artifacts/acquire.go": "c50fad3f7dd7f9f0ecdcc879dfe8e831b125f9329c4d7387723bf7b5ea99150a",
+          "internal/plugins/artifacts/inspect.go": "b230618f682a921e17151da04a76b3c7e138ff4a9bf237babd099e75a9c026f9",
+          "internal/plugins/artifacts/repository.go": "b5deaa4cfa79e9e3d842740632e183873e43fc86cfccb08649e5ce79f760c3c3",
+          "internal/plugins/artifacts/local.go": "7df1f1df74ac97a9eeee4918ff1e4c573f5bb90362e4baaf1f086cce8813f73d",
+          "internal/plugins/artifacts/installed.go": "fd2d1bc431fcba12b01be6d985d745ba526da69acc7f96f3d363851f332f8fb3",
+          "internal/plugins/artifacts/files.go": "a2bea1f2f4bb4ad5192f1f1b7f06e231b7477e447dc55c5fcacc9ee0c8a5dade",
+          "internal/plugins/artifacts/backup.go": "99b374d07ad5f7141bd2ba239e1f258f5445e5e45df6c6692ab87247b617b398",
+          "internal/plugins/artifacts/system_version.go": "4c7b1b2aa8e99367e339c3d8a655c531f4c098fa05205c4ffc16a15123aa7859",
+          "internal/app/plugin_original_artifact_force_failure_test.go": "e844089c324fca1ce34223753e751988ff10090f2d277d290a9a2ffcb37f8c20",
+          "internal/app/plugin_original_market_parity_test.go": "668274216c32e4e9bf09d812208a342f86e79b7a8f4fac960bde918369ac1fd8",
+          "internal/app/plugin_module_process_test.go": "1740f25b1267bdba0d28bc71febdb96be8bce69bdf8a53116d9210c60a14b8d7",
+          "internal/app/plugin_module_process_base_test.go": "445e95fc838f79d1e4da51b5f3e5be768c1c650eee8c33c5541874cc160727d9",
+          "internal/app/plugin_module_process_market_test.go": "55127a625ecc98bd2b2ddced138212b5309c1374ec743a42e3f10b3dfd7a7c92",
+          "cmd/owned-standard-fixture/main.go": "e087e7d0e696ee91feb604e529bde697fc0618b2805cac37691ffbf4a02bb053",
+          "cmd/owned-module-fixture/main.go": "c8487ff9d1d5df5b0afa6a09d6cbfe346ee438ac9965b6936a792612842a808c",
+          "cmd/server/main.go": "903e44dd9932bd697fbe0296fee981e63723213b6b5ed49fd30e16d923390d60",
+          "go.mod": "622569e08ea6fb374e66a0e35f22bc29b276841d7ab74ade1e1d813a6095b5fa",
+          "go.sum": "2166fc925241cdfc675fc78e2e3d2b36152d9eb208a86d6defccec9551c61355",
+          "web/src/components/Plugins.vue": "ccf4effae01b33841eef4633aed65905a92bb6005048d79676b21d4b8b4f6a34",
+          "web/src/components/PluginManageCard.vue": "02fdb436ceaed732923f27ddb1ee3e06bfcf5efe32e0e6a506d2b05eafff4fec",
+          "web/src/features/plugin-market.ts": "31431185219c18cffc47f40b70e73120fa24498d2e280f13123ca5af0834e717",
+          "internal/plugins/shared_plugin_manager.go": "b06e281afb735fe69fb69a70c3635f9b69eb1ac705f347c753b8aa93fd3080d9",
+          "internal/app/plugin_shared_manager_queries.go": "38b4da535d21151fc93217aaa6e9402460c4cd0631c87afe6ff3c517b39632ff",
+          "internal/app/plugin_shared_manager_queries_cache.go": "66d5939907f65a7e71099c21a7fb1ace4b462138c50335ecdb318802a6cae1ef",
+          "internal/app/plugin_original_base.go": "0816f2925099e873caf20cdd2a04505dd221999201842780a3d889c4ee97943b",
+          "internal/app/plugin_original_resources.go": "cd03da14cb5c2578f053e684a4d46d4758af731fb26661cef8fff10fab9d7d2d",
+          "internal/app/plugin_original_config.go": "6c0ca1d4524bfabcd7def2809816394fc27f49cfd5bc1e00b67dbb4c489d6f64",
+          "cmd/owned-manager-query-fixture/main.go": "6bd28653ea5816823177ec9ff81aa8e6fa97a3fe41d23c997b0c404f4e5f04d4",
+          "internal/app/plugin_shared_manager_queries_test.go": "bbf7a8050e5cf602a989aa302afce684f711d73f848cbd0b317d08ea95f1d704",
+          "internal/app/plugin_shared_manager_queries_process_test.go": "969abbad4712452f9e5df22c518fe2571902d94af85d3476b5a9f5f88a9fb0b6",
+          "internal/app/plugin_shared_manager_queries_cache_test.go": "b4598a319af812e2bfab71ea021c40ca317359c263e10a32d62886328cd62e88",
+          "internal/app/plugin_shared_manager_queries_config_failure_test.go": "18c927a2a84bf4d6fbb29b354f43094a110c90518f7ef9c08eb9e55cecf95692",
+          "testdata/shared-plugin-manager/query-source.json": "187ecdd6eb191667cb71c1c513a4499c2e8d903082c70745dc01047934241b08",
+          "testdata/shared-plugin-manager/cache-outage-source.json": "86b31c9ebadfa16567aff2068e51c1fe36eaa2aa9a83597c285da50c1f230bdb",
+          "testdata/shared-plugin-manager/README.md": "10eab90ec63e79b9887870434917ced37c8f3ac68f59f47499c125799e998985",
+          "internal/app/plugin_shared_manager_queries_independent_test.go": "fbeb59ccfd6314b101d429e4fda8689917e7f512374847d892d3f4cb96728fb1",
+          "testdata/shared-plugin-manager/run-independent.sh": "12d2b180a7b0e57ac200458625587a19cf8a7363fca74cc97ff68d00d75e4832",
+          "cmd/owned-history-fixture/main.go": "5aa60e4bf2155cd748919b2b80a39d92d0a5e0e105c2ed9deade0e9195038747",
+          "internal/app/import_plan.go": "402cdcb4fe4eaaa151e23b1880a83ad09a14e4703fdfa5b87f26e17ae38a30f9",
+          "internal/app/import_run.go": "15b961bd1e9de0dabe9b7658b4dbcb3045e6738bc69a30b645cab99462b13f63",
+          "internal/app/plugin_original_transfer_failure.go": "8e07008ad56cc72c9f0cd6bad509f69a26fb6e5576a6272bb8c756bb6f1b48d4",
+          "internal/app/plugin_shared_history.go": "f864e84c1f0b6e33141b1549ecc94b14bf1a3ab76405433ea9280232265c59a8",
+          "internal/app/plugin_shared_history_decode.go": "eee54a55cfdc689a312c54930a24461b9a1c7b88b66aa22454d18a7d7c6668d1",
+          "internal/app/plugin_shared_history_fixture_test.go": "7235ad062e76706d41370f303cdb761261993cdf874084222094b5e60acb48c8",
+          "internal/app/plugin_shared_history_legacy_test.go": "ff188abdfc5f760641979d14fe4a465589ba0b84c3b4bee0d281872a1ea99889",
+          "internal/app/plugin_shared_history_oracle_test.go": "35e24c6466741dbbe24d02c1088eac5119e10547c694b4dfea9315f9e1b30f78",
+          "internal/app/plugin_shared_history_producer_oracle_test.go": "b53cf19decb8d328406825669b510510785c4bca80534bb10614c4c2f50e5ef5",
+          "internal/app/plugin_shared_history_snapshot.go": "df8094933931c2c70f9bd3ea9dfb560eab58346d7b0bf981a2dc1492e45fecdc",
+          "internal/app/plugin_shared_history_test.go": "055d39881e0f2cb7ea4f3cd58d0d38a8fe8338706023f5ff2e5f70cb9d933a5d",
+          "internal/catalog/identities.go": "025fb13a71eb10770d65d1e98e18c693fa011198f4f0cfae26be30b9a8657286",
+          "internal/catalog/media.go": "e9c8db2fd156758b0a21c30c778c6614cb3c83815b5d351cc4fe658f8385d951",
+          "internal/catalog/shared_history_test.go": "6bd89e2c466badad21e1bf481f646a0165df327bdecf814fbc2829d3480d061a",
+          "internal/catalog/types.go": "619d1a307020282b472e774283899f363db4d595c2a4a6ad74ddb8b674eac66a",
+          "internal/plugins/shared_history.go": "0c9583304284b1f88b130216ebab7afe387b183e6f0f8998c9571e30070bda77",
+          "internal/plugins/shared_history_test.go": "5e30a69e66d33557fceadc0da0864d5f0ea241c87b4a1f741a520284872dd999",
+          "internal/app/history_query_independent_test.go": "69399d69a3f4ed0faab15e985b6103953cfb4c89063ebec125032cda3c57dea4",
+          "cmd/owned-history-ui-fixture/main.go": "b32ec1ea083d95101159813f349d421261bab661f079535a43aedb570252dd0b",
+          "internal/app/history_integration_independent_test.go": "6318a30e3efcdfd3fae1140c0d05f7930b0b8ead18d492cced0e65b56d404f74",
+          "cmd/owned-shared-host-fixture/main.go": "a2605474eec2cfa012bc6d6fcd6a5711897e7a4bb41966357b4b7337fafbe0fe",
+          "internal/app/plugin_shared_subscriptions.go": "32cbca1e6bcd6bf0128bad490babebf8903c9499fa33198a14998baca5704553",
+          "internal/app/plugin_shared_subscriptions_apply.go": "e44e48d1fa0dc7b04d468c3fafff22ea4b912039eb412dd5bc939c294508007a",
+          "internal/app/plugin_shared_subscriptions_close_test.go": "c4c6542384ca3365de4fc689dac239837839ba151d31ee237ffb993a6d88424b",
+          "internal/app/plugin_shared_subscriptions_fields.go": "171aaba0117a24fc125d03dc470262a00c74475701041d814251bd3fbb5442bc",
+          "internal/app/plugin_shared_subscriptions_fixture_test.go": "3f97fd1cfc9083bee9abdfddd1535a8088cd608fd12a40854fb7eb5f1da2db54",
+          "internal/app/plugin_shared_subscriptions_float.go": "3f62274b082ee7d257b7c8e92dc0205cab28ad44da20a5f45e0b3dfffea493b3",
+          "internal/app/plugin_shared_subscriptions_integration_test.go": "5abd3b6aea580dbc7b448b21552234aeb27e4b6b6fb514c60e0a5c210fbe3f05",
+          "internal/app/plugin_shared_subscriptions_json.go": "c114f4eae68a2158ac55b9c1c3471a35c364ba5a61807d4c46cda6786239b4ba",
+          "internal/app/plugin_shared_subscriptions_oracle_test.go": "afdb5f7b32977f52fbea481a836f9ad1358452caad31c50c3e56ed556fc228e5",
+          "internal/app/plugin_shared_subscriptions_process_test.go": "8d08c72ce06791994068c145fbf23273703f6331f1ddd022978397c3a79e06c2",
+          "internal/app/plugin_shared_subscriptions_sql.go": "f890d028f578bcdf3dc8201d1ff0476730b22b31404b8abdb2090e4da23dd73f",
+          "internal/app/plugin_shared_subscriptions_test.go": "489197e63496b635a422b09b17b3305660674ead34fee050c254515cfc0b4402",
+          "internal/app/store.go": "44ffeb5c61ed9d1828b97f2c11918c77072711e069983584b3bdaa2f4d601dde",
+          "internal/app/subscription_quality_source.go": "e090ea62be1b0f44fd8a8f70db0d1ff0215b287787d83047b14a4699f656d50e",
+          "internal/app/subscription_quality_state.go": "6bee438964a518942445713bab12d1ccabb14fb1c9d71ba43589f589d02feb1c",
+          "internal/app/subscription_words.go": "5b4f50319d719c04d36b928eb0d9295f84ee375902f635a32adb081f0cd237d4",
+          "internal/app/types.go": "33bd210f927ebf45f1162c2a6cbe7301c9c15e4edfd192525eca9b61d09cc011",
+          "internal/plugins/shared_subscriptions.go": "21d6cd1141f75a1623ad6faed8124c9dbd6e7bb5356687fc3a483b388a5a6b6e",
+          "internal/app/plugin_shared_subscriptions_json_raw.go": "e737612119f2f7d2d540faa633a4be95397054ff0b43038d410ca925129fd83c",
+          "internal/app/plugin_shared_subscriptions_unicode.go": "8bfe9d486b5427c05c6c6deb56b12b6246b066346c9f2dc2038fb17f00e94fd0",
+          "internal/app/plugin_shared_subscriptions_unicode_test.go": "97762dd7e1059f8fcbe54e753ecb9e341d1dde3dd0826e76d83d25e7ce15f0e4",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/README.md": "891573e8f1b8fb01bd4540a7c86c5ad37052395d77bebb5156ab8f70301738ea",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/manifest.json": "5ed5dba6f1cd6c4bfaf673ef47d85a92f376cbb1bfc977805118c10e126597fa",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/observe_source.py": "6f2e9fdb06a89a30fcebb85765c8c72c05de7cd6f5a375c2d27d97b1d7ace8dd",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-cold.json": "e1f4cd6fa32955b9c5a9f164a7743a51dccadd1c857f5f044aba483545350245",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-recover.json": "2393c75fb95810539af9908cebab49de1ad94530dcc826ee6e6054ee54fdba12",
+          "testdata/plugin-shared-host-20261030/subscriptions/unicode/source-warm.json": "9726b46df66d8acb84179d6d976c9a4e165682c08a4a341b641e873d24656b5d",
+          "internal/app/plugin_original_base_schema.go": "e8588ee736a4108cbebad93081cbb881fa25966b63744e531fb9c5295cc4ca56",
+          "internal/app/plugin_original_reset.go": "87e8b09e781867d7bdbae540d1b2e3487422d33ea107028fb3f5467995fb701d",
+          "internal/app/plugin_original_uninstall.go": "54f334aace4cb3b91ab4dce76cea8a3ae8276ec2502fa3a3dde222178f0d4d05",
+          "internal/app/plugin_original_api_methods.go": "a74f449b0791595248c0774d6cb996b366510c9301a0f92fd4dafe726a98a4bc",
+          "internal/app/plugin_original_services.go": "cb1c93b92cec031b93a3e1cc0fe127363c2da37d02180804a364295f88f1238c",
+          "internal/app/plugin_original_direct_dispatch.go": "8785a4121a5dbb177798856b8c9ec1bb4da18996baccd796e8769d8d412587d1",
+          "internal/app/plugin_original_manager_configuration.go": "15c893520dd5bfb13d4605cf15f598c03423c8f187ef010bc568ea05f7db5b91",
+          "internal/app/plugin_original_state.go": "df30cac11c6965248cc5076c0b31f81a143d7fce7f44377f34a2c840b5bd60d6",
+          "internal/app/plugin_original_manager_http.go": "b3961f0fbe0c80316e1155eb10de9dc4a6178f9f52dd491805575e2da3d7b88e",
+          "internal/app/plugin_instances.go": "d5544fc148dc8d4ea2b0c9a4069bc91ad290073f891f039099e02908ffc747d8",
+          "internal/plugins/artifacts/clone.go": "a9a251716df82bdbedf5b06d7fbd6ab4475421139b5c55dc4198ebad612ddaa5",
+          "internal/app/plugin_original_base_session.go": "aa28d216617d864e7c43a30e6a56805b4f65ee667d7c0309871c7c04deaf2c4e",
+          "internal/app/plugin_original_base_sdk_test.go": "e6263b134514e7fefffc05cb5a1e5f73781ea6c9b8abb177584e5d17f64cadc4",
+          "internal/plugins/base.go": "88d704b1249fd6af462f8dc8157586f1e30d579e4cc4719abf3289821f311aed",
+          "internal/app/plugin_original_commands.go": "12b96e0d9c882e2c3922f82b2badd04c8adfbe1e2b711b89971340ea0c96d28b",
+          "cmd/owned-standard-fixture/rich-form.json": "1c401c164f7370ce7b3623a30e64a7f1a0d7f9eed4cd7e11f8e51bd3fca91c76",
+          "cmd/owned-base-fixture/main.go": "7fc6370adcdd5fd6b0f949c5b3b170ac73ed595f6167853a0bf8c2b6cd9f1766"
+        },
+        "fixture_files": {
+          "evidence/existing-platform-11/reuse-review.json": "61c363031bc05e9c219ed6bbf92897da73b025c34c046df8fd7cf48f6d7b7870",
+          "evidence/existing-platform-01-05/reuse-review.json": "2a5a355b9650d338ddd3a7dcbcc50d3b857470b740fb794417e090e0b936fa5b",
+          "evidence/plugin-manager-query/browser-result.json": "38915fb331ee3488c1c7aa34426807321fc21898a68b08d66d842f6f08611c6b",
+          "evidence/transmission-query/browser-result.json": "af7b30af4db54e0bbcd50183eab56f2a14a32bcdcc9cd6406078a48258282485",
+          "evidence/transmission-query/coexistence-result.json": "d4de41d6b7568294a2506635d764f0005b423a3596b2f1dbf8cf075505bff022",
+          "evidence/transmission-query/current-integration-review.json": "09a6e1d40d8eb98debde5d015efe9fbe5448890c6152c6d61780639f037e3e9e"
+        }
+      },
+      "artifacts": {
+        "evidence/existing-platform-11/reuse-review.json": "61c363031bc05e9c219ed6bbf92897da73b025c34c046df8fd7cf48f6d7b7870",
+        "evidence/existing-platform-01-05/reuse-review.json": "2a5a355b9650d338ddd3a7dcbcc50d3b857470b740fb794417e090e0b936fa5b",
+        "evidence/plugin-manager-query/browser-result.json": "38915fb331ee3488c1c7aa34426807321fc21898a68b08d66d842f6f08611c6b",
+        "evidence/transmission-query/browser-result.json": "af7b30af4db54e0bbcd50183eab56f2a14a32bcdcc9cd6406078a48258282485",
+        "evidence/transmission-query/coexistence-result.json": "d4de41d6b7568294a2506635d764f0005b423a3596b2f1dbf8cf075505bff022",
+        "evidence/transmission-query/current-integration-review.json": "09a6e1d40d8eb98debde5d015efe9fbe5448890c6152c6d61780639f037e3e9e"
+      },
+      "reviewer": "manager_queries_independent_review_20261030",
+      "commands": [
+        "Complete original source_probe_v6.py: public local install/actual loader and sync+async force/non-force failure six cases; actual1021imports byte-bound.",
+        "Fresh execution of exactly frozen dcbf race test/worker: force-download failure keeps live object until reload; actual upgrade and compatibility gates; eight selected roots,no skip,exit0.",
+        "Current743b17cb production lifecycle-race44.39s,5959 actual inputs, and actual19-step official browser install/clone/cold supplement; unchanged native installation UI previous exact observations reused."
+      ],
+      "inputs": [
+        "Owned synthetic package identities/files and real persistent SQLite; source independent fixed observations, not target-generated expected values.",
+        "Exact old execution hashes retained; reviewed current source/target closure and minimal reports bound separately."
+      ],
+      "observations": [
+        "Installed code publication precedes registration/real worker initialization; ordinary install and clone execute genuine compiled workers.",
+        "Original sync/async non-force failure restores previous physical directory; force failure removes it. Loaded object lifetime and reload ordering are checked separately from filesystem state.",
+        "This verifies row11 existing installation scope, not all version-selection09 or complete upgrade/reset/uninstall UI."
+      ]
     }
   ],
   "execution_contract": {
@@ -23347,9 +23782,9 @@
     "existing_platform_reuse": "46 existing applicable platform groups are not 46 rewrites. Preserve/reuse implementation and unchanged sufficiently bound source/test evidence. 15 new shared-host groups are discovery buckets, not 15 automatically missing features."
   },
   "resume": {
-    "next_slice": "Commit/push/read back this accepted Transmission slice, then integrate independently verified RemoteIdentifiers/CustomIdentifiers candidate05 and perform normal browser; finish source-order selection09 and existing06-13 reuse gates.",
+    "next_slice": "Integrate S07.CustomIdentifiers candidate05; re-execute main affected gates and real official browser, then exact Git delivery. Continue09 selection-chain repair and existing06-13 reuse.",
     "dirty_work": [
-      "Only this accepted17-file Transmission slice and necessary minimal evidence/ledger/docs selected. S07 candidate05 and market-selector09 remain isolated, uncommitted and unverified on main."
+      "Only independently verified existing installation row11 metadata; next S07 and09 product candidates remain isolated."
     ],
     "workers": [
       "coordinator",
@@ -23442,14 +23877,14 @@
       }
     ],
     "last_delivery": {
-      "commit": "28f3b78c39a227ee82ed4b0ba9be28d80fd782fd",
+      "commit": "743b17cb2d1fe42e70fbe98626d99e3515244177",
       "branch": "plugins-refactor",
-      "readback": "28f3b78c39a227ee82ed4b0ba9be28d80fd782fd",
+      "readback": "743b17cb2d1fe42e70fbe98626d99e3515244177",
       "main_unchanged": "97476582910dc4b696f7ccd5010f28d823812d40",
-      "paths": 5,
-      "mapping_path": "migration/delivery/existing-reuse-28f3b78c-paths.json",
-      "mapping_sha256": "841554ee3967190ef422796b176f0056e20a5299b70858a7f0dba46c3f82e31a",
-      "ci": "0 check-runs and0statuses; not a CI pass/running check."
+      "paths": 25,
+      "mapping_path": "migration/delivery/transmission-743b17cb-paths.json",
+      "mapping_sha256": "360a41b69cec7f9a544f3cfaa1a806b9e79af8d055d6e5b571d9cfe329c923e9",
+      "ci": "0 check-runs and0statuses; not a CI pass or running check."
     }
   },
   "external_inventory": [
