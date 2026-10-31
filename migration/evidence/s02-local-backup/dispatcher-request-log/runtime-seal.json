@@ -1,0 +1,78 @@
+{
+  "status": "ACCEPT_SHARED_MODULE_REQUEST_INFO_ORDER_FIX_EXECUTED_SCOPE",
+  "at_utc": "2026-10-31T19:59:58.991Z",
+  "report": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-host-dependencies/MODULE-LOG-RUNTIME-REVIEW.md",
+    "bytes": 2690,
+    "sha256": "33763bcadf4c51f73987b2757bd7f2fc2003cb044ab160013c40478913452a36"
+  },
+  "evidence_readback": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-host-dependencies/module-log-runtime-independent.json",
+    "bytes": 34366,
+    "sha256": "7c0f283eb8f8efe9cad00a99e9f1109182d641d82eec8d7dd373b896bffffef7"
+  },
+  "static_review": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-host-dependencies/module-log-cli-static-independent.json",
+    "bytes": 5777,
+    "sha256": "82ad47887fd01cd80b9658b2ea3733dcb0635edf33b110ab945dfa91a3d5b8cf"
+  },
+  "prior_source_normal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-independent/MODULE-LOG-FINAL.json",
+    "bytes": 9132,
+    "sha256": "d014872aa5a1c808ede857c80e669c4cff9e49477988636389ed2c3695c8de9d"
+  },
+  "exact_production": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_modules.go",
+    "bytes": 8654,
+    "sha256": "811e1ad367706e39c3eb52ecbb29b208697be8abc181d8d39ac662ec0b2c9c5f"
+  },
+  "exact_delta": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-reconstruction/phase-b-module-log/production-one-line.diff",
+    "bytes": 729,
+    "sha256": "43d2284f9f999c40659a214c9c18bcaca4ee29ce29c553335bca1dfbfab6a89b"
+  },
+  "actual_cli_tool_receipt": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-module-log-cli/run01/tool-execution-receipt.json",
+    "bytes": 2060,
+    "sha256": "f7b593771fffee4b02d9a9dccf30f59d20f551d953cbeaec6ff30942407f4a66"
+  },
+  "actual_cli_receipt_provenance": "Coordinator transcription of original actual tool argv and terminal; not independent re-execution",
+  "normal": {
+    "roots": 1,
+    "subcases": 3,
+    "pass": true,
+    "bound_inputs": 6192
+  },
+  "race": {
+    "roots": 1,
+    "subcases": 3,
+    "pass": true,
+    "bound_inputs": 6201,
+    "worker_race": false
+  },
+  "cli": {
+    "queries": 4,
+    "pass": true,
+    "host_pids": [
+      25,
+      66
+    ],
+    "natural_wait_exits": [
+      0,
+      0
+    ],
+    "raw_bodies_verified": 54,
+    "persisted_warm_log_records": 7
+  },
+  "original_failure_preserved": true,
+  "current_source_inputs_drift_at_readback": [],
+  "blocking_findings_for_this_fix": [],
+  "not_accepted": [
+    "new synchronous Browse host/core/SitesHelper",
+    "serial worker self-reentry",
+    "full logging/platform/browser",
+    "clean standalone release or publication",
+    "race-instrumented worker"
+  ],
+  "reviewer_activity": "Read/hash and own audit writes only; no tests/builds/services/network/source import/product/ledger/stage edits"
+}

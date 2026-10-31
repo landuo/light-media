@@ -1,0 +1,218 @@
+{
+  "status": "ACCEPTED_FINITE_SDK_WIRE_BYTES_CLEANUP_NORMAL_ONLY",
+  "reviewed_at_utc": "2026-10-31T20:15:57.471877+00:00",
+  "scope": "New LocalTorrentBackup SDK adapter only, using an in-memory HostCaller; no real worker/App/FS or source execution.",
+  "product": {
+    "internal/plugins/shared_local_torrent_backup.go": "2508894fba562dbbcfa6f169aa5ce6b497e0587f3a31cbcac5c1825f1eb6ca89",
+    "internal/plugins/shared_local_torrent_backup_test.go": "ea73d6dad206678f950ff015b416e508ecb9dfd6d1dd64a1825fa3448dea8c12"
+  },
+  "unchanged_S12_dependency": {
+    "path": "internal/plugins/shared_torrent_material.go",
+    "sha256": "99638bc7e731e612413ea2ad78e2b3f9faa5371a9e4891c1da65752df5855a6f"
+  },
+  "static_review": {
+    "input": "Three strings preserve spelling/case/Unicode/whitespace. New adapter rejects invalid UTF-8, unsafe single basename and >128KiB request before HostCaller. These are explicitly documented adapter limits, not original Python validation. Directory/ID/hash grant no authority.",
+    "prepare": "Required skipped and temporary pointers distinguish absent/null. Skip forbids transfer fields and rebuilt=true; successful bytes require five semantic fields with valid opaque token, total 0..16MiB and lowercase SHA256. Skipped has nil Content; successful zero bytes are nonnil.",
+    "read": "Sequential offsets and exact same token; base64-only data, exactly min(1MiB,remaining), complete byte count and full SHA256 before result. At most 16 reads for a valid 16MiB object. No folder/files/path/TorrentInfo are invented.",
+    "cleanup": "Valid syntactic prepare handle registers same-capability/same-HostCaller deferred release before strict prepare validation. Malformed allocated result/read/digest/cancel failures still attempt release with one-second cancellation-detached context. Release error/false/malformed receipt prevents returning complete bytes; an earlier error is retained and partial result cleared.",
+    "authority_boundary": "Detached cleanup does not itself authorize anything; host must revalidate the same invocation and final scope close must reclaim allocations. That host behavior is not tested by recording callbacks. Release is not disk deletion; Temporary=false does not certify no partially written disk material.",
+    "decoder_precision": "Reuses unchanged torrentMaterialDecode: UTF-8/size/null/unknown-field/trailing-value guards and standard encoding/json struct member handling. No additional canonical member-case or duplicate-key rejection is introduced or claimed by this finite review.",
+    "no_product_IO": "New SDK imports no os/network/process APIs and never reads or writes backup/temp files. App root/type/authority/error-latch and deterministic hash disk reuse remain outside this SDK gate."
+  },
+  "actual_run": {
+    "result": {
+      "started": "2026-10-31T20:13:25.681253+00:00",
+      "driver_pid": 2,
+      "package": "./internal/plugins",
+      "pattern": "^(TestLocalTorrentBackupWireAndBoundary|TestLocalTorrentBackupPagedBytesAndCleanup)$",
+      "race": false,
+      "status": "PASS",
+      "commands": [
+        {
+          "label": "go-list",
+          "argv": [
+            "go",
+            "list",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-deps",
+            "-test",
+            "-json",
+            "./internal/plugins"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "compile",
+          "argv": [
+            "go",
+            "test",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-p=1",
+            "-c",
+            "-o",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-sdk01.test",
+            "./internal/plugins"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "tests",
+          "argv": [
+            "go",
+            "tool",
+            "test2json",
+            "-t",
+            "-p",
+            "./internal/plugins",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-sdk01.test",
+            "-test.v",
+            "-test.run",
+            "^(TestLocalTorrentBackupWireAndBoundary|TestLocalTorrentBackupPagedBytesAndCleanup)$",
+            "-test.count=1",
+            "-test.timeout=90s"
+          ],
+          "exit": 0
+        }
+      ],
+      "environment_proxy_unchanged": true,
+      "resource_samples": [
+        {
+          "phase": "go-list",
+          "at": "2026-10-31T20:13:25.681268+00:00",
+          "scratch_free": 53530796032,
+          "tmp_free": 5225664512
+        },
+        {
+          "phase": "compile",
+          "at": "2026-10-31T20:13:25.961314+00:00",
+          "scratch_free": 53529919488,
+          "tmp_free": 5225664512
+        },
+        {
+          "phase": "tests",
+          "at": "2026-10-31T20:13:27.896273+00:00",
+          "scratch_free": 53513920512,
+          "tmp_free": 5225664512
+        }
+      ],
+      "input_count": 1926,
+      "program_sha256": "4ff053b7335e74c4eef368b63abb50a47fb7e9fd1a692e1eaab3d3190731823c",
+      "root_passes": [
+        "TestLocalTorrentBackupWireAndBoundary",
+        "TestLocalTorrentBackupPagedBytesAndCleanup"
+      ],
+      "ended": "2026-10-31T20:13:28.596814+00:00"
+    },
+    "exact_root_runs": [
+      "TestLocalTorrentBackupWireAndBoundary",
+      "TestLocalTorrentBackupPagedBytesAndCleanup"
+    ],
+    "exact_root_passes": [
+      "TestLocalTorrentBackupWireAndBoundary",
+      "TestLocalTorrentBackupPagedBytesAndCleanup"
+    ],
+    "separately_named_subtests": 0,
+    "all_1926_before_compile_test_current_inputs_identical": true,
+    "actual_program_sha256": "4ff053b7335e74c4eef368b63abb50a47fb7e9fd1a692e1eaab3d3190731823c",
+    "exit_files": {
+      "go-list": 0,
+      "compile": 0,
+      "tests": 0
+    },
+    "no_fail_skip": true,
+    "test_coverage_not_new_source_oracles": [
+      "wire selector preservation and pre-host invalid/nil/cancel boundaries",
+      "malformed prepare/host errors",
+      "0, 1MiB+3 and 16MiB bytes for both original/rebuilt flags",
+      "oversize, digest, absent/mixed/null fields, short/wrong offset/token and read/release failure",
+      "cancellation during prepare/read still attempts same-callback release and returns no data"
+    ]
+  },
+  "bindings": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/result.json",
+      "sha256": "3339e3995dd0354d372c7e0c9e502d33044df19147f98b2a887a6ef552716e5c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/inputs-before.json",
+      "sha256": "e17c4798c98bf15ca5fbeaebfd2c2fb4a6bc0f629db1a22535b0594c279090d5"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/inputs-after-compile.json",
+      "sha256": "e17c4798c98bf15ca5fbeaebfd2c2fb4a6bc0f629db1a22535b0594c279090d5"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/inputs-after-test.json",
+      "sha256": "e17c4798c98bf15ca5fbeaebfd2c2fb4a6bc0f629db1a22535b0594c279090d5"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/tests.stdout",
+      "sha256": "f1626f4680d35d73aebfde2645a9c83af749dd74081743f216337d3cd57dc27d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/tests.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/tests.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/compile.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/go-list.stdout",
+      "sha256": "475cee2a22bc2b06c6902ed6d8d5c0fee6995285ae5790925e878a195cd166a4"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/go-list.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/go-list.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01/generated-source-map.json",
+      "sha256": "c6b7246bcadc88b9bedb07ae28ac38145f36e680ecf0b62aa3c0a3842def5cdc"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-reconstruction/phase-b-sdk/checkpoint-b1.json",
+      "sha256": "52d17799c0fb676252cd7083536b062564f4b8328bdf381f09070a99adefb549"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-reconstruction/phase-b-sdk/inputs-b1.sha256",
+      "sha256": "12a54d5ba8a943d4ae5fffd20a0011828c7b174562e9cf20e78fc9f8cf056525"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-reconstruction/phase-b-sdk/CONTRACT.md",
+      "sha256": "91fa5d60827a1b98a2b5331ce8fab8e50d41cb6ae568f7d6a05adc1ca8960c30"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-reconstruction/phase-b-sdk/source-b1.tar.gz",
+      "sha256": "d46a327f51c5e61bb3e6b2ae4d9bd3a45de4143d35221b322ba56452893f64dc"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s02-sdk01.py",
+      "sha256": "bfd490d322dd06a71058d84e1464ee76f656b5d94e6a17352a2138d837c059df"
+    }
+  ],
+  "limits": [
+    "No SDK race gate or real worker/host lifecycle tested.",
+    "No filesystem authorization/permission/cleanup, downloader, source oracle execution or arbitrary-size/invalid-Python-domain equivalence.",
+    "S12 old SharedDownloadChain bytes are unchanged; its historical tests are not relabeled as newly rerun.",
+    "Reviewer ran no Go/source/network process and changed only this audit artifact.",
+    "Overall S02 remains incomplete until actual host and required lifecycle acceptance."
+  ]
+}

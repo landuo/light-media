@@ -1,0 +1,776 @@
+{
+  "status": "PASS",
+  "kind": "S02 local backup two normal CLI hosts/installed SDK",
+  "calls": [
+    {
+      "at": "2026-10-31T20:39:31.754581+00:00",
+      "host_pid": 25,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-001.body",
+      "sha256": "86d86ca3cd23e1ad48cc2a932138e9db5c9f03cf30b6eaa861b7cedaf56bfba8"
+    },
+    {
+      "at": "2026-10-31T20:39:31.756614+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-10-31T20:39:31.821989+00:00",
+      "host_pid": 25,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-003.body",
+      "sha256": "de152f72cdda9d3c4691cb396bb8da01dbd12baee186f63b0e2dc76e302f46bf"
+    },
+    {
+      "at": "2026-10-31T20:39:31.824273+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-004.body",
+      "sha256": "b04bf9b0e01d0b2442023d7b1ac735f87ac24a22de4d865fdcb90a5f72575e5f"
+    },
+    {
+      "at": "2026-10-31T20:39:31.900282+00:00",
+      "host_pid": 25,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedLocalTorrentBackup/backup",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-005.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-10-31T20:39:31.902105+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedLocalTorrentBackup/backup",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-006.body",
+      "sha256": "d64d1f7c645e5277009395e43f262a1bd2ca44b4ef0a242275b94585584f1857"
+    },
+    {
+      "at": "2026-10-31T20:39:31.920574+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedLocalTorrentBackup/backup",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-007.body",
+      "sha256": "6e5f6f3672b21873268455a45418ca6460ea5e27fce860094169614595a7c8b7"
+    },
+    {
+      "at": "2026-10-31T20:39:31.932533+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedLocalTorrentBackup/backup",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-008.body",
+      "sha256": "8b60858a5cdb7723504182fe369856a0f909e29eaf63a63850386fbd53f51f50"
+    },
+    {
+      "at": "2026-10-31T20:39:32.076126+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedLocalTorrentBackup/backup",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-009.body",
+      "sha256": "9b144e8abb8c4b64894fef88e44a967e01f706375e799f76b7c60ef9b3eeb137"
+    },
+    {
+      "at": "2026-10-31T20:39:32.327952+00:00",
+      "host_pid": 51,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-010.body",
+      "sha256": "140df808c74ca472510f95991d82024a1c7d61d5e67957193fdbbb276a7311f4"
+    },
+    {
+      "at": "2026-10-31T20:39:32.329986+00:00",
+      "host_pid": 51,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-10-31T20:39:32.398200+00:00",
+      "host_pid": 51,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-012.body",
+      "sha256": "458b7e2522b486cd92a396007e54b562f0f090c27c15c71700778f541e1230c4"
+    },
+    {
+      "at": "2026-10-31T20:39:32.400437+00:00",
+      "host_pid": 51,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedLocalTorrentBackup/backup",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-013.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-10-31T20:39:32.402477+00:00",
+      "host_pid": 51,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedLocalTorrentBackup/backup",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-014.body",
+      "sha256": "1a01134db34061e492ecb4f5a9f3c954097adae914f5b589f46f2cedefef2c43"
+    }
+  ],
+  "peer_calls": [
+    {
+      "at": "2026-10-31T20:39:31.826255+00:00",
+      "method": "GET",
+      "path": "/index",
+      "status": 200,
+      "response_bytes": 1065,
+      "response_sha256": "da70d58b0dcfe1b391086db9a892a90f6809d9d9e2551a284de40d5b8af048e0",
+      "response_completed": true
+    },
+    {
+      "at": "2026-10-31T20:39:31.827537+00:00",
+      "method": "GET",
+      "path": "/worker",
+      "status": 200,
+      "response_bytes": 5293984,
+      "response_sha256": "604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822",
+      "response_completed": true
+    }
+  ],
+  "processes": [
+    {
+      "pid": 25,
+      "identity": {
+        "ppid": 2,
+        "starttime": "3625052"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s02-backup-cli01/private-data",
+      "executable_sha256": "b999c2d36100289983bab3e6955e23b327b7b7733f6821227cd43c7e77eb7bca",
+      "owned_listener_inode": "594770",
+      "exit": 0
+    },
+    {
+      "pid": 51,
+      "identity": {
+        "ppid": 2,
+        "starttime": "3625100"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s02-backup-cli01/private-data",
+      "executable_sha256": "b999c2d36100289983bab3e6955e23b327b7b7733f6821227cd43c7e77eb7bca",
+      "owned_listener_inode": "592892",
+      "exit": 0
+    }
+  ],
+  "queries": [
+    {
+      "label": "source_rebuilt_bytes_actual_worker",
+      "host_pid": 25,
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 1,
+        "had_previous": false,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 182,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "skipped": false,
+              "temporary": true,
+              "length": 182,
+              "sha256": "a51033d7454c40708c3656340911ed21bb845ccf2b2bfafb8a106c98750e93fc",
+              "small_base64": "ZDg6YW5ub3VuY2UyNjpodHRwczovL2EuaW52YWxpZC9hbm5vdW5jZTEzOmFubm91bmNlLWxpc3RsbDI2Omh0dHBzOi8vYS5pbnZhbGlkL2Fubm91bmNlMjY6aHR0cHM6Ly9iLmludmFsaWQvYW5ub3VuY2VlbDI2Omh0dHBzOi8vYy5pbnZhbGlkL2Fubm91bmNlZWU0OmluZm9kNjpsZW5ndGhpMWU0Om5hbWU1Om93bmVkZWU="
+            },
+            "host_calls": {
+              "total": 3,
+              "prepare": 1,
+              "read": 1,
+              "release": 1
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1
+      }
+    },
+    {
+      "label": "missing_resume_source_skip",
+      "host_pid": 25,
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 2,
+        "had_previous": true,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 0,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "skipped": true,
+              "temporary": false
+            },
+            "host_calls": {
+              "total": 1,
+              "prepare": 1,
+              "read": 0,
+              "release": 0
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1
+      }
+    },
+    {
+      "label": "TR_two_actual_pages",
+      "host_pid": 25,
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 3,
+        "had_previous": true,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 1048579,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "skipped": false,
+              "temporary": false,
+              "length": 1048579,
+              "sha256": "c5695a00d8c67cefd85a3efa44d19c6739c253df93405bb87ae871a375af335d"
+            },
+            "host_calls": {
+              "total": 4,
+              "prepare": 1,
+              "read": 2,
+              "release": 1
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1
+      }
+    },
+    {
+      "label": "parameter_error_then_same_worker_recovery",
+      "host_pid": 25,
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 4,
+        "had_previous": true,
+        "requested": 2,
+        "completed": 2,
+        "succeeded": 1,
+        "failed": 1,
+        "ok": false,
+        "reassembled_bytes": 182,
+        "results": [
+          {
+            "index": 0,
+            "ok": false,
+            "error": "plugin: host_operation_failed",
+            "error_code": "host_operation_failed",
+            "host_calls": {
+              "total": 1,
+              "prepare": 1,
+              "read": 0,
+              "release": 0
+            }
+          },
+          {
+            "index": 1,
+            "ok": true,
+            "result": {
+              "skipped": false,
+              "temporary": true,
+              "length": 182,
+              "sha256": "a51033d7454c40708c3656340911ed21bb845ccf2b2bfafb8a106c98750e93fc",
+              "small_base64": "ZDg6YW5ub3VuY2UyNjpodHRwczovL2EuaW52YWxpZC9hbm5vdW5jZTEzOmFubm91bmNlLWxpc3RsbDI2Omh0dHBzOi8vYS5pbnZhbGlkL2Fubm91bmNlMjY6aHR0cHM6Ly9iLmludmFsaWQvYW5ub3VuY2VlbDI2Omh0dHBzOi8vYy5pbnZhbGlkL2Fubm91bmNlZWU0OmluZm9kNjpsZW5ndGhpMWU0Om5hbWU1Om93bmVkZWU="
+            },
+            "host_calls": {
+              "total": 3,
+              "prepare": 1,
+              "read": 1,
+              "release": 1
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1
+      }
+    },
+    {
+      "label": "cold_normal_same_data_rebuilt_and_paged",
+      "host_pid": 51,
+      "response": {
+        "pid": 66,
+        "init_count": 1,
+        "invocation": 1,
+        "had_previous": false,
+        "requested": 2,
+        "completed": 2,
+        "succeeded": 2,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 1048761,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "skipped": false,
+              "temporary": true,
+              "length": 182,
+              "sha256": "a51033d7454c40708c3656340911ed21bb845ccf2b2bfafb8a106c98750e93fc",
+              "small_base64": "ZDg6YW5ub3VuY2UyNjpodHRwczovL2EuaW52YWxpZC9hbm5vdW5jZTEzOmFubm91bmNlLWxpc3RsbDI2Omh0dHBzOi8vYS5pbnZhbGlkL2Fubm91bmNlMjY6aHR0cHM6Ly9iLmludmFsaWQvYW5ub3VuY2VlbDI2Omh0dHBzOi8vYy5pbnZhbGlkL2Fubm91bmNlZWU0OmluZm9kNjpsZW5ndGhpMWU0Om5hbWU1Om93bmVkZWU="
+            },
+            "host_calls": {
+              "total": 3,
+              "prepare": 1,
+              "read": 1,
+              "release": 1
+            }
+          },
+          {
+            "index": 1,
+            "ok": true,
+            "result": {
+              "skipped": false,
+              "temporary": false,
+              "length": 1048579,
+              "sha256": "c5695a00d8c67cefd85a3efa44d19c6739c253df93405bb87ae871a375af335d"
+            },
+            "host_calls": {
+              "total": 4,
+              "prepare": 1,
+              "read": 2,
+              "release": 1
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1
+      }
+    }
+  ],
+  "backup_checks": [
+    {
+      "label": "source_rebuilt_bytes_actual_worker",
+      "files": [
+        {
+          "path": "backup/1111111111111111111111111111111111111111.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398390218
+        },
+        {
+          "path": "backup/1111111111111111111111111111111111111111.fastresume",
+          "size": 105,
+          "sha256": "dc43651af82902a4e15a3577d3dff1e5ab1c130197fadeb3d248b628ebf4c679",
+          "mtime_ns": 1793479171398418721
+        },
+        {
+          "path": "backup/OwnedMissingResume.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398440624
+        },
+        {
+          "path": "library-backup/OwnedPages.torrent",
+          "size": 1048579,
+          "sha256": "c5695a00d8c67cefd85a3efa44d19c6739c253df93405bb87ae871a375af335d",
+          "mtime_ns": 1793479171398458802
+        }
+      ]
+    },
+    {
+      "label": "missing_resume_source_skip",
+      "files": [
+        {
+          "path": "backup/1111111111111111111111111111111111111111.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398390218
+        },
+        {
+          "path": "backup/1111111111111111111111111111111111111111.fastresume",
+          "size": 105,
+          "sha256": "dc43651af82902a4e15a3577d3dff1e5ab1c130197fadeb3d248b628ebf4c679",
+          "mtime_ns": 1793479171398418721
+        },
+        {
+          "path": "backup/OwnedMissingResume.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398440624
+        },
+        {
+          "path": "library-backup/OwnedPages.torrent",
+          "size": 1048579,
+          "sha256": "c5695a00d8c67cefd85a3efa44d19c6739c253df93405bb87ae871a375af335d",
+          "mtime_ns": 1793479171398458802
+        }
+      ]
+    },
+    {
+      "label": "TR_two_actual_pages",
+      "files": [
+        {
+          "path": "backup/1111111111111111111111111111111111111111.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398390218
+        },
+        {
+          "path": "backup/1111111111111111111111111111111111111111.fastresume",
+          "size": 105,
+          "sha256": "dc43651af82902a4e15a3577d3dff1e5ab1c130197fadeb3d248b628ebf4c679",
+          "mtime_ns": 1793479171398418721
+        },
+        {
+          "path": "backup/OwnedMissingResume.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398440624
+        },
+        {
+          "path": "library-backup/OwnedPages.torrent",
+          "size": 1048579,
+          "sha256": "c5695a00d8c67cefd85a3efa44d19c6739c253df93405bb87ae871a375af335d",
+          "mtime_ns": 1793479171398458802
+        }
+      ]
+    },
+    {
+      "label": "parameter_error_then_same_worker_recovery",
+      "files": [
+        {
+          "path": "backup/1111111111111111111111111111111111111111.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398390218
+        },
+        {
+          "path": "backup/1111111111111111111111111111111111111111.fastresume",
+          "size": 105,
+          "sha256": "dc43651af82902a4e15a3577d3dff1e5ab1c130197fadeb3d248b628ebf4c679",
+          "mtime_ns": 1793479171398418721
+        },
+        {
+          "path": "backup/OwnedMissingResume.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398440624
+        },
+        {
+          "path": "library-backup/OwnedPages.torrent",
+          "size": 1048579,
+          "sha256": "c5695a00d8c67cefd85a3efa44d19c6739c253df93405bb87ae871a375af335d",
+          "mtime_ns": 1793479171398458802
+        }
+      ]
+    },
+    {
+      "label": "after_first_Close",
+      "files": [
+        {
+          "path": "backup/1111111111111111111111111111111111111111.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398390218
+        },
+        {
+          "path": "backup/1111111111111111111111111111111111111111.fastresume",
+          "size": 105,
+          "sha256": "dc43651af82902a4e15a3577d3dff1e5ab1c130197fadeb3d248b628ebf4c679",
+          "mtime_ns": 1793479171398418721
+        },
+        {
+          "path": "backup/OwnedMissingResume.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398440624
+        },
+        {
+          "path": "library-backup/OwnedPages.torrent",
+          "size": 1048579,
+          "sha256": "c5695a00d8c67cefd85a3efa44d19c6739c253df93405bb87ae871a375af335d",
+          "mtime_ns": 1793479171398458802
+        }
+      ]
+    },
+    {
+      "label": "cold_normal_same_data_rebuilt_and_paged",
+      "files": [
+        {
+          "path": "backup/1111111111111111111111111111111111111111.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398390218
+        },
+        {
+          "path": "backup/1111111111111111111111111111111111111111.fastresume",
+          "size": 105,
+          "sha256": "dc43651af82902a4e15a3577d3dff1e5ab1c130197fadeb3d248b628ebf4c679",
+          "mtime_ns": 1793479171398418721
+        },
+        {
+          "path": "backup/OwnedMissingResume.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398440624
+        },
+        {
+          "path": "library-backup/OwnedPages.torrent",
+          "size": 1048579,
+          "sha256": "c5695a00d8c67cefd85a3efa44d19c6739c253df93405bb87ae871a375af335d",
+          "mtime_ns": 1793479171398458802
+        }
+      ]
+    },
+    {
+      "label": "terminal_two_hosts",
+      "files": [
+        {
+          "path": "backup/1111111111111111111111111111111111111111.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398390218
+        },
+        {
+          "path": "backup/1111111111111111111111111111111111111111.fastresume",
+          "size": 105,
+          "sha256": "dc43651af82902a4e15a3577d3dff1e5ab1c130197fadeb3d248b628ebf4c679",
+          "mtime_ns": 1793479171398418721
+        },
+        {
+          "path": "backup/OwnedMissingResume.torrent",
+          "size": 34,
+          "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+          "mtime_ns": 1793479171398440624
+        },
+        {
+          "path": "library-backup/OwnedPages.torrent",
+          "size": 1048579,
+          "sha256": "c5695a00d8c67cefd85a3efa44d19c6739c253df93405bb87ae871a375af335d",
+          "mtime_ns": 1793479171398458802
+        }
+      ]
+    }
+  ],
+  "physical_wire_counters": {
+    "available_from_ordinary_API": false,
+    "measured": false
+  },
+  "not_claimed": [
+    "filesystem permission/inode/symlink/path-escape probes",
+    "real downloader/backup/media/NAS",
+    "whole TorrentTransfer business",
+    "age-based deletion boundary",
+    "browser/UI",
+    "full platform/delivery"
+  ],
+  "initial_backups": [
+    {
+      "path": "backup/1111111111111111111111111111111111111111.torrent",
+      "size": 34,
+      "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+      "mtime_ns": 1793479171398390218
+    },
+    {
+      "path": "backup/1111111111111111111111111111111111111111.fastresume",
+      "size": 105,
+      "sha256": "dc43651af82902a4e15a3577d3dff1e5ab1c130197fadeb3d248b628ebf4c679",
+      "mtime_ns": 1793479171398418721
+    },
+    {
+      "path": "backup/OwnedMissingResume.torrent",
+      "size": 34,
+      "sha256": "3ba41d58d7a7ea048770620a5db8371d54e062b087626fb317202062ba3e6e18",
+      "mtime_ns": 1793479171398440624
+    },
+    {
+      "path": "library-backup/OwnedPages.torrent",
+      "size": 1048579,
+      "sha256": "c5695a00d8c67cefd85a3efa44d19c6739c253df93405bb87ae871a375af335d",
+      "mtime_ns": 1793479171398458802
+    }
+  ],
+  "owned_material_input_sha256": "868c8b371899d5b393c5f41062a2413b554d2b0e0bcd054b12aa94f63cf728f3",
+  "temp_age_policy": {
+    "configured_override": false,
+    "source_default_days": 3,
+    "age_deletion_boundary_claimed": false
+  },
+  "bootstrap_exit": 0,
+  "worker_identities": [
+    {
+      "ppid": 25,
+      "starttime": "3625078",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s02-backup-cli01/private-data/plugin-packages/OwnedLocalTorrentBackup/owned-local-torrent-backup-sdk-fixture",
+      "executable_sha256": "604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822",
+      "host_pid": 25
+    },
+    {
+      "ppid": 25,
+      "starttime": "3625078",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s02-backup-cli01/private-data/plugin-packages/OwnedLocalTorrentBackup/owned-local-torrent-backup-sdk-fixture",
+      "executable_sha256": "604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822",
+      "host_pid": 25
+    },
+    {
+      "ppid": 25,
+      "starttime": "3625078",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s02-backup-cli01/private-data/plugin-packages/OwnedLocalTorrentBackup/owned-local-torrent-backup-sdk-fixture",
+      "executable_sha256": "604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822",
+      "host_pid": 25
+    },
+    {
+      "ppid": 25,
+      "starttime": "3625078",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s02-backup-cli01/private-data/plugin-packages/OwnedLocalTorrentBackup/owned-local-torrent-backup-sdk-fixture",
+      "executable_sha256": "604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822",
+      "host_pid": 25
+    },
+    {
+      "ppid": 51,
+      "starttime": "3625116",
+      "pid": 66,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s02-backup-cli01/private-data/plugin-packages/OwnedLocalTorrentBackup/owned-local-torrent-backup-sdk-fixture",
+      "executable_sha256": "604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822",
+      "host_pid": 51
+    }
+  ],
+  "temporary_checks": [
+    {
+      "label": "before_first_Close",
+      "file": {
+        "path": "private-data/temp/plugin-torrent-backup/1111111111111111111111111111111111111111.torrent",
+        "size": 182,
+        "sha256": "a51033d7454c40708c3656340911ed21bb845ccf2b2bfafb8a106c98750e93fc",
+        "mtime_ns": 1793479172075611170
+      },
+      "entries": [
+        "1111111111111111111111111111111111111111.torrent"
+      ]
+    },
+    {
+      "label": "after_first_Close",
+      "file": {
+        "path": "private-data/temp/plugin-torrent-backup/1111111111111111111111111111111111111111.torrent",
+        "size": 182,
+        "sha256": "a51033d7454c40708c3656340911ed21bb845ccf2b2bfafb8a106c98750e93fc",
+        "mtime_ns": 1793479172075611170
+      },
+      "entries": [
+        "1111111111111111111111111111111111111111.torrent"
+      ]
+    },
+    {
+      "label": "cold_before_material",
+      "file": {
+        "path": "private-data/temp/plugin-torrent-backup/1111111111111111111111111111111111111111.torrent",
+        "size": 182,
+        "sha256": "a51033d7454c40708c3656340911ed21bb845ccf2b2bfafb8a106c98750e93fc",
+        "mtime_ns": 1793479172075611170
+      },
+      "entries": [
+        "1111111111111111111111111111111111111111.torrent"
+      ]
+    },
+    {
+      "label": "terminal_retained_not_deleted",
+      "file": {
+        "path": "private-data/temp/plugin-torrent-backup/1111111111111111111111111111111111111111.torrent",
+        "size": 182,
+        "sha256": "a51033d7454c40708c3656340911ed21bb845ccf2b2bfafb8a106c98750e93fc",
+        "mtime_ns": 1793479172403618672
+      },
+      "entries": [
+        "1111111111111111111111111111111111111111.torrent"
+      ]
+    }
+  ],
+  "input_drift": [],
+  "environment_unchanged": true,
+  "finished_at": "2026-10-31T20:39:33.005945+00:00"
+}

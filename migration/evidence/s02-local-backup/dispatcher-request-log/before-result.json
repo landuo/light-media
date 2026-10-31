@@ -1,0 +1,106 @@
+{
+  "started": "2026-10-31T19:47:07.956135+00:00",
+  "driver_pid": 2,
+  "package": "./internal/app",
+  "pattern": "^TestOriginalModulesRequestLogPrecedesTerminalCheck$",
+  "race": false,
+  "status": "FAIL",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/app",
+        "./cmd/owned-module-override"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-browse-log-before01.worker",
+        "./cmd/owned-module-override"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-browse-log-before01.test",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-browse-log-before01.test",
+        "-test.v",
+        "-test.run",
+        "^TestOriginalModulesRequestLogPrecedesTerminalCheck$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 1
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T19:47:07.956151+00:00",
+      "scratch_free": 54295056384,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile-worker",
+      "at": "2026-10-31T19:47:09.091711+00:00",
+      "scratch_free": 54291435520,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T19:47:10.038959+00:00",
+      "scratch_free": 54282584064,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T19:47:46.219300+00:00",
+      "scratch_free": 54095523840,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 6193,
+  "fixture_sha256": "3d1adfd470d1e934e457ee4d8da49d3d2c6d47966866d4338e7f1286c53c6e6c",
+  "fixture_env": "OWNED_MODULE_OVERRIDE_BINARY",
+  "program_sha256": "760d3dc99d2a4cf71ebc79b49a700219dacd389ff9c30c8d7bc3e1eccad2afd7",
+  "error_class": "RuntimeError",
+  "error": "tests exited 1",
+  "ended": "2026-10-31T19:47:47.076630+00:00"
+}

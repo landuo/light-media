@@ -1,0 +1,210 @@
+{
+  "status": "ACCEPT_FINITE_EXECUTED_S02_C2_CLEANUP_COMPONENT",
+  "at_utc": "2026-10-31T20:34:14.301Z",
+  "result": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/result.json",
+    "bytes": 2122,
+    "sha256": "300c5442da2a8b2496fdebf845ff16ea583128db29ead42ea7ab7cf40973ad66"
+  },
+  "static_seal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-local-backup-fs-independent/c2-static-seal.json",
+    "bytes": 9802,
+    "sha256": "9864dfa979abcc1e795d6a79abd5e241e897fc60de35ffb65caa35df3eaf0bd6"
+  },
+  "input_count": 6202,
+  "phase_maps": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/inputs-before.json",
+      "bytes": 1471600,
+      "sha256": "80fe42ad7d3db285caff0c786cabe9b641ac6e13f9eeacf43d557da946d88a4d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/inputs-after-compile.json",
+      "bytes": 1471600,
+      "sha256": "80fe42ad7d3db285caff0c786cabe9b641ac6e13f9eeacf43d557da946d88a4d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/inputs-after-test.json",
+      "bytes": 1471600,
+      "sha256": "80fe42ad7d3db285caff0c786cabe9b641ac6e13f9eeacf43d557da946d88a4d"
+    }
+  ],
+  "recorded_phases_equal": true,
+  "current_bound_paths_rehashed": 6202,
+  "current_drift": [],
+  "generated_copies": [
+    {
+      "original": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/ad/ad1b6ac4891179b6fc0e79b6ab18ceb37a0672f117af21d6ce27f6a3c431fddc-d",
+      "copy": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/generated-source/ad1b6ac4891179b6fc0e79b6ab18ceb37a0672f117af21d6ce27f6a3c431fddc.go",
+        "bytes": 154876,
+        "sha256": "ad1b6ac4891179b6fc0e79b6ab18ceb37a0672f117af21d6ce27f6a3c431fddc"
+      }
+    }
+  ],
+  "root_passes": [
+    "TestLocalTorrentBackupCleanupSourceOracle",
+    "TestLocalTorrentBackupCleanupOwnedSandbox"
+  ],
+  "all_test_passes": [
+    "TestLocalTorrentBackupCleanupSourceOracle/missing_root",
+    "TestLocalTorrentBackupCleanupSourceOracle/exactly_three_days",
+    "TestLocalTorrentBackupCleanupSourceOracle/three_days_twenty_three_hours",
+    "TestLocalTorrentBackupCleanupSourceOracle/exactly_four_days",
+    "TestLocalTorrentBackupCleanupSourceOracle/nested_old_new_and_empty_directories",
+    "TestLocalTorrentBackupCleanupSourceOracle/unlink_exception_propagates",
+    "TestLocalTorrentBackupCleanupSourceOracle/negative-naive-days-and-path-components",
+    "TestLocalTorrentBackupCleanupSourceOracle",
+    "TestLocalTorrentBackupCleanupOwnedSandbox/optional-days-default-zero-custom-and-cold-storage",
+    "TestLocalTorrentBackupCleanupOwnedSandbox"
+  ],
+  "no_skip_or_fail": true,
+  "program": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-cleanup01.test",
+    "bytes": 91239246,
+    "sha256": "699953572ab9bfb8290c1cafa8f0200f4ce3c1a249c7544c9862bdcfbdd1513c"
+  },
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/app"
+      ],
+      "exit": 0,
+      "raw_exit": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/go-list.exit",
+        "bytes": 2,
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "stdout": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/go-list.stdout",
+        "bytes": 1427078,
+        "sha256": "da82cd863d701db9684bf4bd5c7895ac3baa150c0730d44811af79892d81d460"
+      },
+      "stderr": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/go-list.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-cleanup01.test",
+        "./internal/app"
+      ],
+      "exit": 0,
+      "raw_exit": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/compile.exit",
+        "bytes": 2,
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "stdout": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/compile.stdout",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "stderr": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/compile.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-cleanup01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestLocalTorrentBackupCleanupSourceOracle|TestLocalTorrentBackupCleanupOwnedSandbox)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0,
+      "raw_exit": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/tests.exit",
+        "bytes": 2,
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "stdout": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/tests.stdout",
+        "bytes": 14610,
+        "sha256": "364a61fe25d8718aad8e0449d1cc20f0456db5da40834444e7d4803d60cd55e5"
+      },
+      "stderr": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/tests.stderr",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "tool_receipt": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-cleanup01/tool-execution-receipt.json",
+    "bytes": 297,
+    "sha256": "841bd719172b715232b095c2c76cadc91de50ba5a835ccbd5e4f1c9dc37a4756"
+  },
+  "tool_receipt_provenance": "coordinator transcription of actual tool callbacks, not original tool store",
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T20:32:52.416230+00:00",
+      "scratch_free": 53066018816,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T20:32:53.699867+00:00",
+      "scratch_free": 53062406144,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T20:33:20.519215+00:00",
+      "scratch_free": 52899745792,
+      "tmp_free": 5225664512
+    }
+  ],
+  "runner": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s02-cleanup01.py",
+    "bytes": 5560,
+    "sha256": "082236cfb709755290469d6caaa904c31c5f950aef593cba0ad8f9d2e8327ca2"
+  },
+  "environment_boundary": "Inherited os.environ; runner overrides only GOMAXPROCS=2 and CGO_ENABLED=1. environment_proxy_unchanged is a static declaration, not a full environment observation.",
+  "started": "2026-10-31T20:32:52.416213+00:00",
+  "ended": "2026-10-31T20:33:21.002221+00:00",
+  "scope": [
+    "Six exact historical source RecordingPath/clock traces plus static arithmetic/path-order assertions",
+    "Actual owned private-sandbox cleanup and unrelated-owned sentinel preservation",
+    "Optional TempFileDays default/zero/custom/negative and omitted-form preservation with real SQLite cold reopen",
+    "No installed worker, normal CLI, full S02, or arbitrary filesystem error/security-probe acceptance",
+    "This was a normal gate only, not race",
+    "Three pre-command resource samples, not continuous or terminal resource monitoring"
+  ],
+  "reviewer": {
+    "executed_product": false,
+    "executed_source": false,
+    "network": false,
+    "product_edits": false,
+    "filesystem_probes": false
+  }
+}

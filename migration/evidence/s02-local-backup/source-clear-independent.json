@@ -1,0 +1,220 @@
+{
+  "status": "ACCEPTED_FINITE_ACTUAL_SOURCE_AST_RECORDING_PORT_OBSERVATIONS",
+  "reviewed_at_utc": "2026-10-31T20:08:40.202449+00:00",
+  "evidence": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-clear-source01",
+  "actual_stdout": {
+    "bytes": 15854,
+    "sha256": "7deac37768a1aae3251154c2985ed51de97b656e56cdc7c1f3aeaeb852097785"
+  },
+  "actual_exit_file": 0,
+  "stderr_bytes": 0,
+  "reported_outer_tool_receipt": {
+    "recorded_at": "2026-10-31T20:07:52.782192+00:00",
+    "provenance": "coordinator actualtool callback transcription, no newexecution",
+    "argv": [
+      "sh",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-source-clear-preparation/COMMAND.sh"
+    ],
+    "tool": {
+      "chunk_id": "3bdbee",
+      "exit_code": 0,
+      "wall_time_seconds": 0.014778499,
+      "output": "collector_exit=0\n"
+    },
+    "layer": "complete_original_AST_with_recording_path_and_controlled_clock_ports",
+    "real_filesystem_deletions": 0
+  },
+  "outer_receipt_provenance": "Coordinator callback transcription checked as provided; reviewer did not execute the source process. Raw stdout/exit/stderr and input bindings independently read.",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "fixed_git_blob_matches": true,
+  "selected_complete_original_node": {
+    "symbol": "SystemUtils.clear",
+    "start_line": 977,
+    "end_line": 994,
+    "source_bytes_sha256": "b740d618bad8b1fc51e4ce77f282f438a28e1105173767438a2007c1f964981c",
+    "ast_no_attributes_sha256": "527a9531d2f5f71bf7364dd868f017b324a848358e693d52400e82ad501a964a"
+  },
+  "input_count": 17,
+  "all_preparation_and_current_inputs_exact": true,
+  "recorded_python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "timezone": {
+    "tzname": [
+      "UTC",
+      "UTC"
+    ],
+    "timezone": 0
+  },
+  "controlled_now_local": "2026-10-31T12:00:00",
+  "owned_case_inputs_exact": true,
+  "observations": [
+    {
+      "id": "missing_root",
+      "return": null,
+      "exception": null,
+      "trace_events": 1,
+      "mutation_port_trace": [],
+      "remaining_nodes": [],
+      "root_exists_after": false
+    },
+    {
+      "id": "exactly_three_days",
+      "return": null,
+      "exception": null,
+      "trace_events": 8,
+      "mutation_port_trace": [],
+      "remaining_nodes": [
+        "material.torrent"
+      ],
+      "root_exists_after": true
+    },
+    {
+      "id": "three_days_twenty_three_hours",
+      "return": null,
+      "exception": null,
+      "trace_events": 8,
+      "mutation_port_trace": [],
+      "remaining_nodes": [
+        "material.torrent"
+      ],
+      "root_exists_after": true
+    },
+    {
+      "id": "exactly_four_days",
+      "return": null,
+      "exception": null,
+      "trace_events": 8,
+      "mutation_port_trace": [
+        {
+          "operation": "unlink",
+          "path": "material.torrent",
+          "result": "memory_only"
+        }
+      ],
+      "remaining_nodes": [],
+      "root_exists_after": true
+    },
+    {
+      "id": "nested_old_new_and_empty_directories",
+      "return": null,
+      "exception": null,
+      "trace_events": 32,
+      "mutation_port_trace": [
+        {
+          "operation": "unlink",
+          "path": "old/inner/material.torrent",
+          "result": "memory_only"
+        },
+        {
+          "operation": "rmdir",
+          "path": "old/inner",
+          "result": "memory_only"
+        },
+        {
+          "operation": "rmdir",
+          "path": "old",
+          "result": "memory_only"
+        },
+        {
+          "operation": "rmdir",
+          "path": "empty/child",
+          "result": "memory_only"
+        },
+        {
+          "operation": "rmdir",
+          "path": "empty",
+          "result": "memory_only"
+        }
+      ],
+      "remaining_nodes": [
+        "new",
+        "new/material.torrent"
+      ],
+      "root_exists_after": true
+    },
+    {
+      "id": "unlink_exception_propagates",
+      "return": null,
+      "exception": {
+        "class": "PermissionError",
+        "message": "owned recording unlink failure"
+      },
+      "trace_events": 7,
+      "mutation_port_trace": [
+        {
+          "operation": "unlink",
+          "path": "first.torrent",
+          "result": "injected_error"
+        }
+      ],
+      "remaining_nodes": [
+        "first.torrent",
+        "later.torrent",
+        "empty"
+      ],
+      "root_exists_after": true
+    }
+  ],
+  "semantic_findings": [
+    "Missing root returns after exactly one exists port query.",
+    "With days=3, exactly 3 days and 3 days 23 hours retain the material; exactly 4 days invokes one memory-only unlink and retains the root.",
+    "Nested case first removes the old file, then removes empty directories in original reverse-path order; fresh file/nonempty parent survive. This order is observed for explicitly recorded input enumeration, not an OS traversal-order guarantee.",
+    "Injected PermissionError escapes the original clear method to the outer collector; later file and empty-directory pass are not reached and the in-memory tree is unchanged. This is not a filesystem permission refusal or tool-policy denial.",
+    "Original None return, complete node and source algorithm are preserved; port dependencies/clock are explicitly synthetic."
+  ],
+  "bindings": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-clear-source01/stdout.json",
+      "sha256": "7deac37768a1aae3251154c2985ed51de97b656e56cdc7c1f3aeaeb852097785"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-clear-source01/stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-clear-source01/exit.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-clear-source01/command.txt",
+      "sha256": "5a9e3ee626177910b16eb2f2caa38b26ba01136a309f2f30ec4fe07daaa88c6e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-clear-source01/tool-execution-receipt.json",
+      "sha256": "0c3fd3519c56ef117c3c60ba6214c138af7dc65bc1e5b3ef42880830dfc0ebe8"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-source-clear-preparation/capture_clear.py",
+      "sha256": "81e4736b1c40d5069b8ad026c9bbbe691bf1c807229d5de1800160c3ceeec991"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-source-clear-preparation/owned-cases.json",
+      "sha256": "a05ac571ee1cd465d1e7d364d315dde9b2d2dc459a44d630cb011b24d0e05916"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-source-clear-preparation/selected-node.json",
+      "sha256": "748154aeaae0dc23bb866a8e3c02157222f3865acee11f22230478606dc39ba3"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-source-clear-preparation/input-bindings.json",
+      "sha256": "bd90f217e1fe5b13f2edbc56be2eb7d5be4521dee558908334bc960b46efb72a"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-source-clear-preparation/preparation-seal.json",
+      "sha256": "759d1d73cdf206e03a8799004f41f51315b342317ce46bdac00523dcb82b6111"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-source-clear-preparation/COMMAND.sh",
+      "sha256": "33df5f78cc7a9ef4ae50c102fa8cd79ddf83f3879aaf6b590a2eda97ad3a779b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-independent-scope/CLEAR-COLLECTOR-PREEXEC.json",
+      "sha256": "0e0886ba6995e59dcfba2b1c6e0e78603799dc23f2d5eac953d88d8befbc85d8"
+    }
+  ],
+  "limits": [
+    "No real filesystem deletion, permission/inode/symlink probe, whole stop_modules/clear_temp service execution or images/package/cache cleanup.",
+    "No new original TorrentTransfer/fast-bencode source run; old source-oracle recordings remain historical.",
+    "No target Go cleanup/SDK/host lifetime acceptance. S02 remains incomplete.",
+    "Reviewer performed only static source parsing, raw/JSON/hash inspection and this audit write; no product/ledger/source changes."
+  ]
+}

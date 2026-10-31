@@ -7039,7 +7039,8 @@
       "reason": "运行源码或数据，可能由插件直接调用/导入，不能仅因没有 RPC 名称移出宿主范围。",
       "feature_ids": [
         "02",
-        "43"
+        "43",
+        "S02"
       ],
       "feature_link_reason": "startup initializer owns concrete registered subsystem",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -7485,7 +7486,8 @@
         "23",
         "S09",
         "S09.ordinary_storage",
-        "23.usage_rating_wire"
+        "23.usage_rating_wire",
+        "S02"
       ],
       "feature_link_reason": "ordinary utility dependency; native Go implementation allowed, no same-name RPC obligation",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -24967,7 +24969,14 @@
       ],
       "historically_executed_evidence_verbatim": "固定529文件重新核对；源码签名/kwargs/反向调用/守卫、目标与实际证据逐处见 `testdata/standard-module-host/modules56-final-host-audit.json.gz`。全部transfer/storage/catalog等增量与Linux/IAB绑定在 `validation/plugin-module-host43-final-20261029.json`；413平台根回归、29目录影视根和192 SDK根、556前端，失败与修复保留。最后目录方式Linux1.64s/IAB93 242.55s含保存、错误、重启及分身隔离。",
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
-      "new_or_repaired_boundary_not_historical_credit": null,
+      "new_or_repaired_boundary_not_historical_credit": {
+        "at": "2026-10-31T20:00:51.098859+00:00",
+        "scope": "request INFO before terminal result check in common sync/async module dispatch",
+        "source": "ChainBase.__execute_plugin_modules / __async_execute_plugin_modules at fixed8a83efe",
+        "status": "local exactone-line repair verified as dependency; no new remote delivery",
+        "evidence": "resume.new_s12_browse_reconstruction.module_log",
+        "historical_credit": "retain 68direct+1indirect and unchanged algorithm/assertion evidence; only newINFO ordering/visibility reopened and verified, not whole43 reset"
+      },
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:55",
       "historical_evidence_source": "docs/validation/plugin-module-host43-final-20261029.json"
     },
@@ -25559,28 +25568,54 @@
     {
       "id": "S02",
       "description": "S02 · 本机下载器备份、fastresume和临时材料",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/core/config.py",
         "app/helper/browser.py",
-        "app/helper/torrent.py"
+        "app/helper/torrent.py",
+        "app/utils/system.py",
+        "app/startup/modules_initializer.py"
       ],
       "entrypoint_ids": [
         "scope.S02.representative",
         "scope.discovery.48"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "internal/plugins/torrenttransfer/local_backup_material.go",
+        "internal/plugins/shared_local_torrent_backup.go",
+        "internal/app/plugin_shared_local_torrent_backup.go",
+        "internal/app/plugin_shared_local_torrent_backup_fs.go",
+        "internal/app/plugin_shared_local_torrent_backup_cleanup.go",
+        "internal/app/plugin_original_resources.go",
+        "internal/app/types.go",
+        "internal/app/http.go",
+        "internal/app/runtime.go"
+      ],
       "owner": "coordinator",
-      "scenarios": [],
-      "evidence_ids": [],
+      "scenarios": [
+        "source-derived qB original/rebuilt/missing or malformed item skip and sameworker recovery",
+        "actual disabled-config selector reads owned backup only; no daemon contact",
+        "paged complete bytes and empty TR material, explicit errors not source skips",
+        "original6 cleanup traces + target owned agecleanup/config persistence",
+        "normal installed-worker App4/hostrace2 and actual normal dualhost5business cold recovery"
+      ],
+      "evidence_ids": [
+        "s02-local.source-target",
+        "s02-local.normal-cli"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "tls_ab_independent / Astra ultra",
+        "evidence_ids": [
+          "s02-local.independent-review"
+        ],
+        "scope": "finite material slice only; parent remains implementing"
       },
       "external_source_paths": [],
-      "work_kind": "unclassified_shared_host",
-      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent.",
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Old torrent-transfer consumer/57 original cases/25 codec and existing S09 managed-root boundary retained. New finite local material host chain fills actual backup-read/fastresume/temp-cleanup delta, not a new general filesystem RPC or business plugin port.",
       "semantic_scope_reconciliation": {
         "id": "S02",
         "old_operation_scope": "下载器备份选择、只读访问、torrent-fastresume重建、临时处理清理",
@@ -25589,6 +25624,26 @@
         "semantic_judgment": "旧操作全部应登记；不预设文件系统RPC设计，不扩大外部WebDAV/公共备份UI。v1漏写重建与清理，现补明。",
         "current_ledger_status": "discovered",
         "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
+      },
+      "local_reconstruction": {
+        "status": "finite local material slice actual normal/race/dualhost verified; publication ready, remote pending",
+        "fixed_external_consumer": "testdata/plugins/torrent-transfer-1.10.3/torrenttransfer.py:785-869 (own pinned file, not core commit8a83)",
+        "source_scope_record": "../audits/s02-next-scope/INPUTS.json",
+        "temp_days": "source TEMP_FILE_DAYS default3, optional persisted host input; omitted preserves existing, explicit0/negative retained",
+        "source_cleanup": "complete SystemUtils.clear AST 6 recording cases + actual newlyowned sandbox; cleanup exception handled in shutdown, never whole image/package caches"
+      },
+      "boundaries": [
+        "Existing administrator managed roots = AllowedRoots plus library Roots, no authority from plugin-owned config; private/no-follow safeguards inherited from S09. No automatic roots or actual external backups accessed.",
+        "16MiB per-material resource guard retained from S12; source lacks same cap, not arbitrary-size equality or blanket approved adaptation.",
+        "Source selected AST/recording ports and pinned original consumer oracles, not full original application/native helper execution.",
+        "No real qB/Transmission daemon, download, NAS, browser or business TorrentTransfer add/recheck/delete validation; actual installed-worker and normal dualhost owned-only verification completed.",
+        "No historical credit reset; old20 consumer files and historical source/codec coverage inherited, new source errors retained."
+      ],
+      "completion": {
+        "state": "finite_backend_local_verified_publication_pending",
+        "full_parent_verified": false,
+        "remote_delivery": false,
+        "manifest": "migration/evidence/s02-local-backup/evidence-index.json"
       }
     },
     {
@@ -29035,10 +29090,13 @@
       },
       "work_kind": "confirmed_delta",
       "completion": {
-        "state": "locally_verified_publication_pending_not_remote",
+        "state": "locally_committed_bundle_ready_remote_pending",
         "base_commit": "760720ed0a96fd9e7a647914c14545bde5ef857e",
         "manifest": "testdata/plugins/shared-torrent-material-20261031/publication-manifest.json",
-        "remote_delivery": false
+        "remote_delivery": false,
+        "new_commit": "b9e667cbc9532cb996993af30531327af3dcc541",
+        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "bundle_library_id": "libfile_68214c4489548191911635167b273b87"
       },
       "boundaries": [
         "16MiB per-material resource guard retained; actual source has no same cap, no arbitrary-size parity or blanket approved adaptation",
@@ -42835,6 +42893,289 @@
         "evidence/s12-material/runtime-review.md": "56e13974891b0f77f6cc5db5246a6ea2ce2e7c8ca52005575c8ff7d317f7931e",
         "evidence/s12-material/runtime-review-seal.json": "63c3db4c83fe3371124686f33fde8138f132a488fc39ff9315393c7f81e2836b"
       }
+    },
+    {
+      "id": "s02-local.source-target",
+      "kind": "differential",
+      "status": "passed",
+      "feature_ids": [
+        "S02"
+      ],
+      "independent": false,
+      "reviewer": "coordinator actual execution",
+      "observations": "Actual selected-source+target finite comparison and exactcandidate pure2/sdk2/App4/hostrace2.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "target": "owned cloud Linux Go1.26.0 CGO1, preserved environment proxy/CA; normal actual server+worker and real owned SQLite/FS",
+          "source": "fixed8a83 complete selected clear AST + recording dependencies; pinned TorrentTransfer1.10.3 inherited original observations, not full original/native runtime",
+          "limits": "managed roots/16MiB/no real downloader/browser/NAS; not full S02"
+        },
+        "target_files": {
+          "cmd/owned-local-torrent-backup-fixture/main.go": "f554fe8a01d9d29fb200ff5cf4d54cfed7a56faf275bfdced3d4bf5d96907258",
+          "internal/app/http.go": "08bb4ec970ff601d8d8fae495ae72713aa869b1a5c8410eb70d3102178402dff",
+          "internal/app/plugin_original_modules.go": "811e1ad367706e39c3eb52ecbb29b208697be8abc181d8d39ac662ec0b2c9c5f",
+          "internal/app/plugin_original_modules_request_log_test.go": "6629c08093125850a4c957dbf8008799f574bf16ddd453ff446309ece43b46e7",
+          "internal/app/plugin_original_resources.go": "46aef5bda569e673b48b2dd5bff02efc38f520a5d78d5dc0072eb0a5a49221d6",
+          "internal/app/plugin_shared_local_torrent_backup.go": "77d6ed4039da0963601c22ec43e47241e0ccdf75483d44711198db4eb95d3fcd",
+          "internal/app/plugin_shared_local_torrent_backup_cleanup.go": "3f4e5c90935c4fbfad6907771bc4ea2b44baf77764c39b6ca89f12c086336598",
+          "internal/app/plugin_shared_local_torrent_backup_cleanup_test.go": "b968b33c953954fe09d006d5d101733b8a3a2ef3eec5659c609c99bdf14ad4cb",
+          "internal/app/plugin_shared_local_torrent_backup_fs.go": "7f5543d31c0af320844923f635d96dcd60ef4a74e736e47e74e8fbf243b69585",
+          "internal/app/plugin_shared_local_torrent_backup_fs_test.go": "b725cf564c8c908ad80b23404c2913801c4ef365fe8a36751267b4a0a3e151d0",
+          "internal/app/plugin_shared_local_torrent_backup_worker_test.go": "e8410271b7b486e1d8d27fc3f4577c342045076510cd27ada8294489d51b140a",
+          "internal/app/runtime.go": "8e1461bd552a1cdac3eb00f3c9589e5b242a7926f66dd170799ee90b7438d2de",
+          "internal/app/testdata/shared-torrents/browse-module-log-source.json": "3031719c5f5a6af16fca446575850748a50e38420d2aed2135629a73bb1eb129",
+          "internal/app/types.go": "632b72016e1a828343eb10b320bd4fc28bf67fc48a378e870c3e37925fc22191",
+          "internal/plugins/shared_local_torrent_backup.go": "2508894fba562dbbcfa6f169aa5ce6b497e0587f3a31cbcac5c1825f1eb6ca89",
+          "internal/plugins/shared_local_torrent_backup_test.go": "ea73d6dad206678f950ff015b416e508ecb9dfd6d1dd64a1825fa3448dea8c12",
+          "internal/plugins/torrenttransfer/local_backup_material.go": "0897fbc71428ff4d15c5800061ef930cc0806304ce5e37a2ca1961416cbb0923",
+          "internal/plugins/torrenttransfer/local_backup_material_test.go": "0443646b07439453b3c4aa1d609de41a5fb64e4792b6a751c45529333ea2e723"
+        },
+        "fixture_files": {
+          "evidence/s02-local-backup/source-clear-observations.json": "7deac37768a1aae3251154c2985ed51de97b656e56cdc7c1f3aeaeb852097785",
+          "evidence/s02-local-backup/normal-cli-driver.py": "1bcbc250bdac90beb5e247e95c5f52e09baf3c57cdaaa75da50cdabf8cb7a6a9",
+          "evidence/s02-local-backup/normal-cli-owned-materials.json": "868c8b371899d5b393c5f41062a2413b554d2b0e0bcd054b12aa94f63cf728f3"
+        }
+      },
+      "artifacts": {
+        "evidence/s02-local-backup/pure-result.json": "b33b8ce7178921a9b70ccc910a3de79c2b320100ca080a013567944f3600144b",
+        "evidence/s02-local-backup/sdk-result.json": "b1ca8c282e216433762d0796cee3de72b41ceedad31bd5fd4ff7d1c95e80e542",
+        "evidence/s02-local-backup/source-clear-observations.json": "7deac37768a1aae3251154c2985ed51de97b656e56cdc7c1f3aeaeb852097785",
+        "evidence/s02-local-backup/app-normal-result.json": "fd73612854f365674b4da50f5e0ab94c28542bd0d37460bb5e897fbe188fc2d9",
+        "evidence/s02-local-backup/app-race-result.json": "932576917a30bf60d66f2199ff5d1cc5a55c27aea207658d6ac97573da69edfb"
+      },
+      "inputs": {
+        "source_consumer": [
+          {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugins/torrent-transfer-1.10.3/torrenttransfer.py",
+            "bytes": 46423,
+            "sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+            "relative_path": "testdata/plugins/torrent-transfer-1.10.3/torrenttransfer.py",
+            "copy": false
+          },
+          {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugins/torrent-transfer-1.10.3/source-oracle.json",
+            "bytes": 140057,
+            "sha256": "536e6236db1af581258943c14258d59c253ae5ec99e9f663904e79f89593199b",
+            "relative_path": "testdata/plugins/torrent-transfer-1.10.3/source-oracle.json",
+            "copy": false
+          },
+          {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/torrenttransfer/reference/source-oracle.json",
+            "bytes": 140178,
+            "sha256": "b77b1927fc5050a7de0fc7122c72534c70e190e1f947a1a7ede58455d16df2e0",
+            "relative_path": "internal/plugins/torrenttransfer/reference/source-oracle.json",
+            "copy": false
+          }
+        ],
+        "full_runtime_bindings": "exact maps retained in named Space checkpoints; publication retains independent actual readbacks",
+        "server_sha256": "b999c2d36100289983bab3e6955e23b327b7b7733f6821227cd43c7e77eb7bca",
+        "worker_sha256": "604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822"
+      },
+      "commands": {
+        "actual_argv": "see bound result.commands and normal-cli-tool-receipt.driver_argv; no reconstructed execution"
+      }
+    },
+    {
+      "id": "s02-local.normal-cli",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "S02"
+      ],
+      "independent": false,
+      "reviewer": "coordinator actual execution",
+      "observations": "Actual normalserver25→51/worker42→66/14control/5business, source182B and two-page1048579B, error recovery and cold persistence; owned only.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "target": "owned cloud Linux Go1.26.0 CGO1, preserved environment proxy/CA; normal actual server+worker and real owned SQLite/FS",
+          "source": "fixed8a83 complete selected clear AST + recording dependencies; pinned TorrentTransfer1.10.3 inherited original observations, not full original/native runtime",
+          "limits": "managed roots/16MiB/no real downloader/browser/NAS; not full S02"
+        },
+        "target_files": {
+          "cmd/owned-local-torrent-backup-fixture/main.go": "f554fe8a01d9d29fb200ff5cf4d54cfed7a56faf275bfdced3d4bf5d96907258",
+          "internal/app/http.go": "08bb4ec970ff601d8d8fae495ae72713aa869b1a5c8410eb70d3102178402dff",
+          "internal/app/plugin_original_modules.go": "811e1ad367706e39c3eb52ecbb29b208697be8abc181d8d39ac662ec0b2c9c5f",
+          "internal/app/plugin_original_modules_request_log_test.go": "6629c08093125850a4c957dbf8008799f574bf16ddd453ff446309ece43b46e7",
+          "internal/app/plugin_original_resources.go": "46aef5bda569e673b48b2dd5bff02efc38f520a5d78d5dc0072eb0a5a49221d6",
+          "internal/app/plugin_shared_local_torrent_backup.go": "77d6ed4039da0963601c22ec43e47241e0ccdf75483d44711198db4eb95d3fcd",
+          "internal/app/plugin_shared_local_torrent_backup_cleanup.go": "3f4e5c90935c4fbfad6907771bc4ea2b44baf77764c39b6ca89f12c086336598",
+          "internal/app/plugin_shared_local_torrent_backup_cleanup_test.go": "b968b33c953954fe09d006d5d101733b8a3a2ef3eec5659c609c99bdf14ad4cb",
+          "internal/app/plugin_shared_local_torrent_backup_fs.go": "7f5543d31c0af320844923f635d96dcd60ef4a74e736e47e74e8fbf243b69585",
+          "internal/app/plugin_shared_local_torrent_backup_fs_test.go": "b725cf564c8c908ad80b23404c2913801c4ef365fe8a36751267b4a0a3e151d0",
+          "internal/app/plugin_shared_local_torrent_backup_worker_test.go": "e8410271b7b486e1d8d27fc3f4577c342045076510cd27ada8294489d51b140a",
+          "internal/app/runtime.go": "8e1461bd552a1cdac3eb00f3c9589e5b242a7926f66dd170799ee90b7438d2de",
+          "internal/app/testdata/shared-torrents/browse-module-log-source.json": "3031719c5f5a6af16fca446575850748a50e38420d2aed2135629a73bb1eb129",
+          "internal/app/types.go": "632b72016e1a828343eb10b320bd4fc28bf67fc48a378e870c3e37925fc22191",
+          "internal/plugins/shared_local_torrent_backup.go": "2508894fba562dbbcfa6f169aa5ce6b497e0587f3a31cbcac5c1825f1eb6ca89",
+          "internal/plugins/shared_local_torrent_backup_test.go": "ea73d6dad206678f950ff015b416e508ecb9dfd6d1dd64a1825fa3448dea8c12",
+          "internal/plugins/torrenttransfer/local_backup_material.go": "0897fbc71428ff4d15c5800061ef930cc0806304ce5e37a2ca1961416cbb0923",
+          "internal/plugins/torrenttransfer/local_backup_material_test.go": "0443646b07439453b3c4aa1d609de41a5fb64e4792b6a751c45529333ea2e723"
+        },
+        "fixture_files": {
+          "evidence/s02-local-backup/source-clear-observations.json": "7deac37768a1aae3251154c2985ed51de97b656e56cdc7c1f3aeaeb852097785",
+          "evidence/s02-local-backup/normal-cli-driver.py": "1bcbc250bdac90beb5e247e95c5f52e09baf3c57cdaaa75da50cdabf8cb7a6a9",
+          "evidence/s02-local-backup/normal-cli-owned-materials.json": "868c8b371899d5b393c5f41062a2413b554d2b0e0bcd054b12aa94f63cf728f3"
+        }
+      },
+      "artifacts": {
+        "evidence/s02-local-backup/normal-cli-result.json": "bc3294eee1fdc515501cfc6e66154c2c2c5ed620d9eeb07eff383face6f6610a",
+        "evidence/s02-local-backup/normal-cli-tool-receipt.json": "95def9ded058946d97ee6c8b5e87263e736194f3538e3b79e5b9a9af09d57856"
+      },
+      "inputs": {
+        "source_consumer": [
+          {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugins/torrent-transfer-1.10.3/torrenttransfer.py",
+            "bytes": 46423,
+            "sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+            "relative_path": "testdata/plugins/torrent-transfer-1.10.3/torrenttransfer.py",
+            "copy": false
+          },
+          {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugins/torrent-transfer-1.10.3/source-oracle.json",
+            "bytes": 140057,
+            "sha256": "536e6236db1af581258943c14258d59c253ae5ec99e9f663904e79f89593199b",
+            "relative_path": "testdata/plugins/torrent-transfer-1.10.3/source-oracle.json",
+            "copy": false
+          },
+          {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/torrenttransfer/reference/source-oracle.json",
+            "bytes": 140178,
+            "sha256": "b77b1927fc5050a7de0fc7122c72534c70e190e1f947a1a7ede58455d16df2e0",
+            "relative_path": "internal/plugins/torrenttransfer/reference/source-oracle.json",
+            "copy": false
+          }
+        ],
+        "full_runtime_bindings": "exact maps retained in named Space checkpoints; publication retains independent actual readbacks",
+        "server_sha256": "b999c2d36100289983bab3e6955e23b327b7b7733f6821227cd43c7e77eb7bca",
+        "worker_sha256": "604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822"
+      },
+      "commands": {
+        "actual_argv": "see bound result.commands and normal-cli-tool-receipt.driver_argv; no reconstructed execution"
+      }
+    },
+    {
+      "id": "s02-local.independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "S02"
+      ],
+      "independent": true,
+      "reviewer": "tls_ab_independent / Astra ultra",
+      "observations": "Independent original/target/runtime/actualCLI review with explicit INFO semantic-inheritance and scope limits; no fullparent verification.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "target": "owned cloud Linux Go1.26.0 CGO1, preserved environment proxy/CA; normal actual server+worker and real owned SQLite/FS",
+          "source": "fixed8a83 complete selected clear AST + recording dependencies; pinned TorrentTransfer1.10.3 inherited original observations, not full original/native runtime",
+          "limits": "managed roots/16MiB/no real downloader/browser/NAS; not full S02"
+        },
+        "target_files": {
+          "cmd/owned-local-torrent-backup-fixture/main.go": "f554fe8a01d9d29fb200ff5cf4d54cfed7a56faf275bfdced3d4bf5d96907258",
+          "internal/app/http.go": "08bb4ec970ff601d8d8fae495ae72713aa869b1a5c8410eb70d3102178402dff",
+          "internal/app/plugin_original_modules.go": "811e1ad367706e39c3eb52ecbb29b208697be8abc181d8d39ac662ec0b2c9c5f",
+          "internal/app/plugin_original_modules_request_log_test.go": "6629c08093125850a4c957dbf8008799f574bf16ddd453ff446309ece43b46e7",
+          "internal/app/plugin_original_resources.go": "46aef5bda569e673b48b2dd5bff02efc38f520a5d78d5dc0072eb0a5a49221d6",
+          "internal/app/plugin_shared_local_torrent_backup.go": "77d6ed4039da0963601c22ec43e47241e0ccdf75483d44711198db4eb95d3fcd",
+          "internal/app/plugin_shared_local_torrent_backup_cleanup.go": "3f4e5c90935c4fbfad6907771bc4ea2b44baf77764c39b6ca89f12c086336598",
+          "internal/app/plugin_shared_local_torrent_backup_cleanup_test.go": "b968b33c953954fe09d006d5d101733b8a3a2ef3eec5659c609c99bdf14ad4cb",
+          "internal/app/plugin_shared_local_torrent_backup_fs.go": "7f5543d31c0af320844923f635d96dcd60ef4a74e736e47e74e8fbf243b69585",
+          "internal/app/plugin_shared_local_torrent_backup_fs_test.go": "b725cf564c8c908ad80b23404c2913801c4ef365fe8a36751267b4a0a3e151d0",
+          "internal/app/plugin_shared_local_torrent_backup_worker_test.go": "e8410271b7b486e1d8d27fc3f4577c342045076510cd27ada8294489d51b140a",
+          "internal/app/runtime.go": "8e1461bd552a1cdac3eb00f3c9589e5b242a7926f66dd170799ee90b7438d2de",
+          "internal/app/testdata/shared-torrents/browse-module-log-source.json": "3031719c5f5a6af16fca446575850748a50e38420d2aed2135629a73bb1eb129",
+          "internal/app/types.go": "632b72016e1a828343eb10b320bd4fc28bf67fc48a378e870c3e37925fc22191",
+          "internal/plugins/shared_local_torrent_backup.go": "2508894fba562dbbcfa6f169aa5ce6b497e0587f3a31cbcac5c1825f1eb6ca89",
+          "internal/plugins/shared_local_torrent_backup_test.go": "ea73d6dad206678f950ff015b416e508ecb9dfd6d1dd64a1825fa3448dea8c12",
+          "internal/plugins/torrenttransfer/local_backup_material.go": "0897fbc71428ff4d15c5800061ef930cc0806304ce5e37a2ca1961416cbb0923",
+          "internal/plugins/torrenttransfer/local_backup_material_test.go": "0443646b07439453b3c4aa1d609de41a5fb64e4792b6a751c45529333ea2e723"
+        },
+        "fixture_files": {
+          "evidence/s02-local-backup/source-clear-observations.json": "7deac37768a1aae3251154c2985ed51de97b656e56cdc7c1f3aeaeb852097785",
+          "evidence/s02-local-backup/normal-cli-driver.py": "1bcbc250bdac90beb5e247e95c5f52e09baf3c57cdaaa75da50cdabf8cb7a6a9",
+          "evidence/s02-local-backup/normal-cli-owned-materials.json": "868c8b371899d5b393c5f41062a2413b554d2b0e0bcd054b12aa94f63cf728f3",
+          "evidence/s02-local-backup/README.md": "24c0650f39e77bef79faf495422601de5e44e78e4fceba77e534f9a208086e3d",
+          "evidence/s02-local-backup/app-normal-independent.json": "cf0a578ae46cc9f93d076a4ae3b4f3a5850a25e5d0e786642b2d6a1d042a038d",
+          "evidence/s02-local-backup/app-normal-result.json": "fd73612854f365674b4da50f5e0ab94c28542bd0d37460bb5e897fbe188fc2d9",
+          "evidence/s02-local-backup/app-normal-tests.jsonl": "4d95371cfbd1c16021d8aec361994c227fd361b053c8a08e61bfd5ef0e907f78",
+          "evidence/s02-local-backup/app-race-independent.json": "f92fda22315132f36dfb20e6e702732ef190939fe9bf418d93e00b5ae010a408",
+          "evidence/s02-local-backup/app-race-result.json": "932576917a30bf60d66f2199ff5d1cc5a55c27aea207658d6ac97573da69edfb",
+          "evidence/s02-local-backup/app-race-tests.jsonl": "ee08b56af326d3f363279f28d13ac4ef0ce1b8f61984ec1de08da17c3346304c",
+          "evidence/s02-local-backup/cleanup-independent.json": "0cb1150b8595db17c98fec98a65b56795d6c315830697d14ea407c03857191eb",
+          "evidence/s02-local-backup/cleanup-review.md": "f528e98054e3abd72c74a0f8646415201d3441ca06d7c0950a9a7423f6986718",
+          "evidence/s02-local-backup/dispatcher-request-log/after-result.json": "ada5c1e974d2268db3e1109e1a5bc4d9cb9caf32d1b9a48f24ba69e5bd89549e",
+          "evidence/s02-local-backup/dispatcher-request-log/after-tests.jsonl": "6e88b4284efce70d6eea385663b6ca0e4e0fab87cedeabbf6b2ce0a9ce3dc2bc",
+          "evidence/s02-local-backup/dispatcher-request-log/before-result.json": "fe07ff4b2201c3d2ec22d9eeae59db7691b112b42cdd5b0c4bcc4c98c53f906c",
+          "evidence/s02-local-backup/dispatcher-request-log/before-tests.jsonl": "c5c943416fbc204c8a1b00a299a580b412930e547aa2d1d92f4a67e2b00a093a",
+          "evidence/s02-local-backup/dispatcher-request-log/inheritance.json": "b6dcf53bd30612427d7feb12860e8950313e5aee99b0f3731f4b29e891898294",
+          "evidence/s02-local-backup/dispatcher-request-log/normal-cli-driver.py": "01fb93f01a3c57536b26ca5fc5402a3e288a51e22b218b41f019cebe5da8fd1e",
+          "evidence/s02-local-backup/dispatcher-request-log/normal-cli-tool-receipt.json": "f7b593771fffee4b02d9a9dccf30f59d20f551d953cbeaec6ff30942407f4a66",
+          "evidence/s02-local-backup/dispatcher-request-log/race-result.json": "b5c80cdaddf146e3bf09886a694486e9ba7517bc448d2dbc9e936b4a59a6eeeb",
+          "evidence/s02-local-backup/dispatcher-request-log/runtime-independent.json": "7c0f283eb8f8efe9cad00a99e9f1109182d641d82eec8d7dd373b896bffffef7",
+          "evidence/s02-local-backup/dispatcher-request-log/runtime-review.md": "33763bcadf4c51f73987b2757bd7f2fc2003cb044ab160013c40478913452a36",
+          "evidence/s02-local-backup/dispatcher-request-log/runtime-seal.json": "8d67b099e8adc501b219302b9fcf57cc6ef8d42b57463dff6e0d02c562b31ac3",
+          "evidence/s02-local-backup/fs-independent.json": "eb20025dd9bd049c1fea3ce2ee52638c3a7c405b6deca6ba1d2d2a914e7cb54a",
+          "evidence/s02-local-backup/fs-race-result.json": "1aee18285980e73a9863237a510f897bccc26c10bb37e686f768f3b4882a1dc9",
+          "evidence/s02-local-backup/fs-result.json": "343be061ac84873f2dd25ec230b988744c55562025ea3c0de2bc9669109c547f",
+          "evidence/s02-local-backup/fs-review.md": "5171f7c6a52b4d1b857e21f46c23d9e9a162c33d79bfe6f91224b81c6e723919",
+          "evidence/s02-local-backup/normal-cli-independent.json": "a8674a10bb36db2b2c5cc51829114f8cb810504e65df37aa299243334db96bb4",
+          "evidence/s02-local-backup/normal-cli-inputs.json": "382efefa6a87e33813c5f236445b2d398edf46402efdab5251861abef7a65773",
+          "evidence/s02-local-backup/normal-cli-result.json": "bc3294eee1fdc515501cfc6e66154c2c2c5ed620d9eeb07eff383face6f6610a",
+          "evidence/s02-local-backup/normal-cli-tool-receipt.json": "95def9ded058946d97ee6c8b5e87263e736194f3538e3b79e5b9a9af09d57856",
+          "evidence/s02-local-backup/pure-independent.json": "bc138260bd13d0d4c19714622d807819c6098c290496208b732640c20b597e2a",
+          "evidence/s02-local-backup/pure-result.json": "b33b8ce7178921a9b70ccc910a3de79c2b320100ca080a013567944f3600144b",
+          "evidence/s02-local-backup/pure-sdk02-independent.json": "49c40bdabfc413d3a4e41c875b4ee667b0d2495d4fdbdae0988c2ab75a642072",
+          "evidence/s02-local-backup/runtime-review.md": "3a240217ffad3176a79c87a681a0f2c0df1916e91fda686ce472c9301c181056",
+          "evidence/s02-local-backup/runtime-seal.json": "f7f4b183877954dd59552bf1be6de19584d4b8eb68ece652d4cf9be8e5492e07",
+          "evidence/s02-local-backup/sdk-independent.json": "6d4fd16b79cb612934d5213ba997fd8725e12efd9f503a3362683dc7f7ab374d",
+          "evidence/s02-local-backup/sdk-result.json": "b1ca8c282e216433762d0796cee3de72b41ceedad31bd5fd4ff7d1c95e80e542",
+          "evidence/s02-local-backup/source-clear-collector.py": "81e4736b1c40d5069b8ad026c9bbbe691bf1c807229d5de1800160c3ceeec991",
+          "evidence/s02-local-backup/source-clear-independent.json": "dd3d2597e1ed3067df7b846b9645d728bca30adaaab3791d75931ce0bb81d085",
+          "evidence/s02-local-backup/source-clear-inputs.json": "bd90f217e1fe5b13f2edbc56be2eb7d5be4521dee558908334bc960b46efb72a",
+          "evidence/s02-local-backup/source-clear-node.py": "b740d618bad8b1fc51e4ce77f282f438a28e1105173767438a2007c1f964981c",
+          "evidence/s02-local-backup/source-clear-owned-cases.json": "a05ac571ee1cd465d1e7d364d315dde9b2d2dc459a44d630cb011b24d0e05916",
+          "evidence/s02-local-backup/source-clear-tool-receipt.json": "0c3fd3519c56ef117c3c60ba6214c138af7dc65bc1e5b3ef42880830dfc0ebe8"
+        }
+      },
+      "artifacts": {
+        "evidence/s02-local-backup/runtime-review.md": "3a240217ffad3176a79c87a681a0f2c0df1916e91fda686ce472c9301c181056",
+        "evidence/s02-local-backup/runtime-seal.json": "f7f4b183877954dd59552bf1be6de19584d4b8eb68ece652d4cf9be8e5492e07",
+        "evidence/s02-local-backup/normal-cli-independent.json": "a8674a10bb36db2b2c5cc51829114f8cb810504e65df37aa299243334db96bb4",
+        "evidence/s02-local-backup/pure-sdk02-independent.json": "49c40bdabfc413d3a4e41c875b4ee667b0d2495d4fdbdae0988c2ab75a642072"
+      },
+      "inputs": {
+        "source_consumer": [
+          {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugins/torrent-transfer-1.10.3/torrenttransfer.py",
+            "bytes": 46423,
+            "sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+            "relative_path": "testdata/plugins/torrent-transfer-1.10.3/torrenttransfer.py",
+            "copy": false
+          },
+          {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugins/torrent-transfer-1.10.3/source-oracle.json",
+            "bytes": 140057,
+            "sha256": "536e6236db1af581258943c14258d59c253ae5ec99e9f663904e79f89593199b",
+            "relative_path": "testdata/plugins/torrent-transfer-1.10.3/source-oracle.json",
+            "copy": false
+          },
+          {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/torrenttransfer/reference/source-oracle.json",
+            "bytes": 140178,
+            "sha256": "b77b1927fc5050a7de0fc7122c72534c70e190e1f947a1a7ede58455d16df2e0",
+            "relative_path": "internal/plugins/torrenttransfer/reference/source-oracle.json",
+            "copy": false
+          }
+        ],
+        "full_runtime_bindings": "exact maps retained in named Space checkpoints; publication retains independent actual readbacks",
+        "server_sha256": "b999c2d36100289983bab3e6955e23b327b7b7733f6821227cd43c7e77eb7bca",
+        "worker_sha256": "604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822"
+      },
+      "commands": {
+        "actual_argv": "see bound result.commands and normal-cli-tool-receipt.driver_argv; no reconstructed execution"
+      }
     }
   ],
   "execution_contract": {
@@ -42861,7 +43202,7 @@
     "latest_scope_selection": "Current complete61-entry inventory retained by user164510; historical same-scope completion inherited; exact source-discovered missing behaviors continue, no whole-source redevelopment or duplicate shared-chain credit."
   },
   "resume": {
-    "next_slice": "Finish S12.material exactwhitelist local commit/bundle; pendingMac quota recovery does not stop next independent S12.browse source/native wiring. S06 legacy-snapshot/delete decisions remain pending.",
+    "next_slice": "S12.browse standard sync SDK/provider/native full-model chain from b9e667. Preserve original light-media760720 dirtyS06 tree; SitesHelper exactexisting compiled observations found, independent scope lookup underway. Do not wait for pendingMac delivery.",
     "dirty_work": "Postcommit760720ed ledger metadata +2 new S06 SDK files in progress. S10 committed301 remains fixed; no real data or old worktree edits.",
     "workers": [
       {
@@ -43018,7 +43359,7 @@
       "source_of_readback": "Parent relayed actual Mac push/readback; evidence-s15-11f922896377/{push-receipt,protected-after-push,ci-receipt}.json",
       "mac_protection": "Original three worktree HEAD/branch/index unchanged. Main had concurrent changes to2 existing files+5 new paths retained; other2 trees unchanged. Do not falsely claim all Mac files unchanged."
     },
-    "updated_at": "2026-10-31T19:20:04.959503+00:00",
+    "updated_at": "2026-10-31T20:39:42.292748+00:00",
     "latest_integrations": {
       "services_portable": "../evidence/coordinator/services-main-integration/portable-integration.json",
       "services_web": "../evidence/coordinator/services-main-integration/web-v3-result.json",
@@ -43078,16 +43419,15 @@
       "free_after": "2.3GiB including authorized oldbinary archive"
     },
     "delivery_pending": {
-      "state": "S10 localcommit and Spacebundle verified; Mac turn stopped by usage cap, push UNCONFIRMED",
-      "commit": "760720ed0a96fd9e7a647914c14545bde5ef857e",
-      "parent": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
-      "bundle": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/external-backups/light-media-s10-760720ed0a96-20261031.bundle",
-      "bundle_sha256": "4c3c263b9fa065cd9bd7855f84d2a8060db82c29cbc74f57de9585c9bb104c33",
-      "branch": "plugins-refactor",
-      "remote_last_known": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
-      "library_file_id": "libfile_e0f0e6cb75e08191b12c371e69e868a5",
-      "library_version": 0,
-      "mac_blocker": "root relayed Mac task failed usage cap; no model switch or cloud-auth bypass; resume only normal available path and first read remote outcome"
+      "commit": "b9e667cbc9532cb996993af30531327af3dcc541",
+      "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "included_commits": [
+        "760720ed0a96fd9e7a647914c14545bde5ef857e",
+        "b9e667cbc9532cb996993af30531327af3dcc541"
+      ],
+      "remote_confirmed": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "blocker": "Mac Git delivery usage cap last observed; no new cloudGit route/no model switch",
+      "bundle_status": "actualSpace saved libfile_68214c4489548191911635167b273b87 v0; remote pending"
     },
     "terminal_binary_archive": {
       "status": "complete",
@@ -43096,7 +43436,17 @@
       "files": 13,
       "net_file_bytes_reclaimed": 663846871,
       "verification": "../evidence/coordinator/terminal-binary-archive-1519/verification.json",
-      "restore": "python3 ../evidence/coordinator/terminal-binary-archive-1519/restore.py <exact original relative path from index>"
+      "restore": "python3 ../evidence/coordinator/terminal-binary-archive-1519/restore.py <exact original relative path from index>",
+      "s12_development_four_20261031": {
+        "index": "../evidence/runtime-retention/s12-dev-four-1937/index.json",
+        "index_sha256": "b6e3ee38875bfc3bcf1a0f39b0ed68483cbe9057027a3d1923e14c3c5926a2a4",
+        "terminal_programs": 4,
+        "original_bytes": 390833437,
+        "new_archive_bytes": 170614620,
+        "net_reclaimed_bytes": 220218817,
+        "scope": "only4endeddevApptestprograms exactlosslessstreamSHA/bytes verified before removal; currentrelease/worker/source/deps/DB/rawlogs untouched",
+        "restore": "perpathmode+SHA retained inindex; neveroverwrite"
+      }
     },
     "duplicate_binary_cleanup": {
       "status": "complete",
@@ -44119,11 +44469,13 @@
       }
     },
     "last_local_commit": {
-      "commit": "760720ed0a96fd9e7a647914c14545bde5ef857e",
-      "parent": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
-      "accepted_scope": "S10 original8",
-      "bundle_sha256": "4c3c263b9fa065cd9bd7855f84d2a8060db82c29cbc74f57de9585c9bb104c33",
-      "remote_delivery": "pending"
+      "commit": "b9e667cbc9532cb996993af30531327af3dcc541",
+      "parent": "760720ed0a96fd9e7a647914c14545bde5ef857e",
+      "delivery_branch": "plugins-refactor",
+      "status": "locally committed/verified bundle, notremote",
+      "bundle": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/external-backups/light-media-s12-b9e667cbc953-20261031.bundle",
+      "sha256": "125a920fb564dfb4883f3936933ced1853f0098abc24e6ca38fcda186bc4aa3c",
+      "bytes": 1645699
     },
     "new_s06_getbyhash_reconstruction": {
       "base": "760720ed0a96fd9e7a647914c14545bde5ef857e",
@@ -44308,7 +44660,7 @@
           "next": "poll original56799; no parallelGo"
         }
       ],
-      "status": "Finite material candidate actual source/target/host/race/two-normalhost independently accepted; exactpublicationhashreview pending commit; wholeS12 stillopen",
+      "status": "finite material locallycommitted, exactrelease/runtime/publication accepted; wholeS12 browse/RSS and resourceboundaries remain open",
       "parser_source_case": {
         "evidence": "../evidence/s12-parser-source01",
         "tool_chunk": "fbf6fa",
@@ -44743,7 +45095,7 @@
         "base": "760720ed0a96fd9e7a647914c14545bde5ef857e",
         "product_paths": 25,
         "assembly": "../audits/s12-release-assembly",
-        "status": "candidate normal4/hostrace2/normalserver actualtwohost13CLI PASS; finalindependent/publicationpending",
+        "status": "locallycommitted b9e667; authoritative source/runtime exactbundle frozen; actualremote pending",
         "protected": "original34dirty/untracked/ignored actualbytes plusstatus/index unchanged afterworktreeadd",
         "gates": {
           "s12-release-fixture01": {
@@ -44783,7 +45135,8 @@
           }
         },
         "terminal": "299346 exit0",
-        "session": 99749
+        "session": 99749,
+        "commit": "b9e667cbc9532cb996993af30531327af3dcc541"
       },
       "normal_cli_actual": {
         "evidence": "../audits/s12-normal-cli-plan/run-release01",
@@ -44813,7 +45166,1215 @@
         "sha256": "56e13974891b0f77f6cc5db5246a6ea2ce2e7c8ca52005575c8ff7d317f7931e",
         "seal": "testdata/plugins/shared-torrent-material-20261031/review/s12-material-host-independent/release-runtime-final-seal.json",
         "seal_sha256": "63c3db4c83fe3371124686f33fde8138f132a488fc39ff9315393c7f81e2836b"
+      },
+      "external_final_bundle": {
+        "at": "2026-10-31T19:28:37.486281+00:00",
+        "library_file_id": "libfile_68214c4489548191911635167b273b87",
+        "version": 0,
+        "filename": "light-media-s12-b9e667cbc953-20261031.bundle",
+        "bytes": 1645699,
+        "sha256": "125a920fb564dfb4883f3936933ced1853f0098abc24e6ca38fcda186bc4aa3c",
+        "prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "included_commits": [
+          "760720ed0a96fd9e7a647914c14545bde5ef857e",
+          "b9e667cbc9532cb996993af30531327af3dcc541"
+        ],
+        "status": "actualSpace parentconfirmed/xattrs tool0; not remoteGit delivery"
+      },
+      "external_final_sidecar": {
+        "at": "2026-10-31T19:34:50.189219+00:00",
+        "library_file_id": "libfile_68fa8b724950819197c6e2aed2813664",
+        "version": 0,
+        "filename": "s12-b9e667-final-receipts-20261031T1931.tar.gz",
+        "bytes": 724251,
+        "sha256": "cb11d78c46195ae8b7d118930dff6e91aa162c822e79cc432513c833642e139b",
+        "status": "actualSpace parentconfirmed/xattrs tool0; postcommit authority/pubseal sidecar, notnewGit"
       }
+    },
+    "coordinator_worktree_authority": {
+      "at": "2026-10-31T19:28:21.747075+00:00",
+      "authoritative_ledger": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/migration/ledger.json",
+      "authoritative_worktree": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media",
+      "head": "b9e667cbc9532cb996993af30531327af3dcc541",
+      "prior_worktree": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media",
+      "prior_head": "760720ed0a96fd9e7a647914c14545bde5ef857e",
+      "prior_ledger_sha256_at_freeze": "0179dd1c3117e3601f3a95a1907446f4bcd1839eb6a460601904c705807eede2",
+      "reason": "reuse the now-committed exact release worktree for next slice instead of another clone/worktree or reset of protected dirty S06 tree",
+      "prior33_original_nonedger_bytes_unchanged": true,
+      "prior_index_unchanged": true,
+      "prior_status_change": "only coordinator ledger and13explicitraw ledger evidence added duringpublication; no priorpath removed",
+      "future_writes": "only this new authoritative ledger; prior ledger remains frozen historical snapshot, not competingliveauthority"
+    },
+    "new_s12_browse_reconstruction": {
+      "base": "b9e667cbc9532cb996993af30531327af3dcc541",
+      "status": "A1 twoSDKfiles actualfinite wire test result PASS; nohost/nativebrowse or completefeature claim",
+      "sdk_product": [
+        "internal/plugins/shared_torrents_browse.go",
+        "internal/plugins/shared_torrents_browse_test.go"
+      ],
+      "sdk_a1": {
+        "evidence": "../evidence/s12-browse-sdk01",
+        "session": 74768,
+        "input_count": 1924,
+        "program_sha256": "11b49c9dfeb2905fa058c2112794111f3322a9afd69c75aad98b2db157f5d923",
+        "root_passes": [
+          "TestSharedTorrentsBrowseWireValuesAndDefaults",
+          "TestSharedTorrentsBrowseBoundaries"
+        ],
+        "ended": "2026-10-31T19:33:23.455108+00:00",
+        "terminal": "a1e2c7 exit0",
+        "independent": {
+          "path": "../audits/s12-browse-independent/A1-SDK-FINAL.json",
+          "sha256": "781d26a9f6024eae71f2f4d7588a646194bc1e8dd2cc2dc13706c069aa930bb3",
+          "scope": "accepted finite SDKwire only; nohost/native/compiledlookup"
+        }
+      },
+      "source_inputs": "../audits/s12-next-browse-rss/SITESHELPER-INPUTS.md",
+      "inherited": "actualcompiled27stepGet/List/Add/Domain and17catalogschema/23alias facts kept; sourceindexer Go unchanged; do not zero priorcredit",
+      "open_input_gaps": [
+        "SitesHelper.check flowcontrol has caller contract but no actual behavior implementation/observation in located inputs",
+        "full browse DSL/profile absent from schema-only17siteprojection",
+        "externalhelper/catalog pin separate fromfixedGit source; record exact deployedartifact provenance notlatestdownload substitution"
+      ],
+      "next": "finalseal/logCLI backup; keep newbrowsehost open for exactprofile/check inputs; independently trace S02 next completehostslice",
+      "external_a1": {
+        "at": "2026-10-31T19:38:57.568369+00:00",
+        "library_file_id": "libfile_8b70b46aaee08191a3ce0fcfcd498a84",
+        "version": 0,
+        "filename": "s12-browse-a1-wip-20261031T1936.tar.gz",
+        "bytes": 1091691,
+        "sha256": "b6f290f506285a5737127186d536641dece1ba8439fbbfe81282c79792beae27",
+        "status": "actualSpace parentconfirmed/xattrs tool0",
+        "scope": "2SDKsource+2normalroots+finiteindependent only; in-flightcollector/hostdependencyexcluded"
+      },
+      "source_browse01": {
+        "evidence": "../evidence/s12-browse-source01",
+        "terminal": "92da12 exit0",
+        "status": "PASS finite selected-source17nodes/13cases/14calls; independent accepted",
+        "stdout_sha256": "0b0db6fae01aae3ee16ebeacd378a0551a6311d2b90774336077e7a97d035ad4",
+        "stdout_bytes": 67384,
+        "scope": "no constructors/compiledhelper/actualnative/discovery/network/DB; actualValueErrorhandlers only, notrate-limit",
+        "independent": {
+          "path": "../audits/s12-browse-independent/SOURCE01-FINAL.json",
+          "sha256": "f5ccc363239a7f73687eba11d4e28315ed89fd788aa6c98baa90ec040ec6c85f"
+        }
+      },
+      "host_dependencies": {
+        "report": "../audits/s12-browse-host-dependencies/REVIEW.md",
+        "sha256": "4f787e03e2146015d97046feba57ddcf734667c9f0c82f0e0c7094b1992cdc02",
+        "findings": [
+          "existingnegotiatedconcurrent self-RPC reusable; serialself-provider hasrealwaitcycle and safe refusal isnot source completion",
+          "commonmodule dispatcher missing source requestINFO beforeexistingnonlistbreak; exactnew testbeingpreparedbeforeproductionfix"
+        ],
+        "not_changed": "globalprotocol/default/retained authority/nativeprofile/flowcontrol unchanged"
+      },
+      "module_log": {
+        "before": {
+          "evidence": "../evidence/s12-browse-log-before01",
+          "session": 27680,
+          "terminal": "e43a46 exit1",
+          "status": "expected defect observed: 3subcases only final missingINFO fail; actualRPC1/5/2 and errors/results priorassertions passed",
+          "inputs": 6193,
+          "no_after_test_snapshot": "runner stopped at actual tests exit1, not fabricated"
+        },
+        "fix": {
+          "path": "internal/app/plugin_original_modules.go",
+          "sha256": "811e1ad367706e39c3eb52ecbb29b208697be8abc181d8d39ac662ec0b2c9c5f",
+          "scope": "single INFO before result stopcheck; stable module_request via existing writer/redactor"
+        },
+        "after": {
+          "status": "PASS",
+          "session": 48717,
+          "evidence": "../evidence/s12-browse-log-after01",
+          "terminal": "95f6d3 exit0",
+          "input_count": 6192,
+          "program_sha256": "cc81930120815607086a88e589818838bb1e5efb0ee66dcbb7402d2d00f0b05e",
+          "ended": "2026-10-31T19:49:09.520491+00:00",
+          "root_passes": [
+            "TestOriginalModulesRequestLogPrecedesTerminalCheck"
+          ]
+        },
+        "independent": {
+          "path": "../audits/s12-browse-independent/MODULE-LOG-FINAL.json",
+          "sha256": "d014872aa5a1c808ede857c80e669c4cff9e49477988636389ed2c3695c8de9d",
+          "status": "accepted finite before/after actual3cases; CLI/race pending"
+        },
+        "normal_builds": {
+          "s12-module-log-server01": {
+            "at": "2026-10-31T19:50:06.586285+00:00",
+            "status": "PASS",
+            "kind": "newnormalserver compile only; uses unchanged restoredUI assets, notnewbrowser acceptance",
+            "commands": [
+              {
+                "label": "go-list",
+                "argv": [
+                  "go",
+                  "list",
+                  "-mod=readonly",
+                  "-buildvcs=false",
+                  "-deps",
+                  "-json",
+                  "./cmd/server"
+                ],
+                "exit": 0
+              },
+              {
+                "label": "build",
+                "argv": [
+                  "go",
+                  "build",
+                  "-mod=readonly",
+                  "-buildvcs=false",
+                  "-p=1",
+                  "-o",
+                  "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-module-log-server01",
+                  "./cmd/server"
+                ],
+                "exit": 0
+              }
+            ],
+            "resource_samples": [
+              {
+                "phase": "go-list",
+                "scratch_free": 53929111552,
+                "tmp_free": 5225664512
+              },
+              {
+                "phase": "build",
+                "scratch_free": 53926850560,
+                "tmp_free": 5225664512
+              }
+            ],
+            "input_count": 3961,
+            "program_sha256": "7dde726676ac896ce4c692787b8836c5dcf56bbdcbeb7902b76aa4c200064101",
+            "ended": "2026-10-31T19:50:17.185682+00:00"
+          },
+          "s12-module-log-worker01": {
+            "at": "2026-10-31T19:50:17.232954+00:00",
+            "status": "PASS",
+            "kind": "normal owned module fixture with existing snapshot API option; no upstream or native requests",
+            "commands": [
+              {
+                "label": "go-list",
+                "argv": [
+                  "go",
+                  "list",
+                  "-mod=readonly",
+                  "-buildvcs=false",
+                  "-deps",
+                  "-json",
+                  "./cmd/owned-module-override"
+                ],
+                "exit": 0
+              },
+              {
+                "label": "build",
+                "argv": [
+                  "go",
+                  "build",
+                  "-mod=readonly",
+                  "-buildvcs=false",
+                  "-p=1",
+                  "-ldflags",
+                  "-X main.fixtureProcessAPI=1",
+                  "-o",
+                  "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-module-log-worker01",
+                  "./cmd/owned-module-override"
+                ],
+                "exit": 0
+              }
+            ],
+            "resource_samples": [
+              {
+                "phase": "go-list",
+                "scratch_free": 53822820352,
+                "tmp_free": 5225664512
+              },
+              {
+                "phase": "build",
+                "scratch_free": 53822263296,
+                "tmp_free": 5225664512
+              }
+            ],
+            "input_count": 1085,
+            "program_sha256": "3b8cd015282bd2e199e953078233df054283a143d06fc927cb20fa0048859016",
+            "ended": "2026-10-31T19:50:17.774985+00:00"
+          }
+        },
+        "race": {
+          "status": "PASS",
+          "input_count": 6201,
+          "program_sha256": "679cbc28360b1ad5214bf519f41c2747072d9b0130d3081f3dd7d85e561f6a29",
+          "root_passes": [
+            "TestOriginalModulesRequestLogPrecedesTerminalCheck"
+          ],
+          "ended": "2026-10-31T19:51:31.543141+00:00",
+          "evidence": "../evidence/s12-browse-log-race01",
+          "session": 1443,
+          "terminal": "f24cb0 exit0",
+          "scope": "actualraceApp + reusednormalownedworker, notraceworker"
+        },
+        "normal_cli": {
+          "session_id": 54240,
+          "label": "s12-browse-module-log-cli-run01",
+          "status": "PASS and independently accepted finite sharedINFO path",
+          "evidence": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-module-log-cli/run01",
+          "driver_sha256": "01fb93f01a3c57536b26ca5fc5402a3e288a51e22b218b41f019cebe5da8fd1e",
+          "scope": "actual2 normalhost planned; existing asyncresources route log-only regression, no newbrowsehost",
+          "terminal": "b3b862 exit0",
+          "hosts": [
+            25,
+            66
+          ],
+          "host_exits": [
+            0,
+            0
+          ],
+          "business_queries": 4,
+          "rpc_counts": [
+            1,
+            2,
+            1,
+            1
+          ],
+          "info_counts": [
+            2,
+            2,
+            2,
+            2
+          ],
+          "persistent_records": 7,
+          "input_drift": [],
+          "environment_unchanged": true,
+          "finished_at": "2026-10-31T19:55:41.024096+00:00",
+          "result_sha256": "573eaf912495a9fd689118835a80d1e541f222c7497779e3fcd628c06ac55343"
+        },
+        "final_independent": {
+          "status": "accepted finite sharedINFO dependency; not standalonepublished/newbrowsehost",
+          "report": "../audits/s12-browse-host-dependencies/MODULE-LOG-RUNTIME-REVIEW.md",
+          "report_sha256": "33763bcadf4c51f73987b2757bd7f2fc2003cb044ab160013c40478913452a36",
+          "seal": "../audits/s12-browse-host-dependencies/module-log-final-seal.json",
+          "seal_sha256": "8d67b099e8adc501b219302b9fcf57cc6ef8d42b57463dff6e0d02c562b31ac3"
+        }
+      },
+      "external_b2": {
+        "at": "2026-10-31T19:51:52.869878+00:00",
+        "library_file_id": "libfile_c922bd89d97c819186ca11ab7fa1b689",
+        "version": 0,
+        "filename": "s12-browse-b2-wip-20261031T1951.tar.gz",
+        "bytes": 3401013,
+        "sha256": "34a089c29d46b9ded7bb0ef73449eb6291d3adcbd49bc3afe7810d59beaa3fcb",
+        "status": "actualSpace parentconfirmed/xattrs tool0",
+        "scope": "source13/logbefore+normalafter+independent/newcode; race/normalCLI pending atpack, excludedactive/DB/bin/credentials"
+      },
+      "external_log_terminal": {
+        "at": "2026-10-31T20:03:28.610707+00:00",
+        "library_file_id": "libfile_a2d605ebd27881918ea39f7d36943595",
+        "version": 0,
+        "filename": "s12-browse-log-terminal-wip-20261031T2000.tar.gz",
+        "bytes": 1917171,
+        "sha256": "0c4ed147a150c9ea925630b31a6caeab52a02d9f45628269c495c346f61c7051",
+        "prerequisite": "libfile_c922bd89d97c819186ca11ab7fa1b689 v0",
+        "status": "actualSpace parentconfirmed/xattrs tool0; finiteINFOaccepted WIP notnewGitdelivery"
+      },
+      "protected_source_holding": {
+        "at": "2026-10-31T20:34:20.535113+00:00",
+        "reason": "exact S02 publication candidate excludes unfinished unrelated browse SDK; owned untracked sources preserved byte-for-byte, no delete/reset/clean/layout operation",
+        "external_backup": "libfile_018317da01b08191b617758b54e454d2 v0 and prior browse checkpoints",
+        "restore": "after S02 exact candidate commit, restore each sameSHA to original only if original absent; retain receipt",
+        "files": [
+          {
+            "original": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_torrents_browse.go",
+            "holding": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/protected-wip/s12-browse-sdk-during-s02/shared_torrents_browse.go",
+            "bytes": 3378,
+            "sha256": "d4f15363f457d971d8547da928973f61a61f4420a5b373b2248c5280db858eb9"
+          },
+          {
+            "original": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_torrents_browse_test.go",
+            "holding": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/protected-wip/s12-browse-sdk-during-s02/shared_torrents_browse_test.go",
+            "bytes": 5408,
+            "sha256": "f66256ad0281065c02c212f061d08ffeb29b405a9ea8415b499a5b5ed15e912b"
+          }
+        ]
+      }
+    },
+    "new_s02_reconstruction": {
+      "base": "b9e667cbc9532cb996993af30531327af3dcc541",
+      "status": "finite backend accepted and compact publication staged for final independent whitelist review; no remote delivery",
+      "source_scope": "originalbackup path selection/read, qB fastresume tracker rebuild, original temp retention/agecleanup; notbusiness transfer/add/delete",
+      "source_binding": "../audits/s02-next-scope/INPUTS.json",
+      "source_binding_sha256": "abe196e4790f16639d5d0737b726057c69c8ab39c7652559d97c029a5da5081b",
+      "source_plan_correction": "exclude newlyproposed TorrentHelper get_torrent_info/get_fileinfo/torrentool collector; notrequired by actualS02consumer",
+      "authority": "Reuse existing committed S09 current browserRoots boundary = Settings.AllowedRoots + Settings.Roots(library), current private/no-follow safeguards; rootconfirmed no newquestion for maintainingexistingboundary. Plugin config onlyselector. No automaticnewroot; source pathsoutsidecurrentadminroots remain unavailable, explicitinheritedplatform boundary notarbitrarysourcepermission.",
+      "not_executed": [
+        "realbackup root access",
+        "qB daemon orrealdownloads",
+        "sourceimports",
+        "tempdeletion",
+        "Apphostcapability"
+      ],
+      "excluded_probes": "S09 contract excludes historical permission/inode/symlink-path-escape probes. No such newprobe executed/authorized; static guard review + owned positive path only. Source-plan C superseded by CORRECTIONS.",
+      "pure_first_checkpoint": {
+        "path": "internal/plugins/torrenttransfer/local_backup_material.go",
+        "sha256": "0897fbc71428ff4d15c5800061ef930cc0806304ce5e37a2ca1961416cbb0923",
+        "status": "first actualsource landed/gofmt; tests pending; nohost/sourceexecution"
+      },
+      "independent_scope": {
+        "path": "../audits/s02-independent-scope/FINAL.json",
+        "sha256": "69b25ff068c4313ce25491f4430019d9f62d8bf91729aa2a1512bf1c3ee0e10c",
+        "status": "source scope/credit accepted; S02 notclosed; explicitplan corrections pendingfile"
+      },
+      "pure_first_gate": {
+        "session_id": 23769,
+        "label": "s02-pure01",
+        "status": "PASS",
+        "evidence": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01",
+        "scope": "newpurematerial2roots only, nofixture/noactualhost/FS",
+        "input_count": 2897,
+        "program_sha256": "f9f30b0587974c4ce93b8999bd52af00bd0d30747bd5c30bef4542052447fb19",
+        "root_passes": [
+          "TestLocalBackupMaterialSelectedSourceOracle",
+          "TestLocalBackupMaterialReadAndRebuildBoundaries"
+        ],
+        "ended": "2026-10-31T20:04:24.851397+00:00",
+        "terminal": "f11206 exit0",
+        "independent": {
+          "path": "../audits/s02-independent-scope/A1-PURE-FINAL.json",
+          "sha256": "bc138260bd13d0d4c19714622d807819c6098c290496208b732640c20b597e2a",
+          "scope": "9inheritedoriginaltrace +12staticderivedboundary subcases; nohost/FSproof"
+        }
+      },
+      "clear_source": {
+        "status": "PASS finite completeoriginalAST/6recordingcases",
+        "evidence": "../evidence/s02-clear-source01",
+        "terminal": "3bdbee exit0",
+        "stdout_sha256": "7deac37768a1aae3251154c2985ed51de97b656e56cdc7c1f3aeaeb852097785",
+        "input_count": 17,
+        "real_OS_deletions": 0,
+        "independent": {
+          "path": "../audits/s02-independent-scope/CLEAR-SOURCE01-FINAL.json",
+          "sha256": "dd3d2597e1ed3067df7b846b9645d728bca30adaaab3791d75931ce0bb81d085"
+        }
+      },
+      "parallel_files": {
+        "s01_release_owner": [
+          "../audits/s02-reconstruction/phase-d-worker/*.go.txt (worker App test preparation only)"
+        ],
+        "terminate_independent": [
+          "internal/app/plugin_shared_local_torrent_backup_cleanup.go",
+          "internal/app/plugin_shared_local_torrent_backup_cleanup_test.go"
+        ],
+        "tls_ab_independent": [
+          "../audits/s02-local-backup-fs-independent/ (read-only product review)"
+        ]
+      },
+      "sdk_b1": {
+        "session_id": 86689,
+        "label": "s02-sdk01",
+        "evidence": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk01",
+        "status": "PASS",
+        "scope": "twoSDKwire/byte roots only; nohostFS",
+        "input_count": 1926,
+        "program_sha256": "4ff053b7335e74c4eef368b63abb50a47fb7e9fd1a692e1eaab3d3190731823c",
+        "root_passes": [
+          "TestLocalTorrentBackupWireAndBoundary",
+          "TestLocalTorrentBackupPagedBytesAndCleanup"
+        ],
+        "ended": "2026-10-31T20:13:28.596814+00:00",
+        "terminal": "ad0b09 exit0"
+      },
+      "resource_hooks": {
+        "path": "internal/app/plugin_original_resources.go",
+        "before_sha256": "72a0278651ff01d379e62a2f5c8d93e189a3a773a6419123f91850c98efd0aa9",
+        "after_sha256": "46aef5bda569e673b48b2dd5bff02efc38f520a5d78d5dc0072eb0a5a49221d6",
+        "scope": "exactcapwhitelist+dispatch only; no otherresource behavior change"
+      },
+      "external_a1_clear": {
+        "at": "2026-10-31T20:21:57.881894+00:00",
+        "library_file_id": "libfile_ceccb1c857e8819186237e64f7b808fb",
+        "version": 0,
+        "filename": "s02-a1-clear-wip-20261031T2012.tar.gz",
+        "bytes": 1303906,
+        "sha256": "663355f828eb67bfa8f17c92b03071629819d4c09a3c02cce03410c82a4f3d46",
+        "status": "actualSpace parentconfirmed/xattrs tool0; WIP notGitdelivery"
+      },
+      "fs_b2": {
+        "status": "PASS finite owned real filesystem normal2 + concurrent race1, not installed worker",
+        "session_id": 76081,
+        "terminal": "188416 exit0",
+        "normal": {
+          "started": "2026-10-31T20:20:15.068123+00:00",
+          "driver_pid": 11,
+          "package": "./internal/app",
+          "pattern": "^TestOriginalLocalTorrentBackup(OwnedFilesystem|SameHashReuseAndConcurrent)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-fs01.test",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-fs01.test",
+                "-test.v",
+                "-test.run",
+                "^TestOriginalLocalTorrentBackup(OwnedFilesystem|SameHashReuseAndConcurrent)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T20:20:15.068141+00:00",
+              "scratch_free": 53513285632,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T20:20:16.177031+00:00",
+              "scratch_free": 53510049792,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T20:20:49.319324+00:00",
+              "scratch_free": 53319708672,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 6200,
+          "program_sha256": "bf41bc7a4d8e7507f6349c2d888dcda4720ec247cb9fb55f8b052c2a794d8240",
+          "root_passes": [
+            "TestOriginalLocalTorrentBackupOwnedFilesystem",
+            "TestOriginalLocalTorrentBackupSameHashReuseAndConcurrent"
+          ],
+          "ended": "2026-10-31T20:20:49.865446+00:00"
+        },
+        "race": {
+          "started": "2026-10-31T20:20:49.921391+00:00",
+          "driver_pid": 2,
+          "package": "./internal/app",
+          "pattern": "^TestOriginalLocalTorrentBackupSameHashReuseAndConcurrent$",
+          "race": true,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "-race",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-fs-race01.test",
+                "-race",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-fs-race01.test",
+                "-test.v",
+                "-test.run",
+                "^TestOriginalLocalTorrentBackupSameHashReuseAndConcurrent$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T20:20:49.921406+00:00",
+              "scratch_free": 53318213632,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T20:20:51.089883+00:00",
+              "scratch_free": 53314756608,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T20:21:37.786069+00:00",
+              "scratch_free": 53078507520,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 6209,
+          "program_sha256": "620f4390473c2d8b7be1bba402cb87d1d0db39da8d9512a3edc7096b6cd3fd6b",
+          "root_passes": [
+            "TestOriginalLocalTorrentBackupSameHashReuseAndConcurrent"
+          ],
+          "ended": "2026-10-31T20:21:39.788965+00:00"
+        },
+        "independent": "../audits/s02-local-backup-fs-independent/B2-RUNTIME-REVIEW.md",
+        "seal_sha256": "7d1717547955d87500856b985fd2b8fd88ad836fa8f17ce01cf20eaddda82772"
+      },
+      "worker_d1": {
+        "status": "historical fixture01 compile-only checkpoint, superseded by fixture02 actual installed-host and normalCLI gates",
+        "terminal": "7e842a exit0",
+        "evidence": "../evidence/s02-fixture01",
+        "program_sha256": "de9f33b2e58b4df110d9ccce0ecdc8adf23e771a3e99dfbb3b467fe70cbf56cb",
+        "input_count": 1085
+      },
+      "cleanup_c": {
+        "status": "C2 actualnormal2 PASS and independently accepted; repeated in exactcandidate normal4 because unrelatedBrowse declarations removed",
+        "integration_checkpoint": "../audits/s02-reconstruction/phase-c-integration/checkpoint.json",
+        "scope": "optional TEMP_FILE_DAYS default3/preserve explicit0/negative; private owned temp cleanup only after wg join on Close",
+        "review_defects": [
+          "trusted App.Dir name must not be tested as plugin relative entry",
+          "native rglob starting-point iteration order must match bound Python3.12 pathlib"
+        ],
+        "terminal": "db3d16 exit0",
+        "session_id": 15111,
+        "result": {
+          "started": "2026-10-31T20:32:52.416213+00:00",
+          "driver_pid": 2,
+          "package": "./internal/app",
+          "pattern": "^(TestLocalTorrentBackupCleanupSourceOracle|TestLocalTorrentBackupCleanupOwnedSandbox)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-cleanup01.test",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-cleanup01.test",
+                "-test.v",
+                "-test.run",
+                "^(TestLocalTorrentBackupCleanupSourceOracle|TestLocalTorrentBackupCleanupOwnedSandbox)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T20:32:52.416230+00:00",
+              "scratch_free": 53066018816,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T20:32:53.699867+00:00",
+              "scratch_free": 53062406144,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T20:33:20.519215+00:00",
+              "scratch_free": 52899745792,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 6202,
+          "program_sha256": "699953572ab9bfb8290c1cafa8f0200f4ce3c1a249c7544c9862bdcfbdd1513c",
+          "root_passes": [
+            "TestLocalTorrentBackupCleanupSourceOracle",
+            "TestLocalTorrentBackupCleanupOwnedSandbox"
+          ],
+          "ended": "2026-10-31T20:33:21.002221+00:00"
+        },
+        "independent_seal_sha256": "6cb1b1170b6befdd915527879f32baf810dee2e0aa19aef72911ab90aad2c6e9"
+      },
+      "external_bc": {
+        "at": "2026-10-31T20:31:55.018636+00:00",
+        "filename": "s02-bc-wip-20261031T2031.tar.gz",
+        "library_file_id": "libfile_018317da01b08191b617758b54e454d2",
+        "version": 0,
+        "bytes": 4080051,
+        "sha256": "02d6fe8f523dff03d7c3a5b82e32c2ae53285c42d58a6c3b6b412486d76a9485",
+        "status": "actual parentconfirmed Space/xattrs tool0; WIP notGitdelivery"
+      },
+      "exact_candidate_build": {
+        "terminal": "942ca9 exit0",
+        "session_id": 2063,
+        "fixture": {
+          "at": "2026-10-31T20:34:20.645267+00:00",
+          "status": "PASS",
+          "kind": "normal owned S02 backup fixture; no worker localfilesystem or downloader access; compile only",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-json",
+                "./cmd/owned-local-torrent-backup-fixture"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "build",
+              "argv": [
+                "go",
+                "build",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-fixture02",
+                "./cmd/owned-local-torrent-backup-fixture"
+              ],
+              "exit": 0
+            }
+          ],
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "scratch_free": 52898123776,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "build",
+              "scratch_free": 52897521664,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 1084,
+          "program_sha256": "604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822",
+          "ended": "2026-10-31T20:34:21.670446+00:00"
+        },
+        "server": {
+          "at": "2026-10-31T20:34:21.705243+00:00",
+          "status": "PASS",
+          "kind": "newnormalserver compile only; uses unchanged restoredUI assets, notnewbrowser acceptance",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-json",
+                "./cmd/server"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "build",
+              "argv": [
+                "go",
+                "build",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-server01",
+                "./cmd/server"
+              ],
+              "exit": 0
+            }
+          ],
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "scratch_free": 52888793088,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "build",
+              "scratch_free": 52886532096,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 3965,
+          "program_sha256": "b999c2d36100289983bab3e6955e23b327b7b7733f6821227cd43c7e77eb7bca",
+          "ended": "2026-10-31T20:34:36.146228+00:00"
+        },
+        "status": "compiled only; installed host pending; browse WIP preserved outside tree"
+      },
+      "installed_host_d": {
+        "status": "normal4+hostrace2 actual PASS, independent finite review sealed; normalCLI also completed",
+        "terminal": "bbb940 exit0",
+        "session_id": 44317,
+        "normal": {
+          "started": "2026-10-31T20:37:35.665847+00:00",
+          "driver_pid": 5,
+          "package": "./internal/app",
+          "pattern": "^(TestLocalTorrentBackupCleanupSourceOracle|TestLocalTorrentBackupCleanupOwnedSandbox|TestSharedLocalTorrentBackupActualWorkerRecoveryAndScopes|TestSharedLocalTorrentBackupActualWorkerPagedAndCold)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-worker01.test",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-worker01.test",
+                "-test.v",
+                "-test.run",
+                "^(TestLocalTorrentBackupCleanupSourceOracle|TestLocalTorrentBackupCleanupOwnedSandbox|TestSharedLocalTorrentBackupActualWorkerRecoveryAndScopes|TestSharedLocalTorrentBackupActualWorkerPagedAndCold)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "worker_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-fixture02",
+          "worker_sha256": "604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822",
+          "worker_instrumentation": "normal artifact; race flag applies host test program only",
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T20:37:35.665870+00:00",
+              "scratch_free": 52756983808,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T20:37:36.716863+00:00",
+              "scratch_free": 52753367040,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T20:38:03.281262+00:00",
+              "scratch_free": 52590104576,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 6201,
+          "program_sha256": "0bdb40370bc0fd4bff8232fc7d1bcb3e1c94216d835b15db133acd1f291c2d2e",
+          "root_passes": [
+            "TestLocalTorrentBackupCleanupSourceOracle",
+            "TestLocalTorrentBackupCleanupOwnedSandbox",
+            "TestSharedLocalTorrentBackupActualWorkerRecoveryAndScopes",
+            "TestSharedLocalTorrentBackupActualWorkerPagedAndCold"
+          ],
+          "ended": "2026-10-31T20:38:04.489708+00:00"
+        },
+        "race": {
+          "started": "2026-10-31T20:38:04.549371+00:00",
+          "driver_pid": 2,
+          "package": "./internal/app",
+          "pattern": "^(TestSharedLocalTorrentBackupActualWorkerRecoveryAndScopes|TestSharedLocalTorrentBackupActualWorkerPagedAndCold)$",
+          "race": true,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "-race",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-worker-race01.test",
+                "-race",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-worker-race01.test",
+                "-test.v",
+                "-test.run",
+                "^(TestSharedLocalTorrentBackupActualWorkerRecoveryAndScopes|TestSharedLocalTorrentBackupActualWorkerPagedAndCold)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "worker_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-fixture02",
+          "worker_sha256": "604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822",
+          "worker_instrumentation": "normal artifact; race flag applies host test program only",
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T20:38:04.549394+00:00",
+              "scratch_free": 52588580864,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T20:38:05.534611+00:00",
+              "scratch_free": 52585500672,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T20:38:52.215207+00:00",
+              "scratch_free": 52352434176,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 6210,
+          "program_sha256": "7972f461d01411b24696bf4a16b3004e94f2dc0e3ef727986420d18396ee2ac2",
+          "root_passes": [
+            "TestSharedLocalTorrentBackupActualWorkerRecoveryAndScopes",
+            "TestSharedLocalTorrentBackupActualWorkerPagedAndCold"
+          ],
+          "ended": "2026-10-31T20:38:58.970083+00:00"
+        }
+      },
+      "normal_cli": {
+        "status": "actual PASS; final independent finite acceptance sealed f7f4b183877954dd59552bf1be6de19584d4b8eb68ece652d4cf9be8e5492e07",
+        "session_id": 28159,
+        "terminal": "8261ea exit0",
+        "evidence": "../test-instances/s02-backup-cli01",
+        "hosts": [
+          25,
+          51
+        ],
+        "business_queries": 5,
+        "no_real_downloader_or_browser_claim": true
+      },
+      "final_pure_sdk": {
+        "terminal": "7d351b exit0",
+        "session_id": 12500,
+        "status": "PASS exactcandidate 2+2",
+        "pure": {
+          "started": "2026-10-31T20:40:58.078671+00:00",
+          "driver_pid": 5,
+          "package": "./internal/plugins/torrenttransfer",
+          "pattern": "^(TestLocalBackupMaterialSelectedSourceOracle|TestLocalBackupMaterialReadAndRebuildBoundaries)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/plugins/torrenttransfer"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-pure02.test",
+                "./internal/plugins/torrenttransfer"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/plugins/torrenttransfer",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-pure02.test",
+                "-test.v",
+                "-test.run",
+                "^(TestLocalBackupMaterialSelectedSourceOracle|TestLocalBackupMaterialReadAndRebuildBoundaries)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T20:40:58.078686+00:00",
+              "scratch_free": 52340006912,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T20:40:58.466333+00:00",
+              "scratch_free": 52338675712,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T20:40:59.903096+00:00",
+              "scratch_free": 52315226112,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 2897,
+          "program_sha256": "1adcf5ffdd14aaf1ca480319442b35da4651cdd92d88a075aec9616ef455053e",
+          "root_passes": [
+            "TestLocalBackupMaterialSelectedSourceOracle",
+            "TestLocalBackupMaterialReadAndRebuildBoundaries"
+          ],
+          "ended": "2026-10-31T20:41:00.078021+00:00"
+        },
+        "sdk": {
+          "started": "2026-10-31T20:41:00.119025+00:00",
+          "driver_pid": 2,
+          "package": "./internal/plugins",
+          "pattern": "^(TestLocalTorrentBackupWireAndBoundary|TestLocalTorrentBackupPagedBytesAndCleanup)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/plugins"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-sdk02.test",
+                "./internal/plugins"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/plugins",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-sdk02.test",
+                "-test.v",
+                "-test.run",
+                "^(TestLocalTorrentBackupWireAndBoundary|TestLocalTorrentBackupPagedBytesAndCleanup)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T20:41:00.119040+00:00",
+              "scratch_free": 52314554368,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T20:41:00.408424+00:00",
+              "scratch_free": 52313714688,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T20:41:02.462397+00:00",
+              "scratch_free": 52297814016,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 1924,
+          "program_sha256": "0639b279593467b41cf37cb64b362d6a8e5312ffd7ee6fb56deab88b61ec382b",
+          "root_passes": [
+            "TestLocalTorrentBackupWireAndBoundary",
+            "TestLocalTorrentBackupPagedBytesAndCleanup"
+          ],
+          "ended": "2026-10-31T20:41:03.193946+00:00"
+        }
+      },
+      "external_terminal": {
+        "at": "2026-10-31T20:44:59.479926+00:00",
+        "filename": "s02-terminal-wip-20261031T2043.tar.gz",
+        "library_file_id": "libfile_396aff5807588191bba4f6b79aa4366e",
+        "version": 0,
+        "bytes": 4590451,
+        "sha256": "273dc6fb7c812e85ce6123ccdd35c4ad7bb8ddfd4ef0ecba68bf8743d0ed055d",
+        "predecessor": "libfile_018317da01b08191b617758b54e454d2 v0",
+        "status": "actualSpace saved parentconfirmed/xattrs0; notGitdelivery"
+      },
+      "runtime_seal_sha256": "f7f4b183877954dd59552bf1be6de19584d4b8eb68ece652d4cf9be8e5492e07"
     }
   },
   "external_inventory": [

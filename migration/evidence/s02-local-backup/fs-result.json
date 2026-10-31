@@ -1,0 +1,85 @@
+{
+  "started": "2026-10-31T20:20:15.068123+00:00",
+  "driver_pid": 11,
+  "package": "./internal/app",
+  "pattern": "^TestOriginalLocalTorrentBackup(OwnedFilesystem|SameHashReuseAndConcurrent)$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-fs01.test",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-fs01.test",
+        "-test.v",
+        "-test.run",
+        "^TestOriginalLocalTorrentBackup(OwnedFilesystem|SameHashReuseAndConcurrent)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T20:20:15.068141+00:00",
+      "scratch_free": 53513285632,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T20:20:16.177031+00:00",
+      "scratch_free": 53510049792,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T20:20:49.319324+00:00",
+      "scratch_free": 53319708672,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 6200,
+  "program_sha256": "bf41bc7a4d8e7507f6349c2d888dcda4720ec247cb9fb55f8b052c2a794d8240",
+  "root_passes": [
+    "TestOriginalLocalTorrentBackupOwnedFilesystem",
+    "TestOriginalLocalTorrentBackupSameHashReuseAndConcurrent"
+  ],
+  "ended": "2026-10-31T20:20:49.865446+00:00"
+}

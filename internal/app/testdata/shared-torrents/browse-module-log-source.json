@@ -1,0 +1,970 @@
+{
+  "evidence_layer": "selected_complete_source_nodes_with_recording_dependency_ports",
+  "not_executed": [
+    "original constructors",
+    "compiled SitesHelper",
+    "real plugin discovery",
+    "real Indexer.search_torrents",
+    "HTTP",
+    "database",
+    "async browse/UI"
+  ],
+  "traceback_policy": "raw source/driver traceback text retained without normalization",
+  "annotation_policy": "deferred only; real check_signature takes original arity rejection",
+  "selected_nodes": [
+    {
+      "path": "app/schemas/exception.py",
+      "symbol": "ImmediateException",
+      "start_line": 1,
+      "end_line": 6,
+      "source_bytes_sha256": "189a8b71d76cf3134820bb8b287cb667f3055670ad3e8ba1e5b9c917d741006d",
+      "ast_no_attributes_sha256": "8bc800839736ea9a56d728eaff800adbf405339803bdd26dc9137bca1ccc1961"
+    },
+    {
+      "path": "app/schemas/exception.py",
+      "symbol": "LimitException",
+      "start_line": 9,
+      "end_line": 14,
+      "source_bytes_sha256": "f3fc2d2a61e8551679335fbebdec1cbd4a8d4a1caf0695299ec1fe867abb4b29",
+      "ast_no_attributes_sha256": "42e94825570e1d9eb4d9ae2438b7329d6aa2d588da78d0446dc90bddacff0065"
+    },
+    {
+      "path": "app/schemas/exception.py",
+      "symbol": "RateLimitExceededException",
+      "start_line": 25,
+      "end_line": 31,
+      "source_bytes_sha256": "3aa8b9fdd279fcab3dfba93193f073ea929ff20e3f9d8155977ba99e550019da",
+      "ast_no_attributes_sha256": "4ccbb5bde2679b8e2a8945439173d1ff84ade2f8151b763454ad2968d33a729e"
+    },
+    {
+      "path": "app/schemas/types.py",
+      "symbol": "EventType",
+      "start_line": 63,
+      "end_line": 125,
+      "source_bytes_sha256": "c2eaffb5e29fdc6007cdacdfdc9d08ad25213c8dfdee3da33a7859cd7c7b4160",
+      "ast_no_attributes_sha256": "a081a6496ae640461a85ede38ac7f93ed0c2def4b2db4a39e51d03b8ed5a9ef6"
+    },
+    {
+      "path": "app/utils/object.py",
+      "symbol": "ObjectUtils.check_signature",
+      "start_line": 95,
+      "end_line": 134,
+      "source_bytes_sha256": "85d6caa957db2d8ac104e5a1e6bfeb871eeec41e1d1fb90f2a70c35e8d2becf6",
+      "ast_no_attributes_sha256": "ec996f23b25bbbef676157d219dda7e929ac24c38c2b475fb20373ecc59423dc"
+    },
+    {
+      "path": "app/chain/__init__.py",
+      "symbol": "ChainBase.__is_valid_empty",
+      "start_line": 224,
+      "end_line": 232,
+      "source_bytes_sha256": "5c84c368ceda40fecd6c51697b1821de2719e77700e175b1cb3acc4e82e16328",
+      "ast_no_attributes_sha256": "cc675aed8e0f20583b61edaf604c12afe117b4e86d94a1c8d4674151340edc25"
+    },
+    {
+      "path": "app/chain/__init__.py",
+      "symbol": "ChainBase.__handle_plugin_error",
+      "start_line": 234,
+      "end_line": 258,
+      "source_bytes_sha256": "a4a0995ea4c85d132ffa22f373d49853c3dc5af805dc676b2e7113074374d4f8",
+      "ast_no_attributes_sha256": "0cc35e800e08e0451bd4d05145467228283e7f2d9b491ba9b72a29aa7b069740"
+    },
+    {
+      "path": "app/chain/__init__.py",
+      "symbol": "ChainBase.__handle_system_error",
+      "start_line": 260,
+      "end_line": 284,
+      "source_bytes_sha256": "a3a415eb0a49f41e0b918b40d4b14e2e5c05c80c155d730972b4a3735fe8999d",
+      "ast_no_attributes_sha256": "7aecb16a542dccd9a13a37a04e6df47dc29103af051a575b34aab0ff13ed7900"
+    },
+    {
+      "path": "app/chain/__init__.py",
+      "symbol": "ChainBase.__handle_rate_limit_error",
+      "start_line": 286,
+      "end_line": 296,
+      "source_bytes_sha256": "5cabd2475ed7b63542a2ebf4461a57661bffb713b7f2015273faa892f7ba222a",
+      "ast_no_attributes_sha256": "aee09b7e64b643dd2e673a3a16423ac380eb4924748f80f16bfd1b6dfc965cb8"
+    },
+    {
+      "path": "app/chain/__init__.py",
+      "symbol": "ChainBase.__execute_plugin_modules",
+      "start_line": 298,
+      "end_line": 329,
+      "source_bytes_sha256": "7a8068c3f80c094045fbb43a065c984e2dc21acb7e842a9c4824c041e1280635",
+      "ast_no_attributes_sha256": "45da3f30b50409d263d790552a8e91d1e0ddb7f34a7c09f03958859fd96376b7"
+    },
+    {
+      "path": "app/chain/__init__.py",
+      "symbol": "ChainBase.__execute_system_modules",
+      "start_line": 372,
+      "end_line": 414,
+      "source_bytes_sha256": "31227d14eccee277bf34135913480cd187dcddfaf1c84882d45ac5aeb0f66e03",
+      "ast_no_attributes_sha256": "86d6e4a49ce8de86301b796c84d310ec6473a6972f5240714ff40c68383bd3ac"
+    },
+    {
+      "path": "app/chain/__init__.py",
+      "symbol": "ChainBase.run_module",
+      "start_line": 470,
+      "end_line": 490,
+      "source_bytes_sha256": "95c818e0b0e3ac73f30aa5610c7f1a3fe7d330279472ddb2e40c12d4ac0e8cee",
+      "ast_no_attributes_sha256": "b3cc3962503a0270bf044c5352dc337c552ac05a49185b0dd57222b63a40f8de"
+    },
+    {
+      "path": "app/chain/__init__.py",
+      "symbol": "ChainBase.refresh_torrents",
+      "start_line": 1292,
+      "end_line": 1309,
+      "source_bytes_sha256": "a9b2631d5823989f8911f27d67582b92f5c1312dbf1d8dfb9725b0d432890d12",
+      "ast_no_attributes_sha256": "902e3680aa6c3aec3132b63600a02f5d16c63061e6ead8e365c73c82e2cf67c9"
+    },
+    {
+      "path": "app/chain/torrents.py",
+      "symbol": "TorrentsChain.browse",
+      "start_line": 402,
+      "end_line": 416,
+      "source_bytes_sha256": "f8675e663ad29015b027ec5a59e16ff079181f55e56b96b67a6e7fa5c5bf50a9",
+      "ast_no_attributes_sha256": "52e9e802fc2f1b45958f2d979d6681963aa382fb235eb5ae8a1762138af61791"
+    },
+    {
+      "path": "app/modules/indexer/__init__.py",
+      "symbol": "IndexerModule.get_name",
+      "start_line": 54,
+      "end_line": 57,
+      "source_bytes_sha256": "4a1ffd246d8bf44196af6c527d9a07183ff1d96fd3af2c5367d4b0c4e0573bcc",
+      "ast_no_attributes_sha256": "81a5384c635f7f72b6df24ea139048a53f07b880e7dcafe3bd7a590b04a8c2a1"
+    },
+    {
+      "path": "app/modules/indexer/__init__.py",
+      "symbol": "IndexerModule.get_priority",
+      "start_line": 73,
+      "end_line": 78,
+      "source_bytes_sha256": "936788a1b508669f5fabf42320f04c0990b4cc92e5e3b9c696b30a22257e4b70",
+      "ast_no_attributes_sha256": "0f9510a3ead3b66ec5621d2cc880bdd6e9f82a4151548ba8febbafe235c766fa"
+    },
+    {
+      "path": "app/modules/indexer/__init__.py",
+      "symbol": "IndexerModule.refresh_torrents",
+      "start_line": 1023,
+      "end_line": 1035,
+      "source_bytes_sha256": "96c4cf5a7c437dd091e3b109e85f71b9444526c93c08afd9ff7bacf3158cec6d",
+      "ast_no_attributes_sha256": "7a45cfc38dc4db7500ada7c9ba9c6607b92584da31eefbe2c97e57c2e8a18af7"
+    }
+  ],
+  "cases": [
+    {
+      "id": "stop_false",
+      "input": {
+        "id": "stop_false",
+        "lookup": {
+          "id": 17,
+          "domain": "owned.invalid",
+          "name": "Owned site",
+          "marker": "initial"
+        },
+        "calls": [
+          {
+            "domain": "owned.invalid"
+          }
+        ],
+        "providers": [
+          {
+            "id": "Stop",
+            "name": "Owned Stop",
+            "result": false
+          },
+          {
+            "id": "NotCalled",
+            "name": "Owned NotCalled",
+            "result": [
+              {
+                "title": "unused next"
+              }
+            ]
+          }
+        ],
+        "core": [
+          {
+            "result": [
+              {
+                "title": "unused core"
+              }
+            ]
+          }
+        ]
+      },
+      "outcomes": [
+        {
+          "input": {
+            "domain": "owned.invalid"
+          },
+          "result_type": "bool",
+          "result": false,
+          "exception": null,
+          "result_is_provider_return": [
+            "Stop"
+          ],
+          "trace_start": 0,
+          "trace_end": 8
+        }
+      ],
+      "trace": [
+        {
+          "kind": "browse_call",
+          "number": 1,
+          "input": {
+            "domain": "owned.invalid"
+          }
+        },
+        {
+          "kind": "log",
+          "level": "INFO",
+          "message": "开始获取站点 owned.invalid 最新种子 ..."
+        },
+        {
+          "kind": "lookup",
+          "domain": "owned.invalid",
+          "result": {
+            "id": 17,
+            "domain": "owned.invalid",
+            "name": "Owned site",
+            "marker": "initial"
+          }
+        },
+        {
+          "kind": "plugin_registry",
+          "order": [
+            [
+              "Stop",
+              "Owned Stop"
+            ],
+            [
+              "NotCalled",
+              "Owned NotCalled"
+            ]
+          ]
+        },
+        {
+          "kind": "log",
+          "level": "INFO",
+          "message": "请求插件 Owned Stop 执行：refresh_torrents ..."
+        },
+        {
+          "kind": "provider_call",
+          "id": "Stop",
+          "args": [],
+          "kwargs": {
+            "site": {
+              "id": 17,
+              "domain": "owned.invalid",
+              "name": "Owned site",
+              "marker": "initial"
+            },
+            "keyword": null,
+            "cat": null,
+            "page": 0
+          },
+          "site_is_lookup_object": true
+        },
+        {
+          "kind": "provider_return",
+          "id": "Stop",
+          "value": false
+        },
+        {
+          "kind": "log",
+          "level": "INFO",
+          "message": "请求插件 Owned NotCalled 执行：refresh_torrents ..."
+        }
+      ],
+      "site_before": {
+        "id": 17,
+        "domain": "owned.invalid",
+        "name": "Owned site",
+        "marker": "initial"
+      },
+      "site_after": {
+        "id": 17,
+        "domain": "owned.invalid",
+        "name": "Owned site",
+        "marker": "initial"
+      },
+      "returned_values_after_dispatch": [
+        {
+          "provider": "Stop",
+          "value": false
+        }
+      ],
+      "core_metadata": {
+        "name": "站点索引",
+        "priority": 0,
+        "bound_refresh_parameter_count": 4,
+        "actual_check_signature_one_list": false
+      }
+    },
+    {
+      "id": "merge",
+      "input": {
+        "id": "merge",
+        "lookup": {
+          "id": 17,
+          "domain": "owned.invalid",
+          "name": "Owned site",
+          "marker": "initial"
+        },
+        "calls": [
+          {
+            "domain": "owned.invalid"
+          }
+        ],
+        "providers": [
+          {
+            "id": "None",
+            "name": "Owned None",
+            "result": null
+          },
+          {
+            "id": "Empty",
+            "name": "Owned Empty",
+            "result": []
+          },
+          {
+            "id": "P",
+            "name": "Owned P",
+            "result": [
+              {
+                "title": "P"
+              },
+              {
+                "title": "P"
+              }
+            ]
+          },
+          {
+            "id": "Ignored",
+            "name": "Owned Ignored",
+            "result": {
+              "ignored": true
+            }
+          },
+          {
+            "id": "Q",
+            "name": "Owned Q",
+            "result": [
+              {
+                "title": "Q"
+              }
+            ]
+          }
+        ],
+        "core": [
+          {
+            "result": [
+              {
+                "title": "C"
+              }
+            ]
+          }
+        ]
+      },
+      "outcomes": [
+        {
+          "input": {
+            "domain": "owned.invalid"
+          },
+          "result_type": "list",
+          "result": [
+            {
+              "title": "P"
+            },
+            {
+              "title": "P"
+            },
+            {
+              "title": "Q"
+            },
+            {
+              "title": "C"
+            }
+          ],
+          "exception": null,
+          "result_is_provider_return": [
+            "Empty"
+          ],
+          "trace_start": 0,
+          "trace_end": 23
+        }
+      ],
+      "trace": [
+        {
+          "kind": "browse_call",
+          "number": 1,
+          "input": {
+            "domain": "owned.invalid"
+          }
+        },
+        {
+          "kind": "log",
+          "level": "INFO",
+          "message": "开始获取站点 owned.invalid 最新种子 ..."
+        },
+        {
+          "kind": "lookup",
+          "domain": "owned.invalid",
+          "result": {
+            "id": 17,
+            "domain": "owned.invalid",
+            "name": "Owned site",
+            "marker": "initial"
+          }
+        },
+        {
+          "kind": "plugin_registry",
+          "order": [
+            [
+              "None",
+              "Owned None"
+            ],
+            [
+              "Empty",
+              "Owned Empty"
+            ],
+            [
+              "P",
+              "Owned P"
+            ],
+            [
+              "Ignored",
+              "Owned Ignored"
+            ],
+            [
+              "Q",
+              "Owned Q"
+            ]
+          ]
+        },
+        {
+          "kind": "log",
+          "level": "INFO",
+          "message": "请求插件 Owned None 执行：refresh_torrents ..."
+        },
+        {
+          "kind": "provider_call",
+          "id": "None",
+          "args": [],
+          "kwargs": {
+            "site": {
+              "id": 17,
+              "domain": "owned.invalid",
+              "name": "Owned site",
+              "marker": "initial"
+            },
+            "keyword": null,
+            "cat": null,
+            "page": 0
+          },
+          "site_is_lookup_object": true
+        },
+        {
+          "kind": "provider_return",
+          "id": "None",
+          "value": null
+        },
+        {
+          "kind": "log",
+          "level": "INFO",
+          "message": "请求插件 Owned Empty 执行：refresh_torrents ..."
+        },
+        {
+          "kind": "provider_call",
+          "id": "Empty",
+          "args": [],
+          "kwargs": {
+            "site": {
+              "id": 17,
+              "domain": "owned.invalid",
+              "name": "Owned site",
+              "marker": "initial"
+            },
+            "keyword": null,
+            "cat": null,
+            "page": 0
+          },
+          "site_is_lookup_object": true
+        },
+        {
+          "kind": "provider_return",
+          "id": "Empty",
+          "value": []
+        },
+        {
+          "kind": "log",
+          "level": "INFO",
+          "message": "请求插件 Owned P 执行：refresh_torrents ..."
+        },
+        {
+          "kind": "provider_call",
+          "id": "P",
+          "args": [],
+          "kwargs": {
+            "site": {
+              "id": 17,
+              "domain": "owned.invalid",
+              "name": "Owned site",
+              "marker": "initial"
+            },
+            "keyword": null,
+            "cat": null,
+            "page": 0
+          },
+          "site_is_lookup_object": true
+        },
+        {
+          "kind": "provider_return",
+          "id": "P",
+          "value": [
+            {
+              "title": "P"
+            },
+            {
+              "title": "P"
+            }
+          ]
+        },
+        {
+          "kind": "log",
+          "level": "INFO",
+          "message": "请求插件 Owned Ignored 执行：refresh_torrents ..."
+        },
+        {
+          "kind": "provider_call",
+          "id": "Ignored",
+          "args": [],
+          "kwargs": {
+            "site": {
+              "id": 17,
+              "domain": "owned.invalid",
+              "name": "Owned site",
+              "marker": "initial"
+            },
+            "keyword": null,
+            "cat": null,
+            "page": 0
+          },
+          "site_is_lookup_object": true
+        },
+        {
+          "kind": "provider_return",
+          "id": "Ignored",
+          "value": {
+            "ignored": true
+          }
+        },
+        {
+          "kind": "log",
+          "level": "INFO",
+          "message": "请求插件 Owned Q 执行：refresh_torrents ..."
+        },
+        {
+          "kind": "provider_call",
+          "id": "Q",
+          "args": [],
+          "kwargs": {
+            "site": {
+              "id": 17,
+              "domain": "owned.invalid",
+              "name": "Owned site",
+              "marker": "initial"
+            },
+            "keyword": null,
+            "cat": null,
+            "page": 0
+          },
+          "site_is_lookup_object": true
+        },
+        {
+          "kind": "provider_return",
+          "id": "Q",
+          "value": [
+            {
+              "title": "Q"
+            }
+          ]
+        },
+        {
+          "kind": "log",
+          "level": "DEBUG",
+          "message": "请求系统模块执行：refresh_torrents ..."
+        },
+        {
+          "kind": "system_registry",
+          "method": "refresh_torrents",
+          "order": [
+            "IndexerModule"
+          ]
+        },
+        {
+          "kind": "core_search_call",
+          "number": 1,
+          "kwargs": {
+            "site": {
+              "id": 17,
+              "domain": "owned.invalid",
+              "name": "Owned site",
+              "marker": "initial"
+            },
+            "keyword": null,
+            "cat": null,
+            "page": 0
+          },
+          "site_is_lookup_object": true
+        },
+        {
+          "kind": "core_search_return",
+          "value": [
+            {
+              "title": "C"
+            }
+          ]
+        }
+      ],
+      "site_before": {
+        "id": 17,
+        "domain": "owned.invalid",
+        "name": "Owned site",
+        "marker": "initial"
+      },
+      "site_after": {
+        "id": 17,
+        "domain": "owned.invalid",
+        "name": "Owned site",
+        "marker": "initial"
+      },
+      "returned_values_after_dispatch": [
+        {
+          "provider": "None",
+          "value": null
+        },
+        {
+          "provider": "Empty",
+          "value": [
+            {
+              "title": "P"
+            },
+            {
+              "title": "P"
+            },
+            {
+              "title": "Q"
+            },
+            {
+              "title": "C"
+            }
+          ]
+        },
+        {
+          "provider": "P",
+          "value": [
+            {
+              "title": "P"
+            },
+            {
+              "title": "P"
+            }
+          ]
+        },
+        {
+          "provider": "Ignored",
+          "value": {
+            "ignored": true
+          }
+        },
+        {
+          "provider": "Q",
+          "value": [
+            {
+              "title": "Q"
+            }
+          ]
+        },
+        {
+          "provider": "recording_core_search",
+          "value": [
+            {
+              "title": "C"
+            }
+          ]
+        }
+      ],
+      "core_metadata": {
+        "name": "站点索引",
+        "priority": 0,
+        "bound_refresh_parameter_count": 4,
+        "actual_check_signature_one_list": false
+      }
+    },
+    {
+      "id": "provider_ordinary_error",
+      "input": {
+        "id": "provider_ordinary_error",
+        "lookup": {
+          "id": 17,
+          "domain": "owned.invalid",
+          "name": "Owned site",
+          "marker": "initial"
+        },
+        "calls": [
+          {
+            "domain": "owned.invalid"
+          }
+        ],
+        "providers": [
+          {
+            "id": "Raises",
+            "name": "Owned Raises",
+            "error": "ValueError",
+            "message": "owned provider failure"
+          },
+          {
+            "id": "Continues",
+            "name": "Owned Continues",
+            "result": [
+              {
+                "title": "continued provider"
+              }
+            ]
+          }
+        ],
+        "core": [
+          {
+            "result": [
+              {
+                "title": "continued core"
+              }
+            ]
+          }
+        ]
+      },
+      "outcomes": [
+        {
+          "input": {
+            "domain": "owned.invalid"
+          },
+          "result_type": "list",
+          "result": [
+            {
+              "title": "continued provider"
+            },
+            {
+              "title": "continued core"
+            }
+          ],
+          "exception": null,
+          "result_is_provider_return": [
+            "Continues"
+          ],
+          "trace_start": 0,
+          "trace_end": 16
+        }
+      ],
+      "trace": [
+        {
+          "kind": "browse_call",
+          "number": 1,
+          "input": {
+            "domain": "owned.invalid"
+          }
+        },
+        {
+          "kind": "log",
+          "level": "INFO",
+          "message": "开始获取站点 owned.invalid 最新种子 ..."
+        },
+        {
+          "kind": "lookup",
+          "domain": "owned.invalid",
+          "result": {
+            "id": 17,
+            "domain": "owned.invalid",
+            "name": "Owned site",
+            "marker": "initial"
+          }
+        },
+        {
+          "kind": "plugin_registry",
+          "order": [
+            [
+              "Raises",
+              "Owned Raises"
+            ],
+            [
+              "Continues",
+              "Owned Continues"
+            ]
+          ]
+        },
+        {
+          "kind": "log",
+          "level": "INFO",
+          "message": "请求插件 Owned Raises 执行：refresh_torrents ..."
+        },
+        {
+          "kind": "provider_call",
+          "id": "Raises",
+          "args": [],
+          "kwargs": {
+            "site": {
+              "id": 17,
+              "domain": "owned.invalid",
+              "name": "Owned site",
+              "marker": "initial"
+            },
+            "keyword": null,
+            "cat": null,
+            "page": 0
+          },
+          "site_is_lookup_object": true
+        },
+        {
+          "kind": "log",
+          "level": "ERROR",
+          "message": "运行插件 Raises 模块 refresh_torrents 出错：owned provider failure\nTraceback (most recent call last):\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/__init__.py\", line 313, in __execute_plugin_modules\n    result = func(*args, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-source-preparation/capture_browse.py\", line 174, in call\n    raise ValueError(spec['message'])\nValueError: owned provider failure\n"
+        },
+        {
+          "kind": "message",
+          "kwargs": {
+            "title": "Owned Raises 发生了错误",
+            "message": "owned provider failure",
+            "role": "plugin"
+          }
+        },
+        {
+          "kind": "event",
+          "event": "system.error",
+          "data": {
+            "type": "plugin",
+            "plugin_id": "Raises",
+            "plugin_name": "Owned Raises",
+            "plugin_method": "refresh_torrents",
+            "error": "owned provider failure",
+            "traceback": "Traceback (most recent call last):\n  File \"/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/__init__.py\", line 313, in __execute_plugin_modules\n    result = func(*args, **kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-source-preparation/capture_browse.py\", line 174, in call\n    raise ValueError(spec['message'])\nValueError: owned provider failure\n"
+          }
+        },
+        {
+          "kind": "log",
+          "level": "INFO",
+          "message": "请求插件 Owned Continues 执行：refresh_torrents ..."
+        },
+        {
+          "kind": "provider_call",
+          "id": "Continues",
+          "args": [],
+          "kwargs": {
+            "site": {
+              "id": 17,
+              "domain": "owned.invalid",
+              "name": "Owned site",
+              "marker": "initial"
+            },
+            "keyword": null,
+            "cat": null,
+            "page": 0
+          },
+          "site_is_lookup_object": true
+        },
+        {
+          "kind": "provider_return",
+          "id": "Continues",
+          "value": [
+            {
+              "title": "continued provider"
+            }
+          ]
+        },
+        {
+          "kind": "log",
+          "level": "DEBUG",
+          "message": "请求系统模块执行：refresh_torrents ..."
+        },
+        {
+          "kind": "system_registry",
+          "method": "refresh_torrents",
+          "order": [
+            "IndexerModule"
+          ]
+        },
+        {
+          "kind": "core_search_call",
+          "number": 1,
+          "kwargs": {
+            "site": {
+              "id": 17,
+              "domain": "owned.invalid",
+              "name": "Owned site",
+              "marker": "initial"
+            },
+            "keyword": null,
+            "cat": null,
+            "page": 0
+          },
+          "site_is_lookup_object": true
+        },
+        {
+          "kind": "core_search_return",
+          "value": [
+            {
+              "title": "continued core"
+            }
+          ]
+        }
+      ],
+      "site_before": {
+        "id": 17,
+        "domain": "owned.invalid",
+        "name": "Owned site",
+        "marker": "initial"
+      },
+      "site_after": {
+        "id": 17,
+        "domain": "owned.invalid",
+        "name": "Owned site",
+        "marker": "initial"
+      },
+      "returned_values_after_dispatch": [
+        {
+          "provider": "Continues",
+          "value": [
+            {
+              "title": "continued provider"
+            },
+            {
+              "title": "continued core"
+            }
+          ]
+        },
+        {
+          "provider": "recording_core_search",
+          "value": [
+            {
+              "title": "continued core"
+            }
+          ]
+        }
+      ],
+      "core_metadata": {
+        "name": "站点索引",
+        "priority": 0,
+        "bound_refresh_parameter_count": 4,
+        "actual_check_signature_one_list": false
+      }
+    }
+  ],
+  "restricted_modules_absent": true,
+  "original_stdout_sha256": "0b0db6fae01aae3ee16ebeacd378a0551a6311d2b90774336077e7a97d035ad4",
+  "selection": {
+    "ids": [
+      "stop_false",
+      "merge",
+      "provider_ordinary_error"
+    ],
+    "scope": "complete selected case objects and all source metadata; plugin-half projection only, not full raw replay"
+  }
+}

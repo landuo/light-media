@@ -1,0 +1,951 @@
+{
+  "status": "ACCEPT_FINITE_SHARED_MODULE_REQUEST_LOG_FIX_NORMAL_RACE_AND_CLI",
+  "at_utc": "2026-10-31T19:57:45.701Z",
+  "production": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_modules.go",
+    "bytes": 8654,
+    "sha256": "811e1ad367706e39c3eb52ecbb29b208697be8abc181d8d39ac662ec0b2c9c5f"
+  },
+  "exact_one_line_delta": true,
+  "prior_source_and_normal_seal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-independent/MODULE-LOG-FINAL.json",
+    "bytes": 9132,
+    "sha256": "d014872aa5a1c808ede857c80e669c4cff9e49477988636389ed2c3695c8de9d"
+  },
+  "baseline_fail": {
+    "result": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-before01/result.json",
+      "bytes": 2706,
+      "sha256": "fe07ff4b2201c3d2ec22d9eeae59db7691b112b42cdd5b0c4bcc4c98c53f906c"
+    },
+    "raw": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-before01/tests.stdout",
+      "bytes": 15981,
+      "sha256": "c5c943416fbc204c8a1b00a299a580b412930e547aa2d1d92f4a67e2b00a093a"
+    },
+    "exit": 1,
+    "original_after_test_snapshot_absent": true,
+    "failure": "all three subcases reached missing INFO assertion, original FAIL preserved"
+  },
+  "gates": [
+    {
+      "name": "s12-browse-log-after01",
+      "input_count": 6192,
+      "all_recorded_phase_maps_equal": true,
+      "current_drift": [],
+      "phase_maps": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-after01/inputs-before.json",
+          "bytes": 1468958,
+          "sha256": "8ae7b9bb2eeec7e79b99096225892626ad40f7ac70943db58d52d16a47c22578"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-after01/inputs-after-compile.json",
+          "bytes": 1468958,
+          "sha256": "8ae7b9bb2eeec7e79b99096225892626ad40f7ac70943db58d52d16a47c22578"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-after01/inputs-after-test.json",
+          "bytes": 1468958,
+          "sha256": "8ae7b9bb2eeec7e79b99096225892626ad40f7ac70943db58d52d16a47c22578"
+        }
+      ],
+      "generated_copies": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-after01/generated-source/32d8863ae955caa7c63aa8876b4ccbc01d7ce2c369ca59b050b059eb139790bd.go",
+          "bytes": 154446,
+          "sha256": "32d8863ae955caa7c63aa8876b4ccbc01d7ce2c369ca59b050b059eb139790bd"
+        }
+      ],
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-browse-log-after01.test",
+        "bytes": 91021327,
+        "sha256": "cc81930120815607086a88e589818838bb1e5efb0ee66dcbb7402d2d00f0b05e"
+      },
+      "command_exits": [
+        {
+          "label": "go-list",
+          "exit": 0,
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-after01/go-list.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "label": "compile",
+          "exit": 0,
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-after01/compile.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "label": "tests",
+          "exit": 0,
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-after01/tests.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ],
+      "verdicts": [
+        "TestOriginalModulesRequestLogPrecedesTerminalCheck/stop_false",
+        "TestOriginalModulesRequestLogPrecedesTerminalCheck/merge",
+        "TestOriginalModulesRequestLogPrecedesTerminalCheck/provider_ordinary_error",
+        "TestOriginalModulesRequestLogPrecedesTerminalCheck"
+      ],
+      "raw": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-after01/tests.stdout",
+        "bytes": 19281,
+        "sha256": "6e88b4284efce70d6eea385663b6ca0e4e0fab87cedeabbf6b2ce0a9ce3dc2bc"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-after01/result.json",
+        "bytes": 2030,
+        "sha256": "ada5c1e974d2268db3e1109e1a5bc4d9cb9caf32d1b9a48f24ba69e5bd89549e"
+      },
+      "worker_race": false
+    },
+    {
+      "name": "s12-browse-log-race01",
+      "input_count": 6201,
+      "all_recorded_phase_maps_equal": true,
+      "current_drift": [],
+      "phase_maps": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-race01/inputs-before.json",
+          "bytes": 1470945,
+          "sha256": "f8c9088a453b56782fc804d57e0c266988b52bbf3deb172b053c427a0b32f7bf"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-race01/inputs-after-compile.json",
+          "bytes": 1470945,
+          "sha256": "f8c9088a453b56782fc804d57e0c266988b52bbf3deb172b053c427a0b32f7bf"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-race01/inputs-after-test.json",
+          "bytes": 1470945,
+          "sha256": "f8c9088a453b56782fc804d57e0c266988b52bbf3deb172b053c427a0b32f7bf"
+        }
+      ],
+      "generated_copies": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-race01/generated-source/32d8863ae955caa7c63aa8876b4ccbc01d7ce2c369ca59b050b059eb139790bd.go",
+          "bytes": 154446,
+          "sha256": "32d8863ae955caa7c63aa8876b4ccbc01d7ce2c369ca59b050b059eb139790bd"
+        }
+      ],
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-browse-log-race01.test",
+        "bytes": 117726617,
+        "sha256": "679cbc28360b1ad5214bf519f41c2747072d9b0130d3081f3dd7d85e561f6a29"
+      },
+      "command_exits": [
+        {
+          "label": "go-list",
+          "exit": 0,
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-race01/go-list.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "label": "compile",
+          "exit": 0,
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-race01/compile.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "label": "tests",
+          "exit": 0,
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-race01/tests.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ],
+      "verdicts": [
+        "TestOriginalModulesRequestLogPrecedesTerminalCheck/stop_false",
+        "TestOriginalModulesRequestLogPrecedesTerminalCheck/merge",
+        "TestOriginalModulesRequestLogPrecedesTerminalCheck/provider_ordinary_error",
+        "TestOriginalModulesRequestLogPrecedesTerminalCheck"
+      ],
+      "raw": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-race01/tests.stdout",
+        "bytes": 19290,
+        "sha256": "53ebed11031844b73ce2a19a4c86c9542d816b478604f9715d9d8d9992725bde"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-browse-log-race01/result.json",
+        "bytes": 2061,
+        "sha256": "b5c80cdaddf146e3bf09886a694486e9ba7517bc448d2dbc9e936b4a59a6eeeb"
+      },
+      "worker_race": false
+    },
+    {
+      "name": "s12-module-log-server01",
+      "input_count": 3961,
+      "all_recorded_phase_maps_equal": true,
+      "current_drift": [],
+      "phase_maps": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-module-log-server01/inputs-before.json",
+          "bytes": 947681,
+          "sha256": "0008a8a8f6f065497a28c4ce719d08be153b388a00b8acc10ed19e3190ab82f5"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-module-log-server01/inputs-after.json",
+          "bytes": 947681,
+          "sha256": "0008a8a8f6f065497a28c4ce719d08be153b388a00b8acc10ed19e3190ab82f5"
+        }
+      ],
+      "generated_copies": [],
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-module-log-server01",
+        "bytes": 74487335,
+        "sha256": "7dde726676ac896ce4c692787b8836c5dcf56bbdcbeb7902b76aa4c200064101"
+      },
+      "command_exits": [
+        {
+          "label": "go-list",
+          "exit": 0,
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-module-log-server01/go-list.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "label": "build",
+          "exit": 0,
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-module-log-server01/build.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ],
+      "verdicts": [],
+      "raw": null,
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-module-log-server01/result.json",
+        "bytes": 1126,
+        "sha256": "c01848ee387cba623d1866fa93ecb5a6f532d94c28733f7e06cbb96989a5116d"
+      },
+      "worker_race": false
+    },
+    {
+      "name": "s12-module-log-worker01",
+      "input_count": 1085,
+      "all_recorded_phase_maps_equal": true,
+      "current_drift": [],
+      "phase_maps": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-module-log-worker01/inputs-before.json",
+          "bytes": 234389,
+          "sha256": "db0f73445394d9fd4a538d9b0c4f34834ab64f81c822be075bfebcbcea648239"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-module-log-worker01/inputs-after.json",
+          "bytes": 234389,
+          "sha256": "db0f73445394d9fd4a538d9b0c4f34834ab64f81c822be075bfebcbcea648239"
+        }
+      ],
+      "generated_copies": [],
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-module-log-worker01",
+        "bytes": 5671762,
+        "sha256": "3b8cd015282bd2e199e953078233df054283a143d06fc927cb20fa0048859016"
+      },
+      "command_exits": [
+        {
+          "label": "go-list",
+          "exit": 0,
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-module-log-worker01/go-list.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "label": "build",
+          "exit": 0,
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-module-log-worker01/build.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ],
+      "verdicts": [],
+      "raw": null,
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-module-log-worker01/result.json",
+        "bytes": 1220,
+        "sha256": "8daae672aad79eb1d3bc17ba8cd361df165d16c2d04dd9ec06ddd7edf4b30e52"
+      },
+      "worker_race": false
+    }
+  ],
+  "cli": {
+    "result": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-module-log-cli/run01/result.json",
+      "bytes": 64804,
+      "sha256": "573eaf912495a9fd689118835a80d1e541f222c7497779e3fcd628c06ac55343"
+    },
+    "driver": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-module-log-cli/normal-cli-driver.py",
+      "bytes": 30384,
+      "sha256": "01fb93f01a3c57536b26ca5fc5402a3e288a51e22b218b41f019cebe5da8fd1e"
+    },
+    "prepared": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-module-log-cli/prepared-binding.json",
+      "bytes": 2518,
+      "sha256": "7e399f746ce43a4fc4110d82f4ff3cb0ca562b64f0302426c289129c3d8a5943"
+    },
+    "tool_receipt": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-module-log-cli/run01/tool-execution-receipt.json",
+      "bytes": 2060,
+      "sha256": "f7b593771fffee4b02d9a9dccf30f59d20f551d953cbeaec6ff30942407f4a66"
+    },
+    "tool_receipt_origin": "coordinator transcription of original tool argv/terminal, not a new execution",
+    "exit": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-module-log-cli/run01/driver.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "controller_calls": 56,
+    "retained_raw_bodies": [
+      {
+        "path": "/healthz",
+        "bytes": 88,
+        "sha256": "9f950e5eae67818c4e61d2632d7a15adc3403d6dc98bbaae65638a2a54da2209",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/plugins/markets",
+        "bytes": 288,
+        "sha256": "62e5ce4b690756876d78c36245ada2634f9b908f47799bfb4e4f74f299c5288d",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/sites/manage",
+        "bytes": 1395,
+        "sha256": "18b39e763a3ccce356c8ac311e982c5dba8b8766651086ae9e17ae98a427d87a",
+        "method": "POST",
+        "status": 200
+      },
+      {
+        "path": "/api/plugins/install",
+        "bytes": 70,
+        "sha256": "6a985f82e66ba242d94a51464fbaa048a0b17da296864822c2a6db50c9581238",
+        "method": "POST",
+        "status": 200
+      },
+      {
+        "path": "/api/plugins/OwnedModuleOverride",
+        "bytes": 70,
+        "sha256": "efb59594729632fade6a747c576e76e4da23783750aaf08ea81772eac25acfcd",
+        "method": "PUT",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverride/snapshot",
+        "bytes": 390,
+        "sha256": "be458160f439557bce78298280a0d3f132d29832faa7154876b345eae8e5d878",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/plugins/OwnedModuleOverride/clone",
+        "bytes": 238,
+        "sha256": "67e710fd7218aeebf32a0fbbba22f575f180b6e49e6dcee06d70e453938f87c9",
+        "method": "POST",
+        "status": 200
+      },
+      {
+        "path": "/api/plugins/OwnedModuleOverridelog",
+        "bytes": 70,
+        "sha256": "a46fe11ffe59073518edd6344ac9cac627bc4a1389f632fba214d3e4526dd66e",
+        "method": "PUT",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverridelog/snapshot",
+        "bytes": 390,
+        "sha256": "3a973d0904818f664dc98864ed51f316f51acb035c540601aea84a0b72514f6f",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverride/snapshot",
+        "bytes": 390,
+        "sha256": "fb807cac8bfb4cf7af61b521f9dd829f4b0ad7a5a1ac8d97751017de6ab156c7",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverridelog/snapshot",
+        "bytes": 390,
+        "sha256": "a08706afa4f8620569b6dd0d9fea7142be1d6047a5a7d5bda96f34137a2b484d",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=INFO&limit=100",
+        "bytes": 498,
+        "sha256": "8ded23a7607f0c2911b722a0ba2dd0d307baa7d07f3f45d4f5d032834ed51df0",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=ERROR&limit=100",
+        "bytes": 498,
+        "sha256": "faffbe97d15b08efb6dd0e2e9d7aac6af1ac0d9a84f2b935edd99e1d05c49b23",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/sites/manage/owned-module-log-site/resources",
+        "bytes": 282,
+        "sha256": "be964dee9bd5e1bfdd34e4cb4871557b16d018235936a5ccbae0796f018c8ebe",
+        "method": "POST",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverride/snapshot",
+        "bytes": 918,
+        "sha256": "ab67d7b60eff33e0f864ae777366a1913d170302d3c01922584957c719eba7e4",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverridelog/snapshot",
+        "bytes": 421,
+        "sha256": "9be08cc1bf70fdb5fdbc3a4e93584bccda85b77522f8ee80d99069d7939a7484",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=INFO&limit=100",
+        "bytes": 1143,
+        "sha256": "6640c25527f2a8e04345c83b38d533cb6ff9a44b54a413ae44d845a09e48dd0d",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=ERROR&limit=100",
+        "bytes": 498,
+        "sha256": "f8885878cf35a8bb61269e1ea8f7c6d38593b10b15a81e87afaf8751c1adaada",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/plugins/OwnedModuleOverride",
+        "bytes": 70,
+        "sha256": "48debfcf7fb6f4040339d93e0d0452386c18725dca59510968ad7d7b378c1718",
+        "method": "PUT",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverride/snapshot",
+        "bytes": 915,
+        "sha256": "d8d677874f890f84b7a88983863995db38f32099ae00eec89891c9124c54316d",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverridelog/snapshot",
+        "bytes": 421,
+        "sha256": "43994fe983a7e5628923c9b09c1570a6c9cb558eacc21b847bc5548c9b0be9df",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=INFO&limit=100",
+        "bytes": 1143,
+        "sha256": "bfb5e105c0bf8b92da34d127a5513469cc92687de73d579ec59bcf7b43b4062c",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=ERROR&limit=100",
+        "bytes": 498,
+        "sha256": "9709d3c15c620b145bf6e472c9bb74c2ab7b9886f1548f21618028be3ddd4662",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/sites/manage/owned-module-log-site/resources",
+        "bytes": 282,
+        "sha256": "9234d410b0addfe4d3ee8f5f501b716b789050b1167dc56ad1474abba46ea40d",
+        "method": "POST",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverride/snapshot",
+        "bytes": 1405,
+        "sha256": "82c1248c13ec075c4ddf8d88c3149d9b629f614d7118e4441e03054033f1e57a",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverridelog/snapshot",
+        "bytes": 918,
+        "sha256": "5cf8b60f8ef9fa9e07803497190d8055267d59962dfa70194f4c5ede65b38835",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=INFO&limit=100",
+        "bytes": 1789,
+        "sha256": "53549252d498d0695c3c9a631d4b1dbebff30562764b49e263db17a7b09ed64f",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=ERROR&limit=100",
+        "bytes": 783,
+        "sha256": "bc94cdbacd71e8e4211e2e5abb9268449624ece946cf41d5e555d46aebf2ed9a",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/plugins/OwnedModuleOverride",
+        "bytes": 70,
+        "sha256": "e427bffc1871fed63135a3461a7cd7e5bebc23692afe6343a221623579bc3e28",
+        "method": "PUT",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverride/snapshot",
+        "bytes": 1408,
+        "sha256": "f58106cbf262d3b8133f6bce5bad17d804ddb8e37d2242e96eed18ebc244f972",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverridelog/snapshot",
+        "bytes": 918,
+        "sha256": "08d7c8623d9f977634112bebb6de33cdef6b8d6fb81f28c8e64b2a47808e3700",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=INFO&limit=100",
+        "bytes": 1788,
+        "sha256": "787f2ead96acf6b308d94ef1e63f3c33de27e6aaf3a1a2ea74567c3aedbfecc3",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=ERROR&limit=100",
+        "bytes": 782,
+        "sha256": "892434225d7e47fdd3a0e6c4757165ea60d92c92500b7a10f7b00ab4dbcb0824",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/sites/manage/owned-module-log-site/resources",
+        "bytes": 282,
+        "sha256": "7ceddb705e83c5a4d48880e959335b1efba1cf241f3b2c940d146913c8110a03",
+        "method": "POST",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverride/snapshot",
+        "bytes": 1425,
+        "sha256": "a4165c8d4f847faf0d84beb8e2db7be12d80ea8f28a86698cf8a84a14702f349",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverridelog/snapshot",
+        "bytes": 918,
+        "sha256": "95c23763a46614859602500e17a069bd07f27da3abf90e920a0baedd1ac204e2",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=INFO&limit=100",
+        "bytes": 2434,
+        "sha256": "8ec89c2ec9348f9f46a7097d404ad6cc9eac3804019e0c2327028de7c3e75f9b",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=ERROR&limit=100",
+        "bytes": 783,
+        "sha256": "ee471ff6987e19684abcadef36cefe966c1654a97bd8b05db8d21c3f44b5b64e",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/healthz",
+        "bytes": 88,
+        "sha256": "363a51621c4dc61454a36e4860243c230ed2eff0e2a9aa70cefffeb4768ef68c",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/plugins/markets",
+        "bytes": 288,
+        "sha256": "c887c9a861324f62f50b37ffb81ad570adf72bc44a2d4037fd822da837feed0e",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverride/snapshot",
+        "bytes": 421,
+        "sha256": "8cd93eee9b93383c77a4a955d116b21dcaca333bdb2ff79c752d0bb26bd20ebc",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverridelog/snapshot",
+        "bytes": 421,
+        "sha256": "57843cbec50ec98e806c3c1eba7b48259f760f9d3db2ac069147ba189a2d0981",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/sites/manage",
+        "bytes": 1456,
+        "sha256": "fdaed89c279f1eab8b81629f6d020aa00541aaa9e76a1a7c9d1da078c7feb41f",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=INFO&limit=100",
+        "bytes": 2434,
+        "sha256": "491eda376071be12f952c4672cfdceb3bd1bb3dedb4ed49994d3febe04f80dcb",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=ERROR&limit=100",
+        "bytes": 783,
+        "sha256": "9b2e4938eece76b1e9fa362b2e8c9a051159c5f536b5e14aaa7ce15b133f07cb",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverride/snapshot",
+        "bytes": 421,
+        "sha256": "29ed00ace163bc59b7744b735007c7be3c86350eb73f61fa17a05d9a7b69b9ae",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverridelog/snapshot",
+        "bytes": 421,
+        "sha256": "63269518b74217802f0b036ef1ced4c405f79e801c7f133d7f086d69181d16ee",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=INFO&limit=100",
+        "bytes": 2434,
+        "sha256": "222097011f33d887818570b035d36c6950b37816b250bcf8a5e0864a48488ee0",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=ERROR&limit=100",
+        "bytes": 783,
+        "sha256": "75d120e3014d381a35a24888b1c6034fb602ac410fef4cb43d8f04ce8bb19a91",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/sites/manage/owned-module-log-site/resources",
+        "bytes": 282,
+        "sha256": "0cf783931eb0f430755bb84e63b5301371a07362819ede7102905c6f9fa76a4d",
+        "method": "POST",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverride/snapshot",
+        "bytes": 917,
+        "sha256": "e35bf790986c9f2b635cd7397fe5ae0ef59c62d48cee9895c941e954f5b4c1d8",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/v1/plugin/OwnedModuleOverridelog/snapshot",
+        "bytes": 421,
+        "sha256": "f008932c46690e022837a42e9baebd90e43f67d3737ab37cc322a238d9a3f982",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=INFO&limit=100",
+        "bytes": 3080,
+        "sha256": "1d522a91e061022ec4c2ee6fe479bce7bdc120475426c48b8c4d8dd7338e56ca",
+        "method": "GET",
+        "status": 200
+      },
+      {
+        "path": "/api/logs?module=plugins&level=ERROR&limit=100",
+        "bytes": 783,
+        "sha256": "3e161f40017961d74084dfb18564e29dd917d2e2b0fa7d3cb66fc95b284bfed3",
+        "method": "GET",
+        "status": 200
+      }
+    ],
+    "queries": [
+      {
+        "label": "false_stops_second_RPC_but_logs_second_request",
+        "host": 25,
+        "worker_pids": [
+          43,
+          59
+        ],
+        "actual_deltas": [
+          {
+            "get_state": 1,
+            "get_module": 1,
+            "init": 0,
+            "module_execute": 1,
+            "module_fail": 0
+          },
+          {
+            "get_state": 1,
+            "get_module": 1,
+            "init": 0,
+            "module_execute": 0,
+            "module_fail": 0
+          }
+        ],
+        "request_log_ids": [
+          "log_mjsAKfqsPDlpsoOsNOMVotvo",
+          "log_bZQqhTgkfV9ZHYTlkyy3hYIZ"
+        ],
+        "error_log_ids": []
+      },
+      {
+        "label": "ordinary_failure_then_second_false_prevents_native",
+        "host": 25,
+        "worker_pids": [
+          43,
+          59
+        ],
+        "actual_deltas": [
+          {
+            "get_state": 1,
+            "get_module": 1,
+            "init": 0,
+            "module_execute": 0,
+            "module_fail": 1
+          },
+          {
+            "get_state": 1,
+            "get_module": 1,
+            "init": 0,
+            "module_execute": 1,
+            "module_fail": 0
+          }
+        ],
+        "request_log_ids": [
+          "log_KvKKAlrvTwVL8NpP1fCKs2KE",
+          "log_2QNO7jxrAGDwR1I0xVndTL11"
+        ],
+        "error_log_ids": [
+          "log_hV94fW3vQiFQYcKzx4lLwsR4"
+        ]
+      },
+      {
+        "label": "same_worker_recovery_after_real_module_error",
+        "host": 25,
+        "worker_pids": [
+          43,
+          59
+        ],
+        "actual_deltas": [
+          {
+            "get_state": 1,
+            "get_module": 1,
+            "init": 0,
+            "module_execute": 1,
+            "module_fail": 0
+          },
+          {
+            "get_state": 1,
+            "get_module": 1,
+            "init": 0,
+            "module_execute": 0,
+            "module_fail": 0
+          }
+        ],
+        "request_log_ids": [
+          "log_tL7xbLFs2mIQzMnsDGWPQaiK",
+          "log_oMDqGWhI4Pn_sqakAnJMhRWS"
+        ],
+        "error_log_ids": []
+      },
+      {
+        "label": "cold_normal_host_same_configuration_and_shared_log_order",
+        "host": 66,
+        "worker_pids": [
+          81,
+          87
+        ],
+        "actual_deltas": [
+          {
+            "get_state": 1,
+            "get_module": 1,
+            "init": 0,
+            "module_execute": 1,
+            "module_fail": 0
+          },
+          {
+            "get_state": 1,
+            "get_module": 1,
+            "init": 0,
+            "module_execute": 0,
+            "module_fail": 0
+          }
+        ],
+        "request_log_ids": [
+          "log_xpxR9IK4u6F__HfOiHGiMMk4",
+          "log_uwn8yqPiLPQwURuCp10_ueCX"
+        ],
+        "error_log_ids": []
+      }
+    ],
+    "hosts": [
+      {
+        "pid": 25,
+        "identity": {
+          "ppid": 6,
+          "starttime": "3361860"
+        },
+        "normal_not_safe": true,
+        "executable_sha256": "7dde726676ac896ce4c692787b8836c5dcf56bbdcbeb7902b76aa4c200064101",
+        "owned_listener_inode": "545096",
+        "exit": 0
+      },
+      {
+        "pid": 66,
+        "identity": {
+          "ppid": 6,
+          "starttime": "3361919"
+        },
+        "normal_not_safe": true,
+        "executable_sha256": "7dde726676ac896ce4c692787b8836c5dcf56bbdcbeb7902b76aa4c200064101",
+        "owned_listener_inode": "540214",
+        "exit": 0
+      }
+    ],
+    "workers": [
+      {
+        "ppid": 25,
+        "starttime": "3361888",
+        "pid": 43,
+        "executable_sha256": "3b8cd015282bd2e199e953078233df054283a143d06fc927cb20fa0048859016",
+        "host_pid": 25
+      },
+      {
+        "ppid": 25,
+        "starttime": "3361901",
+        "pid": 59,
+        "executable_sha256": "3b8cd015282bd2e199e953078233df054283a143d06fc927cb20fa0048859016",
+        "host_pid": 25
+      },
+      {
+        "ppid": 66,
+        "starttime": "3361936",
+        "pid": 81,
+        "executable_sha256": "3b8cd015282bd2e199e953078233df054283a143d06fc927cb20fa0048859016",
+        "host_pid": 66
+      },
+      {
+        "ppid": 66,
+        "starttime": "3361940",
+        "pid": 87,
+        "executable_sha256": "3b8cd015282bd2e199e953078233df054283a143d06fc927cb20fa0048859016",
+        "host_pid": 66
+      }
+    ],
+    "warm_persisted_logs_unchanged_after_cold": 7,
+    "peer_calls": [
+      {
+        "at": "2026-10-31T19:55:39.914003+00:00",
+        "method": "GET",
+        "path": "/",
+        "scope": "setup",
+        "status": 404,
+        "response_bytes": 19,
+        "response_sha256": "b16e15764b8bc06c5c3f9f19bc8b99fa48e7894aa5a6ccdad65da49bbf564793",
+        "response_completed": true
+      },
+      {
+        "at": "2026-10-31T19:55:39.916597+00:00",
+        "method": "GET",
+        "path": "/index",
+        "scope": "artifact",
+        "status": 200,
+        "response_bytes": 1534,
+        "response_sha256": "09d97eccefd345ee950ab3d144393274d8ffc835cfa93fecf7dbcc87e549c8e0",
+        "response_completed": true
+      },
+      {
+        "at": "2026-10-31T19:55:39.917378+00:00",
+        "method": "GET",
+        "path": "/worker",
+        "scope": "artifact",
+        "status": 200,
+        "response_bytes": 5671762,
+        "response_sha256": "3b8cd015282bd2e199e953078233df054283a143d06fc927cb20fa0048859016",
+        "response_completed": true
+      }
+    ],
+    "resource_samples": 59,
+    "minimum_scratch_free": 53559721984,
+    "minimum_tmp_free": 5225664512,
+    "input_drift": [],
+    "environment_unchanged_reported": true,
+    "host_logs": [
+      {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-module-log-cli/run01/host-1.log",
+        "bytes": 9001,
+        "sha256": "c71d766275bcee67962b3c4980042351768f98e322d2514424e9a273dc0fdf01"
+      },
+      {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-module-log-cli/run01/host-2.log",
+        "bytes": 2820,
+        "sha256": "8ef628f44a0789d3def6fd46c8613023095d450cf45077c3d9eefac58f445e5c"
+      }
+    ],
+    "ended": "2026-10-31T19:55:41.024096+00:00"
+  },
+  "scope": [
+    "Single shared dispatcher INFO position/count fix; unchanged RPC, aggregation and error paths",
+    "Source-driven normal/race one root with three selected source cases, normal reused worker",
+    "Normal two-host existing async site-resource API with false-stop, actual failure, same-PID recovery and cold persistent log IDs",
+    "No new ordinary synchronous browse host/core/SitesHelper, no serial reentry acceptance, no full logging catalog/platform/publication claim",
+    "Server intentionally includes WIP Browse SDK2; not a clean standalone delivery candidate",
+    "Resource sampling only; no continuous/terminal monitor or syscall trace claim"
+  ],
+  "reviewer_execution": {
+    "go": false,
+    "source_import": false,
+    "network": false,
+    "product_ledger_stage_edits": false
+  },
+  "readback_script": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-host-dependencies/readback-module-log.js",
+    "bytes": 10213,
+    "sha256": "f3ac4182702ac440e6edc1e9599c3125f540200b3e5e34362d4650824d5deac9"
+  }
+}

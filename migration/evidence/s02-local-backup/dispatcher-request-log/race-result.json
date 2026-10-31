@@ -1,0 +1,86 @@
+{
+  "started": "2026-10-31T19:50:36.201256+00:00",
+  "driver_pid": 2,
+  "package": "./internal/app",
+  "pattern": "^TestOriginalModulesRequestLogPrecedesTerminalCheck$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-browse-log-race01.test",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-browse-log-race01.test",
+        "-test.v",
+        "-test.run",
+        "^TestOriginalModulesRequestLogPrecedesTerminalCheck$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T19:50:36.201275+00:00",
+      "scratch_free": 53815980032,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T19:50:37.328794+00:00",
+      "scratch_free": 53812899840,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T19:51:25.685851+00:00",
+      "scratch_free": 53573791744,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 6201,
+  "program_sha256": "679cbc28360b1ad5214bf519f41c2747072d9b0130d3081f3dd7d85e561f6a29",
+  "root_passes": [
+    "TestOriginalModulesRequestLogPrecedesTerminalCheck"
+  ],
+  "ended": "2026-10-31T19:51:31.543141+00:00"
+}

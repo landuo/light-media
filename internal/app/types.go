@@ -109,6 +109,7 @@ type Settings struct {
 	RSSSites                    []string                     `json:"rss_sites"`
 	Directories                 []DirectoryRule              `json:"directories"`
 	MaterialMaxMiB              int                          `json:"material_max_mib"`
+	TempFileDays                *int                         `json:"temp_file_days,omitempty"` // Source TEMP_FILE_DAYS; nil preserves default 3.
 	AutoImportMode              string                       `json:"auto_import_mode"`
 	LogLevel                    string                       `json:"log_level"`
 	LogMaxMiB                   int                          `json:"log_max_mib"`

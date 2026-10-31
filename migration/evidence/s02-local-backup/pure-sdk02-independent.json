@@ -1,0 +1,369 @@
+{
+  "status": "ACCEPT_ACTUAL_EXACT_CANDIDATE_PURE2_AND_SDK2",
+  "at_utc": "2026-10-31T20:43:16.869Z",
+  "gates": [
+    {
+      "name": "s02-pure02",
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/result.json",
+        "bytes": 2220,
+        "sha256": "b33b8ce7178921a9b70ccc910a3de79c2b320100ca080a013567944f3600144b"
+      },
+      "input_count": 2897,
+      "phase_maps": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/inputs-before.json",
+          "bytes": 636471,
+          "sha256": "21594f7cda10980852a13e7857e51597c5b17584694a9129096ed597403cf40a"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/inputs-after-compile.json",
+          "bytes": 636471,
+          "sha256": "21594f7cda10980852a13e7857e51597c5b17584694a9129096ed597403cf40a"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/inputs-after-test.json",
+          "bytes": 636471,
+          "sha256": "21594f7cda10980852a13e7857e51597c5b17584694a9129096ed597403cf40a"
+        }
+      ],
+      "recorded_phases_equal": true,
+      "current_bound_drift": [],
+      "generated_copies": [
+        {
+          "original": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/c9/c9a8a053270af41e472abe2cd5e45f6faab40e246ffe61350a752acbf8d50862-d",
+          "copy": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/generated-source/c9a8a053270af41e472abe2cd5e45f6faab40e246ffe61350a752acbf8d50862.go",
+            "bytes": 2606,
+            "sha256": "c9a8a053270af41e472abe2cd5e45f6faab40e246ffe61350a752acbf8d50862"
+          }
+        }
+      ],
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-pure02.test",
+        "bytes": 19435751,
+        "sha256": "1adcf5ffdd14aaf1ca480319442b35da4651cdd92d88a075aec9616ef455053e"
+      },
+      "roots": [
+        "TestLocalBackupMaterialSelectedSourceOracle",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries"
+      ],
+      "all_test_passes": [
+        "TestLocalBackupMaterialSelectedSourceOracle/qbittorrent-qbittorrent-autoFalse-skipFalse",
+        "TestLocalBackupMaterialSelectedSourceOracle/transmission-qbittorrent-autoFalse-skipFalse",
+        "TestLocalBackupMaterialSelectedSourceOracle/missing-torrent-file",
+        "TestLocalBackupMaterialSelectedSourceOracle/empty-torrent",
+        "TestLocalBackupMaterialSelectedSourceOracle/invalid-torrent",
+        "TestLocalBackupMaterialSelectedSourceOracle/missing-announce-no-resume",
+        "TestLocalBackupMaterialSelectedSourceOracle/restore-trackers",
+        "TestLocalBackupMaterialSelectedSourceOracle/restore-empty-trackers-keeps-original",
+        "TestLocalBackupMaterialSelectedSourceOracle/invalid-resume",
+        "TestLocalBackupMaterialSelectedSourceOracle",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries/single-tracker-keeps-old-announce-list",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries/integer-zero-announce-and-tracker-use-source-truth",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries/original-byte-final-reread-not-reencoding",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries/non-qb-empty-raw-is-not-qb-skip",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries/torrent-exists",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries/torrent-read-1",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries/resume-exists",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries/resume-read",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries/temporary-write",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries/temporary-read",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries/final-original-read-error-propagates",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries/pre-cancel-no-IO",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries"
+      ],
+      "no_fail_or_skip": true,
+      "commands": [
+        {
+          "label": "go-list",
+          "argv": [
+            "go",
+            "list",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-deps",
+            "-test",
+            "-json",
+            "./internal/plugins/torrenttransfer"
+          ],
+          "exit": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/go-list.exit",
+            "bytes": 2,
+            "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+          },
+          "stdout": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/go-list.stdout",
+            "bytes": 669553,
+            "sha256": "5cd28f5876a85739599e444354445cc7f8f7b184b88f3082d91fda9dca717f1e"
+          },
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/go-list.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "label": "compile",
+          "argv": [
+            "go",
+            "test",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-p=1",
+            "-c",
+            "-o",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-pure02.test",
+            "./internal/plugins/torrenttransfer"
+          ],
+          "exit": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/compile.exit",
+            "bytes": 2,
+            "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+          },
+          "stdout": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/compile.stdout",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/compile.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "label": "tests",
+          "argv": [
+            "go",
+            "tool",
+            "test2json",
+            "-t",
+            "-p",
+            "./internal/plugins/torrenttransfer",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-pure02.test",
+            "-test.v",
+            "-test.run",
+            "^(TestLocalBackupMaterialSelectedSourceOracle|TestLocalBackupMaterialReadAndRebuildBoundaries)$",
+            "-test.count=1",
+            "-test.timeout=90s"
+          ],
+          "exit": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/tests.exit",
+            "bytes": 2,
+            "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+          },
+          "stdout": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/tests.stdout",
+            "bytes": 22606,
+            "sha256": "e582f23cee294bb4a09b1cbe3e1f3f199861ea727e4d0b317331fda748faa924"
+          },
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure02/tests.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ],
+      "started": "2026-10-31T20:40:58.078671+00:00",
+      "ended": "2026-10-31T20:41:00.078021+00:00",
+      "resource_samples": [
+        {
+          "phase": "go-list",
+          "at": "2026-10-31T20:40:58.078686+00:00",
+          "scratch_free": 52340006912,
+          "tmp_free": 5225664512
+        },
+        {
+          "phase": "compile",
+          "at": "2026-10-31T20:40:58.466333+00:00",
+          "scratch_free": 52338675712,
+          "tmp_free": 5225664512
+        },
+        {
+          "phase": "tests",
+          "at": "2026-10-31T20:40:59.903096+00:00",
+          "scratch_free": 52315226112,
+          "tmp_free": 5225664512
+        }
+      ],
+      "layer": "Pure local-material projection/read-rebuild port against selected inherited source observations; not complete original transfer business"
+    },
+    {
+      "name": "s02-sdk02",
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/result.json",
+        "bytes": 2121,
+        "sha256": "b1ca8c282e216433762d0796cee3de72b41ceedad31bd5fd4ff7d1c95e80e542"
+      },
+      "input_count": 1924,
+      "phase_maps": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/inputs-before.json",
+          "bytes": 416053,
+          "sha256": "6a603d82857713dff41142ec3d8250c9fb6c053c8d05d094da0f8459fff57ecf"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/inputs-after-compile.json",
+          "bytes": 416053,
+          "sha256": "6a603d82857713dff41142ec3d8250c9fb6c053c8d05d094da0f8459fff57ecf"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/inputs-after-test.json",
+          "bytes": 416053,
+          "sha256": "6a603d82857713dff41142ec3d8250c9fb6c053c8d05d094da0f8459fff57ecf"
+        }
+      ],
+      "recorded_phases_equal": true,
+      "current_bound_drift": [],
+      "generated_copies": [
+        {
+          "original": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/8b/8b63ac3bd2de8146c97ee1deddee827d4d611249258eeb9db03a67b0d97583b3-d",
+          "copy": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/generated-source/8b63ac3bd2de8146c97ee1deddee827d4d611249258eeb9db03a67b0d97583b3.go",
+            "bytes": 16032,
+            "sha256": "8b63ac3bd2de8146c97ee1deddee827d4d611249258eeb9db03a67b0d97583b3"
+          }
+        }
+      ],
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-sdk02.test",
+        "bytes": 8763075,
+        "sha256": "0639b279593467b41cf37cb64b362d6a8e5312ffd7ee6fb56deab88b61ec382b"
+      },
+      "roots": [
+        "TestLocalTorrentBackupWireAndBoundary",
+        "TestLocalTorrentBackupPagedBytesAndCleanup"
+      ],
+      "all_test_passes": [
+        "TestLocalTorrentBackupWireAndBoundary",
+        "TestLocalTorrentBackupPagedBytesAndCleanup"
+      ],
+      "no_fail_or_skip": true,
+      "commands": [
+        {
+          "label": "go-list",
+          "argv": [
+            "go",
+            "list",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-deps",
+            "-test",
+            "-json",
+            "./internal/plugins"
+          ],
+          "exit": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/go-list.exit",
+            "bytes": 2,
+            "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+          },
+          "stdout": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/go-list.stdout",
+            "bytes": 368035,
+            "sha256": "7f351b2915ba586755b156e42b6950e92011a8c8817f543d1db15e4cba5a5f85"
+          },
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/go-list.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "label": "compile",
+          "argv": [
+            "go",
+            "test",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-p=1",
+            "-c",
+            "-o",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-sdk02.test",
+            "./internal/plugins"
+          ],
+          "exit": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/compile.exit",
+            "bytes": 2,
+            "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+          },
+          "stdout": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/compile.stdout",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          },
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/compile.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        },
+        {
+          "label": "tests",
+          "argv": [
+            "go",
+            "tool",
+            "test2json",
+            "-t",
+            "-p",
+            "./internal/plugins",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-sdk02.test",
+            "-test.v",
+            "-test.run",
+            "^(TestLocalTorrentBackupWireAndBoundary|TestLocalTorrentBackupPagedBytesAndCleanup)$",
+            "-test.count=1",
+            "-test.timeout=90s"
+          ],
+          "exit": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/tests.exit",
+            "bytes": 2,
+            "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+          },
+          "stdout": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/tests.stdout",
+            "bytes": 1769,
+            "sha256": "325052bcc0bb148b2f3d239e1557e0251e51c5afc914bdcf8059a247f1dd3630"
+          },
+          "stderr": {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-sdk02/tests.stderr",
+            "bytes": 0,
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ],
+      "started": "2026-10-31T20:41:00.119025+00:00",
+      "ended": "2026-10-31T20:41:03.193946+00:00",
+      "resource_samples": [
+        {
+          "phase": "go-list",
+          "at": "2026-10-31T20:41:00.119040+00:00",
+          "scratch_free": 52314554368,
+          "tmp_free": 5225664512
+        },
+        {
+          "phase": "compile",
+          "at": "2026-10-31T20:41:00.408424+00:00",
+          "scratch_free": 52313714688,
+          "tmp_free": 5225664512
+        },
+        {
+          "phase": "tests",
+          "at": "2026-10-31T20:41:02.462397+00:00",
+          "scratch_free": 52297814016,
+          "tmp_free": 5225664512
+        }
+      ],
+      "layer": "SDK wire/page/release boundary with recording host; not actual host filesystem/worker"
+    }
+  ],
+  "unique_bound_paths_rehashed": 2905,
+  "purpose": "Explicit current-closure revalidation after protected holding of two unrelated Browse SDK WIP files; no product changes/repeated full historical suites.",
+  "environment": "Only reviewed inherited build environment settings; static proxy-unchanged flag is not full environment sampling.",
+  "coordinator_terminal_report": {
+    "session": 12500,
+    "terminal": "7d351b",
+    "exit": 0,
+    "provenance": "Parent report; reviewer independently read raw result/log/exit bytes."
+  },
+  "reviewer_executed_Go_source_or_network": false
+}

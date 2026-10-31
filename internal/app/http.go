@@ -752,6 +752,11 @@ func (a *App) preserveSecrets(c *Settings) {
 	c.IndexerSites = a.Settings().IndexerSites
 	c.RSSSites = a.Settings().RSSSites
 	old := a.Settings()
+	// Existing forms do not edit this source-consumed cleanup option.
+	// Preserve an omitted value; explicit zero and negative days remain values.
+	if c.TempFileDays == nil {
+		c.TempFileDays = old.TempFileDays
+	}
 	if c.ClearProxyHost {
 		c.ProxyHost = ""
 	} else if strings.TrimSpace(c.ProxyHost) == "" {

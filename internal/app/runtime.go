@@ -302,6 +302,11 @@ func (a *App) Close() error {
 	a.systemMessages.close()
 	a.stopSubscriptionStatistics()
 	a.wg.Wait()
+	// Source shutdown runs temp cleanup after producers stop, and reports a
+	// failed cleanup step without preventing the remaining shutdown stages.
+	if err := a.clearOriginalLocalTorrentBackup(a.originalLocalTorrentBackupTempDays()); err != nil {
+		a.log("ERROR", "plugins", "local_torrent_backup_cleanup_failed", "关闭临时种子材料失败："+err.Error(), "", "")
+	}
 	a.closeOriginalMaterialCache()
 	a.closeSubscriptionStatisticsHTTP()
 	a.log("INFO", "runtime", "stopped", "服务已停止", "", "")

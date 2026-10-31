@@ -1,0 +1,7 @@
+# S02 C2 cleanup — actual finite acceptance
+
+**ACCEPT at this component layer.** `s02-cleanup01` compiled and ran exactly the two declared roots; both passed, with no skipped or failed test. The independent raw readback confirms the six original source trace cases, additional arithmetic/path-order assertions, real owned-sandbox cleanup, and optional setting persistence across a cold SQLite reopen.
+
+The 6,202 compile-input bindings are equal before compilation, after compilation and after testing; all were independently rehashed current with zero drift. Generated-source retained bytes and program `699953572ab9bfb8290c1cafa8f0200f4ce3c1a249c7544c9862bdcfbdd1513c` match. Go-list/compile/test exit files all contain 0. The coordinator's explicitly labeled callback transcription records session 15111 / terminal db3d16 / exit 0; it is not a new execution by this reviewer.
+
+C2 closes the prior path and directory-order findings, and the three narrow Settings/form/Close hooks were present in the actual compile closure. The tested Close/configuration paths do not establish installed-worker draining or normal-server behavior. The six source traces remain original-AST/recording-port evidence, not source OS cleanup. No permission/inode/symlink-escape probes, worker build, network or full S02 acceptance is claimed. This gate is normal, not race; resource evidence consists of three pre-command samples.

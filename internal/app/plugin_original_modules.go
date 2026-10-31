@@ -123,6 +123,7 @@ func (a *App) invokeOriginalPluginModuleGroupsWithTitleFilter(ctx context.Contex
 		if !exists || !originalViewJSONTruth(binding) {
 			continue
 		}
+		a.logOriginalPluginContext(ctx, "INFO", "module_request", "请求插件 "+group.PluginName+" 执行："+method+" ...")
 		if title != nil {
 			if method != "filter_torrents" {
 				return result, bad("PLUGIN_MODULE_INVALID", "输入修改仅属于当前普通标题过滤调用")

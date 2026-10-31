@@ -1,0 +1,680 @@
+{
+  "layer": "complete_original_AST_with_recording_path_and_controlled_clock_ports",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "timezone": {
+    "tzname": [
+      "UTC",
+      "UTC"
+    ],
+    "timezone": 0
+  },
+  "real_filesystem_deletions": 0,
+  "clock": "fixed local-naive input; real stdlib datetime arithmetic/fromtimestamp; no module patch",
+  "limits": [
+    "not actual OS deletion",
+    "not whole startup cleanup",
+    "not filesystem permissions/inodes/symlink probes",
+    "not torrent parsing or fastresume reconstruction"
+  ],
+  "selected_node": {
+    "symbol": "SystemUtils.clear",
+    "start_line": 977,
+    "end_line": 994,
+    "source_bytes_sha256": "b740d618bad8b1fc51e4ce77f282f438a28e1105173767438a2007c1f964981c",
+    "ast_no_attributes_sha256": "527a9531d2f5f71bf7364dd868f017b324a848358e693d52400e82ad501a964a"
+  },
+  "cases": [
+    {
+      "id": "missing_root",
+      "input": {
+        "id": "missing_root",
+        "now_local": "2026-10-31T12:00:00",
+        "days": 3,
+        "root_exists": false,
+        "nodes": []
+      },
+      "before": [],
+      "return": null,
+      "exception": null,
+      "trace": [
+        {
+          "operation": "exists",
+          "path": ".",
+          "result": false
+        }
+      ],
+      "after": [],
+      "root_exists_after": false
+    },
+    {
+      "id": "exactly_three_days",
+      "input": {
+        "id": "exactly_three_days",
+        "now_local": "2026-10-31T12:00:00",
+        "days": 3,
+        "root_exists": true,
+        "nodes": [
+          {
+            "path": "material.torrent",
+            "kind": "file",
+            "age_seconds": 259200
+          }
+        ]
+      },
+      "before": [
+        {
+          "path": "material.torrent",
+          "kind": "file",
+          "age_seconds": 259200,
+          "mtime": 1793188800.0
+        }
+      ],
+      "return": null,
+      "exception": null,
+      "trace": [
+        {
+          "operation": "exists",
+          "path": ".",
+          "result": true
+        },
+        {
+          "operation": "rglob",
+          "path": ".",
+          "pattern": "*",
+          "result": [
+            "material.torrent"
+          ]
+        },
+        {
+          "operation": "is_file",
+          "path": "material.torrent",
+          "result": true
+        },
+        {
+          "operation": "datetime.now",
+          "path": ".",
+          "result": "2026-10-31T12:00:00"
+        },
+        {
+          "operation": "stat",
+          "path": "material.torrent",
+          "st_mtime": 1793188800.0
+        },
+        {
+          "operation": "datetime.fromtimestamp",
+          "path": ".",
+          "timestamp": 1793188800.0,
+          "result": "2026-10-28T12:00:00"
+        },
+        {
+          "operation": "rglob",
+          "path": ".",
+          "pattern": "*",
+          "result": [
+            "material.torrent"
+          ]
+        },
+        {
+          "operation": "is_dir",
+          "path": "material.torrent",
+          "result": false
+        }
+      ],
+      "after": [
+        {
+          "path": "material.torrent",
+          "kind": "file",
+          "age_seconds": 259200,
+          "mtime": 1793188800.0
+        }
+      ],
+      "root_exists_after": true
+    },
+    {
+      "id": "three_days_twenty_three_hours",
+      "input": {
+        "id": "three_days_twenty_three_hours",
+        "now_local": "2026-10-31T12:00:00",
+        "days": 3,
+        "root_exists": true,
+        "nodes": [
+          {
+            "path": "material.torrent",
+            "kind": "file",
+            "age_seconds": 342000
+          }
+        ]
+      },
+      "before": [
+        {
+          "path": "material.torrent",
+          "kind": "file",
+          "age_seconds": 342000,
+          "mtime": 1793106000.0
+        }
+      ],
+      "return": null,
+      "exception": null,
+      "trace": [
+        {
+          "operation": "exists",
+          "path": ".",
+          "result": true
+        },
+        {
+          "operation": "rglob",
+          "path": ".",
+          "pattern": "*",
+          "result": [
+            "material.torrent"
+          ]
+        },
+        {
+          "operation": "is_file",
+          "path": "material.torrent",
+          "result": true
+        },
+        {
+          "operation": "datetime.now",
+          "path": ".",
+          "result": "2026-10-31T12:00:00"
+        },
+        {
+          "operation": "stat",
+          "path": "material.torrent",
+          "st_mtime": 1793106000.0
+        },
+        {
+          "operation": "datetime.fromtimestamp",
+          "path": ".",
+          "timestamp": 1793106000.0,
+          "result": "2026-10-27T13:00:00"
+        },
+        {
+          "operation": "rglob",
+          "path": ".",
+          "pattern": "*",
+          "result": [
+            "material.torrent"
+          ]
+        },
+        {
+          "operation": "is_dir",
+          "path": "material.torrent",
+          "result": false
+        }
+      ],
+      "after": [
+        {
+          "path": "material.torrent",
+          "kind": "file",
+          "age_seconds": 342000,
+          "mtime": 1793106000.0
+        }
+      ],
+      "root_exists_after": true
+    },
+    {
+      "id": "exactly_four_days",
+      "input": {
+        "id": "exactly_four_days",
+        "now_local": "2026-10-31T12:00:00",
+        "days": 3,
+        "root_exists": true,
+        "nodes": [
+          {
+            "path": "material.torrent",
+            "kind": "file",
+            "age_seconds": 345600
+          }
+        ]
+      },
+      "before": [
+        {
+          "path": "material.torrent",
+          "kind": "file",
+          "age_seconds": 345600,
+          "mtime": 1793102400.0
+        }
+      ],
+      "return": null,
+      "exception": null,
+      "trace": [
+        {
+          "operation": "exists",
+          "path": ".",
+          "result": true
+        },
+        {
+          "operation": "rglob",
+          "path": ".",
+          "pattern": "*",
+          "result": [
+            "material.torrent"
+          ]
+        },
+        {
+          "operation": "is_file",
+          "path": "material.torrent",
+          "result": true
+        },
+        {
+          "operation": "datetime.now",
+          "path": ".",
+          "result": "2026-10-31T12:00:00"
+        },
+        {
+          "operation": "stat",
+          "path": "material.torrent",
+          "st_mtime": 1793102400.0
+        },
+        {
+          "operation": "datetime.fromtimestamp",
+          "path": ".",
+          "timestamp": 1793102400.0,
+          "result": "2026-10-27T12:00:00"
+        },
+        {
+          "operation": "unlink",
+          "path": "material.torrent",
+          "result": "memory_only"
+        },
+        {
+          "operation": "rglob",
+          "path": ".",
+          "pattern": "*",
+          "result": []
+        }
+      ],
+      "after": [],
+      "root_exists_after": true
+    },
+    {
+      "id": "nested_old_new_and_empty_directories",
+      "input": {
+        "id": "nested_old_new_and_empty_directories",
+        "now_local": "2026-10-31T12:00:00",
+        "days": 3,
+        "root_exists": true,
+        "nodes": [
+          {
+            "path": "old",
+            "kind": "dir"
+          },
+          {
+            "path": "old/inner",
+            "kind": "dir"
+          },
+          {
+            "path": "old/inner/material.torrent",
+            "kind": "file",
+            "age_seconds": 345600
+          },
+          {
+            "path": "new",
+            "kind": "dir"
+          },
+          {
+            "path": "new/material.torrent",
+            "kind": "file",
+            "age_seconds": 3600
+          },
+          {
+            "path": "empty",
+            "kind": "dir"
+          },
+          {
+            "path": "empty/child",
+            "kind": "dir"
+          }
+        ]
+      },
+      "before": [
+        {
+          "path": "old",
+          "kind": "dir"
+        },
+        {
+          "path": "old/inner",
+          "kind": "dir"
+        },
+        {
+          "path": "old/inner/material.torrent",
+          "kind": "file",
+          "age_seconds": 345600,
+          "mtime": 1793102400.0
+        },
+        {
+          "path": "new",
+          "kind": "dir"
+        },
+        {
+          "path": "new/material.torrent",
+          "kind": "file",
+          "age_seconds": 3600,
+          "mtime": 1793444400.0
+        },
+        {
+          "path": "empty",
+          "kind": "dir"
+        },
+        {
+          "path": "empty/child",
+          "kind": "dir"
+        }
+      ],
+      "return": null,
+      "exception": null,
+      "trace": [
+        {
+          "operation": "exists",
+          "path": ".",
+          "result": true
+        },
+        {
+          "operation": "rglob",
+          "path": ".",
+          "pattern": "*",
+          "result": [
+            "old",
+            "old/inner",
+            "old/inner/material.torrent",
+            "new",
+            "new/material.torrent",
+            "empty",
+            "empty/child"
+          ]
+        },
+        {
+          "operation": "is_file",
+          "path": "old",
+          "result": false
+        },
+        {
+          "operation": "is_file",
+          "path": "old/inner",
+          "result": false
+        },
+        {
+          "operation": "is_file",
+          "path": "old/inner/material.torrent",
+          "result": true
+        },
+        {
+          "operation": "datetime.now",
+          "path": ".",
+          "result": "2026-10-31T12:00:00"
+        },
+        {
+          "operation": "stat",
+          "path": "old/inner/material.torrent",
+          "st_mtime": 1793102400.0
+        },
+        {
+          "operation": "datetime.fromtimestamp",
+          "path": ".",
+          "timestamp": 1793102400.0,
+          "result": "2026-10-27T12:00:00"
+        },
+        {
+          "operation": "unlink",
+          "path": "old/inner/material.torrent",
+          "result": "memory_only"
+        },
+        {
+          "operation": "is_file",
+          "path": "new",
+          "result": false
+        },
+        {
+          "operation": "is_file",
+          "path": "new/material.torrent",
+          "result": true
+        },
+        {
+          "operation": "datetime.now",
+          "path": ".",
+          "result": "2026-10-31T12:00:00"
+        },
+        {
+          "operation": "stat",
+          "path": "new/material.torrent",
+          "st_mtime": 1793444400.0
+        },
+        {
+          "operation": "datetime.fromtimestamp",
+          "path": ".",
+          "timestamp": 1793444400.0,
+          "result": "2026-10-31T11:00:00"
+        },
+        {
+          "operation": "is_file",
+          "path": "empty",
+          "result": false
+        },
+        {
+          "operation": "is_file",
+          "path": "empty/child",
+          "result": false
+        },
+        {
+          "operation": "rglob",
+          "path": ".",
+          "pattern": "*",
+          "result": [
+            "old",
+            "old/inner",
+            "new",
+            "new/material.torrent",
+            "empty",
+            "empty/child"
+          ]
+        },
+        {
+          "operation": "is_dir",
+          "path": "old/inner",
+          "result": true
+        },
+        {
+          "operation": "iterdir",
+          "path": "old/inner",
+          "result": []
+        },
+        {
+          "operation": "rmdir",
+          "path": "old/inner",
+          "result": "memory_only"
+        },
+        {
+          "operation": "is_dir",
+          "path": "old",
+          "result": true
+        },
+        {
+          "operation": "iterdir",
+          "path": "old",
+          "result": []
+        },
+        {
+          "operation": "rmdir",
+          "path": "old",
+          "result": "memory_only"
+        },
+        {
+          "operation": "is_dir",
+          "path": "new/material.torrent",
+          "result": false
+        },
+        {
+          "operation": "is_dir",
+          "path": "new",
+          "result": true
+        },
+        {
+          "operation": "iterdir",
+          "path": "new",
+          "result": [
+            "new/material.torrent"
+          ]
+        },
+        {
+          "operation": "is_dir",
+          "path": "empty/child",
+          "result": true
+        },
+        {
+          "operation": "iterdir",
+          "path": "empty/child",
+          "result": []
+        },
+        {
+          "operation": "rmdir",
+          "path": "empty/child",
+          "result": "memory_only"
+        },
+        {
+          "operation": "is_dir",
+          "path": "empty",
+          "result": true
+        },
+        {
+          "operation": "iterdir",
+          "path": "empty",
+          "result": []
+        },
+        {
+          "operation": "rmdir",
+          "path": "empty",
+          "result": "memory_only"
+        }
+      ],
+      "after": [
+        {
+          "path": "new",
+          "kind": "dir"
+        },
+        {
+          "path": "new/material.torrent",
+          "kind": "file",
+          "age_seconds": 3600,
+          "mtime": 1793444400.0
+        }
+      ],
+      "root_exists_after": true
+    },
+    {
+      "id": "unlink_exception_propagates",
+      "input": {
+        "id": "unlink_exception_propagates",
+        "now_local": "2026-10-31T12:00:00",
+        "days": 3,
+        "root_exists": true,
+        "nodes": [
+          {
+            "path": "first.torrent",
+            "kind": "file",
+            "age_seconds": 345600,
+            "unlink_error": "owned recording unlink failure"
+          },
+          {
+            "path": "later.torrent",
+            "kind": "file",
+            "age_seconds": 345600
+          },
+          {
+            "path": "empty",
+            "kind": "dir"
+          }
+        ]
+      },
+      "before": [
+        {
+          "path": "first.torrent",
+          "kind": "file",
+          "age_seconds": 345600,
+          "unlink_error": "owned recording unlink failure",
+          "mtime": 1793102400.0
+        },
+        {
+          "path": "later.torrent",
+          "kind": "file",
+          "age_seconds": 345600,
+          "mtime": 1793102400.0
+        },
+        {
+          "path": "empty",
+          "kind": "dir"
+        }
+      ],
+      "return": null,
+      "exception": {
+        "class": "PermissionError",
+        "message": "owned recording unlink failure"
+      },
+      "trace": [
+        {
+          "operation": "exists",
+          "path": ".",
+          "result": true
+        },
+        {
+          "operation": "rglob",
+          "path": ".",
+          "pattern": "*",
+          "result": [
+            "first.torrent",
+            "later.torrent",
+            "empty"
+          ]
+        },
+        {
+          "operation": "is_file",
+          "path": "first.torrent",
+          "result": true
+        },
+        {
+          "operation": "datetime.now",
+          "path": ".",
+          "result": "2026-10-31T12:00:00"
+        },
+        {
+          "operation": "stat",
+          "path": "first.torrent",
+          "st_mtime": 1793102400.0
+        },
+        {
+          "operation": "datetime.fromtimestamp",
+          "path": ".",
+          "timestamp": 1793102400.0,
+          "result": "2026-10-27T12:00:00"
+        },
+        {
+          "operation": "unlink",
+          "path": "first.torrent",
+          "result": "injected_error"
+        }
+      ],
+      "after": [
+        {
+          "path": "first.torrent",
+          "kind": "file",
+          "age_seconds": 345600,
+          "unlink_error": "owned recording unlink failure",
+          "mtime": 1793102400.0
+        },
+        {
+          "path": "later.torrent",
+          "kind": "file",
+          "age_seconds": 345600,
+          "mtime": 1793102400.0
+        },
+        {
+          "path": "empty",
+          "kind": "dir"
+        }
+      ],
+      "root_exists_after": true
+    }
+  ]
+}

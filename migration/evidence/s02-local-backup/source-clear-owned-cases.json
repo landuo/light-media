@@ -1,0 +1,8 @@
+[
+  {"id":"missing_root","now_local":"2026-10-31T12:00:00","days":3,"root_exists":false,"nodes":[]},
+  {"id":"exactly_three_days","now_local":"2026-10-31T12:00:00","days":3,"root_exists":true,"nodes":[{"path":"material.torrent","kind":"file","age_seconds":259200}]},
+  {"id":"three_days_twenty_three_hours","now_local":"2026-10-31T12:00:00","days":3,"root_exists":true,"nodes":[{"path":"material.torrent","kind":"file","age_seconds":342000}]},
+  {"id":"exactly_four_days","now_local":"2026-10-31T12:00:00","days":3,"root_exists":true,"nodes":[{"path":"material.torrent","kind":"file","age_seconds":345600}]},
+  {"id":"nested_old_new_and_empty_directories","now_local":"2026-10-31T12:00:00","days":3,"root_exists":true,"nodes":[{"path":"old","kind":"dir"},{"path":"old/inner","kind":"dir"},{"path":"old/inner/material.torrent","kind":"file","age_seconds":345600},{"path":"new","kind":"dir"},{"path":"new/material.torrent","kind":"file","age_seconds":3600},{"path":"empty","kind":"dir"},{"path":"empty/child","kind":"dir"}]},
+  {"id":"unlink_exception_propagates","now_local":"2026-10-31T12:00:00","days":3,"root_exists":true,"nodes":[{"path":"first.torrent","kind":"file","age_seconds":345600,"unlink_error":"owned recording unlink failure"},{"path":"later.torrent","kind":"file","age_seconds":345600},{"path":"empty","kind":"dir"}]}
+]

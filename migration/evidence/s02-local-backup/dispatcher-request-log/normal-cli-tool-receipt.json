@@ -1,0 +1,39 @@
+{
+  "recorded_at": "2026-10-31T19:56:57.694808+00:00",
+  "provenance": "coordinator transcription of actual tool callbacks, not independent reexecution or recreated old raw logfile",
+  "working_directory": "/workspace/scratch/a1d82674c6f8",
+  "launcher": "python3 stdin wrapper: load prepared-binding argv; replace only interpreter with source-runtime/s10-venv/bin/python; copy inherited env and set execution marker; subprocess.run; propagate returncode",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-module-log-cli/normal-cli-driver.py",
+    "--server",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-module-log-server01",
+    "--worker",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-module-log-worker01",
+    "--output",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-module-log-cli/run01",
+    "--expected-server-sha",
+    "7dde726676ac896ce4c692787b8836c5dcf56bbdcbeb7902b76aa4c200064101",
+    "--expected-worker-sha",
+    "3b8cd015282bd2e199e953078233df054283a143d06fc927cb20fa0048859016",
+    "--expected-driver-sha",
+    "01fb93f01a3c57536b26ca5fc5402a3e288a51e22b218b41f019cebe5da8fd1e"
+  ],
+  "environment_added": {
+    "S12_BROWSE_MODULE_LOG_CLI_GRANTED": "1"
+  },
+  "initial_tool": {
+    "chunk_id": "57cb40",
+    "session_id": 54240,
+    "wall_time_seconds": 1.001865715,
+    "output": ""
+  },
+  "terminal_tool": {
+    "chunk_id": "b3b862",
+    "session_id": 54240,
+    "exit_code": 0,
+    "wall_time_seconds": 2.7545e-05,
+    "output": "{\"status\": \"PASS\", \"hosts\": [25, 66], \"queries\": 4, \"error\": null, \"evidence\": \"/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-browse-module-log-cli/run01\"}\n"
+  },
+  "not_claimed": "no new run; no original tool raw file available in filesystem; denied sessions store not accessed"
+}

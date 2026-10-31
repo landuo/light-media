@@ -1,0 +1,496 @@
+{
+  "status": "ACCEPTED_FINITE_PURE_COMPONENT_NORMAL_ONLY",
+  "reviewed_at_utc": "2026-10-31T20:06:27.381263+00:00",
+  "scope": "Exact source-consumer material selection/rebuild via bound memory IO ports. Not SDK/host/filesystem/permissions/cleanup/business acceptance.",
+  "source_consumer_sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5",
+  "current_bindings": [
+    {
+      "path": "internal/plugins/torrenttransfer/local_backup_material.go",
+      "sha256": "0897fbc71428ff4d15c5800061ef930cc0806304ce5e37a2ca1961416cbb0923"
+    },
+    {
+      "path": "internal/plugins/torrenttransfer/local_backup_material_test.go",
+      "sha256": "0443646b07439453b3c4aa1d609de41a5fb64e4792b6a751c45529333ea2e723"
+    },
+    {
+      "path": "internal/plugins/torrenttransfer/bencode.go",
+      "sha256": "936812df4ed2e25268802d918a386485a6734b8d1c9c605a29039238a8c9860d"
+    },
+    {
+      "path": "internal/plugins/torrenttransfer/types.go",
+      "sha256": "ae53c5fe2e60cfe6b12eb26cd14aff38119bbb75c901d239ce02a8270058ef42"
+    },
+    {
+      "path": "internal/plugins/torrenttransfer/source_oracle_test.go",
+      "sha256": "bbd144e1911e0d8d1a7766314b22c7bd1a2d03a20173466effa37190263c8d05"
+    },
+    {
+      "path": "internal/plugins/torrenttransfer/reference/source-oracle.json",
+      "sha256": "b77b1927fc5050a7de0fc7122c72534c70e190e1f947a1a7ede58455d16df2e0"
+    },
+    {
+      "path": "testdata/plugins/torrent-transfer-1.10.3/torrenttransfer.py",
+      "sha256": "e5f513a57cf42ee8778744ba30cf669f93a5a3e6c7589ca0b2e3b9c483651bd5"
+    }
+  ],
+  "static_checks": {
+    "source_try_edges": "TorrentExists, first qB ReadTorrent, ResumeExists and final selected-file read propagate errors; qB decode errors WARN/skip; resume read/decode/rebuild/write ordinary errors ERROR/skip.",
+    "read_identity": "Truthy announce returns final second original read, not first inspected bytes or re-encoding; qualifying restore writes then reads temporary; non-qB reads raw once and does not reject empty content.",
+    "private_truth": "Bdecode *big.Int zero checked by Sign only in new component; original Core/types/codec unchanged.",
+    "tracker_semantics": "No sorting/dedup/URL filtering; first list/string/bytes index; existing announce-list retained for one tracker. Wider arbitrary Python domain not claimed.",
+    "oracle_independence": "Nine raw original cases intact/hash-bound; expected calls/logs/output taken from historical source recording. Existing fixture constructor supplies only input bytes, no Core/host/downloader execution. Twelve other subcases are explicitly static-source-derived component assertions, not fresh Python observations.",
+    "authority": "IO ports take no worker paths/hash selectors; labels logging-only. Actual downloader-kind/root/capability binding remains future host responsibility.",
+    "mutation_and_lifetime": "Component does not open/remove files. Output copies bytes. Skipped/Temporary=false is not a receipt that a failed write left no file; future host must separately own and account partial writes and cleanup.",
+    "context": "nil/precancel guard and runtime cancellation boundary are host adaptation; no full cancellation-race verification or source async parity claimed."
+  },
+  "actual_run": {
+    "result": {
+      "started": "2026-10-31T20:04:22.759780+00:00",
+      "driver_pid": 2,
+      "package": "./internal/plugins/torrenttransfer",
+      "pattern": "^(TestLocalBackupMaterialSelectedSourceOracle|TestLocalBackupMaterialReadAndRebuildBoundaries)$",
+      "race": false,
+      "status": "PASS",
+      "commands": [
+        {
+          "label": "go-list",
+          "argv": [
+            "go",
+            "list",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-deps",
+            "-test",
+            "-json",
+            "./internal/plugins/torrenttransfer"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "compile",
+          "argv": [
+            "go",
+            "test",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-p=1",
+            "-c",
+            "-o",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-pure01.test",
+            "./internal/plugins/torrenttransfer"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "tests",
+          "argv": [
+            "go",
+            "tool",
+            "test2json",
+            "-t",
+            "-p",
+            "./internal/plugins/torrenttransfer",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-pure01.test",
+            "-test.v",
+            "-test.run",
+            "^(TestLocalBackupMaterialSelectedSourceOracle|TestLocalBackupMaterialReadAndRebuildBoundaries)$",
+            "-test.count=1",
+            "-test.timeout=90s"
+          ],
+          "exit": 0
+        }
+      ],
+      "environment_proxy_unchanged": true,
+      "resource_samples": [
+        {
+          "phase": "go-list",
+          "at": "2026-10-31T20:04:22.759799+00:00",
+          "scratch_free": 53557698560,
+          "tmp_free": 5225664512
+        },
+        {
+          "phase": "compile",
+          "at": "2026-10-31T20:04:23.182118+00:00",
+          "scratch_free": 53556346880,
+          "tmp_free": 5225664512
+        },
+        {
+          "phase": "tests",
+          "at": "2026-10-31T20:04:24.691084+00:00",
+          "scratch_free": 53533036544,
+          "tmp_free": 5225664512
+        }
+      ],
+      "input_count": 2897,
+      "program_sha256": "f9f30b0587974c4ce93b8999bd52af00bd0d30747bd5c30bef4542052447fb19",
+      "root_passes": [
+        "TestLocalBackupMaterialSelectedSourceOracle",
+        "TestLocalBackupMaterialReadAndRebuildBoundaries"
+      ],
+      "ended": "2026-10-31T20:04:24.851397+00:00"
+    },
+    "test_subcases": {
+      "TestLocalBackupMaterialSelectedSourceOracle": [
+        "qbittorrent-qbittorrent-autoFalse-skipFalse",
+        "transmission-qbittorrent-autoFalse-skipFalse",
+        "missing-torrent-file",
+        "empty-torrent",
+        "invalid-torrent",
+        "missing-announce-no-resume",
+        "restore-trackers",
+        "restore-empty-trackers-keeps-original",
+        "invalid-resume"
+      ],
+      "TestLocalBackupMaterialReadAndRebuildBoundaries": [
+        "single-tracker-keeps-old-announce-list",
+        "integer-zero-announce-and-tracker-use-source-truth",
+        "original-byte-final-reread-not-reencoding",
+        "non-qb-empty-raw-is-not-qb-skip",
+        "torrent-exists",
+        "torrent-read-1",
+        "resume-exists",
+        "resume-read",
+        "temporary-write",
+        "temporary-read",
+        "final-original-read-error-propagates",
+        "pre-cancel-no-IO"
+      ]
+    },
+    "package_terminal": [
+      {
+        "Time": "2026-11-01T05:04:24.741822265+09:00",
+        "Action": "pass",
+        "Package": "./internal/plugins/torrenttransfer",
+        "Elapsed": 0.013
+      }
+    ],
+    "all_2897_before_after_compile_after_test_and_current_inputs_identical": true,
+    "actual_program_sha256": "f9f30b0587974c4ce93b8999bd52af00bd0d30747bd5c30bef4542052447fb19",
+    "no_skip_fail": true,
+    "old_20_direct_package_inputs_unchanged": true
+  },
+  "evidence_bindings": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/result.json",
+      "sha256": "1c881754ad7c0c8c635575f18738f1d7252050b0a8593da0d0d8668ba87f8ad3"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/inputs-before.json",
+      "sha256": "e4c9980143e99212f5a809d08b415d651e3bbc19e139802a4f8f787cb2631220"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/inputs-after-compile.json",
+      "sha256": "e4c9980143e99212f5a809d08b415d651e3bbc19e139802a4f8f787cb2631220"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/inputs-after-test.json",
+      "sha256": "e4c9980143e99212f5a809d08b415d651e3bbc19e139802a4f8f787cb2631220"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/tests.stdout",
+      "sha256": "59bcd3174f69d7e8902a0be3891783074a685ffbd607123e003e92db98024345"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/tests.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/tests.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/compile.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/go-list.stdout",
+      "sha256": "c54f61aa7718de0bb1b39d05f32a2a9826ea16fefc110ecdd20235f86a94540e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/go-list.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/go-list.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s02-pure01/generated-source-map.json",
+      "sha256": "deeb2fc3a125f32077a77fe5e69fe415c9ad4ae97f5713bd1730e23af1efa685"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s02-pure01.py",
+      "sha256": "4ce370c6a582ecb08e8938cb049e5a7cf1570e4b8374d08a031008e8da82499a"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-reconstruction/phase-a-pure/checkpoint-a1.json",
+      "sha256": "c3ca5181f0075e62fc20032fd82f2d33744e18083f218a8981c7e79f269d3f3d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-reconstruction/phase-a-pure/inputs-a1.sha256",
+      "sha256": "ed3fe09d2e239001495250a6129da532b77f9c1c8d13469b6d5b62f7d623be73"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-reconstruction/phase-a-pure/CONTRACT.md",
+      "sha256": "3d7c14bdf39733f007b8c1ffb51e4bbc59b1cb8b0450293c6aca49e8285444b5"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-reconstruction/phase-a-pure/source-a1.tar.gz",
+      "sha256": "529fe62e9a67ef2c63798a83687e3ac3963dd9fea88fbddf6e1eef1356958f35"
+    }
+  ],
+  "historical_source_projection": [
+    {
+      "case": "qbittorrent-qbittorrent-autoFalse-skipFalse",
+      "full_original_case_canonical_sha256": "7baffdafae0def389b981459863ca0753b9561fc540c305555db51331cd71e8f",
+      "original_material_calls": [
+        {
+          "op": "exists",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        },
+        {
+          "op": "read",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        },
+        {
+          "op": "read",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        }
+      ],
+      "original_material_logs": [],
+      "origin": "historical actual recording, not executed again"
+    },
+    {
+      "case": "transmission-qbittorrent-autoFalse-skipFalse",
+      "full_original_case_canonical_sha256": "5b6e587621821e37bcd16eea011ddaa7716cc1673f7669ed8f1659897409f3ce",
+      "original_material_calls": [
+        {
+          "op": "exists",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        },
+        {
+          "op": "read",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        }
+      ],
+      "original_material_logs": [],
+      "origin": "historical actual recording, not executed again"
+    },
+    {
+      "case": "missing-torrent-file",
+      "full_original_case_canonical_sha256": "87f4d0d9ae19d6a8c73fd563b36ab6e31589452aeea7d6b47e0e680965a4cc41",
+      "original_material_calls": [
+        {
+          "op": "exists",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        }
+      ],
+      "original_material_logs": [
+        {
+          "line": 787,
+          "level": "ERROR",
+          "message": "种子文件不存在：/backup/1111111111111111111111111111111111111111.torrent"
+        }
+      ],
+      "origin": "historical actual recording, not executed again"
+    },
+    {
+      "case": "empty-torrent",
+      "full_original_case_canonical_sha256": "cda4faf29afb57db1ba6f850254a2c4cb5db600fa7ef7a2daa40b2b8051ae806",
+      "original_material_calls": [
+        {
+          "op": "exists",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        },
+        {
+          "op": "read",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        }
+      ],
+      "original_material_logs": [
+        {
+          "line": 821,
+          "level": "WARN",
+          "message": "读取种子文件失败：/backup/1111111111111111111111111111111111111111.torrent"
+        }
+      ],
+      "origin": "historical actual recording, not executed again"
+    },
+    {
+      "case": "invalid-torrent",
+      "full_original_case_canonical_sha256": "73b83cbc3d431289395b3b68552f6945e43a3f1d2f22b774eb87eaeefc05611b",
+      "original_material_calls": [
+        {
+          "op": "exists",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        },
+        {
+          "op": "read",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        }
+      ],
+      "original_material_logs": [
+        {
+          "line": 829,
+          "level": "WARN",
+          "message": "解析种子文件 /backup/1111111111111111111111111111111111111111.torrent 失败：not a valid bencoded string"
+        }
+      ],
+      "origin": "historical actual recording, not executed again"
+    },
+    {
+      "case": "missing-announce-no-resume",
+      "full_original_case_canonical_sha256": "4e90cc0c87bcfc0feb62cabc4f07f3a88523892a01e4de73d14823c5940c8f92",
+      "original_material_calls": [
+        {
+          "op": "exists",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        },
+        {
+          "op": "read",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        },
+        {
+          "op": "exists",
+          "path": "/backup/1111111111111111111111111111111111111111.fastresume"
+        }
+      ],
+      "original_material_logs": [
+        {
+          "line": 834,
+          "level": "INFO",
+          "message": "1111111111111111111111111111111111111111 未发现tracker信息，尝试补充tracker信息..."
+        },
+        {
+          "line": 838,
+          "level": "WARN",
+          "message": "fastresume文件不存在：/backup/1111111111111111111111111111111111111111.fastresume"
+        }
+      ],
+      "origin": "historical actual recording, not executed again"
+    },
+    {
+      "case": "restore-trackers",
+      "full_original_case_canonical_sha256": "502ed14dda94b8372d74833cd77dc357baa8f42708b3ce5c3afebc57d4b32f65",
+      "original_material_calls": [
+        {
+          "op": "exists",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        },
+        {
+          "op": "read",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        },
+        {
+          "op": "exists",
+          "path": "/backup/1111111111111111111111111111111111111111.fastresume"
+        },
+        {
+          "op": "read",
+          "path": "/backup/1111111111111111111111111111111111111111.fastresume"
+        },
+        {
+          "op": "temp",
+          "name": "1111111111111111111111111111111111111111.torrent",
+          "content": "ZDg6YW5ub3VuY2UyNjpodHRwczovL2EuaW52YWxpZC9hbm5vdW5jZTEzOmFubm91bmNlLWxpc3RsbDI2Omh0dHBzOi8vYS5pbnZhbGlkL2Fubm91bmNlMjY6aHR0cHM6Ly9iLmludmFsaWQvYW5ub3VuY2VlbDI2Omh0dHBzOi8vYy5pbnZhbGlkL2Fubm91bmNlZWU0OmluZm9kNjpsZW5ndGhpMWU0Om5hbWU1Om93bmVkZWU="
+        },
+        {
+          "op": "read",
+          "path": "/temp/1111111111111111111111111111111111111111.torrent"
+        }
+      ],
+      "original_material_logs": [
+        {
+          "line": 834,
+          "level": "INFO",
+          "message": "1111111111111111111111111111111111111111 未发现tracker信息，尝试补充tracker信息..."
+        }
+      ],
+      "origin": "historical actual recording, not executed again"
+    },
+    {
+      "case": "restore-empty-trackers-keeps-original",
+      "full_original_case_canonical_sha256": "ab223b0221340b2eb502192d6a97053432188c985d5e11d777fc5ad5f625a75f",
+      "original_material_calls": [
+        {
+          "op": "exists",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        },
+        {
+          "op": "read",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        },
+        {
+          "op": "exists",
+          "path": "/backup/1111111111111111111111111111111111111111.fastresume"
+        },
+        {
+          "op": "read",
+          "path": "/backup/1111111111111111111111111111111111111111.fastresume"
+        },
+        {
+          "op": "read",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        }
+      ],
+      "original_material_logs": [
+        {
+          "line": 834,
+          "level": "INFO",
+          "message": "1111111111111111111111111111111111111111 未发现tracker信息，尝试补充tracker信息..."
+        }
+      ],
+      "origin": "historical actual recording, not executed again"
+    },
+    {
+      "case": "invalid-resume",
+      "full_original_case_canonical_sha256": "1301ba2a966577a12640bcaff248c592b6734c740aa7d458969b6db3dc8d05d8",
+      "original_material_calls": [
+        {
+          "op": "exists",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        },
+        {
+          "op": "read",
+          "path": "/backup/1111111111111111111111111111111111111111.torrent"
+        },
+        {
+          "op": "exists",
+          "path": "/backup/1111111111111111111111111111111111111111.fastresume"
+        },
+        {
+          "op": "read",
+          "path": "/backup/1111111111111111111111111111111111111111.fastresume"
+        }
+      ],
+      "original_material_logs": [
+        {
+          "line": 834,
+          "level": "INFO",
+          "message": "1111111111111111111111111111111111111111 未发现tracker信息，尝试补充tracker信息..."
+        },
+        {
+          "line": 861,
+          "level": "ERROR",
+          "message": "解析fastresume文件 /backup/1111111111111111111111111111111111111111.fastresume 出错：not a valid bencoded string"
+        }
+      ],
+      "origin": "historical actual recording, not executed again"
+    }
+  ],
+  "limits": [
+    "No new source execution.",
+    "No real file read/write, worker/SDK/RPC, downloader, root authorization, source cleanup or cold host lifetime demonstrated by these two memory-port roots.",
+    "No race gate run for A1.",
+    "No changes to old Core, ledger, original raw evidence or products performed by reviewer.",
+    "S02 overall remains not closed; source-clear independently reviewed later."
+  ]
+}

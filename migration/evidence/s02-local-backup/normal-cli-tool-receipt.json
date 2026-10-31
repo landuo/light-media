@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-31T20:40:37.838735+00:00",
+  "kind": "coordinator transcription of actual tool callbacks; not original tool execution store",
+  "session_id": 28159,
+  "start": {
+    "chunk_id": "ff45c2",
+    "yielded_running": true
+  },
+  "terminal": {
+    "chunk_id": "8261ea",
+    "exit_code": 0,
+    "stdout_summary": {
+      "status": "PASS",
+      "hosts": [
+        25,
+        51
+      ],
+      "queries": 5,
+      "error": null
+    }
+  },
+  "command": "S02_LOCAL_BACKUP_CLI_GRANTED=1 /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python -I -S -B /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-local-backup-cli/normal-cli-driver.py --server /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-server01 --expected-server-sha b999c2d36100289983bab3e6955e23b327b7b7733f6821227cd43c7e77eb7bca --worker /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-fixture02 --expected-worker-sha 604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822 --expected-driver-sha 1bcbc250bdac90beb5e247e95c5f52e09baf3c57cdaaa75da50cdabf8cb7a6a9 --output /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s02-backup-cli01",
+  "driver_argv": [
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+    "-I",
+    "-S",
+    "-B",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s02-local-backup-cli/normal-cli-driver.py",
+    "--server",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-server01",
+    "--expected-server-sha",
+    "b999c2d36100289983bab3e6955e23b327b7b7733f6821227cd43c7e77eb7bca",
+    "--worker",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s02-fixture02",
+    "--expected-worker-sha",
+    "604ccbe20a246919970c2167e5e9ce022aae6424c3a338f53cd88f59c3656822",
+    "--expected-driver-sha",
+    "1bcbc250bdac90beb5e247e95c5f52e09baf3c57cdaaa75da50cdabf8cb7a6a9",
+    "--output",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s02-backup-cli01"
+  ],
+  "explicit_driver_enable_environment": {
+    "S02_LOCAL_BACKUP_CLI_GRANTED": "1"
+  },
+  "note": "exec shell first saved prior App normal/race terminal in ledger, then invoked this exact driver; no environment proxy/CA alteration"
+}
