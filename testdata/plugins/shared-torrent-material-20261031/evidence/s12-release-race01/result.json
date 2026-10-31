@@ -1,0 +1,87 @@
+{
+  "started": "2026-10-31T19:10:02.394975+00:00",
+  "driver_pid": 1096,
+  "package": "./internal/app",
+  "pattern": "^(TestSharedTorrentMaterialCacheColdAndFailureHistory|TestSharedTorrentMaterialCurrentGuardAndCancellation)$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-release-race01.test",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-release-race01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestSharedTorrentMaterialCacheColdAndFailureHistory|TestSharedTorrentMaterialCurrentGuardAndCancellation)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T19:10:02.394991+00:00",
+      "scratch_free": 54604705792,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T19:10:03.426831+00:00",
+      "scratch_free": 54601625600,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T19:11:11.187041+00:00",
+      "scratch_free": 54268997632,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 6198,
+  "program_sha256": "38620ff0183943f2d4f96991cb5b9ab8a5663f2aa7a7e8229ad12fe00cba4f46",
+  "root_passes": [
+    "TestSharedTorrentMaterialCacheColdAndFailureHistory",
+    "TestSharedTorrentMaterialCurrentGuardAndCancellation"
+  ],
+  "ended": "2026-10-31T19:11:16.993499+00:00"
+}

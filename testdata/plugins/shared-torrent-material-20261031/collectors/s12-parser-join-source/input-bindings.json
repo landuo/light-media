@@ -1,0 +1,119 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "cases": 1,
+  "layer": "actual fixed parser plus one unchanged original static source method; no target oracle",
+  "method": "TorrentHelper.get_fileinfo_from_torrent",
+  "original_lines_including_decorator": [
+    208,
+    237
+  ],
+  "import_route": "normal actual fixed torrentool.api package, no replacement or import hook",
+  "inputs": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py",
+      "bytes": 26540,
+      "sha256": "1c8a420d419ee53579079283ea0828536de9d978b6b15e722f1ba53cb51d5dd5"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/torrentool-1.2.0-py3-none-any.whl",
+      "bytes": 13021,
+      "sha256": "bc6c55622e23978cf3c1e4aaf8f087971d75608c15b83be5a2c029464d3dd803"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/acquisition.json",
+      "bytes": 2543,
+      "sha256": "5cc8d1d95b2210ff22fcca5199f5e5221f94aea564bc7c70bcb3dbbfba41909c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/__init__.py",
+      "bytes": 103,
+      "sha256": "f96431e7a1bccfea6e0c5be108915772c09ff323e43c0ec9a8706d39da0e4f5a"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/api.py",
+      "bytes": 239,
+      "sha256": "c600f9f273c03679913b74d7c9d502bb33d1fb3417b7c97fec8197348166ce63"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/bencode.py",
+      "bytes": 6776,
+      "sha256": "7fa9bffd962d5fe90d6fe56e4d85e03736f7032e7440d43701b994f742800d40"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/cli.py",
+      "bytes": 3131,
+      "sha256": "cd4a2bf90236322075262f8a591b837ca7cc8fd46565a077a2a7f4c03dbd0583"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/exceptions.py",
+      "bytes": 761,
+      "sha256": "2b277b94260a2d0dae6ca6a7dfbf689030f39986216253a280457a8f91a6ae96"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/torrent.py",
+      "bytes": 12550,
+      "sha256": "1732e1ca0d581c97a5cb688a18a0086a3e8628f5130a5ef6c72ada5645a3d210"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/utils.py",
+      "bytes": 2543,
+      "sha256": "3cc761e1006fcad808a3d85623f23e565870a6ee8b2062f6a69b7f01324a5829"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/repo/open_trackers.ini",
+      "bytes": 350,
+      "sha256": "50136efe3ce1b2f23b51f74954bd9091d035a598b03556b4497a1762b2aa790c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool-1.2.0.dist-info/AUTHORS",
+      "bytes": 267,
+      "sha256": "37f41a248e0476490ca608c27b282c50d34b98cb38fa9a4cf2418ed32842bbf5"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool-1.2.0.dist-info/LICENSE",
+      "bytes": 1502,
+      "sha256": "293b07b07fdcf353ef0fec2b53e4e8b31c8caf07c5ecc58899a2a0033f47e7b0"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool-1.2.0.dist-info/METADATA",
+      "bytes": 2921,
+      "sha256": "afd5fbddc437187a2c1430048c94c550172d73fce728486f5787037f71b90ddb"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool-1.2.0.dist-info/WHEEL",
+      "bytes": 92,
+      "sha256": "1b5e87e00dc87a84269cead8578b9e6462928e18a95f1f3373c9eef451a5bcc0"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool-1.2.0.dist-info/entry_points.txt",
+      "bytes": 52,
+      "sha256": "4ad414a6ce83b08239f41348f0e6617504da9077cd5d8e555eba5bcd973e4127"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool-1.2.0.dist-info/top_level.txt",
+      "bytes": 11,
+      "sha256": "7e3db7a1f5525137cda16dd8e2a27a78cdc60810df4fed24f570e960e69db36d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool-1.2.0.dist-info/RECORD",
+      "bytes": 1216,
+      "sha256": "2d5faf1d3cfb45097f7a0682b2e96d79cbf74c30fe32f18afaab87c43a0f3d67"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "bytes": 30894944,
+      "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-parser-join-source/capture_parser_join.py",
+      "bytes": 5175,
+      "sha256": "9691fc897b05f834308088b5651e5843de5cc2af0567ff90287db12394924218"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-parser-join-source/owned-join-separator.torrent",
+      "bytes": 114,
+      "sha256": "cb7d78a570a9413fb369cb07376533ed42526d530395ba325f249f9c6bede203"
+    }
+  ]
+}

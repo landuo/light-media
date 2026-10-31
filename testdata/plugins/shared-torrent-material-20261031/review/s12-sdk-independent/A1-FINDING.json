@@ -1,0 +1,37 @@
+{
+  "decision": "STATIC_BLOCKED_A1_FILES_NULL_MEMBER_COERCION",
+  "at_utc": "2026-10-31T17:59:11.461156+00:00",
+  "scope": "SDK two new files and direct wire validators; no Go/source execution",
+  "inputs": [
+    {
+      "path": "internal/plugins/shared_torrent_material.go",
+      "sha256": "bb77ef4caf3b52409c8fdf965e1d6f0fe623af05edfa80922a475aa1fb1640bb"
+    },
+    {
+      "path": "internal/plugins/shared_torrent_material_test.go",
+      "sha256": "01e8fc8a8db91127576e45c67e7ccf718243c7f4b1a307ddb628c51da901f927"
+    }
+  ],
+  "source": {
+    "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "path": "app/chain/download.py",
+    "method_lines": "658-783",
+    "sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003"
+  },
+  "finding": {
+    "code": "NULL_FILE_MEMBER_BECOMES_EMPTY_STRING",
+    "location": "prepared.Files *[]string decode and nonnil-only validation",
+    "counterexample": "{\"kind\":\"none\",\"folder\":\"\",\"files\":[null]}",
+    "behavior": "Go encoding/json leaves a string zero value for null, so current SDK accepts and returns Files containing an invented empty string. A nonnil pointer/slice check does not reject null members.",
+    "minimal_fix": "Require each files member to be an actual JSON string while preserving valid empty strings; add this counterexample in existing root1.",
+    "basis": "Source tuple file names are strings; malformed transport metadata must not silently become a different successful tuple."
+  },
+  "other_static_observations": [
+    "Prepare/read/release stay under one capability and HostCaller; actual invocation ownership is a future host obligation, not proved by this SDK.",
+    "16MiB material uses at most sixteen 1MiB reads plus prepare/release; encoded page fits unchanged logical payload budget; actual transport not exercised by recording Host.",
+    "Exact handle/offset, declared total, final SHA and cleanup acknowledgment are checked; cleanup detaches cancellation only for bounded same-Host release.",
+    "None, empty string and nonnil empty bytes are represented distinctly. Source Python has no same 16MiB cap; no arbitrary-size parity is approved."
+  ],
+  "tests_executed_by_reviewer": false,
+  "runtime_PASS_claimed": false
+}

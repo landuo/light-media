@@ -1,0 +1,135 @@
+{
+  "decision": "PASS_FINITE_A2_SDK_TWO_FILE_SLICE",
+  "reviewed_at_utc": "2026-10-31T18:02:58.134721+00:00",
+  "source_method": "MoviePilot 8a83efeacd3e26b82be495e17d50146e31c96a60 app/chain/download.py:658-783; supporting string-file projection app/helper/torrent.py:208-237",
+  "current_two_inputs": [
+    {
+      "path": "internal/plugins/shared_torrent_material.go",
+      "sha256": "ea478e4b983cc4d861cdf7a17a77bc09900ccb4fd4d2a0d55e3095e3f75c622f"
+    },
+    {
+      "path": "internal/plugins/shared_torrent_material_test.go",
+      "sha256": "1cfa842b344491cec1f5f4e5cce81febbb2e2b6aa66d864e663f1da9e32b1122"
+    }
+  ],
+  "archive_sha256": "193fdf17a2399d7e9f9690bf91d2d8ed860c2d341d96b2ab78684bc09cf1ac46",
+  "finding_closure": {
+    "finding_sha256": "493171bdf38375e1ccd41b0071fe19e53195b04367682083424294f2878f7aa5",
+    "fix": "Prepare Files decodes as *[]*string; reject nil member before returning any public tuple; copy dereferenced string values preserving empty string.",
+    "tests": "Existing first root adds files:[null] rejection and files:[\"\"] preservation.",
+    "original_A1_actual_credit_sha256": "0467bcb571bd6e2485e8465ec62bbfab79dc254c35e64b4f37a49082154b8b6f",
+    "A1_history_preserved": true
+  },
+  "actual_gate": {
+    "directory": "evidence/s12-sdk02",
+    "status": "PASS_RAW_READBACK",
+    "layer": "Synthetic recording HostCaller, not actual SDK worker/host/HTTP or invocation scope",
+    "roots": [
+      "TestSharedDownloadTorrentWireAndBoundary",
+      "TestSharedDownloadTorrentPagedBytesAndCleanup"
+    ],
+    "commands": [
+      {
+        "label": "go-list",
+        "argv": [
+          "go",
+          "list",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-deps",
+          "-test",
+          "-json",
+          "./internal/plugins"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "compile",
+        "argv": [
+          "go",
+          "test",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-p=1",
+          "-c",
+          "-o",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-sdk02.test",
+          "./internal/plugins"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "tests",
+        "argv": [
+          "go",
+          "tool",
+          "test2json",
+          "-t",
+          "-p",
+          "./internal/plugins",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-sdk02.test",
+          "-test.v",
+          "-test.run",
+          "^(TestSharedDownloadTorrentWireAndBoundary|TestSharedDownloadTorrentPagedBytesAndCleanup)$",
+          "-test.count=1",
+          "-test.timeout=90s"
+        ],
+        "exit": 0
+      }
+    ],
+    "ended": "2026-10-31T18:01:30.947859+00:00",
+    "program_sha256": "e8a0ba6793d760ff60b7aadb10d124ca716d67f7fabfca29d9fee340e7ac3f8a",
+    "input_count": 1924,
+    "all_before_after_current_hashes_match": true,
+    "changed_from_A1": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/shared_torrent_material.go",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/shared_torrent_material_test.go"
+    ],
+    "unchanged_shared_input_count": 1922,
+    "raw_hashes": {
+      "result.json": "c7d44f19051bd0715d5f308d74e8bfbabef173ee8c24b5e8ae459ba525e78a4b",
+      "inputs-before.json": "c2c49ec29574af2bfe7ad035eb2f6f37b52a506d51c605708a94b4164b08ae09",
+      "inputs-after-compile.json": "c2c49ec29574af2bfe7ad035eb2f6f37b52a506d51c605708a94b4164b08ae09",
+      "inputs-after-test.json": "c2c49ec29574af2bfe7ad035eb2f6f37b52a506d51c605708a94b4164b08ae09",
+      "tests.stdout": "246289e7e248da5841b4ea882a21664fd37199b91a96ff09710764f6932fd0e1",
+      "generated-source-map.json": "26846d0dd891927084e7abd13b22a4c646514070afa92f2e0790bc4137ead2ea"
+    },
+    "stage_resource_samples": [
+      {
+        "phase": "go-list",
+        "at": "2026-10-31T18:01:27.912257+00:00",
+        "scratch_free": 56760061952,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "compile",
+        "at": "2026-10-31T18:01:28.186418+00:00",
+        "scratch_free": 56759238656,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "tests",
+        "at": "2026-10-31T18:01:30.467642+00:00",
+        "scratch_free": 56743436288,
+        "tmp_free": 5225664512
+      }
+    ]
+  },
+  "static_credit": [
+    "Public nil/string/bytes discriminants preserve values and file order, including nonnil empty bytes and valid empty file strings.",
+    "Prepare/read/release use same HostCaller capability; input object/raw integer preserved and invalid invocation/input rejected before call.",
+    "At most sixteen 1MiB raw chunks for admitted 16MiB content; validates same handle, exact offset/length, total bounds and final SHA before success.",
+    "Valid handle is released once with bounded detached-cancel context on success/failure/cancellation; primary failure retained and release-only failure yields no successful result.",
+    "Existing payload/logical/frame/wire budgets and other product files unchanged in A1-to-A2 1924-input closure."
+  ],
+  "not_claimed": [
+    "Actual private-handle isolation or current-invocation/identity/generation authorization",
+    "Host scope closure reclamation, retained-byte aggregate accounting, real transport",
+    "HTTP/descriptor/source-wrapper/notification/cache persistence",
+    "Full S12 or parser equivalence",
+    "Python arbitrary-size parity; source has no matching 16MiB cap",
+    "Race/CI/remote delivery"
+  ],
+  "remaining_blockers_in_this_sdk_slice": [],
+  "reviewer_executed_no_Go_source_runtime_or_network": true
+}

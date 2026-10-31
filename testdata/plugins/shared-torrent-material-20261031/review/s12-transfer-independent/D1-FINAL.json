@@ -1,0 +1,136 @@
+{
+  "decision": "PASS_FINITE_D1_TRANSFER_PRIMITIVE_AND_STATIC_INVOCATION_HOOK",
+  "reviewed_at_utc": "2026-10-31T18:28:31.101388+00:00",
+  "static_seal_sha256": "ed0f880de26b9e77ff87fea4ab41003b8c0a22b26e5b5acdc2b82b1c4c35b562",
+  "frozen_four_current_inputs": [
+    {
+      "path": "internal/app/plugin_shared_torrent_transfer.go",
+      "sha256": "71a0524ea0ac0ffa6173a4a42255e6d3a53291e656ed23e54a6feaf8b29d6bb6"
+    },
+    {
+      "path": "internal/app/plugin_shared_torrent_transfer_test.go",
+      "sha256": "b0ba38f529cdf973b63f6f1af1db31dae61554bbaa8d228fdebb3cf3de4cbf7b"
+    },
+    {
+      "path": "internal/app/plugin_original_base.go",
+      "sha256": "83df3595caa9f5d4a16c6f36a7e85aa22b51e72d1b6fc87f4bfa7a385904d80f"
+    },
+    {
+      "path": "internal/app/plugin_original_base_session.go",
+      "sha256": "2694bf8040a0fb5d34ae1c89ae6f75249dfc52210e3bae3c9658138da88e960d"
+    }
+  ],
+  "actual_gate": {
+    "directory": "evidence/s12-transfer01",
+    "status": "PASS_RAW_READBACK",
+    "roots": [
+      "TestOriginalTorrentTransferScopeAndCleanup",
+      "TestOriginalTorrentTransferPerObjectAndConcurrentClose"
+    ],
+    "commands": [
+      {
+        "label": "go-list",
+        "argv": [
+          "go",
+          "list",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-deps",
+          "-test",
+          "-json",
+          "./internal/app"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "compile",
+        "argv": [
+          "go",
+          "test",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-p=1",
+          "-c",
+          "-o",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-transfer01.test",
+          "./internal/app"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "tests",
+        "argv": [
+          "go",
+          "tool",
+          "test2json",
+          "-t",
+          "-p",
+          "./internal/app",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-transfer01.test",
+          "-test.v",
+          "-test.run",
+          "^TestOriginalTorrentTransfer(ScopeAndCleanup|PerObjectAndConcurrentClose)$",
+          "-test.count=1",
+          "-test.timeout=90s"
+        ],
+        "exit": 0
+      }
+    ],
+    "ended": "2026-10-31T18:27:41.625880+00:00",
+    "program_sha256": "11091161626ad956b5dd9fc5845950fc7cf097051e2163e59e66728c83b141bd",
+    "input_count": 6189,
+    "all_before_after_compile_after_test_maps_equal": true,
+    "current_missing_input_paths": [],
+    "current_changed_input_paths": [],
+    "current_core_four_equal_executed_inputs": true,
+    "current_readback_is_point_in_time_only": true,
+    "raw_hashes": {
+      "result.json": "8bf68033fd3fdbaf1df53e87d9a70e5fa808e9a6b9a11d9165f317ba7f273331",
+      "inputs-before.json": "5be0797ba149ce781a66308384595d723f015472afcd9c8b743747a6a8250a85",
+      "inputs-after-compile.json": "5be0797ba149ce781a66308384595d723f015472afcd9c8b743747a6a8250a85",
+      "inputs-after-test.json": "5be0797ba149ce781a66308384595d723f015472afcd9c8b743747a6a8250a85",
+      "tests.stdout": "28e5de2bc165bc2a4f4b24bc1dd878ba40281d86de5e62c30dc2fb46b23a69b5",
+      "generated-source-map.json": "d216918bbc1215d9a42d2c4fdcd3eecf7cd2d41ffa15ba6b3359d79164a4e219"
+    },
+    "stage_resource_samples": [
+      {
+        "phase": "go-list",
+        "at": "2026-10-31T18:27:10.063983+00:00",
+        "scratch_free": 56455094272,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "compile",
+        "at": "2026-10-31T18:27:11.209404+00:00",
+        "scratch_free": 56451506176,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "tests",
+        "at": "2026-10-31T18:27:41.108843+00:00",
+        "scratch_free": 56286785536,
+        "tmp_free": 5225664512
+      }
+    ]
+  },
+  "runtime_layer": "Two primitive unit roots; owned in-memory buffers and goroutines. No actual invocation callback, standard child, HTTP/cache or App construction executed by these roots.",
+  "accepted_finite_behavior": [
+    "Same owner immutable byte copy, random256-bit opaque handle and original total/SHA metadata.",
+    "Foreign owner/token rejection, exact sequential offset/1MiB page copy, replay/beyond-end rejection.",
+    "Empty bytes metadata, per-object16MiB rejection, no new aggregate-byte/count rejection.",
+    "Exact release removes allocation; idempotent close drops all retained refs; no publish/read/release after closure; concurrent publication/read/release versus close retains no final entries.",
+    "Static invocation-hook placement creates1 owner per returned actual invocation host closure, reused by every callback and closed with original revoke; prior authority checks unchanged."
+  ],
+  "not_proven": [
+    "Actual material capability dispatch and before/after scope validation (not yet opened in D1)",
+    "Real cross-invocation/identity/generation host isolation and SDK detached cleanup routing",
+    "Wire16MiB transfer or actual worker cancellation/drain",
+    "Scope-close behavior exercised through real App callbacks",
+    "C transport semantics: C files were compile dependencies only",
+    "Whole current App closure after other owners resume writes",
+    "Race detector/HTTP/cache/source equivalence/wholeS12/CI/delivery"
+  ],
+  "resource_policy": "No new aggregate cap. Existing real hostcall budget bounds eventual production publish count; default64*16MiB may retain1GiB plus overhead before close, configurable256 permits more. Primitive alone is not a count admission gate.",
+  "remaining_blockers_in_this_finite_slice": [],
+  "reviewer_executed_no_Go_source_or_network": true
+}

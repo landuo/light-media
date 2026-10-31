@@ -18,6 +18,14 @@ type TorrentHTTP interface {
 	Get(context.Context, string) (*TorrentResponse, error)
 	Post(context.Context, string, map[string]string) (*TorrentResponse, error)
 }
+
+// OrderedTorrentHTTP is optional so existing consumers keep their original
+// Post contract. Source form dictionaries retain first insertion order while
+// duplicate input names overwrite the value at that original position.
+type OrderedTorrentHTTP interface {
+	PostOrdered(context.Context, string, map[string]string, []string) (*TorrentResponse, error)
+}
+
 type TorrentResponse struct {
 	Status  int
 	Content []byte
@@ -78,7 +86,11 @@ func (h TorrentHelper) Download(ctx context.Context, url string, cacheInvalid bo
 		return out, e
 	}
 	for req != nil && req.Status < 400 && (req.Status == 301 || req.Status == 302) {
-		url = req.Headers["Location"]
+		location, present := req.Headers["Location"]
+		if !present {
+			return out, sourceFault("KeyError", "torrent redirect Location")
+		}
+		url = location
 		if strings.HasPrefix(url, "magnet:") {
 			out.CachePath = ""
 			out.Magnet = url
@@ -112,10 +124,18 @@ func (h TorrentHelper) Download(ctx context.Context, url string, cacheInvalid bo
 				inputs := firstInputs.FindAllStringSubmatch(form[2], -1)
 				if len(inputs) > 0 {
 					data := map[string]string{}
+					order := []string{}
 					for _, in := range inputs {
+						if _, exists := data[in[1]]; !exists {
+							order = append(order, in[1])
+						}
 						data[in[1]] = in[2]
 					}
-					req, e = h.HTTP.Post(ctx, url, data)
+					if ordered, ok := h.HTTP.(OrderedTorrentHTTP); ok {
+						req, e = ordered.PostOrdered(ctx, url, data, order)
+					} else {
+						req, e = h.HTTP.Post(ctx, url, data)
+					}
 					if e != nil {
 						return out, e
 					}
@@ -209,7 +229,7 @@ func TorrentFiles(raw []byte) (folder string, files []string) {
 				if strings.HasPrefix(s, "/") {
 					joined = s
 				} else if joined == "" || strings.HasSuffix(joined, "/") {
-					joined = s
+					joined += s
 				} else {
 					joined += "/" + s
 				}

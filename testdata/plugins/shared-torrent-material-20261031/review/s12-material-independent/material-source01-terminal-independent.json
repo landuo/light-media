@@ -1,0 +1,719 @@
+{
+  "decision": "ACCEPT_ACTUAL_19_CASE_SELECTED_SOURCE_COMPONENT_OBSERVATIONS_ONLY",
+  "at_utc": "2026-10-31T18:18:35.510967+00:00",
+  "coordinator_tool_report": {
+    "tool_id": "c5474c",
+    "exit": 0,
+    "provenance": "parent message; local result.json independently read"
+  },
+  "actual_receipt": {
+    "started": "2026-10-31T18:15:22.919125+00:00",
+    "argv": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+      "-I",
+      "-S",
+      "-B",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-source-preparation/capture_download_material.py"
+    ],
+    "driver_sha256": "757225ec8bba71cd9842bdc1c5635f5038d07b90b5ca3d33630b9fe38a9a93ac",
+    "status": "PASS",
+    "layer": "complete selected original download_torrent+normalize and real stdlib; declared recording HTTP/helper/notice dependencies, not actual downloaded materials",
+    "exit": 0,
+    "ended": "2026-10-31T18:15:23.108021+00:00"
+  },
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-material-source01/stdout.json",
+      "bytes": 43162,
+      "sha256": "6e654f82a7e3099eadcde59b38ab9b12c7a8a6b2cc5e1e3909a4a7e1d528e5c6"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-material-source01/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-material-source01/result.json",
+      "bytes": 693,
+      "sha256": "e2a120f01b12296e3da13c28e5c91d0ee9ce9946d997ec4568dfd42c779d24df"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-source-preparation/capture_download_material.py",
+      "bytes": 9027,
+      "sha256": "757225ec8bba71cd9842bdc1c5635f5038d07b90b5ca3d33630b9fe38a9a93ac"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-source-preparation/owned-cases.json",
+      "bytes": 19694,
+      "sha256": "a1ab340afc39b6332475b2fadd741c6f5ea76be2a9d1696c5f1e05d310f73b46"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-source-preparation/collector-inputs.sha256",
+      "bytes": 862,
+      "sha256": "3a2342de6310fcca356626cbe5877ecb0b475397b32e37937665b966bbb7235e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-source-preparation/input-bindings.json",
+      "bytes": 2207,
+      "sha256": "c510b2bf0d14f63378af46b20b1b68afbb6098b8fe6bbe80aa0855e2d568d243"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-source-preparation/preparation-seal.json",
+      "bytes": 1836,
+      "sha256": "6df4e7ee94f36401e973bdb64ab11c41d832c4db9cef60c889406313f132ec74"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-source-preparation/README.md",
+      "bytes": 3732,
+      "sha256": "db681be64deea2065f81a33b78274e7e73737838124dbc7ab138ea89646c0881"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-independent/material-collector-static-independent.json",
+      "bytes": 5161,
+      "sha256": "97abbf449cf97f9a698ecda7ae9976feeb98bc9a9d4b8f077a7bb93e8256fdd6"
+    }
+  ],
+  "current_declared_input_readback": {
+    "count": 5,
+    "drift": [],
+    "files": [
+      {
+        "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/download.py",
+        "bytes": 84639,
+        "sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003"
+      },
+      {
+        "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/types.py",
+        "bytes": 13773,
+        "sha256": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1"
+      },
+      {
+        "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+        "bytes": 30894944,
+        "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"
+      },
+      {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-source-preparation/capture_download_material.py",
+        "bytes": 9027,
+        "sha256": "757225ec8bba71cd9842bdc1c5635f5038d07b90b5ca3d33630b9fe38a9a93ac"
+      },
+      {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-source-preparation/owned-cases.json",
+        "bytes": 19694,
+        "sha256": "a1ab340afc39b6332475b2fadd741c6f5ea76be2a9d1696c5f1e05d310f73b46"
+      }
+    ]
+  },
+  "selected_original_nodes_current_equals_actual_and_static": [
+    {
+      "path": "app/schemas/types.py",
+      "name": "NotificationType",
+      "first_line": 305,
+      "last_line": 323,
+      "file_sha256": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+      "source_fragment_sha256": "2b219f8447f2b3ef182caf85c4a655424cff14b7e5ec6501f8c1e775f49deba5",
+      "ast_sha256": "561dfa044bebf76bbf3bbd645cbd8a7f516185f4f5315d657118b015cd13b8ae"
+    },
+    {
+      "path": "app/schemas/types.py",
+      "name": "MessageChannel",
+      "first_line": 342,
+      "last_line": 357,
+      "file_sha256": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+      "source_fragment_sha256": "7a40463ee29e745165fcd074436c1d4c7435d7f8475bea82b7dff76179dbd3ec",
+      "ast_sha256": "878d040f1d5f7ba5c41d6b52ce207b51c360671f19dcbcb2c0ea3870c48871cf"
+    },
+    {
+      "path": "app/chain/download.py",
+      "name": "_normalize_indirect_download_url",
+      "first_line": 64,
+      "last_line": 84,
+      "file_sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+      "source_fragment_sha256": "821e1118efd7edb7ff32f24489214431d9bea749c2713708b6d3a3249dbf85ca",
+      "ast_sha256": "b2d3ed85d31be6f9e44363e7f509b62107c60f219c3ee45bc53e39f2b77856ca"
+    },
+    {
+      "path": "app/chain/download.py",
+      "name": "download_torrent",
+      "first_line": 658,
+      "last_line": 783,
+      "file_sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+      "source_fragment_sha256": "7a0478cc7c56e47a5943b58602cb6e78507e22d1ef69298b8dc94cd9c76c918b",
+      "ast_sha256": "9aad4457dea45e5c9f37eefeb2e6520e6b47c094ed401d0691c3fadf951c7f7f"
+    }
+  ],
+  "owned_inputs_all19_exact_equal": true,
+  "settings_exact_equal": true,
+  "counts": {
+    "NoneType": 7,
+    "str": 3,
+    "bytes": 7,
+    "exception": 2
+  },
+  "operation_counts": {
+    "torrent_helper.init": 11,
+    "torrent_helper.download_torrent": 11,
+    "log.error": 6,
+    "notification.init": 2,
+    "notice.post_message": 2,
+    "request.init": 8,
+    "request.get_res": 3,
+    "response.bool": 8,
+    "response.text": 1,
+    "request.post_res": 5,
+    "response.json": 6,
+    "log.info": 3
+  },
+  "case_readback": [
+    {
+      "case": "empty_enclosure",
+      "input_canonical_sha256": "f01f5b883fdba05385c9f5cec30b8c60895745ce5e4927cacb49f8f47eb540bc",
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [],
+      "trace_canonical_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "notices": []
+    },
+    {
+      "case": "magnet_passthrough",
+      "input_canonical_sha256": "7049046183f2d6b6a2654183fd23fe1f2dd8fa4364d3748d1f0aa49cd4f25254",
+      "outcome": {
+        "value": [
+          "magnet:?xt=urn:btih:OWNED&dn=Owned",
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "str",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [],
+      "trace_canonical_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "notices": []
+    },
+    {
+      "case": "direct_bytes_explicit_credentials",
+      "input_canonical_sha256": "2879208f24d918f3ea08884a590106d53a25e8eaa651ba88abb5efc1424c12a7",
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "torrent_helper.init",
+        "torrent_helper.download_torrent"
+      ],
+      "trace_canonical_sha256": "5dfd4a29e69d2905996b44be2284293df78737ce9793bf8d8cd06dfe15ed55bb",
+      "notices": []
+    },
+    {
+      "case": "direct_string_fallback_ua",
+      "input_canonical_sha256": "a72d7aee75e5f8abfb4a0f40095d5fc6e2c11ad3e01cf427fd5b636296424d62",
+      "outcome": {
+        "value": [
+          "magnet:?xt=urn:btih:OWNED-HELPER",
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "str",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "torrent_helper.init",
+        "torrent_helper.download_torrent"
+      ],
+      "trace_canonical_sha256": "5ea54ed2971c2a1bdb1ff432d73d6f7fb02f14b8f436b0c935e87893a9cbb914",
+      "notices": []
+    },
+    {
+      "case": "direct_empty_string_precedes_empty_content_check",
+      "input_canonical_sha256": "7f2ffd6a132b43bd1ed3b75f10a36128e30ae311c83104c1743d4e5654f25812",
+      "outcome": {
+        "value": [
+          "",
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "str",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "torrent_helper.init",
+        "torrent_helper.download_torrent"
+      ],
+      "trace_canonical_sha256": "5dfd4a29e69d2905996b44be2284293df78737ce9793bf8d8cd06dfe15ed55bb",
+      "notices": []
+    },
+    {
+      "case": "empty_bytes_notice_with_channel",
+      "input_canonical_sha256": "ef8b7abca9d4f7f5b8a92f4bad118ec28dd9e942bd00f2f00a80abd01b6c4b07",
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "torrent_helper.init",
+        "torrent_helper.download_torrent",
+        "log.error",
+        "notification.init",
+        "notice.post_message"
+      ],
+      "trace_canonical_sha256": "8de5f17de6dd2d0036ae18d1104a1aee8795d3dffaad9a9d9a29efef4d91391f",
+      "notices": [
+        {
+          "channel": {
+            "$enum": "MessageChannel.Web",
+            "value": "Web"
+          },
+          "source": "OwnedSource",
+          "mtype": {
+            "$enum": "NotificationType.Manual",
+            "value": "手动处理"
+          },
+          "title": "Owned release 雪 种子下载失败！",
+          "text": "错误信息：owned empty-content error\n站点：Owned Site",
+          "userid": 17
+        }
+      ]
+    },
+    {
+      "case": "none_content_notice_without_channel",
+      "input_canonical_sha256": "a7d5df258c34d661f7b11733d72f4c6b17539abff3521581fb3538184cd20620",
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "torrent_helper.init",
+        "torrent_helper.download_torrent",
+        "log.error",
+        "notification.init",
+        "notice.post_message"
+      ],
+      "trace_canonical_sha256": "45f065caade994e091c46d1093e3f793aee0630545411bd0fd812592cbc8c5f4",
+      "notices": [
+        {
+          "channel": null,
+          "source": null,
+          "mtype": {
+            "$enum": "NotificationType.Manual",
+            "value": "手动处理"
+          },
+          "title": "Owned release 雪 种子下载失败！",
+          "text": "错误信息：owned missing-content error\n站点：Owned Site",
+          "userid": "owned-user"
+        }
+      ]
+    },
+    {
+      "case": "empty_brackets_use_tail_without_request",
+      "input_canonical_sha256": "ae6266b3db2f3fe2642c13a5fbb96c891cb88c5da92006f18ec138c5b10dbd12",
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "torrent_helper.init",
+        "torrent_helper.download_torrent"
+      ],
+      "trace_canonical_sha256": "5d918425fedae95e8858322b53cca9339f4052d20e7753ac008a805f8fcb9544",
+      "notices": []
+    },
+    {
+      "case": "encoded_get_text_cookie_headers_proxy",
+      "input_canonical_sha256": "f96bf48f6453f801d801972da9201aec1ea4c451e8b2eac75a19d3cc81905191",
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "request.init",
+        "request.get_res",
+        "response.bool",
+        "response.text",
+        "torrent_helper.init",
+        "torrent_helper.download_torrent"
+      ],
+      "trace_canonical_sha256": "6dc9f2913edf36fb79d15f642f8a24e208a5f64dedc0af334deeae725a717085",
+      "notices": []
+    },
+    {
+      "case": "uppercase_GET_is_post_nested_query",
+      "input_canonical_sha256": "2c7953fafcff8327d6237df6a66694e51ad2e4cd070187900623cb4fa63b300a",
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "request.init",
+        "request.post_res",
+        "response.bool",
+        "response.json",
+        "torrent_helper.init",
+        "torrent_helper.download_torrent"
+      ],
+      "trace_canonical_sha256": "2e72f8b320faced247f410f809336e90569ffcb3e7668a8b25f3a6dccb192d79",
+      "notices": []
+    },
+    {
+      "case": "nested_relative_rewrite_ignores_lone_result_path",
+      "input_canonical_sha256": "34ddfcbe5f3ca7f053cc01f4ff146218900e8200fbee4bb10bc87d6e36ee4af3",
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "request.init",
+        "request.post_res",
+        "response.bool",
+        "response.json",
+        "log.info",
+        "torrent_helper.init",
+        "torrent_helper.download_torrent"
+      ],
+      "trace_canonical_sha256": "b7ea7c7d63077bf215ca89519670216e6458ac52a0b9bc9cc61bdf2c6735a9be",
+      "notices": []
+    },
+    {
+      "case": "nested_absolute_rewrite_keeps_path_query_fragment",
+      "input_canonical_sha256": "8a73b17ba5d18b25ec9498e8b0b43afe553d6355bde1cfa30043f4ccd11099f8",
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "request.init",
+        "request.get_res",
+        "response.bool",
+        "response.json",
+        "log.info",
+        "torrent_helper.init",
+        "torrent_helper.download_torrent"
+      ],
+      "trace_canonical_sha256": "10d664fdd56f6116e6a0b1ba26e70d455609ee6d0c76fca6b14d421721275aec",
+      "notices": []
+    },
+    {
+      "case": "nested_invalid_base_preserves_value",
+      "input_canonical_sha256": "12bc082753c9e4c73ff92b262e4f7ea8e236a07df342c34e817948478baa0359",
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "request.init",
+        "request.post_res",
+        "response.bool",
+        "response.json",
+        "log.info",
+        "torrent_helper.init",
+        "torrent_helper.download_torrent"
+      ],
+      "trace_canonical_sha256": "1b8c703633a5b9ee233bc32a39b164043127639c19c626568cfdcbab006ce36f",
+      "notices": []
+    },
+    {
+      "case": "false_response_stops_before_helper",
+      "input_canonical_sha256": "4799eebb42729c498b9511824445d4625fe2c5b720c6b1029a0ad7a6f0ef0c2c",
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "request.init",
+        "request.get_res",
+        "response.bool",
+        "log.error"
+      ],
+      "trace_canonical_sha256": "e6262a5cef4de5a50b1f11317ed6711f0e38c4b417916c56394902e18479dffb",
+      "notices": []
+    },
+    {
+      "case": "false_success_stops_before_result",
+      "input_canonical_sha256": "51f7b765fc0ae6c9f09a16eef0415905e41208352e4fd9a547a837cd781de946",
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "request.init",
+        "request.post_res",
+        "response.bool",
+        "response.json",
+        "log.error"
+      ],
+      "trace_canonical_sha256": "2ca8523fb57fefca3c4542bcffe2eac59eeb2886032a218618784e27b9c92322",
+      "notices": []
+    },
+    {
+      "case": "false_nested_result_stops_before_helper",
+      "input_canonical_sha256": "ef199ef88c9fa499313b87a93c0ac903c58e4a1c2137727deb6fd9af3413850a",
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "request.init",
+        "request.post_res",
+        "response.bool",
+        "response.json",
+        "log.error"
+      ],
+      "trace_canonical_sha256": "efea87d60415458d1621d981d1e44b7f918e5c798ed966097bb57dc7b1c8d985",
+      "notices": []
+    },
+    {
+      "case": "bad_base64_error",
+      "input_canonical_sha256": "a6f9c73a437eec88fae0ebc6c747bb8b29abe83720a2c11bdf95c1c96f5c52cd",
+      "outcome": {
+        "exception": {
+          "module": "binascii",
+          "type": "Error",
+          "message": "Invalid base64-encoded string: number of data characters (1) cannot be 1 more than a multiple of 4",
+          "args": [
+            "Invalid base64-encoded string: number of data characters (1) cannot be 1 more than a multiple of 4"
+          ]
+        }
+      },
+      "trace_operations": [],
+      "trace_canonical_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "notices": []
+    },
+    {
+      "case": "bad_json_error",
+      "input_canonical_sha256": "f8195dcd8e91b3b3bb27bb478c9e3733e1edeb47d48e6f46062c3da81b135a29",
+      "outcome": {
+        "exception": {
+          "module": "json.decoder",
+          "type": "JSONDecodeError",
+          "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+          "args": [
+            "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+          ]
+        }
+      },
+      "trace_operations": [],
+      "trace_canonical_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "notices": []
+    },
+    {
+      "case": "unmatched_bracket_stops_before_helper",
+      "input_canonical_sha256": "096c610a79e9d3482356a4e72904959efefef6104a5544b4e5f4c7471db4b1d8",
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace_operations": [
+        "log.error"
+      ],
+      "trace_canonical_sha256": "fbf8e9bbef4561a859c0b44f726251220c57339ab35bc4b17eb206012e613ebb",
+      "notices": []
+    }
+  ],
+  "oracle_reuse": {
+    "authoritative_raw": "evidence/s12-material-source01/stdout.json",
+    "retain": [
+      "source_commit",
+      "driver_sha256",
+      "input_manifest_sha256",
+      "settings_input",
+      "selected_original_nodes",
+      "dependency_contract",
+      "not_claimed",
+      "cases (all full inputs/outcome/trace/notices)"
+    ],
+    "representation": "$bytes is exact base64; $enum retains class/member/value; tuple/type tags and None/empty-string distinctions retained",
+    "normalization": "Only document explicit representation adapters; preserve case order, complete ordered trace and notice fields, all exception facts. Do not substitute Go expectations or merge distinct source failures into successful empty material."
+  },
+  "boundaries": [
+    "real RequestUtils/requests/HTTP/proxy/cookie transmission",
+    "real TorrentHelper/parser/cache",
+    "real Notification model or delivery",
+    "whole DownloadChain/DAO/downloader",
+    "target Go output or complete equivalence",
+    "unobserved internal syscall behavior",
+    "17 returned tuples plus 2 recorded exceptions; exit0 is collector completion, not 19 successful downloads",
+    "5 declared inputs, not a complete interpreter/stdlib dependency closure",
+    "requests/urllib3/socket absence checks are module-level checks, not a syscall trace",
+    "no current target behavior, S12 end-to-end acceptance, or notification-delivery proof from this run"
+  ],
+  "reviewer_executed_source_go_or_network": false,
+  "review": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-independent/MATERIAL-SOURCE01-REVIEW.md",
+    "bytes": 3758,
+    "sha256": "fbc418dc7339597bade01cf6d4e699b70de6e72b5f819c1e02e10837d5a16cf6"
+  }
+}

@@ -1,0 +1,198 @@
+{
+  "decision": "PASS_FINITE_B2_SOURCE19_COMPONENT_DIFFERENTIAL",
+  "reviewed_at_utc": "2026-10-31T18:23:57.931569+00:00",
+  "current_five_inputs": [
+    {
+      "path": "internal/ocr/source_json_export.go",
+      "sha256": "2124526f82f3ee98a69e74b3a688882295c2f959a7cd65bc619dad70f8fd2dba"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/torrent_material_url.go",
+      "sha256": "731bb0e24a886389789d9ac7f80f968876c506af1abe7f5e6353aacb515932a7"
+    },
+    {
+      "path": "internal/plugins/torrentmaterial/chain.go",
+      "sha256": "7e5c19c144b653b411731fc552d671f6bb78f0c9be0c17e528fcf83cc1597bc8"
+    },
+    {
+      "path": "internal/plugins/torrentmaterial/chain_test.go",
+      "sha256": "12178ff9919e125fde98cdd66dbb96310b0835b49098d982b1ccf8ca35e2ce97"
+    },
+    {
+      "path": "internal/plugins/torrentmaterial/testdata/source-wrapper.json",
+      "sha256": "133bf97c1df6958a62f341b036936519d78fda928cb836eb8e23139f1fffc6bc"
+    }
+  ],
+  "manifest_sha256": "3fbe29a959d8c4489a5c480049ea6c424a7d0e5314a1986da949ec9f984142ae",
+  "archive_sha256": "547f244b82e184fc7907596f8c1f12e4957d7ed5efe00f53696dbc4d89a76e4a",
+  "source_provenance": {
+    "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "actual_original_raw_sha256": "6e654f82a7e3099eadcde59b38ab9b12c7a8a6b2cc5e1e3909a4a7e1d528e5c6",
+    "actual_original_raw_bytes": 43162,
+    "source_independent_seal_sha256": "e4427d2c7ac594afc14fdeb0e76c7f288416ce853bce25c5365b7ee1f1b796ae",
+    "all_original_fields_preserved_structurally": true,
+    "case_count": 19,
+    "tuples": 17,
+    "exceptions": 2,
+    "final_v2_extraction_receipt_sha256": "9b3daecaa8a196fbf6ce067197304e251a7dddcdde5becb290530cdebfffc706",
+    "historical_first_extraction_superseded_by": "FINAL-BINDING.md"
+  },
+  "actual_target_gate": {
+    "directory": "evidence/s12-wrapper-source01",
+    "status": "PASS_RAW_READBACK",
+    "roots": [
+      "TestDownloadTorrentActualSourceWrapper19"
+    ],
+    "subcase_passes": [
+      "empty_enclosure",
+      "magnet_passthrough",
+      "direct_bytes_explicit_credentials",
+      "direct_string_fallback_ua",
+      "direct_empty_string_precedes_empty_content_check",
+      "empty_bytes_notice_with_channel",
+      "none_content_notice_without_channel",
+      "empty_brackets_use_tail_without_request",
+      "encoded_get_text_cookie_headers_proxy",
+      "uppercase_GET_is_post_nested_query",
+      "nested_relative_rewrite_ignores_lone_result_path",
+      "nested_absolute_rewrite_keeps_path_query_fragment",
+      "nested_invalid_base_preserves_value",
+      "false_response_stops_before_helper",
+      "false_success_stops_before_result",
+      "false_nested_result_stops_before_helper",
+      "bad_base64_error",
+      "bad_json_error",
+      "unmatched_bracket_stops_before_helper"
+    ],
+    "commands": [
+      {
+        "label": "go-list",
+        "argv": [
+          "go",
+          "list",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-deps",
+          "-test",
+          "-json",
+          "./internal/plugins/torrentmaterial"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "compile",
+        "argv": [
+          "go",
+          "test",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-p=1",
+          "-c",
+          "-o",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-wrapper-source01.test",
+          "./internal/plugins/torrentmaterial"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "tests",
+        "argv": [
+          "go",
+          "tool",
+          "test2json",
+          "-t",
+          "-p",
+          "./internal/plugins/torrentmaterial",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-wrapper-source01.test",
+          "-test.v",
+          "-test.run",
+          "^TestDownloadTorrentActualSourceWrapper19$",
+          "-test.count=1",
+          "-test.timeout=90s"
+        ],
+        "exit": 0
+      }
+    ],
+    "ended": "2026-10-31T18:22:05.014088+00:00",
+    "input_count": 3439,
+    "all_before_after_current_match": true,
+    "program_sha256": "8a5dea86b23bf1481be6bb5418cb7ab728b8dd41a0134861691624dd0942699c",
+    "raw_hashes": {
+      "result.json": "d32b50c3f5a06aeef1fc54eec3b1d58bdd2e2d9ed1a2bf1d95984cbb1be368b9",
+      "inputs-before.json": "fa44abf036995483d1deba8bc695a98a7e1109c800c22564b93620308088a9c5",
+      "inputs-after-compile.json": "fa44abf036995483d1deba8bc695a98a7e1109c800c22564b93620308088a9c5",
+      "inputs-after-test.json": "fa44abf036995483d1deba8bc695a98a7e1109c800c22564b93620308088a9c5",
+      "tests.stdout": "fc8a726014e30098b2cbc53db7d4b4ab548f075d4a9adc26ee3f76dd3254818f",
+      "generated-source-map.json": "a890f38c9cd27e50feb1c7d43961e1684096dae5d3a58c904bc6f90ebda8b275"
+    },
+    "stage_resource_samples": [
+      {
+        "phase": "go-list",
+        "at": "2026-10-31T18:22:03.057441+00:00",
+        "scratch_free": 56482091008,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "compile",
+        "at": "2026-10-31T18:22:03.595642+00:00",
+        "scratch_free": 56480514048,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "tests",
+        "at": "2026-10-31T18:22:04.697373+00:00",
+        "scratch_free": 56458223616,
+        "tmp_free": 5225664512
+      }
+    ]
+  },
+  "B1_inheritance": {
+    "original_component_seal_sha256": "3fc10f25d9554cfef50f0ff47dd51f32d3d9bda6605599dec1c67fba9daa444b",
+    "old_three_root_and_all_shared_test_helper_text_identical": true,
+    "chain_and_both_bridges_identical": true,
+    "shared_unchanged_input_entries": 3435,
+    "changed_common_inputs": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/torrentmaterial/chain_test.go"
+    ],
+    "added_inputs": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/torrentmaterial/testdata/source-wrapper.json",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s12-wrapper-source01.py",
+      "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/66/666a78564f998468dbbd516044712134be6c9875300a2d1b676461ddd4f63b37-d"
+    ],
+    "removed_inputs": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s12-wrapper01.py",
+      "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/8b/8b4c54051d8d4f30bc6b84fa0b66a09ed3b1014140e66e9a60ca48bd26688105-d"
+    ],
+    "not_all_four_roots_rerun": true
+  },
+  "mapping_review": {
+    "target_inputs": "Original recorded torrent/channel/source/userid, helper tuple and descriptor response inputs only; expected outcome used only for comparison.",
+    "request_ports": "Source request.init and matching get_res/post_res merge into one target descriptor event, with method,URL,UA,cookie,headers,proxy mapping,params compared in order.",
+    "material_ports": "Original helper call URL/cookie/UA/proxy/cache_invalid compared in order; helper result is declared recorded input, not target-derived oracle.",
+    "notices": "Target fields and position compared with source post_message and retained notice list; source enum tags projected to their values.",
+    "tuples": "None vs bytes marker vs string, exact byte values, folder and file order compared; errors compare class only.",
+    "truthiness": "RecordingResponse bool mapped to synthetic 200/503 only; no observed HTTP status claim.",
+    "response_json": "Recorded JSON value reserialized as UTF8/application-json for target; not same original HTTP bytes or codec proof.",
+    "ignored_source_events": [
+      "log.error",
+      "log.info",
+      "notification.init",
+      "response.bool",
+      "response.json",
+      "response.text",
+      "torrent_helper.init"
+    ],
+    "excluded_evidence": "Original logger content, dependency constructors, response property access and exception message/stack are retained but not compared."
+  },
+  "remaining_blockers_in_this_finite_slice": [],
+  "not_claimed": [
+    "Real RequestUtils/HTTP/TLS/proxy/cookie transmission",
+    "Real parser/helper/cache execution within new fourth root (B1 third root separately has actual Go helper/parser and memory ports)",
+    "Real Notification model/provider/persistence",
+    "Full SDK worker/host/scope/transfer lifecycle/ordinary App",
+    "Exact source logging or complete raw trace equivalence",
+    "All source values or arbitrary-size parity",
+    "Complete S12/race/CI/remote delivery"
+  ],
+  "reviewer_executed_no_Go_source_or_network": true
+}

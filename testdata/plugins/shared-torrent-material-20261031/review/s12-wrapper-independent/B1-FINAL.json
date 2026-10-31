@@ -1,0 +1,143 @@
+{
+  "decision": "PASS_FINITE_B1_WRAPPER_COMPONENT_SLICE",
+  "reviewed_at_utc": "2026-10-31T18:14:48.354862+00:00",
+  "source_first": {
+    "commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "path": "app/chain/download.py",
+    "lines": [
+      "65-84",
+      "658-783"
+    ],
+    "sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003"
+  },
+  "four_current_inputs": [
+    {
+      "path": "internal/ocr/source_json_export.go",
+      "sha256": "2124526f82f3ee98a69e74b3a688882295c2f959a7cd65bc619dad70f8fd2dba"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/torrent_material_url.go",
+      "sha256": "731bb0e24a886389789d9ac7f80f968876c506af1abe7f5e6353aacb515932a7"
+    },
+    {
+      "path": "internal/plugins/torrentmaterial/chain.go",
+      "sha256": "7e5c19c144b653b411731fc552d671f6bb78f0c9be0c17e528fcf83cc1597bc8"
+    },
+    {
+      "path": "internal/plugins/torrentmaterial/chain_test.go",
+      "sha256": "5d36594b78cf31bfe96d08cb2183a143ab31a998486d4836a41e1f6d46040cd7"
+    }
+  ],
+  "final_manifest_sha256": "22c3b6043c2ebc76035dacbeb07728a04e350db3949de01a526c68505a6f79e1",
+  "final_archive_sha256": "be839ebcfb30ff74d96da462ee2e19284be661ed3a39a1378cc30b23102c2355",
+  "actual_gate": {
+    "directory": "evidence/s12-wrapper01",
+    "status": "PASS_RAW_READBACK",
+    "roots": [
+      "TestDownloadTorrentWrapperAndNotification",
+      "TestDownloadTorrentDescriptorSemantics",
+      "TestDownloadTorrentExistingHelperCacheAndRecovery"
+    ],
+    "commands": [
+      {
+        "label": "go-list",
+        "argv": [
+          "go",
+          "list",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-deps",
+          "-test",
+          "-json",
+          "./internal/plugins/torrentmaterial"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "compile",
+        "argv": [
+          "go",
+          "test",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-p=1",
+          "-c",
+          "-o",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-wrapper01.test",
+          "./internal/plugins/torrentmaterial"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "tests",
+        "argv": [
+          "go",
+          "tool",
+          "test2json",
+          "-t",
+          "-p",
+          "./internal/plugins/torrentmaterial",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-wrapper01.test",
+          "-test.v",
+          "-test.run",
+          "^(TestDownloadTorrentWrapperAndNotification|TestDownloadTorrentDescriptorSemantics|TestDownloadTorrentExistingHelperCacheAndRecovery)$",
+          "-test.count=1",
+          "-test.timeout=90s"
+        ],
+        "exit": 0
+      }
+    ],
+    "ended": "2026-10-31T18:13:25.360241+00:00",
+    "input_count": 3438,
+    "all_before_after_current_bindings_match": true,
+    "program_sha256": "4c000daa704fe6b3cb7679d187c7b0bdd6db257b6edc4cc9a2391c3b6b8fcd34",
+    "raw_hashes": {
+      "result.json": "461eebd75c3c169f122a35f2f66048b8f5afbbc40e539f2dd6e7ea32811eb23a",
+      "inputs-before.json": "be0c89207ab579c7e00e21599fa7345f3bffe7649e36ad0f10044fd69bc16cf7",
+      "inputs-after-compile.json": "be0c89207ab579c7e00e21599fa7345f3bffe7649e36ad0f10044fd69bc16cf7",
+      "inputs-after-test.json": "be0c89207ab579c7e00e21599fa7345f3bffe7649e36ad0f10044fd69bc16cf7",
+      "tests.stdout": "82dad4d47a1779904a50d95a597379a7628e3b728df6c191f77144f394c07baa",
+      "generated-source-map.json": "a90c29c58ec5b9424fbfa9009cb168de076b318403cbc2c17393e380fb55f076"
+    },
+    "stage_resource_samples": [
+      {
+        "phase": "go-list",
+        "at": "2026-10-31T18:13:22.761362+00:00",
+        "scratch_free": 56510230528,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "compile",
+        "at": "2026-10-31T18:13:23.294167+00:00",
+        "scratch_free": 56508620800,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "tests",
+        "at": "2026-10-31T18:13:25.050615+00:00",
+        "scratch_free": 56483237888,
+        "tmp_free": 5225664512
+      }
+    ]
+  },
+  "layer": "Source-reading component tests. Real existing Go TorrentHelper/TorrentFiles plus owned in-memory fake HTTP/cache/notification ports; no actual source execution or FileCache.",
+  "static_review": [
+    "None/magnet early exits; direct/indirect cookie and cacheInvalid routing; material-stage UA fallback; separate descriptor selectors and query params.",
+    "Exact get selects GET, other methods POST; response truthiness rejects 400..599; falsy missing URL is no-notification early exit.",
+    "Nonvalidating base64 with strict resulting UTF8; existing source JSON parser and requests JSON decoding remain separate; existing source URL parser/join reused.",
+    "Source dictionary/truthiness/dotted results, path/query nondoseq formatting, sanitized typed exceptions and notification channel-source/None title-site behavior.",
+    "String including empty string returns before falsy-byte failure path; nonempty malformed bencode preserved via existing helper; no stricter native parser substitution.",
+    "Four files only are frozen; JSON export delegates unchanged old parser, URL export reuses existing resolver without granting origins."
+  ],
+  "remaining_blockers_in_this_component_slice": [],
+  "not_claimed": [
+    "19-case original source collector/difference equivalence",
+    "Actual SDK worker-to-host or scope authority/paging/reclamation",
+    "Real network/TLS/credential routing",
+    "Persistent cache/FileCache/cold-start behavior",
+    "Real notification history/events/provider or full ordinary App",
+    "All source input domains or arbitrary-size parity beyond retained16MiB",
+    "Complete S12/race/CI/remote delivery"
+  ],
+  "reviewer_executed_no_Go_source_or_network": true
+}

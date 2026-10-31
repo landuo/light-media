@@ -1,0 +1,408 @@
+{
+  "status": "actual_three_case_selected_source_component_with_recording_dependencies",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "driver_sha256": "64cb6a6340aa03c6f6831d46f48bbfebbd1d54c209a092208130bf4f109db501",
+  "input_manifest_sha256": "b9d4ae090d6a22ac761dcf325dfff9a7f5f64c4460d04ae855a0575e3ebe0220",
+  "python_executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+  "python_executable_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+  "settings_input": {
+    "USER_AGENT": "Owned-Default-UA",
+    "PROXY": {
+      "http": "http://owned-proxy.invalid:8080",
+      "https": "http://owned-proxy.invalid:8080"
+    }
+  },
+  "cases": [
+    {
+      "case": "int_result_no_base",
+      "inputs": {
+        "case": "int_result_no_base",
+        "descriptor_input": {
+          "method": "get",
+          "result": "data"
+        },
+        "torrent": {
+          "enclosure": "[eyJtZXRob2QiOiJnZXQiLCJyZXN1bHQiOiJkYXRhIn0=]https://owned-descriptor.invalid/token",
+          "title": "Owned nonstring result",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": false,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "unused owned text",
+          "json": {
+            "data": 123
+          }
+        }
+      },
+      "outcome": {
+        "exception": {
+          "module": "builtins",
+          "type": "AttributeError",
+          "message": "'int' object has no attribute 'startswith'",
+          "args": [
+            "'int' object has no attribute 'startswith'"
+          ],
+          "traceback": [
+            {
+              "filename": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-nonstring-log-source/capture_nonstring_log.py",
+              "line": 213,
+              "name": "<module>",
+              "source_line": "value = chain.download_torrent(torrent=torrent, channel=channel,"
+            },
+            {
+              "filename": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/download.py",
+              "line": 760,
+              "name": "download_torrent",
+              "source_line": "_, content, download_folder, files, error_msg = TorrentHelper().download_torrent("
+            },
+            {
+              "filename": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-nonstring-log-source/capture_nonstring_log.py",
+              "line": 154,
+              "name": "download_torrent",
+              "source_line": "result = SelectedTorrentHelper.download_torrent(self, **kwargs)"
+            },
+            {
+              "filename": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py",
+              "line": 83,
+              "name": "download_torrent",
+              "source_line": "if url.startswith(\"magnet:\"):"
+            }
+          ]
+        }
+      },
+      "trace": [
+        {
+          "op": "request.init",
+          "ua": "Owned-UA",
+          "cookies": null,
+          "headers": null,
+          "proxies": null
+        },
+        {
+          "op": "request.get_res",
+          "url": "https://owned-descriptor.invalid/token",
+          "params": null
+        },
+        {
+          "op": "response.bool",
+          "value": true
+        },
+        {
+          "op": "response.json",
+          "value": {
+            "data": 123
+          }
+        },
+        {
+          "op": "log.info",
+          "message": "已获取到站点临时下载地址"
+        },
+        {
+          "op": "torrent_helper.init",
+          "contract": "recording constructor; source TTLCache constructor excluded"
+        },
+        {
+          "op": "torrent_helper.download_torrent",
+          "url": 123,
+          "cookie": null,
+          "ua": "Owned-UA",
+          "proxy": false,
+          "cache_invalid": false
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "int_result_invalid_base",
+      "inputs": {
+        "case": "int_result_invalid_base",
+        "descriptor_input": {
+          "method": "get",
+          "result": "data",
+          "result_base_url": "owned-relative-base"
+        },
+        "torrent": {
+          "enclosure": "[eyJtZXRob2QiOiJnZXQiLCJyZXN1bHQiOiJkYXRhIiwicmVzdWx0X2Jhc2VfdXJsIjoib3duZWQtcmVsYXRpdmUtYmFzZSJ9]https://owned-descriptor.invalid/token",
+          "title": "Owned nonstring result",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": false,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "unused owned text",
+          "json": {
+            "data": 123
+          }
+        }
+      },
+      "outcome": {
+        "exception": {
+          "module": "builtins",
+          "type": "AttributeError",
+          "message": "'int' object has no attribute 'startswith'",
+          "args": [
+            "'int' object has no attribute 'startswith'"
+          ],
+          "traceback": [
+            {
+              "filename": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-nonstring-log-source/capture_nonstring_log.py",
+              "line": 213,
+              "name": "<module>",
+              "source_line": "value = chain.download_torrent(torrent=torrent, channel=channel,"
+            },
+            {
+              "filename": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/download.py",
+              "line": 760,
+              "name": "download_torrent",
+              "source_line": "_, content, download_folder, files, error_msg = TorrentHelper().download_torrent("
+            },
+            {
+              "filename": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-nonstring-log-source/capture_nonstring_log.py",
+              "line": 154,
+              "name": "download_torrent",
+              "source_line": "result = SelectedTorrentHelper.download_torrent(self, **kwargs)"
+            },
+            {
+              "filename": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py",
+              "line": 83,
+              "name": "download_torrent",
+              "source_line": "if url.startswith(\"magnet:\"):"
+            }
+          ]
+        }
+      },
+      "trace": [
+        {
+          "op": "request.init",
+          "ua": "Owned-UA",
+          "cookies": null,
+          "headers": null,
+          "proxies": null
+        },
+        {
+          "op": "request.get_res",
+          "url": "https://owned-descriptor.invalid/token",
+          "params": null
+        },
+        {
+          "op": "response.bool",
+          "value": true
+        },
+        {
+          "op": "response.json",
+          "value": {
+            "data": 123
+          }
+        },
+        {
+          "op": "log.info",
+          "message": "已获取到站点临时下载地址"
+        },
+        {
+          "op": "torrent_helper.init",
+          "contract": "recording constructor; source TTLCache constructor excluded"
+        },
+        {
+          "op": "torrent_helper.download_torrent",
+          "url": 123,
+          "cookie": null,
+          "ua": "Owned-UA",
+          "proxy": false,
+          "cache_invalid": false
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "int_result_valid_http_base",
+      "inputs": {
+        "case": "int_result_valid_http_base",
+        "descriptor_input": {
+          "method": "get",
+          "result": "data",
+          "result_base_url": "http://owned-base.invalid/api"
+        },
+        "torrent": {
+          "enclosure": "[eyJtZXRob2QiOiJnZXQiLCJyZXN1bHQiOiJkYXRhIiwicmVzdWx0X2Jhc2VfdXJsIjoiaHR0cDovL293bmVkLWJhc2UuaW52YWxpZC9hcGkifQ==]https://owned-descriptor.invalid/token",
+          "title": "Owned nonstring result",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": false,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "unused owned text",
+          "json": {
+            "data": 123
+          }
+        }
+      },
+      "outcome": {
+        "exception": {
+          "module": "builtins",
+          "type": "AttributeError",
+          "message": "'int' object has no attribute 'decode'",
+          "args": [
+            "'int' object has no attribute 'decode'"
+          ],
+          "traceback": [
+            {
+              "filename": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-nonstring-log-source/capture_nonstring_log.py",
+              "line": 213,
+              "name": "<module>",
+              "source_line": "value = chain.download_torrent(torrent=torrent, channel=channel,"
+            },
+            {
+              "filename": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/download.py",
+              "line": 749,
+              "name": "download_torrent",
+              "source_line": "torrent_url = __get_redict_url(url=torrent.enclosure,"
+            },
+            {
+              "filename": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/download.py",
+              "line": 731,
+              "name": "__get_redict_url",
+              "source_line": "data = self._normalize_indirect_download_url("
+            },
+            {
+              "filename": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/download.py",
+              "line": 78,
+              "name": "_normalize_indirect_download_url",
+              "source_line": "url_parts = urlparse(url)"
+            },
+            {
+              "filename": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py",
+              "line": 394,
+              "name": "urlparse",
+              "source_line": "url, scheme, _coerce_result = _coerce_args(url, scheme)"
+            },
+            {
+              "filename": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py",
+              "line": 133,
+              "name": "_coerce_args",
+              "source_line": "return _decode_args(args) + (_encode_result,)"
+            },
+            {
+              "filename": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py",
+              "line": 117,
+              "name": "_decode_args",
+              "source_line": "return tuple(x.decode(encoding, errors) if x else '' for x in args)"
+            },
+            {
+              "filename": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py",
+              "line": 117,
+              "name": "<genexpr>",
+              "source_line": "return tuple(x.decode(encoding, errors) if x else '' for x in args)"
+            }
+          ]
+        }
+      },
+      "trace": [
+        {
+          "op": "request.init",
+          "ua": "Owned-UA",
+          "cookies": null,
+          "headers": null,
+          "proxies": null
+        },
+        {
+          "op": "request.get_res",
+          "url": "https://owned-descriptor.invalid/token",
+          "params": null
+        },
+        {
+          "op": "response.bool",
+          "value": true
+        },
+        {
+          "op": "response.json",
+          "value": {
+            "data": 123
+          }
+        }
+      ],
+      "notices": []
+    }
+  ],
+  "selected_original_nodes": [
+    {
+      "path": "app/schemas/types.py",
+      "name": "NotificationType",
+      "first_line": 305,
+      "last_line": 323,
+      "file_sha256": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+      "source_fragment_sha256": "2b219f8447f2b3ef182caf85c4a655424cff14b7e5ec6501f8c1e775f49deba5",
+      "ast_sha256": "561dfa044bebf76bbf3bbd645cbd8a7f516185f4f5315d657118b015cd13b8ae"
+    },
+    {
+      "path": "app/schemas/types.py",
+      "name": "MessageChannel",
+      "first_line": 342,
+      "last_line": 357,
+      "file_sha256": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+      "source_fragment_sha256": "7a40463ee29e745165fcd074436c1d4c7435d7f8475bea82b7dff76179dbd3ec",
+      "ast_sha256": "878d040f1d5f7ba5c41d6b52ce207b51c360671f19dcbcb2c0ea3870c48871cf"
+    },
+    {
+      "path": "app/helper/torrent.py",
+      "name": "download_torrent",
+      "first_line": 66,
+      "last_line": 190,
+      "file_sha256": "1c8a420d419ee53579079283ea0828536de9d978b6b15e722f1ba53cb51d5dd5",
+      "source_fragment_sha256": "6d9b51203a46f0e9d09a55c46f6b48dd7ee1345203e8f4547948e685fb9b345b",
+      "ast_sha256": "817270e9c836e42bd9bc1df46e0321a7503cee4449f623bf8547fba2a16c4643"
+    },
+    {
+      "path": "app/chain/download.py",
+      "name": "_normalize_indirect_download_url",
+      "first_line": 64,
+      "last_line": 84,
+      "file_sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+      "source_fragment_sha256": "821e1118efd7edb7ff32f24489214431d9bea749c2713708b6d3a3249dbf85ca",
+      "ast_sha256": "b2d3ed85d31be6f9e44363e7f509b62107c60f219c3ee45bc53e39f2b77856ca"
+    },
+    {
+      "path": "app/chain/download.py",
+      "name": "download_torrent",
+      "first_line": 658,
+      "last_line": 783,
+      "file_sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+      "source_fragment_sha256": "7a0478cc7c56e47a5943b58602cb6e78507e22d1ef69298b8dc94cd9c76c918b",
+      "ast_sha256": "9aad4457dea45e5c9f37eefeb2e6520e6b47c094ed401d0691c3fadf951c7f7f"
+    }
+  ],
+  "requests_urllib3_socket_absent_at_checks": true,
+  "dependency_contract": {
+    "RequestUtils": "record constructor/get_res/post_res arguments, no HTTP",
+    "Response": "explicit bool/text/json dependency inputs, not a requests Response",
+    "TorrentHelper": "record constructor without original TTLCache; delegate complete unchanged original download_torrent method with fixed built-in int 123, observing its first url.startswith AttributeError; no fabricated helper tuple and no later helper dependency execution",
+    "Notification": "record constructor kwargs; no original schema validation",
+    "post_message": "record exact notification fields, no delivery",
+    "TorrentInfo": "explicit attributes only; no original model validation",
+    "settings": "synthetic constants below, no host environment lookup",
+    "logging": "record log.info/error and preserve trace order"
+  },
+  "not_claimed": [
+    "real RequestUtils/requests/HTTP/proxy/cookie transmission",
+    "whole TorrentHelper/init/parser/cache (only original int.startswith failure executes)",
+    "real Notification model or delivery",
+    "whole DownloadChain/DAO/downloader",
+    "target Go output or complete equivalence",
+    "unobserved internal syscall behavior"
+  ]
+}

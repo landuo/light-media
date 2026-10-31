@@ -24,6 +24,7 @@ func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context
 	}
 	var active atomic.Bool
 	active.Store(true)
+	torrentTransfers := newOriginalTorrentTransfers()
 	logCall := originalPluginLogCall{id: id("pc_"), phase: phase}
 	validate := func(ctx context.Context) error {
 		if err := ctx.Err(); err != nil {
@@ -65,13 +66,16 @@ func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context
 		return nil
 	}
 	return func(ctx context.Context, identity plugins.Identity, method string, raw json.RawMessage) (json.RawMessage, error) {
-		if !originalStandardCapabilityAllowed(p.hostContract, method) || !slices.Contains(p.manifest.Capabilities, method) {
-			return nil, bad("PLUGIN_CAPABILITY_DENIED", "公共宿主契约未声明该方法")
+			if !originalStandardCapabilityAllowed(p.hostContract, method) || !slices.Contains(p.manifest.Capabilities, method) {
+				return nil, bad("PLUGIN_CAPABILITY_DENIED", "公共宿主契约未声明该方法")
+			}
+			scope := originalBaseCallScope{object: p, phase: phase, installation: p.installation, validate: validate, logCall: logCall, torrentTransfers: torrentTransfers}
+			if plugins.IsBaseMethod(method) {
+				return p.app.pluginOriginalBaseHost(ctx, scope, identity, method, raw)
+			}
+			return p.app.pluginOriginalResourceHost(ctx, scope, identity, method, raw)
+		}, func() {
+			active.Store(false)
+			torrentTransfers.close()
 		}
-		scope := originalBaseCallScope{object: p, phase: phase, installation: p.installation, validate: validate, logCall: logCall}
-		if plugins.IsBaseMethod(method) {
-			return p.app.pluginOriginalBaseHost(ctx, scope, identity, method, raw)
-		}
-		return p.app.pluginOriginalResourceHost(ctx, scope, identity, method, raw)
-	}, func() { active.Store(false) }
 }

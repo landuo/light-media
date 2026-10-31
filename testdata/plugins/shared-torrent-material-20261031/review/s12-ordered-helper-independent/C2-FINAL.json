@@ -1,0 +1,184 @@
+{
+  "decision": "PASS_FINITE_C2_ORDERED_FORM_HELPER_AND_FIVE_AFFECTED_LEGACY_SUBCASES",
+  "at_utc": "2026-10-31T18:40:59.740905+00:00",
+  "frozen_three_inputs": [
+    {
+      "path": "internal/plugins/iyuuautoseed/torrent_helper.go",
+      "sha256": "a8064c85fe8f44e781ad8732e63feacb3aa7ef21d5b36697ce23547c4e9b4789"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/torrent_form_order_test.go",
+      "sha256": "df72f4d649d1b44aa217cee84e62899a8f6e44f91ab0d8c5ede44217d4170bd1"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/testdata/torrent-form-order-source.json",
+      "sha256": "b33a38722142eee1a72fe8450c376d80354037681dc669d1a56c9a8df1a47497"
+    }
+  ],
+  "manifest_sha256": "ca605c0cf3fe8ff3fb9295d4e954c8b172178dee76c1f3b6d7f83a4ba9063630",
+  "archive_sha256": "72aae72111268523e8bb4b4fdd993dac7e80edb7c57d4846d9cea844d16fc9ce",
+  "reviewed_delta_sha256": "f5647299a76e2d040b6357a62708e13c00b6b285623393a594c22404274ba3b1",
+  "source_observation": {
+    "raw_sha256": "b33a38722142eee1a72fe8450c376d80354037681dc669d1a56c9a8df1a47497",
+    "raw_bytes": 2230,
+    "fixture_byte_identical": true,
+    "independent_source_seal_sha256": "17c18e45c6e9a0b6cba7a8ca454cd0b6d791f77851988c56250e699c058db1cb",
+    "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "source_sha256": "1c8a420d419ee53579079283ea0828536de9d978b6b15e722f1ba53cb51d5dd5",
+    "input_html_preserved": true,
+    "regex_matches": [
+      [
+        "b",
+        "first"
+      ],
+      [
+        "a",
+        "middle"
+      ],
+      [
+        "b",
+        "last"
+      ]
+    ],
+    "ordered_items": [
+      [
+        "b",
+        "last"
+      ],
+      [
+        "a",
+        "middle"
+      ]
+    ],
+    "scope": "Three actual selected original AST nodes only: regex extraction, dict initialization, sequential assignment. Not full source helper or HTTP encoding."
+  },
+  "actual_target_gate": {
+    "directory": "evidence/s12-ordered-helper01",
+    "status": "PASS_RAW_READBACK",
+    "roots": [
+      "TestTorrentFirstDownloadPreservesSourceFormOrder",
+      "TestInstalledTorrentHelperOracle"
+    ],
+    "legacy_subcases": [
+      "TestInstalledTorrentHelperOracle/first-valid",
+      "TestInstalledTorrentHelperOracle/first-bad",
+      "TestInstalledTorrentHelperOracle/first-no-input",
+      "TestInstalledTorrentHelperOracle/first-500",
+      "TestInstalledTorrentHelperOracle/first-valid-bencode-no-files"
+    ],
+    "legacy_download_cases_actually_rerun": 5,
+    "not_all_18_legacy_download_cases": true,
+    "not_25_file_parser_cases": true,
+    "pattern": "^(TestInstalledTorrentHelperOracle|TestTorrentFirstDownloadPreservesSourceFormOrder)$/^(first-valid|first-bad|first-no-input|first-500|first-valid-bencode-no-files)$",
+    "commands": [
+      {
+        "label": "go-list",
+        "argv": [
+          "go",
+          "list",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-deps",
+          "-test",
+          "-json",
+          "./internal/plugins/iyuuautoseed"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "compile",
+        "argv": [
+          "go",
+          "test",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-p=1",
+          "-c",
+          "-o",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-ordered-helper01.test",
+          "./internal/plugins/iyuuautoseed"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "tests",
+        "argv": [
+          "go",
+          "tool",
+          "test2json",
+          "-t",
+          "-p",
+          "./internal/plugins/iyuuautoseed",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-ordered-helper01.test",
+          "-test.v",
+          "-test.run",
+          "^(TestInstalledTorrentHelperOracle|TestTorrentFirstDownloadPreservesSourceFormOrder)$/^(first-valid|first-bad|first-no-input|first-500|first-valid-bencode-no-files)$",
+          "-test.count=1",
+          "-test.timeout=90s"
+        ],
+        "exit": 0
+      }
+    ],
+    "ended": "2026-10-31T18:39:04.190105+00:00",
+    "input_count": 3441,
+    "before_after_compile_after_test_equal": true,
+    "current_missing_inputs": [],
+    "current_changed_inputs": [],
+    "frozen_core_three_current_match": true,
+    "program_sha256": "b8935fbd81467f54b1c8825d21803c30ad282a34f38641a9cb55746f335bc9c8",
+    "manually_bound_ReadFile_oracle": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/iyuuautoseed/reference/torrent-helper-oracle.json",
+      "sha256": "0af5deb44232b264a2624cee6a46e93e295a5fca68fb412326723bccf34c406e"
+    },
+    "raw_hashes": {
+      "result.json": "d640f6787db91fe3c9f81a43cc0081f595e8996584700e2f9dc9aa0e3ac5e57e",
+      "inputs-before.json": "7ae668a7cf044ebf71950896d1b82d304188ca774a7ada0e60421549b3e2762d",
+      "inputs-after-compile.json": "7ae668a7cf044ebf71950896d1b82d304188ca774a7ada0e60421549b3e2762d",
+      "inputs-after-test.json": "7ae668a7cf044ebf71950896d1b82d304188ca774a7ada0e60421549b3e2762d",
+      "tests.stdout": "93cc49813d4dbafe58d17260baa769d9d150f28cfd19297e159a2fbd1591a5c5",
+      "generated-source-map.json": "708aa5a5db00181b2c95baf5c3ce223fcb44069abfdee749ad4d820dfc1aacbe"
+    },
+    "resource_stage_samples": [
+      {
+        "phase": "go-list",
+        "at": "2026-10-31T18:39:00.524935+00:00",
+        "scratch_free": 56198004736,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "compile",
+        "at": "2026-10-31T18:39:01.062805+00:00",
+        "scratch_free": 56196407296,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "tests",
+        "at": "2026-10-31T18:39:03.995174+00:00",
+        "scratch_free": 56159014912,
+        "tmp_free": 5225664512
+      }
+    ]
+  },
+  "static_findings": [],
+  "static_review": [
+    "Only optional OrderedTorrentHTTP interface and first-download data/order/dispatch branch added relative to preserved preimage.",
+    "First occurrence determines key position; later repeated names overwrite the same map value without moving its position, matching original dict sequence.",
+    "Existing consumers still use unchanged map-based Post fallback; new test compares complete returned result for ordered and old-interface peers.",
+    "New target test runs actual helper/parser using source input_html and compares regex matches plus ordered key/value items; HTTP/cache ports remain fakes.",
+    "Old affected first-download five subcases use existing oracle helper and bound on-disk JSON; excluded legacy siblings are not newly verified."
+  ],
+  "not_claimed": [
+    "Actual source Requests encoding or transmitted POST byte order",
+    "Actual new App HTTP adapter capability/credentials",
+    "Real network/TLS/cache persistence/host invocation",
+    "Full helper18/parser25 rerun",
+    "Whole S12/race/CI/delivery"
+  ],
+  "reviewer_executed_no_Go_source_or_network": true,
+  "coordinator_terminal_tool_report": {
+    "session": 86788,
+    "tool": "5751f1",
+    "exit": 0,
+    "provenance": "Parent message; local raw terminal independently verified"
+  }
+}

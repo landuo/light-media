@@ -1,0 +1,1291 @@
+{
+  "status": "PASS",
+  "kind": "new S12.material two normal CLI hosts and actual installed SDK",
+  "calls": [
+    {
+      "at": "2026-10-31T19:11:54.818000+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-001.body",
+      "sha256": "2fefa05b70a87c65f784c1b3c361eae90428373fe8d417a71353a53a2765712b"
+    },
+    {
+      "at": "2026-10-31T19:11:54.820869+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-10-31T19:11:54.883871+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-003.body",
+      "sha256": "d142dc1499b551f934d4de36877859622dc525d8c4f6a3cc6851bf1c4117fc33"
+    },
+    {
+      "at": "2026-10-31T19:11:54.886149+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/sites/manage",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-004.body",
+      "sha256": "391960bd3e1853cad70170800a753ece8824b2e78a76ff153bfbd9ecb81a76af"
+    },
+    {
+      "at": "2026-10-31T19:11:54.892319+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-005.body",
+      "sha256": "3742eabc7de50ac79517469e3e768aef8445c1b73fe3e11f398dc42c73aa86ed"
+    },
+    {
+      "at": "2026-10-31T19:11:54.983146+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-006.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-10-31T19:11:54.985764+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": false,
+      "status": 401,
+      "raw_file": "response-007.body",
+      "sha256": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b"
+    },
+    {
+      "at": "2026-10-31T19:11:54.987631+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/notifications",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-008.body",
+      "sha256": "61f35605b37d82b83afe9a7053e297910bfbd267b2d8a10db0c3a050ddd25231"
+    },
+    {
+      "at": "2026-10-31T19:11:54.989699+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-009.body",
+      "sha256": "51bd7219cf0ebcf76aa10bad2be623fb010fe60ee9a45390d3c44467acfd428e"
+    },
+    {
+      "at": "2026-10-31T19:11:54.997797+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-010.body",
+      "sha256": "713fbfcd1a1d13bb0c2cf512d64c7ded6cff2200da8fe939ad594ca489992d22"
+    },
+    {
+      "at": "2026-10-31T19:11:55.006019+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-011.body",
+      "sha256": "0ccd245bea48a0ccd5b5f56b2706ff5eac59756d9c1aa235f05410f6ec801620"
+    },
+    {
+      "at": "2026-10-31T19:11:55.013840+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/notifications",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-012.body",
+      "sha256": "1778c91c25a399a3954fc10fa316c15728132d8a82be1148414349d7bf6dd765"
+    },
+    {
+      "at": "2026-10-31T19:11:55.015832+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-013.body",
+      "sha256": "8d563c7bc0c29009fc065ca2801d1fd524e17071fe2ee0fb88311a26dc04c54f"
+    },
+    {
+      "at": "2026-10-31T19:11:55.029348+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-014.body",
+      "sha256": "26d15603ef3acce5dbb8b8518eaececf0ce96b37c3765e3416a466020371f606"
+    },
+    {
+      "at": "2026-10-31T19:11:55.038212+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-015.body",
+      "sha256": "f505c15985eccac656e9370af6e1f841d77e9709b515c6482ad67acf5d55e07f"
+    },
+    {
+      "at": "2026-10-31T19:11:55.047944+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-016.body",
+      "sha256": "cc63c88523abdfa943765401baf6d1c2dc91d7011f8934372d6cfc1a7eb1ccd2"
+    },
+    {
+      "at": "2026-10-31T19:11:55.131185+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-017.body",
+      "sha256": "8763ac51dd7b019a30694e9d30a274e01d556f333f1cddd0c11938773947e611"
+    },
+    {
+      "at": "2026-10-31T19:11:55.143532+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/notifications",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-018.body",
+      "sha256": "1ce3cc3600d070a6a9b7922a79d42072e9652d59fbb60b61d047e60018bf14d2"
+    },
+    {
+      "at": "2026-10-31T19:11:55.146076+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-019.body",
+      "sha256": "41cfb37d62dd7bd08f664e6826c0169f255121a87875a39d847ccf3fd0170393"
+    },
+    {
+      "at": "2026-10-31T19:11:55.161044+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/notifications",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-020.body",
+      "sha256": "38d78c5f476ee7f78baeafa11eac91dbd090aa2f5c5ec28192dd58521d5ccc93"
+    },
+    {
+      "at": "2026-10-31T19:11:55.163066+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-021.body",
+      "sha256": "98b2ac35218f1e31c1f52871779f18a000b41108d33effcf698ad4dcb04ce8e2"
+    },
+    {
+      "at": "2026-10-31T19:11:57.118535+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-022.body",
+      "sha256": "7a67070217f8a61bc03a827a5230ea9b61f3cefd5a5b621fd49f79aeba3d7336"
+    },
+    {
+      "at": "2026-10-31T19:12:01.162149+00:00",
+      "host_pid": 58,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-023.body",
+      "sha256": "c658842a71393395621977b610ad3511b74d269cdc2f3f19342c8bcfda53e90b"
+    },
+    {
+      "at": "2026-10-31T19:12:01.164123+00:00",
+      "host_pid": 58,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-10-31T19:12:01.237314+00:00",
+      "host_pid": 58,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-025.body",
+      "sha256": "87bd1bd1020510c22988960f0f75d093fe7335575b0453f547b143f68d848e58"
+    },
+    {
+      "at": "2026-10-31T19:12:01.240280+00:00",
+      "host_pid": 58,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-026.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-10-31T19:12:01.242688+00:00",
+      "host_pid": 58,
+      "method": "GET",
+      "path": "/api/sites/manage",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-027.body",
+      "sha256": "3866e5eb06fcead2c19d00e88f4c1cb68685ac86801971a2b0bf69869099a5e8"
+    },
+    {
+      "at": "2026-10-31T19:12:01.246407+00:00",
+      "host_pid": 58,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-028.body",
+      "sha256": "05b355b037d5c4757bd4d62c1d2f810189fd5de64c0db9f379fdc36688b7da6a"
+    },
+    {
+      "at": "2026-10-31T19:12:03.314123+00:00",
+      "host_pid": 58,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTorrentMaterial/material",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-029.body",
+      "sha256": "3515bb95f0ec1a7e9f0b3f58e5fc828353cf16cc59b5f8c871827bd80ba1c9bf"
+    },
+    {
+      "at": "2026-10-31T19:12:03.327388+00:00",
+      "host_pid": 58,
+      "method": "GET",
+      "path": "/api/notifications",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-030.body",
+      "sha256": "b02f06f0d4c55d45803a01449db5db4a8ea3569f5138c857fbe466faeb57224e"
+    }
+  ],
+  "peer_calls": [
+    {
+      "at": "2026-10-31T19:11:54.890890+00:00",
+      "method": "GET",
+      "path": "/",
+      "cookie_present": true,
+      "request_bytes": 0,
+      "scope": "setup",
+      "status": 404,
+      "response_bytes": 19,
+      "response_sha256": "b16e15764b8bc06c5c3f9f19bc8b99fa48e7894aa5a6ccdad65da49bbf564793",
+      "response_completed": true
+    },
+    {
+      "at": "2026-10-31T19:11:54.894025+00:00",
+      "method": "GET",
+      "path": "/index",
+      "cookie_present": false,
+      "request_bytes": 0,
+      "scope": "artifact",
+      "status": 200,
+      "response_bytes": 1060,
+      "response_sha256": "29ac4837ff23bda066a722eb48017302967ab9df5c494abd6ab0d24368975694"
+    },
+    {
+      "at": "2026-10-31T19:11:54.895657+00:00",
+      "method": "GET",
+      "path": "/worker",
+      "cookie_present": false,
+      "request_bytes": 0,
+      "scope": "artifact",
+      "status": 200,
+      "response_bytes": 5294268,
+      "response_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d"
+    },
+    {
+      "at": "2026-10-31T19:11:55.020070+00:00",
+      "method": "GET",
+      "path": "/material/small.torrent",
+      "cookie_present": true,
+      "request_bytes": 0,
+      "scope": "material",
+      "status": 200,
+      "response_bytes": 91,
+      "response_sha256": "f76e94e86f4cf382eaf145d4d44f7368c70acfc099fb14fafbe019b3571a0b3a"
+    },
+    {
+      "at": "2026-10-31T19:11:55.049964+00:00",
+      "method": "POST",
+      "path": "/descriptor/token?owned=descriptor",
+      "cookie_present": true,
+      "request_bytes": 0,
+      "scope": "material",
+      "status": 200,
+      "response_bytes": 66,
+      "response_sha256": "8a9d2df99e52c1dae1a90d0ad99d39d6b4144c5d21d7a9999ddc3c7fdd4de0e2"
+    },
+    {
+      "at": "2026-10-31T19:11:55.119871+00:00",
+      "method": "GET",
+      "path": "/material/descriptor.torrent",
+      "cookie_present": false,
+      "request_bytes": 0,
+      "scope": "material",
+      "status": 200,
+      "response_bytes": 91,
+      "response_sha256": "f76e94e86f4cf382eaf145d4d44f7368c70acfc099fb14fafbe019b3571a0b3a"
+    },
+    {
+      "at": "2026-10-31T19:11:55.133493+00:00",
+      "method": "GET",
+      "path": "/material/recover.torrent",
+      "cookie_present": true,
+      "request_bytes": 0,
+      "scope": "material",
+      "status": 200,
+      "response_bytes": 0,
+      "response_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "at": "2026-10-31T19:11:55.148114+00:00",
+      "method": "GET",
+      "path": "/material/recover.torrent",
+      "cookie_present": true,
+      "request_bytes": 0,
+      "scope": "material",
+      "status": 200,
+      "response_bytes": 91,
+      "response_sha256": "f76e94e86f4cf382eaf145d4d44f7368c70acfc099fb14fafbe019b3571a0b3a"
+    },
+    {
+      "at": "2026-10-31T19:11:55.164954+00:00",
+      "method": "GET",
+      "path": "/material/large.torrent",
+      "cookie_present": true,
+      "request_bytes": 0,
+      "scope": "material",
+      "status": 200,
+      "response_bytes": 16777216,
+      "response_sha256": "723508c230eea44e207f486f3787506bee69750136459735b57af3908cb72834"
+    }
+  ],
+  "setup_root_calls": [
+    {
+      "at": "2026-10-31T19:11:54.890890+00:00",
+      "method": "GET",
+      "path": "/",
+      "cookie_present": true,
+      "request_bytes": 0,
+      "scope": "setup",
+      "status": 404,
+      "response_bytes": 19,
+      "response_sha256": "b16e15764b8bc06c5c3f9f19bc8b99fa48e7894aa5a6ccdad65da49bbf564793",
+      "response_completed": true
+    }
+  ],
+  "processes": [
+    {
+      "pid": 23,
+      "identity": {
+        "ppid": 2,
+        "starttime": "3099358"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data",
+      "executable_sha256": "f810130e5624956348a53fcf82434138fe5dafb1c6c38cd4360497d6b84cbb65",
+      "owned_listener_inode": "484807",
+      "exit": 0
+    },
+    {
+      "pid": 58,
+      "identity": {
+        "ppid": 2,
+        "starttime": "3099987"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data",
+      "executable_sha256": "f810130e5624956348a53fcf82434138fe5dafb1c6c38cd4360497d6b84cbb65",
+      "owned_listener_inode": "478076",
+      "exit": 0
+    }
+  ],
+  "queries": [
+    {
+      "label": "source_none",
+      "host_pid": 23,
+      "response": {
+        "pid": 41,
+        "invocation": 1,
+        "had_previous": false,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 0,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "kind": "none",
+              "folder": "",
+              "files": []
+            },
+            "host_calls": {
+              "total": 1,
+              "prepare": 1,
+              "read": 0,
+              "release": 0
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1
+      }
+    },
+    {
+      "label": "exact_magnet_and_stale_scope",
+      "host_pid": 23,
+      "response": {
+        "pid": 41,
+        "invocation": 2,
+        "had_previous": true,
+        "stale_denied": true,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 0,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "kind": "string",
+              "text": "magnet:?xt=urn:btih:0123456789012345678901234567890123456789&dn=Owned.S12",
+              "folder": "",
+              "files": []
+            },
+            "host_calls": {
+              "total": 1,
+              "prepare": 1,
+              "read": 0,
+              "release": 0
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1
+      }
+    },
+    {
+      "label": "typed_descriptor_exception",
+      "host_pid": 23,
+      "response": {
+        "pid": 41,
+        "invocation": 3,
+        "had_previous": true,
+        "stale_denied": true,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 0,
+        "failed": 1,
+        "ok": false,
+        "reassembled_bytes": 0,
+        "results": [
+          {
+            "index": 0,
+            "ok": false,
+            "error": "download torrent source: JSONDecodeError",
+            "source_error": "JSONDecodeError",
+            "host_calls": {
+              "total": 1,
+              "prepare": 1,
+              "read": 0,
+              "release": 0
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1
+      }
+    },
+    {
+      "label": "same_worker_recovery_small_full_bytes",
+      "host_pid": 23,
+      "response": {
+        "pid": 41,
+        "invocation": 4,
+        "had_previous": true,
+        "stale_denied": true,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 91,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "kind": "bytes",
+              "length": 91,
+              "sha256": "f76e94e86f4cf382eaf145d4d44f7368c70acfc099fb14fafbe019b3571a0b3a",
+              "folder": "",
+              "files": [
+                "owned.mkv"
+              ]
+            },
+            "host_calls": {
+              "total": 3,
+              "prepare": 1,
+              "read": 1,
+              "release": 1
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1
+      }
+    },
+    {
+      "label": "warm_cache_full_byte_return",
+      "host_pid": 23,
+      "response": {
+        "pid": 41,
+        "invocation": 5,
+        "had_previous": true,
+        "stale_denied": true,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 91,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "kind": "bytes",
+              "length": 91,
+              "sha256": "f76e94e86f4cf382eaf145d4d44f7368c70acfc099fb14fafbe019b3571a0b3a",
+              "folder": "",
+              "files": [
+                "owned.mkv"
+              ]
+            },
+            "host_calls": {
+              "total": 3,
+              "prepare": 1,
+              "read": 1,
+              "release": 1
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1
+      }
+    },
+    {
+      "label": "typed_failure_then_same_invocation_recovery",
+      "host_pid": 23,
+      "response": {
+        "pid": 41,
+        "invocation": 6,
+        "had_previous": true,
+        "stale_denied": true,
+        "requested": 2,
+        "completed": 2,
+        "succeeded": 1,
+        "failed": 1,
+        "ok": false,
+        "reassembled_bytes": 91,
+        "results": [
+          {
+            "index": 0,
+            "ok": false,
+            "error": "download torrent source: JSONDecodeError",
+            "source_error": "JSONDecodeError",
+            "host_calls": {
+              "total": 1,
+              "prepare": 1,
+              "read": 0,
+              "release": 0
+            }
+          },
+          {
+            "index": 1,
+            "ok": true,
+            "result": {
+              "kind": "bytes",
+              "length": 91,
+              "sha256": "f76e94e86f4cf382eaf145d4d44f7368c70acfc099fb14fafbe019b3571a0b3a",
+              "folder": "",
+              "files": [
+                "owned.mkv"
+              ]
+            },
+            "host_calls": {
+              "total": 3,
+              "prepare": 1,
+              "read": 1,
+              "release": 1
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1
+      }
+    },
+    {
+      "label": "descriptor_query_and_second_stage_cookie_drop",
+      "host_pid": 23,
+      "response": {
+        "pid": 41,
+        "invocation": 7,
+        "had_previous": true,
+        "stale_denied": true,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 91,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "kind": "bytes",
+              "length": 91,
+              "sha256": "f76e94e86f4cf382eaf145d4d44f7368c70acfc099fb14fafbe019b3571a0b3a",
+              "folder": "",
+              "files": [
+                "owned.mkv"
+              ]
+            },
+            "host_calls": {
+              "total": 3,
+              "prepare": 1,
+              "read": 1,
+              "release": 1
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1,
+        "POST /descriptor/token?owned=descriptor": 1,
+        "GET /material/descriptor.torrent": 1
+      }
+    },
+    {
+      "label": "helper_empty_is_source_none_with_real_notice",
+      "host_pid": 23,
+      "response": {
+        "pid": 41,
+        "invocation": 8,
+        "had_previous": true,
+        "stale_denied": true,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 0,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "kind": "none",
+              "folder": "",
+              "files": []
+            },
+            "host_calls": {
+              "total": 1,
+              "prepare": 1,
+              "read": 0,
+              "release": 0
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1,
+        "POST /descriptor/token?owned=descriptor": 1,
+        "GET /material/descriptor.torrent": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1,
+        "POST /descriptor/token?owned=descriptor": 1,
+        "GET /material/descriptor.torrent": 1,
+        "GET /material/recover.torrent": 1
+      }
+    },
+    {
+      "label": "same_url_and_worker_after_empty_failure",
+      "host_pid": 23,
+      "response": {
+        "pid": 41,
+        "invocation": 9,
+        "had_previous": true,
+        "stale_denied": true,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 91,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "kind": "bytes",
+              "length": 91,
+              "sha256": "f76e94e86f4cf382eaf145d4d44f7368c70acfc099fb14fafbe019b3571a0b3a",
+              "folder": "",
+              "files": [
+                "owned.mkv"
+              ]
+            },
+            "host_calls": {
+              "total": 3,
+              "prepare": 1,
+              "read": 1,
+              "release": 1
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1,
+        "POST /descriptor/token?owned=descriptor": 1,
+        "GET /material/descriptor.torrent": 1,
+        "GET /material/recover.torrent": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1,
+        "POST /descriptor/token?owned=descriptor": 1,
+        "GET /material/descriptor.torrent": 1,
+        "GET /material/recover.torrent": 2
+      }
+    },
+    {
+      "label": "actual_full_16MiB_inside_worker",
+      "host_pid": 23,
+      "response": {
+        "pid": 41,
+        "invocation": 10,
+        "had_previous": true,
+        "stale_denied": true,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 16777216,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "kind": "bytes",
+              "length": 16777216,
+              "sha256": "723508c230eea44e207f486f3787506bee69750136459735b57af3908cb72834",
+              "folder": "",
+              "files": [
+                "owned.mkv"
+              ]
+            },
+            "host_calls": {
+              "total": 18,
+              "prepare": 1,
+              "read": 16,
+              "release": 1
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1,
+        "POST /descriptor/token?owned=descriptor": 1,
+        "GET /material/descriptor.torrent": 1,
+        "GET /material/recover.torrent": 2
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1,
+        "POST /descriptor/token?owned=descriptor": 1,
+        "GET /material/descriptor.torrent": 1,
+        "GET /material/recover.torrent": 2,
+        "GET /material/large.torrent": 1
+      }
+    },
+    {
+      "label": "two_sequential_full_16MiB_actual_32MiB",
+      "host_pid": 23,
+      "response": {
+        "pid": 41,
+        "invocation": 11,
+        "had_previous": true,
+        "stale_denied": true,
+        "requested": 2,
+        "completed": 2,
+        "succeeded": 2,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 33554432,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "kind": "bytes",
+              "length": 16777216,
+              "sha256": "723508c230eea44e207f486f3787506bee69750136459735b57af3908cb72834",
+              "folder": "",
+              "files": [
+                "owned.mkv"
+              ]
+            },
+            "host_calls": {
+              "total": 18,
+              "prepare": 1,
+              "read": 16,
+              "release": 1
+            }
+          },
+          {
+            "index": 1,
+            "ok": true,
+            "result": {
+              "kind": "bytes",
+              "length": 16777216,
+              "sha256": "723508c230eea44e207f486f3787506bee69750136459735b57af3908cb72834",
+              "folder": "",
+              "files": [
+                "owned.mkv"
+              ]
+            },
+            "host_calls": {
+              "total": 18,
+              "prepare": 1,
+              "read": 16,
+              "release": 1
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1,
+        "POST /descriptor/token?owned=descriptor": 1,
+        "GET /material/descriptor.torrent": 1,
+        "GET /material/recover.torrent": 2,
+        "GET /material/large.torrent": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1,
+        "POST /descriptor/token?owned=descriptor": 1,
+        "GET /material/descriptor.torrent": 1,
+        "GET /material/recover.torrent": 2,
+        "GET /material/large.torrent": 1
+      }
+    },
+    {
+      "label": "cold_normal_host_persistent_small_and_large_cache",
+      "host_pid": 58,
+      "response": {
+        "pid": 72,
+        "invocation": 1,
+        "had_previous": false,
+        "requested": 2,
+        "completed": 2,
+        "succeeded": 2,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 16777307,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "kind": "bytes",
+              "length": 91,
+              "sha256": "f76e94e86f4cf382eaf145d4d44f7368c70acfc099fb14fafbe019b3571a0b3a",
+              "folder": "",
+              "files": [
+                "owned.mkv"
+              ]
+            },
+            "host_calls": {
+              "total": 3,
+              "prepare": 1,
+              "read": 1,
+              "release": 1
+            }
+          },
+          {
+            "index": 1,
+            "ok": true,
+            "result": {
+              "kind": "bytes",
+              "length": 16777216,
+              "sha256": "723508c230eea44e207f486f3787506bee69750136459735b57af3908cb72834",
+              "folder": "",
+              "files": [
+                "owned.mkv"
+              ]
+            },
+            "host_calls": {
+              "total": 18,
+              "prepare": 1,
+              "read": 16,
+              "release": 1
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1,
+        "POST /descriptor/token?owned=descriptor": 1,
+        "GET /material/descriptor.torrent": 1,
+        "GET /material/recover.torrent": 2,
+        "GET /material/large.torrent": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1,
+        "POST /descriptor/token?owned=descriptor": 1,
+        "GET /material/descriptor.torrent": 1,
+        "GET /material/recover.torrent": 2,
+        "GET /material/large.torrent": 1
+      }
+    },
+    {
+      "label": "cold_recovered_material_and_scope",
+      "host_pid": 58,
+      "response": {
+        "pid": 72,
+        "invocation": 2,
+        "had_previous": true,
+        "stale_denied": true,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "reassembled_bytes": 91,
+        "results": [
+          {
+            "index": 0,
+            "ok": true,
+            "result": {
+              "kind": "bytes",
+              "length": 91,
+              "sha256": "f76e94e86f4cf382eaf145d4d44f7368c70acfc099fb14fafbe019b3571a0b3a",
+              "folder": "",
+              "files": [
+                "owned.mkv"
+              ]
+            },
+            "host_calls": {
+              "total": 3,
+              "prepare": 1,
+              "read": 1,
+              "release": 1
+            }
+          }
+        ]
+      },
+      "peer_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1,
+        "POST /descriptor/token?owned=descriptor": 1,
+        "GET /material/descriptor.torrent": 1,
+        "GET /material/recover.torrent": 2,
+        "GET /material/large.torrent": 1
+      },
+      "peer_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1,
+        "GET /material/small.torrent": 1,
+        "POST /descriptor/token?owned=descriptor": 1,
+        "GET /material/descriptor.torrent": 1,
+        "GET /material/recover.torrent": 2,
+        "GET /material/large.torrent": 1
+      }
+    }
+  ],
+  "physical_wire_counters": {
+    "available_from_ordinary_API": false,
+    "measured": false
+  },
+  "not_claimed": [
+    "browser/UI",
+    "browse/RSS/S14",
+    "real site/downloader/media/NAS",
+    "arbitrary-size source parity",
+    "physical wire byte counts",
+    "capability-negative artifact or config-race App gates",
+    "full platform, CI or delivery"
+  ],
+  "synthetic_materials": {
+    "small": {
+      "kind": "bytes",
+      "length": 91,
+      "sha256": "f76e94e86f4cf382eaf145d4d44f7368c70acfc099fb14fafbe019b3571a0b3a",
+      "folder": "",
+      "files": [
+        "owned.mkv"
+      ]
+    },
+    "large": {
+      "kind": "bytes",
+      "length": 16777216,
+      "sha256": "723508c230eea44e207f486f3787506bee69750136459735b57af3908cb72834",
+      "folder": "",
+      "files": [
+        "owned.mkv"
+      ]
+    }
+  },
+  "bootstrap_exit": 0,
+  "setup_root_wait": {
+    "at": "2026-10-31T19:11:54.891028+00:00",
+    "observed_count": 1,
+    "waited_only_owned_peer_event": true
+  },
+  "worker_identities": [
+    {
+      "ppid": 23,
+      "starttime": "3099387",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data/plugin-packages/OwnedTorrentMaterial/owned-torrent-material-sdk-fixture",
+      "executable_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+      "host_pid": 23
+    },
+    {
+      "ppid": 23,
+      "starttime": "3099387",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data/plugin-packages/OwnedTorrentMaterial/owned-torrent-material-sdk-fixture",
+      "executable_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+      "host_pid": 23
+    },
+    {
+      "ppid": 23,
+      "starttime": "3099387",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data/plugin-packages/OwnedTorrentMaterial/owned-torrent-material-sdk-fixture",
+      "executable_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+      "host_pid": 23
+    },
+    {
+      "ppid": 23,
+      "starttime": "3099387",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data/plugin-packages/OwnedTorrentMaterial/owned-torrent-material-sdk-fixture",
+      "executable_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+      "host_pid": 23
+    },
+    {
+      "ppid": 23,
+      "starttime": "3099387",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data/plugin-packages/OwnedTorrentMaterial/owned-torrent-material-sdk-fixture",
+      "executable_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+      "host_pid": 23
+    },
+    {
+      "ppid": 23,
+      "starttime": "3099387",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data/plugin-packages/OwnedTorrentMaterial/owned-torrent-material-sdk-fixture",
+      "executable_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+      "host_pid": 23
+    },
+    {
+      "ppid": 23,
+      "starttime": "3099387",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data/plugin-packages/OwnedTorrentMaterial/owned-torrent-material-sdk-fixture",
+      "executable_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+      "host_pid": 23
+    },
+    {
+      "ppid": 23,
+      "starttime": "3099387",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data/plugin-packages/OwnedTorrentMaterial/owned-torrent-material-sdk-fixture",
+      "executable_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+      "host_pid": 23
+    },
+    {
+      "ppid": 23,
+      "starttime": "3099387",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data/plugin-packages/OwnedTorrentMaterial/owned-torrent-material-sdk-fixture",
+      "executable_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+      "host_pid": 23
+    },
+    {
+      "ppid": 23,
+      "starttime": "3099387",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data/plugin-packages/OwnedTorrentMaterial/owned-torrent-material-sdk-fixture",
+      "executable_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+      "host_pid": 23
+    },
+    {
+      "ppid": 23,
+      "starttime": "3099387",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data/plugin-packages/OwnedTorrentMaterial/owned-torrent-material-sdk-fixture",
+      "executable_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+      "host_pid": 23
+    },
+    {
+      "ppid": 58,
+      "starttime": "3100003",
+      "pid": 72,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data/plugin-packages/OwnedTorrentMaterial/owned-torrent-material-sdk-fixture",
+      "executable_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+      "host_pid": 58
+    },
+    {
+      "ppid": 58,
+      "starttime": "3100003",
+      "pid": 72,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01/private-data/plugin-packages/OwnedTorrentMaterial/owned-torrent-material-sdk-fixture",
+      "executable_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+      "host_pid": 58
+    }
+  ],
+  "setup_root_total": 1,
+  "actual_sequential_reassembled_bytes": 33554432,
+  "actual_sdk_attempt_counts_for_pair": [
+    {
+      "total": 18,
+      "prepare": 1,
+      "read": 16,
+      "release": 1
+    },
+    {
+      "total": 18,
+      "prepare": 1,
+      "read": 16,
+      "release": 1
+    }
+  ],
+  "normal_runner_completed_pair": true,
+  "input_drift": [],
+  "environment_unchanged": true,
+  "finished_at": "2026-10-31T19:12:03.770114+00:00"
+}

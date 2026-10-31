@@ -1,0 +1,81 @@
+{
+  "status": "OBSERVED_SELECTED_ORIGINAL_REDIRECT_LOOP",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_sha256": "1c8a420d419ee53579079283ea0828536de9d978b6b15e722f1ba53cb51d5dd5",
+  "driver_sha256": "4d243e31bcc4a32aa193521741b3c73fafec4ab0945e2c6b7a1704a1a05639f3",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "python_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+  "source_node": {
+    "first_line": 110,
+    "last_line": 119,
+    "source": "while req and req.status_code in [301, 302]:\n            url = req.headers['Location']\n            if url and url.startswith(\"magnet:\"):\n                return None, url, \"\", [], f\"获取到磁力链接\"\n            req = RequestUtils(\n                ua=ua,\n                cookies=cookie,\n                referer=referer,\n                proxies=settings.PROXY if proxy else None\n            ).get_res(url=url, allow_redirects=False)",
+    "source_sha256": "d16053db39f4dc0cf69052cdf06f8fd2a3f53c791e7e83c4d1d64e664a5f6345",
+    "ast_sha256": "b443a28f802fddaaa09bac4c1e3fb4956a484f1dc75ba203218ce541e4dbf1af"
+  },
+  "cases": [
+    {
+      "input": {
+        "status_code": 301,
+        "headers": {},
+        "response_truthy": true
+      },
+      "dependency": "owned SimpleNamespace truthy response; not requests.Response",
+      "exception": {
+        "class": "KeyError",
+        "module": "builtins",
+        "args": [
+          "Location"
+        ],
+        "traceback": [
+          {
+            "filename": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-missing-location-source/capture_missing_location.py",
+            "line": 16,
+            "name": "<module>",
+            "source": "try:row['unexpected_return']=ns['selected_source_redirect_loop'](SimpleNamespace(status_code=status,headers={}))"
+          },
+          {
+            "filename": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py",
+            "line": 111,
+            "name": "selected_source_redirect_loop",
+            "source": "url = req.headers['Location']"
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "status_code": 302,
+        "headers": {},
+        "response_truthy": true
+      },
+      "dependency": "owned SimpleNamespace truthy response; not requests.Response",
+      "exception": {
+        "class": "KeyError",
+        "module": "builtins",
+        "args": [
+          "Location"
+        ],
+        "traceback": [
+          {
+            "filename": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-missing-location-source/capture_missing_location.py",
+            "line": 16,
+            "name": "<module>",
+            "source": "try:row['unexpected_return']=ns['selected_source_redirect_loop'](SimpleNamespace(status_code=status,headers={}))"
+          },
+          {
+            "filename": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py",
+            "line": 111,
+            "name": "selected_source_redirect_loop",
+            "source": "url = req.headers['Location']"
+          }
+        ]
+      }
+    }
+  ],
+  "not_claimed": [
+    "fullhelper or wrapper execution",
+    "requests.Response truth implementation",
+    "HTTP/cache/parser/notifications",
+    "target result"
+  ]
+}

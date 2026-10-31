@@ -1,0 +1,37 @@
+{
+  "recorded_at": "2026-10-31T19:14:23.596793+00:00",
+  "provenance": "coordinator copied exact alreadyexecuted toolcommand and terminal; not a second execution",
+  "start_tool": "8a41dc",
+  "session": 88017,
+  "terminal_tool": "3b7182",
+  "exit_code": 0,
+  "workdir": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305",
+  "environment_setup": "source /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh; S12_NORMAL_CLI_GRANTED=1; no proxy or CA clearing",
+  "argv": [
+    "python3",
+    "audits/s12-normal-cli-plan/normal-cli-driver.py",
+    "--server",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-release-server01",
+    "--worker",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-release-fixture01.worker",
+    "--output",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01",
+    "--expected-server-sha",
+    "f810130e5624956348a53fcf82434138fe5dafb1c6c38cd4360497d6b84cbb65",
+    "--expected-worker-sha",
+    "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+    "--expected-driver-sha",
+    "4108d1751de61214f14e2488b0e61f80ca577aa3504cba1094c181c289dfcc18"
+  ],
+  "terminal_output": {
+    "status": "PASS",
+    "hosts": [
+      23,
+      58
+    ],
+    "queries": 13,
+    "error": null,
+    "evidence": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01"
+  },
+  "result_sha256": "2140f56bdbbe0db5e7b5d361de1ef0b19455b590cfcd53f8c8d28ae414821301"
+}

@@ -1,0 +1,289 @@
+{
+  "schema": "s12-material-release-runtime-independent/v1",
+  "status": "ACCEPT_EXECUTED_FINITE_MATERIAL_RUNTIME_BOUNDARY",
+  "sealed_at_utc": "2026-10-31T19:19:31.284Z",
+  "decision": "No additional concrete runtime blocker found within the reviewed material operation and declared safety/resource boundary. This seals actual release runtime evidence, not publication or full-S12 completion.",
+  "target": "release-light-media",
+  "base": "760720ed0a96fd9e7a647914c14545bde5ef857e",
+  "fixed_source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "candidate": {
+    "assembly": {
+      "path": "audits/s12-release-assembly/product-whitelist.json",
+      "bytes": 5262,
+      "sha256": "8e21a8f358ddca1fd2ae55cbcd18e75221056544170dc660943dd098ee89d953"
+    },
+    "paths": 25,
+    "source_test_oracle_paths": 24,
+    "protection_document_paths": 1,
+    "seal_time_current_drift": [],
+    "products": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "44708595ac2280a6d63857d3f4737f07da635d88be96c5361a5bac402534ce87",
+        "bytes": 17003
+      },
+      {
+        "path": "cmd/owned-torrent-material-fixture/main.go",
+        "sha256": "3f495575470836e39c82545860025c1488f8613e329750fa83fd038f520eb015",
+        "bytes": 10688
+      },
+      {
+        "path": "internal/app/plugin_original_base.go",
+        "sha256": "83df3595caa9f5d4a16c6f36a7e85aa22b51e72d1b6fc87f4bfa7a385904d80f",
+        "bytes": 21039
+      },
+      {
+        "path": "internal/app/plugin_original_base_session.go",
+        "sha256": "2694bf8040a0fb5d34ae1c89ae6f75249dfc52210e3bae3c9658138da88e960d",
+        "bytes": 3354
+      },
+      {
+        "path": "internal/app/plugin_original_resources.go",
+        "sha256": "72a0278651ff01d379e62a2f5c8d93e189a3a773a6419123f91850c98efd0aa9",
+        "bytes": 6377
+      },
+      {
+        "path": "internal/app/plugin_shared_torrent_material.go",
+        "sha256": "e2df5206c983e7b16aebd4eda05d959c0b0466f325a52b696f3199291beb3af4",
+        "bytes": 17978
+      },
+      {
+        "path": "internal/app/plugin_shared_torrent_material_test.go",
+        "sha256": "12dcadb5ba30f6387629ab8c491c6a364305efa45eccfcbefd2394dd3bb14e77",
+        "bytes": 30276
+      },
+      {
+        "path": "internal/app/plugin_shared_torrent_transfer.go",
+        "sha256": "71a0524ea0ac0ffa6173a4a42255e6d3a53291e656ed23e54a6feaf8b29d6bb6",
+        "bytes": 4084
+      },
+      {
+        "path": "internal/app/plugin_shared_torrent_transfer_test.go",
+        "sha256": "b0ba38f529cdf973b63f6f1af1db31dae61554bbaa8d228fdebb3cf3de4cbf7b",
+        "bytes": 4034
+      },
+      {
+        "path": "internal/app/runtime.go",
+        "sha256": "28412b5a346378833535f2466b82c130d1edc3a736365d2896e0eb962f6929c9",
+        "bytes": 24454
+      },
+      {
+        "path": "internal/ocr/source_json_export.go",
+        "sha256": "2124526f82f3ee98a69e74b3a688882295c2f959a7cd65bc619dad70f8fd2dba",
+        "bytes": 380
+      },
+      {
+        "path": "internal/plugins/autosignin/http_transport.go",
+        "sha256": "98e5a16d9f508b2dfe0153bb9f71a76fe9660a8c94c8dbe1e7eba30307b86706",
+        "bytes": 22431
+      },
+      {
+        "path": "internal/plugins/autosignin/ordinary_material_transport.go",
+        "sha256": "fd90dba247caa1762fd9d44b8faa97433d81106d9779a16dea9f77205b3c58ec",
+        "bytes": 12859
+      },
+      {
+        "path": "internal/plugins/autosignin/ordinary_material_transport_test.go",
+        "sha256": "986619c497cd357ec39aa84b47b5c93254c9dc63b3b07c0d9ebf14815a43c29d",
+        "bytes": 15829
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/testdata/torrent-form-order-source.json",
+        "sha256": "b33a38722142eee1a72fe8450c376d80354037681dc669d1a56c9a8df1a47497",
+        "bytes": 2230
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/torrent_fileinfo_join_test.go",
+        "sha256": "2240795a306790bc50ef5814226ce7259adbaa99d13003dcfb93558bdb83b709",
+        "bytes": 2281
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/torrent_form_order_test.go",
+        "sha256": "d10f6f2765602dc6a89fe865fed9c93ee55db9f7b75786263f6f5bdfaf2048dc",
+        "bytes": 3514
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/torrent_helper.go",
+        "sha256": "9f84675f2757e0baf9bed0cd106b5717d260a3fd29d1d6347dabc62d13300796",
+        "bytes": 7517
+      },
+      {
+        "path": "internal/plugins/iyuuautoseed/torrent_material_url.go",
+        "sha256": "7cb446091448526411d179567935af28fd1543c0081496a0da763099ffc4169a",
+        "bytes": 1348
+      },
+      {
+        "path": "internal/plugins/shared_torrent_material.go",
+        "sha256": "99638bc7e731e612413ea2ad78e2b3f9faa5371a9e4891c1da65752df5855a6f",
+        "bytes": 9999
+      },
+      {
+        "path": "internal/plugins/shared_torrent_material_test.go",
+        "sha256": "c2dde86989eb64175f21e095109573fea20fa8e01483101b6137095c085285db",
+        "bytes": 11180
+      },
+      {
+        "path": "internal/plugins/torrentmaterial/chain.go",
+        "sha256": "710994af4ec4e700c4390828fcb1d6c823d4ec8126ff80cd78d62fc502181a75",
+        "bytes": 15573
+      },
+      {
+        "path": "internal/plugins/torrentmaterial/chain_test.go",
+        "sha256": "fb98c9c16e728a922dfab0e98f35f69a71531ab4c9583b0e6929aaec2a3fdab8",
+        "bytes": 29026
+      },
+      {
+        "path": "internal/plugins/torrentmaterial/testdata/source-nonstring-log.json",
+        "sha256": "e1ec49d67d042fc45e960b60645f12ffc3e32d1f451e69ceb9fcc8a55b048991",
+        "bytes": 15318
+      },
+      {
+        "path": "internal/plugins/torrentmaterial/testdata/source-wrapper.json",
+        "sha256": "133bf97c1df6958a62f341b036936519d78fda928cb836eb8e23139f1fffc6bc",
+        "bytes": 43246
+      }
+    ],
+    "no_new_s06_history_files": true,
+    "development_ledger_not_in_candidate": true
+  },
+  "actual_gates": [
+    {
+      "name": "release fixture normal+denied build and manifests",
+      "evidence": "evidence/s12-release-fixture01",
+      "inputs": 1083,
+      "status": "PASS"
+    },
+    {
+      "name": "release App normal",
+      "evidence": "evidence/s12-release-app01",
+      "inputs": 6189,
+      "roots": 4,
+      "passed": 4,
+      "status": "PASS"
+    },
+    {
+      "name": "release App race",
+      "evidence": "evidence/s12-release-race01",
+      "inputs": 6198,
+      "roots": 2,
+      "passed": 2,
+      "race_warning": false,
+      "status": "PASS",
+      "worker_race": false
+    },
+    {
+      "name": "release ordinary server build",
+      "evidence": "evidence/s12-release-server01",
+      "inputs": 3960,
+      "status": "PASS"
+    },
+    {
+      "name": "retained S10 shared-scope compatibility",
+      "evidence": "evidence/s12-release-s10-regression01",
+      "inputs": 6195,
+      "roots": 1,
+      "passed": 1,
+      "status": "PASS",
+      "old_worker_reused": true
+    }
+  ],
+  "cli": {
+    "status": "PASS",
+    "evidence": "audits/s12-normal-cli-plan/run-release01",
+    "receipt": {
+      "path": "audits/s12-normal-cli-plan/run-release01/tool-execution-receipt.json",
+      "bytes": 1625,
+      "sha256": "f4b65423459d6dd168f698367bed9ea28924a748186b5d670dee9acca9a807cb"
+    },
+    "result": {
+      "path": "audits/s12-normal-cli-plan/run-release01/result.json",
+      "bytes": 38879,
+      "sha256": "2140f56bdbbe0db5e7b5d361de1ef0b19455b590cfcd53f8c8d28ae414821301"
+    },
+    "controller_calls": 30,
+    "retained_raw_api_bodies": 28,
+    "material_queries": 13,
+    "host_pids": [
+      23,
+      58
+    ],
+    "natural_host_wait_exits": [
+      0,
+      0
+    ],
+    "worker_pids": [
+      41,
+      72
+    ],
+    "worker_identity_and_exit_observation": "actual held PID/PPID/starttime/executable identities recorded by driver and independently read back",
+    "two_full_returns_total_bytes": 33554432,
+    "cold_cache_and_persisted_notice": true,
+    "input_drift": [],
+    "environment_unchanged": true
+  },
+  "independent_reports": [
+    {
+      "path": "audits/s12-material-host-independent/RELEASE-RUNTIME-REVIEW.md",
+      "bytes": 4311,
+      "sha256": "56e13974891b0f77f6cc5db5246a6ea2ce2e7c8ca52005575c8ff7d317f7931e"
+    },
+    {
+      "path": "audits/s12-material-host-independent/release-runtime-gates-independent.json",
+      "bytes": 26064,
+      "sha256": "60a5e917ad5d1d62899e03814338497a61e36b433ba4280f470403ea8846aede"
+    },
+    {
+      "path": "audits/s12-material-host-independent/release-cli01-independent.json",
+      "bytes": 11135,
+      "sha256": "779de2adedfc99bc831b9a5d357474193b2e393f8b6ef713025784c5ea3daff9"
+    },
+    {
+      "path": "audits/s12-material-host-independent/release-s10-compatibility-independent.json",
+      "bytes": 3995,
+      "sha256": "d0ceb775023f88dc40c3a5156e97e0760b0dbc342307400e46c4fc967f46cb8a"
+    }
+  ],
+  "prior_component_records": [
+    {
+      "path": "audits/s12-material-host-independent/host-candidate-final-seal.json",
+      "bytes": 11685,
+      "sha256": "e68cc703e623703531c2f9e857d15f82a9460262bdd289896fd506d02fcc63cb"
+    },
+    {
+      "path": "audits/s12-material-transport-independent/final-seal.json",
+      "bytes": 5576,
+      "sha256": "3a7e6e2b5b0f08a69c3f7c40aea6c13a47176974ee26ae492ad53b1156fc2717"
+    },
+    {
+      "path": "audits/s12-material-independent/material-source01-terminal-independent.json",
+      "bytes": 23406,
+      "sha256": "e4427d2c7ac594afc14fdeb0e76c7f288416ce853bce25c5365b7ee1f1b796ae"
+    },
+    {
+      "path": "audits/s12-material-host-independent/missing-location-source01-independent.json",
+      "bytes": 5918,
+      "sha256": "86c7e4f244b134e06e15849a081e49b4bc54d014be92f244eb77314df484dfe3"
+    }
+  ],
+  "evidence_interpretation": {
+    "compile_inputs": "Declared actual Go/compiler/runtime inputs with recorded phase/current zero drift, generated copies and binary identity; not exhaustive environment or syscall traces.",
+    "cli": "Raw original API bodies and source-peer receipts checked, not HTTP-200-only or summary-only acceptance.",
+    "failures": "Original development App01/App02 failures and their corrective increments remain immutable; release gates are distinct successful executions.",
+    "resource_monitoring": "Only recorded pre-command/driver-step samples are accepted; continuous and terminal reserve monitoring are not claimed."
+  },
+  "limitations": [
+    "Explicit 16 MiB logical-material resource budget remains a documented source difference; no unbounded-Python equivalence waiver.",
+    "Legacy serial cancellation is bounded drain, not immediate cancellation propagation.",
+    "Acquisition checks site/proxy snapshots before/after; immutable page delivery checks invocation authority, not invented per-page configuration revocation.",
+    "Race covers App programs; actual S12 workers are normal builds. Retained S10 compatibility reuses its previously accepted worker.",
+    "Owned HTTP CLI fixtures and selected source components do not establish full original-source HTTP or combined HTTPS proxy/origin behavior.",
+    "No real-site credentials, downloader submission, browse/RSS, browser/UI, arbitrary Python input, full S12/platform, commit/push or publication success claim."
+  ],
+  "reviewer_operations": {
+    "read_and_hash": true,
+    "own_audit_writes": true,
+    "product_or_ledger_or_stage_change": false,
+    "go_or_source_execution": false,
+    "network": false
+  }
+}

@@ -1,0 +1,13 @@
+from pathlib import Path
+import os,json,hashlib,datetime,subprocess
+R=Path(__file__).resolve().parents[1];P=R/'release-light-media';E=R/'evidence/s12-release-s10-regression01';E.mkdir(exist_ok=False);B=R/'runtime/s12-release-app01.test';W=R/'runtime/s10-d3-fixture01.worker';OLD=R/'evidence/s12-release-app01';S10=R/'evidence/s10-d3-fixture01';env=os.environ.copy();env['OWNED_MANAGER_FIXTURE_BINARY']=str(W)
+sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest()
+x=json.load(open(OLD/'result.json'));s10=json.load(open(S10/'result.json'));assert x['status']==s10['status']=='PASS';assert sha(B)==x['program_sha256'] and sha(W)==s10['program_sha256'];inputs=json.load(open(OLD/'inputs-after-test.json'));assert all(sha(p)==v['sha256'] for p,v in inputs.items());extra={str(p):{'sha256':sha(p),'bytes':p.stat().st_size} for p in [Path(__file__).resolve(),B,W,OLD/'result.json',S10/'result.json',S10/'inputs-after.json']};inputs.update(extra);(E/'inputs-before.json').write_text(json.dumps(inputs,indent=2)+'\n')
+record={'started':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'RUNNING','kind':'one real retained S10 shared-scope incremental using current release App test program and prior accepted S10 worker as legacy-compatible consumer','app_program_sha256':sha(B),'worker_program_sha256':sha(W),'worker_compile_evidence':str(S10),'test':'TestSharedSchedulerActualRetainedSelfRemove','input_count':len(inputs),'environment_proxy_unchanged':True}
+try:
+ cmd=['go','tool','test2json','-t','-p','./internal/app',str(B),'-test.v','-test.run','^TestSharedSchedulerActualRetainedSelfRemove$','-test.count=1','-test.timeout=90s'];record['command']=cmd
+ with (E/'tests.stdout').open('wb') as o,(E/'tests.stderr').open('wb') as e:result=subprocess.run(cmd,cwd=P/'internal/app',env=env,stdout=o,stderr=e)
+ (E/'tests.exit').write_text(str(result.returncode)+'\n');record['exit']=result.returncode;assert result.returncode==0
+ events=[json.loads(l) for l in (E/'tests.stdout').read_text().splitlines() if l.startswith('{')];roots=[z['Test'] for z in events if z.get('Action')=='pass' and z.get('Test') and '/' not in z['Test']];assert roots==[record['test']] and not any(z.get('Action') in ['fail','skip'] for z in events);assert all(sha(p)==v['sha256'] for p,v in inputs.items());(E/'inputs-after-test.json').write_text(json.dumps(inputs,indent=2)+'\n');record['root_passes']=roots;record['status']='PASS'
+except BaseException as e:record.update(status='FAIL',error_class=type(e).__name__,error=str(e));raise
+finally:record['ended']=datetime.datetime.now(datetime.timezone.utc).isoformat();(E/'result.json').write_text(json.dumps(record,indent=2)+'\n');print(json.dumps(record))

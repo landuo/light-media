@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "created_utc": "2026-10-31T17:52:20.696054+00:00",
+  "decision": "READY_FOR_SCOPED_S12_MATERIAL_IMPLEMENTATION_PLANNING_NOT_RUNTIME_ACCEPTANCE",
+  "artifacts": {
+    "SOURCE-FIRST.json": {
+      "sha256": "e11c2457886cf93a57bdd384490728c3e8f5853c7b0ec4e8c0b0cb641fd22abe",
+      "bytes": 5292
+    },
+    "input-bindings.json": {
+      "sha256": "df193aa2228b197d3937f1454e22e4adbe7b3e4f69fba9217afe2a084591ec4d",
+      "bytes": 9950
+    },
+    "REVIEW.md": {
+      "sha256": "b59b717aaa9a1ff140b606422de64fba4a35724005d3d01cc331f21afbb5538a",
+      "bytes": 11672
+    }
+  },
+  "independence": "source-first saved before owner and target comparison",
+  "known_exact_gaps": [
+    "ordinary SDK/dispatch/wrapper/cache lifetime not wired",
+    "new source-private sync transport/credential+proxy/UA semantics",
+    "failure notification must use source chain route without plugin wrapper link",
+    "TorrentFiles trailing slash component prefix-loss counterexample",
+    "HTTP/cache/parser16MiB and base64 logical payload reduction; guards retained, no blanket approval"
+  ],
+  "new_execution": false,
+  "no_product_or_ledger_write": true
+}

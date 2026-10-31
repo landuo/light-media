@@ -1,0 +1,98 @@
+{
+  "settings": {
+    "USER_AGENT": "Owned-Default-UA",
+    "PROXY": {
+      "http": "http://owned-proxy.invalid:8080",
+      "https": "http://owned-proxy.invalid:8080"
+    }
+  },
+  "dependency_contract": {
+    "RequestUtils": "record constructor/get_res/post_res arguments, no HTTP",
+    "Response": "explicit bool/text/json dependency inputs, not a requests Response",
+    "TorrentHelper": "record constructor without original TTLCache; delegate complete unchanged original download_torrent method with fixed built-in int 123, observing its first url.startswith AttributeError; no fabricated helper tuple and no later helper dependency execution",
+    "Notification": "record constructor kwargs; no original schema validation",
+    "post_message": "record exact notification fields, no delivery",
+    "TorrentInfo": "explicit attributes only; no original model validation",
+    "settings": "synthetic constants below, no host environment lookup",
+    "logging": "record log.info/error and preserve trace order"
+  },
+  "cases": [
+    {
+      "case": "int_result_no_base",
+      "descriptor_input": {
+        "method": "get",
+        "result": "data"
+      },
+      "torrent": {
+        "enclosure": "[eyJtZXRob2QiOiJnZXQiLCJyZXN1bHQiOiJkYXRhIn0=]https://owned-descriptor.invalid/token",
+        "title": "Owned nonstring result",
+        "site_cookie": "owned_cookie=synthetic",
+        "site_ua": "Owned-UA",
+        "site_proxy": false,
+        "site_name": "Owned Site"
+      },
+      "channel": "Web",
+      "source": "OwnedSource",
+      "userid": "owned-user",
+      "response": {
+        "truthy": true,
+        "text": "unused owned text",
+        "json": {
+          "data": 123
+        }
+      }
+    },
+    {
+      "case": "int_result_invalid_base",
+      "descriptor_input": {
+        "method": "get",
+        "result": "data",
+        "result_base_url": "owned-relative-base"
+      },
+      "torrent": {
+        "enclosure": "[eyJtZXRob2QiOiJnZXQiLCJyZXN1bHQiOiJkYXRhIiwicmVzdWx0X2Jhc2VfdXJsIjoib3duZWQtcmVsYXRpdmUtYmFzZSJ9]https://owned-descriptor.invalid/token",
+        "title": "Owned nonstring result",
+        "site_cookie": "owned_cookie=synthetic",
+        "site_ua": "Owned-UA",
+        "site_proxy": false,
+        "site_name": "Owned Site"
+      },
+      "channel": "Web",
+      "source": "OwnedSource",
+      "userid": "owned-user",
+      "response": {
+        "truthy": true,
+        "text": "unused owned text",
+        "json": {
+          "data": 123
+        }
+      }
+    },
+    {
+      "case": "int_result_valid_http_base",
+      "descriptor_input": {
+        "method": "get",
+        "result": "data",
+        "result_base_url": "http://owned-base.invalid/api"
+      },
+      "torrent": {
+        "enclosure": "[eyJtZXRob2QiOiJnZXQiLCJyZXN1bHQiOiJkYXRhIiwicmVzdWx0X2Jhc2VfdXJsIjoiaHR0cDovL293bmVkLWJhc2UuaW52YWxpZC9hcGkifQ==]https://owned-descriptor.invalid/token",
+        "title": "Owned nonstring result",
+        "site_cookie": "owned_cookie=synthetic",
+        "site_ua": "Owned-UA",
+        "site_proxy": false,
+        "site_name": "Owned Site"
+      },
+      "channel": "Web",
+      "source": "OwnedSource",
+      "userid": "owned-user",
+      "response": {
+        "truthy": true,
+        "text": "unused owned text",
+        "json": {
+          "data": 123
+        }
+      }
+    }
+  ]
+}

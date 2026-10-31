@@ -1,0 +1,193 @@
+{
+  "decision": "PASS_ACTUAL_B2_B3_B4_FINITE_CASES_WITH_OPEN_OUT_OF_CASE_LOG_ORDER_GAP",
+  "at_utc": "2026-10-31T18:44:25.840766+00:00",
+  "frozen_three_inputs": [
+    {
+      "path": "internal/plugins/torrentmaterial/chain.go",
+      "sha256": "8176ea59b0f842ab756962773d0b52dcb2442dbff1a19570ff17759f670d0d9b"
+    },
+    {
+      "path": "internal/plugins/torrentmaterial/chain_test.go",
+      "sha256": "53f4d9929ef72375dea632f16951875a85d47a1d7ba58d15a55bfb0661318bae"
+    },
+    {
+      "path": "internal/plugins/torrentmaterial/testdata/source-wrapper.json",
+      "sha256": "133bf97c1df6958a62f341b036936519d78fda928cb836eb8e23139f1fffc6bc"
+    }
+  ],
+  "manifest_sha256": "51ea88dca26f2159df7758d3895998f7aea700c3733ee169e1a79736742365e5",
+  "archive_sha256": "77818378c77e8303260867217399ac0193525d970ce72145ee1134a4e7ef25d7",
+  "actual_gate": {
+    "directory": "evidence/s12-wrapper02",
+    "status": "PASS_RAW_READBACK",
+    "roots": [
+      "TestDownloadTorrentActualSourceWrapper19",
+      "TestDownloadTorrentActualSourceLogProjection",
+      "TestDownloadTorrentLazyResponseTextBoundary"
+    ],
+    "subcases": {
+      "TestDownloadTorrentActualSourceWrapper19": [
+        "empty_enclosure",
+        "magnet_passthrough",
+        "direct_bytes_explicit_credentials",
+        "direct_string_fallback_ua",
+        "direct_empty_string_precedes_empty_content_check",
+        "empty_bytes_notice_with_channel",
+        "none_content_notice_without_channel",
+        "empty_brackets_use_tail_without_request",
+        "encoded_get_text_cookie_headers_proxy",
+        "uppercase_GET_is_post_nested_query",
+        "nested_relative_rewrite_ignores_lone_result_path",
+        "nested_absolute_rewrite_keeps_path_query_fragment",
+        "nested_invalid_base_preserves_value",
+        "false_response_stops_before_helper",
+        "false_success_stops_before_result",
+        "false_nested_result_stops_before_helper",
+        "bad_base64_error",
+        "bad_json_error",
+        "unmatched_bracket_stops_before_helper"
+      ],
+      "TestDownloadTorrentActualSourceLogProjection": [
+        "empty_bytes_notice_with_channel",
+        "nested_relative_rewrite_ignores_lone_result_path",
+        "unmatched_bracket_stops_before_helper"
+      ],
+      "TestDownloadTorrentLazyResponseTextBoundary": [
+        "false-response",
+        "json-does-not-read-text",
+        "text-propagates-boundary"
+      ]
+    },
+    "commands": [
+      {
+        "label": "go-list",
+        "argv": [
+          "go",
+          "list",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-deps",
+          "-test",
+          "-json",
+          "./internal/plugins/torrentmaterial"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "compile",
+        "argv": [
+          "go",
+          "test",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-p=1",
+          "-c",
+          "-o",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-wrapper02.test",
+          "./internal/plugins/torrentmaterial"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "tests",
+        "argv": [
+          "go",
+          "tool",
+          "test2json",
+          "-t",
+          "-p",
+          "./internal/plugins/torrentmaterial",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-wrapper02.test",
+          "-test.v",
+          "-test.run",
+          "^TestDownloadTorrent(ActualSourceWrapper19|ActualSourceLogProjection|LazyResponseTextBoundary)$",
+          "-test.count=1",
+          "-test.timeout=90s"
+        ],
+        "exit": 0
+      }
+    ],
+    "ended": "2026-10-31T18:40:58.623306+00:00",
+    "input_count": 3440,
+    "before_after_compile_after_test_equal": true,
+    "current_missing_inputs": [],
+    "current_changed_inputs": [],
+    "frozen_three_current_match": true,
+    "program_sha256": "b61b52612914295528e294e5be0798e9dad6c2af20e09400bd90f439184c748a",
+    "raw_hashes": {
+      "result.json": "71a1f386e21866abbeccabf6e99cc31ad72df8ca29bff94cc7b139014fabcb83",
+      "inputs-before.json": "b9e00e3fcad40fe46c23ae7e84d17b8c3aea87a8ec856d703ff4b876b20bb205",
+      "inputs-after-compile.json": "b9e00e3fcad40fe46c23ae7e84d17b8c3aea87a8ec856d703ff4b876b20bb205",
+      "inputs-after-test.json": "b9e00e3fcad40fe46c23ae7e84d17b8c3aea87a8ec856d703ff4b876b20bb205",
+      "tests.stdout": "9378dd0a26d8ae62593ed3171bf609dee259486f14c9de6fbc860c5f4919e159",
+      "generated-source-map.json": "1e46976e51b8cd979aefd3e652a6c5716b1695dd9e4357c3c9e2c4ab1558a28c"
+    },
+    "stage_resource_samples": [
+      {
+        "phase": "go-list",
+        "at": "2026-10-31T18:40:55.816460+00:00",
+        "scratch_free": 56158056448,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "compile",
+        "at": "2026-10-31T18:40:56.313399+00:00",
+        "scratch_free": 56156483584,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "tests",
+        "at": "2026-10-31T18:40:58.298401+00:00",
+        "scratch_free": 56130752512,
+        "tmp_free": 5225664512
+      }
+    ]
+  },
+  "source19_current_fixture_unchanged": true,
+  "selected_source_log_projection": {
+    "cases": {
+      "empty_bytes_notice_with_channel": [
+        {
+          "level": "ERROR",
+          "message": "下载种子文件失败：Owned release 雪"
+        }
+      ],
+      "nested_relative_rewrite_ignores_lone_result_path": [
+        {
+          "level": "INFO",
+          "message": "已获取到站点临时下载地址"
+        }
+      ],
+      "unmatched_bracket_stops_before_helper": [
+        {
+          "level": "ERROR",
+          "message": "Owned release 雪 无法获取下载地址！"
+        }
+      ]
+    },
+    "scope": "Exact level/message log sequence for3 selected actual source cases only. No comparison of log interleaving with other ports, actual logger attribution/redaction/persistence, or every19case log.",
+    "target_inputs": "Original torrent/descriptor inputs; material fake is exact empty bytes for failure case and a branch-equivalent constant string for others. This is log-only projection, not claiming full helper result input identity."
+  },
+  "lazy_text_boundary": {
+    "false_response": "Ignore supplied TextError and returnNone without material.",
+    "truthy_result_selector": "Use body JSON path and ignore TextError; exactly1material call.",
+    "no_result_selector": "Propagate identical target decoder error; no material.",
+    "source_error_claim": false,
+    "scope": "Control-flow error deferral, not actual lazy computation/no decoding work, not source requests.text codec parity or observed original Unicode exception."
+  },
+  "open_static_finding": {
+    "path": "audits/s12-wrapper-independent/B3-B4-FINDING.json",
+    "sha256": "e820806368a69f8e9061c7af9e6e279cbb4bd530ca01c46375689473233e13ee",
+    "summary": "Existing data=123/no-base branch misses original INFO before real helper AttributeError. Current observed cases remain valid but broader logging equivalence is not accepted."
+  },
+  "inherited_credits": "OriginalB1/B2 evidence preserved. B2source19 actually reran on changed product here. Original B1three component roots were NOT rerun and are not described as current whole-closure PASS.",
+  "not_claimed": [
+    "All source logs or full trace interleaving",
+    "Host log routing/attribution/redaction/persistence",
+    "Actual HTTP/helper/cache in new3roots",
+    "App callback integration for TextError",
+    "Source UnicodeDecodeError runtime observation from owned boundary sentinel",
+    "WholeS12/race/CI/delivery"
+  ],
+  "reviewer_executed_no_Go_source_or_network": true
+}

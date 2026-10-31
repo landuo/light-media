@@ -1,0 +1,526 @@
+{
+  "decision": "ACCEPT_ONE_LINE_PARSER_FIX_AND_FINITE_DEPENDENT_REVALIDATION_ONLY",
+  "at_utc": "2026-10-31T18:10:31.923832+00:00",
+  "source": {
+    "actual": {
+      "started": "2026-10-31T17:56:24.717100+00:00",
+      "argv": [
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+        "-I",
+        "-S",
+        "-B",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-parser-join-source/capture_parser_join.py"
+      ],
+      "driver_sha256": "9691fc897b05f834308088b5651e5843de5cc2af0567ff90287db12394924218",
+      "status": "PASS",
+      "exit": 0,
+      "ended": "2026-10-31T17:56:24.872842+00:00"
+    },
+    "raw": {
+      "sha256": "8c86d061ef6c1ef5e3a20a85afdaa6edccd20915c8d2f3239872e638755ac246",
+      "bytes": 3683
+    },
+    "inputs_checked": 21,
+    "vendor_modules_checked": 6,
+    "original_ast_and_fragment_match_static": true,
+    "parser_files": [
+      {
+        "name": "Root/sub/x",
+        "length": 1
+      }
+    ],
+    "folder": "Root",
+    "files": [
+      "sub/x"
+    ]
+  },
+  "fix": {
+    "exact_one_line": true,
+    "before": {
+      "sha256": "de943a7422c700f567d35112f069a3947ecc237b3615638c75d5767957f5ecd5",
+      "bytes": 6786
+    },
+    "after": {
+      "sha256": "837f10b59390aeb07c3f8106fd41e069533ddb7be11e7b5a68e3a553885ee86d",
+      "bytes": 6787
+    },
+    "same114bytes": true
+  },
+  "gates": {
+    "s12-parser-before01": {
+      "status": "FAIL",
+      "started": "2026-10-31T17:59:35.743008+00:00",
+      "ended": "2026-10-31T17:59:39.702092+00:00",
+      "inputs": 3437,
+      "equal_stages": [
+        "inputs-before.json",
+        "inputs-after-compile.json"
+      ],
+      "roots": {
+        "TestTorrentFilesSourceSeparatorRegression": "fail"
+      },
+      "subcases": {},
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-parser-before01.test",
+        "sha256": "19da8c7dfabac61dd16906c58921de7746904d3f7c0ad240539eca526ad8f5fb",
+        "bytes": 27948778
+      },
+      "generated_copies": 1,
+      "no_skips": true,
+      "race": false,
+      "proxy_boundary": "reviewed runner copies environment; overrides GOMAXPROCS=2 and CGO_ENABLED=1 only; not equality across executions"
+    },
+    "s12-parser-after01": {
+      "status": "PASS",
+      "started": "2026-10-31T18:01:43.182952+00:00",
+      "ended": "2026-10-31T18:01:47.363923+00:00",
+      "inputs": 3437,
+      "equal_stages": [
+        "inputs-before.json",
+        "inputs-after-compile.json",
+        "inputs-after-test.json"
+      ],
+      "roots": {
+        "TestTorrentFilesSourceSeparatorRegression": "pass",
+        "TestTorrentFilesRetainedSourceProjections": "pass"
+      },
+      "subcases": {
+        "TestTorrentFilesRetainedSourceProjections/file-0": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-1": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-2": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-3": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-4": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-5": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-6": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-7": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-8": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-9": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-10": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-11": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-12": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-13": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-14": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-15": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-16": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-17": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-18": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-19": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-20": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-21": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-22": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-23": "pass",
+        "TestTorrentFilesRetainedSourceProjections/file-24": "pass"
+      },
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-parser-after01.test",
+        "sha256": "120e839317203cae84a5404c17333b464339d1f58e86c6d1b7c651b3404cd74a",
+        "bytes": 27948914
+      },
+      "generated_copies": 1,
+      "no_skips": true,
+      "race": false,
+      "proxy_boundary": "reviewed runner copies environment; overrides GOMAXPROCS=2 and CGO_ENABLED=1 only; not equality across executions"
+    },
+    "s12-s06-parser-dependent01": {
+      "status": "PASS",
+      "started": "2026-10-31T18:02:27.924961+00:00",
+      "ended": "2026-10-31T18:03:01.522737+00:00",
+      "inputs": 6184,
+      "equal_stages": [
+        "inputs-before.json",
+        "inputs-after-compile.json",
+        "inputs-after-test.json"
+      ],
+      "roots": {
+        "TestSharedDownloadHistoryProducerSourceProjection": "pass"
+      },
+      "subcases": {
+        "TestSharedDownloadHistoryProducerSourceProjection/single_original_meta_fallback": "pass",
+        "TestSharedDownloadHistoryProducerSourceProjection/multifile_original_selected_episodes": "pass",
+        "TestSharedDownloadHistoryProducerSourceProjection/multifile_no_subfolder_preserves_parser_first": "pass",
+        "TestSharedDownloadHistoryProducerSourceProjection/utf8_alias_and_padding_source_first": "pass"
+      },
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-s06-parser-dependent01.test",
+        "sha256": "6af307a4887ae93584240625840fe658baa27e01137c41899bb6c5c87045fd1b",
+        "bytes": 90672981
+      },
+      "generated_copies": 1,
+      "no_skips": true,
+      "race": false,
+      "proxy_boundary": "reviewed runner copies environment; overrides GOMAXPROCS=2 and CGO_ENABLED=1 only; not equality across executions"
+    }
+  },
+  "current_readback": {
+    "s12-parser-before01": {
+      "declared_current_differences": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/iyuuautoseed/torrent_helper.go",
+          "expected": {
+            "sha256": "de943a7422c700f567d35112f069a3947ecc237b3615638c75d5767957f5ecd5",
+            "bytes": 6786
+          },
+          "current": {
+            "sha256": "837f10b59390aeb07c3f8106fd41e069533ddb7be11e7b5a68e3a553885ee86d",
+            "bytes": 6787
+          }
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/shared_torrent_material.go",
+          "expected": {
+            "sha256": "bb77ef4caf3b52409c8fdf965e1d6f0fe623af05edfa80922a475aa1fb1640bb",
+            "bytes": 8701
+          },
+          "current": {
+            "sha256": "ea478e4b983cc4d861cdf7a17a77bc09900ccb4fd4d2a0d55e3095e3f75c622f",
+            "bytes": 8902
+          }
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/shared_torrent_material_test.go",
+          "expected": {
+            "sha256": "01e8fc8a8db91127576e45c67e7ccf718243c7f4b1a307ddb628c51da901f927",
+            "bytes": 8902
+          },
+          "current": {
+            "sha256": "1cfa842b344491cec1f5f4e5cce81febbb2e2b6aa66d864e663f1da9e32b1122",
+            "bytes": 9345
+          }
+        }
+      ],
+      "missing_generated_retained_same_bytes": []
+    },
+    "s12-parser-after01": {
+      "declared_current_differences": [],
+      "missing_generated_retained_same_bytes": []
+    },
+    "s12-s06-parser-dependent01": {
+      "declared_current_differences": [],
+      "missing_generated_retained_same_bytes": []
+    }
+  },
+  "separate_runtime_oracle": {
+    "binding": {
+      "sha256": "0af5deb44232b264a2624cee6a46e93e295a5fca68fb412326723bccf34c406e",
+      "bytes": 16127
+    },
+    "not_go_list_input": true,
+    "before": "test01/fix01 freeze and exact retained preimage",
+    "after": "coordinator runtime-oracle-readback.json and reviewer current hash",
+    "in_test_sha_assert": true
+  },
+  "s06_dependency": {
+    "raw_source": {
+      "sha256": "c7d72484cf63fbe79ad12fdd5567222406e87f55c71620660d81bbce8bf1dcee",
+      "bytes": 88649
+    },
+    "embedded_selected_keys": {
+      "sha256": "1c440aff64655b13c794c9d0c90676240d4fffdca9714f6e2e7f8cd0e6083ec5",
+      "bytes": 14272
+    },
+    "all_selected_keys_and_all_four_cases_exact_equal_raw": true,
+    "included_in_actual_go_embed_inputs": true,
+    "fixtures": [
+      {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/app/testdata/shared-download-history/owned-single.torrent",
+        "sha256": "1e7b2fbdc6791e1274a76c5149d5b4e4428344fe6a228897eda3b7a2e6e98309",
+        "bytes": 103
+      },
+      {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/app/testdata/shared-download-history/owned-multi-unsorted.torrent",
+        "sha256": "aee7fc1d1d6c250eedad666bc4133cfe5523878e8fa77f6870e53c35847fb230",
+        "bytes": 200
+      },
+      {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/app/testdata/shared-download-history/owned-multi-unsorted.torrent",
+        "sha256": "aee7fc1d1d6c250eedad666bc4133cfe5523878e8fa77f6870e53c35847fb230",
+        "bytes": 200
+      },
+      {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/app/testdata/shared-download-history/owned-alias-padding.torrent",
+        "sha256": "f848effae65774204a8b00e9dd05f8afa939369b085a107aeed24370c573f89f",
+        "bytes": 312
+      }
+    ],
+    "limit": "source identity/date supplied observed inputs; no new identity/clock/SQL/downloadchain equivalence"
+  },
+  "current_unbound_go_files_not_historically_tested": [
+    "internal/plugins/iyuuautoseed/torrent_material_url.go",
+    "internal/app/plugin_original_metadata_exchange_other.go",
+    "internal/app/import_rename_darwin.go",
+    "internal/app/subscription_quality_rename_other.go",
+    "internal/app/subscription_quality_rename_darwin.go",
+    "internal/app/import_rename_other.go",
+    "internal/app/plugin_original_metadata_exchange_darwin.go"
+  ],
+  "tool_terminal_relay": {
+    "source": "fbf6fa exit0",
+    "before": "4664/c3ff55 exit1",
+    "after": "79791/36ec58 exit0",
+    "s06_dependent": "39060/e79ab8 exit0"
+  },
+  "artifacts": {
+    "evidence/s12-parser-before01/generated-source/18866c173e69a0083eb734951af1cd51e1848c9ff4e3aacd7af910a4ebe4964f.go": {
+      "sha256": "18866c173e69a0083eb734951af1cd51e1848c9ff4e3aacd7af910a4ebe4964f",
+      "bytes": 6098
+    },
+    "evidence/s12-parser-before01/compile.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "evidence/s12-parser-before01/go-list.stdout": {
+      "sha256": "8c236fd72a607d7587c2ba87cd47a43a476a75c16254d97dd6a885c4437a490a",
+      "bytes": 745076
+    },
+    "evidence/s12-parser-before01/go-list.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "evidence/s12-parser-before01/inputs-after-compile.json": {
+      "sha256": "0ad316d8c21cfd0e11f051fcd149c129fdd86256f664ff45c03eaf9170f4b5c3",
+      "bytes": 782126
+    },
+    "evidence/s12-parser-before01/compile.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evidence/s12-parser-before01/compile.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evidence/s12-parser-before01/generated-source-map.json": {
+      "sha256": "8e1d793c06fceeb9cdecf6dd1cc43ba2665342b26e30e47d3c2958424ad0b87d",
+      "bytes": 246
+    },
+    "evidence/s12-parser-before01/tests.stdout": {
+      "sha256": "4b2df70da648bdc91f9c4c16974f378296558b01267efd33626f65f21c22614b",
+      "bytes": 1473
+    },
+    "evidence/s12-parser-before01/inputs-before.json": {
+      "sha256": "0ad316d8c21cfd0e11f051fcd149c129fdd86256f664ff45c03eaf9170f4b5c3",
+      "bytes": 782126
+    },
+    "evidence/s12-parser-before01/tests.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evidence/s12-parser-before01/tests.exit": {
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2
+    },
+    "evidence/s12-parser-before01/result.json": {
+      "sha256": "df7cbde78cfa85e975f867c28bb30c1782207cdb9c49f2498390e45f6d30be3d",
+      "bytes": 2055
+    },
+    "evidence/s12-parser-before01/go-list.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evidence/s12-parser-after01/generated-source/18866c173e69a0083eb734951af1cd51e1848c9ff4e3aacd7af910a4ebe4964f.go": {
+      "sha256": "18866c173e69a0083eb734951af1cd51e1848c9ff4e3aacd7af910a4ebe4964f",
+      "bytes": 6098
+    },
+    "evidence/s12-parser-after01/compile.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "evidence/s12-parser-after01/runtime-oracle-readback.json": {
+      "sha256": "e5c1d883bf03dd1c376828c5a274c9b59da4f8228c50dc4ada0dada8923fc60f",
+      "bytes": 1008
+    },
+    "evidence/s12-parser-after01/inputs-after-test.json": {
+      "sha256": "3a525b631bd6c8ff3375318e753bd06bf64b1eef495de3336fde5b81173098c2",
+      "bytes": 782132
+    },
+    "evidence/s12-parser-after01/go-list.stdout": {
+      "sha256": "8c236fd72a607d7587c2ba87cd47a43a476a75c16254d97dd6a885c4437a490a",
+      "bytes": 745076
+    },
+    "evidence/s12-parser-after01/go-list.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "evidence/s12-parser-after01/inputs-after-compile.json": {
+      "sha256": "3a525b631bd6c8ff3375318e753bd06bf64b1eef495de3336fde5b81173098c2",
+      "bytes": 782132
+    },
+    "evidence/s12-parser-after01/compile.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evidence/s12-parser-after01/compile.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evidence/s12-parser-after01/generated-source-map.json": {
+      "sha256": "8e1d793c06fceeb9cdecf6dd1cc43ba2665342b26e30e47d3c2958424ad0b87d",
+      "bytes": 246
+    },
+    "evidence/s12-parser-after01/tests.stdout": {
+      "sha256": "e04a4ecadfabe88d5e966b408d80eb9169df9ee35db20997d044b39e8c93ef46",
+      "bytes": 22787
+    },
+    "evidence/s12-parser-after01/inputs-before.json": {
+      "sha256": "3a525b631bd6c8ff3375318e753bd06bf64b1eef495de3336fde5b81173098c2",
+      "bytes": 782132
+    },
+    "evidence/s12-parser-after01/tests.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evidence/s12-parser-after01/tests.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "evidence/s12-parser-after01/result.json": {
+      "sha256": "f54e4521776d6bbd22f15f5ccc8fee32ee94f2d98524343a71e43162dff9a29a",
+      "bytes": 2200
+    },
+    "evidence/s12-parser-after01/go-list.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evidence/s12-s06-parser-dependent01/generated-source/ce39a2015afbc7a1388457d5cf939f0851ea8b17be91309f1f115c288e9b3dcc.go": {
+      "sha256": "ce39a2015afbc7a1388457d5cf939f0851ea8b17be91309f1f115c288e9b3dcc",
+      "bytes": 153966
+    },
+    "evidence/s12-s06-parser-dependent01/compile.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "evidence/s12-s06-parser-dependent01/inputs-after-test.json": {
+      "sha256": "e88676a9c2e2e3527d28ac55ee3751a5dcfdcfe07768b260365724a6e9493b02",
+      "bytes": 1444304
+    },
+    "evidence/s12-s06-parser-dependent01/go-list.stdout": {
+      "sha256": "dc0c6da8906ff6a9ace345e8e256c36f99aa9c62db5e485e09a905965aa4e5d2",
+      "bytes": 1414851
+    },
+    "evidence/s12-s06-parser-dependent01/go-list.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "evidence/s12-s06-parser-dependent01/inputs-after-compile.json": {
+      "sha256": "e88676a9c2e2e3527d28ac55ee3751a5dcfdcfe07768b260365724a6e9493b02",
+      "bytes": 1444304
+    },
+    "evidence/s12-s06-parser-dependent01/compile.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evidence/s12-s06-parser-dependent01/compile.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evidence/s12-s06-parser-dependent01/generated-source-map.json": {
+      "sha256": "bdf53e2dacb9f597e8c0fc2ba5fb492cb59e5bf5f78088de45a9214d470b7ca2",
+      "bytes": 246
+    },
+    "evidence/s12-s06-parser-dependent01/tests.stdout": {
+      "sha256": "509c454ec3c14a54f644e7801dee5cb5fa5e9378f17bffb55e44205a3dcbb9a3",
+      "bytes": 5038
+    },
+    "evidence/s12-s06-parser-dependent01/inputs-before.json": {
+      "sha256": "e88676a9c2e2e3527d28ac55ee3751a5dcfdcfe07768b260365724a6e9493b02",
+      "bytes": 1444304
+    },
+    "evidence/s12-s06-parser-dependent01/tests.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evidence/s12-s06-parser-dependent01/tests.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "evidence/s12-s06-parser-dependent01/result.json": {
+      "sha256": "9f23850cba27d78978f88601634219278990bc1ac3850c1b7a7a1da7e38ef5b6",
+      "bytes": 2035
+    },
+    "evidence/s12-s06-parser-dependent01/go-list.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evidence/s12-parser-source01/stderr.log": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "evidence/s12-parser-source01/stdout.json": {
+      "sha256": "8c86d061ef6c1ef5e3a20a85afdaa6edccd20915c8d2f3239872e638755ac246",
+      "bytes": 3683
+    },
+    "evidence/s12-parser-source01/result.json": {
+      "sha256": "4e67739aa160de29a6b5e1709cdeedf507e69265cc68ffc3fc6d728815640559",
+      "bytes": 509
+    },
+    "audits/s12-parser-join-source/go-regression/test01-freeze.json": {
+      "sha256": "afb5a2e181aa272f64096763fabfab24517328fd550b5d7e8aea97b084721c37",
+      "bytes": 3069
+    },
+    "audits/s12-parser-join-source/go-regression/fix01.patch": {
+      "sha256": "f9e2b5496742ed88349a31d44331ff5ee3581d6680c8f41a9f7f150168ca2268",
+      "bytes": 572
+    },
+    "audits/s12-parser-join-source/go-regression/before.json": {
+      "sha256": "b12e77db321cd0e38e8f067361db7d40dae3b13ebee17cd277a70a5fc540bfb0",
+      "bytes": 2177
+    },
+    "audits/s12-parser-join-source/go-regression/fix01-freeze.json": {
+      "sha256": "87ae96a18bd9222afe2433e22b98cce7a60b57d1f0a0bb250aecc5597b6e1685",
+      "bytes": 2394
+    },
+    "audits/s12-parser-join-source/go-regression/before-fix-torrent_helper.go": {
+      "sha256": "de943a7422c700f567d35112f069a3947ecc237b3615638c75d5767957f5ecd5",
+      "bytes": 6786
+    },
+    "audits/s12-parser-join-source/capture_parser_join.py": {
+      "sha256": "9691fc897b05f834308088b5651e5843de5cc2af0567ff90287db12394924218",
+      "bytes": 5175
+    },
+    "audits/s12-parser-join-source/collector-inputs.sha256": {
+      "sha256": "03f57e5e689f42e76d6e55c118258b6f12c28a7f1409c65ea0e7a8288bb1f950",
+      "bytes": 4274
+    },
+    "audits/s12-parser-join-source/input-bindings.json": {
+      "sha256": "fe08c0533c7bb87553de69f8437120db8cd46f6d13bc338cdef5cc6cc5e5d304",
+      "bytes": 6147
+    },
+    "audits/s12-parser-join-source/preparation-seal.json": {
+      "sha256": "26f00965cc887c379f2c2024fbdc1c905f5ffcf25866bd87b8d6d40bec06c51d",
+      "bytes": 1794
+    },
+    "light-media/internal/plugins/iyuuautoseed/torrent_helper.go": {
+      "sha256": "837f10b59390aeb07c3f8106fd41e069533ddb7be11e7b5a68e3a553885ee86d",
+      "bytes": 6787
+    },
+    "light-media/internal/plugins/iyuuautoseed/torrent_fileinfo_join_test.go": {
+      "sha256": "2240795a306790bc50ef5814226ce7259adbaa99d13003dcfb93558bdb83b709",
+      "bytes": 2281
+    }
+  },
+  "reviewer_go_source_network_execution": false,
+  "not_claimed": [
+    "18helper download scenarios rerun",
+    "current whole-package closure",
+    "new HTTP/chain bridge acceptance",
+    "race",
+    "S12.material complete"
+  ],
+  "before_to_after_closure_delta": {
+    "changed": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/iyuuautoseed/torrent_helper.go",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/shared_torrent_material.go",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/shared_torrent_material_test.go"
+    ],
+    "added": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s12-parser-after01.py"
+    ],
+    "removed": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s12-parser01.py"
+    ],
+    "note": "parallel SDK A2 changes are not parser test calls; only parser file diff is exactly one line"
+  },
+  "report": {
+    "sha256": "90cac529f1f1fe985a8db212b4f23234296bfb866dcdabc20022dd267d5a8b47",
+    "bytes": 4541
+  }
+}

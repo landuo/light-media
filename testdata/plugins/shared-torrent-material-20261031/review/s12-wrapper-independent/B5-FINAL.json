@@ -1,0 +1,140 @@
+{
+  "decision": "PASS_FINITE_B5_NONSTRING_LOG_FIX_SOURCE3_TARGET3",
+  "at_utc": "2026-10-31T19:08:26.091134+00:00",
+  "frozen_four_inputs": [
+    {
+      "path": "internal/plugins/torrentmaterial/chain.go",
+      "sha256": "710994af4ec4e700c4390828fcb1d6c823d4ec8126ff80cd78d62fc502181a75"
+    },
+    {
+      "path": "internal/plugins/torrentmaterial/chain_test.go",
+      "sha256": "fb98c9c16e728a922dfab0e98f35f69a71531ab4c9583b0e6929aaec2a3fdab8"
+    },
+    {
+      "path": "internal/plugins/torrentmaterial/testdata/source-nonstring-log.json",
+      "sha256": "e1ec49d67d042fc45e960b60645f12ffc3e32d1f451e69ceb9fcc8a55b048991"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/torrent_material_url.go",
+      "sha256": "7cb446091448526411d179567935af28fd1543c0081496a0da763099ffc4169a"
+    }
+  ],
+  "manifest_sha256": "fbcf2f30a0c637ee048234064ee7f08579fa4e3fb91f10936f5e75bbc9097da8",
+  "archive_sha256": "94d91d5e63d7abaadbbadfb71bd7d915fda0186e3a0f58c364e51f93f6c340e9",
+  "actual_gate": {
+    "directory": "evidence/s12-wrapper-b501",
+    "status": "PASS_RAW_READBACK",
+    "exact_roots": [
+      "TestDownloadTorrentActualSourceNonstringLogOrder"
+    ],
+    "subcase_passes": [
+      "TestDownloadTorrentActualSourceNonstringLogOrder/int_result_no_base",
+      "TestDownloadTorrentActualSourceNonstringLogOrder/int_result_invalid_base",
+      "TestDownloadTorrentActualSourceNonstringLogOrder/int_result_valid_http_base"
+    ],
+    "commands": [
+      {
+        "label": "go-list",
+        "argv": [
+          "go",
+          "list",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-deps",
+          "-test",
+          "-json",
+          "./internal/plugins/torrentmaterial"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "compile",
+        "argv": [
+          "go",
+          "test",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-p=1",
+          "-c",
+          "-o",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-wrapper-b501.test",
+          "./internal/plugins/torrentmaterial"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "tests",
+        "argv": [
+          "go",
+          "tool",
+          "test2json",
+          "-t",
+          "-p",
+          "./internal/plugins/torrentmaterial",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-wrapper-b501.test",
+          "-test.v",
+          "-test.run",
+          "^TestDownloadTorrentActualSourceNonstringLogOrder$",
+          "-test.count=1",
+          "-test.timeout=90s"
+        ],
+        "exit": 0
+      }
+    ],
+    "ended": "2026-10-31T19:01:56.250820+00:00",
+    "input_count": 3441,
+    "all_before_after_compile_after_test_maps_equal": true,
+    "current_missing_inputs": [],
+    "current_changed_inputs": [],
+    "program_sha256": "19e433d90df91f75d54f8bce4c90b566715a5ac934458cd47b32c1337a06abd3",
+    "raw_hashes": {
+      "result.json": "9a40c0790bc36410765efcbccf2f910d338b5dbd208dcc2327a7f1c5cca17532",
+      "inputs-before.json": "4c4f11df9d022b60c698ed9bace9d4353904263e2679fd39c5dd2c73cb376520",
+      "inputs-after-compile.json": "4c4f11df9d022b60c698ed9bace9d4353904263e2679fd39c5dd2c73cb376520",
+      "inputs-after-test.json": "4c4f11df9d022b60c698ed9bace9d4353904263e2679fd39c5dd2c73cb376520",
+      "tests.stdout": "89e5a3e6cbb7bfe48d89af4bd3435dbe87267ee76d52a62707c82ddeff563d0b",
+      "generated-source-map.json": "c0755cfda95a5d510257c9f84dac21df854d08b08345ec93be1d415b938362da"
+    },
+    "stage_resource_samples": [
+      {
+        "phase": "go-list",
+        "at": "2026-10-31T19:01:54.371329+00:00",
+        "scratch_free": 55722860544,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "compile",
+        "at": "2026-10-31T19:01:54.895768+00:00",
+        "scratch_free": 55721291776,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "tests",
+        "at": "2026-10-31T19:01:55.946134+00:00",
+        "scratch_free": 55698821120,
+        "tmp_free": 5225664512
+      }
+    ]
+  },
+  "source_acceptance_sha256": "844071c3f5fcb27c1cbd62b3ffbf311274aa169fd331c1b0011a0f9b2d9a91bd",
+  "static_acceptance_sha256": "b7320b48608c6bea74804e5aaa72db7dd14f1200a7fe245aeb0ef48dd926b4f9",
+  "closed_finding": {
+    "finding_sha256": "e820806368a69f8e9061c7af9e6e279cbb4bd530ca01c46375689473233e13ee",
+    "code": "B3_NONSTRING_RESULT_MISSING_PRE_HELPER_INFO_LOG",
+    "scope": "Three actual int123 cases: absent/originless base INFO then AttributeError; valid base AttributeError without INFO. Source3 raw preserved byte-identically."
+  },
+  "finite_semantics": [
+    "Target uses existing base parser through a thin export; base parser errors precede result-class error; no invented probe URL or str(123).",
+    "Exactly one new target root/three subcases ran; previous B3/B4 actualPASS and old finding preserved, not rewritten.",
+    "Target compares original inputs, exception class and ordered log sequence; it intentionally raises before string-only Material port. Original helper.init/download(int123) trace is not claimed equal."
+  ],
+  "not_claimed": [
+    "All non-string/surrogate/source domains",
+    "B1/B2/B3/B4 roots rerun on B5",
+    "Host logger routing/redaction/persistence",
+    "Source fullhelper/HTTP/cache or target real worker/host",
+    "App/wholeS12/race/CI/delivery"
+  ],
+  "remaining_blockers_in_recorded_finite_slice": [],
+  "reviewer_executed_no_Go_source_or_network": true
+}

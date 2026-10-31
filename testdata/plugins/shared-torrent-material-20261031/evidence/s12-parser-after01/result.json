@@ -1,0 +1,85 @@
+{
+  "started": "2026-10-31T18:01:43.182952+00:00",
+  "driver_pid": 2,
+  "package": "./internal/plugins/iyuuautoseed",
+  "pattern": "^(TestTorrentFilesSourceSeparatorRegression|TestTorrentFilesRetainedSourceProjections)$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins/iyuuautoseed"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-parser-after01.test",
+        "./internal/plugins/iyuuautoseed"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/iyuuautoseed",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-parser-after01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestTorrentFilesSourceSeparatorRegression|TestTorrentFilesRetainedSourceProjections)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T18:01:43.182970+00:00",
+      "scratch_free": 56742993920,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T18:01:43.693643+00:00",
+      "scratch_free": 56741437440,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T18:01:47.152000+00:00",
+      "scratch_free": 56701353984,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 3437,
+  "program_sha256": "120e839317203cae84a5404c17333b464339d1f58e86c6d1b7c651b3404cd74a",
+  "root_passes": [
+    "TestTorrentFilesSourceSeparatorRegression",
+    "TestTorrentFilesRetainedSourceProjections"
+  ],
+  "ended": "2026-10-31T18:01:47.363923+00:00"
+}

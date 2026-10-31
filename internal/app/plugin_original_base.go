@@ -37,10 +37,11 @@ type originalBaseConfigValue struct {
 }
 
 type originalBaseCallScope struct {
-	object       *originalPluginInstance
-	phase        string
-	installation PluginInstallation
-	logCall      originalPluginLogCall
+	object           *originalPluginInstance
+	phase            string
+	installation     PluginInstallation
+	logCall          originalPluginLogCall
+	torrentTransfers *originalTorrentTransfers // One owner per actual invocation, never per host message.
 	// validate must reject expired/replaced calls, not merely installed objects.
 	validate func(context.Context) error
 	// The host-owned recognized contract defines permitted namespace access;

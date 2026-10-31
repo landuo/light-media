@@ -1,0 +1,95 @@
+{
+  "status": "ACCEPT_ONE_RETAINED_S10_CONSUMER_COMPATIBILITY_GATE",
+  "at_utc": "2026-10-31T19:16:37.977Z",
+  "tool": {
+    "session": 48228,
+    "chunk": "55c9a3",
+    "exit": 0,
+    "source": "parent original receipt"
+  },
+  "actual": {
+    "started": "2026-10-31T19:13:05.673275+00:00",
+    "status": "PASS",
+    "kind": "one real retained S10 shared-scope incremental using current release App test program and prior accepted S10 worker as legacy-compatible consumer",
+    "app_program_sha256": "c146df20a362b2f3a60bced8d7a71bc5c82dafa3fcacfe1d5115927c3f42428c",
+    "worker_program_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+    "worker_compile_evidence": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s10-d3-fixture01",
+    "test": "TestSharedSchedulerActualRetainedSelfRemove",
+    "input_count": 6195,
+    "environment_proxy_unchanged": true,
+    "command": [
+      "go",
+      "tool",
+      "test2json",
+      "-t",
+      "-p",
+      "./internal/app",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-release-app01.test",
+      "-test.v",
+      "-test.run",
+      "^TestSharedSchedulerActualRetainedSelfRemove$",
+      "-test.count=1",
+      "-test.timeout=90s"
+    ],
+    "exit": 0,
+    "root_passes": [
+      "TestSharedSchedulerActualRetainedSelfRemove"
+    ],
+    "ended": "2026-10-31T19:13:06.595124+00:00"
+  },
+  "input_count": 6195,
+  "before_after_equal": true,
+  "current_drift": [],
+  "programs": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-release-app01.test",
+      "bytes": 90968396,
+      "sha256": "c146df20a362b2f3a60bced8d7a71bc5c82dafa3fcacfe1d5115927c3f42428c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-d3-fixture01.worker",
+      "bytes": 5254544,
+      "sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb"
+    }
+  ],
+  "verdicts": [
+    {
+      "test": "TestSharedSchedulerActualRetainedSelfRemove",
+      "status": "pass"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-release-s10-regression01/result.json",
+      "bytes": 1140,
+      "sha256": "73e1ccad6a48937209d18642522b639dd7f00a01111d6d1734a2bdb8843416f4"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-release-s10-regression01/tests.stdout",
+      "bytes": 7805,
+      "sha256": "7409b8360637de4e9726a371b56d0a968bdd3a668d4294388314504f0030b39f"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-release-s10-regression01/tests.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-release-s10-regression01/tests.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-release-s10-regression01/inputs-before.json",
+      "bytes": 1469483,
+      "sha256": "e11a5053b125f7f2804372e665df4b6328b7f24de4a3ec9e9af72b8c9fd1a717"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-release-s10-regression01/inputs-after-test.json",
+      "bytes": 1469483,
+      "sha256": "e11a5053b125f7f2804372e665df4b6328b7f24de4a3ec9e9af72b8c9fd1a717"
+    }
+  ],
+  "boundary": "Current release App program reused exactly; prior accepted S10 worker reused as a legacy-compatible actual consumer, not rebuilt against current SDK. Only retained self-remove/shared-scope root, not a rerun of S10 original8/fullmatrix.",
+  "reviewer_executed_go_network": false
+}

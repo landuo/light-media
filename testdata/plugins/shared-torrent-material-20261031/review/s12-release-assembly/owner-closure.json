@@ -1,0 +1,129 @@
+{
+  "status": "OWNER_STATIC_CLOSURE_ACCEPTED_RUNTIME_GATES_PENDING",
+  "base": "760720ed0a96fd9e7a647914c14545bde5ef857e",
+  "candidate": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media",
+  "whitelist_sha256": "8e21a8f358ddca1fd2ae55cbcd18e75221056544170dc660943dd098ee89d953",
+  "protected_after_sha256": "2ad9032a4a1d1b1733ad08966214c1fda7a33273f2579101ad8168b1fb263295",
+  "path_count": 25,
+  "tracked_modified": 7,
+  "new_paths": 18,
+  "exact_status_matches_whitelist": true,
+  "all25_exact_sha_and_size": true,
+  "no_index_changes": true,
+  "diff_check_clean": true,
+  "s06_exclusions": [
+    {
+      "path": "internal/plugins/shared_download_history.go",
+      "exists": false
+    },
+    {
+      "path": "internal/plugins/shared_download_history_test.go",
+      "exists": false
+    },
+    {
+      "path": "internal/app/plugin_shared_download_history_snapshot.go",
+      "exists": false
+    },
+    {
+      "path": "internal/app/plugin_shared_download_history_snapshot_test.go",
+      "exists": false
+    }
+  ],
+  "reused_base_dependencies": [
+    {
+      "path": "internal/plugins/shared_history.go",
+      "sha256": "0c9583304284b1f88b130216ebab7afe387b183e6f0f8998c9571e30070bda77",
+      "base_blob_unchanged": true
+    },
+    {
+      "path": "internal/app/plugin_shared_history_decode.go",
+      "sha256": "eee54a55cfdc689a312c54930a24461b9a1c7b88b66aa22454d18a7d7c6668d1",
+      "base_blob_unchanged": true
+    },
+    {
+      "path": "internal/app/plugin_shared_ocr.go",
+      "sha256": "0230ce35f9884c4f48b5cea3852cc6ec893ea599a419f07d60a407efa61542a1",
+      "base_blob_unchanged": true
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/torrent_bencode.go",
+      "sha256": "6453421b20cdf057926e443c5e4203c5d45d70f5b4a9b50de140277ad5f42af8",
+      "base_blob_unchanged": true
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/urljoin.go",
+      "sha256": "7db476f5424e567e8f2b783bfaa3de51734e47842d92472d1cf1a6f018701e8e",
+      "base_blob_unchanged": true
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/file_cache.go",
+      "sha256": "d707a6eaa2f5e78e0cf8f7874c8cec8caa45efb59b94c906e51dc4746cc0114c",
+      "base_blob_unchanged": true
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/reference/torrent-helper-oracle.json",
+      "sha256": "0af5deb44232b264a2624cee6a46e93e295a5fca68fb412326723bccf34c406e",
+      "base_blob_unchanged": true
+    }
+  ],
+  "localImports": [
+    {
+      "import": "light-media/internal/catalog",
+      "directory_present": true
+    },
+    {
+      "import": "light-media/internal/jinja/exec",
+      "directory_present": true
+    },
+    {
+      "import": "light-media/internal/media/words",
+      "directory_present": true
+    },
+    {
+      "import": "light-media/internal/networkproxy",
+      "directory_present": true
+    },
+    {
+      "import": "light-media/internal/ocr",
+      "directory_present": true
+    },
+    {
+      "import": "light-media/internal/plugins",
+      "directory_present": true
+    },
+    {
+      "import": "light-media/internal/plugins/autosignin",
+      "directory_present": true
+    },
+    {
+      "import": "light-media/internal/plugins/iyuuautoseed",
+      "directory_present": true
+    },
+    {
+      "import": "light-media/internal/plugins/iyuuautoseed/compat/urlprep",
+      "directory_present": true
+    },
+    {
+      "import": "light-media/internal/plugins/torrentmaterial",
+      "directory_present": true
+    },
+    {
+      "import": "light-media/internal/releasemeta/legacyanime",
+      "directory_present": true
+    },
+    {
+      "import": "light-media/internal/requestsjson",
+      "directory_present": true
+    },
+    {
+      "import": "light-media/internal/rsscontext",
+      "directory_present": true
+    },
+    {
+      "import": "light-media/internal/sourcejson",
+      "directory_present": true
+    }
+  ],
+  "scope": "S12 material SDK/host/cache/transport plus exact parser separator/order/KeyError fixes and their tests; AGENTS recovery protection only. No S06 history implementation, UI, migration/ledger edit, binary, database or credential path in the 25-file candidate.",
+  "limits": "Owner review, not independent source acceptance. Does not claim full build or runtime pass: coordinator serial release window 99749 owns fixture/App4/race2/server gates. Original 19-case/five-node collectors are partial source executions as previously documented."
+}

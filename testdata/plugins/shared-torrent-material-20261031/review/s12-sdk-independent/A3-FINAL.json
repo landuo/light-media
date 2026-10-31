@@ -1,0 +1,155 @@
+{
+  "decision": "PASS_FINITE_A3_SOURCE_EXCEPTION_SDK_DELTA_AND_CURRENT_THREE_ROOTS",
+  "at_utc": "2026-10-31T18:32:51.519530+00:00",
+  "current_two_inputs": [
+    {
+      "path": "internal/plugins/shared_torrent_material.go",
+      "sha256": "c6fb708aaa0965327a376490f997cd6d23415a46f4915e9817e132bcd46ab382"
+    },
+    {
+      "path": "internal/plugins/shared_torrent_material_test.go",
+      "sha256": "5bfefaf32da41d1a89ad6909c576833913a3186236cbb9755ffd066de4498320"
+    }
+  ],
+  "archive_sha256": "60e6219e224b1bc5a3d61fd7f2753eccd82bb1e6f08193176cd5d002396c81aa",
+  "manifest_sha256": "e814c638afb8333fcf2f661856214a3f14faf467fd3b8fb786be0d530ee0ed31",
+  "actual_gate": {
+    "directory": "evidence/s12-sdk03",
+    "status": "PASS_RAW_READBACK",
+    "layer": "Synthetic recording HostCaller only",
+    "roots": [
+      "TestSharedDownloadTorrentWireAndBoundary",
+      "TestSharedDownloadTorrentPagedBytesAndCleanup",
+      "TestSharedDownloadTorrentSourceExceptionEnvelope"
+    ],
+    "seven_class_subcases": [
+      "Error",
+      "JSONDecodeError",
+      "UnicodeDecodeError",
+      "UnicodeEncodeError",
+      "AttributeError",
+      "TypeError",
+      "ValueError"
+    ],
+    "old_two_roots_actually_rerun": true,
+    "commands": [
+      {
+        "label": "go-list",
+        "argv": [
+          "go",
+          "list",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-deps",
+          "-test",
+          "-json",
+          "./internal/plugins"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "compile",
+        "argv": [
+          "go",
+          "test",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-p=1",
+          "-c",
+          "-o",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-sdk03.test",
+          "./internal/plugins"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "tests",
+        "argv": [
+          "go",
+          "tool",
+          "test2json",
+          "-t",
+          "-p",
+          "./internal/plugins",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-sdk03.test",
+          "-test.v",
+          "-test.run",
+          "^TestSharedDownloadTorrent(WireAndBoundary|PagedBytesAndCleanup|SourceExceptionEnvelope)$",
+          "-test.count=1",
+          "-test.timeout=90s"
+        ],
+        "exit": 0
+      }
+    ],
+    "ended": "2026-10-31T18:30:48.757190+00:00",
+    "input_count": 1924,
+    "all_before_after_current_bindings_equal": true,
+    "program_sha256": "1f827f6c54b88311081e4117a0d8b15a9bd6c2d5627cf633e19bc5bb6ee0b152",
+    "raw_hashes": {
+      "result.json": "005b87b09920be561b7a698f24e0e9ee4e90b2ec38f615b60cea1adab000692e",
+      "inputs-before.json": "235b746ff7fac41eab280b95754ff14a7ec4f96b96d93624abf2f96f924ac994",
+      "inputs-after-compile.json": "235b746ff7fac41eab280b95754ff14a7ec4f96b96d93624abf2f96f924ac994",
+      "inputs-after-test.json": "235b746ff7fac41eab280b95754ff14a7ec4f96b96d93624abf2f96f924ac994",
+      "tests.stdout": "d2655b32a5faaa0f0d8ff3194b0c095124b6206a2dbdb267e5241321f6489a85",
+      "generated-source-map.json": "021e8c7b25f7fb72ce127d0c5938be33c0d94acf6522a94a9708774ce66203b8"
+    },
+    "stage_resource_samples": [
+      {
+        "phase": "go-list",
+        "at": "2026-10-31T18:30:45.852763+00:00",
+        "scratch_free": 56285208576,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "compile",
+        "at": "2026-10-31T18:30:46.155979+00:00",
+        "scratch_free": 56284364800,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "tests",
+        "at": "2026-10-31T18:30:48.315719+00:00",
+        "scratch_free": 56268529664,
+        "tmp_free": 5225664512
+      }
+    ]
+  },
+  "classification_basis": {
+    "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "source_method": "app/chain/download.py:65-84,658-783",
+    "actually_observed_in_source19": [
+      {
+        "case": "bad_base64_error",
+        "class": "Error"
+      },
+      {
+        "case": "bad_json_error",
+        "class": "JSONDecodeError"
+      }
+    ],
+    "source19_raw_sha256": "6e654f82a7e3099eadcde59b38ab9b12c7a8a6b2cc5e1e3909a4a7e1d528e5c6",
+    "static_only_not_source_runtime_observed": {
+      "UnicodeDecodeError": "Descriptor base64 bytes decoded as strict UTF8.",
+      "UnicodeEncodeError": "Descriptor/result strings reaching UTF8 encoding, e.g. urlencode of escaped surrogate data.",
+      "AttributeError": "Non-object JSON at .get or non-string URL string-method/parsing branch.",
+      "TypeError": "Unhashable JSON key passed to .get/dict-key query construction or incompatible argument type.",
+      "ValueError": "URL parse normalization validation, including invalid bracketed authority."
+    }
+  },
+  "envelope_review": [
+    "Decoder accepts only finite class as typed DownloadTorrentSourceError; emitted Error text consists of fixed prefix and whitelisted class, not source message/body/URL/traceback.",
+    "Accepted source_error has exactly2 decoded fields; tuple/handle/total/digest/text mixed fields are rejected, source_error in other kinds is rejected, missing/null/unknown class rejected.",
+    "Valid exception envelope has no handle, so only one prepare call and no read/release; all7 class subcases assert calls==1.",
+    "Malformed mixed envelope containing syntactically valid handle still invokes existing best-effort allocation cleanup, but cannot become accepted typed source error. This preserves previous malformed-result cleanup rather than reviving authority.",
+    "Host/transport failure and cancellation remain ordinary errors; not reclassified as source exceptions.",
+    "Original two tests/helper text unchanged, but decoder changed: both were actually rerun here rather than merely inherited."
+  ],
+  "remaining_blockers_in_this_finite_slice": [],
+  "not_claimed": [
+    "Additional5 exception classes actually observed in original source19",
+    "Actual host exception classification integration or real worker/wire",
+    "Scope authorization/transfer lifecycle/HTTP/source notification/cache",
+    "FullS12/allPythonexceptions/arbitrary-size parity/race/CI/delivery"
+  ],
+  "reviewer_executed_no_Go_source_or_network": true
+}

@@ -1,0 +1,92 @@
+{
+  "started": "2026-10-31T18:39:00.524919+00:00",
+  "driver_pid": 2,
+  "package": "./internal/plugins/iyuuautoseed",
+  "pattern": "^(TestInstalledTorrentHelperOracle|TestTorrentFirstDownloadPreservesSourceFormOrder)$/^(first-valid|first-bad|first-no-input|first-500|first-valid-bencode-no-files)$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins/iyuuautoseed"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-ordered-helper01.test",
+        "./internal/plugins/iyuuautoseed"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/iyuuautoseed",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-ordered-helper01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestInstalledTorrentHelperOracle|TestTorrentFirstDownloadPreservesSourceFormOrder)$/^(first-valid|first-bad|first-no-input|first-500|first-valid-bencode-no-files)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T18:39:00.524935+00:00",
+      "scratch_free": 56198004736,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T18:39:01.062805+00:00",
+      "scratch_free": 56196407296,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T18:39:03.995174+00:00",
+      "scratch_free": 56159014912,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 3441,
+  "program_sha256": "b8935fbd81467f54b1c8825d21803c30ad282a34f38641a9cb55746f335bc9c8",
+  "root_passes": [
+    "TestTorrentFirstDownloadPreservesSourceFormOrder",
+    "TestInstalledTorrentHelperOracle"
+  ],
+  "subcase_passes": [
+    "TestInstalledTorrentHelperOracle/first-valid",
+    "TestInstalledTorrentHelperOracle/first-bad",
+    "TestInstalledTorrentHelperOracle/first-no-input",
+    "TestInstalledTorrentHelperOracle/first-500",
+    "TestInstalledTorrentHelperOracle/first-valid-bencode-no-files"
+  ],
+  "ended": "2026-10-31T18:39:04.190105+00:00"
+}

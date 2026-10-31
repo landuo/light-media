@@ -1,0 +1,200 @@
+{
+  "status": "ACTUAL_APP03_SINGLE_ROOT_PASS_NORMAL_COMBINATION_THREE_PLUS_ONE",
+  "at_utc": "2026-10-31T19:07:50.808Z",
+  "tool": {
+    "session": 1225,
+    "chunk": "56df31",
+    "exit": 0,
+    "authority": "coordinator original tool receipt message"
+  },
+  "actual": {
+    "started": "2026-10-31T19:06:09.752959+00:00",
+    "driver_pid": 2,
+    "package": "./internal/app",
+    "pattern": "^TestSharedTorrentMaterialCurrentGuardAndCancellation$",
+    "race": false,
+    "status": "PASS",
+    "commands": [
+      {
+        "label": "go-list",
+        "argv": [
+          "go",
+          "list",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-deps",
+          "-test",
+          "-json",
+          "./internal/app"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "compile",
+        "argv": [
+          "go",
+          "test",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-p=1",
+          "-c",
+          "-o",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-app03.test",
+          "./internal/app"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "tests",
+        "argv": [
+          "go",
+          "tool",
+          "test2json",
+          "-t",
+          "-p",
+          "./internal/app",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-app03.test",
+          "-test.v",
+          "-test.run",
+          "^TestSharedTorrentMaterialCurrentGuardAndCancellation$",
+          "-test.count=1",
+          "-test.timeout=90s"
+        ],
+        "exit": 0
+      }
+    ],
+    "environment_proxy_unchanged": true,
+    "resource_samples": [
+      {
+        "phase": "go-list",
+        "at": "2026-10-31T19:06:09.752978+00:00",
+        "scratch_free": 55644590080,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "compile",
+        "at": "2026-10-31T19:06:10.916472+00:00",
+        "scratch_free": 55641538560,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "tests",
+        "at": "2026-10-31T19:06:38.122122+00:00",
+        "scratch_free": 55479697408,
+        "tmp_free": 5225664512
+      }
+    ],
+    "input_count": 6197,
+    "program_sha256": "6f7f6879d2b46be31c85d077935d799f1f03f8871cdb821ad1488e66f822f499",
+    "root_passes": [
+      "TestSharedTorrentMaterialCurrentGuardAndCancellation"
+    ],
+    "ended": "2026-10-31T19:06:38.760001+00:00"
+  },
+  "closure": {
+    "count": 6197,
+    "before_compile_test_equal": true,
+    "current_drift": []
+  },
+  "generated": [
+    {
+      "original": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/91/91b078eee348dc39fc63b213551325907c45c9d11b300c85493e2c1088a5677e-d",
+      "copy": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-app03/generated-source/91b078eee348dc39fc63b213551325907c45c9d11b300c85493e2c1088a5677e.go",
+        "bytes": 154672,
+        "sha256": "91b078eee348dc39fc63b213551325907c45c9d11b300c85493e2c1088a5677e"
+      },
+      "matches": true
+    }
+  ],
+  "verdicts": [
+    {
+      "root": "TestSharedTorrentMaterialCurrentGuardAndCancellation",
+      "status": "pass"
+    }
+  ],
+  "program": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-app03.test",
+    "bytes": 91032819,
+    "sha256": "6f7f6879d2b46be31c85d077935d799f1f03f8871cdb821ad1488e66f822f499"
+  },
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-app03/result.json",
+      "bytes": 2010,
+      "sha256": "51389f4c78f5eef320e832d829efbcb63089630fa445bae369ac9ad32cd647e5"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-app03/tests.stdout",
+      "bytes": 12200,
+      "sha256": "42ee49871a0e43fe28fd6bf1f11f1df0802006695c5bbc4df6dc0b3157696e43"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-app03/tests.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-app03/tests.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-app03/compile.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-app03/inputs-before.json",
+      "bytes": 1447436,
+      "sha256": "8014f13703909a7de7cd3dd56b18ea5cde12edc9072adbfd471afdfb074df0be"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-app03/inputs-after-compile.json",
+      "bytes": 1447436,
+      "sha256": "8014f13703909a7de7cd3dd56b18ea5cde12edc9072adbfd471afdfb074df0be"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-app03/inputs-after-test.json",
+      "bytes": 1447436,
+      "sha256": "8014f13703909a7de7cd3dd56b18ea5cde12edc9072adbfd471afdfb074df0be"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-app03/go-list.stdout",
+      "bytes": 1423480,
+      "sha256": "8c5cae892d3b32d9a95d522674cda5dccca27935a59fc9d8cda0b1c283976679"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-app03/generated-source-map.json",
+      "bytes": 246,
+      "sha256": "feed79c2b80218ead9c0e4ede13edf5ed2b58cde05c4042da0454bdc6bd0a540"
+    }
+  ],
+  "semantic_result": "Actual configured-site mutation rejects stale material with no stale cache; same persistent worker recovers. Outer caller cancellation follows delivered legacy serial bounded-drain: released owned response completes bytes/cache, cancelled outer HTTP rejected502, subsequent same-PID call reads exact cached bytes and expired previous callback is denied. Not immediate cancellation propagation.",
+  "normal_inheritance": {
+    "source_gate": "s12-app02",
+    "roots": [
+      "TestSharedTorrentMaterialActualWorkerValuesAuthorityRecovery",
+      "TestSharedTorrentMaterialCacheColdAndFailureHistory",
+      "TestSharedTorrentMaterialFullBytesActualWorker"
+    ],
+    "proof": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-host-independent/candidate04-static-independent.json",
+      "bytes": 2668,
+      "sha256": "5373d66cb81627cd592958245699951c7305470b8e553f70b60764a37a1af47f"
+    },
+    "prior_root_prefix_bytes": 24659,
+    "note": "Three original PASS verdicts retained with byte-identical functions/helpers and unchanged production inputs; no claim they were rerun in App03 or that old whole testfile/closure equals current."
+  },
+  "original_failures_preserved": [
+    "s12-app01 compilePASS/fourFAIL",
+    "s12-app02 compilePASS/threePASS/oneFAIL"
+  ],
+  "boundary": [
+    "Serial normal worker fixture02, not a concurrent worker cancellation gate.",
+    "Only three pre-command resource samples, no continuous or terminal sampled floor claim.",
+    "Proxy environment inherited in actual runner with no clearing; no cross-exec full environment equality claim.",
+    "No CLI/race result claimed by this normal readback."
+  ],
+  "reviewer_ran_go_source_network": false
+}

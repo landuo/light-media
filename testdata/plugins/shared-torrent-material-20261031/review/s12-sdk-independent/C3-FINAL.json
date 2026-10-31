@@ -1,0 +1,134 @@
+{
+  "decision": "PASS_FINITE_C3_SDK_KEYERROR_ALLOWLIST_INCREMENT",
+  "at_utc": "2026-10-31T19:08:26.091134+00:00",
+  "frozen_sdk_inputs": [
+    {
+      "path": "internal/plugins/shared_torrent_material.go",
+      "sha256": "99638bc7e731e612413ea2ad78e2b3f9faa5371a9e4891c1da65752df5855a6f"
+    },
+    {
+      "path": "internal/plugins/shared_torrent_material_test.go",
+      "sha256": "c2dde86989eb64175f21e095109573fea20fa8e01483101b6137095c085285db"
+    }
+  ],
+  "manifest_sha256": "60b1b6d55c60946e0c670643a4c96a12a5482e41da6e110f7d375f33cc6fefe6",
+  "archive_sha256": "68244ff8074cc4fd38e3d5cde34c387fd0b8eca3718106dd5ce8671d89ad6e02",
+  "actual_gate": {
+    "directory": "evidence/s12-sdk-c301",
+    "status": "PASS_RAW_READBACK",
+    "exact_roots": [
+      "TestSharedDownloadTorrentSourceExceptionEnvelope"
+    ],
+    "subcase_passes": [
+      "TestSharedDownloadTorrentSourceExceptionEnvelope/Error",
+      "TestSharedDownloadTorrentSourceExceptionEnvelope/JSONDecodeError",
+      "TestSharedDownloadTorrentSourceExceptionEnvelope/UnicodeDecodeError",
+      "TestSharedDownloadTorrentSourceExceptionEnvelope/UnicodeEncodeError",
+      "TestSharedDownloadTorrentSourceExceptionEnvelope/AttributeError",
+      "TestSharedDownloadTorrentSourceExceptionEnvelope/TypeError",
+      "TestSharedDownloadTorrentSourceExceptionEnvelope/ValueError",
+      "TestSharedDownloadTorrentSourceExceptionEnvelope/KeyError"
+    ],
+    "commands": [
+      {
+        "label": "go-list",
+        "argv": [
+          "go",
+          "list",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-deps",
+          "-test",
+          "-json",
+          "./internal/plugins"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "compile",
+        "argv": [
+          "go",
+          "test",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-p=1",
+          "-c",
+          "-o",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-sdk-c301.test",
+          "./internal/plugins"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "tests",
+        "argv": [
+          "go",
+          "tool",
+          "test2json",
+          "-t",
+          "-p",
+          "./internal/plugins",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-sdk-c301.test",
+          "-test.v",
+          "-test.run",
+          "^TestSharedDownloadTorrentSourceExceptionEnvelope$",
+          "-test.count=1",
+          "-test.timeout=90s"
+        ],
+        "exit": 0
+      }
+    ],
+    "ended": "2026-10-31T19:02:01.875404+00:00",
+    "input_count": 1924,
+    "all_before_after_compile_after_test_maps_equal": true,
+    "current_missing_inputs": [],
+    "current_changed_inputs": [],
+    "program_sha256": "75e397f04c9d5dbfcce54c3d2c9c24a10027459b6b59acefc7604becb1b352af",
+    "raw_hashes": {
+      "result.json": "26562e938c9acc9b06333865020bd615bac831bd46c15522d999ad96444010f6",
+      "inputs-before.json": "20d50b5c68018d55d5c6a452ce53147121874df26560e3a15fdafd26d5d2a46a",
+      "inputs-after-compile.json": "20d50b5c68018d55d5c6a452ce53147121874df26560e3a15fdafd26d5d2a46a",
+      "inputs-after-test.json": "20d50b5c68018d55d5c6a452ce53147121874df26560e3a15fdafd26d5d2a46a",
+      "tests.stdout": "7ea28cdbc7cf36909a555d9e84b87406e37ee6b1b601fe3af8a5bd7db3a3575e",
+      "generated-source-map.json": "021e8c7b25f7fb72ce127d0c5938be33c0d94acf6522a94a9708774ce66203b8"
+    },
+    "stage_resource_samples": [
+      {
+        "phase": "go-list",
+        "at": "2026-10-31T19:01:59.324222+00:00",
+        "scratch_free": 55661707264,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "compile",
+        "at": "2026-10-31T19:01:59.596112+00:00",
+        "scratch_free": 55660888064,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "tests",
+        "at": "2026-10-31T19:02:01.725772+00:00",
+        "scratch_free": 55645052928,
+        "tmp_free": 5225664512
+      }
+    ]
+  },
+  "source_observation": {
+    "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "raw_sha256": "cb6f11b12b14bff10655685abf5b1b4db31e0025831eeac9689ad9b1cb0d71f3",
+    "independent_seal_sha256": "86c7e4f244b134e06e15849a081e49b4bc54d014be92f244eb77314df484dfe3",
+    "actual_scope": "Selected unchanged original redirect while AST with owned truthy301/302 and absent Location. Actual KeyError at source torrent.py:111. Not full helper/Requests/HTTP/cache.",
+    "target_intersection": "Helper target new root actually301/absent-map only; prepared from fixed source before new source observation, not generated-from-source differential."
+  },
+  "static_delta": "Only add KeyError literal to finite whitelist and controlled source-envelope root class list; all other SDK parser/cleanup and test bodies unchanged from A3.",
+  "runtime_credit": "One source-exception root with8class subcases actuallyPASS; each has exactly1prepare and typed safe class. Existing malformed/null/private-class/mixed-envelope cases remain in this executed root.",
+  "prior_A3_seal_sha256": "11ee8accb90faa5abc96497832968358cfc044b87932a997020535333c902baa",
+  "not_claimed": [
+    "Wire/paged roots freshly rerun after C3",
+    "All8classes original runtime observations from this KeyError source loop",
+    "Actual worker-to-host classified exception integration",
+    "WholeS12/race/CI/delivery"
+  ],
+  "remaining_blockers_in_recorded_finite_slice": [],
+  "reviewer_executed_no_Go_source_or_network": true
+}

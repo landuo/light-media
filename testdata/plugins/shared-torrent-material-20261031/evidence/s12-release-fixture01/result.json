@@ -1,0 +1,181 @@
+{
+  "started": "2026-10-31T19:09:06.623814+00:00",
+  "status": "PASS",
+  "kind": "normal+denied ownedfixture compile and --manifest only; notactualHostcall",
+  "driver_pid": 6,
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-json",
+        "./cmd/owned-torrent-material-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "build-normal",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-release-fixture01.worker",
+        "./cmd/owned-torrent-material-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "manifest-normal",
+      "argv": [
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-release-fixture01.worker",
+        "--manifest"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "build-denied",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-release-fixture01.denied.worker",
+        "-ldflags",
+        "-X main.fixtureDenied=true",
+        "./cmd/owned-torrent-material-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "manifest-denied",
+      "argv": [
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-release-fixture01.denied.worker",
+        "--manifest"
+      ],
+      "exit": 0
+    }
+  ],
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T19:09:06.623829+00:00",
+      "scratch_free": 54901342208,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "build-normal",
+      "at": "2026-10-31T19:09:06.802742+00:00",
+      "scratch_free": 54900637696,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "manifest-normal",
+      "at": "2026-10-31T19:09:08.802588+00:00",
+      "scratch_free": 54883868672,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "build-denied",
+      "at": "2026-10-31T19:09:08.820802+00:00",
+      "scratch_free": 54883860480,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "manifest-denied",
+      "at": "2026-10-31T19:09:09.178263+00:00",
+      "scratch_free": 54878257152,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 1083,
+  "normal_program_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+  "normal_manifest": {
+    "schema_version": 1,
+    "plugin_id": "OwnedTorrentMaterial",
+    "name": "Owned torrent material SDK fixture",
+    "version": "1.0",
+    "runtime": "go-executable",
+    "entry": "owned-torrent-material-sdk-fixture",
+    "host_api_min": 1,
+    "host_api_max": 1,
+    "methods": [
+      "init",
+      "get_state",
+      "get_service",
+      "get_command",
+      "get_api",
+      "get_form",
+      "get_page",
+      "get_render_mode",
+      "snapshot",
+      "http",
+      "close",
+      "stop_service",
+      "stop"
+    ],
+    "capabilities": [
+      "chain.download.download_torrent"
+    ],
+    "apis": [
+      {
+        "key": "material",
+        "path": "/material",
+        "methods": [
+          "POST"
+        ],
+        "auth": "bear",
+        "body": "json",
+        "body_required": true
+      }
+    ]
+  },
+  "denied_program_sha256": "71fb9ac97ad4628bf685b098346852566d123f27455ea0eebc483f0158b6d0be",
+  "denied_manifest": {
+    "schema_version": 1,
+    "plugin_id": "OwnedTorrentMaterialDenied",
+    "name": "Owned torrent material SDK fixture",
+    "version": "1.0",
+    "runtime": "go-executable",
+    "entry": "owned-torrent-material-sdk-fixture-no-cap",
+    "host_api_min": 1,
+    "host_api_max": 1,
+    "methods": [
+      "init",
+      "get_state",
+      "get_service",
+      "get_command",
+      "get_api",
+      "get_form",
+      "get_page",
+      "get_render_mode",
+      "snapshot",
+      "http",
+      "close",
+      "stop_service",
+      "stop"
+    ],
+    "capabilities": [],
+    "apis": [
+      {
+        "key": "material",
+        "path": "/material",
+        "methods": [
+          "POST"
+        ],
+        "auth": "bear",
+        "body": "json",
+        "body_required": true
+      }
+    ]
+  },
+  "ended": "2026-10-31T19:09:09.228416+00:00"
+}

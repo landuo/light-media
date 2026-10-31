@@ -1,0 +1,120 @@
+{
+  "decision": "ACCEPT_CANDIDATE02_FINITE_PRIVATE_MATERIAL_TRANSPORT_NORMAL13_RACE2",
+  "at_utc": "2026-10-31T18:36:23.291500+00:00",
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-transport-plan/candidate02.json",
+    "bytes": 4244,
+    "sha256": "376799fddbb621f4f74667a8a8e2e2da3189035deb1e26303eb912796c98a19c"
+  },
+  "owned_files_current": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/autosignin/http_transport.go",
+      "bytes": 22431,
+      "sha256": "98e5a16d9f508b2dfe0153bb9f71a76fe9660a8c94c8dbe1e7eba30307b86706"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/autosignin/ordinary_material_transport.go",
+      "bytes": 12859,
+      "sha256": "fd90dba247caa1762fd9d44b8faa97433d81106d9779a16dea9f77205b3c58ec"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/plugins/autosignin/ordinary_material_transport_test.go",
+      "bytes": 15829,
+      "sha256": "986619c497cd357ec39aa84b47b5c93254c9dc63b3b07c0d9ebf14815a43c29d"
+    }
+  ],
+  "review": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-transport-independent/FINAL-REVIEW.md",
+    "bytes": 4301,
+    "sha256": "5b5a13232c76f36771284c5bd5a8edd49eb6438f2fc7aded40f6b5e3bcbeaff7"
+  },
+  "bindings": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-transport-independent/SOURCE-PRELIMINARY.md",
+      "bytes": 4804,
+      "sha256": "b47e1299888aa452eee4e2c4b889fc5a5d1f1ac063bf01925d083fc08470d0e6"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-transport-independent/source-preliminary-bindings.json",
+      "bytes": 3775,
+      "sha256": "4e90a11a7eb546379a050b3f96f38feffc0cc5d64385dafca44b20d185fbf3fe"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-transport-independent/checkpoint01-preliminary.json",
+      "bytes": 4140,
+      "sha256": "6800cfb65dc3487e9bbf821e87a2f9a2b260b9d7bfbc87e2a0995b9714f75f9d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-transport-independent/CANDIDATE02-STATIC.md",
+      "bytes": 2914,
+      "sha256": "fff4884d4b23ea97b3c6409ccd263710bd75974b96fdc20fae1a54935b0bcc32"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-transport-independent/candidate02-static-independent.json",
+      "bytes": 4838,
+      "sha256": "8f9f168616538af3971b19ea39af9c354f85b8f7066586ec7f15bc8e423baf51"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-transport-independent/normal01-terminal-independent.json",
+      "bytes": 11550,
+      "sha256": "aa7adc08079931696b46deabc6661719d3faaeefce095cf28ab5cc0edccc0a09"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-transport-independent/race01-terminal-independent.json",
+      "bytes": 8029,
+      "sha256": "5967c8da8c67154ee468ae0473e24d43ce75ace2b639626c3a1dfca6cd6d9423"
+    }
+  ],
+  "normal": {
+    "evidence": "evidence/s12-transport01",
+    "roots": [
+      "TestBoundSiteTransportNoCrossOriginAndStrictTLS",
+      "TestBoundSiteTransportIdleCancellationAndBounds",
+      "TestBoundSiteTransportSlowHeadersAreIdleNotTotal",
+      "TestOrdinaryMaterialQueryHeadersAndResponse",
+      "TestOrdinaryMaterialSourceTLSAndProxyIsolation",
+      "TestOrdinaryMaterialRedirectCredentialsAndMethods",
+      "TestOrdinaryMaterialBodyLimitsAndBinary",
+      "TestOrdinaryMaterialGuardCancellationAndClose",
+      "TestOrdinaryOCRFullBodyNativeLimitRetained",
+      "TestOrdinaryOCRCancellationAndDecodeErrors",
+      "TestOrdinaryOCRSourceTLSIsIsolated",
+      "TestOrdinaryOCRCredentialRedirectAndNativeRemainDenied",
+      "TestOrdinaryOCRRedirectGuardsAndURLCredentials"
+    ],
+    "input_count": 2958,
+    "program": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-transport01.test",
+      "bytes": 18860946,
+      "sha256": "e757aa2a6a681bef77cf86ebfec81435b1dd38fbb6a63f234fcd73d41aa54d03"
+    }
+  },
+  "race": {
+    "evidence": "evidence/s12-transport-race01",
+    "roots": [
+      "TestOrdinaryMaterialRedirectCredentialsAndMethods",
+      "TestOrdinaryMaterialGuardCancellationAndClose"
+    ],
+    "input_count": 2967,
+    "program": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-transport-race01.test",
+      "bytes": 24124721,
+      "sha256": "bfddfa6ee9fdd7be6a01ac002bb7c8fead23d92400dd1c8e3bb295a74dcb7959"
+    }
+  },
+  "open_consumer_handoff": [
+    "host integration authority/env wiring",
+    "SDK 16MiB logical material transport",
+    "persistent cache/notification delivery/cold process",
+    "source form order upstream map-only helper difference"
+  ],
+  "no_claim": [
+    "complete S12",
+    "real Python HTTP differential",
+    "all codecs/proxy paths/combined CONNECT",
+    "all-package race",
+    "whole current tree suite",
+    "continuous disk reserve or cross-exec environment identity"
+  ],
+  "reviewer_product_ledger_go_network_write_or_execution": false
+}

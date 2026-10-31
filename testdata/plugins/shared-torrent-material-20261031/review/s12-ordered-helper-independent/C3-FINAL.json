@@ -1,0 +1,125 @@
+{
+  "decision": "PASS_FINITE_C3_HELPER_MISSING_LOCATION_INCREMENT",
+  "at_utc": "2026-10-31T19:08:26.091134+00:00",
+  "frozen_helper_inputs": [
+    {
+      "path": "internal/plugins/iyuuautoseed/torrent_helper.go",
+      "sha256": "9f84675f2757e0baf9bed0cd106b5717d260a3fd29d1d6347dabc62d13300796"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/torrent_form_order_test.go",
+      "sha256": "d10f6f2765602dc6a89fe865fed9c93ee55db9f7b75786263f6f5bdfaf2048dc"
+    }
+  ],
+  "manifest_sha256": "60b1b6d55c60946e0c670643a4c96a12a5482e41da6e110f7d375f33cc6fefe6",
+  "archive_sha256": "68244ff8074cc4fd38e3d5cde34c387fd0b8eca3718106dd5ce8671d89ad6e02",
+  "actual_gate": {
+    "directory": "evidence/s12-helper-c301",
+    "status": "PASS_RAW_READBACK",
+    "exact_roots": [
+      "TestTorrentRedirectMissingLocationSourceException"
+    ],
+    "subcase_passes": [],
+    "commands": [
+      {
+        "label": "go-list",
+        "argv": [
+          "go",
+          "list",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-deps",
+          "-test",
+          "-json",
+          "./internal/plugins/iyuuautoseed"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "compile",
+        "argv": [
+          "go",
+          "test",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-p=1",
+          "-c",
+          "-o",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-helper-c301.test",
+          "./internal/plugins/iyuuautoseed"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "tests",
+        "argv": [
+          "go",
+          "tool",
+          "test2json",
+          "-t",
+          "-p",
+          "./internal/plugins/iyuuautoseed",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-helper-c301.test",
+          "-test.v",
+          "-test.run",
+          "^TestTorrentRedirectMissingLocationSourceException$",
+          "-test.count=1",
+          "-test.timeout=90s"
+        ],
+        "exit": 0
+      }
+    ],
+    "ended": "2026-10-31T19:01:59.274280+00:00",
+    "input_count": 3440,
+    "all_before_after_compile_after_test_maps_equal": true,
+    "current_missing_inputs": [],
+    "current_changed_inputs": [],
+    "program_sha256": "3d8a7ff68836a7e77313976ca2a793b3b6df7489ae78e0978da0faf20743d655",
+    "raw_hashes": {
+      "result.json": "a95b14bfe6970244cb1c5361051cda4548c70a9b20392de343cadcd6b9c0bb50",
+      "inputs-before.json": "c8f7158aa7fe866cbc6780c40affa15472ed7075112f45c5c17179291fea80d6",
+      "inputs-after-compile.json": "c8f7158aa7fe866cbc6780c40affa15472ed7075112f45c5c17179291fea80d6",
+      "inputs-after-test.json": "c8f7158aa7fe866cbc6780c40affa15472ed7075112f45c5c17179291fea80d6",
+      "tests.stdout": "faf6e6bd19e445a7ae289b4fb3ee66ac875d3743f1376d00013440d6091e4c6b",
+      "generated-source-map.json": "375bd644bd153068af66428951b01beaf32e02ec4e0294e27eff73a5143d694b"
+    },
+    "stage_resource_samples": [
+      {
+        "phase": "go-list",
+        "at": "2026-10-31T19:01:56.307672+00:00",
+        "scratch_free": 55698018304,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "compile",
+        "at": "2026-10-31T19:01:56.833264+00:00",
+        "scratch_free": 55696449536,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "tests",
+        "at": "2026-10-31T19:01:59.054829+00:00",
+        "scratch_free": 55662505984,
+        "tmp_free": 5225664512
+      }
+    ]
+  },
+  "source_observation": {
+    "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+    "raw_sha256": "cb6f11b12b14bff10655685abf5b1b4db31e0025831eeac9689ad9b1cb0d71f3",
+    "independent_seal_sha256": "86c7e4f244b134e06e15849a081e49b4bc54d014be92f244eb77314df484dfe3",
+    "actual_scope": "Selected unchanged original redirect while AST with owned truthy301/302 and absent Location. Actual KeyError at source torrent.py:111. Not full helper/Requests/HTTP/cache.",
+    "target_intersection": "Helper target new root actually301/absent-map only; prepared from fixed source before new source observation, not generated-from-source differential."
+  },
+  "static_delta": "Only add key-presence check in existing301/302 loop; absence returns fixed SourceFault KeyError before second GET. Explicitly present empty Location keeps previous semantics. Existing PostOrdered/first-download/parser logic remains byte-identical.",
+  "runtime_credit": "Owned fake HTTP/cache test confirms1GET after initialcache-read, KeyError, no secondGET/invalid/cachewrite/content success. SourceFault fixed operation label contains no source URL/body.",
+  "prior_C2_seal_sha256": "d81f0353391d812b8d5aae87e44545214d1552c9e1debe029b8685579d86bc49",
+  "not_claimed": [
+    "Current source-order or old first5/18/25 rerun",
+    "Target302 or explicit-empty Location dynamically run in this increment",
+    "Actual worker/SDK host adapter routing and no-notification App effect",
+    "RealHTTP/cache/completehelper/wholeS12/race/CI/delivery"
+  ],
+  "remaining_blockers_in_recorded_finite_slice": [],
+  "reviewer_executed_no_Go_source_or_network": true
+}

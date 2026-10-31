@@ -1,0 +1,143 @@
+{
+  "decision": "ACCEPT_ACTUAL_THREE_CASE_NONSTRING_SOURCE_OBSERVATIONS_ONLY",
+  "at_utc": "2026-10-31T18:47:48.771732+00:00",
+  "coordinator_tool_report": {
+    "tool": "c6ca8b",
+    "exit": 0,
+    "provenance": "Parent message; local raw/receipt independently read"
+  },
+  "receipt": {
+    "argv": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+      "-I",
+      "-S",
+      "-B",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-nonstring-log-source/capture_nonstring_log.py"
+    ],
+    "started": "2026-10-31T18:46:56.674521+00:00",
+    "kind": "3 controlled source wrapper/base variants; originalhelper firststartswith only, notHTTP/cache/fullhelper",
+    "exit": 0,
+    "ended": "2026-10-31T18:46:56.841636+00:00",
+    "stdout_sha256": "e1ec49d67d042fc45e960b60645f12ffc3e32d1f451e69ceb9fcc8a55b048991",
+    "stdout_bytes": 15318
+  },
+  "artifacts": {
+    "result.json": "1448866e9e5a40842f2b627637685de154d68755004d5067708eac6b0423a00d",
+    "stdout.json": "e1ec49d67d042fc45e960b60645f12ffc3e32d1f451e69ceb9fcc8a55b048991",
+    "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "declared_six_inputs_current_equal": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/download.py",
+      "sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py",
+      "sha256": "1c8a420d419ee53579079283ea0828536de9d978b6b15e722f1ba53cb51d5dd5"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/types.py",
+      "sha256": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-nonstring-log-source/capture_nonstring_log.py",
+      "sha256": "64cb6a6340aa03c6f6831d46f48bbfebbd1d54c209a092208130bf4f109db501"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-nonstring-log-source/owned-cases.json",
+      "sha256": "a1d40a741157d75f795c69166b2088a2e21936f551f5cf8b8a1fb237480bd947"
+    }
+  ],
+  "all_five_selected_source_node_bytes_AST_equal": true,
+  "owned_case_inputs_settings_exact_equal": true,
+  "case_readback": [
+    {
+      "case": "int_result_no_base",
+      "exception_class": "AttributeError",
+      "ordered_ops": [
+        "request.init",
+        "request.get_res",
+        "response.bool",
+        "response.json",
+        "log.info",
+        "torrent_helper.init",
+        "torrent_helper.download_torrent"
+      ],
+      "terminal_traceback": {
+        "filename": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py",
+        "line": 83,
+        "name": "download_torrent",
+        "source_line": "if url.startswith(\"magnet:\"):"
+      },
+      "logs": [
+        {
+          "op": "log.info",
+          "message": "已获取到站点临时下载地址"
+        }
+      ],
+      "helper_entered": true
+    },
+    {
+      "case": "int_result_invalid_base",
+      "exception_class": "AttributeError",
+      "ordered_ops": [
+        "request.init",
+        "request.get_res",
+        "response.bool",
+        "response.json",
+        "log.info",
+        "torrent_helper.init",
+        "torrent_helper.download_torrent"
+      ],
+      "terminal_traceback": {
+        "filename": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py",
+        "line": 83,
+        "name": "download_torrent",
+        "source_line": "if url.startswith(\"magnet:\"):"
+      },
+      "logs": [
+        {
+          "op": "log.info",
+          "message": "已获取到站点临时下载地址"
+        }
+      ],
+      "helper_entered": true
+    },
+    {
+      "case": "int_result_valid_http_base",
+      "exception_class": "AttributeError",
+      "ordered_ops": [
+        "request.init",
+        "request.get_res",
+        "response.bool",
+        "response.json"
+      ],
+      "terminal_traceback": {
+        "filename": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py",
+        "line": 117,
+        "name": "<genexpr>",
+        "source_line": "return tuple(x.decode(encoding, errors) if x else '' for x in args)"
+      },
+      "logs": [],
+      "helper_entered": false
+    }
+  ],
+  "current_stdlib_traceback_file_readback": {
+    "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py",
+    "sha256": "e6af7f475262f1de335bb2e41e26adb94d6103977cf5fe1ddc430dc6a3b1623f",
+    "boundary": "Current support readback, not a claim of historical full transitive stdlib input binding."
+  },
+  "finding_confirmed": "B3_NONSTRING_RESULT_MISSING_PRE_HELPER_INFO_LOG",
+  "oracle_reuse": "Copy the unchanged complete stdout bytes; compare three log sequences and exception class/order with original cases; do not invent expected source outputs from target.",
+  "boundaries": [
+    "Entire helper method AST is selected unchanged, but actual execution reaches only first startswith and raises; original constructor and subsequent helper dependencies do not execute.",
+    "RequestUtils/Response/helper construction/notification/log ports are declared controlled components; no source HTTP/cache/fullhelper or source application imports.",
+    "Validbase actual error is original urllib int.decode path before INFO/helper; no malformedbase fourth case was run.",
+    "Old source19 was not rerun; no Go target acceptance from these observations alone."
+  ],
+  "reviewer_executed_no_Go_source_or_network": true
+}

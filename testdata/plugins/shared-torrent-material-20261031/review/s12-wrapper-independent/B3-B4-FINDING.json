@@ -1,0 +1,23 @@
+{
+  "finding": "B3_NONSTRING_RESULT_MISSING_PRE_HELPER_INFO_LOG",
+  "at_utc": "2026-10-31T18:43:21.666978+00:00",
+  "frozen_product_sha256": "8176ea59b0f842ab756962773d0b52dcb2442dbff1a19570ff17759f670d0d9b",
+  "frozen_test_sha256": "53f4d9929ef72375dea632f16951875a85d47a1d7ba58d15a55bfb0661318bae",
+  "existing_related_case": "TestDownloadTorrentDescriptorSemantics/urlNotString already has params {\"result\":\"data\"}, response JSON {\"data\":123}, no result_base_url; previously only exception class tested.",
+  "source_static_flow": [
+    "DownloadChain._normalize_indirect_download_url: falsy base_url returns url unchanged before any type-sensitive parsing.",
+    "With data=123 and base_url=None, wrapper receives123 then executes logger.info at original download.py:735.",
+    "Real TorrentHelper.download_torrent starts url.startswith at torrent.py:83, raising AttributeError only after that log.",
+    "A nonempty invalid/relative base missing scheme/netloc also returns123 before logging; valid trusted base instead parses123 and can error before logging."
+  ],
+  "target_flow": "chain.go checks data.Kind!=string and returns AttributeError before base truthiness/normalization and before the new INFO callback.",
+  "effect": "Missing original INFO log on this concrete existing input. Current19-source cases/3selected log cases do not cover it; their actual PASS remains valid.",
+  "observation_layer": "Independent static fixed-source/control-flow finding, not a newly executed source case. Source19 recording helper would not model real helper.startswith failure.",
+  "minimal_direction": "Preserve original normalization-versus-helper error order, or explicitly retain this finite gap; do not emit INFO unconditionally for every non-string because valid-base parsing may fail before it.",
+  "not_changed": [
+    "products",
+    "ledger",
+    "prior_B1_B2_seals"
+  ],
+  "reviewer_executed_no_Go_source_or_network": true
+}

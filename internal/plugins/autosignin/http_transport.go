@@ -236,6 +236,10 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 
 // The OCR mode is minted only by the typed host-side ordinary OCR entry.
 func (b *BoundSiteHTTP) doWithOCR(ctx context.Context, request PageRequest, fixedPublicReferer string, ocr *ordinaryOCRMode) (*PageResponse, error) {
+	return b.doWithOrdinaryModes(ctx, request, fixedPublicReferer, ocr, nil)
+}
+
+func (b *BoundSiteHTTP) doWithOrdinaryModes(ctx context.Context, request PageRequest, fixedPublicReferer string, ocr *ordinaryOCRMode, material *ordinaryMaterialMode) (*PageResponse, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
@@ -293,8 +297,8 @@ func (b *BoundSiteHTTP) doWithOCR(ctx context.Context, request PageRequest, fixe
 	if tlsConfig.MinVersion < tls.VersionTLS12 {
 		tlsConfig.MinVersion = tls.VersionTLS12
 	}
-	if ocr != nil {
-		// User-approved source behavior, private to this OCR request transport.
+	if ocr != nil || material != nil {
+		// User-approved source behavior, private to this typed request transport.
 		tlsConfig.InsecureSkipVerify = true
 	}
 	transport.TLSClientConfig = tlsConfig
@@ -321,10 +325,17 @@ func (b *BoundSiteHTTP) doWithOCR(ctx context.Context, request PageRequest, fixe
 	}
 	jar, _ := cookiejar.New(nil)
 	client := &http.Client{Transport: routed, Jar: jar, CheckRedirect: func(req *http.Request, via []*http.Request) error {
+		if material != nil && !material.allowRedirects {
+			return http.ErrUseLastResponse
+		}
 		if len(via) > 30 {
 			return errors.New("site redirect limit exceeded")
 		}
-		if ocr != nil {
+		if material != nil {
+			if err := material.redirect(b.origin, req); err != nil {
+				return err
+			}
+		} else if ocr != nil {
 			if err := ordinaryOCRRedirect(b.origin, req); err != nil {
 				return err
 			}
@@ -342,14 +353,18 @@ func (b *BoundSiteHTTP) doWithOCR(ctx context.Context, request PageRequest, fixe
 				req.Header.Set("Referer", original)
 			}
 		}
-		if req.Method != "POST" {
+		preserveMaterialBody := material != nil && req.Response != nil && (req.Response.StatusCode == http.StatusTemporaryRedirect || req.Response.StatusCode == http.StatusPermanentRedirect)
+		if req.Method != "POST" && !preserveMaterialBody {
 			req.Header.Del("Content-Type")
 			req.Header.Del("Content-Length")
 			req.Header.Del("Transfer-Encoding")
 		}
+		if material != nil {
+			return material.redirect(b.origin, req)
+		}
 		return nil
 	}}
-	if ocr != nil {
+	if ocr != nil || material != nil {
 		client.Jar = newOrdinaryOCRJar()
 	}
 	// Public media never consumes Set-Cookie, including on redirect hops.
@@ -452,6 +467,9 @@ func (b *BoundSiteHTTP) doWithOCR(ctx context.Context, request PageRequest, fixe
 	if request.Referer != "" && request.Headers == nil {
 		req.Header.Set("Referer", request.Referer)
 	}
+	if material != nil {
+		material.applyHeaders(req, cookie, body != nil)
+	}
 	res, err := client.Do(req)
 	if err != nil {
 		if res != nil && res.Body != nil {
@@ -478,6 +496,10 @@ func (b *BoundSiteHTTP) doWithOCR(ctx context.Context, request PageRequest, fixe
 		ocr.contentType = res.Header.Get("Content-Type")
 		reader = io.ReadAll
 	}
+	if material != nil {
+		material.captureResponse(res)
+		reader = func(r io.Reader) ([]byte, error) { return readDocument(r, OrdinaryMaterialMaxBytes) }
+	}
 	compressed, err := reader(res.Body)
 	if err != nil {
 		if ctx.Err() != nil {
@@ -503,6 +525,10 @@ func (b *BoundSiteHTTP) doWithOCR(ctx context.Context, request PageRequest, fixe
 	if request.DecodeAsUTF8 {
 		text = siteUTF8(decoded)
 		err = nil
+	}
+	if material != nil {
+		material.textError = err
+		err = nil // Material bytes remain usable even when text decoding is unavailable.
 	}
 	if err != nil {
 		if request.HeadersMode != HeaderBaseCookie {

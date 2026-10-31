@@ -1,0 +1,130 @@
+{
+  "status": "ACCEPT_ACTUAL_SELECTED_SOURCE_LOOP_TWO_KEYERROR_OBSERVATIONS",
+  "at_utc": "2026-10-31T18:55:04.005Z",
+  "tool_receipt": {
+    "chunk": "c3d8a2",
+    "exit": 0,
+    "authority": "parent original tool message; not a new execution by reviewer"
+  },
+  "execution": {
+    "argv": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+      "-I",
+      "-S",
+      "-B",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-missing-location-source/capture_missing_location.py"
+    ],
+    "started": "2026-10-31T18:54:16.467191+00:00",
+    "kind": "two controlledmissingLocation sourcewhile; nofullhelper/request/cache/notice",
+    "exit": 0,
+    "ended": "2026-10-31T18:54:16.548199+00:00",
+    "stdout_sha256": "cb6f11b12b14bff10655685abf5b1b4db31e0025831eeac9689ad9b1cb0d71f3",
+    "stdout_bytes": 3416
+  },
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-missing-location-source01/result.json",
+      "bytes": 613,
+      "sha256": "455dfa5ea4b3c00cba42b867e1578338210c08444e9eb0894e9346786713b92f"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-missing-location-source01/stdout.json",
+      "bytes": 3416,
+      "sha256": "cb6f11b12b14bff10655685abf5b1b4db31e0025831eeac9689ad9b1cb0d71f3"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s12-missing-location-source01/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py",
+      "bytes": 26540,
+      "sha256": "1c8a420d419ee53579079283ea0828536de9d978b6b15e722f1ba53cb51d5dd5"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-missing-location-source/capture_missing_location.py",
+      "bytes": 2696,
+      "sha256": "4d243e31bcc4a32aa193521741b3c73fafec4ab0945e2c6b7a1704a1a05639f3"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "bytes": 30894944,
+      "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"
+    }
+  ],
+  "observed": [
+    {
+      "input": {
+        "status_code": 301,
+        "headers": {},
+        "response_truthy": true
+      },
+      "dependency": "owned SimpleNamespace truthy response; not requests.Response",
+      "exception": {
+        "class": "KeyError",
+        "module": "builtins",
+        "args": [
+          "Location"
+        ],
+        "traceback": [
+          {
+            "filename": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-missing-location-source/capture_missing_location.py",
+            "line": 16,
+            "name": "<module>",
+            "source": "try:row['unexpected_return']=ns['selected_source_redirect_loop'](SimpleNamespace(status_code=status,headers={}))"
+          },
+          {
+            "filename": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py",
+            "line": 111,
+            "name": "selected_source_redirect_loop",
+            "source": "url = req.headers['Location']"
+          }
+        ]
+      }
+    },
+    {
+      "input": {
+        "status_code": 302,
+        "headers": {},
+        "response_truthy": true
+      },
+      "dependency": "owned SimpleNamespace truthy response; not requests.Response",
+      "exception": {
+        "class": "KeyError",
+        "module": "builtins",
+        "args": [
+          "Location"
+        ],
+        "traceback": [
+          {
+            "filename": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-missing-location-source/capture_missing_location.py",
+            "line": 16,
+            "name": "<module>",
+            "source": "try:row['unexpected_return']=ns['selected_source_redirect_loop'](SimpleNamespace(status_code=status,headers={}))"
+          },
+          {
+            "filename": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py",
+            "line": 111,
+            "name": "selected_source_redirect_loop",
+            "source": "url = req.headers['Location']"
+          }
+        ]
+      }
+    }
+  ],
+  "source_node": {
+    "first_line": 110,
+    "last_line": 119,
+    "source": "while req and req.status_code in [301, 302]:\n            url = req.headers['Location']\n            if url and url.startswith(\"magnet:\"):\n                return None, url, \"\", [], f\"获取到磁力链接\"\n            req = RequestUtils(\n                ua=ua,\n                cookies=cookie,\n                referer=referer,\n                proxies=settings.PROXY if proxy else None\n            ).get_res(url=url, allow_redirects=False)",
+    "source_sha256": "d16053db39f4dc0cf69052cdf06f8fd2a3f53c791e7e83c4d1d64e664a5f6345",
+    "ast_sha256": "b443a28f802fddaaa09bac4c1e3fb4956a484f1dc75ba203218ce541e4dbf1af"
+  },
+  "textual_source_fragment_rechecked": true,
+  "scope": "Complete original redirect while AST in minimal wrapper; controlled truthy SimpleNamespace 301 and302 with empty dict. Source line111 throws KeyError(Location) before the second request. Original module/helper constructor/requests/HTTP/cache/parser/notice not executed.",
+  "corrections": "Actual node110–119 and exception111. Prior static note110–121 and informal118 were locator mistakes, not different executed code.",
+  "target_status": "Presence+SDK-class narrow patch statically reviewed; this record is source observation only and does not claim target gate passed.",
+  "reviewer_executed_source_go_network": false
+}

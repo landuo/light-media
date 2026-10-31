@@ -1,0 +1,86 @@
+{
+  "status": "actual_single_owned_parser_and_selected_static_source_method",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "driver_sha256": "9691fc897b05f834308088b5651e5843de5cc2af0567ff90287db12394924218",
+  "input_manifest_sha256": "03f57e5e689f42e76d6e55c118258b6f12c28a7f1409c65ea0e7a8288bb1f950",
+  "python_executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+  "python_executable_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+  "fixture_sha256": "cb7d78a570a9413fb369cb07376533ed42526d530395ba325f249f9c6bede203",
+  "fixture_input": {
+    "name": "Root",
+    "files": [
+      {
+        "length": 1,
+        "path": [
+          "sub/",
+          "x"
+        ]
+      }
+    ],
+    "piece_length": 16384,
+    "pieces": "20 zero bytes"
+  },
+  "actual_parser_name": "Root",
+  "actual_parser_files_in_order": [
+    {
+      "name": "Root/sub/x",
+      "length": 1
+    }
+  ],
+  "source_folder": "Root",
+  "source_files_in_order": [
+    "sub/x"
+  ],
+  "selected_method": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py",
+    "first_line": 208,
+    "last_line": 237,
+    "file_sha256": "1c8a420d419ee53579079283ea0828536de9d978b6b15e722f1ba53cb51d5dd5",
+    "source_fragment_sha256": "a1f0d0b34c671293c2b2cf1d98d65837fb3fb96622fea4464d90739dbb8e483a",
+    "ast_sha256": "fb5bcd5e9814ff9ef8016299c879a3a48db728953a7301961083beb1a1de28df"
+  },
+  "imported_vendor_files": [
+    {
+      "module": "torrentool",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/__init__.py",
+      "sha256": "f96431e7a1bccfea6e0c5be108915772c09ff323e43c0ec9a8706d39da0e4f5a"
+    },
+    {
+      "module": "torrentool.api",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/api.py",
+      "sha256": "c600f9f273c03679913b74d7c9d502bb33d1fb3417b7c97fec8197348166ce63"
+    },
+    {
+      "module": "torrentool.bencode",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/bencode.py",
+      "sha256": "7fa9bffd962d5fe90d6fe56e4d85e03736f7032e7440d43701b994f742800d40"
+    },
+    {
+      "module": "torrentool.exceptions",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/exceptions.py",
+      "sha256": "2b277b94260a2d0dae6ca6a7dfbf689030f39986216253a280457a8f91a6ae96"
+    },
+    {
+      "module": "torrentool.torrent",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/torrent.py",
+      "sha256": "1732e1ca0d581c97a5cb688a18a0086a3e8628f5130a5ef6c72ada5645a3d210"
+    },
+    {
+      "module": "torrentool.utils",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/utils.py",
+      "sha256": "3cc761e1006fcad808a3d85623f23e565870a6ee8b2062f6a69b7f01324a5829"
+    }
+  ],
+  "requests_urllib3_socket_absent_at_checks": true,
+  "logs": [
+    "解析种子：Root => 目录：Root，文件清单：['sub/x']"
+  ],
+  "not_claimed": [
+    "whole TorrentHelper class or constructor",
+    "whole application",
+    "content-wrapper exception handling",
+    "Go parser execution/equivalence",
+    "network or filesystem torrent APIs",
+    "unobserved internal syscall behavior"
+  ]
+}

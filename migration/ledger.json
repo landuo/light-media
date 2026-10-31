@@ -40,7 +40,7 @@
       "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/README.md",
       "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/publication-manifest.json"
     ],
-    "revision_note": "Actual parent/Mac push/readback last confirmed11f922 on plugins-refactor; main97476582910dc4b696f7ccd5010f28d823812d40 unchanged. Current S10 original8 is locally verified but not yet committed/pushed. Manifest binds candidate bytes; no CI-green claim."
+    "revision_note": "Actual last parent/Mac push/readback remains11f922; main unchanged. Local S10 commit760720 complete but Mac push not confirmed due usage cap. Current S12.material exactrelease candidate accepted locally, notremote. No CI-green claim."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -2830,7 +2830,8 @@
         "S01",
         "S03",
         "S12",
-        "S13"
+        "S13",
+        "S12.material"
       ],
       "feature_link_reason": "explicit shared runtime or source data contract",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4479,7 +4480,8 @@
       "feature_ids": [
         "S02",
         "S03",
-        "S12"
+        "S12",
+        "S12.material"
       ],
       "feature_link_reason": "helper directly supports named SDK/platform chain",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -7251,7 +7253,8 @@
         "S14",
         "11.mirror_response",
         "23.usage_rating_wire",
-        "S15.ordinary_ocr"
+        "S15.ordinary_ocr",
+        "S12.material"
       ],
       "feature_link_reason": "ordinary utility dependency; native Go implementation allowed, no same-name RPC obligation",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -7522,7 +7525,8 @@
         "11",
         "12",
         "S12",
-        "S01.transmission_queries"
+        "S01.transmission_queries",
+        "S12.material"
       ],
       "feature_link_reason": "ordinary utility dependency; native Go implementation allowed, no same-name RPC obligation",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -17349,6 +17353,21 @@
         "target": "SharedOCR -> existing originalResource identity/capability -> App frozenOCRHost -> OCR private transport -> owned protocol; real installed worker and normal CLI"
       },
       "validation": "Actual pure source components and exact inherited HTTP intersection; new real Go host/SDK/CLI; not fresh full sourceHTTP"
+    },
+    {
+      "id": "scope.sdk.app.chain.download.DownloadChain.download_torrent",
+      "source_repository": "backend",
+      "source_path": "app/chain/download.py",
+      "source_location": "app/chain/download.py:658#DownloadChain.download_torrent",
+      "symbol": "DownloadChain.download_torrent",
+      "line": 658,
+      "end_line": 783,
+      "feature_ids": [
+        "S12",
+        "S12.material"
+      ],
+      "chain": "standard installed SDK -> declared resource capability/currentinvocation -> original wrapper -> dedicated site-bound transport/TorrentHelper -> actual FileCache/notification -> complete bytes in worker",
+      "validation": "fixed selected source bodies and true target App/normalCLI finite gates; not original fullHTTP/cache runtime"
     }
   ],
   "features": [
@@ -26434,8 +26453,7 @@
           "still_unimplemented": [],
           "prerequisites_in_progress": [],
           "pending_full_slice_gates": [
-            "whitelist publication review",
-            "local commit/bundle and Mac ordinary push/readback"
+            "Mac ordinary push/readback pending actual quota availability"
           ],
           "locally_verified_prerequisites": [
             "actual SDK drain observation normal4/race4",
@@ -26444,7 +26462,8 @@
           "current_normal_execution": "normal01 actual22PASS+1cwdFAIL retained; normal02 samebinaries onefailedroot PASS; independently checked combined23, not rewritten overall01PASS"
         },
         "local_verified_at": "2026-10-31T16:53:32.801682+00:00",
-        "remote_delivery": "pending; current remote remains11f922 until actual readback"
+        "remote_delivery": "pending; current remote remains11f922 until actual readback",
+        "local_commit": "760720ed0a96fd9e7a647914c14545bde5ef857e"
       },
       "recovery_reconstruction": {
         "base": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
@@ -26635,7 +26654,7 @@
     {
       "id": "S12",
       "description": "S12 · 宿主站点浏览、RSS和种子材料",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/search.py",
         "app/api/endpoints/torrent.py",
@@ -26728,8 +26747,8 @@
         "independent": false
       },
       "external_source_paths": [],
-      "work_kind": "unclassified_shared_host",
-      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent.",
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Finite ordinary material SDK/helper/App/cache backend chain locally verified. browse/rss/S14 and retained resource/decoder differences remain open; no wholeS12 completion.",
       "semantic_scope_reconciliation": {
         "id": "S12",
         "old_operation_scope": "站点浏览、RSS、种子下载",
@@ -26738,7 +26757,10 @@
         "semantic_judgment": "旧三个操作及其RSS恢复分支均已明确；S14是拆明依赖，不是新发现另一RSS功能。下载检查/Servarr等不得无依据增加。Cookie持久化/刷新同步须实际消费者才纳入。",
         "current_ledger_status": "discovered",
         "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
-      }
+      },
+      "accepted_subfeatures": [
+        "S12.material"
+      ]
     },
     {
       "id": "S13",
@@ -28946,6 +28968,162 @@
       "approved_decision_ids": [
         "ocr_tls_source_compatibility_20261031_023925"
       ]
+    },
+    {
+      "id": "S12.material",
+      "parent_feature": "S12",
+      "description": "Usable ordinary torrent-material SDK/helper/App backend slice within explicit retained runtime bounds; not downloader submission/browse/RSS/fullS12",
+      "status": "verified",
+      "owner": "coordinator with s01_release_owner / Astra ultra",
+      "source_paths": [
+        "app/chain/download.py",
+        "app/helper/torrent.py",
+        "app/utils/http.py",
+        "app/utils/url.py"
+      ],
+      "entrypoint_ids": [
+        "scope.sdk.app.chain.download.DownloadChain.download_torrent"
+      ],
+      "dependencies": [
+        "02",
+        "05"
+      ],
+      "target_paths": [
+        "cmd/owned-torrent-material-fixture/main.go",
+        "internal/app/plugin_original_base.go",
+        "internal/app/plugin_original_base_session.go",
+        "internal/app/plugin_original_resources.go",
+        "internal/app/plugin_shared_torrent_material.go",
+        "internal/app/plugin_shared_torrent_material_test.go",
+        "internal/app/plugin_shared_torrent_transfer.go",
+        "internal/app/plugin_shared_torrent_transfer_test.go",
+        "internal/app/runtime.go",
+        "internal/ocr/source_json_export.go",
+        "internal/plugins/autosignin/http_transport.go",
+        "internal/plugins/autosignin/ordinary_material_transport.go",
+        "internal/plugins/autosignin/ordinary_material_transport_test.go",
+        "internal/plugins/iyuuautoseed/testdata/torrent-form-order-source.json",
+        "internal/plugins/iyuuautoseed/torrent_fileinfo_join_test.go",
+        "internal/plugins/iyuuautoseed/torrent_form_order_test.go",
+        "internal/plugins/iyuuautoseed/torrent_helper.go",
+        "internal/plugins/iyuuautoseed/torrent_material_url.go",
+        "internal/plugins/shared_torrent_material.go",
+        "internal/plugins/shared_torrent_material_test.go",
+        "internal/plugins/torrentmaterial/chain.go",
+        "internal/plugins/torrentmaterial/chain_test.go",
+        "internal/plugins/torrentmaterial/testdata/source-nonstring-log.json",
+        "internal/plugins/torrentmaterial/testdata/source-wrapper.json"
+      ],
+      "scenarios": [
+        "None/string/completebytes and folder/files order; indirect descriptor query and actual original finite source errors",
+        "private actualHTTP/TLS headers redirects body/source form ordering and failure recovery",
+        "actual standard worker capability/invocation guards, persistent FileCache/SQLite notices and attributed logs",
+        "normalhost restart no repeated artifact/material download; full16MiB and sequential32MiB worker reconstruction",
+        "existing serial accepted-call bounded drain; host race and minimal retainedS10 scope compatibility"
+      ],
+      "evidence_ids": [
+        "s12-material.source-target",
+        "s12-material.normal-cli"
+      ],
+      "review": {
+        "status": "passed",
+        "independent": true,
+        "reviewer": "tls_ab_independent / Astra ultra; finite SDK/wrapper review by terminate_independent",
+        "evidence_ids": [
+          "s12-material.independent-review"
+        ]
+      },
+      "work_kind": "confirmed_delta",
+      "completion": {
+        "state": "locally_verified_publication_pending_not_remote",
+        "base_commit": "760720ed0a96fd9e7a647914c14545bde5ef857e",
+        "manifest": "testdata/plugins/shared-torrent-material-20261031/publication-manifest.json",
+        "remote_delivery": false
+      },
+      "boundaries": [
+        "16MiB per-material resource guard retained; actual source has no same cap, no arbitrary-size parity or blanket approved adaptation",
+        "selected original AST/component captures not full original HTTP/cache execution",
+        "unsupported text decoder boundaries not silently mapped into source exceptions",
+        "race gate is App/host with normal worker; serial accepted-call drain not immediate caller cancel",
+        "synthetic owned network fixtures only; no real tracker/downloader/browser/NAS/CI/fullS12/platform claims"
+      ],
+      "approved_decision_ids": [
+        "scoped_requestutils_tls_20261031_051730"
+      ],
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "finite original tuple/value/errors/ordering and complete rawbyte reconstruction",
+          "evidence_ids": [
+            "s12-material.source-target",
+            "s12-material.normal-cli",
+            "s12-material.independent-review"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "real FileCache/invocation-owned transfer/SQLite notification state; no new aggregate rejection",
+          "evidence_ids": [
+            "s12-material.source-target",
+            "s12-material.normal-cli",
+            "s12-material.independent-review"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "source exceptions and failure notices, actual sameworker recovery; old failures retained",
+          "evidence_ids": [
+            "s12-material.source-target",
+            "s12-material.normal-cli",
+            "s12-material.independent-review"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "host race2 and minimal S10 retained call ownership; ordinary serial bounded drain, not racebuiltworker",
+          "evidence_ids": [
+            "s12-material.source-target",
+            "s12-material.normal-cli",
+            "s12-material.independent-review"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "two distinct normal hosts/workers, samecache/notice, one install and no cold refetch",
+          "evidence_ids": [
+            "s12-material.source-target",
+            "s12-material.normal-cli",
+            "s12-material.independent-review"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "source19+3 logs+2missingLocation/order/parser finite observations; existing 16MiB and decoder limits explicit",
+          "evidence_ids": [
+            "s12-material.source-target",
+            "s12-material.normal-cli",
+            "s12-material.independent-review"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "actual capability/currentinvocation/site/proxy checks, dedicatedapprovedC TLS, crossdomain credentials protected; no global change",
+          "evidence_ids": [
+            "s12-material.source-target",
+            "s12-material.normal-cli",
+            "s12-material.independent-review"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "real two16MiB worker reconstruction, page budgets and phase free-space samples; not benchmark/continuous peak proof",
+          "evidence_ids": [
+            "s12-material.source-target",
+            "s12-material.normal-cli",
+            "s12-material.independent-review"
+          ]
+        }
+      }
     }
   ],
   "decisions": [
@@ -42375,6 +42553,288 @@
         "seal": "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/reviews/integrated/integrated-app-cli-final-independent.json",
         "seal_sha256": "2609888c1d4ed239f250b2139b513a0e1e76eca329f28e36fd64b97e2b69d996"
       }
+    },
+    {
+      "id": "s12-material.source-target",
+      "kind": "differential",
+      "status": "passed",
+      "feature_ids": [
+        "S12.material"
+      ],
+      "independent": false,
+      "reviewer": "coordinator execution",
+      "observations": "Finite selected original source versus SDK/wrapper/parser; actual ownedHTTP normal13/race2; exactrelease App4/hostrace2 and minimalS10scope1. Not a full original HTTP runtime comparison.",
+      "binding": {
+        "result": "testdata/plugins/shared-torrent-material-20261031/evidence/s12-release-app01/result.json",
+        "sha256": "bc1fa941b4598a679cb9dafb4d110f4429fb7d263559723f52871650be6ac73f",
+        "race_result": "testdata/plugins/shared-torrent-material-20261031/evidence/s12-release-race01/result.json",
+        "race_sha256": "27e727c0a4139e9ab40538fcabe9a18a1046cf571ab215ebcb7e488204f7b8cb",
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "target": "owned cloud Linux; Go1.26.0, CGO_ENABLED1, unchanged inherited proxy/CA; exactrelease source760720+25paths",
+          "source": "fixed8a83 selected AST/stdlib+recording dependencies in Python3.12.14; not full original HTTP/cache runtime",
+          "limits": "explicit16MiB/decoder/serialdrain/source-execution boundaries; only owned endpoints"
+        },
+        "target_files": {
+          "cmd/owned-torrent-material-fixture/main.go": "3f495575470836e39c82545860025c1488f8613e329750fa83fd038f520eb015",
+          "internal/app/plugin_original_base.go": "83df3595caa9f5d4a16c6f36a7e85aa22b51e72d1b6fc87f4bfa7a385904d80f",
+          "internal/app/plugin_original_base_session.go": "2694bf8040a0fb5d34ae1c89ae6f75249dfc52210e3bae3c9658138da88e960d",
+          "internal/app/plugin_original_resources.go": "72a0278651ff01d379e62a2f5c8d93e189a3a773a6419123f91850c98efd0aa9",
+          "internal/app/plugin_shared_torrent_material.go": "e2df5206c983e7b16aebd4eda05d959c0b0466f325a52b696f3199291beb3af4",
+          "internal/app/plugin_shared_torrent_material_test.go": "12dcadb5ba30f6387629ab8c491c6a364305efa45eccfcbefd2394dd3bb14e77",
+          "internal/app/plugin_shared_torrent_transfer.go": "71a0524ea0ac0ffa6173a4a42255e6d3a53291e656ed23e54a6feaf8b29d6bb6",
+          "internal/app/plugin_shared_torrent_transfer_test.go": "b0ba38f529cdf973b63f6f1af1db31dae61554bbaa8d228fdebb3cf3de4cbf7b",
+          "internal/app/runtime.go": "28412b5a346378833535f2466b82c130d1edc3a736365d2896e0eb962f6929c9",
+          "internal/ocr/source_json_export.go": "2124526f82f3ee98a69e74b3a688882295c2f959a7cd65bc619dad70f8fd2dba",
+          "internal/plugins/autosignin/http_transport.go": "98e5a16d9f508b2dfe0153bb9f71a76fe9660a8c94c8dbe1e7eba30307b86706",
+          "internal/plugins/autosignin/ordinary_material_transport.go": "fd90dba247caa1762fd9d44b8faa97433d81106d9779a16dea9f77205b3c58ec",
+          "internal/plugins/autosignin/ordinary_material_transport_test.go": "986619c497cd357ec39aa84b47b5c93254c9dc63b3b07c0d9ebf14815a43c29d",
+          "internal/plugins/iyuuautoseed/testdata/torrent-form-order-source.json": "b33a38722142eee1a72fe8450c376d80354037681dc669d1a56c9a8df1a47497",
+          "internal/plugins/iyuuautoseed/torrent_fileinfo_join_test.go": "2240795a306790bc50ef5814226ce7259adbaa99d13003dcfb93558bdb83b709",
+          "internal/plugins/iyuuautoseed/torrent_form_order_test.go": "d10f6f2765602dc6a89fe865fed9c93ee55db9f7b75786263f6f5bdfaf2048dc",
+          "internal/plugins/iyuuautoseed/torrent_helper.go": "9f84675f2757e0baf9bed0cd106b5717d260a3fd29d1d6347dabc62d13300796",
+          "internal/plugins/iyuuautoseed/torrent_material_url.go": "7cb446091448526411d179567935af28fd1543c0081496a0da763099ffc4169a",
+          "internal/plugins/shared_torrent_material.go": "99638bc7e731e612413ea2ad78e2b3f9faa5371a9e4891c1da65752df5855a6f",
+          "internal/plugins/shared_torrent_material_test.go": "c2dde86989eb64175f21e095109573fea20fa8e01483101b6137095c085285db",
+          "internal/plugins/torrentmaterial/chain.go": "710994af4ec4e700c4390828fcb1d6c823d4ec8126ff80cd78d62fc502181a75",
+          "internal/plugins/torrentmaterial/chain_test.go": "fb98c9c16e728a922dfab0e98f35f69a71531ab4c9583b0e6929aaec2a3fdab8",
+          "internal/plugins/torrentmaterial/testdata/source-nonstring-log.json": "e1ec49d67d042fc45e960b60645f12ffc3e32d1f451e69ceb9fcc8a55b048991",
+          "internal/plugins/torrentmaterial/testdata/source-wrapper.json": "133bf97c1df6958a62f341b036936519d78fda928cb836eb8e23139f1fffc6bc"
+        },
+        "fixture_files": {
+          "evidence/s12-material/normal-cli-driver.py": "4108d1751de61214f14e2488b0e61f80ca577aa3504cba1094c181c289dfcc18",
+          "evidence/s12-material/source-wrapper-owned-cases.json": "a1ab340afc39b6332475b2fadd741c6f5ea76be2a9d1696c5f1e05d310f73b46",
+          "evidence/s12-material/source-nonstring-owned-cases.json": "a1d40a741157d75f795c69166b2088a2e21936f551f5cf8b8a1fb237480bd947",
+          "evidence/s12-material/source-wrapper-collector.py": "757225ec8bba71cd9842bdc1c5635f5038d07b90b5ca3d33630b9fe38a9a93ac"
+        }
+      },
+      "artifacts": {
+        "evidence/s12-material/source-wrapper-observations.json": "6e654f82a7e3099eadcde59b38ab9b12c7a8a6b2cc5e1e3909a4a7e1d528e5c6",
+        "evidence/s12-material/wrapper-differential-result.json": "d32b50c3f5a06aeef1fc54eec3b1d58bdd2e2d9ed1a2bf1d95984cbb1be368b9",
+        "evidence/s12-material/wrapper-differential-tests.jsonl": "fc8a726014e30098b2cbc53db7d4b4ab548f075d4a9adc26ee3f76dd3254818f",
+        "evidence/s12-material/release-app-result.json": "bc1fa941b4598a679cb9dafb4d110f4429fb7d263559723f52871650be6ac73f",
+        "evidence/s12-material/release-race-result.json": "27e727c0a4139e9ab40538fcabe9a18a1046cf571ab215ebcb7e488204f7b8cb"
+      },
+      "inputs": {
+        "fixed_source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "actual_fixture_hashes": {
+          "evidence/s12-material/normal-cli-driver.py": "4108d1751de61214f14e2488b0e61f80ca577aa3504cba1094c181c289dfcc18",
+          "evidence/s12-material/source-wrapper-owned-cases.json": "a1ab340afc39b6332475b2fadd741c6f5ea76be2a9d1696c5f1e05d310f73b46",
+          "evidence/s12-material/source-nonstring-owned-cases.json": "a1d40a741157d75f795c69166b2088a2e21936f551f5cf8b8a1fb237480bd947",
+          "evidence/s12-material/source-wrapper-collector.py": "757225ec8bba71cd9842bdc1c5635f5038d07b90b5ca3d33630b9fe38a9a93ac"
+        },
+        "exact_compile_closures": "published before/after maps and runtime seal, no reconstructed execution",
+        "programs": {
+          "release_app": "c146df20a362b2f3a60bced8d7a71bc5c82dafa3fcacfe1d5115927c3f42428c",
+          "normal_server": "f810130e5624956348a53fcf82434138fe5dafb1c6c38cd4360497d6b84cbb65",
+          "normal_worker": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d"
+        }
+      },
+      "commands": [
+        {
+          "label": "go-list",
+          "argv": [
+            "go",
+            "list",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-deps",
+            "-test",
+            "-json",
+            "./internal/plugins/torrentmaterial"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "compile",
+          "argv": [
+            "go",
+            "test",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-p=1",
+            "-c",
+            "-o",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-wrapper-source01.test",
+            "./internal/plugins/torrentmaterial"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "tests",
+          "argv": [
+            "go",
+            "tool",
+            "test2json",
+            "-t",
+            "-p",
+            "./internal/plugins/torrentmaterial",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-wrapper-source01.test",
+            "-test.v",
+            "-test.run",
+            "^TestDownloadTorrentActualSourceWrapper19$",
+            "-test.count=1",
+            "-test.timeout=90s"
+          ],
+          "exit": 0
+        }
+      ]
+    },
+    {
+      "id": "s12-material.normal-cli",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "S12.material"
+      ],
+      "independent": false,
+      "reviewer": "coordinator execution",
+      "observations": "Normalservice PID23 then58, installedworker41 then72,30APIrequests/13materialqueries,actual32MiB full reconstruction,coldcache/noRefetch/noticepersist,bothWait0; ownedHTTP synthetic endpoints notrealtrackers.",
+      "binding": {
+        "result": "testdata/plugins/shared-torrent-material-20261031/normal-cli/result.json",
+        "sha256": "2140f56bdbbe0db5e7b5d361de1ef0b19455b590cfcd53f8c8d28ae414821301",
+        "receipt": "testdata/plugins/shared-torrent-material-20261031/normal-cli/tool-execution-receipt.json",
+        "receipt_sha256": "f4b65423459d6dd168f698367bed9ea28924a748186b5d670dee9acca9a807cb",
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "target": "owned cloud Linux; Go1.26.0, CGO_ENABLED1, unchanged inherited proxy/CA; exactrelease source760720+25paths",
+          "source": "fixed8a83 selected AST/stdlib+recording dependencies in Python3.12.14; not full original HTTP/cache runtime",
+          "limits": "explicit16MiB/decoder/serialdrain/source-execution boundaries; only owned endpoints"
+        },
+        "target_files": {
+          "cmd/owned-torrent-material-fixture/main.go": "3f495575470836e39c82545860025c1488f8613e329750fa83fd038f520eb015",
+          "internal/app/plugin_original_base.go": "83df3595caa9f5d4a16c6f36a7e85aa22b51e72d1b6fc87f4bfa7a385904d80f",
+          "internal/app/plugin_original_base_session.go": "2694bf8040a0fb5d34ae1c89ae6f75249dfc52210e3bae3c9658138da88e960d",
+          "internal/app/plugin_original_resources.go": "72a0278651ff01d379e62a2f5c8d93e189a3a773a6419123f91850c98efd0aa9",
+          "internal/app/plugin_shared_torrent_material.go": "e2df5206c983e7b16aebd4eda05d959c0b0466f325a52b696f3199291beb3af4",
+          "internal/app/plugin_shared_torrent_material_test.go": "12dcadb5ba30f6387629ab8c491c6a364305efa45eccfcbefd2394dd3bb14e77",
+          "internal/app/plugin_shared_torrent_transfer.go": "71a0524ea0ac0ffa6173a4a42255e6d3a53291e656ed23e54a6feaf8b29d6bb6",
+          "internal/app/plugin_shared_torrent_transfer_test.go": "b0ba38f529cdf973b63f6f1af1db31dae61554bbaa8d228fdebb3cf3de4cbf7b",
+          "internal/app/runtime.go": "28412b5a346378833535f2466b82c130d1edc3a736365d2896e0eb962f6929c9",
+          "internal/ocr/source_json_export.go": "2124526f82f3ee98a69e74b3a688882295c2f959a7cd65bc619dad70f8fd2dba",
+          "internal/plugins/autosignin/http_transport.go": "98e5a16d9f508b2dfe0153bb9f71a76fe9660a8c94c8dbe1e7eba30307b86706",
+          "internal/plugins/autosignin/ordinary_material_transport.go": "fd90dba247caa1762fd9d44b8faa97433d81106d9779a16dea9f77205b3c58ec",
+          "internal/plugins/autosignin/ordinary_material_transport_test.go": "986619c497cd357ec39aa84b47b5c93254c9dc63b3b07c0d9ebf14815a43c29d",
+          "internal/plugins/iyuuautoseed/testdata/torrent-form-order-source.json": "b33a38722142eee1a72fe8450c376d80354037681dc669d1a56c9a8df1a47497",
+          "internal/plugins/iyuuautoseed/torrent_fileinfo_join_test.go": "2240795a306790bc50ef5814226ce7259adbaa99d13003dcfb93558bdb83b709",
+          "internal/plugins/iyuuautoseed/torrent_form_order_test.go": "d10f6f2765602dc6a89fe865fed9c93ee55db9f7b75786263f6f5bdfaf2048dc",
+          "internal/plugins/iyuuautoseed/torrent_helper.go": "9f84675f2757e0baf9bed0cd106b5717d260a3fd29d1d6347dabc62d13300796",
+          "internal/plugins/iyuuautoseed/torrent_material_url.go": "7cb446091448526411d179567935af28fd1543c0081496a0da763099ffc4169a",
+          "internal/plugins/shared_torrent_material.go": "99638bc7e731e612413ea2ad78e2b3f9faa5371a9e4891c1da65752df5855a6f",
+          "internal/plugins/shared_torrent_material_test.go": "c2dde86989eb64175f21e095109573fea20fa8e01483101b6137095c085285db",
+          "internal/plugins/torrentmaterial/chain.go": "710994af4ec4e700c4390828fcb1d6c823d4ec8126ff80cd78d62fc502181a75",
+          "internal/plugins/torrentmaterial/chain_test.go": "fb98c9c16e728a922dfab0e98f35f69a71531ab4c9583b0e6929aaec2a3fdab8",
+          "internal/plugins/torrentmaterial/testdata/source-nonstring-log.json": "e1ec49d67d042fc45e960b60645f12ffc3e32d1f451e69ceb9fcc8a55b048991",
+          "internal/plugins/torrentmaterial/testdata/source-wrapper.json": "133bf97c1df6958a62f341b036936519d78fda928cb836eb8e23139f1fffc6bc"
+        },
+        "fixture_files": {
+          "evidence/s12-material/normal-cli-driver.py": "4108d1751de61214f14e2488b0e61f80ca577aa3504cba1094c181c289dfcc18",
+          "evidence/s12-material/source-wrapper-owned-cases.json": "a1ab340afc39b6332475b2fadd741c6f5ea76be2a9d1696c5f1e05d310f73b46",
+          "evidence/s12-material/source-nonstring-owned-cases.json": "a1d40a741157d75f795c69166b2088a2e21936f551f5cf8b8a1fb237480bd947",
+          "evidence/s12-material/source-wrapper-collector.py": "757225ec8bba71cd9842bdc1c5635f5038d07b90b5ca3d33630b9fe38a9a93ac"
+        }
+      },
+      "artifacts": {
+        "evidence/s12-material/normal-cli-result.json": "2140f56bdbbe0db5e7b5d361de1ef0b19455b590cfcd53f8c8d28ae414821301",
+        "evidence/s12-material/normal-cli-tool-receipt.json": "f4b65423459d6dd168f698367bed9ea28924a748186b5d670dee9acca9a807cb"
+      },
+      "inputs": {
+        "fixed_source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "actual_fixture_hashes": {
+          "evidence/s12-material/normal-cli-driver.py": "4108d1751de61214f14e2488b0e61f80ca577aa3504cba1094c181c289dfcc18",
+          "evidence/s12-material/source-wrapper-owned-cases.json": "a1ab340afc39b6332475b2fadd741c6f5ea76be2a9d1696c5f1e05d310f73b46",
+          "evidence/s12-material/source-nonstring-owned-cases.json": "a1d40a741157d75f795c69166b2088a2e21936f551f5cf8b8a1fb237480bd947",
+          "evidence/s12-material/source-wrapper-collector.py": "757225ec8bba71cd9842bdc1c5635f5038d07b90b5ca3d33630b9fe38a9a93ac"
+        },
+        "exact_compile_closures": "published before/after maps and runtime seal, no reconstructed execution",
+        "programs": {
+          "release_app": "c146df20a362b2f3a60bced8d7a71bc5c82dafa3fcacfe1d5115927c3f42428c",
+          "normal_server": "f810130e5624956348a53fcf82434138fe5dafb1c6c38cd4360497d6b84cbb65",
+          "normal_worker": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d"
+        }
+      },
+      "commands": [
+        "python3",
+        "audits/s12-normal-cli-plan/normal-cli-driver.py",
+        "--server",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-release-server01",
+        "--worker",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-release-fixture01.worker",
+        "--output",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/run-release01",
+        "--expected-server-sha",
+        "f810130e5624956348a53fcf82434138fe5dafb1c6c38cd4360497d6b84cbb65",
+        "--expected-worker-sha",
+        "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+        "--expected-driver-sha",
+        "4108d1751de61214f14e2488b0e61f80ca577aa3504cba1094c181c289dfcc18"
+      ]
+    },
+    {
+      "id": "s12-material.independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "S12.material"
+      ],
+      "independent": true,
+      "reviewer": "tls_ab_independent / Astra ultra",
+      "observations": "Independent source/finite component and exactrelease/runtime/normalCLI acceptance; resource/decoder/source-environment boundaries remain explicit.",
+      "binding": {
+        "report": "testdata/plugins/shared-torrent-material-20261031/review/s12-material-host-independent/RELEASE-RUNTIME-REVIEW.md",
+        "sha256": "56e13974891b0f77f6cc5db5246a6ea2ce2e7c8ca52005575c8ff7d317f7931e",
+        "seal": "testdata/plugins/shared-torrent-material-20261031/review/s12-material-host-independent/release-runtime-final-seal.json",
+        "seal_sha256": "63c3db4c83fe3371124686f33fde8138f132a488fc39ff9315393c7f81e2836b",
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "target": "owned cloud Linux; Go1.26.0, CGO_ENABLED1, unchanged inherited proxy/CA; exactrelease source760720+25paths",
+          "source": "fixed8a83 selected AST/stdlib+recording dependencies in Python3.12.14; not full original HTTP/cache runtime",
+          "limits": "explicit16MiB/decoder/serialdrain/source-execution boundaries; only owned endpoints"
+        },
+        "target_files": {
+          "cmd/owned-torrent-material-fixture/main.go": "3f495575470836e39c82545860025c1488f8613e329750fa83fd038f520eb015",
+          "internal/app/plugin_original_base.go": "83df3595caa9f5d4a16c6f36a7e85aa22b51e72d1b6fc87f4bfa7a385904d80f",
+          "internal/app/plugin_original_base_session.go": "2694bf8040a0fb5d34ae1c89ae6f75249dfc52210e3bae3c9658138da88e960d",
+          "internal/app/plugin_original_resources.go": "72a0278651ff01d379e62a2f5c8d93e189a3a773a6419123f91850c98efd0aa9",
+          "internal/app/plugin_shared_torrent_material.go": "e2df5206c983e7b16aebd4eda05d959c0b0466f325a52b696f3199291beb3af4",
+          "internal/app/plugin_shared_torrent_material_test.go": "12dcadb5ba30f6387629ab8c491c6a364305efa45eccfcbefd2394dd3bb14e77",
+          "internal/app/plugin_shared_torrent_transfer.go": "71a0524ea0ac0ffa6173a4a42255e6d3a53291e656ed23e54a6feaf8b29d6bb6",
+          "internal/app/plugin_shared_torrent_transfer_test.go": "b0ba38f529cdf973b63f6f1af1db31dae61554bbaa8d228fdebb3cf3de4cbf7b",
+          "internal/app/runtime.go": "28412b5a346378833535f2466b82c130d1edc3a736365d2896e0eb962f6929c9",
+          "internal/ocr/source_json_export.go": "2124526f82f3ee98a69e74b3a688882295c2f959a7cd65bc619dad70f8fd2dba",
+          "internal/plugins/autosignin/http_transport.go": "98e5a16d9f508b2dfe0153bb9f71a76fe9660a8c94c8dbe1e7eba30307b86706",
+          "internal/plugins/autosignin/ordinary_material_transport.go": "fd90dba247caa1762fd9d44b8faa97433d81106d9779a16dea9f77205b3c58ec",
+          "internal/plugins/autosignin/ordinary_material_transport_test.go": "986619c497cd357ec39aa84b47b5c93254c9dc63b3b07c0d9ebf14815a43c29d",
+          "internal/plugins/iyuuautoseed/testdata/torrent-form-order-source.json": "b33a38722142eee1a72fe8450c376d80354037681dc669d1a56c9a8df1a47497",
+          "internal/plugins/iyuuautoseed/torrent_fileinfo_join_test.go": "2240795a306790bc50ef5814226ce7259adbaa99d13003dcfb93558bdb83b709",
+          "internal/plugins/iyuuautoseed/torrent_form_order_test.go": "d10f6f2765602dc6a89fe865fed9c93ee55db9f7b75786263f6f5bdfaf2048dc",
+          "internal/plugins/iyuuautoseed/torrent_helper.go": "9f84675f2757e0baf9bed0cd106b5717d260a3fd29d1d6347dabc62d13300796",
+          "internal/plugins/iyuuautoseed/torrent_material_url.go": "7cb446091448526411d179567935af28fd1543c0081496a0da763099ffc4169a",
+          "internal/plugins/shared_torrent_material.go": "99638bc7e731e612413ea2ad78e2b3f9faa5371a9e4891c1da65752df5855a6f",
+          "internal/plugins/shared_torrent_material_test.go": "c2dde86989eb64175f21e095109573fea20fa8e01483101b6137095c085285db",
+          "internal/plugins/torrentmaterial/chain.go": "710994af4ec4e700c4390828fcb1d6c823d4ec8126ff80cd78d62fc502181a75",
+          "internal/plugins/torrentmaterial/chain_test.go": "fb98c9c16e728a922dfab0e98f35f69a71531ab4c9583b0e6929aaec2a3fdab8",
+          "internal/plugins/torrentmaterial/testdata/source-nonstring-log.json": "e1ec49d67d042fc45e960b60645f12ffc3e32d1f451e69ceb9fcc8a55b048991",
+          "internal/plugins/torrentmaterial/testdata/source-wrapper.json": "133bf97c1df6958a62f341b036936519d78fda928cb836eb8e23139f1fffc6bc"
+        },
+        "fixture_files": {
+          "evidence/s12-material/normal-cli-driver.py": "4108d1751de61214f14e2488b0e61f80ca577aa3504cba1094c181c289dfcc18",
+          "evidence/s12-material/source-wrapper-owned-cases.json": "a1ab340afc39b6332475b2fadd741c6f5ea76be2a9d1696c5f1e05d310f73b46",
+          "evidence/s12-material/source-nonstring-owned-cases.json": "a1d40a741157d75f795c69166b2088a2e21936f551f5cf8b8a1fb237480bd947",
+          "evidence/s12-material/source-wrapper-collector.py": "757225ec8bba71cd9842bdc1c5635f5038d07b90b5ca3d33630b9fe38a9a93ac",
+          "evidence/s12-material/source-wrapper-observations.json": "6e654f82a7e3099eadcde59b38ab9b12c7a8a6b2cc5e1e3909a4a7e1d528e5c6",
+          "evidence/s12-material/wrapper-differential-result.json": "d32b50c3f5a06aeef1fc54eec3b1d58bdd2e2d9ed1a2bf1d95984cbb1be368b9",
+          "evidence/s12-material/wrapper-differential-tests.jsonl": "fc8a726014e30098b2cbc53db7d4b4ab548f075d4a9adc26ee3f76dd3254818f",
+          "evidence/s12-material/release-app-result.json": "bc1fa941b4598a679cb9dafb4d110f4429fb7d263559723f52871650be6ac73f",
+          "evidence/s12-material/release-race-result.json": "27e727c0a4139e9ab40538fcabe9a18a1046cf571ab215ebcb7e488204f7b8cb",
+          "evidence/s12-material/normal-cli-result.json": "2140f56bdbbe0db5e7b5d361de1ef0b19455b590cfcd53f8c8d28ae414821301",
+          "evidence/s12-material/normal-cli-tool-receipt.json": "f4b65423459d6dd168f698367bed9ea28924a748186b5d670dee9acca9a807cb"
+        }
+      },
+      "artifacts": {
+        "evidence/s12-material/runtime-review.md": "56e13974891b0f77f6cc5db5246a6ea2ce2e7c8ca52005575c8ff7d317f7931e",
+        "evidence/s12-material/runtime-review-seal.json": "63c3db4c83fe3371124686f33fde8138f132a488fc39ff9315393c7f81e2836b"
+      }
     }
   ],
   "execution_contract": {
@@ -42401,8 +42861,8 @@
     "latest_scope_selection": "Current complete61-entry inventory retained by user164510; historical same-scope completion inherited; exact source-discovered missing behaviors continue, no whole-source redevelopment or duplicate shared-chain credit."
   },
   "resume": {
-    "next_slice": "S10 original8 current41-product backend slice locally verified and independently accepted; finish exact publication whitelist/commit/bundle, parent Mac ordinary push+readback. Do not restart completed normal22+1/race23/two-host CLI.",
-    "dirty_work": "Current isolated recovery worktree detached11f922: exactly41 S10 product paths+one ledger+259 publication evidence/manifest files. All product source frozen and accepted; no active test/server process. Historical older worktree dirty remains untouched; no reset/clean/sparse.",
+    "next_slice": "Finish S12.material exactwhitelist local commit/bundle; pendingMac quota recovery does not stop next independent S12.browse source/native wiring. S06 legacy-snapshot/delete decisions remain pending.",
+    "dirty_work": "Postcommit760720ed ledger metadata +2 new S06 SDK files in progress. S10 committed301 remains fixed; no real data or old worktree edits.",
     "workers": [
       {
         "name": "s01_release_owner",
@@ -42558,7 +43018,7 @@
       "source_of_readback": "Parent relayed actual Mac push/readback; evidence-s15-11f922896377/{push-receipt,protected-after-push,ci-receipt}.json",
       "mac_protection": "Original three worktree HEAD/branch/index unchanged. Main had concurrent changes to2 existing files+5 new paths retained; other2 trees unchanged. Do not falsely claim all Mac files unchanged."
     },
-    "updated_at": "2026-10-31T16:57:13.978396+00:00",
+    "updated_at": "2026-10-31T19:20:04.959503+00:00",
     "latest_integrations": {
       "services_portable": "../evidence/coordinator/services-main-integration/portable-integration.json",
       "services_web": "../evidence/coordinator/services-main-integration/web-v3-result.json",
@@ -42618,12 +43078,16 @@
       "free_after": "2.3GiB including authorized oldbinary archive"
     },
     "delivery_pending": {
-      "state": "S10 original8 local verified accepted candidate; no currentremote publication yet",
-      "base_commit": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
-      "source_paths": 41,
-      "delivery_branch": "plugins-refactor",
-      "next": "exact301 paths whitelist review -> commit -> increment bundle -> approved Mac push/readback",
-      "previous_s15": "delivered11f922 actualremote confirmed"
+      "state": "S10 localcommit and Spacebundle verified; Mac turn stopped by usage cap, push UNCONFIRMED",
+      "commit": "760720ed0a96fd9e7a647914c14545bde5ef857e",
+      "parent": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "bundle": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/external-backups/light-media-s10-760720ed0a96-20261031.bundle",
+      "bundle_sha256": "4c3c263b9fa065cd9bd7855f84d2a8060db82c29cbc74f57de9585c9bb104c33",
+      "branch": "plugins-refactor",
+      "remote_last_known": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "library_file_id": "libfile_e0f0e6cb75e08191b12c371e69e868a5",
+      "library_version": 0,
+      "mac_blocker": "root relayed Mac task failed usage cap; no model switch or cloud-auth bypass; resume only normal available path and first read remote outcome"
     },
     "terminal_binary_archive": {
       "status": "complete",
@@ -43087,7 +43551,31 @@
     "publication_structure_check": {
       "kind": "local derived structural/path/hash check, not official skill checker",
       "official_checker": "skills.read official scripts/check_ledger.py returned failed to read skill resource; unavailable, not passed",
-      "result": "testdata/plugins/ordinary-ocr-reconstruction-20261031/local-structure-check.json"
+      "result": "testdata/plugins/ordinary-ocr-reconstruction-20261031/local-structure-check.json",
+      "current_official_check_20261031": {
+        "status": "FAIL",
+        "path": "../audits/s12-release-assembly/official-structure-before-s12.stdout",
+        "sha256": "ccff20650104eef63e892ac01902153d44ea2cde73c4631e9363784687a23709",
+        "issues_before_new_s12_entries": 664,
+        "kind": "actual nonfinal preserved user-skill checker, historical schema/path/integrity gaps; not semantic tests and not historical credit reset",
+        "next": "globalledger format/evidence reconciliation remains open; exactfinite publication checks remain separate",
+        "current_delta": {
+          "at": "2026-10-31T19:22:05.867966+00:00",
+          "official_checker": {
+            "path": "/workspace/scratch/a1d82674c6f8/personal-skills/skill-6ae1ea8f53bc8191a6fb24bf06b70c29/scripts/check_ledger.py",
+            "sha256": "9dc5357a40062b78c449b10dde0c1b1373a711236d5a2e8a2665a40d5a87ef78"
+          },
+          "before": 664,
+          "initial_after_new_s12": 683,
+          "after_repair": 664,
+          "added_errors": [],
+          "removed_errors": [],
+          "identical_ordered_error_lists": true,
+          "new_s12_fields_repaired": "sourcecommit/environment and actualtarget/fixture/artifact/commands/inputs binding;13 exactraw copies under migration/evidence/s12-material, not reconstructed evidence",
+          "global_status": "FAIL remains; historical schema/path/binding issues not cleared or accepted by this finite slice; full--final notrun/notpassed",
+          "source_tests_rerun": false
+        }
+      }
     },
     "historical_commands_before_current_recovery": [
       "GH_CONFIG_DIR=/workspace/shared/cloud-git-auth GIT_CONFIG_GLOBAL=/workspace/shared/cloud-git-auth/gitconfig git status --short",
@@ -43618,13 +44106,713 @@
         "phase": "source41+then-ledger+terminalreceipts; before final independent seal/publicationmetadata"
       },
       "publication": {
-        "state": "accepted_local_candidate_prepared_for_whitelist_review_commit_bundle",
+        "state": "LOCAL_COMMIT_BUNDLE_VERIFIED_AWAITING_MAC_PUSH",
         "base": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
         "manifest": "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/publication-manifest.json",
         "scope": "original8 complete ordinary backend contract; remote still11f922 until actual push/readback",
         "candidate_product_count": 41,
         "primary_scope_count": 61,
-        "normal_ci": "No CI run/check/status, no CI-green claim"
+        "normal_ci": "No CI run/check/status, no CI-green claim",
+        "commit": "760720ed0a96fd9e7a647914c14545bde5ef857e",
+        "bundle_sha256": "4c3c263b9fa065cd9bd7855f84d2a8060db82c29cbc74f57de9585c9bb104c33",
+        "publication_independent_sha256": "d664bb7e11e7586f43cfd70bdf5490810042c93903f2e069eea57490143fbb6b"
+      }
+    },
+    "last_local_commit": {
+      "commit": "760720ed0a96fd9e7a647914c14545bde5ef857e",
+      "parent": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "accepted_scope": "S10 original8",
+      "bundle_sha256": "4c3c263b9fa065cd9bd7855f84d2a8060db82c29cbc74f57de9585c9bb104c33",
+      "remote_delivery": "pending"
+    },
+    "new_s06_getbyhash_reconstruction": {
+      "base": "760720ed0a96fd9e7a647914c14545bde5ef857e",
+      "source": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+      "scope": "Only DownloadHistoryOper.get_by_hash; inherit existing transfer src/dest; no downloaddelete/fullDAO/realdownloader",
+      "source_contract": "../audits/s06-getbyhash-reconstruction-plan/CONTRACT.md",
+      "source_addendum": "../audits/s06-getbyhash-reconstruction-plan/ADDENDUM-v2.md",
+      "independent_contract": "../audits/s06-getbyhash-independent/REVIEW.md",
+      "independent_sha256": "8739529b4d9ec5408f276f044e5743d7f62839a991a6ca96b75300578bef7a42",
+      "active_write_windows": {
+        "sdk": "s01_release_owner two newfiles A3 frozen; SDK2 normal passed, independent pending",
+        "source_preparation": "c_userdata_owner selected source DAO collector frozen; actual warm/cold passed; independent pending",
+        "producer": "s01_release_owner two new pure App snapshot helper/test files only; production hooks not yet authorized",
+        "source_producer": "c_userdata_owner audits/s06-producer-source-preparation only, selected pure original producer/path preparation; no execution yet"
+      },
+      "producer_not_implemented": true,
+      "legacy_compatibility_decision": {
+        "status": "awaiting_user_root_asked",
+        "proposal": "old accepted facts without genuine history snapshot returnNone/no invented nullable row/no retroactive field fabrication; new actual accepted rows captured faithfully",
+        "not_assumed_approved": true
+      },
+      "transfer_delete_safety_choice": "separate stillawaitinguser; nodeleteimplementation",
+      "old_missing_candidate": "not restored; no lost historical PASS credited to this reconstruction",
+      "next": "freeze S06 SDK+projection partial WIP externally; production reader/hooks/race/CLI remain unimplemented, legacy user choice pending; proceed independently S12.material",
+      "sdk_normal": {
+        "evidence": "../evidence/s06-sdk01",
+        "exec_session": 9021,
+        "terminal_chunk": "578d28",
+        "exit": 0,
+        "roots": 2,
+        "input_count": 1922,
+        "program_sha256": "8174701c4ec08a7fa403ef47614035213694db937ed512b599d1e933b5ce7419",
+        "ended": "2026-10-31T17:26:59.798667Z",
+        "layer": "recording HostCaller SDK only",
+        "independent": {
+          "status": "PASS SDK only",
+          "report": "../audits/s06-sdk-independent/REVIEW.md",
+          "seal": "../audits/s06-sdk-independent/FINAL.json",
+          "sha256": "3338c6ed83c1fe3b9c00aee186a5da0850d723188a935d879432f557100c4b35"
+        }
+      },
+      "source_dao": {
+        "warm": {
+          "evidence": "../evidence/s06-source-warm01",
+          "chunk": "cf5ea8",
+          "exit": 0
+        },
+        "cold": {
+          "evidence": "../evidence/s06-source-cold01",
+          "chunk": "1e0d83",
+          "exit": 0
+        },
+        "scope": "selected actual AST original ORM/Oper/Base/db_query, real SQLAlchemy/owned SQLite; seeded reads, not producer/full App/Go equivalence",
+        "independent": {
+          "status": "PASS selected actual source DAO only",
+          "report": "../audits/s06-getbyhash-independent/SOURCE-DAO01-REVIEW.md",
+          "seal": "../audits/s06-getbyhash-independent/source-dao01-terminal-independent.json",
+          "sha256": "48c04b2eafc096637d591d63230f54e1b46463e883dd78ecdff6f4088e37df61",
+          "observations": 18,
+          "ordinary_lookups": 16,
+          "owned_rows": 19,
+          "columns": 30
+        }
+      },
+      "external_checkpoint": {
+        "path": "../external-backups/s06-a-sdk-source-wip-20261031T1730.tar.gz",
+        "sha256": "8300748926c4ee3b1d71d5d64dc37a005bcf6a35eb24e4b3117ea8e60cc060d1",
+        "bytes": 1177839,
+        "library_file_id": "libfile_f3117a64f7788191b223fd3000c5eab8",
+        "version": 0,
+        "status": "actual Space saved, root receipt/xattrs tool0"
+      },
+      "source_parser_dependency": {
+        "status": "official 1.2.0 wheel acquired and static extracted only; not installed/imported",
+        "source_requirement": "torrentool~=1.2.0 (not torf)",
+        "path": "../source-runtime/s06-torrentool-source",
+        "wheel_sha256": "bc6c55622e23978cf3c1e4aaf8f087971d75608c15b83be5a2c029464d3dd803",
+        "bytes": 13021,
+        "metadata_terminal": "cc9ce5 exit0 session14476",
+        "wheel_terminal": "a22cae exit0 session43466",
+        "next": "static importer/parser check then selected original producer same-ownedbytes capture; no network probe/import bypass",
+        "independent_static": "../audits/s06-getbyhash-independent/TORRENTOOL-STATIC-REVIEW.md; SHA38b478cc5d5fc7fa915d29695e2dc389e8fba1317f733e43e04d80aae12b3554"
+      },
+      "projection_unit_normal": {
+        "evidence": "../evidence/s06-projection01",
+        "session_id": 51234,
+        "terminal": "b7553b exit0",
+        "roots": 2,
+        "inputs": 6177,
+        "program_sha256": "14830a0e96fdad4efac378c06e6cf6c9da65941e17c4c4f2dffd428738ca5cab",
+        "scope": "B1 pure function test; not source equivalence; independent MediaInfo.to_dict identity provenance issue found"
+      },
+      "source_producer_capture": {
+        "attempt01": "../evidence/s06-source-producer01",
+        "status": "FAIL exit1",
+        "chunk": "09ebfa",
+        "next": "independent raw readback, use same source output in target finite differential; attempt01 preserved",
+        "attempt02": {
+          "evidence": "../evidence/s06-source-producer02",
+          "status": "PASS exit0",
+          "chunk": "b9630b",
+          "driver_sha256": "5b06ef8ade5b095b9ff3255c17b3ec7f560965543e30f64bfd46b2e15aba2750",
+          "layer": "selected actual source success-prefix with true torrentool/ownedbytes, recording add receiver not DAO/downloader",
+          "independent": {
+            "report": "../audits/s06-getbyhash-independent/SOURCE-PRODUCER02-REVIEW.md",
+            "seal_sha256": "b00e592c48085b248469d23c7b96cb3f87080b5705cb170b60650835c2345147",
+            "status": "accepted limited selected source component, 29inputs/161nodes/67imports current same; not DAO/download"
+          }
+        }
+      },
+      "projection_unit_normal02": {
+        "evidence": "../evidence/s06-projection02",
+        "session_id": 68502,
+        "terminal": "04a8a8 exit0",
+        "roots": 2,
+        "inputs": 6177,
+        "program_sha256": "178f954fba8cd560a23b46bdfd5783acc2b4bcf1f86e077d88e376e7362da1c1",
+        "scope": "B2 required resolvedIdentity; pure function only, not production provenance"
+      },
+      "known_new_producer_gap": "Ordinary UI compact catalog models do not prove full original MediaInfo or pre-to_dict resolved identity. Existing full source recognition outputs can be captured without new request; normal card-only path remains genuinely missing, no nil/default fabrication, no extra network added.",
+      "projection_source_diff": {
+        "status": "PASS limited B3, B2 originaltwo function credit inherited",
+        "evidence": "../evidence/s06-projection-diff01",
+        "session": 16346,
+        "terminal": "238213 exit0",
+        "input_count": 6181,
+        "program_sha256": "428dded4b3e00adccb8e825ed405c382624f816491915f47ad5b8204945f8488",
+        "actual": "3 owned byte torrents through existing Go TorrentFiles match source, 4 rows /26 recomputed fields; identity pair/date observed input; source recorder no SQLid",
+        "independent": "../audits/s06-snapshot-independent/B3-FINAL.json",
+        "independent_sha256": "c730097d9a0f142da0329644e64f1d3c1676d3b341b1b2f5129b9747eae144cc",
+        "independent_report": "../audits/s06-snapshot-independent/B3-REVIEW.md"
+      },
+      "external_checkpoint_b": {
+        "path": "../external-backups/s06-b-source-diff-wip-20261031T1752.tar.gz",
+        "sha256": "79d356a8f9cc8ae8e28b9fc701db6f34b67eed2ccb879d44f5c24e01e5bd3b94",
+        "bytes": 4650225,
+        "library_file_id": "libfile_c2d4f2e1f3dc81919e262ea08da6bc85",
+        "version": 0,
+        "status": "actual external saved root receipt/xattrs tool0",
+        "scope": "partial SDK/source/projection; production incomplete"
+      }
+    },
+    "next_source_discovery": {
+      "plan": "../audits/s12-next-browse-rss/PLAN.md",
+      "sha256": "3e453c85aaa56f3045e32e8f86c7fe82b72a6af446f4147afc14366d376524d2",
+      "next": "S12.browse sync SDK/provider/full native shape; first resolve SitesHelper source/indexer evidence, no fake reconstruction; RSS/S14 dependency counted once"
+    },
+    "recovery_protection_followthrough": {
+      "path": "AGENTS.md",
+      "reason": "restore explicitly required protection rule absent from recovered committed baseline; no layout operation/deletion performed",
+      "status": "written in current dirty tree, next checkpoint includes it"
+    },
+    "new_s12_material_reconstruction": {
+      "base": "760720ed0a96fd9e7a647914c14545bde5ef857e",
+      "source": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+      "scope": "only original DownloadChain.download_torrent ordinary active standard SDK chain; browse/rss/S14 separate, not allS12",
+      "source_contract": "../audits/s12-source-resume/contract.md",
+      "independent": "../audits/s12-material-independent/REVIEW.md",
+      "independent_sha256": "b59b717aaa9a1ff140b606422de64fba4a35724005d3d01cc331f21afbb5538a",
+      "reuse": "existing iyuuautoseed TorrentHelper/TorrentFiles/FileTorrentCache and exact pinned oracle credit, no reset/recreate",
+      "actual_new_gap": "active SDK/cap wrapper, exact descriptor request/result path, notifications, current trusted scoped HTTP/TLS and durable cache chain",
+      "known_parser_defect": "Actual original Root/sub/x vs beforetarget x; one-line fix tested and independently accepted finite",
+      "resource_limit": "preserve current16MiB helper/cache/decoded body/SDK guards; source no equalcap remains unapproved safety boundary, not arbitrarysize equivalence; private prepare/read1MiB scoped transport proposal preserves raw16MiB without base64 shrink",
+      "active_write_windows": {
+        "wrapper": "B2 product frozen; exact source19 test/embeddedfixture frozen before currentcompile",
+        "transport": "c_userdata_owner 2new ordinary_material_transport files + minimal http_transport.go mode only; preserve normal/OCR",
+        "scope_host": "s01_release_owner transfer2new + originalBaseCallScope/session narrow hooks; then exact host/cache plan; no transport overlap",
+        "source": "frozen source19 independently accepted",
+        "parser": "frozen one-linefix, no furtherwrites"
+      },
+      "active_sessions": [
+        {
+          "session_id": 56799,
+          "evidence": [
+            "../evidence/s12-wrapper-b501",
+            "../evidence/s12-helper-c301",
+            "../evidence/s12-sdk-c301"
+          ],
+          "operation": "three serial finite newdelta roots; sourceB5log/sourceKeyError/SDKallowlist",
+          "status": "RUNNING",
+          "started_tool": "81f67b",
+          "next": "poll original56799; no parallelGo"
+        }
+      ],
+      "status": "Finite material candidate actual source/target/host/race/two-normalhost independently accepted; exactpublicationhashreview pending commit; wholeS12 stillopen",
+      "parser_source_case": {
+        "evidence": "../evidence/s12-parser-source01",
+        "tool_chunk": "fbf6fa",
+        "exit": 0,
+        "actual": "Root/[sub/,x] parses Root/sub/x; original helper folderRoot/files[sub/x]",
+        "independent_readback": "accepted source onecase/parser seal",
+        "target_counterexample": "actual s12-parser-before01 exit1 retained"
+      },
+      "sdk_normal01": {
+        "evidence": "../evidence/s12-sdk01",
+        "session": 2025,
+        "terminal": "022259 exit0",
+        "roots": 2,
+        "input_count": 1924,
+        "program_sha256": "ae83b244ef017a9ae75ff590c52d7ce470bba314786cf77cbb50a131c9e47dba",
+        "independent_issue": "files:[null] silently decoded into emptystring; A2 pending, purePASS does not close it"
+      },
+      "parser_before": {
+        "evidence": "../evidence/s12-parser-before01",
+        "session": 4664,
+        "terminal": "c3ff55 exit1",
+        "status": "actual regression FAIL Root/[x] vs originalRoot/[sub/x], preserved",
+        "input_count": 3437
+      },
+      "parser_fix": {
+        "status": "actual targeted PASS plus dependent S06 sourceprojection PASS, independent finite acceptance",
+        "path": "internal/plugins/iyuuautoseed/torrent_helper.go",
+        "sha256": "837f10b59390aeb07c3f8106fd41e069533ddb7be11e7b5a68e3a553885ee86d",
+        "change": "trailing slash/empty join case append instead of replacing prefix",
+        "reopens": "only affected parser projections including S06 B3 samebytes; prior finite runs remain historical actual PASS",
+        "independent": {
+          "report": "../audits/s12-material-independent/PARSER-JOIN-FINAL-REVIEW.md",
+          "seal": "../audits/s12-material-independent/parser-join-terminal-independent.json",
+          "sha256": "fdc01a8f6d9c733bba9946542ab7dbaf109f24866f8d3956c2a1641c45c613ca",
+          "scope": "finite1sourcecase/actualFAIL/fix1+25/S06dependency4, no entireparser/fullhostclaim"
+        }
+      },
+      "sdk_normal02": {
+        "evidence": "../evidence/s12-sdk02",
+        "session": 8017,
+        "terminal": "99d36d exit0",
+        "roots": 2,
+        "input_count": 1924,
+        "program_sha256": "e8a0ba6793d760ff60b7aadb10d124ca716d67f7fabfca29d9fee340e7ac3f8a",
+        "scope": "A2 recordingHost SDK, not actual scopedhost/HTTP",
+        "independent": {
+          "status": "PASS finiteSDK only",
+          "report": "../audits/s12-sdk-independent/REVIEW.md",
+          "seal": "../audits/s12-sdk-independent/FINAL.json",
+          "sha256": "c5274c9b43b5908ccedf4854b66cce3c6ece32b96ecbe3dccaec92e396f078b9"
+        }
+      },
+      "parser_after": {
+        "evidence": "../evidence/s12-parser-after01",
+        "session": 79791,
+        "terminal": "36ec58 exit0",
+        "roots": 2,
+        "input_count": 3437,
+        "program_sha256": "120e839317203cae84a5404c17333b464339d1f58e86c6d1b7c651b3404cd74a",
+        "scope": "source1regression+25 existingfiles; downloads18 not rerun"
+      },
+      "parser_dependent_revalidation": {
+        "evidence": "../evidence/s12-s06-parser-dependent01",
+        "session": 39060,
+        "terminal": "e79ab8 exit0",
+        "input_count": 6184,
+        "program_sha256": "6af307a4887ae93584240625840fe658baa27e01137c41899bb6c5c87045fd1b",
+        "roots": 1,
+        "scope": "same S06 four sourceprojection cases after actual sharedparser one-line change"
+      },
+      "external_checkpoint_a": {
+        "path": "../external-backups/s12-a-sdk-parser-wip-20261031T1812.tar.gz",
+        "sha256": "25e98b3d64ad20520c1e83dc87e08cd2ca0374e1f928d01b66a2e01f0e69c00d",
+        "bytes": 3543354,
+        "library_file_id": "libfile_bd0759ee05bc8191a3998cc3f7a1420d",
+        "version": 0,
+        "status": "actual Space saved root receipt/xattrs tool0",
+        "scope": "onlySDK+parserpartial; activewrapper excluded"
+      },
+      "wrapper_normal01": {
+        "evidence": "../evidence/s12-wrapper01",
+        "session": 8124,
+        "terminal": "e44415 exit0",
+        "roots": 3,
+        "input_count": 3438,
+        "program_sha256": "4c000daa704fe6b3cb7679d187c7b0bdd6db257b6edc4cc9a2391c3b6b8fcd34",
+        "layer": "purewrapper with actual Go TorrentHelper/TorrentFiles; HTTP/cache/notice are recording in-memory fake ports, not actual persistentFileCache",
+        "independent": "../audits/s12-wrapper-independent/B1-FINAL.json",
+        "independent_sha256": "3fc10f25d9554cfef50f0ff47dd51f32d3d9bda6605599dec1c67fba9daa444b"
+      },
+      "source_material01": {
+        "evidence": "../evidence/s12-material-source01",
+        "terminal": "c5474c exit0",
+        "cases": 19,
+        "status": "actual selected source observations collected; includes expected errors, not19successfuldownloads",
+        "driver_sha256": "757225ec8bba71cd9842bdc1c5635f5038d07b90b5ca3d33630b9fe38a9a93ac",
+        "independent_readback": "accepted limited19recordingcases,17tuple+2sourceexceptions",
+        "independent": {
+          "report": "../audits/s12-material-independent/MATERIAL-SOURCE01-REVIEW.md",
+          "seal": "../audits/s12-material-independent/material-source01-terminal-independent.json",
+          "sha256": "e4427d2c7ac594afc14fdeb0e76c7f288416ce853bce25c5365b7ee1f1b796ae"
+        }
+      },
+      "wrapper_source_diff": {
+        "evidence": "../evidence/s12-wrapper-source01",
+        "session": 13546,
+        "terminal": "9a8d28 exit0",
+        "input_count": 3439,
+        "program_sha256": "8a5dea86b23bf1481be6bb5418cb7ab728b8dd41a0134861691624dd0942699c",
+        "roots": [
+          "TestDownloadTorrentActualSourceWrapper19"
+        ],
+        "cases": 19,
+        "layer": "actualsource19 vs Go recordingports,17tuple+2exception; noHTTP/durablecache/notificationservice",
+        "independent": {
+          "path": "../audits/s12-wrapper-independent/B2-FINAL.json",
+          "sha256": "c8112fb6e80093d9bbae9251ba9ccd04b20afcb202cdeb79d6bd3dccb367656a",
+          "status": "accepted finite source19 component differential; source logging omitted from target projection, pending host"
+        },
+        "old_roots": "3 prior roots/helpers byte-identical inherited; not rerun"
+      },
+      "external_checkpoint_b": {
+        "at": "2026-10-31T18:26:18.741187+00:00",
+        "library_file_id": "libfile_4c50ab815410819181e06840be5622fb",
+        "version": 0,
+        "filename": "s12-b-source-wrapper-wip-20261031T1825.tar.gz",
+        "bytes": 2033587,
+        "sha256": "f3452d1f317673da58544ee0625148b49a47d8d818efefa1b7995e9936e283e3",
+        "status": "parent confirmed actual Space save and xattrs tool0",
+        "scope": "frozen finite wrapper/source19/ledger; not in-flight transfer/transport/worker and not Git delivery"
+      },
+      "transfer_d1": {
+        "status": "actual2pureownerrootsPASS, independentterminalpending; no actualhostdispatch",
+        "freeze": "../audits/s12-material-reconstruction-plan/phase-d1-transfers/final-inputs.sha256",
+        "resource_contract": "only per-object existing16MiB + actual SDK hostcall limits; no newaggregate rejection; theoretical default64 abandonedprepares up to1GiB untilcallclose",
+        "evidence": "../evidence/s12-transfer01",
+        "session": 21771,
+        "terminal": "8d308a exit0",
+        "input_count": 6189,
+        "program_sha256": "11091161626ad956b5dd9fc5845950fc7cf097051e2163e59e66728c83b141bd",
+        "roots": [
+          "TestOriginalTorrentTransferScopeAndCleanup",
+          "TestOriginalTorrentTransferPerObjectAndConcurrentClose"
+        ],
+        "dependency_note": "C transport checkpoint01 compiled dependency only; subsequentC/SDK/host changes notinthisfreeze",
+        "independent": {
+          "path": "../audits/s12-transfer-independent/D1-FINAL.json",
+          "sha256": "117271d4c71f822d85916e6ec437ee0081fb68e8b026fe18a1810844e3608fea",
+          "status": "accepted limited puretransfer+lifehook; not actualhostauthority/cache/SDK"
+        }
+      },
+      "worker_fixture": {
+        "path": "cmd/owned-torrent-material-fixture/main.go",
+        "sha256": "3f495575470836e39c82545860025c1488f8613e329750fa83fd038f520eb015",
+        "status": "normal+capability-denied two programs built and --manifest actualPASS; nothostcallyet",
+        "scope": "singlecapability actualSDK bytes reassembledthenreported; ordinary normalCLI driver preparing",
+        "note": "minimal errors.As DownloadTorrentSourceError class field added; notbuilt/run, oldfreeze preimage retained",
+        "build_evidence": "../evidence/s12-fixture01",
+        "terminal": "34a8e5 exit0",
+        "input_count": 1084,
+        "normal_sha256": "97b3b4b0e6f0f2b646cac982f5e3288b4d340ffee6a8f81167458edac1b3532e",
+        "denied_sha256": "7eb22334dd7be266fc30ced75a952e31bad0dfa06a3becf0c1cdb954ee718e1d"
+      },
+      "next_gate": "private C ownedprotocol+affected ordinary/OCR incremental; SDK source_error+host/cache integration; normalserver twohost later",
+      "sdk_a3": {
+        "status": "normal3actualPASS independentpending",
+        "reason": "host error would flatten original observedexceptionclass; finite typed source_error envelope with no sensitivevalue",
+        "reopens": "2affected SDK roots; not allhistorical tests",
+        "evidence": "../evidence/s12-sdk03",
+        "terminal": "c57478 exit0",
+        "session": 34851,
+        "input_count": 1924,
+        "program_sha256": "1f827f6c54b88311081e4117a0d8b15a9bd6c2d5627cf633e19bc5bb6ee0b152",
+        "roots": [
+          "TestSharedDownloadTorrentWireAndBoundary",
+          "TestSharedDownloadTorrentPagedBytesAndCleanup",
+          "TestSharedDownloadTorrentSourceExceptionEnvelope"
+        ],
+        "independent": {
+          "path": "../audits/s12-sdk-independent/A3-FINAL.json",
+          "sha256": "11ee8accb90faa5abc96497832968358cfc044b87932a997020535333c902baa",
+          "status": "finitePASS; 2sourceclasses actual5static only"
+        }
+      },
+      "transport_c": {
+        "status": "normal13actualPASS/race2actualPASS independentfinalpending; notactualApphost",
+        "freeze": "../audits/s12-material-transport-plan/candidate02.json",
+        "scope": "ownedsynthetic realHTTP/TLSprotocol; noCONNECT/forwarding/realcredentials; not Apphostchain",
+        "resource": "inherited16MiBguard still explicitsource mismatch",
+        "normal_evidence": "../evidence/s12-transport01",
+        "terminal": "8f9bd7 exit0",
+        "session": 25860,
+        "input_count": 2958,
+        "program_sha256": "e757aa2a6a681bef77cf86ebfec81435b1dd38fbb6a63f234fcd73d41aa54d03",
+        "roots": [
+          "TestBoundSiteTransportNoCrossOriginAndStrictTLS",
+          "TestBoundSiteTransportIdleCancellationAndBounds",
+          "TestBoundSiteTransportSlowHeadersAreIdleNotTotal",
+          "TestOrdinaryMaterialQueryHeadersAndResponse",
+          "TestOrdinaryMaterialSourceTLSAndProxyIsolation",
+          "TestOrdinaryMaterialRedirectCredentialsAndMethods",
+          "TestOrdinaryMaterialBodyLimitsAndBinary",
+          "TestOrdinaryMaterialGuardCancellationAndClose",
+          "TestOrdinaryOCRFullBodyNativeLimitRetained",
+          "TestOrdinaryOCRCancellationAndDecodeErrors",
+          "TestOrdinaryOCRSourceTLSIsIsolated",
+          "TestOrdinaryOCRCredentialRedirectAndNativeRemainDenied",
+          "TestOrdinaryOCRRedirectGuardsAndURLCredentials"
+        ],
+        "race_evidence": "../evidence/s12-transport-race01",
+        "race_session": 92889,
+        "race_terminal": "84d1a8 exit0",
+        "race_input_count": 2967,
+        "race_program_sha256": "bfddfa6ee9fdd7be6a01ac002bb7c8fead23d92400dd1c8e3bb295a74dcb7959",
+        "race_roots": [
+          "TestOrdinaryMaterialRedirectCredentialsAndMethods",
+          "TestOrdinaryMaterialGuardCancellationAndClose"
+        ],
+        "independent": {
+          "seal": "../audits/s12-material-transport-independent/final-seal.json",
+          "sha256": "3a7e6e2b5b0f08a69c3f7c40aea6c13a47176974ee26ae492ad53b1156fc2717",
+          "status": "accepted finite actualnormal13/race2, notApphost"
+        }
+      },
+      "source_form_order": {
+        "evidence": "../evidence/s12-form-order-source01",
+        "terminal": "369b11 exit0",
+        "stdout_sha256": "b33a38722142eee1a72fe8450c376d80354037681dc669d1a56c9a8df1a47497",
+        "independent_sha256": "17c18e45c6e9a0b6cba7a8ca454cd0b6d791f77851988c56250e699c058db1cb",
+        "scope": "actual3originalASTnodes produce ordereditems b:last,a:middle; notrequests/HTTPencoding/fullhelper"
+      },
+      "external_checkpoint_cd": {
+        "at": "2026-10-31T18:39:10.852111+00:00",
+        "library_file_id": "libfile_543eb584b754819197cf182a0e10cdb5",
+        "version": 0,
+        "filename": "s12-cd-transport-transfer-wip-20261031T1837.tar.gz",
+        "bytes": 3367702,
+        "sha256": "b59b7d5b1620fb08e93149fc24f3601b390764574d4af8f55c967e07bc06ac02",
+        "status": "actual external Space saved parent receipt/xattrs tool0",
+        "scope": "C normal13/race2+SDK A3normal3/transferD1normal2 finite; workerunbuilt; excludesinflightApphost/CLI"
+      },
+      "ordered_helper": {
+        "status": "normal2roots+5oldsubcases actualPASS independentpending",
+        "freeze": "../audits/s12-material-reconstruction-plan/phase-c2-ordered-source/inputs.sha256",
+        "scope": "onlyoptionalorderedPost; existingparserone-linefixretained; no full18retest",
+        "runtime_input_binding": "oldreferenceJSON explicitlyaddeddriverinput, newsourcefixturegoembed",
+        "evidence": "../evidence/s12-ordered-helper01",
+        "terminal": "5751f1 exit0",
+        "session": 86788,
+        "input_count": 3441,
+        "program_sha256": "b8935fbd81467f54b1c8825d21803c30ad282a34f38641a9cb55746f335bc9c8",
+        "roots": [
+          "TestTorrentFirstDownloadPreservesSourceFormOrder",
+          "TestInstalledTorrentHelperOracle"
+        ],
+        "subcase_passes": [
+          "TestInstalledTorrentHelperOracle/first-valid",
+          "TestInstalledTorrentHelperOracle/first-bad",
+          "TestInstalledTorrentHelperOracle/first-no-input",
+          "TestInstalledTorrentHelperOracle/first-500",
+          "TestInstalledTorrentHelperOracle/first-valid-bencode-no-files"
+        ],
+        "independent": {
+          "path": "../audits/s12-ordered-helper-independent/C2-FINAL.json",
+          "sha256": "d81f0353391d812b8d5aae87e44545214d1552c9e1debe029b8685579d86bc49",
+          "status": "accepted2roots exact5subcases only"
+        }
+      },
+      "wrapper_normal02": {
+        "evidence": "../evidence/s12-wrapper02",
+        "session": 5744,
+        "terminal": "02b3df exit0",
+        "roots": [
+          "TestDownloadTorrentActualSourceWrapper19",
+          "TestDownloadTorrentActualSourceLogProjection",
+          "TestDownloadTorrentLazyResponseTextBoundary"
+        ],
+        "input_count": 3440,
+        "program_sha256": "b61b52612914295528e294e5be0798e9dad6c2af20e09400bd90f439184c748a",
+        "status": "actual finitePASS; independent found existingnonstring URL normalizer logging order gap; B5 finitefix pending, notalllogsclosed"
+      },
+      "normal_cli_prepared": {
+        "driver": "../audits/s12-normal-cli-plan/normal-cli-driver.py",
+        "sha256": "4108d1751de61214f14e2488b0e61f80ca577aa3504cba1094c181c289dfcc18",
+        "status": "candidate02prepared notrun; ownedsetup404 separatelyrecorded"
+      },
+      "host_first_gate": {
+        "status": "actual compile0/tests1 fourrootFAIL; do not green partialassertions",
+        "product": "../audits/s12-material-reconstruction-plan/phase-e2-host-consumers/production-inputs.sha256",
+        "test_manifest": "../audits/s12-material-host-test-plan/candidate02.json",
+        "test_sha256": "20486e126956a7f7a2becd0cc1498237d2f6eab1a003faff0f0521ecf73db7d5",
+        "known_pending": [
+          "B5newsource3logtest notyetplaced inrepo; production710994/bridge7cb frozen",
+          "301/302missingLocation originalKeyError vs targetNone+notice identified; subsequentnarrowfix, notcoveredfullparity"
+        ],
+        "session": 63629,
+        "terminal": "df347c exit1",
+        "evidence": "../evidence/s12-app01",
+        "input_count": 6197,
+        "program_sha256": "d5a62a0aab44e736642be9dca1c492cbedafabd4ddf6741d9d6af9e49e02a4f2",
+        "observations": [
+          "owned unexpected rootrequest /, exactsourcecause investigating",
+          "negativecap correctlyfails but actual SDK code differs testexpectation",
+          "publiclog projection lacks expectedinternalfields; targetinternal attributionnotyetproved",
+          "actualworker32MiB complete/36callbacks butfetchcount2 failsroot",
+          "guard request notstarted, actualroutingcause underinvestigation"
+        ],
+        "sourceproof": "inputsbefore/aftercompile actual; driver raises afterfailure, no fabricatedafter-testmap"
+      },
+      "source_nonstring_log": {
+        "evidence": "../evidence/s12-nonstring-log-source01",
+        "terminal": "c6ca8b exit0",
+        "stdout_sha256": "e1ec49d67d042fc45e960b60645f12ffc3e32d1f451e69ceb9fcc8a55b048991",
+        "scope": "3primitiveint cases sourcefullwrapper+helperfirststartswithonly, notHTTP/fullhelper",
+        "independent": "../audits/s12-wrapper-independent/B5-SOURCE-ACCEPTANCE.json"
+      },
+      "host_retry": {
+        "status": "actualcompile0/test1; first3rootPASS fourthFAIL serialcaller-cancelexpectationcontradictsoldcontract",
+        "manifest": "../audits/s12-material-host-test-plan/candidate03.json",
+        "test_sha256": "c0b7f050009dff9a8089f5870027cf3082fbcf9a2cb2f17e7f0e375befb1a7b2",
+        "actual_fixes": "recordedsetupGET/404 separately withoutclearing; actualSDK publicerror; canonicalexistinglogAPI; rootfalsepositivefixed; addedmissingLocation no-notice",
+        "binary_build": "../evidence/s12-fixture02",
+        "normal_sha256": "3087db37012b0b44db739caed1fc0d9c8f3a1218d98dc9c6e49c58f4ccc3e86f",
+        "denied_sha256": "f57a683f977e1aa6a3418b333bae45a882a6722c14392da1f35e3200e136ac04",
+        "prior_failure_independent": "../audits/s12-material-host-independent/app01-failure-independent.json",
+        "terminal": "0e3c4c exit1",
+        "session": 39190,
+        "input_count": 6197,
+        "program_sha256": "22870924e359884dd7053f1dc5f135207658c0574a345ab22e0b3cacdf687e92",
+        "independent_sha256": "2687b657113cb94aad79f26d33837efced98d1c1dfc74a3d35098269fc8a7b2c",
+        "passed_roots": [
+          "TestSharedTorrentMaterialActualWorkerValuesAuthorityRecovery",
+          "TestSharedTorrentMaterialCacheColdAndFailureHistory",
+          "TestSharedTorrentMaterialFullBytesActualWorker"
+        ],
+        "next": "candidate04 changesonlyfourthroot toactualserialboundeddrain; no product/workerprotocol change"
+      },
+      "source_missingLocation": {
+        "evidence": "../evidence/s12-missing-location-source01",
+        "terminal": "c3d8a2 exit0",
+        "scope": "originalwhile only301/302 controlledtruthyemptyheaders→KeyError actualsource111; noHTTP/fullhelper",
+        "independent_sha256": "86c7e4f244b134e06e15849a081e49b4bc54d014be92f244eb77314df484dfe3"
+      },
+      "external_checkpoint_host_pretest": {
+        "at": "2026-10-31T19:02:07.874678+00:00",
+        "library_file_id": "libfile_d314ae111b308191a4bce4f1f030ca3b",
+        "version": 0,
+        "filename": "s12-host-pretest-failures-wip-20261031T1856.tar.gz",
+        "bytes": 3311349,
+        "sha256": "5e60c41bc3db6e7b78ef38060d2071609b067696d230bcea01cedb67a1ab1cac",
+        "status": "actualSpace rootreceipt/xattrs tool0",
+        "scope": "latestWIP/source+App01FAIL, excluded thenactiveApp02raw and DB/bin/credentials"
+      },
+      "finite_b5_c3_terminals": {
+        "s12-wrapper-b501": {
+          "evidence": "../evidence/s12-wrapper-b501",
+          "status": "PASS",
+          "session": 56799,
+          "result_sha256": "9a40c0790bc36410765efcbccf2f910d338b5dbd208dcc2327a7f1c5cca17532",
+          "ended": "2026-10-31T19:01:56.250820+00:00",
+          "root_passes": [
+            "TestDownloadTorrentActualSourceNonstringLogOrder"
+          ],
+          "program_sha256": "19e433d90df91f75d54f8bce4c90b566715a5ac934458cd47b32c1337a06abd3",
+          "input_count": 3441,
+          "terminal_note": "original session no longer registered on19:06 poll; saved result and individual raw command exits0 verified, not new execution"
+        },
+        "s12-helper-c301": {
+          "evidence": "../evidence/s12-helper-c301",
+          "status": "PASS",
+          "session": 56799,
+          "result_sha256": "a95b14bfe6970244cb1c5361051cda4548c70a9b20392de343cadcd6b9c0bb50",
+          "ended": "2026-10-31T19:01:59.274280+00:00",
+          "root_passes": [
+            "TestTorrentRedirectMissingLocationSourceException"
+          ],
+          "program_sha256": "3d8a7ff68836a7e77313976ca2a793b3b6df7489ae78e0978da0faf20743d655",
+          "input_count": 3440,
+          "terminal_note": "original session no longer registered on19:06 poll; saved result and individual raw command exits0 verified, not new execution"
+        },
+        "s12-sdk-c301": {
+          "evidence": "../evidence/s12-sdk-c301",
+          "status": "PASS",
+          "session": 56799,
+          "result_sha256": "26562e938c9acc9b06333865020bd615bac831bd46c15522d999ad96444010f6",
+          "ended": "2026-10-31T19:02:01.875404+00:00",
+          "root_passes": [
+            "TestSharedDownloadTorrentSourceExceptionEnvelope"
+          ],
+          "program_sha256": "75e397f04c9d5dbfcce54c3d2c9c24a10027459b6b59acefc7604becb1b352af",
+          "input_count": 1924,
+          "terminal_note": "original session no longer registered on19:06 poll; saved result and individual raw command exits0 verified, not new execution"
+        }
+      },
+      "host_single_root_retry": {
+        "status": "PASS",
+        "evidence": "../evidence/s12-app03",
+        "session": 1225,
+        "started_tool": "30b960",
+        "scope": "onlyfourthroot candidate04; no newconcurrentfixture; originalserialdrain contract; previous3rootpartialPASS inheritedbyteidenticalprefix",
+        "terminal": "56df31 exit0",
+        "ended": "2026-10-31T19:06:38.760001+00:00",
+        "input_count": 6197,
+        "program_sha256": "6f7f6879d2b46be31c85d077935d799f1f03f8871cdb821ad1488e66f822f499"
+      },
+      "host_race": {
+        "status": "PASS",
+        "session": 79809,
+        "terminal": "ddd48a exit0",
+        "evidence": "../evidence/s12-app-race01",
+        "input_count": 6206,
+        "program_sha256": "f05fae497eba8a6463fce1634973c281d3e749063f3d91ee5296a69aea2b923e",
+        "roots": [
+          "TestSharedTorrentMaterialCacheColdAndFailureHistory",
+          "TestSharedTorrentMaterialCurrentGuardAndCancellation"
+        ],
+        "ended": "2026-10-31T19:07:38.574975+00:00",
+        "scope": "actualAppcoldcache/guard+legacyserialdrain; notconcurrentcallcancellation"
+      },
+      "external_checkpoint_host_terminal": {
+        "at": "2026-10-31T19:09:22.867867+00:00",
+        "library_file_id": "libfile_663ec93c9b508191af0eed3f3d06945b",
+        "version": 0,
+        "filename": "s12-host-terminal-wip-20261031T1908.tar.gz",
+        "bytes": 7939792,
+        "sha256": "93224847678c50516caab566db11130b5093e8b0604d33dfeab83fb9fdf180d4",
+        "status": "actualSpace parentreceipt/xattrs tool0",
+        "scope": "WIP App3+1 and hostrace2 pass/originalFAIL, before releasecandidate/CLI"
+      },
+      "release_candidate": {
+        "path": "../release-light-media",
+        "base": "760720ed0a96fd9e7a647914c14545bde5ef857e",
+        "product_paths": 25,
+        "assembly": "../audits/s12-release-assembly",
+        "status": "candidate normal4/hostrace2/normalserver actualtwohost13CLI PASS; finalindependent/publicationpending",
+        "protected": "original34dirty/untracked/ignored actualbytes plusstatus/index unchanged afterworktreeadd",
+        "gates": {
+          "s12-release-fixture01": {
+            "status": "PASS",
+            "input_count": 1083,
+            "normal_program_sha256": "fccbea3efb9050b76d479297b8cd41b883281d5cd31babc361a3b9f9b199a35d",
+            "denied_program_sha256": "71fb9ac97ad4628bf685b098346852566d123f27455ea0eebc483f0158b6d0be",
+            "ended": "2026-10-31T19:09:09.228416+00:00"
+          },
+          "s12-release-app01": {
+            "status": "PASS",
+            "input_count": 6189,
+            "program_sha256": "c146df20a362b2f3a60bced8d7a71bc5c82dafa3fcacfe1d5115927c3f42428c",
+            "root_passes": [
+              "TestSharedTorrentMaterialActualWorkerValuesAuthorityRecovery",
+              "TestSharedTorrentMaterialCacheColdAndFailureHistory",
+              "TestSharedTorrentMaterialFullBytesActualWorker",
+              "TestSharedTorrentMaterialCurrentGuardAndCancellation"
+            ],
+            "ended": "2026-10-31T19:10:02.340816+00:00"
+          },
+          "s12-release-race01": {
+            "status": "PASS",
+            "input_count": 6198,
+            "program_sha256": "38620ff0183943f2d4f96991cb5b9ab8a5663f2aa7a7e8229ad12fe00cba4f46",
+            "root_passes": [
+              "TestSharedTorrentMaterialCacheColdAndFailureHistory",
+              "TestSharedTorrentMaterialCurrentGuardAndCancellation"
+            ],
+            "ended": "2026-10-31T19:11:16.993499+00:00"
+          },
+          "s12-release-server01": {
+            "status": "PASS",
+            "input_count": 3960,
+            "program_sha256": "f810130e5624956348a53fcf82434138fe5dafb1c6c38cd4360497d6b84cbb65",
+            "ended": "2026-10-31T19:11:27.801112+00:00"
+          }
+        },
+        "terminal": "299346 exit0",
+        "session": 99749
+      },
+      "normal_cli_actual": {
+        "evidence": "../audits/s12-normal-cli-plan/run-release01",
+        "session": 88017,
+        "terminal": "3b7182 exit0",
+        "status": "PASS",
+        "hosts": [
+          23,
+          58
+        ],
+        "queries": 13,
+        "actual_reassembled_bytes_pair": 33554432,
+        "both_host_exits": 0,
+        "environment_proxy_unchanged": true,
+        "wire_bytes_measured": false
+      },
+      "s10_scope_regression": {
+        "evidence": "../evidence/s12-release-s10-regression01",
+        "session": 48228,
+        "terminal": "55c9a3 exit0",
+        "status": "PASS",
+        "root": "TestSharedSchedulerActualRetainedSelfRemove",
+        "scope": "actualcurrentreleaseApp with oldacceptedS10worker; notS10allrerun"
+      },
+      "final_runtime_independent": {
+        "report": "testdata/plugins/shared-torrent-material-20261031/review/s12-material-host-independent/RELEASE-RUNTIME-REVIEW.md",
+        "sha256": "56e13974891b0f77f6cc5db5246a6ea2ce2e7c8ca52005575c8ff7d317f7931e",
+        "seal": "testdata/plugins/shared-torrent-material-20261031/review/s12-material-host-independent/release-runtime-final-seal.json",
+        "seal_sha256": "63c3db4c83fe3371124686f33fde8138f132a488fc39ff9315393c7f81e2836b"
       }
     }
   },

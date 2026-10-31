@@ -1,0 +1,30 @@
+{
+  "started": "2026-10-31T19:13:05.673275+00:00",
+  "status": "PASS",
+  "kind": "one real retained S10 shared-scope incremental using current release App test program and prior accepted S10 worker as legacy-compatible consumer",
+  "app_program_sha256": "c146df20a362b2f3a60bced8d7a71bc5c82dafa3fcacfe1d5115927c3f42428c",
+  "worker_program_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+  "worker_compile_evidence": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s10-d3-fixture01",
+  "test": "TestSharedSchedulerActualRetainedSelfRemove",
+  "input_count": 6195,
+  "environment_proxy_unchanged": true,
+  "command": [
+    "go",
+    "tool",
+    "test2json",
+    "-t",
+    "-p",
+    "./internal/app",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-release-app01.test",
+    "-test.v",
+    "-test.run",
+    "^TestSharedSchedulerActualRetainedSelfRemove$",
+    "-test.count=1",
+    "-test.timeout=90s"
+  ],
+  "exit": 0,
+  "root_passes": [
+    "TestSharedSchedulerActualRetainedSelfRemove"
+  ],
+  "ended": "2026-10-31T19:13:06.595124+00:00"
+}

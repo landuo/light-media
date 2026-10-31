@@ -1,0 +1,48 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "cases": 19,
+  "selected": [
+    "DownloadChain.download_torrent including complete inner __get_redict_url",
+    "DownloadChain._normalize_indirect_download_url",
+    "NotificationType",
+    "MessageChannel"
+  ],
+  "dependency_contract": {
+    "RequestUtils": "record constructor/get_res/post_res arguments, no HTTP",
+    "Response": "explicit bool/text/json dependency inputs, not a requests Response",
+    "TorrentHelper": "record kwargs and return exact controlled five-tuple; no parser/download/cache",
+    "Notification": "record constructor kwargs; no original schema validation",
+    "post_message": "record exact notification fields, no delivery",
+    "TorrentInfo": "explicit attributes only; no original model validation",
+    "settings": "synthetic constants below, no host environment lookup",
+    "logging": "record log.info/error and preserve trace order"
+  },
+  "inputs": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/download.py",
+      "bytes": 84639,
+      "sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/types.py",
+      "bytes": 13773,
+      "sha256": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "bytes": 30894944,
+      "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-source-preparation/capture_download_material.py",
+      "bytes": 9027,
+      "sha256": "757225ec8bba71cd9842bdc1c5635f5038d07b90b5ca3d33630b9fe38a9a93ac"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-material-source-preparation/owned-cases.json",
+      "bytes": 19694,
+      "sha256": "a1ab340afc39b6332475b2fadd741c6f5ea76be2a9d1696c5f1e05d310f73b46"
+    }
+  ]
+}

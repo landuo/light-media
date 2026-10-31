@@ -1,0 +1,86 @@
+{
+  "started": "2026-10-31T18:13:22.761345+00:00",
+  "driver_pid": 2,
+  "package": "./internal/plugins/torrentmaterial",
+  "pattern": "^(TestDownloadTorrentWrapperAndNotification|TestDownloadTorrentDescriptorSemantics|TestDownloadTorrentExistingHelperCacheAndRecovery)$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins/torrentmaterial"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-wrapper01.test",
+        "./internal/plugins/torrentmaterial"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/torrentmaterial",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s12-wrapper01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestDownloadTorrentWrapperAndNotification|TestDownloadTorrentDescriptorSemantics|TestDownloadTorrentExistingHelperCacheAndRecovery)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T18:13:22.761362+00:00",
+      "scratch_free": 56510230528,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T18:13:23.294167+00:00",
+      "scratch_free": 56508620800,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T18:13:25.050615+00:00",
+      "scratch_free": 56483237888,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 3438,
+  "program_sha256": "4c000daa704fe6b3cb7679d187c7b0bdd6db257b6edc4cc9a2391c3b6b8fcd34",
+  "root_passes": [
+    "TestDownloadTorrentWrapperAndNotification",
+    "TestDownloadTorrentDescriptorSemantics",
+    "TestDownloadTorrentExistingHelperCacheAndRecovery"
+  ],
+  "ended": "2026-10-31T18:13:25.360241+00:00"
+}

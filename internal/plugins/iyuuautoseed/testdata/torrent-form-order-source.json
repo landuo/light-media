@@ -1,0 +1,65 @@
+{
+  "status": "OBSERVED_SELECTED_SOURCE_COMPONENT",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py",
+  "source_sha256": "1c8a420d419ee53579079283ea0828536de9d978b6b15e722f1ba53cb51d5dd5",
+  "driver_sha256": "2bc26cd918735c5ef461151772b997b6e811846df3516fd0c3539312b3a3062d",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "python_executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+  "python_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+  "input_html": "<input name=\"b\" value=\"first\"><input name=\"a\" value=\"middle\"><input name=\"b\" value=\"last\">\n",
+  "input_sha256": "364447b27032bc25a8430fa76868174122678470734dd2893491ff420563c236",
+  "selected_nodes": [
+    {
+      "line": 137,
+      "end_line": 137,
+      "source": "inputs = re.findall(r'<input.*?name=\"(.*?)\".*?value=\"(.*?)\".*?>', form[1], re.S)",
+      "source_sha256": "f2d69e2f47de291d69fcc309554907153831caaa471ac29b77f7874e0364de46",
+      "ast_sha256": "84ab972a5382f6f6c29be1ba51ea5d7bc0001e83ffb9bffa4d6ae7dd58b87c4b"
+    },
+    {
+      "line": 139,
+      "end_line": 139,
+      "source": "data = {}",
+      "source_sha256": "90106b2fa197c8db64086a44c3750584e8e727b9ab92e3d017d81287e7220ffa",
+      "ast_sha256": "feb7d7aa2c0848bd76c2b01b2265fbd5b7fb23a107f4578292d2cfed2f4a440b"
+    },
+    {
+      "line": 140,
+      "end_line": 141,
+      "source": "for item in inputs:\n                                data[item[0]] = item[1]",
+      "source_sha256": "040fb7b3136ccc16cbef601d66abe8444308bc64c341932050199400017a9ed6",
+      "ast_sha256": "1eab5f5bfa7898351f4181090d1b96f53ff1cce1eb8a326bd4ce576d16891220"
+    }
+  ],
+  "regex_matches": [
+    [
+      "b",
+      "first"
+    ],
+    [
+      "a",
+      "middle"
+    ],
+    [
+      "b",
+      "last"
+    ]
+  ],
+  "ordered_items": [
+    [
+      "b",
+      "last"
+    ],
+    [
+      "a",
+      "middle"
+    ]
+  ],
+  "not_claimed": [
+    "full TorrentHelper invocation",
+    "requests import or runtime",
+    "actual HTTP body encoding/network/cache",
+    "target result"
+  ]
+}

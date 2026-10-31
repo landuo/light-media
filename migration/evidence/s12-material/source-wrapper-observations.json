@@ -1,0 +1,1568 @@
+{
+  "status": "actual_selected_source_component_with_recording_dependencies",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "driver_sha256": "757225ec8bba71cd9842bdc1c5635f5038d07b90b5ca3d33630b9fe38a9a93ac",
+  "input_manifest_sha256": "3a2342de6310fcca356626cbe5877ecb0b475397b32e37937665b966bbb7235e",
+  "python_executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+  "python_executable_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+  "settings_input": {
+    "USER_AGENT": "Owned-Default-UA",
+    "PROXY": {
+      "http": "http://owned-proxy.invalid:8080",
+      "https": "http://owned-proxy.invalid:8080"
+    }
+  },
+  "cases": [
+    {
+      "case": "empty_enclosure",
+      "inputs": {
+        "torrent": {
+          "enclosure": "",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "url": "child.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "empty_enclosure"
+      },
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [],
+      "notices": []
+    },
+    {
+      "case": "magnet_passthrough",
+      "inputs": {
+        "torrent": {
+          "enclosure": "magnet:?xt=urn:btih:OWNED&dn=Owned",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "url": "child.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "magnet_passthrough"
+      },
+      "outcome": {
+        "value": [
+          "magnet:?xt=urn:btih:OWNED&dn=Owned",
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "str",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [],
+      "notices": []
+    },
+    {
+      "case": "direct_bytes_explicit_credentials",
+      "inputs": {
+        "torrent": {
+          "enclosure": "https://owned.invalid/direct.torrent",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "url": "child.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "direct_bytes_explicit_credentials"
+      },
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "torrent_helper.init"
+        },
+        {
+          "op": "torrent_helper.download_torrent",
+          "url": "https://owned.invalid/direct.torrent",
+          "cookie": "owned_cookie=synthetic",
+          "ua": "Owned-UA",
+          "proxy": true,
+          "cache_invalid": true
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "direct_string_fallback_ua",
+      "inputs": {
+        "torrent": {
+          "enclosure": "https://owned.invalid/direct.torrent",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "",
+          "site_proxy": false,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "url": "child.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": "magnet:?xt=urn:btih:OWNED-HELPER",
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "direct_string_fallback_ua"
+      },
+      "outcome": {
+        "value": [
+          "magnet:?xt=urn:btih:OWNED-HELPER",
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "str",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "torrent_helper.init"
+        },
+        {
+          "op": "torrent_helper.download_torrent",
+          "url": "https://owned.invalid/direct.torrent",
+          "cookie": "owned_cookie=synthetic",
+          "ua": "Owned-Default-UA",
+          "proxy": false,
+          "cache_invalid": true
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "direct_empty_string_precedes_empty_content_check",
+      "inputs": {
+        "torrent": {
+          "enclosure": "https://owned.invalid/direct.torrent",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "url": "child.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": "",
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "direct_empty_string_precedes_empty_content_check"
+      },
+      "outcome": {
+        "value": [
+          "",
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "str",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "torrent_helper.init"
+        },
+        {
+          "op": "torrent_helper.download_torrent",
+          "url": "https://owned.invalid/direct.torrent",
+          "cookie": "owned_cookie=synthetic",
+          "ua": "Owned-UA",
+          "proxy": true,
+          "cache_invalid": true
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "empty_bytes_notice_with_channel",
+      "inputs": {
+        "torrent": {
+          "enclosure": "https://owned.invalid/direct.torrent",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": 17,
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "url": "child.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": ""
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": "owned empty-content error"
+        },
+        "case": "empty_bytes_notice_with_channel"
+      },
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "torrent_helper.init"
+        },
+        {
+          "op": "torrent_helper.download_torrent",
+          "url": "https://owned.invalid/direct.torrent",
+          "cookie": "owned_cookie=synthetic",
+          "ua": "Owned-UA",
+          "proxy": true,
+          "cache_invalid": true
+        },
+        {
+          "op": "log.error",
+          "message": "下载种子文件失败：Owned release 雪"
+        },
+        {
+          "op": "notification.init",
+          "channel": {
+            "$enum": "MessageChannel.Web",
+            "value": "Web"
+          },
+          "source": "OwnedSource",
+          "mtype": {
+            "$enum": "NotificationType.Manual",
+            "value": "手动处理"
+          },
+          "title": "Owned release 雪 种子下载失败！",
+          "text": "错误信息：owned empty-content error\n站点：Owned Site",
+          "userid": 17
+        },
+        {
+          "op": "notice.post_message",
+          "channel": {
+            "$enum": "MessageChannel.Web",
+            "value": "Web"
+          },
+          "source": "OwnedSource",
+          "mtype": {
+            "$enum": "NotificationType.Manual",
+            "value": "手动处理"
+          },
+          "title": "Owned release 雪 种子下载失败！",
+          "text": "错误信息：owned empty-content error\n站点：Owned Site",
+          "userid": 17
+        }
+      ],
+      "notices": [
+        {
+          "channel": {
+            "$enum": "MessageChannel.Web",
+            "value": "Web"
+          },
+          "source": "OwnedSource",
+          "mtype": {
+            "$enum": "NotificationType.Manual",
+            "value": "手动处理"
+          },
+          "title": "Owned release 雪 种子下载失败！",
+          "text": "错误信息：owned empty-content error\n站点：Owned Site",
+          "userid": 17
+        }
+      ]
+    },
+    {
+      "case": "none_content_notice_without_channel",
+      "inputs": {
+        "torrent": {
+          "enclosure": "https://owned.invalid/direct.torrent",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": null,
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "url": "child.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": null,
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": "owned missing-content error"
+        },
+        "case": "none_content_notice_without_channel"
+      },
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "torrent_helper.init"
+        },
+        {
+          "op": "torrent_helper.download_torrent",
+          "url": "https://owned.invalid/direct.torrent",
+          "cookie": "owned_cookie=synthetic",
+          "ua": "Owned-UA",
+          "proxy": true,
+          "cache_invalid": true
+        },
+        {
+          "op": "log.error",
+          "message": "下载种子文件失败：Owned release 雪"
+        },
+        {
+          "op": "notification.init",
+          "channel": null,
+          "source": null,
+          "mtype": {
+            "$enum": "NotificationType.Manual",
+            "value": "手动处理"
+          },
+          "title": "Owned release 雪 种子下载失败！",
+          "text": "错误信息：owned missing-content error\n站点：Owned Site",
+          "userid": "owned-user"
+        },
+        {
+          "op": "notice.post_message",
+          "channel": null,
+          "source": null,
+          "mtype": {
+            "$enum": "NotificationType.Manual",
+            "value": "手动处理"
+          },
+          "title": "Owned release 雪 种子下载失败！",
+          "text": "错误信息：owned missing-content error\n站点：Owned Site",
+          "userid": "owned-user"
+        }
+      ],
+      "notices": [
+        {
+          "channel": null,
+          "source": null,
+          "mtype": {
+            "$enum": "NotificationType.Manual",
+            "value": "手动处理"
+          },
+          "title": "Owned release 雪 种子下载失败！",
+          "text": "错误信息：owned missing-content error\n站点：Owned Site",
+          "userid": "owned-user"
+        }
+      ]
+    },
+    {
+      "case": "empty_brackets_use_tail_without_request",
+      "inputs": {
+        "torrent": {
+          "enclosure": "[]https://owned.invalid/tail.torrent",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "url": "child.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "empty_brackets_use_tail_without_request"
+      },
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "torrent_helper.init"
+        },
+        {
+          "op": "torrent_helper.download_torrent",
+          "url": "https://owned.invalid/tail.torrent",
+          "cookie": null,
+          "ua": "Owned-UA",
+          "proxy": true,
+          "cache_invalid": false
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "encoded_get_text_cookie_headers_proxy",
+      "inputs": {
+        "torrent": {
+          "enclosure": "[eyJtZXRob2QiOiJnZXQiLCJjb29raWUiOnRydWUsInByb3h5Ijp0cnVlLCJoZWFkZXIiOnsiWC1Pd25lZCI6InllcyIsIkFjY2VwdCI6InRleHQvcGxhaW4ifSwicGFyYW1zIjp7ImlkIjoib3duZWQiLCJuIjpbIjEiLCIyIl19fQ==]https://owned.invalid/ticket",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "url": "child.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "encoded_get_text_cookie_headers_proxy"
+      },
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "request.init",
+          "ua": "Owned-UA",
+          "cookies": "owned_cookie=synthetic",
+          "headers": {
+            "X-Owned": "yes",
+            "Accept": "text/plain"
+          },
+          "proxies": {
+            "http": "http://owned-proxy.invalid:8080",
+            "https": "http://owned-proxy.invalid:8080"
+          }
+        },
+        {
+          "op": "request.get_res",
+          "url": "https://owned.invalid/ticket",
+          "params": {
+            "id": "owned",
+            "n": [
+              "1",
+              "2"
+            ]
+          }
+        },
+        {
+          "op": "response.bool",
+          "value": true
+        },
+        {
+          "op": "response.text",
+          "value": "https://owned.invalid/text-result.torrent"
+        },
+        {
+          "op": "torrent_helper.init"
+        },
+        {
+          "op": "torrent_helper.download_torrent",
+          "url": "https://owned.invalid/text-result.torrent",
+          "cookie": null,
+          "ua": "Owned-UA",
+          "proxy": true,
+          "cache_invalid": false
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "uppercase_GET_is_post_nested_query",
+      "inputs": {
+        "torrent": {
+          "enclosure": "[eyJtZXRob2QiOiJHRVQiLCJjb29raWUiOmZhbHNlLCJwcm94eSI6ZmFsc2UsImhlYWRlciI6e30sInBhcmFtcyI6eyJuYW1lIjoib3duZWQg6ZuqIn0sInJlc3VsdCI6ImRhdGEudGlja2V0Iiwic3VjY2VzcyI6Im9rIiwicmVzdWx0X3BhdGgiOiIvZG93bmxvYWQvZmlsZSIsInJlc3VsdF9xdWVyeV9wYXJhbSI6InRpY2tldCIsInJlc3VsdF9iYXNlX3VybCI6Imh0dHBzOi8vdHJ1c3RlZC5vd25lZC5pbnZhbGlkL2FwaS8ifQ==]https://owned.invalid/ticket",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "ticket": "owned token+&雪"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "uppercase_GET_is_post_nested_query"
+      },
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "request.init",
+          "ua": "Owned-UA",
+          "cookies": null,
+          "headers": null,
+          "proxies": null
+        },
+        {
+          "op": "request.post_res",
+          "url": "https://owned.invalid/ticket",
+          "params": {
+            "name": "owned 雪"
+          }
+        },
+        {
+          "op": "response.bool",
+          "value": true
+        },
+        {
+          "op": "response.json",
+          "value": {
+            "ok": true,
+            "data": {
+              "ticket": "owned token+&雪"
+            }
+          }
+        },
+        {
+          "op": "torrent_helper.init"
+        },
+        {
+          "op": "torrent_helper.download_torrent",
+          "url": "https://trusted.owned.invalid/api/download/file?ticket=owned+token%2B%26%E9%9B%AA",
+          "cookie": null,
+          "ua": "Owned-UA",
+          "proxy": true,
+          "cache_invalid": false
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "nested_relative_rewrite_ignores_lone_result_path",
+      "inputs": {
+        "torrent": {
+          "enclosure": "[eyJyZXN1bHQiOiJkYXRhLnVybCIsInJlc3VsdF9iYXNlX3VybCI6Imh0dHBzOi8vdHJ1c3RlZC5vd25lZC5pbnZhbGlkL2FwaSIsInJlc3VsdF9wYXRoIjoiL2lnbm9yZWQtd2l0aG91dC1xdWVyeSJ9]https://owned.invalid/ticket",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "data": {
+              "url": "../files/owned.torrent?x=1#fragment"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "nested_relative_rewrite_ignores_lone_result_path"
+      },
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "request.init",
+          "ua": "Owned-UA",
+          "cookies": null,
+          "headers": null,
+          "proxies": null
+        },
+        {
+          "op": "request.post_res",
+          "url": "https://owned.invalid/ticket",
+          "params": null
+        },
+        {
+          "op": "response.bool",
+          "value": true
+        },
+        {
+          "op": "response.json",
+          "value": {
+            "data": {
+              "url": "../files/owned.torrent?x=1#fragment"
+            }
+          }
+        },
+        {
+          "op": "log.info",
+          "message": "已获取到站点临时下载地址"
+        },
+        {
+          "op": "torrent_helper.init"
+        },
+        {
+          "op": "torrent_helper.download_torrent",
+          "url": "https://trusted.owned.invalid/files/owned.torrent?x=1#fragment",
+          "cookie": null,
+          "ua": "Owned-UA",
+          "proxy": true,
+          "cache_invalid": false
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "nested_absolute_rewrite_keeps_path_query_fragment",
+      "inputs": {
+        "torrent": {
+          "enclosure": "[eyJtZXRob2QiOiJnZXQiLCJyZXN1bHQiOiJkYXRhLnVybCIsInJlc3VsdF9iYXNlX3VybCI6Imh0dHBzOi8vdHJ1c3RlZC5vd25lZC5pbnZhbGlkOjg0NDMvYmFzZSJ9]https://owned.invalid/ticket",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "data": {
+              "url": "http://returned.owned.invalid:99/files/owned?x=1#fragment"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "nested_absolute_rewrite_keeps_path_query_fragment"
+      },
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "request.init",
+          "ua": "Owned-UA",
+          "cookies": null,
+          "headers": null,
+          "proxies": null
+        },
+        {
+          "op": "request.get_res",
+          "url": "https://owned.invalid/ticket",
+          "params": null
+        },
+        {
+          "op": "response.bool",
+          "value": true
+        },
+        {
+          "op": "response.json",
+          "value": {
+            "data": {
+              "url": "http://returned.owned.invalid:99/files/owned?x=1#fragment"
+            }
+          }
+        },
+        {
+          "op": "log.info",
+          "message": "已获取到站点临时下载地址"
+        },
+        {
+          "op": "torrent_helper.init"
+        },
+        {
+          "op": "torrent_helper.download_torrent",
+          "url": "https://trusted.owned.invalid:8443/files/owned?x=1#fragment",
+          "cookie": null,
+          "ua": "Owned-UA",
+          "proxy": true,
+          "cache_invalid": false
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "nested_invalid_base_preserves_value",
+      "inputs": {
+        "torrent": {
+          "enclosure": "[eyJyZXN1bHQiOiJkYXRhLnVybCIsInJlc3VsdF9iYXNlX3VybCI6InJlbGF0aXZlL2Jhc2UifQ==]https://owned.invalid/ticket",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "data": {
+              "url": "https://returned.owned.invalid/unchanged"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "nested_invalid_base_preserves_value"
+      },
+      "outcome": {
+        "value": [
+          {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "OwnedFolder",
+          [
+            "z-last.mkv",
+            "a-first.mkv"
+          ]
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "bytes",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "request.init",
+          "ua": "Owned-UA",
+          "cookies": null,
+          "headers": null,
+          "proxies": null
+        },
+        {
+          "op": "request.post_res",
+          "url": "https://owned.invalid/ticket",
+          "params": null
+        },
+        {
+          "op": "response.bool",
+          "value": true
+        },
+        {
+          "op": "response.json",
+          "value": {
+            "data": {
+              "url": "https://returned.owned.invalid/unchanged"
+            }
+          }
+        },
+        {
+          "op": "log.info",
+          "message": "已获取到站点临时下载地址"
+        },
+        {
+          "op": "torrent_helper.init"
+        },
+        {
+          "op": "torrent_helper.download_torrent",
+          "url": "https://returned.owned.invalid/unchanged",
+          "cookie": null,
+          "ua": "Owned-UA",
+          "proxy": true,
+          "cache_invalid": false
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "false_response_stops_before_helper",
+      "inputs": {
+        "torrent": {
+          "enclosure": "[eyJtZXRob2QiOiJnZXQifQ==]https://owned.invalid/ticket",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": false,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "url": "child.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "false_response_stops_before_helper"
+      },
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "request.init",
+          "ua": "Owned-UA",
+          "cookies": null,
+          "headers": null,
+          "proxies": null
+        },
+        {
+          "op": "request.get_res",
+          "url": "https://owned.invalid/ticket",
+          "params": null
+        },
+        {
+          "op": "response.bool",
+          "value": false
+        },
+        {
+          "op": "log.error",
+          "message": "Owned release 雪 无法获取下载地址！"
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "false_success_stops_before_result",
+      "inputs": {
+        "torrent": {
+          "enclosure": "[eyJyZXN1bHQiOiJkYXRhLnVybCIsInN1Y2Nlc3MiOiJvayJ9]https://owned.invalid/ticket",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": false,
+            "data": {
+              "url": "never.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "false_success_stops_before_result"
+      },
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "request.init",
+          "ua": "Owned-UA",
+          "cookies": null,
+          "headers": null,
+          "proxies": null
+        },
+        {
+          "op": "request.post_res",
+          "url": "https://owned.invalid/ticket",
+          "params": null
+        },
+        {
+          "op": "response.bool",
+          "value": true
+        },
+        {
+          "op": "response.json",
+          "value": {
+            "ok": false,
+            "data": {
+              "url": "never.torrent"
+            }
+          }
+        },
+        {
+          "op": "log.error",
+          "message": "Owned release 雪 无法获取下载地址！"
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "false_nested_result_stops_before_helper",
+      "inputs": {
+        "torrent": {
+          "enclosure": "[eyJyZXN1bHQiOiJkYXRhLnVybCJ9]https://owned.invalid/ticket",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "data": {
+              "url": ""
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "false_nested_result_stops_before_helper"
+      },
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "request.init",
+          "ua": "Owned-UA",
+          "cookies": null,
+          "headers": null,
+          "proxies": null
+        },
+        {
+          "op": "request.post_res",
+          "url": "https://owned.invalid/ticket",
+          "params": null
+        },
+        {
+          "op": "response.bool",
+          "value": true
+        },
+        {
+          "op": "response.json",
+          "value": {
+            "data": {
+              "url": ""
+            }
+          }
+        },
+        {
+          "op": "log.error",
+          "message": "Owned release 雪 无法获取下载地址！"
+        }
+      ],
+      "notices": []
+    },
+    {
+      "case": "bad_base64_error",
+      "inputs": {
+        "torrent": {
+          "enclosure": "[a]https://owned.invalid/ticket",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "url": "child.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "bad_base64_error"
+      },
+      "outcome": {
+        "exception": {
+          "module": "binascii",
+          "type": "Error",
+          "message": "Invalid base64-encoded string: number of data characters (1) cannot be 1 more than a multiple of 4",
+          "args": [
+            "Invalid base64-encoded string: number of data characters (1) cannot be 1 more than a multiple of 4"
+          ]
+        }
+      },
+      "trace": [],
+      "notices": []
+    },
+    {
+      "case": "bad_json_error",
+      "inputs": {
+        "torrent": {
+          "enclosure": "[ew==]https://owned.invalid/ticket",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "url": "child.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "bad_json_error"
+      },
+      "outcome": {
+        "exception": {
+          "module": "json.decoder",
+          "type": "JSONDecodeError",
+          "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+          "args": [
+            "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+          ]
+        }
+      },
+      "trace": [],
+      "notices": []
+    },
+    {
+      "case": "unmatched_bracket_stops_before_helper",
+      "inputs": {
+        "torrent": {
+          "enclosure": "[owned-no-closing-bracket",
+          "title": "Owned release 雪",
+          "site_cookie": "owned_cookie=synthetic",
+          "site_ua": "Owned-UA",
+          "site_proxy": true,
+          "site_name": "Owned Site"
+        },
+        "channel": "Web",
+        "source": "OwnedSource",
+        "userid": "owned-user",
+        "response": {
+          "truthy": true,
+          "text": "https://owned.invalid/text-result.torrent",
+          "json": {
+            "ok": true,
+            "data": {
+              "url": "child.torrent"
+            }
+          }
+        },
+        "helper_result": {
+          "cache_path": "/owned/cache/recorded.torrent",
+          "content": {
+            "$bytes": "b3duZWQgdG9ycmVudCBieXRlcwDpm6o="
+          },
+          "folder": "OwnedFolder",
+          "files": [
+            "z-last.mkv",
+            "a-first.mkv"
+          ],
+          "error": ""
+        },
+        "case": "unmatched_bracket_stops_before_helper"
+      },
+      "outcome": {
+        "value": [
+          null,
+          "",
+          []
+        ],
+        "return_type": "tuple",
+        "element_types": [
+          "NoneType",
+          "str",
+          "list"
+        ]
+      },
+      "trace": [
+        {
+          "op": "log.error",
+          "message": "Owned release 雪 无法获取下载地址！"
+        }
+      ],
+      "notices": []
+    }
+  ],
+  "selected_original_nodes": [
+    {
+      "path": "app/schemas/types.py",
+      "name": "NotificationType",
+      "first_line": 305,
+      "last_line": 323,
+      "file_sha256": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+      "source_fragment_sha256": "2b219f8447f2b3ef182caf85c4a655424cff14b7e5ec6501f8c1e775f49deba5",
+      "ast_sha256": "561dfa044bebf76bbf3bbd645cbd8a7f516185f4f5315d657118b015cd13b8ae"
+    },
+    {
+      "path": "app/schemas/types.py",
+      "name": "MessageChannel",
+      "first_line": 342,
+      "last_line": 357,
+      "file_sha256": "025060b9dd29be0fc811cb42ea357e7cd23ce1f450cb704f04f18012ed8be5c1",
+      "source_fragment_sha256": "7a40463ee29e745165fcd074436c1d4c7435d7f8475bea82b7dff76179dbd3ec",
+      "ast_sha256": "878d040f1d5f7ba5c41d6b52ce207b51c360671f19dcbcb2c0ea3870c48871cf"
+    },
+    {
+      "path": "app/chain/download.py",
+      "name": "_normalize_indirect_download_url",
+      "first_line": 64,
+      "last_line": 84,
+      "file_sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+      "source_fragment_sha256": "821e1118efd7edb7ff32f24489214431d9bea749c2713708b6d3a3249dbf85ca",
+      "ast_sha256": "b2d3ed85d31be6f9e44363e7f509b62107c60f219c3ee45bc53e39f2b77856ca"
+    },
+    {
+      "path": "app/chain/download.py",
+      "name": "download_torrent",
+      "first_line": 658,
+      "last_line": 783,
+      "file_sha256": "ecfaaa2b2777809924aeb32632afa53d8eb701c7ee76e333099d6847988fc003",
+      "source_fragment_sha256": "7a0478cc7c56e47a5943b58602cb6e78507e22d1ef69298b8dc94cd9c76c918b",
+      "ast_sha256": "9aad4457dea45e5c9f37eefeb2e6520e6b47c094ed401d0691c3fadf951c7f7f"
+    }
+  ],
+  "requests_urllib3_socket_absent_at_checks": true,
+  "dependency_contract": {
+    "RequestUtils": "record constructor/get_res/post_res arguments, no HTTP",
+    "Response": "explicit bool/text/json dependency inputs, not a requests Response",
+    "TorrentHelper": "record kwargs and return exact controlled five-tuple; no parser/download/cache",
+    "Notification": "record constructor kwargs; no original schema validation",
+    "post_message": "record exact notification fields, no delivery",
+    "TorrentInfo": "explicit attributes only; no original model validation",
+    "settings": "synthetic constants below, no host environment lookup",
+    "logging": "record log.info/error and preserve trace order"
+  },
+  "not_claimed": [
+    "real RequestUtils/requests/HTTP/proxy/cookie transmission",
+    "real TorrentHelper/parser/cache",
+    "real Notification model or delivery",
+    "whole DownloadChain/DAO/downloader",
+    "target Go output or complete equivalence",
+    "unobserved internal syscall behavior"
+  ]
+}

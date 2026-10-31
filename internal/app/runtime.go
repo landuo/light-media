@@ -30,6 +30,7 @@ type App struct {
 	originalOCRHost                  string
 	sharedSystemConfig               sharedSystemConfigRuntime
 	pluginOriginalBase               originalBaseState
+	pluginOriginalTorrentMaterial    originalTorrentMaterialCache
 	pluginOriginalMarkets            originalMarketCache
 	pluginOriginalInput              originalPluginInputRuntime
 	pluginOriginalNotice             originalNoticeRuntime
@@ -301,6 +302,7 @@ func (a *App) Close() error {
 	a.systemMessages.close()
 	a.stopSubscriptionStatistics()
 	a.wg.Wait()
+	a.closeOriginalMaterialCache()
 	a.closeSubscriptionStatisticsHTTP()
 	a.log("INFO", "runtime", "stopped", "服务已停止", "", "")
 	a.catMu.Lock()

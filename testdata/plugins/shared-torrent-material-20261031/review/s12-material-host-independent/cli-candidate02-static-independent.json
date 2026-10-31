@@ -1,0 +1,32 @@
+{
+  "status": "CLI_CANDIDATE02_STATIC_READY_PENDING_CURRENT_BINARY_EXECUTION",
+  "at_utc": "2026-10-31T19:07:50.937Z",
+  "inputs": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/normal-cli-driver.py",
+      "bytes": 36516,
+      "sha256": "4108d1751de61214f14e2488b0e61f80ca577aa3504cba1094c181c289dfcc18"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/preparation-candidate02.json",
+      "bytes": 3872,
+      "sha256": "322ba3df79fc53c1204968b338dcdeff8c80fa64fb56780c5655bd742079c2e3"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s12-normal-cli-plan/README.md",
+      "bytes": 12296,
+      "sha256": "ccbbfebd3b860b57ac6674af85cda2966f0e8ca02bf904e12bb2ca04c13ac985"
+    }
+  ],
+  "scope": "Two sequential normal CLI hosts at exact127.0.0.1:39123; one standard owned install; fixed same-process synthetic HTTP peer; source None/magnet/error/recovery/direct/descriptor Cookie boundary/full16MiB then sequential32MiB/cold persistentcache+notice.",
+  "safety": [
+    "Before every controller request, held childPID/starttime/executable and exact listener inode; nine method/path pairs, no redirects or alternate authority.",
+    "Peer exact routes only including explicit setup / GET404; no CONNECT, forwarding or arbitrary upstream. No real credentials/data source.",
+    "ENV exact inherited; no proxy/CA/guard rewrite; isolated bootstrap via stdin, no private DB access; secrets not retained in response artifacts.",
+    "Actual installed worker direct-child/executableSHA/starttime binding; natural hostWait0 and ownedworker exit required; forced cleanup isFAIL.",
+    "No source imports/requests/urllib3/Go or new builds in driver. Inputs binaries/driver SHA checked before and after."
+  ],
+  "source_evidence_boundary": "Expected values derive from pinned download_torrent/helper contract and explicitly known syntheticbytes, not a claim of new source HTTP differential. Physical wirebytes unmeasured; actual full reconstruction hashes/callbackcounts are distinct.",
+  "no_static_blocker": true,
+  "not_executed_by_reviewer": true
+}
