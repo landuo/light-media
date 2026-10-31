@@ -1,0 +1,163 @@
+{
+  "status": "PASS_LIMITED_SDK_REVIEW_NO_PRODUCT_BLOCKERS",
+  "review_source_files": [
+    {
+      "path": "internal/plugins/terminate_transport.go",
+      "sha256": "6f015c11caacbee9579a0b9d056683bc11134ec1878f52fdd33f59830f68be5b"
+    },
+    {
+      "path": "internal/plugins/terminate_transport_test.go",
+      "sha256": "c500fa972b3ac42191a9e9b703ed2d1ac13c88ec2e2b8671c3c59935e437b776"
+    },
+    {
+      "path": "internal/plugins/protocol.go",
+      "sha256": "505e8a39e674c6e45be652a9eafb9c42c8f858f9787108ca4e8446d4ab2a0bae"
+    },
+    {
+      "path": "internal/plugins/concurrent_session.go",
+      "sha256": "73486ad6c0fc8668609476421bf853dec4e0d38500e9433fbb06d435c5d9af7b"
+    },
+    {
+      "path": "internal/plugins/worker.go",
+      "sha256": "304edf9fe25a283a2c0a5233c0ef2f8de2f0a7a22926835a74ae5a654513c9f8"
+    },
+    {
+      "path": "internal/plugins/close_transport.go",
+      "sha256": "0fe69adfa2532d666e36a35295f2fb01b28ef172d98babe0e649ea0174acbbbf"
+    },
+    {
+      "path": "internal/plugins/concurrent_transport.go",
+      "sha256": "eced9e86ea677124c4d87622ebb3c2432dd45f22bb5c34770149130a0819094c"
+    },
+    {
+      "path": "internal/plugins/transport.go",
+      "sha256": "f36a61b4f9becfd844aef64f4a006665f8791be2e27621b65dbbb13216be249c"
+    },
+    {
+      "path": "cmd/owned-concurrent-fixture/main.go",
+      "sha256": "7520fc5513ad5c9201332896a0fe0d9fc941da9ad18876bbc235587b11e6d34e"
+    },
+    {
+      "path": "internal/plugins/pending_call_test.go",
+      "sha256": "d0deec4570c989e966beeb6ba07bf1751024c8ec8176a2c32710e18656cc09ed"
+    },
+    {
+      "path": "internal/plugins/session_test.go",
+      "sha256": "ce9cba929b624ba47455222a4984c60c6771feda3658caf21309eee724685cbd"
+    },
+    {
+      "path": "internal/plugins/pending_call_drained_test.go",
+      "sha256": "46609572e1d16de1fca96dcedb1683dfde7c3c5f533c912af45cb4a8cd82cf94"
+    }
+  ],
+  "protected_existing_sdk_files_checked": 93,
+  "protected_existing_sdk_drift": [],
+  "gates": [
+    {
+      "directory": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s10-terminate-normal01",
+      "status": "PASS_RAW_READBACK",
+      "root_passes": [
+        "TestOwnedPendingCallCanceledAdmissionAndLegacy",
+        "TestOwnedPendingCallTransportRetirementInvokesNoHandler",
+        "TestPersistentSessionStopFailureObservable",
+        "TestPersistentSessionStopUsesFreshCleanupAuthority",
+        "TestOwnedPhysicalTransportTerminationLegacyNoBusiness",
+        "TestOwnedPhysicalTransportTerminationExistingConcurrentNoBusiness",
+        "TestOwnedPhysicalTransportTerminationTerminalAndDeadline"
+      ],
+      "subtest_passes": [
+        "TestOwnedPhysicalTransportTerminationTerminalAndDeadline/existing_serial_failure",
+        "TestOwnedPhysicalTransportTerminationTerminalAndDeadline/busy_serial_not_a_reap_receipt",
+        "TestOwnedPhysicalTransportTerminationTerminalAndDeadline/concurrent_observer_pending",
+        "TestOwnedPhysicalTransportTerminationTerminalAndDeadline/claimant_deadline_still_reaps"
+      ],
+      "failed_or_skipped": 0,
+      "commands": [
+        {
+          "label": "go-list",
+          "exit": 0,
+          "stderr_bytes": 0
+        },
+        {
+          "label": "compile-worker",
+          "exit": 0,
+          "stderr_bytes": 0
+        },
+        {
+          "label": "compile",
+          "exit": 0,
+          "stderr_bytes": 0
+        },
+        {
+          "label": "tests",
+          "exit": 0,
+          "stderr_bytes": 0
+        }
+      ],
+      "result_sha256": "2ff6b21e611e6b001d4f5b3644cae256916419f3c19ca9d2dc366b1e9f40dd2c",
+      "tests_stdout_sha256": "c3e6f747cabc280988dcc4459a107dcedc0fbab342d4bd7ab428f2e5db4b12c0",
+      "input_count": 1921,
+      "all_three_input_json_sha256": "a5ac56ac87f7a035be9850d5f7f7a3b0244bbb5a949d01e37c1a98fb645c16ef",
+      "fixture_sha256": "4d0c2f66db38179eecaa56a919ed28dd816cabc54d2b4a3242305c5d64b1ac0d",
+      "program_sha256": "c25046d6cc5271d24a1639708c4110595cc521d7e6c7cf774d9ebc2d18d8d203",
+      "race_host_and_child": false,
+      "ended": "2026-10-31T16:26:20.606340+00:00"
+    },
+    {
+      "directory": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s10-terminate-race01",
+      "status": "PASS_RAW_READBACK",
+      "root_passes": [
+        "TestOwnedPhysicalTransportTerminationLegacyNoBusiness",
+        "TestOwnedPhysicalTransportTerminationExistingConcurrentNoBusiness",
+        "TestOwnedPhysicalTransportTerminationTerminalAndDeadline"
+      ],
+      "subtest_passes": [
+        "TestOwnedPhysicalTransportTerminationTerminalAndDeadline/existing_serial_failure",
+        "TestOwnedPhysicalTransportTerminationTerminalAndDeadline/busy_serial_not_a_reap_receipt",
+        "TestOwnedPhysicalTransportTerminationTerminalAndDeadline/concurrent_observer_pending",
+        "TestOwnedPhysicalTransportTerminationTerminalAndDeadline/claimant_deadline_still_reaps"
+      ],
+      "failed_or_skipped": 0,
+      "commands": [
+        {
+          "label": "go-list",
+          "exit": 0,
+          "stderr_bytes": 0
+        },
+        {
+          "label": "compile-worker",
+          "exit": 0,
+          "stderr_bytes": 0
+        },
+        {
+          "label": "compile",
+          "exit": 0,
+          "stderr_bytes": 0
+        },
+        {
+          "label": "tests",
+          "exit": 0,
+          "stderr_bytes": 0
+        }
+      ],
+      "result_sha256": "489fdb023f29caa2ac76e9a02022665b323a72965af8f7a61bd3f4ef638654d5",
+      "tests_stdout_sha256": "0ef8ceccdc42d2ce32d47ae0b4c38ae13b6b0fce4344ec1aceab26079f0a0a51",
+      "input_count": 1958,
+      "all_three_input_json_sha256": "c6ad40735e44def3a80293e343f505815d494d1600b2aca35c7f9210c73a3ddb",
+      "fixture_sha256": "ba725a541e80b2943bd696a4f7d0021241990b8598e7089301a2f29e3d22a15c",
+      "program_sha256": "532e150853617c06152b8b6c71b181795f41fcf24a7cf674292c2d60b78371dc",
+      "race_host_and_child": true,
+      "ended": "2026-10-31T16:32:34.382576+00:00"
+    }
+  ],
+  "execution_by_reviewer": "Only readonly parsing/hashing plus writes in this audit directory; no Go/fixture execution.",
+  "normal_outer_session": "Coordinator reports old session no longer exists; not used as or relabeled external exit-0 evidence. Four raw command exit files and actual test JSON are the normal gate evidence.",
+  "scope_exclusions": [
+    "App logical remove/reference lifecycle integration",
+    "retained jobs/API acceptance",
+    "real plugin/downloader/NAS",
+    "full S10",
+    "CI",
+    "commit/push delivery"
+  ]
+}

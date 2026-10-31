@@ -15,8 +15,8 @@
     "remote": "https://github.com/landuo/light-media.git",
     "branch": "plugins-refactor",
     "baseline_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-    "revision": "42d6ef0ae3b4697200c13c22b7353de52320af6a",
-    "remote_revision": "42d6ef0ae3b4697200c13c22b7353de52320af6a",
+    "revision": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+    "remote_revision": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
     "delivery_mode": "remote",
     "delivery_reason": "Per accepted functional slice commit, push and readback; no merge or deployment.",
     "metadata_paths": [
@@ -36,9 +36,11 @@
       "migration/delivery/storage-ordinary-51719d2f-paths.json",
       "testdata/plugins/ordinary-ocr-reconstruction-20261031/README.md",
       "testdata/plugins/ordinary-ocr-reconstruction-20261031/publication-manifest.json",
-      "testdata/plugins/ordinary-ocr-reconstruction-20261031/local-structure-check.json"
+      "testdata/plugins/ordinary-ocr-reconstruction-20261031/local-structure-check.json",
+      "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/README.md",
+      "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/publication-manifest.json"
     ],
-    "revision_note": "Last actual parent/Mac push and remote readback is 42d6; recovered here from explicitly approved zero-prerequisite full-history Space bundle. This recovery is not a new delivery. Main remains 97476582910dc4b696f7ccd5010f28d823812d40."
+    "revision_note": "Actual parent/Mac push/readback last confirmed11f922 on plugins-refactor; main97476582910dc4b696f7ccd5010f28d823812d40 unchanged. Current S10 original8 is locally verified but not yet committed/pushed. Manifest binds candidate bytes; no CI-green claim."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -26311,7 +26313,7 @@
     {
       "id": "S10",
       "description": "S10 · 跨插件生命周期与关联调度",
-      "status": "implementing",
+      "status": "verified",
       "source_paths": [
         "app/core/plugin.py",
         "app/scheduler.py"
@@ -26321,19 +26323,77 @@
         "scope.discovery.39"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "cmd/owned-manager-lifecycle-fixture/main.go",
+        "internal/app/plugin_custom_api.go",
+        "internal/app/plugin_original_api_registration.go",
+        "internal/app/plugin_original_api_retained_test.go",
+        "internal/app/plugin_original_base_session.go",
+        "internal/app/plugin_original_common_scheduler.go",
+        "internal/app/plugin_original_direct_dispatch.go",
+        "internal/app/plugin_original_external_http.go",
+        "internal/app/plugin_original_external_http_boundary_test.go",
+        "internal/app/plugin_original_lifecycle.go",
+        "internal/app/plugin_original_refresh_resource.go",
+        "internal/app/plugin_original_resources.go",
+        "internal/app/plugin_original_retained.go",
+        "internal/app/plugin_original_retained_legacy_test.go",
+        "internal/app/plugin_original_retained_runtime.go",
+        "internal/app/plugin_original_retained_runtime_test.go",
+        "internal/app/plugin_original_retained_test.go",
+        "internal/app/plugin_original_service_progress.go",
+        "internal/app/plugin_original_services.go",
+        "internal/app/plugin_original_session.go",
+        "internal/app/plugin_original_submitted.go",
+        "internal/app/plugin_original_submitted_owned_test.go",
+        "internal/app/plugin_original_uninstall.go",
+        "internal/app/plugin_shared_manager_lifecycle.go",
+        "internal/app/plugin_shared_manager_lifecycle_test.go",
+        "internal/app/plugin_shared_manager_remove.go",
+        "internal/app/plugin_shared_manager_remove_test.go",
+        "internal/app/plugin_shared_manager_runtime.go",
+        "internal/app/plugin_shared_manager_runtime_test.go",
+        "internal/app/plugin_shared_scheduler.go",
+        "internal/app/plugin_shared_scheduler_test.go",
+        "internal/app/runtime.go",
+        "internal/app/testdata/shared-plugin-manager/lifecycle-source.json",
+        "internal/app/testdata/shared-plugin-manager/remove-source.json",
+        "internal/plugins/concurrent_session.go",
+        "internal/plugins/pending_call.go",
+        "internal/plugins/pending_call_drained_test.go",
+        "internal/plugins/shared_plugin_manager_lifecycle.go",
+        "internal/plugins/shared_plugin_manager_lifecycle_test.go",
+        "internal/plugins/terminate_transport.go",
+        "internal/plugins/terminate_transport_test.go"
+      ],
       "owner": "coordinator",
-      "scenarios": [],
-      "evidence_ids": [],
+      "scenarios": [
+        "source init/state/local raw JSON/default/order/error contract",
+        "class/force config and data namespace; SQL failure hot-cache/cold persistence",
+        "logical remove close-error/empty-all running order; installation/config/data retained",
+        "scheduler global job ID/prefix replacement/getter failure/invalid clock continuation",
+        "actual cancellation/child drain/exact API and bound-job ownership/legacy transport-only termination",
+        "two normal hosts: actual eight-wrapper chain, same-worker failure recovery and cold no-replay"
+      ],
+      "evidence_ids": [
+        "s10-original8.source-target",
+        "s10-original8.normal-cli",
+        "s10-original8.independent-review"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "tls_ab_independent / Astra ultra; SDK primitive independent reviews separately bound",
+        "evidence_ids": [
+          "s10-original8.independent-review"
+        ]
       },
       "external_source_paths": [],
       "work_kind": "confirmed_delta",
-      "work_kind_note": "Specific source/target behavioral gaps confirmed; partial child-slice delivery does not complete the whole parent.",
+      "work_kind_note": "Fixed original six Manager + two Scheduler ordinary Go SDK/standard-JSON contract locally verified as a complete backend slice. Prior extra three queries remain distinct. This is not whole-platform/browser/real-downloader/CI acceptance.",
       "delivery_slices": [
-        "S10.manager_queries"
+        "S10.manager_queries",
+        "S10.original8"
       ],
       "semantic_scope_reconciliation": {
         "id": "S10",
@@ -26341,11 +26401,12 @@
         "precise_operation_inventory": "PluginManager.init_plugin/remove_plugin/delete_plugin_config/delete_plugin_data/get_plugin_state/get_local_plugins；Scheduler.remove_plugin_job/update_plugin_job",
         "current_owner": "旧S10八操作；S10.manager_queries为另行增量，不抵旧八项",
         "semantic_judgment": "重要更正：当前get_plugin_ids/get_running_plugin_ids/get_plugin_config三查询与旧八操作没有一个等价完成。get_local_plugins返回Plugin完整信息与安装/运行状态，不是ID列表。保留额外三查询真实完成，但旧八项须独立复用既有链或登记缺口。",
-        "current_ledger_status": "implementing",
-        "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
+        "current_ledger_status": "verified",
+        "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "new_verified_original_scope": "All eight reconstructed/verified against fixed source; original query3 still have intersection0 and separate credit."
       },
       "completion": {
-        "status": "old_explicit_operations_pending",
+        "status": "old_explicit_eight_locally_verified_delivery_pending",
         "old_exact_methods": [
           "init_plugin",
           "remove_plugin",
@@ -26358,7 +26419,113 @@
         ],
         "additional_completed_slice": "S10.manager_queries",
         "additional_slice_counts_toward_old_methods": 0,
-        "historical_scope_source": "Formal Mac original untracked full-audit relayed by root,2026-10-30T16:40Z"
+        "historical_scope_source": "Formal Mac original untracked full-audit relayed by root,2026-10-30T16:40Z",
+        "local_partial_progress": {
+          "component_and_sdk_checked": [
+            "init_plugin",
+            "remove_plugin",
+            "delete_plugin_config",
+            "delete_plugin_data",
+            "get_plugin_state",
+            "get_local_plugins",
+            "Scheduler.remove_plugin_job",
+            "Scheduler.update_plugin_job"
+          ],
+          "still_unimplemented": [],
+          "prerequisites_in_progress": [],
+          "pending_full_slice_gates": [
+            "whitelist publication review",
+            "local commit/bundle and Mac ordinary push/readback"
+          ],
+          "locally_verified_prerequisites": [
+            "actual SDK drain observation normal4/race4",
+            "retained core+App call/submission cleanup normal5/race5"
+          ],
+          "current_normal_execution": "normal01 actual22PASS+1cwdFAIL retained; normal02 samebinaries onefailedroot PASS; independently checked combined23, not rewritten overall01PASS"
+        },
+        "local_verified_at": "2026-10-31T16:53:32.801682+00:00",
+        "remote_delivery": "pending; current remote remains11f922 until actual readback"
+      },
+      "recovery_reconstruction": {
+        "base": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "old_uncommitted_candidate": "unreachable/not restored; prior reports not acceptance of new source",
+        "current": "Current reconstructed41-product original8 backend slice accepted by independent source/current-normal/race/two-normalhost review. Original normal01 cwd FAIL retained; normal22+single corrected1 combine23. No historical missing byte recovery claimed.",
+        "extra_three_queries": "prior delivered get_plugin_ids/get_running_plugin_ids/get_plugin_config remain credited; intersection with old8 is zero",
+        "current_checkpoint": "libfile_b02655d709f881918d31f911ac84ac70 v0 F terminalWIP source+receipts; final independent seal/publication metadata added later."
+      },
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "actual source SQLite/Pydantic/rawJSON plus target exact namespace and descriptor projections",
+          "evidence_ids": [
+            "s10-original8.source-target",
+            "s10-original8.normal-cli",
+            "s10-original8.independent-review"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "logical class/running registries vs installed config/data; exact API/job object retention",
+          "evidence_ids": [
+            "s10-original8.source-target",
+            "s10-original8.normal-cli",
+            "s10-original8.independent-review"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "source hook failure short circuit, SQL failure/cache/cold behavior, same-worker normalCLI recovery; original harness failures preserved",
+          "evidence_ids": [
+            "s10-original8.source-target",
+            "s10-original8.normal-cli",
+            "s10-original8.independent-review"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "current race23 actual race-built six workers; pending returned vs drained and exact owner release",
+          "evidence_ids": [
+            "s10-original8.source-target",
+            "s10-original8.normal-cli",
+            "s10-original8.independent-review"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "two distinct normal hosts and installed worker identities, one install, no cold artifact reacquisition or transient job replay",
+          "evidence_ids": [
+            "s10-original8.source-target",
+            "s10-original8.normal-cli",
+            "s10-original8.independent-review"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "fixed original8 ordinary standardJSON contract; legacy serial cross-object target transport-only teardown, new self calls use negotiated concurrent SDK",
+          "evidence_ids": [
+            "s10-original8.source-target",
+            "s10-original8.normal-cli",
+            "s10-original8.independent-review"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "capability/identity/generation/phase authority, auth revocation and exact registered route checks; no global proxy/TLS changes",
+          "evidence_ids": [
+            "s10-original8.source-target",
+            "s10-original8.normal-cli",
+            "s10-original8.independent-review"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "finite existing call/slot budgets and phase resource samples; no benchmark or continuous reservation claim",
+          "evidence_ids": [
+            "s10-original8.source-target",
+            "s10-original8.normal-cli",
+            "s10-original8.independent-review"
+          ]
+        }
       }
     },
     {
@@ -26723,7 +26890,7 @@
         "baseline": "42d6ef0ae3b4697200c13c22b7353de52320af6a",
         "old_candidate_bytes": "not recovered",
         "new_finite_contract": "../audits/s15-reconstruction-plan/CONTRACT.md",
-        "new_progress": "New22-file ordinary helper slice locally verified with final independent acceptance; see S15.ordinary_ocr. Parent browser/Cookie dependencies and allS15 not claimed. Pending actual Git delivery.",
+        "new_progress": "Ordinary helper22-path usable backend slice delivered at11f922896377cb0d02bf481ef0df10f11a1cb4c4 and actual remote readback confirmed; see S15.ordinary_ocr. Parent browser/Cookie dependencies and fullS15 remain open.",
         "external_partial_backup": "libfile_da3d601c81c081918010f3a264c01f9a v0 binds current22 source and normal/CLI evidence; snapshot predates race termination and final review, not a Git delivery.",
         "not_new_requirement": true
       },
@@ -28761,11 +28928,13 @@
       },
       "work_kind": "confirmed_delta",
       "completion": {
-        "state": "verified_pending_local_commit_and_remote_readback",
+        "state": "delivered_remote_readback_confirmed",
         "base_commit": "42d6ef0ae3b4697200c13c22b7353de52320af6a",
         "manifest": "testdata/plugins/ordinary-ocr-reconstruction-20261031/publication-manifest.json",
-        "new_commit": null,
-        "remote_delivery": false
+        "new_commit": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "remote_delivery": true,
+        "bundle_library_id": "libfile_66e90b8ac2b481918c4e4dd969b4a44f",
+        "readback": "11f922896377cb0d02bf481ef0df10f11a1cb4c4"
       },
       "boundaries": [
         "exact deep JSON recursion threshold unverified, not claimed source-equivalent; no demonstrated source counterexample in current ordinary contract",
@@ -42118,6 +42287,94 @@
         "../testdata/plugins/ordinary-ocr-reconstruction-20261031/README.md": "e1ae7669c6d04d69b16b1c5b649f0657d1a02369ca4260d23eb27562fe3a6e1b"
       },
       "execution_receipts": "Exact original command/result/raw files retained under testdata/plugins/ordinary-ocr-reconstruction-20261031/raw; source preparation01 failure remains distinct from02 success."
+    },
+    {
+      "id": "s10-original8.source-target",
+      "kind": "source-and-target",
+      "status": "passed",
+      "feature_ids": [
+        "S10"
+      ],
+      "observations": "Fixed source selected real methods/SQLite/Pydantic/stoppedAPScheduler and empty-all actual source; current integrated normal22+corrected1, race23, exact41 products. Original normal01 FAIL remains. Not full Python host/timer replay.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "target_files": {
+          "internal/app/plugin_custom_api.go": "523af30514f0211455ce7871076b784618aa22f3b6ed56bf732b93b765e5b7f9",
+          "internal/app/plugin_original_base_session.go": "9d24189ba985811b020b0b87bfd15a38f2e328192be25795925ad5230263a148",
+          "internal/app/plugin_original_common_scheduler.go": "281564453e5b96ca8b59f5b8b8995d3ad61d675a1ab131dc6820aae2bb8636e6",
+          "internal/app/plugin_original_direct_dispatch.go": "6940dbb4d6a149ee16f6d53a0f1854c2e4fc4d8f2337da7d75fac14854ed8a60",
+          "internal/app/plugin_original_external_http.go": "cb223f8f22e940688cb80d31247803a00ce4c30d5bda9bb7fbd2ab52f9c7c172",
+          "internal/app/plugin_original_external_http_boundary_test.go": "65a4cb95097d89ae4306e3337e39592759dbeb1b80e2ad8116c76fcdf50a422d",
+          "internal/app/plugin_original_lifecycle.go": "bdeaacf91eeba588edd7534c822ce5e737f4691941bb3a2e5981ecbcb6a19224",
+          "internal/app/plugin_original_refresh_resource.go": "2a4a450ddaad0c0e422f2183056a2116e2ef4ad3bf8fe3905ccc6af88f5f2572",
+          "internal/app/plugin_original_resources.go": "0cb70e900b5a30724589079cb8fd06d0b0697af3edb5bd50b598a9c65a223484",
+          "internal/app/plugin_original_service_progress.go": "464264f7e5b00c06ab4741d4edcb2ea845724bd0ff86dc0d6b02cbba382e7f7b",
+          "internal/app/plugin_original_services.go": "4b3a68d3406634dbcd12b4dcbd5ec718149e13c23134ec6f4349e679c4c1faff",
+          "internal/app/plugin_original_session.go": "d2d4983444be7058f96699ab86e46598dc00a7ce591c906b10d09cd7fd25eeed",
+          "internal/app/plugin_original_submitted.go": "9b0c28d46ef44e6fc90b309c27c5a54bd8c07836d25b86b2aec5dde791cdf9c1",
+          "internal/app/plugin_original_submitted_owned_test.go": "cb694c178580ec7313ea5bac6f9180a124b3e0b4677630e6e6304866d8d62878",
+          "internal/app/plugin_original_uninstall.go": "2eac2f4ec7d94346857bb0368f55ccd7b6ac1bec45bf0c4940bc0efbc3297bd1",
+          "internal/app/runtime.go": "628d17c5d35d161267ee955cc06dd975818b1970fae63b45606aa505946b541b",
+          "internal/plugins/concurrent_session.go": "73486ad6c0fc8668609476421bf853dec4e0d38500e9433fbb06d435c5d9af7b",
+          "internal/plugins/pending_call.go": "3fd5c93efe184e219467116359814bd98188810160f715e7a41f8087a964f7b7",
+          "cmd/owned-manager-lifecycle-fixture/main.go": "4e5d3c3a8d4656700133c84605d7b00d5701471448ea7cdaba35be737d0337b8",
+          "internal/app/plugin_original_api_registration.go": "668aeb2b0f544e14327feeb6042cd0bd60ca39595e8b341c67adc3127f45ce0f",
+          "internal/app/plugin_original_api_retained_test.go": "cca0e43bb2bf4575cbc983e0c6b2fbefb490a8b77e9221b3b2717d463f605aea",
+          "internal/app/plugin_original_retained.go": "6398271a88d953eead791d2f73530e39d19cd72fc0f7663b97cfc44a04c6fefd",
+          "internal/app/plugin_original_retained_legacy_test.go": "d5c4f1eb6637419dfb4e091b39fb2e8e0eedce374d4101bf51e4aafe1f394743",
+          "internal/app/plugin_original_retained_runtime.go": "df1522d4f845937836232d67572b56bb4e3d9b29f9b95f18dbf0e37aedef7c47",
+          "internal/app/plugin_original_retained_runtime_test.go": "3c43d122744eeed49c5b7f93cfe498dbc7dee6c6a473a710bb6655f43208d737",
+          "internal/app/plugin_original_retained_test.go": "c5b098355a6f0b4b125e0b1882b945401cf37de8555748cc495a685e920f4591",
+          "internal/app/plugin_shared_manager_lifecycle.go": "a52b69dd4b89449c595473b5a814c00a0ba176e0d1ecd021b90a4e7d9a28c0d5",
+          "internal/app/plugin_shared_manager_lifecycle_test.go": "b1a5dbf16df50689bfe898dc4c54e604fedf2a60d9931b0d54b2ab59302c21d8",
+          "internal/app/plugin_shared_manager_remove.go": "5e813fa3573414d56f54685102719307c1f787454ce5b14e5c663b3781231551",
+          "internal/app/plugin_shared_manager_remove_test.go": "488e0aa37dbdfa1c94d92acf27c96cd4d23b520abef240f6509c1d86dc176be8",
+          "internal/app/plugin_shared_manager_runtime.go": "31ad20ec82a976ac959d402efbaf5587cea2126366f1048b29598e47d5bd78ee",
+          "internal/app/plugin_shared_manager_runtime_test.go": "5c07c7b8f83f08a6df4b76710264bd4471d86f5605f87e979dda5fcd2a8f1394",
+          "internal/app/plugin_shared_scheduler.go": "a546220f960ad06ae96173e468ddf82c1c85f9188525e7f9e79586b7c19430f5",
+          "internal/app/plugin_shared_scheduler_test.go": "8eba6a16a011f424bd5914764c59033cc98ebe75bd71d17bf37e6b631441415a",
+          "internal/app/testdata/shared-plugin-manager/lifecycle-source.json": "4732897f3ddffc2c46839ab9d610bb727b02e8ba1637e2ef69bdf25119bf4fac",
+          "internal/app/testdata/shared-plugin-manager/remove-source.json": "74876e4ed8cbc2142131d098774fce4fbf109ccf661e29c9d4fcdaefe4c0e989",
+          "internal/plugins/pending_call_drained_test.go": "46609572e1d16de1fca96dcedb1683dfde7c3c5f533c912af45cb4a8cd82cf94",
+          "internal/plugins/shared_plugin_manager_lifecycle.go": "745cd9f77f8211984d4e5dfeb87d08fce37f0896aabdbf1870e2ba0de96d5d20",
+          "internal/plugins/shared_plugin_manager_lifecycle_test.go": "d2ea3d75478db7df7aba62dde194ee7ce4c38a86b5fc576686e5ed4a44f606f3",
+          "internal/plugins/terminate_transport.go": "6f015c11caacbee9579a0b9d056683bc11134ec1878f52fdd33f59830f68be5b",
+          "internal/plugins/terminate_transport_test.go": "c500fa972b3ac42191a9e9b703ed2d1ac13c88ec2e2b8671c3c59935e437b776"
+        },
+        "publication_manifest": "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/publication-manifest.json"
+      }
+    },
+    {
+      "id": "s10-original8.normal-cli",
+      "kind": "runtime",
+      "status": "passed",
+      "feature_ids": [
+        "S10"
+      ],
+      "observations": "Actual owned normal hosts24->46 Wait0, SDK children40->60,24queries and all8wrappers; failure recovery/retainedAPI-job/cold; no real third-party/media/NAS.",
+      "binding": {
+        "raw_result": "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/raw/normal-cli01/result.json",
+        "actual_tool_receipt": "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/raw/normal-cli01/coordinator-tool-receipt.json",
+        "server_sha256": "972e0df2b2dcb68a9548ec3001e2974a2a703ab1f7f5b4277402a3a7e5edf87f",
+        "worker_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb"
+      }
+    },
+    {
+      "id": "s10-original8.independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "S10"
+      ],
+      "independent": true,
+      "reviewer": "tls_ab_independent / Astra ultra",
+      "observations": "Independent original8 complete ordinary backend contract accepted, no unresolved in-scope implementation/required test blocker; delivery still pending. SDK drain and physical termination also independently reviewed.",
+      "binding": {
+        "report": "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/reviews/integrated/INTEGRATED-APP-CLI-FINAL-REVIEW.md",
+        "sha256": "c51e030c099bbbea047f2791b602e32baf6ac5586697aef538894dfcdf1dfca7",
+        "seal": "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/reviews/integrated/integrated-app-cli-final-independent.json",
+        "seal_sha256": "2609888c1d4ed239f250b2139b513a0e1e76eca329f28e36fd64b97e2b69d996"
+      }
     }
   ],
   "execution_contract": {
@@ -42144,23 +42401,36 @@
     "latest_scope_selection": "Current complete61-entry inventory retained by user164510; historical same-scope completion inherited; exact source-discovered missing behaviors continue, no whole-source redevelopment or duplicate shared-chain credit."
   },
   "resume": {
-    "next_slice": "Deliver verified S15.ordinary_ocr, then original S10 eight-method dependency chain; source-only plan prepared, no new S10 implementation yet.",
-    "dirty_work": "New recovered source was independently clean and blob-identical to42d6. Only coordinator recovery metadata is being updated now; inaccessible old20261030 dirty candidates are not present. Older20261028 111dirty/5763ignored preserved unchanged.",
-    "workers": {
-      "coordinator": "Normal server built; CLI static review pending; no active Go/test host; soleledger/externalbackup",
-      "s15_owner": "Exact22presentproductpaths frozen; normalCLI driver prepared only",
-      "independent_reviewer": "A/B/C7 actual gates independently read; CLI staticreview and specific sourceevidenceinheritance",
-      "source_preparation": "c_userdata_owner Astraultra; purerequests AST body/header source script only; no import/socket/HTTP"
-    },
+    "next_slice": "S10 original8 current41-product backend slice locally verified and independently accepted; finish exact publication whitelist/commit/bundle, parent Mac ordinary push+readback. Do not restart completed normal22+1/race23/two-host CLI.",
+    "dirty_work": "Current isolated recovery worktree detached11f922: exactly41 S10 product paths+one ledger+259 publication evidence/manifest files. All product source frozen and accepted; no active test/server process. Historical older worktree dirty remains untouched; no reset/clean/sparse.",
+    "workers": [
+      {
+        "name": "s01_release_owner",
+        "model": "Astra ultra",
+        "task": "SDK/B code frozen, preparing next init/state/local precise write set"
+      },
+      {
+        "name": "tls_ab_independent",
+        "model": "Astra ultra",
+        "task": "Actual source warm/cold readback and exact source-to-B evidence mapping"
+      },
+      {
+        "name": "c_userdata_owner",
+        "model": "Astra ultra",
+        "task": "Source collector01 terminal receipt only; no further execution"
+      }
+    ],
     "blockers": [
-      "qB native AF_NETLINK restriction remains; no bypass.",
-      "07Wiki browser harddeny remains; noCA/trust/proxybypass.",
-      "Old explicitly denied inode/race-replacement/permission probes remain stopped; no retry or toolbypass. Old TLS/CA/CONNECT acceptance remains historicalonly."
+      "Old20261030 uncommitted candidates remain inaccessible; do not infer new code or reuse historical PASS as current acceptance.",
+      "Historical qB daemon/AF_NETLINK restriction retained as stop; original precise refusal is not available in current receipts, and no daemon/probe is retried.",
+      "New requests/urllib3 imports and restricted IPv6 probe remain paused. Earlier readonly import internal bind outcome is unknown; no false denial/success claim. Pure selected source components may proceed without those operations.",
+      "Browser/07Wiki source UI gates remain separately blocked/unverified; Mac is authorized for Git delivery only. No TLS/CA/proxy/CONNECT bypass or implicit migration of development/acceptance environment.",
+      "Prior explicit inode/race-replacement/permission probe refusals remain stopped. This does not prohibit unrelated pure semantic/owned fixture work."
     ],
     "commands": [
-      "GH_CONFIG_DIR=/workspace/shared/cloud-git-auth GIT_CONFIG_GLOBAL=/workspace/shared/cloud-git-auth/gitconfig git status --short",
-      "GH_CONFIG_DIR=/workspace/shared/cloud-git-auth GIT_CONFIG_GLOBAL=/workspace/shared/cloud-git-auth/gitconfig git ls-remote origin refs/heads/main refs/heads/plugins-refactor",
-      "source /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh; export GOFLAGS=\"-mod=readonly -buildvcs=false\" GOPROXY=off"
+      "git -C /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media status --short",
+      "source /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh; use only the frozen per-gate driver with explicit --root /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305 and a new evidence label after owner input freeze; poll saved active session before restarting",
+      "Git remote publication is coordinated by parent using the explicitly approved Space bundle -> existing Mac isolated delivery worktree -> ordinary plugins-refactor push/readback; no missing cloud credential path reuse"
     ],
     "prior_environment": "2026-10-29 implementation/test files unavailable; four recovered orphan documents/logs are not current acceptance.",
     "recovery_backups": [
@@ -42279,15 +42549,16 @@
       }
     ],
     "last_delivery": {
-      "commit": "42d6ef0ae3b4697200c13c22b7353de52320af6a",
+      "commit": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
       "branch": "plugins-refactor",
-      "readback": "42d6ef0ae3b4697200c13c22b7353de52320af6a",
+      "readback": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
       "main_unchanged": "97476582910dc4b696f7ccd5010f28d823812d40",
-      "ci": "0 checks/statuses/workflows reported at actual Mac push; no CI-green claim",
-      "feature": "S01.qbittorrent_completed",
-      "source_of_readback": "Trusted parent report of actual ordinary Mac push and ls-remote; fullbundle restored42d6 independently here"
+      "ci": "checks0/runs0/status0; no CI-green claim",
+      "feature": "S15.ordinary_ocr",
+      "source_of_readback": "Parent relayed actual Mac push/readback; evidence-s15-11f922896377/{push-receipt,protected-after-push,ci-receipt}.json",
+      "mac_protection": "Original three worktree HEAD/branch/index unchanged. Main had concurrent changes to2 existing files+5 new paths retained; other2 trees unchanged. Do not falsely claim all Mac files unchanged."
     },
-    "updated_at": "2026-10-31T14:34:26.398916+00:00",
+    "updated_at": "2026-10-31T16:57:13.978396+00:00",
     "latest_integrations": {
       "services_portable": "../evidence/coordinator/services-main-integration/portable-integration.json",
       "services_web": "../evidence/coordinator/services-main-integration/web-v3-result.json",
@@ -42347,12 +42618,12 @@
       "free_after": "2.3GiB including authorized oldbinary archive"
     },
     "delivery_pending": {
-      "branch": "plugins-refactor",
-      "base": "42d6ef0ae3b4697200c13c22b7353de52320af6a",
-      "scopes": [
-        "S15.ordinary_ocr"
-      ],
-      "state": "verified; exact whitelist being sealed for local commit/bundle; remote still42d6"
+      "state": "S10 original8 local verified accepted candidate; no currentremote publication yet",
+      "base_commit": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "source_paths": 41,
+      "delivery_branch": "plugins-refactor",
+      "next": "exact301 paths whitelist review -> commit -> increment bundle -> approved Mac push/readback",
+      "previous_s15": "delivered11f922 actualremote confirmed"
     },
     "terminal_binary_archive": {
       "status": "complete",
@@ -42734,6 +43005,37 @@
         "library_file_id": "libfile_da3d601c81c081918010f3a264c01f9a",
         "version": 0,
         "confirmed_at": "2026-10-31T14:15:15.964536+00:00"
+      },
+      {
+        "kind": "verified committed S15 incremental bundle",
+        "library_file_id": "libfile_66e90b8ac2b481918c4e4dd969b4a44f",
+        "version": 0,
+        "bytes": 764161,
+        "sha256": "dd0dbfe34a4de3aaefe100f2d30eb5b0161786d6b48573c4bb81873ab4849472",
+        "commit": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "prerequisite": "42d6ef0ae3b4697200c13c22b7353de52320af6a",
+        "status": "parent confirmed actual Space save/xattrs; not remote Git delivery confirmation"
+      },
+      {
+        "at": "2026-10-31T14:56:10.828853+00:00",
+        "library_file_id": "libfile_9063ecbf5580819196aa6fafecd6b3e4",
+        "version": 0,
+        "filename": "s10-a1-wip-20261031T1454.tar.gz",
+        "bytes": 861978,
+        "sha256": "c4334d06833398aa58419055c7d340e0a1c58263e41e53abd9abf2a203073cfd",
+        "scope": "2 SDK sourcefiles + actual wire2 gates and independent review, source contracts/env recipe; not hostB or complete8/Git delivery",
+        "status": "parent confirmed actual Space save and xattrs tool0"
+      },
+      {
+        "at": "2026-10-31T15:19:27.997873+00:00",
+        "library_file_id": "libfile_51e880e425448191a33080219f2cf130",
+        "version": 0,
+        "filename": "s10-ab-source-wip-20261031T1515.tar.gz",
+        "bytes": 1228558,
+        "sha256": "b6e79ba6e0beda3b46fff32b8348da140de19ef2f5523e46b1b9d96e5daa7337",
+        "scope": "Current5 productpaths; BApp2/sourcewarm+cold original component evidence and static Cplan, not complete8/SDKCLI/race",
+        "status": "actual Space saved/xattrs tool0 parentconfirmed",
+        "snapshot_boundary": "Source postexecution independent review was pending when tar froze; subsequently passed separately, never relabel tar as same-input Go differential"
       }
     ],
     "active_sessions": [],
@@ -42761,7 +43063,7 @@
       "source_requests_import_boundary": "../evidence/requests-readonly-import-boundary.json",
       "adjacent_qb": "one dispatchroot PASS using exactsameAppbinary, one newlybuiltownedqBworker; norealdaemon/netlink",
       "normal_server": "build01 PASS session62853;3944 inputs zero drift; SHA5db4973ba4fcc4eb0fc3580ce4d3099182e1066a7be1e5ade3938201e7e8ae4c; subsequently exercised by normal CLI01",
-      "next": "Exact whitelist commit/bundle, parent Mac push/readback; then S10 original8 reconstruction from actual available source, not lost candidate evidence",
+      "next": "Delivered11f922; only remaining parentS15 dependencies retain separate status. Continue S10.",
       "normal_cli": "actual normalCLI PASS session33729;hosts24->52 Wait0x2;workers40->66;5OCRcalls;independentb121d5c4; sourceHTTP/recognition/browser notclaimed",
       "race_transport": "actual3 PASS session75870;2951 inputs zero drift; independently accepted",
       "race_app": "actual3 PASS session38931;6161 inputs zero drift; race worker1386->1394; ended2026-10-31T14:14:04Z; independent RACE06 review passed",
@@ -42786,6 +43088,544 @@
       "kind": "local derived structural/path/hash check, not official skill checker",
       "official_checker": "skills.read official scripts/check_ledger.py returned failed to read skill resource; unavailable, not passed",
       "result": "testdata/plugins/ordinary-ocr-reconstruction-20261031/local-structure-check.json"
+    },
+    "historical_commands_before_current_recovery": [
+      "GH_CONFIG_DIR=/workspace/shared/cloud-git-auth GIT_CONFIG_GLOBAL=/workspace/shared/cloud-git-auth/gitconfig git status --short",
+      "GH_CONFIG_DIR=/workspace/shared/cloud-git-auth GIT_CONFIG_GLOBAL=/workspace/shared/cloud-git-auth/gitconfig git ls-remote origin refs/heads/main refs/heads/plugins-refactor",
+      "source /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh; export GOFLAGS=\"-mod=readonly -buildvcs=false\" GOPROXY=off"
+    ],
+    "new_s10_reconstruction": {
+      "base": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "source": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+      "actual_product_files": [
+        "cmd/owned-manager-lifecycle-fixture/main.go",
+        "internal/app/plugin_original_lifecycle.go",
+        "internal/app/plugin_original_resources.go",
+        "internal/app/plugin_shared_manager_lifecycle.go",
+        "internal/app/plugin_shared_manager_lifecycle_test.go",
+        "internal/app/plugin_shared_manager_runtime.go",
+        "internal/app/plugin_shared_manager_runtime_test.go",
+        "internal/app/testdata/shared-plugin-manager/lifecycle-source.json",
+        "internal/plugins/shared_plugin_manager_lifecycle.go",
+        "internal/plugins/shared_plugin_manager_lifecycle_test.go"
+      ],
+      "source_state": "SDK2 recordingHost gate/review accepted; B DB2 actualSQLite gate/review accepted; C seven paths frozen, App5 running. Not complete S10.",
+      "input_binding": "../audits/s10-reconstruction-plan/sdk-gofmt-binding.json",
+      "host_eight_methods": "DB2 and init/rawstate/local3 implemented with actual component/SDK targeted gates; remove and two scheduler methods not yet implemented. Full normalCLI/race still pending.",
+      "next": "publication whitelist final review, localcommit/incrementbundle, Mac ordinarypush/readback; do not repeat accepted tests",
+      "sdk_gate": {
+        "session": 30242,
+        "tool_poll_exit": 0,
+        "driver_pid": 2,
+        "status": "PASS",
+        "roots": [
+          "TestSharedPluginManagerLifecycleWire",
+          "TestSharedPluginManagerLifecycleBoundaries"
+        ],
+        "input_count": 1917,
+        "program_sha256": "f44bbb76579f657abd51257707d352e6590aa862d2afc8c78125fd9bc366d1b1",
+        "ended": "2026-10-31T14:46:57.584383+00:00",
+        "scope": "SDK wire/recordingHost only, not actual host eight methods"
+      },
+      "sdk_review": "Accepted SDK-only phase-a1-sdk-independent.json SHA121f1c8abecb0226483141ec6c5e5c3de85f0e6b112b084fb6fb4971c7d7f55c; no host credit",
+      "source_dependencies": "Actual isolated uv dependencies installed; original selected8 component warm/cold execution and independent review accepted; no full source service claim.",
+      "host_block_b": "Actual ownedSQLite App2 gate and independent accepted; C admission hook changes now being covered by App5.",
+      "external_a1_checkpoint": {
+        "at": "2026-10-31T14:56:10.828853+00:00",
+        "library_file_id": "libfile_9063ecbf5580819196aa6fafecd6b3e4",
+        "version": 0,
+        "filename": "s10-a1-wip-20261031T1454.tar.gz",
+        "bytes": 861978,
+        "sha256": "c4334d06833398aa58419055c7d340e0a1c58263e41e53abd9abf2a203073cfd",
+        "scope": "2 SDK sourcefiles + actual wire2 gates and independent review, source contracts/env recipe; not hostB or complete8/Git delivery",
+        "status": "parent confirmed actual Space save and xattrs tool0"
+      },
+      "db_gate": {
+        "session": 97303,
+        "tool_terminal_chunk": "b95fce",
+        "exit": 0,
+        "driver_pid": 2,
+        "status": "PASS",
+        "input_count": 6155,
+        "program_sha256": "ba730fbd6e9e8327dd98d299ef64f036ed6a6bebd8ae3e5b4b69c9e52ce0837e",
+        "roots": [
+          "TestSharedManagerMutationsClassForceAndIsolation",
+          "TestSharedManagerMutationsConfigFailureHotCold"
+        ],
+        "ended": "2026-10-31T15:02:00.150890+00:00",
+        "scope": "ownedSQLite+real dispatcher, supplied authority; not normal CLI/SDK"
+      },
+      "db_review": "B1 accepted for twoDB host component layer; phase-b1-db-independent.json SHA730253ee30e98c6873d0df1b772f2f954928aab01c7dddbdc7c6a0e7eb31ed09; no SDK/CLI/race or full8 claim",
+      "source_collector01": {
+        "warm": {
+          "session": 84498,
+          "exit": 0,
+          "tool": "00b06e",
+          "stdout_sha256": "c5a54c6d5f238b61d8016635581506281e0cbd82b860b7b833d379c7a6201d48"
+        },
+        "cold": {
+          "session": 55866,
+          "exit": 0,
+          "tool": "c7cf86",
+          "stdout_sha256": "62f700a28082b48675f5f4f831ba7daa827a6cb4d8e022bb9cb5e29719dba975"
+        },
+        "scope": "Selected original8 methods/realSQLAlchemy SQLite+sourcePlugin schema+unstarted APScheduler; owned callbacks/event/auth inputs. Separate cold process opensDB readonly. NotfullsourceHTTP/timer/realbusinessplugins",
+        "review": "Actual postexecution independent accepted; SOURCE-COLLECTOR01-REVIEW.md SHA106d85ccdcee309be3c4ab44d8c560e002c1fef93fef5d8f77b1967791ef4d0b; terminal63df4a58d4814eb7d9b19a47c91a97ca8e43926cf298be2e82dcb3739494baf4. No same-input Go comparison claimed; exactcase excerpt for next replay."
+      },
+      "reentry_plan": {
+        "path": "../audits/s10-reentry-plan/REVIEW.md",
+        "sha256": "59a43e3879d098080787a49f4de2251f54ee2364af58cd9b1f3c981d317038e3",
+        "status": "staticfeasible for current concurrent chain; not implemented/accepted",
+        "registered_api_addendum": {
+          "path": "../audits/s10-reentry-plan/API-BINDING-ADDENDUM.md",
+          "sha256": "e3f253c46317e12bfc21e760ea2c8a49d3db7c6691bd9e331494b408ecad0f0c",
+          "scope": "Actual source-bound endpoint dependency, static-only/no product implementation"
+        }
+      },
+      "external_ab_checkpoint": {
+        "at": "2026-10-31T15:19:27.997873+00:00",
+        "library_file_id": "libfile_51e880e425448191a33080219f2cf130",
+        "version": 0,
+        "filename": "s10-ab-source-wip-20261031T1515.tar.gz",
+        "bytes": 1228558,
+        "sha256": "b6e79ba6e0beda3b46fff32b8348da140de19ef2f5523e46b1b9d96e5daa7337",
+        "scope": "Current5 productpaths; BApp2/sourcewarm+cold original component evidence and static Cplan, not complete8/SDKCLI/race",
+        "status": "actual Space saved/xattrs tool0 parentconfirmed",
+        "snapshot_boundary": "Source postexecution independent review was pending when tar froze; subsequently passed separately, never relabel tar as same-input Go differential"
+      },
+      "host_runtime_c": {
+        "state": "Finite C normal checkpoint independently accepted and externally preserved; not full S10",
+        "fixture_compile": {
+          "at": "2026-10-31T15:28:53.139353+00:00",
+          "status": "PASS",
+          "kind": "owned S10 concurrent fixture compile only; no worker execution/App gate",
+          "driver_pid": 2,
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-json",
+                "./cmd/owned-manager-lifecycle-fixture"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "build",
+              "argv": [
+                "go",
+                "build",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-c-fixture01.worker",
+                "./cmd/owned-manager-lifecycle-fixture"
+              ],
+              "exit": 0
+            }
+          ],
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "scratch_free": 58968080384,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "build",
+              "scratch_free": 58967519232,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 1080,
+          "program_sha256": "4d1ee8471677efd159391510b2ec044fa8dbf0423d0adbbf126d7408ff5bcde8",
+          "ended": "2026-10-31T15:28:53.665151+00:00"
+        },
+        "app_session": 67972,
+        "driver_sha256": "5e7ffb4d3f62b000aadcf72c700e48af701fedcad4518d40f74408999b3a002a",
+        "input_bindings": "../audits/s10-reconstruction-plan/phase-c3-app/inputs.sha256",
+        "new_go_tests_not_yet_passed": false,
+        "app01_terminal": {
+          "session": 14437,
+          "chunk": "8fe7a8",
+          "exit": 1,
+          "evidence": "../evidence/s10-c-app01",
+          "defects": [
+            "new test helper name collides with existing managerWorkerSnapshot",
+            "callOriginalMethod result wrapper must use Result bytes"
+          ]
+        },
+        "app02_driver": "../runners/s10-c-app02.py",
+        "app02_terminal": {
+          "session": 9435,
+          "chunk": "fce333",
+          "exit": 1,
+          "compile_exit": 0,
+          "test_exit": 1,
+          "evidence": "../evidence/s10-c-app02",
+          "root_passes": 4,
+          "root_failures": 1,
+          "failure": "line296 expected raw source exception text; actual plugin: host_operation_failed"
+        },
+        "app03_terminal": {
+          "session": 67972,
+          "chunk": "c1a10a",
+          "exit": 0,
+          "status": "PASS",
+          "input_count": 6164,
+          "program_sha256": "b38ef068f39c589ce5ccb3c228a9413b944db4ee79309d75384dd77aada19fde",
+          "root_passes": [
+            "TestSharedManagerRuntimeActualConcurrentInitState"
+          ],
+          "ended": "2026-10-31T15:39:21.632264+00:00"
+        },
+        "acceptance_boundary": "App router/install ownedHTTP artifacts + actual negotiated concurrent SDK worker; not normal daemonCLI/race/browser or all8methods. Original source stateerror reused as getter+staticinit-order combination, not identical-input-event trace.",
+        "review": {
+          "report": "../audits/s10-reconstruction-independent/PHASE-C-FINAL-REVIEW.md",
+          "report_sha256": "8757b5bc8a061d407a661fb9fe85721c7f3c7556cb949d95d46e941073e8f833",
+          "seal_sha256": "3187d79554cb92d8eabc36f58d96c887eaf41aad1255fad892d654f59e0c49ce",
+          "status": "accepted finite normal checkpoint:App03 corrected1+App02 inherited4; not full8/CLI/race"
+        }
+      },
+      "external_c_checkpoint": {
+        "at": "2026-10-31T15:44:58.320964+00:00",
+        "library_file_id": "libfile_4dddf8e6b0ac8191bcd17eb6a81ea275",
+        "version": 0,
+        "filename": "s10-c-wip-20261031T1543.tar.gz",
+        "bytes": 1838849,
+        "sha256": "4da71fac8a2dd506b39bfbc88bdb8a98860971a3409e7e5e89f8290b13f4b3f2",
+        "status": "parent confirmed actual Space save and xattrs tool0",
+        "scope": "Frozen C10 source+ledger/normal actual evidence and two failures;not subsequent SDK drain/retained changes;not Git delivery"
+      },
+      "write_windows": {
+        "sdk_drain": {
+          "owner": "c_userdata_owner",
+          "paths": [
+            "internal/plugins/pending_call.go",
+            "internal/plugins/concurrent_session.go",
+            "internal/plugins/pending_call_drained_test.go"
+          ],
+          "state": "Frozen3 independently accepted normal4/race4;not App/S10 complete"
+        },
+        "retained_core": {
+          "owner": "s01_release_owner",
+          "paths": [
+            "internal/app/plugin_original_retained.go",
+            "internal/app/plugin_original_retained_test.go"
+          ],
+          "state": "D1 two files staticREADY;pure3 not executed;D2 seven-path integration write authorized"
+        },
+        "retained_runtime": {
+          "owner": "s01_release_owner",
+          "paths": [
+            "internal/app/plugin_original_retained_runtime.go",
+            "internal/app/plugin_original_retained_runtime_test.go",
+            "internal/app/plugin_original_lifecycle.go",
+            "internal/app/runtime.go",
+            "internal/app/plugin_original_session.go",
+            "internal/app/plugin_original_base_session.go",
+            "internal/app/plugin_original_submitted.go"
+          ],
+          "state": "Frozen7 normal5/race5 independently accepted, checkpointed;D3 now modifying explicitdependencyhunks separately"
+        },
+        "d3_remove_jobs": {
+          "owner": "s01_release_owner",
+          "scope": "new remove/test+retained_runtime operationhelpers+manager_runtime pins+ownedmanagerfixture+its runtime_test exactcaphelper;then new shared_scheduler/test+services/direct_dispatch/common_scheduler/service_progress",
+          "state": "writegranted/smallblocks;last3hostdispatch not opened"
+        },
+        "d3_bound_api": {
+          "owner": "c_userdata_owner",
+          "scope": "new api_registration/test+lifecycle registerfunction+runtime APIshortlock+uninstall/custom_api/external_http;exacttwoexistingtests typeadaptation only",
+          "state": "writegranted;onlytrustedboundobject/registrationrefs,noauthrelaxation"
+        }
+      },
+      "sdk_drain_normal01": {
+        "status": "PASS",
+        "input_count": 1919,
+        "fixture_sha256": "e70b86fd7cc2344189547042f88cf24fc3d9b5c4d30164521548ee57d0c8f3e6",
+        "program_sha256": "8d43e122eda207fe0d545f400b61927ee3f854fc2c43ca40e5f23e6e5a7b8512",
+        "root_passes": [
+          "TestOwnedPendingCallDrainedSuccessAndZeroByteFailure",
+          "TestOwnedPendingCallDrainedCancellationWaitsForWorkerAndHost",
+          "TestOwnedPendingCallDrainedTerminalRequiresReaperAndHost",
+          "TestOwnedPendingCallDrainedUnusedObserverAndShutdownBoundary"
+        ],
+        "started": "2026-10-31T15:48:30.140621+00:00",
+        "ended": "2026-10-31T15:48:33.494213+00:00",
+        "session": 92795,
+        "tool_terminal": "0406bb",
+        "exit": 0,
+        "scope": "Actual owned publicSDK process4 plus explicitly controlled internal reaper synchronization subcase; not App remove/retained integration"
+      },
+      "sdk_drain_race01": {
+        "status": "PASS",
+        "input_count": 1956,
+        "fixture_sha256": "7ffd4a356f08fd4fdc5008a795c5f09662115c22abe810b4f8ab4efb76a80c98",
+        "program_sha256": "1712696efd7f7bdeeccef48d969ccb5644070c430571909471e426b7ec276640",
+        "root_passes": [
+          "TestOwnedPendingCallDrainedSuccessAndZeroByteFailure",
+          "TestOwnedPendingCallDrainedCancellationWaitsForWorkerAndHost",
+          "TestOwnedPendingCallDrainedTerminalRequiresReaperAndHost",
+          "TestOwnedPendingCallDrainedUnusedObserverAndShutdownBoundary"
+        ],
+        "started": "2026-10-31T15:49:02.160782+00:00",
+        "ended": "2026-10-31T15:49:13.217981+00:00",
+        "session": 31336,
+        "tool_terminal": "4f2be0",
+        "exit": 0,
+        "scope": "Same finite4 SDK roots with actual race-built ownedworker+host; internal controlled reaper case separately labeled"
+      },
+      "sdk_drain_independent": {
+        "status": "accepted finite SDK3 normal4/race4",
+        "report_sha256": "569c333ba470ba8000ec33ec33760128add14534f86fb8e28ee9fc556fe45ddc",
+        "seal_sha256": "a254cc1c5076d66c2e6d05739f809731a4001fa9caa732cd605d972a776edf24",
+        "path": "../audits/s10-drain-independent/FINAL-REVIEW.md"
+      },
+      "d2_normal01": {
+        "status": "PASS",
+        "input_count": 6165,
+        "fixture_sha256": "b73d14a8cd41190342bf1a179042100ed12538823e84c5dd4be679a4a54f7cd3",
+        "submitted_fixture_sha256": "cf9769c5cfedd8d67181e22565679595c17fa13c9e7d533156e4b643fceddd3d",
+        "program_sha256": "9cb5108890d6e574a1a3d8c6bc7b4aebeaff4423812b60e58c0aa748f0e42a5e",
+        "root_passes": [
+          "TestOriginalRetainedActualCancelledCallAndForcedClose",
+          "TestOriginalRetainedActualUnpublishedSubmission",
+          "TestOriginalRetainedOwnersAndExactAdmission",
+          "TestOriginalRetainedCallFactsAndForcedClose",
+          "TestOriginalRetainedConcurrentRetirementOnce"
+        ],
+        "started": "2026-10-31T15:55:23.231709+00:00",
+        "ended": "2026-10-31T15:55:58.190974+00:00",
+        "session": 2992,
+        "tool_terminal": "2890d3",
+        "exit": 0,
+        "scope": "D1pure3 plus D2 actualSDK2 roots (unpublished normal/forced subcases);not remove/job/API/normaldaemonCLI"
+      },
+      "d2_race01": {
+        "status": "PASS",
+        "input_count": 6174,
+        "fixture_sha256": "6faddc7e6ddf732d7eb96d73a4722bcb28a47d558d59d4e06a671a75215a612d",
+        "submitted_fixture_sha256": "d5e79583ca206147b3379e36a9614a565576f82a3977aa30f2cf3d158fe341da",
+        "program_sha256": "254a23b6a89f3742ce9ddfad8b9e13c8020412e9f991701110fdfa6e27504f41",
+        "root_passes": [
+          "TestOriginalRetainedActualCancelledCallAndForcedClose",
+          "TestOriginalRetainedActualUnpublishedSubmission",
+          "TestOriginalRetainedOwnersAndExactAdmission",
+          "TestOriginalRetainedCallFactsAndForcedClose",
+          "TestOriginalRetainedConcurrentRetirementOnce"
+        ],
+        "started": "2026-10-31T15:56:32.710870+00:00",
+        "ended": "2026-10-31T15:57:33.596999+00:00",
+        "session": 63400,
+        "tool_terminal": "58eb4b",
+        "exit": 0,
+        "scope": "D1pure3 plus D2 actualSDK2 roots at racehost/workers;not remove/job/API/normaldaemonCLI"
+      },
+      "d2_independent": {
+        "status": "accepted finite App normal5/race5 checkpoint",
+        "report_sha256": "ffa34fb8556c7c8fbb53d59cb353b088d169c446d47a4a7574a01a138cfe8fb0",
+        "seal_sha256": "2d82bb1fdad91c000fe258f4b5a9c9852e9d5a0b07d5750d9b77048a550f4bbd",
+        "path": "../audits/s10-reconstruction-independent/PHASE-D2-FINAL-REVIEW.md"
+      },
+      "external_d_checkpoint": {
+        "at": "2026-10-31T16:02:38.656931+00:00",
+        "library_file_id": "libfile_201e6ed8961081918ab70fa1976492c8",
+        "version": 0,
+        "filename": "s10-d-wip-20261031T1601.tar.gz",
+        "bytes": 1708217,
+        "sha256": "fcb637f9fff4dba59264d246ccb1b34d94ba00fec436657c72297c0e353c86f8",
+        "status": "parent confirmed actual Space save and xattrs tool0",
+        "scope": "Frozen21source+ledger/SDKnormal4race4+D2normal5race5;doesnotincludeD3;notGitdelivery"
+      },
+      "remove_empty_source_addendum": {
+        "status": "Actual single sourcecase exit0 and independentterminal accepted",
+        "tool_terminal": "fae1a8",
+        "driver_sha256": "79402d069e0bd821f74f2f824be0f418cde2c49212580db4bd855bce9f7e70d4",
+        "stdout_sha256": "74876e4ed8cbc2142131d098774fce4fbf109ccf661e29c9d4fcdaefe4c0e989",
+        "evidence": "../audits/s10-remove-source-addendum/execution01.stdout",
+        "scope": "Original5 method bodies,2controlledobjects,empty-all closeerror branch;no fullsource/DB/HTTP/threads/probes;originalfinder cache invalidation with empty app.plugins prefix",
+        "terminal_seal_sha256": "5d1d4ae5c7ed9a4f5de1aeef1928f292f7cab6c9b21367bf76133967016f083e"
+      },
+      "legacy_retirement_gap": {
+        "status": "2newSDKfiles implemented/frozen/staticREADY;normal7 actualrunning64622,not passed",
+        "scope": "Explicit exactchild physical termination zeroframes;SupportsTransportClose/oldStop/oldCloseTransport unchanged;own intentional nil is reaped not cleanexit0",
+        "pending_contract": "Admission/nonclaimant uses suppliedctx;pending no actualWait receipt;App logicalremoved-only exactBackground cleanup and explicitno-false-finish handling;oldunpublishedfallback unchanged",
+        "race": "new3 pending normal terminal",
+        "old_neighbor_layer": "normal2 PersistentSession roots self-exec testprogram children,other5 independentlybuiltownedfixture;not all normal7 publicartifact e2e"
+      },
+      "d3_api_review": {
+        "status": "API8 checkpoint03 staticREADY;actual4roots unexecuted",
+        "report_sha256": "6ac0dbafc71acb373a0da1aabdd6f9597718a7bd17a1830191275be681a6235b",
+        "seal_sha256": "b345417360264a8398e5cafa320e4caee685f20403149c790b53f0fa09f08f45"
+      },
+      "terminate_normal01": {
+        "status": "PASS",
+        "session_id": 64622,
+        "evidence": "../evidence/s10-terminate-normal01",
+        "actual_roots": 7,
+        "actual_command_exits": [
+          0,
+          0,
+          0,
+          0
+        ],
+        "ended": "2026-10-31T16:26:20.606340+00:00",
+        "outer_tool_receipt": "original poll output truncated in model context; subsequent poll Unknown process id; raw terminal logs independently verified, no invented outer exit"
+      },
+      "external_e_checkpoint_preparation": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/external-backups/s10-e-pretest-wip-20261031T1633.tar.gz",
+        "bytes": 781074,
+        "sha256": "781801947b3ef941ddb3b750183b4daa0eea9268c1e44e75aff1cedfedd465e2",
+        "members": 73,
+        "manifest_sha256": "623fec3ef87f6440ea2cdcd0b56af201282e874249074fd2b4dd24d65961b444",
+        "state": "verified_local_WIP_backup_NOT_delivery_NOT_external_yet",
+        "at": "2026-10-31T16:32:51.417319+00:00"
+      },
+      "terminate_race01": {
+        "status": "PASS",
+        "session_id": 36092,
+        "tool_chunk": "c764aa",
+        "outer_exit": 0,
+        "evidence": "../evidence/s10-terminate-race01",
+        "actual_roots": 3,
+        "input_count": 1958
+      },
+      "terminate_independent": {
+        "status": "accepted_finite_sdk_only",
+        "report": "../audits/s10-terminate-independent/REVIEW.md",
+        "sha256": "03bf26c4fc4a9cf1dda7a4b6db534929676d9da6834252efbb3c93efd6d3bf28"
+      },
+      "external_e_checkpoint": {
+        "library_file_id": "libfile_c13c53d2ed3c819190716d35690a4d18",
+        "version": 0,
+        "bytes": 781074,
+        "sha256": "781801947b3ef941ddb3b750183b4daa0eea9268c1e44e75aff1cedfedd465e2",
+        "status": "external_WIP_backup_NOT_delivery",
+        "snapshot_scope": "36Go+2sourceJSON+ledger at1630, not later coordinator hooks/final currentsource"
+      },
+      "d3_fixture_compile": {
+        "status": "PASS_COMPILE_ONLY",
+        "tool_chunk": "1406d6",
+        "outer_exit": 0,
+        "evidence": "../evidence/s10-d3-fixture01",
+        "input_count": 1081,
+        "program_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb"
+      },
+      "d3_d4_static": {
+        "status": "READY_NOT_RUNTIME_PASS",
+        "report": "../audits/s10-reconstruction-independent/PHASE-D3-D4-CANDIDATE03-STATIC.md",
+        "sha256": "57b5819daab0e19ae3076eb5dd2327ac5bc275ad171c57acc4a56533a41b3ad8",
+        "binding_sha256": "7dcbc5de9d0cda652f836321a0ae7db93d76a3b1048fbe7df7f32467cf3f35cf"
+      },
+      "d3_integrated_gate_preparation": {
+        "status": "RUNNING_NORMAL23_SESSION36268",
+        "driver": "../runners/s10-integrated-app01.py",
+        "driver_sha256": "23ff85f13e76ca7522ef054856d447937a218a47b2787284e0968046481b41e4",
+        "plan": "../audits/s10-coordinator-integration01/app-gate.json",
+        "root_count": 23,
+        "legacy_test_sha256": "d5c4f1eb6637419dfb4e091b39fb2e8e0eedce374d4101bf51e4aafe1f394743",
+        "product_frozen": true,
+        "normal_cli": "owner writing actual bounded driver; not executed"
+      },
+      "d3_integrated_normal01": {
+        "status": "FAIL",
+        "session_id": 36268,
+        "tool_chunk": "e236cf",
+        "outer_exit": 1,
+        "compile": "PASS",
+        "passed_roots": 22,
+        "failed_roots": 1,
+        "evidence": "../evidence/s10-integrated-normal01",
+        "cause": "tests cwd mismatched normal go test package directory; committed runtime oracle present",
+        "diagnosis": "../audits/s10-coordinator-integration01/normal01-cwd-diagnosis.json"
+      },
+      "d3_integrated_normal02": {
+        "status": "PASS",
+        "actual_roots": 1,
+        "scope": "only oldAsync root corrected cwd; original normal01 22PASS remains, its failure not overwritten",
+        "evidence": "../evidence/s10-integrated-normal02",
+        "session_id": 28297,
+        "tool_chunk": "9bc2b8",
+        "outer_exit": 0,
+        "input_count": 6192,
+        "program_sha256": "859fcd30461c4500f5d80059a79bf915b3a9d881a05f19a1f48f6b63e7f87dfe"
+      },
+      "d3_server_compile": {
+        "status": "PASS",
+        "evidence": "../evidence/s10-server01",
+        "session_id": 86002,
+        "program_sha256": "972e0df2b2dcb68a9548ec3001e2974a2a703ab1f7f5b4277402a3a7e5edf87f",
+        "input_count": 3953,
+        "only_compile": true
+      },
+      "d3_integrated_race01": {
+        "status": "PASS",
+        "session_id": 15875,
+        "tool_chunk": "aa238f",
+        "outer_exit": 0,
+        "roots": 23,
+        "input_count": 6191,
+        "program_sha256": "bef999b05b62ade02d70f231fca6379f7403f2cb7e7be0ea9af9a96fab9d3f87",
+        "evidence": "../evidence/s10-integrated-race01",
+        "ended": "2026-10-31T16:44:16.624644+00:00"
+      },
+      "d3_normal_cli01": {
+        "status": "PASS",
+        "execution_session_id": 95364,
+        "outer_exit": 0,
+        "tool_chunk": "daca14",
+        "evidence": "../audits/s10-normal-cli-plan/run01",
+        "hosts": [
+          24,
+          46
+        ],
+        "workers": [
+          40,
+          60
+        ],
+        "host_exits": [
+          0,
+          0
+        ],
+        "queries": 24,
+        "installation_count": 1,
+        "peer_acquisitions": [
+          "GET /index",
+          "GET /worker"
+        ],
+        "server_sha256": "972e0df2b2dcb68a9548ec3001e2974a2a703ab1f7f5b4277402a3a7e5edf87f",
+        "worker_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+        "driver_sha256": "efbd53c01af3ab740cf0d1f3a2da566aae355661ef9c35219bf274dca2fa2513",
+        "receipt": "../audits/s10-normal-cli-plan/run01/coordinator-tool-receipt.json"
+      },
+      "final_independent": {
+        "status": "passed",
+        "in_scope_open_blockers": [],
+        "report": "../audits/s10-reconstruction-independent/INTEGRATED-APP-CLI-FINAL-REVIEW.md",
+        "sha256": "c51e030c099bbbea047f2791b602e32baf6ac5586697aef538894dfcdf1dfca7",
+        "seal_sha256": "2609888c1d4ed239f250b2139b513a0e1e76eca329f28e36fd64b97e2b69d996"
+      },
+      "external_f_checkpoint": {
+        "library_file_id": "libfile_b02655d709f881918d31f911ac84ac70",
+        "version": 0,
+        "bytes": 779055,
+        "sha256": "a916e8f80df0adad8aa571470d0348a690740e84d5ce354b849945fcf61fd201",
+        "status": "actual_external_WIP_backup_not_delivery",
+        "phase": "source41+then-ledger+terminalreceipts; before final independent seal/publicationmetadata"
+      },
+      "publication": {
+        "state": "accepted_local_candidate_prepared_for_whitelist_review_commit_bundle",
+        "base": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "manifest": "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/publication-manifest.json",
+        "scope": "original8 complete ordinary backend contract; remote still11f922 until actual push/readback",
+        "candidate_product_count": 41,
+        "primary_scope_count": 61,
+        "normal_ci": "No CI run/check/status, no CI-green claim"
+      }
     }
   },
   "external_inventory": [

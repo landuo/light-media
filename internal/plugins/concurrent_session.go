@@ -25,6 +25,8 @@ type concurrentHostCall struct {
 	account     concurrentAccount
 	result      chan concurrentOutcome
 	sent        chan struct{}
+	drained     chan struct{}
+	drainOnce   sync.Once
 	mu          sync.Mutex
 	closed      bool
 	received    bool
@@ -37,23 +39,23 @@ type concurrentHostCall struct {
 
 type concurrentClient struct {
 	transportClose bool
-	client       *Client
-	transport    *concurrentTransport
-	proposal     concurrentProposal
-	mu           sync.Mutex
-	calls        map[string]*concurrentHostCall
-	terminal     error
-	stopping     bool
-	draining     bool
-	shutdownDone chan struct{}
-	shutdownErr  error
-	cleanupGate  chan struct{}
-	expectedEOF  bool
-	stopDone     chan struct{}
-	stopErr      error
-	readerDone   chan struct{}
-	hosts        sync.WaitGroup
-	writes       sync.WaitGroup
+	client         *Client
+	transport      *concurrentTransport
+	proposal       concurrentProposal
+	mu             sync.Mutex
+	calls          map[string]*concurrentHostCall
+	terminal       error
+	stopping       bool
+	draining       bool
+	shutdownDone   chan struct{}
+	shutdownErr    error
+	cleanupGate    chan struct{}
+	expectedEOF    bool
+	stopDone       chan struct{}
+	stopErr        error
+	readerDone     chan struct{}
+	hosts          sync.WaitGroup
+	writes         sync.WaitGroup
 }
 
 func newConcurrentClient(c *Client, proposal concurrentProposal) *concurrentClient {
@@ -94,14 +96,24 @@ func (m *concurrentClient) terminalError() error {
 func (m *concurrentClient) readLoop() {
 	defer close(m.readerDone)
 	defer func() {
+		var observed []*concurrentHostCall
 		m.mu.Lock()
 		for id, call := range m.calls {
 			call.revoke()
 			call.stopLife()
 			call.finish()
 			delete(m.calls, id)
+			if call.drained != nil {
+				observed = append(observed, call)
+			}
 		}
 		m.mu.Unlock()
+		// EOF/table removal is not handler completion. Do not block the sole
+		// reader or existing shutdown joins on a host callback that is still
+		// exiting. Hard failure already owns cancellation/reaping via abort.
+		for _, call := range observed {
+			go m.observeTerminatedCall(call)
+		}
 	}()
 	for {
 		frame, count, err := m.transport.read()
@@ -110,7 +122,9 @@ func (m *concurrentClient) readLoop() {
 			expected := m.expectedEOF
 			m.mu.Unlock()
 			if !expected || !errors.Is(err, io.EOF) {
-				if errors.Is(err, io.EOF) { err = failure("worker_io_failed") }
+				if errors.Is(err, io.EOF) {
+					err = failure("worker_io_failed")
+				}
 				m.abort(err)
 			}
 			return
@@ -211,6 +225,23 @@ func (m *concurrentClient) complete(call *concurrentHostCall, outcome concurrent
 	}
 	call.stopLife()
 	call.finish()
+	call.notifyDrained()
+}
+
+func (call *concurrentHostCall) notifyDrained() {
+	if call.drained != nil {
+		call.drainOnce.Do(func() { close(call.drained) })
+	}
+}
+
+// Terminal-only completion requires the actual command reaper as well as this
+// invocation's callbacks. This observes existing termination; it never starts
+// it or waits under an SDK mutex. A valid result may race this path and prove
+// invocation completion earlier without requiring the whole worker to exit.
+func (m *concurrentClient) observeTerminatedCall(call *concurrentHostCall) {
+	<-m.client.done
+	call.hosts.Wait()
+	call.notifyDrained()
 }
 func (m *concurrentClient) replyDenied(call *concurrentHostCall, id string) {
 	_, err := m.transport.write(Frame{Protocol: ProtocolVersion, ID: id, Type: "host_result", Identity: m.client.binding.Identity, Error: &ReplyError{Code: "HOST_DENIED"}}, call.account.send)
@@ -260,14 +291,18 @@ func (m *concurrentClient) callHost(call *concurrentHostCall, host HostHandler, 
 }
 
 func (m *concurrentClient) call(ctx context.Context, method string, payload json.RawMessage, host HostHandler, options CallOptions, cleanup bool) (RunResult, error) {
-	return m.callStarted(ctx, method, payload, host, options, cleanup, nil, nil)
+	return m.callStarted(ctx, method, payload, host, options, cleanup, nil, nil, nil)
 }
 
 // admitted is notified exactly once, before any worker completion is awaited.
 // An accepted call already owns the same bounded table slot as ordinary Call.
-func (m *concurrentClient) callStarted(ctx context.Context, method string, payload json.RawMessage, host HostHandler, options CallOptions, cleanup bool, admitted chan<- error, admissionCtx context.Context) (out RunResult, err error) {
+func (m *concurrentClient) callStarted(ctx context.Context, method string, payload json.RawMessage, host HostHandler, options CallOptions, cleanup bool, admitted chan<- error, admissionCtx context.Context, drained chan struct{}) (out RunResult, err error) {
 	announced := false
+	registered := false
 	defer func() {
+		if !registered && drained != nil {
+			close(drained)
+		}
 		if admitted != nil && !announced {
 			admitted <- err
 		}
@@ -282,7 +317,7 @@ func (m *concurrentClient) callStarted(ctx context.Context, method string, paylo
 	parent, cancel := context.WithCancel(context.WithValue(ctx, concurrentCallIDKey{}, id))
 	stopLife := context.AfterFunc(m.client.life, cancel)
 	callCtx, finish, budget := invocationContext(parent, options)
-	call := &concurrentHostCall{id: id, method: method, ctx: callCtx, cancel: cancel, finish: finish, stopLife: stopLife, budget: budget, host: host, cleanup: cleanup, account: concurrentAccount{limits: m.client.session.limits}, result: make(chan concurrentOutcome, 1), sent: make(chan struct{}), seen: map[string]bool{}}
+	call := &concurrentHostCall{id: id, method: method, ctx: callCtx, cancel: cancel, finish: finish, stopLife: stopLife, budget: budget, host: host, cleanup: cleanup, account: concurrentAccount{limits: m.client.session.limits}, result: make(chan concurrentOutcome, 1), sent: make(chan struct{}), drained: drained, seen: map[string]bool{}}
 	m.mu.Lock()
 	if admissionCtx != nil && admissionCtx.Err() != nil {
 		m.mu.Unlock()
@@ -307,6 +342,7 @@ func (m *concurrentClient) callStarted(ctx context.Context, method string, paylo
 		return out, reason
 	}
 	m.calls[id] = call
+	registered = true
 	m.writes.Add(1)
 	m.mu.Unlock()
 	if admitted != nil {

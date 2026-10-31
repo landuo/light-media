@@ -15,46 +15,72 @@ func (p *originalPluginInstance) getServices(ctx context.Context) ([]pluginSched
 	return defs, err
 }
 func (a *App) updateOriginalPluginJobs(ctx context.Context, instance string) {
-	a.pluginOriginalServicesMu.Lock()
-	defer a.pluginOriginalServicesMu.Unlock()
-	state := &a.pluginOriginalDirectJobs
-	state.mu.Lock()
-	for key := range state.jobs {
-		if key.instance == instance {
-			delete(state.jobs, key)
+	_ = a.updateOriginalPluginJobsScoped(ctx, instance, nil)
+}
+func (a *App) updateOriginalPluginJobsScoped(ctx context.Context, instance string, scope *originalBaseCallScope) error {
+	if instance == "" {
+		return nil
+	}
+	a.removeOriginalPluginJobsSelected(instance, "")
+	object, operation, err := a.pinOriginalRunningObject(ctx, instance)
+	if err != nil {
+		return err
+	}
+	if object == nil {
+		return nil
+	}
+	defer object.releaseOriginalRetainedOwner(operation)
+	if scope != nil {
+		if err := originalManagerNestedTarget(*scope, object); err != nil {
+			return err
 		}
 	}
-	state.mu.Unlock()
-	value, ok := a.pluginRunningInstances.Load(instance)
-	if !ok {
-		return
+	ctx, err = object.originalRetainedParentContext(ctx, operation)
+	if err != nil {
+		return err
 	}
-	object := value.(*originalPluginInstance)
-	enabled, err := object.getState(ctx)
-	if err != nil || !enabled {
-		return
+	state, err := object.originalManagerRawState(ctx)
+	if err != nil || !originalBaseJSONTruthy(state) {
+		return nil
 	}
 	defs, err := object.getServices(ctx)
 	if err != nil {
 		a.log("ERROR", "plugins", "register_services_failed", "读取插件定时服务失败", "", "")
-		return
+		return nil
 	}
 	for _, definition := range defs {
-		if err := a.addOriginalPluginJob(ctx, object.installation, definition); err != nil {
+		if scope != nil {
+			if err := scope.validate(ctx); err != nil {
+				return err
+			}
+		}
+		if err := a.addOriginalBoundPluginJob(ctx, object, operation, definition, false); err != nil {
 			a.log("ERROR", "plugins", "register_service_failed", "注册插件定时服务失败", "", "")
 			a.reportOriginalPluginExecutionError(ctx, "system", "插件 "+object.manifest.Name+" 服务注册失败", nil, err)
 		}
 	}
+	return nil
 }
 func (a *App) addOriginalPluginJob(ctx context.Context, in PluginInstallation, definition pluginScheduleDefinition) error {
 	if err := ctx.Err(); err != nil {
 		return err
 	}
-	value, ok := a.pluginRunningInstances.Load(in.InstanceID)
-	if !ok {
+	object, operation, err := a.pinOriginalRunningObject(ctx, in.InstanceID)
+	if err != nil {
+		return err
+	}
+	if object == nil {
 		return bad("PLUGIN_NOT_LOADED", "插件未加载")
 	}
-	object := value.(*originalPluginInstance)
+	defer object.releaseOriginalRetainedOwner(operation)
+	return a.addOriginalBoundPluginJob(ctx, object, operation, definition, true)
+}
+
+func (a *App) addOriginalBoundPluginJob(ctx context.Context, object *originalPluginInstance, operation *originalRetainedLease, definition pluginScheduleDefinition, requireRunning bool) error {
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	in := object.installation
 	provider, err := object.originalDisplayName(ctx)
 	if err != nil {
 		return err
@@ -74,19 +100,36 @@ func (a *App) addOriginalPluginJob(ctx context.Context, in PluginInstallation, d
 		definition.MisfireGraceMS = 1000
 	}
 	state := &a.pluginOriginalDirectJobs
+	owner, err := object.originalRetainedState().retain(originalRetainedJob, operation)
+	if err != nil {
+		return err
+	}
+	if requireRunning {
+		a.pluginOriginalRunningMu.Lock()
+		if !originalObjectStillLoaded(object) || object.stopping.Load() {
+			a.pluginOriginalRunningMu.Unlock()
+			object.releaseOriginalRetainedOwner(owner)
+			return bad("PLUGIN_NOT_LOADED", "插件刷新对象已替换")
+		}
+	}
 	state.mu.Lock()
-	defer state.mu.Unlock()
 	if state.jobs == nil {
 		state.jobs = make(map[originalServiceKey]*originalDirectJob)
 	}
 	state.nextRegistration++
-	job := &originalDirectJob{object: object, definition: definition, trigger: trigger, provider: provider, registrationOrder: state.nextRegistration, coalesceDisabled: options.coalesceDisabled, misfireUnlimited: options.unlimited, executorUnavailable: options.executorUnavailable, clockRegistered: triggerErr == nil, timerID: timerID, maxInstances: options.maxInstances}
+	job := &originalDirectJob{object: object, retained: owner, definition: definition, trigger: trigger, provider: provider, registrationOrder: state.nextRegistration, coalesceDisabled: options.coalesceDisabled, misfireUnlimited: options.unlimited, executorUnavailable: options.executorUnavailable, clockRegistered: triggerErr == nil, timerID: timerID, maxInstances: options.maxInstances}
 	if triggerErr == nil {
 		job.due = trigger.First(at)
 		if options.hasNextRun {
 			job.due = options.nextRun
 		}
 	}
+	removed := removeOriginalJobsLocked(state, "", originalServiceID(job))
 	state.jobs[originalServiceKey{in.InstanceID, definition.ID}] = job
+	state.mu.Unlock()
+	if requireRunning {
+		a.pluginOriginalRunningMu.Unlock()
+	}
+	releaseOriginalJobOwners(removed)
 	return triggerErr
 }

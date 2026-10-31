@@ -1,0 +1,277 @@
+{
+  "started": "2026-10-31T16:42:19.131677+00:00",
+  "status": "PASS",
+  "race": true,
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/app",
+        "./cmd/owned-manager-lifecycle-fixture",
+        "./cmd/owned-app-concurrent-fixture",
+        "./cmd/owned-submitted-fixture",
+        "./cmd/owned-input-fixture",
+        "./cmd/original-api-registration-fixture",
+        "./cmd/owned-standard-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.test",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker-0",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.worker0",
+        "-race",
+        "./cmd/owned-manager-lifecycle-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker-1",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.worker1",
+        "-race",
+        "./cmd/owned-app-concurrent-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker-2",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.worker2",
+        "-race",
+        "./cmd/owned-submitted-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker-3",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.worker3",
+        "-race",
+        "./cmd/owned-input-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker-4",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.worker4",
+        "-race",
+        "./cmd/original-api-registration-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker-5",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.worker5",
+        "-race",
+        "./cmd/owned-standard-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestSharedManagerRemoveClassOnlySourceScope|TestSharedManagerRemoveActualEmptyAllSource|TestSharedSchedulerActualSDKSourceRegistry|TestSharedSchedulerActualRetainedSelfRemove|TestSharedManagerRuntimeSourceDefaultsAndGuards|TestSharedManagerRuntimeActualConcurrentInitState|TestSharedManagerRuntimeLocalSourceDescriptors|TestSharedManagerMutationsClassForceAndIsolation|TestSharedManagerMutationsConfigFailureHotCold|TestOriginalRetainedOwnersAndExactAdmission|TestOriginalRetainedCallFactsAndForcedClose|TestOriginalRetainedConcurrentRetirementOnce|TestOriginalRetainedActualCancelledCallAndForcedClose|TestOriginalRetainedActualUnpublishedSubmission|TestOriginalAPIRegistrationImmutableSnapshotAndPointer|TestOriginalAPIRegistrationActualRemoveRetainsExactWorker|TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute|TestPluginOriginalExternalHTTPRejectsRemovedRegisteredRoute|TestOriginalServiceGetterFailureReplacesAllRegistrations|TestOriginalServiceActualSDKAsyncReplacementSource|TestOriginalServiceActualSDKSuffixReplacementAndSyncWait|TestOriginalSubmittedActualSynchronousRefreshAndGetterRecursion|TestOriginalRetainedLegacyRemovedLastOwnerTerminatesTransport)$",
+        "-test.count=1",
+        "-test.timeout=240s"
+      ],
+      "exit": 0
+    }
+  ],
+  "pattern": "^(TestSharedManagerRemoveClassOnlySourceScope|TestSharedManagerRemoveActualEmptyAllSource|TestSharedSchedulerActualSDKSourceRegistry|TestSharedSchedulerActualRetainedSelfRemove|TestSharedManagerRuntimeSourceDefaultsAndGuards|TestSharedManagerRuntimeActualConcurrentInitState|TestSharedManagerRuntimeLocalSourceDescriptors|TestSharedManagerMutationsClassForceAndIsolation|TestSharedManagerMutationsConfigFailureHotCold|TestOriginalRetainedOwnersAndExactAdmission|TestOriginalRetainedCallFactsAndForcedClose|TestOriginalRetainedConcurrentRetirementOnce|TestOriginalRetainedActualCancelledCallAndForcedClose|TestOriginalRetainedActualUnpublishedSubmission|TestOriginalAPIRegistrationImmutableSnapshotAndPointer|TestOriginalAPIRegistrationActualRemoveRetainsExactWorker|TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute|TestPluginOriginalExternalHTTPRejectsRemovedRegisteredRoute|TestOriginalServiceGetterFailureReplacesAllRegistrations|TestOriginalServiceActualSDKAsyncReplacementSource|TestOriginalServiceActualSDKSuffixReplacementAndSyncWait|TestOriginalSubmittedActualSynchronousRefreshAndGetterRecursion|TestOriginalRetainedLegacyRemovedLastOwnerTerminatesTransport)$",
+  "environment_proxy_unchanged": true,
+  "driver_pid": 2,
+  "fixture_bindings": {
+    "OWNED_MANAGER_FIXTURE_BINARY": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.worker0",
+      "sha256": "4e847049ae98c63ee9181787acbb7cad1913a1d07fc4c6ab46b0f33bba2e39f8",
+      "package": "./cmd/owned-manager-lifecycle-fixture",
+      "new_compile": true
+    },
+    "OWNED_APP_CONCURRENT_FIXTURE_BINARY": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.worker1",
+      "sha256": "80666a5e4102ad65a21e45bf4b180b4ab138eb2ae8a19ae71a0877c00e5c9024",
+      "package": "./cmd/owned-app-concurrent-fixture",
+      "new_compile": true
+    },
+    "OWNED_SUBMITTED_FIXTURE_BINARY": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.worker2",
+      "sha256": "d4d6b65e05d2cb686a4d6b0d1ca2232c4f4f9ff7553ce16d6d164af0ddefda6c",
+      "package": "./cmd/owned-submitted-fixture",
+      "new_compile": true
+    },
+    "OWNED_INPUT_FIXTURE_BINARY": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.worker3",
+      "sha256": "b7839d203c5f46d66fb1b59107346f3503f53dbd079899199d5d97515041681c",
+      "package": "./cmd/owned-input-fixture",
+      "new_compile": true
+    },
+    "ORIGINAL_API_REGISTRATION_FIXTURE_BINARY": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.worker4",
+      "sha256": "7b024720c676a3b85d2a61029107c228a2158451ec7aa9e3e6aa63b560ec1139",
+      "package": "./cmd/original-api-registration-fixture",
+      "new_compile": true
+    },
+    "OWNED_STANDARD_FIXTURE_BINARY": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-race01.worker5",
+      "sha256": "a22d68136efc82d4b80e6e5df093a0bd9b991bcbf1d92927922896b8eebd6167",
+      "package": "./cmd/owned-standard-fixture",
+      "new_compile": true
+    }
+  },
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T16:42:19.131694+00:00",
+      "scratch_free": 57709047808,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T16:42:20.145584+00:00",
+      "scratch_free": 57705984000,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile-worker-0",
+      "at": "2026-10-31T16:43:05.891137+00:00",
+      "scratch_free": 57477144576,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile-worker-1",
+      "at": "2026-10-31T16:43:06.311011+00:00",
+      "scratch_free": 57470365696,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile-worker-2",
+      "at": "2026-10-31T16:43:06.741806+00:00",
+      "scratch_free": 57463517184,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile-worker-3",
+      "at": "2026-10-31T16:43:07.184437+00:00",
+      "scratch_free": 57456705536,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile-worker-4",
+      "at": "2026-10-31T16:43:07.868829+00:00",
+      "scratch_free": 57443352576,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile-worker-5",
+      "at": "2026-10-31T16:43:08.290270+00:00",
+      "scratch_free": 57436663808,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T16:43:08.969363+00:00",
+      "scratch_free": 57428267008,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 6191,
+  "program_sha256": "bef999b05b62ade02d70f231fca6379f7403f2cb7e7be0ea9af9a96fab9d3f87",
+  "root_passes": [
+    "TestOriginalAPIRegistrationImmutableSnapshotAndPointer",
+    "TestOriginalAPIRegistrationActualRemoveRetainsExactWorker",
+    "TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute",
+    "TestPluginOriginalExternalHTTPRejectsRemovedRegisteredRoute",
+    "TestOriginalRetainedLegacyRemovedLastOwnerTerminatesTransport",
+    "TestOriginalRetainedActualCancelledCallAndForcedClose",
+    "TestOriginalRetainedActualUnpublishedSubmission",
+    "TestOriginalRetainedOwnersAndExactAdmission",
+    "TestOriginalRetainedCallFactsAndForcedClose",
+    "TestOriginalRetainedConcurrentRetirementOnce",
+    "TestOriginalServiceActualSDKAsyncReplacementSource",
+    "TestOriginalServiceGetterFailureReplacesAllRegistrations",
+    "TestOriginalServiceActualSDKSuffixReplacementAndSyncWait",
+    "TestOriginalSubmittedActualSynchronousRefreshAndGetterRecursion",
+    "TestSharedManagerMutationsClassForceAndIsolation",
+    "TestSharedManagerMutationsConfigFailureHotCold",
+    "TestSharedManagerRemoveActualEmptyAllSource",
+    "TestSharedManagerRemoveClassOnlySourceScope",
+    "TestSharedManagerRuntimeSourceDefaultsAndGuards",
+    "TestSharedManagerRuntimeActualConcurrentInitState",
+    "TestSharedManagerRuntimeLocalSourceDescriptors",
+    "TestSharedSchedulerActualSDKSourceRegistry",
+    "TestSharedSchedulerActualRetainedSelfRemove"
+  ],
+  "ended": "2026-10-31T16:44:16.624644+00:00"
+}

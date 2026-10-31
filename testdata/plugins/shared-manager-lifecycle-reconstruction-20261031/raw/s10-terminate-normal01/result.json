@@ -1,0 +1,113 @@
+{
+  "started": "2026-10-31T16:26:17.396433+00:00",
+  "package": "./internal/plugins",
+  "pattern": "^(TestOwnedPhysicalTransportTerminationLegacyNoBusiness|TestOwnedPhysicalTransportTerminationExistingConcurrentNoBusiness|TestOwnedPhysicalTransportTerminationTerminalAndDeadline|TestOwnedPendingCallCanceledAdmissionAndLegacy|TestOwnedPendingCallTransportRetirementInvokesNoHandler|TestPersistentSessionStopFailureObservable|TestPersistentSessionStopUsesFreshCleanupAuthority)$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins",
+        "./cmd/owned-concurrent-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-terminate-normal01.worker",
+        "./cmd/owned-concurrent-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-terminate-normal01.test",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-terminate-normal01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestOwnedPhysicalTransportTerminationLegacyNoBusiness|TestOwnedPhysicalTransportTerminationExistingConcurrentNoBusiness|TestOwnedPhysicalTransportTerminationTerminalAndDeadline|TestOwnedPendingCallCanceledAdmissionAndLegacy|TestOwnedPendingCallTransportRetirementInvokesNoHandler|TestPersistentSessionStopFailureObservable|TestPersistentSessionStopUsesFreshCleanupAuthority)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "driver_pid": 2,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T16:26:17.396452+00:00",
+      "scratch_free": 58105352192,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile-worker",
+      "at": "2026-10-31T16:26:17.686016+00:00",
+      "scratch_free": 58104475648,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T16:26:18.392853+00:00",
+      "scratch_free": 58096381952,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T16:26:20.201325+00:00",
+      "scratch_free": 58080935936,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 1921,
+  "fixture_sha256": "4d0c2f66db38179eecaa56a919ed28dd816cabc54d2b4a3242305c5d64b1ac0d",
+  "fixture_env": "LIGHT_MEDIA_CONCURRENT_FIXTURE",
+  "program_sha256": "c25046d6cc5271d24a1639708c4110595cc521d7e6c7cf774d9ebc2d18d8d203",
+  "root_passes": [
+    "TestOwnedPendingCallCanceledAdmissionAndLegacy",
+    "TestOwnedPendingCallTransportRetirementInvokesNoHandler",
+    "TestPersistentSessionStopFailureObservable",
+    "TestPersistentSessionStopUsesFreshCleanupAuthority",
+    "TestOwnedPhysicalTransportTerminationLegacyNoBusiness",
+    "TestOwnedPhysicalTransportTerminationExistingConcurrentNoBusiness",
+    "TestOwnedPhysicalTransportTerminationTerminalAndDeadline"
+  ],
+  "ended": "2026-10-31T16:26:20.606340+00:00"
+}

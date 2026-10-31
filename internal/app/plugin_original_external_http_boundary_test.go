@@ -64,6 +64,7 @@ func originalExternalHTTPBoundaryFixture(t *testing.T, env string) (*App, *http.
 	t.Cleanup(server.Close)
 	index.Releases[0].Artifacts[0].URL = server.URL + "/original-api-registration-fixture"
 	a := newTestApp(t)
+	disableResetFixtureStatistics(t, a)
 	t.Cleanup(a.closeOriginalSessions)
 	cookie := setupTestAdmin(t, a)
 	body, _ := json.Marshal(map[string]any{"plugin_id": manifest.PluginID, "repo_url": server.URL + "/index"})
@@ -155,11 +156,12 @@ func TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute(t *testing.T) {
 	if initAfter != initBefore || apiAfter != apiBefore {
 		t.Fatalf("direct APIs queued/reinitialized: init %d -> %d; api %d -> %d", initBefore, initAfter, apiBefore, apiAfter)
 	}
-	registered, ok := a.pluginRegisteredAPIs.Load(instance)
-	if !ok {
-		t.Fatal("missing actual route")
+	registered, operation, err := a.selectOriginalAPIRegistration(instance)
+	if err != nil {
+		t.Fatal("missing actual route", err)
 	}
-	api := registered.([]plugins.HTTPAPI)[0]
+	defer object.releaseOriginalRetainedOwner(operation)
+	api := registered.routes[0]
 	authority := pluginAPIAuthority{Kind: "key", Proof: a.pluginAPIKeyProof(oldKey)}
 	settings := a.Settings()
 	settings.APIToken = "synthetic-external-boundary-rotated"
@@ -170,7 +172,7 @@ func TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute(t *testing.T) {
 	if denied.Code != 401 {
 		t.Fatalf("revoked key: %d %s", denied.Code, denied.Body.String())
 	}
-	_, err := a.callOriginalExternalHTTP(context.Background(), object.installation, api, plugins.HTTPRequest{Key: api.Key, Method: "GET", Path: "/actual"}, authority)
+	_, err = a.callOriginalExternalHTTP(context.Background(), object.installation, registered, operation, api, plugins.HTTPRequest{Key: api.Key, Method: "GET", Path: "/actual"}, authority)
 	var failure *APIError
 	if !errors.As(err, &failure) || failure.Code != "PLUGIN_API_AUTH_REVOKED" {
 		t.Fatalf("stale already-authenticated authority must reject before SDK: %v", err)
@@ -186,7 +188,7 @@ func TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute(t *testing.T) {
 	if gone.Code != 404 {
 		t.Fatalf("uninstalled route still exposed: %d %s", gone.Code, gone.Body.String())
 	}
-	_, err = a.callOriginalExternalHTTP(context.Background(), object.installation, api, plugins.HTTPRequest{Key: api.Key, Method: "GET", Path: "/actual"}, pluginAPIAuthority{Kind: "key", Proof: a.pluginAPIKeyProof(settings.APIToken)})
+	_, err = a.callOriginalExternalHTTP(context.Background(), object.installation, registered, operation, api, plugins.HTTPRequest{Key: api.Key, Method: "GET", Path: "/actual"}, pluginAPIAuthority{Kind: "key", Proof: a.pluginAPIKeyProof(settings.APIToken)})
 	failure = nil
 	if !errors.As(err, &failure) || failure.Code != "PLUGIN_NOT_LOADED" {
 		t.Fatalf("stale direct object call survived actual uninstall: %v", err)
@@ -195,17 +197,18 @@ func TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute(t *testing.T) {
 
 func TestPluginOriginalExternalHTTPRejectsRemovedRegisteredRoute(t *testing.T) {
 	a, _, object := originalExternalHTTPBoundaryFixture(t, "ORIGINAL_API_REGISTRATION_FIXTURE_BINARY")
-	registered, ok := a.pluginRegisteredAPIs.Load(object.installation.InstanceID)
-	if !ok {
-		t.Fatal("missing route")
+	registered, operation, err := a.selectOriginalAPIRegistration(object.installation.InstanceID)
+	if err != nil {
+		t.Fatal("missing route", err)
 	}
-	api := registered.([]plugins.HTTPAPI)[0]
+	defer object.releaseOriginalRetainedOwner(operation)
+	api := registered.routes[0]
 	raw, _ := json.Marshal("null")
 	if _, err := object.callSession(context.Background(), plugins.Runner{Timeout: 10 * time.Second}, "set_mode", raw, nil); err != nil {
 		t.Fatal(err)
 	}
 	a.registerOriginalPluginAPIs(object.installation.InstanceID)
-	_, err := a.callOriginalExternalHTTP(context.Background(), object.installation, api, plugins.HTTPRequest{Key: api.Key, Method: "GET", Path: "/actual"}, pluginAPIAuthority{Kind: "key", Proof: a.pluginAPIKeyProof(a.Settings().APIToken)})
+	_, err = a.callOriginalExternalHTTP(context.Background(), object.installation, registered, operation, api, plugins.HTTPRequest{Key: api.Key, Method: "GET", Path: "/actual"}, pluginAPIAuthority{Kind: "key", Proof: a.pluginAPIKeyProof(a.Settings().APIToken)})
 	var failure *APIError
 	if !errors.As(err, &failure) || failure.Code != "PLUGIN_API_SCOPE_DENIED" {
 		t.Fatalf("old route reused after actual getter removal: %v", err)

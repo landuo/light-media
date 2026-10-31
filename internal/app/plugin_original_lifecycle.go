@@ -21,6 +21,7 @@ type originalPluginInstance struct {
 	manifest              plugins.Manifest
 	methodMu              sync.Mutex
 	stopping              atomic.Bool
+	managerRemoved        atomic.Bool // Set only by exact logical Manager.remove; not caller authority.
 	configMu              sync.RWMutex
 	appliedConfig         json.RawMessage
 	eventsEnabled         bool
@@ -30,6 +31,7 @@ type originalPluginInstance struct {
 	sessionMu             sync.Mutex
 	session               *plugins.Client
 	sessionStarted        bool
+	retained              *originalRetainedLifetime // guarded by sessionMu; exact process occupancy, not authority
 }
 
 func (p *originalPluginInstance) frontendPackageHash() string {
@@ -52,14 +54,27 @@ type originalInitializationCall struct{ object *originalPluginInstance }
 // The manager calls the loaded implementation directly. Initialization is not
 // a queued job and has no config-revision, receipt or recovery prerequisite.
 func (p *originalPluginInstance) init(ctx context.Context) error {
+	return p.initWithConfiguration(ctx, nil)
+}
+
+// A nil selector keeps the existing manager-config initialization path. A
+// nonnil selector supplies the exact direct init_plugin argument (including
+// explicit JSON null). Both paths acquire method admission exactly once.
+func (p *originalPluginInstance) initWithConfiguration(ctx context.Context, explicit *json.RawMessage) error {
 	unlock := p.lockOriginalMethod()
 	defer unlock()
 	if !p.external {
 		return bad("PLUGIN_ADAPTER_UNAVAILABLE", "插件尚未适配新的标准模块")
 	}
-	config, err := p.app.originalManagerConfiguration(ctx, p.installation.InstanceID)
-	if err != nil {
-		return err
+	var config json.RawMessage
+	var err error
+	if explicit == nil {
+		config, err = p.app.originalManagerConfiguration(ctx, p.installation.InstanceID)
+		if err != nil {
+			return err
+		}
+	} else {
+		config = append(json.RawMessage(nil), (*explicit)...)
 	}
 	call := &originalInitializationCall{object: p}
 	_, err = p.callSession(context.WithValue(ctx, originalInitializingObjectKey{}, call), plugins.Runner{Timeout: 10 * time.Second}, "init", config, nil)
@@ -199,10 +214,20 @@ func (a *App) stopOriginalPlugin(ctx context.Context, instance string) error {
 func (a *App) registerOriginalPluginAPIs(instance string) {
 	// Original registration removes old routes even when start failed and no
 	// replacement running instance exists. Business disabled is not a filter.
-	a.pluginRegisteredAPIs.Delete(instance)
-	if loaded, ok := a.pluginRunningInstances.Load(instance); ok {
-		object := loaded.(*originalPluginInstance)
-		apis, err := object.getAPIs(context.Background())
+	a.unregisterOriginalPluginAPIs(instance)
+	object, operation, err := a.pinOriginalRunningObject(context.Background(), instance)
+	if err != nil {
+		a.log("ERROR", "plugins", "register_apis_failed", "读取插件API失败", "", "")
+		return
+	}
+	if object != nil {
+		defer object.releaseOriginalRetainedOwner(operation)
+		ctx, err := object.originalRetainedParentContext(context.Background(), operation)
+		if err != nil {
+			a.log("ERROR", "plugins", "register_apis_failed", "读取插件API失败", "", "")
+			return
+		}
+		apis, err := object.getAPIs(ctx)
 		if err != nil {
 			a.log("ERROR", "plugins", "register_apis_failed", "读取插件API失败", "", "")
 			return
@@ -225,7 +250,20 @@ func (a *App) registerOriginalPluginAPIs(instance string) {
 			}
 			declaration.APIs = candidate.APIs
 		}
-		a.pluginRegisteredAPIs.Store(instance, declaration.APIs)
+		if len(declaration.APIs) == 0 {
+			return
+		}
+		owner, err := operation.lifetime.retain(originalRetainedAPI, operation)
+		if err != nil {
+			a.log("ERROR", "plugins", "register_apis_failed", "插件API对象已失效", "", "")
+			return
+		}
+		registration := &originalAPIRegistration{
+			object: object, installation: object.installation,
+			routes: cloneOriginalAPIRoutes(declaration.APIs), owner: owner,
+		}
+		a.pluginRetainedObjects.Store(object, struct{}{})
+		a.replaceOriginalAPIRegistration(instance, registration)
 	}
 }
 

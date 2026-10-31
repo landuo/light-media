@@ -13,10 +13,11 @@ import (
 // uncooperative worker handler retains its bounded slot until it really exits.
 // Client.Stop still owns final worker join and reap.
 type PendingCall struct {
-	done chan struct{}
-	cancel context.CancelFunc
-	result RunResult
-	err error
+	done    chan struct{}
+	drained chan struct{}
+	cancel  context.CancelFunc
+	result  RunResult
+	err     error
 }
 
 func (p *PendingCall) Wait() (RunResult, error) {
@@ -27,6 +28,19 @@ func (p *PendingCall) Wait() (RunResult, error) {
 }
 
 func (p *PendingCall) Cancel() { p.cancel() }
+
+// Drained observes completion of the worker invocation and its host callbacks,
+// independently of Wait returning after caller cancellation. It never initiates
+// cancellation or shutdown, and is not a process-reap receipt. A successful
+// result can drain before Wait has consumed it: owners must also finish their
+// caller phase before retiring the Client. Nil/zero PendingCall returns nil,
+// not a fabricated completed receipt. Multiple receivers may observe closure.
+func (p *PendingCall) Drained() <-chan struct{} {
+	if p == nil {
+		return nil
+	}
+	return p.drained
+}
 
 // StartCall installs a new, independently cancellable invocation. Success
 // means actual admission into this Client's bounded concurrent call table,
@@ -62,10 +76,10 @@ func (c *Client) StartCallWithAdmission(admissionCtx, ctx context.Context, metho
 	}
 	owned := append(json.RawMessage(nil), payload...)
 	callCtx, cancel := context.WithCancel(ctx)
-	pending := &PendingCall{done: make(chan struct{}), cancel: cancel}
+	pending := &PendingCall{done: make(chan struct{}), drained: make(chan struct{}), cancel: cancel}
 	admitted := make(chan error, 1)
 	go func() {
-		pending.result, pending.err = c.concurrent.callStarted(callCtx, method, owned, host, options, false, admitted, admissionCtx)
+		pending.result, pending.err = c.concurrent.callStarted(callCtx, method, owned, host, options, false, admitted, admissionCtx, pending.drained)
 		cancel()
 		close(pending.done)
 	}()

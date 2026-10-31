@@ -38,7 +38,7 @@ func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context
 		if p.stopping.Load() && phase != "stop" {
 			return bad("PLUGIN_CALL_CLOSED", "插件对象正在停止")
 		}
-		admitted := originalObjectStillLoaded(p) || p.originalSubmittedScopeAllowed(callCtx)
+		admitted := originalObjectStillLoaded(p) || p.originalSubmittedScopeAllowed(callCtx) || p.originalRetainedScopeAllowed(callCtx)
 		if call, ok := callCtx.Value(originalInitializingObjectKey{}).(*originalInitializationCall); ok && call != nil && call.object == p {
 			admitted = true
 		}

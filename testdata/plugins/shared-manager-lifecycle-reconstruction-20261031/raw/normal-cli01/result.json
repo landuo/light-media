@@ -1,0 +1,1225 @@
+{
+  "status": "PASS",
+  "kind": "new S10 two normal CLI hosts and actual installed SDK",
+  "calls": [
+    {
+      "at": "2026-10-31T16:44:25.561408+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-001.body",
+      "sha256": "06d354816aa682cb19430df730b8c4a562e6e5aa8ddbe5037846900bb0f26d4e"
+    },
+    {
+      "at": "2026-10-31T16:44:25.563903+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-10-31T16:44:25.632282+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-003.body",
+      "sha256": "48c562fd53ac88c4e4492ba33f399838da15e1153de328ca8d6312730a316b6d"
+    },
+    {
+      "at": "2026-10-31T16:44:25.634762+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-004.body",
+      "sha256": "7d880143da187071f155cc9054bf91e98782bd472a00513a98b5b5cf6a7d61b6"
+    },
+    {
+      "at": "2026-10-31T16:44:25.716747+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-005.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-10-31T16:44:25.718590+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": false,
+      "status": 401,
+      "raw_file": "response-006.body",
+      "sha256": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b"
+    },
+    {
+      "at": "2026-10-31T16:44:25.721729+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-007.body",
+      "sha256": "bfe2a3c0619f8ad0fd15f4136f888c2f05b85cfe1c58b07aed60c95aefea9548"
+    },
+    {
+      "at": "2026-10-31T16:44:25.733101+00:00",
+      "host_pid": 24,
+      "method": "PUT",
+      "path": "/api/plugins/Owned",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-008.body",
+      "sha256": "572223e7b735321fa5afb0e3e851a312452268026c595ff1f628815098b3c728"
+    },
+    {
+      "at": "2026-10-31T16:44:25.739826+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-009.body",
+      "sha256": "928ffd98e0106593e9fa51b7ca8aa7a2c42b1a90eb53330f8c3a44583841fd0f"
+    },
+    {
+      "at": "2026-10-31T16:44:25.749992+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-010.body",
+      "sha256": "928ffd98e0106593e9fa51b7ca8aa7a2c42b1a90eb53330f8c3a44583841fd0f"
+    },
+    {
+      "at": "2026-10-31T16:44:25.760809+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-011.body",
+      "sha256": "a8ee7bf10d1d2bfd2a0f77790d0684d7329385702af97f560c6d8309b418fb1c"
+    },
+    {
+      "at": "2026-10-31T16:44:25.770827+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/api/plugins/Owned",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-012.body",
+      "sha256": "0e5841a39e75edb6aa45bda2d3eacc96c22133a3e8975bb4a267cc8b06600ada"
+    },
+    {
+      "at": "2026-10-31T16:44:25.772868+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-013.body",
+      "sha256": "75a19508ff06623fb562d3d2a5d3847320978096aef245a8419ea50187a5f22a"
+    },
+    {
+      "at": "2026-10-31T16:44:25.782662+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-014.body",
+      "sha256": "59f812ccbb233c14f2a60e48bba7e6a7399ee3a315c59784f76760c4d0039835"
+    },
+    {
+      "at": "2026-10-31T16:44:25.792901+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-015.body",
+      "sha256": "a79c8f64de3b59f55df26012adb7683dcd1744fc172c27723a3dc27f3f554690"
+    },
+    {
+      "at": "2026-10-31T16:44:25.803241+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/api/plugins/Owned",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-016.body",
+      "sha256": "42e23be7ce06599b244a01a2ef019b82efe523ce45310783e19b97af935d69a0"
+    },
+    {
+      "at": "2026-10-31T16:44:25.805793+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-017.body",
+      "sha256": "a79c8f64de3b59f55df26012adb7683dcd1744fc172c27723a3dc27f3f554690"
+    },
+    {
+      "at": "2026-10-31T16:44:25.815393+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-018.body",
+      "sha256": "928ffd98e0106593e9fa51b7ca8aa7a2c42b1a90eb53330f8c3a44583841fd0f"
+    },
+    {
+      "at": "2026-10-31T16:44:25.826749+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-019.body",
+      "sha256": "b6949ebeb15a53373085eb29adb0d6b24acb7ca768452f8290b708a94f1a30d0"
+    },
+    {
+      "at": "2026-10-31T16:44:25.837422+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-020.body",
+      "sha256": "7854048330177d9d679bf5e6164ff079f5e410c72eb38392a0fa66a2bbe3d263"
+    },
+    {
+      "at": "2026-10-31T16:44:25.848345+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-021.body",
+      "sha256": "928ffd98e0106593e9fa51b7ca8aa7a2c42b1a90eb53330f8c3a44583841fd0f"
+    },
+    {
+      "at": "2026-10-31T16:44:25.857261+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-022.body",
+      "sha256": "928ffd98e0106593e9fa51b7ca8aa7a2c42b1a90eb53330f8c3a44583841fd0f"
+    },
+    {
+      "at": "2026-10-31T16:44:25.867927+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-023.body",
+      "sha256": "928ffd98e0106593e9fa51b7ca8aa7a2c42b1a90eb53330f8c3a44583841fd0f"
+    },
+    {
+      "at": "2026-10-31T16:44:25.879668+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/api/plugins/services",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-024.body",
+      "sha256": "00448d775f09b961777c5a5b3c183b684879ad2db2790a66a5556a277f270179"
+    },
+    {
+      "at": "2026-10-31T16:44:25.881903+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-025.body",
+      "sha256": "928ffd98e0106593e9fa51b7ca8aa7a2c42b1a90eb53330f8c3a44583841fd0f"
+    },
+    {
+      "at": "2026-10-31T16:44:25.893171+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-026.body",
+      "sha256": "d8f195439f0569180444ffa80f5a4bfe1a1834b490042825976c1b6b872ebe7a"
+    },
+    {
+      "at": "2026-10-31T16:44:25.902728+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-027.body",
+      "sha256": "80650a685d3564fc5d8e9a461353e2a4a568948d664f7c96a31c8182a170cc3c"
+    },
+    {
+      "at": "2026-10-31T16:44:25.912607+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-028.body",
+      "sha256": "4f94bd8a993af85d1983a00a31e3ca6203a8c0832a1d2d8daf584dbb86283521"
+    },
+    {
+      "at": "2026-10-31T16:44:25.922127+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/api/plugins/services",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-029.body",
+      "sha256": "51f1db7fadb265b1592dc8219b0c5af7e237a168da73beeb2ec651106a5da9dd"
+    },
+    {
+      "at": "2026-10-31T16:44:25.924785+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/plugins/services/run",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-030.body",
+      "sha256": "7a50f54483207d3ae4ccb8b196ccd238cbf746da9adeb49756cba694115b7070"
+    },
+    {
+      "at": "2026-10-31T16:44:25.927864+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-031.body",
+      "sha256": "52d8cde0348a572b9bd57602222ee73f472af5e3b891ca8ce1aaf5fdc4e33935"
+    },
+    {
+      "at": "2026-10-31T16:44:25.936797+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-032.body",
+      "sha256": "928ffd98e0106593e9fa51b7ca8aa7a2c42b1a90eb53330f8c3a44583841fd0f"
+    },
+    {
+      "at": "2026-10-31T16:44:25.951190+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/api/plugins/services",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-033.body",
+      "sha256": "438d70c125420cdc32a9eb73a73d81cb3ab8e8a321395b671d1abc10cf9e8886"
+    },
+    {
+      "at": "2026-10-31T16:44:25.953334+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-034.body",
+      "sha256": "52d8cde0348a572b9bd57602222ee73f472af5e3b891ca8ce1aaf5fdc4e33935"
+    },
+    {
+      "at": "2026-10-31T16:44:26.226793+00:00",
+      "host_pid": 46,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-035.body",
+      "sha256": "33673c330cb03bc511f245942707002052758e646d8b2abfd04cb9e71a84e2f1"
+    },
+    {
+      "at": "2026-10-31T16:44:26.229861+00:00",
+      "host_pid": 46,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-10-31T16:44:26.340618+00:00",
+      "host_pid": 46,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-037.body",
+      "sha256": "dd2aa4dcb5e9c4459152a4e2317fc76a449c915ec68ce227c5a8db6757c5f837"
+    },
+    {
+      "at": "2026-10-31T16:44:26.344907+00:00",
+      "host_pid": 46,
+      "method": "GET",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-038.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-10-31T16:44:26.349058+00:00",
+      "host_pid": 46,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-039.body",
+      "sha256": "a09c79d97936152221f8178107281fd91ab03d79ae75047913834e93deb70ae5"
+    },
+    {
+      "at": "2026-10-31T16:44:26.366108+00:00",
+      "host_pid": 46,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-040.body",
+      "sha256": "913c42a1cc4cf006bd883d973ac668eef91a8a8197fa15fde8ef0fa0fcba31d5"
+    },
+    {
+      "at": "2026-10-31T16:44:26.383007+00:00",
+      "host_pid": 46,
+      "method": "POST",
+      "path": "/api/v1/plugin/Owned/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-041.body",
+      "sha256": "c13049bd6d5c292f1137bce79f1807a88f74d659995942541df4775d9be6db3c"
+    },
+    {
+      "at": "2026-10-31T16:44:26.398143+00:00",
+      "host_pid": 46,
+      "method": "GET",
+      "path": "/api/plugins/services",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-042.body",
+      "sha256": "5f7bf14a1b9d53219963c0a4b10993b0a62659179d8a542fad6ef5a3a799a2dd"
+    }
+  ],
+  "peer_calls": [
+    {
+      "method": "GET",
+      "path": "/index"
+    },
+    {
+      "method": "GET",
+      "path": "/worker"
+    }
+  ],
+  "processes": [
+    {
+      "pid": 24,
+      "identity": {
+        "ppid": 2,
+        "starttime": "2214425"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data",
+      "owned_listener_inode": "294997",
+      "exit": 0
+    },
+    {
+      "pid": 46,
+      "identity": {
+        "ppid": 2,
+        "starttime": "2214487"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data",
+      "owned_listener_inode": "295032",
+      "exit": 0
+    }
+  ],
+  "queries": [
+    {
+      "label": "warm_initial",
+      "host_pid": 24,
+      "request": {
+        "op": "inspect"
+      },
+      "response": {
+        "value": {
+          "conf": {},
+          "trace": [
+            [
+              "init",
+              {}
+            ],
+            [
+              "get_state"
+            ],
+            [
+              "get_state"
+            ],
+            [
+              "get_state"
+            ],
+            [
+              "get_api"
+            ],
+            [
+              "get_state"
+            ]
+          ],
+          "counter": 0
+        },
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "configure",
+      "host_pid": 24,
+      "request": {
+        "op": "configure",
+        "state": {
+          "active": [
+            1,
+            "owned"
+          ]
+        },
+        "services": [
+          {
+            "id": "alpha",
+            "name": "owned retained job",
+            "handler": "job",
+            "trigger": {
+              "kind": "date",
+              "timezone": "UTC",
+              "run_at": "2099-01-01T00:00:00Z"
+            }
+          }
+        ]
+      },
+      "response": {
+        "value": null,
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "init_plugin",
+      "host_pid": 24,
+      "request": {
+        "op": "init",
+        "plugin_id": "Owned",
+        "conf": {
+          "owned": "explicit-runtime-only"
+        }
+      },
+      "response": {
+        "value": null,
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "init_side_effect",
+      "host_pid": 24,
+      "request": {
+        "op": "inspect"
+      },
+      "response": {
+        "value": {
+          "conf": {
+            "owned": "explicit-runtime-only"
+          },
+          "trace": [
+            [
+              "init",
+              {
+                "owned": "explicit-runtime-only"
+              }
+            ],
+            [
+              "get_state"
+            ]
+          ],
+          "counter": 0
+        },
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "get_plugin_state",
+      "host_pid": 24,
+      "request": {
+        "op": "state",
+        "plugin_id": "Owned"
+      },
+      "response": {
+        "value": {
+          "active": [
+            1,
+            "owned"
+          ]
+        },
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "get_local_plugins",
+      "host_pid": 24,
+      "request": {
+        "op": "local"
+      },
+      "response": {
+        "value": [
+          {
+            "add_time": 0,
+            "auth_level": 0,
+            "author_url": null,
+            "has_page": true,
+            "has_update": false,
+            "history": {},
+            "id": "Owned",
+            "install_count": 0,
+            "installed": true,
+            "is_local": true,
+            "plugin_author": null,
+            "plugin_config_prefix": null,
+            "plugin_desc": "Owned protocol verification",
+            "plugin_icon": null,
+            "plugin_label": null,
+            "plugin_name": "Owned manager lifecycle",
+            "plugin_order": 0,
+            "plugin_public_key": null,
+            "plugin_version": "1.0",
+            "release": false,
+            "repo_url": null,
+            "state": {
+              "active": [
+                1,
+                "owned"
+              ]
+            },
+            "system_version": null,
+            "system_version_compatible": true,
+            "system_version_message": null
+          }
+        ],
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "delete_plugin_config",
+      "host_pid": 24,
+      "request": {
+        "op": "delete_config",
+        "plugin_id": "Owned",
+        "force": false
+      },
+      "response": {
+        "value": true,
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "delete_plugin_data",
+      "host_pid": 24,
+      "request": {
+        "op": "delete_data",
+        "plugin_id": "Owned",
+        "force": false
+      },
+      "response": {
+        "value": true,
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "configure_failure",
+      "host_pid": 24,
+      "request": {
+        "op": "configure",
+        "init_error": true
+      },
+      "response": {
+        "value": null,
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "init_failure",
+      "host_pid": 24,
+      "request": {
+        "op": "init",
+        "plugin_id": "Owned",
+        "conf": {
+          "owned": "failed-side-effect"
+        }
+      },
+      "response": {
+        "value": null,
+        "error": "plugin: host_operation_failed",
+        "pid": 40
+      }
+    },
+    {
+      "label": "failure_side_effect",
+      "host_pid": 24,
+      "request": {
+        "op": "inspect"
+      },
+      "response": {
+        "value": {
+          "conf": {
+            "owned": "failed-side-effect"
+          },
+          "trace": [
+            [
+              "init",
+              {
+                "owned": "failed-side-effect"
+              }
+            ]
+          ],
+          "counter": 0
+        },
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "configure_recovery",
+      "host_pid": 24,
+      "request": {
+        "op": "configure",
+        "init_error": false
+      },
+      "response": {
+        "value": null,
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "warm_recovery",
+      "host_pid": 24,
+      "request": {
+        "op": "init",
+        "plugin_id": "Owned",
+        "conf": {
+          "owned": "recovered"
+        }
+      },
+      "response": {
+        "value": null,
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "update_plugin_job",
+      "host_pid": 24,
+      "request": {
+        "op": "scheduler_update",
+        "plugin_id": "Owned"
+      },
+      "response": {
+        "value": null,
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "remove_plugin",
+      "host_pid": 24,
+      "request": {
+        "op": "remove",
+        "plugin_id": "Owned"
+      },
+      "response": {
+        "value": null,
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "removed_state",
+      "host_pid": 24,
+      "request": {
+        "op": "state",
+        "plugin_id": "Owned"
+      },
+      "response": {
+        "value": false,
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "removed_local",
+      "host_pid": 24,
+      "request": {
+        "op": "local"
+      },
+      "response": {
+        "value": [],
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "retained_api_after_remove",
+      "host_pid": 24,
+      "request": {
+        "op": "inspect"
+      },
+      "response": {
+        "value": {
+          "conf": {
+            "owned": "recovered"
+          },
+          "trace": [
+            [
+              "init",
+              {
+                "owned": "recovered"
+              }
+            ],
+            [
+              "get_state"
+            ],
+            [
+              "get_state"
+            ],
+            [
+              "get_service"
+            ],
+            [
+              "close"
+            ],
+            [
+              "stop_service"
+            ]
+          ],
+          "counter": 100
+        },
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "bound_job_completion",
+      "host_pid": 24,
+      "request": {
+        "op": "inspect"
+      },
+      "response": {
+        "value": {
+          "conf": {
+            "owned": "recovered"
+          },
+          "trace": [
+            [
+              "init",
+              {
+                "owned": "recovered"
+              }
+            ],
+            [
+              "get_state"
+            ],
+            [
+              "get_state"
+            ],
+            [
+              "get_service"
+            ],
+            [
+              "close"
+            ],
+            [
+              "stop_service"
+            ],
+            [
+              "job"
+            ]
+          ],
+          "counter": 101
+        },
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "remove_plugin_job",
+      "host_pid": 24,
+      "request": {
+        "op": "scheduler_remove",
+        "plugin_id": "Wrong",
+        "job_id": "Owned_alpha"
+      },
+      "response": {
+        "value": null,
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "retained_api_after_job_removal",
+      "host_pid": 24,
+      "request": {
+        "op": "inspect"
+      },
+      "response": {
+        "value": {
+          "conf": {
+            "owned": "recovered"
+          },
+          "trace": [
+            [
+              "init",
+              {
+                "owned": "recovered"
+              }
+            ],
+            [
+              "get_state"
+            ],
+            [
+              "get_state"
+            ],
+            [
+              "get_service"
+            ],
+            [
+              "close"
+            ],
+            [
+              "stop_service"
+            ],
+            [
+              "job"
+            ]
+          ],
+          "counter": 101
+        },
+        "error": "",
+        "pid": 40
+      }
+    },
+    {
+      "label": "cold_initial",
+      "host_pid": 46,
+      "request": {
+        "op": "inspect"
+      },
+      "response": {
+        "value": {
+          "conf": {},
+          "trace": [
+            [
+              "init",
+              {}
+            ],
+            [
+              "get_state"
+            ],
+            [
+              "get_state"
+            ],
+            [
+              "get_api"
+            ],
+            [
+              "get_state"
+            ]
+          ],
+          "counter": 0
+        },
+        "error": "",
+        "pid": 60
+      }
+    },
+    {
+      "label": "cold_raw_state",
+      "host_pid": 46,
+      "request": {
+        "op": "state",
+        "plugin_id": "Owned"
+      },
+      "response": {
+        "value": false,
+        "error": "",
+        "pid": 60
+      }
+    },
+    {
+      "label": "cold_local",
+      "host_pid": 46,
+      "request": {
+        "op": "local"
+      },
+      "response": {
+        "value": [
+          {
+            "add_time": 0,
+            "auth_level": 0,
+            "author_url": null,
+            "has_page": true,
+            "has_update": false,
+            "history": {},
+            "id": "Owned",
+            "install_count": 0,
+            "installed": true,
+            "is_local": true,
+            "plugin_author": null,
+            "plugin_config_prefix": null,
+            "plugin_desc": "Owned protocol verification",
+            "plugin_icon": null,
+            "plugin_label": null,
+            "plugin_name": "Owned manager lifecycle",
+            "plugin_order": 0,
+            "plugin_public_key": null,
+            "plugin_version": "1.0",
+            "release": false,
+            "repo_url": null,
+            "state": false,
+            "system_version": null,
+            "system_version_compatible": true,
+            "system_version_message": null
+          }
+        ],
+        "error": "",
+        "pid": 60
+      }
+    }
+  ],
+  "not_claimed": [
+    "full Python host or arbitrary Python object representation",
+    "browser/UI/business plugins",
+    "real downloader/NAS/data deletion",
+    "CI/whole platform/delivery"
+  ],
+  "bootstrap_exit": 0,
+  "worker_identities": [
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "2214460",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 24
+    },
+    {
+      "ppid": 46,
+      "starttime": "2214506",
+      "pid": 60,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 46
+    },
+    {
+      "ppid": 46,
+      "starttime": "2214506",
+      "pid": 60,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 46
+    },
+    {
+      "ppid": 46,
+      "starttime": "2214506",
+      "pid": 60,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-normal-cli-plan/run01/private-data/plugin-packages/Owned/owned-manager-lifecycle-fixture",
+      "executable_sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "host_pid": 46
+    }
+  ],
+  "input_drift": [],
+  "environment_unchanged": true,
+  "finished_at": "2026-10-31T16:44:26.729203+00:00"
+}

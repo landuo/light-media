@@ -1,0 +1,422 @@
+{
+  "schema": 1,
+  "created_at": "2026-10-31T15:54:39.959Z",
+  "decision": "ACCEPT_SDK_DRAIN_INCREMENT_ONLY",
+  "blocking": [],
+  "scope": {
+    "paths": [
+      {
+        "path": "light-media/internal/plugins/pending_call.go",
+        "sha256": "3fd5c93efe184e219467116359814bd98188810160f715e7a41f8087a964f7b7",
+        "bytes": 3774
+      },
+      {
+        "path": "light-media/internal/plugins/concurrent_session.go",
+        "sha256": "73486ad6c0fc8668609476421bf853dec4e0d38500e9433fbb06d435c5d9af7b",
+        "bytes": 15050
+      },
+      {
+        "path": "light-media/internal/plugins/pending_call_drained_test.go",
+        "sha256": "46609572e1d16de1fca96dcedb1683dfde7c3c5f533c912af45cb4a8cd82cf94",
+        "bytes": 10803
+      }
+    ],
+    "baseline_commit": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+    "plan": {
+      "path": "audits/s10-sdk-drain-plan/PLAN.md",
+      "sha256": "1bf2417895d234e4c302abe0c867b38cbcf352ee631f4d94d5ab6985993f9051",
+      "bytes": 9912
+    },
+    "checkpoint": {
+      "path": "audits/s10-sdk-drain-plan/checkpoint02/candidate-inputs.sha256",
+      "sha256": "b5548b0ba85c0ed9654fa5b7ee4bbb46a99d7f96e4121146a7b7575640f97ac3",
+      "bytes": 565
+    }
+  },
+  "review": {
+    "path": "audits/s10-drain-independent/FINAL-REVIEW.md",
+    "sha256": "569c333ba470ba8000ec33ec33760128add14534f86fb8e28ee9fc556fe45ddc",
+    "bytes": 4156
+  },
+  "prior_static": [
+    {
+      "path": "audits/s10-drain-independent/PRODUCT01-REVIEW.md",
+      "sha256": "e0c708860fcd16345d57145c958fe2097789714600a045994a7a0c8aaff54722",
+      "bytes": 3577
+    },
+    {
+      "path": "audits/s10-drain-independent/product01-static.json",
+      "sha256": "8ac73a3237c8f13de28f6b100e1c667034bed61ff933c4ea3f8b4f17f9930fe0",
+      "bytes": 2328
+    },
+    {
+      "path": "audits/s10-drain-independent/CHECKPOINT02-STATIC-REVIEW.md",
+      "sha256": "d7b16210de94f6053dc834af0e2303caa5d41189627b52d676985a857a618739",
+      "bytes": 3932
+    },
+    {
+      "path": "audits/s10-drain-independent/checkpoint02-static.json",
+      "sha256": "ac0e498422a8f5c8bed520a0b204507d7ff9efa406b260ed40eab8d70291880d",
+      "bytes": 3377
+    }
+  ],
+  "readback": {
+    "path": "audits/s10-drain-independent/normal-race-readback.json",
+    "sha256": "0373fb9e3b5fc58527911e80a3a01ad2dd9d172f21acee972d446a7c695fb00b",
+    "bytes": 12149
+  },
+  "gates": {
+    "normal": {
+      "status": "PASS",
+      "ended": "2026-10-31T15:48:33.494213+00:00",
+      "input_count": 1919,
+      "three_phase_equal": true,
+      "current_input_mismatches": [],
+      "root_passes": [
+        "TestOwnedPendingCallDrainedSuccessAndZeroByteFailure",
+        "TestOwnedPendingCallDrainedCancellationWaitsForWorkerAndHost",
+        "TestOwnedPendingCallDrainedTerminalRequiresReaperAndHost",
+        "TestOwnedPendingCallDrainedUnusedObserverAndShutdownBoundary"
+      ],
+      "subtest_passes": [
+        "TestOwnedPendingCallDrainedCancellationWaitsForWorkerAndHost/worker_handler",
+        "TestOwnedPendingCallDrainedCancellationWaitsForWorkerAndHost/host_callback",
+        "TestOwnedPendingCallDrainedTerminalRequiresReaperAndHost/actual_transport",
+        "TestOwnedPendingCallDrainedTerminalRequiresReaperAndHost/controlled_reaper_and_once"
+      ],
+      "bad_event_count": 0,
+      "package_pass": true,
+      "race_warning": false,
+      "command_exits": [
+        {
+          "label": "go-list",
+          "exit": 0
+        },
+        {
+          "label": "compile-worker",
+          "exit": 0
+        },
+        {
+          "label": "compile",
+          "exit": 0
+        },
+        {
+          "label": "tests",
+          "exit": 0
+        }
+      ],
+      "binaries": [
+        {
+          "path": "runtime/s10-drain-normal01.worker",
+          "sha256": "e70b86fd7cc2344189547042f88cf24fc3d9b5c4d30164521548ee57d0c8f3e6",
+          "bytes": 5231864,
+          "matches_result": true
+        },
+        {
+          "path": "runtime/s10-drain-normal01.test",
+          "sha256": "8d43e122eda207fe0d545f400b61927ee3f854fc2c43ca40e5f23e6e5a7b8512",
+          "bytes": 8597836,
+          "matches_result": true
+        }
+      ],
+      "driver": {
+        "path": "runners/s10-drain-normal01.py",
+        "sha256": "9483ee305ed4841ea1f44f6602cc10bbf1ded8aed9c9250d9f3374dc90486876",
+        "bytes": 5279
+      },
+      "generated": [
+        {
+          "original": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/0d/0d526fe88a8e7d4dacd275542c4fe371d2082a948314f175d325a4821378154b-d",
+          "captured": {
+            "path": "evidence/s10-drain-normal01/generated-source/0d526fe88a8e7d4dacd275542c4fe371d2082a948314f175d325a4821378154b.go",
+            "sha256": "0d526fe88a8e7d4dacd275542c4fe371d2082a948314f175d325a4821378154b",
+            "bytes": 15132
+          },
+          "matches_input": true,
+          "original_matches": true
+        }
+      ],
+      "raw_files": [
+        {
+          "path": "evidence/s10-drain-normal01/compile-worker.exit",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        {
+          "path": "evidence/s10-drain-normal01/compile-worker.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "evidence/s10-drain-normal01/compile-worker.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "evidence/s10-drain-normal01/compile.exit",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        {
+          "path": "evidence/s10-drain-normal01/compile.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "evidence/s10-drain-normal01/compile.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "evidence/s10-drain-normal01/generated-source-map.json",
+          "sha256": "aca50bc5b5889d865d89f203aa37926e548cad9e87187b1606dcbbc50f20b7b0",
+          "bytes": 246
+        },
+        {
+          "path": "evidence/s10-drain-normal01/go-list.exit",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        {
+          "path": "evidence/s10-drain-normal01/go-list.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "evidence/s10-drain-normal01/go-list.stdout",
+          "sha256": "623128ff9f9c21e09d08047dec9ba7d5aa43732b7960c328ad281edaad67b986",
+          "bytes": 371545
+        },
+        {
+          "path": "evidence/s10-drain-normal01/inputs-after-compile.json",
+          "sha256": "b4e6f7fb4c587898c59e38bf87dacb59f0c75baefe4475002802c69113ccd3d7",
+          "bytes": 413387
+        },
+        {
+          "path": "evidence/s10-drain-normal01/inputs-after-test.json",
+          "sha256": "b4e6f7fb4c587898c59e38bf87dacb59f0c75baefe4475002802c69113ccd3d7",
+          "bytes": 413387
+        },
+        {
+          "path": "evidence/s10-drain-normal01/inputs-before.json",
+          "sha256": "b4e6f7fb4c587898c59e38bf87dacb59f0c75baefe4475002802c69113ccd3d7",
+          "bytes": 413387
+        },
+        {
+          "path": "evidence/s10-drain-normal01/result.json",
+          "sha256": "56d067bffa86c3f17018a05bae3b50837bbaebbc17cc05631d77eb3686185a5f",
+          "bytes": 3302
+        },
+        {
+          "path": "evidence/s10-drain-normal01/tests.exit",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        {
+          "path": "evidence/s10-drain-normal01/tests.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "evidence/s10-drain-normal01/tests.stdout",
+          "sha256": "9286e0ad1370d00b1ef9f15339d7fcc549ee59fe9014231b876de16bd707d0c7",
+          "bytes": 7446
+        }
+      ]
+    },
+    "race": {
+      "status": "PASS",
+      "ended": "2026-10-31T15:49:13.217981+00:00",
+      "input_count": 1956,
+      "three_phase_equal": true,
+      "current_input_mismatches": [],
+      "root_passes": [
+        "TestOwnedPendingCallDrainedSuccessAndZeroByteFailure",
+        "TestOwnedPendingCallDrainedCancellationWaitsForWorkerAndHost",
+        "TestOwnedPendingCallDrainedTerminalRequiresReaperAndHost",
+        "TestOwnedPendingCallDrainedUnusedObserverAndShutdownBoundary"
+      ],
+      "subtest_passes": [
+        "TestOwnedPendingCallDrainedCancellationWaitsForWorkerAndHost/worker_handler",
+        "TestOwnedPendingCallDrainedCancellationWaitsForWorkerAndHost/host_callback",
+        "TestOwnedPendingCallDrainedTerminalRequiresReaperAndHost/actual_transport",
+        "TestOwnedPendingCallDrainedTerminalRequiresReaperAndHost/controlled_reaper_and_once"
+      ],
+      "bad_event_count": 0,
+      "package_pass": true,
+      "race_warning": false,
+      "command_exits": [
+        {
+          "label": "go-list",
+          "exit": 0
+        },
+        {
+          "label": "compile-worker",
+          "exit": 0
+        },
+        {
+          "label": "compile",
+          "exit": 0
+        },
+        {
+          "label": "tests",
+          "exit": 0
+        }
+      ],
+      "binaries": [
+        {
+          "path": "runtime/s10-drain-race01.worker",
+          "sha256": "7ffd4a356f08fd4fdc5008a795c5f09662115c22abe810b4f8ab4efb76a80c98",
+          "bytes": 6560208,
+          "matches_result": true
+        },
+        {
+          "path": "runtime/s10-drain-race01.test",
+          "sha256": "1712696efd7f7bdeeccef48d969ccb5644070c430571909471e426b7ec276640",
+          "bytes": 10915359,
+          "matches_result": true
+        }
+      ],
+      "driver": {
+        "path": "runners/s10-drain-race01.py",
+        "sha256": "9483ee305ed4841ea1f44f6602cc10bbf1ded8aed9c9250d9f3374dc90486876",
+        "bytes": 5279
+      },
+      "generated": [
+        {
+          "original": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/0d/0d526fe88a8e7d4dacd275542c4fe371d2082a948314f175d325a4821378154b-d",
+          "captured": {
+            "path": "evidence/s10-drain-race01/generated-source/0d526fe88a8e7d4dacd275542c4fe371d2082a948314f175d325a4821378154b.go",
+            "sha256": "0d526fe88a8e7d4dacd275542c4fe371d2082a948314f175d325a4821378154b",
+            "bytes": 15132
+          },
+          "matches_input": true,
+          "original_matches": true
+        }
+      ],
+      "raw_files": [
+        {
+          "path": "evidence/s10-drain-race01/compile-worker.exit",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        {
+          "path": "evidence/s10-drain-race01/compile-worker.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "evidence/s10-drain-race01/compile-worker.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "evidence/s10-drain-race01/compile.exit",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        {
+          "path": "evidence/s10-drain-race01/compile.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "evidence/s10-drain-race01/compile.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "evidence/s10-drain-race01/generated-source-map.json",
+          "sha256": "aca50bc5b5889d865d89f203aa37926e548cad9e87187b1606dcbbc50f20b7b0",
+          "bytes": 246
+        },
+        {
+          "path": "evidence/s10-drain-race01/go-list.exit",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        {
+          "path": "evidence/s10-drain-race01/go-list.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "evidence/s10-drain-race01/go-list.stdout",
+          "sha256": "f41f672439fbe8dbc933a26c656b902a14998123a9da53a25fabb02ef4970193",
+          "bytes": 377813
+        },
+        {
+          "path": "evidence/s10-drain-race01/inputs-after-compile.json",
+          "sha256": "655afe7421c9dcbbbb387c654428fc75e3e4ea45c380b78c64ee4bf72bbfcfe6",
+          "bytes": 421160
+        },
+        {
+          "path": "evidence/s10-drain-race01/inputs-after-test.json",
+          "sha256": "655afe7421c9dcbbbb387c654428fc75e3e4ea45c380b78c64ee4bf72bbfcfe6",
+          "bytes": 421160
+        },
+        {
+          "path": "evidence/s10-drain-race01/inputs-before.json",
+          "sha256": "655afe7421c9dcbbbb387c654428fc75e3e4ea45c380b78c64ee4bf72bbfcfe6",
+          "bytes": 421160
+        },
+        {
+          "path": "evidence/s10-drain-race01/result.json",
+          "sha256": "007f5585067b33a29235bcf8a1b5055c1d777681d7a08c2e9d546ee43b32b2dd",
+          "bytes": 3346
+        },
+        {
+          "path": "evidence/s10-drain-race01/tests.exit",
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        {
+          "path": "evidence/s10-drain-race01/tests.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        {
+          "path": "evidence/s10-drain-race01/tests.stdout",
+          "sha256": "38e8e0bd1dec399ac036ee3b5d29972726a820cb174b5661c94a7f8b409b9e5d",
+          "bytes": 7448
+        }
+      ]
+    }
+  },
+  "outer_tool_receipts": {
+    "provenance": "coordinator message; original sessions not polled by this reviewer",
+    "normal": {
+      "session": 92795,
+      "tool": "0406bb",
+      "exit": 0
+    },
+    "race": {
+      "session": 31336,
+      "tool": "4f2be0",
+      "exit": 0
+    }
+  },
+  "claims": {
+    "actual_independent_worker": true,
+    "caller_and_drain_separate": true,
+    "terminal_actual_cmd_wait_and_host_wait": true,
+    "controlled_reaper_is_internal_unit_only": true,
+    "no_new_wire_or_fence_policy": true,
+    "environment_proxy_unchanged_by_driver": true,
+    "no_skip_or_fail": true
+  },
+  "app_requirements": [
+    "release only after caller/phase ended AND Drained",
+    "forced close starts actual stop independently of waiting drain refs",
+    "uncooperative callback can keep drain open"
+  ],
+  "not_proven": [
+    "App self-remove/retained job/registered API integration",
+    "App normal/race/CLI/cold",
+    "full S10 or all 61",
+    "real business plugins",
+    "browser",
+    "CI",
+    "Git or remote delivery"
+  ]
+}

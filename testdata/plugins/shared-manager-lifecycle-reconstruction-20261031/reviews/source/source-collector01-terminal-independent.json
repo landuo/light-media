@@ -1,0 +1,173 @@
+{
+  "at": "2026-10-31T15:13:42.624731+00:00",
+  "decision": "Actual source component warm/cold observations independently read back and accepted for reuse; B1 semantic intersection confirmed, not same-input differential or full S10 acceptance.",
+  "execution": {
+    "warm": {
+      "command": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python -I -S -B /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-source-preparation/capture_source_s10.py warm capture01",
+      "start": "2026-10-31T15:07:25Z",
+      "end": "2026-10-31T15:07:26Z",
+      "recorded_exit": 0,
+      "stderr_bytes": 0
+    },
+    "cold": {
+      "command": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python -I -S -B /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-source-preparation/capture_source_s10.py cold capture01",
+      "start": "2026-10-31T15:07:55Z",
+      "end": "2026-10-31T15:07:56Z",
+      "recorded_exit": 0,
+      "stderr_bytes": 0
+    }
+  },
+  "coordinator_reported_tool_receipts": {
+    "warm": {
+      "session": 84498,
+      "tool": "00b06e",
+      "exit": 0
+    },
+    "cold": {
+      "session": 55866,
+      "tool": "c7cf86",
+      "exit": 0
+    }
+  },
+  "readback": {
+    "bound_inputs": 619,
+    "bound_inputs_current_drift": 0,
+    "warm_loaded_module_files": 385,
+    "cold_loaded_module_files": 385,
+    "loaded_module_current_drift": 0,
+    "selected_nodes": 86,
+    "selected_node_tables_equal": true,
+    "source_line_bytes_current_drift": 0,
+    "warm_terminal_rows_equal_cold_rows": true,
+    "owner_seal_artifacts_verified": 27,
+    "retained_sqlite_current": {
+      "sha256": "949450cc2e9cd4196515b79f95567c98bce6bf16549bf6617b88a3a276e4052c",
+      "bytes": 20480
+    },
+    "database_read_method": "Read-only bytes for SHA; no SQL/import/connection; not copied/exported",
+    "database_matches_warm_receipt": true
+  },
+  "runtime_boundaries": {
+    "socket_module_loaded": {
+      "warm": true,
+      "cold": true
+    },
+    "requests_urllib3_absent": true,
+    "threads_at_before_and_after": [
+      "MainThread"
+    ],
+    "scheduler": "actual APScheduler pending jobs; state 0 and thread_created false in emitted snapshots; no firing",
+    "network_syscall_observation": "none; module presence neither proves nor disproves bind/connect",
+    "environment": "new pinned isolated component environment, not historical full source"
+  },
+  "B1_alignment": {
+    "matches": [
+      "missing class and force=false => both false, rows unchanged",
+      "force=true => true for both methods, only target configuration/data removed",
+      "known class and no rows => both true",
+      "SQLite delete-abort => surfaced error, hot source config null, persistent old row retained",
+      "fresh cold source process => old persisted config restored"
+    ],
+    "not_same_input": [
+      "source Owned/Other, config {owned:1}, data keys a/b and values {owned:pid}; Go OwnedA/OwnedB/OwnedStopped with different config/data",
+      "source failure {must_remain_in_db:true}; Go {persisted:before-delete}",
+      "source failure=SQLAlchemy IntegrityError; Go own SQL error path, no exact exception text equivalence",
+      "Go read-outage subcase has no actual source counterpart in this collector",
+      "source cold uses a new readonly process; B1 Go cold closes/reopens App in same process"
+    ],
+    "new_blocking_behavioral_difference": null,
+    "B1_existing_gate_unchanged": "Accepted earlier at its exact gate hashes; not rerun or upgraded to SDK/CLI by these observations"
+  },
+  "files": {
+    "audits/s10-source-preparation/execution01.cold.command.txt": {
+      "sha256": "6a05413e7b2c7085e150788fd258aee558033d29614f577743511a11276a45e5",
+      "bytes": 253
+    },
+    "audits/s10-source-preparation/execution01.cold.end.txt": {
+      "sha256": "73d0fbe644c9a1fd92b23e737a39ad2f13e1991bdd7a95a8c6e2d7563e52cd9f",
+      "bytes": 21
+    },
+    "audits/s10-source-preparation/execution01.cold.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "audits/s10-source-preparation/execution01.cold.start.txt": {
+      "sha256": "3ca70a7033324c7317897b9cf12691b648cca5b3a631b19c5aa0374a72da8ec7",
+      "bytes": 21
+    },
+    "audits/s10-source-preparation/execution01.cold.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "audits/s10-source-preparation/execution01.cold.stdout": {
+      "sha256": "62f700a28082b48675f5f4f831ba7daa827a6cb4d8e022bb9cb5e29719dba975",
+      "bytes": 156474
+    },
+    "audits/s10-source-preparation/execution01.warm.command.txt": {
+      "sha256": "8e874d6aa84a74721150324b471b253fcbf7aa4b9204cb646949a0d765459798",
+      "bytes": 253
+    },
+    "audits/s10-source-preparation/execution01.warm.end.txt": {
+      "sha256": "cd59a5efb244030013b183888056b8130a89d99a6d7ada333b6f25bf11b02bfd",
+      "bytes": 21
+    },
+    "audits/s10-source-preparation/execution01.warm.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "audits/s10-source-preparation/execution01.warm.start.txt": {
+      "sha256": "976f182264991aadaa55db1632daa3533a45bac56270e245aadd78a5957737a3",
+      "bytes": 21
+    },
+    "audits/s10-source-preparation/execution01.warm.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "audits/s10-source-preparation/execution01.warm.stdout": {
+      "sha256": "c5a54c6d5f238b61d8016635581506281e0cbd82b860b7b833d379c7a6201d48",
+      "bytes": 176004
+    },
+    "audits/s10-source-preparation/capture01/warm-receipt.json": {
+      "sha256": "7dbb0e76eb67886cdb30151cd75bd7b4f779d49e3a0853e36059c3b1f879775c",
+      "bytes": 274
+    },
+    "audits/s10-source-preparation/capture_source_s10.py": {
+      "sha256": "b407c020bd57d5eeef3798a3aab379a0ff7e73b9525ce36051850eb69f05f51d",
+      "bytes": 20521
+    },
+    "audits/s10-source-preparation/collector-inputs.sha256": {
+      "sha256": "5d3eb9a218cbebb5204cecf172f67e1ba814deefe9a543221a1ff6360c2fb0fd",
+      "bytes": 137167
+    },
+    "audits/s10-source-preparation/COLLECTOR-01.md": {
+      "sha256": "ace069ea13a16befccb47b0e56d9163c0aabeb734b134a09ecb32527586f3f45",
+      "bytes": 7171
+    },
+    "audits/s10-source-preparation/RESULT.md": {
+      "sha256": "692dd498e5a1dc3699516f7ed8ca4d2328b562b82e65983710b5ad498ca8b662",
+      "bytes": 5901
+    },
+    "audits/s10-source-preparation/terminal-seal.json": {
+      "sha256": "387b40cf5f89d6479d2651a629f571402de00850813334ce1fcbebbadd8b1b41",
+      "bytes": 7103
+    },
+    "audits/s10-reconstruction-independent/phase-b1-db-independent.json": {
+      "sha256": "730253ee30e98c6873d0df1b772f2f954928aab01c7dddbdc7c6a0e7eb31ed09",
+      "bytes": 5007
+    },
+    "audits/s10-reconstruction-independent/PHASE-B1-DB-REVIEW.md": {
+      "sha256": "e7bccc1516c2eb5e5274ec975fc1e16c8ab85547c36acae8f57d1426c37e9925",
+      "bytes": 2803
+    },
+    "audits/s10-reconstruction-independent/source-collector01-observations.json": {
+      "sha256": "4732897f3ddffc2c46839ab9d610bb727b02e8ba1637e2ef69bdf25119bf4fac",
+      "bytes": 23574
+    }
+  },
+  "reviewer_actions": "Only text/JSON reading, streaming hashes and own audit writes. No collector execution, source import, Go, service or network.",
+  "review_report": {
+    "path": "SOURCE-COLLECTOR01-REVIEW.md",
+    "bytes": 5497,
+    "sha256": "106d85ccdcee309be3c4ab44d8c560e002c1fef93fef5d8f77b1967791ef4d0b"
+  }
+}

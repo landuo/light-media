@@ -1,0 +1,145 @@
+{
+  "schema": "s10-source-empty-remove-component-v1",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_file": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/core/plugin.py",
+  "source_sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7",
+  "driver_sha256": "79402d069e0bd821f74f2f824be0f418cde2c49212580db4bd855bce9f7e70d4",
+  "input_manifest_sha256": "8af63c0af658a6fac80c1cd54f1a03ed05b3f95d1e39cea87aee1d90321a2b75",
+  "python_version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "python_executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+  "python_executable_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+  "selected_original_nodes": [
+    {
+      "method": "clear_plugin_agent_tools_cache",
+      "first_line": 141,
+      "last_line": 147,
+      "source_bytes_sha256": "1ffda49ce0865601dfb556ae2955094ccbfea181e13ef26c976ab038f804498b",
+      "ast_sha256": "a577a7ca7e74d488eff7f994af89e200d3e6ca8d18ebc88128df456e431c83bc"
+    },
+    {
+      "method": "stop",
+      "first_line": 156,
+      "last_line": 192,
+      "source_bytes_sha256": "d4737df660738f4a80cdb379496e2cba438cbf953ceca05c74600edb798664eb",
+      "ast_sha256": "789423f512d16b13b1c2e16d7adf88e1079b2c09652a0096eaa4b6ade74f4fe0"
+    },
+    {
+      "method": "__stop_plugin",
+      "first_line": 618,
+      "last_line": 632,
+      "source_bytes_sha256": "b79cfd00fa8baebca33854682f08f5b3593278d24bb17cd772b0e806f509ad35",
+      "ast_sha256": "24df8e654f9918111c1f08f3e67a2f4f56eed526d10de3572ef22009966cffad"
+    },
+    {
+      "method": "remove_plugin",
+      "first_line": 634,
+      "last_line": 639,
+      "source_bytes_sha256": "cd2329646f99cd0c0790f3e71bd4e728a84a77f6ccffd1f2b718c5716341eddd",
+      "ast_sha256": "19836b1cb6124b9fbee2dea31418078beacab9b59b59995d4f67e876b2c19c7f"
+    },
+    {
+      "method": "_clear_plugin_modules",
+      "first_line": 653,
+      "last_line": 688,
+      "source_bytes_sha256": "b7dfecfd8a32a5dc0a986843f4aadcb0bcdf0706a0c0402c2dd096d97a6318a0",
+      "ast_sha256": "387ed879b02054fe61201b7d40c85ad4fb9517807d5c470a6c50eba15faaac42"
+    }
+  ],
+  "case": "remove_empty_pid_all_two_owned_objects_second_close_error",
+  "input": {
+    "plugin_id": "",
+    "second_close_raises": "ValueError: owned second close failure"
+  },
+  "before": {
+    "classes": [
+      "OwnedFirst",
+      "OwnedSecond"
+    ],
+    "running": [
+      "OwnedFirst",
+      "OwnedSecond"
+    ],
+    "agent_cache": {
+      "owned": "cached"
+    },
+    "agent_revision": 7
+  },
+  "result": {
+    "returned": null,
+    "type": "NoneType"
+  },
+  "trace": [
+    [
+      "log",
+      "info",
+      "正在停止所有插件..."
+    ],
+    [
+      "event",
+      "disable",
+      "OwnedFirst"
+    ],
+    [
+      "close",
+      "OwnedFirst"
+    ],
+    [
+      "stop_service",
+      "OwnedFirst"
+    ],
+    [
+      "event",
+      "disable",
+      "OwnedSecond"
+    ],
+    [
+      "close",
+      "OwnedSecond"
+    ],
+    [
+      "log",
+      "warn",
+      "停止插件 OwnedSecond 时发生错误: owned second close failure"
+    ],
+    [
+      "log",
+      "debug",
+      "已清除查找器的缓存"
+    ],
+    [
+      "log",
+      "info",
+      "插件停止完成"
+    ]
+  ],
+  "after": {
+    "classes": [],
+    "running": [],
+    "agent_cache": {},
+    "agent_revision": 8
+  },
+  "module_prefix_before": [],
+  "module_prefix_after": [],
+  "standard_meta_path_before_after": [
+    [
+      "_frozen_importlib",
+      "BuiltinImporter"
+    ],
+    [
+      "_frozen_importlib",
+      "FrozenImporter"
+    ],
+    [
+      "_frozen_importlib_external",
+      "PathFinder"
+    ]
+  ],
+  "threads_before": [
+    "MainThread"
+  ],
+  "threads_after": [
+    "MainThread"
+  ],
+  "requests_urllib3_absent": true,
+  "boundary": "one selected-source empty-all branch with two owned callbacks; continuation means final registry/cache cleanup after second close error, not a third plugin; real default-finder invalidation, empty module eviction; no full source host, DB, HTTP, timer, process, recursion or arbitrary plugin claim"
+}

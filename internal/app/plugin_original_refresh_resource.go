@@ -3,21 +3,16 @@ package app
 import (
 	"context"
 	"encoding/json"
-	"light-media/internal/plugins/schedule"
-	"strings"
-	"time"
 )
 
-// Refresh is synchronous, as in the source Scheduler.update_plugin_job. New
-// concurrent SDK calls permit getters while the business call awaits this
-// callback. No storage, object method or worker-shared business lock is held.
+// This existing self-only adapter retains its phase and exception contract.
+// Registry operations are short; no services mutex is held over worker RPC.
 func (a *App) originalRefreshServicesResource(ctx context.Context, scope originalBaseCallScope, raw json.RawMessage) (json.RawMessage, error) {
 	p := scope.object
 	if p == nil || p.app != a || scope.phase == "stop" || scope.phase == "get_state" || scope.phase == "get_service" {
 		return nil, bad("PLUGIN_CAPABILITY_DENIED", "服务刷新不能从声明读取或清理阶段重入")
 	}
-	var empty struct{}
-	if err := originalResourceDecode(raw, &empty); err != nil {
+	if err := originalResourceDecode(raw, &struct{}{}); err != nil {
 		return nil, err
 	}
 	if err := scope.validate(ctx); err != nil {
@@ -29,17 +24,26 @@ func (a *App) originalRefreshServicesResource(ctx context.Context, scope origina
 	if !concurrent {
 		return nil, bad("PLUGIN_CONCURRENT_REQUIRED", "同步服务刷新需要协商并发worker")
 	}
-	a.pluginOriginalServicesMu.Lock()
-	defer a.pluginOriginalServicesMu.Unlock()
+	object, operation, err := a.pinOriginalRunningObject(ctx, p.installation.InstanceID)
+	if err != nil {
+		return nil, err
+	}
+	if object == nil {
+		return json.RawMessage(`null`), nil
+	}
+	defer object.releaseOriginalRetainedOwner(operation)
+	if object != p || p.stopping.Load() {
+		return nil, bad("PLUGIN_NOT_LOADED", "插件刷新对象已替换")
+	}
+	ctx, err = p.originalRetainedParentContext(ctx, operation)
+	if err != nil {
+		return nil, err
+	}
 	if err := scope.validate(ctx); err != nil {
 		return nil, err
 	}
-	// An initial or retained failed object is not in PluginManager's running
-	// map. Its submitted methods may run, but it has no published services.
-	// A same-ID replacement must not have its registrations removed here.
-	if !originalObjectStillLoaded(p) {
-		return json.RawMessage(`null`), nil
-	}
+	// Preserve old registration-removal timing and exact self identity. Owner
+	// retirement is outside both manager and jobs locks.
 	a.pluginOriginalRunningMu.Lock()
 	if !originalObjectStillLoaded(p) || p.stopping.Load() {
 		a.pluginOriginalRunningMu.Unlock()
@@ -47,20 +51,15 @@ func (a *App) originalRefreshServicesResource(ctx context.Context, scope origina
 	}
 	state := &a.pluginOriginalDirectJobs
 	state.mu.Lock()
-	for key := range state.jobs {
-		if key.instance == p.installation.InstanceID {
-			delete(state.jobs, key)
-		}
-	}
+	removed := removeOriginalJobsLocked(state, p.installation.InstanceID, "")
 	state.mu.Unlock()
 	a.pluginOriginalRunningMu.Unlock()
-	// Removal happens before reading declarations. Failure does not restore
-	// the old service list or turn a failed refresh into deferred success.
-	enabled, err := p.getState(ctx)
+	releaseOriginalJobOwners(removed)
+	value, err := p.originalManagerRawState(ctx)
 	if err != nil {
 		return nil, err
 	}
-	if !enabled {
+	if !originalBaseJSONTruthy(value) {
 		return json.RawMessage(`null`), nil
 	}
 	defs, err := p.getServices(ctx)
@@ -71,44 +70,21 @@ func (a *App) originalRefreshServicesResource(ctx context.Context, scope origina
 		if err := scope.validate(ctx); err != nil {
 			return nil, err
 		}
-		provider, err := p.originalDisplayName(ctx)
-		if err != nil {
-			return nil, err
-		}
-		at := time.Now()
-		trigger, triggerErr := schedule.New(definition.Trigger, at)
-		options, optionsErr := originalServiceOptions(&definition)
-		if optionsErr != nil {
-			triggerErr = optionsErr
-		}
-		timerID := p.installation.InstanceID + "_" + definition.ID
-		definition.ID, _, _ = strings.Cut(definition.ID, "|")
-		if definition.MisfireGraceMS == 0 {
-			definition.MisfireGraceMS = 1000
-		}
-		a.pluginOriginalRunningMu.Lock()
 		if !originalObjectStillLoaded(p) || p.stopping.Load() {
-			a.pluginOriginalRunningMu.Unlock()
 			return nil, bad("PLUGIN_NOT_LOADED", "插件刷新对象已替换")
 		}
-		state.mu.Lock()
-		if state.jobs == nil {
-			state.jobs = make(map[originalServiceKey]*originalDirectJob)
-		}
-		state.nextRegistration++
-		job := &originalDirectJob{object: p, definition: definition, trigger: trigger, provider: provider, registrationOrder: state.nextRegistration, coalesceDisabled: options.coalesceDisabled, misfireUnlimited: options.unlimited, executorUnavailable: options.executorUnavailable, clockRegistered: triggerErr == nil, timerID: timerID, maxInstances: options.maxInstances}
-		if triggerErr == nil {
-			job.due = trigger.First(at)
-			if options.hasNextRun {
-				job.due = options.nextRun
+		if err := a.addOriginalBoundPluginJob(ctx, p, operation, definition, true); err != nil {
+			// Existing adapter reports per-definition schedule failures but does
+			// not turn a later declaration into a deferred job or stop the loop.
+			if !originalObjectStillLoaded(p) || p.stopping.Load() {
+				return nil, bad("PLUGIN_NOT_LOADED", "插件刷新对象已替换")
 			}
-		}
-		state.jobs[originalServiceKey{p.installation.InstanceID, definition.ID}] = job
-		state.mu.Unlock()
-		a.pluginOriginalRunningMu.Unlock()
-		if triggerErr != nil {
+			provider, providerErr := p.originalDisplayName(ctx)
+			if providerErr != nil {
+				return nil, providerErr
+			}
 			a.writeOriginalPluginCallLog(scope.installation, scope.logCall, "ERROR", "register_service_failed", "注册插件定时服务失败")
-			a.reportOriginalPluginExecutionError(ctx, "system", "插件 "+provider+" 服务注册失败", nil, triggerErr)
+			a.reportOriginalPluginExecutionError(ctx, "system", "插件 "+provider+" 服务注册失败", nil, err)
 		}
 	}
 	return json.RawMessage(`null`), nil

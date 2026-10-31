@@ -1,0 +1,112 @@
+{
+  "started": "2026-10-31T16:32:28.185978+00:00",
+  "package": "./internal/plugins",
+  "pattern": "^(TestOwnedPhysicalTransportTerminationLegacyNoBusiness|TestOwnedPhysicalTransportTerminationExistingConcurrentNoBusiness|TestOwnedPhysicalTransportTerminationTerminalAndDeadline)$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/plugins",
+        "./cmd/owned-concurrent-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-terminate-race01.worker",
+        "-race",
+        "./cmd/owned-concurrent-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-terminate-race01.test",
+        "-race",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-terminate-race01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestOwnedPhysicalTransportTerminationLegacyNoBusiness|TestOwnedPhysicalTransportTerminationExistingConcurrentNoBusiness|TestOwnedPhysicalTransportTerminationTerminalAndDeadline)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "driver_pid": 2,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T16:32:28.185995+00:00",
+      "scratch_free": 58076213248,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile-worker",
+      "at": "2026-10-31T16:32:28.485214+00:00",
+      "scratch_free": 58075377664,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T16:32:29.770854+00:00",
+      "scratch_free": 58065522688,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T16:32:32.679643+00:00",
+      "scratch_free": 58046763008,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 1958,
+  "fixture_sha256": "ba725a541e80b2943bd696a4f7d0021241990b8598e7089301a2f29e3d22a15c",
+  "fixture_env": "LIGHT_MEDIA_CONCURRENT_FIXTURE",
+  "program_sha256": "532e150853617c06152b8b6c71b181795f41fcf24a7cf674292c2d60b78371dc",
+  "root_passes": [
+    "TestOwnedPhysicalTransportTerminationLegacyNoBusiness",
+    "TestOwnedPhysicalTransportTerminationExistingConcurrentNoBusiness",
+    "TestOwnedPhysicalTransportTerminationTerminalAndDeadline"
+  ],
+  "ended": "2026-10-31T16:32:34.382576+00:00"
+}

@@ -1,0 +1,342 @@
+{
+  "schema": 1,
+  "at_utc": "2026-10-31T16:42:34.308013+00:00",
+  "verdict": "NORMAL_23_COMPOSED_ACCEPTED_RACE_PENDING",
+  "normal01": {
+    "status": "FAIL_PRESERVED",
+    "pass_roots": [
+      "TestOriginalAPIRegistrationImmutableSnapshotAndPointer",
+      "TestOriginalAPIRegistrationActualRemoveRetainsExactWorker",
+      "TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute",
+      "TestPluginOriginalExternalHTTPRejectsRemovedRegisteredRoute",
+      "TestOriginalRetainedLegacyRemovedLastOwnerTerminatesTransport",
+      "TestOriginalRetainedActualCancelledCallAndForcedClose",
+      "TestOriginalRetainedActualUnpublishedSubmission",
+      "TestOriginalRetainedOwnersAndExactAdmission",
+      "TestOriginalRetainedCallFactsAndForcedClose",
+      "TestOriginalRetainedConcurrentRetirementOnce",
+      "TestOriginalServiceGetterFailureReplacesAllRegistrations",
+      "TestOriginalServiceActualSDKSuffixReplacementAndSyncWait",
+      "TestOriginalSubmittedActualSynchronousRefreshAndGetterRecursion",
+      "TestSharedManagerMutationsClassForceAndIsolation",
+      "TestSharedManagerMutationsConfigFailureHotCold",
+      "TestSharedManagerRemoveActualEmptyAllSource",
+      "TestSharedManagerRemoveClassOnlySourceScope",
+      "TestSharedManagerRuntimeSourceDefaultsAndGuards",
+      "TestSharedManagerRuntimeActualConcurrentInitState",
+      "TestSharedManagerRuntimeLocalSourceDescriptors",
+      "TestSharedSchedulerActualSDKSourceRegistry",
+      "TestSharedSchedulerActualRetainedSelfRemove"
+    ],
+    "failed_roots": [
+      "TestOriginalServiceActualSDKAsyncReplacementSource"
+    ],
+    "input_count": 6181,
+    "before_equals_after_compile": true,
+    "after_test_file_absent_not_fabricated": true,
+    "no_skip": true,
+    "failure_cause": "test process cwd=repository; existing runtime oracle relative path could not resolve; failure precedes actual fixture business body"
+  },
+  "normal02": {
+    "status": "PASS",
+    "root_passes": [
+      "TestOriginalServiceActualSDKAsyncReplacementSource"
+    ],
+    "input_count": 6192,
+    "before_equals_after_test": true,
+    "no_skip": true,
+    "reuse": "same exact App and six workers; no rebuild",
+    "cwd": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/app"
+  },
+  "composition": {
+    "exact_roots": [
+      "TestSharedManagerRemoveClassOnlySourceScope",
+      "TestSharedManagerRemoveActualEmptyAllSource",
+      "TestSharedSchedulerActualSDKSourceRegistry",
+      "TestSharedSchedulerActualRetainedSelfRemove",
+      "TestSharedManagerRuntimeSourceDefaultsAndGuards",
+      "TestSharedManagerRuntimeActualConcurrentInitState",
+      "TestSharedManagerRuntimeLocalSourceDescriptors",
+      "TestSharedManagerMutationsClassForceAndIsolation",
+      "TestSharedManagerMutationsConfigFailureHotCold",
+      "TestOriginalRetainedOwnersAndExactAdmission",
+      "TestOriginalRetainedCallFactsAndForcedClose",
+      "TestOriginalRetainedConcurrentRetirementOnce",
+      "TestOriginalRetainedActualCancelledCallAndForcedClose",
+      "TestOriginalRetainedActualUnpublishedSubmission",
+      "TestOriginalAPIRegistrationImmutableSnapshotAndPointer",
+      "TestOriginalAPIRegistrationActualRemoveRetainsExactWorker",
+      "TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute",
+      "TestPluginOriginalExternalHTTPRejectsRemovedRegisteredRoute",
+      "TestOriginalServiceGetterFailureReplacesAllRegistrations",
+      "TestOriginalServiceActualSDKAsyncReplacementSource",
+      "TestOriginalServiceActualSDKSuffixReplacementAndSyncWait",
+      "TestOriginalSubmittedActualSynchronousRefreshAndGetterRecursion",
+      "TestOriginalRetainedLegacyRemovedLastOwnerTerminatesTransport"
+    ],
+    "all_original6181_inputs_inherited_unchanged": true,
+    "current6192_sha_drift": [],
+    "product_test_oracle_change_required": false,
+    "normal01_failure_not_overwritten": true
+  },
+  "programs": [
+    {
+      "path": "runtime/s10-integrated-normal01.test",
+      "sha256": "859fcd30461c4500f5d80059a79bf915b3a9d881a05f19a1f48f6b63e7f87dfe",
+      "bytes": 90576319
+    },
+    {
+      "path": "runtime/s10-d3-fixture01.worker",
+      "sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "bytes": 5254544
+    },
+    {
+      "path": "runtime/s10-integrated-normal01.worker1",
+      "sha256": "1cf03b83b99103921f367e97f29ab87856c821fe93f27f05a604b36dc12ae806",
+      "bytes": 5256111
+    },
+    {
+      "path": "runtime/s10-integrated-normal01.worker2",
+      "sha256": "6e406955f3368da48f97682c6f976d14b896444b9947a35005ea815adfd5d2ba",
+      "bytes": 5246457
+    },
+    {
+      "path": "runtime/s10-integrated-normal01.worker3",
+      "sha256": "01411cd4e0249c72ddb14581102baec9366de14fdda3e86ed9007a1c31d9efc4",
+      "bytes": 10393483
+    },
+    {
+      "path": "runtime/s10-integrated-normal01.worker4",
+      "sha256": "74f2ca0c32b7b880f1382a37299ed43f29ee9d41954666a7022b5f3a5cf2dcfa",
+      "bytes": 5218767
+    },
+    {
+      "path": "runtime/s10-integrated-normal01.worker5",
+      "sha256": "60403e493ba75c73f24ec7786058d2b93cc2ec7b3cd521680a84c15b0c240808",
+      "bytes": 5278957
+    }
+  ],
+  "references": [
+    {
+      "path": "runners/s10-integrated-app01.py",
+      "sha256": "23ff85f13e76ca7522ef054856d447937a218a47b2787284e0968046481b41e4",
+      "bytes": 6980
+    },
+    {
+      "path": "runners/s10-integrated-normal02.py",
+      "sha256": "6ef37b12086051dc4331ba3ab02b7ca65c0e7a47ad2d448596d1dfa8f22db645",
+      "bytes": 3647
+    },
+    {
+      "path": "runners/s10-integrated-app02.py",
+      "sha256": "7a6f413c951a9e6ce3b0da67bc1c0fcb9059998cd9718ed619454f168fd60e11",
+      "bytes": 7260
+    },
+    {
+      "path": "audits/s10-coordinator-integration01/app-gate.json",
+      "sha256": "1d9f4e943c4a3daa6736a3565ffc5f1bf6563c86231215476c22db0a86e6622f",
+      "bytes": 2021
+    },
+    {
+      "path": "audits/s10-coordinator-integration01/normal01-cwd-diagnosis.json",
+      "sha256": "c79eb204f071113eb821b7a1a744200f41c26b048d3ea217db8a8c5cd5ff50bb",
+      "bytes": 538
+    },
+    {
+      "path": "light-media/testdata/standard-services/async-oracle.json",
+      "sha256": "8c209e25d6d0fab34032f63e75081a04efbb577565ea64a2107f2e841d2cc91a",
+      "bytes": 2846
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-5.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-3.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-1.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-4.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-5.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/go-list.stdout",
+      "sha256": "f4a0cf9619dba8ecaaafcf69f181d6400d36c921b86b8d68e8be9466dd98db50",
+      "bytes": 1442230
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-4.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/go-list.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-2.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/inputs-after-compile.json",
+      "sha256": "f47329569d0e561ac49499a1ea65d27e9768b81220a338504a3a9d4eb9287fe5",
+      "bytes": 1443389
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-3.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-5.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-1.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/generated-source-map.json",
+      "sha256": "e1f5b93e734dc54247320ce77e6efcff00300567f5c42c8f785f7373007e90db",
+      "bytes": 246
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/tests.stdout",
+      "sha256": "40ce19ac39f400a6b5f699253ef25636c8805743db2b54077c8b5c35d753abd8",
+      "bytes": 115358
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-3.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-4.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/inputs-before.json",
+      "sha256": "f47329569d0e561ac49499a1ea65d27e9768b81220a338504a3a9d4eb9287fe5",
+      "bytes": 1443389
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-1.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/tests.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/tests.exit",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/result.json",
+      "sha256": "f8d414a5dd18f58742dc59b04661f15b7b24b7b32d493db85aca749f9fba4da2",
+      "bytes": 9465
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/go-list.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-2.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/compile-worker-2.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal02/inputs-after-test.json",
+      "sha256": "4b71e873c8602d4722e1fa3d370035e24e658c615e1bf21e444f3f4a3c3daf06",
+      "bytes": 1445893
+    },
+    {
+      "path": "evidence/s10-integrated-normal02/tests.stdout",
+      "sha256": "4befec59abdeba8a02ca2459251f2785e203bb4d92abfeaaaca901e1e07be5b3",
+      "bytes": 6829
+    },
+    {
+      "path": "evidence/s10-integrated-normal02/inputs-before.json",
+      "sha256": "4b71e873c8602d4722e1fa3d370035e24e658c615e1bf21e444f3f4a3c3daf06",
+      "bytes": 1445893
+    },
+    {
+      "path": "evidence/s10-integrated-normal02/tests.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "evidence/s10-integrated-normal02/tests.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "evidence/s10-integrated-normal02/result.json",
+      "sha256": "c5c21a72c0d3562de64f6108d070323a82b022c8a575fd023093e3da170e584f",
+      "bytes": 3389
+    },
+    {
+      "path": "evidence/s10-integrated-normal01/generated-source/417bc2d50bcc19d63eb40542f410a0e229b671b9f50e9ed682f3e626fd74de93.go",
+      "sha256": "417bc2d50bcc19d63eb40542f410a0e229b671b9f50e9ed682f3e626fd74de93",
+      "bytes": 153624
+    }
+  ],
+  "race_driver_static": {
+    "sha256": "7a6f413c951a9e6ce3b0da67bc1c0fcb9059998cd9718ed619454f168fd60e11",
+    "delta": [
+      "race-only guard",
+      "tests cwd=internal/app, other commands repository",
+      "HEAD-identical async oracle hash/assert/input binding"
+    ],
+    "roots_expanded": false,
+    "verdict": "READY"
+  },
+  "limitations": [
+    "No continuous reserve monitor",
+    "No normal CLI acceptance here",
+    "Original source component boundaries unchanged",
+    "No full project equivalence"
+  ]
+}

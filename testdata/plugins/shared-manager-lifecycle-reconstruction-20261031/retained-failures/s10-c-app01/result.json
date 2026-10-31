@@ -1,0 +1,64 @@
+{
+  "started": "2026-10-31T15:35:11.321478+00:00",
+  "package": "./internal/app",
+  "pattern": "^Test(SharedManagerRuntime(SourceDefaultsAndGuards|ActualConcurrentInitState|LocalSourceDescriptors)|SharedManagerMutations(ClassForceAndIsolation|ConfigFailureHotCold))$",
+  "race": false,
+  "status": "FAIL",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-c-app01.test",
+        "./internal/app"
+      ],
+      "exit": 1
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "driver_pid": 2,
+  "prebuilt_fixture": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-c-fixture01.worker",
+    "sha256": "4d1ee8471677efd159391510b2ec044fa8dbf0423d0adbbf126d7408ff5bcde8",
+    "evidence": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s10-c-fixture01",
+    "input_count": 1080
+  },
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T15:35:11.378896+00:00",
+      "scratch_free": 58961842176,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T15:35:12.583148+00:00",
+      "scratch_free": 58958295040,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 6164,
+  "error_class": "RuntimeError",
+  "error": "compile exited 1",
+  "ended": "2026-10-31T15:35:14.154051+00:00"
+}

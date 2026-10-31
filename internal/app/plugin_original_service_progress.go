@@ -107,7 +107,10 @@ func originalServiceResultError(raw json.RawMessage) string {
 	}
 	return string(tuple[1])
 }
-func (a *App) executeOriginalService(ctx context.Context, job *originalDirectJob) {
+func (a *App) executeOriginalService(ctx context.Context, job *originalDirectJob, operation *originalRetainedLease) {
+	if operation != nil {
+		defer job.object.releaseOriginalRetainedOwner(operation)
+	}
 	ctx = context.WithValue(ctx, originalServiceCallKey{}, &originalServiceCall{job: job})
 	var result plugins.RunResult
 	input, err := originalServiceArguments(job.definition.Input)
@@ -116,7 +119,7 @@ func (a *App) executeOriginalService(ctx context.Context, job *originalDirectJob
 		// provider returns a terminal value; Scheduler.start sees success.
 		_, err = a.invokeOriginalPluginModules(ctx, "scheduler_job", nil, nil, nil)
 	} else if err == nil {
-		result, err = job.object.callOriginalMethod(ctx, job.definition.Handler, input)
+		result, err = a.callOriginalBoundService(ctx, job, operation, input)
 	}
 	errorText := originalServiceResultError(result.Result)
 	failed := err != nil || errorText != ""
@@ -132,7 +135,7 @@ func (a *App) executeOriginalService(ctx context.Context, job *originalDirectJob
 	// dictionary. An older asynchronous completion can therefore finish a
 	// newly registered same-ID job and its shared progress; preserve that quirk.
 	jobID := originalServiceID(job)
-	current := state.jobs[originalServiceLookupKey(job)]
+	current := lookupOriginalJobIDLocked(state, originalServiceID(job))
 	finishedAt := time.Now().Format("2006-01-02 15:04:05")
 	name := jobID
 	var provider any

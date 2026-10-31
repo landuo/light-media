@@ -1,0 +1,113 @@
+{
+  "started": "2026-10-31T15:49:02.160782+00:00",
+  "package": "./internal/plugins",
+  "pattern": "^(TestOwnedPendingCallDrainedSuccessAndZeroByteFailure|TestOwnedPendingCallDrainedCancellationWaitsForWorkerAndHost|TestOwnedPendingCallDrainedTerminalRequiresReaperAndHost|TestOwnedPendingCallDrainedUnusedObserverAndShutdownBoundary)$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/plugins",
+        "./cmd/owned-concurrent-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-drain-race01.worker",
+        "-race",
+        "./cmd/owned-concurrent-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-drain-race01.test",
+        "-race",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-drain-race01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestOwnedPendingCallDrainedSuccessAndZeroByteFailure|TestOwnedPendingCallDrainedCancellationWaitsForWorkerAndHost|TestOwnedPendingCallDrainedTerminalRequiresReaperAndHost|TestOwnedPendingCallDrainedUnusedObserverAndShutdownBoundary)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "driver_pid": 2,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T15:49:02.160798+00:00",
+      "scratch_free": 58595278848,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile-worker",
+      "at": "2026-10-31T15:49:02.447362+00:00",
+      "scratch_free": 58594443264,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T15:49:03.673862+00:00",
+      "scratch_free": 58584625152,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T15:49:06.597729+00:00",
+      "scratch_free": 58565517312,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 1956,
+  "fixture_sha256": "7ffd4a356f08fd4fdc5008a795c5f09662115c22abe810b4f8ab4efb76a80c98",
+  "fixture_env": "LIGHT_MEDIA_CONCURRENT_FIXTURE",
+  "program_sha256": "1712696efd7f7bdeeccef48d969ccb5644070c430571909471e426b7ec276640",
+  "root_passes": [
+    "TestOwnedPendingCallDrainedSuccessAndZeroByteFailure",
+    "TestOwnedPendingCallDrainedCancellationWaitsForWorkerAndHost",
+    "TestOwnedPendingCallDrainedTerminalRequiresReaperAndHost",
+    "TestOwnedPendingCallDrainedUnusedObserverAndShutdownBoundary"
+  ],
+  "ended": "2026-10-31T15:49:13.217981+00:00"
+}

@@ -1,0 +1,35 @@
+--- /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-reconstruction-plan/phase-c4-test-fix/runtime_test.before.go	2026-11-01 00:36:00.729414322 +0900
++++ /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-reconstruction-plan/phase-c4-test-fix/runtime_test.final.go	2026-11-01 00:36:21.968403496 +0900
+@@ -135,7 +135,7 @@
+ 	Error string          `json:"error"`
+ 	PID   int             `json:"pid"`
+ }
+-type managerWorkerSnapshot struct {
++type managerLifecycleWorkerSnapshot struct {
+ 	Conf  json.RawMessage   `json:"conf"`
+ 	Trace []json.RawMessage `json:"trace"`
+ }
+@@ -222,8 +222,8 @@
+ 		t.Fatal(err)
+ 	}
+ 	var result managerWorkerReply
+-	if json.Unmarshal(raw, &result) != nil || result.PID <= 0 || result.PID == os.Getpid() {
+-		t.Fatalf("not an actual separate worker: %s", raw)
++	if json.Unmarshal(raw.Result, &result) != nil || result.PID <= 0 || result.PID == os.Getpid() {
++		t.Fatalf("not an actual separate worker: %s", raw.Result)
+ 	}
+ 	return result
+ }
+@@ -234,10 +234,10 @@
+ 		t.Fatal(reply.Error)
+ 	}
+ }
+-func managerWorkerInspect(t *testing.T, object *originalPluginInstance) managerWorkerSnapshot {
++func managerWorkerInspect(t *testing.T, object *originalPluginInstance) managerLifecycleWorkerSnapshot {
+ 	t.Helper()
+ 	reply := managerWorkerQuery(t, object, `{"op":"inspect"}`)
+-	var result managerWorkerSnapshot
++	var result managerLifecycleWorkerSnapshot
+ 	if reply.Error != "" || json.Unmarshal(reply.Value, &result) != nil {
+ 		t.Fatal("worker inspection failed", reply.Error)
+ 	}

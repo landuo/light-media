@@ -24,6 +24,7 @@ type originalDirectJobs struct {
 }
 type originalDirectJob struct {
 	object                               *originalPluginInstance
+	retained                             *originalRetainedLease // exact registry owner; released only outside jobs.mu
 	commonModule                         bool
 	definition                           pluginScheduleDefinition
 	trigger                              *schedule.Trigger
@@ -199,14 +200,7 @@ func mustOriginalEventJSON(event string, data json.RawMessage) json.RawMessage {
 }
 
 func (a *App) removeOriginalPluginJobs(instance string) {
-	state := &a.pluginOriginalDirectJobs
-	state.mu.Lock()
-	defer state.mu.Unlock()
-	for key := range state.jobs {
-		if key.instance == instance {
-			delete(state.jobs, key)
-		}
-	}
+	a.removeOriginalPluginJobsSelected(instance, "")
 }
 
 func (a *App) originalPublicServices(at time.Time) []PluginServiceInfo {
@@ -292,7 +286,11 @@ func (a *App) runOriginalPublicService(ctx context.Context, instance, id string)
 func (a *App) runOriginalService(ctx context.Context, instance, id string, wait bool) error {
 	state := &a.pluginOriginalDirectJobs
 	state.mu.Lock()
-	job := state.jobs[originalServiceKey{instance, id}]
+	jobID := id
+	if instance != "" {
+		jobID = instance + "_" + id
+	}
+	job := lookupOriginalJobIDLocked(state, jobID)
 	if job == nil || !originalServiceActive(job) {
 		state.mu.Unlock()
 		return bad("PLUGIN_SERVICE_NOT_FOUND", "定时服务不存在")
@@ -301,20 +299,32 @@ func (a *App) runOriginalService(ctx context.Context, instance, id string, wait 
 		state.mu.Unlock()
 		return bad("PLUGIN_BUSY", "定时服务正在运行")
 	}
+	var operation *originalRetainedLease
+	if !job.commonModule {
+		var err error
+		operation, err = job.object.originalRetainedState().retain(originalRetainedOperation, job.retained)
+		if err != nil {
+			state.mu.Unlock()
+			return err
+		}
+	}
 	if !a.admitOriginalBackground() {
 		state.mu.Unlock()
+		if operation != nil {
+			job.object.releaseOriginalRetainedOwner(operation)
+		}
 		return bad("PLUGIN_NOT_LOADED", "插件管理器已停止")
 	}
 	a.prepareOriginalServiceLocked(job)
 	state.mu.Unlock()
 	if wait && !job.definition.Async {
 		defer a.wg.Done()
-		a.executeOriginalService(context.WithoutCancel(ctx), job)
+		a.executeOriginalService(context.WithoutCancel(ctx), job, operation)
 		return nil
 	}
 	go func() {
 		defer a.wg.Done()
-		a.executeOriginalService(context.WithoutCancel(ctx), job)
+		a.executeOriginalService(context.WithoutCancel(ctx), job, operation)
 	}()
 	return nil
 }

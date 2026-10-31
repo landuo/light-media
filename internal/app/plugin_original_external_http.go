@@ -4,42 +4,31 @@ import (
 	"context"
 	"encoding/json"
 	"light-media/internal/plugins"
-	"reflect"
 	"time"
 )
 
 // Pure SDK packages have no host grants. Their registered API is a method of
 // the already loaded object, not a request to enable or initialize the plugin.
-func (a *App) callOriginalExternalHTTP(ctx context.Context, in PluginInstallation, api plugins.HTTPAPI, input plugins.HTTPRequest, authority pluginAPIAuthority) (plugins.HTTPResponse, error) {
-	value, ok := a.pluginRunningInstances.Load(in.InstanceID)
-	if !ok {
-		return plugins.HTTPResponse{}, bad("PLUGIN_NOT_LOADED", "插件实例尚未加载")
+func (a *App) callOriginalExternalHTTP(ctx context.Context, in PluginInstallation, registration *originalAPIRegistration, operation *originalRetainedLease, api plugins.HTTPAPI, input plugins.HTTPRequest, authority pluginAPIAuthority) (plugins.HTTPResponse, error) {
+	if _, err := resolveOriginalRegisteredAPI(registration, in); err != nil {
+		return plugins.HTTPResponse{}, err
 	}
-	object := value.(*originalPluginInstance)
+	object := registration.object
 	if !object.external {
 		return plugins.HTTPResponse{}, bad("PLUGIN_HOST_CONTRACT_UNSUPPORTED", "插件调用契约不匹配")
+	}
+	ctx, err := object.originalRetainedParentContext(ctx, operation)
+	if err != nil {
+		return plugins.HTTPResponse{}, err
 	}
 	unlock := object.lockOriginalMethod()
 	defer unlock()
 	check := func() error {
-		if current, ok := a.pluginRunningInstances.Load(in.InstanceID); !ok || current != object {
-			return bad("PLUGIN_SNAPSHOT_STALE", "插件调用对象已经被替换")
+		if _, err := resolveOriginalRegisteredAPI(registration, in); err != nil {
+			return err
 		}
-		if object.installation.PluginID != in.PluginID || object.installation.Version != in.Version || object.installation.Generation != in.Generation {
-			return bad("PLUGIN_SNAPSHOT_STALE", "插件实例已变化")
-		}
-		routes, ok := a.pluginRegisteredAPIs.Load(in.InstanceID)
-		matched := false
-		if ok {
-			for _, route := range routes.([]plugins.HTTPAPI) {
-				if reflect.DeepEqual(route, api) {
-					matched = true
-					break
-				}
-			}
-		}
-		if !matched {
-			return bad("PLUGIN_API_SCOPE_DENIED", "插件路由已变化")
+		if err := a.currentOriginalAPIRegistration(registration, in, api); err != nil {
+			return err
 		}
 		return a.validatePluginReadAuthority(ctx, authority)
 	}

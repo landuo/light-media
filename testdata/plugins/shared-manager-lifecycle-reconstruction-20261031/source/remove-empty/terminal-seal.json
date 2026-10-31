@@ -1,0 +1,101 @@
+{
+  "at": "2026-10-31T16:10:49.866110+00:00",
+  "status": "actual_single_source_component_observation_completed",
+  "coordinator_reported_tool_receipt": {
+    "tool": "fae1a8",
+    "exit": 0
+  },
+  "recorded_start": "2026-10-31T16:09:55Z",
+  "recorded_end": "2026-10-31T16:09:55Z",
+  "stdout_is_unmodified_oracle": {
+    "path": "execution01.stdout",
+    "sha256": "74876e4ed8cbc2142131d098774fce4fbf109ccf661e29c9d4fcdaefe4c0e989",
+    "bytes": 4185
+  },
+  "bound_inputs_current_drift": 0,
+  "selected_nodes": 5,
+  "selected_nodes_current_line_bytes_drift": 0,
+  "prepared_artifacts_unchanged": true,
+  "actual_result": {
+    "returned": null,
+    "type": "NoneType"
+  },
+  "observed_callback_trace": [
+    [
+      "event",
+      "disable",
+      "OwnedFirst"
+    ],
+    [
+      "close",
+      "OwnedFirst"
+    ],
+    [
+      "stop_service",
+      "OwnedFirst"
+    ],
+    [
+      "event",
+      "disable",
+      "OwnedSecond"
+    ],
+    [
+      "close",
+      "OwnedSecond"
+    ]
+  ],
+  "class_and_running_cleared": true,
+  "AI_cache_raw_only_not_migration_feature": true,
+  "limits": "controlled two objects, original method bodies only; no fullhost/DB/HTTP/timer/real plugin/nonempty eviction/Go PASS",
+  "artifacts": {
+    "capture_empty_remove.py": {
+      "sha256": "79402d069e0bd821f74f2f824be0f418cde2c49212580db4bd855bce9f7e70d4",
+      "bytes": 7528
+    },
+    "input-bindings.sha256": {
+      "sha256": "8af63c0af658a6fac80c1cd54f1a03ed05b3f95d1e39cea87aee1d90321a2b75",
+      "bytes": 496
+    },
+    "selected-source-bindings.json": {
+      "sha256": "a7c1b78afdef1cfc92488e389e4650cabda51d4f24f25466b0cb2477bc33ecc4",
+      "bytes": 1508
+    },
+    "README.md": {
+      "sha256": "248d962496d404bc23773530d870e865234484d6950d3b806c74dc85b1f2e3aa",
+      "bytes": 3387
+    },
+    "preparation-seal.json": {
+      "sha256": "4ac364f0b845e8774ad5d6f0d746bf7457f99bd3afad53051dadc7dadec11474",
+      "bytes": 1205
+    },
+    "execution01.command.txt": {
+      "sha256": "4067b520730b111e825695d783df0f5398ef77029005a91f868933af4ad04ee3",
+      "bytes": 244
+    },
+    "execution01.start.txt": {
+      "sha256": "d45c6cbbbe1853d428e02db2ee6e2ac41fc244d0839cb16885ff0fe342be4a30",
+      "bytes": 21
+    },
+    "execution01.end.txt": {
+      "sha256": "d45c6cbbbe1853d428e02db2ee6e2ac41fc244d0839cb16885ff0fe342be4a30",
+      "bytes": 21
+    },
+    "execution01.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "execution01.stdout": {
+      "sha256": "74876e4ed8cbc2142131d098774fce4fbf109ccf661e29c9d4fcdaefe4c0e989",
+      "bytes": 4185
+    },
+    "execution01.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "RESULT.md": {
+      "sha256": "915a77f81dd5cab3ec50e92ed685818a511817a224388c0356bb8293cb1594e0",
+      "bytes": 2012
+    }
+  },
+  "readback_actions": "read/hash only, no repeated source execution/import/Go/network; DB not used"
+}

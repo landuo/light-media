@@ -1,0 +1,963 @@
+{
+  "schema": "s10-actual-source-observation-extract-v1",
+  "origin": {
+    "warm": {
+      "sha256": "c5a54c6d5f238b61d8016635581506281e0cbd82b860b7b833d379c7a6201d48",
+      "bytes": 176004
+    },
+    "cold": {
+      "sha256": "62f700a28082b48675f5f4f831ba7daa827a6cb4d8e022bb9cb5e29719dba975",
+      "bytes": 156474
+    },
+    "driver": {
+      "sha256": "b407c020bd57d5eeef3798a3aab379a0ff7e73b9525ce36051850eb69f05f51d",
+      "bytes": 20521
+    }
+  },
+  "note": "Exact JSON-value extraction from the two actual stdout files; no imported-file/environment maps. Not a Go same-input replay result. Inputs/callback definitions remain in the byte-bound collector.",
+  "warm": {
+    "manager_algorithms": [
+      {
+        "case": "init_missing",
+        "result": {
+          "returned": null,
+          "type": "NoneType"
+        },
+        "trace": [],
+        "after": {
+          "classes": [
+            "Owned"
+          ],
+          "running": [],
+          "agent_cache": {
+            "owned": "cached"
+          },
+          "agent_revision": 7
+        }
+      },
+      {
+        "case": "init_enabled",
+        "result": {
+          "returned": null,
+          "type": "NoneType"
+        },
+        "trace": [
+          [
+            "init",
+            {
+              "owned": 1
+            }
+          ],
+          [
+            "get_state"
+          ],
+          [
+            "event",
+            "enable",
+            "Owned"
+          ]
+        ],
+        "after": {
+          "classes": [
+            "Owned"
+          ],
+          "running": [
+            "Owned"
+          ],
+          "agent_cache": {},
+          "agent_revision": 8
+        }
+      },
+      {
+        "case": "init_disabled",
+        "result": {
+          "returned": null,
+          "type": "NoneType"
+        },
+        "trace": [
+          [
+            "init",
+            {
+              "owned": 1
+            }
+          ],
+          [
+            "get_state"
+          ],
+          [
+            "event",
+            "disable",
+            "Owned"
+          ]
+        ],
+        "after": {
+          "classes": [
+            "Owned"
+          ],
+          "running": [
+            "Owned"
+          ],
+          "agent_cache": {},
+          "agent_revision": 8
+        }
+      },
+      {
+        "case": "init_init_error",
+        "result": {
+          "exception": "ValueError",
+          "message": "owned init failure"
+        },
+        "trace": [
+          [
+            "init",
+            {
+              "owned": 1
+            }
+          ]
+        ],
+        "after": {
+          "classes": [
+            "Owned"
+          ],
+          "running": [
+            "Owned"
+          ],
+          "agent_cache": {
+            "owned": "cached"
+          },
+          "agent_revision": 7
+        }
+      },
+      {
+        "case": "remove_class_only",
+        "result": {
+          "returned": null,
+          "type": "NoneType"
+        },
+        "trace": [
+          [
+            "log",
+            "info",
+            "正在停止插件 Owned..."
+          ],
+          [
+            "log",
+            "debug",
+            "插件 Owned 不存在或未加载"
+          ],
+          [
+            "log",
+            "debug",
+            "已清除查找器的缓存"
+          ],
+          [
+            "log",
+            "debug",
+            "插件 Owned 没有找到需要清除的模块缓存"
+          ],
+          [
+            "log",
+            "info",
+            "插件停止完成"
+          ]
+        ],
+        "after": {
+          "classes": [
+            "Other"
+          ],
+          "running": [],
+          "agent_cache": {},
+          "agent_revision": 8
+        },
+        "module_eviction": "no matching real modules; nonempty branch unobserved"
+      },
+      {
+        "case": "remove_running",
+        "result": {
+          "returned": null,
+          "type": "NoneType"
+        },
+        "trace": [
+          [
+            "log",
+            "info",
+            "正在停止插件 Owned..."
+          ],
+          [
+            "event",
+            "disable",
+            "Owned"
+          ],
+          [
+            "close"
+          ],
+          [
+            "stop_service"
+          ],
+          [
+            "log",
+            "debug",
+            "已清除查找器的缓存"
+          ],
+          [
+            "log",
+            "debug",
+            "插件 Owned 没有找到需要清除的模块缓存"
+          ],
+          [
+            "log",
+            "info",
+            "插件停止完成"
+          ]
+        ],
+        "after": {
+          "classes": [
+            "Other"
+          ],
+          "running": [],
+          "agent_cache": {},
+          "agent_revision": 8
+        },
+        "module_eviction": "no matching real modules; nonempty branch unobserved"
+      },
+      {
+        "case": "remove_close_error",
+        "result": {
+          "returned": null,
+          "type": "NoneType"
+        },
+        "trace": [
+          [
+            "log",
+            "info",
+            "正在停止插件 Owned..."
+          ],
+          [
+            "event",
+            "disable",
+            "Owned"
+          ],
+          [
+            "close"
+          ],
+          [
+            "log",
+            "warn",
+            "停止插件 Owned 时发生错误: owned close failure"
+          ],
+          [
+            "log",
+            "debug",
+            "已清除查找器的缓存"
+          ],
+          [
+            "log",
+            "debug",
+            "插件 Owned 没有找到需要清除的模块缓存"
+          ],
+          [
+            "log",
+            "info",
+            "插件停止完成"
+          ]
+        ],
+        "after": {
+          "classes": [
+            "Other"
+          ],
+          "running": [],
+          "agent_cache": {},
+          "agent_revision": 8
+        },
+        "module_eviction": "no matching real modules; nonempty branch unobserved"
+      },
+      {
+        "case": "get_state_missing",
+        "result": {
+          "returned": false,
+          "type": "bool"
+        }
+      },
+      {
+        "case": "get_state_json_value",
+        "result": {
+          "returned": {
+            "active": [
+              1,
+              "owned"
+            ]
+          },
+          "type": "dict"
+        }
+      },
+      {
+        "case": "get_state_callback_error",
+        "result": {
+          "exception": "ValueError",
+          "message": "owned state failure"
+        }
+      }
+    ],
+    "actual_sqlite": [
+      {
+        "case": "seed",
+        "rows": {
+          "systemconfig": [
+            {
+              "key": "plugin.Other",
+              "value": {
+                "keep": true
+              }
+            },
+            {
+              "key": "plugin.Owned",
+              "value": {
+                "owned": 1
+              }
+            },
+            {
+              "key": "unrelated",
+              "value": "keep"
+            }
+          ],
+          "plugindata": [
+            {
+              "plugin_id": "Other",
+              "key": "a",
+              "value": {
+                "owned": "Other"
+              }
+            },
+            {
+              "plugin_id": "Owned",
+              "key": "a",
+              "value": {
+                "owned": "Owned"
+              }
+            },
+            {
+              "plugin_id": "Owned",
+              "key": "b",
+              "value": {
+                "owned": "Owned"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "case": "missing_unforced",
+        "config_result": false,
+        "data_result": false,
+        "rows": {
+          "systemconfig": [
+            {
+              "key": "plugin.Other",
+              "value": {
+                "keep": true
+              }
+            },
+            {
+              "key": "plugin.Owned",
+              "value": {
+                "owned": 1
+              }
+            },
+            {
+              "key": "unrelated",
+              "value": "keep"
+            }
+          ],
+          "plugindata": [
+            {
+              "plugin_id": "Other",
+              "key": "a",
+              "value": {
+                "owned": "Other"
+              }
+            },
+            {
+              "plugin_id": "Owned",
+              "key": "a",
+              "value": {
+                "owned": "Owned"
+              }
+            },
+            {
+              "plugin_id": "Owned",
+              "key": "b",
+              "value": {
+                "owned": "Owned"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "case": "force_both",
+        "config_result": true,
+        "data_result": true,
+        "cache": null,
+        "rows": {
+          "systemconfig": [
+            {
+              "key": "plugin.Other",
+              "value": {
+                "keep": true
+              }
+            },
+            {
+              "key": "unrelated",
+              "value": "keep"
+            }
+          ],
+          "plugindata": [
+            {
+              "plugin_id": "Other",
+              "key": "a",
+              "value": {
+                "owned": "Other"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "case": "known_missing_rows",
+        "config_result": true,
+        "data_result": true,
+        "rows": {
+          "systemconfig": [
+            {
+              "key": "plugin.Other",
+              "value": {
+                "keep": true
+              }
+            },
+            {
+              "key": "unrelated",
+              "value": "keep"
+            }
+          ],
+          "plugindata": [
+            {
+              "plugin_id": "Other",
+              "key": "a",
+              "value": {
+                "owned": "Other"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "case": "actual_sqlite_delete_failure",
+        "result": {
+          "exception": "IntegrityError",
+          "message": "(sqlite3.IntegrityError) owned delete denied\n[SQL: DELETE FROM systemconfig WHERE systemconfig.id = ?]\n[parameters: (4,)]\n(Background on this error at: https://sqlalche.me/e/20/gkpj)"
+        },
+        "cache": null,
+        "rows": {
+          "systemconfig": [
+            {
+              "key": "plugin.Other",
+              "value": {
+                "keep": true
+              }
+            },
+            {
+              "key": "plugin.Owned",
+              "value": {
+                "must_remain_in_db": true
+              }
+            },
+            {
+              "key": "unrelated",
+              "value": "keep"
+            }
+          ],
+          "plugindata": [
+            {
+              "plugin_id": "Other",
+              "key": "a",
+              "value": {
+                "owned": "Other"
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "actual_schema": {
+      "plugin_model_config": {},
+      "defaults": {
+        "id": null,
+        "plugin_name": null,
+        "plugin_desc": null,
+        "plugin_icon": null,
+        "plugin_version": null,
+        "plugin_label": null,
+        "plugin_author": null,
+        "author_url": null,
+        "plugin_config_prefix": null,
+        "plugin_order": 0,
+        "auth_level": 0,
+        "installed": false,
+        "state": false,
+        "has_page": false,
+        "has_update": false,
+        "system_version_compatible": true,
+        "system_version_message": null,
+        "system_version": null,
+        "release": false,
+        "is_local": false,
+        "repo_url": null,
+        "install_count": 0,
+        "history": {},
+        "add_time": 0,
+        "plugin_public_key": null
+      },
+      "cases": [
+        {
+          "auth_level_input": 1,
+          "descriptors": [
+            {
+              "id": "Empty",
+              "plugin_name": "Owned",
+              "plugin_desc": null,
+              "plugin_icon": null,
+              "plugin_version": null,
+              "plugin_label": null,
+              "plugin_author": null,
+              "author_url": null,
+              "plugin_config_prefix": null,
+              "plugin_order": 2,
+              "auth_level": 1,
+              "installed": false,
+              "state": false,
+              "has_page": false,
+              "has_update": false,
+              "system_version_compatible": true,
+              "system_version_message": null,
+              "system_version": null,
+              "release": false,
+              "is_local": true,
+              "repo_url": null,
+              "install_count": 0,
+              "history": {},
+              "add_time": 0,
+              "plugin_public_key": null
+            },
+            {
+              "id": "Owned",
+              "plugin_name": "Owned",
+              "plugin_desc": null,
+              "plugin_icon": null,
+              "plugin_version": null,
+              "plugin_label": null,
+              "plugin_author": null,
+              "author_url": null,
+              "plugin_config_prefix": null,
+              "plugin_order": 2,
+              "auth_level": 1,
+              "installed": true,
+              "state": {
+                "active": [
+                  1,
+                  "owned"
+                ]
+              },
+              "has_page": true,
+              "has_update": false,
+              "system_version_compatible": true,
+              "system_version_message": null,
+              "system_version": null,
+              "release": false,
+              "is_local": true,
+              "repo_url": null,
+              "install_count": 0,
+              "history": {},
+              "add_time": 0,
+              "plugin_public_key": null
+            }
+          ],
+          "state_types": {
+            "Empty": "bool",
+            "Owned": "dict"
+          },
+          "trace": [
+            [
+              "get_state"
+            ],
+            [
+              "log",
+              "error",
+              "获取插件 Empty 状态出错：owned state failure"
+            ],
+            [
+              "get_state"
+            ],
+            [
+              "get_state"
+            ]
+          ]
+        },
+        {
+          "auth_level_input": 3,
+          "descriptors": [
+            {
+              "id": "Restricted",
+              "plugin_name": "Owned",
+              "plugin_desc": null,
+              "plugin_icon": null,
+              "plugin_version": null,
+              "plugin_label": null,
+              "plugin_author": null,
+              "author_url": null,
+              "plugin_config_prefix": null,
+              "plugin_order": 1,
+              "auth_level": 3,
+              "installed": false,
+              "state": true,
+              "has_page": true,
+              "has_update": false,
+              "system_version_compatible": true,
+              "system_version_message": null,
+              "system_version": null,
+              "release": false,
+              "is_local": true,
+              "repo_url": null,
+              "install_count": 0,
+              "history": {},
+              "add_time": 0,
+              "plugin_public_key": null
+            },
+            {
+              "id": "Empty",
+              "plugin_name": "Owned",
+              "plugin_desc": null,
+              "plugin_icon": null,
+              "plugin_version": null,
+              "plugin_label": null,
+              "plugin_author": null,
+              "author_url": null,
+              "plugin_config_prefix": null,
+              "plugin_order": 2,
+              "auth_level": 1,
+              "installed": false,
+              "state": false,
+              "has_page": false,
+              "has_update": false,
+              "system_version_compatible": true,
+              "system_version_message": null,
+              "system_version": null,
+              "release": false,
+              "is_local": true,
+              "repo_url": null,
+              "install_count": 0,
+              "history": {},
+              "add_time": 0,
+              "plugin_public_key": null
+            },
+            {
+              "id": "Owned",
+              "plugin_name": "Owned",
+              "plugin_desc": null,
+              "plugin_icon": null,
+              "plugin_version": null,
+              "plugin_label": null,
+              "plugin_author": null,
+              "author_url": null,
+              "plugin_config_prefix": null,
+              "plugin_order": 2,
+              "auth_level": 1,
+              "installed": true,
+              "state": {
+                "active": [
+                  1,
+                  "owned"
+                ]
+              },
+              "has_page": true,
+              "has_update": false,
+              "system_version_compatible": true,
+              "system_version_message": null,
+              "system_version": null,
+              "release": false,
+              "is_local": true,
+              "repo_url": null,
+              "install_count": 0,
+              "history": {},
+              "add_time": 0,
+              "plugin_public_key": null
+            }
+          ],
+          "state_types": {
+            "Restricted": "bool",
+            "Empty": "bool",
+            "Owned": "dict"
+          },
+          "trace": [
+            [
+              "get_state"
+            ],
+            [
+              "log",
+              "error",
+              "获取插件 Empty 状态出错：owned state failure"
+            ],
+            [
+              "get_state"
+            ],
+            [
+              "get_state"
+            ]
+          ]
+        }
+      ],
+      "auth_boundary": "real threshold helper with owned numeric provider; no actual SitesHelper/RSA"
+    },
+    "actual_stopped_scheduler": {
+      "no_scheduler": [
+        {
+          "returned": null,
+          "type": "NoneType"
+        },
+        {
+          "returned": null,
+          "type": "NoneType"
+        }
+      ],
+      "empty_pid": {
+        "returned": null,
+        "type": "NoneType"
+      },
+      "explicit_id_ignores_pid": {
+        "result": {
+          "returned": null,
+          "type": "NoneType"
+        },
+        "after": {
+          "registry": {
+            "Owned_old": {
+              "pid": "Owned",
+              "name": "old"
+            }
+          },
+          "pending_jobs": [
+            {
+              "id": "Owned_old|v",
+              "name": "unused_job",
+              "kwargs": {}
+            }
+          ],
+          "scheduler_state": 0,
+          "thread_created": false
+        },
+        "trace": [
+          [
+            "log",
+            "info",
+            "移除插件服务(Owned)：cross-owned"
+          ]
+        ]
+      },
+      "update_same_prefix_and_add_failure": {
+        "result": {
+          "returned": null,
+          "type": "NoneType"
+        },
+        "after": {
+          "registry": {
+            "Owned_alpha": {
+              "func": "unused_job",
+              "name": "replacement",
+              "pid": "Owned",
+              "provider_name": "Owned",
+              "kwargs": {},
+              "running": false
+            },
+            "Owned_broken": {
+              "func": "unused_job",
+              "name": "invalid max_instances",
+              "pid": "Owned",
+              "provider_name": "Owned",
+              "kwargs": {},
+              "running": false
+            },
+            "Owned_later": {
+              "func": "unused_job",
+              "name": "after failure",
+              "pid": "Owned",
+              "provider_name": "Owned",
+              "kwargs": {},
+              "running": false
+            }
+          },
+          "pending_jobs": [
+            {
+              "id": "Owned_alpha|two",
+              "name": "replacement",
+              "kwargs": {
+                "job_id": "Owned_alpha"
+              }
+            },
+            {
+              "id": "Owned_later",
+              "name": "after failure",
+              "kwargs": {
+                "job_id": "Owned_later"
+              }
+            }
+          ],
+          "scheduler_state": 0,
+          "thread_created": false
+        },
+        "trace": [
+          [
+            "log",
+            "info",
+            "移除插件服务(Owned)：old"
+          ],
+          [
+            "get_state"
+          ],
+          [
+            "log",
+            "info",
+            "注册插件Owned服务：first - date[2099-01-01 00:00:00 UTC]"
+          ],
+          [
+            "log",
+            "info",
+            "移除插件服务(Owned)：first"
+          ],
+          [
+            "log",
+            "info",
+            "注册插件Owned服务：replacement - date[2099-01-01 00:00:00 UTC]"
+          ],
+          [
+            "log",
+            "error",
+            "注册插件Owned服务失败：max_instances must be a positive integer - {'id': 'broken', 'name': 'invalid max_instances', 'func': <function unused_job at 0x7f16ca887560>, 'trigger': <DateTrigger (run_date='2099-01-01 00:00:00 UTC')>, 'kwargs': {'max_instances': 0}}"
+          ],
+          [
+            "notification",
+            {
+              "title": "插件 Owned 服务注册失败",
+              "message": "max_instances must be a positive integer",
+              "role": "system"
+            }
+          ],
+          [
+            "log",
+            "info",
+            "注册插件Owned服务：after failure - date[2099-01-01 00:00:00 UTC]"
+          ]
+        ]
+      },
+      "remove_all": {
+        "result": {
+          "returned": null,
+          "type": "NoneType"
+        },
+        "after": {
+          "registry": {},
+          "pending_jobs": [],
+          "scheduler_state": 0,
+          "thread_created": false
+        },
+        "trace": [
+          [
+            "log",
+            "info",
+            "移除插件服务(Owned)：replacement"
+          ],
+          [
+            "log",
+            "info",
+            "移除插件服务(Owned)：after failure"
+          ]
+        ]
+      },
+      "engine_layer": "actual APScheduler 3.11.2 pending jobs; never started; no firing/worker evidence"
+    },
+    "terminal_rows": {
+      "systemconfig": [
+        {
+          "key": "UserInstalledPlugins",
+          "value": [
+            "Owned"
+          ]
+        },
+        {
+          "key": "plugin.Other",
+          "value": {
+            "keep": true
+          }
+        },
+        {
+          "key": "plugin.Owned",
+          "value": {
+            "must_remain_in_db": true
+          }
+        },
+        {
+          "key": "unrelated",
+          "value": "keep"
+        }
+      ],
+      "plugindata": [
+        {
+          "plugin_id": "Other",
+          "key": "a",
+          "value": {
+            "owned": "Other"
+          }
+        }
+      ]
+    }
+  },
+  "cold": {
+    "cold_rows": {
+      "systemconfig": [
+        {
+          "key": "UserInstalledPlugins",
+          "value": [
+            "Owned"
+          ]
+        },
+        {
+          "key": "plugin.Other",
+          "value": {
+            "keep": true
+          }
+        },
+        {
+          "key": "plugin.Owned",
+          "value": {
+            "must_remain_in_db": true
+          }
+        },
+        {
+          "key": "unrelated",
+          "value": "keep"
+        }
+      ],
+      "plugindata": [
+        {
+          "plugin_id": "Other",
+          "key": "a",
+          "value": {
+            "owned": "Other"
+          }
+        }
+      ]
+    },
+    "cold_config_after_prior_failure": {
+      "must_remain_in_db": true
+    },
+    "cold_process": "separate coordinator invocation, readonly SQLite URL"
+  }
+}

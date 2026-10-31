@@ -28,7 +28,7 @@ func (a *App) originalPluginUninstallHTTP(r *http.Request, path string) (any, er
 	if err := a.setOriginalPluginInstalled(ctx, instance, false); err != nil {
 		return nil, err
 	}
-	a.pluginRegisteredAPIs.Delete(instance)
+	a.unregisterOriginalPluginAPIs(instance)
 	a.removeOriginalPluginJobs(instance)
 	retained := true
 	if value, ok := a.pluginOriginalClasses.Load(instance); ok {

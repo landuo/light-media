@@ -13,8 +13,14 @@ import (
 // holds the implementation lock only while resolving/starting it, never during
 // a potentially long business method. Every invocation has fresh authority.
 func (p *originalPluginInstance) callSession(ctx context.Context, runner plugins.Runner, method string, payload json.RawMessage, host plugins.HostHandler) (plugins.RunResult, error) {
+	lease, callCtx, err := p.reserveOriginalCall(ctx)
+	if err != nil {
+		return plugins.RunResult{}, err
+	}
+	ctx = callCtx
 	client, err := p.originalSessionClient(ctx, runner)
 	if err != nil {
+		p.finishOriginalRetainedCall(lease, nil)
 		return plugins.RunResult{}, err
 	}
 	// A fixed plugin method belongs to its loaded object. Disconnecting one
@@ -24,17 +30,17 @@ func (p *originalPluginInstance) callSession(ctx context.Context, runner plugins
 	// and runner budget still apply. Concurrent SDKs can cancel only this call.
 	if !client.SupportsConcurrent() {
 		if err := ctx.Err(); err != nil {
+			p.finishOriginalRetainedCall(lease, nil)
 			return plugins.RunResult{}, err
 		}
 		ctx = context.WithoutCancel(ctx)
 	}
 	callback, closePhase := p.originalBaseSessionHost(ctx, method, host)
-	defer closePhase()
 	options := plugins.CallOptions{Timeout: runner.Timeout, ExcludeHostTime: runner.ExcludeHostTime}
 	if client.SupportsConcurrent() {
 		options = plugins.CallOptions{CallerDeadlineOnly: true}
 	}
-	return client.CallWithOptions(ctx, method, payload, callback, options)
+	return p.callRetainedSession(ctx, client, method, payload, callback, options, lease, closePhase)
 }
 
 func (p *originalPluginInstance) originalSessionClient(ctx context.Context, runner plugins.Runner) (*plugins.Client, error) {
@@ -104,6 +110,11 @@ func (p *originalPluginInstance) readSession(ctx context.Context, method string,
 	return json.Unmarshal(result.Result, output)
 }
 func (p *originalPluginInstance) stopSession(ctx context.Context) error {
+	life := p.originalRetainedState()
+	if !life.claimForcedRetirement() {
+		return p.waitOriginalRetainedTermination(ctx, life)
+	}
+	defer p.completeOriginalRetainedTermination(life)
 	p.closeOriginalSubmissions()
 	p.sessionMu.Lock()
 	client := p.session
@@ -112,12 +123,7 @@ func (p *originalPluginInstance) stopSession(ctx context.Context) error {
 	if client == nil {
 		return nil
 	}
-	// Pure contract has no cleanup host capability. Native contracts keep their
-	// existing actual owner stop method; no old invocation authorization is reused.
-	ctx = context.WithValue(ctx, originalBaseStopKey{}, &originalBaseStopCall{object: p, client: client})
-	callback, closePhase := p.originalBaseSessionHost(ctx, "stop", nil)
-	defer closePhase()
-	return client.StopWithHost(ctx, callback)
+	return p.stopExactOriginalClient(ctx, client)
 }
 func (a *App) closeOriginalSessions() {
 	a.pluginRunningInstances.Range(func(key, value any) bool {

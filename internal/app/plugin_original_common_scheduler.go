@@ -14,7 +14,19 @@ func originalServiceLookupKey(job *originalDirectJob) originalServiceKey {
 }
 
 func originalServiceActive(job *originalDirectJob) bool {
-	return job.commonModule || originalObjectStillLoaded(job.object)
+	if job.commonModule {
+		return true
+	}
+	if job.object == nil || job.object.stopping.Load() {
+		return false
+	}
+	if job.retained == nil {
+		return originalObjectStillLoaded(job.object)
+	} // older direct component fixtures, not new registrations
+	life := job.retained.lifetime
+	life.mu.Lock()
+	defer life.mu.Unlock()
+	return life.object == job.object && !life.sealed && life.containsLocked(job.retained) && job.retained.phaseActive && job.retained.kind == originalRetainedJob
 }
 
 // Fixed Scheduler.init registers one common 10-minute service. It asks the

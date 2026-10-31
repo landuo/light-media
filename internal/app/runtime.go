@@ -48,10 +48,11 @@ type App struct {
 	pluginOriginalBackground         originalBackgroundAdmission
 	pluginOriginalUserUID            atomic.Pointer[string]
 	pluginOriginalDirectJobs         originalDirectJobs
-	pluginRegisteredAPIs             sync.Map // Exact instance routes refreshed by original register_plugin_api.
+	pluginRegisteredAPIs             sync.Map // *originalAPIRegistration; immutable exact object/routes, guarded by pluginOriginalAPIMu.
 	pluginOriginalClasses            sync.Map // Original _plugins: imported compiled class, independent of running and installed.
 	pluginOriginalClassOrder         []string // guarded by pluginOriginalRunningMu; source _plugins insertion order
 	pluginSubmittedObjects           sync.Map // Exact objects held by accepted asynchronous calls, including failed init.
+	pluginRetainedObjects            sync.Map // Exact objects for shutdown/reap enumeration only, never manager lookup.
 	pluginRunningInstances           sync.Map // Original _running_plugins: successful initialized call objects, not business enable state.
 	systemMessages                   systemMessageRuntime
 	bigMemoryMode                    bool               // Trusted startup option; not worker or plugin configuration.
@@ -105,6 +106,9 @@ type App struct {
 	siteLocks                        sync.Map
 	cancel                           context.CancelFunc
 	pluginMu                         sync.Mutex
+
+	pluginOriginalAPIMu sync.Mutex // Short registration publish/unregister/select-and-pin only.
+
 	// Serialize original endpoint operations separately from live SDK calls.
 	// Shutdown may join workers and must not hold a callback snapshot lock.
 	pluginOriginalOperationMu sync.Mutex
@@ -293,6 +297,7 @@ func (a *App) Close() error {
 	a.closeOriginalSessions()
 	a.pluginOriginalOperationMu.Unlock()
 	a.stopOriginalUnpublishedSubmissions(context.Background(), "")
+	a.closeOriginalRetainedObjects()
 	a.systemMessages.close()
 	a.stopSubscriptionStatistics()
 	a.wg.Wait()

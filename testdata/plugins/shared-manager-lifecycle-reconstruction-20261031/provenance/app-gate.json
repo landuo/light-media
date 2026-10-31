@@ -1,0 +1,37 @@
+{
+  "roots": [
+    "TestSharedManagerRemoveClassOnlySourceScope",
+    "TestSharedManagerRemoveActualEmptyAllSource",
+    "TestSharedSchedulerActualSDKSourceRegistry",
+    "TestSharedSchedulerActualRetainedSelfRemove",
+    "TestSharedManagerRuntimeSourceDefaultsAndGuards",
+    "TestSharedManagerRuntimeActualConcurrentInitState",
+    "TestSharedManagerRuntimeLocalSourceDescriptors",
+    "TestSharedManagerMutationsClassForceAndIsolation",
+    "TestSharedManagerMutationsConfigFailureHotCold",
+    "TestOriginalRetainedOwnersAndExactAdmission",
+    "TestOriginalRetainedCallFactsAndForcedClose",
+    "TestOriginalRetainedConcurrentRetirementOnce",
+    "TestOriginalRetainedActualCancelledCallAndForcedClose",
+    "TestOriginalRetainedActualUnpublishedSubmission",
+    "TestOriginalAPIRegistrationImmutableSnapshotAndPointer",
+    "TestOriginalAPIRegistrationActualRemoveRetainsExactWorker",
+    "TestPluginOriginalExternalHTTPRevokedKeyAndUninstalledRoute",
+    "TestPluginOriginalExternalHTTPRejectsRemovedRegisteredRoute",
+    "TestOriginalServiceGetterFailureReplacesAllRegistrations",
+    "TestOriginalServiceActualSDKAsyncReplacementSource",
+    "TestOriginalServiceActualSDKSuffixReplacementAndSyncWait",
+    "TestOriginalSubmittedActualSynchronousRefreshAndGetterRecursion",
+    "TestOriginalRetainedLegacyRemovedLastOwnerTerminatesTransport"
+  ],
+  "fixtures": {
+    "OWNED_MANAGER_FIXTURE_BINARY": "./cmd/owned-manager-lifecycle-fixture",
+    "OWNED_APP_CONCURRENT_FIXTURE_BINARY": "./cmd/owned-app-concurrent-fixture",
+    "OWNED_SUBMITTED_FIXTURE_BINARY": "./cmd/owned-submitted-fixture",
+    "OWNED_INPUT_FIXTURE_BINARY": "./cmd/owned-input-fixture",
+    "ORIGINAL_API_REGISTRATION_FIXTURE_BINARY": "./cmd/original-api-registration-fixture",
+    "OWNED_STANDARD_FIXTURE_BINARY": "./cmd/owned-standard-fixture"
+  },
+  "normal_manager_reuse_evidence": "s10-d3-fixture01",
+  "scope": "finite affected S10/retained/API/scheduler gates only; legacy test pending freeze; no normal CLI/browser/full feature claim"
+}

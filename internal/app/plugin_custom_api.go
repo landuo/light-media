@@ -156,20 +156,25 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 		pluginHTTPError(w, &pluginHTTPFailure{503, "Plugin storage unavailable"})
 		return true
 	}
-	implementation, implementationErr := a.resolvePluginInvocation(r.Context(), installation)
+	if err != nil {
+		pluginHTTPError(w, &pluginHTTPFailure{404, "Not Found"})
+		return true
+	}
+	// Pin the exact bound endpoint independently of the manager's running map.
+	// This lock is already released before storage, auth, or worker operations.
+	registration, operation, registrationErr := a.selectOriginalAPIRegistration(instance)
+	if registrationErr != nil {
+		pluginHTTPError(w, &pluginHTTPFailure{404, "Not Found"})
+		return true
+	}
+	defer registration.object.releaseOriginalRetainedOwner(operation)
+	implementation, implementationErr := resolveOriginalRegisteredAPI(registration, installation)
+	if implementationErr != nil {
+		pluginHTTPError(w, &pluginHTTPFailure{404, "Not Found"})
+		return true
+	}
 	manifest := implementation.Manifest
-	if err != nil || implementationErr != nil {
-		pluginHTTPError(w, &pluginHTTPFailure{404, "Not Found"})
-		return true
-	}
-	// Original get_plugin_apis exposes routes registered from loaded objects,
-	// irrespective of the plugin business-enabled setting.
-	registered, registeredOK := a.pluginRegisteredAPIs.Load(instance)
-	if !registeredOK {
-		pluginHTTPError(w, &pluginHTTPFailure{404, "Not Found"})
-		return true
-	}
-	manifest.APIs = registered.([]plugins.HTTPAPI)
+	manifest.APIs = registration.routes
 	var api *plugins.HTTPAPI
 	var params map[string]string
 	allowed := []string{}
@@ -266,7 +271,7 @@ func (a *App) servePluginCustomAPI(w http.ResponseWriter, r *http.Request) bool 
 	// own implementation performs configuration edits. No first-write load,
 	// alternate configuration prepare/CAS, or extra framework init is inserted.
 	if implementation.External {
-		response, err := a.callOriginalExternalHTTP(r.Context(), installation, *api, input, authority)
+		response, err := a.callOriginalExternalHTTP(r.Context(), installation, registration, operation, *api, input, authority)
 		if err != nil {
 			status := 502
 			var failure *APIError

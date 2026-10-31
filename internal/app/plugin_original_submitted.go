@@ -24,6 +24,7 @@ type originalSubmittedState struct {
 
 type originalSubmittedLease struct {
 	object *originalPluginInstance
+	retained *originalRetainedLease
 	cancel context.CancelFunc
 	active atomic.Bool
 }
@@ -42,7 +43,7 @@ func (p *originalPluginInstance) originalSubmittedScopeAllowed(ctx context.Conte
 // Close cannot scan the object registry and then miss a late successful submit.
 // The reservation is rolled back if SDK admission fails; it is never published
 // as an accepted task, nor allowed to retain a failed object on that path.
-func (p *originalPluginInstance) reserveOriginalSubmission() (*originalSubmittedLease, context.Context, error) {
+func (p *originalPluginInstance) reserveOriginalSubmission(parentCtx context.Context) (*originalSubmittedLease, context.Context, error) {
 	global := &p.app.pluginOriginalBackground
 	global.mu.Lock()
 	defer global.mu.Unlock()
@@ -51,12 +52,16 @@ func (p *originalPluginInstance) reserveOriginalSubmission() (*originalSubmitted
 	if global.closed || p.submitted.sealed || p.stopping.Load() {
 		return nil, nil, bad("PLUGIN_CALL_CLOSED", "插件后台提交已停止")
 	}
+	life := p.originalRetainedState()
+	retained, err := life.retain(originalRetainedSubmission, p.originalRetainedParent(parentCtx))
+	if err != nil { return nil,nil,err }
 	ctx, cancel := context.WithCancel(context.Background())
-	lease := &originalSubmittedLease{object:p, cancel:cancel}
+	lease := &originalSubmittedLease{object:p, retained:retained, cancel:cancel}
 	lease.active.Store(true)
 	if p.submitted.leases == nil { p.submitted.leases = make(map[*originalSubmittedLease]struct{}) }
 	p.submitted.leases[lease] = struct{}{}
 	p.app.pluginSubmittedObjects.Store(p, struct{}{})
+	p.app.pluginRetainedObjects.Store(p, struct{}{})
 	p.app.wg.Add(1)
 	return lease, context.WithValue(ctx, originalSubmittedObjectKey{}, lease), nil
 }
@@ -67,11 +72,10 @@ func (p *originalPluginInstance) releaseOriginalSubmission(lease *originalSubmit
 	p.submitted.mu.Lock()
 	delete(p.submitted.leases, lease)
 	empty := len(p.submitted.leases) == 0
-	retire := empty && p.submitted.initializationFinished && p.submitted.unpublished && !p.submitted.sealed
-	if retire { p.submitted.sealed = true }
 	if empty { p.app.pluginSubmittedObjects.Delete(p) }
 	p.submitted.mu.Unlock()
-	if retire { p.retireOriginalSubmittedObject() }
+	retire, _ := lease.retained.releaseOwner()
+	if retire { p.retireOriginalRetainedObject(lease.retained.lifetime) }
 }
 
 // Called only by the manager's initial start, after actual publication or
@@ -81,21 +85,13 @@ func (p *originalPluginInstance) finishOriginalInitialization(published bool) {
 	p.submitted.mu.Lock()
 	p.submitted.initializationFinished = true
 	p.submitted.unpublished = !published
-	retire := !published && len(p.submitted.leases) == 0 && !p.submitted.sealed
-	if retire { p.submitted.sealed = true }
 	p.submitted.mu.Unlock()
-	if retire { p.retireOriginalSubmittedObject() }
+	if !published { p.retireOriginalSubmittedObject() }
 }
 
 func (p *originalPluginInstance) retireOriginalSubmittedObject() {
-	p.stopping.Store(true)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
-	// The last submitted call has already returned and revoked its phase.
-	// Never wait on App.wg here: this goroutine owns one of its references.
-	if err := p.closeOriginalSubmittedTransport(ctx); err != nil {
-		p.app.log("ERROR", "plugins", "submitted_stop_failed", "未发布插件对象清理失败", "", "")
-	}
+	life := p.originalRetainedState()
+	if life.detachManager() { p.retireOriginalRetainedObject(life) }
 }
 
 // Explicit object shutdown revokes submissions, unlike ordinary parent-call
@@ -117,10 +113,8 @@ func (a *App) stopOriginalUnpublishedSubmissions(ctx context.Context, instance s
 	a.pluginSubmittedObjects.Range(func(key, _ any) bool {
 		p := key.(*originalPluginInstance)
 		if instance != "" && p.installation.InstanceID != instance || originalObjectStillLoaded(p) { return true }
-		p.stopping.Store(true)
-		p.closeOriginalSubmissions()
 		stopCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
-		if err := p.closeOriginalSubmittedTransport(stopCtx); err != nil {
+		if err := p.forceOriginalRetainedObject(stopCtx); err != nil {
 			a.log("ERROR", "plugins", "submitted_stop_failed", "未发布插件对象清理失败", "", "")
 		}
 		cancel()
@@ -148,12 +142,15 @@ func (a *App) originalSubmitResource(ctx context.Context, scope originalBaseCall
 	client := p.session
 	p.sessionMu.Unlock()
 	if client == nil || !client.SupportsConcurrent() || !client.SupportsTransportClose() { return nil, bad("PLUGIN_CONCURRENT_REQUIRED", "后台提交需要协商并发worker") }
-	lease, childCtx, err := p.reserveOriginalSubmission()
+	lease, childCtx, err := p.reserveOriginalSubmission(ctx)
 	if err != nil { return nil, err }
-	callback, revoke := p.originalBaseSessionHost(childCtx, input.Method, nil)
-	pending, err := client.StartCallWithAdmission(ctx, childCtx, input.Method, input.Payload, callback, plugins.CallOptions{CallerDeadlineOnly:true})
+	callLease, callCtx, err := p.reserveOriginalCall(childCtx)
+	if err != nil { p.releaseOriginalSubmission(lease); a.wg.Done(); return nil,err }
+	callback, revoke := p.originalBaseSessionHost(callCtx, input.Method, nil)
+	pending, err := client.StartCallWithAdmission(ctx, callCtx, input.Method, input.Payload, callback, plugins.CallOptions{CallerDeadlineOnly:true})
 	if err != nil {
 		revoke()
+		p.finishOriginalRetainedCall(callLease,nil)
 		p.releaseOriginalSubmission(lease)
 		a.wg.Done()
 		return nil, err
@@ -162,6 +159,7 @@ func (a *App) originalSubmitResource(ctx context.Context, scope originalBaseCall
 		defer a.wg.Done()
 		_, err := pending.Wait()
 		revoke()
+		p.finishOriginalRetainedCall(callLease,pending.Drained())
 		if err != nil { a.log("ERROR", "plugins", "submitted_method_failed", "插件后台方法执行失败", "", "") }
 		p.releaseOriginalSubmission(lease)
 	}()
@@ -175,8 +173,10 @@ func (p *originalPluginInstance) closeOriginalSubmittedTransport(ctx context.Con
 	p.sessionMu.Lock()
 	client := p.session
 	if client == nil { p.sessionMu.Unlock(); return nil }
-	if !client.SupportsTransportClose() { p.sessionMu.Unlock(); return p.stopSession(ctx) }
 	p.session = nil
 	p.sessionMu.Unlock()
+	// Preserve the existing unpublished legacy fallback without recursively
+	// taking the same retirement claim. Manager.remove is not wired here.
+	if !client.SupportsTransportClose() { return p.stopExactOriginalClient(ctx,client) }
 	return client.CloseTransport(ctx)
 }

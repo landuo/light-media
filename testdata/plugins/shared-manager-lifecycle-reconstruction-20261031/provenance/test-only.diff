@@ -1,0 +1,24 @@
+--- /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-reconstruction-plan/phase-c5-error-contract/runtime_test.before.go	2026-11-01 00:38:15.005879138 +0900
++++ /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-reconstruction-plan/phase-c5-error-contract/runtime_test.after.go	2026-11-01 00:38:17.314734397 +0900
+@@ -12,7 +12,6 @@
+ 	"os"
+ 	"os/exec"
+ 	"runtime"
+-	"strings"
+ 	"sync/atomic"
+ 	"testing"
+ 	"time"
+@@ -292,8 +291,11 @@
+ 		managerWorkerConfigure(t, object, state, value.initError, value.stateError)
+ 		reply := managerWorkerQuery(t, object, `{"op":"init","plugin_id":"Owned","conf":{"owned":1}}`)
+ 		observed := managerSourceObservation(t, source, value.name)
+-		if observed.Result.Exception == "" || !strings.Contains(reply.Error, observed.Result.Message) {
+-			t.Fatalf("source callback failure not propagated: %s", reply.Error)
++		// The source exception establishes failure, not a license to expose its
++		// text to the worker. Existing concurrent HostCaller intentionally maps
++		// a failed host_result to the code-only host_operation_failed boundary.
++		if observed.Result.Exception == "" || observed.Result.Message == "" || reply.Error != "plugin: host_operation_failed" {
++			t.Fatalf("source failure / existing SDK failure classification differs: %s", reply.Error)
+ 		}
+ 		snapshot := managerWorkerInspect(t, object)
+ 		wantCount := 2

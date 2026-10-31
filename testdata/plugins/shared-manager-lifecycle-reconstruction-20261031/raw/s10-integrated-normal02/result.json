@@ -1,0 +1,73 @@
+{
+  "started": "2026-10-31T16:40:22.130130+00:00",
+  "status": "PASS",
+  "environment_proxy_unchanged": true,
+  "driver_pid": 2,
+  "prior_failure_preserved": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s10-integrated-normal01",
+  "input_count": 6192,
+  "program_sha256": "859fcd30461c4500f5d80059a79bf915b3a9d881a05f19a1f48f6b63e7f87dfe",
+  "fixture_bindings": {
+    "OWNED_MANAGER_FIXTURE_BINARY": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-d3-fixture01.worker",
+      "sha256": "ba1cd0ac6b041e9ba5d8faad5b34043b6cbc9c3440640a6e1961ba1fe608eecb",
+      "package": "./cmd/owned-manager-lifecycle-fixture",
+      "reused_compile": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s10-d3-fixture01",
+      "receipt_sha256": "c6afcbb6221b0257a37af0094c7641f4c0c1cb9ebc6e442baab369517470b7a3",
+      "inputs_sha256": "2182b12d9c8cd9ac1c44bb22e76051915199772251615df116c8201bb0e7845f"
+    },
+    "OWNED_APP_CONCURRENT_FIXTURE_BINARY": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-normal01.worker1",
+      "sha256": "1cf03b83b99103921f367e97f29ab87856c821fe93f27f05a604b36dc12ae806",
+      "package": "./cmd/owned-app-concurrent-fixture",
+      "new_compile": true
+    },
+    "OWNED_SUBMITTED_FIXTURE_BINARY": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-normal01.worker2",
+      "sha256": "6e406955f3368da48f97682c6f976d14b896444b9947a35005ea815adfd5d2ba",
+      "package": "./cmd/owned-submitted-fixture",
+      "new_compile": true
+    },
+    "OWNED_INPUT_FIXTURE_BINARY": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-normal01.worker3",
+      "sha256": "01411cd4e0249c72ddb14581102baec9366de14fdda3e86ed9007a1c31d9efc4",
+      "package": "./cmd/owned-input-fixture",
+      "new_compile": true
+    },
+    "ORIGINAL_API_REGISTRATION_FIXTURE_BINARY": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-normal01.worker4",
+      "sha256": "74f2ca0c32b7b880f1382a37299ed43f29ee9d41954666a7022b5f3a5cf2dcfa",
+      "package": "./cmd/original-api-registration-fixture",
+      "new_compile": true
+    },
+    "OWNED_STANDARD_FIXTURE_BINARY": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-normal01.worker5",
+      "sha256": "60403e493ba75c73f24ec7786058d2b93cc2ec7b3cd521680a84c15b0c240808",
+      "package": "./cmd/owned-standard-fixture",
+      "new_compile": true
+    }
+  },
+  "cwd": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media/internal/app",
+  "free_before": {
+    "scratch": 57816231936,
+    "tmp": 5225664512
+  },
+  "command": [
+    "go",
+    "tool",
+    "test2json",
+    "-t",
+    "-p",
+    "./internal/app",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s10-integrated-normal01.test",
+    "-test.v",
+    "-test.run",
+    "^TestOriginalServiceActualSDKAsyncReplacementSource$",
+    "-test.count=1",
+    "-test.timeout=90s"
+  ],
+  "exit": 0,
+  "root_passes": [
+    "TestOriginalServiceActualSDKAsyncReplacementSource"
+  ],
+  "ended": "2026-10-31T16:40:23.979029+00:00"
+}

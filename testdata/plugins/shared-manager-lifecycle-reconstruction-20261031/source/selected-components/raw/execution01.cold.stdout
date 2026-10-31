@@ -1,0 +1,3136 @@
+{
+  "cold_rows": {
+    "systemconfig": [
+      {
+        "key": "UserInstalledPlugins",
+        "value": [
+          "Owned"
+        ]
+      },
+      {
+        "key": "plugin.Other",
+        "value": {
+          "keep": true
+        }
+      },
+      {
+        "key": "plugin.Owned",
+        "value": {
+          "must_remain_in_db": true
+        }
+      },
+      {
+        "key": "unrelated",
+        "value": "keep"
+      }
+    ],
+    "plugindata": [
+      {
+        "plugin_id": "Other",
+        "key": "a",
+        "value": {
+          "owned": "Other"
+        }
+      }
+    ]
+  },
+  "cold_config_after_prior_failure": {
+    "must_remain_in_db": true
+  },
+  "cold_process": "separate coordinator invocation, readonly SQLite URL",
+  "phase": "cold",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "environment": "new isolated pinned component environment, not historical production environment",
+  "driver_sha256": "b407c020bd57d5eeef3798a3aab379a0ff7e73b9525ce36051850eb69f05f51d",
+  "input_manifest_sha256": "5d3eb9a218cbebb5204cecf172f67e1ba814deefe9a543221a1ff6360c2fb0fd",
+  "python_executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+  "python_executable_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+  "selected_original_nodes": [
+    {
+      "file": "app/utils/singleton.py",
+      "name": "Singleton",
+      "first_line": 6,
+      "last_line": 22,
+      "source_bytes_sha256": "d4b5b331afcbe40bf3430a6700a677dbcdbf5dafdda84e5f380b4092dfa10ad3",
+      "ast_sha256": "1ca69e4d75f2dcdbbaa3634cce8fe21b0353fdae13b3a46f7808d3c1a95ba3c0"
+    },
+    {
+      "file": "app/utils/singleton.py",
+      "name": "SingletonClass",
+      "first_line": 32,
+      "last_line": 46,
+      "source_bytes_sha256": "53bc85f1357ed2e464b924d1a69e6b0e6cfdab0d1a1d35fee65cd8f682095039",
+      "ast_sha256": "18e63f3e4f4f0c693e0ddb79d30bc23c1b0a8b24897e03a409b9de9db3f7208d"
+    },
+    {
+      "file": "app/schemas/types.py",
+      "name": "SystemConfigKey",
+      "first_line": 207,
+      "last_line": 285,
+      "source_bytes_sha256": "bfcd3082938b49c59a761026e37a3bc3494a249f4a7f963c9f355c36f1853dff",
+      "ast_sha256": "85476150f03335267723d871a86abb6aa3cc462c12e67caccf3923a619e2b23e"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 7,
+      "last_line": 9,
+      "source_bytes_sha256": "8270e9e9e6552c3078e9f071c7938ae61bcaa9218894f65277ce6f81304ae376",
+      "ast_sha256": "8e8c9d160127384b8202bcafe7ea474bd239f050b49069101d4a29745b347b9b"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 10,
+      "last_line": 10,
+      "source_bytes_sha256": "ac7a814320749798df507ef2aececf88f5c82f04daf364c1cb8bc95b1ecc9be4",
+      "ast_sha256": "a706ae51181388cb56586706fe1574d09f5b7ac7df5e8f69449036d99e1ffbde"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 12,
+      "last_line": 12,
+      "source_bytes_sha256": "a547b23ec110e1b5fd52252276d23e68fad72cca2b2301d6d2d89c3deb08cbbd",
+      "ast_sha256": "fc1496a7a480d147672a0993247ee46974453801fd3ef334ad405b30e35cd486"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 14,
+      "last_line": 14,
+      "source_bytes_sha256": "468b477946fc529427c0eefa420b1635b288c2c14fcd0f7b764eb39d25226fa5",
+      "ast_sha256": "fac8fd6d9f980a72da91ec5b6dc4c518c2a9414981c8ebbf61496d5b33adb471"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 16,
+      "last_line": 16,
+      "source_bytes_sha256": "b4e5c6dd8fc08b8d63338eb4cdbd6eaabe94f96df180ea389ae2db41f98ea5bf",
+      "ast_sha256": "4eeb04cc83c638b14dcbd5f82ceb147f4201e6431c34266cd81a633267975ae3"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 18,
+      "last_line": 18,
+      "source_bytes_sha256": "b766c2cb5e19bb901965109eeb702e7d7eeb269d9c310f9395357785e709b25c",
+      "ast_sha256": "cd17d3774312473cfd6d4421359d4066052c0f2c351c188c23b95feee5bea6c7"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 20,
+      "last_line": 20,
+      "source_bytes_sha256": "0516672797591bbca25545b630e241b4c0646765f7a9e8f884adcb8425a546b3",
+      "ast_sha256": "bf4c807f7d45ca251661568d464bd4b2df53f05e774ab4162309a00e7c338b81"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 22,
+      "last_line": 22,
+      "source_bytes_sha256": "64c28838463c662432eaac2afffe2ebbb2dd92e4f8cc2352c2faf537d3272fee",
+      "ast_sha256": "698bc864384249a92707afbda27ba53c7959dda384a5e50fff40c2c72c2c5f46"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 24,
+      "last_line": 24,
+      "source_bytes_sha256": "7772856826a49122876467fb3df96d1e59f05ac1143b7fa963c635bdcd435d66",
+      "ast_sha256": "d9a31b06d97e6915878f9769041b6f8e6089f3b716f2e4aeb8951233303ef2f4"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 26,
+      "last_line": 26,
+      "source_bytes_sha256": "6d8373d32d306d09db4505385b03cc9910ecb0c6a90671879c689de5c7fbdc57",
+      "ast_sha256": "88a7c72dac60ff8b86257a2118de40598d48cab31daf252e0dabccb990bbfc0f"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 28,
+      "last_line": 28,
+      "source_bytes_sha256": "8d108228ebd3a6dd65a900b24096ec4388797acb23247aeb7e46fe18c5176116",
+      "ast_sha256": "37833152d3d66dae55e05c5f49ebed042c92d8b3fedd13d9afc1cd367a5291b7"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 30,
+      "last_line": 30,
+      "source_bytes_sha256": "e68d254661b646d9acd278512181dfd9aa7bafb82da99a9a9736b90645db4615",
+      "ast_sha256": "b5ce03fbf727b95da7b9bb773b92d6065264d83398d7c78f866c4b8176f638c3"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 32,
+      "last_line": 32,
+      "source_bytes_sha256": "9279f1ae12fadf772ae8722c923750c2542a3e491b1c266f6ea52fc14e27de69",
+      "ast_sha256": "4459d67f7ed2f5f2e0f81bf7ea9d376a60b385076b367ce4f9912f1c8b15181b"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 34,
+      "last_line": 34,
+      "source_bytes_sha256": "7ac96cc56907b311b58466a6ef920e20bb88047b60d344e50c2568f4abc6456c",
+      "ast_sha256": "8591fc4747ce2f0314e37061b6b297555182d081f979d7b79696163abf401daf"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 36,
+      "last_line": 36,
+      "source_bytes_sha256": "e41970ed6d95ff0f422fdddbf47db7498533daf1f7b968805a0ca9889d5f5662",
+      "ast_sha256": "556270dc88136edb2ccac1c411fedb0ff9139592a88d62aead989b61c6b13552"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 38,
+      "last_line": 38,
+      "source_bytes_sha256": "4c4551c0a5c3d33dab9a9f4aaab20e6d8f6bea780e3bdc2f85f0841e5295ec63",
+      "ast_sha256": "e056515a76aebf604dd81d9bbfafb1f2b668371eebe60dbc8c7e01b2765813b4"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 40,
+      "last_line": 40,
+      "source_bytes_sha256": "0e1261de43550cfa7bb7b0d2e9c2c1a6d1334b5705256c84d5ceafefa5b91cdc",
+      "ast_sha256": "adba8d22a28d1306e13014c5308d823400201fe218b111247c6d008c63479e5e"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 42,
+      "last_line": 42,
+      "source_bytes_sha256": "55d13e606ec25ab634fcf7f87c2d0defef9bf00aca8d356b45144284e51dcb58",
+      "ast_sha256": "d55ab73dac32acaffdc9a22d3a533e6f2ba12d1de900a77865e860f30ae573c2"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 44,
+      "last_line": 44,
+      "source_bytes_sha256": "ab0da0de8818544301ee68958f0cb62742f0c7606ff8fdd21ca1d37f32a0d244",
+      "ast_sha256": "437cbd8307a5941a0eddc59258489fbd1eda3005232041e6911ae574d8539dec"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 46,
+      "last_line": 46,
+      "source_bytes_sha256": "6bcd254a09eab874d7b2409ed6b454890e7ce959df8fc7a184faa4ce9a3aa494",
+      "ast_sha256": "5f14dc7365b50b729f5b8d8eae5d336334853a9cc793fc67858a339a41bbbb4f"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 48,
+      "last_line": 48,
+      "source_bytes_sha256": "4a07fe560a04fd2afd15b52e81aae3109ae1531fd708003182211e75d7b8e0cd",
+      "ast_sha256": "e0c1be58176cb743c207e66b0ce1adb9475bada2833e0128a7fb8d7b155455db"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 50,
+      "last_line": 50,
+      "source_bytes_sha256": "7563dc7906e548a5034218c85fba9e01005ff48df1b3fa30ed85d96942a963e2",
+      "ast_sha256": "d47e56244c79d6d2107d81123e202a629db2c2f29d0d1324005920b861e7a874"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 52,
+      "last_line": 52,
+      "source_bytes_sha256": "160d9bcf1b5382fcdfe61a0d03fac1efd1d18f6ac4a3af238f0c74c93bd71fca",
+      "ast_sha256": "17c0bf94b24d5fe4843fe53f5883966e60dc0c802b97151fcc47c2b06a62a895"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 54,
+      "last_line": 54,
+      "source_bytes_sha256": "41bdb1e4f7ba40858b4150cc0cc53a03fac0a6969b4997610c7467bc0424d3d4",
+      "ast_sha256": "4a0b17a0c920dddc379ccf198c28072c81e238f663499acd238fa9afa112b9d9"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 56,
+      "last_line": 56,
+      "source_bytes_sha256": "90f13acbea46d5aabdf5843762ec7e68231bd105830969f7ee67cac72ecf7949",
+      "ast_sha256": "1604fe70b28f47e3f7dc2de2938cb853faa133be53625be383b1f332aa9a171d"
+    },
+    {
+      "file": "app/schemas/plugin.py",
+      "class": "Plugin",
+      "name": "<field-or-docstring>",
+      "first_line": 58,
+      "last_line": 58,
+      "source_bytes_sha256": "be72e5c53cd8a0630e9317e4ef77480ca435b23baa591ee5d04729d3b9b37280",
+      "ast_sha256": "9ac74a175e73abbbe90dc585bad70c12c7882dfbe336bbbedc00edf75262c42e"
+    },
+    {
+      "file": "app/utils/object.py",
+      "class": "ObjectUtils",
+      "name": "check_method",
+      "first_line": 43,
+      "last_line": 93,
+      "source_bytes_sha256": "579e0a7403745e397243d5e53513249f47e55d5009789b89801326d1da74d74a",
+      "ast_sha256": "0cbca9e9c46056e0e0a552541e603b6c534cd5c474b9aac6bc6932cf6e125e42"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "name": "get_id_column",
+      "first_line": 60,
+      "last_line": 69,
+      "source_bytes_sha256": "c80b91facee35f1ba2110c42077de9f45abd38ed1a1ed3335fae2915866e4f1a",
+      "ast_sha256": "2dec6905529662e9707d20b959e6e1c5a2009453953f584a7c538d64b1d326b2"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "name": "_get_args_db",
+      "first_line": 278,
+      "last_line": 293,
+      "source_bytes_sha256": "4200236be50a559011372f149024425dedb0515995251cd9aa2f4c000c96df0f",
+      "ast_sha256": "982ec52941c5034eed34cbcbf8a4195950e97b2f86a7ccc2698a226fe163382a"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "name": "_update_args_db",
+      "first_line": 314,
+      "last_line": 325,
+      "source_bytes_sha256": "7808afd5842e3caa10e07401f17f52c476240b7a267f2cb1fa714073758a5987",
+      "ast_sha256": "218ec39b5c1bb91a01bf030fb0d914646a5688c64ef78d4bf98e9dcb772ec933"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "name": "db_update",
+      "first_line": 342,
+      "last_line": 374,
+      "source_bytes_sha256": "47ff0fe997d986e9045a6a4e196399156fd3ed502e33982e734d78dc56454b2d",
+      "ast_sha256": "15cf58a95dff4818d5034508d3054a99264c5d16085d241743e8425154a52862"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "name": "db_query",
+      "first_line": 412,
+      "last_line": 441,
+      "source_bytes_sha256": "b4d0bd340ad18b3a010df0e064eee14086b039ad2037cc83cb12fbcdbfc7e7d5",
+      "ast_sha256": "3215d24014d2d370cb926418f80e6022097048c787c1b2b296fc177f32db77bf"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "name": "DbOper",
+      "first_line": 558,
+      "last_line": 564,
+      "source_bytes_sha256": "759c7526f1a8d45dd9e21c5b1972f6d0afef3c9d2f5c4ef40c8eb0c306c0f315",
+      "ast_sha256": "00c6d9377747a7828ea7cfb259b6899ed42b9cf8d3ea922e42d04a5520ed8309"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "class": "Base",
+      "name": "<field-or-docstring>",
+      "first_line": 478,
+      "last_line": 478,
+      "source_bytes_sha256": "6c8387b1961933a6be0a04c08015788ee5cbae53a001d4f02431bbd141b3667e",
+      "ast_sha256": "5888a9c11bd94526529e5764e8362b2376acd0c312960f1b7959ab518e0370ae"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "class": "Base",
+      "name": "<field-or-docstring>",
+      "first_line": 479,
+      "last_line": 479,
+      "source_bytes_sha256": "a8f3c503c7b104d19890e6d9f8f219e589d77b6ef99fe7f1a8f2b863cdf403d9",
+      "ast_sha256": "e5d3901b9222fae01b784d0c2798e3261de9f12e57d642d6ffe286ff0a95bab8"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "class": "Base",
+      "name": "create",
+      "first_line": 481,
+      "last_line": 483,
+      "source_bytes_sha256": "5dd6367ffe16f292862bc764bae4ea724da16e28cdc6b216aec1328fde123b04",
+      "ast_sha256": "f2bec074249ae046257452f5b8f6d30105f7fd4fe2f9580296d46c294a6ce1ae"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "class": "Base",
+      "name": "get",
+      "first_line": 491,
+      "last_line": 494,
+      "source_bytes_sha256": "91bb7fe7430b8da037cdaa5896bcca92dd1b69920510cb803f435dadf473a371",
+      "ast_sha256": "f3594c27759594492c8af7afceabafb09490a50ab3cba93e505c2c336d4858b5"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "class": "Base",
+      "name": "update",
+      "first_line": 502,
+      "last_line": 507,
+      "source_bytes_sha256": "3fcb1ba7412543816521c4c00d8a440d2477611d6b4ce422724aa390e3591bfa",
+      "ast_sha256": "69fb9593f66d19d9effe433401969edbbcc49ce7fa80b9cbde8891822599714b"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "class": "Base",
+      "name": "delete",
+      "first_line": 516,
+      "last_line": 519,
+      "source_bytes_sha256": "704f13bce1f5249215b2382f6e6558a49215d6032bf159f22710b02a46625040",
+      "ast_sha256": "1abffa7c955b78bc5b5df5fcc8baeb4f111fd26c116e9e390a977536e59ad0d5"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "class": "Base",
+      "name": "list",
+      "first_line": 539,
+      "last_line": 542,
+      "source_bytes_sha256": "9c5d9a1d9e22705664503edc1d7fe7225ee9c7e88aebba9622cf3c4834913ef4",
+      "ast_sha256": "ceef14d6cbae1424298419bf3da0a7bc2abf322f58453489671dab233195e07b"
+    },
+    {
+      "file": "app/db/__init__.py",
+      "class": "Base",
+      "name": "__tablename__",
+      "first_line": 553,
+      "last_line": 555,
+      "source_bytes_sha256": "91fc1716d9895440b2a2ca6c85d7dff8e37496a20bf8cf43d4504020be3ba940",
+      "ast_sha256": "6c8896f37d110a871948b197d44beba1beb7fef8ab3a35d819bc71544c6838c7"
+    },
+    {
+      "file": "app/db/models/systemconfig.py",
+      "class": "SystemConfig",
+      "name": "<field-or-docstring>",
+      "first_line": 9,
+      "last_line": 11,
+      "source_bytes_sha256": "0d85a86263094f07b7490aa6ac9d6401db76e3207f3d1061654b53037de044c3",
+      "ast_sha256": "a33b9d561059a0be87e026de3b7171105c2566b6e5805dd5ee60452f90b9da1b"
+    },
+    {
+      "file": "app/db/models/systemconfig.py",
+      "class": "SystemConfig",
+      "name": "<field-or-docstring>",
+      "first_line": 12,
+      "last_line": 12,
+      "source_bytes_sha256": "e95a688d028026706785f46400ecfac0a22753019f8c2d8f6cb0a6ddac4ce996",
+      "ast_sha256": "e21dabd565af377e284b8cbe938323c8571cae955a2a5a685dc606ccbf2d351f"
+    },
+    {
+      "file": "app/db/models/systemconfig.py",
+      "class": "SystemConfig",
+      "name": "<field-or-docstring>",
+      "first_line": 14,
+      "last_line": 14,
+      "source_bytes_sha256": "ebf03a44d9a6544444382f5566a18cc635a2dbe15c583eed979fe510b33d1fde",
+      "ast_sha256": "155128d8f70ed1efe4f17755d4199a3d4e35b9951417244502b26bc039fb7425"
+    },
+    {
+      "file": "app/db/models/systemconfig.py",
+      "class": "SystemConfig",
+      "name": "<field-or-docstring>",
+      "first_line": 16,
+      "last_line": 16,
+      "source_bytes_sha256": "ab44aad7c66d3c4254e905aba930f4be7b19d81c34ba2cb6e27665e9def7c372",
+      "ast_sha256": "31fa13c084ef36ccd256cd464fa01b89d65294be76c68d5db7afb439aa01e395"
+    },
+    {
+      "file": "app/db/models/systemconfig.py",
+      "class": "SystemConfig",
+      "name": "get_by_key",
+      "first_line": 18,
+      "last_line": 21,
+      "source_bytes_sha256": "45d4dda90a28961bddf325d1466cd473498993f9b3690321804d9caac865979b",
+      "ast_sha256": "c3bcecc5fea8e5c490f030771046c2f2259c9b37a47c8e2b300161d4dbb2302d"
+    },
+    {
+      "file": "app/db/models/plugindata.py",
+      "class": "PluginData",
+      "name": "<field-or-docstring>",
+      "first_line": 15,
+      "last_line": 17,
+      "source_bytes_sha256": "bb57ba921154beae5a253ec147238b86d896f551e2b8d4fbe4b52d2e9a0b7b9b",
+      "ast_sha256": "d3149a94dbb454f0db71f02d6facd206c14e3a099826a8ee5bfcfc3b59dffb58"
+    },
+    {
+      "file": "app/db/models/plugindata.py",
+      "class": "PluginData",
+      "name": "<field-or-docstring>",
+      "first_line": 18,
+      "last_line": 18,
+      "source_bytes_sha256": "e95a688d028026706785f46400ecfac0a22753019f8c2d8f6cb0a6ddac4ce996",
+      "ast_sha256": "43c74ff532ae6148c1f966c42c5f41c7deb1a67c6361713d168177e56f8f26af"
+    },
+    {
+      "file": "app/db/models/plugindata.py",
+      "class": "PluginData",
+      "name": "<field-or-docstring>",
+      "first_line": 19,
+      "last_line": 19,
+      "source_bytes_sha256": "85f2b856f92a2f90c855edd8233b9dc53b8d73a7fee5b8b3533102e85573dad3",
+      "ast_sha256": "8c8931d02d585fb11ff365ca0c310c88489a9fa387e0ebc5e0f9827ba234965f"
+    },
+    {
+      "file": "app/db/models/plugindata.py",
+      "class": "PluginData",
+      "name": "<field-or-docstring>",
+      "first_line": 20,
+      "last_line": 20,
+      "source_bytes_sha256": "7bcbfaf1df903e0fa9a99a8ebea51ae4ca4ff6bbd98b64df842f0ff5fbcac3d1",
+      "ast_sha256": "bfec448b43730df46a52ca8043d4718369702a32020dff2ef51c92bc425200e8"
+    },
+    {
+      "file": "app/db/models/plugindata.py",
+      "class": "PluginData",
+      "name": "<field-or-docstring>",
+      "first_line": 21,
+      "last_line": 21,
+      "source_bytes_sha256": "ab44aad7c66d3c4254e905aba930f4be7b19d81c34ba2cb6e27665e9def7c372",
+      "ast_sha256": "f4d1d1eb8095beca774d4506fefbaa70f6177c84e7a3390240fe2ad88cfa71f6"
+    },
+    {
+      "file": "app/db/models/plugindata.py",
+      "class": "PluginData",
+      "name": "<field-or-docstring>",
+      "first_line": 23,
+      "last_line": 25,
+      "source_bytes_sha256": "6026eb79a2e42f491e12e8e982e1f9cac51107f698cede80de0443371508ead3",
+      "ast_sha256": "4666f201bb9889f256a126b64bd2e46264826e3f2ebdd02ad4805b9a0e1a2dae"
+    },
+    {
+      "file": "app/db/models/plugindata.py",
+      "class": "PluginData",
+      "name": "get_plugin_data",
+      "first_line": 27,
+      "last_line": 30,
+      "source_bytes_sha256": "b34f69ce8faa7642e09915bacf2966d74a2d4ee75e409f84362aa1e095ae5cd2",
+      "ast_sha256": "f8d40c9506b1f7ed82f14ea3cebd6284e64332100299a682724887fd410350ff"
+    },
+    {
+      "file": "app/db/models/plugindata.py",
+      "class": "PluginData",
+      "name": "get_plugin_data_by_key",
+      "first_line": 38,
+      "last_line": 41,
+      "source_bytes_sha256": "e2fec5d82e030cbb24af0a639f362b0789e109d25957a03afcdde22f054aa648",
+      "ast_sha256": "daf5a73bd7348c3cbf7eadf1acbb8050f14671ef58979fc8c4557fbc52891225"
+    },
+    {
+      "file": "app/db/models/plugindata.py",
+      "class": "PluginData",
+      "name": "del_plugin_data_by_key",
+      "first_line": 53,
+      "last_line": 56,
+      "source_bytes_sha256": "1b4bfa2366d1ffe8c0ac04ba5ee611a4154b23216cdf7b53448782c40089841c",
+      "ast_sha256": "55df7e76842ef0e7b67901e8a4932b8e4579c9b0673a237fb48400d2b8748a5f"
+    },
+    {
+      "file": "app/db/models/plugindata.py",
+      "class": "PluginData",
+      "name": "del_plugin_data",
+      "first_line": 58,
+      "last_line": 61,
+      "source_bytes_sha256": "ef71194b905c16d548abc3797c998c3014e6ccc6238c60f35b2d6ad474058862",
+      "ast_sha256": "5a006ec4701feade5f867ef213e467023438418266edc97de3ed589b5c47e772"
+    },
+    {
+      "file": "app/db/systemconfig_oper.py",
+      "class": "SystemConfigOper",
+      "name": "<field-or-docstring>",
+      "first_line": 13,
+      "last_line": 15,
+      "source_bytes_sha256": "c2cf29753a483aa2c7af4dcaa61a3bf39e20bfc698978d00ad69e0871a553ee5",
+      "ast_sha256": "8b92c33cbfe20801ffe36f243290bd8640b9b975abbd5c69fba6fc500c63d56d"
+    },
+    {
+      "file": "app/db/systemconfig_oper.py",
+      "class": "SystemConfigOper",
+      "name": "__init__",
+      "first_line": 16,
+      "last_line": 25,
+      "source_bytes_sha256": "d6aa111132f88eb47fe970daa265e313be8124da0f33ad62625945082219c568",
+      "ast_sha256": "39477e243746a3b26c74208fa26f5423efdbd39edaff429b5cbc0bf63b516539"
+    },
+    {
+      "file": "app/db/systemconfig_oper.py",
+      "class": "SystemConfigOper",
+      "name": "set",
+      "first_line": 27,
+      "last_line": 53,
+      "source_bytes_sha256": "dc8bc69bbc89287ad82edf5608a4815c50c66a20b53c971a997a63e1abe47c9f",
+      "ast_sha256": "ed413c49cad35dfd352ef6f2094a0858f56b2187924a87e4e97fa365214c8dbc"
+    },
+    {
+      "file": "app/db/systemconfig_oper.py",
+      "class": "SystemConfigOper",
+      "name": "get",
+      "first_line": 92,
+      "last_line": 102,
+      "source_bytes_sha256": "da1496804c870923ab2943120adb509b5c557fa954e267bece648fd92ce11122",
+      "ast_sha256": "b024d81d9ccd2b7485749a796eb72dda4f0ebb97e0e5514a80a4bfdb33f90120"
+    },
+    {
+      "file": "app/db/systemconfig_oper.py",
+      "class": "SystemConfigOper",
+      "name": "all",
+      "first_line": 117,
+      "last_line": 123,
+      "source_bytes_sha256": "26fae83dc3f0034eeb8192e0cff60e1f78b30b5560d8167422e8814ff740b3d4",
+      "ast_sha256": "7eafc5bc060e2fd558e289222a939398d673bc341fbfe380d1c96f4d152d006b"
+    },
+    {
+      "file": "app/db/systemconfig_oper.py",
+      "class": "SystemConfigOper",
+      "name": "delete",
+      "first_line": 125,
+      "last_line": 138,
+      "source_bytes_sha256": "32a7c53b2dbd35b80bc03aa7f5e8cff3031004f3fa0701d410bb33aa64010f9a",
+      "ast_sha256": "ed0f6840ba80bc35a5d5887696411da156b54c4548ca3e90e75b8b314d45ceb2"
+    },
+    {
+      "file": "app/db/plugindata_oper.py",
+      "class": "PluginDataOper",
+      "name": "<field-or-docstring>",
+      "first_line": 8,
+      "last_line": 10,
+      "source_bytes_sha256": "62edaced4b208a242f63e35e2472b4d59ea82c07e0f487ba7c5721cae113f028",
+      "ast_sha256": "000bdc2cb4e9568e6d932e40cee7b01aeb4d8a05b7d6846095e0dd27a429030a"
+    },
+    {
+      "file": "app/db/plugindata_oper.py",
+      "class": "PluginDataOper",
+      "name": "del_data",
+      "first_line": 74,
+      "last_line": 83,
+      "source_bytes_sha256": "846648c8dedcdd037be832dc408179edcb0f7a3546eb8b25276c213395169f5f",
+      "ast_sha256": "8e49af8f3a3e734f328b2ecbf00662609bc1b3b4d709ae94bbbd2ab6a65a4302"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "<field-or-docstring>",
+      "first_line": 42,
+      "last_line": 42,
+      "source_bytes_sha256": "6270a7cd47b2b2751d57c8a924faf019b304f49fe05cf39f473d28dfdcd35979",
+      "ast_sha256": "d4a2f3f1bafd71fe6976d43b8380d2f6afeca33de66592239e07f5402aa33fc9"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "<field-or-docstring>",
+      "first_line": 43,
+      "last_line": 43,
+      "source_bytes_sha256": "4eb8436500f0ac9fefbfa2a5c6b62bfce778582682481807b65603eb8e5c8475",
+      "ast_sha256": "a28a032b56f80d3b39e0dfabdd367fe46a246ec062733dfb9c3b9e87469b0921"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "init_plugin",
+      "first_line": 121,
+      "last_line": 139,
+      "source_bytes_sha256": "75344bc8fa2c4ff6401491e6cb7045329aedaddc051795fb2f416baa62b1e269",
+      "ast_sha256": "ede3fb847d5e2f6c5041c51ea522885a30559f056f029e40bf1a5e3dc654b776"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "clear_plugin_agent_tools_cache",
+      "first_line": 141,
+      "last_line": 147,
+      "source_bytes_sha256": "1ffda49ce0865601dfb556ae2955094ccbfea181e13ef26c976ab038f804498b",
+      "ast_sha256": "a577a7ca7e74d488eff7f994af89e200d3e6ca8d18ebc88128df456e431c83bc"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "stop",
+      "first_line": 156,
+      "last_line": 192,
+      "source_bytes_sha256": "d4737df660738f4a80cdb379496e2cba438cbf953ceca05c74600edb798664eb",
+      "ast_sha256": "789423f512d16b13b1c2e16d7adf88e1079b2c09652a0096eaa4b6ade74f4fe0"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "__stop_plugin",
+      "first_line": 618,
+      "last_line": 632,
+      "source_bytes_sha256": "b79cfd00fa8baebca33854682f08f5b3593278d24bb17cd772b0e806f509ad35",
+      "ast_sha256": "24df8e654f9918111c1f08f3e67a2f4f56eed526d10de3572ef22009966cffad"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "remove_plugin",
+      "first_line": 634,
+      "last_line": 639,
+      "source_bytes_sha256": "cd2329646f99cd0c0790f3e71bd4e728a84a77f6ccffd1f2b718c5716341eddd",
+      "ast_sha256": "19836b1cb6124b9fbee2dea31418078beacab9b59b59995d4f67e876b2c19c7f"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "_clear_plugin_modules",
+      "first_line": 653,
+      "last_line": 688,
+      "source_bytes_sha256": "b7dfecfd8a32a5dc0a986843f4aadcb0bcdf0706a0c0402c2dd096d97a6318a0",
+      "ast_sha256": "387ed879b02054fe61201b7d40c85ad4fb9517807d5c470a6c50eba15faaac42"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "delete_plugin_config",
+      "first_line": 815,
+      "last_line": 823,
+      "source_bytes_sha256": "bd37ee615568a08888beeccbdba60979059fac34f17831cf2e2fd5a24547981a",
+      "ast_sha256": "b9dc9c6e8016af981f7e271ed0de6eaa1f90d71e4b21fcde307f16f9b822eb88"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "delete_plugin_data",
+      "first_line": 825,
+      "last_line": 834,
+      "source_bytes_sha256": "c8c306c1306cea169915b8b26532efb5e5c30e83448fd57c9cb368b272c5b13f",
+      "ast_sha256": "efea6a66366ba5071d4727e408cd33c3fe309e4e7dddb01a6eba897c9e24acee"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "get_plugin_state",
+      "first_line": 836,
+      "last_line": 842,
+      "source_bytes_sha256": "b04cd87e88f2cfdfbf078eb1ac8018f0343efc778219a0966b630e2eeb12af95",
+      "ast_sha256": "f6071e51ec119fc1ee45b005efe21569164bd6c5c3161610ba90d8ae5bb16dba"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "get_plugin_services",
+      "first_line": 905,
+      "last_line": 931,
+      "source_bytes_sha256": "1cc2a5b75b73428e28cfde3c9d214bca11d9a3ba54e75e4c2a6056d64e240ec4",
+      "ast_sha256": "8d216fec12b0953f3a4a56cd115629b8ae08861e30a87d962ea202c35fa17c09"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "get_plugin_attr",
+      "first_line": 1273,
+      "last_line": 1284,
+      "source_bytes_sha256": "f4356f93ad57a97f438da0447cf31096576439017010dd16194661bbbadb8917",
+      "ast_sha256": "316afcfa0edd0f9d3e8cd3093606506b7ac2124b1af7460cc99bbc4b397eb1a2"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "get_local_plugins",
+      "first_line": 1375,
+      "last_line": 1446,
+      "source_bytes_sha256": "16dd5578085be02d0b458d99f2f60068126de6e9a1bf699d243ce55126dbe833",
+      "ast_sha256": "73b85caf061e46b695889a50f556d025fa426de7d8cf0475561a61983d04cf51"
+    },
+    {
+      "file": "app/core/plugin.py",
+      "class": "PluginManager",
+      "name": "__set_and_check_auth_level",
+      "first_line": 1851,
+      "last_line": 1887,
+      "source_bytes_sha256": "a67a1d49226ff98fa58fa94123d7f8f55214f7017c70bacfefcd0f62dd39aecf",
+      "ast_sha256": "3f2295f4ef695df26f30fab4f6442259f5cec2aea7f2e22bb066ef4241cd0b99"
+    },
+    {
+      "file": "app/scheduler.py",
+      "class": "Scheduler",
+      "name": "<field-or-docstring>",
+      "first_line": 277,
+      "last_line": 279,
+      "source_bytes_sha256": "f644a6ac7b5c135cf2a09386d15497638d2a2198ef93ce2e862910013d8eff7b",
+      "ast_sha256": "e9e31430d0d0dc5512d9b055ee2e89c833f0c2d8950aa2bc92066bf67b02fcd5"
+    },
+    {
+      "file": "app/scheduler.py",
+      "class": "Scheduler",
+      "name": "<field-or-docstring>",
+      "first_line": 281,
+      "last_line": 299,
+      "source_bytes_sha256": "39283d0acf341fcd1d8f6dc9ec853314927031888f7b85b56e37948ed693aeb5",
+      "ast_sha256": "299dc34b337f1975e48601cedafe445d29ffb98d4c08dc121654c5df01f7b3aa"
+    },
+    {
+      "file": "app/scheduler.py",
+      "class": "Scheduler",
+      "name": "remove_plugin_job",
+      "first_line": 1251,
+      "last_line": 1301,
+      "source_bytes_sha256": "5051b8e3ddcae19baa2e2ea6e28835870ed64ece24b90ac971458eec11e4d9af",
+      "ast_sha256": "ae01a45f9f2c1153b9de544333d5a60b50a631729d8b029ad0b18a48c47d2717"
+    },
+    {
+      "file": "app/scheduler.py",
+      "class": "Scheduler",
+      "name": "update_plugin_job",
+      "first_line": 1338,
+      "last_line": 1390,
+      "source_bytes_sha256": "d89574d4327e7fbcc6d3782d5df339c991dde85f826a7d52301ec570c3db8d0e",
+      "ast_sha256": "314b6e730dc6e1d67c2726144f42dd4e9f2df2ecb82fa9619c6bd15c17b90c50"
+    }
+  ],
+  "imported_file_bindings": [
+    {
+      "module": "__future__",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__future__.py",
+      "sha256": "981d4c398849f9ebcab72300d9c1fe288fd6d7f28957b3b3fa3a493a5836d95c",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "__main__",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-source-preparation/capture_source_s10.py",
+      "sha256": "b407c020bd57d5eeef3798a3aab379a0ff7e73b9525ce36051850eb69f05f51d",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "__mp_main__",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s10-source-preparation/capture_source_s10.py",
+      "sha256": "b407c020bd57d5eeef3798a3aab379a0ff7e73b9525ce36051850eb69f05f51d",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "_collections_abc",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_collections_abc.py",
+      "sha256": "d4945c8410c4bab351741b04bca3de066f7c27ed7e38df89e206a96617102ffb",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "_compat_pickle",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_compat_pickle.py",
+      "sha256": "12c8356a3d40bd0a336f13d7c6e2bed50d5c1a876563766a3175a6b328b5855e",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "_compression",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_compression.py",
+      "sha256": "3ad5d60627477a60939ee44fc1bb3a05dbe8fb52f0f75039b8f5d8f1a278b981",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "_frozen_importlib",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap.py",
+      "sha256": "d112d54b7831cf4a818d4841d5ff8003b54df220a6dabafa61f67d7c7a5603f7",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "_frozen_importlib_external",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap_external.py",
+      "sha256": "e6ad72f3f0f9b65c99ab52598cd02ab748511dcdce1dd51f18dace9be9a680c6",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "_sysconfigdata__linux_x86_64-linux-gnu",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_sysconfigdata__linux_x86_64-linux-gnu.py",
+      "sha256": "8788a2192b81e7434f9739f786bb27fe9912ecec785884bf89d9bc36c1d45e46",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "_weakrefset",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_weakrefset.py",
+      "sha256": "91895a451d06e9f521a1171b31b9b19bc9740f35af00d4fa106338ab7167c9ac",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "abc",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/abc.py",
+      "sha256": "e558702a95cdce3febd289da021715d2b92bc43995b8a1bc58dfa1c3d8010287",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "annotated_types",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/annotated_types/__init__.py",
+      "sha256": "a7104a4d439b27a9f74fc0be236b9ba1b7831e6044026802a205abc1298a9bc8",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/__init__.py",
+      "sha256": "84ea48f6826e93997923f56d76c1cfa2eb3642bf990d7e7bddeecd698456154b",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.events",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/events.py",
+      "sha256": "6ba6d517e89d88ffec0b09215da778db50a113407cb55ef32443a8955debee3e",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.executors",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/executors/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.executors.base",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/executors/base.py",
+      "sha256": "0ae83658a46170920624ff7411fb23aca5085e5a31fdacead1f9ff4b399c2ed1",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.executors.pool",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/executors/pool.py",
+      "sha256": "abfb21c67bd72e375cc21b4ac8fbd04989e03a301e2903bc282bd979bd7d4524",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.job",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/job.py",
+      "sha256": "b6e74aa51c419fd0411422041d6ac724f2b659cb460e615ac2fb758a6774c260",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.jobstores",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/jobstores/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.jobstores.base",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/jobstores/base.py",
+      "sha256": "6433a032d1cb685dd33d4390c269012037299c753469486dcd938698c19a267f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.jobstores.memory",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/jobstores/memory.py",
+      "sha256": "1e63acec56eb3a840dcb0cfec9fab6bf97ac1831de284fe6bcc3450de199df51",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.schedulers",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/schedulers/__init__.py",
+      "sha256": "3ce132ee7dc166071c678e1ab4cbf18f4c393de8cde7983ee7935db9951916a4",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.schedulers.background",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/schedulers/background.py",
+      "sha256": "b1136b8a4521a726e5bc0e510a9282e438ef7f7f9be8d1ef9d74db97196a21a3",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.schedulers.base",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/schedulers/base.py",
+      "sha256": "86f9ef708d43382f5b9afac593c5222e51b1b17287b4ca441cb0c47bade643fb",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.schedulers.blocking",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/schedulers/blocking.py",
+      "sha256": "d77f2b7fd5f50be6715954d500efe9c9f60c04a864a8edaa66a268c86227bf97",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.triggers",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/triggers/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.triggers.base",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/triggers/base.py",
+      "sha256": "f222a596e6da7b1178e7a20af637e2e7a413ad521f0c33cb6af51cf304e59cbd",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.triggers.date",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/triggers/date.py",
+      "sha256": "652fd33235024a576a959b14523970bee59e30a7835eaa8031c6551466296a6e",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "apscheduler.util",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/apscheduler/util.py",
+      "sha256": "f97dea0b2f5da9d6ffcbbc18ebfa7c00dcf6f6a45c03fffeeb42ac4bb6813c9a",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "ast",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ast.py",
+      "sha256": "b515c23dbbc459329d3b802a3aac742cc456d7472e66f7ed6e9dc97e40596d7d",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/__init__.py",
+      "sha256": "61102f2b5f8fb832f0558cb66391f227970b3dd34ea2a621455587b4295e89a1",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.base_events",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_events.py",
+      "sha256": "53b71bbbd79e7fb2251460119afc379ebd71bbc599d9018313cc62ef218ae795",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.base_futures",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_futures.py",
+      "sha256": "2f3798c4b82f5ac77647908b157c924f734f36871d98970e72849ea9a9a07856",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.base_subprocess",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_subprocess.py",
+      "sha256": "d69ba8f97bf8c89564cadce49427574ddb98103a5db6f04b98798240332e7adf",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.base_tasks",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/base_tasks.py",
+      "sha256": "56efac65b63db927af336fa55eb5bda93c97a2defa4734ea8d695ed20fd6712a",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.constants",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/constants.py",
+      "sha256": "873fc2f9e66313c3c19c337269e704f204b59f9e91d6ecbec59f68335484d338",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.coroutines",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/coroutines.py",
+      "sha256": "2feec17557c230a80cc2a6391bbb1c44b9f3341820b05667e36a4eb12b749436",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.events",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/events.py",
+      "sha256": "6a18b7eee5926622c146e61a7eb39726b4656e07ca41d36b06936ffb2354f0ed",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.exceptions",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/exceptions.py",
+      "sha256": "a5971f88be14cd1417d59adf539ae48c5d818f95362a4e0eb00017e3690ab37b",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.format_helpers",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/format_helpers.py",
+      "sha256": "6377b672b3f4ba8b6f0f7a5f0ea00cde24c8cddc0ca764e3329f302763477f59",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.futures",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/futures.py",
+      "sha256": "f6daaf2a051fc61ea146811d7d4b4db1cac31d7f4777aa4d10617812d78bd943",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.locks",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/locks.py",
+      "sha256": "5234295a0456e9a6ba2e80446848b602cd9195bca4fca2c711c6e3f41989cd86",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.log",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/log.py",
+      "sha256": "80e4cc3ded4b138baba486519e7444801a23d6ac35f229d336a407a96af7e8d2",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.mixins",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/mixins.py",
+      "sha256": "8f4a3e16eca845ebfba422550cbcee7340ec8166d2bff6b750a8ed0de6b9ae3c",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.protocols",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/protocols.py",
+      "sha256": "1d1b49988c338b4ef06e30f9e92d9db2e00080c341f0a3f573bb8312deb8aff6",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.queues",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/queues.py",
+      "sha256": "8f020744ebd1f557dcb051a1530b504447660df906c2127a94bbcc8450ea7ef9",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.runners",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/runners.py",
+      "sha256": "739e0ecbb335cfec821a39f9e225583b5911bb6e3894ef93782005f852c54263",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.selector_events",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/selector_events.py",
+      "sha256": "b77c4b8a85f1e1e2882a2bf3bd85a4b1c1fcfd7cb37ed0d8d8eb5f9a2ea44231",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.sslproto",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/sslproto.py",
+      "sha256": "6c7fa1b81dc41850281cbf284c99ca18e824939fa5778860327040f3a80f6218",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.staggered",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/staggered.py",
+      "sha256": "3998d04fcff2c8052af03f3f34dbd3bd510b2dadddd5f2629a2c1cccbecd136d",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.streams",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/streams.py",
+      "sha256": "6ec5c70fd95b0d51cc1e81cd21e8abe8c1b69650148d6bb75ab4aa4797319bd4",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.subprocess",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/subprocess.py",
+      "sha256": "7b70605716334f63cc482123b2aaa3b7c5bb7138eeab63a037bd8068d43307c1",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.taskgroups",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/taskgroups.py",
+      "sha256": "1d2bcd2da66524b45024841b94100cd6e7a7825a1b8f8ee125bf16b4ad0ca9bc",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.tasks",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/tasks.py",
+      "sha256": "6f6aad82d597fea1800004075b9a2481604da0035f1143af1eb267823ec460e3",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.threads",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/threads.py",
+      "sha256": "39d37295383641565f0c08bd992e2f661dc8051eb17e890b834fce96bde0910e",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.timeouts",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/timeouts.py",
+      "sha256": "3e40ca0dca3e54776579797837cd4936d73d04aae09fe0cf83ce1e5449d00163",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.transports",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/transports.py",
+      "sha256": "940108bc133de399f38928cad3274f463096168d8a3ee5148f2478d3cb636f1c",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.trsock",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/trsock.py",
+      "sha256": "c0eac37debcc51b702b808f6b7ed3e417343f5ff5f57125dad600a27eb082328",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "asyncio.unix_events",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/asyncio/unix_events.py",
+      "sha256": "1fff06cce78763800f05f4d2bebfcdbc07ebf9564ca7e7222e0d91e39dee08c9",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "base64",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/base64.py",
+      "sha256": "8d1f608dbf030d11d6ec4df9e4c55b73fb68cdfbd9f53a7c91684a93b55564b5",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "bisect",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/bisect.py",
+      "sha256": "f1cf7b85fc36b5da249813fc5ab97d9464f8cc1bc817f7146206fa2713e35999",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "bz2",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/bz2.py",
+      "sha256": "76ab3252924e71e859d7d90e8d3db13b6554975cfcac0fdadced4de7f8779330",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "calendar",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/calendar.py",
+      "sha256": "0010004d32c694e4afa554db2434952040819c09c438e88d465dcf6d9fb63718",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "codecs",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/codecs.py",
+      "sha256": "7b7839e53a77961153240aecfe11edc8054d05b1dedd83894450dae21ec05785",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "collections",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/__init__.py",
+      "sha256": "7fdb04dd248ab37909f46d2085bfee56b32d7e91e49ad3a2fad99c453295659b",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "collections.abc",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/abc.py",
+      "sha256": "9cb4208f99128a0489b6c8e6c61637617dd7d4250c59e065491957eda084dd10",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "concurrent",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/__init__.py",
+      "sha256": "87ad5c8954dd56fbbca04517bf87477ff4dce575170c7dd1281d7ef1f4214ac8",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "concurrent.futures",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/__init__.py",
+      "sha256": "9b597f6de7da771109ca7bf96a1af5ea4d5fda69b27b39312d34966d987f73cd",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "concurrent.futures._base",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py",
+      "sha256": "8c6d5f09f7c535d40fa1c30ebfcb35e0601c2abf32286a82cf151af7ddf72473",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "concurrent.futures.process",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/process.py",
+      "sha256": "66b4fe880563a604ac4a094b72c6535b56b3bb8b14f4b6025705d53d28816fba",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "contextlib",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py",
+      "sha256": "8b7a477f978a8532852fd81e241c78182516bc4975d672d580a5848a76e11eb6",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "contextvars",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextvars.py",
+      "sha256": "5ed260be8d1f4fe92261b7810b4bb1e8539c42093d7493f677d076e1a87f459a",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "copy",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/copy.py",
+      "sha256": "cbd25547933176fcf6bb05c2adc9f4796d15ac20b9b82dcf890daea7203daeab",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "copyreg",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/copyreg.py",
+      "sha256": "c8eda41f05c6bf95a4da4726a530409d2485ae060b8d019b3a8034389a15d3e9",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "csv",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/csv.py",
+      "sha256": "2fd2a39ec59a5cbcd71596a93205001e593c65dc2ca3bef6028f148372028a88",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "dataclasses",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/dataclasses.py",
+      "sha256": "d242aea5fcf6408b1c1f622442f88f68b9526ce1f8bd2890d74a144677c427d9",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "datetime",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/datetime.py",
+      "sha256": "ef20dc6b3554cd585dddffdc573f1f9a7a54c522f2a3fb4576c44edbb1e14238",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "decimal",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/decimal.py",
+      "sha256": "c3e37c55ef72b3dd6cb7b466a907b966467b6a9c58d85302193e64cbb5fd53d0",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "dis",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/dis.py",
+      "sha256": "44c0b389c96124d8fb5cb0bc41c7a2aa7a6848ef4001b4000dcbd858efa4a1a2",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "email",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/__init__.py",
+      "sha256": "e4f46e3414c4602c9abb8b404a45e84412fc49dbe38a3d163f9575132dc7c93e",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email._encoded_words",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/_encoded_words.py",
+      "sha256": "4178321600c0a19ca04cfe8542ce44487f339d15d89a473b58cea63c0b230217",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email._parseaddr",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/_parseaddr.py",
+      "sha256": "4308932872acbf4a674312a45a49b870e48026e3dfedc878ee2f512ddf2f30ba",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email._policybase",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/_policybase.py",
+      "sha256": "284be073d7fe99d1021958e6dbeefe4c98a6c00021ea465d01aac71338d1579f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email.base64mime",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/base64mime.py",
+      "sha256": "e2b4b87a5f42a8c5780e343f675513bbcc6abdd23fa14f8f1a7d4f7d72304770",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email.charset",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/charset.py",
+      "sha256": "a90653f13a4dc5eb3205079dda1d62561a8bf9a7b45585f5dbf90aa31a966680",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email.encoders",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/encoders.py",
+      "sha256": "690b275529788cc48e8f541a2aef321dc31e92f75764ac7924896db72d8a9555",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email.errors",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/errors.py",
+      "sha256": "dbfb4bbfc85e9d556d3385dc6356518846d8a122bc643b171ea61b6e8dc42c8b",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email.feedparser",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/feedparser.py",
+      "sha256": "6046239fcdd6977d1c25841581cabedaeec8046cc5fedcb8ff2d6450a36442bd",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email.header",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/header.py",
+      "sha256": "4d9baa908ad5288dd8fad8cf20b3802ffac77ba1642727804a633b201c56e5ca",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email.iterators",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/iterators.py",
+      "sha256": "1080a2d03779176d6d45f6ecd976dbe69f5579f7e4e83b75224c3f92fd258102",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email.message",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/message.py",
+      "sha256": "ba32efea2602ea52e73028a2817afddccccacc4385b9800896556d5c22db2b90",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email.parser",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/parser.py",
+      "sha256": "88890ea9994c55ff7d6c1fd570fece2785f51ed407ee95df4aff946e250bcd66",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email.quoprimime",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/quoprimime.py",
+      "sha256": "77b454bd3ba3b5e3776be28ae3a0fd8de5d1e50d5b8ee10dd539c37c2bd68082",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "email.utils",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/email/utils.py",
+      "sha256": "65d259aded3b7d29609d320decdb59cb0a0f7f0e5c453e1d3c380e8a4a5d61c9",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "encodings",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__init__.py",
+      "sha256": "78c4744d407690f321565488710b5aaf6486b5afa8d185637aa1e7633ab59cd8",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "encodings.aliases",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/aliases.py",
+      "sha256": "6fdcc49ba23a0203ae6cf28e608f8e6297d7c4d77d52e651db3cb49b9564c6d2",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "encodings.utf_8",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/utf_8.py",
+      "sha256": "ba0cac060269583523ca9506473a755203037c57d466a11aa89a30a5f6756f3d",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "enum",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/enum.py",
+      "sha256": "f35e542d8c4c1d2b5e910138d726fa48774925f3c4dc5462793ebcb66aa55501",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "fnmatch",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/fnmatch.py",
+      "sha256": "6683da36e47af523f3f41e18ad244d837783e19e98911cc0b7415dea81494ebc",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "fractions",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/fractions.py",
+      "sha256": "d52d1ab9d5be26924e4914a5e40069c992bbfa68f773694c2e5ee8452d0766a0",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "functools",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/functools.py",
+      "sha256": "de4a1d37c795e2a065124b5c49357893433bc6bb111b41277ccc9930ef08d4c9",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "genericpath",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/genericpath.py",
+      "sha256": "2b0b35d2206778af4081cf81dd9b513876e72c35a55bec941402e1fa62b1f1aa",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "greenlet",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/greenlet/__init__.py",
+      "sha256": "0262f8c1fe8973d3c0d6f559826ee915ce5ecf788f3be1fc31e8338ed24a3ad2",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "greenlet._greenlet",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/greenlet/_greenlet.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "a39d6693c3aee88d76b6156e2fe915639bd47b0106c88676efa96ccb62df4e65",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "hashlib",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/hashlib.py",
+      "sha256": "6dbdebf270868b391080e21dc9687eddfaf321c965ad979f68d3f5c423c613ab",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "heapq",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/heapq.py",
+      "sha256": "6d43277e5c76fc0f073cd388fcff852d14d068f6bb6d4886c340f8b75a1229a9",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "importlib",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/__init__.py",
+      "sha256": "d540b5ac137fcb3e26a8d5f2939649e34373c6685f98a30a9f682cf231be5854",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "importlib._abc",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_abc.py",
+      "sha256": "80aab7931dc999dee581c8b8b56fcd973fe156335a96ceeaf6acfc03cebf10e8",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib._bootstrap",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap.py",
+      "sha256": "d112d54b7831cf4a818d4841d5ff8003b54df220a6dabafa61f67d7c7a5603f7",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "importlib._bootstrap_external",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap_external.py",
+      "sha256": "e6ad72f3f0f9b65c99ab52598cd02ab748511dcdce1dd51f18dace9be9a680c6",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "importlib.abc",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/abc.py",
+      "sha256": "5f9cb36ca1bce9d5df00bc8d4d7f46b7ea2353dfa99292ad7f099affddfb5d03",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib.machinery",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/machinery.py",
+      "sha256": "d045cd7ecf2a12b6ecbfbef79eb114e87ef2ebd756f5b705f73e6f3266e3dede",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "importlib.metadata",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/metadata/__init__.py",
+      "sha256": "1a26dfee8cb302b729501e944626f77e2cbcc4675038f3d18c2d8534751b3e8b",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib.metadata._adapters",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/metadata/_adapters.py",
+      "sha256": "de9a880abc4513af1b69ce150cd5a5093201c39131717cdc2ba6b19f4364c163",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib.metadata._collections",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/metadata/_collections.py",
+      "sha256": "089d0e4c21c88d6034648552e2fa0e440b27d91e11d9c40112d3ec6442690126",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib.metadata._functools",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/metadata/_functools.py",
+      "sha256": "3ec636fb8aeb297e1155e442d681a9d65075a660bd78a37cf3f7fe6c3f6e3a80",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib.metadata._itertools",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/metadata/_itertools.py",
+      "sha256": "72faffdaff0145bc5c225e71e6575fa9d1e3848f188bcb3cca4e741bf9e6ea34",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib.metadata._meta",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/metadata/_meta.py",
+      "sha256": "bd3504040497cd049e6b529bde0b461f63cd2be3070f2d0815d4dd7609b266c8",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib.metadata._text",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/metadata/_text.py",
+      "sha256": "1c2b0592c66924b7933f734493f9e0ac079755146d4ebb7287d78e001a113f80",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib.resources",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/resources/__init__.py",
+      "sha256": "4146e1d00d56a783d4087f15257f0c284fae52e71fa3f20613fa268d911bf6d5",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib.resources._adapters",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/resources/_adapters.py",
+      "sha256": "be9ac919b51e1db6a35fa5c2b8c3fa27794caea0a2f8ffcc4e5ce225447b8df9",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib.resources._common",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/resources/_common.py",
+      "sha256": "a0de4a899a2aa787b052f92f516b39f80b183c3f0d409d1305cc6dc374f18870",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib.resources._legacy",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/resources/_legacy.py",
+      "sha256": "79c566fdf1a61129683e38e8c11a660d6233dd84422456ae5dd230e658a7857f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib.resources.abc",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/resources/abc.py",
+      "sha256": "a726c48590b21ba5532f0c654735991571bc0ecafe88145cb8891d82cd364e5e",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "importlib.util",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/util.py",
+      "sha256": "671f2995653f673f6d5056a1089debef473bc28ae7114f7a8db71475733d6876",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "inspect",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/inspect.py",
+      "sha256": "5c54ebf0bfdc25397750e5d0f63800751650ee50e65325ff3ea4069c9bfa5f75",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "io",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/io.py",
+      "sha256": "7cec3cb8ac004058dd0a5af246e6d950fb59c7ddd0058fda48bcb3fcb98d8822",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "ipaddress",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ipaddress.py",
+      "sha256": "ba8d3389ff084fcb232b48204ec04f2b3ea4bd0eadf7b18c814947d185de2c64",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "json",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py",
+      "sha256": "d5d41e2c29049515d295d81a6d40b4890fbec8d8482cfb401630f8ef2f77e4d5",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "json.decoder",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py",
+      "sha256": "382cd02af6f7efede5a6d4abbcda1015e5c7a75794b0016022878f9cf32a24f6",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "json.encoder",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py",
+      "sha256": "52bfb1b66029cc70fa3bd7fe11df9f2e03922d413407a341b387a22c987f24f8",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "json.scanner",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/scanner.py",
+      "sha256": "572958017eae8842eeddd0e3d18d3c56cc0a197348224915e1d87ce937841764",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "keyword",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/keyword.py",
+      "sha256": "18c2be738c04ad20ad375f6a71db34b3823c7f40b0340f5294d0e89f3c9b093b",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "linecache",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/linecache.py",
+      "sha256": "9eb9194707991b49f9fea67a5222b0e6a0e49c865cdffc69fbc80a1f829e77fb",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "locale",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/locale.py",
+      "sha256": "3988c5419552d5b9f0bef3695102376f79357f0f440e9cd1f32c501f966e6ef3",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "logging",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/logging/__init__.py",
+      "sha256": "43f86bbc08fdd5c7b6e697abffe1381f534a92bb32e1f1aee8360d6a142592a1",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "lzma",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/lzma.py",
+      "sha256": "58fb9d2fdc8a8af7b25e218f17ea3b51bdfa53bdf40f440ab33c605974ca5c2e",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "multiprocessing",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/__init__.py",
+      "sha256": "a5a42976033c7d63ee2740acceef949a3582dcb0e0442845f9717e1be771c68b",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "multiprocessing.connection",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/connection.py",
+      "sha256": "c2f2d6f3d32d48d4d8c51a7d7c98766a04e958cae72a67c7f905438a7c332bdd",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "multiprocessing.context",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/context.py",
+      "sha256": "63f15d3169f4453eb80af4ce673a193a0670941206673ab5192ea16a17e8419f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "multiprocessing.process",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/process.py",
+      "sha256": "67f0c2a7a3a83c92dd024705bac18619a2e123c9df77c414beb81035ea4a0e18",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "multiprocessing.queues",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/queues.py",
+      "sha256": "f4721a323ab2981a172dd2b853d2cfeded696e9716fba340cf6e168f5ed95f83",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "multiprocessing.reduction",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/reduction.py",
+      "sha256": "4999f8b9ae7b3e8a7f5de302612b4131498dc2e238a2c47f894905c1c63294fe",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "multiprocessing.util",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/multiprocessing/util.py",
+      "sha256": "6752c4515ec69f82e9df64e017da490c3754e51d818c270ea1ad2d64e09268be",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "ntpath",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ntpath.py",
+      "sha256": "6c0d55ee892f98ef87b1ed3c50c9dfc7e267a98d2db47e08d3dc67529af56725",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "numbers",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/numbers.py",
+      "sha256": "ac381960a3dc1db0498b0bd43d8ef278d6599713121a186b153ff09d9552e0db",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "opcode",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/opcode.py",
+      "sha256": "192f6008508f28d3273bff42eaea9b01c8394dab1607cd36aea778bdd166c3a6",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "operator",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/operator.py",
+      "sha256": "b2af20f67667203c1730e686cc5d0427becc94db4c97f1d3efe3ed2158473f6a",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "os",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/os.py",
+      "sha256": "54c43a1fc69c979c70d8f7d097174cee163bfe59937723ee353043dd4a0211e1",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "os.path",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/posixpath.py",
+      "sha256": "03825681086638649a43480954f7f6a16b4da3bd41ece956864ae96e4f795cd9",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "pathlib",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py",
+      "sha256": "10ba48ae8063cfe7589436041d0d4628c05f427c7709cf8e75e486f8930cc32c",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "pickle",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pickle.py",
+      "sha256": "7e3447b6d993a6306a7893fd2fba916010ed79f8e09ceb56158a550fa8099a14",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "platform",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/platform.py",
+      "sha256": "f5ff83f15c841792be42709a6710dc8d7a9f72791c1ae4cad719b1fb0abe0a05",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "posixpath",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/posixpath.py",
+      "sha256": "03825681086638649a43480954f7f6a16b4da3bd41ece956864ae96e4f795cd9",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "pydantic",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/__init__.py",
+      "sha256": "e62127278c07bf5384cdd2903f368a69929f3b8a524000bae4e0eb608ebf4bc6",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._config",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_config.py",
+      "sha256": "473cacd49a1f7e7e097331257180eab192d18018079f69585aa0d1e79a0048f0",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._core_metadata",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_core_metadata.py",
+      "sha256": "63f836b778bbba5b8afb05c266fcc97d114c3d4336dda0582df69ee05cc13f2d",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._core_utils",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_core_utils.py",
+      "sha256": "d63aeee156c9d31eb747a76d55cb8e23e74a4130bf77f9529c9584050cc63444",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._decorators",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_decorators.py",
+      "sha256": "443106fc96aee4d88971f3b4c60753ec43a0b14d4b816218957ef0379ad8b55b",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._discriminated_union",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_discriminated_union.py",
+      "sha256": "24bc7f3152dea7b331975cdba5d3598ef1c3733f89dce116e9671d575f3875c3",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._docs_extraction",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_docs_extraction.py",
+      "sha256": "7f2ce74801e1e40ce88675d94ad5741ef1fe9d16dabcd1cfca0fa49f1f92fc41",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._fields",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_fields.py",
+      "sha256": "85779bfb3a1d1b04c3bc6f4e2b5ba6d7c3fae1bedca876f418e9e03f88eb81c6",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._forward_ref",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_forward_ref.py",
+      "sha256": "e67dd8efedc028b9fcfc54b761cecabad2e23d48725e602d90464e6859e89f03",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._generate_schema",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_generate_schema.py",
+      "sha256": "3e3a2051ac085e67fc2ee2cd7bdb1e26987b58b5b8309efe181b17c02b100bd4",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._generics",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_generics.py",
+      "sha256": "0978dc22796f722f157a36969f57f7f64bf401c7c92f4479db7a912c56550feb",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._import_utils",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_import_utils.py",
+      "sha256": "4d18710f93ae63a094a2c8a805d05c254b34a26ec820e36265d60057bcd0f233",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._internal_dataclass",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_internal_dataclass.py",
+      "sha256": "fdb79d7355dbbaeca044688b66a914930c05a506a847584a2e5479d359f2c926",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._known_annotated_metadata",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_known_annotated_metadata.py",
+      "sha256": "3f29d020543ad7fff819caf39f40f910d96583b8cfabf731a0b4e6b8540163cf",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._mock_val_ser",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_mock_val_ser.py",
+      "sha256": "c2645115206fa9f70b6c8e353ec165881e2ed80677989a597a21116c3df1293a",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._model_construction",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_model_construction.py",
+      "sha256": "2682a663826b0c1bb79c6fed088ac982d249135baaeafdbd4ef4f3e449471398",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._namespace_utils",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_namespace_utils.py",
+      "sha256": "865dfe4d102bf365368d3c8f3f7b7e42ab2f28b8abc6d90b7cd7eb37e7e9d31f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._repr",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_repr.py",
+      "sha256": "8d07e726ec83c50a5244d846dbd208f4f5fc7b836fdaa599ac4c3696a8a1dd41",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._schema_gather",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_schema_gather.py",
+      "sha256": "f2727eb8ce98e33eb1a5ab271a89c432e6ed3555ff9b179e44316677fa8c54b0",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._schema_generation_shared",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_schema_generation_shared.py",
+      "sha256": "17fadb41bae4a289a0c6cb24747a4fd23509ed309f7b40400c0124aba089e273",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._signature",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_signature.py",
+      "sha256": "8bf6fac2d96e895599461d5963c52f076519ce23f52a3a925d9802f87c70393d",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._typing_extra",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_typing_extra.py",
+      "sha256": "743c6a178ea5ceea82a0a2eb007fe4f791036dac8478a6f69478ee4c9e4e0686",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._utils",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_utils.py",
+      "sha256": "80de3c06c47e143ac90e26c29a8ebdb6d420ebb59bb85addcbfd4d40bddcbcb2",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._internal._validators",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_internal/_validators.py",
+      "sha256": "ec64e35d758530b89be1dc50f8779a8879406624760761bc6f2098306ae6438f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic._migration",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/_migration.py",
+      "sha256": "545ef72d1094cf722b6f9c55b75de36f7340717567105e93d7e27438b7de6790",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.aliases",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/aliases.py",
+      "sha256": "be1087ca84969d7f8427ec166f9aa3e31c91b2c8065a74d07f3429e06499f6e8",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.annotated_handlers",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/annotated_handlers.py",
+      "sha256": "59fc854aac28108157061ed3ef73f270a9682350e25f8e465a2d3e24eb024786",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.config",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/config.py",
+      "sha256": "a353faec53162101befd17c6b4a8ac9641f0a38a579bfea37ec478d4ff3cbfbf",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.errors",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/errors.py",
+      "sha256": "0eb1023c25a1498ad0f016b83bc84acc800cda2f460474d75802f36850e92dfe",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.fields",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/fields.py",
+      "sha256": "6bc66125f23c143e934030fbf9c58c9b5657950bdad3031d4f6132e55bd57be3",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.functional_validators",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/functional_validators.py",
+      "sha256": "ee9fb88ef3ffffd8d9caf71d5e289d7b9a406bf26533b7c9d41824a9b8f14963",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.json_schema",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/json_schema.py",
+      "sha256": "75ade143dbd03cb1213ecac39d49628df4357ee0825621959d4cceac064b803b",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.main",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/main.py",
+      "sha256": "35b842cfe92ef300e060b40c062ef93afee1cb075cf0b7b0037a1434867c2554",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.plugin",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/plugin/__init__.py",
+      "sha256": "6bb4f0dfae94e8ade496d08235963bea773db2cfbbb86190e344d769df4eca94",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.plugin._loader",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/plugin/_loader.py",
+      "sha256": "8408e04a58e82211b1dc0569229baac3948fb6d04d35e181493aea48c9cd8899",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.plugin._schema_validator",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/plugin/_schema_validator.py",
+      "sha256": "e4ce487356d99e384d0f1b510d529b44f4d0ea9a3a42e28c63b320b8c907796d",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.types",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/types.py",
+      "sha256": "7e961c1a702770ae108da166de366da98c31258cc1eeb2493df025f3d7a6cf24",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.version",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/version.py",
+      "sha256": "4f9af38b00cfacc8df694d17fbee5f05d195be1f784339cd43b4230f82df8260",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic.warnings",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic/warnings.py",
+      "sha256": "dd0c90a3a94ddf970eece5c36c511759c35a3e518245aade815640f86fa56702",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic_core",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic_core/__init__.py",
+      "sha256": "9cad6292b75254af606a970aae9bff6e5ae9f0b08089cd63acafa391b60794d2",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic_core._pydantic_core",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic_core/_pydantic_core.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "7b3b21e8e6fc722fa6913a893d1f82968542135b0119f83c7cede35fc71c4a2f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "pydantic_core.core_schema",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/pydantic_core/core_schema.py",
+      "sha256": "d4f337d727ff906a66fc7ec62e734546420f01018f2fdce1eab7f64b1a215718",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "queue",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/queue.py",
+      "sha256": "f6c37fc37cd7440979f7d22d40ee818fa3b714c573610c08fa52911d541193f0",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "quopri",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/quopri.py",
+      "sha256": "a1cd7f3b22033d32151209886cc855d4b71cc4c83530769f920097582339013a",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "random",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/random.py",
+      "sha256": "de48263a837339c7e01cf9f3c4d756696e0e0775f7778eb9cf81ad5b00134569",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "re",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__init__.py",
+      "sha256": "8ff3c37c63b917fcf8dc8d50993a502292a3dc159e41de4f4018c72a53d1c07b",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "re._casefix",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_casefix.py",
+      "sha256": "1b12d9136f23db6c3f6f26053fefc15ca964b886838c7b9c1fabf8d2efc1e5c8",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "re._compiler",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_compiler.py",
+      "sha256": "c75620761098a70ed75b9accef63ef2881d8abb6d4e5cbfd10074bd165eefe4d",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "re._constants",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_constants.py",
+      "sha256": "fa4fdb200f238f9e7817b63892b0d69833d8165134801e775e10cc113348a375",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "re._parser",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_parser.py",
+      "sha256": "a51a85b37cf3f44ba7ff25754da5f31306e4ccfa6eb3c017f9d37bdf4e770840",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "reprlib",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/reprlib.py",
+      "sha256": "e177bc70da83a7fbcde6fd261dc15da34e8a20873b1cccd4f9a1f8f27cca3779",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "selectors",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/selectors.py",
+      "sha256": "1eeb102373e18c96311203f30c516e785bd8642275aa0bd66e43a284c9692385",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "shutil",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/shutil.py",
+      "sha256": "53496e06742fe008fee2bccc8caeac77473e69923bec05358bd43eea467db1f8",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "signal",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/signal.py",
+      "sha256": "0363c964c90ac0b3e515de5749205e6e6454051a1211058375d84d91eab6071a",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "socket",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/socket.py",
+      "sha256": "7d4d4c66e6f4bcc961ab462c4f08002ca97def8713a4be1c7373bdbd970a5274",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "sqlalchemy",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/__init__.py",
+      "sha256": "75824824b4d05f1b4cf738e2d355500eb109717894eaeb0349820470d2fe4932",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.connectors",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/connectors/__init__.py",
+      "sha256": "1a6e9c40284f7e448041c90280072f3efc420ce151ba341e7c562071c3014a94",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.connectors.asyncio",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/connectors/asyncio.py",
+      "sha256": "44d173217bfaf38174149b84d396bed502bf769a98ad41f022269408edf69f9b",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.cyextension",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/cyextension/__init__.py",
+      "sha256": "66201546f39c092df5ccad2a341c1e42ef7a2376034f92d91e8f9df6503aa0a1",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.cyextension.collections",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/cyextension/collections.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "750fdc5838354f49bf4e944e284ae5ffb45aad21189f85c6dcafc3d6a37c0a4b",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.cyextension.immutabledict",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/cyextension/immutabledict.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "26969eb95671a7e06aa259df77c9ee6412c6b0fd32db5b79d796c8397cc286b8",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.cyextension.processors",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/cyextension/processors.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "4e88f3264b97afe3b795288204e30792ead4ae5978a7ff06dfafe55ab35ed9b5",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.cyextension.resultproxy",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/cyextension/resultproxy.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "c85e50e68511ac2c7bd8a059ba47af6a4b6ac3561e528d152594d220a8967ee8",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.cyextension.util",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/cyextension/util.cpython-312-x86_64-linux-gnu.so",
+      "sha256": "56f3247f0f4a3fd50fbba05af16692be921629f27e6586147270a4c6925c03f7",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.dialects",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/dialects/__init__.py",
+      "sha256": "fcf96cdc9387ed3e52fcaf020794d21f78185f7eb448d6d0820e80199a1ccc12",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.dialects._typing",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/dialects/_typing.py",
+      "sha256": "a1498523153f0155e6272457884e48b03bca161f07bc0732886310696998ecc6",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.dialects.sqlite",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/__init__.py",
+      "sha256": "927614ac02cff7a259a4c79c028c66228ba826b45b190e0a3e48c65e5a73975e",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.dialects.sqlite.aiosqlite",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/aiosqlite.py",
+      "sha256": "e0c726df1a154dffe97953574c0f11bfa151c4b77d2712f709b34951faef7301",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.dialects.sqlite.base",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/base.py",
+      "sha256": "58bc07f4e16b4367f9c9279837a7be4bc0c639aafd08e48654f267dd800b7052",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.dialects.sqlite.dml",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/dml.py",
+      "sha256": "6f8a55ddfffb24c9b6671b96f74e98408ed87198b21ce631a9128f81ed1c31a3",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.dialects.sqlite.json",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/json.py",
+      "sha256": "3ee067a0e31c51c574314897802de65c20affe28a09518665f76544f7362531d",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.dialects.sqlite.pysqlcipher",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/pysqlcipher.py",
+      "sha256": "63fd597eb8b9af7b46cd07bda6eb7be21be7312003e79572d970760a22089569",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.dialects.sqlite.pysqlite",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/pysqlite.py",
+      "sha256": "c3c8a5e449571d8c3501981a90029841e6085e9a6e62ff724e0a5bcb5314e61b",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/__init__.py",
+      "sha256": "367d390095407d99ffb13a068edd3dbc1719113df8dfec18c25fa8a36160e91f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine._py_processors",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/_py_processors.py",
+      "sha256": "f6fb6c9fb8c1dd0348b775903ce3f862319b384cc6254c2717f6a3dde2719b12",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.base",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py",
+      "sha256": "53f38e544004d329ac38e243104bf4bbbaf7d0f0cecabd112b1923b78dde5614",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.characteristics",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/characteristics.py",
+      "sha256": "c1183ab84f0d6121f7f30be9d02318d94e61bfdbb75533a44c7c8979762b92f4",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.create",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/create.py",
+      "sha256": "49d840a1060f46f7c994e202f2c43b4b715b34e3bd35afe1006b334acc28b972",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.cursor",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/cursor.py",
+      "sha256": "a830b8f63f906f1db7f89e0dd9ef4dad16c5c62ca6388fe03f3247fe8621e5d0",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.default",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py",
+      "sha256": "43886cde55bc6ec1da223a20319c811f8d46a81282c60455691df2cb632a0c2f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.events",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/events.py",
+      "sha256": "d4c0098fe0f97711c18535d96276f163c015888b51b639be184c53ad737e9eb6",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.interfaces",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/interfaces.py",
+      "sha256": "847decdb2c905353b58c7d7d7fdc56611930a1e744f9ecdc2bba3332d6d408eb",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.mock",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/mock.py",
+      "sha256": "8bd27ecf436c2fbf1596a0bce4c460a3948d350536e7a52d12a7e270edc30b06",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.processors",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/processors.py",
+      "sha256": "630d54655b3215fd8c74552b40a6931ce7b015367477aa7f1a58415c3bb6e749",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.reflection",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/reflection.py",
+      "sha256": "d711094c2c353e5dbb73ff03a960a7d3fb31d3ef55b00d581e8f32f64d40898e",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.result",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/result.py",
+      "sha256": "1d7ce239218c4c62a40f64654f2bce0a409e4a592d8aa97b33d7f873654e2a3d",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.row",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/row.py",
+      "sha256": "b02f758c84c1a22b448637909b7e884bb2a31b08992638b008acce15bc69e6aa",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.url",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/url.py",
+      "sha256": "26cad73b08a9dfddf756e621d0e39b1df2e4da8915dab82a10ff12eec69c7128",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.engine.util",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/engine/util.py",
+      "sha256": "664f0b293c8e3bf59f8d07e6155757aa55450c9cf516339bedbc05e3ce516a0a",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.event",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/event/__init__.py",
+      "sha256": "0df498ae12cc7f59eb0a710178a6994f86c9924b207b6718d93839d3a138d665",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.event.api",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/event/api.py",
+      "sha256": "b35a82010d32c42dd6d5eac8bd3b7bf50a04bce628e2ee38c68b2d25868158eb",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.event.attr",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/event/attr.py",
+      "sha256": "f287fc6be9775ee5373f750ce669ae0acc662791f32fe319ba3a892da78fd8b6",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.event.base",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/event/base.py",
+      "sha256": "de8d9cd05164fa76fba89b51792a877e65ac0aa34a5a83b2013611cf8c05d2ad",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.event.legacy",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/event/legacy.py",
+      "sha256": "187ab811b53b106f4f89787531efea565c40f389fdbef97f52e7395323c35fd3",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.event.registry",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/event/registry.py",
+      "sha256": "cd051f4faed957d572ac1a69782a968d64400d51a08932786d909795f4001e7f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.exc",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/exc.py",
+      "sha256": "2555488b3763adb658280de9a170cc498e6a0f14d6f21c09cd4fd95b1d392d87",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.ext",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/ext/__init__.py",
+      "sha256": "060f04591ef2a56ad819c20111350502551778507b30934487a55840299aa43d",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.ext.asyncio",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/__init__.py",
+      "sha256": "442608c78fdec5952004f9acf08e61db35def1b2b3a7016c9cd062067cb03541",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.ext.asyncio.base",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/base.py",
+      "sha256": "797580618779bc18e8b05f3f658d63da0b1bae563fc727a024bb6abbd9606636",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.ext.asyncio.engine",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/engine.py",
+      "sha256": "d7db66ce683ee95c30982103c7c9f2c27ccff6a53ee630e31d334c3af4e22528",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.ext.asyncio.exc",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/exc.py",
+      "sha256": "0ad1b1f2c8c7cf2929519a238a176e62d5e3654cfeabe38b72e3fc10da071416",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.ext.asyncio.result",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/result.py",
+      "sha256": "c457d360bf22f72aac9820fd12b1dbd89aa12a1030ba5786cf5aaeb604382920",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.ext.asyncio.scoping",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/scoping.py",
+      "sha256": "e93ef0175771390e9cf8fc8df8277a6b31c1f869a18e857d964e91403abdb17c",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.ext.asyncio.session",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/ext/asyncio/session.py",
+      "sha256": "875e89b14110e7b9bd435c86bf26716a1e38031638e80179bc044f1292c43e7e",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.future",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/future/__init__.py",
+      "sha256": "f699e040f021a200938643f458caa9e3731888c1d0f2eb107a493420186b518c",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.future.engine",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/future/engine.py",
+      "sha256": "08d21e673fb4dc6481ca56024d36a6fd89399070f4129adf4f168d12041cfb42",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.inspection",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/inspection.py",
+      "sha256": "46ac3990558b639307de9af48f67f739019971adda151f8d39a2f6b111ae041a",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.log",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/log.py",
+      "sha256": "a1b499eccaae4f6bdabb10707b10c460f12346e9ef9cd390d75f877d81c8858a",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/__init__.py",
+      "sha256": "10d5f71b8fe667566197a02569701209603f8447d7d6dd906f70c6e61eabbecb",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm._orm_constructors",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/_orm_constructors.py",
+      "sha256": "f9b1de572ecba113655156c516e74e3a5338736d32e7cd6b49cddbd7d782700e",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm._typing",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/_typing.py",
+      "sha256": "e82a6fecb9676e81730d142a8b7101f1ffba3ec2e4ecdbc558ce3729bc0ff807",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.attributes",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/attributes.py",
+      "sha256": "e41d1f812af624b41bc4c7bcb2028e4a46e9017f59ef2145a46d1c208c0c169e",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.base",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/base.py",
+      "sha256": "66596ab4e2c4392cc1ba3c2e2607b8f6bb1a18dc8e7166485f578375fefe8e06",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.bulk_persistence",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/bulk_persistence.py",
+      "sha256": "629245228121de3b28ad7d7c1f064fd9ac1628c8ea0c506d6aeac3da74449c8a",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.clsregistry",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/clsregistry.py",
+      "sha256": "98ca550420b46154d87f5b90f6ef982676d1cb8c9f2f9cde415eb4b408c4b92b",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.collections",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/collections.py",
+      "sha256": "4f433a720f91fa7dbb0843c1554cfa9be082e8e566984ce23c2939eb8ef5ff00",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.context",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/context.py",
+      "sha256": "da1b0d1366225ec426dc3d9745804cf91de3662ee871b448c119f0523c2daf49",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.decl_api",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_api.py",
+      "sha256": "6162275d828dbaa780e8bc7300195fb9a01b3461fab9a39219406f0b0e2ebb47",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.decl_base",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/decl_base.py",
+      "sha256": "3472125e99eeea38f068fca50573e20f9cd8f989076fbad20fbdb4424d09897e",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.dependency",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/dependency.py",
+      "sha256": "0e4bed2a0bc8c6a622403826bffd15ac315a6db40b28821a5bdbd011a16d91a2",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.descriptor_props",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/descriptor_props.py",
+      "sha256": "fca904ce2b84594e02af1241c5bfb99db94c011e883f55b2cc244d46a4aac951",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.dynamic",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/dynamic.py",
+      "sha256": "b7747257055c20d42026a02cbc63efcf154b031bfad38153e2dacd78ba9d9a95",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.evaluator",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/evaluator.py",
+      "sha256": "0e4292ef50d8933651b715d187ef290b2ba9fd7ed77db8bd16358771e4e270e0",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.events",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/events.py",
+      "sha256": "8386df91c26c4459e3cb37d61f143ce21d8608d3c72912f95f439e40137a1d24",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.exc",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/exc.py",
+      "sha256": "5b5d530369035550f0798beb0cac28aa01553bbc22228156ff21ea0edb3b7c65",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.identity",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/identity.py",
+      "sha256": "90880981b37630b68bde4738dfe8b5080dfd7b0c3bb37517b2ff71c628e5419a",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.instrumentation",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/instrumentation.py",
+      "sha256": "98d95e0c930501481dad0dc23b53b98a8692f62df34e2bec2c6fa752a652a31a",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.interfaces",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/interfaces.py",
+      "sha256": "79719640b29fc7575300863a0970bf20ef73cd699c73455969043935841ce7b0",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.loading",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/loading.py",
+      "sha256": "11b01922f9e7891aee5d0466fd5e2bd31d10e77e2349a9829f4c3be61c813049",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.mapped_collection",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/mapped_collection.py",
+      "sha256": "501dc99823594369345c1d0c1fa4fb6e044fb9e13ba52ae1732163497fe0f0cb",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.mapper",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/mapper.py",
+      "sha256": "31816b7b00afea621216e34d001511b2c0a3b75ff6472c14f7bbb7e7d4e6cf00",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.path_registry",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/path_registry.py",
+      "sha256": "002020001462ea3c62c6cd62f714eb3c7bec3e6b50eb2ecbbc1bf1c7cb974c41",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.persistence",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/persistence.py",
+      "sha256": "dd62e385ef70b3c0bc0fa9497085768c03a33418f623cc02433980d6249f9c2f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.properties",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/properties.py",
+      "sha256": "9cd00a3de53b59fd14865b597adfe27b2060b196c4e80d7675da26a0a56afd1f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.query",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/query.py",
+      "sha256": "fbb7a07f519251a9ca6fb5915a982653e38c334fb7846d922f9efd22e2f61a97",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.relationships",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/relationships.py",
+      "sha256": "b6c93819658f1851bd719f5ff6643f66bc491e1189dd60cac769fefe28c761a5",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.scoping",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/scoping.py",
+      "sha256": "d1d89b80ddf4716d4b3a0552e8c2668f164774d7420b5b34d2a89a000cd01aa1",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.session",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/session.py",
+      "sha256": "b12db5f1bc4056e8be239a9557b0124c136a8addd139a3a3efce1668c032fbd3",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.state",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/state.py",
+      "sha256": "612d2fa0dfdf7e3ee183b76a92519dbcd306c0420b2a8d6d5efef6e4e216f665",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.state_changes",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/state_changes.py",
+      "sha256": "ccc870c5b40d56571198aed8c1a3ec62cc4de2e849930e0c9a0fec9dfb401838",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.strategies",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/strategies.py",
+      "sha256": "9c717d0600e06007831b777b35e5a21885b10fe84d7eb20ef8768b6d87f63bd4",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.strategy_options",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/strategy_options.py",
+      "sha256": "5d6d50fa7e285f2bc085e7a9a4c88ecb3f6144a6fc533298291188d9fd4286e4",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.sync",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/sync.py",
+      "sha256": "df2726b160072b8cf051fbdf5e3d9ee2fe7c333990f4a50b5b2e1ac281b3a0c2",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.unitofwork",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/unitofwork.py",
+      "sha256": "c23568fa9401b71f77a786b08e474aa5b7d61b910dcfe93e56da6415e8dc261a",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.util",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/util.py",
+      "sha256": "1b4ac4c05ade570c09e0c6ed9886d657c6d88963ec9ba937f55b448517f6056c",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.orm.writeonly",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/orm/writeonly.py",
+      "sha256": "3aa45696259affd9ae599208fc2b433a6e7c60c6313505ad68fe85febf64fa28",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.pool",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/pool/__init__.py",
+      "sha256": "474b5d8ef5c7d937d3bfcb12dfa083b37837455c279e8dde5d695f349861cded",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.pool.base",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/pool/base.py",
+      "sha256": "5dbe91e32ec424f1e4cfee5db84896b96cfb23c601020e291d0a6644ff50883f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.pool.events",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/pool/events.py",
+      "sha256": "1666b612f525f177db9cf118b116266ab46dba66099a9153131c6f3b86e63a69",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.pool.impl",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/pool/impl.py",
+      "sha256": "ed1388cb028150edad2a85542d99808f819d1e7e8033bb19bf60e22ecbbb320a",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.schema",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/schema.py",
+      "sha256": "45203f8c223430591e3aa8904aca2b91ac8df9a155458b0e7c3338134be59352",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/__init__.py",
+      "sha256": "5fa56a42e7049974b9ff48d6e08939efaf3227ef91c0d3cb09e574a6da121b79",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql._dml_constructors",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/_dml_constructors.py",
+      "sha256": "c840aa92af0ff3c9ac28a266bc7aa2206780b501024916bdbd0a42f153f31b22",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql._elements_constructors",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/_elements_constructors.py",
+      "sha256": "e1dcdc312d31352bf115d5ccc71fb6a7b38af7c4abba2fdc5aad3a0a4d0a9544",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql._orm_types",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/_orm_types.py",
+      "sha256": "5bc7120fecdc9b6c3ea6c1521ca1babe9b7ad086e88a7c729cf4c16e3938a886",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql._selectable_constructors",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/_selectable_constructors.py",
+      "sha256": "101781422af670a481ca47a3576eebce9ac9a4dba6df124130c253938921e055",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql._typing",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/_typing.py",
+      "sha256": "ffee155fe66d5a822947e82cc7088ece5c07cccb91ece58b4c191c3f3ff287dd",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.annotation",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/annotation.py",
+      "sha256": "cbebc64826cb26cae02e49102f9337ff2b5ccceb32c78cf7da40e7a7045e243b",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.base",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/base.py",
+      "sha256": "be61c6c49c33fdcb98ca6023b82b0c9d721c6560e262657b627872f8607702c6",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.cache_key",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/cache_key.py",
+      "sha256": "004d0b1c1de1fae90213de6cbd6f4751c33bad65105a824a7bd4d85bda4ac4a7",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.coercions",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/coercions.py",
+      "sha256": "f7f19d38fe7d01f94322cb56b0344f9c9ada2465714b907894f7cbfba8877e0d",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.compiler",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/compiler.py",
+      "sha256": "bc6ed1aafad01f1cfba799a285340021f2d0b7638a1e745eee9b494cd2bc627b",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.crud",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/crud.py",
+      "sha256": "9c2144758ca8747f7de476b0caa15a225b487b6af728a60017d46b5e0930f165",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.ddl",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/ddl.py",
+      "sha256": "7c969b7a80808f761ce91ae66a21815224a7286d3165eede599b39420b49d8b2",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.default_comparator",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/default_comparator.py",
+      "sha256": "8dac5de3d202d5f952df8f6a3d9d997098479756b203e06e5aae7607845a25ec",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.dml",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/dml.py",
+      "sha256": "4dc1d057624e666d2f4657d3336aac17971be22fc2213b3fa1bf1a96418adfc4",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.elements",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/elements.py",
+      "sha256": "d48ceed670eea800fe6bf67b60a1d0f1b6b6d607add26e61f340f31d4eeb5b64",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.events",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/events.py",
+      "sha256": "c69ab1de2ae41bc377832b1701588b0aa5d791ef4a09253eeb0e336547585f3c",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.expression",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/expression.py",
+      "sha256": "131a25394c8827dd1e0591a9a741b9c36f535e127455fe2acab280fab29ef555",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.functions",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/functions.py",
+      "sha256": "5acd63686d3b1b6cc44e9989cf268c936e020d63045ded49451793918f49de9e",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.lambdas",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/lambdas.py",
+      "sha256": "491d87f181aaaf857142285e1cc65bba3d5e581fde15b800395ac393a417ca1f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.naming",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/naming.py",
+      "sha256": "c3ad93db28faa5a7cb3517bb48352cbad9251d262021a6d78f652d9da0894523",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.operators",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/operators.py",
+      "sha256": "ee1f283f0c3c808ceaca18b3a625be8b254d485084594a2e1b2325846d645da7",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.roles",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/roles.py",
+      "sha256": "f4aae711dd66b79fcb9bc1befbbb8a08a1d576b5b73e4b3765749a710efd0d01",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.schema",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/schema.py",
+      "sha256": "ee400babee26d9cacad39c97ccde6bfc0322b1ef946d30509eb58ec79d488ff4",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.selectable",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/selectable.py",
+      "sha256": "d662412f0e80220bd637d26c696940afed0860eb0d08a89ae7f7259f390de005",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.sqltypes",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/sqltypes.py",
+      "sha256": "c0a224385311292b5d1435688d912edad33c472cf5d08a28d0671617260241ed",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.traversals",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/traversals.py",
+      "sha256": "9cdd4c0e6ab12900395870289497cb6c3ca548292e82ed03e388852caa2215d7",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.type_api",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/type_api.py",
+      "sha256": "a9328f0f453a337dd231ec7014c347621e4aeeeac449f5261ee5a8a42b56a860",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.util",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/util.py",
+      "sha256": "999187d396586d7426d3b396593dc6f1c98c7cbf7abcd466ed8d6592ce877da5",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.sql.visitors",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/sql/visitors.py",
+      "sha256": "abbb014080d6013c14d2559a4156121260166a5fb781910db2f146a918a149ad",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.types",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/types.py",
+      "sha256": "471a5f210317278e9bfa4eb2b8365ce59112df23b69eeb741258859d1c89f326",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.util",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/util/__init__.py",
+      "sha256": "678b6c2d1ccd157fd5cc26a04857c4ce5e67beea7c3b3dcfe3ef3b0922186173",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.util._collections",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/util/_collections.py",
+      "sha256": "119d468eaad989e5e996d26a1b0b3ca6c6ef5b41ebcb4f488b21b2dba15c6b11",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.util._concurrency_py3k",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/util/_concurrency_py3k.py",
+      "sha256": "77d8fa9522bf45122616afc8b4104e948db96c08ddabb4ecf4d9cdc69a0d6d2c",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.util._has_cy",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/util/_has_cy.py",
+      "sha256": "872d5e5e1c44db9553e5bbd620a5fa8ed7ea8dac124019ecb2b4db1a8f24c3d4",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.util.compat",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/util/compat.py",
+      "sha256": "128f67e08953f82c2969ef753920ffa338af68355649620c57aa00f6a65d0e4f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.util.concurrency",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/util/concurrency.py",
+      "sha256": "42bedb54101e85bbfc82febef9daa0f01cb9a53136a087629d931ceeb704b1ec",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.util.deprecations",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/util/deprecations.py",
+      "sha256": "15a5daca8b6fd89a08d945f02b1b8230c199f1e997d56d5d5f8910374e9b4666",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.util.langhelpers",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/util/langhelpers.py",
+      "sha256": "73d604262679cc986a02f5f534798d97a41b9127382a6fd3524ec05fbc13669d",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.util.preloaded",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/util/preloaded.py",
+      "sha256": "06f1234bf28354896c12b30633684248b1562de3240a077f6fe0f9f1bd50bb0c",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.util.queue",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/util/queue.py",
+      "sha256": "18555962659ff3a7a34d0c126adc3b50e84360d286cc816d4c3054d136a73c5f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.util.topological",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/util/topological.py",
+      "sha256": "c8ca5a036b3425821e9101785cac33273cbc955a3ef327a8f28d49db1cf1ab8f",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlalchemy.util.typing",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/sqlalchemy/util/typing.py",
+      "sha256": "e248ac239398adcb45dbfa15650d59616202327aea270f930613ef3df97165ca",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlite3",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/sqlite3/__init__.py",
+      "sha256": "f7cc982617b68e147540ef352d38310fe4d25c2c9c2542b67d0590c871df09a8",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "sqlite3.dbapi2",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/sqlite3/dbapi2.py",
+      "sha256": "7c5c8d98df1f2c50c4062a3be2c0f0499190c179fa4fc281507a1ef763a98f28",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "ssl",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ssl.py",
+      "sha256": "4a2368eb4ecbcf07859a44582d9fc015a73eac16a4b90b514fb5c63a8a9d95ca",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "stat",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/stat.py",
+      "sha256": "052af0327eae6941b69b05c088b3e748f79995635f80ac4cc7125eb333eb4c77",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "string",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/string.py",
+      "sha256": "24aeae1f0526250f442022022bf98df9a823b1cb330543ee79e70e44907462e9",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "struct",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/struct.py",
+      "sha256": "9c231f9497caf513a22dee8f790b07f969b0e45854a0bdd6dd84b492e08c2856",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "subprocess",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/subprocess.py",
+      "sha256": "85d29b2bf0249f5436838298c9a60ee93508b1102e9ac43b001f8a7e7ae8f375",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "sysconfig",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/sysconfig.py",
+      "sha256": "ce56212ba89be181fb90fe62496e6d2e436befaf2dffd10e87ce37d1685271a8",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "tempfile",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/tempfile.py",
+      "sha256": "2eea4401f4f29d0d3647ed6fc8bcf6aa1daf879c8aa407a8ea310edac9dfc317",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "textwrap",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/textwrap.py",
+      "sha256": "62867e40cdea6669b361f72af4d7daf0359f207c92cbeddfc7c7506397c1f31c",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "threading",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/threading.py",
+      "sha256": "846f450ae794e4aab823a163f8c71d27751148af33e91dd3de886686a4e8ebfb",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "token",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/token.py",
+      "sha256": "1a4d994ce9744f4bfe2d964fc24d112a1e76796a08c2e45a2d73c82a8587f922",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "tokenize",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/tokenize.py",
+      "sha256": "026f566ac63e60d69c8185a3880831b657accc5eac984fadf271fc99a5e5825d",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "traceback",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/traceback.py",
+      "sha256": "2c44af2848836d9af0c7b3547469695cd22586c64274d362eafcf466af284bd6",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "types",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/types.py",
+      "sha256": "345474ef027a1273f353da9bdc1f7c18f65335e72e681bcc0376774cc51f2405",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "typing",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/typing.py",
+      "sha256": "be92d60fb8382bb29ead21c128825d7c96d0e8c915b44f840791e49f5a8d554c",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "typing_extensions",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/typing_extensions.py",
+      "sha256": "4040ca1a1ecbee00d1385c12a93084d1c5bd46f0b774f07e5ae7e91c4f55e696",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "typing_inspection",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/typing_inspection/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "typing_inspection.introspection",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/typing_inspection/introspection.py",
+      "sha256": "5888c45bd627da692d9527699e3f549adf35651596b1656772310e12181b4396",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "typing_inspection.typing_objects",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/typing_inspection/typing_objects.py",
+      "sha256": "a778d6290d51581c9c9a23e0263af2a4604c76def5c4d40a7cd1a375b0046ff6",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "tzlocal",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/tzlocal/__init__.py",
+      "sha256": "562dffdfb17fb0177000a6e7108b6a58d8de59a856f8c02af1e703d705fd1d90",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "tzlocal.unix",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/tzlocal/unix.py",
+      "sha256": "44add9a99f9833bfbb13bb03f800a1d5b38c397280b70bfb8964726d7570f724",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "tzlocal.utils",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/tzlocal/utils.py",
+      "sha256": "3dffb8651e542061bb8cfb7bb939cc81387e6212b74bfc8a7ef622c2b7defcef",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "tzlocal.windows_tz",
+      "file": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/lib/python3.12/site-packages/tzlocal/windows_tz.py",
+      "sha256": "50bc4be62bbb914197e82111cc4dbcfb0d44e72c7f3f3a2ab89a7cd3c2413dd0",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "urllib",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "urllib.parse",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py",
+      "sha256": "e6af7f475262f1de335bb2e41e26adb94d6103977cf5fe1ddc430dc6a3b1623f",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "uuid",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/uuid.py",
+      "sha256": "fe357bff7241e9fd6f86ee81567fd20aeec2e17460428ea9b7924bebf57301fc",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "warnings",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/warnings.py",
+      "sha256": "6405e281882932205eae641b2d31fba7776f94517a206d289465a1caffbf310e",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "weakref",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/weakref.py",
+      "sha256": "56f8d313fb74019e53eb9287400702fbce788b7fe30e097b0b6e06296f3f080c",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "zipfile",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/zipfile/__init__.py",
+      "sha256": "83031a1582b84054fdde260a372f8ed25d9dedfbfcbedcef2bc015bcca7c5332",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "zipfile._path",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/zipfile/_path/__init__.py",
+      "sha256": "63fc930890d38a662253bcf7ae50a1bfa06ce38bade19084f9c89f964dcd0e12",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "zipfile._path.glob",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/zipfile/_path/glob.py",
+      "sha256": "64e27d3872da2ea18b901718c91297d32b9610ebdad058de8561344b0a10e8d7",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "zipimport",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/zipimport.py",
+      "sha256": "a96f1d7a7b6aaf421a3cf382b94b1422f4f0ad452fdd0bb61d635b560d7a4e91",
+      "present_before_vendor_imports": true
+    },
+    {
+      "module": "zoneinfo",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/zoneinfo/__init__.py",
+      "sha256": "ac7fb403e4371d07482ef2fda81dbcf6879484e9fc41d4be42c156d7e54c68a8",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "zoneinfo._common",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/zoneinfo/_common.py",
+      "sha256": "67deaf0ba41aa4865e007297677207485a89b75629eea0ee5c472be8a3e83bf6",
+      "present_before_vendor_imports": false
+    },
+    {
+      "module": "zoneinfo._tzpath",
+      "file": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/zoneinfo/_tzpath.py",
+      "sha256": "5dc473af6f6ae35e5531cc9705a1e4923aa07e7d35f6b4c275b90c6a3c2591c4",
+      "present_before_vendor_imports": false
+    }
+  ],
+  "threads_before": [
+    "MainThread"
+  ],
+  "threads_after": [
+    "MainThread"
+  ],
+  "socket_module_loaded": true,
+  "requests_urllib3_absent": true,
+  "boundary": "selected source bodies + actual SQLite/schema/stopped APScheduler; owned callback/event/auth/message inputs; not full source host, HTTP, real plugins, site auth or timer firing"
+}

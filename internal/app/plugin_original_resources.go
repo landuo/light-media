@@ -17,7 +17,7 @@ func originalStandardCapabilityAllowed(contract, method string) bool {
 			return true
 		}
 	}
-	return contract == pluginResourcesSDKContract && (method == plugins.BrushInventoryReadCapability || method == plugins.LogWriteCapability || method == plugins.DownloaderTasksReadCapability || method == plugins.BackgroundSubmitCapability || method == plugins.ServicesRefreshCapability || method == plugins.ServiceProgressCapability || method == plugins.AuthTicketCreateCapability || method == plugins.PostMessageCapability || method == plugins.EventSendCapability || method == plugins.EventCheckCapability || method == plugins.EventManageCapability || originalInputCapability(method) || categoryEditorCapability(method) || originalSharedSubscriptionsCapability(method) || originalSharedSystemConfigCapability(method) || originalSharedHistoryCapability(method) || originalSharedManagerQueryCapability(method) || originalSharedTransmissionQueryCapability(method) || originalSharedQBittorrentCompletedCapability(method) || originalSharedLocalStorageCapability(method) || originalSharedOCRCapability(method))
+	return contract == pluginResourcesSDKContract && (method == plugins.BrushInventoryReadCapability || method == plugins.LogWriteCapability || method == plugins.DownloaderTasksReadCapability || method == plugins.BackgroundSubmitCapability || method == plugins.ServicesRefreshCapability || method == plugins.ServiceProgressCapability || method == plugins.AuthTicketCreateCapability || method == plugins.PostMessageCapability || method == plugins.EventSendCapability || method == plugins.EventCheckCapability || method == plugins.EventManageCapability || originalInputCapability(method) || categoryEditorCapability(method) || originalSharedSubscriptionsCapability(method) || originalSharedSystemConfigCapability(method) || originalSharedHistoryCapability(method) || originalSharedManagerQueryCapability(method) || originalSharedManagerMutationCapability(method) || originalSharedManagerRuntimeCapability(method) || method == plugins.SharedPluginRemove || originalSharedSchedulerCapability(method) || originalSharedTransmissionQueryCapability(method) || originalSharedQBittorrentCompletedCapability(method) || originalSharedLocalStorageCapability(method) || originalSharedOCRCapability(method))
 }
 
 func originalResourceDecode(raw json.RawMessage, output any) error {
@@ -67,6 +67,18 @@ func (a *App) pluginOriginalResourceHost(ctx context.Context, scope originalBase
 	}
 	if originalSharedManagerQueryCapability(method) {
 		return a.originalSharedManagerQuery(ctx, scope, method, raw)
+	}
+	if originalSharedManagerMutationCapability(method) {
+		return a.originalSharedManagerMutation(ctx, scope, method, raw)
+	}
+	if originalSharedManagerRuntimeCapability(method) {
+		return a.originalSharedManagerRuntime(ctx, scope, method, raw)
+	}
+	if method == plugins.SharedPluginRemove {
+		return a.originalSharedManagerRemove(ctx, scope, raw)
+	}
+	if originalSharedSchedulerCapability(method) {
+		return a.originalSharedScheduler(ctx, scope, method, raw)
 	}
 	if originalSharedHistoryCapability(method) {
 		return a.originalSharedHistoryResource(ctx, scope, method, raw)
