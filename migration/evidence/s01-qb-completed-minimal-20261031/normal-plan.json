@@ -1,0 +1,86 @@
+{
+  "state": "frozen",
+  "base_commit": "b4f3251ee4f5359659a66935a427502da20f59e1",
+  "worktree": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/worktrees/release-s01-20261031",
+  "candidate_manifest": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/assembly.json",
+  "run_directory": "normal01",
+  "gotmpdir": "/tmp/s01-release-normal01",
+  "source_packages": [
+    "./internal/app",
+    "./cmd/owned-qbittorrent-completed-fixture",
+    "./internal/plugins",
+    "./cmd/owned-transmission-query-fixture",
+    "./cmd/server"
+  ],
+  "fixtures": [
+    {
+      "binary": "qb-allowed",
+      "package": "./cmd/owned-qbittorrent-completed-fixture",
+      "env": "OWNED_QBITTORRENT_COMPLETED_FIXTURE_BINARY",
+      "ldflags": ""
+    },
+    {
+      "binary": "qb-denied",
+      "package": "./cmd/owned-qbittorrent-completed-fixture",
+      "env": "OWNED_QBITTORRENT_COMPLETED_DENIED_FIXTURE_BINARY",
+      "ldflags": "-X main.fixtureDenied=true"
+    },
+    {
+      "binary": "tr-allowed",
+      "package": "./cmd/owned-transmission-query-fixture",
+      "env": "OWNED_TRANSMISSION_QUERY_FIXTURE_BINARY",
+      "ldflags": ""
+    },
+    {
+      "binary": "tr-denied",
+      "package": "./cmd/owned-transmission-query-fixture",
+      "env": "OWNED_TRANSMISSION_QUERY_DENIED_FIXTURE_BINARY",
+      "ldflags": "-X main.fixtureDenied=true"
+    }
+  ],
+  "test_packages": [
+    {
+      "label": "sdk",
+      "package": "./internal/plugins",
+      "binary": "sdk.test",
+      "roots": [
+        "TestQBittorrentCompletedSDKRawFieldsAndNone",
+        "TestQBittorrentCompletedSDKRejectsInputAndHostFault"
+      ]
+    },
+    {
+      "label": "app",
+      "package": "./internal/app",
+      "binary": "app.test",
+      "roots": [
+        "TestSharedQBittorrentCompletedWorkerOwnedProtocolCold",
+        "TestSharedQBittorrentCompletedWorkerPermissionAndWire",
+        "TestSharedQBittorrentCompletedDispatchScope",
+        "TestSharedQBittorrentCompletedResponseLimit",
+        "TestSharedTransmissionQueryWorkerPermissionAndWire"
+      ]
+    }
+  ],
+  "build_server": true,
+  "expected_roots": 7,
+  "expected_go": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/bin/go",
+  "runtime_inputs": [
+    "internal/plugins/iyuuautoseed/reference/native-projection-oracle.json",
+    "testdata/plugins/clean-invalid-seed-mutation-phase/installed-qb.py",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/delivery-whitelist-20261031/first-slice-proposal.json",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/delivery-whitelist-20261031/exact-hook-spec.json",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/delivery-whitelist-20261031/s01-prepared-gates-static-review.json"
+  ],
+  "frozen_runner_inputs": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/run-candidate.py": "38c5becf9ca998ff6ea970c86d08c7e57d5c6997dbe10f1e91b5ad162831b12f",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/monitor.py": "33b5f4da11183712c7c7709e34d1fcfced298b4505de1f9a7fac1735a3e6ee52",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/launch.sh": "2e76ad9da2630177d52f4e3d207fc2f1d515de66034afc2ce6bd41fe73419fdb",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/assembly.json": "709af4e7a6c651118f71536a5dfd00893934b30718dcc2aa2447c1c365382885",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/delivery-whitelist-20261031/s01-prepared-gates-static-review.json": "797fe296631c6918001f0b6689081639f7de4a68e1bd99b399abc413d4983929"
+  },
+  "scratch_growth_budget_bytes": null,
+  "growth_policy": "Atstart available scratch minus1GiB equals realfloor; no arbitrary growthcap",
+  "scope": "Fresh b4+S01 standalone candidate. Normal SDK2/App4+adjacentTR1 with newlybuilt normalQBandTRallowdeny +server compileonly. No realqBdaemon/netlink/sourcePython/browser/remote acceptance.",
+  "inheritance_pending_review": "Pure App3/native4 and source28 retain finite unchanged function/actual dependencies evidence only after reviewer confirms; no old dirtytreePASS mapped to newhost."
+}

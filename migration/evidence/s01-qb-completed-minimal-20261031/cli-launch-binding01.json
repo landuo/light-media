@@ -1,0 +1,57 @@
+{
+  "at": "2026-10-31T09:47:12.736383+00:00",
+  "state": "actual_newcandidate_artifacts_bound_NOT_EXECUTED_wait_normal_independent_and_coordinator_grant",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-B",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/cli-driver.py",
+    "--server",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/server",
+    "--expected-server-sha",
+    "0a4035ea012ac8595e68be19ce36a30e6b22be3fe1ba7d1882d31a1602025277",
+    "--worker",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/qb-allowed",
+    "--expected-worker-sha",
+    "1bd44886362a396c8c18b2e075e8bc89fdabc1138f15d4dcb58e58503761ddd4",
+    "--evidence",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/cli01"
+  ],
+  "cwd": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031",
+  "environment": "Copy complete inherited environment; add only existing test control S01_CLI_EXECUTION_GRANTED=1, no proxy/TLS/product setting rewritten; driver then passes its inherited ENV unchanged to held children",
+  "test_grant_environment": {
+    "S01_CLI_EXECUTION_GRANTED": "1"
+  },
+  "assembly_sha256": "709af4e7a6c651118f71536a5dfd00893934b30718dcc2aa2447c1c365382885",
+  "driver_sha256": "d2bb0571f8eb24b743a35abbdfb385a5174d3d5819c8c2ce11cc064f3e54387d",
+  "server": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/server",
+    "sha256": "0a4035ea012ac8595e68be19ce36a30e6b22be3fe1ba7d1882d31a1602025277",
+    "bytes": 67854312
+  },
+  "worker": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/qb-allowed",
+    "sha256": "1bd44886362a396c8c18b2e075e8bc89fdabc1138f15d4dcb58e58503761ddd4",
+    "bytes": 5264215
+  },
+  "normal02_session_reported_by_coordinator": 67611,
+  "normal02_actual_exit": 0,
+  "normal02_roots": 7,
+  "normal02_input_count": 6208,
+  "inputs_manifest": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/cli-launch-inputs01.json",
+    "sha256": "76f8f87c3d5cd05eb9ebd1924805c08d02c21159a6e8330dc54a8db05e7c571f",
+    "count": 34
+  },
+  "controller": "exact http://127.0.0.1:39123,6fixedmethod-path pairs,no redirects/fallback/transportretry/proxy credentials",
+  "normal_hosts": 2,
+  "evidence_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/cli01",
+  "evidence_path_absent_at_binding": true,
+  "business_sequence": "Original03 ordinaryinstall/config/observe/safequery/owned503non-success/recovery/sameDataDircold/401/newworker/zeroextrafetch",
+  "remaining": "normalindependentreadback+soleCLIgrant; actualraw503\u2192HTTP502 required; separate race4 stillpending",
+  "not_claimed": [
+    "realqBdaemon/netlink/sourcePython",
+    "browser/UI",
+    "actualmedia/download/NAS",
+    "remote delivery"
+  ]
+}

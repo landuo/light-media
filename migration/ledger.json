@@ -4096,7 +4096,8 @@
         "S01",
         "S03",
         "S13",
-        "S01.transmission_queries"
+        "S01.transmission_queries",
+        "S01.qbittorrent_completed"
       ],
       "feature_link_reason": "helper directly supports named SDK/platform chain",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -4403,7 +4404,8 @@
         "S13",
         "S14",
         "S15",
-        "S01.transmission_queries"
+        "S01.transmission_queries",
+        "S01.qbittorrent_completed"
       ],
       "feature_link_reason": "helper directly supports named SDK/platform chain; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link; exact representative entrypoint reverse-link",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -5435,7 +5437,8 @@
       "feature_ids": [
         "S01",
         "S03",
-        "S13"
+        "S13",
+        "S01.qbittorrent_completed"
       ],
       "feature_link_reason": "system provider/client family qbittorrent; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -5449,7 +5452,8 @@
       "feature_ids": [
         "S01",
         "S03",
-        "S13"
+        "S13",
+        "S01.qbittorrent_completed"
       ],
       "feature_link_reason": "system provider/client family qbittorrent; exact fallback/default/error behavior remains source-bound",
       "coverage": "static-source-scope-not-runtime-equivalence"
@@ -16897,7 +16901,8 @@
       "line": 254,
       "end_line": 289,
       "feature_ids": [
-        "S01"
+        "S01",
+        "S01.qbittorrent_completed"
       ],
       "chain": {
         "ingress": "ordinary plugin import/helper/Oper call, or source builtin cache command",
@@ -28448,6 +28453,140 @@
         "current_UI_native_dependency_limit": "No same-runtime mappedexe/loader/libc capture; original failure evidence preserved"
       },
       "remaining_parent_scope": "See originalparent and runtime-safety-boundaries; no wholefamily/sourceclaim."
+    },
+    {
+      "id": "S01.qbittorrent_completed",
+      "parent_feature": "S01",
+      "description": "Finite ordinary SDK qB completed query with exactJSONselector/sourcephase/rawfield semantics andexistingnativeclient; notwholeS01/realdaemon/TLSadaptation",
+      "status": "verified",
+      "owner": "S01 standalone release candidate",
+      "source_paths": [
+        "app/modules/qbittorrent/qbittorrent.py",
+        "app/modules/qbittorrent/__init__.py",
+        "app/helper/downloader.py",
+        "app/helper/service.py"
+      ],
+      "entrypoint_ids": [
+        "scope.sdk.app.modules.qbittorrent.qbittorrent.Qbittorrent.get_completed_torrents"
+      ],
+      "dependencies": [
+        "02",
+        "05"
+      ],
+      "target_paths": [
+        "cmd/owned-qbittorrent-completed-fixture/main.go",
+        "internal/app/plugin_original_resources.go",
+        "internal/app/plugin_shared_qbittorrent_completed.go",
+        "internal/app/plugin_shared_qbittorrent_completed_boundary_test.go",
+        "internal/app/plugin_shared_qbittorrent_completed_decode.go",
+        "internal/app/plugin_shared_qbittorrent_completed_fixture_test.go",
+        "internal/app/plugin_shared_qbittorrent_completed_values.go",
+        "internal/app/plugin_shared_qbittorrent_completed_values_test.go",
+        "internal/app/plugin_shared_qbittorrent_completed_worker_test.go",
+        "internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed.go",
+        "internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed_test.go",
+        "internal/plugins/shared_qbittorrent_completed.go",
+        "internal/plugins/shared_qbittorrent_completed_test.go"
+      ],
+      "scenarios": [
+        "idsnull/string/list andtagsfirstphase",
+        "nullable/empty/sourceexception/vendorJSONedgecontract",
+        "actualSDKpermission/identity/responsebudget/cancel-revoke-configchange",
+        "normalCLIqueryfailure-recovery-cold/401/observernoqB/Wait0"
+      ],
+      "evidence_ids": [
+        "s01-qb-completed.minimal-release-e2e"
+      ],
+      "review": {
+        "status": "passed",
+        "independent": true,
+        "reviewer": "delivery_whitelist_review / Astra ultra",
+        "evidence_ids": [
+          "s01-qb-completed.minimal-release-review"
+        ]
+      },
+      "facet_checks": {
+        "data": {
+          "applicable": true,
+          "reason": "RawJSONnumberlexemes/order/nullable/vendorreannounce projection andSDKprivatefields preserved; finitefixtureAPI onlynames/status/explicitPID receipt.",
+          "evidence_ids": [
+            "s01-qb-completed.minimal-release-e2e",
+            "s01-qb-completed.minimal-release-review"
+          ]
+        },
+        "state": {
+          "applicable": true,
+          "reason": "Existingnativeauthentication/session reused; selectors union/tags-beforecompletion; no new downloaderconfig or mutation authority.",
+          "evidence_ids": [
+            "s01-qb-completed.minimal-release-e2e",
+            "s01-qb-completed.minimal-release-review"
+          ]
+        },
+        "errors": {
+          "applicable": true,
+          "reason": "Source caughtNone versus success[] and completion exceptions; invalidpayload/permission/responsebudget; actualCLI503→502→recovery, oldobserverFAIL retained.",
+          "evidence_ids": [
+            "s01-qb-completed.minimal-release-e2e",
+            "s01-qb-completed.minimal-release-review"
+          ]
+        },
+        "concurrency": {
+          "applicable": true,
+          "reason": "New standalone App4 race and freshly built two qB race workers; unchanged native2 race inherited through exact189-path comparison; observer branch actual normalCLI.",
+          "evidence_ids": [
+            "s01-qb-completed.minimal-release-e2e",
+            "s01-qb-completed.minimal-release-review"
+          ]
+        },
+        "restart": {
+          "applicable": true,
+          "reason": "Actualnormal2OS hosts/sameownedDataDir/newownedworkeridentities/configpersist/artifactonce/coldnoautonomousqB/2Wait0/naturalreaping.",
+          "evidence_ids": [
+            "s01-qb-completed.minimal-release-e2e",
+            "s01-qb-completed.minimal-release-review"
+          ]
+        },
+        "compatibility": {
+          "applicable": true,
+          "reason": "Pinnedsource28oracleinherited plusfixedsource/vendorstaticcounterexamples; exactfiniteJSONselectors, notarbitraryPython/entireqBdaemon.",
+          "evidence_ids": [
+            "s01-qb-completed.minimal-release-e2e",
+            "s01-qb-completed.minimal-release-review"
+          ]
+        },
+        "security": {
+          "applicable": true,
+          "reason": "Declaredfinitecapability/actualidentityscope; strictnativeTLS/timeouts/credentials/redirect unchanged; no daemon/netlinkretry, realdata,globalprocscanorbrowserbypass.",
+          "evidence_ids": [
+            "s01-qb-completed.minimal-release-e2e",
+            "s01-qb-completed.minimal-release-review"
+          ]
+        },
+        "performance": {
+          "applicable": true,
+          "reason": "Boundedwirelimit/cancellation/close and2secondownedresourceguard measured; no largeproductionworkload orinstantaneouspeakclaim.",
+          "evidence_ids": [
+            "s01-qb-completed.minimal-release-e2e",
+            "s01-qb-completed.minimal-release-review"
+          ]
+        }
+      },
+      "work_kind": "confirmed_delta",
+      "completion": {
+        "state": "standalone_candidate_verified_pending_commit_remote_readback",
+        "manifest": "migration/evidence/s01-qb-completed-minimal-20261031/publication-manifest.json",
+        "manifest_sha256": "e95756c6d2530d8ad8b94883f0bec8b6f22b6cbb1e52b5a317e4a58c65c5fa9a",
+        "base_commit": "b4f3251ee4f5359659a66935a427502da20f59e1",
+        "new_commit": null,
+        "remote_delivery": false
+      },
+      "boundaries": [
+        "OwnedHTTPprotocol andrealstandardSDK/App/normalCLI, notrealqBdaemon/originalPython/ordinaryinstalledbusinessconsumer/browser/CI",
+        "qBthirdpartySDKTLSdifferenceexcludedfromgroupedRequestUtilspermission; existingnative strictTLS/timeouts/credentials/redirect/guardsunchanged",
+        "RawprivatefieldsSDKonlyunderdeclaredfinitecapability; syntheticfixtureHTTPsafeprojection/processonly, nocredentials/rawtrackeroutput",
+        "OldTransmission/S05/S06/S07/S09/43creditretained; notall61/newremoteacceptance",
+        "Only exact13 newfiles plus2 dispatcher hooks assembled on b4; README/evidence/thisS01ledger metadata updated after tests, Go13 hashes unchanged; historical main dirtytree acceptance not substituted."
+      ]
     }
   ],
   "decisions": [
@@ -40529,6 +40668,426 @@
         "Read actuallogs/binary/input hashes, independent source comparisons and actual UItoolresults/peerrecords; not owner summary alone",
         "Assetclosure and aftercold cleanup verified; native observation limitation explicit; nonsecurity unresolved differences notapproved bypassing tests"
       ]
+    },
+    {
+      "id": "s01-qb-completed.minimal-release-e2e",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "S01.qbittorrent_completed"
+      ],
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "target_files": {
+          "internal/plugins/shared_qbittorrent_completed.go": "e3f06800ba67874aa23e9efd9daef9d794f02f9c6fe5599e963e46ca7aac8f61",
+          "internal/plugins/shared_qbittorrent_completed_test.go": "602d643ef0bf31cbc1ce26bf20eb8605016ea6ce755969a91883380a0a8cd94a",
+          "internal/app/plugin_shared_qbittorrent_completed_values.go": "ac736dde7af225b2a5ead4a2441afbaa26e6d8a821ae0942109ae3573bdd2433",
+          "internal/app/plugin_shared_qbittorrent_completed_fixture_test.go": "3fc550f97f0ca0ddf1ab5c4812c6589ca3061d19e273f8fa984935e21f88c4bd",
+          "internal/app/plugin_shared_qbittorrent_completed.go": "7b0d25cb9d14266f0f25da44b5f4f61396687250377d6520f3da9e8bb898ffe3",
+          "internal/app/plugin_shared_qbittorrent_completed_worker_test.go": "fc4b3e1d831597ece67e60c2cf86872fc4942c13201e68e9726ff991d48be8f8",
+          "internal/app/plugin_shared_qbittorrent_completed_values_test.go": "e6801f24dcde808e88ef4c8b717b6f8ade0fb6c81b2a383b3eac08c8a72fc1da",
+          "internal/app/plugin_shared_qbittorrent_completed_decode.go": "16f0d81699100ecce4fceeb5da181ca453346729da6773546157cf867d960373",
+          "internal/app/plugin_shared_qbittorrent_completed_boundary_test.go": "2dc3eb133b854e40fc7276f07331c2a487827e73c5df34edfa57036e0284039f",
+          "internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed.go": "ea9a7952068a106671f8710fb780413f8afe91967adc7b10b24eac62517b2883",
+          "internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed_test.go": "6fbdad5cc2f196fd22b2c0e03ef6d41450352a1f4ecd3c45866e3e8ca68ad58c",
+          "cmd/owned-qbittorrent-completed-fixture/main.go": "53186a5815fd02318dcf161e7b1d93fc1f9ecccc6dfbd53423c9b065c12102a7",
+          "internal/app/plugin_original_resources.go": "8c31144c1215293cfdcc18b9dcbdd0ebf73317c2a446425b229609231aa9f488"
+        },
+        "fixture_files": {
+          "evidence/s01-qb-completed-minimal-20261031/normal-resume-plan.json": "b767eac040b3b037ef8b0e5ce96bd7168a10e05ad76a855911bd1cd4d96452f5",
+          "evidence/s01-qb-completed-minimal-20261031/race-plan.json": "19b8f49c60d88886d9e864353e4a1ac0112e1c3c7a0ce9622601fa6275bc6c00",
+          "evidence/s01-qb-completed-minimal-20261031/cli-driver.py": "d2bb0571f8eb24b743a35abbdfb385a5174d3d5819c8c2ce11cc064f3e54387d",
+          "evidence/s01-qb-completed-minimal-20261031/review/s01-pure-inheritance-b4-readback.json": "eea49ecfb5311d229dcafd9be9588716e91bde41f4c5e04e029bc20843ce16a7"
+        },
+        "environment": "Cloud Linux Go1.26, actualstandardSDK/two normalhosts/ownedfixedHTTPqB only; scopedtmp raceGOCACHE. Compile/run inheritedexec environments differ; no proxy/globalTLS rewrite. Fullcurrent inputmaps preserved; no realqB/browser/CI claim."
+      },
+      "artifacts": {
+        "evidence/s01-qb-completed-minimal-20261031/assembly.json": "709af4e7a6c651118f71536a5dfd00893934b30718dcc2aa2447c1c365382885",
+        "evidence/s01-qb-completed-minimal-20261031/candidate.diff": "358ec9188d399cc1387cc698bba37bbfc2935bae4052f733e5be515388efd79e",
+        "evidence/s01-qb-completed-minimal-20261031/normal-plan.json": "51e4fb907318e1356151ecce9a6d730ed17ba8380d83a097bc8b99670e602dfb",
+        "evidence/s01-qb-completed-minimal-20261031/normal-resume-plan.json": "b767eac040b3b037ef8b0e5ce96bd7168a10e05ad76a855911bd1cd4d96452f5",
+        "evidence/s01-qb-completed-minimal-20261031/race-plan.json": "19b8f49c60d88886d9e864353e4a1ac0112e1c3c7a0ce9622601fa6275bc6c00",
+        "evidence/s01-qb-completed-minimal-20261031/run-candidate.py": "38c5becf9ca998ff6ea970c86d08c7e57d5c6997dbe10f1e91b5ad162831b12f",
+        "evidence/s01-qb-completed-minimal-20261031/monitor.py": "33b5f4da11183712c7c7709e34d1fcfced298b4505de1f9a7fac1735a3e6ee52",
+        "evidence/s01-qb-completed-minimal-20261031/launch.sh": "2e76ad9da2630177d52f4e3d207fc2f1d515de66034afc2ce6bd41fe73419fdb",
+        "evidence/s01-qb-completed-minimal-20261031/run-resume.py": "29157d09805ad70438e2f40c272906f2d23e609ffb764aef748b07498b218295",
+        "evidence/s01-qb-completed-minimal-20261031/monitor-resume.py": "16072a0d4911789a561a8329cc346c31b319117a6670325be8b9f8704c823f9e",
+        "evidence/s01-qb-completed-minimal-20261031/launch-resume.sh": "d7ba79fdb1b557b382f84d3cc504e30a362bd8681ec831439c35eb6279e7de6a",
+        "evidence/s01-qb-completed-minimal-20261031/run-race.py": "2af51a1762bfa0cdeee0130bbf368b1e932afd490bab9e96bcfb1afd649b9e61",
+        "evidence/s01-qb-completed-minimal-20261031/monitor-race.py": "c635ea9ff2375b33d88c3786012a04dbdf762f3b71b408ce346d5f2aa45bed6e",
+        "evidence/s01-qb-completed-minimal-20261031/launch-race.sh": "c9011ecc9b5b728020319db87ca64615218f8f5f0f2dc3a9934d26764b6bcdea",
+        "evidence/s01-qb-completed-minimal-20261031/cli-driver.py": "d2bb0571f8eb24b743a35abbdfb385a5174d3d5819c8c2ce11cc064f3e54387d",
+        "evidence/s01-qb-completed-minimal-20261031/cli-launch-binding01.json": "837bac779ada4a72370854bbaedae2084512e812121e366891f210709e52f5e6",
+        "evidence/s01-qb-completed-minimal-20261031/cli-launch-inputs01.json": "76f8f87c3d5cd05eb9ebd1924805c08d02c21159a6e8330dc54a8db05e7c571f",
+        "evidence/s01-qb-completed-minimal-20261031/cli-execution-grant01.json": "7c80084e49593d34ada320a6ccd7fbaaa64a47280f01b9a5ff6cb81c536040f7",
+        "evidence/s01-qb-completed-minimal-20261031/normal01-reuse-proof.json": "4b90036513f57592822e6061785918781b18c4073b49eee886682e34bd533e38",
+        "evidence/s01-qb-completed-minimal-20261031/race-final-bindings01.json": "9e2885ff551fc31667073463e10b9d97211b32897642368a71d8754accae7131",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/before-list.command.json": "aa6a87df82412e1f16caa2a00f5011f4d1a960ad99e227f583571e2cdc7d142c",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/before-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/binary-hashes.json": "c42ca2ca4c800a4339eeacc0eeaa6b8bb27db2bef417d47717767c621b395950",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-app.command.json": "f1c0068ccd9b519b9beaaebbc83a57d6ab66bb255cd947c1dddd630420c63861",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-app.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-app.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-qb-allowed.command.json": "4ec1d987a5f5bb81f9682d84ebef249b22f7b4ec6080655165bbabc50c2b5529",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-qb-allowed.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-qb-allowed.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-qb-denied.command.json": "8e6034184b577cdcee86488eaf3eb2403e24b7c9393a28ab697729847368ada8",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-qb-denied.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-qb-denied.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-sdk.command.json": "1effa5a23a3840238914d6be78bd93cdf3e038bd03ccca598a2738644531aabd",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-sdk.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-sdk.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-server.command.json": "ff67d3adb3f43f4dbf26852f306ace4c6c84e9dd2d0ec0b43e75aee211cedf50",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-server.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-server.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-tr-allowed.command.json": "3dddecb0cc8c09e29095d4004f7ff263d1ff0d8759d596161abc801932853cf8",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-tr-allowed.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-tr-allowed.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-tr-denied.command.json": "5a12a8ea293f321b31566af68d80c4d433fce2f4849efe892facbb197b0aa901",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-tr-denied.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/build-tr-denied.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/candidate-readback.json": "7ae03a9f2d2ccb756c20936b770eb103a1f1ac09450863f03926698c5137b0c6",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/failure.json": "c5d32dd57157c91ccc1106f8c68175a0748abdba01aa9d1643414e79e246e8ae",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/fixture-environment.json": "809c3ceaa139428a9c76d75fc88b4b65fba6269739fb4e284af4564c64dc6499",
+        "evidence/s01-qb-completed-minimal-20261031/normal01-monitor/result.json": "f56d7496b7e558ffc12297fc2fa4986b3023b398022d0ca064b7b1208a672aaa",
+        "evidence/s01-qb-completed-minimal-20261031/normal01-monitor/runner.log": "ff015d8a5a271f96e361c3361ddfda326b0badf9c93a8c413c5ebd0cd4f3068d",
+        "evidence/s01-qb-completed-minimal-20261031/normal01-monitor/monitor.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "evidence/s01-qb-completed-minimal-20261031/normal01-monitor/resources.jsonl": "d99aa5a3642baccfca0c59e78593ef773fd512cf58c79a0727455a50958632e0",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/actual-reuse-readback.json": "ab3754383aec172005464e6cc137974e8cc592c84fe6c3778de69e4a2e2d6932",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/actual-roots.json": "67f7a36b4b9b22ac4a9a05fd8d7252ba48340a7d719b731c35f473dbc63f0f85",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/after-list.command.json": "22a3a582801ecd949d54c23b56fe76d038af4542c5e7fbcbfdcbbd7850f4d9de",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/after-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/before-list.command.json": "7cc9f416db527422b0fc5df9797be4e38c49077065643d7f1d9ade626e6e45b8",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/before-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/binary-hashes.json": "f97635bb3e8808c1e13c72d81252d98c2363601776b593ea1e07a39a0114a1d5",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/candidate-readback.json": "7ae03a9f2d2ccb756c20936b770eb103a1f1ac09450863f03926698c5137b0c6",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/fixture-environment.json": "809c3ceaa139428a9c76d75fc88b4b65fba6269739fb4e284af4564c64dc6499",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/result.json": "064227d40b9c87b34c4cfbd5537bd26fb280b27fa1cb37b5aa42a205c5fe80d9",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/run-before-list.command.json": "54f9837eae0893692f5d215887ac3f43d8342e6fa42b632f70e6457a986d0097",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/run-before-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/runner.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/test-app.command.json": "92ab93057d2bc116c21a3b1ca48e7702023ec81d7a7310573b76a7d41cd10de1",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/test-app.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/test-app.log": "66c773a100ded221465300c8a7a53f2ef08265460f4bda7c252c6eccc06c281e",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/test-sdk.command.json": "69a338c82fe231c35e7d1a35c8629205ee72d3fec9a4dc20a9718c8ed0d8ad14",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/test-sdk.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/test-sdk.log": "1bbcca8468310149473cc26224d8e33f8de0d9c1847add48aa2a36881c4a3d5b",
+        "evidence/s01-qb-completed-minimal-20261031/normal02-monitor/result.json": "47a7328601bdf51f24c403c5dd58c9ed03efa02abaacd181521f5f7403cb9e30",
+        "evidence/s01-qb-completed-minimal-20261031/normal02-monitor/runner.log": "0f45edb6006fcab9718e4e9cf94715a3e36725ee85ebefa63c9e22f2f0775dea",
+        "evidence/s01-qb-completed-minimal-20261031/normal02-monitor/monitor.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/normal02-monitor/resources.jsonl": "9124312063fa4a7ce151db3af9390688b0303c8c8bf3f0f8804a41a2f866ed45",
+        "evidence/s01-qb-completed-minimal-20261031/race01/actual-roots.json": "d6c480907b50b91f97efbf67953fbac934f0a1f4e15700cdb4c08b2997afa158",
+        "evidence/s01-qb-completed-minimal-20261031/race01/after-list.command.json": "044c44b7c8e8c417ce7f045e5bcee9103f804272de866b292f65846e1978f140",
+        "evidence/s01-qb-completed-minimal-20261031/race01/after-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/race01/before-list.command.json": "2b20be5fe57dda9482b264642e9884b27132c023747e694176b975c546326aca",
+        "evidence/s01-qb-completed-minimal-20261031/race01/before-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/race01/binary-hashes.json": "8ce9ffdc4b3b95da69162e6f2276a6128b9b34a8f4906eb4559aba38d08c9e4c",
+        "evidence/s01-qb-completed-minimal-20261031/race01/build-app.command.json": "58f1479d90ed1444fe9dfe5ea90ef10b781c7b9aacb1971295e78cc7d0f69151",
+        "evidence/s01-qb-completed-minimal-20261031/race01/build-app.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/race01/build-app.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "evidence/s01-qb-completed-minimal-20261031/race01/build-qb-allowed.command.json": "b5e283f38279f3f13ac5d09eccf5c1f9a415c4e0ce962269a75b12481013efec",
+        "evidence/s01-qb-completed-minimal-20261031/race01/build-qb-allowed.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/race01/build-qb-allowed.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "evidence/s01-qb-completed-minimal-20261031/race01/build-qb-denied.command.json": "57eacc99c8fc6933f51fa4d97897580664f27b557b9ec6950b1fedfdf9fb6d6e",
+        "evidence/s01-qb-completed-minimal-20261031/race01/build-qb-denied.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/race01/build-qb-denied.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "evidence/s01-qb-completed-minimal-20261031/race01/candidate-readback.json": "7ae03a9f2d2ccb756c20936b770eb103a1f1ac09450863f03926698c5137b0c6",
+        "evidence/s01-qb-completed-minimal-20261031/race01/fixture-environment.json": "4980dc9e7704fb13752b46e1fd58c26f830489a6572cbfcb2485a351d69788d9",
+        "evidence/s01-qb-completed-minimal-20261031/race01/result.json": "c7410c5a5b5adc77961c244b02e350ced9470abb84f6c0ea4dc2cca89bef0908",
+        "evidence/s01-qb-completed-minimal-20261031/race01/run-before-list.command.json": "3deacdae5d82d7d806e0de3342b17bae3a2e4088bf0e00ed8828f491da4ed2df",
+        "evidence/s01-qb-completed-minimal-20261031/race01/run-before-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/race01/runner.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/race01/test-app.command.json": "b5f9a04551a19fe3c94d2449383ea04324917820e8d5bc13ba831eea61db66f2",
+        "evidence/s01-qb-completed-minimal-20261031/race01/test-app.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/race01/test-app.log": "0630a5ce29753c8626643293d0a5c95bc2b2085708161071f3fe7b5160e5e469",
+        "evidence/s01-qb-completed-minimal-20261031/race01-monitor/result.json": "c267fc735847e0dceb2b1a158bd543f0ea09ec6f33c9b8b179db0862291b37fa",
+        "evidence/s01-qb-completed-minimal-20261031/race01-monitor/runner.log": "e23910cd3c1d95c9295651ef09e2a05db1fd9108fed2bb00510e0d75d6885f5c",
+        "evidence/s01-qb-completed-minimal-20261031/race01-monitor/monitor.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/race01-monitor/resources.jsonl": "bdb97a96038f2d3067d80ac077e2162a814e5f0866427738749beb33fa1c314b",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-001.body": "2bb1bf5b1d5c314c3738337bcb7551337a7081941c03f3516c0fae76eea8adce",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-003.body": "81213db23167e8e088a620e9a856f2ecca4c28d9d1aa1e0bf46bf3483d87c2e4",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-004.body": "827b74ebae0424ca9b13906be5ff6354a0adab6b736ecae28b2bd0ff00e16f69",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-005.body": "c69f32c32a04d7a84816fa016d2cf0733f8c1ceba566e2a5ad7c21098c10c598",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-006.body": "6648ff7c4b2b5cb9cdcd7bc4dbb6c858b91abd110272fc09a37e24e78bde541c",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-007.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-008.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-009.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-010.body": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-011.body": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-012.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-013.body": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-014.body": "ea0d484de96f7d227463c35319ea3700834a8027f212530a657dc0168afcab30",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-016.body": "767e53e299655d5c78502998fb8f62770c04af01345e80a6c1dde3db75059c7c",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-017.body": "65c666adf49272ce8ea0241e7c1907869566b14796c909cd18ddad86112e3351",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-018.body": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-019.body": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/bootstrap.log": "ea8d3369d2379199afc36810ef08bf9f7c9701a7b99029945669f5cfb15413bf",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/driver.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/inputs.json": "825bd6a0cad505107381ac65392f68480514afadfa3305bd80c0880a14053779",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/observations.json": "bd0422337f784c64aa4afa5159b4b061279424146496aa8feb7cc693ee1cde0d",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-001.body": "6648ff7c4b2b5cb9cdcd7bc4dbb6c858b91abd110272fc09a37e24e78bde541c",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-002.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-003.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-004.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-005.body": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-006.body": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-007.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-008.body": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-009.body": "65c666adf49272ce8ea0241e7c1907869566b14796c909cd18ddad86112e3351",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-010.body": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-011.body": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/query-responses.json": "eee5e8301b0257772819a12540de6a10464ad70f42e169d2242f3cb11949657f",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/resources.jsonl": "3b15f1a36ad2cf9b90a912ef7853b6c16c08a559c1b0f4e5d4d426280f072721",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/server-1.log": "63d2aabde7a8d5920895c0ca022ab459817398e70b3ad926e201814ccc944124",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/server-2.log": "0c202eb2750a3e66a414e6ab81847f98d6fba6140767917881c2505cbf272589",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/worker-manifest.json": "f10db3f5b8c5745463c1fb248940a212728ef922a6e6009ab1a4a92eabb6138a",
+        "evidence/s01-qb-completed-minimal-20261031/cli01/worker-observations.json": "4cceaa58f780564674f4943e76e74f2ee2ca6e5152970146013797e8a6c74eaf",
+        "evidence/s01-qb-completed-minimal-20261031/review/exact-hook-spec.json": "89d7d12a9f2c6a7befe513e58a1438619b99ffef5ecaa596cdb452ebc8aff04c",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-actual-assembly-independent.json": "a4f81df122f387d0f3e1c5551ec453c087dbf40716d188874345d09a36adc009",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-pure-inheritance-b4-readback.json": "eea49ecfb5311d229dcafd9be9588716e91bde41f4c5e04e029bc20843ce16a7",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-cli-controller-static-review.json": "3ea8e89fd2423fae89710c99494f206291ff0b7f6bda28d51d367fa58e35afb8",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-normal01-build-reuse-readback.json": "833d9b42e57165ddf66c60c613867d5f4cd5552bbf1b410b4eafd95b6f3610ba",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-normal02-independent-readback.json": "f82491d942870f5f9fbf4d82c1f7af4eb07b170a08ce9b953cecd2adb3303102",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-cli01-independent-readback.json": "5569d7bf8ec7247e311340f082e2aa4324d0af8a9eacd043b5e2b2e27c0785ba",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-race01-independent-readback.json": "869e274fb42edaf756b950f1e29faa6855a2c8d3d2a7dfe8e1af31d855b831fa",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-build-environment-summary.json": "50ac0eb45e5c7e6726473020401cf76f1f8a638b8a7de5a6f7b4793b9e7833c1",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-input-closure-summary.json": "4dae9c68acf4bdf9262c8dd443b6054b8f344f8ab14fd4cb1978f58938b6b548",
+        "evidence/s01-qb-completed-minimal-20261031/normal01/before-inputs.json": "7bc53168c479feb79b8d4d68f57fca69cbcdcd7fbad130bbc193dc028ad002b9",
+        "evidence/s01-qb-completed-minimal-20261031/normal02/before-inputs.json": "39b8e6752e14bcd599a7dcacc294579c24892979fd54a6ec88277a58697e6c67",
+        "evidence/s01-qb-completed-minimal-20261031/race01/before-inputs.json": "3cace2c44a15bbd61ad88a2bb7a2ac460a78129b47d7cb09724259f58e56a794",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-final-runtime-seal.json": "db4f4608d99036c03246c2620815f5dba2714babf59d3e1b16ea1a8646e94b4e",
+        "evidence/s01-qb-completed-minimal-20261031/review/S01-FINAL-RUNTIME-REVIEW.md": "1a9532e91edbe57f95035e15503174fca160aa34cd777ac85e73963a9bd84c3a"
+      },
+      "limitations": [
+        "Owned fixedHTTPqB protocol, not actualqB daemon/netlink/source fullruntime/media/NAS/browser",
+        "Native TLS/auth/timeout policies unchanged from baseline; not groupedRequestUtilsTLSpermission",
+        "NoCI, no remote delivery before actualpush andSHAreadback",
+        "Original absolute command paths retained as evidence; no claim unmodified scripts portable"
+      ],
+      "commands": [
+        "normal01 build commands: all7 exit0, later realreserveFAIL before tests",
+        "normal02 bash launch-resume.sh: exactSDK2+App4+adjacentTransmission1, no compile",
+        "cli01 bound command: actual2normalhosts + ownedfixedHTTPqB success/503→502/recovery/cold",
+        "race01 bash launch-race.sh: App4 +2fresh raceworkers, dedicatedtmpGo cache"
+      ],
+      "inputs": [
+        "b4f3251ee4f5359659a66935a427502da20f59e1 + exact13 newfiles and2dispatcher hooks; source8a83 fixed",
+        "actual normal01 compile6191, normal02 runtime6208, race01 inputs6191 full beforemaps; threephase equality raw+independent",
+        "source28/pureApp3/native4/native2race inherited only on independently compared189paths",
+        "no real endpoints/credentials; bootstrap newownedDB, two fixedprotocol HTTP fixtures"
+      ],
+      "observations": [
+        "normal02 exact7PASS/noSkip/6208threephase0drift, all7 completedprograms reused unchanged",
+        "actualnormalhosts24→53/workers41→68, twoWait0, trueowned503→502→recovery→cold200, anonymous401, noquietqueries, oneartifact acquisition",
+        "App4race noSkip/noDATA RACE/6191threephase0drift; both workers racebuilt; actualresourcefloor preserved",
+        "normal01 physicalreserveFAIL before0tests retained; metadata source/doc/export boundary separate; noCI/browser/realqB/NAS/remote claim"
+      ]
+    },
+    {
+      "id": "s01-qb-completed.minimal-release-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "S01.qbittorrent_completed"
+      ],
+      "independent": true,
+      "reviewer": "delivery_whitelist_review / Astra ultra",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "target_files": {
+          "internal/plugins/shared_qbittorrent_completed.go": "e3f06800ba67874aa23e9efd9daef9d794f02f9c6fe5599e963e46ca7aac8f61",
+          "internal/plugins/shared_qbittorrent_completed_test.go": "602d643ef0bf31cbc1ce26bf20eb8605016ea6ce755969a91883380a0a8cd94a",
+          "internal/app/plugin_shared_qbittorrent_completed_values.go": "ac736dde7af225b2a5ead4a2441afbaa26e6d8a821ae0942109ae3573bdd2433",
+          "internal/app/plugin_shared_qbittorrent_completed_fixture_test.go": "3fc550f97f0ca0ddf1ab5c4812c6589ca3061d19e273f8fa984935e21f88c4bd",
+          "internal/app/plugin_shared_qbittorrent_completed.go": "7b0d25cb9d14266f0f25da44b5f4f61396687250377d6520f3da9e8bb898ffe3",
+          "internal/app/plugin_shared_qbittorrent_completed_worker_test.go": "fc4b3e1d831597ece67e60c2cf86872fc4942c13201e68e9726ff991d48be8f8",
+          "internal/app/plugin_shared_qbittorrent_completed_values_test.go": "e6801f24dcde808e88ef4c8b717b6f8ade0fb6c81b2a383b3eac08c8a72fc1da",
+          "internal/app/plugin_shared_qbittorrent_completed_decode.go": "16f0d81699100ecce4fceeb5da181ca453346729da6773546157cf867d960373",
+          "internal/app/plugin_shared_qbittorrent_completed_boundary_test.go": "2dc3eb133b854e40fc7276f07331c2a487827e73c5df34edfa57036e0284039f",
+          "internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed.go": "ea9a7952068a106671f8710fb780413f8afe91967adc7b10b24eac62517b2883",
+          "internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed_test.go": "6fbdad5cc2f196fd22b2c0e03ef6d41450352a1f4ecd3c45866e3e8ca68ad58c",
+          "cmd/owned-qbittorrent-completed-fixture/main.go": "53186a5815fd02318dcf161e7b1d93fc1f9ecccc6dfbd53423c9b065c12102a7",
+          "internal/app/plugin_original_resources.go": "8c31144c1215293cfdcc18b9dcbdd0ebf73317c2a446425b229609231aa9f488"
+        },
+        "fixture_files": {
+          "evidence/s01-qb-completed-minimal-20261031/normal-resume-plan.json": "b767eac040b3b037ef8b0e5ce96bd7168a10e05ad76a855911bd1cd4d96452f5",
+          "evidence/s01-qb-completed-minimal-20261031/race-plan.json": "19b8f49c60d88886d9e864353e4a1ac0112e1c3c7a0ce9622601fa6275bc6c00",
+          "evidence/s01-qb-completed-minimal-20261031/cli-driver.py": "d2bb0571f8eb24b743a35abbdfb385a5174d3d5819c8c2ce11cc064f3e54387d",
+          "evidence/s01-qb-completed-minimal-20261031/review/s01-pure-inheritance-b4-readback.json": "eea49ecfb5311d229dcafd9be9588716e91bde41f4c5e04e029bc20843ce16a7",
+          "evidence/s01-qb-completed-minimal-20261031/assembly.json": "709af4e7a6c651118f71536a5dfd00893934b30718dcc2aa2447c1c365382885",
+          "evidence/s01-qb-completed-minimal-20261031/candidate.diff": "358ec9188d399cc1387cc698bba37bbfc2935bae4052f733e5be515388efd79e",
+          "evidence/s01-qb-completed-minimal-20261031/normal-plan.json": "51e4fb907318e1356151ecce9a6d730ed17ba8380d83a097bc8b99670e602dfb",
+          "evidence/s01-qb-completed-minimal-20261031/run-candidate.py": "38c5becf9ca998ff6ea970c86d08c7e57d5c6997dbe10f1e91b5ad162831b12f",
+          "evidence/s01-qb-completed-minimal-20261031/monitor.py": "33b5f4da11183712c7c7709e34d1fcfced298b4505de1f9a7fac1735a3e6ee52",
+          "evidence/s01-qb-completed-minimal-20261031/launch.sh": "2e76ad9da2630177d52f4e3d207fc2f1d515de66034afc2ce6bd41fe73419fdb",
+          "evidence/s01-qb-completed-minimal-20261031/run-resume.py": "29157d09805ad70438e2f40c272906f2d23e609ffb764aef748b07498b218295",
+          "evidence/s01-qb-completed-minimal-20261031/monitor-resume.py": "16072a0d4911789a561a8329cc346c31b319117a6670325be8b9f8704c823f9e",
+          "evidence/s01-qb-completed-minimal-20261031/launch-resume.sh": "d7ba79fdb1b557b382f84d3cc504e30a362bd8681ec831439c35eb6279e7de6a",
+          "evidence/s01-qb-completed-minimal-20261031/run-race.py": "2af51a1762bfa0cdeee0130bbf368b1e932afd490bab9e96bcfb1afd649b9e61",
+          "evidence/s01-qb-completed-minimal-20261031/monitor-race.py": "c635ea9ff2375b33d88c3786012a04dbdf762f3b71b408ce346d5f2aa45bed6e",
+          "evidence/s01-qb-completed-minimal-20261031/launch-race.sh": "c9011ecc9b5b728020319db87ca64615218f8f5f0f2dc3a9934d26764b6bcdea",
+          "evidence/s01-qb-completed-minimal-20261031/cli-launch-binding01.json": "837bac779ada4a72370854bbaedae2084512e812121e366891f210709e52f5e6",
+          "evidence/s01-qb-completed-minimal-20261031/cli-launch-inputs01.json": "76f8f87c3d5cd05eb9ebd1924805c08d02c21159a6e8330dc54a8db05e7c571f",
+          "evidence/s01-qb-completed-minimal-20261031/cli-execution-grant01.json": "7c80084e49593d34ada320a6ccd7fbaaa64a47280f01b9a5ff6cb81c536040f7",
+          "evidence/s01-qb-completed-minimal-20261031/normal01-reuse-proof.json": "4b90036513f57592822e6061785918781b18c4073b49eee886682e34bd533e38",
+          "evidence/s01-qb-completed-minimal-20261031/race-final-bindings01.json": "9e2885ff551fc31667073463e10b9d97211b32897642368a71d8754accae7131",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/before-list.command.json": "aa6a87df82412e1f16caa2a00f5011f4d1a960ad99e227f583571e2cdc7d142c",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/before-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/binary-hashes.json": "c42ca2ca4c800a4339eeacc0eeaa6b8bb27db2bef417d47717767c621b395950",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-app.command.json": "f1c0068ccd9b519b9beaaebbc83a57d6ab66bb255cd947c1dddd630420c63861",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-app.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-app.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-qb-allowed.command.json": "4ec1d987a5f5bb81f9682d84ebef249b22f7b4ec6080655165bbabc50c2b5529",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-qb-allowed.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-qb-allowed.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-qb-denied.command.json": "8e6034184b577cdcee86488eaf3eb2403e24b7c9393a28ab697729847368ada8",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-qb-denied.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-qb-denied.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-sdk.command.json": "1effa5a23a3840238914d6be78bd93cdf3e038bd03ccca598a2738644531aabd",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-sdk.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-sdk.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-server.command.json": "ff67d3adb3f43f4dbf26852f306ace4c6c84e9dd2d0ec0b43e75aee211cedf50",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-server.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-server.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-tr-allowed.command.json": "3dddecb0cc8c09e29095d4004f7ff263d1ff0d8759d596161abc801932853cf8",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-tr-allowed.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-tr-allowed.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-tr-denied.command.json": "5a12a8ea293f321b31566af68d80c4d433fce2f4849efe892facbb197b0aa901",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-tr-denied.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/build-tr-denied.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/candidate-readback.json": "7ae03a9f2d2ccb756c20936b770eb103a1f1ac09450863f03926698c5137b0c6",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/failure.json": "c5d32dd57157c91ccc1106f8c68175a0748abdba01aa9d1643414e79e246e8ae",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/fixture-environment.json": "809c3ceaa139428a9c76d75fc88b4b65fba6269739fb4e284af4564c64dc6499",
+          "evidence/s01-qb-completed-minimal-20261031/normal01-monitor/result.json": "f56d7496b7e558ffc12297fc2fa4986b3023b398022d0ca064b7b1208a672aaa",
+          "evidence/s01-qb-completed-minimal-20261031/normal01-monitor/runner.log": "ff015d8a5a271f96e361c3361ddfda326b0badf9c93a8c413c5ebd0cd4f3068d",
+          "evidence/s01-qb-completed-minimal-20261031/normal01-monitor/monitor.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+          "evidence/s01-qb-completed-minimal-20261031/normal01-monitor/resources.jsonl": "d99aa5a3642baccfca0c59e78593ef773fd512cf58c79a0727455a50958632e0",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/actual-reuse-readback.json": "ab3754383aec172005464e6cc137974e8cc592c84fe6c3778de69e4a2e2d6932",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/actual-roots.json": "67f7a36b4b9b22ac4a9a05fd8d7252ba48340a7d719b731c35f473dbc63f0f85",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/after-list.command.json": "22a3a582801ecd949d54c23b56fe76d038af4542c5e7fbcbfdcbbd7850f4d9de",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/after-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/before-list.command.json": "7cc9f416db527422b0fc5df9797be4e38c49077065643d7f1d9ade626e6e45b8",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/before-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/binary-hashes.json": "f97635bb3e8808c1e13c72d81252d98c2363601776b593ea1e07a39a0114a1d5",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/candidate-readback.json": "7ae03a9f2d2ccb756c20936b770eb103a1f1ac09450863f03926698c5137b0c6",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/fixture-environment.json": "809c3ceaa139428a9c76d75fc88b4b65fba6269739fb4e284af4564c64dc6499",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/result.json": "064227d40b9c87b34c4cfbd5537bd26fb280b27fa1cb37b5aa42a205c5fe80d9",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/run-before-list.command.json": "54f9837eae0893692f5d215887ac3f43d8342e6fa42b632f70e6457a986d0097",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/run-before-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/runner.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/test-app.command.json": "92ab93057d2bc116c21a3b1ca48e7702023ec81d7a7310573b76a7d41cd10de1",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/test-app.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/test-app.log": "66c773a100ded221465300c8a7a53f2ef08265460f4bda7c252c6eccc06c281e",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/test-sdk.command.json": "69a338c82fe231c35e7d1a35c8629205ee72d3fec9a4dc20a9718c8ed0d8ad14",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/test-sdk.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/test-sdk.log": "1bbcca8468310149473cc26224d8e33f8de0d9c1847add48aa2a36881c4a3d5b",
+          "evidence/s01-qb-completed-minimal-20261031/normal02-monitor/result.json": "47a7328601bdf51f24c403c5dd58c9ed03efa02abaacd181521f5f7403cb9e30",
+          "evidence/s01-qb-completed-minimal-20261031/normal02-monitor/runner.log": "0f45edb6006fcab9718e4e9cf94715a3e36725ee85ebefa63c9e22f2f0775dea",
+          "evidence/s01-qb-completed-minimal-20261031/normal02-monitor/monitor.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/normal02-monitor/resources.jsonl": "9124312063fa4a7ce151db3af9390688b0303c8c8bf3f0f8804a41a2f866ed45",
+          "evidence/s01-qb-completed-minimal-20261031/race01/actual-roots.json": "d6c480907b50b91f97efbf67953fbac934f0a1f4e15700cdb4c08b2997afa158",
+          "evidence/s01-qb-completed-minimal-20261031/race01/after-list.command.json": "044c44b7c8e8c417ce7f045e5bcee9103f804272de866b292f65846e1978f140",
+          "evidence/s01-qb-completed-minimal-20261031/race01/after-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/race01/before-list.command.json": "2b20be5fe57dda9482b264642e9884b27132c023747e694176b975c546326aca",
+          "evidence/s01-qb-completed-minimal-20261031/race01/before-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/race01/binary-hashes.json": "8ce9ffdc4b3b95da69162e6f2276a6128b9b34a8f4906eb4559aba38d08c9e4c",
+          "evidence/s01-qb-completed-minimal-20261031/race01/build-app.command.json": "58f1479d90ed1444fe9dfe5ea90ef10b781c7b9aacb1971295e78cc7d0f69151",
+          "evidence/s01-qb-completed-minimal-20261031/race01/build-app.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/race01/build-app.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "evidence/s01-qb-completed-minimal-20261031/race01/build-qb-allowed.command.json": "b5e283f38279f3f13ac5d09eccf5c1f9a415c4e0ce962269a75b12481013efec",
+          "evidence/s01-qb-completed-minimal-20261031/race01/build-qb-allowed.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/race01/build-qb-allowed.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "evidence/s01-qb-completed-minimal-20261031/race01/build-qb-denied.command.json": "57eacc99c8fc6933f51fa4d97897580664f27b557b9ec6950b1fedfdf9fb6d6e",
+          "evidence/s01-qb-completed-minimal-20261031/race01/build-qb-denied.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/race01/build-qb-denied.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "evidence/s01-qb-completed-minimal-20261031/race01/candidate-readback.json": "7ae03a9f2d2ccb756c20936b770eb103a1f1ac09450863f03926698c5137b0c6",
+          "evidence/s01-qb-completed-minimal-20261031/race01/fixture-environment.json": "4980dc9e7704fb13752b46e1fd58c26f830489a6572cbfcb2485a351d69788d9",
+          "evidence/s01-qb-completed-minimal-20261031/race01/result.json": "c7410c5a5b5adc77961c244b02e350ced9470abb84f6c0ea4dc2cca89bef0908",
+          "evidence/s01-qb-completed-minimal-20261031/race01/run-before-list.command.json": "3deacdae5d82d7d806e0de3342b17bae3a2e4088bf0e00ed8828f491da4ed2df",
+          "evidence/s01-qb-completed-minimal-20261031/race01/run-before-list.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/race01/runner.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/race01/test-app.command.json": "b5f9a04551a19fe3c94d2449383ea04324917820e8d5bc13ba831eea61db66f2",
+          "evidence/s01-qb-completed-minimal-20261031/race01/test-app.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/race01/test-app.log": "0630a5ce29753c8626643293d0a5c95bc2b2085708161071f3fe7b5160e5e469",
+          "evidence/s01-qb-completed-minimal-20261031/race01-monitor/result.json": "c267fc735847e0dceb2b1a158bd543f0ea09ec6f33c9b8b179db0862291b37fa",
+          "evidence/s01-qb-completed-minimal-20261031/race01-monitor/runner.log": "e23910cd3c1d95c9295651ef09e2a05db1fd9108fed2bb00510e0d75d6885f5c",
+          "evidence/s01-qb-completed-minimal-20261031/race01-monitor/monitor.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/race01-monitor/resources.jsonl": "bdb97a96038f2d3067d80ac077e2162a814e5f0866427738749beb33fa1c314b",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-001.body": "2bb1bf5b1d5c314c3738337bcb7551337a7081941c03f3516c0fae76eea8adce",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-003.body": "81213db23167e8e088a620e9a856f2ecca4c28d9d1aa1e0bf46bf3483d87c2e4",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-004.body": "827b74ebae0424ca9b13906be5ff6354a0adab6b736ecae28b2bd0ff00e16f69",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-005.body": "c69f32c32a04d7a84816fa016d2cf0733f8c1ceba566e2a5ad7c21098c10c598",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-006.body": "6648ff7c4b2b5cb9cdcd7bc4dbb6c858b91abd110272fc09a37e24e78bde541c",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-007.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-008.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-009.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-010.body": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-011.body": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-012.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-013.body": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-014.body": "ea0d484de96f7d227463c35319ea3700834a8027f212530a657dc0168afcab30",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-016.body": "767e53e299655d5c78502998fb8f62770c04af01345e80a6c1dde3db75059c7c",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-017.body": "65c666adf49272ce8ea0241e7c1907869566b14796c909cd18ddad86112e3351",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-018.body": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/api-response-019.body": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/bootstrap.log": "ea8d3369d2379199afc36810ef08bf9f7c9701a7b99029945669f5cfb15413bf",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/driver.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/inputs.json": "825bd6a0cad505107381ac65392f68480514afadfa3305bd80c0880a14053779",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/observations.json": "bd0422337f784c64aa4afa5159b4b061279424146496aa8feb7cc693ee1cde0d",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-001.body": "6648ff7c4b2b5cb9cdcd7bc4dbb6c858b91abd110272fc09a37e24e78bde541c",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-002.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-003.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-004.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-005.body": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-006.body": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-007.body": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-008.body": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-009.body": "65c666adf49272ce8ea0241e7c1907869566b14796c909cd18ddad86112e3351",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-010.body": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/query-response-011.body": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/query-responses.json": "eee5e8301b0257772819a12540de6a10464ad70f42e169d2242f3cb11949657f",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/resources.jsonl": "3b15f1a36ad2cf9b90a912ef7853b6c16c08a559c1b0f4e5d4d426280f072721",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/server-1.log": "63d2aabde7a8d5920895c0ca022ab459817398e70b3ad926e201814ccc944124",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/server-2.log": "0c202eb2750a3e66a414e6ab81847f98d6fba6140767917881c2505cbf272589",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/worker-manifest.json": "f10db3f5b8c5745463c1fb248940a212728ef922a6e6009ab1a4a92eabb6138a",
+          "evidence/s01-qb-completed-minimal-20261031/cli01/worker-observations.json": "4cceaa58f780564674f4943e76e74f2ee2ca6e5152970146013797e8a6c74eaf",
+          "evidence/s01-qb-completed-minimal-20261031/review/exact-hook-spec.json": "89d7d12a9f2c6a7befe513e58a1438619b99ffef5ecaa596cdb452ebc8aff04c",
+          "evidence/s01-qb-completed-minimal-20261031/review/s01-actual-assembly-independent.json": "a4f81df122f387d0f3e1c5551ec453c087dbf40716d188874345d09a36adc009",
+          "evidence/s01-qb-completed-minimal-20261031/review/s01-cli-controller-static-review.json": "3ea8e89fd2423fae89710c99494f206291ff0b7f6bda28d51d367fa58e35afb8",
+          "evidence/s01-qb-completed-minimal-20261031/review/s01-normal01-build-reuse-readback.json": "833d9b42e57165ddf66c60c613867d5f4cd5552bbf1b410b4eafd95b6f3610ba",
+          "evidence/s01-qb-completed-minimal-20261031/review/s01-normal02-independent-readback.json": "f82491d942870f5f9fbf4d82c1f7af4eb07b170a08ce9b953cecd2adb3303102",
+          "evidence/s01-qb-completed-minimal-20261031/review/s01-cli01-independent-readback.json": "5569d7bf8ec7247e311340f082e2aa4324d0af8a9eacd043b5e2b2e27c0785ba",
+          "evidence/s01-qb-completed-minimal-20261031/review/s01-race01-independent-readback.json": "869e274fb42edaf756b950f1e29faa6855a2c8d3d2a7dfe8e1af31d855b831fa",
+          "evidence/s01-qb-completed-minimal-20261031/review/s01-build-environment-summary.json": "50ac0eb45e5c7e6726473020401cf76f1f8a638b8a7de5a6f7b4793b9e7833c1",
+          "evidence/s01-qb-completed-minimal-20261031/review/s01-input-closure-summary.json": "4dae9c68acf4bdf9262c8dd443b6054b8f344f8ab14fd4cb1978f58938b6b548",
+          "evidence/s01-qb-completed-minimal-20261031/normal01/before-inputs.json": "7bc53168c479feb79b8d4d68f57fca69cbcdcd7fbad130bbc193dc028ad002b9",
+          "evidence/s01-qb-completed-minimal-20261031/normal02/before-inputs.json": "39b8e6752e14bcd599a7dcacc294579c24892979fd54a6ec88277a58697e6c67",
+          "evidence/s01-qb-completed-minimal-20261031/race01/before-inputs.json": "3cace2c44a15bbd61ad88a2bb7a2ac460a78129b47d7cb09724259f58e56a794",
+          "evidence/s01-qb-completed-minimal-20261031/review/s01-final-runtime-seal.json": "db4f4608d99036c03246c2620815f5dba2714babf59d3e1b16ea1a8646e94b4e",
+          "evidence/s01-qb-completed-minimal-20261031/review/S01-FINAL-RUNTIME-REVIEW.md": "1a9532e91edbe57f95035e15503174fca160aa34cd777ac85e73963a9bd84c3a"
+        },
+        "environment": "Cloud Linux Go1.26, actualstandardSDK/two normalhosts/ownedfixedHTTPqB only; scopedtmp raceGOCACHE. Compile/run inheritedexec environments differ; no proxy/globalTLS rewrite. Fullcurrent inputmaps preserved; no realqB/browser/CI claim."
+      },
+      "artifacts": {
+        "evidence/s01-qb-completed-minimal-20261031/review/exact-hook-spec.json": "89d7d12a9f2c6a7befe513e58a1438619b99ffef5ecaa596cdb452ebc8aff04c",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-actual-assembly-independent.json": "a4f81df122f387d0f3e1c5551ec453c087dbf40716d188874345d09a36adc009",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-pure-inheritance-b4-readback.json": "eea49ecfb5311d229dcafd9be9588716e91bde41f4c5e04e029bc20843ce16a7",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-cli-controller-static-review.json": "3ea8e89fd2423fae89710c99494f206291ff0b7f6bda28d51d367fa58e35afb8",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-normal01-build-reuse-readback.json": "833d9b42e57165ddf66c60c613867d5f4cd5552bbf1b410b4eafd95b6f3610ba",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-normal02-independent-readback.json": "f82491d942870f5f9fbf4d82c1f7af4eb07b170a08ce9b953cecd2adb3303102",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-cli01-independent-readback.json": "5569d7bf8ec7247e311340f082e2aa4324d0af8a9eacd043b5e2b2e27c0785ba",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-race01-independent-readback.json": "869e274fb42edaf756b950f1e29faa6855a2c8d3d2a7dfe8e1af31d855b831fa",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-build-environment-summary.json": "50ac0eb45e5c7e6726473020401cf76f1f8a638b8a7de5a6f7b4793b9e7833c1",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-input-closure-summary.json": "4dae9c68acf4bdf9262c8dd443b6054b8f344f8ab14fd4cb1978f58938b6b548",
+        "evidence/s01-qb-completed-minimal-20261031/review/s01-final-runtime-seal.json": "db4f4608d99036c03246c2620815f5dba2714babf59d3e1b16ea1a8646e94b4e",
+        "evidence/s01-qb-completed-minimal-20261031/review/S01-FINAL-RUNTIME-REVIEW.md": "1a9532e91edbe57f95035e15503174fca160aa34cd777ac85e73963a9bd84c3a"
+      },
+      "reviews_evidence_ids": [
+        "s01-qb-completed.minimal-release-e2e"
+      ],
+      "observations": [
+        "Independent actual b4 reconstruction/source13Go,189path inheritance, rawnormal7/CLI2host/race4 and originalfloorFAIL reviewed; exact bytecopies in safeexportproposal v2 rehashed. Publication metadata/documentation final review is separate before staging."
+      ]
     }
   ],
   "execution_contract": {
@@ -40999,6 +41558,14 @@
       },
       "new_scope_groups_note": "New ledger indexing of already-noted browser/OCR dependencies awaiting old scope adjudication; not two new product requirements. SharedRSS chain counted once.",
       "platform_finite_deliveries_note": "Historical entries delivered previously;38.runtime_wire/23.usage_rating_wire now verified and pending this selective commit/push, not wholeparent closure."
+    },
+    "minimal_release_snapshot_20261031": {
+      "feature": "S01.qbittorrent_completed",
+      "state": "localverified_pendingcommit_remote",
+      "base": "b4f3251ee4f5359659a66935a427502da20f59e1",
+      "manifest": "migration/evidence/s01-qb-completed-minimal-20261031/publication-manifest.json",
+      "not_whole_project_complete": true,
+      "unpublished_cloud_work_excluded": true
     }
   },
   "external_inventory": [

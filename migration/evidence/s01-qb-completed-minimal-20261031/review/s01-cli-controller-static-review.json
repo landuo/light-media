@@ -1,0 +1,68 @@
+{
+  "at": "2026-10-31T09:35:33.650064+00:00",
+  "state": "static_accept_transport_only_not_executed_no_server_candidate_yet",
+  "reviewer": "delivery_whitelist_review / inherited Astra ultra",
+  "files": {
+    "audits/s01-completed-implementation-20261031/production-driver/driver-03.py": "d238c8c29dad928b82536278a335c1c3298ea0c8a7917cc648c99b82554d54a6",
+    "audits/s01-minimal-release-20261031/cli-driver.py": "d2bb0571f8eb24b743a35abbdfb385a5174d3d5819c8c2ce11cc064f3e54387d"
+  },
+  "unchanged_AST_functions_classes": [
+    "Peer",
+    "check",
+    "collect_workers",
+    "identity",
+    "now",
+    "observe_worker",
+    "ok",
+    "preflight",
+    "process_stat",
+    "quiet_check",
+    "reserve",
+    "safe_summary",
+    "sha",
+    "snapshot",
+    "startup_false",
+    "stop",
+    "termination_requested",
+    "write"
+  ],
+  "changed_AST_functions": [
+    "req",
+    "start"
+  ],
+  "removed_functions": [
+    "NoRedirect",
+    "direct"
+  ],
+  "top_level_business_and_cleanup_AST_identical": true,
+  "base_listener_source": {
+    "commit": "b4f3251ee4f5359659a66935a427502da20f59e1",
+    "path": "cmd/server/main.go",
+    "sha256": "903e44dd9932bd697fbe0296fee981e63723213b6b5ed49fd30e16d923390d60",
+    "exact_announcement_verified": true
+  },
+  "transport_contract": [
+    "Fixed http://127.0.0.1:39123 only, full scheme/host/port/netloc/path/userinfo/query/fragment hard checks",
+    "Six exact method/path pairs; no URL argument, redirects or generic proxy-disabled opener",
+    "http.client never reads proxy credentials; original product ENV copied unchanged",
+    "Read held server own startup log then one health request; transport/validation exception rethrows, no retry or other route",
+    "Cookie only in memory, login headers/body not persisted; bounded nonlogin raw response saved before assertions",
+    "Only owned existing fixed qB protocol routes and two static artifact routes; Peer AST unchanged, no upstream/CONNECT/daemon/netlink"
+  ],
+  "preserved_business": [
+    "Ordinary install/config and authenticated observer",
+    "Safe unknown-hash completed query",
+    "Owned503 observed non-success then repair",
+    "SameDataDir real2host cold / newworker /401 /no extra artifact",
+    "Known exactPID+PPid+exeSHA/starttime only; no process enumeration",
+    "Held process cleanup and only-bound-worker failure cleanup unchanged"
+  ],
+  "remaining_before_run": [
+    "New isolated candidate assembly14paths and candidate-source/static independent check",
+    "Fresh exact candidate normal/race host and worker evidence",
+    "Final current driver d2bb0571 hash launch binding, not stale cli-draft01.json",
+    "Coordinator sole execution window/resource guard",
+    "At actualCLI independently read raw503→HTTP502; original condition onlynon200 retained, no premature exact502 claim"
+  ],
+  "boundary": "Only static delta accepted. No import/execution/listener/request/Go/product/ledger/network action by this reviewer."
+}

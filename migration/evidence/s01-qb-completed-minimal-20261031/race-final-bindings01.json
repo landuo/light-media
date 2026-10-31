@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-31T09:46:22.498185+00:00",
+  "state": "race_frozen_notexecuted_pending_solewindow",
+  "plan_sha256": "19b8f49c60d88886d9e864353e4a1ac0112e1c3c7a0ce9622601fa6275bc6c00",
+  "assembly_sha256": "709af4e7a6c651118f71536a5dfd00893934b30718dcc2aa2447c1c365382885",
+  "static_review_sha256": "afe17120c04b4b622d9c4963c55fc13eb1fefe0160efd7b648ccaee95d9375ed",
+  "frozen_runner_inputs": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/assembly.json": "709af4e7a6c651118f71536a5dfd00893934b30718dcc2aa2447c1c365382885",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/delivery-whitelist-20261031/s01-prepared-gates-static-review.json": "797fe296631c6918001f0b6689081639f7de4a68e1bd99b399abc413d4983929",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/run-race.py": "2af51a1762bfa0cdeee0130bbf368b1e932afd490bab9e96bcfb1afd649b9e61",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/monitor-race.py": "c635ea9ff2375b33d88c3786012a04dbdf762f3b71b408ce346d5f2aa45bed6e",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/launch-race.sh": "c9011ecc9b5b728020319db87ca64615218f8f5f0f2dc3a9934d26764b6bcdea",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/delivery-whitelist-20261031/s01-race-cache-static-review.json": "afe17120c04b4b622d9c4963c55fc13eb1fefe0160efd7b648ccaee95d9375ed"
+  },
+  "command": {
+    "argv": [
+      "bash",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/launch-race.sh"
+    ],
+    "cwd": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031"
+  },
+  "original_normal_inputs_untouched": {
+    "run-candidate.py": "38c5becf9ca998ff6ea970c86d08c7e57d5c6997dbe10f1e91b5ad162831b12f",
+    "monitor.py": "33b5f4da11183712c7c7709e34d1fcfced298b4505de1f9a7fac1735a3e6ee52",
+    "launch.sh": "2e76ad9da2630177d52f4e3d207fc2f1d515de66034afc2ce6bd41fe73419fdb",
+    "normal-plan.json": "51e4fb907318e1356151ecce9a6d730ed17ba8380d83a097bc8b99670e602dfb"
+  },
+  "exact_tmp_cache": "/tmp/s01-release/cache/go-build",
+  "scope": "App4 originalrace+2freshQBworkers with exactprivateGOCACHE; no source/normalserver/otherroots"
+}

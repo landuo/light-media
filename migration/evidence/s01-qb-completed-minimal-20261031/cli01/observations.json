@@ -1,0 +1,746 @@
+{
+  "status": "PASS",
+  "kind": "ordinary CLI two-process cold query; ownedHTTPprotocol only",
+  "passes": [
+    "ordinary CLI/installed SDK successful unknown-hash completed query, safe summary",
+    "one owned503 is visible failure, then normal recovery; no full semantics matrix rerun",
+    "same private DataDir, two distinct OS hosts/new SDK worker, cold zero active qB before query, persisted config,401 fence,both Wait0 and natural worker reaping"
+  ],
+  "calls": [
+    {
+      "at": "2026-10-31T09:49:00.552855+00:00",
+      "method": "GET",
+      "path": "/healthz",
+      "host_pid": 24,
+      "status": 200,
+      "raw_file": "api-response-001.body",
+      "raw_sha256": "2bb1bf5b1d5c314c3738337bcb7551337a7081941c03f3516c0fae76eea8adce",
+      "bytes": 88
+    },
+    {
+      "at": "2026-10-31T09:49:00.554369+00:00",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "host_pid": 24,
+      "status": 200,
+      "credentials_headers_body_not_persisted": true
+    },
+    {
+      "at": "2026-10-31T09:49:00.618853+00:00",
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "host_pid": 24,
+      "status": 200,
+      "raw_file": "api-response-003.body",
+      "raw_sha256": "81213db23167e8e088a620e9a856f2ecca4c28d9d1aa1e0bf46bf3483d87c2e4",
+      "bytes": 70
+    },
+    {
+      "at": "2026-10-31T09:49:00.699354+00:00",
+      "method": "PUT",
+      "path": "/api/plugins/OwnedQBittorrentCompleted",
+      "host_pid": 24,
+      "status": 200,
+      "raw_file": "api-response-004.body",
+      "raw_sha256": "827b74ebae0424ca9b13906be5ff6354a0adab6b736ecae28b2bd0ff00e16f69",
+      "bytes": 70
+    },
+    {
+      "at": "2026-10-31T09:49:00.702179+00:00",
+      "method": "GET",
+      "path": "/api/plugins/OwnedQBittorrentCompleted",
+      "host_pid": 24,
+      "status": 200,
+      "raw_file": "api-response-005.body",
+      "raw_sha256": "c69f32c32a04d7a84816fa016d2cf0733f8c1ceba566e2a5ad7c21098c10c598",
+      "bytes": 124
+    },
+    {
+      "at": "2026-10-31T09:49:00.702990+00:00",
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBittorrentCompleted/query",
+      "host_pid": 24,
+      "status": 200,
+      "raw_file": "api-response-006.body",
+      "raw_sha256": "6648ff7c4b2b5cb9cdcd7bc4dbb6c858b91abd110272fc09a37e24e78bde541c",
+      "bytes": 72
+    },
+    {
+      "at": "2026-10-31T09:49:00.709950+00:00",
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBittorrentCompleted/query",
+      "host_pid": 24,
+      "status": 502,
+      "raw_file": "api-response-007.body",
+      "raw_sha256": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+      "bytes": 37
+    },
+    {
+      "at": "2026-10-31T09:49:00.711977+00:00",
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBittorrentCompleted/query",
+      "host_pid": 24,
+      "status": 502,
+      "raw_file": "api-response-008.body",
+      "raw_sha256": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+      "bytes": 37
+    },
+    {
+      "at": "2026-10-31T09:49:00.713644+00:00",
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBittorrentCompleted/query",
+      "host_pid": 24,
+      "status": 502,
+      "raw_file": "api-response-009.body",
+      "raw_sha256": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+      "bytes": 37
+    },
+    {
+      "at": "2026-10-31T09:49:00.715347+00:00",
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBittorrentCompleted/query",
+      "host_pid": 24,
+      "status": 401,
+      "raw_file": "api-response-010.body",
+      "raw_sha256": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b",
+      "bytes": 31
+    },
+    {
+      "at": "2026-10-31T09:49:00.716428+00:00",
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBittorrentCompleted/query",
+      "host_pid": 24,
+      "status": 200,
+      "raw_file": "api-response-011.body",
+      "raw_sha256": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+      "bytes": 170
+    },
+    {
+      "at": "2026-10-31T09:49:00.722244+00:00",
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBittorrentCompleted/query",
+      "host_pid": 24,
+      "status": 502,
+      "raw_file": "api-response-012.body",
+      "raw_sha256": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+      "bytes": 37
+    },
+    {
+      "at": "2026-10-31T09:49:00.726065+00:00",
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBittorrentCompleted/query",
+      "host_pid": 24,
+      "status": 200,
+      "raw_file": "api-response-013.body",
+      "raw_sha256": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+      "bytes": 170
+    },
+    {
+      "at": "2026-10-31T09:49:00.989473+00:00",
+      "method": "GET",
+      "path": "/healthz",
+      "host_pid": 53,
+      "status": 200,
+      "raw_file": "api-response-014.body",
+      "raw_sha256": "ea0d484de96f7d227463c35319ea3700834a8027f212530a657dc0168afcab30",
+      "bytes": 88
+    },
+    {
+      "at": "2026-10-31T09:49:00.990597+00:00",
+      "method": "POST",
+      "path": "/api/auth/login",
+      "host_pid": 53,
+      "status": 200,
+      "credentials_headers_body_not_persisted": true
+    },
+    {
+      "at": "2026-10-31T09:49:01.052587+00:00",
+      "method": "GET",
+      "path": "/api/plugins/OwnedQBittorrentCompleted",
+      "host_pid": 53,
+      "status": 200,
+      "raw_file": "api-response-016.body",
+      "raw_sha256": "767e53e299655d5c78502998fb8f62770c04af01345e80a6c1dde3db75059c7c",
+      "bytes": 124
+    },
+    {
+      "at": "2026-10-31T09:49:01.053441+00:00",
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBittorrentCompleted/query",
+      "host_pid": 53,
+      "status": 200,
+      "raw_file": "api-response-017.body",
+      "raw_sha256": "65c666adf49272ce8ea0241e7c1907869566b14796c909cd18ddad86112e3351",
+      "bytes": 72
+    },
+    {
+      "at": "2026-10-31T09:49:01.060279+00:00",
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBittorrentCompleted/query",
+      "host_pid": 53,
+      "status": 401,
+      "raw_file": "api-response-018.body",
+      "raw_sha256": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b",
+      "bytes": 31
+    },
+    {
+      "at": "2026-10-31T09:49:01.061502+00:00",
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBittorrentCompleted/query",
+      "host_pid": 53,
+      "status": 200,
+      "raw_file": "api-response-019.body",
+      "raw_sha256": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+      "bytes": 170
+    }
+  ],
+  "query_responses": [
+    {
+      "status": 200,
+      "value": {
+        "instance_id": "OwnedQBittorrentCompleted",
+        "observe_only": true,
+        "pid": 41
+      },
+      "raw_file": "query-response-001.body",
+      "raw_sha256": "6648ff7c4b2b5cb9cdcd7bc4dbb6c858b91abd110272fc09a37e24e78bde541c",
+      "peer_after": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    {
+      "status": 502,
+      "value": {
+        "detail": "Plugin execution failed"
+      },
+      "raw_file": "query-response-002.body",
+      "raw_sha256": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+      "peer_after": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    {
+      "status": 502,
+      "value": {
+        "detail": "Plugin execution failed"
+      },
+      "raw_file": "query-response-003.body",
+      "raw_sha256": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+      "peer_after": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    {
+      "status": 502,
+      "value": {
+        "detail": "Plugin execution failed"
+      },
+      "raw_file": "query-response-004.body",
+      "raw_sha256": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+      "peer_after": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    {
+      "status": 401,
+      "value": {
+        "detail": "Not authenticated"
+      },
+      "raw_file": "query-response-005.body",
+      "raw_sha256": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b",
+      "peer_after": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    {
+      "status": 200,
+      "value": {
+        "success": true,
+        "summary": {
+          "count": 1,
+          "downloader_id": "owned-qb",
+          "instance_id": "OwnedQBittorrentCompleted",
+          "tasks": [
+            {
+              "name": "Owned completed item",
+              "status": "stoppedUP"
+            }
+          ]
+        }
+      },
+      "raw_file": "query-response-006.body",
+      "raw_sha256": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+      "peer_after": {
+        "mode": "success",
+        "qb_calls": 2,
+        "info_calls": 1,
+        "login_calls": 1,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    {
+      "status": 502,
+      "value": {
+        "detail": "Plugin execution failed"
+      },
+      "raw_file": "query-response-007.body",
+      "raw_sha256": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e",
+      "peer_after": {
+        "mode": "failure503",
+        "qb_calls": 4,
+        "info_calls": 2,
+        "login_calls": 2,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    {
+      "status": 200,
+      "value": {
+        "success": true,
+        "summary": {
+          "count": 1,
+          "downloader_id": "owned-qb",
+          "instance_id": "OwnedQBittorrentCompleted",
+          "tasks": [
+            {
+              "name": "Owned completed item",
+              "status": "stoppedUP"
+            }
+          ]
+        }
+      },
+      "raw_file": "query-response-008.body",
+      "raw_sha256": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+      "peer_after": {
+        "mode": "success",
+        "qb_calls": 6,
+        "info_calls": 3,
+        "login_calls": 3,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    {
+      "status": 200,
+      "value": {
+        "instance_id": "OwnedQBittorrentCompleted",
+        "observe_only": true,
+        "pid": 68
+      },
+      "raw_file": "query-response-009.body",
+      "raw_sha256": "65c666adf49272ce8ea0241e7c1907869566b14796c909cd18ddad86112e3351",
+      "peer_after": {
+        "mode": "success",
+        "qb_calls": 6,
+        "info_calls": 3,
+        "login_calls": 3,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    {
+      "status": 401,
+      "value": {
+        "detail": "Not authenticated"
+      },
+      "raw_file": "query-response-010.body",
+      "raw_sha256": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b",
+      "peer_after": {
+        "mode": "success",
+        "qb_calls": 6,
+        "info_calls": 3,
+        "login_calls": 3,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    {
+      "status": 200,
+      "value": {
+        "success": true,
+        "summary": {
+          "count": 1,
+          "downloader_id": "owned-qb",
+          "instance_id": "OwnedQBittorrentCompleted",
+          "tasks": [
+            {
+              "name": "Owned completed item",
+              "status": "stoppedUP"
+            }
+          ]
+        }
+      },
+      "raw_file": "query-response-011.body",
+      "raw_sha256": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2",
+      "peer_after": {
+        "mode": "success",
+        "qb_calls": 8,
+        "info_calls": 4,
+        "login_calls": 4,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    }
+  ],
+  "peer_calls": [
+    {
+      "at": "2026-10-31T09:49:00.620388+00:00",
+      "method": "GET",
+      "path": "/artifact/index"
+    },
+    {
+      "at": "2026-10-31T09:49:00.621568+00:00",
+      "method": "GET",
+      "path": "/artifact/worker.zip"
+    },
+    {
+      "at": "2026-10-31T09:49:00.718351+00:00",
+      "method": "POST",
+      "path": "/api/v2/auth/login"
+    },
+    {
+      "at": "2026-10-31T09:49:00.719197+00:00",
+      "method": "POST",
+      "path": "/api/v2/torrents/info"
+    },
+    {
+      "at": "2026-10-31T09:49:00.724110+00:00",
+      "method": "POST",
+      "path": "/api/v2/auth/login"
+    },
+    {
+      "at": "2026-10-31T09:49:00.724852+00:00",
+      "method": "POST",
+      "path": "/api/v2/torrents/info"
+    },
+    {
+      "at": "2026-10-31T09:49:00.727810+00:00",
+      "method": "POST",
+      "path": "/api/v2/auth/login"
+    },
+    {
+      "at": "2026-10-31T09:49:00.728571+00:00",
+      "method": "POST",
+      "path": "/api/v2/torrents/info"
+    },
+    {
+      "at": "2026-10-31T09:49:01.063877+00:00",
+      "method": "POST",
+      "path": "/api/v2/auth/login"
+    },
+    {
+      "at": "2026-10-31T09:49:01.064822+00:00",
+      "method": "POST",
+      "path": "/api/v2/torrents/info"
+    }
+  ],
+  "processes": [
+    {
+      "pid": 24,
+      "starttime": "11969174",
+      "ordinary": true,
+      "safe_mode": false,
+      "same_private_datadir": true,
+      "listen": "127.0.0.1:39123",
+      "observed_workers": [
+        {
+          "pid": 41,
+          "starttime": "11969213",
+          "ppid": 24,
+          "exe_readlink": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/cli01/private-data/plugin-packages/OwnedQBittorrentCompleted/owned-qbittorrent-completed-sdk-fixture",
+          "executable_sha256": "1bd44886362a396c8c18b2e075e8bc89fdabc1138f15d4dcb58e58503761ddd4",
+          "instance_id": "OwnedQBittorrentCompleted",
+          "host_pid": 24
+        }
+      ],
+      "wait_exit": 0,
+      "workers_still_same_identity": []
+    },
+    {
+      "pid": 53,
+      "starttime": "11969218",
+      "ordinary": true,
+      "safe_mode": false,
+      "same_private_datadir": true,
+      "listen": "127.0.0.1:39123",
+      "observed_workers": [
+        {
+          "pid": 68,
+          "starttime": "11969232",
+          "ppid": 53,
+          "exe_readlink": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/cli01/private-data/plugin-packages/OwnedQBittorrentCompleted/owned-qbittorrent-completed-sdk-fixture",
+          "executable_sha256": "1bd44886362a396c8c18b2e075e8bc89fdabc1138f15d4dcb58e58503761ddd4",
+          "instance_id": "OwnedQBittorrentCompleted",
+          "host_pid": 53
+        }
+      ],
+      "wait_exit": 0,
+      "workers_still_same_identity": []
+    }
+  ],
+  "checks": {
+    "host1_startup_no_qb": {
+      "before": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 0,
+        "index_calls": 0
+      },
+      "after": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 0,
+        "index_calls": 0
+      }
+    },
+    "observe_only_1_no_qb": {
+      "before": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      },
+      "after": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    "install_config_no_qb": {
+      "before": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 0,
+        "index_calls": 0
+      },
+      "after": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    "invalid_observe_2_no_qb": {
+      "before": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      },
+      "after": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    "invalid_observe_3_no_qb": {
+      "before": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      },
+      "after": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    "invalid_observe_4_no_qb": {
+      "before": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      },
+      "after": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    "warm_401_no_qb": {
+      "before": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      },
+      "after": {
+        "mode": "success",
+        "qb_calls": 0,
+        "info_calls": 0,
+        "login_calls": 0,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    "observe_only_2_no_qb": {
+      "before": {
+        "mode": "success",
+        "qb_calls": 6,
+        "info_calls": 3,
+        "login_calls": 3,
+        "artifact_calls": 1,
+        "index_calls": 1
+      },
+      "after": {
+        "mode": "success",
+        "qb_calls": 6,
+        "info_calls": 3,
+        "login_calls": 3,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    "host2_cold_config_before_query_no_qb": {
+      "before": {
+        "mode": "success",
+        "qb_calls": 6,
+        "info_calls": 3,
+        "login_calls": 3,
+        "artifact_calls": 1,
+        "index_calls": 1
+      },
+      "after": {
+        "mode": "success",
+        "qb_calls": 6,
+        "info_calls": 3,
+        "login_calls": 3,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    },
+    "cold_same_config": true,
+    "cold_401_no_qb": {
+      "before": {
+        "mode": "success",
+        "qb_calls": 6,
+        "info_calls": 3,
+        "login_calls": 3,
+        "artifact_calls": 1,
+        "index_calls": 1
+      },
+      "after": {
+        "mode": "success",
+        "qb_calls": 6,
+        "info_calls": 3,
+        "login_calls": 3,
+        "artifact_calls": 1,
+        "index_calls": 1
+      }
+    }
+  },
+  "not_claimed": [
+    "real qB daemon/source/module/business consumer acceptance",
+    "browser",
+    "full raw-fields CLI gate",
+    "any downloader mutations or real downloads"
+  ],
+  "environment": {
+    "inherited_environment_copy": true,
+    "overrides": [],
+    "all_inherited_variables_equal": true,
+    "inherited_variable_count": 108,
+    "proxy_guard_environment_not_rewritten": true
+  },
+  "inputs": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/server": "0a4035ea012ac8595e68be19ce36a30e6b22be3fe1ba7d1882d31a1602025277",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/qb-allowed": "1bd44886362a396c8c18b2e075e8bc89fdabc1138f15d4dcb58e58503761ddd4",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/cli-driver.py": "d2bb0571f8eb24b743a35abbdfb385a5174d3d5819c8c2ce11cc064f3e54387d"
+  },
+  "artifact": {
+    "zip_sha256": "f584e2b4fc2839766c9248551222985761ef8a8ab5406043d7ec6ced782f5373",
+    "bytes": 2974530,
+    "executable_sha256": "1bd44886362a396c8c18b2e075e8bc89fdabc1138f15d4dcb58e58503761ddd4"
+  },
+  "bootstrap_exit": 0,
+  "worker_observations": [
+    {
+      "pid": 41,
+      "starttime": "11969213",
+      "ppid": 24,
+      "exe_readlink": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/cli01/private-data/plugin-packages/OwnedQBittorrentCompleted/owned-qbittorrent-completed-sdk-fixture",
+      "executable_sha256": "1bd44886362a396c8c18b2e075e8bc89fdabc1138f15d4dcb58e58503761ddd4",
+      "instance_id": "OwnedQBittorrentCompleted",
+      "host_pid": 24
+    },
+    {
+      "pid": 68,
+      "starttime": "11969232",
+      "ppid": 53,
+      "exe_readlink": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/cli01/private-data/plugin-packages/OwnedQBittorrentCompleted/owned-qbittorrent-completed-sdk-fixture",
+      "executable_sha256": "1bd44886362a396c8c18b2e075e8bc89fdabc1138f15d4dcb58e58503761ddd4",
+      "instance_id": "OwnedQBittorrentCompleted",
+      "host_pid": 53
+    }
+  ],
+  "final_peer_counts": {
+    "mode": "success",
+    "qb_calls": 8,
+    "info_calls": 4,
+    "login_calls": 4,
+    "artifact_calls": 1,
+    "index_calls": 1
+  },
+  "input_drift": [],
+  "environment_unchanged": true,
+  "finished_at": "2026-10-31T09:49:01.642857+00:00"
+}

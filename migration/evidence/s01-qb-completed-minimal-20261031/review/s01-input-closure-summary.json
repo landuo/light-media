@@ -1,0 +1,106 @@
+{
+  "at": "2026-10-31T09:55:22.848317+00:00",
+  "kind": "Summary derivative; original manifests and generated source copies retained locally, not replaced",
+  "runs": {
+    "normal01": {
+      "before": {
+        "original_local_file": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/before-inputs.json",
+        "original": {
+          "sha256": "7bc53168c479feb79b8d4d68f57fca69cbcdcd7fbad130bbc193dc028ad002b9",
+          "bytes": 1230688
+        },
+        "input_count": 6191,
+        "package_count": 431,
+        "generated_source_binding": {
+          "sha256": "b5ef0d637c1051e1b2e354e61ab485357a36ad58313ddd3ebbbc9b72360593cc",
+          "bytes": 1388
+        }
+      }
+    },
+    "normal02": {
+      "before": {
+        "original_local_file": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal02/before-inputs.json",
+        "original": {
+          "sha256": "39b8e6752e14bcd599a7dcacc294579c24892979fd54a6ec88277a58697e6c67",
+          "bytes": 1233971
+        },
+        "input_count": 6208,
+        "package_count": 431,
+        "generated_source_binding": {
+          "sha256": "90ae7c7012d9ea1b1292cb3bb24b61147d81752a8ea44d0308e300933aabe0d0",
+          "bytes": 1388
+        }
+      },
+      "run-before": {
+        "original_local_file": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal02/run-before-inputs.json",
+        "original": {
+          "sha256": "a30fab6892c12143a93710f8b4c02f277de95ab404d7ed2b53be521db59bfaf1",
+          "bytes": 1233971
+        },
+        "input_count": 6208,
+        "package_count": 431,
+        "generated_source_binding": {
+          "sha256": "90ae7c7012d9ea1b1292cb3bb24b61147d81752a8ea44d0308e300933aabe0d0",
+          "bytes": 1388
+        }
+      },
+      "after": {
+        "original_local_file": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal02/after-inputs.json",
+        "original": {
+          "sha256": "5dec29be3c9388970bcb73e50b9f4b80449948158997134ec8c798f9a7f43ca2",
+          "bytes": 1233971
+        },
+        "input_count": 6208,
+        "package_count": 431,
+        "generated_source_binding": {
+          "sha256": "90ae7c7012d9ea1b1292cb3bb24b61147d81752a8ea44d0308e300933aabe0d0",
+          "bytes": 1388
+        }
+      }
+    },
+    "race01": {
+      "before": {
+        "original_local_file": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/race01/before-inputs.json",
+        "original": {
+          "sha256": "3cace2c44a15bbd61ad88a2bb7a2ac460a78129b47d7cb09724259f58e56a794",
+          "bytes": 1230434
+        },
+        "input_count": 6191,
+        "package_count": 426,
+        "generated_source_binding": {
+          "sha256": "00c2b9bf02fa4d5361e484eb8bb1d73d03e92c307a2eeb7b83d6d7c6143b88d7",
+          "bytes": 416
+        }
+      },
+      "run-before": {
+        "original_local_file": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/race01/run-before-inputs.json",
+        "original": {
+          "sha256": "7a0274f8214c73f03704577a473dfb76e6c9c141be514df6f0f9f6b7e2dd927f",
+          "bytes": 1230434
+        },
+        "input_count": 6191,
+        "package_count": 426,
+        "generated_source_binding": {
+          "sha256": "00c2b9bf02fa4d5361e484eb8bb1d73d03e92c307a2eeb7b83d6d7c6143b88d7",
+          "bytes": 416
+        }
+      },
+      "after": {
+        "original_local_file": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/race01/after-inputs.json",
+        "original": {
+          "sha256": "6e2cd6b75dd9a497621f9841c97c1f320f0988aa0e2a7a67633ee67b47ebbda4",
+          "bytes": 1230434
+        },
+        "input_count": 6191,
+        "package_count": 426,
+        "generated_source_binding": {
+          "sha256": "00c2b9bf02fa4d5361e484eb8bb1d73d03e92c307a2eeb7b83d6d7c6143b88d7",
+          "bytes": 416
+        }
+      }
+    }
+  },
+  "normal02_equality": "6208 before/run-before/after + independent current rehash 0 drift",
+  "race01_equality": "6191 before/run-before/after + independent current rehash 0 drift",
+  "normal01": "6191 pre-build inputs; all 7 binaries built, resource floor failed before any roots. Retained failure never converted to PASS."
+}

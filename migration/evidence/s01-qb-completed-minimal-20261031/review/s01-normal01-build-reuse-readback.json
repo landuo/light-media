@@ -1,0 +1,79 @@
+{
+  "at": "2026-10-31T09:43:44.179922+00:00",
+  "state": "original_guardFAIL_no_test_roots_completed7builds_reuse_eligible_after_newwindow",
+  "original_monitor": {
+    "at": "2026-10-31T09:41:03.744999+00:00",
+    "exit": -15,
+    "limit_stop": "scratch_growth_budget",
+    "interruption_or_error": null,
+    "cleanup": [
+      "owned_group_TERM"
+    ],
+    "first": {
+      "at": "2026-10-31T09:39:41.702733+00:00",
+      "scratch_free": 1517912064,
+      "tmp_free": 5186342912
+    },
+    "observed_minimum": {
+      "at": "2026-10-31T09:39:41.702733+00:00",
+      "scratch_free": 1001975808,
+      "tmp_free": 4874649600
+    },
+    "final": {
+      "at": "2026-10-31T09:41:03.744981+00:00",
+      "scratch_free": 1001975808,
+      "tmp_free": 5186342912
+    },
+    "sampling_seconds": 2,
+    "not_exact_instantaneous_peak": true,
+    "signals_only_owned_pgid": 7,
+    "process_enumeration": false,
+    "rss_measured": false,
+    "scratch_growth_budget_bytes": 444170240
+  },
+  "build_exits": {
+    "build-app.exit": "0",
+    "build-qb-allowed.exit": "0",
+    "build-tr-allowed.exit": "0",
+    "build-qb-denied.exit": "0",
+    "build-server.exit": "0",
+    "build-sdk.exit": "0",
+    "build-tr-denied.exit": "0"
+  },
+  "binaries_independently_rehashed": {
+    "sdk.test": {
+      "sha256": "d404bcbf2230fb429b50a2d7c5b5a2536a14980977fb423763bf1012aa4fb09d",
+      "bytes": 8472408
+    },
+    "qb-allowed": {
+      "sha256": "1bd44886362a396c8c18b2e075e8bc89fdabc1138f15d4dcb58e58503761ddd4",
+      "bytes": 5264215
+    },
+    "qb-denied": {
+      "sha256": "8fdcfc2c4f5f5c94840917322ed9efb6e2a240e384ec0dca101b960064abfdff",
+      "bytes": 5264262
+    },
+    "tr-allowed": {
+      "sha256": "3fd747aa2cdd788fe8994dc7b1e3edafa4ff580a6dd08158a60d8b9a1a8d7f5b",
+      "bytes": 5262852
+    },
+    "tr-denied": {
+      "sha256": "cf904d883a0348676e5af5d461e4f6bb1d37db7975d041f28bffae2f40703d1d",
+      "bytes": 5262883
+    },
+    "app.test": {
+      "sha256": "a74cde8495ee444f38121aaac8f67ac02e02ec2e28c4c87f0aafb57fa2aa6dd4",
+      "bytes": 83932352
+    },
+    "server": {
+      "sha256": "0a4035ea012ac8595e68be19ce36a30e6b22be3fe1ba7d1882d31a1602025277",
+      "bytes": 67854312
+    }
+  },
+  "before_input_count": 6191,
+  "current_before_input_drift": [],
+  "test_commands": [],
+  "candidate14_current_same": true,
+  "runner_result_exists": false,
+  "boundary": "Builds successful, not normal tests passed. Recorded before input/readback supports reuse but fresh runtime precheck and terminal binding still required; actual monitor violates physical1GiB floor, failure preserved. No Go or process operation by reviewer."
+}

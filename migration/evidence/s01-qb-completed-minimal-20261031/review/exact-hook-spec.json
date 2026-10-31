@@ -1,0 +1,21 @@
+{
+  "state": "metadata_only_not_applied",
+  "base": "b4f3251ee4f5359659a66935a427502da20f59e1",
+  "path": "internal/app/plugin_original_resources.go",
+  "base_sha256": "10d324bce28e38e331b5c971c6c6e7146e2bfbfc27b24ae42c857af537ee5008",
+  "hooks": [
+    {
+      "purpose": "allow exact new qB standard capability",
+      "before": "originalSharedTransmissionQueryCapability(method) || originalSharedLocalStorageCapability(method)",
+      "after": "originalSharedTransmissionQueryCapability(method) || originalSharedQBittorrentCompletedCapability(method) || originalSharedLocalStorageCapability(method)",
+      "base_match_count": 1
+    },
+    {
+      "purpose": "dispatch qB after existing generic scope validation and before Transmission",
+      "before": "\tif originalSharedTransmissionQueryCapability(method) {\n\t\treturn a.originalSharedTransmissionQueryResource(ctx, scope, method, raw)\n\t}",
+      "after": "\tif originalSharedQBittorrentCompletedCapability(method) {\n\t\treturn a.originalSharedQBittorrentCompletedResource(ctx, scope, method, raw)\n\t}\n\tif originalSharedTransmissionQueryCapability(method) {\n\t\treturn a.originalSharedTransmissionQueryResource(ctx, scope, method, raw)\n\t}",
+      "base_match_count": 1
+    }
+  ],
+  "warning": "No file patch or worktree was created; assembly authorized separately to coordinator, not this reviewer. Do not use current whole dispatcher."
+}

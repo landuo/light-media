@@ -1,0 +1,347 @@
+{
+  "at": "2026-10-31T09:46:49.628284+00:00",
+  "state": "accepted_exact_standalone_candidate_normal7_not_race_or_CLI",
+  "candidate_assembly_sha256": "709af4e7a6c651118f71536a5dfd00893934b30718dcc2aa2447c1c365382885",
+  "roots": [
+    {
+      "name": "TestQBittorrentCompletedSDKRawFieldsAndNone",
+      "status": "PASS"
+    },
+    {
+      "name": "TestQBittorrentCompletedSDKRejectsInputAndHostFault",
+      "status": "PASS"
+    },
+    {
+      "name": "TestSharedQBittorrentCompletedWorkerPermissionAndWire",
+      "status": "PASS"
+    },
+    {
+      "name": "TestSharedQBittorrentCompletedDispatchScope",
+      "status": "PASS"
+    },
+    {
+      "name": "TestSharedQBittorrentCompletedResponseLimit",
+      "status": "PASS"
+    },
+    {
+      "name": "TestSharedQBittorrentCompletedWorkerOwnedProtocolCold",
+      "status": "PASS"
+    },
+    {
+      "name": "TestSharedTransmissionQueryWorkerPermissionAndWire",
+      "status": "PASS"
+    }
+  ],
+  "input_count": 6208,
+  "three_phase_equal": true,
+  "current_input_drift": [],
+  "binaries": {
+    "sdk.test": {
+      "sha256": "d404bcbf2230fb429b50a2d7c5b5a2536a14980977fb423763bf1012aa4fb09d",
+      "bytes": 8472408,
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/sdk.test",
+      "reused_completed_compile": true
+    },
+    "qb-allowed": {
+      "sha256": "1bd44886362a396c8c18b2e075e8bc89fdabc1138f15d4dcb58e58503761ddd4",
+      "bytes": 5264215,
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/qb-allowed",
+      "reused_completed_compile": true
+    },
+    "qb-denied": {
+      "sha256": "8fdcfc2c4f5f5c94840917322ed9efb6e2a240e384ec0dca101b960064abfdff",
+      "bytes": 5264262,
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/qb-denied",
+      "reused_completed_compile": true
+    },
+    "tr-allowed": {
+      "sha256": "3fd747aa2cdd788fe8994dc7b1e3edafa4ff580a6dd08158a60d8b9a1a8d7f5b",
+      "bytes": 5262852,
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/tr-allowed",
+      "reused_completed_compile": true
+    },
+    "tr-denied": {
+      "sha256": "cf904d883a0348676e5af5d461e4f6bb1d37db7975d041f28bffae2f40703d1d",
+      "bytes": 5262883,
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/tr-denied",
+      "reused_completed_compile": true
+    },
+    "app.test": {
+      "sha256": "a74cde8495ee444f38121aaac8f67ac02e02ec2e28c4c87f0aafb57fa2aa6dd4",
+      "bytes": 83932352,
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/app.test",
+      "reused_completed_compile": true
+    },
+    "server": {
+      "sha256": "0a4035ea012ac8595e68be19ce36a30e6b22be3fe1ba7d1882d31a1602025277",
+      "bytes": 67854312,
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal01/server",
+      "reused_completed_compile": true
+    }
+  },
+  "generated_input_copy_checks": [
+    {
+      "phase": "before",
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/32/326c376bd83cb344b219aa727e98f62fcb87455700c5f77572a0a2fcbaecc097-d",
+      "sha256": "326c376bd83cb344b219aa727e98f62fcb87455700c5f77572a0a2fcbaecc097",
+      "copy": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal02/generated-inputs/326c376bd83cb344b219aa727e98f62fcb87455700c5f77572a0a2fcbaecc097",
+      "bytes": 151068
+    },
+    {
+      "phase": "before",
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/61/616e32bf1f2e26d935f40c8706d26befa0e08d359c370e25086a5eced15aea5d-d",
+      "sha256": "616e32bf1f2e26d935f40c8706d26befa0e08d359c370e25086a5eced15aea5d",
+      "copy": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal02/generated-inputs/616e32bf1f2e26d935f40c8706d26befa0e08d359c370e25086a5eced15aea5d",
+      "bytes": 824
+    },
+    {
+      "phase": "before",
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/bd/bd24d08751e93b1b46c3df0538b0169a6803e9af1a89f88bd65588d9c5c2ef34-d",
+      "sha256": "bd24d08751e93b1b46c3df0538b0169a6803e9af1a89f88bd65588d9c5c2ef34",
+      "copy": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal02/generated-inputs/bd24d08751e93b1b46c3df0538b0169a6803e9af1a89f88bd65588d9c5c2ef34",
+      "bytes": 14330
+    },
+    {
+      "phase": "run-before",
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/32/326c376bd83cb344b219aa727e98f62fcb87455700c5f77572a0a2fcbaecc097-d",
+      "sha256": "326c376bd83cb344b219aa727e98f62fcb87455700c5f77572a0a2fcbaecc097",
+      "copy": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal02/generated-inputs/326c376bd83cb344b219aa727e98f62fcb87455700c5f77572a0a2fcbaecc097",
+      "bytes": 151068
+    },
+    {
+      "phase": "run-before",
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/61/616e32bf1f2e26d935f40c8706d26befa0e08d359c370e25086a5eced15aea5d-d",
+      "sha256": "616e32bf1f2e26d935f40c8706d26befa0e08d359c370e25086a5eced15aea5d",
+      "copy": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal02/generated-inputs/616e32bf1f2e26d935f40c8706d26befa0e08d359c370e25086a5eced15aea5d",
+      "bytes": 824
+    },
+    {
+      "phase": "run-before",
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/bd/bd24d08751e93b1b46c3df0538b0169a6803e9af1a89f88bd65588d9c5c2ef34-d",
+      "sha256": "bd24d08751e93b1b46c3df0538b0169a6803e9af1a89f88bd65588d9c5c2ef34",
+      "copy": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal02/generated-inputs/bd24d08751e93b1b46c3df0538b0169a6803e9af1a89f88bd65588d9c5c2ef34",
+      "bytes": 14330
+    },
+    {
+      "phase": "after",
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/32/326c376bd83cb344b219aa727e98f62fcb87455700c5f77572a0a2fcbaecc097-d",
+      "sha256": "326c376bd83cb344b219aa727e98f62fcb87455700c5f77572a0a2fcbaecc097",
+      "copy": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal02/generated-inputs/326c376bd83cb344b219aa727e98f62fcb87455700c5f77572a0a2fcbaecc097",
+      "bytes": 151068
+    },
+    {
+      "phase": "after",
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/61/616e32bf1f2e26d935f40c8706d26befa0e08d359c370e25086a5eced15aea5d-d",
+      "sha256": "616e32bf1f2e26d935f40c8706d26befa0e08d359c370e25086a5eced15aea5d",
+      "copy": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal02/generated-inputs/616e32bf1f2e26d935f40c8706d26befa0e08d359c370e25086a5eced15aea5d",
+      "bytes": 824
+    },
+    {
+      "phase": "after",
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/bd/bd24d08751e93b1b46c3df0538b0169a6803e9af1a89f88bd65588d9c5c2ef34-d",
+      "sha256": "bd24d08751e93b1b46c3df0538b0169a6803e9af1a89f88bd65588d9c5c2ef34",
+      "copy": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/normal02/generated-inputs/bd24d08751e93b1b46c3df0538b0169a6803e9af1a89f88bd65588d9c5c2ef34",
+      "bytes": 14330
+    }
+  ],
+  "monitor": {
+    "at": "2026-10-31T09:44:59.074897+00:00",
+    "exit": 0,
+    "limit_stop": null,
+    "interruption_or_error": null,
+    "cleanup": [],
+    "first": {
+      "at": "2026-10-31T09:44:51.072860+00:00",
+      "scratch_free": 1599684608,
+      "tmp_free": 5186342912
+    },
+    "observed_minimum": {
+      "at": "2026-10-31T09:44:51.072860+00:00",
+      "scratch_free": 1591148544,
+      "tmp_free": 5181075456
+    },
+    "final": {
+      "at": "2026-10-31T09:44:59.074833+00:00",
+      "scratch_free": 1591148544,
+      "tmp_free": 5186310144
+    },
+    "sampling_seconds": 2,
+    "not_exact_instantaneous_peak": true,
+    "signals_only_owned_pgid": 6,
+    "process_enumeration": false,
+    "rss_measured": false,
+    "scratch_growth_budget_bytes": 525942784
+  },
+  "resource_sample_count": 4,
+  "cross_attempt_environment_changed_names": [
+    "ALL_PROXY",
+    "BUNDLE_HTTPS_PROXY",
+    "BUNDLE_HTTP_PROXY",
+    "CODEX_TOOL_CALL_ID",
+    "DOCKER_HTTPS_PROXY",
+    "DOCKER_HTTP_PROXY",
+    "FTP_PROXY",
+    "GOTMPDIR",
+    "HTTPS_PROXY",
+    "HTTP_PROXY",
+    "NPM_CONFIG_HTTPS_PROXY",
+    "NPM_CONFIG_HTTP_PROXY",
+    "NPM_CONFIG_PROXY",
+    "PIP_PROXY",
+    "WSS_PROXY",
+    "WS_PROXY",
+    "YARN_HTTPS_PROXY",
+    "YARN_HTTP_PROXY",
+    "all_proxy",
+    "ftp_proxy",
+    "http_proxy",
+    "https_proxy",
+    "npm_config_http_proxy",
+    "npm_config_https_proxy",
+    "npm_config_proxy",
+    "ws_proxy",
+    "wss_proxy"
+  ],
+  "environment_boundary": "Runners preserve inherited network/proxy/TLS environment. Cross-exec compile01/runtime02 environments not asserted fully identical; above names disclose differences. Actual02 closure and source/binaries stable.",
+  "retained_failure": "normal01 actual physicalscratch reserve violation -15,7successful compiles0roots; normal02 reuses same7programs withoutcopy/recompile and is a separate new execution",
+  "files": {
+    "audits/s01-minimal-release-20261031/normal02/run-before-inputs.json": {
+      "sha256": "a30fab6892c12143a93710f8b4c02f277de95ab404d7ed2b53be521db59bfaf1",
+      "bytes": 1233971
+    },
+    "audits/s01-minimal-release-20261031/normal02/after-list.command.json": {
+      "sha256": "22a3a582801ecd949d54c23b56fe76d038af4542c5e7fbcbfdcbbd7850f4d9de",
+      "bytes": 387
+    },
+    "audits/s01-minimal-release-20261031/normal02/after-inputs.json": {
+      "sha256": "5dec29be3c9388970bcb73e50b9f4b80449948158997134ec8c798f9a7f43ca2",
+      "bytes": 1233971
+    },
+    "audits/s01-minimal-release-20261031/normal02/run-before-list.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "audits/s01-minimal-release-20261031/normal02/test-sdk.log": {
+      "sha256": "1bbcca8468310149473cc26224d8e33f8de0d9c1847add48aa2a36881c4a3d5b",
+      "bytes": 253
+    },
+    "audits/s01-minimal-release-20261031/normal02/binary-hashes.json": {
+      "sha256": "f97635bb3e8808c1e13c72d81252d98c2363601776b593ea1e07a39a0114a1d5",
+      "bytes": 2029
+    },
+    "audits/s01-minimal-release-20261031/normal02/environment-binding.json": {
+      "sha256": "33299c8efb8beda4d197eeea19326f868f352d5b89c0787a61d561f60843ea04",
+      "bytes": 11372
+    },
+    "audits/s01-minimal-release-20261031/normal02/before-list.log": {
+      "sha256": "1a38c2d571242e6b493131f8f14923629139334acb32255868930739ba2746e2",
+      "bytes": 1500413
+    },
+    "audits/s01-minimal-release-20261031/normal02/actual-roots.json": {
+      "sha256": "67f7a36b4b9b22ac4a9a05fd8d7252ba48340a7d719b731c35f473dbc63f0f85",
+      "bytes": 900
+    },
+    "audits/s01-minimal-release-20261031/normal02/test-app.log": {
+      "sha256": "66c773a100ded221465300c8a7a53f2ef08265460f4bda7c252c6eccc06c281e",
+      "bytes": 21959
+    },
+    "audits/s01-minimal-release-20261031/normal02/after-generated-inputs.json": {
+      "sha256": "90ae7c7012d9ea1b1292cb3bb24b61147d81752a8ea44d0308e300933aabe0d0",
+      "bytes": 1388
+    },
+    "audits/s01-minimal-release-20261031/normal02/before-list.command.json": {
+      "sha256": "7cc9f416db527422b0fc5df9797be4e38c49077065643d7f1d9ade626e6e45b8",
+      "bytes": 387
+    },
+    "audits/s01-minimal-release-20261031/normal02/candidate-readback.json": {
+      "sha256": "7ae03a9f2d2ccb756c20936b770eb103a1f1ac09450863f03926698c5137b0c6",
+      "bytes": 1951
+    },
+    "audits/s01-minimal-release-20261031/normal02/run-before-list.log": {
+      "sha256": "1a38c2d571242e6b493131f8f14923629139334acb32255868930739ba2746e2",
+      "bytes": 1500413
+    },
+    "audits/s01-minimal-release-20261031/normal02/result.json": {
+      "sha256": "064227d40b9c87b34c4cfbd5537bd26fb280b27fa1cb37b5aa42a205c5fe80d9",
+      "bytes": 445
+    },
+    "audits/s01-minimal-release-20261031/normal02/fixture-environment.json": {
+      "sha256": "809c3ceaa139428a9c76d75fc88b4b65fba6269739fb4e284af4564c64dc6499",
+      "bytes": 665
+    },
+    "audits/s01-minimal-release-20261031/normal02/run-before-list.command.json": {
+      "sha256": "54f9837eae0893692f5d215887ac3f43d8342e6fa42b632f70e6457a986d0097",
+      "bytes": 387
+    },
+    "audits/s01-minimal-release-20261031/normal02/test-app.command.json": {
+      "sha256": "92ab93057d2bc116c21a3b1ca48e7702023ec81d7a7310573b76a7d41cd10de1",
+      "bytes": 631
+    },
+    "audits/s01-minimal-release-20261031/normal02/before-generated-inputs.json": {
+      "sha256": "90ae7c7012d9ea1b1292cb3bb24b61147d81752a8ea44d0308e300933aabe0d0",
+      "bytes": 1388
+    },
+    "audits/s01-minimal-release-20261031/normal02/test-app.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "audits/s01-minimal-release-20261031/normal02/after-list.log": {
+      "sha256": "1a38c2d571242e6b493131f8f14923629139334acb32255868930739ba2746e2",
+      "bytes": 1500413
+    },
+    "audits/s01-minimal-release-20261031/normal02/actual-reuse-readback.json": {
+      "sha256": "ab3754383aec172005464e6cc137974e8cc592c84fe6c3778de69e4a2e2d6932",
+      "bytes": 188
+    },
+    "audits/s01-minimal-release-20261031/normal02/test-sdk.command.json": {
+      "sha256": "69a338c82fe231c35e7d1a35c8629205ee72d3fec9a4dc20a9718c8ed0d8ad14",
+      "bytes": 484
+    },
+    "audits/s01-minimal-release-20261031/normal02/runner.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "audits/s01-minimal-release-20261031/normal02/run-before-generated-inputs.json": {
+      "sha256": "90ae7c7012d9ea1b1292cb3bb24b61147d81752a8ea44d0308e300933aabe0d0",
+      "bytes": 1388
+    },
+    "audits/s01-minimal-release-20261031/normal02/test-sdk.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "audits/s01-minimal-release-20261031/normal02/before-list.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "audits/s01-minimal-release-20261031/normal02/before-inputs.json": {
+      "sha256": "39b8e6752e14bcd599a7dcacc294579c24892979fd54a6ec88277a58697e6c67",
+      "bytes": 1233971
+    },
+    "audits/s01-minimal-release-20261031/normal02/after-list.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "audits/s01-minimal-release-20261031/normal02-monitor/runner.log": {
+      "sha256": "0f45edb6006fcab9718e4e9cf94715a3e36725ee85ebefa63c9e22f2f0775dea",
+      "bytes": 519
+    },
+    "audits/s01-minimal-release-20261031/normal02-monitor/runner.pid": {
+      "sha256": "06e9d52c1720fca412803e3b07c4b228ff113e303f4c7ab94665319d832bbfb7",
+      "bytes": 2
+    },
+    "audits/s01-minimal-release-20261031/normal02-monitor/result.json": {
+      "sha256": "47a7328601bdf51f24c403c5dd58c9ed03efa02abaacd181521f5f7403cb9e30",
+      "bytes": 710
+    },
+    "audits/s01-minimal-release-20261031/normal02-monitor/monitor.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "audits/s01-minimal-release-20261031/normal02-monitor/resources.jsonl": {
+      "sha256": "9124312063fa4a7ce151db3af9390688b0303c8c8bf3f0f8804a41a2f866ed45",
+      "bytes": 380
+    }
+  },
+  "remaining": "Fresh candidate race4, normal2hostCLI, evidence/content scan and final independent delivery review; no wholeS01/daemon/browser/remote/CI claim",
+  "reviewer_execution": "None; only rawlog/hash/JSON/read-only audit"
+}

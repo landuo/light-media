@@ -1,0 +1,67 @@
+{
+  "state": "frozen",
+  "base_commit": "b4f3251ee4f5359659a66935a427502da20f59e1",
+  "worktree": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/worktrees/release-s01-20261031",
+  "candidate_manifest": "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/assembly.json",
+  "run_directory": "race01",
+  "gotmpdir": "/tmp/s01-release-race01",
+  "source_packages": [
+    "./internal/app",
+    "./cmd/owned-qbittorrent-completed-fixture"
+  ],
+  "fixtures": [
+    {
+      "binary": "qb-allowed",
+      "package": "./cmd/owned-qbittorrent-completed-fixture",
+      "env": "OWNED_QBITTORRENT_COMPLETED_FIXTURE_BINARY",
+      "ldflags": ""
+    },
+    {
+      "binary": "qb-denied",
+      "package": "./cmd/owned-qbittorrent-completed-fixture",
+      "env": "OWNED_QBITTORRENT_COMPLETED_DENIED_FIXTURE_BINARY",
+      "ldflags": "-X main.fixtureDenied=true"
+    }
+  ],
+  "test_packages": [
+    {
+      "label": "app",
+      "package": "./internal/app",
+      "binary": "app-race.test",
+      "roots": [
+        "TestSharedQBittorrentCompletedWorkerOwnedProtocolCold",
+        "TestSharedQBittorrentCompletedWorkerPermissionAndWire",
+        "TestSharedQBittorrentCompletedDispatchScope",
+        "TestSharedQBittorrentCompletedResponseLimit"
+      ]
+    }
+  ],
+  "build_server": false,
+  "expected_roots": 4,
+  "expected_go": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/bin/go",
+  "runtime_inputs": [
+    "internal/plugins/iyuuautoseed/reference/native-projection-oracle.json",
+    "testdata/plugins/clean-invalid-seed-mutation-phase/installed-qb.py",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/delivery-whitelist-20261031/first-slice-proposal.json",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/delivery-whitelist-20261031/exact-hook-spec.json",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/delivery-whitelist-20261031/s01-prepared-gates-static-review.json",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/delivery-whitelist-20261031/s01-race-cache-static-review.json"
+  ],
+  "frozen_runner_inputs": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/assembly.json": "709af4e7a6c651118f71536a5dfd00893934b30718dcc2aa2447c1c365382885",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/delivery-whitelist-20261031/s01-prepared-gates-static-review.json": "797fe296631c6918001f0b6689081639f7de4a68e1bd99b399abc413d4983929",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/run-race.py": "2af51a1762bfa0cdeee0130bbf368b1e932afd490bab9e96bcfb1afd649b9e61",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/monitor-race.py": "c635ea9ff2375b33d88c3786012a04dbdf762f3b71b408ce346d5f2aa45bed6e",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/s01-minimal-release-20261031/launch-race.sh": "c9011ecc9b5b728020319db87ca64615218f8f5f0f2dc3a9934d26764b6bcdea",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-20261030/audits/delivery-whitelist-20261031/s01-race-cache-static-review.json": "afe17120c04b4b622d9c4963c55fc13eb1fefe0160efd7b648ccaee95d9375ed"
+  },
+  "scratch_growth_budget_bytes": null,
+  "growth_policy": "Atstart available scratch minus1GiB equals realfloor; no arbitrary growthcap",
+  "scope": "Fresh b4+S01 standalone candidate. Only originalApp4 race with newlybuilt raceQBalllowdeny; noTR/native/fullhistory. No realqBdaemon/netlink/sourcePython/browser/remote acceptance. Dedicated approved /tmp/s01-release/cache/go-build avoids scratch cache growth; every generated Go-cache input remains byte-snapshotted before/run-before/after.",
+  "inheritance_pending_review": "Pure App3/native4 and source28 retain finite unchanged function/actual dependencies evidence only after reviewer confirms; no old dirtytreePASS mapped to newhost.",
+  "build_environment": {
+    "GOCACHE": "/tmp/s01-release/cache/go-build"
+  },
+  "build_environment_authority": "root09:43 via coordinator allows exact candidate race private tmp buildcache only, dependencies not copied, old shared generatedcache source preserved; no networking env change"
+}
