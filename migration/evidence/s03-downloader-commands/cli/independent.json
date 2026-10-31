@@ -1,0 +1,125 @@
+{
+  "status": "FINITE_NORMAL_SERVICE_OWNED_PROTOCOL_CLI_ACCEPTED",
+  "at": "2026-10-31T22:05:02.337707+00:00",
+  "artifacts": {
+    "result": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-command-cli01/result.json",
+      "bytes": 27608,
+      "sha256": "15fec23d68b1b64d1362a24e5105198966771644b8d6cf98426856fe643484d5"
+    },
+    "driver": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-command-cli/normal-cli-driver.py",
+      "bytes": 37704,
+      "sha256": "fe2e2440877e8c296c5059115d37a7b0ea84c3f8237d8d68f64b20a7a012af38"
+    },
+    "execution_bindings": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-command-cli/execution-bindings.json",
+      "bytes": 8550,
+      "sha256": "1fd9399f61e78663f844f545ed52bc8c14a7ce269f32b1495c895ab8ec7535b8"
+    },
+    "tool_receipt": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-command-cli01/tool-execution-receipt.json",
+      "bytes": 156,
+      "sha256": "dd610cddfef8f4f03a9dbf6057b7f95d81ef1c4be0db0b566d737477fe56fe43"
+    },
+    "driver_exit": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-command-cli01/driver.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "prior_binding_review": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-command-cli-independent/execution-binding-readback.json",
+      "bytes": 4934,
+      "sha256": "e249eb5de0412bd974bff88fd5f76994b86c4f5b570bb0cda0448d7670fffc9d"
+    }
+  },
+  "current_binding_inputs_verified": 30,
+  "actual": {
+    "normal_hosts": [
+      25,
+      73
+    ],
+    "natural_wait_exit": [
+      0,
+      0
+    ],
+    "same_private_DB": true,
+    "workers": [
+      42,
+      88
+    ],
+    "warm_init_count": 1,
+    "cold_init_count": 1,
+    "business_queries": 4,
+    "selected_HTTP_requests": 12,
+    "all_owned_HTTP_requests": 22,
+    "eight_methods_observed": [
+      [
+        "qbittorrent",
+        "add"
+      ],
+      [
+        "qbittorrent",
+        "start"
+      ],
+      [
+        "qbittorrent",
+        "recheck"
+      ],
+      [
+        "qbittorrent",
+        "delete_keep_files"
+      ],
+      [
+        "transmission",
+        "add"
+      ],
+      [
+        "transmission",
+        "start"
+      ],
+      [
+        "transmission",
+        "recheck"
+      ],
+      [
+        "transmission",
+        "delete_keep_files"
+      ]
+    ],
+    "single_500_then_same_worker_recovery": true,
+    "no_extra_selected_request_after_old_callback_denial": true,
+    "large_bytes": 16777216,
+    "large_sha256": "287507f403176f1f5b22b9a4d9cb49f7d7f88ac19e406b5ae87ce109564846bd",
+    "large_logical_callbacks": 18,
+    "large_append_callbacks": 16,
+    "large_submit_callbacks": 1,
+    "physical_plugin_wire_measured": false,
+    "endpoint_http_entity_bytes_measured": true,
+    "one_install": true,
+    "environment_unchanged_after_grant_marker": true,
+    "no_input_drift": true
+  },
+  "publication_secret_check": {
+    "scope": [
+      "original structured result",
+      "frozen driver source",
+      "execution bindings"
+    ],
+    "no_credential_value_fields_in_result_or_bindings": true,
+    "no_private_key_or_standard_GitHub_token_or_URL_userinfo_pattern_found": true,
+    "runtime_credentials_created_in_memory_not_source_literals": true,
+    "login_responses_not_retained_in_result": true,
+    "private_DB_keys_login_bodies_host_logs_not_read_by_reviewer": true,
+    "conclusion": "No credential material found in these exact proposed publication texts. Bounded structural/manual code inspection, not a universal secret-absence theorem or clearance of private runtime directories."
+  },
+  "reviewer_boundary": "Reviewer authored driver but did not execute service or author actual tool receipt. Existing different-author static review was retained; this is independent readback/recalculation of coordinator execution evidence, not a claim of a new independent driver design review. No driver rerun, API call, source/vendor import, Go execution, process probe or product edit.",
+  "not_claimed": [
+    "real qB/Transmission daemon or actual download/data deletion",
+    "full Python Torrent/vendor behavior/full S03",
+    "browser/UI/CI/push",
+    "absence of unknown effects from retained vendor acquisition incident",
+    "universal single underlying transport attempt"
+  ],
+  "worker_departure": "Original frozen driver checks exact held PID/starttime departures after each natural host Wait; PASS and no forced cleanup retained. No cross-exec ps assertion substituted."
+}

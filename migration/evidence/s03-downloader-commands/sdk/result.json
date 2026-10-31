@@ -1,0 +1,86 @@
+{
+  "started": "2026-10-31T21:46:37.076745+00:00",
+  "driver_pid": 6,
+  "package": "./internal/plugins",
+  "pattern": "^(TestSharedDownloaderCommandsWireAndSourceValues|TestSharedDownloaderCommandsPagedAdd|TestSharedDownloaderCommandsStrictFailuresAndNoResubmit)$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-sdk02.test",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-sdk02.test",
+        "-test.v",
+        "-test.run",
+        "^(TestSharedDownloaderCommandsWireAndSourceValues|TestSharedDownloaderCommandsPagedAdd|TestSharedDownloaderCommandsStrictFailuresAndNoResubmit)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T21:46:37.076765+00:00",
+      "scratch_free": 51863601152,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T21:46:37.378579+00:00",
+      "scratch_free": 51862724608,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T21:46:39.635226+00:00",
+      "scratch_free": 51846320128,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 1926,
+  "program_sha256": "9266dc8f9611184b62cb7c90b54a6e516a816b5ea3a5834c07345cb3671d9835",
+  "root_passes": [
+    "TestSharedDownloaderCommandsWireAndSourceValues",
+    "TestSharedDownloaderCommandsPagedAdd",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit"
+  ],
+  "ended": "2026-10-31T21:46:40.309334+00:00"
+}

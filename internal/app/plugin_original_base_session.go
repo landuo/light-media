@@ -25,6 +25,7 @@ func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context
 	var active atomic.Bool
 	active.Store(true)
 	torrentTransfers := newOriginalTorrentTransfers()
+	downloaderUploads := newOriginalDownloaderCommandUploads()
 	logCall := originalPluginLogCall{id: id("pc_"), phase: phase}
 	validate := func(ctx context.Context) error {
 		if err := ctx.Err(); err != nil {
@@ -69,7 +70,7 @@ func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context
 			if !originalStandardCapabilityAllowed(p.hostContract, method) || !slices.Contains(p.manifest.Capabilities, method) {
 				return nil, bad("PLUGIN_CAPABILITY_DENIED", "公共宿主契约未声明该方法")
 			}
-			scope := originalBaseCallScope{object: p, phase: phase, installation: p.installation, validate: validate, logCall: logCall, torrentTransfers: torrentTransfers}
+			scope := originalBaseCallScope{object: p, phase: phase, installation: p.installation, validate: validate, logCall: logCall, torrentTransfers: torrentTransfers, downloaderUploads: downloaderUploads}
 			if plugins.IsBaseMethod(method) {
 				return p.app.pluginOriginalBaseHost(ctx, scope, identity, method, raw)
 			}
@@ -77,5 +78,6 @@ func (p *originalPluginInstance) originalBaseSessionHost(callCtx context.Context
 		}, func() {
 			active.Store(false)
 			torrentTransfers.close()
+			downloaderUploads.close()
 		}
 }

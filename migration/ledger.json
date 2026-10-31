@@ -40,7 +40,7 @@
       "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/README.md",
       "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/publication-manifest.json"
     ],
-    "revision_note": "Actual last parent/Mac push/readback remains11f922; main unchanged. Local S10 commit760720 complete but Mac push not confirmed due usage cap. Current S12.material exactrelease candidate accepted locally, notremote. No CI-green claim."
+    "revision_note": "Last actual remote remains11f922; local760720→b9e667→41c8 plus current S03 candidate not pushed. main unchanged; no CI-green claim."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -25640,16 +25640,20 @@
         "No historical credit reset; old20 consumer files and historical source/codec coverage inherited, new source errors retained."
       ],
       "completion": {
-        "state": "finite_backend_local_verified_publication_pending",
+        "state": "finite_backend_locally_committed_bundle_ready_remote_pending",
         "full_parent_verified": false,
         "remote_delivery": false,
-        "manifest": "migration/evidence/s02-local-backup/evidence-index.json"
+        "manifest": "migration/evidence/s02-local-backup/evidence-index.json",
+        "new_commit": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "bundle_sha256": "ccf6518d6c47361867ae5846ce518b1422d1cfe83f921a01775c5fa5ee14addb",
+        "bundle_library_id": "libfile_e8215c49578881918d7acefc9c0ba82e"
       }
     },
     {
       "id": "S03",
       "description": "S03 · 添加、复核、开始与保留数据删除种子",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/download.py",
         "app/chain/download.py",
@@ -25669,17 +25673,37 @@
         "scope.discovery.46"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "internal/plugins/downloadercommands/leaf.go",
+        "internal/plugins/shared_downloader_commands.go",
+        "internal/app/plugin_shared_downloader_command_uploads.go",
+        "internal/app/plugin_shared_downloader_commands.go",
+        "internal/app/plugin_shared_downloader_commands_native.go",
+        "internal/plugins/iyuuautoseed/native/shared_downloader_commands.go"
+      ],
       "owner": "coordinator",
-      "scenarios": [],
-      "evidence_ids": [],
+      "scenarios": [
+        "selected-source34/leaf2 and final SDK3 finite differential",
+        "native current qB normal4/race1 plus unchanged TR2 historical credit",
+        "real installed worker8 operations/unknown failure recovery/18callback16MiB/cold full settings equality",
+        "actual normal dualhost4 business calls with fixed owned peer, not real daemon"
+      ],
+      "evidence_ids": [
+        "s03-commands.source-target",
+        "s03-commands.normal-cli"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "terminate_independent and s01_release_owner / Astra ultra",
+        "evidence_ids": [
+          "s03-commands.independent-review"
+        ],
+        "scope": "finite backend only; full parent remains implementing"
       },
       "external_source_paths": [],
-      "work_kind": "unclassified_shared_host",
-      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent.",
+      "work_kind": "confirmed_delta",
+      "work_kind_note": "Existing native ordinary-consumer paused add/control and old business traces retained; missing normal worker→host write operations and source return/material semantics are new deltas.",
       "semantic_scope_reconciliation": {
         "id": "S03",
         "old_operation_scope": "两下载器添加、复核、开始、保留数据删除",
@@ -25688,6 +25712,26 @@
         "semantic_judgment": "旧四操作×两下载器；已有native客户端可复用，主动调用权限/结果保持独立，不能拿43反向覆盖代替。",
         "current_ledger_status": "discovered",
         "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
+      },
+      "local_reconstruction": {
+        "status": "finite source/target/installed-worker/normal CLI independently accepted; local publication ready, remote pending",
+        "source_contract": "../audits/s03-next-scope/REVIEW.md",
+        "boundary": "delete_file=False only; owned HTTP/TLS fixture not real daemon. URL+truthyCookie, arbitraryPython objects/full vendorTorrent properties, wider kwargs/source timeout/retry and actual service equivalence remain bounded/unproven. Dedicated qB TLS exception explicitly approved and actual owned TLS/current affected gates passed; other clients/CA/credentials unchanged."
+      },
+      "boundaries": [
+        "Real qB/TR daemon, actual downloads, NAS and browser unverified; full S03 remains open.",
+        "Finite JSON/bytes selectors and source return projection only; no arbitrary Python/vendor object parity.",
+        "16MiB/frame/callback limits explicit; URL+truthyCookie/global synchronization pending.",
+        "Unknown delegated effect/no application replay differs unrestricted source retry/catch; Go proven zero-write retry boundary retained.",
+        "Vendor-source acquisition incident side effects unknown; final content integrity not proof of no side effects."
+      ],
+      "completion": {
+        "state": "finite_backend_verified_publication_ready_remote_pending",
+        "full_parent_verified": false,
+        "remote_delivery": false,
+        "manifest": "migration/evidence/s03-downloader-commands/evidence-index.json",
+        "parent_commit": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4"
       }
     },
     {
@@ -29418,6 +29462,16 @@
         "text": "允许"
       },
       "scope": "Full committed landuo/light-media Git history through42d6 to current ChatGPT Space for cloud recovery, excludes workspace uncommitted files. Initial upload denied/not executed, exact same upload retried only after this explicit approval; not bypassed."
+    },
+    {
+      "id": "scoped_qb_native_tls_20261031_215510",
+      "status": "approved",
+      "authorization": {
+        "user_utc": "2026-10-31T21:55:10Z",
+        "user_message_id": "Sentinel_6f870ab66a148191a118376aa072856d",
+        "text": "关闭证书校验"
+      },
+      "scope": "Only newly implemented independent qB native command client, preserving source VERIFY_WEBUI_CERTIFICATE=False. Clone its transport/TLS config; no change to global CA/default transport, other clients, Git/browser, cross-origin credentials, source import or real downloader access. Owned isolated TLS verification only; no broader future-client authority."
     }
   ],
   "evidence": [
@@ -43176,6 +43230,173 @@
       "commands": {
         "actual_argv": "see bound result.commands and normal-cli-tool-receipt.driver_argv; no reconstructed execution"
       }
+    },
+    {
+      "id": "s03-commands.source-target",
+      "kind": "differential",
+      "status": "passed",
+      "feature_ids": [
+        "S03"
+      ],
+      "independent": false,
+      "reviewer": "coordinator actual execution",
+      "observations": "Finite source/target/owned host layers and retained failed App01; not full source runtime or real daemon equivalence.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "target": "owned Linux Go1.26 normal App/worker/SQLite/HTTP and explicit isolated TLS; original environment proxy/CA unchanged",
+          "source": "fixed8a83 selected complete AST with recording ports; pinned static vendor bodies, not full Python/native runtime",
+          "limits": "finite backend only; no real downloader/browser/NAS/full S03"
+        },
+        "target_files": {
+          "cmd/owned-downloader-command-fixture/main.go": "f0f8e7a362e290a94f4f99cfb87ca4dee24b83f7ba172790212de1f8e673559a",
+          "internal/app/plugin_original_base.go": "3a5904b5af0228ee8b6da59362b7acb45d96b5c464b1bc5ad1bf51bb7a904712",
+          "internal/app/plugin_original_base_session.go": "dedac30b003d95ec4ff229957e6bb2c63a675ab5d9bfadd6ec40bf2ed88bc0a2",
+          "internal/app/plugin_original_resources.go": "318964898a57149b61b93ca2eba12b4a3fb535c55c57f0a1a50412bca2519271",
+          "internal/app/plugin_shared_downloader_command_uploads.go": "790d8adca4872924d3a7b74c37d84c4e7d5f549ce984880acc0fb6872f77dbe0",
+          "internal/app/plugin_shared_downloader_command_uploads_test.go": "01c11e728c651bfbe84692d38212f806389a376310577b62da6b177078f570e2",
+          "internal/app/plugin_shared_downloader_commands.go": "decad941135e41ed408cbfa94dc3bdbf2217b909f35922f9554be295b2a7d9a8",
+          "internal/app/plugin_shared_downloader_commands_native.go": "684d6d0a0e2456218383f5ecd8ab626e5214991de45dd3fa2ec9cc1d073ef5a7",
+          "internal/app/plugin_shared_downloader_commands_test.go": "d976c135ca417f60c12827e8237ac62bc25c357a259191dee40541dc098ee296",
+          "internal/app/plugin_shared_downloader_commands_worker_test.go": "8b4363c966a2bca4b0276ac5df2da1ded1e4e0873740669d3719dfae887dd89b",
+          "internal/plugins/downloadercommands/leaf.go": "00571f58415d6db1577858a89c5d7606de71a616a476635aebee2e121d1d5394",
+          "internal/plugins/downloadercommands/leaf_test.go": "aa2b8cb5aeed60d9c2ff319b54277f62b0620a56d14f81ea32df0893651593a2",
+          "internal/plugins/downloadercommands/testdata/source-leaves.json": "8de99e30850e6a111b9b97de08de755b50452bbd6da463567111e11872952e26",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_commands.go": "dad454d549235fc7607da4dd845da83b2d2086cf03d126f8385cdf9e38ce97f3",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_commands_test.go": "d4a564bf736e617ad4e1e944edb8275ce1cc4c6ea56a2ad983008b266a324c08",
+          "internal/plugins/shared_downloader_commands.go": "9e0a3815ec4102b544d520887ff3a6bb71ce3eab09944cc5ecf7d068a0c65696",
+          "internal/plugins/shared_downloader_commands_test.go": "224bb9ace90bc76c373cf9080f9032bd7461432e7edf9b8028876c1140aafc85"
+        },
+        "fixture_files": {
+          "evidence/s03-downloader-commands/cli/driver.py": "fe2e2440877e8c296c5059115d37a7b0ea84c3f8237d8d68f64b20a7a012af38",
+          "evidence/s03-downloader-commands/source/owned-cases.json": "c0a0c16e326810520dace74db5483b32532769870f5453ad146327dd12bf500b"
+        }
+      },
+      "artifacts": {
+        "evidence/s03-downloader-commands/source/independent.json": "53c4d41cfdb6a59c33a945af02505d3dd5834b596475ef1a680f5bdf10aad2b1",
+        "evidence/s03-downloader-commands/leaf/result.json": "3e26e0920535aca4eebb0e2bc1581942bc8c9af130e5aab0d1f6689e13cc1e74",
+        "evidence/s03-downloader-commands/sdk/result.json": "31bf03c2ec4c5067646cdb0f3f6397913c9b9990ada1b48c3231fbf9318908d0",
+        "evidence/s03-downloader-commands/native/current-normal-result.json": "630abaf6796dc5e7ee446ae6191d2174ee596ad2138b068d4e4404c97a022642",
+        "evidence/s03-downloader-commands/app/current-normal-result.json": "0e382acf7c5f48491f19e56a1bffba89c662d5e2987378c012aee8c8860ff980",
+        "evidence/s03-downloader-commands/app/current-race-result.json": "65390f2bf828dac286c6ab2b66212616df2c427b0f4e61f17a33240416e460ba"
+      },
+      "inputs": {
+        "full_compile_input_maps": "retained external Space checkpoints and actual independent seals",
+        "server_sha256": "08fb05ab8c1dc8fc29754b2239ad4c9507a18c387fafd2cf0c801353d2f93f03",
+        "worker_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3"
+      },
+      "commands": {
+        "actual_argv": "bound result.commands and cli/command.json executed by recorded tool session"
+      }
+    },
+    {
+      "id": "s03-commands.normal-cli",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "S03"
+      ],
+      "independent": false,
+      "reviewer": "coordinator actual execution",
+      "observations": "Finite source/target/owned host layers and retained failed App01; not full source runtime or real daemon equivalence.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "target": "owned Linux Go1.26 normal App/worker/SQLite/HTTP and explicit isolated TLS; original environment proxy/CA unchanged",
+          "source": "fixed8a83 selected complete AST with recording ports; pinned static vendor bodies, not full Python/native runtime",
+          "limits": "finite backend only; no real downloader/browser/NAS/full S03"
+        },
+        "target_files": {
+          "cmd/owned-downloader-command-fixture/main.go": "f0f8e7a362e290a94f4f99cfb87ca4dee24b83f7ba172790212de1f8e673559a",
+          "internal/app/plugin_original_base.go": "3a5904b5af0228ee8b6da59362b7acb45d96b5c464b1bc5ad1bf51bb7a904712",
+          "internal/app/plugin_original_base_session.go": "dedac30b003d95ec4ff229957e6bb2c63a675ab5d9bfadd6ec40bf2ed88bc0a2",
+          "internal/app/plugin_original_resources.go": "318964898a57149b61b93ca2eba12b4a3fb535c55c57f0a1a50412bca2519271",
+          "internal/app/plugin_shared_downloader_command_uploads.go": "790d8adca4872924d3a7b74c37d84c4e7d5f549ce984880acc0fb6872f77dbe0",
+          "internal/app/plugin_shared_downloader_command_uploads_test.go": "01c11e728c651bfbe84692d38212f806389a376310577b62da6b177078f570e2",
+          "internal/app/plugin_shared_downloader_commands.go": "decad941135e41ed408cbfa94dc3bdbf2217b909f35922f9554be295b2a7d9a8",
+          "internal/app/plugin_shared_downloader_commands_native.go": "684d6d0a0e2456218383f5ecd8ab626e5214991de45dd3fa2ec9cc1d073ef5a7",
+          "internal/app/plugin_shared_downloader_commands_test.go": "d976c135ca417f60c12827e8237ac62bc25c357a259191dee40541dc098ee296",
+          "internal/app/plugin_shared_downloader_commands_worker_test.go": "8b4363c966a2bca4b0276ac5df2da1ded1e4e0873740669d3719dfae887dd89b",
+          "internal/plugins/downloadercommands/leaf.go": "00571f58415d6db1577858a89c5d7606de71a616a476635aebee2e121d1d5394",
+          "internal/plugins/downloadercommands/leaf_test.go": "aa2b8cb5aeed60d9c2ff319b54277f62b0620a56d14f81ea32df0893651593a2",
+          "internal/plugins/downloadercommands/testdata/source-leaves.json": "8de99e30850e6a111b9b97de08de755b50452bbd6da463567111e11872952e26",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_commands.go": "dad454d549235fc7607da4dd845da83b2d2086cf03d126f8385cdf9e38ce97f3",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_commands_test.go": "d4a564bf736e617ad4e1e944edb8275ce1cc4c6ea56a2ad983008b266a324c08",
+          "internal/plugins/shared_downloader_commands.go": "9e0a3815ec4102b544d520887ff3a6bb71ce3eab09944cc5ecf7d068a0c65696",
+          "internal/plugins/shared_downloader_commands_test.go": "224bb9ace90bc76c373cf9080f9032bd7461432e7edf9b8028876c1140aafc85"
+        },
+        "fixture_files": {
+          "evidence/s03-downloader-commands/cli/driver.py": "fe2e2440877e8c296c5059115d37a7b0ea84c3f8237d8d68f64b20a7a012af38",
+          "evidence/s03-downloader-commands/source/owned-cases.json": "c0a0c16e326810520dace74db5483b32532769870f5453ad146327dd12bf500b"
+        }
+      },
+      "artifacts": {
+        "evidence/s03-downloader-commands/cli/result.json": "15fec23d68b1b64d1362a24e5105198966771644b8d6cf98426856fe643484d5",
+        "evidence/s03-downloader-commands/cli/tool-receipt.json": "dd610cddfef8f4f03a9dbf6057b7f95d81ef1c4be0db0b566d737477fe56fe43"
+      },
+      "inputs": {
+        "full_compile_input_maps": "retained external Space checkpoints and actual independent seals",
+        "server_sha256": "08fb05ab8c1dc8fc29754b2239ad4c9507a18c387fafd2cf0c801353d2f93f03",
+        "worker_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3"
+      },
+      "commands": {
+        "actual_argv": "bound result.commands and cli/command.json executed by recorded tool session"
+      }
+    },
+    {
+      "id": "s03-commands.independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "S03"
+      ],
+      "independent": true,
+      "reviewer": "terminate_independent / s01_release_owner Astra ultra",
+      "observations": "Finite source/target/owned host layers and retained failed App01; not full source runtime or real daemon equivalence.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "target": "owned Linux Go1.26 normal App/worker/SQLite/HTTP and explicit isolated TLS; original environment proxy/CA unchanged",
+          "source": "fixed8a83 selected complete AST with recording ports; pinned static vendor bodies, not full Python/native runtime",
+          "limits": "finite backend only; no real downloader/browser/NAS/full S03"
+        },
+        "target_files": {
+          "cmd/owned-downloader-command-fixture/main.go": "f0f8e7a362e290a94f4f99cfb87ca4dee24b83f7ba172790212de1f8e673559a",
+          "internal/app/plugin_original_base.go": "3a5904b5af0228ee8b6da59362b7acb45d96b5c464b1bc5ad1bf51bb7a904712",
+          "internal/app/plugin_original_base_session.go": "dedac30b003d95ec4ff229957e6bb2c63a675ab5d9bfadd6ec40bf2ed88bc0a2",
+          "internal/app/plugin_original_resources.go": "318964898a57149b61b93ca2eba12b4a3fb535c55c57f0a1a50412bca2519271",
+          "internal/app/plugin_shared_downloader_command_uploads.go": "790d8adca4872924d3a7b74c37d84c4e7d5f549ce984880acc0fb6872f77dbe0",
+          "internal/app/plugin_shared_downloader_command_uploads_test.go": "01c11e728c651bfbe84692d38212f806389a376310577b62da6b177078f570e2",
+          "internal/app/plugin_shared_downloader_commands.go": "decad941135e41ed408cbfa94dc3bdbf2217b909f35922f9554be295b2a7d9a8",
+          "internal/app/plugin_shared_downloader_commands_native.go": "684d6d0a0e2456218383f5ecd8ab626e5214991de45dd3fa2ec9cc1d073ef5a7",
+          "internal/app/plugin_shared_downloader_commands_test.go": "d976c135ca417f60c12827e8237ac62bc25c357a259191dee40541dc098ee296",
+          "internal/app/plugin_shared_downloader_commands_worker_test.go": "8b4363c966a2bca4b0276ac5df2da1ded1e4e0873740669d3719dfae887dd89b",
+          "internal/plugins/downloadercommands/leaf.go": "00571f58415d6db1577858a89c5d7606de71a616a476635aebee2e121d1d5394",
+          "internal/plugins/downloadercommands/leaf_test.go": "aa2b8cb5aeed60d9c2ff319b54277f62b0620a56d14f81ea32df0893651593a2",
+          "internal/plugins/downloadercommands/testdata/source-leaves.json": "8de99e30850e6a111b9b97de08de755b50452bbd6da463567111e11872952e26",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_commands.go": "dad454d549235fc7607da4dd845da83b2d2086cf03d126f8385cdf9e38ce97f3",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_commands_test.go": "d4a564bf736e617ad4e1e944edb8275ce1cc4c6ea56a2ad983008b266a324c08",
+          "internal/plugins/shared_downloader_commands.go": "9e0a3815ec4102b544d520887ff3a6bb71ce3eab09944cc5ecf7d068a0c65696",
+          "internal/plugins/shared_downloader_commands_test.go": "224bb9ace90bc76c373cf9080f9032bd7461432e7edf9b8028876c1140aafc85"
+        },
+        "fixture_files": {
+          "evidence/s03-downloader-commands/cli/driver.py": "fe2e2440877e8c296c5059115d37a7b0ea84c3f8237d8d68f64b20a7a012af38",
+          "evidence/s03-downloader-commands/source/owned-cases.json": "c0a0c16e326810520dace74db5483b32532769870f5453ad146327dd12bf500b"
+        }
+      },
+      "artifacts": {
+        "evidence/s03-downloader-commands/native/current-independent.json": "5b0c73f9516cfbcdd5be0a7e3259c8614404354dd7f7828d0b873de4fac4a2c2",
+        "evidence/s03-downloader-commands/app/current-independent.json": "daf9bf5cc9aa0423a0d63ee6f0848e5b34da0973724c790bb168b47ec8aee3bc",
+        "evidence/s03-downloader-commands/cli/independent.json": "c8710910954451506d4a1db486cbf0239af6146eb436542923d87d83c9cb5cda"
+      },
+      "inputs": {
+        "full_compile_input_maps": "retained external Space checkpoints and actual independent seals",
+        "server_sha256": "08fb05ab8c1dc8fc29754b2239ad4c9507a18c387fafd2cf0c801353d2f93f03",
+        "worker_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3"
+      },
+      "commands": {
+        "actual_argv": "bound result.commands and cli/command.json executed by recorded tool session"
+      }
     }
   ],
   "execution_contract": {
@@ -43202,23 +43423,28 @@
     "latest_scope_selection": "Current complete61-entry inventory retained by user164510; historical same-scope completion inherited; exact source-discovered missing behaviors continue, no whole-source redevelopment or duplicate shared-chain credit."
   },
   "resume": {
-    "next_slice": "S12.browse standard sync SDK/provider/native full-model chain from b9e667. Preserve original light-media760720 dirtyS06 tree; SitesHelper exactexisting compiled observations found, independent scope lookup underway. Do not wait for pendingMac delivery.",
-    "dirty_work": "Postcommit760720ed ledger metadata +2 new S06 SDK files in progress. S10 committed301 remains fixed; no real data or old worktree edits.",
+    "next_slice": "S03 exact whitelist independent review/commit/bundle; then finite S04 SiteOper statistics discovery. Mac delivery remains quota blocked.",
+    "dirty_work": "Active release-light-media HEAD41c8 has only exact S03 publication75paths dirty (17products+57evidence+ledger). Protected prior tree remains760720 with S06 WIP; unrelated Browse2 held outside active until S03 commit; no reset/clean.",
     "workers": [
       {
-        "name": "s01_release_owner",
+        "name": "terminate_independent",
         "model": "Astra ultra",
-        "task": "SDK/B code frozen, preparing next init/state/local precise write set"
+        "task": "S03 final75path publication independent review; product frozen"
       },
       {
         "name": "tls_ab_independent",
         "model": "Astra ultra",
-        "task": "Actual source warm/cold readback and exact source-to-B evidence mapping"
+        "task": "S04 source-only collector preparation, no source execution or product edits"
+      },
+      {
+        "name": "s01_release_owner",
+        "model": "Astra ultra",
+        "task": "S03 CLI runtime/secret review complete c8710910; idle"
       },
       {
         "name": "c_userdata_owner",
         "model": "Astra ultra",
-        "task": "Source collector01 terminal receipt only; no further execution"
+        "task": "S03 native candidate02 frozen; idle"
       }
     ],
     "blockers": [
@@ -43359,7 +43585,7 @@
       "source_of_readback": "Parent relayed actual Mac push/readback; evidence-s15-11f922896377/{push-receipt,protected-after-push,ci-receipt}.json",
       "mac_protection": "Original three worktree HEAD/branch/index unchanged. Main had concurrent changes to2 existing files+5 new paths retained; other2 trees unchanged. Do not falsely claim all Mac files unchanged."
     },
-    "updated_at": "2026-10-31T20:39:42.292748+00:00",
+    "updated_at": "2026-10-31T22:08:15.065212+00:00",
     "latest_integrations": {
       "services_portable": "../evidence/coordinator/services-main-integration/portable-integration.json",
       "services_web": "../evidence/coordinator/services-main-integration/web-v3-result.json",
@@ -43419,15 +43645,16 @@
       "free_after": "2.3GiB including authorized oldbinary archive"
     },
     "delivery_pending": {
-      "commit": "b9e667cbc9532cb996993af30531327af3dcc541",
-      "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "commit": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
       "included_commits": [
         "760720ed0a96fd9e7a647914c14545bde5ef857e",
-        "b9e667cbc9532cb996993af30531327af3dcc541"
+        "b9e667cbc9532cb996993af30531327af3dcc541",
+        "41c8e93571bdb3551533d7817d20f9d967dc8eda"
       ],
+      "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
       "remote_confirmed": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
-      "blocker": "Mac Git delivery usage cap last observed; no new cloudGit route/no model switch",
-      "bundle_status": "actualSpace saved libfile_68214c4489548191911635167b273b87 v0; remote pending"
+      "bundle_status": "S02 threecommit bundle actualSpace libfile_e8215c49578881918d7acefc9c0ba82e v0; currentS03 notcommittedyet",
+      "blocker": "Mac quota blocker last observed, no blind retry/model switch/new auth route"
     },
     "terminal_binary_archive": {
       "status": "complete",
@@ -43925,6 +44152,14 @@
           "global_status": "FAIL remains; historical schema/path/binding issues not cleared or accepted by this finite slice; full--final notrun/notpassed",
           "source_tests_rerun": false
         }
+      },
+      "history_note": "Initial S15 checker-unavailable wording is historical; official unchanged checker now actually available and executed. Current global664 failures remain.",
+      "current_official_s03": {
+        "path": "../audits/s03-publication/official-structure-delta.json",
+        "baseline": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+        "issues": 664,
+        "ordered_baseline_equal": true,
+        "no_global_final_pass": true
       }
     },
     "historical_commands_before_current_recovery": [
@@ -44468,15 +44703,7 @@
         "publication_independent_sha256": "d664bb7e11e7586f43cfd70bdf5490810042c93903f2e069eea57490143fbb6b"
       }
     },
-    "last_local_commit": {
-      "commit": "b9e667cbc9532cb996993af30531327af3dcc541",
-      "parent": "760720ed0a96fd9e7a647914c14545bde5ef857e",
-      "delivery_branch": "plugins-refactor",
-      "status": "locally committed/verified bundle, notremote",
-      "bundle": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/external-backups/light-media-s12-b9e667cbc953-20261031.bundle",
-      "sha256": "125a920fb564dfb4883f3936933ced1853f0098abc24e6ca38fcda186bc4aa3c",
-      "bytes": 1645699
-    },
+    "last_local_commit": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
     "new_s06_getbyhash_reconstruction": {
       "base": "760720ed0a96fd9e7a647914c14545bde5ef857e",
       "source": "8a83efeacd3e26b82be495e17d50146e31c96a60",
@@ -44619,9 +44846,22 @@
       }
     },
     "next_source_discovery": {
-      "plan": "../audits/s12-next-browse-rss/PLAN.md",
-      "sha256": "3e453c85aaa56f3045e32e8f86c7fe82b72a6af446f4147afc14366d376524d2",
-      "next": "S12.browse sync SDK/provider/full native shape; first resolve SitesHelper source/indexer evidence, no fake reconstruction; RSS/S14 dependency counted once"
+      "feature": "S03",
+      "scope": "old exact qB/TR add/recheck/start/delete_file=False only",
+      "status": "source01 actual34 recording-port observations completed; independent readback inprogress; Go pure leaf implementation assigned, no native/SDK/host implementation claim",
+      "review": "../audits/s03-next-scope/REVIEW.md",
+      "review_sha256": "0d52d992f9f9300bb5e649eb266681a9dd693f0c113100f98a56e713d6424dc0",
+      "binding": "../audits/s03-next-scope/BINDINGS.json",
+      "binding_sha256": "83fce64e2db6d04fc84669409a7c265d7378527344cd4378dac4139dd384e330",
+      "known_gaps": [
+        "ordinary worker-host write route not reverse group43",
+        "inbound material path distinct from released outbound handles",
+        "qB tuple and TR passthrough value fidelity",
+        "ordinaryURL/Cookie/packaging.Version branch notyetbaseline",
+        "enabled/current invocation and explicit operation authorization",
+        "no blind retry of uncertain side effects"
+      ],
+      "prohibitions": "no realdownloader/NAS/downloads/delete_file=True/sourceimports/IPv6/netlink; no source/native execution duringstaticphase"
     },
     "recovery_protection_followthrough": {
       "path": "AGENTS.md",
@@ -45203,7 +45443,9 @@
       "prior33_original_nonedger_bytes_unchanged": true,
       "prior_index_unchanged": true,
       "prior_status_change": "only coordinator ledger and13explicitraw ledger evidence added duringpublication; no priorpath removed",
-      "future_writes": "only this new authoritative ledger; prior ledger remains frozen historical snapshot, not competingliveauthority"
+      "future_writes": "only this new authoritative ledger; prior ledger remains frozen historical snapshot, not competingliveauthority",
+      "history_note": "19:28 authority transfer snapshot retains its original head/fields; current head from resume.last_local_commit, same authoritative path.",
+      "current_head": "41c8e93571bdb3551533d7817d20f9d967dc8eda"
     },
     "new_s12_browse_reconstruction": {
       "base": "b9e667cbc9532cb996993af30531327af3dcc541",
@@ -45495,12 +45737,24 @@
             "bytes": 5408,
             "sha256": "f66256ad0281065c02c212f061d08ffeb29b405a9ea8415b499a5b5ed15e912b"
           }
+        ],
+        "restored_after_commit": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+        "restored_at": "2026-10-31T20:50:38.750678+00:00",
+        "restored": [
+          {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_torrents_browse.go",
+            "sha256": "d4f15363f457d971d8547da928973f61a61f4420a5b373b2248c5280db858eb9"
+          },
+          {
+            "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_torrents_browse_test.go",
+            "sha256": "f66256ad0281065c02c212f061d08ffeb29b405a9ea8415b499a5b5ed15e912b"
+          }
         ]
       }
     },
     "new_s02_reconstruction": {
       "base": "b9e667cbc9532cb996993af30531327af3dcc541",
-      "status": "finite backend accepted and compact publication staged for final independent whitelist review; no remote delivery",
+      "status": "finite backend locally committed exact64 and verifiedbundle ready; remote remains lastverified11f922",
       "source_scope": "originalbackup path selection/read, qB fastresume tracker rebuild, original temp retention/agecleanup; notbusiness transfer/add/delete",
       "source_binding": "../audits/s02-next-scope/INPUTS.json",
       "source_binding_sha256": "abe196e4790f16639d5d0737b726057c69c8ab39c7652559d97c029a5da5081b",
@@ -46374,7 +46628,1477 @@
         "predecessor": "libfile_018317da01b08191b617758b54e454d2 v0",
         "status": "actualSpace saved parentconfirmed/xattrs0; notGitdelivery"
       },
-      "runtime_seal_sha256": "f7f4b183877954dd59552bf1be6de19584d4b8eb68ece652d4cf9be8e5492e07"
+      "runtime_seal_sha256": "f7f4b183877954dd59552bf1be6de19584d4b8eb68ece652d4cf9be8e5492e07",
+      "commit": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+      "bundle": {
+        "at": "2026-10-31T20:50:01.733452+00:00",
+        "head": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+        "parent": "b9e667cbc9532cb996993af30531327af3dcc541",
+        "files": 64,
+        "all_commit_blob_hashes_match": true,
+        "bundle": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/external-backups/light-media-s02-41c8e93571bd-20261031.bundle",
+        "bytes": 2108862,
+        "sha256": "ccf6518d6c47361867ae5846ce518b1422d1cfe83f921a01775c5fa5ee14addb",
+        "ref": "refs/codex/delivery/s02-41c8e93571bd",
+        "prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "commit_chain": [
+          "760720ed0a96fd9e7a647914c14545bde5ef857e",
+          "b9e667cbc9532cb996993af30531327af3dcc541",
+          "41c8e93571bdb3551533d7817d20f9d967dc8eda"
+        ],
+        "bundle_heads": [
+          "41c8e93571bdb3551533d7817d20f9d967dc8eda refs/codex/delivery/s02-41c8e93571bd"
+        ],
+        "remote_delivery": "not attempted; last verified remote11f922; Mac quota blocker unchanged"
+      },
+      "publication_independent": "audits/s02-local-backup-fs-independent final publication review; READY before commit",
+      "external_bundle": {
+        "at": "2026-10-31T20:51:13.878353+00:00",
+        "library_file_id": "libfile_e8215c49578881918d7acefc9c0ba82e",
+        "version": 0,
+        "filename": "light-media-s02-41c8e93571bd-20261031.bundle",
+        "bytes": 2108862,
+        "sha256": "ccf6518d6c47361867ae5846ce518b1422d1cfe83f921a01775c5fa5ee14addb",
+        "head": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+        "prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "status": "actual parentconfirmed Space saved/xattrs tool0; no remote push attempt; Mac quota blocker unchanged"
+      },
+      "postcommit_independent": {
+        "path": "../audits/s02-local-backup-fs-independent/publication-postcommit-independent.json",
+        "sha256": "10f67a49ef7b86fb10d5cfdd421c17a36d0664ebe4e133d9af9e4aacef62a170",
+        "status": "actualgitcommit64+bundle/parent/prereq verified; no push"
+      },
+      "external_postcommit": {
+        "at": "2026-10-31T20:58:32.404052+00:00",
+        "library_file_id": "libfile_03d2fe08e7108191b38a2c3ba9a123c8",
+        "version": 0,
+        "filename": "s02-postcommit-s03-scope-20261031T2056.tar.gz",
+        "bytes": 734881,
+        "sha256": "bc9f7c9e40d61bb95a96942065543e2232522bcfb69f238c2fa6e183d53dcdc8",
+        "status": "actual parentconfirmed Space saved/xattrs0; localpostcommit receipts + S03 static scope only"
+      }
+    },
+    "new_s03_reconstruction": {
+      "base": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+      "status": "finite source/leaf/SDK/native/App/normalCLI actually passed and independently accepted; final75path publication review pending; full S03 open",
+      "source": {
+        "terminal": "117ef0 exit0",
+        "evidence": "../evidence/s03-source01",
+        "node_count": 10,
+        "case_count": 34,
+        "stdout_sha256": "8de99e30850e6a111b9b97de08de755b50452bbd6da463567111e11872952e26",
+        "stdout_bytes": 48216,
+        "level": "complete selected original AST with recording ports, not real daemon/native SDK",
+        "independent_seal_sha256": "53c4d41cfdb6a59c33a945af02505d3dd5834b596475ef1a680f5bdf10aad2b1"
+      },
+      "scope": "old qB/TR eight fixed add/start/recheck/delete_file=False ordinary worker chain implemented for explicit finite JSON/bytes; materialupload/identity/current host binding verified. URL+truthyCookie, arbitrary kwargs/Python vendor objects/full Torrent model and realdaemon equivalence remain open.",
+      "owners": {
+        "s01_release_owner": [
+          "internal/plugins/downloadercommands/leaf.go",
+          "internal/plugins/downloadercommands/leaf_test.go",
+          "internal/plugins/downloadercommands/testdata/source-leaves.json"
+        ],
+        "c_userdata_owner": [
+          "../audits/s03-inbound-material-plan/"
+        ],
+        "tls_ab_independent": [
+          "../audits/s03-source-independent/"
+        ]
+      },
+      "permissions": "actual owned HTTP/TLS and normal isolated App/worker tests only; no realdaemon/download/NAS/globalconfiguration writes; environment proxy/CA/guard unchanged; no arbitrary RPC/True-delete",
+      "leaf_a2": {
+        "status": "actual PASS finite34sourcecases+boundary root",
+        "terminal": "7abeaf exit0",
+        "result": {
+          "started": "2026-10-31T21:15:53.520282+00:00",
+          "driver_pid": 2,
+          "package": "./internal/plugins/downloadercommands",
+          "pattern": "^(TestDownloaderLeafSourceObservations|TestDownloaderLeafBoundaryErrors)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/plugins/downloadercommands"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-leaf01.test",
+                "./internal/plugins/downloadercommands"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/plugins/downloadercommands",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-leaf01.test",
+                "-test.v",
+                "-test.run",
+                "^(TestDownloaderLeafSourceObservations|TestDownloaderLeafBoundaryErrors)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T21:15:53.520298+00:00",
+              "scratch_free": 52284727296,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T21:15:53.750444+00:00",
+              "scratch_free": 52283973632,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T21:15:54.241901+00:00",
+              "scratch_free": 52276715520,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 1766,
+          "program_sha256": "79f390f0b252903e18d6b74b6cd93f0fc6a103155ed4905dd96a14f510720296",
+          "root_passes": [
+            "TestDownloaderLeafSourceObservations",
+            "TestDownloaderLeafBoundaryErrors"
+          ],
+          "ended": "2026-10-31T21:15:54.357255+00:00"
+        },
+        "static_resource_fix": "bounded unnecessary rational construction replaced by lexical JSON number/mantissa checks; original candidate neverexecuted, no OOM claim/probe",
+        "limits": "JSON recording-domain wrapper only, no vendorSDK/daemon/host",
+        "independent_seal_sha256": "6759642a4c7ddf59837ed1f3a36ec614e40685380a554d8c3380e5bb2382d884"
+      },
+      "inbound_b1": {
+        "status": "actual normal3/race1 PASS; finite store/decoder independently accepted; no integration",
+        "candidate": "../audits/s03-inbound-material-plan/phase-a/candidate01.json",
+        "scope": "bytes-only sameinvocation store/private decoder; no typed add metadata/current enabled service snapshot yet",
+        "global_wire_abi_or_budget_changed": false,
+        "normal": {
+          "started": "2026-10-31T21:17:34.172052+00:00",
+          "driver_pid": 6,
+          "package": "./internal/app",
+          "pattern": "^TestDownloaderCommandUploads(CompleteBytesAndState|StrictAppendDecoder|ConcurrentClaimAndClose)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-upload-store01.test",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-upload-store01.test",
+                "-test.v",
+                "-test.run",
+                "^TestDownloaderCommandUploads(CompleteBytesAndState|StrictAppendDecoder|ConcurrentClaimAndClose)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T21:17:34.172066+00:00",
+              "scratch_free": 52275113984,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T21:17:35.264357+00:00",
+              "scratch_free": 52271497216,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T21:18:02.819539+00:00",
+              "scratch_free": 52108451840,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 6203,
+          "program_sha256": "5c71f648e56906729f3499aedc77ef7e695e7fd085e531a6b70f49b55df0369d",
+          "root_passes": [
+            "TestDownloaderCommandUploadsCompleteBytesAndState",
+            "TestDownloaderCommandUploadsStrictAppendDecoder",
+            "TestDownloaderCommandUploadsConcurrentClaimAndClose"
+          ],
+          "ended": "2026-10-31T21:18:03.726093+00:00"
+        },
+        "race": {
+          "started": "2026-10-31T21:18:03.781036+00:00",
+          "driver_pid": 2,
+          "package": "./internal/app",
+          "pattern": "^TestDownloaderCommandUploadsConcurrentClaimAndClose$",
+          "race": true,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "-race",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-upload-store-race01.test",
+                "-race",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-upload-store-race01.test",
+                "-test.v",
+                "-test.run",
+                "^TestDownloaderCommandUploadsConcurrentClaimAndClose$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T21:18:03.781049+00:00",
+              "scratch_free": 52106952704,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T21:18:04.810739+00:00",
+              "scratch_free": 52103872512,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T21:18:43.177821+00:00",
+              "scratch_free": 51898277888,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 6212,
+          "program_sha256": "bd135ffd239d9c327d0a791ce656ff234a002b37045033bac5aad585b7a14c9a",
+          "root_passes": [
+            "TestDownloaderCommandUploadsConcurrentClaimAndClose"
+          ],
+          "ended": "2026-10-31T21:18:44.951191+00:00"
+        },
+        "independent_seal_sha256": "59f5757bf37d2e0d25b49bfba84c4593e3c9c5b144eba1a7d721c89b7fca6571",
+        "outer_tool_receipt": "original terminal callback unavailable after context truncation; actual driver per-command exit0 and raw terminals verified; fresh poll21:22 reports Unknown process id54427; no fabricated outer exit/chunk"
+      },
+      "external_2117": {
+        "at": "2026-10-31T21:24:07.331825+00:00",
+        "library_file_id": "libfile_8f2e1b5999708191b774baae4f24c0dd",
+        "version": 0,
+        "filename": "s03-a2-source-leaf-inbound-wip-20261031T2117.tar.gz",
+        "bytes": 1117384,
+        "sha256": "be7ac8364af106f45c2d83a026b85e4adf2605bc9cc9e809ebb269dcaf1a8b33",
+        "status": "actual parentconfirmed Space saved/xattrs0; package predates inbound actual tests and not Gitdelivery"
+      },
+      "acquisition_incident": {
+        "status": "bounded static review and final content integrity checks complete; original outerreceipt missing, possible shell interpolation outcomes and side effects remain unknown, not declared absent",
+        "affected_known_drafts": [
+          "audits/s03-native-contract/vendor-qb/torrents.py",
+          "audits/s03-native-contract/vendor-qb/request.py"
+        ],
+        "side_effects": "unknown, not declared absent",
+        "current_targeted_invariants": "../audits/s03-coordinator/acquisition-incident-worktree-check.json",
+        "new_builds": "not started while bounded incident review pending",
+        "no_denied_session_access": true,
+        "disposition": "parent21:38:49 permits bounded reviewed handwritten Go/owned HTTP continuation, no vendor import/execution or unsafewrite replay; incident sideeffectsunknown retained"
+      },
+      "sdk_a1": {
+        "candidate": "../audits/s03-sdk/candidate02.json",
+        "static_seal_sha256": "deba2080c8ad20757e163a3bbbcf352f9fc46b52fc803322d73ca4a164ac3318",
+        "status": "actual normal3 PASS, independent finite SDK acceptance; no native/host/physicalwire",
+        "result": {
+          "started": "2026-10-31T21:37:05.837756+00:00",
+          "driver_pid": 2,
+          "package": "./internal/plugins",
+          "pattern": "^(TestSharedDownloaderCommandsWireAndSourceValues|TestSharedDownloaderCommandsPagedAdd|TestSharedDownloaderCommandsStrictFailuresAndNoResubmit)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/plugins"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-sdk01.test",
+                "./internal/plugins"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/plugins",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-sdk01.test",
+                "-test.v",
+                "-test.run",
+                "^(TestSharedDownloaderCommandsWireAndSourceValues|TestSharedDownloaderCommandsPagedAdd|TestSharedDownloaderCommandsStrictFailuresAndNoResubmit)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T21:37:05.837771+00:00",
+              "scratch_free": 51895287808,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T21:37:06.120805+00:00",
+              "scratch_free": 51894394880,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T21:37:08.236595+00:00",
+              "scratch_free": 51877883904,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 1928,
+          "program_sha256": "d46211d3759feb28476b241595f1fc631f7149010ce1070d066ccfcd486ab62a",
+          "root_passes": [
+            "TestSharedDownloaderCommandsWireAndSourceValues",
+            "TestSharedDownloaderCommandsPagedAdd",
+            "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit"
+          ],
+          "ended": "2026-10-31T21:37:08.979015+00:00"
+        },
+        "session_id": 76752,
+        "terminal": "6540e3 exit0",
+        "independent_seal_sha256": "43c7bf0bc42df2e97b956d7458d6f3903a5b6f82bf527129b476fff23c52a217"
+      },
+      "host_b1": {
+        "status": "historical phase-B static gate; final actual App02/race01 and CLI accepted, see final records",
+        "candidate": "../audits/s03-inbound-material-plan/phase-b/candidate01.json",
+        "static_seal_sha256": "85c3cfbacfb9ca8656f7a486d9ee11ccf78ee13c41ca971f6a228f8fd0a471a2"
+      },
+      "native": {
+        "status": "historical candidate01 normal5/race1 actually passed and independently accepted; candidate02 scoped TLS delta supersedes qB paths, TR two unchanged methods inherited explicitly",
+        "contract_seal_sha256": "1408e139f95aeea88fd955b2f481f7454773324ba6e1e2b58afe7a53956e49ea",
+        "ctor_tls": "user explicitly approves only independent qB client 2026-10-31T21:55:10Z Sentinel_6f870ab66a148191a118376aa072856d; minimal isolated implementation pending ownedTLS gate; other transports/globalCA/Git/browser/cross-origin credentials unchanged",
+        "candidate": "../audits/s03-native-implementation/candidate01.json",
+        "static_seal_sha256": "29b889b0e8153026c54810f19765bdb6dd136a9296ecdcf0c2306697371b3790",
+        "retry_boundary": "no app-layer selected replay; Go transport may retry a proven zero-byte nothingWritten emptybody, not full physical-attempt single-shot guarantee",
+        "transport_clarification_sha256": "37b80fa39e02e2f0f6f55fc4677886d2893e0d6c99c0458622b201325eeecf2b",
+        "normal": {
+          "started": "2026-10-31T21:49:11.837736+00:00",
+          "driver_pid": 6,
+          "package": "./internal/plugins/iyuuautoseed/native",
+          "pattern": "^TestSharedDownloaderCommand(QBControls|QBAdd|TRControls|TRAdd|GuardUnknownAndClose)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/plugins/iyuuautoseed/native"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native01.test",
+                "./internal/plugins/iyuuautoseed/native"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/plugins/iyuuautoseed/native",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native01.test",
+                "-test.v",
+                "-test.run",
+                "^TestSharedDownloaderCommand(QBControls|QBAdd|TRControls|TRAdd|GuardUnknownAndClose)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T21:49:11.837750+00:00",
+              "scratch_free": 51835899904,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T21:49:12.218469+00:00",
+              "scratch_free": 51834658816,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T21:49:14.420292+00:00",
+              "scratch_free": 51814539264,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 2599,
+          "program_sha256": "5630e6c53eda5d259a31d53c9d59e780673eec91b7f49280bd52d98aa36c5781",
+          "root_passes": [
+            "TestSharedDownloaderCommandQBControls",
+            "TestSharedDownloaderCommandQBAdd",
+            "TestSharedDownloaderCommandTRControls",
+            "TestSharedDownloaderCommandTRAdd",
+            "TestSharedDownloaderCommandGuardUnknownAndClose"
+          ],
+          "ended": "2026-10-31T21:49:14.567093+00:00"
+        },
+        "race": {
+          "started": "2026-10-31T21:49:14.614070+00:00",
+          "driver_pid": 2,
+          "package": "./internal/plugins/iyuuautoseed/native",
+          "pattern": "^TestSharedDownloaderCommandGuardUnknownAndClose$",
+          "race": true,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "-race",
+                "./internal/plugins/iyuuautoseed/native"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native-race01.test",
+                "-race",
+                "./internal/plugins/iyuuautoseed/native"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/plugins/iyuuautoseed/native",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native-race01.test",
+                "-test.v",
+                "-test.run",
+                "^TestSharedDownloaderCommandGuardUnknownAndClose$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T21:49:14.614083+00:00",
+              "scratch_free": 51813957632,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T21:49:14.971538+00:00",
+              "scratch_free": 51812745216,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T21:49:18.570424+00:00",
+              "scratch_free": 51784880128,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 2607,
+          "program_sha256": "71374d556162f3ff0069f52bb4b6529eb1b2046d422698d45959b48dcee36a11",
+          "root_passes": [
+            "TestSharedDownloaderCommandGuardUnknownAndClose"
+          ],
+          "ended": "2026-10-31T21:49:19.782371+00:00"
+        },
+        "session_id": 8359,
+        "terminal": "eaf275 exit0",
+        "independent_final_sha256": "246c794bc49d9813ce8cf29edf222eb29c3ac4882af02496bdd030c4e2eb0166"
+      },
+      "external_2139": {
+        "at": "2026-10-31T21:40:22.782372+00:00",
+        "library_file_id": "libfile_04eca0e099588191996315491abf6a93",
+        "version": 0,
+        "filename": "s03-sdk-host-native-contract-wip-20261031T2139.tar.gz",
+        "bytes": 3914708,
+        "sha256": "e36bd901ee11af392c0aef4e91006cac9ee79f1cce464f2010010dee56454ba6",
+        "status": "parentconfirmed actualSpace saved/xattrs0; includesincident and WIPrecovery, notGitdelivery"
+      },
+      "fixture": {
+        "status": "historical fixture01 compileonly; unrelated Browse closure excluded in final fixture02, actual installed runs use fixture02",
+        "source_sha256": "f0f8e7a362e290a94f4f99cfb87ca4dee24b83f7ba172790212de1f8e673559a",
+        "static_review_sha256": "5dd3a2a9acb1b80f54cd82ff88e792d1a81671077785134083351a8b95e8953d",
+        "result": {
+          "at": "2026-10-31T21:40:22.862082+00:00",
+          "status": "PASS",
+          "kind": "normal owned S03 command fixture; SDK HostCaller only, no worker localfilesystem/network/daemon; compile only",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-json",
+                "./cmd/owned-downloader-command-fixture"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "build",
+              "argv": [
+                "go",
+                "build",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-fixture01",
+                "./cmd/owned-downloader-command-fixture"
+              ],
+              "exit": 0
+            }
+          ],
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "scratch_free": 51873390592,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "build",
+              "scratch_free": 51872817152,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 1086,
+          "program_sha256": "ecaac05f7e573112d9de12be1a97c8e6549578efeb3916627801e3f18548cfbb",
+          "ended": "2026-10-31T21:40:24.113100+00:00"
+        },
+        "session_id": 17627,
+        "terminal": "7ed7fd exit0"
+      },
+      "browse_unrelated_protection": {
+        "receipt": "../protected-wip/s12-browse-sdk-during-s03/receipt.json",
+        "status": "2 old unrelated WIP held exactbytes, restore aftercandidatecommit; no other dirty moved",
+        "impact": "SDK01/fixture01 retained historical; final SDK02/fixture02 rebuilt without Browse. Native/App/normalCLI final gates completed against narrow candidate. Restore held exact bytes only after S03 commit."
+      },
+      "sdk_final_candidate": {
+        "status": "actualnormal3PASS independentlysealed finalnarrowcandidate",
+        "result": {
+          "started": "2026-10-31T21:46:37.076745+00:00",
+          "driver_pid": 6,
+          "package": "./internal/plugins",
+          "pattern": "^(TestSharedDownloaderCommandsWireAndSourceValues|TestSharedDownloaderCommandsPagedAdd|TestSharedDownloaderCommandsStrictFailuresAndNoResubmit)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/plugins"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-sdk02.test",
+                "./internal/plugins"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/plugins",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-sdk02.test",
+                "-test.v",
+                "-test.run",
+                "^(TestSharedDownloaderCommandsWireAndSourceValues|TestSharedDownloaderCommandsPagedAdd|TestSharedDownloaderCommandsStrictFailuresAndNoResubmit)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T21:46:37.076765+00:00",
+              "scratch_free": 51863601152,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T21:46:37.378579+00:00",
+              "scratch_free": 51862724608,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T21:46:39.635226+00:00",
+              "scratch_free": 51846320128,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 1926,
+          "program_sha256": "9266dc8f9611184b62cb7c90b54a6e516a816b5ea3a5834c07345cb3671d9835",
+          "root_passes": [
+            "TestSharedDownloaderCommandsWireAndSourceValues",
+            "TestSharedDownloaderCommandsPagedAdd",
+            "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit"
+          ],
+          "ended": "2026-10-31T21:46:40.309334+00:00"
+        },
+        "session_id": 38740,
+        "terminal": "2b203e exit0",
+        "independent_seal_sha256": "c511b54ea4278d04c9ff1374c7fac2ddee1a6c7ecb110983180e249297cbdb17"
+      },
+      "fixture_final_candidate": {
+        "status": "fixture02 actualcompilePASS plus actual installedApp/normalCLI use; program b7d906d4 unchanged",
+        "result": {
+          "at": "2026-10-31T21:46:40.347907+00:00",
+          "status": "PASS",
+          "kind": "normal owned S03 command fixture; SDK HostCaller only, no worker localfilesystem/network/daemon; compile only",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-json",
+                "./cmd/owned-downloader-command-fixture"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "build",
+              "argv": [
+                "go",
+                "build",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-fixture02",
+                "./cmd/owned-downloader-command-fixture"
+              ],
+              "exit": 0
+            }
+          ],
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "scratch_free": 51845869568,
+              "tmp_free": 5225664512
+            },
+            {
+              "phase": "build",
+              "scratch_free": 51845312512,
+              "tmp_free": 5225664512
+            }
+          ],
+          "input_count": 1085,
+          "program_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3",
+          "ended": "2026-10-31T21:46:41.393818+00:00"
+        },
+        "session_id": 38740,
+        "terminal": "2b203e exit0"
+      },
+      "app01": {
+        "status": "original actual10root gate FAILED, 9pass/1coldfailure retained. Exact fixture normalization correction independently reviewed; subsequent App02 worker2 and race01 passed, no old result rewritten.",
+        "result": {
+          "started": "2026-10-31T21:53:45.855180+00:00",
+          "driver_pid": 6,
+          "package": "./internal/app",
+          "pattern": "^(TestDownloaderCommandUploadsCompleteBytesAndState|TestDownloaderCommandUploadsStrictAppendDecoder|TestDownloaderCommandUploadsConcurrentClaimAndClose|TestOriginalDownloaderCommandHostWire|TestOriginalDownloaderCommandHostCurrentBinding|TestOriginalDownloaderCommandHostClaimDrainsOnce|TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes|TestSharedDownloaderCommandsActualWorkerPagedAndCold|TestOriginalTorrentTransferScopeAndCleanup|TestOriginalTorrentTransferPerObjectAndConcurrentClose)$",
+          "race": false,
+          "status": "FAIL",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-app01.test",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-app01.test",
+                "-test.v",
+                "-test.run",
+                "^(TestDownloaderCommandUploadsCompleteBytesAndState|TestDownloaderCommandUploadsStrictAppendDecoder|TestDownloaderCommandUploadsConcurrentClaimAndClose|TestOriginalDownloaderCommandHostWire|TestOriginalDownloaderCommandHostCurrentBinding|TestOriginalDownloaderCommandHostClaimDrainsOnce|TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes|TestSharedDownloaderCommandsActualWorkerPagedAndCold|TestOriginalTorrentTransferScopeAndCleanup|TestOriginalTorrentTransferPerObjectAndConcurrentClose)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 1
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "worker_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-fixture02",
+          "worker_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3",
+          "worker_instrumentation": "normal frozen artifact; race flag applies host test program only",
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T21:53:45.855210+00:00",
+              "scratch_free": 51784126464,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T21:53:46.927244+00:00",
+              "scratch_free": 51780493312,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T21:54:19.858097+00:00",
+              "scratch_free": 51589586944,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 6211,
+          "program_sha256": "65a9dd04181a49a89cee0f96a2606024a8e04336e43355461cdfb1b6cfb08493",
+          "error_class": "RuntimeError",
+          "error": "tests exited 1",
+          "ended": "2026-10-31T21:54:23.163782+00:00"
+        },
+        "tool_receipt": {
+          "session_id": 75057,
+          "initial_chunk": "dd8a53",
+          "terminal_chunk": "d03dbc",
+          "exit_code": 1,
+          "observed_at": "2026-10-31T21:54:44.090272+00:00"
+        },
+        "diagnosis": "static review identifies SharedPaths false in test fixture versus existing public/cold normalization true; test-only two true initializers frozen03, full equality retained; no claim all other fields already equal"
+      },
+      "external_2159": {
+        "at": "2026-10-31T22:00:34.874186+00:00",
+        "library_file_id": "libfile_f162d07f95788191b0e9d8c81a7b74e2",
+        "version": 0,
+        "filename": "s03-native-app-wip-20261031T2159.tar.gz",
+        "bytes": 4150027,
+        "sha256": "c95b576cdc9d8b036bcaa0a324bfd358e5a4095f49fcfc39417f4d32e7682b2e",
+        "prerequisite_library_file_id": "libfile_04eca0e099588191996315491abf6a93",
+        "status": "parent confirmed actual Space save and xattrs tool0; checkpoint WIP not Git delivery"
+      },
+      "native_tls_gate": {
+        "status": "actual currentnormal4/race1 PASS independently sealed; outer sequence48751/bb8079 exit0",
+        "normal": {
+          "started": "2026-10-31T21:59:05.829174+00:00",
+          "driver_pid": 7,
+          "package": "./internal/plugins/iyuuautoseed/native",
+          "pattern": "^(TestSharedDownloaderCommandQBControls|TestSharedDownloaderCommandQBAdd|TestSharedDownloaderCommandGuardUnknownAndClose|TestSharedDownloaderCommandQBTLSIsolation)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/plugins/iyuuautoseed/native"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native02.test",
+                "./internal/plugins/iyuuautoseed/native"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/plugins/iyuuautoseed/native",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native02.test",
+                "-test.v",
+                "-test.run",
+                "^(TestSharedDownloaderCommandQBControls|TestSharedDownloaderCommandQBAdd|TestSharedDownloaderCommandGuardUnknownAndClose|TestSharedDownloaderCommandQBTLSIsolation)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T21:59:05.829190+00:00",
+              "scratch_free": 51589304320,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T21:59:06.181234+00:00",
+              "scratch_free": 51588063232,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T21:59:07.964508+00:00",
+              "scratch_free": 51568812032,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 2599,
+          "program_sha256": "341e7555816c229022b7b94918caf21e8a106ad5328fb9c00eb4d1b2b47523c4",
+          "root_passes": [
+            "TestSharedDownloaderCommandQBControls",
+            "TestSharedDownloaderCommandQBAdd",
+            "TestSharedDownloaderCommandGuardUnknownAndClose",
+            "TestSharedDownloaderCommandQBTLSIsolation"
+          ],
+          "ended": "2026-10-31T21:59:08.129853+00:00"
+        },
+        "race": {
+          "started": "2026-10-31T21:59:08.171302+00:00",
+          "driver_pid": 104,
+          "package": "./internal/plugins/iyuuautoseed/native",
+          "pattern": "^(TestSharedDownloaderCommandGuardUnknownAndClose)$",
+          "race": true,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "-race",
+                "./internal/plugins/iyuuautoseed/native"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native-race02.test",
+                "-race",
+                "./internal/plugins/iyuuautoseed/native"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/plugins/iyuuautoseed/native",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native-race02.test",
+                "-test.v",
+                "-test.run",
+                "^(TestSharedDownloaderCommandGuardUnknownAndClose)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T21:59:08.171314+00:00",
+              "scratch_free": 51568230400,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T21:59:08.514277+00:00",
+              "scratch_free": 51567017984,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T21:59:11.071780+00:00",
+              "scratch_free": 51543449600,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 2607,
+          "program_sha256": "afdd904d2c2a3ea22d078afec34b95a1f3af45fb951e6b9a00fbabbc2be2797a",
+          "root_passes": [
+            "TestSharedDownloaderCommandGuardUnknownAndClose"
+          ],
+          "ended": "2026-10-31T21:59:12.281942+00:00"
+        },
+        "static_seal_sha256": "e865389c9efbbcb771c0a486b755c48a3365df4fd55bfa1ac75fbe61b88c97a3"
+      },
+      "app02": {
+        "status": "actual corrected normalworker2 PASS; currenthostrace5 and normalCLI separately passed/independently sealed",
+        "result": {
+          "started": "2026-10-31T21:59:12.340929+00:00",
+          "driver_pid": 203,
+          "package": "./internal/app",
+          "pattern": "^(TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes|TestSharedDownloaderCommandsActualWorkerPagedAndCold)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-app02.test",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-app02.test",
+                "-test.v",
+                "-test.run",
+                "^(TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes|TestSharedDownloaderCommandsActualWorkerPagedAndCold)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "worker_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-fixture02",
+          "worker_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3",
+          "worker_instrumentation": "normal frozen artifact; race flag applies host test program only",
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T21:59:12.340999+00:00",
+              "scratch_free": 51542872064,
+              "tmp_free": 5225582592
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T21:59:13.436403+00:00",
+              "scratch_free": 51535589376,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T21:59:42.485900+00:00",
+              "scratch_free": 51362643968,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 6211,
+          "program_sha256": "2ff65910fc7316456d5915cb174046fd02739f0b652dcc43693293976de465a0",
+          "root_passes": [
+            "TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes",
+            "TestSharedDownloaderCommandsActualWorkerPagedAndCold"
+          ],
+          "ended": "2026-10-31T21:59:45.608820+00:00"
+        }
+      },
+      "incremental_terminal": {
+        "session_id": 48751,
+        "initial_chunk": "640efc",
+        "terminal_chunk": "bb8079",
+        "exit_code": 0,
+        "observed_at": "2026-10-31T22:01:04.269836+00:00",
+        "sequence": [
+          "s03-native02",
+          "s03-native-race02",
+          "s03-app02",
+          "s03-app-race01"
+        ]
+      },
+      "app_race01": {
+        "status": "actual5rootPASS, hosttest race instrumented, normalworker reused",
+        "result": {
+          "started": "2026-10-31T21:59:45.666237+00:00",
+          "driver_pid": 374,
+          "package": "./internal/app",
+          "pattern": "^(TestDownloaderCommandUploadsConcurrentClaimAndClose|TestOriginalDownloaderCommandHostClaimDrainsOnce|TestOriginalTorrentTransferPerObjectAndConcurrentClose|TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes|TestSharedDownloaderCommandsActualWorkerPagedAndCold)$",
+          "race": true,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "-race",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-app-race01.test",
+                "-race",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-app-race01.test",
+                "-test.v",
+                "-test.run",
+                "^(TestDownloaderCommandUploadsConcurrentClaimAndClose|TestOriginalDownloaderCommandHostClaimDrainsOnce|TestOriginalTorrentTransferPerObjectAndConcurrentClose|TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes|TestSharedDownloaderCommandsActualWorkerPagedAndCold)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "worker_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-fixture02",
+          "worker_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3",
+          "worker_instrumentation": "normal frozen artifact; race flag applies host test program only",
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T21:59:45.666256+00:00",
+              "scratch_free": 51361136640,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T21:59:46.706168+00:00",
+              "scratch_free": 51358044160,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T22:00:31.884495+00:00",
+              "scratch_free": 51120992256,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 6220,
+          "program_sha256": "33aa6f99773719ca165c17939b675000351c725bbcffdd470b9af611c0763083",
+          "root_passes": [
+            "TestDownloaderCommandUploadsConcurrentClaimAndClose",
+            "TestOriginalDownloaderCommandHostClaimDrainsOnce",
+            "TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes",
+            "TestSharedDownloaderCommandsActualWorkerPagedAndCold",
+            "TestOriginalTorrentTransferPerObjectAndConcurrentClose"
+          ],
+          "ended": "2026-10-31T22:00:55.124216+00:00"
+        }
+      },
+      "normal_server": {
+        "status": "actual compilePASS3971inputs; same program subsequently exercised in normalCLI twohosts, both naturalexit0",
+        "result": {
+          "at": "2026-10-31T22:01:04.379853+00:00",
+          "status": "PASS",
+          "kind": "newnormalserver compile only; uses unchanged restoredUI assets, notnewbrowser acceptance",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-json",
+                "./cmd/server"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "build",
+              "argv": [
+                "go",
+                "build",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-server01",
+                "./cmd/server"
+              ],
+              "exit": 0
+            }
+          ],
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "scratch_free": 51119439872,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "build",
+              "scratch_free": 51117174784,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 3971,
+          "program_sha256": "08fb05ab8c1dc8fc29754b2239ad4c9507a18c387fafd2cf0c801353d2f93f03",
+          "ended": "2026-10-31T22:01:14.416437+00:00"
+        },
+        "outer_tool_receipt": {
+          "session_id": 77506,
+          "initial_chunk": "c4d24d",
+          "terminal_chunk": "fcff9d",
+          "exit_code": 0,
+          "observed_at": "2026-10-31T22:02:04.739148+00:00"
+        }
+      },
+      "cli": {
+        "status": "actual normaldualhost4business PASS independently accepted c8710910954451506d4a1db486cbf0239af6146eb436542923d87d83c9cb5cda; ownedpeer only, notrealdaemon/UI",
+        "execution_bindings_sha256": "1fd9399f61e78663f844f545ed52bc8c14a7ce269f32b1495c895ab8ec7535b8",
+        "driver_sha256": "fe2e2440877e8c296c5059115d37a7b0ea84c3f8237d8d68f64b20a7a012af38",
+        "outer_tool_receipt": {
+          "session_id": 83702,
+          "initial_chunk": "afd56f",
+          "terminal_chunk": "306590",
+          "exit_code": 0,
+          "observed_at": "2026-10-31T22:03:23.031932+00:00"
+        },
+        "result_path": "../test-instances/s03-command-cli01/result.json"
+      },
+      "publication": {
+        "status": "assembled exact accepted finite candidate, final whitelist review pending",
+        "path": "migration/evidence/s03-downloader-commands"
+      },
+      "owners_history_note": "owners map below is historical early phase assignment, not current live agent status; current roles in resume.workers",
+      "external_2206": {
+        "at": "2026-10-31T22:08:15.065212+00:00",
+        "library_file_id": "libfile_ce34d63acd0081918bd1e7c82c033172",
+        "version": 0,
+        "filename": "s03-native-app-wip-20261031T2206.tar.gz",
+        "bytes": 7021675,
+        "sha256": "129c6a89acb2d406f6d149948e8aa4eb3694dd7138b3f338460c305f9a86c874",
+        "prerequisite_library_file_id": "libfile_04eca0e099588191996315491abf6a93",
+        "status": "parentconfirmed actualSpace saved/xattrs0; terminalWIPnotGitdelivery"
+      }
+    },
+    "workers_history_before_s03": [
+      {
+        "name": "s01_release_owner",
+        "model": "Astra ultra",
+        "task": "SDK/B code frozen, preparing next init/state/local precise write set"
+      },
+      {
+        "name": "tls_ab_independent",
+        "model": "Astra ultra",
+        "task": "Actual source warm/cold readback and exact source-to-B evidence mapping"
+      },
+      {
+        "name": "c_userdata_owner",
+        "model": "Astra ultra",
+        "task": "Source collector01 terminal receipt only; no further execution"
+      }
+    ],
+    "delivery_pending_historical_b9": {
+      "commit": "b9e667cbc9532cb996993af30531327af3dcc541",
+      "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "included_commits": [
+        "760720ed0a96fd9e7a647914c14545bde5ef857e",
+        "b9e667cbc9532cb996993af30531327af3dcc541"
+      ],
+      "remote_confirmed": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "blocker": "Mac Git delivery usage cap last observed; no new cloudGit route/no model switch",
+      "bundle_status": "actualSpace saved libfile_68214c4489548191911635167b273b87 v0; remote pending"
     }
   },
   "external_inventory": [

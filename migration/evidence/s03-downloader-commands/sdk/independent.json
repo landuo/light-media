@@ -1,0 +1,201 @@
+{
+  "status": "FINITE_SDK_RECORDING_HOST_NORMAL3_CURRENT_CLOSURE_ACCEPTED",
+  "at": "2026-10-31T21:49:13.089701+00:00",
+  "prior_seal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-host-independent/SDK-A1-FINAL.json",
+    "bytes": 10748,
+    "sha256": "43c7bf0bc42df2e97b956d7458d6f3903a5b6f82bf527129b476fff23c52a217"
+  },
+  "result": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-sdk02/result.json",
+    "bytes": 2308,
+    "sha256": "31bf03c2ec4c5067646cdb0f3f6397913c9b9990ada1b48c3231fbf9318908d0"
+  },
+  "execution": {
+    "started": "2026-10-31T21:46:37.076745+00:00",
+    "driver_pid": 6,
+    "package": "./internal/plugins",
+    "pattern": "^(TestSharedDownloaderCommandsWireAndSourceValues|TestSharedDownloaderCommandsPagedAdd|TestSharedDownloaderCommandsStrictFailuresAndNoResubmit)$",
+    "race": false,
+    "status": "PASS",
+    "commands": [
+      {
+        "label": "go-list",
+        "argv": [
+          "go",
+          "list",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-deps",
+          "-test",
+          "-json",
+          "./internal/plugins"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "compile",
+        "argv": [
+          "go",
+          "test",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-p=1",
+          "-c",
+          "-o",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-sdk02.test",
+          "./internal/plugins"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "tests",
+        "argv": [
+          "go",
+          "tool",
+          "test2json",
+          "-t",
+          "-p",
+          "./internal/plugins",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-sdk02.test",
+          "-test.v",
+          "-test.run",
+          "^(TestSharedDownloaderCommandsWireAndSourceValues|TestSharedDownloaderCommandsPagedAdd|TestSharedDownloaderCommandsStrictFailuresAndNoResubmit)$",
+          "-test.count=1",
+          "-test.timeout=90s"
+        ],
+        "exit": 0
+      }
+    ],
+    "environment_proxy_unchanged": true,
+    "resource_samples": [
+      {
+        "phase": "go-list",
+        "at": "2026-10-31T21:46:37.076765+00:00",
+        "scratch_free": 51863601152,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "compile",
+        "at": "2026-10-31T21:46:37.378579+00:00",
+        "scratch_free": 51862724608,
+        "tmp_free": 5225664512
+      },
+      {
+        "phase": "tests",
+        "at": "2026-10-31T21:46:39.635226+00:00",
+        "scratch_free": 51846320128,
+        "tmp_free": 5225664512
+      }
+    ],
+    "input_count": 1926,
+    "program_sha256": "9266dc8f9611184b62cb7c90b54a6e516a816b5ea3a5834c07345cb3671d9835",
+    "root_passes": [
+      "TestSharedDownloaderCommandsWireAndSourceValues",
+      "TestSharedDownloaderCommandsPagedAdd",
+      "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit"
+    ],
+    "ended": "2026-10-31T21:46:40.309334+00:00"
+  },
+  "tool_receipt": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-sdk02/tool-execution-receipt.json",
+    "bytes": 196,
+    "sha256": "fc4465ebdcf31e012884b44738b869b25a3d5f0e122266d729a1e60502bb2f90"
+  },
+  "tool_receipt_contents": {
+    "at": "2026-10-31T21:46:59.681352+00:00",
+    "session_id": 38740,
+    "start_chunk": "bee6a4",
+    "terminal_chunk": "2b203e",
+    "exit_code": 0,
+    "sequence": "SDK02thenfixture02 bothactualPASS"
+  },
+  "input_snapshots": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-sdk02/inputs-before.json",
+      "bytes": 416568,
+      "sha256": "7327f5354ad598f79b2bd736e37799d59cff4a7d32a604b998cd5939b827a0c2"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-sdk02/inputs-after-compile.json",
+      "bytes": 416568,
+      "sha256": "7327f5354ad598f79b2bd736e37799d59cff4a7d32a604b998cd5939b827a0c2"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-sdk02/inputs-after-test.json",
+      "bytes": 416568,
+      "sha256": "7327f5354ad598f79b2bd736e37799d59cff4a7d32a604b998cd5939b827a0c2"
+    }
+  ],
+  "input_count": 1926,
+  "all_snapshots_equal": true,
+  "current_input_readback": {
+    "matching": 1926,
+    "missing_cache_inputs_verified_via_saved_generated_source": []
+  },
+  "closure_difference_from_sdk01": {
+    "removed": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_torrents_browse.go",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_torrents_browse_test.go",
+      "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/02/02e5348ddce6f5f61fc04f561260e4ff4d863dbf7b9c891b61cadcdf7111b19b-d"
+    ],
+    "added": [
+      "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/ee/ee83313db4717d0f1b18fa52328a5bba42db8715ff5c39b795f7772365818d2c-d"
+    ],
+    "same_path_changed": [],
+    "generated_testmain_exact_delta": "Only the two protected Browse test registration entries removed; all other generated text identical. Driver source unchanged; runtime expected label is argv.",
+    "removed_bytes_preserved_in_held_receipt": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/protected-wip/s12-browse-sdk-during-s03/receipt.json",
+      "bytes": 1213,
+      "sha256": "e39415d847280281bad7ec92b7502e065ff8d3e121096be1692146d038177c5d"
+    }
+  },
+  "program": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-sdk02.test",
+    "bytes": 8866505,
+    "sha256": "9266dc8f9611184b62cb7c90b54a6e516a816b5ea3a5834c07345cb3671d9835"
+  },
+  "raw_test_log": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-sdk02/tests.stdout",
+    "bytes": 23788,
+    "sha256": "ab0b28f6927d41b6550b74430eb372295babe70e8804502d18dccb330ad53034"
+  },
+  "roots": [
+    "TestSharedDownloaderCommandsWireAndSourceValues",
+    "TestSharedDownloaderCommandsPagedAdd",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit"
+  ],
+  "subtest_count": 24,
+  "subtests": [
+    "TestSharedDownloaderCommandsPagedAdd/typed-nil-empty",
+    "TestSharedDownloaderCommandsPagedAdd/two-pages",
+    "TestSharedDownloaderCommandsPagedAdd/full-existing-bound",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/duplicate",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/escaped-duplicate",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/unknown",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/null-success",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/null-ids",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/null-id",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/lossy-id",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/trailing",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/case-alias",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/missing-raw",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/nested-duplicate",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/nonbool-control",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/begin-error",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/bad-begin",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/late-cancel-begin",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/append-error",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/bad-ack",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/wrong-offset",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/submit-error",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/bad-submit",
+    "TestSharedDownloaderCommandsStrictFailuresAndNoResubmit/late-cancel-submit"
+  ],
+  "go_list_records": 166,
+  "no_App_or_native_package_dependency": true,
+  "candidate_product2_and_direct_helper_current_and_archive_match": true,
+  "credit": "Same 3 SDK roots actually rerun on final closure excluding two unrelated protected Browse WIP files; three raw stages exit 0, no skip/fail. Recording Host only. SDK01 remains historical actual evidence, not rewritten. No fixture/native/host/end-to-end or source vendor runtime credit. Companion fixture02 compile not reviewed by this SDK seal.",
+  "incident": "Original vendor acquisition unknown shell side effects remain unresolved. This gate has no native/vendor dependency and does not clear the incident.",
+  "reviewer_actions": "Static raw JSON/input hashes/current source/archived bytes review only; no Go/tests/services/network/import or product edits."
+}

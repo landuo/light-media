@@ -1,0 +1,153 @@
+{
+  "status": "ACTUAL_APP01_FAILURE_PRESERVED_NARROW_TEST_EXPECTATION_DIAGNOSIS",
+  "at": "2026-10-31T21:55:59.202605+00:00",
+  "execution": {
+    "started": "2026-10-31T21:53:45.855180+00:00",
+    "driver_pid": 6,
+    "package": "./internal/app",
+    "pattern": "^(TestDownloaderCommandUploadsCompleteBytesAndState|TestDownloaderCommandUploadsStrictAppendDecoder|TestDownloaderCommandUploadsConcurrentClaimAndClose|TestOriginalDownloaderCommandHostWire|TestOriginalDownloaderCommandHostCurrentBinding|TestOriginalDownloaderCommandHostClaimDrainsOnce|TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes|TestSharedDownloaderCommandsActualWorkerPagedAndCold|TestOriginalTorrentTransferScopeAndCleanup|TestOriginalTorrentTransferPerObjectAndConcurrentClose)$",
+    "race": false,
+    "status": "FAIL",
+    "commands": [
+      {
+        "label": "go-list",
+        "argv": [
+          "go",
+          "list",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-deps",
+          "-test",
+          "-json",
+          "./internal/app"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "compile",
+        "argv": [
+          "go",
+          "test",
+          "-mod=readonly",
+          "-buildvcs=false",
+          "-p=1",
+          "-c",
+          "-o",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-app01.test",
+          "./internal/app"
+        ],
+        "exit": 0
+      },
+      {
+        "label": "tests",
+        "argv": [
+          "go",
+          "tool",
+          "test2json",
+          "-t",
+          "-p",
+          "./internal/app",
+          "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-app01.test",
+          "-test.v",
+          "-test.run",
+          "^(TestDownloaderCommandUploadsCompleteBytesAndState|TestDownloaderCommandUploadsStrictAppendDecoder|TestDownloaderCommandUploadsConcurrentClaimAndClose|TestOriginalDownloaderCommandHostWire|TestOriginalDownloaderCommandHostCurrentBinding|TestOriginalDownloaderCommandHostClaimDrainsOnce|TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes|TestSharedDownloaderCommandsActualWorkerPagedAndCold|TestOriginalTorrentTransferScopeAndCleanup|TestOriginalTorrentTransferPerObjectAndConcurrentClose)$",
+          "-test.count=1",
+          "-test.timeout=90s"
+        ],
+        "exit": 1
+      }
+    ],
+    "environment_proxy_unchanged": true,
+    "worker_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-fixture02",
+    "worker_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3",
+    "worker_instrumentation": "normal frozen artifact; race flag applies host test program only",
+    "resource_samples": [
+      {
+        "phase": "go-list",
+        "at": "2026-10-31T21:53:45.855210+00:00",
+        "scratch_free": 51784126464,
+        "tmp_free": 5225631744
+      },
+      {
+        "phase": "compile",
+        "at": "2026-10-31T21:53:46.927244+00:00",
+        "scratch_free": 51780493312,
+        "tmp_free": 5225631744
+      },
+      {
+        "phase": "tests",
+        "at": "2026-10-31T21:54:19.858097+00:00",
+        "scratch_free": 51589586944,
+        "tmp_free": 5225631744
+      }
+    ],
+    "input_count": 6211,
+    "program_sha256": "65a9dd04181a49a89cee0f96a2606024a8e04336e43355461cdfb1b6cfb08493",
+    "error_class": "RuntimeError",
+    "error": "tests exited 1",
+    "ended": "2026-10-31T21:54:23.163782+00:00"
+  },
+  "result": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-app01/result.json",
+    "bytes": 3171,
+    "sha256": "6ac220e1c70f9eb31451a16d89b7419fbd62bc638119ab98c19eb2e407c1c319"
+  },
+  "raw": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-app01/tests.stdout",
+    "bytes": 39465,
+    "sha256": "ab3d7114204d7be96b4f4ade97733bacbcbe2a1542059857e93eaa7d6e86ebf1"
+  },
+  "outer_receipt": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-app01/outer-tool-receipt.json",
+    "bytes": 156,
+    "sha256": "b7e06cb673678074fa972f26568c10bb3a0a0c65f310f431f6acf7bf3660c8ae"
+  },
+  "before_inputs": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-app01/inputs-before.json",
+    "bytes": 1473953,
+    "sha256": "f9bbfcb9289cd230186f7162fa4d14889b33ee4f8936892759d6ff4391cf46ae"
+  },
+  "after_compile_inputs": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-app01/inputs-after-compile.json",
+    "bytes": 1473953,
+    "sha256": "f9bbfcb9289cd230186f7162fa4d14889b33ee4f8936892759d6ff4391cf46ae"
+  },
+  "6211_compile_inputs_identical": true,
+  "after_test_manifest": "Absent: original driver aborts on tests exit1. No after-test stability or aggregate PASS invented.",
+  "compiled_test_source": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-command-worker/worker.source-frozen02.go",
+    "bytes": 32402,
+    "sha256": "486f28dcf80923a038d2a20cbc7cba396460ee06176e606164de299c051fecf0"
+  },
+  "compiled_runtime_source": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/runtime.go",
+    "bytes": 24828,
+    "sha256": "8e1461bd552a1cdac3eb00f3c9589e5b242a7926f66dd170799ee90b7438d2de"
+  },
+  "actual_root_passes": [
+    "TestDownloaderCommandUploadsCompleteBytesAndState",
+    "TestDownloaderCommandUploadsStrictAppendDecoder",
+    "TestDownloaderCommandUploadsConcurrentClaimAndClose",
+    "TestOriginalDownloaderCommandHostWire",
+    "TestOriginalDownloaderCommandHostCurrentBinding",
+    "TestOriginalDownloaderCommandHostClaimDrainsOnce",
+    "TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes",
+    "TestOriginalTorrentTransferScopeAndCleanup",
+    "TestOriginalTorrentTransferPerObjectAndConcurrentClose"
+  ],
+  "actual_root_failure": [
+    "TestSharedDownloaderCommandsActualWorkerPagedAndCold"
+  ],
+  "actual_partial_observations": [
+    "plugin_shared_downloader_commands_worker_test.go:700: actual installed-object pipe (not HTTP-route counter): callbacks=18 sent_wire_bytes=33431 read_wire_bytes=29879371 sent_chunks=0 read_chunks=96; native_multipart_bytes=16777216 sha256=287507f403176f1f5b22b9a4d9cb49f7d7f88ac19e406b5ae87ce109564846bd",
+    "plugin_shared_downloader_commands_worker_test.go:729: cold enabled owned downloader settings changed"
+  ],
+  "diagnosis": [
+    "Frozen02 fixture constructed both DownloaderConfig values with implicit SharedPaths=false. saveSettingsWithEffect does not normalize this field; Settings() is a JSON clone.",
+    "Cold New unconditionally sets each downloader SharedPaths=true at runtime.go:226-227. The identical loop exists in committed HEAD; it is not an S03 product edit.",
+    "Therefore whole-struct DeepEqual at test line729 has a definite invalid premise for this fixture. Raw failure lacks per-field values, so no claim that this is the only possible mismatch or that all persisted fields are already proved intact.",
+    "Minimal proposed fixture-only correction: initialize SharedPaths:true for both owned downloaders, keep full DeepEqual unchanged. Rerun both worker roots because shared setup changes; no product/runtime fix is justified by current evidence."
+  ],
+  "credit_boundary": "Nine roots actually passed in failed package run; second worker root reached successful 16MiB digest/18 actual callbacks/physical read counters before failure. Cold installation/PID/post-reopen operation below line729 not reached and remain unverified. Preserve original FAIL; no changing oracle/raw to PASS.",
+  "reviewer_actions": "Read raw/source/hash and git show HEAD bytes only, audit write only; no test/Go/DB/service/network/product changes."
+}

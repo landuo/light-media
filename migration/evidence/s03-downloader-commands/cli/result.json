@@ -1,0 +1,943 @@
+{
+  "status": "PASS",
+  "kind": "S03 normal host / installed SDK / fixed owned HTTP protocol",
+  "calls": [
+    {
+      "at": "2026-10-31T22:03:10.449973+00:00",
+      "host_pid": 25,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-001.body",
+      "sha256": "9af2e146e30c446de7d5c8d2607a4ccadd1ffcd3ac15997bea7bea151d1f88c8"
+    },
+    {
+      "at": "2026-10-31T22:03:10.452111+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-10-31T22:03:10.517112+00:00",
+      "host_pid": 25,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-003.body",
+      "sha256": "c883e4b00a01ce9f629989b9addcd5b5476279939e2b3459fe983219843c5845"
+    },
+    {
+      "at": "2026-10-31T22:03:10.519235+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-004.body",
+      "sha256": "b5691f3cb53fe52ff181a484e70c765bd0743c5f7b3999b52a2559555d9853e4"
+    },
+    {
+      "at": "2026-10-31T22:03:10.581494+00:00",
+      "host_pid": 25,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedDownloaderCommands/commands",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-005.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-10-31T22:03:10.583526+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedDownloaderCommands/commands",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-006.body",
+      "sha256": "79540ce15ecf1a7a902479f4d6cfab01296033bc7d09c03007da5ef93a568c10"
+    },
+    {
+      "at": "2026-10-31T22:03:10.614173+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedDownloaderCommands/commands",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-007.body",
+      "sha256": "172a00185ad0248d6f80fa82c5ca18a4a4508dbce608481d4eeeac5bebf0a740"
+    },
+    {
+      "at": "2026-10-31T22:03:10.630476+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedDownloaderCommands/commands",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-008.body",
+      "sha256": "199a43ca4c01dbba9878fd49a1e6cfa1f74b2e5e74afa157d68575475357cb09"
+    },
+    {
+      "at": "2026-10-31T22:03:13.312339+00:00",
+      "host_pid": 73,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-009.body",
+      "sha256": "5339905db7c3a3eee5f305afa91b7e1a72ae32877708fc8af81683572f53b5d7"
+    },
+    {
+      "at": "2026-10-31T22:03:13.315236+00:00",
+      "host_pid": 73,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-10-31T22:03:13.379469+00:00",
+      "host_pid": 73,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-011.body",
+      "sha256": "c1a64dcd338bbfc9f8ec163f65baa5a368ffa6dbc28b437249e92c12c69918e0"
+    },
+    {
+      "at": "2026-10-31T22:03:13.381420+00:00",
+      "host_pid": 73,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedDownloaderCommands/commands",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-012.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-10-31T22:03:13.383653+00:00",
+      "host_pid": 73,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedDownloaderCommands/commands",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-013.body",
+      "sha256": "d674acb327ae29b7d67a8277e17cea8ea780516a1a610223169086cb851b80b0"
+    }
+  ],
+  "peer_calls": [
+    {
+      "method": "GET",
+      "path": "/index",
+      "request_body_bytes": 0,
+      "at": "2026-10-31T22:03:10.520576+00:00",
+      "status": 200,
+      "response_bytes": 1320,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/worker",
+      "request_body_bytes": 0,
+      "at": "2026-10-31T22:03:10.521585+00:00",
+      "status": 200,
+      "response_bytes": 5358719,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "at": "2026-10-31T22:03:10.585856+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/add",
+      "request_body_bytes": 139,
+      "selected_operation": "qb_add_magnet",
+      "at": "2026-10-31T22:03:10.587073+00:00",
+      "status": 200,
+      "response_bytes": 3,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "at": "2026-10-31T22:03:10.589479+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/start",
+      "request_body_bytes": 47,
+      "selected_operation": "qb_start",
+      "at": "2026-10-31T22:03:10.590624+00:00",
+      "status": 200,
+      "response_bytes": 3,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/recheck",
+      "request_body_bytes": 47,
+      "selected_operation": "qb_recheck",
+      "at": "2026-10-31T22:03:10.592202+00:00",
+      "status": 200,
+      "response_bytes": 3,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/delete",
+      "request_body_bytes": 65,
+      "delete_files": false,
+      "selected_operation": "qb_delete",
+      "at": "2026-10-31T22:03:10.593693+00:00",
+      "status": 200,
+      "response_bytes": 3,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "rpc_method": "session-get",
+      "request_body_bytes": 39,
+      "at": "2026-10-31T22:03:10.595305+00:00",
+      "status": 200,
+      "response_bytes": 101,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "rpc_method": "torrent-add",
+      "request_body_bytes": 127,
+      "selected_operation": "tr_add",
+      "at": "2026-10-31T22:03:10.596104+00:00",
+      "status": 200,
+      "response_bytes": 162,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "rpc_method": "session-get",
+      "request_body_bytes": 39,
+      "at": "2026-10-31T22:03:10.597705+00:00",
+      "status": 200,
+      "response_bytes": 101,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "rpc_method": "torrent-start",
+      "request_body_bytes": 52,
+      "selected_operation": "tr_start",
+      "at": "2026-10-31T22:03:10.598377+00:00",
+      "status": 200,
+      "response_bytes": 38,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "rpc_method": "session-get",
+      "request_body_bytes": 39,
+      "at": "2026-10-31T22:03:10.600014+00:00",
+      "status": 200,
+      "response_bytes": 101,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "rpc_method": "torrent-verify",
+      "request_body_bytes": 53,
+      "selected_operation": "tr_recheck",
+      "at": "2026-10-31T22:03:10.600743+00:00",
+      "status": 200,
+      "response_bytes": 38,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "rpc_method": "session-get",
+      "request_body_bytes": 39,
+      "at": "2026-10-31T22:03:10.602188+00:00",
+      "status": 200,
+      "response_bytes": 101,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "rpc_method": "torrent-remove",
+      "request_body_bytes": 79,
+      "delete_local_data": false,
+      "selected_operation": "tr_delete",
+      "at": "2026-10-31T22:03:10.603114+00:00",
+      "status": 200,
+      "response_bytes": 38,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "at": "2026-10-31T22:03:10.617817+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/add",
+      "request_body_bytes": 139,
+      "selected_operation": "qb_add_owned_unknown500",
+      "at": "2026-10-31T22:03:10.619276+00:00",
+      "status": 500,
+      "response_bytes": 17,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/recheck",
+      "request_body_bytes": 47,
+      "selected_operation": "qb_recheck",
+      "at": "2026-10-31T22:03:10.621131+00:00",
+      "status": 200,
+      "response_bytes": 3,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "at": "2026-10-31T22:03:12.803937+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/add",
+      "request_body_bytes": 16777809,
+      "material": {
+        "length": 16777216,
+        "sha256": "287507f403176f1f5b22b9a4d9cb49f7d7f88ac19e406b5ae87ce109564846bd",
+        "kind": "synthetic_i_mod_251_not_real_torrent"
+      },
+      "selected_operation": "qb_add_bytes",
+      "at": "2026-10-31T22:03:13.101984+00:00",
+      "status": 200,
+      "response_bytes": 3,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/recheck",
+      "request_body_bytes": 47,
+      "selected_operation": "qb_recheck",
+      "at": "2026-10-31T22:03:13.387265+00:00",
+      "status": 200,
+      "response_bytes": 3,
+      "response_completed": true
+    }
+  ],
+  "processes": [
+    {
+      "pid": 25,
+      "identity": {
+        "ppid": 6,
+        "starttime": "4126921"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-command-cli01/private-data",
+      "executable_sha256": "08fb05ab8c1dc8fc29754b2239ad4c9507a18c387fafd2cf0c801353d2f93f03",
+      "owned_listener_inode": "708072",
+      "exit": 0
+    },
+    {
+      "pid": 73,
+      "identity": {
+        "ppid": 6,
+        "starttime": "4127203"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-command-cli01/private-data",
+      "executable_sha256": "08fb05ab8c1dc8fc29754b2239ad4c9507a18c387fafd2cf0c801353d2f93f03",
+      "owned_listener_inode": "709791",
+      "exit": 0
+    }
+  ],
+  "queries": [
+    {
+      "label": "actual_eight_fixed_methods",
+      "host_pid": 25,
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 1,
+        "had_previous": false,
+        "requested": 8,
+        "completed": 8,
+        "succeeded": 8,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "add",
+            "downloader_id": "owned-command-qb",
+            "ok": true,
+            "result": {
+              "success": true,
+              "ids": []
+            },
+            "result_kind": "qbittorrent_source_tuple",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 132,
+              "output_json_bytes": 25,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 132
+            }
+          },
+          {
+            "index": 1,
+            "kind": "qbittorrent",
+            "op": "start",
+            "downloader_id": "owned-command-qb",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 101,
+              "output_json_bytes": 14,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 101
+            }
+          },
+          {
+            "index": 2,
+            "kind": "qbittorrent",
+            "op": "recheck",
+            "downloader_id": "owned-command-qb",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 101,
+              "output_json_bytes": 14,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 101
+            }
+          },
+          {
+            "index": 3,
+            "kind": "qbittorrent",
+            "op": "delete_keep_files",
+            "downloader_id": "owned-command-qb",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 101,
+              "output_json_bytes": 14,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 101
+            }
+          },
+          {
+            "index": 4,
+            "kind": "transmission",
+            "op": "add",
+            "downloader_id": "owned-command-tr",
+            "ok": true,
+            "result": {
+              "hashString": "1111111111111111111111111111111111111111",
+              "id": 101,
+              "name": "Owned S03 synthetic result"
+            },
+            "result_kind": "transmission_native_json_not_python_torrent",
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 132,
+              "output_json_bytes": 112,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 132
+            }
+          },
+          {
+            "index": 5,
+            "kind": "transmission",
+            "op": "start",
+            "downloader_id": "owned-command-tr",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 62,
+              "output_json_bytes": 14,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 62
+            }
+          },
+          {
+            "index": 6,
+            "kind": "transmission",
+            "op": "recheck",
+            "downloader_id": "owned-command-tr",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 62,
+              "output_json_bytes": 14,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 62
+            }
+          },
+          {
+            "index": 7,
+            "kind": "transmission",
+            "op": "delete_keep_files",
+            "downloader_id": "owned-command-tr",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 62,
+              "output_json_bytes": 14,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 62
+            }
+          }
+        ]
+      },
+      "selected_before": {},
+      "selected_after": {
+        "qb_add_magnet": 1,
+        "qb_start": 1,
+        "qb_recheck": 1,
+        "qb_delete": 1,
+        "tr_add": 1,
+        "tr_start": 1,
+        "tr_recheck": 1,
+        "tr_delete": 1
+      },
+      "selected_delta": {
+        "tr_recheck": 1,
+        "qb_recheck": 1,
+        "qb_delete": 1,
+        "tr_add": 1,
+        "tr_delete": 1,
+        "qb_start": 1,
+        "tr_start": 1,
+        "qb_add_magnet": 1
+      }
+    },
+    {
+      "label": "owned500_unknown_then_same_worker_recovery",
+      "host_pid": 25,
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 2,
+        "had_previous": true,
+        "requested": 2,
+        "completed": 2,
+        "succeeded": 1,
+        "failed": 1,
+        "ok": false,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "add",
+            "downloader_id": "owned-command-qb",
+            "ok": false,
+            "error_code": "host_operation_failed",
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 0,
+              "failed": 1,
+              "input_json_bytes": 132,
+              "output_json_bytes": 0,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 132
+            }
+          },
+          {
+            "index": 1,
+            "kind": "qbittorrent",
+            "op": "recheck",
+            "downloader_id": "owned-command-qb",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 101,
+              "output_json_bytes": 14,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 101
+            }
+          }
+        ]
+      },
+      "selected_before": {
+        "qb_add_magnet": 1,
+        "qb_start": 1,
+        "qb_recheck": 1,
+        "qb_delete": 1,
+        "tr_add": 1,
+        "tr_start": 1,
+        "tr_recheck": 1,
+        "tr_delete": 1
+      },
+      "selected_after": {
+        "qb_add_magnet": 1,
+        "qb_start": 1,
+        "qb_recheck": 2,
+        "qb_delete": 1,
+        "tr_add": 1,
+        "tr_start": 1,
+        "tr_recheck": 1,
+        "tr_delete": 1,
+        "qb_add_owned_unknown500": 1
+      },
+      "selected_delta": {
+        "qb_recheck": 1,
+        "qb_add_owned_unknown500": 1
+      }
+    },
+    {
+      "label": "16MiB_actual_upload_and_previous_callback_denial",
+      "host_pid": 25,
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 3,
+        "had_previous": true,
+        "previous_probe": {
+          "label": "previous_invocation_host_caller_denied",
+          "available": true,
+          "source_invocation": 2,
+          "kind": "qbittorrent",
+          "operation": "recheck",
+          "private_frame_operation": "invoke",
+          "callback_attempts": 1,
+          "input_json_bytes": 101,
+          "output_json_bytes": 0,
+          "denied": true,
+          "error_code": "invalid_host_call"
+        },
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "add",
+            "downloader_id": "owned-command-qb",
+            "ok": true,
+            "result": {
+              "success": true,
+              "ids": []
+            },
+            "result_kind": "qbittorrent_source_tuple",
+            "source_truthy": true,
+            "generated": {
+              "kind": "deterministic_bytes_i_mod_251",
+              "length": 16777216,
+              "sha256": "287507f403176f1f5b22b9a4d9cb49f7d7f88ac19e406b5ae87ce109564846bd"
+            },
+            "host_calls": {
+              "total": 18,
+              "begin": 1,
+              "append": 16,
+              "submit": 1,
+              "abort": 0,
+              "invoke": 0,
+              "other": 0,
+              "succeeded": 18,
+              "failed": 0,
+              "input_json_bytes": 22371955,
+              "output_json_bytes": 1647,
+              "append_payload_bytes": 16777216,
+              "max_input_json_bytes": 1398232
+            }
+          }
+        ]
+      },
+      "selected_before": {
+        "qb_add_magnet": 1,
+        "qb_start": 1,
+        "qb_recheck": 2,
+        "qb_delete": 1,
+        "tr_add": 1,
+        "tr_start": 1,
+        "tr_recheck": 1,
+        "tr_delete": 1,
+        "qb_add_owned_unknown500": 1
+      },
+      "selected_after": {
+        "qb_add_magnet": 1,
+        "qb_start": 1,
+        "qb_recheck": 2,
+        "qb_delete": 1,
+        "tr_add": 1,
+        "tr_start": 1,
+        "tr_recheck": 1,
+        "tr_delete": 1,
+        "qb_add_owned_unknown500": 1,
+        "qb_add_bytes": 1
+      },
+      "selected_delta": {
+        "qb_add_bytes": 1
+      }
+    },
+    {
+      "label": "cold_same_DB_new_worker_recheck",
+      "host_pid": 73,
+      "response": {
+        "pid": 88,
+        "init_count": 1,
+        "invocation": 1,
+        "had_previous": false,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "recheck",
+            "downloader_id": "owned-command-qb",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 101,
+              "output_json_bytes": 14,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 101
+            }
+          }
+        ]
+      },
+      "selected_before": {
+        "qb_add_magnet": 1,
+        "qb_start": 1,
+        "qb_recheck": 2,
+        "qb_delete": 1,
+        "tr_add": 1,
+        "tr_start": 1,
+        "tr_recheck": 1,
+        "tr_delete": 1,
+        "qb_add_owned_unknown500": 1,
+        "qb_add_bytes": 1
+      },
+      "selected_after": {
+        "qb_add_magnet": 1,
+        "qb_start": 1,
+        "qb_recheck": 3,
+        "qb_delete": 1,
+        "tr_add": 1,
+        "tr_start": 1,
+        "tr_recheck": 1,
+        "tr_delete": 1,
+        "qb_add_owned_unknown500": 1,
+        "qb_add_bytes": 1
+      },
+      "selected_delta": {
+        "qb_recheck": 1
+      }
+    }
+  ],
+  "physical_plugin_wire_counters": {
+    "measured": false,
+    "available_from_ordinary_API": false
+  },
+  "measured_layers": [
+    "worker logical SDK callback counters",
+    "owned endpoint HTTP requests and entity-body bytes"
+  ],
+  "not_claimed": [
+    "real daemon/download/NAS",
+    "filesystem or data deletion",
+    "complete Python Torrent object",
+    "browser/UI",
+    "full S03/platform/delivery"
+  ],
+  "bindings_sha256": "1fd9399f61e78663f844f545ed52bc8c14a7ce269f32b1495c895ab8ec7535b8",
+  "execution_environment": "inherited after coordinator grant marker; no proxy or startup rewrites",
+  "owned_peer_origin": "http://127.0.0.1:34425",
+  "bootstrap_exit": 0,
+  "worker_identities": [
+    {
+      "ppid": 25,
+      "starttime": "4126946",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-command-cli01/private-data/plugin-packages/OwnedDownloaderCommands/owned-downloader-command-sdk-fixture",
+      "executable_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3",
+      "host_pid": 25
+    },
+    {
+      "ppid": 25,
+      "starttime": "4126946",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-command-cli01/private-data/plugin-packages/OwnedDownloaderCommands/owned-downloader-command-sdk-fixture",
+      "executable_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3",
+      "host_pid": 25
+    },
+    {
+      "ppid": 25,
+      "starttime": "4126946",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-command-cli01/private-data/plugin-packages/OwnedDownloaderCommands/owned-downloader-command-sdk-fixture",
+      "executable_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3",
+      "host_pid": 25
+    },
+    {
+      "ppid": 73,
+      "starttime": "4127218",
+      "pid": 88,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-command-cli01/private-data/plugin-packages/OwnedDownloaderCommands/owned-downloader-command-sdk-fixture",
+      "executable_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3",
+      "host_pid": 73
+    }
+  ],
+  "owned500_outcome": {
+    "effect": "unknown_by_product_not_replayed",
+    "fixture": "one fixed 500 response; no actual daemon mutation"
+  },
+  "actual_endpoint_request_counts": {
+    "GET /index": 1,
+    "GET /worker": 1,
+    "GET /api/v2/app/webapiVersion": 4,
+    "POST /api/v2/torrents/add": 3,
+    "POST /api/v2/torrents/start": 1,
+    "POST /api/v2/torrents/recheck": 3,
+    "POST /api/v2/torrents/delete": 1,
+    "POST /transmission/rpc": 8
+  },
+  "input_drift": [],
+  "environment_unchanged": true,
+  "finished_at": "2026-10-31T22:03:14.050639+00:00"
+}

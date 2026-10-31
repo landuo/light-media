@@ -1,0 +1,13 @@
+--- /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-command-worker/worker.source-frozen02.go	2026-11-01 06:51:17.555728903 +0900
++++ internal/app/plugin_shared_downloader_commands_worker_test.go	2026-11-01 06:55:43.200479507 +0900
+@@ -421,8 +421,8 @@
+ 	cfg.AllowedRoots, cfg.Roots = []string{t.TempDir()}, []Root{}
+ 	enabled := true
+ 	cfg.Downloaders = []DownloaderConfig{
+-		{Config: download.Config{ID: ownedCommandQBID, Kind: "qb", BaseURL: p.qb.URL, Username: ownedCommandUsername, Password: ownedCommandPassword}, Enabled: &enabled},
+-		{Config: download.Config{ID: ownedCommandTRID, Kind: "transmission", BaseURL: p.tr.URL + "/transmission/rpc", Username: ownedCommandUsername, Password: ownedCommandPassword}, Enabled: &enabled},
++		{Config: download.Config{ID: ownedCommandQBID, Kind: "qb", BaseURL: p.qb.URL, Username: ownedCommandUsername, Password: ownedCommandPassword}, SharedPaths: true, Enabled: &enabled},
++		{Config: download.Config{ID: ownedCommandTRID, Kind: "transmission", BaseURL: p.tr.URL + "/transmission/rpc", Username: ownedCommandUsername, Password: ownedCommandPassword}, SharedPaths: true, Enabled: &enabled},
+ 	}
+ 	if err := a.saveSettings(context.Background(), cfg); err != nil {
+ 		t.Fatal("save owned command fixture settings failed")

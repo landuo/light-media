@@ -1,0 +1,27 @@
+# S03 finite ordinary downloader command bridge
+
+This local candidate extends 41c8e935. It is not full S03 or full-platform equivalence, not a remote push, and has no CI-green claim.
+
+## Implemented and actually exercised
+
+Ordinary installed Go workers can invoke fixed qBittorrent and Transmission add/start/recheck/delete-keep-files capabilities. The actual scope is eight methods, with delete-data always false, explicit currently enabled downloader identity, per-invocation authorization, one-use uploaded material and immutable command/config binding. Byte material is paged through the real worker pipe rather than placed in a generic JSON request. No business plugin was migrated or real downloader contacted.
+
+Source credit is the fixed MoviePilot 8a83efe selected complete eight wrapper methods plus two helper nodes: 34 recorded observations, not full original/vendor execution. The exact raw is stored once in internal/plugins/downloadercommands/testdata/source-leaves.json. Leaf2 and final SDK02 three roots are source-grounded component evidence. Pinned vendor sources were read statically, not imported/executed.
+
+Native current normal4 plus race1 cover the affected qB paths and newly approved dedicated-client TLS behavior. Original TR normal2 credit is inherited with unchanged branches/methods, not falsely reported as a new run. Only this independent qB command transport disables verification under the explicit 21:55:10 UTC user decision; old IYUU/TR clients, global CA/default transport, Git/browser and cross-origin credential boundaries remain unchanged. Owned TLS tests observed self-signed success, strict-client rejection and no redirect hop.
+
+App01 remains FAILED: nine roots passed, but an internal fixture's false SharedPaths conflicted with existing cold/public normalization to true. The two-line fixture correction retains the full settings equality assertion. Actual corrected worker normal2 and host race5 passed, including SQLite installation, eight registered HTTP operations, same-worker failure recovery, expired callback denial and cold settings/installation equality. Other unchanged App01 component roots retain the independent review's limited credit, not whole-build zero-drift credit. The race host used a normal worker binary.
+
+The actual 16 MiB installed-object pipe measured 18 callbacks, 33,431 sent and 29,879,371 read wire bytes, 96 read chunks, and exact native multipart SHA 287507f403176f1f5b22b9a4d9cb49f7d7f88ac19e406b5ae87ce109564846bd. These pipe counters are distinct from ordinary API observations.
+
+Final normal CLI actually ran two non-safe-mode hosts, PID25 then73, same owned DB, both natural exit0; ordinary worker42 then88. Four business calls covered eight methods, one fixed500 unknown-effect failure without application resubmission and same-worker recovery, 16 MiB/18 logical callbacks plus endpoint SHA, and cold fresh worker. The peer is a fixed owned protocol endpoint, not qB/Transmission. CLI does not expose physical pipe counters. Environment proxy/CA remained unchanged.
+
+## Retained boundaries
+
+The existing 16 MiB material, 128 KiB generic request, 64 callbacks and framing budgets remain explicit limits, not source-unlimited equivalence. Arbitrary Python objects/file-like values, unrestricted vendor kwargs, full Transmission Torrent object properties, qB URL-plus-truthy-Cookie/global synchronization and real service behavior remain pending. Source constructor/global settings synchronization is not certified.
+
+After selected delegation an error retains unknown-effect semantics; no application-level selected mutation replay is promised. Go may internally retry an empty-body request on a reused connection after proven nothingWrittenError: do not infer universally one physical attempt. Old callback probes do not prove arbitrary old live upload-submit tokens. No real files, media, torrents, NAS, daemon, browser or deployment were mutated/tested.
+
+The acquisition incident remains visible: two intermediate vendor draft byte mismatches and unsafe shell interpolation risk were identified; original tool receipts/outcomes are unavailable. Correct final Git-blob hashes prove content integrity only. Unobserved side effects remain unknown; bounded invariant checks do not prove none. No forbidden session access or unsafe replay was used. See incident records.
+
+The evidence index binds compact exact originals and product hashes. Full source/compile-input maps and protected originals are retained in external Space checkpoints; executable/DB/credential/private-instance contents are excluded. Historical evidence is not rewritten to PASS. The global ledger has pre-existing unresolved structural issues and cannot certify full migration.

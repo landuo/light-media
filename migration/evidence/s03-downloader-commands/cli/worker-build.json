@@ -1,0 +1,49 @@
+{
+  "at": "2026-10-31T21:46:40.347907+00:00",
+  "status": "PASS",
+  "kind": "normal owned S03 command fixture; SDK HostCaller only, no worker localfilesystem/network/daemon; compile only",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-json",
+        "./cmd/owned-downloader-command-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "build",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-fixture02",
+        "./cmd/owned-downloader-command-fixture"
+      ],
+      "exit": 0
+    }
+  ],
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "scratch_free": 51845869568,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "build",
+      "scratch_free": 51845312512,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 1085,
+  "program_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3",
+  "ended": "2026-10-31T21:46:41.393818+00:00"
+}

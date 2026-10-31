@@ -1,0 +1,698 @@
+{
+  "kind": "owned fixed JSON/bytes inputs, no asserted expected source result",
+  "cases": [
+    {
+      "id": "qb-add-no-client",
+      "kind": "qb",
+      "method": "add_torrent",
+      "args": {
+        "content": {
+          "$bytes_base64": "b3duZWQtbGVhZi1tYXRlcmlhbAA="
+        }
+      },
+      "client_present": false,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_add",
+      "vendor_reply": "Ok.",
+      "purpose": "source missing-client tuple; not vendor success"
+    },
+    {
+      "id": "qb-add-empty-content",
+      "kind": "qb",
+      "method": "add_torrent",
+      "args": {
+        "content": {
+          "$bytes_base64": ""
+        }
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_add",
+      "vendor_reply": "Ok.",
+      "purpose": "falsey bytes before vendor"
+    },
+    {
+      "id": "qb-add-bytes-defaults",
+      "kind": "qb",
+      "method": "add_torrent",
+      "args": {
+        "content": {
+          "$bytes_base64": "b3duZWQtbGVhZi1tYXRlcmlhbAA="
+        }
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_add",
+      "vendor_reply": "Ok.",
+      "purpose": "default False paused; omitted option keys; original string response"
+    },
+    {
+      "id": "qb-add-magnet-explicit-null",
+      "kind": "qb",
+      "method": "add_torrent",
+      "args": {
+        "content": "magnet:?xt=urn:btih:OwnedLeaf",
+        "is_paused": null,
+        "download_dir": "",
+        "tag": [],
+        "category": "OwnedCategory",
+        "cookie": null,
+        "ignore_category_check": false,
+        "is_skip_checking": true
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_add",
+      "vendor_reply": false,
+      "purpose": "explicit null retained; falsey path/tag normalized; vendor False gives false tuple but tuple truth is True"
+    },
+    {
+      "id": "qb-add-list-ids-and-instance-flags",
+      "kind": "qb",
+      "method": "add_torrent",
+      "args": {
+        "content": {
+          "$bytes_base64": "b3duZWQtbGVhZi1tYXRlcmlhbAA="
+        },
+        "is_paused": true,
+        "download_dir": "/owned/downloads",
+        "tag": [
+          "owned-a",
+          "owned-b"
+        ],
+        "category": "OwnedCategory",
+        "ignore_category_check": false,
+        "is_skip_checking": false
+      },
+      "client_present": true,
+      "instance": {
+        "category": true,
+        "sequential": true,
+        "first_last_piece": true
+      },
+      "vendor_method": "torrents_add",
+      "vendor_reply": {
+        "added_torrent_ids": [
+          null,
+          "",
+          0,
+          false,
+          "Owned-A",
+          42,
+          true
+        ],
+        "success_count": 0,
+        "pending_count": 0
+      },
+      "purpose": "source list filtering/str conversion and true category branch"
+    },
+    {
+      "id": "qb-add-ignore-null-pending-count",
+      "kind": "qb",
+      "method": "add_torrent",
+      "args": {
+        "content": {
+          "$bytes_base64": "b3duZWQtbGVhZi1tYXRlcmlhbAA="
+        },
+        "category": "",
+        "ignore_category_check": null
+      },
+      "client_present": true,
+      "instance": {
+        "category": true,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_add",
+      "vendor_reply": {
+        "success_count": 0,
+        "pending_count": 1,
+        "added_torrent_ids": []
+      },
+      "purpose": "explicit null ignore option uses checked-category branch; pending truth"
+    },
+    {
+      "id": "qb-add-url-no-cookie-fallback",
+      "kind": "qb",
+      "method": "add_torrent",
+      "args": {
+        "content": "https://owned.invalid/material.torrent",
+        "category": "OwnedCategory",
+        "cookie": null
+      },
+      "client_present": true,
+      "instance": {
+        "category": true,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_add",
+      "vendor_reply": {
+        "detail": "Ok"
+      },
+      "purpose": "record string URL only with cookie None; parser fallback Python mapping string; no URL fetch/sync"
+    },
+    {
+      "id": "qb-add-parser-error",
+      "kind": "qb",
+      "method": "add_torrent",
+      "args": {
+        "content": {
+          "$bytes_base64": "b3duZWQtbGVhZi1tYXRlcmlhbAA="
+        }
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_add",
+      "vendor_reply": {
+        "added_torrent_ids": 7
+      },
+      "purpose": "ordinary JSON number is not iterable; original add catches parser exception"
+    },
+    {
+      "id": "qb-add-vendor-error",
+      "kind": "qb",
+      "method": "add_torrent",
+      "args": {
+        "content": {
+          "$bytes_base64": "b3duZWQtbGVhZi1tYXRlcmlhbAA="
+        }
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_add",
+      "vendor_reply": null,
+      "purpose": "original Exception log and false tuple",
+      "vendor_raises": "owned vendor exception"
+    },
+    {
+      "id": "tr-add-no-client",
+      "kind": "tr",
+      "method": "add_torrent",
+      "args": {
+        "content": {
+          "$bytes_base64": "b3duZWQtbGVhZi1tYXRlcmlhbAA="
+        }
+      },
+      "client_present": false,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "add_torrent",
+      "vendor_reply": null,
+      "purpose": "missing-client None"
+    },
+    {
+      "id": "tr-add-bytes-defaults-json-identity",
+      "kind": "tr",
+      "method": "add_torrent",
+      "args": {
+        "content": {
+          "$bytes_base64": "b3duZWQtbGVhZi1tYXRlcmlhbAA="
+        }
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "add_torrent",
+      "vendor_reply": {
+        "hashString": "Owned-TR",
+        "id": 7,
+        "name": "owned"
+      },
+      "purpose": "only recording JSON return identity; not a vendor Torrent object"
+    },
+    {
+      "id": "tr-add-empty-explicit-null",
+      "kind": "tr",
+      "method": "add_torrent",
+      "args": {
+        "content": "",
+        "is_paused": null,
+        "download_dir": "",
+        "labels": [],
+        "cookie": null
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "add_torrent",
+      "vendor_reply": false,
+      "purpose": "no empty-content guard; empty/null values and False vendor reply preserved"
+    },
+    {
+      "id": "tr-add-magnet-none-return",
+      "kind": "tr",
+      "method": "add_torrent",
+      "args": {
+        "content": "magnet:?xt=urn:btih:OwnedLeaf",
+        "is_paused": true,
+        "labels": [
+          "owned"
+        ]
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "add_torrent",
+      "vendor_reply": null,
+      "purpose": "successful recording call may itself return None"
+    },
+    {
+      "id": "tr-add-vendor-error",
+      "kind": "tr",
+      "method": "add_torrent",
+      "args": {
+        "content": {
+          "$bytes_base64": "b3duZWQtbGVhZi1tYXRlcmlhbAA="
+        }
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "add_torrent",
+      "vendor_reply": null,
+      "purpose": "original Exception log and None",
+      "vendor_raises": "owned vendor exception"
+    },
+    {
+      "id": "qb-start_torrents-no-client",
+      "kind": "qb",
+      "method": "start_torrents",
+      "args": {
+        "ids": [
+          "Owned-A"
+        ]
+      },
+      "client_present": false,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_resume",
+      "vendor_reply": false,
+      "purpose": "missing client; no recording call"
+    },
+    {
+      "id": "qb-start_torrents-false-vendor-return",
+      "kind": "qb",
+      "method": "start_torrents",
+      "args": {
+        "ids": null
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_resume",
+      "vendor_reply": false,
+      "purpose": "source wrapper completion True despite recording return False; selector retained"
+    },
+    {
+      "id": "qb-start_torrents-vendor-error",
+      "kind": "qb",
+      "method": "start_torrents",
+      "args": {
+        "ids": "Owned-A"
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_resume",
+      "vendor_reply": null,
+      "purpose": "source ERROR and False; string selector unchanged",
+      "vendor_raises": "owned vendor exception"
+    },
+    {
+      "id": "qb-recheck_torrents-no-client",
+      "kind": "qb",
+      "method": "recheck_torrents",
+      "args": {
+        "ids": [
+          "Owned-A"
+        ]
+      },
+      "client_present": false,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_recheck",
+      "vendor_reply": false,
+      "purpose": "missing client; no recording call"
+    },
+    {
+      "id": "qb-recheck_torrents-false-vendor-return",
+      "kind": "qb",
+      "method": "recheck_torrents",
+      "args": {
+        "ids": []
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_recheck",
+      "vendor_reply": false,
+      "purpose": "source wrapper completion True despite recording return False; selector retained"
+    },
+    {
+      "id": "qb-recheck_torrents-vendor-error",
+      "kind": "qb",
+      "method": "recheck_torrents",
+      "args": {
+        "ids": "Owned-A"
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_recheck",
+      "vendor_reply": null,
+      "purpose": "source ERROR and False; string selector unchanged",
+      "vendor_raises": "owned vendor exception"
+    },
+    {
+      "id": "qb-delete_torrents-no-client",
+      "kind": "qb",
+      "method": "delete_torrents",
+      "args": {
+        "delete_file": false,
+        "ids": [
+          "Owned-A"
+        ]
+      },
+      "client_present": false,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_delete",
+      "vendor_reply": false,
+      "purpose": "missing client; no recording call"
+    },
+    {
+      "id": "qb-delete_torrents-false-vendor-return",
+      "kind": "qb",
+      "method": "delete_torrents",
+      "args": {
+        "delete_file": false,
+        "ids": [
+          "Owned-A",
+          "Owned-B"
+        ]
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_delete",
+      "vendor_reply": false,
+      "purpose": "source wrapper completion True despite recording return False; selector retained"
+    },
+    {
+      "id": "qb-delete_torrents-vendor-error",
+      "kind": "qb",
+      "method": "delete_torrents",
+      "args": {
+        "delete_file": false,
+        "ids": "Owned-A"
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_delete",
+      "vendor_reply": null,
+      "purpose": "source ERROR and False; string selector unchanged",
+      "vendor_raises": "owned vendor exception"
+    },
+    {
+      "id": "qb-delete-empty-guard",
+      "kind": "qb",
+      "method": "delete_torrents",
+      "args": {
+        "delete_file": false,
+        "ids": []
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "torrents_delete",
+      "vendor_reply": false,
+      "purpose": "delete empty preguard; no recording call and no deletion"
+    },
+    {
+      "id": "tr-start_torrents-no-client",
+      "kind": "tr",
+      "method": "start_torrents",
+      "args": {
+        "ids": [
+          "Owned-A"
+        ]
+      },
+      "client_present": false,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "start_torrent",
+      "vendor_reply": false,
+      "purpose": "missing client; no recording call"
+    },
+    {
+      "id": "tr-start_torrents-false-vendor-return",
+      "kind": "tr",
+      "method": "start_torrents",
+      "args": {
+        "ids": null
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "start_torrent",
+      "vendor_reply": false,
+      "purpose": "source wrapper completion True despite recording return False; selector retained"
+    },
+    {
+      "id": "tr-start_torrents-vendor-error",
+      "kind": "tr",
+      "method": "start_torrents",
+      "args": {
+        "ids": "Owned-A"
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "start_torrent",
+      "vendor_reply": null,
+      "purpose": "source ERROR and False; string selector unchanged",
+      "vendor_raises": "owned vendor exception"
+    },
+    {
+      "id": "tr-recheck_torrents-no-client",
+      "kind": "tr",
+      "method": "recheck_torrents",
+      "args": {
+        "ids": [
+          "Owned-A"
+        ]
+      },
+      "client_present": false,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "verify_torrent",
+      "vendor_reply": false,
+      "purpose": "missing client; no recording call"
+    },
+    {
+      "id": "tr-recheck_torrents-false-vendor-return",
+      "kind": "tr",
+      "method": "recheck_torrents",
+      "args": {
+        "ids": []
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "verify_torrent",
+      "vendor_reply": false,
+      "purpose": "source wrapper completion True despite recording return False; selector retained"
+    },
+    {
+      "id": "tr-recheck_torrents-vendor-error",
+      "kind": "tr",
+      "method": "recheck_torrents",
+      "args": {
+        "ids": "Owned-A"
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "verify_torrent",
+      "vendor_reply": null,
+      "purpose": "source ERROR and False; string selector unchanged",
+      "vendor_raises": "owned vendor exception"
+    },
+    {
+      "id": "tr-delete_torrents-no-client",
+      "kind": "tr",
+      "method": "delete_torrents",
+      "args": {
+        "delete_file": false,
+        "ids": [
+          "Owned-A"
+        ]
+      },
+      "client_present": false,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "remove_torrent",
+      "vendor_reply": false,
+      "purpose": "missing client; no recording call"
+    },
+    {
+      "id": "tr-delete_torrents-false-vendor-return",
+      "kind": "tr",
+      "method": "delete_torrents",
+      "args": {
+        "delete_file": false,
+        "ids": [
+          "Owned-A",
+          "Owned-B"
+        ]
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "remove_torrent",
+      "vendor_reply": false,
+      "purpose": "source wrapper completion True despite recording return False; selector retained"
+    },
+    {
+      "id": "tr-delete_torrents-vendor-error",
+      "kind": "tr",
+      "method": "delete_torrents",
+      "args": {
+        "delete_file": false,
+        "ids": "Owned-A"
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "remove_torrent",
+      "vendor_reply": null,
+      "purpose": "source ERROR and False; string selector unchanged",
+      "vendor_raises": "owned vendor exception"
+    },
+    {
+      "id": "tr-delete-empty-guard",
+      "kind": "tr",
+      "method": "delete_torrents",
+      "args": {
+        "delete_file": false,
+        "ids": []
+      },
+      "client_present": true,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "vendor_method": "remove_torrent",
+      "vendor_reply": false,
+      "purpose": "delete empty preguard; no recording call and no deletion"
+    }
+  ],
+  "boundaries": [
+    "Only 8 complete original leaf methods plus 2 qB mapping/parser nodes; no original constructor or imports.",
+    "Recording vendor returns are ordinary JSON values, not real daemon outcomes or vendor Torrent objects.",
+    "Bytes are synthetic uninterpreted payload; this wrapper collector does not claim valid torrent parsing.",
+    "All add cookie arguments are omitted or exact None; URL/cookie sync and Version branches are pending and fail closed if entered.",
+    "All delete_file/delete_files/delete_data values are exact False; no file or real torrent removal occurs.",
+    "No native vendor, requests, socket/network, real downloader, source whole-app import or environment proxy/CA rewrite.",
+    "Getter/attribute branches for arbitrary non-JSON Python objects are not sampled; helpers remain full original nodes."
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "started": "2026-10-31T21:49:14.614070+00:00",
+  "driver_pid": 2,
+  "package": "./internal/plugins/iyuuautoseed/native",
+  "pattern": "^TestSharedDownloaderCommandGuardUnknownAndClose$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/plugins/iyuuautoseed/native"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native-race01.test",
+        "-race",
+        "./internal/plugins/iyuuautoseed/native"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/iyuuautoseed/native",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native-race01.test",
+        "-test.v",
+        "-test.run",
+        "^TestSharedDownloaderCommandGuardUnknownAndClose$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T21:49:14.614083+00:00",
+      "scratch_free": 51813957632,
+      "tmp_free": 5225631744
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T21:49:14.971538+00:00",
+      "scratch_free": 51812745216,
+      "tmp_free": 5225631744
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T21:49:18.570424+00:00",
+      "scratch_free": 51784880128,
+      "tmp_free": 5225631744
+    }
+  ],
+  "input_count": 2607,
+  "program_sha256": "71374d556162f3ff0069f52bb4b6529eb1b2046d422698d45959b48dcee36a11",
+  "root_passes": [
+    "TestSharedDownloaderCommandGuardUnknownAndClose"
+  ],
+  "ended": "2026-10-31T21:49:19.782371+00:00"
+}

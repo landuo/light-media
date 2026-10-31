@@ -1,0 +1,623 @@
+{
+  "at": "2026-10-31T21:06:30.524Z",
+  "status": "ACCEPTED_FINITE_ORIGINAL_WRAPPER_RECORDING_OBSERVATION",
+  "review": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-source-independent/SOURCE01-REVIEW.md",
+    "bytes": 2532,
+    "sha256": "e9f80b93df9ee2a8d10f1eeac8f42e6ba918dc9d54300130443016eed189b378"
+  },
+  "preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-source-independent/collector01-preexec-independent.json",
+    "bytes": 9660,
+    "sha256": "3c320055728c9fec8a5d6cb673153588dec2a44cde8260d40f2c4db3d5b44cde"
+  },
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-source01/stdout.json",
+      "bytes": 48216,
+      "sha256": "8de99e30850e6a111b9b97de08de755b50452bbd6da463567111e11872952e26"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-source01/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-source01/exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-source01/execution.json",
+      "bytes": 812,
+      "sha256": "883d388778bbe572da6dc15a6d9bb3cac9c2bdaeaa52042602c0a7fde46d67d7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-source01/tool-execution-receipt.json",
+      "bytes": 263,
+      "sha256": "e8d471b6af4b9dcf10742a0fc66e151656ebbab34149bc5d1fb9492909f25d96"
+    }
+  ],
+  "current_input_checks": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-source-preparation/capture_downloader_leaves.py",
+      "bytes": 11167,
+      "sha256": "a2dfaca312973ef3c04fdd7b5ac9168b29d6613f6f4ad0037977cc9873aaf3af"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-source-preparation/owned-cases.json",
+      "bytes": 19132,
+      "sha256": "c0a0c16e326810520dace74db5483b32532769870f5453ad146327dd12bf500b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-source-preparation/source-nodes.json",
+      "bytes": 3735,
+      "sha256": "7760cd97f3007e11dfb56b360e9c5ac37848a87ed394e433b90acd4e5de6f9d1"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/qbittorrent/qbittorrent.py",
+      "bytes": 27897,
+      "sha256": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/transmission/transmission.py",
+      "bytes": 18483,
+      "sha256": "6fc20e208b86e9e68ada074643f82b88270c2e51749e460ad881b10f744cf676"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "bytes": 30894944,
+      "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"
+    }
+  ],
+  "original_nodes_exact": 10,
+  "actual_cases_exact": 34,
+  "actual_trace_counts": {
+    "vendor_calls": 23,
+    "vendor_returns": 15,
+    "vendor_exceptions": 8,
+    "source_ERROR_logs": 9,
+    "short_circuit_cases": 11,
+    "total_trace_events": 55
+  },
+  "case_summary": [
+    {
+      "id": "qb-add-no-client",
+      "vendor_calls": 0,
+      "source_outcome": {
+        "kind": "return",
+        "value": {
+          "kind": "tuple",
+          "items": [
+            false,
+            []
+          ]
+        },
+        "python_truthy": true,
+        "python_type": "tuple"
+      },
+      "trace_events": []
+    },
+    {
+      "id": "qb-add-empty-content",
+      "vendor_calls": 0,
+      "source_outcome": {
+        "kind": "return",
+        "value": {
+          "kind": "tuple",
+          "items": [
+            false,
+            []
+          ]
+        },
+        "python_truthy": true,
+        "python_type": "tuple"
+      },
+      "trace_events": []
+    },
+    {
+      "id": "qb-add-bytes-defaults",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": {
+          "kind": "tuple",
+          "items": [
+            true,
+            []
+          ]
+        },
+        "python_truthy": true,
+        "python_type": "tuple"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "qb-add-magnet-explicit-null",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": {
+          "kind": "tuple",
+          "items": [
+            false,
+            []
+          ]
+        },
+        "python_truthy": true,
+        "python_type": "tuple"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "qb-add-list-ids-and-instance-flags",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": {
+          "kind": "tuple",
+          "items": [
+            true,
+            [
+              "Owned-A",
+              "42",
+              "True"
+            ]
+          ]
+        },
+        "python_truthy": true,
+        "python_type": "tuple"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "qb-add-ignore-null-pending-count",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": {
+          "kind": "tuple",
+          "items": [
+            true,
+            []
+          ]
+        },
+        "python_truthy": true,
+        "python_type": "tuple"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "qb-add-url-no-cookie-fallback",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": {
+          "kind": "tuple",
+          "items": [
+            true,
+            []
+          ]
+        },
+        "python_truthy": true,
+        "python_type": "tuple"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "qb-add-parser-error",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": {
+          "kind": "tuple",
+          "items": [
+            false,
+            []
+          ]
+        },
+        "python_truthy": true,
+        "python_type": "tuple"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return",
+        "log"
+      ]
+    },
+    {
+      "id": "qb-add-vendor-error",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": {
+          "kind": "tuple",
+          "items": [
+            false,
+            []
+          ]
+        },
+        "python_truthy": true,
+        "python_type": "tuple"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_exception",
+        "log"
+      ]
+    },
+    {
+      "id": "tr-add-no-client",
+      "vendor_calls": 0,
+      "source_outcome": {
+        "kind": "return",
+        "value": null,
+        "python_truthy": false,
+        "python_type": "NoneType",
+        "same_recording_reply_identity": true,
+        "vendor_return_observed": false
+      },
+      "trace_events": []
+    },
+    {
+      "id": "tr-add-bytes-defaults-json-identity",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": {
+          "hashString": "Owned-TR",
+          "id": 7,
+          "name": "owned"
+        },
+        "python_truthy": true,
+        "python_type": "dict",
+        "same_recording_reply_identity": true,
+        "vendor_return_observed": true
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "tr-add-empty-explicit-null",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool",
+        "same_recording_reply_identity": true,
+        "vendor_return_observed": true
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "tr-add-magnet-none-return",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": null,
+        "python_truthy": false,
+        "python_type": "NoneType",
+        "same_recording_reply_identity": true,
+        "vendor_return_observed": true
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "tr-add-vendor-error",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": null,
+        "python_truthy": false,
+        "python_type": "NoneType",
+        "same_recording_reply_identity": true,
+        "vendor_return_observed": false
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_exception",
+        "log"
+      ]
+    },
+    {
+      "id": "qb-start_torrents-no-client",
+      "vendor_calls": 0,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": []
+    },
+    {
+      "id": "qb-start_torrents-false-vendor-return",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": true,
+        "python_truthy": true,
+        "python_type": "bool"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "qb-start_torrents-vendor-error",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_exception",
+        "log"
+      ]
+    },
+    {
+      "id": "qb-recheck_torrents-no-client",
+      "vendor_calls": 0,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": []
+    },
+    {
+      "id": "qb-recheck_torrents-false-vendor-return",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": true,
+        "python_truthy": true,
+        "python_type": "bool"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "qb-recheck_torrents-vendor-error",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_exception",
+        "log"
+      ]
+    },
+    {
+      "id": "qb-delete_torrents-no-client",
+      "vendor_calls": 0,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": []
+    },
+    {
+      "id": "qb-delete_torrents-false-vendor-return",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": true,
+        "python_truthy": true,
+        "python_type": "bool"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "qb-delete_torrents-vendor-error",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_exception",
+        "log"
+      ]
+    },
+    {
+      "id": "qb-delete-empty-guard",
+      "vendor_calls": 0,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": []
+    },
+    {
+      "id": "tr-start_torrents-no-client",
+      "vendor_calls": 0,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": []
+    },
+    {
+      "id": "tr-start_torrents-false-vendor-return",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": true,
+        "python_truthy": true,
+        "python_type": "bool"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "tr-start_torrents-vendor-error",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_exception",
+        "log"
+      ]
+    },
+    {
+      "id": "tr-recheck_torrents-no-client",
+      "vendor_calls": 0,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": []
+    },
+    {
+      "id": "tr-recheck_torrents-false-vendor-return",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": true,
+        "python_truthy": true,
+        "python_type": "bool"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "tr-recheck_torrents-vendor-error",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_exception",
+        "log"
+      ]
+    },
+    {
+      "id": "tr-delete_torrents-no-client",
+      "vendor_calls": 0,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": []
+    },
+    {
+      "id": "tr-delete_torrents-false-vendor-return",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": true,
+        "python_truthy": true,
+        "python_type": "bool"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "tr-delete_torrents-vendor-error",
+      "vendor_calls": 1,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": [
+        "vendor_call",
+        "vendor_exception",
+        "log"
+      ]
+    },
+    {
+      "id": "tr-delete-empty-guard",
+      "vendor_calls": 0,
+      "source_outcome": {
+        "kind": "return",
+        "value": false,
+        "python_truthy": false,
+        "python_type": "bool"
+      },
+      "trace_events": []
+    }
+  ],
+  "actual_argv": [
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python3.12",
+    "-I",
+    "-S",
+    "-B",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-source-preparation/capture_downloader_leaves.py"
+  ],
+  "actual_cwd": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305",
+  "started": "2026-10-31T21:02:09.867098+00:00",
+  "ended": "2026-10-31T21:02:10.001583+00:00",
+  "tool_receipt_level": "Coordinator transcription of original tool result, not newly executing or inspecting system session storage.",
+  "environment_boundary": "Frozen script does not mutate environment. execution.json states environment_proxy_unchanged; no separately collected complete environment transcript is inferred.",
+  "scope": "Source eight leaf methods and two mapping/parser helpers against recording ports only; not downloader/HTTP/vendor/SDK/host or full-S03 acceptance.",
+  "new_source_or_test_executions_by_reviewer": 0
+}

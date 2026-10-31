@@ -1,0 +1,156 @@
+--- candidate01/internal/plugins/iyuuautoseed/native/shared_downloader_commands.go
++++ candidate02/internal/plugins/iyuuautoseed/native/shared_downloader_commands.go
+@@ -5,6 +5,7 @@
+ import (
+ 	"bytes"
+ 	"context"
++	"crypto/tls"
+ 	"encoding/base64"
+ 	"encoding/json"
+ 	"io"
+@@ -32,10 +33,10 @@
+ type sharedQBCommands struct{ owner *sharedDownloaderCommands }
+ type sharedTRCommands struct{ owner *sharedDownloaderCommands }
+ 
+-// NewSharedDownloaderCommands creates one owned fixed native client. qB keeps
+-// current strict TLS and environment proxy policy: source constructor's separate
+-// VERIFY=False remains an explicit unapproved difference. TR reuses the already
+-// established source trust_env=False / connect+idle timeout policy.
++// NewSharedDownloaderCommands creates one owned fixed native client. Only this
++// qB clone follows the separately approved source VERIFY=False constructor;
++// environment proxy policy is unchanged. TR retains its established strict TLS,
++// trust_env=False and connect+idle timeout policy.
+ func NewSharedDownloaderCommands(config Config, apiKey string, guard func(context.Context) error) (downloadercommands.QBC, downloadercommands.TRC, func(), error) {
+ 	if guard == nil {
+ 		return nil, nil, nil, commandBoundary("missing trusted native guard")
+@@ -66,6 +67,12 @@
+ 			return nil, nil, nil, commandBoundary("unsupported default transport type")
+ 		}
+ 		transport = original.Clone()
++		if transport.TLSClientConfig == nil {
++			transport.TLSClientConfig = &tls.Config{}
++		}
++		// Transport.Clone owns this TLS config. Do not mutate the global
++		// transport, old IYUU clients, TR, CA stores or environment settings.
++		transport.TLSClientConfig.InsecureSkipVerify = true
+ 	}
+ 	var rt http.RoundTripper = &mutationDispatchTransport{next: logging.Transport(transport)}
+ 	if apiKey != "" {
+--- candidate01/internal/plugins/iyuuautoseed/native/shared_downloader_commands_test.go
++++ candidate02/internal/plugins/iyuuautoseed/native/shared_downloader_commands_test.go
+@@ -3,6 +3,7 @@
+ import (
+ 	"bytes"
+ 	"context"
++	"crypto/x509"
+ 	"encoding/base64"
+ 	"encoding/json"
+ 	"errors"
+@@ -493,3 +494,107 @@
+ 		}
+ 	}
+ }
++
++func TestSharedDownloaderCommandQBTLSIsolation(t *testing.T) {
++	global, ok := http.DefaultTransport.(*http.Transport)
++	if !ok {
++		t.Fatal("test requires the unchanged standard default transport")
++	}
++	var roots *x509.CertPool
++	if global.TLSClientConfig != nil {
++		if global.TLSClientConfig.InsecureSkipVerify {
++			t.Fatal("default transport was already non-verifying")
++		}
++		roots = global.TLSClientConfig.RootCAs
++	}
++	var originCalls, otherCalls atomic.Int32
++	other := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		otherCalls.Add(1)
++		t.Error("redirect reached a different owned origin")
++		w.WriteHeader(http.StatusNoContent)
++	}))
++	defer other.Close()
++	origin := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		originCalls.Add(1)
++		if r.Header.Get("Authorization") != "Bearer owned-tls-key" {
++			t.Error("configured bearer missing at exact origin")
++		}
++		switch r.URL.Path {
++		case "/api/v2/torrents/recheck":
++			io.WriteString(w, "ignored control response")
++		case "/api/v2/torrents/delete":
++			w.Header().Set("Location", other.URL+"/not-followed")
++			w.WriteHeader(http.StatusFound)
++		default:
++			t.Error("unexpected application request crossed strict TLS boundary", r.URL.Path)
++			w.WriteHeader(http.StatusNotFound)
++		}
++	}))
++	defer origin.Close()
++	var revoked atomic.Bool
++	guard := func(ctx context.Context) error {
++		if err := ctx.Err(); err != nil {
++			return err
++		}
++		if revoked.Load() {
++			return errors.New("owned TLS grant revoked")
++		}
++		return nil
++	}
++	qb, _, closeQB, err := NewSharedDownloaderCommands(Config{ID: "owned-tls-qb", Kind: "qb", BaseURL: origin.URL}, "owned-tls-key", guard)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer closeQB()
++	if _, err = qb.Recheck(context.Background(), "owned"); err != nil {
++		t.Fatal("dedicated source-verifyFalse qB rejected owned self-signed TLS", err)
++	}
++	if originCalls.Load() != 1 {
++		t.Fatal("actual HTTPS request count", originCalls.Load())
++	}
++	// The old IYUU constructor and the new TR command client remain verifying;
++	// both fail the same self-signed peer before any HTTP handler is entered.
++	old, err := NewIYUUClient(Config{ID: "owned-tls-old", Kind: "qbittorrent", BaseURL: origin.URL}, IYUUOptions{Guard: guard})
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer old.Close()
++	if _, err = old.Recheck(context.Background(), []string{strings.Repeat("b", 40)}); err == nil {
++		t.Fatal("old IYUU TLS verification was relaxed")
++	}
++	_, tr, closeTR, err := NewSharedDownloaderCommands(Config{ID: "owned-tls-tr", Kind: "transmission", BaseURL: origin.URL}, "", guard)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer closeTR()
++	if _, err = tr.Recheck(context.Background(), json.Number("0")); err == nil {
++		t.Fatal("TR TLS verification was relaxed")
++	}
++	if originCalls.Load() != 1 {
++		t.Fatal("a strict client entered the HTTPS handler", originCalls.Load())
++	}
++	// No cross-origin credential hop is newly authorized by certificate policy.
++	if _, err = qb.DeleteKeepFiles(context.Background(), "owned"); err == nil {
++		t.Fatal("selected redirect was treated as success")
++	}
++	if originCalls.Load() != 2 || otherCalls.Load() != 0 {
++		t.Fatal("redirect boundary changed", originCalls.Load(), otherCalls.Load())
++	}
++	revoked.Store(true)
++	if _, err = qb.Recheck(context.Background(), "owned"); !MutationNotDispatched(err) || MutationFailureClass(err) != "owner_denied" {
++		t.Fatal("TLS relaxation bypassed current guard", err)
++	}
++	if originCalls.Load() != 2 {
++		t.Fatal("revoked qB client dispatched")
++	}
++	if http.DefaultTransport != global {
++		t.Fatal("default transport replaced")
++	}
++	if global.TLSClientConfig != nil {
++		if global.TLSClientConfig.InsecureSkipVerify || global.TLSClientConfig.RootCAs != roots {
++			t.Fatal("global TLS/CA configuration changed")
++		}
++	} else if roots != nil {
++		t.Fatal("global CA configuration disappeared")
++	}
++}

@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-31T21:35:12.320117+00:00",
+  "status": "targeted invariants verified, not proof of no unobserved shell side effects",
+  "active_head": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+  "tracked_changes": [
+    "internal/app/plugin_original_base.go",
+    "internal/app/plugin_original_base_session.go",
+    "internal/app/plugin_original_resources.go",
+    "migration/ledger.json"
+  ],
+  "tracked_changes_match_expected": true,
+  "status_porcelain": "M internal/app/plugin_original_base.go\n M internal/app/plugin_original_base_session.go\n M internal/app/plugin_original_resources.go\n M migration/ledger.json\n?? cmd/owned-downloader-command-fixture/\n?? internal/app/plugin_shared_downloader_command_uploads.go\n?? internal/app/plugin_shared_downloader_command_uploads_test.go\n?? internal/app/plugin_shared_downloader_commands.go\n?? internal/app/plugin_shared_downloader_commands_test.go\n?? internal/plugins/downloadercommands/\n?? internal/plugins/shared_downloader_commands.go\n?? internal/plugins/shared_downloader_commands_test.go\n?? internal/plugins/shared_torrents_browse.go\n?? internal/plugins/shared_torrents_browse_test.go",
+  "old_protected_invariants": {
+    "head": "760720ed0a96fd9e7a647914c14545bde5ef857e",
+    "index_sha256": "62b33132e0b242b19c6f74e972b1e0bd53c0479437ee8e064e37537e5a347e41",
+    "ledger_sha256": "0179dd1c3117e3601f3a95a1907446f4bcd1839eb6a460601904c705807eede2"
+  },
+  "not_checked": "ignored/outside-tree side effects and lost original shell stderr; no broad scan or forbidden session access"
+}

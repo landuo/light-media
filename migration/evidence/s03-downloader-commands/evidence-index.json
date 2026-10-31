@@ -1,0 +1,470 @@
+{
+  "base": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+  "status": "finite backend locally verified, publication pending; no remote claim",
+  "product_files": {
+    "cmd/owned-downloader-command-fixture/main.go": "f0f8e7a362e290a94f4f99cfb87ca4dee24b83f7ba172790212de1f8e673559a",
+    "internal/app/plugin_original_base.go": "3a5904b5af0228ee8b6da59362b7acb45d96b5c464b1bc5ad1bf51bb7a904712",
+    "internal/app/plugin_original_base_session.go": "dedac30b003d95ec4ff229957e6bb2c63a675ab5d9bfadd6ec40bf2ed88bc0a2",
+    "internal/app/plugin_original_resources.go": "318964898a57149b61b93ca2eba12b4a3fb535c55c57f0a1a50412bca2519271",
+    "internal/app/plugin_shared_downloader_command_uploads.go": "790d8adca4872924d3a7b74c37d84c4e7d5f549ce984880acc0fb6872f77dbe0",
+    "internal/app/plugin_shared_downloader_command_uploads_test.go": "01c11e728c651bfbe84692d38212f806389a376310577b62da6b177078f570e2",
+    "internal/app/plugin_shared_downloader_commands.go": "decad941135e41ed408cbfa94dc3bdbf2217b909f35922f9554be295b2a7d9a8",
+    "internal/app/plugin_shared_downloader_commands_native.go": "684d6d0a0e2456218383f5ecd8ab626e5214991de45dd3fa2ec9cc1d073ef5a7",
+    "internal/app/plugin_shared_downloader_commands_test.go": "d976c135ca417f60c12827e8237ac62bc25c357a259191dee40541dc098ee296",
+    "internal/app/plugin_shared_downloader_commands_worker_test.go": "8b4363c966a2bca4b0276ac5df2da1ded1e4e0873740669d3719dfae887dd89b",
+    "internal/plugins/downloadercommands/leaf.go": "00571f58415d6db1577858a89c5d7606de71a616a476635aebee2e121d1d5394",
+    "internal/plugins/downloadercommands/leaf_test.go": "aa2b8cb5aeed60d9c2ff319b54277f62b0620a56d14f81ea32df0893651593a2",
+    "internal/plugins/downloadercommands/testdata/source-leaves.json": "8de99e30850e6a111b9b97de08de755b50452bbd6da463567111e11872952e26",
+    "internal/plugins/iyuuautoseed/native/shared_downloader_commands.go": "dad454d549235fc7607da4dd845da83b2d2086cf03d126f8385cdf9e38ce97f3",
+    "internal/plugins/iyuuautoseed/native/shared_downloader_commands_test.go": "d4a564bf736e617ad4e1e944edb8275ce1cc4c6ea56a2ad983008b266a324c08",
+    "internal/plugins/shared_downloader_commands.go": "9e0a3815ec4102b544d520887ff3a6bb71ce3eab09944cc5ecf7d068a0c65696",
+    "internal/plugins/shared_downloader_commands_test.go": "224bb9ace90bc76c373cf9080f9032bd7461432e7edf9b8028876c1140aafc85"
+  },
+  "published_evidence": {
+    "evidence/s03-downloader-commands/README.md": "6cfc44971bf7ae93ef9116b1675850785fed29682c804ffc308e6005e3114449",
+    "evidence/s03-downloader-commands/app/current-independent.json": "daf9bf5cc9aa0423a0d63ee6f0848e5b34da0973724c790bb168b47ec8aee3bc",
+    "evidence/s03-downloader-commands/app/current-normal-result.json": "0e382acf7c5f48491f19e56a1bffba89c662d5e2987378c012aee8c8860ff980",
+    "evidence/s03-downloader-commands/app/current-normal-tests.jsonl": "727440530cca3bf3e0349016b889b7bfa3a7528116f476c122c721b7b842a5e1",
+    "evidence/s03-downloader-commands/app/current-race-result.json": "65390f2bf828dac286c6ab2b66212616df2c427b0f4e61f17a33240416e460ba",
+    "evidence/s03-downloader-commands/app/current-race-tests.jsonl": "33e83139562f2d74f59fa9c7f2fcb6e3d52e986738060e3e7dc6fd91178290d7",
+    "evidence/s03-downloader-commands/app/sequence-tool-receipt.json": "26bc41ee006c6dc06522fa604754e8fc1b55c255d6383a8978959d01b90a137d",
+    "evidence/s03-downloader-commands/cli/command.json": "719bc4c7a0daf683963b8738098716394bd29bef7957260e91eee7a693591bf7",
+    "evidence/s03-downloader-commands/cli/driver.py": "fe2e2440877e8c296c5059115d37a7b0ea84c3f8237d8d68f64b20a7a012af38",
+    "evidence/s03-downloader-commands/cli/independent.json": "c8710910954451506d4a1db486cbf0239af6146eb436542923d87d83c9cb5cda",
+    "evidence/s03-downloader-commands/cli/inputs.json": "1fd9399f61e78663f844f545ed52bc8c14a7ce269f32b1495c895ab8ec7535b8",
+    "evidence/s03-downloader-commands/cli/result.json": "15fec23d68b1b64d1362a24e5105198966771644b8d6cf98426856fe643484d5",
+    "evidence/s03-downloader-commands/cli/server-build.json": "51d63cf97ffecc0707cbdf4bd6b7fbfa4d9c47a7af696e47727e641adf81d57b",
+    "evidence/s03-downloader-commands/cli/tool-receipt.json": "dd610cddfef8f4f03a9dbf6057b7f95d81ef1c4be0db0b566d737477fe56fe43",
+    "evidence/s03-downloader-commands/cli/worker-build.json": "c393e7f12870c442018a314c1675775731db73842fe40754a0d4c8c2a38f4a30",
+    "evidence/s03-downloader-commands/failures/app01-independent-diagnosis.json": "9c325a79e7aa5a4a6fa7be148d811ebf600ce8a8f605ce1a5d61b306313ef198",
+    "evidence/s03-downloader-commands/failures/app01-result.json": "6ac220e1c70f9eb31451a16d89b7419fbd62bc638119ab98c19eb2e407c1c319",
+    "evidence/s03-downloader-commands/failures/app01-tests.jsonl": "ab3d7114204d7be96b4f4ade97733bacbcbe2a1542059857e93eaa7d6e86ebf1",
+    "evidence/s03-downloader-commands/failures/app01-tool-receipt.json": "b7e06cb673678074fa972f26568c10bb3a0a0c65f310f431f6acf7bf3660c8ae",
+    "evidence/s03-downloader-commands/failures/worker-fixture-two-line-correction.patch": "5467494b870e5a9a3aab1a29d2a641cac1cd1bd87e1e817871048b8d2684fc5d",
+    "evidence/s03-downloader-commands/incident/acquisition-write.md": "55fc68cb3ade8e039a74230e7e9e9d96d02cbd291ee235bdc44e21e3b6f31e8a",
+    "evidence/s03-downloader-commands/incident/limited-review.md": "a6ce9e774264dc58894a5f57755a05d6c453ffdb9e9081bf21ed9e50d1d990b8",
+    "evidence/s03-downloader-commands/incident/limited-worktree-check.json": "e950c35d219487874c4d3d3db24fc5f9c28e1ca79304195e791ccd3367ec34e0",
+    "evidence/s03-downloader-commands/leaf/independent.json": "6759642a4c7ddf59837ed1f3a36ec614e40685380a554d8c3380e5bb2382d884",
+    "evidence/s03-downloader-commands/leaf/result.json": "3e26e0920535aca4eebb0e2bc1581942bc8c9af130e5aab0d1f6689e13cc1e74",
+    "evidence/s03-downloader-commands/leaf/tests.jsonl": "ab8fe52e41d39881806d01999a4c9461eec9ffcde75dd83cc9698cf37a408adf",
+    "evidence/s03-downloader-commands/native/current-independent.json": "5b0c73f9516cfbcdd5be0a7e3259c8614404354dd7f7828d0b873de4fac4a2c2",
+    "evidence/s03-downloader-commands/native/current-normal-result.json": "630abaf6796dc5e7ee446ae6191d2174ee596ad2138b068d4e4404c97a022642",
+    "evidence/s03-downloader-commands/native/current-normal-tests.jsonl": "42a7766df06e9cb6bde4feddd4e3651c8675bb1c6796b3d5347815b376fe8af2",
+    "evidence/s03-downloader-commands/native/current-race-result.json": "bb177a84d2e19aeaf6e516627bdc1cde499439b055e98a386dc4af8162a8eae1",
+    "evidence/s03-downloader-commands/native/current-race-tests.jsonl": "5a1b49f9623232b48e8eb4dd613e55cef34061156151c000c08c04f5af44bb68",
+    "evidence/s03-downloader-commands/native/pre-tls-independent.json": "246c794bc49d9813ce8cf29edf222eb29c3ac4882af02496bdd030c4e2eb0166",
+    "evidence/s03-downloader-commands/native/pre-tls-normal-result.json": "862740608470e75dca3f79ee49fb2cb750cf95971a031191d7b02bb2d5593dec",
+    "evidence/s03-downloader-commands/native/pre-tls-normal-tests.jsonl": "4ec7cf4c11c4e2d9ce2ff15d5c73d7b4b8690b75393ccd44982e7f1e90003615",
+    "evidence/s03-downloader-commands/native/pre-tls-race-result.json": "78ccccb60ce822ae5abbc6e89940bbccadb79b446f4b4064fd6b7c6877896a62",
+    "evidence/s03-downloader-commands/native/pre-tls-race-tests.jsonl": "d8e18d757118727ee029637ed0f0e999cdf942b18b490a800cf8a22b97e2b0db",
+    "evidence/s03-downloader-commands/native/qb-tls-authorized-delta.md": "4a227baaddf9126e95dfd6de36dd86945389f45ab860effe56d2f44f4f55fa3a",
+    "evidence/s03-downloader-commands/native/qb-tls-delta.patch": "a9a201affc42e85d4e96541254a4cdd96e565071099ac654432a2b0de8c8c76b",
+    "evidence/s03-downloader-commands/native/source-contract-historical.md": "dca2773947fd29ee8924fd6fd36924694538b92237fa566c0f2cc91df3649224",
+    "evidence/s03-downloader-commands/native/source-provenance.json": "16e0be65f0e490e0f4f5d757133a206fdeb9adbdcc549b7e133b70a1ec939c5f",
+    "evidence/s03-downloader-commands/native/transport-zero-write-clarification.md": "37b80fa39e02e2f0f6f55fc4677886d2893e0d6c99c0458622b201325eeecf2b",
+    "evidence/s03-downloader-commands/sdk/contract.md": "00799b79c33e12ff9d36eba58f3154ab5b395d639eb41a41177b094c4bf34d82",
+    "evidence/s03-downloader-commands/sdk/independent.json": "c511b54ea4278d04c9ff1374c7fac2ddee1a6c7ecb110983180e249297cbdb17",
+    "evidence/s03-downloader-commands/sdk/result.json": "31bf03c2ec4c5067646cdb0f3f6397913c9b9990ada1b48c3231fbf9318908d0",
+    "evidence/s03-downloader-commands/sdk/tests.jsonl": "ab0b28f6927d41b6550b74430eb372295babe70e8804502d18dccb330ad53034",
+    "evidence/s03-downloader-commands/source/collector.py": "a2dfaca312973ef3c04fdd7b5ac9168b29d6613f6f4ad0037977cc9873aaf3af",
+    "evidence/s03-downloader-commands/source/execution.json": "883d388778bbe572da6dc15a6d9bb3cac9c2bdaeaa52042602c0a7fde46d67d7",
+    "evidence/s03-downloader-commands/source/independent.json": "53c4d41cfdb6a59c33a945af02505d3dd5834b596475ef1a680f5bdf10aad2b1",
+    "evidence/s03-downloader-commands/source/inputs.json": "d2e50281d7792e90e1481a5a9b2ff57eb9b980e8d72cf11df7a32400c568c46d",
+    "evidence/s03-downloader-commands/source/nodes.json": "7760cd97f3007e11dfb56b360e9c5ac37848a87ed394e433b90acd4e5de6f9d1",
+    "evidence/s03-downloader-commands/source/owned-cases.json": "c0a0c16e326810520dace74db5483b32532769870f5453ad146327dd12bf500b",
+    "evidence/s03-downloader-commands/source/review.md": "e9f80b93df9ee2a8d10f1eeac8f42e6ba918dc9d54300130443016eed189b378",
+    "evidence/s03-downloader-commands/source/tool-receipt.json": "e8d471b6af4b9dcf10742a0fc66e151656ebbab34149bc5d1fb9492909f25d96",
+    "evidence/s03-downloader-commands/upload/independent.json": "59f5757bf37d2e0d25b49bfba84c4593e3c9c5b144eba1a7d721c89b7fca6571",
+    "evidence/s03-downloader-commands/upload/store-race-result.json": "23312674a55c9535c0e1ca7d7474598de3392d9783a768dce49784ff35dd9c47",
+    "evidence/s03-downloader-commands/upload/store-race-tests.jsonl": "a0f7b7b4c62d39bac800730ba9c58fedb736f5d40d7f3e446cf142b3625feb2a"
+  },
+  "exact_copies": [
+    {
+      "source": "audits/s03-source-preparation/capture_downloader_leaves.py",
+      "destination": "migration/evidence/s03-downloader-commands/source/collector.py",
+      "bytes": 11167,
+      "sha256": "a2dfaca312973ef3c04fdd7b5ac9168b29d6613f6f4ad0037977cc9873aaf3af",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-source-preparation/owned-cases.json",
+      "destination": "migration/evidence/s03-downloader-commands/source/owned-cases.json",
+      "bytes": 19132,
+      "sha256": "c0a0c16e326810520dace74db5483b32532769870f5453ad146327dd12bf500b",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-source-preparation/source-nodes.json",
+      "destination": "migration/evidence/s03-downloader-commands/source/nodes.json",
+      "bytes": 3735,
+      "sha256": "7760cd97f3007e11dfb56b360e9c5ac37848a87ed394e433b90acd4e5de6f9d1",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-source-preparation/input-bindings.json",
+      "destination": "migration/evidence/s03-downloader-commands/source/inputs.json",
+      "bytes": 1938,
+      "sha256": "d2e50281d7792e90e1481a5a9b2ff57eb9b980e8d72cf11df7a32400c568c46d",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-source01/execution.json",
+      "destination": "migration/evidence/s03-downloader-commands/source/execution.json",
+      "bytes": 812,
+      "sha256": "883d388778bbe572da6dc15a6d9bb3cac9c2bdaeaa52042602c0a7fde46d67d7",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-source01/tool-execution-receipt.json",
+      "destination": "migration/evidence/s03-downloader-commands/source/tool-receipt.json",
+      "bytes": 263,
+      "sha256": "e8d471b6af4b9dcf10742a0fc66e151656ebbab34149bc5d1fb9492909f25d96",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-source-independent/SOURCE01-REVIEW.md",
+      "destination": "migration/evidence/s03-downloader-commands/source/review.md",
+      "bytes": 2532,
+      "sha256": "e9f80b93df9ee2a8d10f1eeac8f42e6ba918dc9d54300130443016eed189b378",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-source-independent/source01-final-seal.json",
+      "destination": "migration/evidence/s03-downloader-commands/source/independent.json",
+      "bytes": 16228,
+      "sha256": "53c4d41cfdb6a59c33a945af02505d3dd5834b596475ef1a680f5bdf10aad2b1",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-leaf01/result.json",
+      "destination": "migration/evidence/s03-downloader-commands/leaf/result.json",
+      "bytes": 2166,
+      "sha256": "3e26e0920535aca4eebb0e2bc1581942bc8c9af130e5aab0d1f6689e13cc1e74",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-leaf01/tests.stdout",
+      "destination": "migration/evidence/s03-downloader-commands/leaf/tests.jsonl",
+      "bytes": 34498,
+      "sha256": "ab8fe52e41d39881806d01999a4c9461eec9ffcde75dd83cc9698cf37a408adf",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-source-independent/a2-leaf01-final-seal.json",
+      "destination": "migration/evidence/s03-downloader-commands/leaf/independent.json",
+      "bytes": 10737,
+      "sha256": "6759642a4c7ddf59837ed1f3a36ec614e40685380a554d8c3380e5bb2382d884",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-sdk02/result.json",
+      "destination": "migration/evidence/s03-downloader-commands/sdk/result.json",
+      "bytes": 2308,
+      "sha256": "31bf03c2ec4c5067646cdb0f3f6397913c9b9990ada1b48c3231fbf9318908d0",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-sdk02/tests.stdout",
+      "destination": "migration/evidence/s03-downloader-commands/sdk/tests.jsonl",
+      "bytes": 23788,
+      "sha256": "ab0b28f6927d41b6550b74430eb372295babe70e8804502d18dccb330ad53034",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-host-independent/SDK-A2-FINAL.json",
+      "destination": "migration/evidence/s03-downloader-commands/sdk/independent.json",
+      "bytes": 9055,
+      "sha256": "c511b54ea4278d04c9ff1374c7fac2ddee1a6c7ecb110983180e249297cbdb17",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-sdk/CONTRACT.md",
+      "destination": "migration/evidence/s03-downloader-commands/sdk/contract.md",
+      "bytes": 4125,
+      "sha256": "00799b79c33e12ff9d36eba58f3154ab5b395d639eb41a41177b094c4bf34d82",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-native01/result.json",
+      "destination": "migration/evidence/s03-downloader-commands/native/pre-tls-normal-result.json",
+      "bytes": 2339,
+      "sha256": "862740608470e75dca3f79ee49fb2cb750cf95971a031191d7b02bb2d5593dec",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-native01/tests.stdout",
+      "destination": "migration/evidence/s03-downloader-commands/native/pre-tls-normal-tests.jsonl",
+      "bytes": 4321,
+      "sha256": "4ec7cf4c11c4e2d9ce2ff15d5c73d7b4b8690b75393ccd44982e7f1e90003615",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-native-race01/result.json",
+      "destination": "migration/evidence/s03-downloader-commands/native/pre-tls-race-result.json",
+      "bytes": 2140,
+      "sha256": "78ccccb60ce822ae5abbc6e89940bbccadb79b446f4b4064fd6b7c6877896a62",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-native-race01/tests.stdout",
+      "destination": "migration/evidence/s03-downloader-commands/native/pre-tls-race-tests.jsonl",
+      "bytes": 1224,
+      "sha256": "d8e18d757118727ee029637ed0f0e999cdf942b18b490a800cf8a22b97e2b0db",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-host-independent/NATIVE-A1-FINAL.json",
+      "destination": "migration/evidence/s03-downloader-commands/native/pre-tls-independent.json",
+      "bytes": 16984,
+      "sha256": "246c794bc49d9813ce8cf29edf222eb29c3ac4882af02496bdd030c4e2eb0166",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-native-contract/REVIEW.md",
+      "destination": "migration/evidence/s03-downloader-commands/native/source-contract-historical.md",
+      "bytes": 15248,
+      "sha256": "dca2773947fd29ee8924fd6fd36924694538b92237fa566c0f2cc91df3649224",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-native-contract/input-bindings.json",
+      "destination": "migration/evidence/s03-downloader-commands/native/source-provenance.json",
+      "bytes": 17578,
+      "sha256": "16e0be65f0e490e0f4f5d757133a206fdeb9adbdcc549b7e133b70a1ec939c5f",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-native-implementation/TRANSPORT-ZERO-WRITE-CLARIFICATION.md",
+      "destination": "migration/evidence/s03-downloader-commands/native/transport-zero-write-clarification.md",
+      "bytes": 2787,
+      "sha256": "37b80fa39e02e2f0f6f55fc4677886d2893e0d6c99c0458622b201325eeecf2b",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-upload-store-race01/result.json",
+      "destination": "migration/evidence/s03-downloader-commands/upload/store-race-result.json",
+      "bytes": 2068,
+      "sha256": "23312674a55c9535c0e1ca7d7474598de3392d9783a768dce49784ff35dd9c47",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-upload-store-race01/tests.stdout",
+      "destination": "migration/evidence/s03-downloader-commands/upload/store-race-tests.jsonl",
+      "bytes": 1084,
+      "sha256": "a0f7b7b4c62d39bac800730ba9c58fedb736f5d40d7f3e446cf142b3625feb2a",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-next-scope/UPLOADS-A1-FINAL.json",
+      "destination": "migration/evidence/s03-downloader-commands/upload/independent.json",
+      "bytes": 15204,
+      "sha256": "59f5757bf37d2e0d25b49bfba84c4593e3c9c5b144eba1a7d721c89b7fca6571",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-app01/result.json",
+      "destination": "migration/evidence/s03-downloader-commands/failures/app01-result.json",
+      "bytes": 3171,
+      "sha256": "6ac220e1c70f9eb31451a16d89b7419fbd62bc638119ab98c19eb2e407c1c319",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-app01/tests.stdout",
+      "destination": "migration/evidence/s03-downloader-commands/failures/app01-tests.jsonl",
+      "bytes": 39465,
+      "sha256": "ab3d7114204d7be96b4f4ade97733bacbcbe2a1542059857e93eaa7d6e86ebf1",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-app01/outer-tool-receipt.json",
+      "destination": "migration/evidence/s03-downloader-commands/failures/app01-tool-receipt.json",
+      "bytes": 156,
+      "sha256": "b7e06cb673678074fa972f26568c10bb3a0a0c65f310f431f6acf7bf3660c8ae",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-host-independent/APP01-FAILURE-DIAGNOSIS.json",
+      "destination": "migration/evidence/s03-downloader-commands/failures/app01-independent-diagnosis.json",
+      "bytes": 7858,
+      "sha256": "9c325a79e7aa5a4a6fa7be148d811ebf600ce8a8f605ce1a5d61b306313ef198",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-command-worker/frozen02-to03.patch",
+      "destination": "migration/evidence/s03-downloader-commands/failures/worker-fixture-two-line-correction.patch",
+      "bytes": 1302,
+      "sha256": "5467494b870e5a9a3aab1a29d2a641cac1cd1bd87e1e817871048b8d2684fc5d",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-native-contract/ACQUISITION-WRITE-INCIDENT.md",
+      "destination": "migration/evidence/s03-downloader-commands/incident/acquisition-write.md",
+      "bytes": 2046,
+      "sha256": "55fc68cb3ade8e039a74230e7e9e9d96d02cbd291ee235bdc44e21e3b6f31e8a",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-native-contract/INCIDENT-REVIEW.md",
+      "destination": "migration/evidence/s03-downloader-commands/incident/limited-review.md",
+      "bytes": 2024,
+      "sha256": "a6ce9e774264dc58894a5f57755a05d6c453ffdb9e9081bf21ed9e50d1d990b8",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-coordinator/acquisition-incident-worktree-check.json",
+      "destination": "migration/evidence/s03-downloader-commands/incident/limited-worktree-check.json",
+      "bytes": 1553,
+      "sha256": "e950c35d219487874c4d3d3db24fc5f9c28e1ca79304195e791ccd3367ec34e0",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-native02/result.json",
+      "destination": "migration/evidence/s03-downloader-commands/native/current-normal-result.json",
+      "bytes": 2461,
+      "sha256": "630abaf6796dc5e7ee446ae6191d2174ee596ad2138b068d4e4404c97a022642",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-native02/tests.stdout",
+      "destination": "migration/evidence/s03-downloader-commands/native/current-normal-tests.jsonl",
+      "bytes": 4158,
+      "sha256": "42a7766df06e9cb6bde4feddd4e3651c8675bb1c6796b3d5347815b376fe8af2",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-native-race02/result.json",
+      "destination": "migration/evidence/s03-downloader-commands/native/current-race-result.json",
+      "bytes": 2146,
+      "sha256": "bb177a84d2e19aeaf6e516627bdc1cde499439b055e98a386dc4af8162a8eae1",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-native-race02/tests.stdout",
+      "destination": "migration/evidence/s03-downloader-commands/native/current-race-tests.jsonl",
+      "bytes": 1228,
+      "sha256": "5a1b49f9623232b48e8eb4dd613e55cef34061156151c000c08c04f5af44bb68",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-native-implementation/QB-TLS-AUTHORIZED-DELTA.md",
+      "destination": "migration/evidence/s03-downloader-commands/native/qb-tls-authorized-delta.md",
+      "bytes": 2847,
+      "sha256": "4a227baaddf9126e95dfd6de36dd86945389f45ab860effe56d2f44f4f55fa3a",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-native-implementation/candidate01-to-candidate02.patch",
+      "destination": "migration/evidence/s03-downloader-commands/native/qb-tls-delta.patch",
+      "bytes": 6124,
+      "sha256": "a9a201affc42e85d4e96541254a4cdd96e565071099ac654432a2b0de8c8c76b",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-host-independent/NATIVE-A2-FINAL.json",
+      "destination": "migration/evidence/s03-downloader-commands/native/current-independent.json",
+      "bytes": 14755,
+      "sha256": "5b0c73f9516cfbcdd5be0a7e3259c8614404354dd7f7828d0b873de4fac4a2c2",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-app02/result.json",
+      "destination": "migration/evidence/s03-downloader-commands/app/current-normal-result.json",
+      "bytes": 2493,
+      "sha256": "0e382acf7c5f48491f19e56a1bffba89c662d5e2987378c012aee8c8860ff980",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-app02/tests.stdout",
+      "destination": "migration/evidence/s03-downloader-commands/app/current-normal-tests.jsonl",
+      "bytes": 21947,
+      "sha256": "727440530cca3bf3e0349016b889b7bfa3a7528116f476c122c721b7b842a5e1",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-app-race01/result.json",
+      "destination": "migration/evidence/s03-downloader-commands/app/current-race-result.json",
+      "bytes": 3025,
+      "sha256": "65390f2bf828dac286c6ab2b66212616df2c427b0f4e61f17a33240416e460ba",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-app-race01/tests.stdout",
+      "destination": "migration/evidence/s03-downloader-commands/app/current-race-tests.jsonl",
+      "bytes": 25236,
+      "sha256": "33e83139562f2d74f59fa9c7f2fcb6e3d52e986738060e3e7dc6fd91178290d7",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-app-race01/outer-tool-receipt.json",
+      "destination": "migration/evidence/s03-downloader-commands/app/sequence-tool-receipt.json",
+      "bytes": 260,
+      "sha256": "26bc41ee006c6dc06522fa604754e8fc1b55c255d6383a8978959d01b90a137d",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-host-independent/APP-A2-FINAL.json",
+      "destination": "migration/evidence/s03-downloader-commands/app/current-independent.json",
+      "bytes": 18705,
+      "sha256": "daf9bf5cc9aa0423a0d63ee6f0848e5b34da0973724c790bb168b47ec8aee3bc",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-command-cli/normal-cli-driver.py",
+      "destination": "migration/evidence/s03-downloader-commands/cli/driver.py",
+      "bytes": 37704,
+      "sha256": "fe2e2440877e8c296c5059115d37a7b0ea84c3f8237d8d68f64b20a7a012af38",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-command-cli/execution-bindings.json",
+      "destination": "migration/evidence/s03-downloader-commands/cli/inputs.json",
+      "bytes": 8550,
+      "sha256": "1fd9399f61e78663f844f545ed52bc8c14a7ce269f32b1495c895ab8ec7535b8",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-command-cli/execution-command.json",
+      "destination": "migration/evidence/s03-downloader-commands/cli/command.json",
+      "bytes": 872,
+      "sha256": "719bc4c7a0daf683963b8738098716394bd29bef7957260e91eee7a693591bf7",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "test-instances/s03-command-cli01/result.json",
+      "destination": "migration/evidence/s03-downloader-commands/cli/result.json",
+      "bytes": 27608,
+      "sha256": "15fec23d68b1b64d1362a24e5105198966771644b8d6cf98426856fe643484d5",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "test-instances/s03-command-cli01/tool-execution-receipt.json",
+      "destination": "migration/evidence/s03-downloader-commands/cli/tool-receipt.json",
+      "bytes": 156,
+      "sha256": "dd610cddfef8f4f03a9dbf6057b7f95d81ef1c4be0db0b566d737477fe56fe43",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s03-command-cli-independent/runtime-final.json",
+      "destination": "migration/evidence/s03-downloader-commands/cli/independent.json",
+      "bytes": 4792,
+      "sha256": "c8710910954451506d4a1db486cbf0239af6146eb436542923d87d83c9cb5cda",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-server01/result.json",
+      "destination": "migration/evidence/s03-downloader-commands/cli/server-build.json",
+      "bytes": 1115,
+      "sha256": "51d63cf97ffecc0707cbdf4bd6b7fbfa4d9c47a7af696e47727e641adf81d57b",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s03-fixture02/result.json",
+      "destination": "migration/evidence/s03-downloader-commands/cli/worker-build.json",
+      "bytes": 1189,
+      "sha256": "c393e7f12870c442018a314c1675775731db73842fe40754a0d4c8c2a38f4a30",
+      "mode": "exact original bytes"
+    }
+  ],
+  "source_raw_existing_product": "internal/plugins/downloadercommands/testdata/source-leaves.json",
+  "excluded": "binaries/DB/credentials/private instances/full vendor trees/unrelated WIP"
+}

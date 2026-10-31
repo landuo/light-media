@@ -1,0 +1,93 @@
+{
+  "started": "2026-10-31T21:59:45.666237+00:00",
+  "driver_pid": 374,
+  "package": "./internal/app",
+  "pattern": "^(TestDownloaderCommandUploadsConcurrentClaimAndClose|TestOriginalDownloaderCommandHostClaimDrainsOnce|TestOriginalTorrentTransferPerObjectAndConcurrentClose|TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes|TestSharedDownloaderCommandsActualWorkerPagedAndCold)$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-app-race01.test",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-app-race01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestDownloaderCommandUploadsConcurrentClaimAndClose|TestOriginalDownloaderCommandHostClaimDrainsOnce|TestOriginalTorrentTransferPerObjectAndConcurrentClose|TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes|TestSharedDownloaderCommandsActualWorkerPagedAndCold)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "worker_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-fixture02",
+  "worker_sha256": "b7d906d4e9873c1091da3ea7cf1e293dcbd0e8330eae7f76c3f037d8ebe35cc3",
+  "worker_instrumentation": "normal frozen artifact; race flag applies host test program only",
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T21:59:45.666256+00:00",
+      "scratch_free": 51361136640,
+      "tmp_free": 5225631744
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T21:59:46.706168+00:00",
+      "scratch_free": 51358044160,
+      "tmp_free": 5225631744
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T22:00:31.884495+00:00",
+      "scratch_free": 51120992256,
+      "tmp_free": 5225631744
+    }
+  ],
+  "input_count": 6220,
+  "program_sha256": "33aa6f99773719ca165c17939b675000351c725bbcffdd470b9af611c0763083",
+  "root_passes": [
+    "TestDownloaderCommandUploadsConcurrentClaimAndClose",
+    "TestOriginalDownloaderCommandHostClaimDrainsOnce",
+    "TestSharedDownloaderCommandsActualWorkerRecoveryAndScopes",
+    "TestSharedDownloaderCommandsActualWorkerPagedAndCold",
+    "TestOriginalTorrentTransferPerObjectAndConcurrentClose"
+  ],
+  "ended": "2026-10-31T22:00:55.124216+00:00"
+}

@@ -1,0 +1,312 @@
+{
+  "schema_version": 1,
+  "kind": "read-only-source-contract-inputs",
+  "created_at": "2026-10-31T21:32:15.540Z",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "versions": {
+    "qbittorrent_api": {
+      "source_requirement": "==2026.6.0",
+      "tag": "v2026.6.0",
+      "commit": "0bd26a9f44c113a315146428c3fd78408bc2c985",
+      "historical_torrents_py_sha256": "d087e5ef72ee748a8af160fd7f4fdbf119d41df6b1fdf2fe1d50509a3a0c2e26"
+    },
+    "transmission_rpc": {
+      "source_requirement": "~=7.0.11",
+      "observed_installed_version": "7.0.11",
+      "tag": "v7.0.11",
+      "annotated_tag": "78eb2f7696fbc30dd3210f7e462f9dd3a10ec395",
+      "commit": "8cd8c22353adf85795a62687044526c5537fa516",
+      "historical_torrent_py_sha256": "8978c8f8171b8758716a9b8d64b03ce8118ea576ee2dd40ddd15b07b3f0a04ee"
+    }
+  },
+  "acquisition_method": "authorized read-only public GitHub connector, exact tag resolution then commit-pinned raw files; no install/import/vendor execution",
+  "acquisition_first_local_write_failure": "Initial shell double-quote transfer was faulty and failed byte/hash verification; those draft bytes were not used for the contract. The owned draft paths were rewritten via safely single-quoted writes and all final blobs/lengths verified against the pinned Git tree. Intermediate transfer stderr was not retained, so no claim is made about every shell interpolation outcome. No Python vendor import or execution was invoked.",
+  "acquired": [
+    {
+      "local_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/vendor-qb/_version_support.py",
+      "repository": "rmartin16/qbittorrent-api",
+      "commit": "0bd26a9f44c113a315146428c3fd78408bc2c985",
+      "repository_path": "src/qbittorrentapi/_version_support.py",
+      "url": "https://raw.githubusercontent.com/rmartin16/qbittorrent-api/0bd26a9f44c113a315146428c3fd78408bc2c985/src/qbittorrentapi/_version_support.py",
+      "bytes": 4833,
+      "sha256": "07f1bce35feafbee531d2712706416020a8b015900af6386044b8e05bcc0264d",
+      "git_blob_sha1": "6d9d32919e6937aa1c5d68af07b2bd5dc91215e8",
+      "tree_blob_and_size_match": true
+    },
+    {
+      "local_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/vendor-qb/app.py",
+      "repository": "rmartin16/qbittorrent-api",
+      "commit": "0bd26a9f44c113a315146428c3fd78408bc2c985",
+      "repository_path": "src/qbittorrentapi/app.py",
+      "url": "https://raw.githubusercontent.com/rmartin16/qbittorrent-api/0bd26a9f44c113a315146428c3fd78408bc2c985/src/qbittorrentapi/app.py",
+      "bytes": 14919,
+      "sha256": "4f4c13c7c7cf786a62b9373104eb5371cb19654ca5ef8022b3d9c7768263ebe5",
+      "git_blob_sha1": "7e58033763636ef9fb9f16f46955fea613bbbe7c",
+      "tree_blob_and_size_match": true
+    },
+    {
+      "local_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/vendor-qb/definitions.py",
+      "repository": "rmartin16/qbittorrent-api",
+      "commit": "0bd26a9f44c113a315146428c3fd78408bc2c985",
+      "repository_path": "src/qbittorrentapi/definitions.py",
+      "url": "https://raw.githubusercontent.com/rmartin16/qbittorrent-api/0bd26a9f44c113a315146428c3fd78408bc2c985/src/qbittorrentapi/definitions.py",
+      "bytes": 8785,
+      "sha256": "2a1473d4d54171b47d0deee8450aeb4e5adee716cf63450f884d97c68ab260a5",
+      "git_blob_sha1": "5250a2e8a52faaef7a21bedb9782fa09d3f5104f",
+      "tree_blob_and_size_match": true
+    },
+    {
+      "local_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/vendor-qb/pyproject.toml",
+      "repository": "rmartin16/qbittorrent-api",
+      "commit": "0bd26a9f44c113a315146428c3fd78408bc2c985",
+      "repository_path": "pyproject.toml",
+      "url": "https://raw.githubusercontent.com/rmartin16/qbittorrent-api/0bd26a9f44c113a315146428c3fd78408bc2c985/pyproject.toml",
+      "bytes": 3642,
+      "sha256": "32fa76aa0a069f9a8cb13f504446448d709c4beee49dd0744e5fffc37f2714b1",
+      "git_blob_sha1": "864449409bfa321c4a926aee4c5cfc207901688c",
+      "tree_blob_and_size_match": true
+    },
+    {
+      "local_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/vendor-qb/request.py",
+      "repository": "rmartin16/qbittorrent-api",
+      "commit": "0bd26a9f44c113a315146428c3fd78408bc2c985",
+      "repository_path": "src/qbittorrentapi/request.py",
+      "url": "https://raw.githubusercontent.com/rmartin16/qbittorrent-api/0bd26a9f44c113a315146428c3fd78408bc2c985/src/qbittorrentapi/request.py",
+      "bytes": 45746,
+      "sha256": "dcf8371d17e5623ca81d95be2a8a6a8ade747f23d2aac5a79a629dc961dc206e",
+      "git_blob_sha1": "0032634967a80c227a496797e9e0967024f5f5d9",
+      "tree_blob_and_size_match": true
+    },
+    {
+      "local_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/vendor-qb/torrents.py",
+      "repository": "rmartin16/qbittorrent-api",
+      "commit": "0bd26a9f44c113a315146428c3fd78408bc2c985",
+      "repository_path": "src/qbittorrentapi/torrents.py",
+      "url": "https://raw.githubusercontent.com/rmartin16/qbittorrent-api/0bd26a9f44c113a315146428c3fd78408bc2c985/src/qbittorrentapi/torrents.py",
+      "bytes": 124888,
+      "sha256": "d087e5ef72ee748a8af160fd7f4fdbf119d41df6b1fdf2fe1d50509a3a0c2e26",
+      "git_blob_sha1": "d7298d52a86f50aca9104fd496dd8ed7596de7a6",
+      "tree_blob_and_size_match": true
+    },
+    {
+      "local_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/vendor-tr/client.py",
+      "repository": "trim21/transmission-rpc",
+      "commit": "8cd8c22353adf85795a62687044526c5537fa516",
+      "repository_path": "transmission_rpc/client.py",
+      "url": "https://raw.githubusercontent.com/trim21/transmission-rpc/8cd8c22353adf85795a62687044526c5537fa516/transmission_rpc/client.py",
+      "bytes": 45742,
+      "sha256": "5d34047c37bcadb00f3320fd8dbbe46aae6583acb5fd7877ed9a4ca0eea4bf34",
+      "git_blob_sha1": "d2e07766afa8b0ef3ec049cec7556eedb62107f7",
+      "tree_blob_and_size_match": true
+    },
+    {
+      "local_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/vendor-tr/pyproject.toml",
+      "repository": "trim21/transmission-rpc",
+      "commit": "8cd8c22353adf85795a62687044526c5537fa516",
+      "repository_path": "pyproject.toml",
+      "url": "https://raw.githubusercontent.com/trim21/transmission-rpc/8cd8c22353adf85795a62687044526c5537fa516/pyproject.toml",
+      "bytes": 2961,
+      "sha256": "0fa822e4b1148d758476d23f62775b58a76c14402f4a4ad9e96af73eb45b604f",
+      "git_blob_sha1": "58058691ad806a8dca521ff8c27cc146afeb588c",
+      "tree_blob_and_size_match": true
+    },
+    {
+      "local_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/vendor-tr/torrent.py",
+      "repository": "trim21/transmission-rpc",
+      "commit": "8cd8c22353adf85795a62687044526c5537fa516",
+      "repository_path": "transmission_rpc/torrent.py",
+      "url": "https://raw.githubusercontent.com/trim21/transmission-rpc/8cd8c22353adf85795a62687044526c5537fa516/transmission_rpc/torrent.py",
+      "bytes": 24455,
+      "sha256": "8978c8f8171b8758716a9b8d64b03ce8118ea576ee2dd40ddd15b07b3f0a04ee",
+      "git_blob_sha1": "0476ad056dab9dddc7613093883a66efc4287f5e",
+      "tree_blob_and_size_match": true
+    },
+    {
+      "local_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/vendor-tr/types.py",
+      "repository": "trim21/transmission-rpc",
+      "commit": "8cd8c22353adf85795a62687044526c5537fa516",
+      "repository_path": "transmission_rpc/types.py",
+      "url": "https://raw.githubusercontent.com/trim21/transmission-rpc/8cd8c22353adf85795a62687044526c5537fa516/transmission_rpc/types.py",
+      "bytes": 1966,
+      "sha256": "d81011cdd92cc51752c69f554248f8d417bcedb2f03745ff7b12a9b50af65068",
+      "git_blob_sha1": "fa7d7b09d6dca3d8fce1ca94d4af24b0f62d3318",
+      "tree_blob_and_size_match": true
+    },
+    {
+      "local_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/vendor-tr/utils.py",
+      "repository": "trim21/transmission-rpc",
+      "commit": "8cd8c22353adf85795a62687044526c5537fa516",
+      "repository_path": "transmission_rpc/utils.py",
+      "url": "https://raw.githubusercontent.com/trim21/transmission-rpc/8cd8c22353adf85795a62687044526c5537fa516/transmission_rpc/utils.py",
+      "bytes": 2643,
+      "sha256": "265829a3ff36580a80b22a816438cef199c58c748b0179b7d09ad928f4c99007",
+      "git_blob_sha1": "2dea3ca7e27e3b3499feff41565ad8462805a33d",
+      "tree_blob_and_size_match": true
+    }
+  ],
+  "acquisition_metadata": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/acquisition/qb-tag.json",
+      "bytes": 369,
+      "sha256": "e6f690ad16165a2134c5ab6aae3f7125490c4e64a4c15f4a105ef5d9ea1939c7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/acquisition/qb-tree.json",
+      "bytes": 23520,
+      "sha256": "03635efd1a7b1d8d07a43ad1f1de27fc42ab5357d9bbab4df8f2f5ccfe30a42c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/acquisition/tr-tag-object.json",
+      "bytes": 2512,
+      "sha256": "00d4760dd1d323407ff783e83aa06ef1a79a02a13cca4a908de955a1ee06f91e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/acquisition/tr-tag-ref.json",
+      "bytes": 351,
+      "sha256": "4e166d1aa2d93c06f6d6947288e8ec0f8e2fe5b8e532138137b7b1fbdc00139c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/acquisition/tr-tree.json",
+      "bytes": 12071,
+      "sha256": "bb1cfbfe526c5d8d793944038d1fa2a225a38f9dffa23f26699c37b3309dbb62"
+    }
+  ],
+  "local_inputs": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/requirements.txt",
+      "bytes": 18,
+      "sha256": "0b6a108308bb6b9e0def4eb5afe9cefd6dd92e155c41f89cbfea97599989a482"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/requirements.in",
+      "bytes": 1812,
+      "sha256": "060c85ee9a2023df9216f255b0a8deac5771b304ef2705950f694045be99aab1"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/qbittorrent/qbittorrent.py",
+      "bytes": 27897,
+      "sha256": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/transmission/transmission.py",
+      "bytes": 18483,
+      "sha256": "6fc20e208b86e9e68ada074643f82b88270c2e51749e460ad881b10f744cf676"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/AGENTS.md",
+      "bytes": 17003,
+      "sha256": "44708595ac2280a6d63857d3f4737f07da635d88be96c5361a5bac402534ce87"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugins/clean-invalid-seed-2.1/reference/downloader-source.json",
+      "bytes": 8004,
+      "sha256": "b63ab8a805bfd2d9236cee244d3df00142941b4314581710785517aa3026e62d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/reference/native-projection-oracle.json",
+      "bytes": 9237,
+      "sha256": "de6cdbe4e03a9c6d9d9828285a7c4973d264254ae40d96039dc381bc6099fdb4"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/leaf.go",
+      "bytes": 13192,
+      "sha256": "00571f58415d6db1577858a89c5d7606de71a616a476635aebee2e121d1d5394"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/testdata/source-leaves.json",
+      "bytes": 48216,
+      "sha256": "8de99e30850e6a111b9b97de08de755b50452bbd6da463567111e11872952e26"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_downloader_tasks.go",
+      "bytes": 6142,
+      "sha256": "cbf88517ca5c94427222984085f86ccdb3f5fa064ce784388b18c66564a51f11"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/download/client.go",
+      "bytes": 13290,
+      "sha256": "64170d220446e6ba606988790d8092b54b77f330b572cf105ec3c80644d33591"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/download/native.go",
+      "bytes": 12577,
+      "sha256": "3d8e6ce83db73d0f3098609e64193d208f0ca61ea11241ddf4847b2a9705ccdd"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/download/qbittorrent.go",
+      "bytes": 9593,
+      "sha256": "d6f8423fb75ff662a1d59cf19d9e950d501bde44de2d8e44a2e877e9256d1fdc"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/download/transmission.go",
+      "bytes": 11885,
+      "sha256": "08a7fabbaaf0ea193de8779f8862cc68d0dd0ec91238c6a7264ba6d1848cff23"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/download/source_remove.go",
+      "bytes": 1125,
+      "sha256": "19cc3ca1607c2f8b4a1d13c6d4353f446a0a150ccd74d1f870adf0e5f2250b9e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/download/source_mutation.go",
+      "bytes": 1837,
+      "sha256": "6456ec04bd4b79b92ccb660d7d2d7348079438db286f2a96d33d730dfb6bbd59"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/download/mutation_phase.go",
+      "bytes": 1938,
+      "sha256": "16d0e7a97bbb683c42966e657aa4c67a4d84d06897e0139aa399d239d139e264"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/client.go",
+      "bytes": 11897,
+      "sha256": "447f67afdafd394c2afc4dff98be2383d805e073fe0d75fc1914458e948bc2ca"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/iyuu.go",
+      "bytes": 17507,
+      "sha256": "19a0bd6042b846263b7bf2eb0d6f64bc73a7502b453834f5e21fb3e7494d8e74"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/iyuu_version.go",
+      "bytes": 2271,
+      "sha256": "4539b47b44bb0cc7927754c12e92434afae964b73fcb4a847c745b5c60d51c71"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/mutation_phase.go",
+      "bytes": 5953,
+      "sha256": "32d5b4e8441b8871da244b5a0b345fe5a9d0b548e60c8380310ad3f7195b465c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/qbittorrent.go",
+      "bytes": 9322,
+      "sha256": "a1a7413f3cc5bb1c6f9310e11e0ac1d72f3905889704f6dd5ab052feada55363"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/transmission.go",
+      "bytes": 11830,
+      "sha256": "46c1063d2fa14f1534e9c54cd306b779ff180e43cc24d38bd0b965bb9a01ef99"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/transfer.go",
+      "bytes": 3327,
+      "sha256": "b41c9a18ccc280cd9a853220ce15945736b42fa394ef860c79a2b18c2b9448cf"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed.go",
+      "bytes": 4618,
+      "sha256": "ea9a7952068a106671f8710fb780413f8afe91967adc7b10b24eac62517b2883"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/shared_transmission_query.go",
+      "bytes": 4445,
+      "sha256": "1cbf030b40a61fbf1ca078c5f9b959418dc7d6ad8c04daf10d96c6141a2b17f0"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/models.py",
+      "bytes": 41783,
+      "sha256": "d1bc0d990abf5d5ebee05f890911b4363fadf2d5264b686a963df47c529b6ace"
+    }
+  ],
+  "execution_claim": "none: static source reads and byte/hash checks only; no daemon/HTTP fixture/source import/Go run"
+}

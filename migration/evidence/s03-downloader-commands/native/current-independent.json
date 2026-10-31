@@ -1,0 +1,348 @@
+{
+  "at": "2026-10-31T22:02:52.616514+00:00",
+  "delta_static_review": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-host-independent/NATIVE-A2-WORKER-A2-STATIC.json",
+    "bytes": 5700,
+    "sha256": "e865389c9efbbcb771c0a486b755c48a3365df4fd55bfa1ac75fbe61b88c97a3"
+  },
+  "incident": "Known source acquisition shell-quoting incident retains unknown other effects. Authorized handwritten Go/owned HTTP executions do not clear incident; no vendor import/replay by this reviewer.",
+  "reviewer_actions": "Static readback only: raw JSON, hashes, current source, tar bytes, recorded receipts. No Go/test/server/network/product or ledger changes by reviewer.",
+  "status": "FINITE_NATIVE_AUTHORIZED_QB_TLS_NORMAL4_RACE1_ACCEPTED",
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-implementation/candidate02.json",
+    "bytes": 2858,
+    "sha256": "e1ee1f839e79e5c3ab985291e6837d249c0c4f8263e01a9abe33dbf81d84b55c"
+  },
+  "archive": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-implementation/candidate02.tar",
+    "bytes": 51200,
+    "sha256": "430e88927880b4d499d6a8465cdeda2c489b913f97b4d4e936c059bccab56d0d"
+  },
+  "executions": [
+    {
+      "label": "s03-native02",
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-native02/result.json",
+        "bytes": 2461,
+        "sha256": "630abaf6796dc5e7ee446ae6191d2174ee596ad2138b068d4e4404c97a022642"
+      },
+      "execution": {
+        "started": "2026-10-31T21:59:05.829174+00:00",
+        "driver_pid": 7,
+        "package": "./internal/plugins/iyuuautoseed/native",
+        "pattern": "^(TestSharedDownloaderCommandQBControls|TestSharedDownloaderCommandQBAdd|TestSharedDownloaderCommandGuardUnknownAndClose|TestSharedDownloaderCommandQBTLSIsolation)$",
+        "race": false,
+        "status": "PASS",
+        "commands": [
+          {
+            "label": "go-list",
+            "argv": [
+              "go",
+              "list",
+              "-mod=readonly",
+              "-buildvcs=false",
+              "-deps",
+              "-test",
+              "-json",
+              "./internal/plugins/iyuuautoseed/native"
+            ],
+            "exit": 0
+          },
+          {
+            "label": "compile",
+            "argv": [
+              "go",
+              "test",
+              "-mod=readonly",
+              "-buildvcs=false",
+              "-p=1",
+              "-c",
+              "-o",
+              "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native02.test",
+              "./internal/plugins/iyuuautoseed/native"
+            ],
+            "exit": 0
+          },
+          {
+            "label": "tests",
+            "argv": [
+              "go",
+              "tool",
+              "test2json",
+              "-t",
+              "-p",
+              "./internal/plugins/iyuuautoseed/native",
+              "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native02.test",
+              "-test.v",
+              "-test.run",
+              "^(TestSharedDownloaderCommandQBControls|TestSharedDownloaderCommandQBAdd|TestSharedDownloaderCommandGuardUnknownAndClose|TestSharedDownloaderCommandQBTLSIsolation)$",
+              "-test.count=1",
+              "-test.timeout=90s"
+            ],
+            "exit": 0
+          }
+        ],
+        "environment_proxy_unchanged": true,
+        "resource_samples": [
+          {
+            "phase": "go-list",
+            "at": "2026-10-31T21:59:05.829190+00:00",
+            "scratch_free": 51589304320,
+            "tmp_free": 5225631744
+          },
+          {
+            "phase": "compile",
+            "at": "2026-10-31T21:59:06.181234+00:00",
+            "scratch_free": 51588063232,
+            "tmp_free": 5225631744
+          },
+          {
+            "phase": "tests",
+            "at": "2026-10-31T21:59:07.964508+00:00",
+            "scratch_free": 51568812032,
+            "tmp_free": 5225631744
+          }
+        ],
+        "input_count": 2599,
+        "program_sha256": "341e7555816c229022b7b94918caf21e8a106ad5328fb9c00eb4d1b2b47523c4",
+        "root_passes": [
+          "TestSharedDownloaderCommandQBControls",
+          "TestSharedDownloaderCommandQBAdd",
+          "TestSharedDownloaderCommandGuardUnknownAndClose",
+          "TestSharedDownloaderCommandQBTLSIsolation"
+        ],
+        "ended": "2026-10-31T21:59:08.129853+00:00"
+      },
+      "outer_receipt": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-native02/outer-tool-receipt.json",
+        "bytes": 260,
+        "sha256": "26bc41ee006c6dc06522fa604754e8fc1b55c255d6383a8978959d01b90a137d"
+      },
+      "outer_receipt_contents": {
+        "session_id": 48751,
+        "initial_chunk": "640efc",
+        "terminal_chunk": "bb8079",
+        "exit_code": 0,
+        "observed_at": "2026-10-31T22:01:04.269836+00:00",
+        "sequence": [
+          "s03-native02",
+          "s03-native-race02",
+          "s03-app02",
+          "s03-app-race01"
+        ]
+      },
+      "raw": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-native02/tests.stdout",
+        "bytes": 4158,
+        "sha256": "42a7766df06e9cb6bde4feddd4e3651c8675bb1c6796b3d5347815b376fe8af2"
+      },
+      "input_snapshots": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-native02/inputs-before.json",
+          "bytes": 562947,
+          "sha256": "0fffe4c6e4717bc1751c85f0f07b90462ac3e08b06bf5c79bb2d97c59a2f88c4"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-native02/inputs-after-compile.json",
+          "bytes": 562947,
+          "sha256": "0fffe4c6e4717bc1751c85f0f07b90462ac3e08b06bf5c79bb2d97c59a2f88c4"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-native02/inputs-after-test.json",
+          "bytes": 562947,
+          "sha256": "0fffe4c6e4717bc1751c85f0f07b90462ac3e08b06bf5c79bb2d97c59a2f88c4"
+        }
+      ],
+      "current_inputs_matching": 2599,
+      "all_three_snapshots_equal": true,
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native02.test",
+        "bytes": 13985614,
+        "sha256": "341e7555816c229022b7b94918caf21e8a106ad5328fb9c00eb4d1b2b47523c4"
+      },
+      "actual_observations": [
+        "2026/11/01 06:59:08 http: TLS handshake error from 127.0.0.1:42926: remote error: tls: bad certificate",
+        "2026/11/01 06:59:08 http: TLS handshake error from 127.0.0.1:42928: remote error: tls: bad certificate"
+      ]
+    },
+    {
+      "label": "s03-native-race02",
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-native-race02/result.json",
+        "bytes": 2146,
+        "sha256": "bb177a84d2e19aeaf6e516627bdc1cde499439b055e98a386dc4af8162a8eae1"
+      },
+      "execution": {
+        "started": "2026-10-31T21:59:08.171302+00:00",
+        "driver_pid": 104,
+        "package": "./internal/plugins/iyuuautoseed/native",
+        "pattern": "^(TestSharedDownloaderCommandGuardUnknownAndClose)$",
+        "race": true,
+        "status": "PASS",
+        "commands": [
+          {
+            "label": "go-list",
+            "argv": [
+              "go",
+              "list",
+              "-mod=readonly",
+              "-buildvcs=false",
+              "-deps",
+              "-test",
+              "-json",
+              "-race",
+              "./internal/plugins/iyuuautoseed/native"
+            ],
+            "exit": 0
+          },
+          {
+            "label": "compile",
+            "argv": [
+              "go",
+              "test",
+              "-mod=readonly",
+              "-buildvcs=false",
+              "-p=1",
+              "-c",
+              "-o",
+              "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native-race02.test",
+              "-race",
+              "./internal/plugins/iyuuautoseed/native"
+            ],
+            "exit": 0
+          },
+          {
+            "label": "tests",
+            "argv": [
+              "go",
+              "tool",
+              "test2json",
+              "-t",
+              "-p",
+              "./internal/plugins/iyuuautoseed/native",
+              "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native-race02.test",
+              "-test.v",
+              "-test.run",
+              "^(TestSharedDownloaderCommandGuardUnknownAndClose)$",
+              "-test.count=1",
+              "-test.timeout=90s"
+            ],
+            "exit": 0
+          }
+        ],
+        "environment_proxy_unchanged": true,
+        "resource_samples": [
+          {
+            "phase": "go-list",
+            "at": "2026-10-31T21:59:08.171314+00:00",
+            "scratch_free": 51568230400,
+            "tmp_free": 5225631744
+          },
+          {
+            "phase": "compile",
+            "at": "2026-10-31T21:59:08.514277+00:00",
+            "scratch_free": 51567017984,
+            "tmp_free": 5225631744
+          },
+          {
+            "phase": "tests",
+            "at": "2026-10-31T21:59:11.071780+00:00",
+            "scratch_free": 51543449600,
+            "tmp_free": 5225631744
+          }
+        ],
+        "input_count": 2607,
+        "program_sha256": "afdd904d2c2a3ea22d078afec34b95a1f3af45fb951e6b9a00fbabbc2be2797a",
+        "root_passes": [
+          "TestSharedDownloaderCommandGuardUnknownAndClose"
+        ],
+        "ended": "2026-10-31T21:59:12.281942+00:00"
+      },
+      "outer_receipt": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-native-race02/outer-tool-receipt.json",
+        "bytes": 260,
+        "sha256": "26bc41ee006c6dc06522fa604754e8fc1b55c255d6383a8978959d01b90a137d"
+      },
+      "outer_receipt_contents": {
+        "session_id": 48751,
+        "initial_chunk": "640efc",
+        "terminal_chunk": "bb8079",
+        "exit_code": 0,
+        "observed_at": "2026-10-31T22:01:04.269836+00:00",
+        "sequence": [
+          "s03-native02",
+          "s03-native-race02",
+          "s03-app02",
+          "s03-app-race01"
+        ]
+      },
+      "raw": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-native-race02/tests.stdout",
+        "bytes": 1228,
+        "sha256": "5a1b49f9623232b48e8eb4dd613e55cef34061156151c000c08c04f5af44bb68"
+      },
+      "input_snapshots": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-native-race02/inputs-before.json",
+          "bytes": 564674,
+          "sha256": "ac4fe16f87e40e393869f882b33b11ae939ec3dddbb398ddc6befe4a605ed26e"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-native-race02/inputs-after-compile.json",
+          "bytes": 564674,
+          "sha256": "ac4fe16f87e40e393869f882b33b11ae939ec3dddbb398ddc6befe4a605ed26e"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-native-race02/inputs-after-test.json",
+          "bytes": 564674,
+          "sha256": "ac4fe16f87e40e393869f882b33b11ae939ec3dddbb398ddc6befe4a605ed26e"
+        }
+      ],
+      "current_inputs_matching": 2607,
+      "all_three_snapshots_equal": true,
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-native-race02.test",
+        "bytes": 17634382,
+        "sha256": "afdd904d2c2a3ea22d078afec34b95a1f3af45fb951e6b9a00fbabbc2be2797a"
+      },
+      "actual_observations": []
+    }
+  ],
+  "current_products": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/shared_downloader_commands.go",
+      "bytes": 21046,
+      "sha256": "dad454d549235fc7607da4dd845da83b2d2086cf03d126f8385cdf9e38ce97f3"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/shared_downloader_commands_test.go",
+      "bytes": 21352,
+      "sha256": "d4a564bf736e617ad4e1e944edb8275ce1cc4c6ea56a2ad983008b266a324c08"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_downloader_commands_native.go",
+      "bytes": 536,
+      "sha256": "684d6d0a0e2456218383f5ecd8ab626e5214991de45dd3fa2ec9cc1d073ef5a7"
+    }
+  ],
+  "inherited_TR2": {
+    "prior": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-host-independent/NATIVE-A1-FINAL.json",
+      "bytes": 16984,
+      "sha256": "246c794bc49d9813ce8cf29edf222eb29c3ac4882af02496bdd030c4e2eb0166"
+    },
+    "roots": [
+      "TestSharedDownloaderCommandTRControls",
+      "TestSharedDownloaderCommandTRAdd"
+    ],
+    "proof": "Prior actual normal01 retained; final TLS delta only qB constructor branch, all TR branch/method bodies and old five test bodies byte-identical plus unchanged native/leaf dependencies checked in static delta seal. Not rerun in native02, not a claim all six current roots newly ran."
+  },
+  "TLS_observation": "New dedicated qB client succeeded at owned self-signed HTTPS origin. Old IYUU and new TR produced the two expected owned bad-certificate handshakes without HTTP handlers; configured-origin bearer, no redirect follow, guard denial and original global verification/root pool remained asserted. This is controlled owned TLS behavior, not real daemon or tool-permission failure.",
+  "no_replay_limit": "No application-level selected replay; pinned zero-body nothingWritten internal retry remains possible and is not unknown-effect replay. No universal exactly-one internal attempt claim.",
+  "retained_boundaries": [
+    "Dedicated qB VERIFY=False is now explicitly authorized and actually tested; no other TLS/proxy/CA/environment relaxation.",
+    "Truthful URL+Cookie global sync leaf branch and unsupported vendor/model/log domains remain pending.",
+    "App factory compile/runtime credit belongs to separate App gate below, not these native package gates.",
+    "Race root is GuardUnknownAndClose only; TLS root normal only."
+  ]
+}
