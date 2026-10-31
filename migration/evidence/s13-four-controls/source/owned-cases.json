@@ -1,0 +1,281 @@
+{
+  "cases": [
+    {
+      "id": "qb-set_torrents_tag-missing-client",
+      "kind": "qb",
+      "method": "set_torrents_tag",
+      "args": {
+        "ids": [
+          "owned-a",
+          "owned-a"
+        ],
+        "tags": [
+          "owned-label",
+          "owned-label"
+        ]
+      },
+      "client_present": false,
+      "vendor_method": "torrents_add_tags",
+      "vendor_reply": false,
+      "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+    },
+    {
+      "id": "qb-set_torrents_tag-nonthrowing-false",
+      "kind": "qb",
+      "method": "set_torrents_tag",
+      "args": {
+        "ids": [
+          "owned-a",
+          "owned-a"
+        ],
+        "tags": [
+          "owned-label",
+          "owned-label"
+        ]
+      },
+      "client_present": true,
+      "vendor_method": "torrents_add_tags",
+      "vendor_reply": false,
+      "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+    },
+    {
+      "id": "qb-set_torrents_tag-ordinary-exception",
+      "kind": "qb",
+      "method": "set_torrents_tag",
+      "args": {
+        "ids": [
+          "owned-a",
+          "owned-a"
+        ],
+        "tags": [
+          "owned-label",
+          "owned-label"
+        ]
+      },
+      "client_present": true,
+      "vendor_method": "torrents_add_tags",
+      "vendor_reply": false,
+      "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance",
+      "vendor_raises": {
+        "class": "RuntimeError",
+        "message": "owned recording failure"
+      }
+    },
+    {
+      "id": "qb-set_torrent_category-missing-client",
+      "kind": "qb",
+      "method": "set_torrent_category",
+      "args": {
+        "hash_string": "owned-a",
+        "category": "owned-category"
+      },
+      "client_present": false,
+      "vendor_method": "torrents_set_category",
+      "vendor_reply": false,
+      "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+    },
+    {
+      "id": "qb-set_torrent_category-nonthrowing-false",
+      "kind": "qb",
+      "method": "set_torrent_category",
+      "args": {
+        "hash_string": "owned-a",
+        "category": "owned-category"
+      },
+      "client_present": true,
+      "vendor_method": "torrents_set_category",
+      "vendor_reply": false,
+      "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+    },
+    {
+      "id": "qb-set_torrent_category-ordinary-exception",
+      "kind": "qb",
+      "method": "set_torrent_category",
+      "args": {
+        "hash_string": "owned-a",
+        "category": "owned-category"
+      },
+      "client_present": true,
+      "vendor_method": "torrents_set_category",
+      "vendor_reply": false,
+      "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance",
+      "vendor_raises": {
+        "class": "RuntimeError",
+        "message": "owned recording failure"
+      }
+    },
+    {
+      "id": "qb-stop_torrents-missing-client",
+      "kind": "qb",
+      "method": "stop_torrents",
+      "args": {
+        "ids": [
+          "owned-a",
+          "owned-a"
+        ]
+      },
+      "client_present": false,
+      "vendor_method": "torrents_pause",
+      "vendor_reply": false,
+      "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+    },
+    {
+      "id": "qb-stop_torrents-nonthrowing-false",
+      "kind": "qb",
+      "method": "stop_torrents",
+      "args": {
+        "ids": [
+          "owned-a",
+          "owned-a"
+        ]
+      },
+      "client_present": true,
+      "vendor_method": "torrents_pause",
+      "vendor_reply": false,
+      "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+    },
+    {
+      "id": "qb-stop_torrents-ordinary-exception",
+      "kind": "qb",
+      "method": "stop_torrents",
+      "args": {
+        "ids": [
+          "owned-a",
+          "owned-a"
+        ]
+      },
+      "client_present": true,
+      "vendor_method": "torrents_pause",
+      "vendor_reply": false,
+      "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance",
+      "vendor_raises": {
+        "class": "RuntimeError",
+        "message": "owned recording failure"
+      }
+    },
+    {
+      "id": "tr-stop_torrents-missing-client",
+      "kind": "tr",
+      "method": "stop_torrents",
+      "args": {
+        "ids": [
+          0,
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ]
+      },
+      "client_present": false,
+      "vendor_method": "stop_torrent",
+      "vendor_reply": false,
+      "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+    },
+    {
+      "id": "tr-stop_torrents-nonthrowing-false",
+      "kind": "tr",
+      "method": "stop_torrents",
+      "args": {
+        "ids": [
+          0,
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ]
+      },
+      "client_present": true,
+      "vendor_method": "stop_torrent",
+      "vendor_reply": false,
+      "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+    },
+    {
+      "id": "tr-stop_torrents-ordinary-exception",
+      "kind": "tr",
+      "method": "stop_torrents",
+      "args": {
+        "ids": [
+          0,
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ]
+      },
+      "client_present": true,
+      "vendor_method": "stop_torrent",
+      "vendor_reply": false,
+      "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance",
+      "vendor_raises": {
+        "class": "RuntimeError",
+        "message": "owned recording failure"
+      }
+    },
+    {
+      "id": "qb-tags-null-arguments",
+      "kind": "qb",
+      "method": "set_torrents_tag",
+      "args": {
+        "ids": null,
+        "tags": null
+      },
+      "client_present": true,
+      "vendor_method": "torrents_add_tags",
+      "vendor_reply": null,
+      "purpose": "Observe complete source branch with explicitly owned dependency input; no native selector/HTTP claim"
+    },
+    {
+      "id": "qb-category-empty-hash",
+      "kind": "qb",
+      "method": "set_torrent_category",
+      "args": {
+        "hash_string": "",
+        "category": "owned-category"
+      },
+      "client_present": true,
+      "vendor_method": "torrents_set_category",
+      "vendor_reply": null,
+      "purpose": "Observe complete source branch with explicitly owned dependency input; no native selector/HTTP claim"
+    },
+    {
+      "id": "qb-category-null",
+      "kind": "qb",
+      "method": "set_torrent_category",
+      "args": {
+        "hash_string": "owned-a",
+        "category": null
+      },
+      "client_present": true,
+      "vendor_method": "torrents_set_category",
+      "vendor_reply": null,
+      "purpose": "Observe complete source branch with explicitly owned dependency input; no native selector/HTTP claim"
+    },
+    {
+      "id": "qb-pause-null-selector",
+      "kind": "qb",
+      "method": "stop_torrents",
+      "args": {
+        "ids": null
+      },
+      "client_present": true,
+      "vendor_method": "torrents_pause",
+      "vendor_reply": null,
+      "purpose": "Observe complete source branch with explicitly owned dependency input; no native selector/HTTP claim"
+    },
+    {
+      "id": "tr-stop-null-selector-port-valueerror",
+      "kind": "tr",
+      "method": "stop_torrents",
+      "args": {
+        "ids": null
+      },
+      "client_present": true,
+      "vendor_method": "stop_torrent",
+      "vendor_reply": null,
+      "purpose": "Observe complete source branch with explicitly owned dependency input; no native selector/HTTP claim",
+      "vendor_raises": {
+        "class": "ValueError",
+        "message": "owned recording failure"
+      }
+    }
+  ],
+  "boundaries": [
+    "complete four original methods; recording vendor/logger only",
+    "no original constructor/import/vendor/HTTP/daemon/SQLite execution",
+    "TR None ValueError is explicitly supplied dependency input, not vendor-parser evidence",
+    "no tag deletion, polling, reannounce or arbitrary downloader RPC",
+    "no expected values generated from target Go; no target execution",
+    "source caught ordinary exceptions differ from retained platform authority/unknown-effect boundaries"
+  ]
+}

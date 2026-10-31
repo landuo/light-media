@@ -40,7 +40,7 @@
       "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/README.md",
       "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/publication-manifest.json"
     ],
-    "revision_note": "Last actual remote11f922; local760720→b9e667→41c8→7b9b exactbundles savedSpace, notpushed. CurrentS04 WIP; main unchanged, noCIgreen."
+    "revision_note": "Last actual remote11f922; local fivecommit chain760720→b9e667→41c8→7b9b→f913, no push/CIgreen. main unchanged."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -25856,7 +25856,7 @@
       },
       "local_reconstruction": {
         "scope": "SiteOper.success/fail only, access statistics not sign-in; remaining five reads/refresh still open",
-        "status": "finite original/target/installedworker/normalCLI independently accepted; local publication ready, remote pending",
+        "status": "finite accessstatistics independentlyaccepted and locallycommittedf913; five otherreads/refresh remain, remote pending",
         "historical_credit": "existing account history/identity/43 reverse refresh/events preserved; no S06 dependency"
       },
       "boundaries": [
@@ -25867,12 +25867,13 @@
         "Server outer terminal receipt unavailable; childbuild0 and actual laterCLI independently established."
       ],
       "completion": {
-        "state": "finite_backend_verified_publication_ready_remote_pending",
+        "state": "finite_backend_verified_localcommit_remote_pending",
         "full_parent_verified": false,
         "remote_delivery": false,
         "manifest": "migration/evidence/s04-site-access/evidence-index.json",
         "parent_commit": "7b9b1d038b11d6235108889bea634e53e8b19d27",
-        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4"
+        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "local_commit": "f91359b612cefc068ff590d6c99622d329e6d474"
       }
     },
     {
@@ -26912,7 +26913,7 @@
     {
       "id": "S13",
       "description": "S13 · 下载器标签、分类、暂停与重新通告",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/download.py",
         "app/chain/download.py",
@@ -26931,26 +26932,67 @@
         "scope.discovery.46"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "cmd/owned-downloader-controls-fixture/main.go",
+        "internal/app/plugin_original_resources.go",
+        "internal/app/plugin_shared_downloader_controls.go",
+        "internal/app/plugin_shared_downloader_controls_test.go",
+        "internal/plugins/downloadercommands/four_commands.go",
+        "internal/plugins/downloadercommands/four_commands_test.go",
+        "internal/plugins/downloadercommands/testdata/source-four-leaves.json",
+        "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands.go",
+        "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands_test.go",
+        "internal/plugins/shared_downloader_four_commands.go",
+        "internal/plugins/shared_downloader_four_commands_test.go"
+      ],
       "owner": "coordinator",
-      "scenarios": [],
-      "evidence_ids": [],
+      "scenarios": [
+        "actual original four complete wrappers / 17 recording-port observations; not vendor execution",
+        "actual SDK2 / leaf2 / App2 / native3, separate normal and race gates; finite input domains",
+        "actual installed worker through two normal hosts: four business calls / eight current callbacks / one expired-caller denial",
+        "fixed owned HTTP500 unknown effect without replay, same-worker recovery and same-DB fresh-worker cold start"
+      ],
+      "evidence_ids": [
+        "s13-controls.source-target",
+        "s13-controls.normal-cli"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "component-specific coordinator/tls_ab_independent/c_userdata_owner Astra ultra",
+        "evidence_ids": [
+          "s13-controls.independent-review"
+        ],
+        "scope": "finite four ordinary controls only; full S13 remains implementing"
       },
       "external_source_paths": [],
-      "work_kind": "unclassified_shared_host",
-      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent.",
+      "work_kind": "shared_host_extension",
+      "work_kind_note": "Precise original eight retained; four ordinary-control paths locally accepted, remaining methods and explicit finite-domain gaps stay open.",
       "semantic_scope_reconciliation": {
         "id": "S13",
         "old_operation_scope": "两下载器指定附加操作",
         "precise_operation_inventory": "qB delete_torrents_tag/set_torrents_tag/get_torrent_id_by_tag/stop_torrents/set_torrent_category；TR set_torrent_tag/stop_torrents/change_torrent",
         "current_owner": "S13精确八方法；安装版tags/delete_tags/reannounce另核",
         "semantic_judgment": "旧八项待实现不能改成已完成。v1宽列remove_torrents_tag、qB change_torrent、TR get_torrent_tags等为旧清单不准确，现移为未归属候选，不抵旧八项。",
-        "current_ledger_status": "discovered",
-        "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
-      }
+        "current_ledger_status": "implementing",
+        "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "mapping_time_ledger_status": "discovered"
+      },
+      "completion": {
+        "state": "finite_backend_verified_publication_ready_remote_pending",
+        "full_parent_verified": false,
+        "remote_delivery": false,
+        "manifest": "migration/evidence/s13-four-controls/evidence-index.json",
+        "parent_commit": "f91359b612cefc068ff590d6c99622d329e6d474",
+        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4"
+      },
+      "boundaries": [
+        "Original precise eight preserved; this slice covers ordinary qB set_torrents_tag/set_torrent_category/stop_torrents and TR stop_torrents paths only.",
+        "Four remaining methods are open; title reannounce is not silently added to or counted against the original eight.",
+        "No arbitrary Python iterable/ordered-map selector/structured category/native kwargs certification; explicit boundary errors remain pending.",
+        "No real downloader daemon/media/NAS, vendor runtime or browser acceptance; owned HTTP protocol fixture is identified honestly.",
+        "Source None is not mutation success; delegated failure remains unknown effect without application replay, not an all-physical-attempt guarantee."
+      ]
     },
     {
       "id": "S14",
@@ -43594,6 +43636,146 @@
       "commands": {
         "actual_argv": "bound result.commands/source argv and cli/command.json; actual terminal receipts"
       }
+    },
+    {
+      "id": "s13-controls.source-target",
+      "kind": "differential",
+      "status": "passed",
+      "feature_ids": [
+        "S13"
+      ],
+      "independent": false,
+      "reviewer": "coordinator actual execution",
+      "observations": "Finite original wrapper/target/owned installed host observations; not full vendor/daemon/parent equivalence.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "source": "fixed8a83 complete selected wrappers with recording ports, no constructor/vendor/network",
+          "target": "Go1.26 normal installed App/worker with fixed owned HTTP; same DB two hosts; proxies/CA unchanged",
+          "limits": "finite declared ordinary control paths, no real daemon/full S13"
+        },
+        "target_files": {
+          "cmd/owned-downloader-controls-fixture/main.go": "16fa3b3b3e5b63bbf2e1050a6c47d36f2dfe09001be7c2ed41c49ea63a93e4b7",
+          "internal/app/plugin_original_resources.go": "84a5f33be4a68b99832b66cf63450471d56a36de864530d5c022058ba32346c5",
+          "internal/app/plugin_shared_downloader_controls.go": "630baffd0fa16cbdff0129cf5a6d650682c2b7cd7ded2ae56d15b4674232af51",
+          "internal/app/plugin_shared_downloader_controls_test.go": "171c9c4c42b5125d11e01fc36402dc0d5a0444ffa20a0da2842ad68e76604321",
+          "internal/plugins/shared_downloader_four_commands.go": "80e1c898c4d0d258c98e9a980ddfccd0a91af17e4a4922067cdcf6bd20a4f4a7",
+          "internal/plugins/shared_downloader_four_commands_test.go": "cd2442d31a026d7dd4e80e0330f8ea6e22dd2aaf20ca6d1a14d7c0b7252a1844",
+          "internal/plugins/downloadercommands/four_commands.go": "95e381e5fd06190df25f6fa8f2f9c9b5b64483a1edc4ac4ebb46830b50d67304",
+          "internal/plugins/downloadercommands/four_commands_test.go": "89aa218e17b70c4742b7ec008059cedb24d688cf3364a5f67ffc8eb36e1c862d",
+          "internal/plugins/downloadercommands/testdata/source-four-leaves.json": "de761347f6ba64f9d74eafaf0309c99b5a0fbab9aa6d2ad17ccdaa6ea2920c7c",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands.go": "de73f7cf95d10edab095b39c10941b2b81ba8f0e1a91412ecac409b2dde4e56b",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands_test.go": "b8a9a0ba1a88e258647b45dfcdc17de24ab94fcea383310c55144d9ebe853665"
+        },
+        "fixture_files": {
+          "evidence/s13-four-controls/cli/driver.py": "3c05d112687b22cac5c5f9d3ccbabefdd880aaf875bb35baaddd78df8ad97095"
+        }
+      },
+      "artifacts": {
+        "evidence/s13-four-controls/source/independent.json": "f94225932879cd08d662abc2c9f57a6e67b9d0f60cb6b2b66f792837b6ecd52c",
+        "evidence/s13-four-controls/leaf/normal/result.json": "b4a1a0b99b155e90a0feb071ebf5a4413d0dcd037cf27eeb21646c5cbfc38143",
+        "evidence/s13-four-controls/sdk/normal/result.json": "17d7589494646e0c8da69ae030d9fc3c92ee98579b8737a0ea6d7281227dd11a",
+        "evidence/s13-four-controls/native/normal/result.json": "cccbb07996ad1e205848993e28badc0734162d63b0d93be3e542c1ce7d0f4897",
+        "evidence/s13-four-controls/native/race/result.json": "9642fc0fcaf7f5ee8b7a15169670c6328316908e38f4502eb95a1f4ad68d6540",
+        "evidence/s13-four-controls/app/race/result.json": "1cfea7740abc87a10cde0760b94c18ec474cf3fdac26b8097ad27f159920bb98"
+      },
+      "inputs": {
+        "full_maps": "retained exact local/Space checkpoint source and compile-input maps; CLI full binding included"
+      },
+      "commands": {
+        "actual_argv": "bound source/gate result argv and cli/command.json; original tool receipts preserved"
+      }
+    },
+    {
+      "id": "s13-controls.normal-cli",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "S13"
+      ],
+      "independent": false,
+      "reviewer": "coordinator actual execution",
+      "observations": "Finite original wrapper/target/owned installed host observations; not full vendor/daemon/parent equivalence.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "source": "fixed8a83 complete selected wrappers with recording ports, no constructor/vendor/network",
+          "target": "Go1.26 normal installed App/worker with fixed owned HTTP; same DB two hosts; proxies/CA unchanged",
+          "limits": "finite declared ordinary control paths, no real daemon/full S13"
+        },
+        "target_files": {
+          "cmd/owned-downloader-controls-fixture/main.go": "16fa3b3b3e5b63bbf2e1050a6c47d36f2dfe09001be7c2ed41c49ea63a93e4b7",
+          "internal/app/plugin_original_resources.go": "84a5f33be4a68b99832b66cf63450471d56a36de864530d5c022058ba32346c5",
+          "internal/app/plugin_shared_downloader_controls.go": "630baffd0fa16cbdff0129cf5a6d650682c2b7cd7ded2ae56d15b4674232af51",
+          "internal/app/plugin_shared_downloader_controls_test.go": "171c9c4c42b5125d11e01fc36402dc0d5a0444ffa20a0da2842ad68e76604321",
+          "internal/plugins/shared_downloader_four_commands.go": "80e1c898c4d0d258c98e9a980ddfccd0a91af17e4a4922067cdcf6bd20a4f4a7",
+          "internal/plugins/shared_downloader_four_commands_test.go": "cd2442d31a026d7dd4e80e0330f8ea6e22dd2aaf20ca6d1a14d7c0b7252a1844",
+          "internal/plugins/downloadercommands/four_commands.go": "95e381e5fd06190df25f6fa8f2f9c9b5b64483a1edc4ac4ebb46830b50d67304",
+          "internal/plugins/downloadercommands/four_commands_test.go": "89aa218e17b70c4742b7ec008059cedb24d688cf3364a5f67ffc8eb36e1c862d",
+          "internal/plugins/downloadercommands/testdata/source-four-leaves.json": "de761347f6ba64f9d74eafaf0309c99b5a0fbab9aa6d2ad17ccdaa6ea2920c7c",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands.go": "de73f7cf95d10edab095b39c10941b2b81ba8f0e1a91412ecac409b2dde4e56b",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands_test.go": "b8a9a0ba1a88e258647b45dfcdc17de24ab94fcea383310c55144d9ebe853665"
+        },
+        "fixture_files": {
+          "evidence/s13-four-controls/cli/driver.py": "3c05d112687b22cac5c5f9d3ccbabefdd880aaf875bb35baaddd78df8ad97095"
+        }
+      },
+      "artifacts": {
+        "evidence/s13-four-controls/cli/result.json": "c15dc06bcede1ce5d3fbf86d3bac54d944ef00d62edb0fe3ffa7c9e505c7a714",
+        "evidence/s13-four-controls/cli/tool-receipt.json": "338aff4988a5bc45e943f8531723cf7a3b16501cb249a25a1bf515dfa3035b9b"
+      },
+      "inputs": {
+        "full_maps": "retained exact local/Space checkpoint source and compile-input maps; CLI full binding included"
+      },
+      "commands": {
+        "actual_argv": "bound source/gate result argv and cli/command.json; original tool receipts preserved"
+      }
+    },
+    {
+      "id": "s13-controls.independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "S13"
+      ],
+      "independent": true,
+      "reviewer": "component-specific independent reviewers Astra ultra",
+      "observations": "Finite original wrapper/target/owned installed host observations; not full vendor/daemon/parent equivalence.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "source": "fixed8a83 complete selected wrappers with recording ports, no constructor/vendor/network",
+          "target": "Go1.26 normal installed App/worker with fixed owned HTTP; same DB two hosts; proxies/CA unchanged",
+          "limits": "finite declared ordinary control paths, no real daemon/full S13"
+        },
+        "target_files": {
+          "cmd/owned-downloader-controls-fixture/main.go": "16fa3b3b3e5b63bbf2e1050a6c47d36f2dfe09001be7c2ed41c49ea63a93e4b7",
+          "internal/app/plugin_original_resources.go": "84a5f33be4a68b99832b66cf63450471d56a36de864530d5c022058ba32346c5",
+          "internal/app/plugin_shared_downloader_controls.go": "630baffd0fa16cbdff0129cf5a6d650682c2b7cd7ded2ae56d15b4674232af51",
+          "internal/app/plugin_shared_downloader_controls_test.go": "171c9c4c42b5125d11e01fc36402dc0d5a0444ffa20a0da2842ad68e76604321",
+          "internal/plugins/shared_downloader_four_commands.go": "80e1c898c4d0d258c98e9a980ddfccd0a91af17e4a4922067cdcf6bd20a4f4a7",
+          "internal/plugins/shared_downloader_four_commands_test.go": "cd2442d31a026d7dd4e80e0330f8ea6e22dd2aaf20ca6d1a14d7c0b7252a1844",
+          "internal/plugins/downloadercommands/four_commands.go": "95e381e5fd06190df25f6fa8f2f9c9b5b64483a1edc4ac4ebb46830b50d67304",
+          "internal/plugins/downloadercommands/four_commands_test.go": "89aa218e17b70c4742b7ec008059cedb24d688cf3364a5f67ffc8eb36e1c862d",
+          "internal/plugins/downloadercommands/testdata/source-four-leaves.json": "de761347f6ba64f9d74eafaf0309c99b5a0fbab9aa6d2ad17ccdaa6ea2920c7c",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands.go": "de73f7cf95d10edab095b39c10941b2b81ba8f0e1a91412ecac409b2dde4e56b",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands_test.go": "b8a9a0ba1a88e258647b45dfcdc17de24ab94fcea383310c55144d9ebe853665"
+        },
+        "fixture_files": {
+          "evidence/s13-four-controls/cli/driver.py": "3c05d112687b22cac5c5f9d3ccbabefdd880aaf875bb35baaddd78df8ad97095"
+        }
+      },
+      "artifacts": {
+        "evidence/s13-four-controls/native/runtime-review.md": "d25029879420afec22293f2c9e9a30c6e81be43418e9a8e072e60be9ace8704c",
+        "evidence/s13-four-controls/app/race-review.md": "f3df53e8141910fd02de408922e18f7ee1ce673c1004b9170888241b8b6799ff",
+        "evidence/s13-four-controls/cli/runtime-review.md": "c16d1f15b5d63d2944739cad5a1877a67bb4adbdaadd8a760f73106cb3f2c455"
+      },
+      "inputs": {
+        "full_maps": "retained exact local/Space checkpoint source and compile-input maps; CLI full binding included"
+      },
+      "commands": {
+        "actual_argv": "bound source/gate result argv and cli/command.json; original tool receipts preserved"
+      }
     }
   ],
   "execution_contract": {
@@ -43620,33 +43802,33 @@
     "latest_scope_selection": "Current complete61-entry inventory retained by user164510; historical same-scope completion inherited; exact source-discovered missing behaviors continue, no whole-source redevelopment or duplicate shared-chain credit."
   },
   "resume": {
-    "next_slice": "S04 exactfinitewhitelist independentreview/commit/bundle; then remainingSiteOper reads provenance. No repeatedoldgates; Macquota remains.",
-    "dirty_work": "S04 verified11products+44compactpublicationrecords+ledger awaitingfinalwhitelist/commit; unrelatedBrowse2 heldexactbytes; old760720S06dirty protected",
+    "next_slice": "S13 exact finite whitelist independent review/commit/bundle; then remaining original four; user compatibility decisions remain pending.",
+    "dirty_work": "S13 accepted finite11 productpaths plus63compactevidence and uniqueledger assembled, not yetcommitted; protectedS07nine/Browsetwo and old760720S06dirty remain separately held; no realdaemon/UI claim",
     "workers": [
       {
         "name": "coordinator",
         "model": "Astra ultra",
-        "task": "sole ledger/publication/commit/backup authority"
+        "task": "final11product/63evidence/ledger composition, exactlocalcommit/bundle afterindependentreview; not yetpush"
       },
       {
         "name": "terminate_independent",
         "model": "Astra ultra",
-        "task": "S04 final56-path publication review; CLI authorship explicitly excluded from own independent approval"
-      },
-      {
-        "name": "s01_release_owner",
-        "model": "Astra ultra",
-        "task": "S04 normalCLI static+runtime independent accepted; noactiveexecution"
-      },
-      {
-        "name": "tls_ab_independent",
-        "model": "Astra ultra",
-        "task": "S04 source/App/installedworker finite independent accepted; idle"
+        "task": "current finalwhitelist/composition reviewer; not self-approval of authoredSDK/worker semantics already independentlyaccepted"
       },
       {
         "name": "c_userdata_owner",
         "model": "Astra ultra",
-        "task": "S04 next3read sourcecomponent preparation only; frozenaccess11products unchanged"
+        "task": "terminal App/native/CLI independentreviews accepted; no active execution"
+      },
+      {
+        "name": "tls_ab_independent",
+        "model": "Astra ultra",
+        "task": "terminal original17 independentreview/nativeowner; remainingfour readonlyscope frozen, no active execution"
+      },
+      {
+        "name": "s01_release_owner",
+        "model": "Astra ultra",
+        "task": "terminal App/CLI owner handoff, no active execution"
       }
     ],
     "blockers": [
@@ -43787,7 +43969,7 @@
       "source_of_readback": "Parent relayed actual Mac push/readback; evidence-s15-11f922896377/{push-receipt,protected-after-push,ci-receipt}.json",
       "mac_protection": "Original three worktree HEAD/branch/index unchanged. Main had concurrent changes to2 existing files+5 new paths retained; other2 trees unchanged. Do not falsely claim all Mac files unchanged."
     },
-    "updated_at": "2026-10-31T22:44:14.993083+00:00",
+    "updated_at": "2026-10-31T23:45:44.215398+00:00",
     "latest_integrations": {
       "services_portable": "../evidence/coordinator/services-main-integration/portable-integration.json",
       "services_web": "../evidence/coordinator/services-main-integration/web-v3-result.json",
@@ -43847,17 +44029,18 @@
       "free_after": "2.3GiB including authorized oldbinary archive"
     },
     "delivery_pending": {
-      "commit": "7b9b1d038b11d6235108889bea634e53e8b19d27",
+      "commit": "f91359b612cefc068ff590d6c99622d329e6d474",
       "included_commits": [
         "760720ed0a96fd9e7a647914c14545bde5ef857e",
         "b9e667cbc9532cb996993af30531327af3dcc541",
         "41c8e93571bdb3551533d7817d20f9d967dc8eda",
-        "7b9b1d038b11d6235108889bea634e53e8b19d27"
+        "7b9b1d038b11d6235108889bea634e53e8b19d27",
+        "f91359b612cefc068ff590d6c99622d329e6d474"
       ],
       "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
       "remote_confirmed": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
-      "bundle_status": "actualSpace saved libfile_c2a07eef7c308191b096aca960a86e35 v0; fourcommit chain, not remote",
-      "blocker": "Mac quota blocker last observed, no blind retry/model switch/new auth route"
+      "bundle_status": "actual Space saved libfile_c96563555efc819188862887f88b85d2 v0, five local accepted commits; not remote",
+      "blocker": "Mac quota last observed, no blind retry/model/auth route switch"
     },
     "terminal_binary_archive": {
       "status": "complete",
@@ -44906,7 +45089,7 @@
         "publication_independent_sha256": "d664bb7e11e7586f43cfd70bdf5490810042c93903f2e069eea57490143fbb6b"
       }
     },
-    "last_local_commit": "7b9b1d038b11d6235108889bea634e53e8b19d27",
+    "last_local_commit": "f91359b612cefc068ff590d6c99622d329e6d474",
     "new_s06_getbyhash_reconstruction": {
       "base": "760720ed0a96fd9e7a647914c14545bde5ef857e",
       "source": "8a83efeacd3e26b82be495e17d50146e31c96a60",
@@ -48317,7 +48500,7 @@
     },
     "new_s04_access_reconstruction": {
       "base": "7b9b1d038b11d6235108889bea634e53e8b19d27",
-      "status": "finite source/target/worker/normalCLI independentlyaccepted; exactpublication finalreviewpending",
+      "status": "finite accessstatistics independentlyverified and locallycommitted f913; parentnotcomplete, remotepending",
       "scope": "only SiteOper.success/fail access statistics, notsign-in/fullDAO/fullS04; no S06/browse artifact dependency",
       "source_preparation": "../audits/s04-source-preparation/preparation-seal.json",
       "source_static_acceptance_sha256": "a0d0b651fa70bb6d933203b354ec7558a20a941843e16004de1aed67ae98aa45",
@@ -48979,11 +49162,47 @@
         "all_host_exit0": true
       },
       "publication": {
-        "status": "assembled acceptedfinitecandidate, finalwhitelistreviewpending",
-        "path": "migration/evidence/s04-site-access"
+        "status": "locallycommitted/bundleverified/actualSpace saved; remoteMacquota blocked",
+        "commit": "f91359b612cefc068ff590d6c99622d329e6d474",
+        "parent": "7b9b1d038b11d6235108889bea634e53e8b19d27",
+        "bundle": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/external-backups/light-media-s04-f91359b612ce-20261031.bundle",
+        "bundle_sha256": "1d75470b58f119218158985889241b318b9079adc99f4835a48fe62405ea61b9",
+        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "receipt": "../audits/s04-publication/commit-bundle-receipt.json",
+        "outer_tool": {
+          "chunk": "1874ab",
+          "exit": 0
+        },
+        "bundle_library_file_id": "libfile_c96563555efc819188862887f88b85d2",
+        "postcommit_independent_sha256": "69efbe2f0e43be0c1c00cf78e7698a18757ab7fb052dc5bd4391f6d71f86a4fc"
+      },
+      "browse_restore": {
+        "at": "2026-10-31T22:47:17.385392+00:00",
+        "head": "f91359b612cefc068ff590d6c99622d329e6d474",
+        "old_named_invariants": {
+          "head": "760720ed0a96fd9e7a647914c14545bde5ef857e",
+          "index_sha256": "62b33132e0b242b19c6f74e972b1e0bd53c0479437ee8e064e37537e5a347e41",
+          "ledger_sha256": "0179dd1c3117e3601f3a95a1907446f4bcd1839eb6a460601904c705807eede2"
+        },
+        "scope": "only named invariants, not blanket olddirty proof",
+        "browse_exact_restored": {
+          "shared_torrents_browse.go": "d4f15363f457d971d8547da928973f61a61f4420a5b373b2248c5280db858eb9",
+          "shared_torrents_browse_test.go": "f66256ad0281065c02c212f061d08ffeb29b405a9ea8415b499a5b5ed15e912b"
+        },
+        "gates": "S04 prior finite accepted closure remains historical; unrelated2 not compiled as part of thosegates"
+      },
+      "external_2248": {
+        "at": "2026-10-31T22:49:28.168875+00:00",
+        "library_file_id": "libfile_a5d28581910c8191bbc14079984f333d",
+        "version": 0,
+        "filename": "s04-host-wip-20261031T2248.tar.gz",
+        "bytes": 5539838,
+        "sha256": "a03e5f054ff369d6b02332fe1c70c7947f46717a787bf8687d3daccf56433f63",
+        "prerequisite_library_id": "libfile_cf412747f43c819185e8f032cbddb953",
+        "status": "parentconfirmedactualSpace saved/xattrs0; finite localf913 terminal originals, no remote/fullS04 claim"
       }
     },
-    "next_action": "S04 exactfinitewhitelist independentreview/commit/bundle; then remainingSiteOper reads provenance. No repeatedoldgates; Macquota remains.",
+    "next_action": "S13 exact finite whitelist independent review/commit/bundle; then remaining original four; user compatibility decisions remain pending.",
     "workers_history_before_s04_publication": [
       {
         "name": "terminate_independent",
@@ -49004,6 +49223,822 @@
         "name": "c_userdata_owner",
         "model": "Astra ultra",
         "task": "S03 native candidate02 frozen; idle"
+      }
+    ],
+    "new_s04_reads_reconstruction": {
+      "status": "finiteoriginalORMthree-read sourcewarm/cold independentlyaccepted; targetproducer/olddata pending, not fullhost",
+      "scope": "SiteOper.get/list_order_by_pri/list_active; original22column projection",
+      "source_preparation": "../audits/s04-reads-source-preparation",
+      "driver_sha256": "15d59cd39c1bf7e5fe75d42d43072166d89296b48043d2f61cf34307bd798d85",
+      "source_seal_sha256": "a48a1b03238f6aff782647cfeb88ff377b389b3d9206064fba2c3fa4fb52c16e",
+      "boundaries": "existing nativeoldrows lack exactnullable/classdefaulttimestamp/originalIDprovenance; no invention or compatibilitydecision",
+      "source_execution": {
+        "receipt": {
+          "observed_at": "2026-10-31T22:50:38.956724+00:00",
+          "session_id": 7283,
+          "initial_chunk": "d58a35",
+          "terminal_chunk": "23114e",
+          "exit_code": 0,
+          "sequence": [
+            "s04-reads-source-warm01",
+            "s04-reads-source-cold01"
+          ]
+        },
+        "warm": {
+          "started": "2026-10-31T22:50:07.215926+00:00",
+          "driver_pid": 2,
+          "argv": [
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+            "-I",
+            "-S",
+            "-B",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-reads-source-preparation/capture_site_reads.py",
+            "warm",
+            "capture01"
+          ],
+          "status": "PASS",
+          "environment_proxy_unchanged": true,
+          "scope": "complete selected original Site22/three reads/ORM/decorators, owned SQLite, explicit clock and seeds; no target or siteproducer claim",
+          "independent_static_sha256": "1184e890c7a37e45d04fca8cca51c1eb7eda0daac4121740517fb925d0766869",
+          "resource_sample": {
+            "scratch_free": 50213826560,
+            "tmp_free": 5225631744
+          },
+          "exit": 0,
+          "raw_sha256": "e537d487fb7f5fa0bd8568c12dcccf553afee5db5f72ba460326fc96555b4b05",
+          "selected_nodes": 40,
+          "bound_inputs": 393,
+          "columns": 22,
+          "rows": 6,
+          "actual_main_queries": 9,
+          "database_sha256": "4fe668bb81b82d5063e762cdca331ef517fb07ae95e7318052c289ea5db24259",
+          "actual_empty_table_queries": 3,
+          "actual_missing_table_errors": 3,
+          "ended": "2026-10-31T22:50:08.234907+00:00"
+        },
+        "cold": {
+          "started": "2026-10-31T22:50:08.235261+00:00",
+          "driver_pid": 2,
+          "argv": [
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+            "-I",
+            "-S",
+            "-B",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-reads-source-preparation/capture_site_reads.py",
+            "cold",
+            "capture01"
+          ],
+          "status": "PASS",
+          "environment_proxy_unchanged": true,
+          "scope": "complete selected original Site22/three reads/ORM/decorators, owned SQLite, explicit clock and seeds; no target or siteproducer claim",
+          "independent_static_sha256": "1184e890c7a37e45d04fca8cca51c1eb7eda0daac4121740517fb925d0766869",
+          "resource_sample": {
+            "scratch_free": 50213523456,
+            "tmp_free": 5225631744
+          },
+          "exit": 0,
+          "raw_sha256": "dd5969d2b2e1dd6efabb4aa59b8844cf044dfd7be12a2d62cd02f086899aa1c8",
+          "selected_nodes": 40,
+          "bound_inputs": 393,
+          "columns": 22,
+          "rows": 6,
+          "actual_main_queries": 9,
+          "database_sha256": "4fe668bb81b82d5063e762cdca331ef517fb07ae95e7318052c289ea5db24259",
+          "readonly_cold_results_equal": true,
+          "ended": "2026-10-31T22:50:09.253930+00:00"
+        }
+      },
+      "producer_review_sha256": "244e011ff462e7ae61e4896519d1abe8354c246c7c72f311bbf292ba27829910",
+      "source_independent_final_sha256": "10b7255b9ecf381019a83209301b96c01798523b4c4db4a54864829bdf7acead",
+      "external_2253": {
+        "at": "2026-10-31T22:55:01.162403+00:00",
+        "library_file_id": "libfile_e074ea1394d481919816dc0222024f4d",
+        "version": 0,
+        "filename": "s04-three-reads-source-20261031T2253.tar.gz",
+        "bytes": 894123,
+        "sha256": "9062b65c79c06a0fb6c62aeb04d5c0722f786bd0c4e2198b281ab8639f3da628",
+        "base_bundle_library_id": "libfile_c96563555efc819188862887f88b85d2",
+        "status": "parentconfirmedactualSpace saved/xattrs0; finiteoriginalsourceonly, targetnotimplemented"
+      }
+    },
+    "new_s07_sites_reconstruction": {
+      "status": "frozen finite source/SDK/pure/SQLite candidate retained locally+external; nineproductfiles heldoutsideactive tree; oldcompatibility pending",
+      "scope": "two ordinarykeys IndexerSites/RssSites and existing native selectionconsumers; no fullS07/businessplugin/UI claim",
+      "base": "f91359b612cefc068ff590d6c99622d329e6d474",
+      "scope_review_sha256": "1f8e052d93d1bf80804a09d741a014500e14f4882e314480ad78d3ef27cfa4a6",
+      "browse_protection": {
+        "at": "2026-10-31T23:00:22.759350+00:00",
+        "base": "f91359b612cefc068ff590d6c99622d329e6d474",
+        "files": {
+          "shared_torrents_browse.go": "d4f15363f457d971d8547da928973f61a61f4420a5b373b2248c5280db858eb9",
+          "shared_torrents_browse_test.go": "f66256ad0281065c02c212f061d08ffeb29b405a9ea8415b499a5b5ed15e912b"
+        },
+        "status": "unrelatedBrowse2 heldexactbytes beforefirstS07Go gate; restoreafterfiniteS07 publication; no Gitlayout/reset/cleanup",
+        "external_recovery": "2248 Space libfile_a5d28581910c8191bbc14079984f333d contains exactrestoredsourcebytes"
+      },
+      "owners": {
+        "s01_release_owner": "Appnewsites files+reviewednarrowhooks",
+        "terminate_independent": "SDKtwo constants/tests/ownedfixture",
+        "c_userdata_owner": "fixedoriginalsourcecollector only",
+        "tls_ab_independent": "independent source/App reviews"
+      },
+      "source_execution": {
+        "receipt": {
+          "observed_at": "2026-10-31T23:06:37.875276+00:00",
+          "session_id": 85817,
+          "initial_chunk": "016b51",
+          "terminal_chunk": "9515e3",
+          "exit_code": 0,
+          "sequence": [
+            "s07-sites-source-warm01",
+            "s07-sites-source-cold01"
+          ]
+        },
+        "warm": {
+          "started": "2026-10-31T23:06:23.954392+00:00",
+          "driver_pid": 2,
+          "argv": [
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+            "-I",
+            "-S",
+            "-B",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s07-sites-source-preparation/capture_system_config_sites.py",
+            "warm",
+            "capture01"
+          ],
+          "status": "PASS",
+          "environment_proxy_unchanged": true,
+          "independent_static_sha256": "8b327d7c751eda62db7b4db41e52b52cd02eff9dbc75b384eb7dbdb6aaa45b70",
+          "scope": "selected original fourconsumer methods and synchronous cache/Singleton/ORM; real ownedSQLite only, notbusinessplugin/fullApp/nativeID/legacyinitialization",
+          "resources": {
+            "scratch_free": 50211721216,
+            "tmp_free": 5225631744
+          },
+          "exit": 0,
+          "raw_sha256": "148a29ae85a4ed1674b129415e5f1860588e5722f51d47dfcad13c780e878f01",
+          "selected_nodes": 36,
+          "bound_inputs": 402,
+          "columns": 3,
+          "final_queries": 4,
+          "final_rows": 1,
+          "database_sha256": "1b8fc3d086cd767a9344b62b023dd9c9113739439641e0446eb165989b06cdb3",
+          "normal_calls": 22,
+          "actual_readonly_write_errors": 3,
+          "ended": "2026-10-31T23:06:24.973764+00:00"
+        },
+        "cold": {
+          "started": "2026-10-31T23:06:24.974178+00:00",
+          "driver_pid": 2,
+          "argv": [
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+            "-I",
+            "-S",
+            "-B",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s07-sites-source-preparation/capture_system_config_sites.py",
+            "cold",
+            "capture01"
+          ],
+          "status": "PASS",
+          "environment_proxy_unchanged": true,
+          "independent_static_sha256": "8b327d7c751eda62db7b4db41e52b52cd02eff9dbc75b384eb7dbdb6aaa45b70",
+          "scope": "selected original fourconsumer methods and synchronous cache/Singleton/ORM; real ownedSQLite only, notbusinessplugin/fullApp/nativeID/legacyinitialization",
+          "resources": {
+            "scratch_free": 50211434496,
+            "tmp_free": 5225631744
+          },
+          "exit": 0,
+          "raw_sha256": "3478592222ff9b6207fc8ce4c06801f0f9fca3e8df6cc4810a3e97e20b3d7722",
+          "selected_nodes": 36,
+          "bound_inputs": 402,
+          "columns": 3,
+          "final_queries": 4,
+          "final_rows": 1,
+          "database_sha256": "1b8fc3d086cd767a9344b62b023dd9c9113739439641e0446eb165989b06cdb3",
+          "cold_rows_and_database_equal": true,
+          "warm_cache_equals_cold_cache": false,
+          "ended": "2026-10-31T23:06:25.942293+00:00"
+        },
+        "independent_runtime": {
+          "status": "acceptedfiniteactualsource",
+          "seal_sha256": "c059ec61c9c8f134e30cebf48d8ce60604f490f5cf5c31ff0f1458663465c877",
+          "path": "../audits/s07-sites-source-independent/source01-final.json"
+        }
+      },
+      "native_initialization_choice": {
+        "status": "root_asked_user_awaiting_answer",
+        "proposal": "preserveeffectiveselection, explicitnative-origininitialprojection, firstnewset createsexactrawfact; do notclaimoldraw/presence/sourceID",
+        "not_approved": true
+      },
+      "app_a1_static": {
+        "status": "READY_TWO_PURE_ROOTS_ONLY",
+        "seal_sha256": "24a0abc1dd0168a339f6dcf6a768014f87182242fdf3ad391a7655f7063e1ba9"
+      },
+      "a1_sdk_sequence": {
+        "receipt": {
+          "observed_at": "2026-10-31T23:10:20.101110+00:00",
+          "session_id": 5405,
+          "initial_chunk": "6f3770",
+          "terminal_chunk": "12260a",
+          "exit_code": 0,
+          "sequence": [
+            "s07-sites-sdk01",
+            "s07-sites-core01"
+          ],
+          "verification": "both independent childresults PASS and command exits0, not merely shell finalexit"
+        },
+        "sdk": {
+          "started": "2026-10-31T23:08:37.497197+00:00",
+          "driver_pid": 7,
+          "package": "./internal/plugins",
+          "pattern": "^TestSharedSystemConfigSiteSelectionKeys$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/plugins"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s07-sites-sdk01.test",
+                "./internal/plugins"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/plugins",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s07-sites-sdk01.test",
+                "-test.v",
+                "-test.run",
+                "^TestSharedSystemConfigSiteSelectionKeys$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T23:08:37.497210+00:00",
+              "scratch_free": 50211151872,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T23:08:37.763816+00:00",
+              "scratch_free": 50210267136,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T23:08:39.934379+00:00",
+              "scratch_free": 50197762048,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 1929,
+          "program_sha256": "3f1fa01828ebc3d79262d6f50b660fa42f0da1d22f36707a1270cc8e27c41b21",
+          "root_passes": [
+            "TestSharedSystemConfigSiteSelectionKeys"
+          ],
+          "ended": "2026-10-31T23:08:40.039838+00:00"
+        },
+        "pure_core": {
+          "started": "2026-10-31T23:08:40.081456+00:00",
+          "driver_pid": 2,
+          "package": "./internal/app",
+          "pattern": "^TestSharedSiteConfig(CorePresenceAndWarmFailure|ProjectionKeepsRestrictionAndRaw)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s07-sites-core01.test",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s07-sites-core01.test",
+                "-test.v",
+                "-test.run",
+                "^TestSharedSiteConfig(CorePresenceAndWarmFailure|ProjectionKeepsRestrictionAndRaw)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T23:08:40.081470+00:00",
+              "scratch_free": 50197331968,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T23:08:41.131147+00:00",
+              "scratch_free": 50193686528,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T23:09:14.217940+00:00",
+              "scratch_free": 50000072704,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 6221,
+          "program_sha256": "03ea0d4ac3691675c216b2d9ee3069a9dda2b4da290c64e52126f84554f08a65",
+          "root_passes": [
+            "TestSharedSiteConfigCorePresenceAndWarmFailure",
+            "TestSharedSiteConfigProjectionKeepsRestrictionAndRaw"
+          ],
+          "ended": "2026-10-31T23:09:14.679095+00:00"
+        },
+        "status": "actual SDK1/pure2 independentlyaccepted within finitecomponent scopes",
+        "independent_sha256": "92bfc92a3f3786393c84679b7c37e0ed0a4cb42e50c418315b0f7c634139cc43"
+      },
+      "external_2311": {
+        "library_file_id": "libfile_c1e2680ed3c08191b2472dcdc384a4df",
+        "version": 0,
+        "bytes": 2379518,
+        "sha256": "291dfcf64046aef99b4ac6e4cf969c6d66f9067a30b76ffbffcb7a0e539f2922",
+        "status": "parentconfirmedactualSpace saved/xattrs0; A1/sourceWIP before later terminalreview/Bstore"
+      },
+      "b1_integration": {
+        "status": "actualnormal3PASS and independentfiniteaccepted; pure/realownedSQLite only, nohost/consumer",
+        "copy_receipt": "../audits/s07-sites-b1-integration/copy-receipt.json",
+        "static_sha256": "a89cb63b441d19045b665a3d4722540327ddb55f8def77d8b87543caee50526d",
+        "result": {
+          "started": "2026-10-31T23:15:26.071451+00:00",
+          "driver_pid": 2,
+          "package": "./internal/app",
+          "pattern": "^TestSharedSiteConfig(ActualSourceObservations|StoreActualSourceWarmCold|StoreKnownStateAndTransactionGuard)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s07-sites-store01.test",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s07-sites-store01.test",
+                "-test.v",
+                "-test.run",
+                "^TestSharedSiteConfig(ActualSourceObservations|StoreActualSourceWarmCold|StoreKnownStateAndTransactionGuard)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T23:15:26.071465+00:00",
+              "scratch_free": 49985626112,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T23:15:27.168525+00:00",
+              "scratch_free": 49982369792,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T23:15:54.185275+00:00",
+              "scratch_free": 49817243648,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 6227,
+          "program_sha256": "8b43b8c0cf5736acfaa5d5821a7601131a5ed29d6d3b39c971aba828cc41831a",
+          "root_passes": [
+            "TestSharedSiteConfigActualSourceObservations",
+            "TestSharedSiteConfigStoreActualSourceWarmCold",
+            "TestSharedSiteConfigStoreKnownStateAndTransactionGuard"
+          ],
+          "ended": "2026-10-31T23:15:54.666065+00:00"
+        },
+        "outer_receipt": {
+          "observed_at": "2026-10-31T23:16:54.943962+00:00",
+          "session_id": 86760,
+          "initial_chunk": "68ce74",
+          "terminal_chunk": "a1be14",
+          "exit_code": 0
+        },
+        "independent_sha256": "acf63ca1fa09b8bb7997919eb350f6e50d0ade5d0f5a483aa626230e965c3eec"
+      },
+      "protection": {
+        "at": "2026-10-31T23:24:08.954077+00:00",
+        "base": "f91359b612cefc068ff590d6c99622d329e6d474",
+        "files": [
+          {
+            "target_path": "cmd/owned-site-selection-fixture/main.go",
+            "protected_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/protected-wip/s07-awaiting-native-origin/target/cmd/owned-site-selection-fixture/main.go",
+            "bytes": 15147,
+            "sha256": "875df153a59c9cf63a16f7919969bd37e89ef985ea4e09845b47e2bd6d621d74",
+            "action": "newfile move"
+          },
+          {
+            "target_path": "internal/app/plugin_shared_system_config_sites.go",
+            "protected_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/protected-wip/s07-awaiting-native-origin/target/internal/app/plugin_shared_system_config_sites.go",
+            "bytes": 5837,
+            "sha256": "47405a4f50e0d4494e93791cbb5f9a7714648cb8c560b7b3f9361c2adbbea047",
+            "action": "newfile move"
+          },
+          {
+            "target_path": "internal/app/plugin_shared_system_config_sites_source_test.go",
+            "protected_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/protected-wip/s07-awaiting-native-origin/target/internal/app/plugin_shared_system_config_sites_source_test.go",
+            "bytes": 9127,
+            "sha256": "a430090ef3e659870607de6d7f1b36f0615d11d926e495fe6699d767249c7293",
+            "action": "newfile move"
+          },
+          {
+            "target_path": "internal/app/plugin_shared_system_config_sites_store.go",
+            "protected_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/protected-wip/s07-awaiting-native-origin/target/internal/app/plugin_shared_system_config_sites_store.go",
+            "bytes": 6235,
+            "sha256": "713e685a3e0277f34684e38da2b079c3c99516a5e00dc1fe9db18b596cedaf4c",
+            "action": "newfile move"
+          },
+          {
+            "target_path": "internal/app/plugin_shared_system_config_sites_store_test.go",
+            "protected_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/protected-wip/s07-awaiting-native-origin/target/internal/app/plugin_shared_system_config_sites_store_test.go",
+            "bytes": 10631,
+            "sha256": "d1a0e367060a908383e19ce68ab5d0801732e7dd44f777fd445b950b45852327",
+            "action": "newfile move"
+          },
+          {
+            "target_path": "internal/app/plugin_shared_system_config_sites_test.go",
+            "protected_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/protected-wip/s07-awaiting-native-origin/target/internal/app/plugin_shared_system_config_sites_test.go",
+            "bytes": 6345,
+            "sha256": "5d5e72dc3acb772c5a7267f56afb6a32323dfdfbcd0a1fef31d8b28eee74fd58",
+            "action": "newfile move"
+          },
+          {
+            "target_path": "internal/app/testdata/source-system-config-sites-warm01.json",
+            "protected_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/protected-wip/s07-awaiting-native-origin/target/internal/app/testdata/source-system-config-sites-warm01.json",
+            "bytes": 251898,
+            "sha256": "148a29ae85a4ed1674b129415e5f1860588e5722f51d47dfcad13c780e878f01",
+            "action": "newfile move"
+          },
+          {
+            "target_path": "internal/plugins/shared_system_config_site_selection_test.go",
+            "protected_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/protected-wip/s07-awaiting-native-origin/target/internal/plugins/shared_system_config_site_selection_test.go",
+            "bytes": 3225,
+            "sha256": "e0d561b7ca3459f70b1e1a7b2a5cfb8ef834fc072fd6db0a91423c7a08a8669b",
+            "action": "newfile move"
+          },
+          {
+            "target_path": "internal/plugins/shared_system_config.go",
+            "protected_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/protected-wip/s07-awaiting-native-origin/target/internal/plugins/shared_system_config.go",
+            "bytes": 2684,
+            "sha256": "e181932913a790fb653a46f66282494b6a5f0a9f9c590c6250688c5d826d8efd",
+            "action": "fullownedversion saved; restore exactHEADbase with two-added-constants proof"
+          }
+        ],
+        "sdk_base_sha256": "e650df39ce52e94479fffb559867e540df8747e49771db31902c1d14dd914065",
+        "external_checkpoints": [
+          {
+            "library_file_id": "libfile_c1e2680ed3c08191b2472dcdc384a4df",
+            "sha256": "291dfcf64046aef99b4ac6e4cf969c6d66f9067a30b76ffbffcb7a0e539f2922"
+          },
+          {
+            "library_file_id": "libfile_1e4d21a23aa48191a824510c746a60e8",
+            "sha256": "86bbcbd0e4fc3093614bdf260988d7e9734414de71aa5c98ef433cd23d69e79c"
+          }
+        ],
+        "scope": "nine ownedS07 productfiles protected exactly; no reset/clean/sparse/index edit; oldS06/Browse unaffected; sourceproof refers frozen candidate not activeS13 tree",
+        "restore_rule": "restoreeightnewfiles only ifdestabsent; SDK wholefile only ifcurrentbase hash stillmatches elseapply reviewedtwoconstantdelta; verifyallhashes before gates"
+      },
+      "external_2322": {
+        "library_file_id": "libfile_1e4d21a23aa48191a824510c746a60e8",
+        "version": 0,
+        "bytes": 2069198,
+        "sha256": "86bbcbd0e4fc3093614bdf260988d7e9734414de71aa5c98ef433cd23d69e79c",
+        "prerequisite_library_id": "libfile_c1e2680ed3c08191b2472dcdc384a4df",
+        "status": "parentconfirmedactualSpace saved/xattrs0; WIPnotcommit"
+      }
+    },
+    "new_s13_four_reconstruction": {
+      "base": "f91359b612cefc068ff590d6c99622d329e6d474",
+      "scope": "exactoldS13eight subset: QBset_torrents_tag/set_torrent_category/stop_torrents,TRstop_torrents; no reannounce expansion",
+      "scope_review_sha256": "161d73fa16b0e707e8ad21f18cd2cd45653589e9e15a92a0d787673df39bafab",
+      "status": "finite source/target/normal installed dualhost independentlyaccepted; publicationfinalreviewpending",
+      "source_preparation": {
+        "path": "../audits/s13-four-source-preparation",
+        "seal_sha256": "4c6f321b18895f7125819a6d72859ba1e8b0cacaed03b26f92288a621519d185",
+        "scope": "fourcomplete originalmethods/17recordingcases; no vendor/network/constructor, notnativeproof"
+      },
+      "source_actual": {
+        "path": "../evidence/s13-four-source01",
+        "outer_tool_chunk": "5131f7",
+        "exit_code": 0,
+        "source_raw_sha256": "de761347f6ba64f9d74eafaf0309c99b5a0fbab9aa6d2ad17ccdaa6ea2920c7c",
+        "at": "2026-10-31T23:29:44Z",
+        "scope": "17 actual original selected-leaf recording-port observations; not native/vendor/daemon proof",
+        "runtime_independent": {
+          "path": "../audits/s13-four-source-independent/source01-readback.json",
+          "sha256": "f94225932879cd08d662abc2c9f57a6e67b9d0f60cb6b2b66f792837b6ecd52c",
+          "status": "accepted finite original selected leaves"
+        }
+      },
+      "active_session": null,
+      "sdk_leaf_actual": {
+        "s13-four-sdk01": {
+          "status": "PASS finite component, not native/installed host",
+          "roots": [
+            "TestSharedDownloaderFourCommandsWire",
+            "TestSharedDownloaderFourCommandsBoundary"
+          ],
+          "input_count": 1930,
+          "current_drift": [],
+          "program_sha256": "48eafd6a23768e87c2ec849502c2bbd3f38a631a6cee6aaf6b31036ab9225b61",
+          "ended": "2026-10-31T23:30:58.905086+00:00",
+          "result_sha256": "17d7589494646e0c8da69ae030d9fc3c92ee98579b8737a0ea6d7281227dd11a"
+        },
+        "s13-four-leaf01": {
+          "status": "PASS finite component, not native/installed host",
+          "roots": [
+            "TestDownloaderFourLeafSourceObservations",
+            "TestDownloaderFourLeafBoundaries"
+          ],
+          "input_count": 1770,
+          "current_drift": [],
+          "program_sha256": "f3bed6ab960280e3f703e220057f8a5857df3476aa769b27f1cbc23c9b2800bc",
+          "ended": "2026-10-31T23:30:59.769833+00:00",
+          "result_sha256": "b4a1a0b99b155e90a0feb071ebf5a4413d0dcd037cf27eeb21646c5cbfc38143"
+        }
+      },
+      "app_actual": {
+        "path": "../evidence/s13-four-app01",
+        "status": "actualPASS2 originalnormalcomponent, independentlyaccepted; later currentclosure race separately accepted",
+        "input_count": 6224,
+        "program_sha256": "dbc2cbbe07ef91c4c31d7c9d1f2d56fa6ba41b92b0446036aed04298982c28c4",
+        "outer_exit": 0,
+        "ended": "2026-10-31T23:32:30Z",
+        "runtime_independent": {
+          "path": "../audits/s13-four-cross-review/app01-runtime-readback.json",
+          "sha256": "d29b6300aea3447ca1594af7851a2de4490d305778cc3e409ffedae59f628e92",
+          "status": "ACCEPT finite component; exact two hooks static"
+        },
+        "stage_status_when_recorded": "PASS2 finite component; runtimeindependent pending",
+        "historical_stage": true
+      },
+      "external_2333": {
+        "library_file_id": "libfile_bda6eb5e42d88191aeb2b44a226c82f6",
+        "version": 0,
+        "bytes": 2620062,
+        "sha256": "8e92e1f09f9ab03dadec4455a3f51d22192e2a9a899fa7d1247546007f013e06",
+        "status": "parent confirmed actual Space save and xattrs tool0; WIP not Git delivery"
+      },
+      "worker_build": {
+        "path": "../evidence/s13-four-fixture01",
+        "program": "../runtime/s13-four-fixture01",
+        "program_sha256": "0c6741203942a1f1c6065ab7188798a45aabe419cb559116d1dcfe383f48ce63",
+        "input_count": 1087,
+        "status": "actualnormalfixture compilePASS; actualinstalled invocation lateraccepted in normal_cli_actual",
+        "stage_status_when_recorded": "compile only PASS; actual installed invocation pending",
+        "historical_stage": true
+      },
+      "sdk_leaf_race": {
+        "s13-four-sdk-race01": {
+          "roots": [
+            "TestSharedDownloaderFourCommandsWire",
+            "TestSharedDownloaderFourCommandsBoundary"
+          ],
+          "input_count": 1967,
+          "program_sha256": "93dc59e6884db111d4a11e6f6f46a2a7aff4ea47b0dd875ac2af6beac3fe58a6",
+          "result_sha256": "890216cd5fa855a83e5bf08ccb379edd26633532cf9293bc426374adc77d92ea",
+          "status": "actualPASS finite race component, independentcoordinatorreadback zero drift"
+        },
+        "s13-four-leaf-race01": {
+          "roots": [
+            "TestDownloaderFourLeafSourceObservations",
+            "TestDownloaderFourLeafBoundaries"
+          ],
+          "input_count": 1807,
+          "program_sha256": "b21216b4e0a2c9403ddd4fcf67332f52c835066bd9370a23e1c72b3e406f9a4b",
+          "result_sha256": "b9f398c3a510b5660fc9df70579d7d1f4276d0c9f937be4873b6cf6a92727e9d",
+          "status": "actualPASS finite race component, independentcoordinatorreadback zero drift"
+        }
+      },
+      "native_integration": {
+        "candidate_sha256": "bb8009d2ee4595c3a716c6f1aab7d5736f2506a37468b679e17ad50c7b238891",
+        "independent_readback_sha256": "c0c105a182fbf8e436dcd7d3304913fc20c46f71ae55eaed165405dab75aa5a3",
+        "status": "exacttwo newfiles with sevenoldfilesunchanged; later actualnormal/race gates independentlyaccepted",
+        "boundary": "finite declared ordinary JSON subset; unsupported arbitraryPython/structured category/ordered-map selector remain explicit; no realdaemon claim",
+        "stage_status_when_recorded": "exacttwo newfiles, 7oldnativeunchanged, actualgates running",
+        "historical_stage": true
+      },
+      "normal_cli_preparation": {
+        "driver_sha256": "3c05d112687b22cac5c5f9d3ccbabefdd880aaf875bb35baaddd78df8ad97095",
+        "bindings_sha256": "7c435376cb862b72930279b2520dd99a6e65bea4455fd9ffd9a8346655f9de92",
+        "input_count": 3998,
+        "server_sha256": "2a14551d6f7812b382412690417417b0a72d1423f6357e92d54ae70e5d34a28a",
+        "status": "historical frozenpreparation; later actual reviewed execution accepted in normal_cli_actual",
+        "stage_status_when_recorded": "notexecuted; independentpreexecpending",
+        "historical_stage": true
+      },
+      "app_race_actual": {
+        "path": "../evidence/s13-four-app-race01",
+        "status": "actualPASS2 and independentfiniteACCEPT",
+        "input_count": 6235,
+        "program_sha256": "195f9e5bf508ad3addc31f976911a28201511001cf7c3c250dad327ed812681a",
+        "outer_exit": 0,
+        "independent_sha256": "7ef1d11e04927877a41ae435ae1987bbdba674352d3249e590dacdc3f27268f0"
+      },
+      "native_actual": {
+        "s13-four-native01": {
+          "status": "PASS3 actualownedHTTP, independentaccepted",
+          "program_sha256": "dc831fd628558f711a888b1274623be66f7829e1d5ec0d55a98520ed2b2c6482",
+          "input_count": 2607,
+          "result_sha256": "cccbb07996ad1e205848993e28badc0734162d63b0d93be3e542c1ce7d0f4897"
+        },
+        "s13-four-native-race01": {
+          "status": "PASS3 actualownedHTTP, independentaccepted",
+          "program_sha256": "eebd17e46c49062fd19641278c4df529caf1f0035bad4ee928ecfc0f87ad43de",
+          "input_count": 2615,
+          "result_sha256": "9642fc0fcaf7f5ee8b7a15169670c6328316908e38f4502eb95a1f4ad68d6540"
+        }
+      },
+      "normal_cli_actual": {
+        "path": "../test-instances/s13-controls-normal01/result.json",
+        "sha256": "c15dc06bcede1ce5d3fbf86d3bac54d944ef00d62edb0fe3ffa7c9e505c7a714",
+        "outer": {
+          "session_id": 82895,
+          "initial_chunk": "a9f5c9",
+          "terminal_chunk": "24de41",
+          "exit_code": 0,
+          "scope": "actual reviewed normal two-host/installedworker/ownedHTTP execution"
+        },
+        "normal_hosts": [
+          {
+            "pid": 24,
+            "exit": 0
+          },
+          {
+            "pid": 60,
+            "exit": 0
+          }
+        ],
+        "workers": [
+          41,
+          75
+        ],
+        "status": "actualPASS and independentfiniteACCEPT",
+        "business_calls": 4,
+        "current_callbacks": 8,
+        "old_caller_attempts": 1,
+        "limits": "owned fixed HTTP, not realdaemon/media/browser/fullS13",
+        "independent_sha256": "653a3112c8dcad2cd44f4804a6ccd78ddc0170b050b186eda91e63a3254ca2a4"
+      },
+      "external_2344": {
+        "library_file_id": "libfile_617e6eac75708191bc0a46325422d25f",
+        "version": 0,
+        "bytes": 4371234,
+        "sha256": "4f4e85bd787c4586ce31533a4bdd08bd5fbd489a66ffe873a71c4797454192c8",
+        "prerequisite_library_id": "libfile_bda6eb5e42d88191aeb2b44a226c82f6",
+        "status": "parent confirmed actual Space save/xattrs tool0; terminal WIP not Git delivery"
+      },
+      "publication": {
+        "path": "migration/evidence/s13-four-controls",
+        "status": "assembled finite candidate; not committed/pushed"
+      }
+    },
+    "delivery_pending_historical_7b": {
+      "commit": "7b9b1d038b11d6235108889bea634e53e8b19d27",
+      "included_commits": [
+        "760720ed0a96fd9e7a647914c14545bde5ef857e",
+        "b9e667cbc9532cb996993af30531327af3dcc541",
+        "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+        "7b9b1d038b11d6235108889bea634e53e8b19d27"
+      ],
+      "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "remote_confirmed": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "bundle_status": "actualSpace saved libfile_c2a07eef7c308191b096aca960a86e35 v0; fourcommit chain, not remote",
+      "blocker": "Mac quota blocker last observed, no blind retry/model switch/new auth route"
+    },
+    "workers_history_before_s13_publication": [
+      {
+        "name": "coordinator",
+        "model": "Astra ultra",
+        "task": "unique ledger/actual serial execution/S13 integration; S07protected pendinglegacychoice"
+      },
+      {
+        "name": "terminate_independent",
+        "model": "Astra ultra",
+        "task": "S13 newSDK/optionalleaf candidate only, oldeightinterfaces unchanged"
+      },
+      {
+        "name": "s01_release_owner",
+        "model": "Astra ultra",
+        "task": "S13 App handler externalcandidate and exacttwo resourcehooks"
+      },
+      {
+        "name": "c_userdata_owner",
+        "model": "Astra ultra",
+        "task": "S13 17case originalleaf prepared, no vendorimport"
+      },
+      {
+        "name": "tls_ab_independent",
+        "model": "Astra ultra",
+        "task": "S13 originalleaf independentpreexec then nativecandidate author; willnotselfapprove native"
       }
     ]
   },

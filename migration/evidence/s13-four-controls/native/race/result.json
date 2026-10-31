@@ -1,0 +1,88 @@
+{
+  "started": "2026-10-31T23:36:24.197157+00:00",
+  "driver_pid": 103,
+  "package": "./internal/plugins/iyuuautoseed/native",
+  "pattern": "^TestSharedDownloaderFour(QBWireAndVersions|TRStopSelectors|GuardAndUnknown)$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/plugins/iyuuautoseed/native"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-four-native-race01.test",
+        "-race",
+        "./internal/plugins/iyuuautoseed/native"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/iyuuautoseed/native",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-four-native-race01.test",
+        "-test.v",
+        "-test.run",
+        "^TestSharedDownloaderFour(QBWireAndVersions|TRStopSelectors|GuardAndUnknown)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T23:36:24.197174+00:00",
+      "scratch_free": 49521500160,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T23:36:24.597532+00:00",
+      "scratch_free": 49520263168,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T23:36:28.730621+00:00",
+      "scratch_free": 49491181568,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 2615,
+  "program_sha256": "eebd17e46c49062fd19641278c4df529caf1f0035bad4ee928ecfc0f87ad43de",
+  "root_passes": [
+    "TestSharedDownloaderFourQBWireAndVersions",
+    "TestSharedDownloaderFourTRStopSelectors",
+    "TestSharedDownloaderFourGuardAndUnknown"
+  ],
+  "ended": "2026-10-31T23:36:29.950422+00:00"
+}

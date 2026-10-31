@@ -1,0 +1,14 @@
+# S13 four controls — actual normal CLI finite acceptance
+
+**ACCEPT**, independent non-author review, 2026-10-31 UTC. Actual execution receipt: session 82895, initial `a9f5c9`, terminal `24de41`, exit 0. Original evidence remains `test-instances/s13-controls-normal01`; no replay or new process probe was performed.
+
+- Independently read and hashed all **11 non-login response bodies**, compared four business response JSON objects to recorded observations, and verified installation success (not merely HTTP 200). Login contents were deliberately not retained. Private DB and host logs were neither read nor exported.
+- All **3,998 frozen inputs** rehash identically. Driver `3c05d112…`, bindings `7c435376…`, server `2a14551d…`, worker `0c674120…` remain as accepted before execution. Recorded terminal input drift is empty and inherited environment unchanged.
+- Four business requests completed **eight current SDK callbacks**: seven typed returns and one explicit `host_operation_failed`. Tag completion is JSON null/source-falsey, not a mutation-success receipt; six other successful current results are source bool true. One independent old-caller probe returned `invalid_host_call`, denied=true, one failed callback/zero returned bytes. It was not inferred merely from absence of selected writes.
+- Warm host **24**, worker **41**, init_count 1, invocation 1→2→3. The selected fixed 500 occurred exactly once; the next distinct stop succeeded on the same worker within invocation 2. No failure was converted to source False or silently replayed. This is an observed peer count, not a universal single transport-attempt guarantee.
+- Cold normal host **60**, new worker **75**, init_count/invocation 1, same private DataDir, no reinstall or artifact refetch. Both recorded hosts naturally Wait=0 without forced cleanup. PID/starttime/parent/executable identities and listener ownership receipts are consistent. Worker reap evidence is the frozen driver's successful stop/wait_workers checks, not a new live /proc observation.
+- Independently recounted all **16 completed fixed peer requests** and checked their timestamps against per-business before/after selected counts: `/index` GET 1, `/worker` GET 1, qB version GET 5, addTags POST 1, setCategory POST 2, stop POST 4, TR POST 2 (session-get then torrent-stop). No peer errors. Seventeen resource samples, including terminal, passed the existing reserve.
+
+Level: real standard installation and ordinary two-host SDK invocation through the production host/native chain to owned synthetic responders. Not real downloader state, vendor import/execution, physical plugin-wire measurement, browser/full S13 or published delivery. Original source-leaf/native/component credits remain distinct.
+
+Machine readback `cli01-runtime-readback.json`: SHA256 `653a3112c8dcad2cd44f4804a6ccd78ddc0170b050b186eda91e63a3254ca2a4`.

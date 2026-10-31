@@ -1,0 +1,14 @@
+# S13 four controls — normal CLI pre-execution review
+
+**READY for coordinator's sole execution window; not executed by reviewer.** Author s01_release_owner; independent review c_userdata_owner, 2026-10-31 UTC.
+
+- Driver `3c05d112687b22cac5c5f9d3ccbabefdd880aaf875bb35baaddd78df8ad97095`; actual coordinator execution bindings `7c435376cb862b72930279b2520dd99a6e65bea4455fd9ffd9a8346655f9de92`. Independently rehashed all **3,998** entries with no drift/duplicate path. The early prepared-bindings/COMMAND files correctly remain historical templates, not actual server receipts.
+- Independently checked actual server 3,978-input and worker 1,087-input before/after/current equality, build exit 0, binary hashes and inclusion in execution bindings. Server `2a14551d6f7812b382412690417417b0a72d1423f6357e92d54ae70e5d34a28a`; worker `0c6741203942a1f1c6065ab7188798a45aabe419cb559116d1dcfe383f48ce63`. These are compilation facts, not CLI or browser success.
+- All 15 declared original S03 lifecycle/control helpers and the entire finally block are independently AST-identical. Exact owned 127.0.0.1:39123 control client remains six fixed method/path pairs with known child PID/starttime/executable/listener checks. Environment/proxy/CA are not rewritten; only the existing coordinator grant marker is required before launch. No alternate endpoint or transport fallback on denial.
+- Fixed peer accepts seven method/path pairs: two artifacts, one version GET, three qB selected POSTs and one TR RPC POST route with only session-get/torrent-stop. No forwarding; CONNECT and other explicit methods reject. All downloader identities, selectors and credentials are synthetic and privately generated; no real daemon or filesystem mutation.
+- Four business API requests contain eight current SDK operations. Driver validates each callback, explicit source None versus bool, one selected 500 as unknown effect without replay, same-worker next-operation recovery, one previous-caller rejection with exact stale code and separate callback counters, and same-DB second normal host/new worker without reinstall/refetch. Worker actual manifest/fields/counters/probe match the frozen source. It does not manufacture physical plugin-wire counts or treat HTTP 200 as business success.
+- Expected fixed peer totals are independently consistent with the native code: version GET 5; tag/category/stop POST 1/2/4; TR POST 2; artifact GETs 1 each. Graceful host Wait=0 and owned child disappearance are required; forced cleanup marks FAIL. Source/SDK/leaf/native/component credits stay separate.
+
+No static blocker found within this exact finite gate. Only metadata hashing and Python AST parsing were performed; driver/source/vendor/Go/services were not executed.
+
+Machine readback: `cli01-preexec-static.json` SHA256 `01789fe667bd1ede885f32536f8ed112be06fba41eaf7e1cf172edb7204f5466`.

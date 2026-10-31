@@ -1,0 +1,87 @@
+{
+  "started": "2026-10-31T23:38:21.021020+00:00",
+  "driver_pid": 2,
+  "package": "./internal/app",
+  "pattern": "^TestOriginalDownloaderControlHost(Wire|ScopeAndNoReplay)$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-four-app-race01.test",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-four-app-race01.test",
+        "-test.v",
+        "-test.run",
+        "^TestOriginalDownloaderControlHost(Wire|ScopeAndNoReplay)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T23:38:21.021038+00:00",
+      "scratch_free": 49372733440,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T23:38:22.141619+00:00",
+      "scratch_free": 49369632768,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T23:39:09.465412+00:00",
+      "scratch_free": 49131540480,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 6235,
+  "program_sha256": "195f9e5bf508ad3addc31f976911a28201511001cf7c3c250dad327ed812681a",
+  "root_passes": [
+    "TestOriginalDownloaderControlHostWire",
+    "TestOriginalDownloaderControlHostScopeAndNoReplay"
+  ],
+  "ended": "2026-10-31T23:39:11.594759+00:00"
+}

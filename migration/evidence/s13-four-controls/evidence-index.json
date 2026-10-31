@@ -1,0 +1,451 @@
+{
+  "base": "f91359b612cefc068ff590d6c99622d329e6d474",
+  "status": "finite backend locally verified; not remote delivered",
+  "product_files": {
+    "cmd/owned-downloader-controls-fixture/main.go": "16fa3b3b3e5b63bbf2e1050a6c47d36f2dfe09001be7c2ed41c49ea63a93e4b7",
+    "internal/app/plugin_original_resources.go": "84a5f33be4a68b99832b66cf63450471d56a36de864530d5c022058ba32346c5",
+    "internal/app/plugin_shared_downloader_controls.go": "630baffd0fa16cbdff0129cf5a6d650682c2b7cd7ded2ae56d15b4674232af51",
+    "internal/app/plugin_shared_downloader_controls_test.go": "171c9c4c42b5125d11e01fc36402dc0d5a0444ffa20a0da2842ad68e76604321",
+    "internal/plugins/shared_downloader_four_commands.go": "80e1c898c4d0d258c98e9a980ddfccd0a91af17e4a4922067cdcf6bd20a4f4a7",
+    "internal/plugins/shared_downloader_four_commands_test.go": "cd2442d31a026d7dd4e80e0330f8ea6e22dd2aaf20ca6d1a14d7c0b7252a1844",
+    "internal/plugins/downloadercommands/four_commands.go": "95e381e5fd06190df25f6fa8f2f9c9b5b64483a1edc4ac4ebb46830b50d67304",
+    "internal/plugins/downloadercommands/four_commands_test.go": "89aa218e17b70c4742b7ec008059cedb24d688cf3364a5f67ffc8eb36e1c862d",
+    "internal/plugins/downloadercommands/testdata/source-four-leaves.json": "de761347f6ba64f9d74eafaf0309c99b5a0fbab9aa6d2ad17ccdaa6ea2920c7c",
+    "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands.go": "de73f7cf95d10edab095b39c10941b2b81ba8f0e1a91412ecac409b2dde4e56b",
+    "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands_test.go": "b8a9a0ba1a88e258647b45dfcdc17de24ab94fcea383310c55144d9ebe853665"
+  },
+  "published_evidence": {
+    "evidence/s13-four-controls/README.md": "f8402d344800f01564dcea952171b8995713f22b0df81d7bf5a34ae40ca7efc7",
+    "evidence/s13-four-controls/app/normal/result.json": "c46b32c80dbbb1de929c11701c68b661b215d0d3b0d8d93f6a7809fba12f7ea4",
+    "evidence/s13-four-controls/app/normal/tests.jsonl": "38adeef61fc5d65833f1ec0953e288cce0456e7dd237adb03487e710bbaf02a4",
+    "evidence/s13-four-controls/app/normal/tool-receipt.json": "f4031a79353fffcb6679da9bfc963720fa1d0e8636764f6d6da4dc23560048cd",
+    "evidence/s13-four-controls/app/normal-review.md": "2c07c64173784cbdb6ba198b78aae509a2dde0256460a5ef8bc403f673c08544",
+    "evidence/s13-four-controls/app/race/result.json": "1cfea7740abc87a10cde0760b94c18ec474cf3fdac26b8097ad27f159920bb98",
+    "evidence/s13-four-controls/app/race/tests.jsonl": "e36ac83fcf39e873cf51b6e3378a745c46cff982d3012f6e109508a37ad8a1c0",
+    "evidence/s13-four-controls/app/race/tool-receipt.json": "50bbdfe87a1973d9d8e0e4abbfe1818eb7e3c8cb4989765ba14390fd425093cc",
+    "evidence/s13-four-controls/app/race-review.md": "f3df53e8141910fd02de408922e18f7ee1ce673c1004b9170888241b8b6799ff",
+    "evidence/s13-four-controls/app/static-review.md": "9158b8ad00239dbf83bbe9ae3a55452b800d0d59e66e2ab9cde25e1baf6d59af",
+    "evidence/s13-four-controls/app/two-hooks.json": "9c608e9b4d51aa01c0537f5e3d107963bed58d4ed217af924bd13bccf45add4c",
+    "evidence/s13-four-controls/cli/command.json": "f3798ca6ae000451f1b4a03e013a7db3a0d234321e933f5f0ebb101dc988cebf",
+    "evidence/s13-four-controls/cli/driver.py": "3c05d112687b22cac5c5f9d3ccbabefdd880aaf875bb35baaddd78df8ad97095",
+    "evidence/s13-four-controls/cli/fixture-result.json": "475999c647f407b76ec73502521e93c306a23bfce24a32164578d70b9f4c57d1",
+    "evidence/s13-four-controls/cli/fixture-tool-receipt.json": "2d1092c8fe776c4b5c9b6ca2b23bee231ad4b295ed99cabae51d8e3382d8358f",
+    "evidence/s13-four-controls/cli/inherited-helpers.json": "13375ab41095d46f10069295ab8c5dbd0fff8564d7e525c5e92a457f9d2d6ba2",
+    "evidence/s13-four-controls/cli/inputs.json": "7c435376cb862b72930279b2520dd99a6e65bea4455fd9ffd9a8346655f9de92",
+    "evidence/s13-four-controls/cli/preexec-review.md": "65b5ff2885609757a94c43a8c8367df4142e36c63727ca8c6680b8023345b198",
+    "evidence/s13-four-controls/cli/result.json": "c15dc06bcede1ce5d3fbf86d3bac54d944ef00d62edb0fe3ffa7c9e505c7a714",
+    "evidence/s13-four-controls/cli/runtime-review.md": "c16d1f15b5d63d2944739cad5a1877a67bb4adbdaadd8a760f73106cb3f2c455",
+    "evidence/s13-four-controls/cli/server-result.json": "a705ac816c01dc25895758b64ec5c0079f39ac640d8d6fcb3aa54410740907eb",
+    "evidence/s13-four-controls/cli/server-tool-receipt.json": "f724b8903c1e20ee8ba24409c9eb9451ae94e8957d78b011999fe7da282dadee",
+    "evidence/s13-four-controls/cli/tool-receipt.json": "338aff4988a5bc45e943f8531723cf7a3b16501cb249a25a1bf515dfa3035b9b",
+    "evidence/s13-four-controls/leaf/normal/result.json": "b4a1a0b99b155e90a0feb071ebf5a4413d0dcd037cf27eeb21646c5cbfc38143",
+    "evidence/s13-four-controls/leaf/normal/tests.jsonl": "76c382facc2f9b3133880ecdb6ccafa8c914d38e3296d732c08ce72dd8045cf4",
+    "evidence/s13-four-controls/leaf/normal/tool-receipt.json": "06ee4a976fd391b60a49f5797fcd34dc64b38a4d4c377bd49c1decd9e3ee6f90",
+    "evidence/s13-four-controls/leaf/race/result.json": "b9f398c3a510b5660fc9df70579d7d1f4276d0c9f937be4873b6cf6a92727e9d",
+    "evidence/s13-four-controls/leaf/race/tests.jsonl": "5b76380b0b298ba60d6200fb6ea4a3719376a26eb39dcffb39b035030ac5bdf8",
+    "evidence/s13-four-controls/leaf/race/tool-receipt.json": "f011eb593df786bc56ae99c584a5aea4073b99e48acb9f9b8bfa42e4d4e0c908",
+    "evidence/s13-four-controls/native/contract.md": "261a6a9cba225c99572a60e188fc744d74bce74acea08473d837b03d5ae9402a",
+    "evidence/s13-four-controls/native/normal/result.json": "cccbb07996ad1e205848993e28badc0734162d63b0d93be3e542c1ce7d0f4897",
+    "evidence/s13-four-controls/native/normal/tests.jsonl": "6093bc59c1fa379dcd6284de43496282aec99f29090935b31b17372af00410f0",
+    "evidence/s13-four-controls/native/normal/tool-receipt.json": "f724b8903c1e20ee8ba24409c9eb9451ae94e8957d78b011999fe7da282dadee",
+    "evidence/s13-four-controls/native/race/result.json": "9642fc0fcaf7f5ee8b7a15169670c6328316908e38f4502eb95a1f4ad68d6540",
+    "evidence/s13-four-controls/native/race/tests.jsonl": "ac1e27928aebf411891fdb46afb07a0b0d152eb6e1eb36cd5b795723aefd8346",
+    "evidence/s13-four-controls/native/race/tool-receipt.json": "f724b8903c1e20ee8ba24409c9eb9451ae94e8957d78b011999fe7da282dadee",
+    "evidence/s13-four-controls/native/runtime-review.md": "d25029879420afec22293f2c9e9a30c6e81be43418e9a8e072e60be9ace8704c",
+    "evidence/s13-four-controls/native/static-review.md": "90f8fab364f2ffcc4abd8437d7f815f9c4fc8e52ed2f338c2cac139501347a38",
+    "evidence/s13-four-controls/retention/first-checkpoint.json": "1b072729914f68e7e27083fd73e911dab0e85e87a998869dd05a4559b2bba20c",
+    "evidence/s13-four-controls/retention/terminal-checkpoint.json": "eddebbf9b06b447f5b8c255a67d811d1aacbea8c332928934d18d974bd39f492",
+    "evidence/s13-four-controls/scope.md": "161d73fa16b0e707e8ad21f18cd2cd45653589e9e15a92a0d787673df39bafab",
+    "evidence/s13-four-controls/sdk/normal/result.json": "17d7589494646e0c8da69ae030d9fc3c92ee98579b8737a0ea6d7281227dd11a",
+    "evidence/s13-four-controls/sdk/normal/tests.jsonl": "4fe417cf1c098ccde0dda9a4de1334b9a3a610d95a302c4831b112e9bd06dcc0",
+    "evidence/s13-four-controls/sdk/normal/tool-receipt.json": "06ee4a976fd391b60a49f5797fcd34dc64b38a4d4c377bd49c1decd9e3ee6f90",
+    "evidence/s13-four-controls/sdk/race/result.json": "890216cd5fa855a83e5bf08ccb379edd26633532cf9293bc426374adc77d92ea",
+    "evidence/s13-four-controls/sdk/race/tests.jsonl": "e3c081dc7a72edc9ec942a2c35c3b3c9ba6b48c4f2d4ab384ad42549db41943c",
+    "evidence/s13-four-controls/sdk/race/tool-receipt.json": "f011eb593df786bc56ae99c584a5aea4073b99e48acb9f9b8bfa42e4d4e0c908",
+    "evidence/s13-four-controls/sdk-leaf/contract.md": "f57edb5da01d06ea4a1b3c1c51497514addbfb2e5e1ad587110470169d2150de",
+    "evidence/s13-four-controls/sdk-leaf/normal-independent.json": "03690c9939bbba112b0dfda1087c3920dbd7b686e929543a7f4ac1ed8c819f0d",
+    "evidence/s13-four-controls/sdk-leaf/oracle-integration.json": "ecc31e3e36d79dcee95bab9aa3cc7313300ff9a5695413602bdd43a6d9e3c9c8",
+    "evidence/s13-four-controls/sdk-leaf/race-independent.json": "e0f61eb7379fa33667b109160c2a40c4365bacfb22c073ad06d6dadd35ccedc5",
+    "evidence/s13-four-controls/sdk-leaf/static-review.json": "d39ce2809d891ece3240594c90e069cbde5aef349bc010afd47a8487b1caf2ea",
+    "evidence/s13-four-controls/source/collector.py": "2a08e7fccf9d4c4f97f8158fef59ee1aa82ca1ecd932f21c0ac77aa6ad542dbe",
+    "evidence/s13-four-controls/source/independent.json": "f94225932879cd08d662abc2c9f57a6e67b9d0f60cb6b2b66f792837b6ecd52c",
+    "evidence/s13-four-controls/source/inputs.json": "216891caf2eefb4648ba5dacbf125f37c758d6af541a66f65ece107236136bb3",
+    "evidence/s13-four-controls/source/owned-cases.json": "c173f346469048741aa744f1ac2e31191a552f68e362e076301c8eae6d48f449",
+    "evidence/s13-four-controls/source/result.json": "d886016e498a71356e3d4f34825df00c29d5db109a670ddd6f30c59e79a0f5ca",
+    "evidence/s13-four-controls/source/review.md": "c31562bca93b073b9ff61e5b392ba6ace2dd82a3d468c1127565c7810f335f2a",
+    "evidence/s13-four-controls/source/selected-nodes.json": "01ad94a1e5c512b942b28b4d88dcc40299d210578403ba7529df55fcac7da4ff",
+    "evidence/s13-four-controls/source/tool-receipt.json": "fe5c9b7934370812ee30e6a24536a8f24017f4eb1f9db8679eb9686bfb652315",
+    "evidence/s13-four-controls/worker/contract.md": "53fc087dfb40a61983c711113ec528ee8e513b70f3088d6ca5ef19c80cc9d760",
+    "evidence/s13-four-controls/worker/independent.json": "3145cc2c99fa86e028b691d982b5a5548a7ca0ade3daf5be673d55b8f9995ac1"
+  },
+  "exact_copies": [
+    {
+      "source": "audits/s13-next-scope/REVIEW.md",
+      "destination": "migration/evidence/s13-four-controls/scope.md",
+      "sha256": "161d73fa16b0e707e8ad21f18cd2cd45653589e9e15a92a0d787673df39bafab",
+      "bytes": 6849
+    },
+    {
+      "source": "audits/s13-four-source-preparation/capture_four_leaves.py",
+      "destination": "migration/evidence/s13-four-controls/source/collector.py",
+      "sha256": "2a08e7fccf9d4c4f97f8158fef59ee1aa82ca1ecd932f21c0ac77aa6ad542dbe",
+      "bytes": 9812
+    },
+    {
+      "source": "audits/s13-four-source-preparation/owned-cases.json",
+      "destination": "migration/evidence/s13-four-controls/source/owned-cases.json",
+      "sha256": "c173f346469048741aa744f1ac2e31191a552f68e362e076301c8eae6d48f449",
+      "bytes": 8763
+    },
+    {
+      "source": "audits/s13-four-source-preparation/source-nodes.json",
+      "destination": "migration/evidence/s13-four-controls/source/selected-nodes.json",
+      "sha256": "01ad94a1e5c512b942b28b4d88dcc40299d210578403ba7529df55fcac7da4ff",
+      "bytes": 2451
+    },
+    {
+      "source": "audits/s13-four-source-preparation/input-bindings.json",
+      "destination": "migration/evidence/s13-four-controls/source/inputs.json",
+      "sha256": "216891caf2eefb4648ba5dacbf125f37c758d6af541a66f65ece107236136bb3",
+      "bytes": 4206
+    },
+    {
+      "source": "evidence/s13-four-source01/result.json",
+      "destination": "migration/evidence/s13-four-controls/source/result.json",
+      "sha256": "d886016e498a71356e3d4f34825df00c29d5db109a670ddd6f30c59e79a0f5ca",
+      "bytes": 738
+    },
+    {
+      "source": "evidence/s13-four-source01/tool-receipt.json",
+      "destination": "migration/evidence/s13-four-controls/source/tool-receipt.json",
+      "sha256": "fe5c9b7934370812ee30e6a24536a8f24017f4eb1f9db8679eb9686bfb652315",
+      "bytes": 164
+    },
+    {
+      "source": "audits/s13-four-source-independent/SOURCE01-REVIEW.md",
+      "destination": "migration/evidence/s13-four-controls/source/review.md",
+      "sha256": "c31562bca93b073b9ff61e5b392ba6ace2dd82a3d468c1127565c7810f335f2a",
+      "bytes": 1564
+    },
+    {
+      "source": "audits/s13-four-source-independent/source01-readback.json",
+      "destination": "migration/evidence/s13-four-controls/source/independent.json",
+      "sha256": "f94225932879cd08d662abc2c9f57a6e67b9d0f60cb6b2b66f792837b6ecd52c",
+      "bytes": 10021
+    },
+    {
+      "source": "audits/s13-four-sdk-leaf-preparation/CONTRACT.md",
+      "destination": "migration/evidence/s13-four-controls/sdk-leaf/contract.md",
+      "sha256": "f57edb5da01d06ea4a1b3c1c51497514addbfb2e5e1ad587110470169d2150de",
+      "bytes": 4191
+    },
+    {
+      "source": "audits/s13-four-coordinator-review/sdk-leaf-static01.json",
+      "destination": "migration/evidence/s13-four-controls/sdk-leaf/static-review.json",
+      "sha256": "d39ce2809d891ece3240594c90e069cbde5aef349bc010afd47a8487b1caf2ea",
+      "bytes": 1447
+    },
+    {
+      "source": "audits/s13-four-coordinator-review/sdk-leaf-integration02.json",
+      "destination": "migration/evidence/s13-four-controls/sdk-leaf/oracle-integration.json",
+      "sha256": "ecc31e3e36d79dcee95bab9aa3cc7313300ff9a5695413602bdd43a6d9e3c9c8",
+      "bytes": 2259
+    },
+    {
+      "source": "audits/s13-four-coordinator-review/sdk-leaf-runtime01.json",
+      "destination": "migration/evidence/s13-four-controls/sdk-leaf/normal-independent.json",
+      "sha256": "03690c9939bbba112b0dfda1087c3920dbd7b686e929543a7f4ac1ed8c819f0d",
+      "bytes": 1243
+    },
+    {
+      "source": "audits/s13-four-coordinator-review/sdk-leaf-race01.json",
+      "destination": "migration/evidence/s13-four-controls/sdk-leaf/race-independent.json",
+      "sha256": "e0f61eb7379fa33667b109160c2a40c4365bacfb22c073ad06d6dadd35ccedc5",
+      "bytes": 890
+    },
+    {
+      "source": "audits/s13-four-native-preparation/CONTRACT.md",
+      "destination": "migration/evidence/s13-four-controls/native/contract.md",
+      "sha256": "261a6a9cba225c99572a60e188fc744d74bce74acea08473d837b03d5ae9402a",
+      "bytes": 5112
+    },
+    {
+      "source": "audits/s13-four-cross-review/NATIVE01-REVIEW.md",
+      "destination": "migration/evidence/s13-four-controls/native/static-review.md",
+      "sha256": "90f8fab364f2ffcc4abd8437d7f815f9c4fc8e52ed2f338c2cac139501347a38",
+      "bytes": 3726
+    },
+    {
+      "source": "audits/s13-four-cross-review/NATIVE01-RUNTIME-REVIEW.md",
+      "destination": "migration/evidence/s13-four-controls/native/runtime-review.md",
+      "sha256": "d25029879420afec22293f2c9e9a30c6e81be43418e9a8e072e60be9ace8704c",
+      "bytes": 2261
+    },
+    {
+      "source": "audits/s13-four-cross-review/APP01-REVIEW.md",
+      "destination": "migration/evidence/s13-four-controls/app/static-review.md",
+      "sha256": "9158b8ad00239dbf83bbe9ae3a55452b800d0d59e66e2ab9cde25e1baf6d59af",
+      "bytes": 3099
+    },
+    {
+      "source": "audits/s13-four-cross-review/APP01-RUNTIME-REVIEW.md",
+      "destination": "migration/evidence/s13-four-controls/app/normal-review.md",
+      "sha256": "2c07c64173784cbdb6ba198b78aae509a2dde0256460a5ef8bc403f673c08544",
+      "bytes": 2042
+    },
+    {
+      "source": "audits/s13-four-cross-review/APP-RACE01-REVIEW.md",
+      "destination": "migration/evidence/s13-four-controls/app/race-review.md",
+      "sha256": "f3df53e8141910fd02de408922e18f7ee1ce673c1004b9170888241b8b6799ff",
+      "bytes": 1619
+    },
+    {
+      "source": "audits/s13-four-coordinator-review/app-integration01.json",
+      "destination": "migration/evidence/s13-four-controls/app/two-hooks.json",
+      "sha256": "9c608e9b4d51aa01c0537f5e3d107963bed58d4ed217af924bd13bccf45add4c",
+      "bytes": 591
+    },
+    {
+      "source": "audits/s13-four-worker-preparation/CONTRACT.md",
+      "destination": "migration/evidence/s13-four-controls/worker/contract.md",
+      "sha256": "53fc087dfb40a61983c711113ec528ee8e513b70f3088d6ca5ef19c80cc9d760",
+      "bytes": 5016
+    },
+    {
+      "source": "audits/s13-four-coordinator-review/worker-static01.json",
+      "destination": "migration/evidence/s13-four-controls/worker/independent.json",
+      "sha256": "3145cc2c99fa86e028b691d982b5a5548a7ca0ade3daf5be673d55b8f9995ac1",
+      "bytes": 994
+    },
+    {
+      "source": "audits/s13-four-normal-cli/normal-cli-driver.py",
+      "destination": "migration/evidence/s13-four-controls/cli/driver.py",
+      "sha256": "3c05d112687b22cac5c5f9d3ccbabefdd880aaf875bb35baaddd78df8ad97095",
+      "bytes": 33565
+    },
+    {
+      "source": "audits/s13-four-normal-cli/AST-DELTA.json",
+      "destination": "migration/evidence/s13-four-controls/cli/inherited-helpers.json",
+      "sha256": "13375ab41095d46f10069295ab8c5dbd0fff8564d7e525c5e92a457f9d2d6ba2",
+      "bytes": 645
+    },
+    {
+      "source": "audits/s13-four-normal-cli/execution-bindings.json",
+      "destination": "migration/evidence/s13-four-controls/cli/inputs.json",
+      "sha256": "7c435376cb862b72930279b2520dd99a6e65bea4455fd9ffd9a8346655f9de92",
+      "bytes": 1045069
+    },
+    {
+      "source": "audits/s13-four-normal-cli/execution-command.json",
+      "destination": "migration/evidence/s13-four-controls/cli/command.json",
+      "sha256": "f3798ca6ae000451f1b4a03e013a7db3a0d234321e933f5f0ebb101dc988cebf",
+      "bytes": 1112
+    },
+    {
+      "source": "test-instances/s13-controls-normal01/result.json",
+      "destination": "migration/evidence/s13-four-controls/cli/result.json",
+      "sha256": "c15dc06bcede1ce5d3fbf86d3bac54d944ef00d62edb0fe3ffa7c9e505c7a714",
+      "bytes": 19619
+    },
+    {
+      "source": "test-instances/s13-controls-normal01/tool-execution-receipt.json",
+      "destination": "migration/evidence/s13-four-controls/cli/tool-receipt.json",
+      "sha256": "338aff4988a5bc45e943f8531723cf7a3b16501cb249a25a1bf515dfa3035b9b",
+      "bytes": 185
+    },
+    {
+      "source": "audits/s13-four-cross-review/CLI01-PREEXEC-REVIEW.md",
+      "destination": "migration/evidence/s13-four-controls/cli/preexec-review.md",
+      "sha256": "65b5ff2885609757a94c43a8c8367df4142e36c63727ca8c6680b8023345b198",
+      "bytes": 2864
+    },
+    {
+      "source": "audits/s13-four-cross-review/CLI01-RUNTIME-REVIEW.md",
+      "destination": "migration/evidence/s13-four-controls/cli/runtime-review.md",
+      "sha256": "c16d1f15b5d63d2944739cad5a1877a67bb4adbdaadd8a760f73106cb3f2c455",
+      "bytes": 2885
+    },
+    {
+      "source": "external-backups/space-backup-receipt-s13-2333.json",
+      "destination": "migration/evidence/s13-four-controls/retention/first-checkpoint.json",
+      "sha256": "1b072729914f68e7e27083fd73e911dab0e85e87a998869dd05a4559b2bba20c",
+      "bytes": 273
+    },
+    {
+      "source": "external-backups/space-backup-receipt-s13-2344.json",
+      "destination": "migration/evidence/s13-four-controls/retention/terminal-checkpoint.json",
+      "sha256": "eddebbf9b06b447f5b8c255a67d811d1aacbea8c332928934d18d974bd39f492",
+      "bytes": 351
+    },
+    {
+      "source": "evidence/s13-four-sdk01/result.json",
+      "destination": "migration/evidence/s13-four-controls/sdk/normal/result.json",
+      "sha256": "17d7589494646e0c8da69ae030d9fc3c92ee98579b8737a0ea6d7281227dd11a",
+      "bytes": 2058
+    },
+    {
+      "source": "evidence/s13-four-sdk01/tests.stdout",
+      "destination": "migration/evidence/s13-four-controls/sdk/normal/tests.jsonl",
+      "sha256": "4fe417cf1c098ccde0dda9a4de1334b9a3a610d95a302c4831b112e9bd06dcc0",
+      "bytes": 11174
+    },
+    {
+      "source": "evidence/s13-four-sdk01/tool-receipt.json",
+      "destination": "migration/evidence/s13-four-controls/sdk/normal/tool-receipt.json",
+      "sha256": "06ee4a976fd391b60a49f5797fcd34dc64b38a4d4c377bd49c1decd9e3ee6f90",
+      "bytes": 120
+    },
+    {
+      "source": "evidence/s13-four-sdk-race01/result.json",
+      "destination": "migration/evidence/s13-four-controls/sdk/race/result.json",
+      "sha256": "890216cd5fa855a83e5bf08ccb379edd26633532cf9293bc426374adc77d92ea",
+      "bytes": 2101
+    },
+    {
+      "source": "evidence/s13-four-sdk-race01/tests.stdout",
+      "destination": "migration/evidence/s13-four-controls/sdk/race/tests.jsonl",
+      "sha256": "e3c081dc7a72edc9ec942a2c35c3b3c9ba6b48c4f2d4ab384ad42549db41943c",
+      "bytes": 11177
+    },
+    {
+      "source": "evidence/s13-four-sdk-race01/tool-receipt.json",
+      "destination": "migration/evidence/s13-four-controls/sdk/race/tool-receipt.json",
+      "sha256": "f011eb593df786bc56ae99c584a5aea4073b99e48acb9f9b8bfa42e4d4e0c908",
+      "bytes": 103
+    },
+    {
+      "source": "evidence/s13-four-leaf01/result.json",
+      "destination": "migration/evidence/s13-four-controls/leaf/normal/result.json",
+      "sha256": "b4a1a0b99b155e90a0feb071ebf5a4413d0dcd037cf27eeb21646c5cbfc38143",
+      "bytes": 2144
+    },
+    {
+      "source": "evidence/s13-four-leaf01/tests.stdout",
+      "destination": "migration/evidence/s13-four-controls/leaf/normal/tests.jsonl",
+      "sha256": "76c382facc2f9b3133880ecdb6ccafa8c914d38e3296d732c08ce72dd8045cf4",
+      "bytes": 22539
+    },
+    {
+      "source": "evidence/s13-four-leaf01/tool-receipt.json",
+      "destination": "migration/evidence/s13-four-controls/leaf/normal/tool-receipt.json",
+      "sha256": "06ee4a976fd391b60a49f5797fcd34dc64b38a4d4c377bd49c1decd9e3ee6f90",
+      "bytes": 120
+    },
+    {
+      "source": "evidence/s13-four-leaf-race01/result.json",
+      "destination": "migration/evidence/s13-four-controls/leaf/race/result.json",
+      "sha256": "b9f398c3a510b5660fc9df70579d7d1f4276d0c9f937be4873b6cf6a92727e9d",
+      "bytes": 2187
+    },
+    {
+      "source": "evidence/s13-four-leaf-race01/tests.stdout",
+      "destination": "migration/evidence/s13-four-controls/leaf/race/tests.jsonl",
+      "sha256": "5b76380b0b298ba60d6200fb6ea4a3719376a26eb39dcffb39b035030ac5bdf8",
+      "bytes": 22549
+    },
+    {
+      "source": "evidence/s13-four-leaf-race01/tool-receipt.json",
+      "destination": "migration/evidence/s13-four-controls/leaf/race/tool-receipt.json",
+      "sha256": "f011eb593df786bc56ae99c584a5aea4073b99e48acb9f9b8bfa42e4d4e0c908",
+      "bytes": 103
+    },
+    {
+      "source": "evidence/s13-four-app01/result.json",
+      "destination": "migration/evidence/s13-four-controls/app/normal/result.json",
+      "sha256": "c46b32c80dbbb1de929c11701c68b661b215d0d3b0d8d93f6a7809fba12f7ea4",
+      "bytes": 2070
+    },
+    {
+      "source": "evidence/s13-four-app01/tests.stdout",
+      "destination": "migration/evidence/s13-four-controls/app/normal/tests.jsonl",
+      "sha256": "38adeef61fc5d65833f1ec0953e288cce0456e7dd237adb03487e710bbaf02a4",
+      "bytes": 4122
+    },
+    {
+      "source": "evidence/s13-four-app01/tool-receipt.json",
+      "destination": "migration/evidence/s13-four-controls/app/normal/tool-receipt.json",
+      "sha256": "f4031a79353fffcb6679da9bfc963720fa1d0e8636764f6d6da4dc23560048cd",
+      "bytes": 113
+    },
+    {
+      "source": "evidence/s13-four-app-race01/result.json",
+      "destination": "migration/evidence/s13-four-controls/app/race/result.json",
+      "sha256": "1cfea7740abc87a10cde0760b94c18ec474cf3fdac26b8097ad27f159920bb98",
+      "bytes": 2113
+    },
+    {
+      "source": "evidence/s13-four-app-race01/tests.stdout",
+      "destination": "migration/evidence/s13-four-controls/app/race/tests.jsonl",
+      "sha256": "e36ac83fcf39e873cf51b6e3378a745c46cff982d3012f6e109508a37ad8a1c0",
+      "bytes": 4126
+    },
+    {
+      "source": "evidence/s13-four-app-race01/tool-receipt.json",
+      "destination": "migration/evidence/s13-four-controls/app/race/tool-receipt.json",
+      "sha256": "50bbdfe87a1973d9d8e0e4abbfe1818eb7e3c8cb4989765ba14390fd425093cc",
+      "bytes": 103
+    },
+    {
+      "source": "evidence/s13-four-native01/result.json",
+      "destination": "migration/evidence/s13-four-controls/native/normal/result.json",
+      "sha256": "cccbb07996ad1e205848993e28badc0734162d63b0d93be3e542c1ce7d0f4897",
+      "bytes": 2251
+    },
+    {
+      "source": "evidence/s13-four-native01/tests.stdout",
+      "destination": "migration/evidence/s13-four-controls/native/normal/tests.jsonl",
+      "sha256": "6093bc59c1fa379dcd6284de43496282aec99f29090935b31b17372af00410f0",
+      "bytes": 6174
+    },
+    {
+      "source": "evidence/s13-four-native01/tool-receipt.json",
+      "destination": "migration/evidence/s13-four-controls/native/normal/tool-receipt.json",
+      "sha256": "f724b8903c1e20ee8ba24409c9eb9451ae94e8957d78b011999fe7da282dadee",
+      "bytes": 139
+    },
+    {
+      "source": "evidence/s13-four-native-race01/result.json",
+      "destination": "migration/evidence/s13-four-controls/native/race/result.json",
+      "sha256": "9642fc0fcaf7f5ee8b7a15169670c6328316908e38f4502eb95a1f4ad68d6540",
+      "bytes": 2296
+    },
+    {
+      "source": "evidence/s13-four-native-race01/tests.stdout",
+      "destination": "migration/evidence/s13-four-controls/native/race/tests.jsonl",
+      "sha256": "ac1e27928aebf411891fdb46afb07a0b0d152eb6e1eb36cd5b795723aefd8346",
+      "bytes": 6178
+    },
+    {
+      "source": "evidence/s13-four-native-race01/tool-receipt.json",
+      "destination": "migration/evidence/s13-four-controls/native/race/tool-receipt.json",
+      "sha256": "f724b8903c1e20ee8ba24409c9eb9451ae94e8957d78b011999fe7da282dadee",
+      "bytes": 139
+    },
+    {
+      "source": "evidence/s13-four-server01/result.json",
+      "destination": "migration/evidence/s13-four-controls/cli/server-result.json",
+      "sha256": "a705ac816c01dc25895758b64ec5c0079f39ac640d8d6fcb3aa54410740907eb",
+      "bytes": 1120
+    },
+    {
+      "source": "evidence/s13-four-server01/tool-receipt.json",
+      "destination": "migration/evidence/s13-four-controls/cli/server-tool-receipt.json",
+      "sha256": "f724b8903c1e20ee8ba24409c9eb9451ae94e8957d78b011999fe7da282dadee",
+      "bytes": 139
+    },
+    {
+      "source": "evidence/s13-four-fixture01/result.json",
+      "destination": "migration/evidence/s13-four-controls/cli/fixture-result.json",
+      "sha256": "475999c647f407b76ec73502521e93c306a23bfce24a32164578d70b9f4c57d1",
+      "bytes": 1201
+    },
+    {
+      "source": "evidence/s13-four-fixture01/tool-receipt.json",
+      "destination": "migration/evidence/s13-four-controls/cli/fixture-tool-receipt.json",
+      "sha256": "2d1092c8fe776c4b5c9b6ca2b23bee231ad4b295ed99cabae51d8e3382d8358f",
+      "bytes": 114
+    }
+  ],
+  "source_raw_single_copy": "internal/plugins/downloadercommands/testdata/source-four-leaves.json",
+  "excluded": "DB/binaries/dependencies/credentials/private instances/unrelated S06/S07/Browse WIP"
+}

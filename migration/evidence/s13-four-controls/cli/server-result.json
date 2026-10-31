@@ -1,0 +1,49 @@
+{
+  "at": "2026-10-31T23:36:29.992695+00:00",
+  "status": "PASS",
+  "kind": "newnormalserver compile only; uses unchanged restoredUI assets, notnewbrowser acceptance",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-json",
+        "./cmd/server"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "build",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-four-server01",
+        "./cmd/server"
+      ],
+      "exit": 0
+    }
+  ],
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "scratch_free": 49490595840,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "build",
+      "scratch_free": 49487937536,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 3978,
+  "program_sha256": "2a14551d6f7812b382412690417417b0a72d1423f6357e92d54ae70e5d34a28a",
+  "ended": "2026-10-31T23:36:42.205807+00:00"
+}

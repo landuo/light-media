@@ -1,0 +1,731 @@
+{
+  "status": "ORIGINAL_FOUR_LEAF_RECORDING_PORT_OBSERVATION_COMPLETE",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "input_manifest_sha256": "216891caf2eefb4648ba5dacbf125f37c758d6af541a66f65ece107236136bb3",
+  "python": {
+    "version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+    "isolated": 1,
+    "no_site": 1,
+    "dont_write_bytecode": 1
+  },
+  "source_nodes": [
+    {
+      "name": "set_torrents_tag",
+      "first_line": 336,
+      "last_line": 346,
+      "source_bytes_sha256": "335cec80a0c008dfae696aaf687e1c83d037612e10e1c7dd68fa35f5a80551b7",
+      "ast_sha256": "cfe675296aef4414890fe4421359ab3dcbd8da866473cc04e4f4dcd7b914eb2f",
+      "decorators": [],
+      "direct_original_helpers": [],
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/qbittorrent/qbittorrent.py",
+      "original_class": "Qbittorrent"
+    },
+    {
+      "name": "stop_torrents",
+      "first_line": 490,
+      "last_line": 501,
+      "source_bytes_sha256": "944f61c183636cf0a581e5261a47824298e155b8f5b739bb36ba064996d58452",
+      "ast_sha256": "f0dd873dc32067e77af628d04ea35e9bfae930797d00d58244b60dc8a33804fa",
+      "decorators": [],
+      "direct_original_helpers": [],
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/qbittorrent/qbittorrent.py",
+      "original_class": "Qbittorrent"
+    },
+    {
+      "name": "set_torrent_category",
+      "first_line": 686,
+      "last_line": 700,
+      "source_bytes_sha256": "45eabab1151eb164c7b33a06cc6d32990f6670b527d35ec109149b67673dcd47",
+      "ast_sha256": "cb79da605700b26e51b4c47f31c7bb5c00dc20cc5d0830b33519f696d3c43fc2",
+      "decorators": [],
+      "direct_original_helpers": [],
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/qbittorrent/qbittorrent.py",
+      "original_class": "Qbittorrent"
+    },
+    {
+      "name": "stop_torrents",
+      "first_line": 240,
+      "last_line": 251,
+      "source_bytes_sha256": "a904521522ca48df7afb167e2f08ddce469271e43b64f12a1e17d507cc3c1540",
+      "ast_sha256": "9fa9b4896e4526453ebed06ebffd004b5c26dd453db196f94bab003abbab5f8b",
+      "decorators": [],
+      "direct_original_helpers": [],
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/transmission/transmission.py",
+      "original_class": "Transmission"
+    }
+  ],
+  "case_count": 17,
+  "cases": [
+    {
+      "id": "qb-set_torrents_tag-missing-client",
+      "input": {
+        "id": "qb-set_torrents_tag-missing-client",
+        "kind": "qb",
+        "method": "set_torrents_tag",
+        "args": {
+          "ids": [
+            "owned-a",
+            "owned-a"
+          ],
+          "tags": [
+            "owned-label",
+            "owned-label"
+          ]
+        },
+        "client_present": false,
+        "vendor_method": "torrents_add_tags",
+        "vendor_reply": false,
+        "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType",
+        "python_truthy": false
+      },
+      "vendor_calls": 0,
+      "trace": []
+    },
+    {
+      "id": "qb-set_torrents_tag-nonthrowing-false",
+      "input": {
+        "id": "qb-set_torrents_tag-nonthrowing-false",
+        "kind": "qb",
+        "method": "set_torrents_tag",
+        "args": {
+          "ids": [
+            "owned-a",
+            "owned-a"
+          ],
+          "tags": [
+            "owned-label",
+            "owned-label"
+          ]
+        },
+        "client_present": true,
+        "vendor_method": "torrents_add_tags",
+        "vendor_reply": false,
+        "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "torrents_add_tags",
+          "kwargs": {
+            "tags": [
+              "owned-label",
+              "owned-label"
+            ],
+            "torrent_hashes": [
+              "owned-a",
+              "owned-a"
+            ]
+          }
+        },
+        {
+          "event": "vendor_return",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "qb-set_torrents_tag-ordinary-exception",
+      "input": {
+        "id": "qb-set_torrents_tag-ordinary-exception",
+        "kind": "qb",
+        "method": "set_torrents_tag",
+        "args": {
+          "ids": [
+            "owned-a",
+            "owned-a"
+          ],
+          "tags": [
+            "owned-label",
+            "owned-label"
+          ]
+        },
+        "client_present": true,
+        "vendor_method": "torrents_add_tags",
+        "vendor_reply": false,
+        "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance",
+        "vendor_raises": {
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "torrents_add_tags",
+          "kwargs": {
+            "tags": [
+              "owned-label",
+              "owned-label"
+            ],
+            "torrent_hashes": [
+              "owned-a",
+              "owned-a"
+            ]
+          }
+        },
+        {
+          "event": "vendor_exception",
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "设置种子Tag出错：owned recording failure"
+        }
+      ]
+    },
+    {
+      "id": "qb-set_torrent_category-missing-client",
+      "input": {
+        "id": "qb-set_torrent_category-missing-client",
+        "kind": "qb",
+        "method": "set_torrent_category",
+        "args": {
+          "hash_string": "owned-a",
+          "category": "owned-category"
+        },
+        "client_present": false,
+        "vendor_method": "torrents_set_category",
+        "vendor_reply": false,
+        "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 0,
+      "trace": []
+    },
+    {
+      "id": "qb-set_torrent_category-nonthrowing-false",
+      "input": {
+        "id": "qb-set_torrent_category-nonthrowing-false",
+        "kind": "qb",
+        "method": "set_torrent_category",
+        "args": {
+          "hash_string": "owned-a",
+          "category": "owned-category"
+        },
+        "client_present": true,
+        "vendor_method": "torrents_set_category",
+        "vendor_reply": false,
+        "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "vendor_calls": 1,
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "torrents_set_category",
+          "kwargs": {
+            "category": "owned-category",
+            "torrent_hashes": "owned-a"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "qb-set_torrent_category-ordinary-exception",
+      "input": {
+        "id": "qb-set_torrent_category-ordinary-exception",
+        "kind": "qb",
+        "method": "set_torrent_category",
+        "args": {
+          "hash_string": "owned-a",
+          "category": "owned-category"
+        },
+        "client_present": true,
+        "vendor_method": "torrents_set_category",
+        "vendor_reply": false,
+        "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance",
+        "vendor_raises": {
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "torrents_set_category",
+          "kwargs": {
+            "category": "owned-category",
+            "torrent_hashes": "owned-a"
+          }
+        },
+        {
+          "event": "vendor_exception",
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "设置种子分类出错：owned recording failure"
+        }
+      ]
+    },
+    {
+      "id": "qb-stop_torrents-missing-client",
+      "input": {
+        "id": "qb-stop_torrents-missing-client",
+        "kind": "qb",
+        "method": "stop_torrents",
+        "args": {
+          "ids": [
+            "owned-a",
+            "owned-a"
+          ]
+        },
+        "client_present": false,
+        "vendor_method": "torrents_pause",
+        "vendor_reply": false,
+        "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 0,
+      "trace": []
+    },
+    {
+      "id": "qb-stop_torrents-nonthrowing-false",
+      "input": {
+        "id": "qb-stop_torrents-nonthrowing-false",
+        "kind": "qb",
+        "method": "stop_torrents",
+        "args": {
+          "ids": [
+            "owned-a",
+            "owned-a"
+          ]
+        },
+        "client_present": true,
+        "vendor_method": "torrents_pause",
+        "vendor_reply": false,
+        "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "vendor_calls": 1,
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "torrents_pause",
+          "kwargs": {
+            "torrent_hashes": [
+              "owned-a",
+              "owned-a"
+            ]
+          }
+        },
+        {
+          "event": "vendor_return",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "qb-stop_torrents-ordinary-exception",
+      "input": {
+        "id": "qb-stop_torrents-ordinary-exception",
+        "kind": "qb",
+        "method": "stop_torrents",
+        "args": {
+          "ids": [
+            "owned-a",
+            "owned-a"
+          ]
+        },
+        "client_present": true,
+        "vendor_method": "torrents_pause",
+        "vendor_reply": false,
+        "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance",
+        "vendor_raises": {
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "torrents_pause",
+          "kwargs": {
+            "torrent_hashes": [
+              "owned-a",
+              "owned-a"
+            ]
+          }
+        },
+        {
+          "event": "vendor_exception",
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "暂停种子出错：owned recording failure"
+        }
+      ]
+    },
+    {
+      "id": "tr-stop_torrents-missing-client",
+      "input": {
+        "id": "tr-stop_torrents-missing-client",
+        "kind": "tr",
+        "method": "stop_torrents",
+        "args": {
+          "ids": [
+            0,
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
+        },
+        "client_present": false,
+        "vendor_method": "stop_torrent",
+        "vendor_reply": false,
+        "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 0,
+      "trace": []
+    },
+    {
+      "id": "tr-stop_torrents-nonthrowing-false",
+      "input": {
+        "id": "tr-stop_torrents-nonthrowing-false",
+        "kind": "tr",
+        "method": "stop_torrents",
+        "args": {
+          "ids": [
+            0,
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
+        },
+        "client_present": true,
+        "vendor_method": "stop_torrent",
+        "vendor_reply": false,
+        "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance"
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "vendor_calls": 1,
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "stop_torrent",
+          "kwargs": {
+            "ids": [
+              0,
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ]
+          }
+        },
+        {
+          "event": "vendor_return",
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "tr-stop_torrents-ordinary-exception",
+      "input": {
+        "id": "tr-stop_torrents-ordinary-exception",
+        "kind": "tr",
+        "method": "stop_torrents",
+        "args": {
+          "ids": [
+            0,
+            "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ]
+        },
+        "client_present": true,
+        "vendor_method": "stop_torrent",
+        "vendor_reply": false,
+        "purpose": "Observe actual original short-circuit/ignored dependency return/caught ordinary exception, not daemon acceptance",
+        "vendor_raises": {
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "stop_torrent",
+          "kwargs": {
+            "ids": [
+              0,
+              "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            ]
+          }
+        },
+        {
+          "event": "vendor_exception",
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "停止种子出错：owned recording failure"
+        }
+      ]
+    },
+    {
+      "id": "qb-tags-null-arguments",
+      "input": {
+        "id": "qb-tags-null-arguments",
+        "kind": "qb",
+        "method": "set_torrents_tag",
+        "args": {
+          "ids": null,
+          "tags": null
+        },
+        "client_present": true,
+        "vendor_method": "torrents_add_tags",
+        "vendor_reply": null,
+        "purpose": "Observe complete source branch with explicitly owned dependency input; no native selector/HTTP claim"
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "torrents_add_tags",
+          "kwargs": {
+            "tags": null,
+            "torrent_hashes": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "value": null
+        }
+      ]
+    },
+    {
+      "id": "qb-category-empty-hash",
+      "input": {
+        "id": "qb-category-empty-hash",
+        "kind": "qb",
+        "method": "set_torrent_category",
+        "args": {
+          "hash_string": "",
+          "category": "owned-category"
+        },
+        "client_present": true,
+        "vendor_method": "torrents_set_category",
+        "vendor_reply": null,
+        "purpose": "Observe complete source branch with explicitly owned dependency input; no native selector/HTTP claim"
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 0,
+      "trace": []
+    },
+    {
+      "id": "qb-category-null",
+      "input": {
+        "id": "qb-category-null",
+        "kind": "qb",
+        "method": "set_torrent_category",
+        "args": {
+          "hash_string": "owned-a",
+          "category": null
+        },
+        "client_present": true,
+        "vendor_method": "torrents_set_category",
+        "vendor_reply": null,
+        "purpose": "Observe complete source branch with explicitly owned dependency input; no native selector/HTTP claim"
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "vendor_calls": 1,
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "torrents_set_category",
+          "kwargs": {
+            "category": "",
+            "torrent_hashes": "owned-a"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "value": null
+        }
+      ]
+    },
+    {
+      "id": "qb-pause-null-selector",
+      "input": {
+        "id": "qb-pause-null-selector",
+        "kind": "qb",
+        "method": "stop_torrents",
+        "args": {
+          "ids": null
+        },
+        "client_present": true,
+        "vendor_method": "torrents_pause",
+        "vendor_reply": null,
+        "purpose": "Observe complete source branch with explicitly owned dependency input; no native selector/HTTP claim"
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "vendor_calls": 1,
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "torrents_pause",
+          "kwargs": {
+            "torrent_hashes": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "value": null
+        }
+      ]
+    },
+    {
+      "id": "tr-stop-null-selector-port-valueerror",
+      "input": {
+        "id": "tr-stop-null-selector-port-valueerror",
+        "kind": "tr",
+        "method": "stop_torrents",
+        "args": {
+          "ids": null
+        },
+        "client_present": true,
+        "vendor_method": "stop_torrent",
+        "vendor_reply": null,
+        "purpose": "Observe complete source branch with explicitly owned dependency input; no native selector/HTTP claim",
+        "vendor_raises": {
+          "class": "ValueError",
+          "message": "owned recording failure"
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "stop_torrent",
+          "kwargs": {
+            "ids": null
+          }
+        },
+        {
+          "event": "vendor_exception",
+          "class": "ValueError",
+          "message": "owned recording failure"
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "停止种子出错：owned recording failure"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    "complete four original methods; recording vendor/logger only",
+    "no original constructor/import/vendor/HTTP/daemon/SQLite execution",
+    "TR None ValueError is explicitly supplied dependency input, not vendor-parser evidence",
+    "no tag deletion, polling, reannounce or arbitrary downloader RPC",
+    "no expected values generated from target Go; no target execution",
+    "source caught ordinary exceptions differ from retained platform authority/unknown-effect boundaries"
+  ],
+  "forbidden_imports_absent": true,
+  "input_drift": []
+}

@@ -1,0 +1,85 @@
+{
+  "started": "2026-10-31T23:30:56.477678+00:00",
+  "driver_pid": 6,
+  "package": "./internal/plugins",
+  "pattern": "^TestSharedDownloaderFourCommands(Wire|Boundary)$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-four-sdk01.test",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-four-sdk01.test",
+        "-test.v",
+        "-test.run",
+        "^TestSharedDownloaderFourCommands(Wire|Boundary)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T23:30:56.477693+00:00",
+      "scratch_free": 49813032960,
+      "tmp_free": 5225631744
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T23:30:56.753660+00:00",
+      "scratch_free": 49812172800,
+      "tmp_free": 5225631744
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T23:30:58.791303+00:00",
+      "scratch_free": 49795457024,
+      "tmp_free": 5225631744
+    }
+  ],
+  "input_count": 1930,
+  "program_sha256": "48eafd6a23768e87c2ec849502c2bbd3f38a631a6cee6aaf6b31036ab9225b61",
+  "root_passes": [
+    "TestSharedDownloaderFourCommandsWire",
+    "TestSharedDownloaderFourCommandsBoundary"
+  ],
+  "ended": "2026-10-31T23:30:58.905086+00:00"
+}

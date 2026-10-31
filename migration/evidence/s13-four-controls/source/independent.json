@@ -1,0 +1,337 @@
+{
+  "status": "ACCEPT_ORIGINAL_FOUR_METHOD_RECORDING_COMPONENT_ONLY",
+  "at_utc": "2026-10-31T23:30:50.317Z",
+  "coordinator_tool_receipt": "parent reports actual tool5131f7 exit0; local result agrees",
+  "result": {
+    "argv": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+      "-I",
+      "-S",
+      "-B",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-four-source-preparation/capture_four_leaves.py"
+    ],
+    "started_at": "2026-10-31T23:29:44.569712+00:00",
+    "scope": "selected original four methods; recording ports, no vendor/network/daemon",
+    "environment": "inherited, no proxy/guard alterations",
+    "ended_at": "2026-10-31T23:29:44.720395+00:00",
+    "exit_code": 0,
+    "stdout_sha256": "de761347f6ba64f9d74eafaf0309c99b5a0fbab9aa6d2ad17ccdaa6ea2920c7c",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-four-source01/stdout.json",
+      "bytes": 21048,
+      "sha256": "de761347f6ba64f9d74eafaf0309c99b5a0fbab9aa6d2ad17ccdaa6ea2920c7c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-four-source01/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-four-source01/command.json",
+      "bytes": 496,
+      "sha256": "366a95abe90c2b31042d416ff1efa02c0fbd6246ba0c542c23c59a9cfb66b8a9"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-four-source01/result.json",
+      "bytes": 738,
+      "sha256": "d886016e498a71356e3d4f34825df00c29d5db109a670ddd6f30c59e79a0f5ca"
+    }
+  ],
+  "current_inputs": 14,
+  "current_input_drift": [],
+  "source_node_count": 4,
+  "source_nodes": [
+    {
+      "name": "set_torrents_tag",
+      "first_line": 336,
+      "last_line": 346,
+      "source_bytes_sha256": "335cec80a0c008dfae696aaf687e1c83d037612e10e1c7dd68fa35f5a80551b7",
+      "ast_sha256": "cfe675296aef4414890fe4421359ab3dcbd8da866473cc04e4f4dcd7b914eb2f",
+      "decorators": [],
+      "direct_original_helpers": [],
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/qbittorrent/qbittorrent.py",
+      "original_class": "Qbittorrent"
+    },
+    {
+      "name": "stop_torrents",
+      "first_line": 490,
+      "last_line": 501,
+      "source_bytes_sha256": "944f61c183636cf0a581e5261a47824298e155b8f5b739bb36ba064996d58452",
+      "ast_sha256": "f0dd873dc32067e77af628d04ea35e9bfae930797d00d58244b60dc8a33804fa",
+      "decorators": [],
+      "direct_original_helpers": [],
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/qbittorrent/qbittorrent.py",
+      "original_class": "Qbittorrent"
+    },
+    {
+      "name": "set_torrent_category",
+      "first_line": 686,
+      "last_line": 700,
+      "source_bytes_sha256": "45eabab1151eb164c7b33a06cc6d32990f6670b527d35ec109149b67673dcd47",
+      "ast_sha256": "cb79da605700b26e51b4c47f31c7bb5c00dc20cc5d0830b33519f696d3c43fc2",
+      "decorators": [],
+      "direct_original_helpers": [],
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/qbittorrent/qbittorrent.py",
+      "original_class": "Qbittorrent"
+    },
+    {
+      "name": "stop_torrents",
+      "first_line": 240,
+      "last_line": 251,
+      "source_bytes_sha256": "a904521522ca48df7afb167e2f08ddce469271e43b64f12a1e17d507cc3c1540",
+      "ast_sha256": "9fa9b4896e4526453ebed06ebffd004b5c26dd453db196f94bab003abbab5f8b",
+      "decorators": [],
+      "direct_original_helpers": [],
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/transmission/transmission.py",
+      "original_class": "Transmission"
+    }
+  ],
+  "case_count": 17,
+  "case_results": [
+    {
+      "id": "qb-set_torrents_tag-missing-client",
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType",
+        "python_truthy": false
+      },
+      "vendor_calls": 0,
+      "trace_events": []
+    },
+    {
+      "id": "qb-set_torrents_tag-nonthrowing-false",
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "qb-set_torrents_tag-ordinary-exception",
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace_events": [
+        "vendor_call",
+        "vendor_exception",
+        "log"
+      ]
+    },
+    {
+      "id": "qb-set_torrent_category-missing-client",
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 0,
+      "trace_events": []
+    },
+    {
+      "id": "qb-set_torrent_category-nonthrowing-false",
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "vendor_calls": 1,
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "qb-set_torrent_category-ordinary-exception",
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace_events": [
+        "vendor_call",
+        "vendor_exception",
+        "log"
+      ]
+    },
+    {
+      "id": "qb-stop_torrents-missing-client",
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 0,
+      "trace_events": []
+    },
+    {
+      "id": "qb-stop_torrents-nonthrowing-false",
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "vendor_calls": 1,
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "qb-stop_torrents-ordinary-exception",
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace_events": [
+        "vendor_call",
+        "vendor_exception",
+        "log"
+      ]
+    },
+    {
+      "id": "tr-stop_torrents-missing-client",
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 0,
+      "trace_events": []
+    },
+    {
+      "id": "tr-stop_torrents-nonthrowing-false",
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "vendor_calls": 1,
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "tr-stop_torrents-ordinary-exception",
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace_events": [
+        "vendor_call",
+        "vendor_exception",
+        "log"
+      ]
+    },
+    {
+      "id": "qb-tags-null-arguments",
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "qb-category-empty-hash",
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 0,
+      "trace_events": []
+    },
+    {
+      "id": "qb-category-null",
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "vendor_calls": 1,
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "qb-pause-null-selector",
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "vendor_calls": 1,
+      "trace_events": [
+        "vendor_call",
+        "vendor_return"
+      ]
+    },
+    {
+      "id": "tr-stop-null-selector-port-valueerror",
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "trace_events": [
+        "vendor_call",
+        "vendor_exception",
+        "log"
+      ]
+    }
+  ],
+  "boundaries": [
+    "complete four original methods; recording vendor/logger only",
+    "no original constructor/import/vendor/HTTP/daemon/SQLite execution",
+    "TR None ValueError is explicitly supplied dependency input, not vendor-parser evidence",
+    "no tag deletion, polling, reannounce or arbitrary downloader RPC",
+    "no expected values generated from target Go; no target execution",
+    "source caught ordinary exceptions differ from retained platform authority/unknown-effect boundaries"
+  ],
+  "source_preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-four-source-independent/preexec-seal.json",
+    "bytes": 2126,
+    "sha256": "da221e09f1e5398bf52266dd5e8b3133ba2b8486c0275898b1fb6df24d9a6767"
+  },
+  "native_requires_independent_reviewer": true
+}

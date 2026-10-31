@@ -1,0 +1,87 @@
+{
+  "started": "2026-10-31T23:35:08.034464+00:00",
+  "driver_pid": 2,
+  "package": "./internal/plugins/downloadercommands",
+  "pattern": "^TestDownloaderFourLeaf(SourceObservations|Boundaries)$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/plugins/downloadercommands"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-four-leaf-race01.test",
+        "-race",
+        "./internal/plugins/downloadercommands"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/downloadercommands",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-four-leaf-race01.test",
+        "-test.v",
+        "-test.run",
+        "^TestDownloaderFourLeaf(SourceObservations|Boundaries)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T23:35:08.034506+00:00",
+      "scratch_free": 49553354752,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T23:35:08.328217+00:00",
+      "scratch_free": 49552601088,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T23:35:09.127956+00:00",
+      "scratch_free": 49543274496,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 1807,
+  "program_sha256": "b21216b4e0a2c9403ddd4fcf67332f52c835066bd9370a23e1c72b3e406f9a4b",
+  "root_passes": [
+    "TestDownloaderFourLeafSourceObservations",
+    "TestDownloaderFourLeafBoundaries"
+  ],
+  "ended": "2026-10-31T23:35:10.294570+00:00"
+}
