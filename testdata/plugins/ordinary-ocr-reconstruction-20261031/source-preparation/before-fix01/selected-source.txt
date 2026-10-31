@@ -1,0 +1,435 @@
+
+# _KT_co — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/_types.py:23-23
+_KT_co = TypeVar("_KT_co", covariant=True)
+
+# _VT_co — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/_types.py:24-24
+_VT_co = TypeVar("_VT_co", covariant=True)
+
+# SupportsItems — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/_types.py:32-34
+@runtime_checkable
+class SupportsItems(Protocol[_KT_co, _VT_co]):
+    def items(self) -> Iterable[tuple[_KT_co, _VT_co]]: ...
+
+# _VT — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/structures.py:16-16
+_VT = TypeVar("_VT")
+
+# CaseInsensitiveDict — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/structures.py:20-93
+class CaseInsensitiveDict(MutableMapping[str, _VT], Generic[_VT]):
+    """A case-insensitive ``dict``-like object.
+
+    Implements all methods and operations of
+    ``MutableMapping`` as well as dict's ``copy``. Also
+    provides ``lower_items``.
+
+    All keys are expected to be strings. The structure remembers the
+    case of the last key to be set, and ``iter(instance)``,
+    ``keys()``, ``items()``, ``iterkeys()``, and ``iteritems()``
+    will contain case-sensitive keys. However, querying and contains
+    testing is case insensitive::
+
+        cid = CaseInsensitiveDict()
+        cid['Accept'] = 'application/json'
+        cid['aCCEPT'] == 'application/json'  # True
+        list(cid) == ['Accept']  # True
+
+    For example, ``headers['content-encoding']`` will return the
+    value of a ``'Content-Encoding'`` response header, regardless
+    of how the header name was originally stored.
+
+    If the constructor, ``.update``, or equality comparison
+    operations are given keys that have equal ``.lower()``s, the
+    behavior is undefined.
+    """
+
+    _store: OrderedDict[str, tuple[str, _VT]]
+
+    def __init__(
+        self,
+        data: Mapping[str, _VT] | Iterable[tuple[str, _VT]] | None = None,
+        **kwargs: _VT,
+    ) -> None:
+        self._store = OrderedDict()
+        if data is None:
+            data = {}
+        self.update(data, **kwargs)
+
+    def __setitem__(self, key: str, value: _VT) -> None:
+        # Use the lowercased key for lookups, but store the actual
+        # key alongside the value.
+        self._store[key.lower()] = (key, value)
+
+    def __getitem__(self, key: str) -> _VT:
+        return self._store[key.lower()][1]
+
+    def __delitem__(self, key: str) -> None:
+        del self._store[key.lower()]
+
+    def __iter__(self) -> Iterator[str]:
+        return (casedkey for casedkey, _ in self._store.values())
+
+    def __len__(self) -> int:
+        return len(self._store)
+
+    def lower_items(self) -> Iterator[tuple[str, _VT]]:
+        """Like iteritems(), but with all lowercase keys."""
+        return ((lowerkey, keyval[1]) for (lowerkey, keyval) in self._store.items())
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Mapping):
+            other_dict: CaseInsensitiveDict[Any] = CaseInsensitiveDict(other)  # type: ignore[reportUnknownArgumentType]
+        else:
+            return NotImplemented
+        # Compare insensitively
+        return dict(self.lower_items()) == dict(other_dict.lower_items())
+
+    # Copy is required
+    def copy(self) -> CaseInsensitiveDict[_VT]:
+        return CaseInsensitiveDict(self._store.values())
+
+    def __repr__(self) -> str:
+        return str(dict(self.items()))
+
+# _VALID_HEADER_NAME_RE_BYTE — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/_internal_utils.py:13-13
+_VALID_HEADER_NAME_RE_BYTE = re.compile(rb"^[^:\s][^:\r\n]*\Z")
+
+# _VALID_HEADER_NAME_RE_STR — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/_internal_utils.py:14-14
+_VALID_HEADER_NAME_RE_STR = re.compile(r"^[^:\s][^:\r\n]*\Z")
+
+# _VALID_HEADER_VALUE_RE_BYTE — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/_internal_utils.py:15-15
+_VALID_HEADER_VALUE_RE_BYTE = re.compile(rb"^\S[^\r\n]*\Z|^\Z")
+
+# _VALID_HEADER_VALUE_RE_STR — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/_internal_utils.py:16-16
+_VALID_HEADER_VALUE_RE_STR = re.compile(r"^\S[^\r\n]*\Z|^\Z")
+
+# _HEADER_VALIDATORS_STR — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/_internal_utils.py:18-18
+_HEADER_VALIDATORS_STR = (_VALID_HEADER_NAME_RE_STR, _VALID_HEADER_VALUE_RE_STR)
+
+# _HEADER_VALIDATORS_BYTE — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/_internal_utils.py:19-19
+_HEADER_VALIDATORS_BYTE = (_VALID_HEADER_NAME_RE_BYTE, _VALID_HEADER_VALUE_RE_BYTE)
+
+# to_native_string — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/_internal_utils.py:26-36
+def to_native_string(string: str | bytes, encoding: str = "ascii") -> str:
+    """Given a string object, regardless of type, returns a representation of
+    that string in the native string type, encoding and decoding where
+    necessary. This assumes ASCII unless told otherwise.
+    """
+    if isinstance(string, builtin_str):
+        out = string
+    else:
+        out = string.decode(encoding)
+
+    return out
+
+# RequestException — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/exceptions.py:20-35
+class RequestException(IOError):
+    """There was an ambiguous exception that occurred while handling your
+    request.
+    """
+
+    response: Response | None
+    request: Request | PreparedRequest | None
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        """Initialize RequestException with `request` and `response` objects."""
+        response: Response | None = kwargs.pop("response", None)
+        self.response = response
+        self.request = kwargs.pop("request", None)
+        if response is not None and not self.request and hasattr(response, "request"):
+            self.request = response.request
+        super().__init__(*args, **kwargs)
+
+# InvalidJSONError — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/exceptions.py:38-39
+class InvalidJSONError(RequestException):
+    """A JSON error occurred."""
+
+# InvalidHeader — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/exceptions.py:122-123
+class InvalidHeader(RequestException, ValueError):
+    """The header value provided was somehow invalid."""
+
+# to_key_val_list — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/utils.py:376-404
+def to_key_val_list(
+    value: _t.SupportsItems[_KT, _VT] | Iterable[tuple[_KT, _VT]] | None,
+) -> list[tuple[_KT, _VT]] | None:
+    """Take an object and test to see if it can be represented as a
+    dictionary. If it can be, return a list of tuples, e.g.,
+
+    ::
+
+        >>> to_key_val_list([('key', 'val')])
+        [('key', 'val')]
+        >>> to_key_val_list({'key': 'val'})
+        [('key', 'val')]
+        >>> to_key_val_list('string')
+        Traceback (most recent call last):
+        ...
+        ValueError: cannot encode objects that are not 2-tuples
+
+    :rtype: list
+    """
+    if value is None:
+        return None
+
+    if isinstance(value, (str, bytes, bool, int)):
+        raise ValueError("cannot encode objects that are not 2-tuples")
+
+    if isinstance(value, _SupportsItems):
+        return list(value.items())
+
+    return list(value)
+
+# super_len — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/utils.py:160-228
+def super_len(o: Any) -> int:
+    total_length = None
+    current_position = 0
+
+    if not is_urllib3_1 and isinstance(o, str):
+        # urllib3 2.x+ treats all strings as utf-8 instead
+        # of latin-1 (iso-8859-1) like http.client.
+        o = o.encode("utf-8")
+
+    if hasattr(o, "__len__"):
+        total_length = len(o)
+
+    elif hasattr(o, "len"):
+        total_length = o.len
+
+    elif hasattr(o, "fileno"):
+        try:
+            fileno = o.fileno()
+        except (io.UnsupportedOperation, AttributeError):
+            # AttributeError is a surprising exception, seeing as how we've just checked
+            # that `hasattr(o, 'fileno')`.  It happens for objects obtained via
+            # `Tarfile.extractfile()`, per issue 5229.
+            pass
+        else:
+            total_length = os.fstat(fileno).st_size
+
+            # Having used fstat to determine the file length, we need to
+            # confirm that this file was opened up in binary mode.
+            if "b" not in o.mode:
+                warnings.warn(
+                    (
+                        "Requests has determined the content-length for this "
+                        "request using the binary size of the file: however, the "
+                        "file has been opened in text mode (i.e. without the 'b' "
+                        "flag in the mode). This may lead to an incorrect "
+                        "content-length. In Requests 3.0, support will be removed "
+                        "for files in text mode."
+                    ),
+                    FileModeWarning,
+                )
+
+    if hasattr(o, "tell"):
+        try:
+            current_position = o.tell()
+        except OSError:
+            # This can happen in some weird situations, such as when the file
+            # is actually a special file descriptor like stdin. In this
+            # instance, we don't know what the length is, so set it to zero and
+            # let requests chunk it instead.
+            if total_length is not None:
+                current_position = total_length
+        else:
+            if hasattr(o, "seek") and total_length is None:
+                # StringIO and BytesIO have seek but no usable fileno
+                try:
+                    # seek to end of file
+                    o.seek(0, 2)
+                    total_length = o.tell()
+
+                    # seek back to current position to support
+                    # partially read file-like objects
+                    o.seek(current_position or 0)
+                except OSError:
+                    total_length = 0
+
+    if total_length is None:
+        total_length = 0
+
+    return max(0, total_length - current_position)
+
+# check_header_validity — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/utils.py:1087-1095
+def check_header_validity(header: tuple[str | bytes, str | bytes]) -> None:
+    """Verifies that header parts don't contain leading whitespace
+    reserved characters, or return characters.
+
+    :param header: tuple, in the format (name, value).
+    """
+    name, value = header
+    _validate_header_part(header, name, 0)
+    _validate_header_part(header, value, 1)
+
+# _validate_header_part — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/utils.py:1098-1119
+def _validate_header_part(
+    header: tuple[str | bytes, str | bytes],
+    header_part: str | bytes,
+    header_validator_index: int,
+) -> None:
+    if isinstance(header_part, str):
+        validator = _HEADER_VALIDATORS_STR[header_validator_index]
+    elif isinstance(header_part, bytes):  # type: ignore[reportUnnecessaryIsInstance]
+        # runtime guard for non-str/bytes input
+        validator = _HEADER_VALIDATORS_BYTE[header_validator_index]
+    else:
+        raise InvalidHeader(
+            f"Header part ({header_part!r}) from {header} "
+            f"must be of type str or bytes, not {type(header_part)}"
+        )
+
+    if not validator.match(header_part):  # type: ignore[arg-type]
+        header_kind = "name" if header_validator_index == 0 else "value"
+        raise InvalidHeader(
+            f"Invalid leading whitespace, reserved character(s), or return "
+            f"character(s) in header {header_kind}: {header_part!r}"
+        )
+
+# merge_setting — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/sessions.py:76-105
+def merge_setting(
+    request_setting: Any, session_setting: Any, dict_class: type = OrderedDict
+) -> Any:
+    """Determines appropriate setting for a given request, taking into account
+    the explicit setting on that request, and the setting in the session. If a
+    setting is a dictionary, they will be merged together using `dict_class`
+    """
+
+    if session_setting is None:
+        return request_setting
+
+    if request_setting is None:
+        return session_setting
+
+    # Bypass if not a dictionary (e.g. verify)
+    if not (
+        isinstance(session_setting, Mapping) and isinstance(request_setting, Mapping)
+    ):
+        return request_setting
+
+    merged_setting = dict_class(to_key_val_list(session_setting))  # type: ignore[arg-type]  # isinstance narrows Any to Mapping[Unknown]
+    merged_setting.update(to_key_val_list(request_setting))  # type: ignore[arg-type]
+
+    # Remove keys that are set to None. Extract keys first to avoid altering
+    # the dictionary during iteration.
+    none_keys = [k for (k, v) in merged_setting.items() if v is None]
+    for key in none_keys:
+        del merged_setting[key]
+
+    return merged_setting
+
+# prepare_headers — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/models.py:563-572
+    def prepare_headers(self, headers: Mapping[str, str | bytes] | None) -> None:
+        """Prepares the given HTTP headers."""
+
+        self.headers = CaseInsensitiveDict()
+        if headers:
+            for header in headers.items():
+                # Raise exception on invalid header value.
+                check_header_validity(header)
+                name, value = header
+                self.headers[to_native_string(name)] = value
+
+# prepare_body — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/models.py:574-650
+    def prepare_body(
+        self, data: _t.DataType, files: _t.FilesType, json: _t.JsonType = None
+    ) -> None:
+        """Prepares the given HTTP body data."""
+
+        # Check if file, fo, generator, iterator.
+        # If not, run through normal process.
+
+        # Nottin' on you.
+        body = None
+        content_type = None
+
+        if not data and json is not None:
+            # urllib3 requires a bytes-like body. Python 2's json.dumps
+            # provides this natively, but Python 3 gives a Unicode string.
+            content_type = "application/json"
+
+            try:
+                body = complexjson.dumps(json, allow_nan=False)
+            except ValueError as ve:
+                raise InvalidJSONError(ve, request=self)
+
+            if not isinstance(body, bytes):
+                body = body.encode("utf-8")
+
+        # data that proxies attributes to underlying objects needs hasattr
+        is_iterable = isinstance(data, Iterable) or hasattr(data, "__iter__")
+        if is_iterable and not isinstance(data, (str, bytes, list, tuple, Mapping)):
+            try:
+                length = super_len(data)
+            except (TypeError, AttributeError, UnsupportedOperation):
+                length = None
+
+            body = data
+
+            if getattr(body, "tell", None) is not None:
+                # Record the current file position before reading.
+                # This will allow us to rewind a file in the event
+                # of a redirect.
+                try:
+                    self._body_position = body.tell()  # type: ignore[union-attr]  # guarded by getattr check
+                except OSError:
+                    # This differentiates from None, allowing us to catch
+                    # a failed `tell()` later when trying to rewind the body
+                    self._body_position = object()
+
+            if files:
+                raise NotImplementedError(
+                    "Streamed bodies and files are mutually exclusive."
+                )
+
+            if length:
+                self.headers["Content-Length"] = builtin_str(length)
+            else:
+                self.headers["Transfer-Encoding"] = "chunked"
+        else:
+            # After is_stream filtering, remaining data is raw (not streamed)
+            raw_data = cast("_t.RawDataType | None", data)
+
+            # Multi-part file uploads.
+            if files:
+                (body, content_type) = self._encode_files(files, raw_data)
+            else:
+                if raw_data:
+                    body = self._encode_params(raw_data)
+                    if isinstance(data, basestring) or isinstance(data, _SupportsRead):
+                        content_type = None
+                    else:
+                        content_type = "application/x-www-form-urlencoded"
+
+            self.prepare_content_length(body)
+
+            # Add content-type if it wasn't explicitly provided.
+            if content_type and ("content-type" not in self.headers):
+                self.headers["Content-Type"] = content_type
+
+        self.body = body  # type: ignore[assignment]  # body transforms from DataType to BodyType
+
+# prepare_content_length — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/requests/models.py:652-666
+    def prepare_content_length(self, body: _t.BodyType) -> None:
+        """Prepare Content-Length header based on request method and body"""
+        if body is not None:
+            length = super_len(body)
+            if length:
+                # If length exists, set it. Otherwise, we fallback
+                # to Transfer-Encoding: chunked.
+                self.headers["Content-Length"] = builtin_str(length)
+        elif (
+            self.method not in ("GET", "HEAD")
+            and self.headers.get("Content-Length") is None
+        ):
+            # Set Content-Length to 0 for methods that can have a body
+            # but don't provide one. (i.e. not GET or HEAD)
+            self.headers["Content-Length"] = "0"
+
+# RequestUtils._headers — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/utils/http.py:364-369
+            self._headers = {
+                "User-Agent": ua,
+                "Content-Type": content_type,
+                "Accept": accept_type,
+                "referer": referer,
+            }
+
+# OcrHelper.post_res.json — /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/ocr.py:47-47
+            json={"base64_img": image_b64})

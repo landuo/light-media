@@ -1,0 +1,416 @@
+{
+  "status": "PASS",
+  "kind": "new normal CLI two-host/installed SDK; synthetic owned OCR HTTP only",
+  "calls": [
+    {
+      "at": "2026-10-31T14:07:51.341388+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-001.body",
+      "sha256": "6f36c4be969024ea8e196d3f187d0ac2741f67e48591feee2648e94a35e6f6bb"
+    },
+    {
+      "at": "2026-10-31T14:07:51.346313+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-10-31T14:07:51.418384+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-003.body",
+      "sha256": "2219ca145f401ec8e2ed6be682a26e8c22f2ec85125613b4b83cc13b222a83e0"
+    },
+    {
+      "at": "2026-10-31T14:07:51.420775+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-004.body",
+      "sha256": "0bbeff9f6c3ed33fc139691b0a75004bc664c7577dd7480bf26855fe28f98e59"
+    },
+    {
+      "at": "2026-10-31T14:07:51.503589+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-005.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-10-31T14:07:51.505526+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "authenticated": false,
+      "status": 401,
+      "raw_file": "response-006.body",
+      "sha256": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b"
+    },
+    {
+      "at": "2026-10-31T14:07:51.507303+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-007.body",
+      "sha256": "24a3e5a97b472ed95606057f3cc02c405167afc5b5395025aa4f76fcdf724abd"
+    },
+    {
+      "at": "2026-10-31T14:07:51.590997+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-008.body",
+      "sha256": "0c845a81d05dc3d543c22802a729d3a648af109eb204a3f5e31d54a99ff5545e"
+    },
+    {
+      "at": "2026-10-31T14:07:51.602370+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-009.body",
+      "sha256": "b38b464ae62fa4426d46a8a04bcdcfac62f9aecf43d2082214aa16497dcd8d19"
+    },
+    {
+      "at": "2026-10-31T14:07:51.617776+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-010.body",
+      "sha256": "24a3e5a97b472ed95606057f3cc02c405167afc5b5395025aa4f76fcdf724abd"
+    },
+    {
+      "at": "2026-10-31T14:07:51.903133+00:00",
+      "host_pid": 52,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-011.body",
+      "sha256": "a1db52ae2a75c958542ae39be64f289d1a7246a798d2b67b16ffad95d8631cac"
+    },
+    {
+      "at": "2026-10-31T14:07:51.905168+00:00",
+      "host_pid": 52,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-10-31T14:07:51.990411+00:00",
+      "host_pid": 52,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-013.body",
+      "sha256": "5b8801dfe4bbe7301581bcb36d0168b7ca0afc7e28eba9ac690d61596581d42f"
+    },
+    {
+      "at": "2026-10-31T14:07:51.992848+00:00",
+      "host_pid": 52,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-014.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-10-31T14:07:51.994576+00:00",
+      "host_pid": 52,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-015.body",
+      "sha256": "75eee02064141cd1607d0a2ea5f3f024d476a0fddcac16f6be29dcb16b8a132c"
+    }
+  ],
+  "peer_calls": [
+    {
+      "method": "GET",
+      "path": "/index"
+    },
+    {
+      "method": "GET",
+      "path": "/worker"
+    }
+  ],
+  "ocr_calls": [
+    {
+      "method": "POST",
+      "path": "/captcha/base64",
+      "mode": "healthy",
+      "body_sha256": "991e7fc9eaa761693f822db39b751e6e5d81159b57bf78d5be3a4e026e9c672f",
+      "body": "{\"base64_img\": \"QQ==\"}",
+      "cookie_present": false,
+      "authorization_present": false,
+      "accept_present": false
+    },
+    {
+      "method": "POST",
+      "path": "/captcha/base64",
+      "mode": "malformed",
+      "body_sha256": "991e7fc9eaa761693f822db39b751e6e5d81159b57bf78d5be3a4e026e9c672f",
+      "body": "{\"base64_img\": \"QQ==\"}",
+      "cookie_present": false,
+      "authorization_present": false,
+      "accept_present": false
+    },
+    {
+      "method": "POST",
+      "path": "/captcha/base64",
+      "mode": "disconnect",
+      "body_sha256": "991e7fc9eaa761693f822db39b751e6e5d81159b57bf78d5be3a4e026e9c672f",
+      "body": "{\"base64_img\": \"QQ==\"}",
+      "cookie_present": false,
+      "authorization_present": false,
+      "accept_present": false
+    },
+    {
+      "method": "POST",
+      "path": "/captcha/base64",
+      "mode": "healthy",
+      "body_sha256": "991e7fc9eaa761693f822db39b751e6e5d81159b57bf78d5be3a4e026e9c672f",
+      "body": "{\"base64_img\": \"QQ==\"}",
+      "cookie_present": false,
+      "authorization_present": false,
+      "accept_present": false
+    },
+    {
+      "method": "POST",
+      "path": "/captcha/base64",
+      "mode": "healthy",
+      "body_sha256": "991e7fc9eaa761693f822db39b751e6e5d81159b57bf78d5be3a4e026e9c672f",
+      "body": "{\"base64_img\": \"QQ==\"}",
+      "cookie_present": false,
+      "authorization_present": false,
+      "accept_present": false
+    }
+  ],
+  "processes": [
+    {
+      "pid": 24,
+      "identity": {
+        "ppid": 2,
+        "starttime": "1275003"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s15-reconstruction-plan/normal-cli01/private-data",
+      "owned_listener_inode": "100180",
+      "exit": 0
+    },
+    {
+      "pid": 52,
+      "identity": {
+        "ppid": 2,
+        "starttime": "1275054"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s15-reconstruction-plan/normal-cli01/private-data",
+      "owned_listener_inode": "100209",
+      "exit": 0
+    }
+  ],
+  "queries": [
+    {
+      "label": "warm_success",
+      "host_pid": 24,
+      "response": {
+        "value": {
+          "kind": "string",
+          "points": [
+            79,
+            87,
+            78,
+            69,
+            68,
+            95,
+            79,
+            67,
+            82,
+            95,
+            78,
+            79,
+            82,
+            77,
+            65,
+            76,
+            95,
+            79,
+            75
+          ]
+        },
+        "pid": 40,
+        "stale_denied": true
+      },
+      "owned_ocr_calls": 1
+    },
+    {
+      "label": "typed_json_failure",
+      "host_pid": 24,
+      "response": {
+        "error_class": "JSONDecodeError",
+        "pid": 40,
+        "stale_denied": true
+      },
+      "owned_ocr_calls": 2
+    },
+    {
+      "label": "network_failure_empty",
+      "host_pid": 24,
+      "response": {
+        "value": {
+          "kind": "string"
+        },
+        "pid": 40,
+        "stale_denied": true
+      },
+      "owned_ocr_calls": 3
+    },
+    {
+      "label": "warm_recovery",
+      "host_pid": 24,
+      "response": {
+        "value": {
+          "kind": "string",
+          "points": [
+            79,
+            87,
+            78,
+            69,
+            68,
+            95,
+            79,
+            67,
+            82,
+            95,
+            78,
+            79,
+            82,
+            77,
+            65,
+            76,
+            95,
+            79,
+            75
+          ]
+        },
+        "pid": 40,
+        "stale_denied": true
+      },
+      "owned_ocr_calls": 4
+    },
+    {
+      "label": "cold_success",
+      "host_pid": 52,
+      "response": {
+        "value": {
+          "kind": "string",
+          "points": [
+            79,
+            87,
+            78,
+            69,
+            68,
+            95,
+            79,
+            67,
+            82,
+            95,
+            78,
+            79,
+            82,
+            77,
+            65,
+            76,
+            95,
+            79,
+            75
+          ]
+        },
+        "pid": 66,
+        "stale_denied": true
+      },
+      "owned_ocr_calls": 5
+    }
+  ],
+  "not_claimed": [
+    "source requests HTTP runtime",
+    "real recognition quality/site credentials",
+    "browser/S14",
+    "business AutoSignIn",
+    "whole platform/CI/delivery"
+  ],
+  "bootstrap_exit": 0,
+  "worker_identities": [
+    {
+      "ppid": 24,
+      "starttime": "1275038",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s15-reconstruction-plan/normal-cli01/private-data/plugin-packages/OwnedOCR/owned-ocr-fixture",
+      "executable_sha256": "b8c80011ce46a88ef6254d0778f1421da11e1c2d40aa2f332ab0db7fd3758d67",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "1275038",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s15-reconstruction-plan/normal-cli01/private-data/plugin-packages/OwnedOCR/owned-ocr-fixture",
+      "executable_sha256": "b8c80011ce46a88ef6254d0778f1421da11e1c2d40aa2f332ab0db7fd3758d67",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "1275038",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s15-reconstruction-plan/normal-cli01/private-data/plugin-packages/OwnedOCR/owned-ocr-fixture",
+      "executable_sha256": "b8c80011ce46a88ef6254d0778f1421da11e1c2d40aa2f332ab0db7fd3758d67",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "1275038",
+      "pid": 40,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s15-reconstruction-plan/normal-cli01/private-data/plugin-packages/OwnedOCR/owned-ocr-fixture",
+      "executable_sha256": "b8c80011ce46a88ef6254d0778f1421da11e1c2d40aa2f332ab0db7fd3758d67",
+      "host_pid": 24
+    },
+    {
+      "ppid": 52,
+      "starttime": "1275075",
+      "pid": 66,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s15-reconstruction-plan/normal-cli01/private-data/plugin-packages/OwnedOCR/owned-ocr-fixture",
+      "executable_sha256": "b8c80011ce46a88ef6254d0778f1421da11e1c2d40aa2f332ab0db7fd3758d67",
+      "host_pid": 52
+    }
+  ],
+  "input_drift": [],
+  "environment_unchanged_except_owned_OCR_HOST": true,
+  "finished_at": "2026-10-31T14:07:52.592025+00:00"
+}

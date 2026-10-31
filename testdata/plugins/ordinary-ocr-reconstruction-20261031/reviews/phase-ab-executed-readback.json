@@ -1,0 +1,227 @@
+{
+  "at": "2026-10-31T13:47:06.538241+00:00",
+  "verdict": "A4 narrow fixes executed; B new5+adjacent7 accepted at owned Go protocol boundary; C/worker/CLI/race/source HTTP not claimed",
+  "a4": {
+    "files": {
+      "before-gofmt.sha256": {
+        "sha256": "f2860d74535fa13b8b209fff3c2421108ed6d03ef21972b1fd3d5965ed690ef3",
+        "bytes": 288
+      },
+      "exit.txt": {
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "bytes": 2
+      },
+      "after.sha256": {
+        "sha256": "9a12f24b8bb4925439cf093e06f39a187b517fde63c7886ee7dc43a700c4045c",
+        "bytes": 1120
+      },
+      "inputs.sha256": {
+        "sha256": "9a12f24b8bb4925439cf093e06f39a187b517fde63c7886ee7dc43a700c4045c",
+        "bytes": 1120
+      },
+      "command.txt": {
+        "sha256": "3307ae32b3df33cd50ca87e6f6dc314f5e56ba0940129ae2878be5f9a4ff53b5",
+        "bytes": 180
+      },
+      "end.txt": {
+        "sha256": "54057884ad3dfa3bbaf53c7bd6170524d9c6f8813051d42efe43453ab6a85eee",
+        "bytes": 21
+      },
+      "output.jsonl": {
+        "sha256": "eb58adb3cea63ae7aa09e17bf04e71fc2e518781037cbac23b50da3e9e9050f7",
+        "bytes": 28817
+      },
+      "start.txt": {
+        "sha256": "ab6d3cd73524c6e5d6ca6de98ac28d2e29561ea68ee02b9172340db5a737d3fe",
+        "bytes": 21
+      }
+    },
+    "exit": "0",
+    "roots_pass": [
+      "TestSharedOCRValuesAndTypedSourceErrors",
+      "TestOrdinaryOCRFixedSourceObservations"
+    ],
+    "fail_skip": [],
+    "input_after_equal": true,
+    "current_matches": {
+      "internal/ocr/client.go": true,
+      "internal/ocr/client_test.go": true,
+      "internal/ocr/extended_source_test.go": true,
+      "internal/ocr/json_value.go": true,
+      "internal/ocr/testdata/extended-http-source.json": true,
+      "internal/ocr/testdata/helper-source.json": true,
+      "internal/ocr/testdata/status-truthiness-source.json": true,
+      "internal/requestsjson/response.go": true,
+      "internal/plugins/shared_ocr.go": true,
+      "internal/plugins/shared_ocr_value.go": true,
+      "internal/plugins/shared_ocr_test.go": true
+    },
+    "executed_files": {
+      "internal/ocr/client.go": "dfa55e016d0e8fdaba9e720a71e2c373f641b1e15c9c180f2a1678dba43a9303",
+      "internal/ocr/client_test.go": "069c8d25d2b183ea9d125465e2f4f31e1fa90ea63380e78a7ece347d94c2aa83",
+      "internal/ocr/extended_source_test.go": "9ef721d517c9b42a1f9260f8b4b42c999909bf5b40a77e7d642ab5860eaa9815",
+      "internal/ocr/json_value.go": "495fae407624a690330d9d698e6baee61fc2dd2126ca9164cf60ef857be01e23",
+      "internal/ocr/testdata/extended-http-source.json": "57adae702e79570164b1add534a03e2ab2e6e353451f1e031af56c6d9cda26eb",
+      "internal/ocr/testdata/helper-source.json": "64d8eb46d0c2bb6e04a14c13365f334af2c3d2fa1641e45444119882a15c2900",
+      "internal/ocr/testdata/status-truthiness-source.json": "aa5c9caa43db9f72a56cacd64ca9738ce9095e261b02f8ca9dca00fd4dc4e9dd",
+      "internal/requestsjson/response.go": "e2212496028321ac77a9d8e84b3a0b6cc7823d03e920928127f7f54e982e44ec",
+      "internal/plugins/shared_ocr.go": "f393af4973eaace19cb26ab78486220ba56b1e93407f35b84b3aff12553870c2",
+      "internal/plugins/shared_ocr_value.go": "c7073f93f2bfaf84e69abea16b619a6c56fb59b28351bc5b698a1a28a3775a7b",
+      "internal/plugins/shared_ocr_test.go": "d64f68f47bffb6fc672bfc9e7332f235ca748199f86cfcef8e17dddff093e2cc"
+    }
+  },
+  "b02": {
+    "files": {
+      "compile.exit": {
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "bytes": 2
+      },
+      "inputs-after-test.json": {
+        "sha256": "ffcc98ca8b5c8b6ba8a1cb50184109b5530fa5c6234903ab0ef99ce413a94315",
+        "bytes": 647122
+      },
+      "go-list.stdout": {
+        "sha256": "7251a030f01f3fc49d0f8de992811fbd0adf1eff51f752fe253ee738fdf9ec8a",
+        "bytes": 701204
+      },
+      "go-list.exit": {
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "bytes": 2
+      },
+      "inputs-after-compile.json": {
+        "sha256": "ffcc98ca8b5c8b6ba8a1cb50184109b5530fa5c6234903ab0ef99ce413a94315",
+        "bytes": 647122
+      },
+      "compile.stderr": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "compile.stdout": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "generated-source-map.json": {
+        "sha256": "d2913c266b385d0e78fe1edbfbf2bb5dd0340e252f5a82534e7408f13de5c6ac",
+        "bytes": 246
+      },
+      "tests.stdout": {
+        "sha256": "c5bed53c9d1cbbb59270be6aaa1fd822143d4e60fd1670811e4d85cf74c7e4b7",
+        "bytes": 15141
+      },
+      "inputs-before.json": {
+        "sha256": "ffcc98ca8b5c8b6ba8a1cb50184109b5530fa5c6234903ab0ef99ce413a94315",
+        "bytes": 647122
+      },
+      "tests.stderr": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "tests.exit": {
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "bytes": 2
+      },
+      "result.json": {
+        "sha256": "56a35cefa68850d716f4fe780a7b5f7e01fdb9a7456112f23bd1c30159d29b14",
+        "bytes": 2131
+      },
+      "go-list.stderr": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    "input_count": 2942,
+    "three_phase_equal": true,
+    "current_drift": [],
+    "program_sha256": "cd6bef20035f3f66ce2365357095293ae13d68d39434f555c9900812489c557d",
+    "program_matches": true,
+    "generated": {
+      "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/1d/1d63b34aff7249f25cce00c1e7ffade07a5a68034f98240d2f40aaaa091f0bd6-d": {
+        "copy": "generated-source/1d63b34aff7249f25cce00c1e7ffade07a5a68034f98240d2f40aaaa091f0bd6.go",
+        "matches": true
+      }
+    },
+    "roots_pass": [
+      "TestSiteHostGuardIsNotSerialized",
+      "TestBoundSiteTransportNoCrossOriginAndStrictTLS",
+      "TestBoundSiteTransportIdleCancellationAndBounds",
+      "TestBoundSiteTransportSlowHeadersAreIdleNotTotal",
+      "TestSiteHostGuardRedirectBoundary",
+      "TestSiteHostGuardCanceledContextAndRedaction",
+      "TestSiteHostGuardPreservesOrdinaryNetworkFailure",
+      "TestOrdinaryOCRFullBodyNativeLimitRetained",
+      "TestOrdinaryOCRCancellationAndDecodeErrors",
+      "TestOrdinaryOCRSourceTLSIsIsolated",
+      "TestOrdinaryOCRCredentialRedirectAndNativeRemainDenied",
+      "TestOrdinaryOCRRedirectGuardsAndURLCredentials"
+    ],
+    "fail_skip": [],
+    "commands_exits": [
+      [
+        "go-list",
+        0
+      ],
+      [
+        "compile",
+        0
+      ],
+      [
+        "tests",
+        0
+      ]
+    ]
+  },
+  "b01_preserved": {
+    "files": {
+      "go-list.stdout": {
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "go-list.exit": {
+        "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "bytes": 2
+      },
+      "driver.py": {
+        "sha256": "779f139c952137fad8af029dbf98c130d7041f8d444f89ac2ab0465ce7cf3bd5",
+        "bytes": 4101
+      },
+      "result.json": {
+        "sha256": "bcd3841fa3e187f9e46df4392f7c1d24f1d7816c71484f7c376b51680cd52a41",
+        "bytes": 599
+      },
+      "go-list.stderr": {
+        "sha256": "7b975d1650e95c46af5cac5edbe94e280405c6356309b2484cf4cc41e752808c",
+        "bytes": 119
+      }
+    },
+    "status": "FAIL",
+    "last_step": {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins/autosignin"
+      ],
+      "exit": 1
+    },
+    "raw_error": "go: can't load test package: error obtaining VCS status: exit status 128\n\tUse -buildvcs=false to disable VCS stamping.\n",
+    "classification": "precompile runner go-list buildvcs failure; no product test execution"
+  },
+  "reviewed_sources": {
+    "internal/plugins/autosignin/http_transport.go": "7a0996793e5c2e9303ff5592ec034e58c6bba96ae1ca0791a791fdb1808cd8ae",
+    "internal/plugins/autosignin/ordinary_ocr_transport.go": "eb063157420facf0a8a100c5b56fd1dbe6dcbf9b12748094487459cfdef0c04a",
+    "internal/plugins/autosignin/ordinary_ocr_transport_test.go": "8bd57155c4d14161ddd03de1e4d545aefc2fa5450ab241021b0985ef2c116806"
+  },
+  "scope": [
+    "Fresh per-request private TLS config; no default/global changes.",
+    "Ordinary Do uses nil OCR mode, retains strict TLS and 1MiB compressed/decoded body bound.",
+    "OCR reader full body, gzip decode; body and owned idle pools close on ordinary success/error.",
+    "Accept absent, POST distinct credentials/UA, origin-isolated response-cookie jar.",
+    "Each actual redirect still passes BeforeRequest; non-http/userinfo denied, foreign-origin Cookie/Authorization/Proxy-Authorization removed.",
+    "RequestsProxyPolicy remains existing captured environment router; no direct fallback or proxy clearing.",
+    "No new Python HTTP observations or HTTPS-proxy two-hop empirical claim."
+  ]
+}

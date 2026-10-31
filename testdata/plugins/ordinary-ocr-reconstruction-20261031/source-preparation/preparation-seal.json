@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-31T14:23:36.953097+00:00",
+  "state": "static-fix01-awaiting-review-and-coordinator-execution02",
+  "fix_executed": false,
+  "prior_actual_execution01_exit": 1,
+  "source_ast_and_source_files_unchanged": true,
+  "selected_ast_no_import_or_direct_import_calls": true,
+  "stdlib_static_reference": {
+    "typing_path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/typing.py",
+    "sha256": "be92d60fb8382bb29ead21c128825d7c96d0e8c915b44f840791e49f5a8d554c",
+    "Generic_from_typing_extension_lines": [
+      36,
+      45
+    ],
+    "generic_class_getitem_lines": [
+      1075,
+      1122
+    ],
+    "Protocol_inherits_Generic_line": 1962,
+    "boundary": "static stdlib route evidence plus actual generic-expression failure; no claim to have observed the internal C import target"
+  },
+  "files": {
+    "capture_source_preparation.py": {
+      "sha256": "9eeb228d9545e709c3bbdabd01895d8bc23292a7565791d41a90e8472074a999",
+      "bytes": 10579
+    },
+    "input-bindings.json": {
+      "sha256": "3bad0d1ec2657acc830e0ebfa0830437f4df4269f28062bcf9877c9ac8e07657",
+      "bytes": 16582
+    },
+    "selected-source.txt": {
+      "sha256": "704053d2a822fc84b10ca7e845c3549707e53072ad12a8d1fced84f012e17038",
+      "bytes": 19473
+    },
+    "README.md": {
+      "sha256": "0ea596e2a2ef8b941456be3244c939cf82f981d380a3d92f37dfb555c9f8dff1",
+      "bytes": 5347
+    }
+  },
+  "preserved_beforeimage_manifest_sha256": "b08aa3c0c0146f27948c53f6850c323b12523bbf7810b9f0e8c2fee964424e27",
+  "execution01_unchanged": true,
+  "network_or_go_or_requests_urllib3_import_by_owner": false
+}

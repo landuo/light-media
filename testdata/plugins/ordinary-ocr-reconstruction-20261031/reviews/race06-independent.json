@@ -1,0 +1,367 @@
+{
+  "at": "2026-10-31T14:15:55.850586+00:00",
+  "verdict": "finite race6 accepted on exact new reconstruction bytes, no additional root required",
+  "gates": {
+    "s15-race-transport01": {
+      "evidence_files": {
+        "compile.exit": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "inputs-after-test.json": {
+          "sha256": "8e29df57a2019b57ea0ed5f6544de16ddb5d99286bf7cec4b1d86ad9a57495b2",
+          "bytes": 649122
+        },
+        "go-list.stdout": {
+          "sha256": "c00bbef27a28909745ba1a1000bd506c19739782e4314903a8e7157f68e17f8a",
+          "bytes": 708514
+        },
+        "go-list.exit": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "inputs-after-compile.json": {
+          "sha256": "8e29df57a2019b57ea0ed5f6544de16ddb5d99286bf7cec4b1d86ad9a57495b2",
+          "bytes": 649122
+        },
+        "compile.stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "compile.stdout": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "generated-source-map.json": {
+          "sha256": "d2913c266b385d0e78fe1edbfbf2bb5dd0340e252f5a82534e7408f13de5c6ac",
+          "bytes": 246
+        },
+        "tests.stdout": {
+          "sha256": "fab5cdc7c695d14fec4dfb7b40e3678ec9e9d05fa79f5cc4aa158d48e3341604",
+          "bytes": 3261
+        },
+        "inputs-before.json": {
+          "sha256": "8e29df57a2019b57ea0ed5f6544de16ddb5d99286bf7cec4b1d86ad9a57495b2",
+          "bytes": 649122
+        },
+        "tests.stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "tests.exit": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "result.json": {
+          "sha256": "26f5ce2e4f32954380472e6efd24f3f1c2825a846d753524b916d85657c9de39",
+          "bytes": 2304
+        },
+        "go-list.stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      "input_count": 2951,
+      "three_phase_equal": true,
+      "current_drift": [],
+      "programs": {
+        "s15-race-transport01.test": {
+          "sha256": "7d76f61ae132fab196a2e42a4e885661c1fe44911d559c1898605ecf03f387d8",
+          "bytes": 23741313,
+          "matches_result": true
+        }
+      },
+      "generated_copies": {
+        "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/1d/1d63b34aff7249f25cce00c1e7ffade07a5a68034f98240d2f40aaaa091f0bd6-d": {
+          "copy": "generated-source/1d63b34aff7249f25cce00c1e7ffade07a5a68034f98240d2f40aaaa091f0bd6.go",
+          "matches": true
+        }
+      },
+      "commands": [
+        {
+          "label": "go-list",
+          "argv": [
+            "go",
+            "list",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-deps",
+            "-test",
+            "-json",
+            "-race",
+            "./internal/plugins/autosignin"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "compile",
+          "argv": [
+            "go",
+            "test",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-p=1",
+            "-c",
+            "-o",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s15-race-transport01.test",
+            "-race",
+            "./internal/plugins/autosignin"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "tests",
+          "argv": [
+            "go",
+            "tool",
+            "test2json",
+            "-t",
+            "-p",
+            "./internal/plugins/autosignin",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s15-race-transport01.test",
+            "-test.v",
+            "-test.run",
+            "^TestOrdinaryOCR(CancellationAndDecodeErrors|SourceTLSIsIsolated|CredentialRedirectAndNativeRemainDenied)$",
+            "-test.count=1",
+            "-test.timeout=90s"
+          ],
+          "exit": 0
+        }
+      ],
+      "roots_pass": [
+        "TestOrdinaryOCRCancellationAndDecodeErrors",
+        "TestOrdinaryOCRSourceTLSIsIsolated",
+        "TestOrdinaryOCRCredentialRedirectAndNativeRemainDenied"
+      ],
+      "fail_skip": [],
+      "race_warning": false,
+      "worker_receipt": [],
+      "environment_proxy_unchanged_recorded": true,
+      "resources_step_samples": [
+        {
+          "phase": "go-list",
+          "at": "2026-10-31T14:10:31.224307+00:00",
+          "scratch_free": 59737706496,
+          "tmp_free": 5225664512
+        },
+        {
+          "phase": "compile",
+          "at": "2026-10-31T14:10:31.676714+00:00",
+          "scratch_free": 59736322048,
+          "tmp_free": 5225664512
+        },
+        {
+          "phase": "tests",
+          "at": "2026-10-31T14:10:49.535184+00:00",
+          "scratch_free": 59659776000,
+          "tmp_free": 5225664512
+        }
+      ],
+      "ended": "2026-10-31T14:10:50.890121+00:00"
+    },
+    "s15-race-app01": {
+      "evidence_files": {
+        "compile.exit": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "inputs-after-test.json": {
+          "sha256": "01544a7b52eacaa3840ac2fb07cb5519dbfea2b30b42968251fca2a11367a1a9",
+          "bytes": 1438332
+        },
+        "compile-worker.stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "go-list.stdout": {
+          "sha256": "5044b2e68801a264ba65329b1104de9b52dc0397644f6fb636e55bddeea15d10",
+          "bytes": 1426142
+        },
+        "compile-worker.exit": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "go-list.exit": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "inputs-after-compile.json": {
+          "sha256": "01544a7b52eacaa3840ac2fb07cb5519dbfea2b30b42968251fca2a11367a1a9",
+          "bytes": 1438332
+        },
+        "compile.stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "compile.stdout": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "generated-source-map.json": {
+          "sha256": "be8ea06e03e25965f1b50f92dcd30e2df022c9cf24f48cf16288f10462d1fc80",
+          "bytes": 246
+        },
+        "tests.stdout": {
+          "sha256": "e87ece1349450d7fecd0a86892f17c1f1c5c18472642629e938d437fbdbf1b71",
+          "bytes": 12100
+        },
+        "compile-worker.stdout": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "inputs-before.json": {
+          "sha256": "01544a7b52eacaa3840ac2fb07cb5519dbfea2b30b42968251fca2a11367a1a9",
+          "bytes": 1438332
+        },
+        "tests.stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        },
+        "tests.exit": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "result.json": {
+          "sha256": "1fc64c9f7c0c4c588f1a661840827897a4727c1afec7de49f6fc8c52784669d7",
+          "bytes": 2920
+        },
+        "go-list.stderr": {
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "bytes": 0
+        }
+      },
+      "input_count": 6161,
+      "three_phase_equal": true,
+      "current_drift": [],
+      "programs": {
+        "s15-race-app01.test": {
+          "sha256": "dfa816e7760b596ed1259b5d095fb3c377c82245adee5f6173e4d1f9f43c9620",
+          "bytes": 116701102,
+          "matches_result": true
+        },
+        "s15-race-app01.worker": {
+          "sha256": "d1b4a3e0fd7f2da45bb85b2ee889c91a44f942bc7f0a7c1043c39dd3ed94e913",
+          "bytes": 6716319,
+          "matches_result": true
+        }
+      },
+      "generated_copies": {
+        "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/6c/6c108b8a92012df95c169bce91785e97d939039d59aed862e31fbacc6f594e0b-d": {
+          "copy": "generated-source/6c108b8a92012df95c169bce91785e97d939039d59aed862e31fbacc6f594e0b.go",
+          "matches": true
+        }
+      },
+      "commands": [
+        {
+          "label": "go-list",
+          "argv": [
+            "go",
+            "list",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-deps",
+            "-test",
+            "-json",
+            "-race",
+            "./internal/app",
+            "./cmd/owned-ocr-fixture"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "compile-worker",
+          "argv": [
+            "go",
+            "build",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-p=1",
+            "-o",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s15-race-app01.worker",
+            "-race",
+            "./cmd/owned-ocr-fixture"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "compile",
+          "argv": [
+            "go",
+            "test",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-p=1",
+            "-c",
+            "-o",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s15-race-app01.test",
+            "-race",
+            "./internal/app"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "tests",
+          "argv": [
+            "go",
+            "tool",
+            "test2json",
+            "-t",
+            "-p",
+            "./internal/app",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s15-race-app01.test",
+            "-test.v",
+            "-test.run",
+            "^TestSharedOCR(HostBoundariesAndSnapshot|ActualWorkerFailureRecoveryCold|RedirectSourceAndCookieIsolation)$",
+            "-test.count=1",
+            "-test.timeout=90s"
+          ],
+          "exit": 0
+        }
+      ],
+      "roots_pass": [
+        "TestSharedOCRActualWorkerFailureRecoveryCold",
+        "TestSharedOCRRedirectSourceAndCookieIsolation",
+        "TestSharedOCRHostBoundariesAndSnapshot"
+      ],
+      "fail_skip": [],
+      "race_warning": false,
+      "worker_receipt": [
+        "    plugin_shared_ocr_process_test.go:210: new actual owned SDK workers 1386 -> 1394, five synthetic HTTP calls; not OCR engine quality\n"
+      ],
+      "environment_proxy_unchanged_recorded": true,
+      "resources_step_samples": [
+        {
+          "phase": "go-list",
+          "at": "2026-10-31T14:12:12.506611+00:00",
+          "scratch_free": 59656720384,
+          "tmp_free": 5225664512
+        },
+        {
+          "phase": "compile-worker",
+          "at": "2026-10-31T14:12:13.578599+00:00",
+          "scratch_free": 59653668864,
+          "tmp_free": 5225664512
+        },
+        {
+          "phase": "compile",
+          "at": "2026-10-31T14:12:13.989048+00:00",
+          "scratch_free": 59646820352,
+          "tmp_free": 5225664512
+        },
+        {
+          "phase": "tests",
+          "at": "2026-10-31T14:13:55.697218+00:00",
+          "scratch_free": 59231137792,
+          "tmp_free": 5225664512
+        }
+      ],
+      "ended": "2026-10-31T14:14:04.500342+00:00"
+    }
+  },
+  "boundaries": [
+    "go-list -race, test-c -race, workerbuild -race present in actual argv",
+    "resources are phase-start samples, not claimed continuous guard or arbitrary whole-run bound",
+    "ordinary unchanged normal-only cases inherit their exact normal evidence, not falsely rerun under race",
+    "no source HTTP imports/probes or full platform race claim"
+  ]
+}

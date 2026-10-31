@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-31T13:40:18.801252+00:00",
+  "state": "source_review_fix_unexecuted",
+  "source_fix": "Actual RequestUtils accept_type=None removes header; docs default not used. OCR GET AcceptType omitted and POST Accept:nil. New owned HTTP test asserts absence and POST content-type/payload/no image credentials-UA. NativeDo unchanged.",
+  "files": {
+    "internal/plugins/autosignin/http_transport.go": "9025c03182d289aff02c65f182f87c35c7d99a739fcc47eae9c4aa2d04fa984d",
+    "internal/plugins/autosignin/ordinary_ocr_transport.go": "c9b34510611710c50b3c887ac122c45a679bf02a1b60bff37363122478f35594",
+    "internal/plugins/autosignin/ordinary_ocr_transport_test.go": "95472bf0db47f21e9e21452b20648be034c0b395dda6070fdde8394d0143c2b9"
+  },
+  "recovery_tar_sha256": "7524c19a56151cec25cd82f1d8e1da3b73643eebe1963a49d55304e323dfb3fe"
+}

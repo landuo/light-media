@@ -1,0 +1,88 @@
+{
+  "at": "2026-10-31T13:27:13.092307+00:00",
+  "state": "read_only_reconstruction_plan_no_source_writes_or_execution",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "source_files": {
+    "app/helper/ocr.py": {
+      "sha256": "736e7a078b22fe0ac5ac611d58be6a8d742f7d768d582abfed605fafe65a550c",
+      "bytes": 2810
+    },
+    "app/utils/http.py": {
+      "sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+      "bytes": 62612
+    },
+    "app/core/config.py": {
+      "sha256": "3be390c00277672706c3cb2f28d480d1e6d67541b6fd4afaaf490a0ee3966a6e",
+      "bytes": 51315
+    }
+  },
+  "target_base": "42d6ef0ae3b4697200c13c22b7353de52320af6a",
+  "repo": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/light-media",
+  "new_paths": [
+    "cmd/owned-ocr-fixture/main.go",
+    "internal/app/plugin_shared_ocr.go",
+    "internal/app/plugin_shared_ocr_extended_test.go",
+    "internal/app/plugin_shared_ocr_process_test.go",
+    "internal/app/plugin_shared_ocr_test.go",
+    "internal/ocr/client.go",
+    "internal/ocr/client_test.go",
+    "internal/ocr/extended_source_test.go",
+    "internal/ocr/json_value.go",
+    "internal/ocr/testdata/extended-http-source.json",
+    "internal/ocr/testdata/helper-source.json",
+    "internal/ocr/testdata/owned-http-source.json",
+    "internal/ocr/testdata/status-truthiness-source.json",
+    "internal/ocr/testdata/url-prepare-source.json",
+    "internal/plugins/autosignin/ordinary_ocr_transport.go",
+    "internal/plugins/autosignin/ordinary_ocr_transport_test.go",
+    "internal/plugins/shared_ocr.go",
+    "internal/plugins/shared_ocr_test.go",
+    "internal/plugins/shared_ocr_value.go",
+    "internal/requestsjson/response.go",
+    "internal/app/plugin_shared_ocr_redirect_test.go",
+    "internal/ocr/testdata/redirect-source.json"
+  ],
+  "existing_paths": {
+    "internal/app/plugin_original_resources.go": {
+      "sha256": "8c31144c1215293cfdcc18b9dcbdd0ebf73317c2a446425b229609231aa9f488",
+      "bytes": 5414
+    },
+    "internal/app/runtime.go": {
+      "sha256": "4fcab0b50f7a18a2266ecbb6200c8159f376498e4ddbf04c957047603223324e",
+      "bytes": 23834
+    },
+    "internal/plugins/autosignin/http_transport.go": {
+      "sha256": "4fdf149b63629ff0b281cead6d9b0c6998bc579c2007de44e8fbb2a45bc9a732",
+      "bytes": 20291
+    }
+  },
+  "new_paths_absent": true,
+  "reusable_committed_inputs": {
+    "internal/plugins/iyuuautoseed/site_http.go": {
+      "sha256": "490ea1f14d5d60aca60d4119b8f171465f548674b5e75d6539f233344ffc2e7f",
+      "bytes": 15835
+    },
+    "internal/plugins/autosignin/http_transport.go": {
+      "sha256": "4fdf149b63629ff0b281cead6d9b0c6998bc579c2007de44e8fbb2a45bc9a732",
+      "bytes": 20291
+    },
+    "internal/app/plugin_shared_qbittorrent_completed.go": {
+      "sha256": "7b0d25cb9d14266f0f25da44b5f4f61396687250377d6520f3da9e8bb898ffe3",
+      "bytes": 2766
+    },
+    "internal/app/plugin_original_resources.go": {
+      "sha256": "8c31144c1215293cfdcc18b9dcbdd0ebf73317c2a446425b229609231aa9f488",
+      "bytes": 5414
+    },
+    "go.mod": {
+      "sha256": "622569e08ea6fb374e66a0e35f22bc29b276841d7ab74ade1e1d813a6095b5fa",
+      "bytes": 2262
+    },
+    "go.sum": {
+      "sha256": "2166fc925241cdfc675fc78e2e3d2b36152d9eb208a86d6defccec9551c61355",
+      "bytes": 18073
+    }
+  },
+  "old_candidate_status": "Old uncommitted25path bytes and original runtime logs are unavailable after environment replacement. Historical21normal/6race/2host5calls reports are retained as history only, not source recovery or fresh acceptance. New files/hashes/oracles will be new reconstruction.",
+  "permissions": "Only this new audit directory writable now. No Go/source imports/listeners/network or product writes before sole coordinator source window. Never recreate old LOST path."
+}

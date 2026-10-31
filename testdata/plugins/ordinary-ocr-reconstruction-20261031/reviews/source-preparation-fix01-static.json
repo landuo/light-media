@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-31T14:27:20.659369+00:00",
+  "status": "ready-for-coordinator-execution02",
+  "reviewer_executed_source": false,
+  "fix": "original builtins.__import__ added; executable harness AST otherwise identical",
+  "source_files_count": 12,
+  "source_and_selected_ast_unchanged": true,
+  "execution01_failure_and_beforeimages_verified": true,
+  "files": {
+    "capture_source_preparation.py": {
+      "sha256": "9eeb228d9545e709c3bbdabd01895d8bc23292a7565791d41a90e8472074a999",
+      "bytes": 10579
+    },
+    "input-bindings.json": {
+      "sha256": "3bad0d1ec2657acc830e0ebfa0830437f4df4269f28062bcf9877c9ac8e07657",
+      "bytes": 16582
+    },
+    "preparation-seal.json": {
+      "sha256": "f9a1886ff180e0a85d5c948afcd76babc2b2358b88659dac922c0e234bd847eb",
+      "bytes": 1624
+    },
+    "selected-source.txt": {
+      "sha256": "704053d2a822fc84b10ca7e845c3549707e53072ad12a8d1fced84f012e17038",
+      "bytes": 19473
+    },
+    "before-fix01/manifest.json": {
+      "sha256": "b08aa3c0c0146f27948c53f6850c323b12523bbf7810b9f0e8c2fee964424e27",
+      "bytes": 1692
+    }
+  },
+  "boundary": "selected source JSON preparation only, no requests/urllib3/socket import, no URL/send/HTTP; fixed AST has no import or direct __import__ invocation; standard built-in is not a hook; actual internal prior C import target not observed"
+}

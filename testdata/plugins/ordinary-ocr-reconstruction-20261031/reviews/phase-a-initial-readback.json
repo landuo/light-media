@@ -1,0 +1,158 @@
+{
+  "at": "2026-10-31T13:45:17.552848+00:00",
+  "scope": "new reconstruction A only; static + existing coordinator receipts, no reviewer Go/network/source import",
+  "gates": {
+    "s15-sdk01": {
+      "evidence": {
+        "before-gofmt.sha256": {
+          "sha256": "995696d2427c0de528058fd649d9d1edfedd912e63a3b02eace8dbad37db290b",
+          "bytes": 302
+        },
+        "exit.txt": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "after.sha256": {
+          "sha256": "390d74efea6ca32ca5125de2ce20f838f86acebe0b8f0caacf7d017e95e579bc",
+          "bytes": 302
+        },
+        "inputs.sha256": {
+          "sha256": "390d74efea6ca32ca5125de2ce20f838f86acebe0b8f0caacf7d017e95e579bc",
+          "bytes": 302
+        },
+        "command.txt": {
+          "sha256": "f59653fe439333633e184e21942416e16c85fabefaf257a61b4432134164e383",
+          "bytes": 151
+        },
+        "end.txt": {
+          "sha256": "469f6aeca25ad25b03a601c468aec5f23a5b849a4238b7f55b614d10bce69075",
+          "bytes": 21
+        },
+        "output.jsonl": {
+          "sha256": "77a47ad8b73cc6904a4b5abab0dc25de4d2bf1f550835738c0b581ae2327ac4e",
+          "bytes": 1269
+        },
+        "start.txt": {
+          "sha256": "3dc323d2bf8f2435bae3642776e1e615f3a6a2351140d0f8b268b4b528e39a1b",
+          "bytes": 21
+        }
+      },
+      "exit": "0",
+      "roots_pass": [
+        "TestSharedOCRValuesAndTypedSourceErrors"
+      ],
+      "fail_skip": [],
+      "scoped_inputs_equal_after": true,
+      "before_gofmt": {
+        "internal/plugins/shared_ocr.go": "4c69d15936ba5e06d3000e5a415f91c2b061312612d999c465ac91977a724ca3",
+        "internal/plugins/shared_ocr_value.go": "a9bdfc01bb977c425acf9dc2a5af3b328bec83be60a3d9078ef97ad69d6a9865",
+        "internal/plugins/shared_ocr_test.go": "e5afacd5385a96c1a41d92c862b38a634759b021b1bf98456a4840d1889fc3b1"
+      },
+      "executed_inputs": {
+        "internal/plugins/shared_ocr.go": "ced793c9916548907d32c4662c0266c94884480d8f0db3ed04bc6f9d5260ede8",
+        "internal/plugins/shared_ocr_value.go": "c7073f93f2bfaf84e69abea16b619a6c56fb59b28351bc5b698a1a28a3775a7b",
+        "internal/plugins/shared_ocr_test.go": "65db94eb15fe3817325f38c6f2f14f529e085cf4a989b535fcb8eb129fd6b7a7"
+      }
+    },
+    "s15-core01": {
+      "evidence": {
+        "before-gofmt.sha256": {
+          "sha256": "701d5d0e708501847209b7e4372f82e4bc5777d0b0f65d91d534d7ac090edb8c",
+          "bytes": 479
+        },
+        "exit.txt": {
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+          "bytes": 2
+        },
+        "after.sha256": {
+          "sha256": "37c0f9c960bf7190c3a6aa2ba940332807bb9e407630546c1b20484f4bfac866",
+          "bytes": 818
+        },
+        "inputs.sha256": {
+          "sha256": "37c0f9c960bf7190c3a6aa2ba940332807bb9e407630546c1b20484f4bfac866",
+          "bytes": 818
+        },
+        "command.txt": {
+          "sha256": "5785327f9a3219daeebf889230d55d243eac6a73876fc6abc18eb92eaf20ec48",
+          "bytes": 122
+        },
+        "end.txt": {
+          "sha256": "e1b95d34cbed15a46b60eb084f840b7ba7919da48af9042be25d314f140f7080",
+          "bytes": 21
+        },
+        "output.jsonl": {
+          "sha256": "9d439b335d410434ef214fec55da6ebe4d336b101463713ba276ba4147a347fe",
+          "bytes": 46267
+        },
+        "start.txt": {
+          "sha256": "cfd4f3064b1fd11120930175d27bfa2076004206d73e470da98de413c6fe8a24",
+          "bytes": 21
+        }
+      },
+      "exit": "0",
+      "roots_pass": [
+        "TestOrdinaryOCRFixedSourceObservations",
+        "TestOrdinaryOCRSourceStatusTruthiness",
+        "TestOrdinaryOCRTransportErrorsAndCancel",
+        "TestOrdinaryOCRExtendedSourceCodecAndValues"
+      ],
+      "fail_skip": [],
+      "scoped_inputs_equal_after": true,
+      "before_gofmt": {
+        "internal/ocr/client.go": "4493356be56900aeb9b81a1a4ac23059f783db39725c7865af7d28a368b1ee8d",
+        "internal/ocr/client_test.go": "0d1b0a01d8a27bff4c9e0728e838d7de8ab1fc793177e432b9d5590ddd24bdeb",
+        "internal/ocr/extended_source_test.go": "c56bc09246646378acfb11153793c1176d8075c63c3d48fd0eeb0f762d1d18b7",
+        "internal/ocr/json_value.go": "57babddd3dc2051b1158d918f63eab549363d530b1cd58e21c1b1f1a62c8e155",
+        "internal/requestsjson/response.go": "d75ecfa3897d1469842b87d9bdaee8b0590b631b73b33ccf471995242e6019ef"
+      },
+      "executed_inputs": {
+        "internal/ocr/client.go": "c934cb4162cf8d9bdefae98709bc64fe09a63c3801f3ac54b0b85f668046abb7",
+        "internal/ocr/client_test.go": "069c8d25d2b183ea9d125465e2f4f31e1fa90ea63380e78a7ece347d94c2aa83",
+        "internal/ocr/extended_source_test.go": "9ef721d517c9b42a1f9260f8b4b42c999909bf5b40a77e7d642ab5860eaa9815",
+        "internal/ocr/json_value.go": "495fae407624a690330d9d698e6baee61fc2dd2126ca9164cf60ef857be01e23",
+        "internal/ocr/testdata/extended-http-source.json": "57adae702e79570164b1add534a03e2ab2e6e353451f1e031af56c6d9cda26eb",
+        "internal/ocr/testdata/helper-source.json": "8a9ab15ef6fa410f77abccd6257101d415cbdf3c2d32418ca1491e0686121dc2",
+        "internal/ocr/testdata/status-truthiness-source.json": "aa5c9caa43db9f72a56cacd64ca9738ce9095e261b02f8ca9dca00fd4dc4e9dd",
+        "internal/requestsjson/response.go": "e2212496028321ac77a9d8e84b3a0b6cc7823d03e920928127f7f54e982e44ec"
+      }
+    }
+  },
+  "phase_a4_static": {
+    "manifest_sha256": "7c3497855c1df98420bb378954fc4424020a976297c356cca9e25680509b4b4d",
+    "files": {
+      "internal/plugins/shared_ocr.go": "00efa8974275a4b4c3d32487dc5377ac9d18c6784f01714d32c1dcac587fe575",
+      "internal/plugins/shared_ocr_test.go": "0c647b7a6c116df1aecba04e9da11b141ea8c3b1e712e075fec11fe096946a13",
+      "internal/ocr/client.go": "1b152c51be8ad4a552dc1fc5bb2719ef2b179bca825e6871ab32b788ad9d6a4a",
+      "internal/ocr/testdata/helper-source.json": "64d8eb46d0c2bb6e04a14c13365f334af2c3d2fa1641e45444119882a15c2900"
+    },
+    "current_match": {
+      "internal/plugins/shared_ocr.go": false,
+      "internal/plugins/shared_ocr_test.go": false,
+      "internal/ocr/client.go": false,
+      "internal/ocr/testdata/helper-source.json": true
+    },
+    "archive_sha256": "b2a8fdac4c9a10adad09c7c074f893781ef0bf683629938ae7622aec245712ab",
+    "archive_declared_match": true,
+    "archive_stream_members_match": true,
+    "preimage_sha256": "e3a3258f7bdf0b078821285a121f427f16080018395b6f0c83398508c51115d2",
+    "preimage_matches_prior_executed_inputs": {
+      "internal/plugins/shared_ocr.go": true,
+      "internal/plugins/shared_ocr_test.go": true,
+      "internal/ocr/client.go": true,
+      "internal/ocr/testdata/helper-source.json": true
+    },
+    "source_extra_observation_sha256": "1d7c863880012cd2f42ad434d860dc444af4bcff4cebe797a9fa4bd7646138f2",
+    "source_extra_name": "data_url_dotted_capital_i_fallback",
+    "static_findings_closed": [
+      "SDK all four optional strings validate UTF-8 before json.Marshal and Host; same root tests all four and zero Host calls.",
+      "ASCII-only sentinel matching prevents dotted-I false dataURL recognition; source AST extra observation explicitly GET None then fallback Qg== POST."
+    ],
+    "execution": "A4 fixes not credited as executed by SDK01/core01; these earlier gates remain valid for their exact pre-fix bytes only."
+  },
+  "limitations": [
+    "No old disappeared S15 PASS carried forward.",
+    "Small input manifests bind scoped edited files, not a complete transitive Go closure.",
+    "depth>=1000 is an implementation safety cap, not an observed source JSON decoder exact threshold; no deep-nesting equivalence claim.",
+    "AST synthetic source fixtures do not prove HTTP behavior."
+  ]
+}

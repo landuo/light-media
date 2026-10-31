@@ -1,0 +1,29 @@
+{
+  "at": "2026-10-31T13:34:20.006783+00:00",
+  "state": "fresh_source_AST_fixture_capture_and_new_tests_uncompiled",
+  "files": {
+    "internal/ocr/client_test.go": "0d1b0a01d8a27bff4c9e0728e838d7de8ab1fc793177e432b9d5590ddd24bdeb",
+    "internal/ocr/extended_source_test.go": "c56bc09246646378acfb11153793c1176d8075c63c3d48fd0eeb0f762d1d18b7",
+    "internal/ocr/testdata/helper-source.json": "8a9ab15ef6fa410f77abccd6257101d415cbdf3c2d32418ca1491e0686121dc2",
+    "internal/ocr/testdata/status-truthiness-source.json": "aa5c9caa43db9f72a56cacd64ca9738ce9095e261b02f8ca9dca00fd4dc4e9dd",
+    "internal/ocr/testdata/extended-http-source.json": "57adae702e79570164b1add534a03e2ab2e6e353451f1e031af56c6d9cda26eb"
+  },
+  "capture_driver_sha256": "52fc9b8dc3c14447a1127186884cb9725db6b76da68b30ca0b3d510604deef8b",
+  "source_cases": {
+    "helper": 30,
+    "status": 10,
+    "extended": 11
+  },
+  "source_execution": "exact pinned OcrHelper class AST only; no wholeapp import/network. Owned response doubles explicitly NOT RequestUtils/requests runtime equivalence. Current requests/urllib3 distributions absent, not silently substituted.",
+  "python": "3.12.14; integer maxdigits4300 observed; recursionlimit1000 observed (exact JSON depth boundary not accepted).",
+  "go_request": [
+    "go",
+    "test",
+    "./internal/ocr",
+    "-run",
+    "^TestOrdinaryOCR",
+    "-count=1",
+    "-v"
+  ],
+  "recovery_tar_sha256": "b14b729753947ca26b03b2a5707e734b73a1d0970ac6f4a13a17d2413a54fcc0"
+}

@@ -1,0 +1,336 @@
+{
+  "meta": {
+    "kind": "fixed source OcrHelper AST with explicit owned response fixtures; not requests transport or full source app",
+    "source_file": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/ocr.py",
+    "source_sha256": "736e7a078b22fe0ac5ac611d58be6a8d742f7d768d582abfed605fafe65a550c",
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "integer_digit_limit": 4300,
+    "recursion_limit": 1000,
+    "fixed_endpoint": "https://owned.invalid/captcha/base64",
+    "network_executed": false
+  },
+  "cases": [
+    {
+      "name": "big_integer",
+      "input": {
+        "image_b64": "QQ"
+      },
+      "get": null,
+      "post": {
+        "status": 200,
+        "body_b64": "eyJyZXN1bHQiOjEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MH0="
+      },
+      "value": {
+        "kind": "int",
+        "number": "123456789012345678901234567890"
+      },
+      "calls": [
+        {
+          "method": "POST",
+          "options": {
+            "content_type": "application/json"
+          },
+          "url": "https://owned.invalid/captcha/base64",
+          "json": {
+            "base64_img": "QQ=="
+          }
+        }
+      ]
+    },
+    {
+      "name": "nan",
+      "input": {
+        "image_b64": "QQ"
+      },
+      "get": null,
+      "post": {
+        "status": 200,
+        "body_b64": "eyJyZXN1bHQiOk5hTn0="
+      },
+      "value": {
+        "kind": "float",
+        "number": "nan"
+      },
+      "calls": [
+        {
+          "method": "POST",
+          "options": {
+            "content_type": "application/json"
+          },
+          "url": "https://owned.invalid/captcha/base64",
+          "json": {
+            "base64_img": "QQ=="
+          }
+        }
+      ]
+    },
+    {
+      "name": "positive_inf",
+      "input": {
+        "image_b64": "QQ"
+      },
+      "get": null,
+      "post": {
+        "status": 200,
+        "body_b64": "eyJyZXN1bHQiOkluZmluaXR5fQ=="
+      },
+      "value": {
+        "kind": "float",
+        "number": "+inf"
+      },
+      "calls": [
+        {
+          "method": "POST",
+          "options": {
+            "content_type": "application/json"
+          },
+          "url": "https://owned.invalid/captcha/base64",
+          "json": {
+            "base64_img": "QQ=="
+          }
+        }
+      ]
+    },
+    {
+      "name": "negative_inf",
+      "input": {
+        "image_b64": "QQ"
+      },
+      "get": null,
+      "post": {
+        "status": 200,
+        "body_b64": "eyJyZXN1bHQiOi1JbmZpbml0eX0="
+      },
+      "value": {
+        "kind": "float",
+        "number": "-inf"
+      },
+      "calls": [
+        {
+          "method": "POST",
+          "options": {
+            "content_type": "application/json"
+          },
+          "url": "https://owned.invalid/captcha/base64",
+          "json": {
+            "base64_img": "QQ=="
+          }
+        }
+      ]
+    },
+    {
+      "name": "overflow",
+      "input": {
+        "image_b64": "QQ"
+      },
+      "get": null,
+      "post": {
+        "status": 200,
+        "body_b64": "eyJyZXN1bHQiOjFlNDAwfQ=="
+      },
+      "value": {
+        "kind": "float",
+        "number": "+inf"
+      },
+      "calls": [
+        {
+          "method": "POST",
+          "options": {
+            "content_type": "application/json"
+          },
+          "url": "https://owned.invalid/captcha/base64",
+          "json": {
+            "base64_img": "QQ=="
+          }
+        }
+      ]
+    },
+    {
+      "name": "negative_zero",
+      "input": {
+        "image_b64": "QQ"
+      },
+      "get": null,
+      "post": {
+        "status": 200,
+        "body_b64": "eyJyZXN1bHQiOi0wLjB9"
+      },
+      "value": {
+        "kind": "string",
+        "points": []
+      },
+      "calls": [
+        {
+          "method": "POST",
+          "options": {
+            "content_type": "application/json"
+          },
+          "url": "https://owned.invalid/captcha/base64",
+          "json": {
+            "base64_img": "QQ=="
+          }
+        }
+      ]
+    },
+    {
+      "name": "fraction",
+      "input": {
+        "image_b64": "QQ"
+      },
+      "get": null,
+      "post": {
+        "status": 200,
+        "body_b64": "eyJyZXN1bHQiOjAuMTIzNDU2Nzg5MDEyMzQ1Njd9"
+      },
+      "value": {
+        "kind": "float",
+        "number": "0.12345678901234566"
+      },
+      "calls": [
+        {
+          "method": "POST",
+          "options": {
+            "content_type": "application/json"
+          },
+          "url": "https://owned.invalid/captcha/base64",
+          "json": {
+            "base64_img": "QQ=="
+          }
+        }
+      ]
+    },
+    {
+      "name": "surrogate",
+      "input": {
+        "image_b64": "QQ"
+      },
+      "get": null,
+      "post": {
+        "status": 200,
+        "body_b64": "eyJyZXN1bHQiOiJcdWQ4MDBYXHVkODNkXHVkZTAwIn0="
+      },
+      "value": {
+        "kind": "string",
+        "points": [
+          55296,
+          88,
+          128512
+        ]
+      },
+      "calls": [
+        {
+          "method": "POST",
+          "options": {
+            "content_type": "application/json"
+          },
+          "url": "https://owned.invalid/captcha/base64",
+          "json": {
+            "base64_img": "QQ=="
+          }
+        }
+      ]
+    },
+    {
+      "name": "duplicate",
+      "input": {
+        "image_b64": "QQ"
+      },
+      "get": null,
+      "post": {
+        "status": 200,
+        "body_b64": "eyJyZXN1bHQiOjEsInJlc3VsdCI6Mn0="
+      },
+      "value": {
+        "kind": "int",
+        "number": "2"
+      },
+      "calls": [
+        {
+          "method": "POST",
+          "options": {
+            "content_type": "application/json"
+          },
+          "url": "https://owned.invalid/captcha/base64",
+          "json": {
+            "base64_img": "QQ=="
+          }
+        }
+      ]
+    },
+    {
+      "name": "nested",
+      "input": {
+        "image_b64": "QQ"
+      },
+      "get": null,
+      "post": {
+        "status": 200,
+        "body_b64": "eyJyZXN1bHQiOnsieCI6W3RydWUsbnVsbCwiQSJdfX0="
+      },
+      "value": {
+        "kind": "object",
+        "entries": [
+          {
+            "key": [
+              120
+            ],
+            "value": {
+              "kind": "list",
+              "items": [
+                {
+                  "kind": "bool",
+                  "bool": true
+                },
+                {
+                  "kind": "null"
+                },
+                {
+                  "kind": "string",
+                  "points": [
+                    65
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "calls": [
+        {
+          "method": "POST",
+          "options": {
+            "content_type": "application/json"
+          },
+          "url": "https://owned.invalid/captcha/base64",
+          "json": {
+            "base64_img": "QQ=="
+          }
+        }
+      ]
+    },
+    {
+      "name": "int_over_limit",
+      "input": {
+        "image_b64": "QQ"
+      },
+      "get": null,
+      "post": {
+        "status": 200,
+        "body_b64": "eyJyZXN1bHQiOjExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExMTExfQ=="
+      },
+      "error_class": "ValueError",
+      "calls": [
+        {
+          "method": "POST",
+          "options": {
+            "content_type": "application/json"
+          },
+          "url": "https://owned.invalid/captcha/base64",
+          "json": {
+            "base64_img": "QQ=="
+          }
+        }
+      ]
+    }
+  ]
+}

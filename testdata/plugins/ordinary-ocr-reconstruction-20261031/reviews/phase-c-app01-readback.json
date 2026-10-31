@@ -1,0 +1,132 @@
+{
+  "at": "2026-10-31T14:03:57.274127+00:00",
+  "verdict": "new actual App7 accepted, including real externally built SDK worker failure/recovery/cold; no CLI/race claim",
+  "evidence": {
+    "compile.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "inputs-after-test.json": {
+      "sha256": "9183aac7673013d1dcb8c26c2deca0e9c32b9a64913a6265ae693ff212e53856",
+      "bytes": 1436340
+    },
+    "compile-worker.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "go-list.stdout": {
+      "sha256": "7ff651e88a25d835295e2cfdd710996ce82c90a9c6ce8eeb55e04acfbd9e637d",
+      "bytes": 1415009
+    },
+    "compile-worker.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "go-list.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "inputs-after-compile.json": {
+      "sha256": "9183aac7673013d1dcb8c26c2deca0e9c32b9a64913a6265ae693ff212e53856",
+      "bytes": 1436340
+    },
+    "compile.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "compile.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "generated-source-map.json": {
+      "sha256": "be8ea06e03e25965f1b50f92dcd30e2df022c9cf24f48cf16288f10462d1fc80",
+      "bytes": 246
+    },
+    "tests.stdout": {
+      "sha256": "f962b6a71abec1bbf23aa4ac3f68b2960d33dca9d653c024a6709a0ec5f80f57",
+      "bytes": 17152
+    },
+    "compile-worker.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "inputs-before.json": {
+      "sha256": "9183aac7673013d1dcb8c26c2deca0e9c32b9a64913a6265ae693ff212e53856",
+      "bytes": 1436340
+    },
+    "tests.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "tests.exit": {
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    "result.json": {
+      "sha256": "df47e61ae545423725e70c9c8feb48bb0e635c5b80c18842b3965b0b9daac682",
+      "bytes": 2214
+    },
+    "go-list.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  },
+  "input_count": 6152,
+  "three_phase_equal": true,
+  "current_drift": [],
+  "programs": {
+    "s15-app01.test": {
+      "sha256": "806dc7667dab1acf8274c5da05fd8024afabc910db777b592f13b32a7f151cd4",
+      "bytes": 90203681,
+      "matches_result": true
+    },
+    "s15-app01.worker": {
+      "sha256": "b8c80011ce46a88ef6254d0778f1421da11e1c2d40aa2f332ab0db7fd3758d67",
+      "bytes": 5357229,
+      "matches_result": true
+    }
+  },
+  "generated": {
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/6c/6c108b8a92012df95c169bce91785e97d939039d59aed862e31fbacc6f594e0b-d": {
+      "copy": "generated-source/6c108b8a92012df95c169bce91785e97d939039d59aed862e31fbacc6f594e0b.go",
+      "matches": true
+    }
+  },
+  "root_passes": [
+    "TestSharedOCRExtendedSourceHTTP",
+    "TestSharedOCRSourceURLPreparationFallback",
+    "TestSharedOCRActualWorkerFailureRecoveryCold",
+    "TestSharedOCRRedirectSourceAndCookieIsolation",
+    "TestSharedOCROwnedHTTPFixedSource",
+    "TestSharedOCRHostBoundariesAndSnapshot",
+    "TestSharedOCRAnonymousImageDoesNotRequireSite"
+  ],
+  "fail_skip": [],
+  "worker_observation": [
+    "    plugin_shared_ocr_process_test.go:210: new actual owned SDK workers 817 -> 825, five synthetic HTTP calls; not OCR engine quality\n"
+  ],
+  "commands_exits": [
+    [
+      "go-list",
+      0
+    ],
+    [
+      "compile-worker",
+      0
+    ],
+    [
+      "compile",
+      0
+    ],
+    [
+      "tests",
+      0
+    ]
+  ],
+  "boundary": [
+    "Actual compiled app+worker closure, no hidden worker build in test.",
+    "Only App same-process host reopen/cold via New; this is not normal CLI two-host process acceptance.",
+    "Fresh source RequestUtils HTTP/import/probe still not performed.",
+    "Source-header correction assertions included in this executed C7 source."
+  ]
+}

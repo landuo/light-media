@@ -1,0 +1,182 @@
+{
+  "at": "2026-10-31T14:00:26.192047+00:00",
+  "scope": "read-only existing committed source-observation intersection; no RequestUtils import/probe/network/Go",
+  "inputs": {
+    "testdata/plugins/auto-signin-2.9.14/installed-http-reference.json": {
+      "sha256": "50adf93481c5da87a699c499e8c8855232c37c0297014069b35235d506c38865",
+      "bytes": 33244,
+      "equals_42d6": true
+    },
+    "testdata/plugins/auto-signin-2.9.14/http-reference.json": {
+      "sha256": "f3ca8031d32ea210eb60089ae622136fadfaa61e80ed41b2b4db07e611bbf29e",
+      "bytes": 24475,
+      "equals_42d6": true
+    },
+    "testdata/plugins/auto-signin-2.9.14/requestutils-source.json": {
+      "sha256": "ec7bf901ca729cd446bf2cb05785dec79ef047790711059276e6661b39b44546",
+      "bytes": 2989,
+      "equals_42d6": true
+    },
+    "testdata/plugins/auto-signin-2.9.14/installed-codec-reference.json": {
+      "sha256": "d285dcf78a9cb21a1b1cf6f90daad8f56b1fc4d746b9ab952ce79668a5c709c9",
+      "bytes": 603,
+      "equals_42d6": true
+    },
+    "testdata/plugins/auto-signin-2.9.14/slice-provenance.json": {
+      "sha256": "8b51cc4be85c4c04b40f203d8fde1743a64c942bc747e1a9a714e17e6d029c26",
+      "bytes": 5761,
+      "equals_42d6": true
+    },
+    "testdata/plugins/auto-signin-2.9.14/formal-manifest.json": {
+      "sha256": "4943e98b86155e8162102fb8bd74b3490559b9aa3c4889cb93e6c6f87a2b074e",
+      "bytes": 13289,
+      "equals_42d6": true
+    },
+    "testdata/plugins/auto-signin-2.9.14/promotion-manifest.json": {
+      "sha256": "2f4a75a128d75197baf541c6756e881249fd1c420930427ae66f3d77ab585ff1",
+      "bytes": 19580,
+      "equals_42d6": true
+    }
+  },
+  "source_http_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+  "source_SHA_matches_installed_reference": true,
+  "source_SHA_matches_extracted_reference": true,
+  "stored_AST_matches_fixed_source": {
+    "cookie_parse": true,
+    "_url_decode_if_latin": true,
+    "post_res": true
+  },
+  "formal_manifest_bindings": {
+    "testdata/plugins/auto-signin-2.9.14/installed-http-reference.json": "50adf93481c5da87a699c499e8c8855232c37c0297014069b35235d506c38865",
+    "testdata/plugins/auto-signin-2.9.14/requestutils-source.json": "ec7bf901ca729cd446bf2cb05785dec79ef047790711059276e6661b39b44546",
+    "testdata/plugins/auto-signin-2.9.14/installed-codec-reference.json": "d285dcf78a9cb21a1b1cf6f90daad8f56b1fc4d746b9ab952ce79668a5c709c9"
+  },
+  "recorded_provenance": {
+    "http_source_sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27",
+    "distributions": {
+      "requests": "2.34.2",
+      "urllib3": "2.7.0",
+      "certifi": "2026.7.22",
+      "idna": "3.18",
+      "charset-normalizer": "3.4.9",
+      "chardet": "7.4.3",
+      "brotli": "1.2.0",
+      "zstandard": "0.25.0"
+    },
+    "python": "3.12.13 (main, Aug  5 2026, 01:11:46) [GCC 12.2.0]",
+    "accept_encoding": "gzip, deflate, br",
+    "decoders": [
+      "gzip",
+      "x-gzip",
+      "deflate",
+      "br"
+    ],
+    "execution": "actual installed RequestUtils/cookie_parse AST and actual installed optional dependency capabilities (no zstandard); disposable loopback HTTP/TLS only; original app/user config/real credentials/notifications never imported; empty fixture netrc; strict TLS behavior is documented Go divergence"
+  },
+  "inherited_cases": [
+    {
+      "name": "network-0",
+      "json_pointer": "/cases/0",
+      "canonical_case_sha256": "1a492866ff43d32f4b21525142b03b6a71f0143f25d7fb2653f31d786a9b9108",
+      "reusable_observation": "normal image GET custom UA/Cookie, no Accept, form Content-Type, empty request body and raw response content"
+    },
+    {
+      "name": "network-4",
+      "json_pointer": "/cases/4",
+      "canonical_case_sha256": "94d8fbcc06d6bb07372a7a1f594692f7d6015accb00a0b38218278621a103356",
+      "reusable_observation": "same-origin GET302 follow and response-cookie merge, removed GET entity content-type"
+    },
+    {
+      "name": "network-5",
+      "json_pointer": "/cases/5",
+      "canonical_case_sha256": "07c1cfcbc0ddf8abd6a759af1c9e5025e50982c868763cf09eb8f7a5cb707ca2",
+      "reusable_observation": "empty-body POST302 becomes GET; not JSON POST body evidence"
+    },
+    {
+      "name": "network-6",
+      "json_pointer": "/cases/6",
+      "canonical_case_sha256": "f01d6fe273c53d283efebda6c545bf5575fa25324f63c4b813c5c88617ed2242",
+      "reusable_observation": "string cookie parse: last duplicate wins, ignore no-equals, ASCII-only conditional URL decode"
+    },
+    {
+      "name": "network-7",
+      "json_pointer": "/cases/7",
+      "canonical_case_sha256": "48e86bde2ddab4c03eae1882cccc047bbcd76ad39e9a44549ca382cf363933c3",
+      "reusable_observation": "nil UA becomes python-urllib3/2.7.0, independently of nonempty cookie"
+    },
+    {
+      "name": "network-8",
+      "json_pointer": "/cases/8",
+      "canonical_case_sha256": "f407cd4c75e7bf4f38c6d9ff0cf53c2c1e79f9879a22ddf486b26049a3f3e358",
+      "reusable_observation": "explicit empty UA remains empty"
+    },
+    {
+      "name": "network-13",
+      "json_pointer": "/cases/13",
+      "canonical_case_sha256": "f41fccb0a56e7853216745a1a27f3c4c54f7fbe274bf326ea7dcc84e8992cd78",
+      "reusable_observation": "GET503 returns nonnil response with status/body"
+    },
+    {
+      "name": "network-17",
+      "json_pointer": "/cases/17",
+      "canonical_case_sha256": "8e0dbcc4adeea36ceb6bb0c73b91257e33eb3a9ba903f026e0927f8169547734",
+      "reusable_observation": "gzip decoded response content"
+    },
+    {
+      "name": "network-18",
+      "json_pointer": "/cases/18",
+      "canonical_case_sha256": "66a4da592af66fcec5b9a5683dcd74e1fe00f85df8da0bfa203b3b0574c4bdb3",
+      "reusable_observation": "zlib-deflate decoded response content"
+    },
+    {
+      "name": "network-19",
+      "json_pointer": "/cases/19",
+      "canonical_case_sha256": "659fba423a886a5fa64559fa8c465186fe395122e9fa99e61cb6bc03af3051ec",
+      "reusable_observation": "raw-deflate decoded response content"
+    },
+    {
+      "name": "network-20",
+      "json_pointer": "/cases/20",
+      "canonical_case_sha256": "08298e8f291eddacd74c2ae11fbeb7ddcde51e9f9e54eaf1aa24145f47a7814f",
+      "reusable_observation": "brotli decoded response content in recorded brotli-enabled original environment"
+    },
+    {
+      "name": "network-21",
+      "json_pointer": "/cases/21",
+      "canonical_case_sha256": "94c529ba79dc57c13c10523936ba43077738dfaa807e213fc1c11f61a5c64ec9",
+      "reusable_observation": "zstandard bytes retained un-decoded in recorded capability environment"
+    },
+    {
+      "name": "network-22",
+      "json_pointer": "/cases/22",
+      "canonical_case_sha256": "c0b4e2ba5262fefe1fa56158007cc87fcc384fdca8bcb725b6b8088f1b2e45a9",
+      "reusable_observation": "truncated HTTP body yields None"
+    },
+    {
+      "name": "network-24",
+      "json_pointer": "/cases/24",
+      "canonical_case_sha256": "27e7ce18185222293c70511992fc80edd4e138441af251e4659c555ee3e7d22e",
+      "reusable_observation": "malformed gzip yields None"
+    }
+  ],
+  "inherited_tls": {
+    "source_verify_false_sends_synthetic_cookie": true,
+    "strict_tls_rejects_before_http": true,
+    "strict_http_handler_calls": 0
+  },
+  "precise_limits": [
+    "Installed reference contains 26 cases; only empty-body form POSTs, no JSON-body POST, no OCR base64_img body.",
+    "Historical generator/driver and full dependency-file hash closure were not found in this committed fixture directory/tree; available provenance records versions/capabilities and source SHA, not full original runtime reconstruction.",
+    "Python3.12.13 recorded environment differs from accessible3.12.14 oracle venv; brotli/chardet and dependency versions differ. No claim that current environment matches.",
+    "None-cookie default-mode GET, fresh OCR JSON POST no Cookie/UA/Accept and exact source JSON wire payload are not an exact parameter tuple present in these 26 records.",
+    "New source-helper AST proves OCR call selection/POST constructor and JSON argument; composition with static source and new Go owned HTTP is valid evidence classification, not a source HTTP differential execution of the full OCR chain.",
+    "No empirical foreign-origin credential redirect in this source fixture; accepted stricter Go security policy remains separately reviewed/tested.",
+    "No inherited HTTPS-proxy certificate two-hop empirical observation, source idle-cancel/error edge exhaustive proof, or >1MiB source-body fixture.",
+    "New private UA Latin1/InvalidHeader source classes were statically traced but not present as actual source cases in this fixture."
+  ],
+  "no_claimed_missing_runtime_oracle_outputs": [
+    "owned-http-source.json",
+    "url-prepare-source.json",
+    "redirect-source.json"
+  ]
+}

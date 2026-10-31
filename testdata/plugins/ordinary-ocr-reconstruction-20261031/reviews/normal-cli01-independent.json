@@ -1,0 +1,232 @@
+{
+  "at": "2026-10-31T14:10:24.668431+00:00",
+  "verdict": "new normal CLI finite two-host/realSDK five-call gate accepted",
+  "result_sha256": "ef4b6683c5c6ac1c0218889eba608f7ca9b68bbc3fc48260d3f73c1181eb1957",
+  "driver_sha256": "5c81a4c55af3a2f082cd6841fdc63d732fdeb134ca9fe3ae038a655f5baf9ddc",
+  "driver_exit": "0",
+  "raw_bodies": [
+    {
+      "file": "response-001.body",
+      "sha256": "6f36c4be969024ea8e196d3f187d0ac2741f67e48591feee2648e94a35e6f6bb",
+      "matches_record": true,
+      "method": "GET",
+      "path": "/healthz",
+      "status": 200
+    },
+    {
+      "file": "response-003.body",
+      "sha256": "2219ca145f401ec8e2ed6be682a26e8c22f2ec85125613b4b83cc13b222a83e0",
+      "matches_record": true,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "status": 200
+    },
+    {
+      "file": "response-004.body",
+      "sha256": "0bbeff9f6c3ed33fc139691b0a75004bc664c7577dd7480bf26855fe28f98e59",
+      "matches_record": true,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "status": 200
+    },
+    {
+      "file": "response-005.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "matches_record": true,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "status": 405
+    },
+    {
+      "file": "response-006.body",
+      "sha256": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b",
+      "matches_record": true,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "status": 401
+    },
+    {
+      "file": "response-007.body",
+      "sha256": "24a3e5a97b472ed95606057f3cc02c405167afc5b5395025aa4f76fcdf724abd",
+      "matches_record": true,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "status": 200
+    },
+    {
+      "file": "response-008.body",
+      "sha256": "0c845a81d05dc3d543c22802a729d3a648af109eb204a3f5e31d54a99ff5545e",
+      "matches_record": true,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "status": 200
+    },
+    {
+      "file": "response-009.body",
+      "sha256": "b38b464ae62fa4426d46a8a04bcdcfac62f9aecf43d2082214aa16497dcd8d19",
+      "matches_record": true,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "status": 200
+    },
+    {
+      "file": "response-010.body",
+      "sha256": "24a3e5a97b472ed95606057f3cc02c405167afc5b5395025aa4f76fcdf724abd",
+      "matches_record": true,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "status": 200
+    },
+    {
+      "file": "response-011.body",
+      "sha256": "a1db52ae2a75c958542ae39be64f289d1a7246a798d2b67b16ffad95d8631cac",
+      "matches_record": true,
+      "method": "GET",
+      "path": "/healthz",
+      "status": 200
+    },
+    {
+      "file": "response-013.body",
+      "sha256": "5b8801dfe4bbe7301581bcb36d0168b7ca0afc7e28eba9ac690d61596581d42f",
+      "matches_record": true,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "status": 200
+    },
+    {
+      "file": "response-014.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "matches_record": true,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "status": 405
+    },
+    {
+      "file": "response-015.body",
+      "sha256": "75eee02064141cd1607d0a2ea5f3f024d476a0fddcac16f6be29dcb16b8a132c",
+      "matches_record": true,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedOCR/query",
+      "status": 200
+    }
+  ],
+  "raw_business_equals_summary": [
+    {
+      "label": "warm_success",
+      "file": "response-007.body",
+      "equals_query_record": true
+    },
+    {
+      "label": "typed_json_failure",
+      "file": "response-008.body",
+      "equals_query_record": true
+    },
+    {
+      "label": "network_failure_empty",
+      "file": "response-009.body",
+      "equals_query_record": true
+    },
+    {
+      "label": "warm_recovery",
+      "file": "response-010.body",
+      "equals_query_record": true
+    },
+    {
+      "label": "cold_success",
+      "file": "response-015.body",
+      "equals_query_record": true
+    }
+  ],
+  "api_calls": 15,
+  "raw_body_count": 13,
+  "login_body_not_retained": true,
+  "programs": {
+    "s15-server01": "5db4973ba4fcc4eb0fc3580ce4d3099182e1066a7be1e5ade3938201e7e8ae4c",
+    "s15-app01.worker": "b8c80011ce46a88ef6254d0778f1421da11e1c2d40aa2f332ab0db7fd3758d67"
+  },
+  "input_continuity": {
+    "gates": {
+      "s15-server01": {
+        "count": 3944,
+        "before_sha256": "a8128df4b577515bbeb5fba801058eee0f833987b322f3cf21284ac85b017e27",
+        "after_sha256": "a8128df4b577515bbeb5fba801058eee0f833987b322f3cf21284ac85b017e27",
+        "before_after_equal": true,
+        "result_sha256": "b4c2dc6327059281d84d9a1997694e0dea931e92e1b45c9f23216ecf01992bc7"
+      },
+      "s15-app01": {
+        "count": 6152,
+        "before_sha256": "9183aac7673013d1dcb8c26c2deca0e9c32b9a64913a6265ae693ff212e53856",
+        "after_sha256": "9183aac7673013d1dcb8c26c2deca0e9c32b9a64913a6265ae693ff212e53856",
+        "before_after_equal": true,
+        "result_sha256": "df47e61ae545423725e70c9c8feb48bb0e635c5b80c18842b3965b0b9daac682"
+      }
+    },
+    "union_count": 6154,
+    "conflicts": [],
+    "current_drift": []
+  },
+  "hosts": [
+    {
+      "pid": 24,
+      "exit": 0,
+      "owned_listener_inode": "100180",
+      "forced_stop": false
+    },
+    {
+      "pid": 52,
+      "exit": 0,
+      "owned_listener_inode": "100209",
+      "forced_stop": false
+    }
+  ],
+  "worker_pids": [
+    40,
+    40,
+    40,
+    40,
+    66
+  ],
+  "worker_executable_bindings_valid": true,
+  "five_mode_sequence": [
+    "healthy",
+    "malformed",
+    "disconnect",
+    "healthy",
+    "healthy"
+  ],
+  "ocr_headers_and_body_valid": true,
+  "artifact_requests": [
+    {
+      "method": "GET",
+      "path": "/index"
+    },
+    {
+      "method": "GET",
+      "path": "/worker"
+    }
+  ],
+  "environment_exact_allowed_delta": true,
+  "driver_input_drift": [],
+  "forced_worker_cleanup": [],
+  "peer_errors": [],
+  "sampled_resources": {
+    "samples": 18,
+    "min_scratch_free": 59737673728,
+    "min_tmp_free": 5225664512,
+    "scope": "start/API-step samples only, not continuous/terminal guarantee"
+  },
+  "host_log_sha256": {
+    "host-1.log": "7486a6b90e297c9424686d0213f2f5578031d8c332c4aa19e0dd26de92c8f36c",
+    "host-2.log": "3ec8bafb2466068263a96b968bb94e61258e09a80e8aceb8b163a600a5ea943f"
+  },
+  "worker_manifest_sha256": "c859b629c734d9b7afbf73a7e9153aca77d8a72eca749db97065e7a1f8400b12",
+  "remaining": [
+    "finite race6",
+    "pure source preparation gap per separately approved static-only plan; no source HTTP import/probe authorized"
+  ],
+  "limits": [
+    "Owned HTTP-only endpoint, not CLI HTTPS validation.",
+    "Full OCR RequestUtils source HTTP chain not newly run.",
+    "No originalengine quality/realcredentials/browser/allplatform claim."
+  ]
+}

@@ -1,0 +1,287 @@
+{
+  "stage": "selected-real-source-json-post-preparation-only",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "versions_from_literal_source": {
+    "requests_version": "2.34.2",
+    "urllib3_version": "2.7.0"
+  },
+  "input_bindings_sha256": "3bad0d1ec2657acc830e0ebfa0830437f4df4269f28062bcf9877c9ac8e07657",
+  "capture_script_sha256": "9eeb228d9545e709c3bbdabd01895d8bc23292a7565791d41a90e8472074a999",
+  "python": {
+    "version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "executable": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/bin/python",
+    "isolated": true,
+    "no_site": true
+  },
+  "json_backend": "controlled standard-library json; not a rediscovery of requests.compat backend",
+  "controlled_session_headers": {
+    "User-Agent": "python-requests/2.34.2",
+    "Accept-Encoding": "gzip, deflate",
+    "Accept": "*/*",
+    "Connection": "keep-alive"
+  },
+  "default_header_claim": "controlled input previously observed by coordinator; not a new measurement or old br environment replay",
+  "http_observed": false,
+  "full_source_environment": false,
+  "requests_or_urllib3_imported": false,
+  "url_preparation_or_session_send_executed": false,
+  "unicode_case_scope": "synthetic POST preparation string; not OCR image validity or full input normalization",
+  "selected_source_definitions": [
+    {
+      "label": "_KT_co",
+      "ast_sha256": "da73ef245ae9f9563a022264498ee7b639ecb366076e7fe49a404d61bfbd3fe1",
+      "lines": [
+        23,
+        23
+      ]
+    },
+    {
+      "label": "_VT_co",
+      "ast_sha256": "5df9b1e0e8d4738bb98f56c726d48c5d67de3bd5a5064bc33b4bee5f797277e9",
+      "lines": [
+        24,
+        24
+      ]
+    },
+    {
+      "label": "SupportsItems",
+      "ast_sha256": "0069cadb55601faf04929667e93d861150f2da56243eeee46c8889a54add6883",
+      "lines": [
+        32,
+        34
+      ]
+    },
+    {
+      "label": "_VT",
+      "ast_sha256": "259335294add9b49d7cc6b274fec0b8bc77d8e74511da8f338c034628decd253",
+      "lines": [
+        16,
+        16
+      ]
+    },
+    {
+      "label": "CaseInsensitiveDict",
+      "ast_sha256": "242c7823a4e318b52acf2a1d766a0e048fd26fc944495300705f56e01abb539e",
+      "lines": [
+        20,
+        93
+      ]
+    },
+    {
+      "label": "_VALID_HEADER_NAME_RE_BYTE",
+      "ast_sha256": "f494a29643184fbd4073325a3148c9d10abad5d9ba743725025fbfa1ef9096cd",
+      "lines": [
+        13,
+        13
+      ]
+    },
+    {
+      "label": "_VALID_HEADER_NAME_RE_STR",
+      "ast_sha256": "166524a8582235e57ccd5c98f1ec6d84c351783db41a3fb56752079f6b90faaf",
+      "lines": [
+        14,
+        14
+      ]
+    },
+    {
+      "label": "_VALID_HEADER_VALUE_RE_BYTE",
+      "ast_sha256": "49872355bca15f7ff6db1ee9d41ebf62d4c8e36d38786c8aef2f07e31af4b993",
+      "lines": [
+        15,
+        15
+      ]
+    },
+    {
+      "label": "_VALID_HEADER_VALUE_RE_STR",
+      "ast_sha256": "c7936980e2822dc053881e4f5da06f4a179d72ea667b981dc19837e8775b3fa9",
+      "lines": [
+        16,
+        16
+      ]
+    },
+    {
+      "label": "_HEADER_VALIDATORS_STR",
+      "ast_sha256": "0d5283e436ba87ba2431b816746ab64d1dacc89aad8f2f6ff728049d42f22b77",
+      "lines": [
+        18,
+        18
+      ]
+    },
+    {
+      "label": "_HEADER_VALIDATORS_BYTE",
+      "ast_sha256": "09da2cadea5ea9141b5bb350b529177d5c1b990626d06a7889661e2f16ff422f",
+      "lines": [
+        19,
+        19
+      ]
+    },
+    {
+      "label": "to_native_string",
+      "ast_sha256": "891b91e7db567ec314436f3de844b42d9e5662d07c4c17fa523795cfff69e9af",
+      "lines": [
+        26,
+        36
+      ]
+    },
+    {
+      "label": "RequestException",
+      "ast_sha256": "a2971f446e5eb23eccffcb1cdb9105d9410439b1ce3854ca8f4d9c72fdabf91d",
+      "lines": [
+        20,
+        35
+      ]
+    },
+    {
+      "label": "InvalidJSONError",
+      "ast_sha256": "2effea5fb3304a7f72bd9c67aae0ab402f14029e8f740ad950b0963cb270c465",
+      "lines": [
+        38,
+        39
+      ]
+    },
+    {
+      "label": "InvalidHeader",
+      "ast_sha256": "45177d107dd461b236b6be493bf0d49df9f1a1c9d3b973b5e221d478b7c69ccb",
+      "lines": [
+        122,
+        123
+      ]
+    },
+    {
+      "label": "to_key_val_list",
+      "ast_sha256": "e9272a3a68181efc4e255acf61ff3a0e45c28bfe07f3b626d4c77cf5818e9d2c",
+      "lines": [
+        376,
+        404
+      ]
+    },
+    {
+      "label": "super_len",
+      "ast_sha256": "0e033c7d7c005c7a39bb8fdf612876777e7dae09b9e759cec1ac60ce02d80862",
+      "lines": [
+        160,
+        228
+      ]
+    },
+    {
+      "label": "check_header_validity",
+      "ast_sha256": "1635a44b0c44f8ad1cd5c8e3cd1ede5c9553fbf747c6d357ab94a7e9da92316a",
+      "lines": [
+        1087,
+        1095
+      ]
+    },
+    {
+      "label": "_validate_header_part",
+      "ast_sha256": "64dec4ca89525ecf79c6ff8401aea767fae6635f38918288739aa7c479d9da26",
+      "lines": [
+        1098,
+        1119
+      ]
+    },
+    {
+      "label": "merge_setting",
+      "ast_sha256": "c6f0a2eb7a0cd5bb114bdec0b2ba8dba9b402ea953bd0d2c88bb065927eb3386",
+      "lines": [
+        76,
+        105
+      ]
+    },
+    {
+      "label": "prepare_headers",
+      "ast_sha256": "bd1263c98714318c92e59f969b936f0d36190ad612b56c2aa716df044e68d576",
+      "lines": [
+        563,
+        572
+      ]
+    },
+    {
+      "label": "prepare_body",
+      "ast_sha256": "89040c2db30d1729bfa8ea96ccefbd57afbeb9e71696e6fcc4146049492a42eb",
+      "lines": [
+        574,
+        650
+      ]
+    },
+    {
+      "label": "prepare_content_length",
+      "ast_sha256": "02bdefda4625e391f4dbf6990f0535d90a34e85ca5d4d90b0a6c85ad75ab0657",
+      "lines": [
+        652,
+        666
+      ]
+    },
+    {
+      "label": "RequestUtils._headers",
+      "ast_sha256": "b46bfbc674a17e3db7849b5751821dc8b8c1db65ff679448e97662925c7c3be3",
+      "lines": [
+        364,
+        369
+      ]
+    },
+    {
+      "label": "OcrHelper.post_res.json",
+      "ast_sha256": "b8c1ff7dcc52ad5c194d030371a24969dd70ab40191d9afd88a2b90989392948",
+      "lines": [
+        47,
+        47
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "case": "ascii",
+      "payload": {
+        "base64_img": "QQ=="
+      },
+      "source_request_headers_before_merge": {
+        "User-Agent": null,
+        "Content-Type": "application/json",
+        "Accept": null,
+        "referer": null
+      },
+      "merged_headers": {
+        "Accept-Encoding": "gzip, deflate",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json"
+      },
+      "prepared_headers": {
+        "Accept-Encoding": "gzip, deflate",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "22"
+      },
+      "body_hex": "7b226261736536345f696d67223a202251513d3d227d",
+      "body_ascii": "{\"base64_img\": \"QQ==\"}",
+      "body_bytes": 22,
+      "body_sha256": "991e7fc9eaa761693f822db39b751e6e5d81159b57bf78d5be3a4e026e9c672f"
+    },
+    {
+      "case": "unicode-and-escapes-preparation-only",
+      "payload": {
+        "base64_img": "\u6c49\u5b57\ud83d\ude42\"\\\n\t"
+      },
+      "source_request_headers_before_merge": {
+        "User-Agent": null,
+        "Content-Type": "application/json",
+        "Accept": null,
+        "referer": null
+      },
+      "merged_headers": {
+        "Accept-Encoding": "gzip, deflate",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json"
+      },
+      "prepared_headers": {
+        "Accept-Encoding": "gzip, deflate",
+        "Connection": "keep-alive",
+        "Content-Type": "application/json",
+        "Content-Length": "50"
+      },
+      "body_hex": "7b226261736536345f696d67223a20225c75366334395c75356235375c75643833645c75646534325c225c5c5c6e5c74227d",
+      "body_ascii": "{\"base64_img\": \"\\u6c49\\u5b57\\ud83d\\ude42\\\"\\\\\\n\\t\"}",
+      "body_bytes": 50,
+      "body_sha256": "0428dba62077fa4f31d2c9ec423c12574dbac019f9794bad538faaff57b82aca"
+    }
+  ]
+}

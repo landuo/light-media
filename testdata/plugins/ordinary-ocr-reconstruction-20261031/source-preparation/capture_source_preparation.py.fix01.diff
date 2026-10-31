@@ -1,0 +1,18 @@
+--- before-fix01/capture_source_preparation.py
++++ after-fix01/capture_source_preparation.py
+@@ -118,11 +118,13 @@
+         version_values[key] = ast.literal_eval(assignment.value)
+     assert version_values == {"requests_version": "2.34.2", "urllib3_version": "2.7.0"}
+ 
+-    # Selected definitions get no import/open/eval/exec/socket/os/io capability.
++    # Original __import__ supports CPython typing/Generic internals, not a hook.
++    # Frozen source AST has no imports or __import__ calls; no open/eval/exec/
++    # socket/os/io names are provided to these selected definitions.
+     # super_len is preserved verbatim, but receives exact bytes only: __len__ is
+     # used, and its general file/tell/seek branches are outside this capture.
+     allowed_builtins = (
+-        "__build_class__", "object", "type", "isinstance", "hasattr", "getattr",
++        "__build_class__", "__import__", "object", "type", "isinstance", "hasattr", "getattr",
+         "len", "list", "dict", "tuple", "str", "bytes", "bool", "int", "max",
+         "super", "NotImplemented", "ValueError", "TypeError", "AttributeError",
+         "OSError", "IOError", "NotImplementedError", "AssertionError",

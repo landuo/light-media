@@ -1,0 +1,26 @@
+{
+  "started": "2026-10-31T13:44:51.145141+00:00",
+  "package": "./internal/plugins/autosignin",
+  "pattern": "^Test(OrdinaryOCR|BoundSiteTransport|SiteHostGuard)",
+  "race": false,
+  "status": "FAIL",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins/autosignin"
+      ],
+      "exit": 1
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "error_class": "RuntimeError",
+  "error": "go-list exited 1",
+  "ended": "2026-10-31T13:44:51.223936+00:00"
+}

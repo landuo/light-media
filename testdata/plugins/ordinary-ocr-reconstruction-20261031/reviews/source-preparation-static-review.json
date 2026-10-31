@@ -1,0 +1,200 @@
+{
+  "at": "2026-10-31T14:18:24.399237+00:00",
+  "state": "static accepted for coordinator-only -I -S -B pure source preparation execution; no reviewer source execution",
+  "script_sha256": "55a5227e80d5084c503ca8f0ff588addf91f00198875d245327eb5dece36cfb4",
+  "bindings_sha256": "78e8e91e43e9973087849e332bc66184d1aa1a2a328aee4c1ea237ca51e2bca7",
+  "seal_sha256": "da234e46e63bc9926e78d83926583463deef1c891c96f6fc18b959b086a33966",
+  "source12_match": {
+    "models": true,
+    "sessions": true,
+    "structures": true,
+    "utils": true,
+    "internal_utils": true,
+    "types": true,
+    "exceptions": true,
+    "compat": true,
+    "requests_version": true,
+    "urllib3_version": true,
+    "source_http": true,
+    "source_ocr": true
+  },
+  "sealed4_match": {
+    "capture_source_preparation.py": true,
+    "input-bindings.json": true,
+    "selected-source.txt": true,
+    "README.md": true
+  },
+  "selected25": [
+    {
+      "label": "_KT_co",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "_VT_co",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "SupportsItems",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "_VT",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "CaseInsensitiveDict",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "_VALID_HEADER_NAME_RE_BYTE",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "_VALID_HEADER_NAME_RE_STR",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "_VALID_HEADER_VALUE_RE_BYTE",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "_VALID_HEADER_VALUE_RE_STR",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "_HEADER_VALIDATORS_STR",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "_HEADER_VALIDATORS_BYTE",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "to_native_string",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "RequestException",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "InvalidJSONError",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "InvalidHeader",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "to_key_val_list",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "super_len",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "check_header_validity",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "_validate_header_part",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "merge_setting",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "prepare_headers",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "prepare_body",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "prepare_content_length",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "RequestUtils._headers",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    },
+    {
+      "label": "OcrHelper.post_res.json",
+      "unique_exact_source_AST": true,
+      "bound_full_line_slice_matches": true,
+      "no_imports": true
+    }
+  ],
+  "static_control_flow": [
+    "Only standard-library top-level imports; requests/urllib3/socket absent checked before and after.",
+    "12 bound files read/hash/AST parse only; no complete source-module import/execution.",
+    "25 unchanged selected source nodes; function selection excludes annotation overload stubs. Bound source_segment hash means full declared line slice including newline/indentation/decorators, not ast.get_source_segment.",
+    "Exact str payloads; data/files=None; actual prepare_body yields exact bytes. super_len bytes branch uses len/max, no fileno/tell/seek reached.",
+    "CaseInsensitiveDict/merge_setting removes None headers, then actual prepare_headers/body/content_length.",
+    "Execution namespace omits import/open/socket/os/io. No full RequestUtils.request/OcrHelper entry, URL preparation or Session.send.",
+    "Two fixed payloads only; controlled session headers and stdlibJSON explicitly not original backend/environment discovery.",
+    "Source dictionaries restricted to Names/Constants; fixed expected bytes. stdout only; coordinator owns execution and captures result."
+  ],
+  "if_pass_proves": [
+    "exact JSON string encoding/body bytes and length in selected source preparation layer",
+    "Content-Type and deletion of Accept/User-Agent None via original merge/prepare"
+  ],
+  "does_not_prove": [
+    "source HTTP/redirect/proxy/TLS transport run",
+    "complete original/current Python optional dependency environment identity",
+    "final wire User-Agent fallback",
+    "OCR normalization of second synthetic Unicode payload",
+    "three unavailable runtime-source JSON or lost S15 observations"
+  ]
+}

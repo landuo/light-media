@@ -1,0 +1,41 @@
+{
+  "at": "2026-10-31T14:29:06.166941+00:00",
+  "verdict": "one existing adjacent qB dispatch scope root PASS; reused exact App program and declared 6152 input map",
+  "root": "TestSharedQBittorrentCompletedDispatchScope",
+  "subtests": [
+    "TestSharedQBittorrentCompletedDispatchScope/cancel",
+    "TestSharedQBittorrentCompletedDispatchScope/revoke",
+    "TestSharedQBittorrentCompletedDispatchScope/reconfigure",
+    "TestSharedQBittorrentCompletedDispatchScope/disable"
+  ],
+  "no_fail_or_skip": true,
+  "files": {
+    "build-worker.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "test.stdout": {
+      "sha256": "075cd8317a9123bbb93a938af6e66a4c9e6c91846853b889439f55f2d47a3eb1",
+      "bytes": 17418
+    },
+    "test.stderr": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "build-worker.stdout": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "result.json": {
+      "sha256": "54c20b454fc939075f34ce11d189d4b79c8f652ed2db5b6ae53bc00cf204adaa",
+      "bytes": 1354
+    }
+  },
+  "app_program_sha256": "806dc7667dab1acf8274c5da05fd8024afabc910db777b592f13b32a7f151cd4",
+  "fresh_worker_sha256": "75563ff7c31f350216685008ade9d33efb76fb24ac9e28725175e251849a02f1",
+  "reused_input_manifest_sha256": "9183aac7673013d1dcb8c26c2deca0e9c32b9a64913a6265ae693ff212e53856",
+  "extra_worker_source": {
+    "cmd/owned-qbittorrent-completed-fixture/main.go": "53186a5815fd02318dcf161e7b1d93fc1f9ecccc6dfbd53423c9b065c12102a7"
+  },
+  "limits": "No new whole App compilation or claimed whole qB SDK matrix; fixture imports only stdlib and plugins already present in actual App closure."
+}

@@ -27,6 +27,7 @@ import (
 )
 
 type App struct {
+	originalOCRHost                  string
 	sharedSystemConfig               sharedSystemConfigRuntime
 	pluginOriginalBase               originalBaseState
 	pluginOriginalMarkets            originalMarketCache
@@ -116,6 +117,7 @@ type App struct {
 }
 
 type Options struct {
+	OCRHost               *string // Trusted host-only override; nil preserves process OCR_HOST snapshot.
 	PluginLogRotation     *PluginLogRotation
 	ResourceSearchPages   *big.Int
 	MediaSearch           *MediaSearchConfiguration
@@ -143,6 +145,10 @@ func New(opts Options) (*App, error) {
 		return nil, e
 	}
 	a := &App{pluginDeveloperMode: opts.PluginDeveloperMode, bigMemoryMode: opts.BigMemoryMode, safeMode: opts.SafeMode, RestartRequested: make(chan struct{}, 1), Store: s, Dir: opts.DataDir, web: opts.Web, control: "running", authAttempts: map[string][]time.Time{}, jobWake: make(chan struct{}, 1), materials: map[string][]byte{}}
+	a.originalOCRHost = originalStartupOCRHost
+	if opts.OCRHost != nil {
+		a.originalOCRHost = *opts.OCRHost
+	}
 	a.pluginLogRotation = clonePluginLogRotation(opts.PluginLogRotation)
 	a.mediaSearchConfiguration = cloneMediaSearchConfiguration(opts.MediaSearch)
 	if a.mediaSearchConfiguration == nil {

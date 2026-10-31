@@ -1,0 +1,29 @@
+{
+  "recorded_at": "2026-10-31T13:58:52.654959+00:00",
+  "actual_prior_tool": {
+    "chunk_id": "741033",
+    "exit": 0,
+    "time_approx_utc": "2026-10-31T13:46:44Z",
+    "purpose": "read existing installed package versions and requests default headers",
+    "explicit_import": "import importlib.metadata as m,json,requests",
+    "explicit_http_requests": 0,
+    "observed_result": {
+      "requests": "2.34.2",
+      "urllib3": "2.7.0",
+      "brotli": null,
+      "brotlicffi": null,
+      "chardet": null,
+      "zstandard": "0.25.0",
+      "Accept-Encoding": "gzip, deflate"
+    }
+  },
+  "newly_discovered_static_side_effect": {
+    "file": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/audits/repository-source-oracle/venv/lib/python3.12/site-packages/urllib3/util/connection.py",
+    "sha256": "2633bbdb69731e5ccb5cf4e4afd65605d86c7979cc5633126f50c92d5ad74a74",
+    "description": "urllib3 util.connection import initializes HAS_IPV6 via _has_ipv6(::1); helper conditionally attempts local AF_INET6 socket/bind and catches errors",
+    "actual_internal_bind_attempt_or_outcome": "not observed; do not assert it executed, succeeded, or was denied",
+    "new_tool_denial_receipt": "none observed"
+  },
+  "action": "No new requests import or IPv6 probe. Prior denied probe boundary retained. Continue permitted pure AST/static source and owned Go gates. This event is not a product failure and not proof of source HTTP execution.",
+  "parent_direction": "Record potential effect honestly; do not turn unknown into occurrence/denial; keep restricted probe/import paused; report any critical remaining source-equivalence gap precisely."
+}

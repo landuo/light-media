@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-31T13:43:41.174713+00:00",
+  "source_sha256": "736e7a078b22fe0ac5ac611d58be6a8d742f7d768d582abfed605fafe65a550c",
+  "new_source_AST_execution": true,
+  "network": false,
+  "response_fixture_not_requests_HTTP": true,
+  "observation": {
+    "name": "data_url_dotted_capital_i_fallback",
+    "input": {
+      "image_url": "data:\u0130mage/png;base64,QQ",
+      "image_b64": "Qg"
+    },
+    "get": null,
+    "post": {
+      "status": 200,
+      "body_b64": "eyJyZXN1bHQiOiJPSyJ9"
+    },
+    "value": {
+      "kind": "string",
+      "points": [
+        79,
+        75
+      ]
+    },
+    "calls": [
+      {
+        "method": "GET",
+        "url": "data:\u0130mage/png;base64,QQ",
+        "options": {
+          "ua": null,
+          "cookies": null
+        }
+      },
+      {
+        "method": "POST",
+        "options": {
+          "content_type": "application/json"
+        },
+        "url": "https://owned.invalid/captcha/base64",
+        "json": {
+          "base64_img": "Qg=="
+        }
+      }
+    ]
+  }
+}

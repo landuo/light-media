@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-31T14:23:33.002595+00:00",
+  "state": "actual preparation01 FAILURE retained; no output observations credited",
+  "files": {
+    "capture01.json": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "execution01.command.txt": {
+      "sha256": "b635e9628c9b3e9f393d00fd8c63c6ae9ad5247234ffa0625c9d188a145780d9",
+      "bytes": 142
+    },
+    "execution01.start.txt": {
+      "sha256": "3a6c2e5c164a67a8c643343c2f59669ae396e341475eee53543f901adb124aa2",
+      "bytes": 21
+    },
+    "execution01.end.txt": {
+      "sha256": "3a6c2e5c164a67a8c643343c2f59669ae396e341475eee53543f901adb124aa2",
+      "bytes": 21
+    },
+    "execution01.exit": {
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "bytes": 2
+    },
+    "execution01.stderr": {
+      "sha256": "9c07ace762ea594a21cd741e974b2fa5594cc33dab0e4ae57ffa5f004b2277bf",
+      "bytes": 757
+    }
+  },
+  "exit": "1",
+  "capture_bytes": 0,
+  "error_class": "KeyError",
+  "error_key": "__import__",
+  "failure_stage": "creating exact SupportsItems(Protocol[_KT_co, _VT_co]) source class, before either payload preparation",
+  "interpretation": "Restricted source namespace prevented required Python generic-class internal import mechanism. Raw trace does not identify the requested module name; do not invent an observed network/import event. No source HTTP or Go execution result is implied.",
+  "next": "Any correction must be separately frozen/reviewed and coordinator authorized; preserve original script/bindings/raw failure; do not install import hook or change package modules to bypass paused requests/urllib3 probe."
+}

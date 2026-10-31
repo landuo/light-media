@@ -231,6 +231,11 @@ func (b *BoundSiteHTTP) Do(ctx context.Context, request PageRequest) (*PageRespo
 // fixedPublicReferer is only supplied by the typed uncredentialed public-image
 // client; ordinary site Do has no such exception.
 func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublicReferer string) (*PageResponse, error) {
+	return b.doWithOCR(ctx, request, fixedPublicReferer, nil)
+}
+
+// The OCR mode is minted only by the typed host-side ordinary OCR entry.
+func (b *BoundSiteHTTP) doWithOCR(ctx context.Context, request PageRequest, fixedPublicReferer string, ocr *ordinaryOCRMode) (*PageResponse, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
@@ -288,6 +293,10 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 	if tlsConfig.MinVersion < tls.VersionTLS12 {
 		tlsConfig.MinVersion = tls.VersionTLS12
 	}
+	if ocr != nil {
+		// User-approved source behavior, private to this OCR request transport.
+		tlsConfig.InsecureSkipVerify = true
+	}
 	transport.TLSClientConfig = tlsConfig
 	transport.DialContext = func(ctx context.Context, network, address string) (net.Conn, error) {
 		c, err := dialer.DialContext(ctx, network, address)
@@ -315,7 +324,11 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 		if len(via) > 30 {
 			return errors.New("site redirect limit exceeded")
 		}
-		if _, err := b.authorize(req.URL.String()); err != nil {
+		if ocr != nil {
+			if err := ordinaryOCRRedirect(b.origin, req); err != nil {
+				return err
+			}
+		} else if _, err := b.authorize(req.URL.String()); err != nil {
 			return err
 		}
 		// requests rebuilds Cookie on redirects. A Cookie supplied as a
@@ -336,6 +349,9 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 		}
 		return nil
 	}}
+	if ocr != nil {
+		client.Jar = newOrdinaryOCRJar()
+	}
 	// Public media never consumes Set-Cookie, including on redirect hops.
 	if fixedPublicReferer != "" {
 		client.Jar = nil
@@ -457,7 +473,12 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 		return nil, nil
 	}
 	defer res.Body.Close()
-	compressed, err := readDocument(res.Body, 1<<20)
+	reader := func(r io.Reader) ([]byte, error) { return readDocument(r, 1<<20) }
+	if ocr != nil {
+		ocr.contentType = res.Header.Get("Content-Type")
+		reader = io.ReadAll
+	}
+	compressed, err := reader(res.Body)
 	if err != nil {
 		if ctx.Err() != nil {
 			return nil, ctx.Err()
@@ -467,7 +488,7 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 		}
 		return nil, nil
 	}
-	decoded, err := decodeSiteContent(compressed, res.Header.Values("Content-Encoding"))
+	decoded, err := decodeSiteContentWithReader(compressed, res.Header.Values("Content-Encoding"), reader)
 	if err != nil {
 		if errors.Is(err, ErrSiteResponseLimit) || errors.Is(err, ErrSiteCodecNotReady) {
 			return nil, err
@@ -502,6 +523,10 @@ func (b *BoundSiteHTTP) do(ctx context.Context, request PageRequest, fixedPublic
 	return &PageResponse{Status: res.StatusCode, Text: text, Content: decoded, Cookies: cookies}, nil
 }
 func decodeSiteContent(data []byte, headers []string) ([]byte, error) {
+	return decodeSiteContentWithReader(data, headers, func(r io.Reader) ([]byte, error) { return readDocument(r, 1<<20) })
+}
+
+func decodeSiteContentWithReader(data []byte, headers []string, read func(io.Reader) ([]byte, error)) ([]byte, error) {
 	encodings := strings.Split(strings.Join(headers, ","), ",")
 	// Installed urllib3 lacks zstandard: unrecognized single encodings are
 	// returned untouched, not decoded by whichever Go libraries are present.
@@ -542,7 +567,7 @@ func decodeSiteContent(data []byte, headers []string) ([]byte, error) {
 		default:
 			return nil, ErrSiteCodecNotReady
 		}
-		raw, err := readDocument(r, 1<<20)
+		raw, err := read(r)
 		if close != nil {
 			close()
 		}

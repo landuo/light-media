@@ -1,0 +1,111 @@
+{
+  "started": "2026-10-31T14:12:12.506596+00:00",
+  "package": "./internal/app",
+  "pattern": "^TestSharedOCR(HostBoundariesAndSnapshot|ActualWorkerFailureRecoveryCold|RedirectSourceAndCookieIsolation)$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/app",
+        "./cmd/owned-ocr-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s15-race-app01.worker",
+        "-race",
+        "./cmd/owned-ocr-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s15-race-app01.test",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s15-race-app01.test",
+        "-test.v",
+        "-test.run",
+        "^TestSharedOCR(HostBoundariesAndSnapshot|ActualWorkerFailureRecoveryCold|RedirectSourceAndCookieIsolation)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T14:12:12.506611+00:00",
+      "scratch_free": 59656720384,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile-worker",
+      "at": "2026-10-31T14:12:13.578599+00:00",
+      "scratch_free": 59653668864,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T14:12:13.989048+00:00",
+      "scratch_free": 59646820352,
+      "tmp_free": 5225664512
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T14:13:55.697218+00:00",
+      "scratch_free": 59231137792,
+      "tmp_free": 5225664512
+    }
+  ],
+  "input_count": 6161,
+  "fixture_sha256": "d1b4a3e0fd7f2da45bb85b2ee889c91a44f942bc7f0a7c1043c39dd3ed94e913",
+  "fixture_env": "OWNED_OCR_FIXTURE_BINARY",
+  "program_sha256": "dfa816e7760b596ed1259b5d095fb3c377c82245adee5f6173e4d1f9f43c9620",
+  "root_passes": [
+    "TestSharedOCRActualWorkerFailureRecoveryCold",
+    "TestSharedOCRRedirectSourceAndCookieIsolation",
+    "TestSharedOCRHostBoundariesAndSnapshot"
+  ],
+  "ended": "2026-10-31T14:14:04.500342+00:00"
+}

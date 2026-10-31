@@ -1,0 +1,47 @@
+{
+  "at": "2026-10-31T13:55:57.456257+00:00",
+  "verdict": "C static ready for finite compile/execution; prior encoding finding closed, no execution PASS claimed",
+  "manifest_sha256": "66bfea72bd16ab518a1ed8b39ad2e6a6dd3dc68de26bd634e61f1d9903aa1bc9",
+  "files": {
+    "internal/app/plugin_shared_ocr.go": "4337e9e9817634a3b2e9a9f886a7f956a3230d0a27c971533ee61f2dc3790acf",
+    "internal/app/plugin_shared_ocr_test.go": "eebc023ffdd18514ec62bfeb55d35603310353738d1c5b44c0aadfce66605825",
+    "internal/app/plugin_shared_ocr_extended_test.go": "2ae87c44cb77b7304dfa4fc435ddb38b040200cbe5a9a71e2b44d8eb613788e1",
+    "internal/app/plugin_shared_ocr_redirect_test.go": "b793ccf96f1c6a24dc1d4eee21021cc5b62b2f087581e6f5dceca296dee314c5",
+    "internal/app/plugin_shared_ocr_process_test.go": "8b3bc168d0dd921abf94eff9db22968c1d2391a3529f8432a284981dea2a0120",
+    "cmd/owned-ocr-fixture/main.go": "5871508d6f567b015aa6f0754da796034bfcda84cfc184f37690a9876c9ab6f8",
+    "internal/app/plugin_original_resources.go": "61538152cdd110b2845413df8ed5d478efd6ee1511eb8fe4f916f75015d3858f",
+    "internal/app/runtime.go": "1f71346585932e0765e6867032b6aa8e110ab84b16576090e74ca6003c27f78b"
+  },
+  "current": {
+    "internal/app/plugin_shared_ocr.go": "4337e9e9817634a3b2e9a9f886a7f956a3230d0a27c971533ee61f2dc3790acf",
+    "internal/app/plugin_shared_ocr_test.go": "eebc023ffdd18514ec62bfeb55d35603310353738d1c5b44c0aadfce66605825",
+    "internal/app/plugin_shared_ocr_extended_test.go": "2ae87c44cb77b7304dfa4fc435ddb38b040200cbe5a9a71e2b44d8eb613788e1",
+    "internal/app/plugin_shared_ocr_redirect_test.go": "b793ccf96f1c6a24dc1d4eee21021cc5b62b2f087581e6f5dceca296dee314c5",
+    "internal/app/plugin_shared_ocr_process_test.go": "8b3bc168d0dd921abf94eff9db22968c1d2391a3529f8432a284981dea2a0120",
+    "cmd/owned-ocr-fixture/main.go": "5871508d6f567b015aa6f0754da796034bfcda84cfc184f37690a9876c9ab6f8",
+    "internal/app/plugin_original_resources.go": "61538152cdd110b2845413df8ed5d478efd6ee1511eb8fe4f916f75015d3858f",
+    "internal/app/runtime.go": "1f71346585932e0765e6867032b6aa8e110ab84b16576090e74ca6003c27f78b"
+  },
+  "archive_sha256": "0f7f9f05f7a31bc7b9836204ace0f72905008e72676c39df9c97af5f563432da",
+  "archive_declared_match": true,
+  "archive_members_match": true,
+  "preimages_sha256": "fb393bac2cf10ed43ddef217931a209a37ce07bc1a008f9ba2f758d94e27c16f",
+  "preimages_equal_C6": {
+    "internal/app/plugin_shared_ocr.go": true,
+    "internal/app/plugin_shared_ocr_test.go": true
+  },
+  "closed_findings": [
+    "C-UA-LATIN1",
+    "C-COOKIE-ERROR-CLASS"
+  ],
+  "accepted_checks": [
+    "UA conversion after actual source caller suffix, before binding, private to OCR host",
+    "source leading whitespace/CRLF InvalidHeader branch remains nil HTTP response instead of UnicodeEncodeError",
+    "only effective trimmed cookie name/value pairs checked; duplicate last wins, no-equals segments ignored",
+    "site config snapshot validation occurs before these header operations and remains per-hop/return",
+    "same existing OwnedHTTP root verifies Latin1 E9 peer bytes, typed Unicode errors and zero peer hits; no new fixture endpoint",
+    "existing AnonymousImage root now traverses server-UA Plugin/ownedocr branch with actual received-header assertion",
+    "worker test requires externally prebuilt OWNED_OCR_FIXTURE_BINARY; uses real standard artifact install and SDK routes, no hidden compilation"
+  ],
+  "pending": "actual App7 + qB adjacent, fresh externally-built worker, normal CLI and finite race; optional source HTTP observations must state actual environment"
+}
