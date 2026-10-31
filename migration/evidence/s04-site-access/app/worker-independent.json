@@ -1,0 +1,254 @@
+{
+  "status": "FINITE_INSTALLED_WORKER_NORMAL2_HOSTRACE3_ACCEPTED",
+  "at": "2026-10-31T22:37:04.368Z",
+  "gates": [
+    {
+      "label": "s04-worker01",
+      "status": "PASS_INDEPENDENTLY_READ_BACK",
+      "root_passes": [
+        "TestSharedSiteAccessActualWorkerRecoveryAndScopes",
+        "TestSharedSiteAccessActualWorkerColdPersistence"
+      ],
+      "fail_skip_events": 0,
+      "data_race_warning": false,
+      "input_count": 6219,
+      "three_phase_maps_equal": true,
+      "current_bound_drift": 0,
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-worker01.test",
+        "bytes": 92008844,
+        "sha256": "3881b80442d6a8fcdf016868aad55909a9fac33d7f063508b4923fa03826b902"
+      },
+      "normal_worker": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-fixture01",
+        "sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c",
+        "in_source_input_map": false,
+        "binding": "driver pre-execution and post-test SHA assertions plus actual result; inherited normal compile"
+      },
+      "generated_copies": [
+        {
+          "original": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/ac/aca095dddc2f771d975faf2339778e622ad698d66a65aba69deaeea8965c8c64-d",
+          "copy": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/generated-source/aca095dddc2f771d975faf2339778e622ad698d66a65aba69deaeea8965c8c64.go",
+          "sha256": "aca095dddc2f771d975faf2339778e622ad698d66a65aba69deaeea8965c8c64"
+        }
+      ],
+      "ended": "2026-10-31T22:32:57.566665+00:00",
+      "evidence": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/result.json",
+          "bytes": 2458,
+          "sha256": "4088de163440cfa2a65bcf1b8e83684441e7dd834a8e7ac405db6d10f84f26c0"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/outer-tool-receipt.json",
+          "bytes": 221,
+          "sha256": "2b590ce5f41fa50f7dccbd077f4b245327ff03f423d01292536918d7890ba859"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/compile.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/tests.stdout",
+          "bytes": 14772,
+          "sha256": "c47b7777f3f2d9f05fa62aa7513d885bd4232d14a00cb5ce131de0fbfb02978d"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/inputs-before.json",
+          "bytes": 1475963,
+          "sha256": "cc131332b36d85bd468014801eab92e8365e68f041219a12b0e14d9c9e7edfad"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/inputs-after-compile.json",
+          "bytes": 1475963,
+          "sha256": "cc131332b36d85bd468014801eab92e8365e68f041219a12b0e14d9c9e7edfad"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/inputs-after-test.json",
+          "bytes": 1475963,
+          "sha256": "cc131332b36d85bd468014801eab92e8365e68f041219a12b0e14d9c9e7edfad"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker01/generated-source-map.json",
+          "bytes": 246,
+          "sha256": "8ede93a7f0408d11bccd9a57054896f82be932dad8bf771e09c846fb01762cd7"
+        }
+      ]
+    },
+    {
+      "label": "s04-worker-race01",
+      "status": "PASS_INDEPENDENTLY_READ_BACK",
+      "root_passes": [
+        "TestSharedSiteAccessResourceFiniteBoundary",
+        "TestSharedSiteAccessActualWorkerRecoveryAndScopes",
+        "TestSharedSiteAccessActualWorkerColdPersistence"
+      ],
+      "fail_skip_events": 0,
+      "data_race_warning": false,
+      "input_count": 6228,
+      "three_phase_maps_equal": true,
+      "current_bound_drift": 0,
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-worker-race01.test",
+        "bytes": 119076286,
+        "sha256": "361a2fe751fcf4b6d7f6f6e773a033038679b511b9cb26cb7252282f4982ddc8"
+      },
+      "normal_worker": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-fixture01",
+        "sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c",
+        "in_source_input_map": false,
+        "binding": "driver pre-execution and post-test SHA assertions plus actual result; inherited normal compile"
+      },
+      "generated_copies": [
+        {
+          "original": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/cache/go-build/ac/aca095dddc2f771d975faf2339778e622ad698d66a65aba69deaeea8965c8c64-d",
+          "copy": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/generated-source/aca095dddc2f771d975faf2339778e622ad698d66a65aba69deaeea8965c8c64.go",
+          "sha256": "aca095dddc2f771d975faf2339778e622ad698d66a65aba69deaeea8965c8c64"
+        }
+      ],
+      "ended": "2026-10-31T22:33:50.407731+00:00",
+      "evidence": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/result.json",
+          "bytes": 2639,
+          "sha256": "ab945c1f13ced5659df39d9aa7fd54a86164bf57288f37f3c01e5d6d369cf43c"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/outer-tool-receipt.json",
+          "bytes": 221,
+          "sha256": "2b590ce5f41fa50f7dccbd077f4b245327ff03f423d01292536918d7890ba859"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/compile.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/tests.stdout",
+          "bytes": 16424,
+          "sha256": "1d749c1d9961e05b8b769fe77ddd4075f655405f8e00f86f1a9e3c019b752e48"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/inputs-before.json",
+          "bytes": 1477950,
+          "sha256": "d6b24ba54b532618d3abcee18fbe70ba0de8b03291946f7fa60031e2717050b1"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/inputs-after-compile.json",
+          "bytes": 1477950,
+          "sha256": "d6b24ba54b532618d3abcee18fbe70ba0de8b03291946f7fa60031e2717050b1"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/inputs-after-test.json",
+          "bytes": 1477950,
+          "sha256": "d6b24ba54b532618d3abcee18fbe70ba0de8b03291946f7fa60031e2717050b1"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-worker-race01/generated-source-map.json",
+          "bytes": 246,
+          "sha256": "8ede93a7f0408d11bccd9a57054896f82be932dad8bf771e09c846fb01762cd7"
+        }
+      ]
+    }
+  ],
+  "runner": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s04-worker-gate.py",
+    "sha256": "fb3294c31f81f746ae39c14c521a4f664e56808dc0386b5ebbbe3b7e2d4631d0"
+  },
+  "references": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-app-independent/WORKER-FINAL.md",
+      "sha256": "afbdcaecebe5ff3320beeba27fcb9b43a1269308324b57058dd8088be5224bac"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-app-independent/APP01-AND-WORKER-READY.md",
+      "sha256": "1ad8aa315e7a9cf3ade15a5f86247146f5634cfa8fc5323c3f2ac1718950a264"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-app-independent/app01-final-and-worker-static.json",
+      "sha256": "6cf07e714d0fe4e874ab6c32fae70be7027c893529f5a5e36a731cc31a836931"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-app-independent/CANDIDATE02-REVIEW.md",
+      "sha256": "534b22e4a0639443745fc6fb90378edc4f345c22f107d2a9af2063b98f008f9d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-app-independent/candidate02-static-seal.json",
+      "sha256": "74479fe3784d5b8d7a226ecba50a87791356d1790053e0241bfffced9c1d9e2c"
+    }
+  ],
+  "current_worker_test": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_site_access_worker_test.go",
+    "sha256": "2a51a6d628cb555f747d7b19c4a6d8794ffada2d9c566a7f9eb0a8eefceeca06"
+  },
+  "boundaries": [
+    "normal worker is not race-instrumented",
+    "App3 retains separate historical6218 closure",
+    "fresh int64 producer; not arbitrary legacy row equivalence",
+    "standalone server/CLI not accepted here",
+    "phase-boundary resource samples only"
+  ],
+  "reviewer_executed_tests_or_services": false,
+  "reviewer_product_write": false
+}

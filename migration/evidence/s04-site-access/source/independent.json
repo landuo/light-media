@@ -1,0 +1,339 @@
+{
+  "status": "ACCEPTED_FINITE_ORIGINAL_SOURCE_SQLITE_WARM_COLD",
+  "reviewed_at": "2026-10-31T22:16:59.685489+00:00",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "reviewer_actions": "Read and hash existing source/input/raw/owned database bytes only. No source import, source execution, SQL database open, Go or network activity by reviewer.",
+  "evidence": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-source-warm01/stdout.json",
+      "bytes": 291222,
+      "sha256": "9303332121f5265e8881f3330aa785d32d08aa4c2e00054111f41954fadc9fe3"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-source-warm01/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-source-warm01/exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-source-warm01/result.json",
+      "bytes": 1032,
+      "sha256": "3362db995f5147a08664a4ff4fb1c647f1fc42142207de1e2f599ba13b495c48"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-source-warm01/outer-tool-receipt.json",
+      "bytes": 156,
+      "sha256": "df54009dcc160a503a5cd387c713e176f63e08b3c1278272248a8877169f89b7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-source-cold01/stdout.json",
+      "bytes": 220246,
+      "sha256": "e6d273ba401f7f2c288461388d5c4a36892e13605ee136b77f8de20d3df35188"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-source-cold01/stderr.txt",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-source-cold01/exit.txt",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-source-cold01/result.json",
+      "bytes": 1035,
+      "sha256": "79b639292ab7752785e8ad448e107baa0a48aebf380a1496457db74292485732"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-source-cold01/outer-tool-receipt.json",
+      "bytes": 156,
+      "sha256": "df54009dcc160a503a5cd387c713e176f63e08b3c1278272248a8877169f89b7"
+    }
+  ],
+  "preexec_reviews": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-source-independent/SOURCE-FIRST.json",
+      "bytes": 2601,
+      "sha256": "a07c9fc5b3611e0268ef46dadc5accd982515043e59e084cf29dd9e9f7f5de41"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-source-independent/collector01-preexec-independent.json",
+      "bytes": 3111,
+      "sha256": "a0d0b651fa70bb6d933203b354ec7558a20a941843e16004de1aed67ae98aa45"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-source-independent/runner01-preexec-independent.json",
+      "bytes": 1598,
+      "sha256": "39df1835b39d4c83eb1c9e647d06d6f0d9c2b6a660602bcbd6432c6cb9093dd3"
+    }
+  ],
+  "binding_checks": {
+    "inputs": 391,
+    "inputs_match_preparation_and_current": true,
+    "original_nodes": 26,
+    "nodes_match_preparation_and_warm_and_cold": true,
+    "prior_dependency_files": 385,
+    "original_orm_and_decorators": "Preserved original selected source bodies/decorators per independently accepted preparation; actual node table equals that preparation.",
+    "imported_module_file_records": 301,
+    "distinct_imported_files": 298,
+    "third_party_module_file_records": 142,
+    "third_party_files_are_prebound": true,
+    "all_actual_imported_files_current_sha_equal": true,
+    "warm_cold_import_tables_equal": true,
+    "python_executable_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"
+  },
+  "actual_outcomes": {
+    "normal_scenarios": 11,
+    "normal_calls": 19,
+    "seed_rows": 5,
+    "normal_returns": "All 19 original calls returned NoneType / null, each one explicit clock access.",
+    "borrowed_session_calls": 2,
+    "borrowed_session_followup_query_usable": true,
+    "real_source_sql_errors": [
+      {
+        "case": "get_missing_table",
+        "exception": "OperationalError",
+        "sqlite_errorname": "SQLITE_ERROR",
+        "stage": "original_source_call",
+        "rows_unchanged": null,
+        "session_usable_after_source_error": null
+      },
+      {
+        "case": "readonly_success_existing",
+        "exception": "OperationalError",
+        "sqlite_errorname": "SQLITE_READONLY",
+        "stage": "original_source_call",
+        "rows_unchanged": true,
+        "session_usable_after_source_error": true
+      },
+      {
+        "case": "readonly_success_new",
+        "exception": "OperationalError",
+        "sqlite_errorname": "SQLITE_READONLY",
+        "stage": "original_source_call",
+        "rows_unchanged": true,
+        "session_usable_after_source_error": true
+      },
+      {
+        "case": "readonly_fail_existing",
+        "exception": "OperationalError",
+        "sqlite_errorname": "SQLITE_READONLY",
+        "stage": "original_source_call",
+        "rows_unchanged": true,
+        "session_usable_after_source_error": true
+      },
+      {
+        "case": "readonly_fail_new",
+        "exception": "OperationalError",
+        "sqlite_errorname": "SQLITE_READONLY",
+        "stage": "original_source_call",
+        "rows_unchanged": true,
+        "session_usable_after_source_error": true
+      }
+    ],
+    "readonly_transaction_observation": "Four actual original db_update failures propagated OperationalError; the same borrowed sessions subsequently queried successfully and all owned rows remained unchanged. This plus preserved original rollback/rethrow source closes the finite original transaction failure observations, not all concurrency/isolation behaviors.",
+    "cold_original_queries": 11,
+    "cold_rows_equal_warm": true,
+    "database_sha256": "0ebfbc22e9e6eec171d0fe5c08edf7a48595c1db54a02d611eee2b33fe876e53",
+    "database_before_errors_after_errors_cold_current_bytes_equal": true,
+    "observed_case_rows": [
+      {
+        "case": "initial_none_then_value_fail_none",
+        "actual_final_row": {
+          "id": 1,
+          "domain": "none-owned.invalid",
+          "success": 3,
+          "fail": 1,
+          "seconds": 7,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:00:03",
+          "note": {
+            "2026-10-31 12:00:01": 7
+          }
+        }
+      },
+      {
+        "case": "initial_zero",
+        "actual_final_row": {
+          "id": 2,
+          "domain": "zero-owned.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:01:00",
+          "note": {
+            "2026-10-31 12:01:00": 1
+          }
+        }
+      },
+      {
+        "case": "initial_negative",
+        "actual_final_row": {
+          "id": 3,
+          "domain": "negative-owned.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": -4,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:02:00",
+          "note": {
+            "2026-10-31 12:02:00": -4
+          }
+        }
+      },
+      {
+        "case": "same_second_overwrite",
+        "actual_final_row": {
+          "id": 4,
+          "domain": "same-second-owned.invalid",
+          "success": 3,
+          "fail": 0,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:03:00",
+          "note": {
+            "2026-10-31 12:03:00": 1
+          }
+        }
+      },
+      {
+        "case": "existing_none_preserves_nonempty_note",
+        "actual_final_row": {
+          "id": 5,
+          "domain": "preserve-owned.invalid",
+          "success": 5,
+          "fail": 2,
+          "seconds": -8,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:04:00",
+          "note": {
+            "2026-10-30 00:00:00": 3,
+            "2026-10-30 00:00:01": -7
+          }
+        }
+      },
+      {
+        "case": "eleven_entries_pretrim_denominator",
+        "actual_final_row": {
+          "id": 6,
+          "domain": "eleven-owned.invalid",
+          "success": 5,
+          "fail": 2,
+          "seconds": 5,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:05:00",
+          "note": {
+            "2026-10-31 12:05:00": 11,
+            "2026-10-30 00:00:09": 10,
+            "2026-10-30 00:00:08": 9,
+            "2026-10-30 00:00:07": 8,
+            "2026-10-30 00:00:06": 7,
+            "2026-10-30 00:00:05": 6,
+            "2026-10-30 00:00:04": 5,
+            "2026-10-30 00:00:03": 4,
+            "2026-10-30 00:00:02": 3,
+            "2026-10-30 00:00:01": 2
+          }
+        }
+      },
+      {
+        "case": "negative_floor",
+        "actual_final_row": {
+          "id": 7,
+          "domain": "floor-owned.invalid",
+          "success": 5,
+          "fail": 2,
+          "seconds": -3,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:06:00",
+          "note": {
+            "2026-10-30 00:00:00": -2,
+            "2026-10-31 12:06:00": -3
+          }
+        }
+      },
+      {
+        "case": "zero_average_retains_old_seconds",
+        "actual_final_row": {
+          "id": 8,
+          "domain": "zero-average-owned.invalid",
+          "success": 5,
+          "fail": 2,
+          "seconds": 17,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:07:00",
+          "note": {
+            "2026-10-30 00:00:00": -1,
+            "2026-10-31 12:07:00": 1
+          }
+        }
+      },
+      {
+        "case": "initial_fail_then_fail_then_success_none",
+        "actual_final_row": {
+          "id": 9,
+          "domain": "fail-first-owned.invalid",
+          "success": 1,
+          "fail": 2,
+          "seconds": null,
+          "lst_state": 0,
+          "lst_mod_date": "2026-10-31 12:08:02",
+          "note": {}
+        }
+      },
+      {
+        "case": "fail_preserves_success_seconds_note",
+        "actual_final_row": {
+          "id": 10,
+          "domain": "fail-preserve-owned.invalid",
+          "success": 4,
+          "fail": 3,
+          "seconds": -6,
+          "lst_state": 1,
+          "lst_mod_date": "2026-10-31 12:09:00",
+          "note": {
+            "2026-10-30 00:00:00": 4
+          }
+        }
+      },
+      {
+        "case": "borrowed_session_exact_domain",
+        "actual_final_row": {
+          "id": 11,
+          "domain": "  Owned.雪.invalid/Path  ",
+          "success": 1,
+          "fail": 1,
+          "seconds": 4,
+          "lst_state": 1,
+          "lst_mod_date": "2026-10-31 12:10:01",
+          "note": {
+            "2026-10-31 12:10:00": 4
+          }
+        }
+      }
+    ]
+  },
+  "environment_observation": {
+    "app_requests_urllib3_module_prefixes_absent": true,
+    "socket_module_loaded": true,
+    "threads_before_after": [
+      "MainThread"
+    ],
+    "runner_records_environment_proxy_unchanged": true,
+    "caveat": "Loaded-module and thread observations are not syscall tracing or proof of absence of network/system calls. Existing SQLAlchemy imports load stdlib socket/asyncio; no new restricted import/probe is authorized or claimed."
+  },
+  "boundaries": [
+    "Original selected SiteOper.success/fail with real owned SQLite, original Base/ORM/decorators and an explicit fixed clock input.",
+    "Not a whole MoviePilot app import, production clock, real site request, PostgreSQL or concurrent transaction test.",
+    "Not a Go implementation/differential/SDK/HTTP/UI test; actual original raw may support the later matching Go projection.",
+    "Owned SQLite seed and fixed domain strings are fixture inputs, not real site/production history.",
+    "Missing-table observation used a separate new in-memory database; read-only failures used mode=ro on the newly created owned file, not chmod, inode, symlink escape or arbitrary filesystem permission probes.",
+    "Original raw and prior preparation remain unmodified; no re-execution or prior failed evidence replacement."
+  ]
+}

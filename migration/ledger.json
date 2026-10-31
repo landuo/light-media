@@ -40,7 +40,7 @@
       "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/README.md",
       "testdata/plugins/shared-manager-lifecycle-reconstruction-20261031/publication-manifest.json"
     ],
-    "revision_note": "Last actual remote remains11f922; local760720→b9e667→41c8 plus current S03 candidate not pushed. main unchanged; no CI-green claim."
+    "revision_note": "Last actual remote11f922; local760720→b9e667→41c8→7b9b exactbundles savedSpace, notpushed. CurrentS04 WIP; main unchanged, noCIgreen."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -25714,7 +25714,7 @@
         "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
       },
       "local_reconstruction": {
-        "status": "finite source/target/installed-worker/normal CLI independently accepted; local publication ready, remote pending",
+        "status": "finite source/target/installed-worker/normalCLI independently accepted and locallycommitted7b9b; remote pending, fullparent open",
         "source_contract": "../audits/s03-next-scope/REVIEW.md",
         "boundary": "delete_file=False only; owned HTTP/TLS fixture not real daemon. URL+truthyCookie, arbitraryPython objects/full vendorTorrent properties, wider kwargs/source timeout/retry and actual service equivalence remain bounded/unproven. Dedicated qB TLS exception explicitly approved and actual owned TLS/current affected gates passed; other clients/CA/credentials unchanged."
       },
@@ -25726,18 +25726,21 @@
         "Vendor-source acquisition incident side effects unknown; final content integrity not proof of no side effects."
       ],
       "completion": {
-        "state": "finite_backend_verified_publication_ready_remote_pending",
+        "state": "finite_backend_locally_committed_bundle_ready_remote_pending",
         "full_parent_verified": false,
         "remote_delivery": false,
         "manifest": "migration/evidence/s03-downloader-commands/evidence-index.json",
         "parent_commit": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
-        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4"
+        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "new_commit": "7b9b1d038b11d6235108889bea634e53e8b19d27",
+        "bundle_sha256": "ba81574dbbe5f9dfaf39f8a5003ae9e9bcd0df842404646b8484cb2d306df1cd",
+        "bundle_library_id": "libfile_c2a07eef7c308191b096aca960a86e35"
       }
     },
     {
       "id": "S04",
       "description": "S04 · 站点资料、历史账户数据、访问结果与刷新",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/site.py",
         "app/chain/site.py",
@@ -25806,13 +25809,38 @@
         "scope.sdk.app.db.site_oper.SiteOper.success"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "cmd/owned-site-access-fixture/main.go",
+        "internal/app/plugin_original_resources.go",
+        "internal/app/plugin_shared_site_access.go",
+        "internal/app/plugin_shared_site_access_test.go",
+        "internal/app/plugin_shared_site_access_worker_test.go",
+        "internal/app/store.go",
+        "internal/plugins/shared_site_access.go",
+        "internal/plugins/shared_site_access_test.go",
+        "internal/plugins/siteaccess/statistics.go",
+        "internal/plugins/siteaccess/statistics_test.go",
+        "internal/plugins/siteaccess/testdata/source-access-results.json"
+      ],
       "owner": "coordinator",
-      "scenarios": [],
-      "evidence_ids": [],
+      "scenarios": [
+        "original selected ORM SQLite warm19+5errors/cold11; pure2 finite differential",
+        "SDK2 recording-only; AppSQLite3 transaction/raw/error recovery",
+        "actual installedworker2 and host-race3 using normalworker",
+        "actual normal dualhost fourbusinesscalls, fixedwirefailure recovery, expiredcaller denial and eight-column coldpersistence"
+      ],
+      "evidence_ids": [
+        "s04-access.source-target",
+        "s04-access.normal-cli"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "s01_release_owner / tls_ab_independent / terminate_independent, Astra ultra",
+        "evidence_ids": [
+          "s04-access.independent-review"
+        ],
+        "scope": "finite fresh success/fail only, parent implementing"
       },
       "external_source_paths": [],
       "work_kind": "unclassified_shared_host",
@@ -25825,6 +25853,26 @@
         "semantic_judgment": "七DAO+一刷新与旧原文一致；不扩大成整个SiteOper CRUD。",
         "current_ledger_status": "discovered",
         "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
+      },
+      "local_reconstruction": {
+        "scope": "SiteOper.success/fail only, access statistics not sign-in; remaining five reads/refresh still open",
+        "status": "finite original/target/installedworker/normalCLI independently accepted; local publication ready, remote pending",
+        "historical_credit": "existing account history/identity/43 reverse refresh/events preserved; no S06 dependency"
+      },
+      "boundaries": [
+        "Only fresh finite int64 success/fail producer, no arbitrary legacy nullable/note backfill; source success(None) null-valued note differs and is not certified.",
+        "Five other reads plus refresh remain; preserve existing historical credit.",
+        "Real sites/browser/UI/full original app/async/Postgres unverified; no physical pipe counter claim.",
+        "No automatic selected mutation replay; cancellation/revocation after commit may leave effect.",
+        "Server outer terminal receipt unavailable; childbuild0 and actual laterCLI independently established."
+      ],
+      "completion": {
+        "state": "finite_backend_verified_publication_ready_remote_pending",
+        "full_parent_verified": false,
+        "remote_delivery": false,
+        "manifest": "migration/evidence/s04-site-access/evidence-index.json",
+        "parent_commit": "7b9b1d038b11d6235108889bea634e53e8b19d27",
+        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4"
       }
     },
     {
@@ -43397,6 +43445,155 @@
       "commands": {
         "actual_argv": "bound result.commands and cli/command.json executed by recorded tool session"
       }
+    },
+    {
+      "id": "s04-access.source-target",
+      "kind": "differential",
+      "status": "passed",
+      "feature_ids": [
+        "S04"
+      ],
+      "independent": false,
+      "reviewer": "coordinator actual execution",
+      "observations": "Finite originalSQLite/target/ownedhost layers accepted; no full parent or legacydata equivalence.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "target": "owned Linux Go1.26 normal App/installedworker/SQLite; inherited proxy/CA unchanged",
+          "source": "fixed8a83 selected complete ORM/decorators with pinned dependencies/owned SQLite/fixedclock; not fullapp",
+          "limits": "finite fresh success/fail; no historicalbackfill/site/browser/fullS04"
+        },
+        "target_files": {
+          "cmd/owned-site-access-fixture/main.go": "84b1af3cc2a99ee5bd57476c9fea60df089ee153e5cca94b4a991ed50877100e",
+          "internal/app/plugin_original_resources.go": "8cc333982f2856ce441b19ca2a6e17e4fa9a861c512a7efedb8c79700ef92f35",
+          "internal/app/store.go": "10ee3cacadc897b38d8209cd50c029964506071a6b014b975d4610efcd987a38",
+          "internal/app/plugin_shared_site_access.go": "9a92117a90afeb3e968ae1ee7e9d6ff0a237673dcf2b44a4adbc07f9c3de2842",
+          "internal/app/plugin_shared_site_access_test.go": "dbe3963a60015d02ca408fb0df5ca220dc5c99e580ff7f3aa508fd0eab5a49b7",
+          "internal/app/plugin_shared_site_access_worker_test.go": "2a51a6d628cb555f747d7b19c4a6d8794ffada2d9c566a7f9eb0a8eefceeca06",
+          "internal/plugins/shared_site_access.go": "a866152f4a156d7325efe290bc0b67887325e6979e2450d6be031e85bb6fb19d",
+          "internal/plugins/shared_site_access_test.go": "11ece93b2162c7075916025f036bd2517e1f7b85e1e1f916917db8fc9cc6abc3",
+          "internal/plugins/siteaccess/statistics.go": "f8dfcd3696710e56a2cd07014e01a254158b4816c79b59dc0fed0e33cde9e564",
+          "internal/plugins/siteaccess/statistics_test.go": "5507f7c62d97efa92740c9991cfb96fc7929351cc367dc09acd49f8890fe9569",
+          "internal/plugins/siteaccess/testdata/source-access-results.json": "9303332121f5265e8881f3330aa785d32d08aa4c2e00054111f41954fadc9fe3"
+        },
+        "fixture_files": {
+          "evidence/s04-site-access/cli/driver.py": "6a58b8577355871e65f6d3c9f38e3ffa6951fb156aa79d1e365a00bcda74601f",
+          "evidence/s04-site-access/source/owned-cases.json": "6d9c85a4b7fb4095af401c8737a59ac53ea7a3e3dd001b5e28e29456f51d8723"
+        }
+      },
+      "artifacts": {
+        "evidence/s04-site-access/source/independent.json": "83dc64c6d6ca49923f36cee829ee063de54909c1795305be654adc1a371a215d",
+        "evidence/s04-site-access/pure/result.json": "fa0c23da0d474d5b53014e84bf142869a2555e003602888beaa164da9404d33b",
+        "evidence/s04-site-access/sdk/result.json": "539162920b6a6596e233d429fa10aa38eb3179ff1c92a3086b242b0703e70fc7",
+        "evidence/s04-site-access/app/normal/result.json": "8e44da8aadafd3572194591e8b9be23159a9f6454a0965ed0ae2f94dd5af587b",
+        "evidence/s04-site-access/app/worker/result.json": "4088de163440cfa2a65bcf1b8e83684441e7dd834a8e7ac405db6d10f84f26c0",
+        "evidence/s04-site-access/app/host-race/result.json": "ab945c1f13ced5659df39d9aa7fd54a86164bf57288f37f3c01e5d6d369cf43c"
+      },
+      "inputs": {
+        "full_input_maps": "retained acknowledged source/host Space checkpoints and independent seals",
+        "server_sha256": "2da78389db498e84e5ab01077c260e7f331caf9ba8470a7d02d4ffd9ce3855a2",
+        "worker_sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c"
+      },
+      "commands": {
+        "actual_argv": "bound result.commands/source argv and cli/command.json; actual terminal receipts"
+      }
+    },
+    {
+      "id": "s04-access.normal-cli",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "S04"
+      ],
+      "independent": false,
+      "reviewer": "coordinator actual execution",
+      "observations": "Finite originalSQLite/target/ownedhost layers accepted; no full parent or legacydata equivalence.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "target": "owned Linux Go1.26 normal App/installedworker/SQLite; inherited proxy/CA unchanged",
+          "source": "fixed8a83 selected complete ORM/decorators with pinned dependencies/owned SQLite/fixedclock; not fullapp",
+          "limits": "finite fresh success/fail; no historicalbackfill/site/browser/fullS04"
+        },
+        "target_files": {
+          "cmd/owned-site-access-fixture/main.go": "84b1af3cc2a99ee5bd57476c9fea60df089ee153e5cca94b4a991ed50877100e",
+          "internal/app/plugin_original_resources.go": "8cc333982f2856ce441b19ca2a6e17e4fa9a861c512a7efedb8c79700ef92f35",
+          "internal/app/store.go": "10ee3cacadc897b38d8209cd50c029964506071a6b014b975d4610efcd987a38",
+          "internal/app/plugin_shared_site_access.go": "9a92117a90afeb3e968ae1ee7e9d6ff0a237673dcf2b44a4adbc07f9c3de2842",
+          "internal/app/plugin_shared_site_access_test.go": "dbe3963a60015d02ca408fb0df5ca220dc5c99e580ff7f3aa508fd0eab5a49b7",
+          "internal/app/plugin_shared_site_access_worker_test.go": "2a51a6d628cb555f747d7b19c4a6d8794ffada2d9c566a7f9eb0a8eefceeca06",
+          "internal/plugins/shared_site_access.go": "a866152f4a156d7325efe290bc0b67887325e6979e2450d6be031e85bb6fb19d",
+          "internal/plugins/shared_site_access_test.go": "11ece93b2162c7075916025f036bd2517e1f7b85e1e1f916917db8fc9cc6abc3",
+          "internal/plugins/siteaccess/statistics.go": "f8dfcd3696710e56a2cd07014e01a254158b4816c79b59dc0fed0e33cde9e564",
+          "internal/plugins/siteaccess/statistics_test.go": "5507f7c62d97efa92740c9991cfb96fc7929351cc367dc09acd49f8890fe9569",
+          "internal/plugins/siteaccess/testdata/source-access-results.json": "9303332121f5265e8881f3330aa785d32d08aa4c2e00054111f41954fadc9fe3"
+        },
+        "fixture_files": {
+          "evidence/s04-site-access/cli/driver.py": "6a58b8577355871e65f6d3c9f38e3ffa6951fb156aa79d1e365a00bcda74601f",
+          "evidence/s04-site-access/source/owned-cases.json": "6d9c85a4b7fb4095af401c8737a59ac53ea7a3e3dd001b5e28e29456f51d8723"
+        }
+      },
+      "artifacts": {
+        "evidence/s04-site-access/cli/result.json": "55d4ee3fbe79c461ac56377af2270e403962addbb5b137f81615503f7dfe3b83",
+        "evidence/s04-site-access/cli/tool-receipt.json": "a45cc60dfac5f5c92758216b2bf2ba1aa748fa5eba8525d3804f80e2cbf32ebc"
+      },
+      "inputs": {
+        "full_input_maps": "retained acknowledged source/host Space checkpoints and independent seals",
+        "server_sha256": "2da78389db498e84e5ab01077c260e7f331caf9ba8470a7d02d4ffd9ce3855a2",
+        "worker_sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c"
+      },
+      "commands": {
+        "actual_argv": "bound result.commands/source argv and cli/command.json; actual terminal receipts"
+      }
+    },
+    {
+      "id": "s04-access.independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "S04"
+      ],
+      "independent": true,
+      "reviewer": "s01_release_owner / tls_ab_independent / terminate_independent Astra ultra",
+      "observations": "Finite originalSQLite/target/ownedhost layers accepted; no full parent or legacydata equivalence.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "target": "owned Linux Go1.26 normal App/installedworker/SQLite; inherited proxy/CA unchanged",
+          "source": "fixed8a83 selected complete ORM/decorators with pinned dependencies/owned SQLite/fixedclock; not fullapp",
+          "limits": "finite fresh success/fail; no historicalbackfill/site/browser/fullS04"
+        },
+        "target_files": {
+          "cmd/owned-site-access-fixture/main.go": "84b1af3cc2a99ee5bd57476c9fea60df089ee153e5cca94b4a991ed50877100e",
+          "internal/app/plugin_original_resources.go": "8cc333982f2856ce441b19ca2a6e17e4fa9a861c512a7efedb8c79700ef92f35",
+          "internal/app/store.go": "10ee3cacadc897b38d8209cd50c029964506071a6b014b975d4610efcd987a38",
+          "internal/app/plugin_shared_site_access.go": "9a92117a90afeb3e968ae1ee7e9d6ff0a237673dcf2b44a4adbc07f9c3de2842",
+          "internal/app/plugin_shared_site_access_test.go": "dbe3963a60015d02ca408fb0df5ca220dc5c99e580ff7f3aa508fd0eab5a49b7",
+          "internal/app/plugin_shared_site_access_worker_test.go": "2a51a6d628cb555f747d7b19c4a6d8794ffada2d9c566a7f9eb0a8eefceeca06",
+          "internal/plugins/shared_site_access.go": "a866152f4a156d7325efe290bc0b67887325e6979e2450d6be031e85bb6fb19d",
+          "internal/plugins/shared_site_access_test.go": "11ece93b2162c7075916025f036bd2517e1f7b85e1e1f916917db8fc9cc6abc3",
+          "internal/plugins/siteaccess/statistics.go": "f8dfcd3696710e56a2cd07014e01a254158b4816c79b59dc0fed0e33cde9e564",
+          "internal/plugins/siteaccess/statistics_test.go": "5507f7c62d97efa92740c9991cfb96fc7929351cc367dc09acd49f8890fe9569",
+          "internal/plugins/siteaccess/testdata/source-access-results.json": "9303332121f5265e8881f3330aa785d32d08aa4c2e00054111f41954fadc9fe3"
+        },
+        "fixture_files": {
+          "evidence/s04-site-access/cli/driver.py": "6a58b8577355871e65f6d3c9f38e3ffa6951fb156aa79d1e365a00bcda74601f",
+          "evidence/s04-site-access/source/owned-cases.json": "6d9c85a4b7fb4095af401c8737a59ac53ea7a3e3dd001b5e28e29456f51d8723"
+        }
+      },
+      "artifacts": {
+        "evidence/s04-site-access/app/worker-independent.json": "d1d9c767072da2794379a9eaf172998543bced666cf8e0e9e6cad90fb69a9d8e",
+        "evidence/s04-site-access/app/app-independent.json": "6cf07e714d0fe4e874ab6c32fae70be7027c893529f5a5e36a731cc31a836931",
+        "evidence/s04-site-access/cli/independent.json": "df7ba73998b0a9e3aa8bfce034e12af1c81a623ed0a08ac1c1c08d4e9eae62e3"
+      },
+      "inputs": {
+        "full_input_maps": "retained acknowledged source/host Space checkpoints and independent seals",
+        "server_sha256": "2da78389db498e84e5ab01077c260e7f331caf9ba8470a7d02d4ffd9ce3855a2",
+        "worker_sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c"
+      },
+      "commands": {
+        "actual_argv": "bound result.commands/source argv and cli/command.json; actual terminal receipts"
+      }
     }
   ],
   "execution_contract": {
@@ -43423,28 +43620,33 @@
     "latest_scope_selection": "Current complete61-entry inventory retained by user164510; historical same-scope completion inherited; exact source-discovered missing behaviors continue, no whole-source redevelopment or duplicate shared-chain credit."
   },
   "resume": {
-    "next_slice": "S03 exact whitelist independent review/commit/bundle; then finite S04 SiteOper statistics discovery. Mac delivery remains quota blocked.",
-    "dirty_work": "Active release-light-media HEAD41c8 has only exact S03 publication75paths dirty (17products+57evidence+ledger). Protected prior tree remains760720 with S06 WIP; unrelated Browse2 held outside active until S03 commit; no reset/clean.",
+    "next_slice": "S04 exactfinitewhitelist independentreview/commit/bundle; then remainingSiteOper reads provenance. No repeatedoldgates; Macquota remains.",
+    "dirty_work": "S04 verified11products+44compactpublicationrecords+ledger awaitingfinalwhitelist/commit; unrelatedBrowse2 heldexactbytes; old760720S06dirty protected",
     "workers": [
+      {
+        "name": "coordinator",
+        "model": "Astra ultra",
+        "task": "sole ledger/publication/commit/backup authority"
+      },
       {
         "name": "terminate_independent",
         "model": "Astra ultra",
-        "task": "S03 final75path publication independent review; product frozen"
-      },
-      {
-        "name": "tls_ab_independent",
-        "model": "Astra ultra",
-        "task": "S04 source-only collector preparation, no source execution or product edits"
+        "task": "S04 final56-path publication review; CLI authorship explicitly excluded from own independent approval"
       },
       {
         "name": "s01_release_owner",
         "model": "Astra ultra",
-        "task": "S03 CLI runtime/secret review complete c8710910; idle"
+        "task": "S04 normalCLI static+runtime independent accepted; noactiveexecution"
+      },
+      {
+        "name": "tls_ab_independent",
+        "model": "Astra ultra",
+        "task": "S04 source/App/installedworker finite independent accepted; idle"
       },
       {
         "name": "c_userdata_owner",
         "model": "Astra ultra",
-        "task": "S03 native candidate02 frozen; idle"
+        "task": "S04 next3read sourcecomponent preparation only; frozenaccess11products unchanged"
       }
     ],
     "blockers": [
@@ -43585,7 +43787,7 @@
       "source_of_readback": "Parent relayed actual Mac push/readback; evidence-s15-11f922896377/{push-receipt,protected-after-push,ci-receipt}.json",
       "mac_protection": "Original three worktree HEAD/branch/index unchanged. Main had concurrent changes to2 existing files+5 new paths retained; other2 trees unchanged. Do not falsely claim all Mac files unchanged."
     },
-    "updated_at": "2026-10-31T22:08:15.065212+00:00",
+    "updated_at": "2026-10-31T22:44:14.993083+00:00",
     "latest_integrations": {
       "services_portable": "../evidence/coordinator/services-main-integration/portable-integration.json",
       "services_web": "../evidence/coordinator/services-main-integration/web-v3-result.json",
@@ -43645,15 +43847,16 @@
       "free_after": "2.3GiB including authorized oldbinary archive"
     },
     "delivery_pending": {
-      "commit": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+      "commit": "7b9b1d038b11d6235108889bea634e53e8b19d27",
       "included_commits": [
         "760720ed0a96fd9e7a647914c14545bde5ef857e",
         "b9e667cbc9532cb996993af30531327af3dcc541",
-        "41c8e93571bdb3551533d7817d20f9d967dc8eda"
+        "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+        "7b9b1d038b11d6235108889bea634e53e8b19d27"
       ],
       "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
       "remote_confirmed": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
-      "bundle_status": "S02 threecommit bundle actualSpace libfile_e8215c49578881918d7acefc9c0ba82e v0; currentS03 notcommittedyet",
+      "bundle_status": "actualSpace saved libfile_c2a07eef7c308191b096aca960a86e35 v0; fourcommit chain, not remote",
       "blocker": "Mac quota blocker last observed, no blind retry/model switch/new auth route"
     },
     "terminal_binary_archive": {
@@ -44703,7 +44906,7 @@
         "publication_independent_sha256": "d664bb7e11e7586f43cfd70bdf5490810042c93903f2e069eea57490143fbb6b"
       }
     },
-    "last_local_commit": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+    "last_local_commit": "7b9b1d038b11d6235108889bea634e53e8b19d27",
     "new_s06_getbyhash_reconstruction": {
       "base": "760720ed0a96fd9e7a647914c14545bde5ef857e",
       "source": "8a83efeacd3e26b82be495e17d50146e31c96a60",
@@ -45445,7 +45648,7 @@
       "prior_status_change": "only coordinator ledger and13explicitraw ledger evidence added duringpublication; no priorpath removed",
       "future_writes": "only this new authoritative ledger; prior ledger remains frozen historical snapshot, not competingliveauthority",
       "history_note": "19:28 authority transfer snapshot retains its original head/fields; current head from resume.last_local_commit, same authoritative path.",
-      "current_head": "41c8e93571bdb3551533d7817d20f9d967dc8eda"
+      "current_head": "7b9b1d038b11d6235108889bea634e53e8b19d27"
     },
     "new_s12_browse_reconstruction": {
       "base": "b9e667cbc9532cb996993af30531327af3dcc541",
@@ -47351,8 +47554,9 @@
       },
       "browse_unrelated_protection": {
         "receipt": "../protected-wip/s12-browse-sdk-during-s03/receipt.json",
-        "status": "2 old unrelated WIP held exactbytes, restore aftercandidatecommit; no other dirty moved",
-        "impact": "SDK01/fixture01 retained historical; final SDK02/fixture02 rebuilt without Browse. Native/App/normalCLI final gates completed against narrow candidate. Restore held exact bytes only after S03 commit."
+        "status": "afterS03commit two exact heldBrowsebytes restored as unrelateduntrackedWIP; no otherdirty touched",
+        "impact": "SDK01/fixture01 retained historical; final SDK02/fixture02 rebuilt without Browse. Native/App/normalCLI final gates completed against narrow candidate. Restore held exact bytes only after S03 commit.",
+        "restored_receipt": "../audits/s03-publication/postcommit-protection-and-browse-restore.json"
       },
       "sdk_final_candidate": {
         "status": "actualnormal3PASS independentlysealed finalnarrowcandidate",
@@ -48057,8 +48261,19 @@
         "result_path": "../test-instances/s03-command-cli01/result.json"
       },
       "publication": {
-        "status": "assembled exact accepted finite candidate, final whitelist review pending",
-        "path": "migration/evidence/s03-downloader-commands"
+        "status": "locallycommitted/bundleverified/actualSpace saved; remote pending Mac quota",
+        "commit": "7b9b1d038b11d6235108889bea634e53e8b19d27",
+        "parent": "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+        "bundle": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/external-backups/light-media-s03-7b9b1d038b11-20261031.bundle",
+        "bundle_sha256": "ba81574dbbe5f9dfaf39f8a5003ae9e9bcd0df842404646b8484cb2d306df1cd",
+        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "receipt": "../audits/s03-publication/commit-bundle-receipt.json",
+        "outer_tool": {
+          "chunk": "517aa1",
+          "exit": 0
+        },
+        "bundle_library_file_id": "libfile_c2a07eef7c308191b096aca960a86e35",
+        "postcommit_independent_sha256": "450b6f30a1e1c5c0ec44a7dd3fd98eab3966e326141620b095f7ffe6293e8fa0"
       },
       "owners_history_note": "owners map below is historical early phase assignment, not current live agent status; current roles in resume.workers",
       "external_2206": {
@@ -48099,7 +48314,698 @@
       "remote_confirmed": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
       "blocker": "Mac Git delivery usage cap last observed; no new cloudGit route/no model switch",
       "bundle_status": "actualSpace saved libfile_68214c4489548191911635167b273b87 v0; remote pending"
-    }
+    },
+    "new_s04_access_reconstruction": {
+      "base": "7b9b1d038b11d6235108889bea634e53e8b19d27",
+      "status": "finite source/target/worker/normalCLI independentlyaccepted; exactpublication finalreviewpending",
+      "scope": "only SiteOper.success/fail access statistics, notsign-in/fullDAO/fullS04; no S06/browse artifact dependency",
+      "source_preparation": "../audits/s04-source-preparation/preparation-seal.json",
+      "source_static_acceptance_sha256": "a0d0b651fa70bb6d933203b354ec7558a20a941843e16004de1aed67ae98aa45",
+      "permissions": "existing pinned SQLAlchemy/greenlet/typing deps only, no app/requests/urllib3/nativevendor imports or probes; exact ownnewSQLite/fixedclock/no real DB/network",
+      "product_write_owner": {
+        "historical_preexecution": "c_userdata_owner: internal/plugins/siteaccess only; no builds until sourceoracle+review",
+        "current": "11accessproducts frozen after actualsource/SDK/App/worker/CLI acceptance; coordinator publication, no furtherproductwrites"
+      },
+      "source_execution": {
+        "warm": {
+          "started": "2026-10-31T22:15:32.704893+00:00",
+          "driver_pid": 2,
+          "argv": [
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+            "-I",
+            "-S",
+            "-B",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-source-preparation/capture_access_statistics.py",
+            "warm",
+            "capture01"
+          ],
+          "status": "PASS",
+          "environment_proxy_unchanged": true,
+          "scope": "complete selected original ORM/decorators with real owned SQLite and fixed clock, not full app/source network",
+          "resource_sample": {
+            "scratch_free": 50990260224,
+            "tmp_free": 5225631744
+          },
+          "exit": 0,
+          "raw_sha256": "9303332121f5265e8881f3330aa785d32d08aa4c2e00054111f41954fadc9fe3",
+          "selected_nodes": 26,
+          "bound_inputs": 391,
+          "rows": 11,
+          "database_sha256": "0ebfbc22e9e6eec171d0fe5c08edf7a48595c1db54a02d611eee2b33fe876e53",
+          "cases": 11,
+          "actual_calls": 19,
+          "actual_error_observations": 5,
+          "ended": "2026-10-31T22:15:33.724037+00:00"
+        },
+        "cold": {
+          "started": "2026-10-31T22:15:33.724637+00:00",
+          "driver_pid": 2,
+          "argv": [
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+            "-I",
+            "-S",
+            "-B",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-source-preparation/capture_access_statistics.py",
+            "cold",
+            "capture01"
+          ],
+          "status": "PASS",
+          "environment_proxy_unchanged": true,
+          "scope": "complete selected original ORM/decorators with real owned SQLite and fixed clock, not full app/source network",
+          "resource_sample": {
+            "scratch_free": 50989932544,
+            "tmp_free": 5225631744
+          },
+          "exit": 0,
+          "raw_sha256": "e6d273ba401f7f2c288461388d5c4a36892e13605ee136b77f8de20d3df35188",
+          "selected_nodes": 26,
+          "bound_inputs": 391,
+          "rows": 11,
+          "database_sha256": "0ebfbc22e9e6eec171d0fe5c08edf7a48595c1db54a02d611eee2b33fe876e53",
+          "readonly_cold_rows_equal": true,
+          "actual_cold_original_queries": 11,
+          "ended": "2026-10-31T22:15:34.643950+00:00"
+        },
+        "outer_tool_receipt": {
+          "session_id": 87501,
+          "initial_chunk": "977a1d",
+          "terminal_chunk": "50bd12",
+          "exit_code": 0,
+          "observed_at": "2026-10-31T22:15:51.256520+00:00"
+        },
+        "independent_final_sha256": "83dc64c6d6ca49923f36cee829ee063de54909c1795305be654adc1a371a215d"
+      },
+      "pure01": {
+        "status": "actualnormal2PASS and independentfiniteaccepted; pure component gate only, laterSQLite/SDK/host gates separately recorded",
+        "result": {
+          "started": "2026-10-31T22:20:11.668673+00:00",
+          "driver_pid": 2,
+          "package": "./internal/plugins/siteaccess",
+          "pattern": "^TestSiteAccess(ActualSourceObservations|RecordOwnershipAndIntegerBoundary)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/plugins/siteaccess"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-pure01.test",
+                "./internal/plugins/siteaccess"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/plugins/siteaccess",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-pure01.test",
+                "-test.v",
+                "-test.run",
+                "^TestSiteAccess(ActualSourceObservations|RecordOwnershipAndIntegerBoundary)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T22:20:11.668688+00:00",
+              "scratch_free": 50987528192,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T22:20:11.849835+00:00",
+              "scratch_free": 50986926080,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T22:20:12.200638+00:00",
+              "scratch_free": 50981216256,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 1468,
+          "program_sha256": "c48847c7c271986bad936c8fbdcf0b9c932e9a7e87cfecf378d7732e69b75dc2",
+          "root_passes": [
+            "TestSiteAccessActualSourceObservations",
+            "TestSiteAccessRecordOwnershipAndIntegerBoundary"
+          ],
+          "ended": "2026-10-31T22:20:12.297291+00:00"
+        },
+        "outer_tool_receipt": {
+          "tool_chunk": "b935c5",
+          "exit_code": 0,
+          "session_id": null,
+          "completion": "exec completed within initial call",
+          "observed_at": "2026-10-31T22:20:23.784388+00:00"
+        },
+        "independent_final_sha256": "74d03aca5cb5ca2b0558df7a8900175815967bdb293a182bc54e5deb6922a792"
+      },
+      "external_2219": {
+        "at": "2026-10-31T22:20:23.784388+00:00",
+        "library_file_id": "libfile_cf412747f43c819185e8f032cbddb953",
+        "version": 0,
+        "filename": "s04-source-pure-wip-20261031T2219.manifest.tar.gz",
+        "bytes": 1044237,
+        "sha256": "6212e35adefe0859649a448e746d257f86fa4c744deb1d04318649bfded6dc81",
+        "base_bundle_library_id": "libfile_c2a07eef7c308191b096aca960a86e35",
+        "status": "parentconfirmedactualSpace saved/xattrs0, thenWIP snapshot notpuretestPASS"
+      },
+      "browse_protection": {
+        "at": "2026-10-31T22:22:25.001436+00:00",
+        "base": "7b9b1d038b11d6235108889bea634e53e8b19d27",
+        "files": {
+          "shared_torrents_browse.go": "d4f15363f457d971d8547da928973f61a61f4420a5b373b2248c5280db858eb9",
+          "shared_torrents_browse_test.go": "f66256ad0281065c02c212f061d08ffeb29b405a9ea8415b499a5b5ed15e912b"
+        },
+        "status": "unrelated pendingBrowse2 held before first S04 SDK compilation, preserve bytes; restore afterS04 publication; no git layout/reset/otherdirty changes"
+      },
+      "sdk01": {
+        "status": "actualnormal2PASS recordingHostCaller, notactualhost",
+        "result": {
+          "started": "2026-10-31T22:24:20.025149+00:00",
+          "driver_pid": 2,
+          "package": "./internal/plugins",
+          "pattern": "^TestSharedSiteAccess(Wire|Boundaries)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/plugins"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-sdk01.test",
+                "./internal/plugins"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/plugins",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-sdk01.test",
+                "-test.v",
+                "-test.run",
+                "^TestSharedSiteAccess(Wire|Boundaries)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T22:24:20.025164+00:00",
+              "scratch_free": 50980687872,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T22:24:20.324437+00:00",
+              "scratch_free": 50979794944,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T22:24:22.736383+00:00",
+              "scratch_free": 50963243008,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 1928,
+          "program_sha256": "ec1c348fdbd99a526c4449d2aa40e672603540c50f4d2dbe458960e39d3100dc",
+          "root_passes": [
+            "TestSharedSiteAccessWire",
+            "TestSharedSiteAccessBoundaries"
+          ],
+          "ended": "2026-10-31T22:24:22.884624+00:00"
+        },
+        "outer_tool_receipt": {
+          "session_id": 12794,
+          "initial_chunk": "58ae04",
+          "terminal_chunk": "2eb218",
+          "exit_code": 0,
+          "observed_at": "2026-10-31T22:25:54.573299+00:00"
+        }
+      },
+      "app_preexecution_correction": {
+        "status": "candidate01 unexecuted wrongraw-note expectation preserved; candidate02 actualApp3+worker2/race3 accepted within finiteint64note boundary",
+        "reason": "sourceORM hydrates JSON before fail; validJSON raw shape preserved, invalidJSON must fail; finiteint64Note boundary explicit"
+      },
+      "app01": {
+        "status": "actualnormal3PASS realownedSQLite source19/cold/SQLrollback+resourcehandler; notactualworker/CLI",
+        "result": {
+          "started": "2026-10-31T22:27:21.142803+00:00",
+          "driver_pid": 2,
+          "package": "./internal/app",
+          "pattern": "^TestSharedSiteAccess(ActualSourceSQLiteAndCold|SQLiteFailureAndRawPreservation|ResourceFiniteBoundary)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-app01.test",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-app01.test",
+                "-test.v",
+                "-test.run",
+                "^TestSharedSiteAccess(ActualSourceSQLiteAndCold|SQLiteFailureAndRawPreservation|ResourceFiniteBoundary)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T22:27:21.142818+00:00",
+              "scratch_free": 50962608128,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T22:27:22.298579+00:00",
+              "scratch_free": 50958954496,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T22:27:54.226160+00:00",
+              "scratch_free": 50765975552,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 6218,
+          "program_sha256": "e7a8d7cec2ffe1655d8c3dc5e9f03256e1c8dfa6b90424105bdcad7bb4513946",
+          "root_passes": [
+            "TestSharedSiteAccessActualSourceSQLiteAndCold",
+            "TestSharedSiteAccessSQLiteFailureAndRawPreservation",
+            "TestSharedSiteAccessResourceFiniteBoundary"
+          ],
+          "ended": "2026-10-31T22:27:54.726843+00:00"
+        },
+        "outer_tool_receipt": {
+          "session_id": 58092,
+          "initial_chunk": "d6b4d4",
+          "terminal_chunk": "1902ad",
+          "exit_code": 0,
+          "observed_at": "2026-10-31T22:30:13.459719+00:00"
+        }
+      },
+      "worker_sequence": {
+        "status": "actualnormal2/hostrace3PASS, normalworkerprogram; independentfiniteaccepted",
+        "receipt": {
+          "session_id": 81022,
+          "initial_chunk": "dd4160",
+          "terminal_chunk": "420bd7",
+          "exit_code": 0,
+          "observed_at": "2026-10-31T22:35:30.039345+00:00",
+          "sequence": [
+            "s04-worker01",
+            "s04-worker-race01"
+          ]
+        },
+        "normal": {
+          "started": "2026-10-31T22:32:28.095301+00:00",
+          "driver_pid": 7,
+          "package": "./internal/app",
+          "pattern": "^(TestSharedSiteAccessActualWorkerRecoveryAndScopes|TestSharedSiteAccessActualWorkerColdPersistence)$",
+          "race": false,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-worker01.test",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-worker01.test",
+                "-test.v",
+                "-test.run",
+                "^(TestSharedSiteAccessActualWorkerRecoveryAndScopes|TestSharedSiteAccessActualWorkerColdPersistence)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "worker_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-fixture01",
+          "worker_sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c",
+          "worker_instrumentation": "normal frozen artifact; race flag applies host test program only",
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T22:32:28.095326+00:00",
+              "scratch_free": 50757849088,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T22:32:29.162271+00:00",
+              "scratch_free": 50754199552,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T22:32:56.655579+00:00",
+              "scratch_free": 50589507584,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 6219,
+          "program_sha256": "3881b80442d6a8fcdf016868aad55909a9fac33d7f063508b4923fa03826b902",
+          "root_passes": [
+            "TestSharedSiteAccessActualWorkerRecoveryAndScopes",
+            "TestSharedSiteAccessActualWorkerColdPersistence"
+          ],
+          "ended": "2026-10-31T22:32:57.566665+00:00"
+        },
+        "race": {
+          "started": "2026-10-31T22:32:57.632800+00:00",
+          "driver_pid": 133,
+          "package": "./internal/app",
+          "pattern": "^(TestSharedSiteAccessResourceFiniteBoundary|TestSharedSiteAccessActualWorkerRecoveryAndScopes|TestSharedSiteAccessActualWorkerColdPersistence)$",
+          "race": true,
+          "status": "PASS",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-test",
+                "-json",
+                "-race",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "compile",
+              "argv": [
+                "go",
+                "test",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-c",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-worker-race01.test",
+                "-race",
+                "./internal/app"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "tests",
+              "argv": [
+                "go",
+                "tool",
+                "test2json",
+                "-t",
+                "-p",
+                "./internal/app",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-worker-race01.test",
+                "-test.v",
+                "-test.run",
+                "^(TestSharedSiteAccessResourceFiniteBoundary|TestSharedSiteAccessActualWorkerRecoveryAndScopes|TestSharedSiteAccessActualWorkerColdPersistence)$",
+                "-test.count=1",
+                "-test.timeout=90s"
+              ],
+              "exit": 0
+            }
+          ],
+          "environment_proxy_unchanged": true,
+          "worker_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-fixture01",
+          "worker_sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c",
+          "worker_instrumentation": "normal frozen artifact; race flag applies host test program only",
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "at": "2026-10-31T22:32:57.632825+00:00",
+              "scratch_free": 50588004352,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "compile",
+              "at": "2026-10-31T22:32:58.879838+00:00",
+              "scratch_free": 50584907776,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "tests",
+              "at": "2026-10-31T22:33:44.875764+00:00",
+              "scratch_free": 50345172992,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 6228,
+          "program_sha256": "361a2fe751fcf4b6d7f6f6e773a033038679b511b9cb26cb7252282f4982ddc8",
+          "root_passes": [
+            "TestSharedSiteAccessResourceFiniteBoundary",
+            "TestSharedSiteAccessActualWorkerRecoveryAndScopes",
+            "TestSharedSiteAccessActualWorkerColdPersistence"
+          ],
+          "ended": "2026-10-31T22:33:50.407731+00:00"
+        },
+        "independent_final_sha256": "d1d9c767072da2794379a9eaf172998543bced666cf8e0e9e6cad90fb69a9d8e"
+      },
+      "external_2236": {
+        "at": "2026-10-31T22:40:23.030503+00:00",
+        "library_file_id": "libfile_70d03963a0b881918f1d9cab79731d73",
+        "version": 0,
+        "filename": "s04-host-wip-20261031T2236.tar.gz",
+        "bytes": 5416420,
+        "sha256": "43bc8dff37e5752e620028f51ce12408ee3096be1a27dc8818d9f0aa145f3ae9",
+        "prerequisite_library_id": "libfile_cf412747f43c819185e8f032cbddb953",
+        "status": "parentconfirmedactualSpace saved/xattrs0; WIP snapshot excludes laterworkerreview/CLI, notdelivery"
+      },
+      "server01": {
+        "status": "actualchildbuild0,input3974before/after/currentequal; outerreceiptunavailable(truncatedtool), notserviceexecution",
+        "result": {
+          "at": "2026-10-31T22:35:30.142052+00:00",
+          "status": "PASS",
+          "kind": "newnormalserver compile only; uses unchanged restoredUI assets, notnewbrowser acceptance",
+          "commands": [
+            {
+              "label": "go-list",
+              "argv": [
+                "go",
+                "list",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-deps",
+                "-json",
+                "./cmd/server"
+              ],
+              "exit": 0
+            },
+            {
+              "label": "build",
+              "argv": [
+                "go",
+                "build",
+                "-mod=readonly",
+                "-buildvcs=false",
+                "-p=1",
+                "-o",
+                "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-server01",
+                "./cmd/server"
+              ],
+              "exit": 0
+            }
+          ],
+          "resource_samples": [
+            {
+              "phase": "go-list",
+              "scratch_free": 50343616512,
+              "tmp_free": 5225631744
+            },
+            {
+              "phase": "build",
+              "scratch_free": 50341343232,
+              "tmp_free": 5225631744
+            }
+          ],
+          "input_count": 3974,
+          "program_sha256": "2da78389db498e84e5ab01077c260e7f331caf9ba8470a7d02d4ffd9ce3855a2",
+          "ended": "2026-10-31T22:35:40.316201+00:00"
+        }
+      },
+      "normal_cli": {
+        "status": "actualPASS and s01 independentfiniteaccepted",
+        "receipt": {
+          "observed_at": "2026-10-31T22:41:13.366345+00:00",
+          "session_id": 70983,
+          "initial_chunk": "c22232",
+          "terminal_chunk": "47dec4",
+          "exit_code": 0,
+          "child_exit": 0
+        },
+        "result_path": "../test-instances/s04-access-normal01/result.json",
+        "host_pids": [
+          26,
+          51
+        ],
+        "all_host_exit0": true
+      },
+      "publication": {
+        "status": "assembled acceptedfinitecandidate, finalwhitelistreviewpending",
+        "path": "migration/evidence/s04-site-access"
+      }
+    },
+    "next_action": "S04 exactfinitewhitelist independentreview/commit/bundle; then remainingSiteOper reads provenance. No repeatedoldgates; Macquota remains.",
+    "workers_history_before_s04_publication": [
+      {
+        "name": "terminate_independent",
+        "model": "Astra ultra",
+        "task": "S03 final75path publication independent review; product frozen"
+      },
+      {
+        "name": "tls_ab_independent",
+        "model": "Astra ultra",
+        "task": "S04 source-only collector preparation, no source execution or product edits"
+      },
+      {
+        "name": "s01_release_owner",
+        "model": "Astra ultra",
+        "task": "S03 CLI runtime/secret review complete c8710910; idle"
+      },
+      {
+        "name": "c_userdata_owner",
+        "model": "Astra ultra",
+        "task": "S03 native candidate02 frozen; idle"
+      }
+    ]
   },
   "external_inventory": [
     {

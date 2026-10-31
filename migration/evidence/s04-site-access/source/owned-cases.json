@@ -1,0 +1,226 @@
+[
+  {
+    "case": "initial_none_then_value_fail_none",
+    "domain": "none-owned.invalid",
+    "seed": null,
+    "actions": [
+      {
+        "method": "success",
+        "time": "2026-10-31 12:00:00",
+        "seconds": null
+      },
+      {
+        "method": "success",
+        "time": "2026-10-31 12:00:01",
+        "seconds": 7
+      },
+      {
+        "method": "fail",
+        "time": "2026-10-31 12:00:02"
+      },
+      {
+        "method": "success",
+        "time": "2026-10-31 12:00:03",
+        "seconds": null
+      }
+    ]
+  },
+  {
+    "case": "initial_zero",
+    "domain": "zero-owned.invalid",
+    "seed": null,
+    "actions": [
+      {
+        "method": "success",
+        "time": "2026-10-31 12:01:00",
+        "seconds": 0
+      }
+    ]
+  },
+  {
+    "case": "initial_negative",
+    "domain": "negative-owned.invalid",
+    "seed": null,
+    "actions": [
+      {
+        "method": "success",
+        "time": "2026-10-31 12:02:00",
+        "seconds": -4
+      }
+    ]
+  },
+  {
+    "case": "same_second_overwrite",
+    "domain": "same-second-owned.invalid",
+    "seed": null,
+    "actions": [
+      {
+        "method": "success",
+        "time": "2026-10-31 12:03:00",
+        "seconds": 5
+      },
+      {
+        "method": "success",
+        "time": "2026-10-31 12:03:00",
+        "seconds": 9
+      },
+      {
+        "method": "success",
+        "time": "2026-10-31 12:03:00",
+        "seconds": 0
+      }
+    ]
+  },
+  {
+    "case": "existing_none_preserves_nonempty_note",
+    "domain": "preserve-owned.invalid",
+    "seed": {
+      "success": 4,
+      "fail": 2,
+      "seconds": -8,
+      "lst_state": 1,
+      "lst_mod_date": "2026-10-30 00:00:00",
+      "note": {
+        "2026-10-30 00:00:00": 3,
+        "2026-10-30 00:00:01": -7
+      }
+    },
+    "actions": [
+      {
+        "method": "success",
+        "time": "2026-10-31 12:04:00",
+        "seconds": null
+      }
+    ]
+  },
+  {
+    "case": "eleven_entries_pretrim_denominator",
+    "domain": "eleven-owned.invalid",
+    "seed": {
+      "success": 4,
+      "fail": 2,
+      "seconds": 99,
+      "lst_state": 1,
+      "lst_mod_date": "2026-10-30 00:00:00",
+      "note": {
+        "2026-10-30 00:00:00": 1,
+        "2026-10-30 00:00:01": 2,
+        "2026-10-30 00:00:02": 3,
+        "2026-10-30 00:00:03": 4,
+        "2026-10-30 00:00:04": 5,
+        "2026-10-30 00:00:05": 6,
+        "2026-10-30 00:00:06": 7,
+        "2026-10-30 00:00:07": 8,
+        "2026-10-30 00:00:08": 9,
+        "2026-10-30 00:00:09": 10
+      }
+    },
+    "actions": [
+      {
+        "method": "success",
+        "time": "2026-10-31 12:05:00",
+        "seconds": 11
+      }
+    ]
+  },
+  {
+    "case": "negative_floor",
+    "domain": "floor-owned.invalid",
+    "seed": {
+      "success": 4,
+      "fail": 2,
+      "seconds": 17,
+      "lst_state": 1,
+      "lst_mod_date": "2026-10-30 00:00:00",
+      "note": {
+        "2026-10-30 00:00:00": -2
+      }
+    },
+    "actions": [
+      {
+        "method": "success",
+        "time": "2026-10-31 12:06:00",
+        "seconds": -3
+      }
+    ]
+  },
+  {
+    "case": "zero_average_retains_old_seconds",
+    "domain": "zero-average-owned.invalid",
+    "seed": {
+      "success": 4,
+      "fail": 2,
+      "seconds": 17,
+      "lst_state": 1,
+      "lst_mod_date": "2026-10-30 00:00:00",
+      "note": {
+        "2026-10-30 00:00:00": -1
+      }
+    },
+    "actions": [
+      {
+        "method": "success",
+        "time": "2026-10-31 12:07:00",
+        "seconds": 1
+      }
+    ]
+  },
+  {
+    "case": "initial_fail_then_fail_then_success_none",
+    "domain": "fail-first-owned.invalid",
+    "seed": null,
+    "actions": [
+      {
+        "method": "fail",
+        "time": "2026-10-31 12:08:00"
+      },
+      {
+        "method": "fail",
+        "time": "2026-10-31 12:08:01"
+      },
+      {
+        "method": "success",
+        "time": "2026-10-31 12:08:02",
+        "seconds": null
+      }
+    ]
+  },
+  {
+    "case": "fail_preserves_success_seconds_note",
+    "domain": "fail-preserve-owned.invalid",
+    "seed": {
+      "success": 4,
+      "fail": 2,
+      "seconds": -6,
+      "lst_state": 1,
+      "lst_mod_date": "2026-10-30 00:00:00",
+      "note": {
+        "2026-10-30 00:00:00": 4
+      }
+    },
+    "actions": [
+      {
+        "method": "fail",
+        "time": "2026-10-31 12:09:00"
+      }
+    ]
+  },
+  {
+    "case": "borrowed_session_exact_domain",
+    "domain": "  Owned.雪.invalid/Path  ",
+    "seed": null,
+    "actions": [
+      {
+        "method": "success",
+        "time": "2026-10-31 12:10:00",
+        "seconds": 4,
+        "session": "borrowed"
+      },
+      {
+        "method": "fail",
+        "time": "2026-10-31 12:10:01",
+        "session": "borrowed"
+      }
+    ]
+  }
+]

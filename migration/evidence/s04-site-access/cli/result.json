@@ -1,0 +1,1066 @@
+{
+  "status": "PASS",
+  "kind": "S04 normal hosts / installed SDK / read-only owned SQLite observations",
+  "calls": [
+    {
+      "at": "2026-10-31T22:40:59.111272+00:00",
+      "host_pid": 26,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-001.body",
+      "sha256": "943fe2faa1b78f6cbfb76d6002a663d5186bfdabb59f54389781b286b1de7643"
+    },
+    {
+      "at": "2026-10-31T22:40:59.113180+00:00",
+      "host_pid": 26,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-10-31T22:40:59.177788+00:00",
+      "host_pid": 26,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-003.body",
+      "sha256": "b94479384a1f03dad5447c2ed669a6c8968206a920bd15e3e3d6fe15bef667f7"
+    },
+    {
+      "at": "2026-10-31T22:40:59.181576+00:00",
+      "host_pid": 26,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-004.body",
+      "sha256": "bb8589e67b2af9da1c89091eff3b87b4d888098f85e17c0969081a0ca1430dfe"
+    },
+    {
+      "at": "2026-10-31T22:40:59.276979+00:00",
+      "host_pid": 26,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedSiteAccess/access",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-005.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-10-31T22:40:59.279747+00:00",
+      "host_pid": 26,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedSiteAccess/access",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-006.body",
+      "sha256": "dabffbc8c0d0bb7dd1f885de30f59851c1f36fc11acbd1f295447849509a4e70"
+    },
+    {
+      "at": "2026-10-31T22:40:59.296954+00:00",
+      "host_pid": 26,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedSiteAccess/access",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-007.body",
+      "sha256": "38cf86c7990d5579e45433cf947b41baea6a909d89243254a5c5da03eda368ca"
+    },
+    {
+      "at": "2026-10-31T22:40:59.314386+00:00",
+      "host_pid": 26,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedSiteAccess/access",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-008.body",
+      "sha256": "63dd2aeee0ef915d8e4872b288ebf195b3038dfcde4fdbaecc586b330c1c80f4"
+    },
+    {
+      "at": "2026-10-31T22:40:59.565846+00:00",
+      "host_pid": 51,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-009.body",
+      "sha256": "7042ade0d011671b1c0cdb508c792cf8d9800a69311384598cf47082d9ac8997"
+    },
+    {
+      "at": "2026-10-31T22:40:59.568017+00:00",
+      "host_pid": 51,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-10-31T22:40:59.633070+00:00",
+      "host_pid": 51,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-011.body",
+      "sha256": "145f91e2b6ad39ba97f38ce582a60a8137e7b74d8ff5aee5a32f9babe8800132"
+    },
+    {
+      "at": "2026-10-31T22:40:59.634942+00:00",
+      "host_pid": 51,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedSiteAccess/access",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-012.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-10-31T22:40:59.637934+00:00",
+      "host_pid": 51,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedSiteAccess/access",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-013.body",
+      "sha256": "9136481224fbdc2ea5eb3373e953c178b09ff4f84e79b24212f164e2996abe87"
+    }
+  ],
+  "peer_calls": [
+    {
+      "at": "2026-10-31T22:40:59.183425+00:00",
+      "method": "GET",
+      "path": "/index",
+      "request_body_bytes": 0,
+      "status": 200,
+      "response_bytes": 1040,
+      "response_completed": true
+    },
+    {
+      "at": "2026-10-31T22:40:59.184508+00:00",
+      "method": "GET",
+      "path": "/worker",
+      "request_body_bytes": 0,
+      "status": 200,
+      "response_bytes": 5265162,
+      "response_completed": true
+    }
+  ],
+  "processes": [
+    {
+      "pid": 26,
+      "identity": {
+        "ppid": 6,
+        "starttime": "4353788"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data",
+      "executable_sha256": "2da78389db498e84e5ab01077c260e7f331caf9ba8470a7d02d4ffd9ce3855a2",
+      "owned_listener_inode": "763950",
+      "exit": 0
+    },
+    {
+      "pid": 51,
+      "identity": {
+        "ppid": 6,
+        "starttime": "4353823"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data",
+      "executable_sha256": "2da78389db498e84e5ab01077c260e7f331caf9ba8470a7d02d4ffd9ce3855a2",
+      "owned_listener_inode": "763083",
+      "exit": 0
+    }
+  ],
+  "queries": [
+    {
+      "label": "none_fail_and_first_nonzero",
+      "host_pid": 26,
+      "response": {
+        "pid": 44,
+        "init_count": 1,
+        "invocation": 1,
+        "requested": 3,
+        "completed": 3,
+        "succeeded": 3,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "op": "success",
+            "domain": "owned-site-access.invalid",
+            "ok": true,
+            "source_none": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 53,
+              "output_json_bytes": 4
+            }
+          },
+          {
+            "index": 1,
+            "op": "fail",
+            "domain": "owned-site-access.invalid",
+            "ok": true,
+            "source_none": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 38,
+              "output_json_bytes": 4
+            }
+          },
+          {
+            "index": 2,
+            "op": "success",
+            "domain": "owned-site-access-second.invalid",
+            "ok": true,
+            "source_none": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 57,
+              "output_json_bytes": 4
+            }
+          }
+        ]
+      },
+      "local_naive_call_window": [
+        "2026-11-01 07:40:59",
+        "2026-11-01 07:40:59"
+      ],
+      "before": {},
+      "after": {
+        "owned-site-access.invalid": {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 1,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{}"
+        },
+        "owned-site-access-second.invalid": {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 7,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      }
+    },
+    {
+      "label": "invalid_wire_then_same_worker_zero_recovery",
+      "host_pid": 26,
+      "response": {
+        "pid": 44,
+        "init_count": 1,
+        "invocation": 2,
+        "requested": 2,
+        "completed": 2,
+        "succeeded": 1,
+        "failed": 1,
+        "ok": false,
+        "results": [
+          {
+            "index": 0,
+            "op": "invalid_wire",
+            "domain": "owned-site-access.invalid",
+            "ok": false,
+            "source_none": false,
+            "error_code": "host_operation_failed",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 0,
+              "failed": 1,
+              "input_json_bytes": 65,
+              "output_json_bytes": 0
+            }
+          },
+          {
+            "index": 1,
+            "op": "success",
+            "domain": "owned-site-access.invalid",
+            "ok": true,
+            "source_none": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 50,
+              "output_json_bytes": 4
+            }
+          }
+        ]
+      },
+      "local_naive_call_window": [
+        "2026-11-01 07:40:59",
+        "2026-11-01 07:40:59"
+      ],
+      "before": {
+        "owned-site-access.invalid": {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 1,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{}"
+        },
+        "owned-site-access-second.invalid": {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 7,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      },
+      "after": {
+        "owned-site-access.invalid": {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 2,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":1}"
+        },
+        "owned-site-access-second.invalid": {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 7,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      }
+    },
+    {
+      "label": "old_caller_denied_then_fail_second_domain",
+      "host_pid": 26,
+      "response": {
+        "pid": 44,
+        "init_count": 1,
+        "invocation": 3,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "previous_probe": {
+          "label": "previous_invocation_fixed_frame",
+          "available": true,
+          "denied": true,
+          "error_code": "invalid_host_call",
+          "host_calls": {
+            "total": 1,
+            "succeeded": 0,
+            "failed": 1,
+            "input_json_bytes": 53,
+            "output_json_bytes": 0
+          }
+        },
+        "results": [
+          {
+            "index": 0,
+            "op": "fail",
+            "domain": "owned-site-access-second.invalid",
+            "ok": true,
+            "source_none": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 45,
+              "output_json_bytes": 4
+            }
+          }
+        ]
+      },
+      "local_naive_call_window": [
+        "2026-11-01 07:40:59",
+        "2026-11-01 07:40:59"
+      ],
+      "before": {
+        "owned-site-access.invalid": {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 2,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":1}"
+        },
+        "owned-site-access-second.invalid": {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 7,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      },
+      "after": {
+        "owned-site-access.invalid": {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 2,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":1}"
+        },
+        "owned-site-access-second.invalid": {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 7,
+          "lst_state": 1,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      }
+    },
+    {
+      "label": "cold_same_DB_new_worker_success_none",
+      "host_pid": 51,
+      "response": {
+        "pid": 66,
+        "init_count": 1,
+        "invocation": 1,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "op": "success",
+            "domain": "owned-site-access.invalid",
+            "ok": true,
+            "source_none": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 53,
+              "output_json_bytes": 4
+            }
+          }
+        ]
+      },
+      "local_naive_call_window": [
+        "2026-11-01 07:40:59",
+        "2026-11-01 07:40:59"
+      ],
+      "before": {
+        "owned-site-access.invalid": {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 2,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":1}"
+        },
+        "owned-site-access-second.invalid": {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 7,
+          "lst_state": 1,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      },
+      "after": {
+        "owned-site-access.invalid": {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 3,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":1}"
+        },
+        "owned-site-access-second.invalid": {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 7,
+          "lst_state": 1,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      }
+    }
+  ],
+  "database_observations": [
+    {
+      "label": "initial_empty",
+      "at": "2026-10-31T22:40:59.180322+00:00",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/light-media.db",
+      "read_only": true,
+      "table": "source_site_access_statistic",
+      "columns": [
+        "id",
+        "domain",
+        "success",
+        "fail",
+        "seconds",
+        "lst_state",
+        "lst_mod_date",
+        "note"
+      ],
+      "domains": [
+        "owned-site-access.invalid",
+        "owned-site-access-second.invalid"
+      ],
+      "rows": []
+    },
+    {
+      "label": "none_fail_and_first_nonzero:before",
+      "at": "2026-10-31T22:40:59.278733+00:00",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/light-media.db",
+      "read_only": true,
+      "table": "source_site_access_statistic",
+      "columns": [
+        "id",
+        "domain",
+        "success",
+        "fail",
+        "seconds",
+        "lst_state",
+        "lst_mod_date",
+        "note"
+      ],
+      "domains": [
+        "owned-site-access.invalid",
+        "owned-site-access-second.invalid"
+      ],
+      "rows": []
+    },
+    {
+      "label": "none_fail_and_first_nonzero:after",
+      "at": "2026-10-31T22:40:59.293144+00:00",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/light-media.db",
+      "read_only": true,
+      "table": "source_site_access_statistic",
+      "columns": [
+        "id",
+        "domain",
+        "success",
+        "fail",
+        "seconds",
+        "lst_state",
+        "lst_mod_date",
+        "note"
+      ],
+      "domains": [
+        "owned-site-access.invalid",
+        "owned-site-access-second.invalid"
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 1,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{}"
+        },
+        {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 7,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      ]
+    },
+    {
+      "label": "invalid_wire_then_same_worker_zero_recovery:before",
+      "at": "2026-10-31T22:40:59.295648+00:00",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/light-media.db",
+      "read_only": true,
+      "table": "source_site_access_statistic",
+      "columns": [
+        "id",
+        "domain",
+        "success",
+        "fail",
+        "seconds",
+        "lst_state",
+        "lst_mod_date",
+        "note"
+      ],
+      "domains": [
+        "owned-site-access.invalid",
+        "owned-site-access-second.invalid"
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 1,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{}"
+        },
+        {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 7,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      ]
+    },
+    {
+      "label": "invalid_wire_then_same_worker_zero_recovery:after",
+      "at": "2026-10-31T22:40:59.311860+00:00",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/light-media.db",
+      "read_only": true,
+      "table": "source_site_access_statistic",
+      "columns": [
+        "id",
+        "domain",
+        "success",
+        "fail",
+        "seconds",
+        "lst_state",
+        "lst_mod_date",
+        "note"
+      ],
+      "domains": [
+        "owned-site-access.invalid",
+        "owned-site-access-second.invalid"
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 2,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":1}"
+        },
+        {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 7,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      ]
+    },
+    {
+      "label": "old_caller_denied_then_fail_second_domain:before",
+      "at": "2026-10-31T22:40:59.313077+00:00",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/light-media.db",
+      "read_only": true,
+      "table": "source_site_access_statistic",
+      "columns": [
+        "id",
+        "domain",
+        "success",
+        "fail",
+        "seconds",
+        "lst_state",
+        "lst_mod_date",
+        "note"
+      ],
+      "domains": [
+        "owned-site-access.invalid",
+        "owned-site-access-second.invalid"
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 2,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":1}"
+        },
+        {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 0,
+          "seconds": 7,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      ]
+    },
+    {
+      "label": "old_caller_denied_then_fail_second_domain:after",
+      "at": "2026-10-31T22:40:59.323418+00:00",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/light-media.db",
+      "read_only": true,
+      "table": "source_site_access_statistic",
+      "columns": [
+        "id",
+        "domain",
+        "success",
+        "fail",
+        "seconds",
+        "lst_state",
+        "lst_mod_date",
+        "note"
+      ],
+      "domains": [
+        "owned-site-access.invalid",
+        "owned-site-access-second.invalid"
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 2,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":1}"
+        },
+        {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 7,
+          "lst_state": 1,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      ]
+    },
+    {
+      "label": "after_first_normal_stop",
+      "at": "2026-10-31T22:40:59.332508+00:00",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/light-media.db",
+      "read_only": true,
+      "table": "source_site_access_statistic",
+      "columns": [
+        "id",
+        "domain",
+        "success",
+        "fail",
+        "seconds",
+        "lst_state",
+        "lst_mod_date",
+        "note"
+      ],
+      "domains": [
+        "owned-site-access.invalid",
+        "owned-site-access-second.invalid"
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 2,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":1}"
+        },
+        {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 7,
+          "lst_state": 1,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      ]
+    },
+    {
+      "label": "cold_before_first_call",
+      "at": "2026-10-31T22:40:59.636434+00:00",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/light-media.db",
+      "read_only": true,
+      "table": "source_site_access_statistic",
+      "columns": [
+        "id",
+        "domain",
+        "success",
+        "fail",
+        "seconds",
+        "lst_state",
+        "lst_mod_date",
+        "note"
+      ],
+      "domains": [
+        "owned-site-access.invalid",
+        "owned-site-access-second.invalid"
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 2,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":1}"
+        },
+        {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 7,
+          "lst_state": 1,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      ]
+    },
+    {
+      "label": "cold_same_DB_new_worker_success_none:before",
+      "at": "2026-10-31T22:40:59.636966+00:00",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/light-media.db",
+      "read_only": true,
+      "table": "source_site_access_statistic",
+      "columns": [
+        "id",
+        "domain",
+        "success",
+        "fail",
+        "seconds",
+        "lst_state",
+        "lst_mod_date",
+        "note"
+      ],
+      "domains": [
+        "owned-site-access.invalid",
+        "owned-site-access-second.invalid"
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 2,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":1}"
+        },
+        {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 7,
+          "lst_state": 1,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      ]
+    },
+    {
+      "label": "cold_same_DB_new_worker_success_none:after",
+      "at": "2026-10-31T22:40:59.655391+00:00",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/light-media.db",
+      "read_only": true,
+      "table": "source_site_access_statistic",
+      "columns": [
+        "id",
+        "domain",
+        "success",
+        "fail",
+        "seconds",
+        "lst_state",
+        "lst_mod_date",
+        "note"
+      ],
+      "domains": [
+        "owned-site-access.invalid",
+        "owned-site-access-second.invalid"
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 3,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":1}"
+        },
+        {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 7,
+          "lst_state": 1,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      ]
+    },
+    {
+      "label": "after_second_normal_stop",
+      "at": "2026-10-31T22:40:59.664720+00:00",
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/light-media.db",
+      "read_only": true,
+      "table": "source_site_access_statistic",
+      "columns": [
+        "id",
+        "domain",
+        "success",
+        "fail",
+        "seconds",
+        "lst_state",
+        "lst_mod_date",
+        "note"
+      ],
+      "domains": [
+        "owned-site-access.invalid",
+        "owned-site-access-second.invalid"
+      ],
+      "rows": [
+        {
+          "id": 1,
+          "domain": "owned-site-access.invalid",
+          "success": 3,
+          "fail": 1,
+          "seconds": 1,
+          "lst_state": 0,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":1}"
+        },
+        {
+          "id": 2,
+          "domain": "owned-site-access-second.invalid",
+          "success": 1,
+          "fail": 1,
+          "seconds": 7,
+          "lst_state": 1,
+          "lst_mod_date": "2026-11-01 07:40:59",
+          "note": "{\"2026-11-01 07:40:59\":7}"
+        }
+      ]
+    }
+  ],
+  "physical_plugin_wire_counters": {
+    "measured": false,
+    "available_from_ordinary_API": false
+  },
+  "measured_layers": [
+    "worker HostCaller attempt counts and logical JSON bytes",
+    "exact owned table eight columns after completed ordinary calls"
+  ],
+  "not_claimed": [
+    "source differential rerun",
+    "real site or network request to a site",
+    "arbitrary table/DAO access",
+    "SQLite fault injection",
+    "browser/UI",
+    "full S04/platform/delivery"
+  ],
+  "bindings_sha256": "b6fdf2cee11d3f32d3a29838d19c962eb30c83f6cc95975ad454bea28f0522cf",
+  "execution_environment": "inherited after coordinator grant marker; no proxy or startup rewrites",
+  "owned_peer_origin": "http://127.0.0.1:41919",
+  "bootstrap_exit": 0,
+  "worker_identities": [
+    {
+      "ppid": 26,
+      "starttime": "4353816",
+      "pid": 44,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/plugin-packages/OwnedSiteAccess/owned-site-access-fixture",
+      "executable_sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c",
+      "host_pid": 26
+    },
+    {
+      "ppid": 26,
+      "starttime": "4353816",
+      "pid": 44,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/plugin-packages/OwnedSiteAccess/owned-site-access-fixture",
+      "executable_sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c",
+      "host_pid": 26
+    },
+    {
+      "ppid": 26,
+      "starttime": "4353816",
+      "pid": 44,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/plugin-packages/OwnedSiteAccess/owned-site-access-fixture",
+      "executable_sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c",
+      "host_pid": 26
+    },
+    {
+      "ppid": 51,
+      "starttime": "4353840",
+      "pid": 66,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01/private-data/plugin-packages/OwnedSiteAccess/owned-site-access-fixture",
+      "executable_sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c",
+      "host_pid": 51
+    }
+  ],
+  "actual_artifact_request_counts": {
+    "GET /index": 1,
+    "GET /worker": 1
+  },
+  "input_drift": [],
+  "environment_unchanged": true,
+  "finished_at": "2026-10-31T22:40:59.866662+00:00"
+}

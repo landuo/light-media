@@ -1,0 +1,360 @@
+{
+  "base": "7b9b1d038b11d6235108889bea634e53e8b19d27",
+  "status": "finite backend locally verified; publication pending, not remote delivered",
+  "product_files": {
+    "cmd/owned-site-access-fixture/main.go": "84b1af3cc2a99ee5bd57476c9fea60df089ee153e5cca94b4a991ed50877100e",
+    "internal/app/plugin_original_resources.go": "8cc333982f2856ce441b19ca2a6e17e4fa9a861c512a7efedb8c79700ef92f35",
+    "internal/app/store.go": "10ee3cacadc897b38d8209cd50c029964506071a6b014b975d4610efcd987a38",
+    "internal/app/plugin_shared_site_access.go": "9a92117a90afeb3e968ae1ee7e9d6ff0a237673dcf2b44a4adbc07f9c3de2842",
+    "internal/app/plugin_shared_site_access_test.go": "dbe3963a60015d02ca408fb0df5ca220dc5c99e580ff7f3aa508fd0eab5a49b7",
+    "internal/app/plugin_shared_site_access_worker_test.go": "2a51a6d628cb555f747d7b19c4a6d8794ffada2d9c566a7f9eb0a8eefceeca06",
+    "internal/plugins/shared_site_access.go": "a866152f4a156d7325efe290bc0b67887325e6979e2450d6be031e85bb6fb19d",
+    "internal/plugins/shared_site_access_test.go": "11ece93b2162c7075916025f036bd2517e1f7b85e1e1f916917db8fc9cc6abc3",
+    "internal/plugins/siteaccess/statistics.go": "f8dfcd3696710e56a2cd07014e01a254158b4816c79b59dc0fed0e33cde9e564",
+    "internal/plugins/siteaccess/statistics_test.go": "5507f7c62d97efa92740c9991cfb96fc7929351cc367dc09acd49f8890fe9569",
+    "internal/plugins/siteaccess/testdata/source-access-results.json": "9303332121f5265e8881f3330aa785d32d08aa4c2e00054111f41954fadc9fe3"
+  },
+  "published_evidence": {
+    "evidence/s04-site-access/README.md": "10773aefeccfcbbc1ef87a483476711baaabb3bff5c80c73438be97e36167766",
+    "evidence/s04-site-access/app/app-independent.json": "6cf07e714d0fe4e874ab6c32fae70be7027c893529f5a5e36a731cc31a836931",
+    "evidence/s04-site-access/app/finite-boundary-review.md": "534b22e4a0639443745fc6fb90378edc4f345c22f107d2a9af2063b98f008f9d",
+    "evidence/s04-site-access/app/host-race/result.json": "ab945c1f13ced5659df39d9aa7fd54a86164bf57288f37f3c01e5d6d369cf43c",
+    "evidence/s04-site-access/app/host-race/tests.jsonl": "1d749c1d9961e05b8b769fe77ddd4075f655405f8e00f86f1a9e3c019b752e48",
+    "evidence/s04-site-access/app/normal/result.json": "8e44da8aadafd3572194591e8b9be23159a9f6454a0965ed0ae2f94dd5af587b",
+    "evidence/s04-site-access/app/normal/tests.jsonl": "f386abc86348671695b7caa8ba783cbfa1d4b32671a8b8d7143e5d9860539cc5",
+    "evidence/s04-site-access/app/normal/tool-receipt.json": "c6324f8e50253e5d02824ddca12d2e5197bc00ba68fef6418fa0ceddb9756c94",
+    "evidence/s04-site-access/app/preexecution-correction.md": "d4861cd2a8b9451e7dee236454bcda1dc3910b5664b4fc74858f196bc2953f7a",
+    "evidence/s04-site-access/app/worker/result.json": "4088de163440cfa2a65bcf1b8e83684441e7dd834a8e7ac405db6d10f84f26c0",
+    "evidence/s04-site-access/app/worker/tests.jsonl": "c47b7777f3f2d9f05fa62aa7513d885bd4232d14a00cb5ce131de0fbfb02978d",
+    "evidence/s04-site-access/app/worker/tool-receipt.json": "2b590ce5f41fa50f7dccbd077f4b245327ff03f423d01292536918d7890ba859",
+    "evidence/s04-site-access/app/worker-independent.json": "d1d9c767072da2794379a9eaf172998543bced666cf8e0e9e6cad90fb69a9d8e",
+    "evidence/s04-site-access/cli/build-binding-independent.json": "323c61be7999274ac1bc47946621849c4b058203921d876bcdb80fe525e0feb5",
+    "evidence/s04-site-access/cli/command.json": "c5f37ea1d095c3404e97e699eec6b4db209e117f4fbb1dd50b78ef7f71baa12c",
+    "evidence/s04-site-access/cli/driver.py": "6a58b8577355871e65f6d3c9f38e3ffa6951fb156aa79d1e365a00bcda74601f",
+    "evidence/s04-site-access/cli/fixture-build.json": "e1a43a25ca743dda8b73585116cfcb9c78579d4ab89b3b2f6164fa657f342a87",
+    "evidence/s04-site-access/cli/independent.json": "df7ba73998b0a9e3aa8bfce034e12af1c81a623ed0a08ac1c1c08d4e9eae62e3",
+    "evidence/s04-site-access/cli/inherited-helpers.json": "47d7c895eef24d4778a1cda6554379ae187c06c4b3bdb3cae5b3936b03bee3ba",
+    "evidence/s04-site-access/cli/inputs.json": "b6fdf2cee11d3f32d3a29838d19c962eb30c83f6cc95975ad454bea28f0522cf",
+    "evidence/s04-site-access/cli/result.json": "55d4ee3fbe79c461ac56377af2270e403962addbb5b137f81615503f7dfe3b83",
+    "evidence/s04-site-access/cli/server-build.json": "d81bf1d3faa693e8467be334cc554a280512b29ee6da7eac1880d358629c2de8",
+    "evidence/s04-site-access/cli/server-child-build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "evidence/s04-site-access/cli/server-outer-receipt-unavailable.json": "f30a8c567832d569dcfde99c367218b2d7eb315a5ffe2d368485d514092ba460",
+    "evidence/s04-site-access/cli/tool-receipt.json": "a45cc60dfac5f5c92758216b2bf2ba1aa748fa5eba8525d3804f80e2cbf32ebc",
+    "evidence/s04-site-access/pure/independent.json": "74d03aca5cb5ca2b0558df7a8900175815967bdb293a182bc54e5deb6922a792",
+    "evidence/s04-site-access/pure/result.json": "fa0c23da0d474d5b53014e84bf142869a2555e003602888beaa164da9404d33b",
+    "evidence/s04-site-access/pure/tests.jsonl": "7cb9cc3435ce1543c87df689422715547806f1e780a47ee587ebc8c79e737d5c",
+    "evidence/s04-site-access/pure/tool-receipt.json": "2ed1e4151edc3a52ebe10a6f551108896e832f7a4f4be2e37120e9a8aaa60143",
+    "evidence/s04-site-access/retention/host-space-receipt.json": "aff60ca07c52d2eb69a8d0084808ae264d34d423ddab6d41cd4916b9f345d43d",
+    "evidence/s04-site-access/retention/source-space-receipt.json": "d51b1ad1c5e43cc3941ef5e077abdd88dc29ad9a8dc4ebb3623db4a96d8b8787",
+    "evidence/s04-site-access/sdk/contract-historical.md": "849625d89f38e0e7cabe385126b1e01fb3952543eab86b0d3c7204351efbfb85",
+    "evidence/s04-site-access/sdk/independent.json": "d459639c62b2ab6e9054d233d60b89945ab4a6518574363644424a6f8552cbe1",
+    "evidence/s04-site-access/sdk/result.json": "539162920b6a6596e233d429fa10aa38eb3179ff1c92a3086b242b0703e70fc7",
+    "evidence/s04-site-access/sdk/tests.jsonl": "547b5f9aa1764e642d56e72475748a23072aa9bdb1bc3683406c6135518b3e2c",
+    "evidence/s04-site-access/sdk/tool-receipt.json": "a8182464f3b092bdf770e5cd3c9cb7dc08602aa5b442a2401ec4f750ac73bbed",
+    "evidence/s04-site-access/source/cold-result.json": "79b639292ab7752785e8ad448e107baa0a48aebf380a1496457db74292485732",
+    "evidence/s04-site-access/source/collector.py": "ec8933aeeec611254196ffe4d231a7d64d0293a6ed92f434215ebf900b94ddfc",
+    "evidence/s04-site-access/source/independent.json": "83dc64c6d6ca49923f36cee829ee063de54909c1795305be654adc1a371a215d",
+    "evidence/s04-site-access/source/owned-cases.json": "6d9c85a4b7fb4095af401c8737a59ac53ea7a3e3dd001b5e28e29456f51d8723",
+    "evidence/s04-site-access/source/selected-nodes.json": "e57af0e220565843c465a1085532a8ed0a5eb7f9376e436331e77bb3d244e02c",
+    "evidence/s04-site-access/source/tool-receipt.json": "df54009dcc160a503a5cd387c713e176f63e08b3c1278272248a8877169f89b7",
+    "evidence/s04-site-access/source/warm-result.json": "3362db995f5147a08664a4ff4fb1c647f1fc42142207de1e2f599ba13b495c48"
+  },
+  "exact_copies": [
+    {
+      "source": "audits/s04-source-preparation/capture_access_statistics.py",
+      "destination": "migration/evidence/s04-site-access/source/collector.py",
+      "bytes": 13288,
+      "sha256": "ec8933aeeec611254196ffe4d231a7d64d0293a6ed92f434215ebf900b94ddfc",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-source-preparation/owned-cases.json",
+      "destination": "migration/evidence/s04-site-access/source/owned-cases.json",
+      "bytes": 4701,
+      "sha256": "6d9c85a4b7fb4095af401c8737a59ac53ea7a3e3dd001b5e28e29456f51d8723",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-source-preparation/selected-nodes.json",
+      "destination": "migration/evidence/s04-site-access/source/selected-nodes.json",
+      "bytes": 8509,
+      "sha256": "e57af0e220565843c465a1085532a8ed0a5eb7f9376e436331e77bb3d244e02c",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-source-warm01/result.json",
+      "destination": "migration/evidence/s04-site-access/source/warm-result.json",
+      "bytes": 1032,
+      "sha256": "3362db995f5147a08664a4ff4fb1c647f1fc42142207de1e2f599ba13b495c48",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-source-cold01/result.json",
+      "destination": "migration/evidence/s04-site-access/source/cold-result.json",
+      "bytes": 1035,
+      "sha256": "79b639292ab7752785e8ad448e107baa0a48aebf380a1496457db74292485732",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-source-warm01/outer-tool-receipt.json",
+      "destination": "migration/evidence/s04-site-access/source/tool-receipt.json",
+      "bytes": 156,
+      "sha256": "df54009dcc160a503a5cd387c713e176f63e08b3c1278272248a8877169f89b7",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-source-independent/source01-final.json",
+      "destination": "migration/evidence/s04-site-access/source/independent.json",
+      "bytes": 12654,
+      "sha256": "83dc64c6d6ca49923f36cee829ee063de54909c1795305be654adc1a371a215d",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-pure-independent/FINAL.json",
+      "destination": "migration/evidence/s04-site-access/pure/independent.json",
+      "bytes": 9481,
+      "sha256": "74d03aca5cb5ca2b0558df7a8900175815967bdb293a182bc54e5deb6922a792",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-sdk-independent/FINAL.json",
+      "destination": "migration/evidence/s04-site-access/sdk/independent.json",
+      "bytes": 6325,
+      "sha256": "d459639c62b2ab6e9054d233d60b89945ab4a6518574363644424a6f8552cbe1",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-sdk/CONTRACT.md",
+      "destination": "migration/evidence/s04-site-access/sdk/contract-historical.md",
+      "bytes": 3797,
+      "sha256": "849625d89f38e0e7cabe385126b1e01fb3952543eab86b0d3c7204351efbfb85",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-app-independent/app01-final-and-worker-static.json",
+      "destination": "migration/evidence/s04-site-access/app/app-independent.json",
+      "bytes": 10095,
+      "sha256": "6cf07e714d0fe4e874ab6c32fae70be7027c893529f5a5e36a731cc31a836931",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-app-independent/worker-final-seal.json",
+      "destination": "migration/evidence/s04-site-access/app/worker-independent.json",
+      "bytes": 12961,
+      "sha256": "d1d9c767072da2794379a9eaf172998543bced666cf8e0e9e6cad90fb69a9d8e",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-app-independent/CANDIDATE02-REVIEW.md",
+      "destination": "migration/evidence/s04-site-access/app/finite-boundary-review.md",
+      "bytes": 6777,
+      "sha256": "534b22e4a0639443745fc6fb90378edc4f345c22f107d2a9af2063b98f008f9d",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-app-implementation/CANDIDATE02-CORRECTION.md",
+      "destination": "migration/evidence/s04-site-access/app/preexecution-correction.md",
+      "bytes": 1187,
+      "sha256": "d4861cd2a8b9451e7dee236454bcda1dc3910b5664b4fc74858f196bc2953f7a",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-fixture01/result.json",
+      "destination": "migration/evidence/s04-site-access/cli/fixture-build.json",
+      "bytes": 1185,
+      "sha256": "e1a43a25ca743dda8b73585116cfcb9c78579d4ab89b3b2f6164fa657f342a87",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-server01/result.json",
+      "destination": "migration/evidence/s04-site-access/cli/server-build.json",
+      "bytes": 1115,
+      "sha256": "d81bf1d3faa693e8467be334cc554a280512b29ee6da7eac1880d358629c2de8",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-server01/build.exit",
+      "destination": "migration/evidence/s04-site-access/cli/server-child-build.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-server01/outer-receipt-unavailable-readback.json",
+      "destination": "migration/evidence/s04-site-access/cli/server-outer-receipt-unavailable.json",
+      "bytes": 471,
+      "sha256": "f30a8c567832d569dcfde99c367218b2d7eb315a5ffe2d368485d514092ba460",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-normal-cli/normal-cli-driver.py",
+      "destination": "migration/evidence/s04-site-access/cli/driver.py",
+      "bytes": 31382,
+      "sha256": "6a58b8577355871e65f6d3c9f38e3ffa6951fb156aa79d1e365a00bcda74601f",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-normal-cli/inherited-helpers.json",
+      "destination": "migration/evidence/s04-site-access/cli/inherited-helpers.json",
+      "bytes": 2534,
+      "sha256": "47d7c895eef24d4778a1cda6554379ae187c06c4b3bdb3cae5b3936b03bee3ba",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-normal-cli/execution-bindings.json",
+      "destination": "migration/evidence/s04-site-access/cli/inputs.json",
+      "bytes": 8508,
+      "sha256": "b6fdf2cee11d3f32d3a29838d19c962eb30c83f6cc95975ad454bea28f0522cf",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-normal-cli/execution-command.json",
+      "destination": "migration/evidence/s04-site-access/cli/command.json",
+      "bytes": 1228,
+      "sha256": "c5f37ea1d095c3404e97e699eec6b4db209e117f4fbb1dd50b78ef7f71baa12c",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "test-instances/s04-access-normal01/result.json",
+      "destination": "migration/evidence/s04-site-access/cli/result.json",
+      "bytes": 30960,
+      "sha256": "55d4ee3fbe79c461ac56377af2270e403962addbb5b137f81615503f7dfe3b83",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "test-instances/s04-access-normal01/tool-execution-receipt.json",
+      "destination": "migration/evidence/s04-site-access/cli/tool-receipt.json",
+      "bytes": 175,
+      "sha256": "a45cc60dfac5f5c92758216b2bf2ba1aa748fa5eba8525d3804f80e2cbf32ebc",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-normal-cli-independent/runtime-final.json",
+      "destination": "migration/evidence/s04-site-access/cli/independent.json",
+      "bytes": 9471,
+      "sha256": "df7ba73998b0a9e3aa8bfce034e12af1c81a623ed0a08ac1c1c08d4e9eae62e3",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "audits/s04-normal-cli-independent/execution-binding-readback.json",
+      "destination": "migration/evidence/s04-site-access/cli/build-binding-independent.json",
+      "bytes": 5659,
+      "sha256": "323c61be7999274ac1bc47946621849c4b058203921d876bcdb80fe525e0feb5",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "external-backups/space-backup-receipt-s04-2219.json",
+      "destination": "migration/evidence/s04-site-access/retention/source-space-receipt.json",
+      "bytes": 457,
+      "sha256": "d51b1ad1c5e43cc3941ef5e077abdd88dc29ad9a8dc4ebb3623db4a96d8b8787",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "external-backups/space-backup-receipt-s04-2236.json",
+      "destination": "migration/evidence/s04-site-access/retention/host-space-receipt.json",
+      "bytes": 466,
+      "sha256": "aff60ca07c52d2eb69a8d0084808ae264d34d423ddab6d41cd4916b9f345d43d",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-pure01/result.json",
+      "destination": "migration/evidence/s04-site-access/pure/result.json",
+      "bytes": 2157,
+      "sha256": "fa0c23da0d474d5b53014e84bf142869a2555e003602888beaa164da9404d33b",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-pure01/tests.stdout",
+      "destination": "migration/evidence/s04-site-access/pure/tests.jsonl",
+      "bytes": 12196,
+      "sha256": "7cb9cc3435ce1543c87df689422715547806f1e780a47ee587ebc8c79e737d5c",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-pure01/outer-tool-receipt.json",
+      "destination": "migration/evidence/s04-site-access/pure/tool-receipt.json",
+      "bytes": 176,
+      "sha256": "2ed1e4151edc3a52ebe10a6f551108896e832f7a4f4be2e37120e9a8aaa60143",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-sdk01/result.json",
+      "destination": "migration/evidence/s04-site-access/sdk/result.json",
+      "bytes": 2006,
+      "sha256": "539162920b6a6596e233d429fa10aa38eb3179ff1c92a3086b242b0703e70fc7",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-sdk01/tests.stdout",
+      "destination": "migration/evidence/s04-site-access/sdk/tests.jsonl",
+      "bytes": 1617,
+      "sha256": "547b5f9aa1764e642d56e72475748a23072aa9bdb1bc3683406c6135518b3e2c",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-sdk01/outer-tool-receipt.json",
+      "destination": "migration/evidence/s04-site-access/sdk/tool-receipt.json",
+      "bytes": 156,
+      "sha256": "a8182464f3b092bdf770e5cd3c9cb7dc08602aa5b442a2401ec4f750ac73bbed",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-app01/result.json",
+      "destination": "migration/evidence/s04-site-access/app/normal/result.json",
+      "bytes": 2212,
+      "sha256": "8e44da8aadafd3572194591e8b9be23159a9f6454a0965ed0ae2f94dd5af587b",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-app01/tests.stdout",
+      "destination": "migration/evidence/s04-site-access/app/normal/tests.jsonl",
+      "bytes": 13553,
+      "sha256": "f386abc86348671695b7caa8ba783cbfa1d4b32671a8b8d7143e5d9860539cc5",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-app01/outer-tool-receipt.json",
+      "destination": "migration/evidence/s04-site-access/app/normal/tool-receipt.json",
+      "bytes": 156,
+      "sha256": "c6324f8e50253e5d02824ddca12d2e5197bc00ba68fef6418fa0ceddb9756c94",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-worker01/result.json",
+      "destination": "migration/evidence/s04-site-access/app/worker/result.json",
+      "bytes": 2458,
+      "sha256": "4088de163440cfa2a65bcf1b8e83684441e7dd834a8e7ac405db6d10f84f26c0",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-worker01/tests.stdout",
+      "destination": "migration/evidence/s04-site-access/app/worker/tests.jsonl",
+      "bytes": 14772,
+      "sha256": "c47b7777f3f2d9f05fa62aa7513d885bd4232d14a00cb5ce131de0fbfb02978d",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-worker01/outer-tool-receipt.json",
+      "destination": "migration/evidence/s04-site-access/app/worker/tool-receipt.json",
+      "bytes": 221,
+      "sha256": "2b590ce5f41fa50f7dccbd077f4b245327ff03f423d01292536918d7890ba859",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-worker-race01/result.json",
+      "destination": "migration/evidence/s04-site-access/app/host-race/result.json",
+      "bytes": 2639,
+      "sha256": "ab945c1f13ced5659df39d9aa7fd54a86164bf57288f37f3c01e5d6d369cf43c",
+      "mode": "exact original bytes"
+    },
+    {
+      "source": "evidence/s04-worker-race01/tests.stdout",
+      "destination": "migration/evidence/s04-site-access/app/host-race/tests.jsonl",
+      "bytes": 16424,
+      "sha256": "1d749c1d9961e05b8b769fe77ddd4075f655405f8e00f86f1a9e3c019b752e48",
+      "mode": "exact original bytes"
+    }
+  ],
+  "source_warm_single_copy": "internal/plugins/siteaccess/testdata/source-access-results.json",
+  "excluded": "DB/binaries/dependencies/credentials/private instances/unrelated WIP"
+}

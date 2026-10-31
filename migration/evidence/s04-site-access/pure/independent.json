@@ -1,0 +1,179 @@
+{
+  "status": "ACCEPTED_FINITE_PURE_SOURCE_DIFFERENTIAL_NORMAL2",
+  "reviewed_at": "2026-10-31T22:21:29.277653+00:00",
+  "static_review": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-pure-independent/STATIC.json",
+    "bytes": 6052,
+    "sha256": "df7fd5563d0524a114d62dd8b77e1cf44d4896a1acc508392dc8a3e89372fab9"
+  },
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-pure-implementation/candidate01.json",
+    "bytes": 3148,
+    "sha256": "8fadfe544792d8330486da61b49cada194e8c3d7e9b82367e904b806bf192ed0"
+  },
+  "actual_gate": {
+    "result": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/result.json",
+      "bytes": 2157,
+      "sha256": "fa0c23da0d474d5b53014e84bf142869a2555e003602888beaa164da9404d33b"
+    },
+    "outer_receipt": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/outer-tool-receipt.json",
+      "bytes": 176,
+      "sha256": "2ed1e4151edc3a52ebe10a6f551108896e832f7a4f4be2e37120e9a8aaa60143"
+    },
+    "direct_exec_terminal": "b935c5 exit0, no session",
+    "started": "2026-10-31T22:20:11.668673+00:00",
+    "ended": "2026-10-31T22:20:12.297291+00:00",
+    "package": "./internal/plugins/siteaccess",
+    "pattern": "^TestSiteAccess(ActualSourceObservations|RecordOwnershipAndIntegerBoundary)$",
+    "race": false,
+    "commands_exit": [
+      0,
+      0,
+      0
+    ],
+    "root_passes": [
+      "TestSiteAccessActualSourceObservations",
+      "TestSiteAccessRecordOwnershipAndIntegerBoundary"
+    ],
+    "subcase_passes": [
+      "TestSiteAccessActualSourceObservations/initial_none_then_value_fail_none",
+      "TestSiteAccessActualSourceObservations/initial_zero",
+      "TestSiteAccessActualSourceObservations/initial_negative",
+      "TestSiteAccessActualSourceObservations/same_second_overwrite",
+      "TestSiteAccessActualSourceObservations/existing_none_preserves_nonempty_note",
+      "TestSiteAccessActualSourceObservations/eleven_entries_pretrim_denominator",
+      "TestSiteAccessActualSourceObservations/negative_floor",
+      "TestSiteAccessActualSourceObservations/zero_average_retains_old_seconds",
+      "TestSiteAccessActualSourceObservations/initial_fail_then_fail_then_success_none",
+      "TestSiteAccessActualSourceObservations/fail_preserves_success_seconds_note",
+      "TestSiteAccessActualSourceObservations/borrowed_session_exact_domain"
+    ],
+    "normal_source_calls_compared": 19,
+    "failed_or_skipped_events": 0,
+    "program": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-pure01.test",
+      "bytes": 4986108,
+      "sha256": "c48847c7c271986bad936c8fbdcf0b9c932e9a7e87cfecf378d7732e69b75dc2"
+    }
+  },
+  "input_readback": {
+    "count": 1468,
+    "three_manifests_equal": true,
+    "all_current_bytes_equal": true,
+    "explicit_nonembedded_original_fixture_bound": true,
+    "manifest_scope": "go-list reported source set (including recorded TestGoFiles) plus go.mod/go.sum/runner/explicit raw fixture; not a claim every recorded dependency test file executed",
+    "only_repo_sources": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/go.mod",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/go.sum",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/siteaccess/statistics.go",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/siteaccess/statistics_test.go",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/siteaccess/testdata/source-access-results.json"
+    ],
+    "local_go_list_packages": [
+      "light-media/internal/plugins/siteaccess",
+      "light-media/internal/plugins/siteaccess [light-media/internal/plugins/siteaccess.test]",
+      "light-media/internal/plugins/siteaccess.test"
+    ],
+    "no_browse_or_app_package_dependency": true
+  },
+  "raw_bindings": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/inputs-before.json",
+      "bytes": 307576,
+      "sha256": "24dfb1a0713ffe232a021f6692b1985b9687337952d4b24572a49a2f2a42273c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/inputs-after-compile.json",
+      "bytes": 307576,
+      "sha256": "24dfb1a0713ffe232a021f6692b1985b9687337952d4b24572a49a2f2a42273c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/inputs-after-test.json",
+      "bytes": 307576,
+      "sha256": "24dfb1a0713ffe232a021f6692b1985b9687337952d4b24572a49a2f2a42273c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/go-list.stdout",
+      "bytes": 252075,
+      "sha256": "783fe22697f5afa5fe64c60c7c6bba0dc9a73d0f3d31452f4bb1df0d8d1dee33"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/go-list.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/go-list.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/compile.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/compile.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/tests.stdout",
+      "bytes": 12196,
+      "sha256": "7cb9cc3435ce1543c87df689422715547806f1e780a47ee587ebc8c79e737d5c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/tests.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/tests.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-pure01/generated-source-map.json",
+      "bytes": 246,
+      "sha256": "4dd45fd75fe936640304e9585e66bbccc7617e479cd072e291e159f88481dfd6"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s04-pure-gate.py",
+      "bytes": 5474,
+      "sha256": "65365e25f253224948249a56403c843706e64ae68357275f71d34ef3738febe8"
+    }
+  ],
+  "current_product_fixture": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/siteaccess/statistics.go",
+      "bytes": 4336,
+      "sha256": "f8dfcd3696710e56a2cd07014e01a254158b4816c79b59dc0fed0e33cde9e564"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/siteaccess/statistics_test.go",
+      "bytes": 7555,
+      "sha256": "5507f7c62d97efa92740c9991cfb96fc7929351cc367dc09acd49f8890fe9569"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/siteaccess/testdata/source-access-results.json",
+      "bytes": 291222,
+      "sha256": "9303332121f5265e8881f3330aa785d32d08aa4c2e00054111f41954fadc9fe3"
+    }
+  ],
+  "meaning": "Actual normal target pure transitions match eleven original-source scenarios/nineteen calls across all eight fields, with only explicitly asserted new-ID normalization. Structural ownership/domain/int64 overflow assertions also actually pass.",
+  "boundaries": [
+    "Pure algorithm only, no target SQLite transaction/ID allocation/cold persistence, SDK/router/worker/HTTP or site authority credit.",
+    "The five source DB errors and eleven source cold queries are retained separate original-source observations, not target executions by this gate.",
+    "No Go/rerun/source execution or database opening by independent reviewer; read/hash/JSON inspection only.",
+    "Input domain remains ordinary signed int64 seconds/counters/note values with nullable seconds/note and exact string domain; arbitrary Python objects, null counters and wider storage types are not claimed.",
+    "Static no-intermediate-wrap review is not represented as an extra executed big-integer boundary case."
+  ],
+  "blockers": []
+}

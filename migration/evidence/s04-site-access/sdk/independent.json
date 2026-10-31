@@ -1,0 +1,139 @@
+{
+  "status": "ACCEPTED_FINITE_SDK_RECORDING_HOST_NORMAL2",
+  "reviewed_at": "2026-10-31T22:27:11.688686+00:00",
+  "static": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-sdk-independent/STATIC.json",
+    "bytes": 3751,
+    "sha256": "2154ebb67de9814a114dc6732cc3606eba4e6484d4c057668bea20935de95050"
+  },
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-sdk/candidate01.json",
+    "bytes": 3911,
+    "sha256": "572492027213206bbb09383e264974782f295bb2c44089f570b641a99094427b"
+  },
+  "actual": {
+    "session_id": 12794,
+    "terminal_chunk": "2eb218",
+    "outer_exit": 0,
+    "started": "2026-10-31T22:24:20.025149+00:00",
+    "ended": "2026-10-31T22:24:22.884624+00:00",
+    "package": "./internal/plugins",
+    "pattern": "^TestSharedSiteAccess(Wire|Boundaries)$",
+    "race": false,
+    "commands_exit": [
+      0,
+      0,
+      0
+    ],
+    "root_passes": [
+      "TestSharedSiteAccessWire",
+      "TestSharedSiteAccessBoundaries"
+    ],
+    "subcases": 0,
+    "no_fail_skip": true,
+    "program": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-sdk01.test",
+      "bytes": 8898212,
+      "sha256": "ec1c348fdbd99a526c4449d2aa40e672603540c50f4d2dbe458960e39d3100dc"
+    }
+  },
+  "input_readback": {
+    "count": 1928,
+    "three_snapshots_equal": true,
+    "all_current_bytes_equal": true,
+    "owned_product_test_and_recovery_equal": true,
+    "app_in_closure": false,
+    "unrelated_browse_wip_in_closure": false,
+    "scope": "Recorded go-list source set plus go.mod/go.sum/runner, including dependency TestGoFiles; not all dependency tests executed."
+  },
+  "evidence": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/result.json",
+      "bytes": 2006,
+      "sha256": "539162920b6a6596e233d429fa10aa38eb3179ff1c92a3086b242b0703e70fc7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/outer-tool-receipt.json",
+      "bytes": 156,
+      "sha256": "a8182464f3b092bdf770e5cd3c9cb7dc08602aa5b442a2401ec4f750ac73bbed"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/inputs-before.json",
+      "bytes": 417052,
+      "sha256": "7c8b2f64f3bf098e8e018df561001ff1eaf3f6d8554b2145904a42f90a40852c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/inputs-after-compile.json",
+      "bytes": 417052,
+      "sha256": "7c8b2f64f3bf098e8e018df561001ff1eaf3f6d8554b2145904a42f90a40852c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/inputs-after-test.json",
+      "bytes": 417052,
+      "sha256": "7c8b2f64f3bf098e8e018df561001ff1eaf3f6d8554b2145904a42f90a40852c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/tests.stdout",
+      "bytes": 1617,
+      "sha256": "547b5f9aa1764e642d56e72475748a23072aa9bdb1bc3683406c6135518b3e2c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/tests.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/tests.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/go-list.stdout",
+      "bytes": 368456,
+      "sha256": "26457c64fe4fdc053dc233ffbdb7a1ed6a8ea160bf93785ead3785182d859e1d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/go-list.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/go-list.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/compile.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/compile.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-sdk01/generated-source-map.json",
+      "bytes": 246,
+      "sha256": "2171d3916170dec235494a9988c2e18d9d67d276c2a6e483976a5a65034d87c1"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s04-sdk-gate.py",
+      "bytes": 5403,
+      "sha256": "49b66d8309a1293dcfaede846e2d380588a326b5c4482784b924bfea9e25b916"
+    }
+  ],
+  "meaning": "Actual exact two recording-HostCaller roots passed for fixed capabilities, exact request wire/nullable timing/verbatim domain, strict null replies, admission/reply boundaries, unchanged errors, cancellation and callback-count/no-retry checks.",
+  "boundaries": [
+    "No target App, SQL storage/rollback, source algorithm, worker, HTTP, site or downloader acceptance from this gate.",
+    "Malformed source/DB behavior is not simulated or inferred from a recording HostCaller.",
+    "No Go/test/source/network/DB execution by reviewer; existing raw/input/binary hash readback only.",
+    "int64 wire endpoints and inherited byte ceilings do not prove broader Python numeric/unbounded input compatibility."
+  ],
+  "blockers": []
+}

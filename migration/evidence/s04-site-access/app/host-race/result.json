@@ -1,0 +1,91 @@
+{
+  "started": "2026-10-31T22:32:57.632800+00:00",
+  "driver_pid": 133,
+  "package": "./internal/app",
+  "pattern": "^(TestSharedSiteAccessResourceFiniteBoundary|TestSharedSiteAccessActualWorkerRecoveryAndScopes|TestSharedSiteAccessActualWorkerColdPersistence)$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-worker-race01.test",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-worker-race01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestSharedSiteAccessResourceFiniteBoundary|TestSharedSiteAccessActualWorkerRecoveryAndScopes|TestSharedSiteAccessActualWorkerColdPersistence)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "worker_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-fixture01",
+  "worker_sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c",
+  "worker_instrumentation": "normal frozen artifact; race flag applies host test program only",
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T22:32:57.632825+00:00",
+      "scratch_free": 50588004352,
+      "tmp_free": 5225631744
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T22:32:58.879838+00:00",
+      "scratch_free": 50584907776,
+      "tmp_free": 5225631744
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T22:33:44.875764+00:00",
+      "scratch_free": 50345172992,
+      "tmp_free": 5225631744
+    }
+  ],
+  "input_count": 6228,
+  "program_sha256": "361a2fe751fcf4b6d7f6f6e773a033038679b511b9cb26cb7252282f4982ddc8",
+  "root_passes": [
+    "TestSharedSiteAccessResourceFiniteBoundary",
+    "TestSharedSiteAccessActualWorkerRecoveryAndScopes",
+    "TestSharedSiteAccessActualWorkerColdPersistence"
+  ],
+  "ended": "2026-10-31T22:33:50.407731+00:00"
+}

@@ -1,0 +1,86 @@
+{
+  "started": "2026-10-31T22:27:21.142803+00:00",
+  "driver_pid": 2,
+  "package": "./internal/app",
+  "pattern": "^TestSharedSiteAccess(ActualSourceSQLiteAndCold|SQLiteFailureAndRawPreservation|ResourceFiniteBoundary)$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-app01.test",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-app01.test",
+        "-test.v",
+        "-test.run",
+        "^TestSharedSiteAccess(ActualSourceSQLiteAndCold|SQLiteFailureAndRawPreservation|ResourceFiniteBoundary)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-10-31T22:27:21.142818+00:00",
+      "scratch_free": 50962608128,
+      "tmp_free": 5225631744
+    },
+    {
+      "phase": "compile",
+      "at": "2026-10-31T22:27:22.298579+00:00",
+      "scratch_free": 50958954496,
+      "tmp_free": 5225631744
+    },
+    {
+      "phase": "tests",
+      "at": "2026-10-31T22:27:54.226160+00:00",
+      "scratch_free": 50765975552,
+      "tmp_free": 5225631744
+    }
+  ],
+  "input_count": 6218,
+  "program_sha256": "e7a8d7cec2ffe1655d8c3dc5e9f03256e1c8dfa6b90424105bdcad7bb4513946",
+  "root_passes": [
+    "TestSharedSiteAccessActualSourceSQLiteAndCold",
+    "TestSharedSiteAccessSQLiteFailureAndRawPreservation",
+    "TestSharedSiteAccessResourceFiniteBoundary"
+  ],
+  "ended": "2026-10-31T22:27:54.726843+00:00"
+}

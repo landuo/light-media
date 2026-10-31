@@ -1,0 +1,49 @@
+{
+  "at": "2026-10-31T22:30:13.557656+00:00",
+  "status": "PASS",
+  "kind": "normal owned S04 access-statistics fixture; SDK HostCaller only, no worker localfilesystem/network/daemon; compile only",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-json",
+        "./cmd/owned-site-access-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "build",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-fixture01",
+        "./cmd/owned-site-access-fixture"
+      ],
+      "exit": 0
+    }
+  ],
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "scratch_free": 50764427264,
+      "tmp_free": 5225631744
+    },
+    {
+      "phase": "build",
+      "scratch_free": 50763853824,
+      "tmp_free": 5225631744
+    }
+  ],
+  "input_count": 1086,
+  "program_sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c",
+  "ended": "2026-10-31T22:30:14.027903+00:00"
+}

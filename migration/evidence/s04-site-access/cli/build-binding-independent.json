@@ -1,0 +1,107 @@
+{
+  "status": "READY_FOR_COORDINATOR_EXISTING_OWNED_WINDOW_NOT_EXECUTED",
+  "reviewed_at": "2026-10-31T22:40:22.674132+00:00",
+  "execution_bindings": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-normal-cli/execution-bindings.json",
+    "sha256": "b6fdf2cee11d3f32d3a29838d19c962eb30c83f6cc95975ad454bea28f0522cf",
+    "bytes": 8508
+  },
+  "direct_bindings_verified_current": 31,
+  "static_review": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-normal-cli-independent/static-final02.json",
+    "sha256": "a201e53e9d609d9fe0d90f83778d5dc1e4b0eebb8a626b644ef53ff6897770cf",
+    "bytes": 11151
+  },
+  "build_checks": [
+    {
+      "program": "server",
+      "binary": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-server01",
+        "sha256": "2da78389db498e84e5ab01077c260e7f331caf9ba8470a7d02d4ffd9ce3855a2",
+        "bytes": 75059561
+      },
+      "build_result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-server01/result.json",
+        "sha256": "d81bf1d3faa693e8467be334cc554a280512b29ee6da7eac1880d358629c2de8",
+        "bytes": 1115
+      },
+      "input_count": 3974,
+      "before_after_current_equal": true,
+      "commands_exit_zero": true,
+      "before": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-server01/inputs-before.json",
+        "sha256": "4911f21813ec807b2ebec01454f399eded308493343936528e2ba35cb1972d08",
+        "bytes": 950987
+      },
+      "after": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-server01/inputs-after.json",
+        "sha256": "4911f21813ec807b2ebec01454f399eded308493343936528e2ba35cb1972d08",
+        "bytes": 950987
+      }
+    },
+    {
+      "program": "fixture",
+      "binary": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-fixture01",
+        "sha256": "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c",
+        "bytes": 5265162
+      },
+      "build_result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-fixture01/result.json",
+        "sha256": "e1a43a25ca743dda8b73585116cfcb9c78579d4ab89b3b2f6164fa657f342a87",
+        "bytes": 1185
+      },
+      "input_count": 1086,
+      "before_after_current_equal": true,
+      "commands_exit_zero": true,
+      "before": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-fixture01/inputs-before.json",
+        "sha256": "053b40dd2d0592b79ad2360f2ea0925acab3bfae14b120d4ed89804751cfefe7",
+        "bytes": 234640
+      },
+      "after": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-fixture01/inputs-after.json",
+        "sha256": "053b40dd2d0592b79ad2360f2ea0925acab3bfae14b120d4ed89804751cfefe7",
+        "bytes": 234640
+      }
+    }
+  ],
+  "server_outer_receipt_gap": {
+    "record": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s04-server01/outer-receipt-unavailable-readback.json",
+      "sha256": "f30a8c567832d569dcfde99c367218b2d7eb315a5ffe2d368485d514092ba460",
+      "bytes": 471
+    },
+    "precise_claim": "Stored child build.exit and build result report child exit0; actual binary and full build maps independently hash equal before/after/current. Outer terminal chunk/exit unavailable after truncated combined tool output and UnknownProcess. No outer success receipt is invented."
+  },
+  "command": {
+    "status": "Reviewed exact argv assembled from frozen bindings; execution-command.json not present at review and no execution performed.",
+    "argv": [
+      "python3",
+      "-B",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s04-normal-cli/normal-cli-driver.py",
+      "--server",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-server01",
+      "--worker",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s04-fixture01",
+      "--output",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s04-access-normal01",
+      "--expected-server-sha",
+      "2da78389db498e84e5ab01077c260e7f331caf9ba8470a7d02d4ffd9ce3855a2",
+      "--expected-worker-sha",
+      "0b2f66a20604f4d81de40d0419556e41139c041c459644d821c9f1a90aa2ac4c",
+      "--expected-driver-sha",
+      "6a58b8577355871e65f6d3c9f38e3ffa6951fb156aa79d1e365a00bcda74601f",
+      "--expected-bindings-sha",
+      "b6fdf2cee11d3f32d3a29838d19c962eb30c83f6cc95975ad454bea28f0522cf"
+    ],
+    "environment": "Inherited unchanged; coordinator adds only S04_ACCESS_CLI_GRANTED=1 before driver captures environment.",
+    "output_rule": "Exclusive absent test-instances/s04-access-*; reviewed concrete normal01 path is absent. No reuse/overwrite."
+  },
+  "conclusion": "Fresh normal server contains current S04 capability/schema/handler and pure dependency; fixture includes current SDK. Driver/static review unchanged. Old S02/S03 server not used. Proceed only via coordinator previously authorized owned CLI, no alternate route or environment rewrite.",
+  "not_claimed": [
+    "No service/driver/network/SQLite execution or Go build by reviewer.",
+    "No runtime PASS or repaired server outer-tool receipt.",
+    "No reopening prior source/App/SDK scope or UI/real site/remote delivery conclusion."
+  ]
+}
