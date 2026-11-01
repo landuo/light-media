@@ -1,0 +1,49 @@
+{
+  "note": "Read-only contextual snapshot, not competing progress ledger. Coordinator alone updates authoritative ledger.",
+  "source": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/migration/ledger.json",
+    "bytes": 4155247,
+    "sha256": "770276e3102756b277c4438053862133c5059931a0f122777a8e5ad3c3b9db36"
+  },
+  "semantic_scope_reconciliation": {
+    "id": "S01",
+    "old_operation_scope": "标准插件枚举已完成下载任务；不需预知hash",
+    "precise_operation_inventory": "qB/Transmission get_completed_torrents(ids,tags)，包括未提供ids的完成任务枚举",
+    "current_owner": "S01；Transmission查询实现是覆盖该操作的可复用实现",
+    "semantic_judgment": "旧需求是无预知hash的已完成任务枚举；当前全任务get_torrents/下载中查询与通用服务选择是支持或额外范围，不把全部下载器查询自动写成旧承诺。Transmission已验与qB具体剩余分开。",
+    "current_ledger_status": "implementing",
+    "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
+  },
+  "parent_acceptance_current": {
+    "id": "S01",
+    "description": "S01 · 下载器任务完整枚举",
+    "scope": "qB/Transmission get_completed_torrents(ids,tags)，包括未提供ids的完成任务枚举",
+    "counts_once": true,
+    "credit_basis": "original parent scope plus delivered child evidence, not child count",
+    "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+    "historical_evidence_reference": null,
+    "existing_evidence_ids": [],
+    "remaining": [
+      "原精确qB/TR completed两操作历史已验信用保留。当前HEAD808148的qB completed专用constructor经NewIYUUClient仍strict；固定原qB同self.qbc VERIFY_WEBUI_CERTIFICATE=False，已核实际差异。",
+      "root于2026-11-01T10:29重核用户21:55披露为仅qBittorrent客户端而非commands限定；S01同qB独立query客户端在原许可内。仅该constructor私有TLS clone准备中，待owned TLS/native/host受影响链与独审，不改共享NewIYUU/TR/全局或跨域凭据。",
+      "不扩全get_torrents/downloading、全部service发现或真实qB daemon为旧两项要求。"
+    ],
+    "status": "partial_specific_remaining",
+    "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+    "target_revision": "808148abfad0b7fe230c426387a3b7b49eeedb18",
+    "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+    "legacy_schema_status_not_parent_progress": true,
+    "new_test_execution_claimed": false,
+    "publication_unit": "whole_current61_parent_only",
+    "remaining_history": [
+      {
+        "as_of": "2026-11-01T08:53:45.574601+00:00",
+        "remaining": [
+          "原精确两项qB/TR completed枚举均已有实现和真实门；剩余已知差异是qB completed仍走旧NewIYUUClient严格TLS，而源qB ctor VERIFY_WEBUI_CERTIFICATE=False。新独立qB commands的单独授权不自动覆盖此旧query客户端。",
+          "不将全get_torrents/downloading、全部service发现或真实qB daemon新增为旧completed两项要求。"
+        ]
+      }
+    ],
+    "progress_updated_at": "2026-11-01T10:32:38.323890+00:00"
+  }
+}

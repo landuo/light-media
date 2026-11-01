@@ -1,0 +1,62 @@
+{
+  "utc": "2026-11-01T10:50:05.784818+00:00",
+  "reviewer": "/root/continue_platform_astra/meta_target_review",
+  "status": "ACCEPTED_FINITE_NATIVE_NORMAL1_RACE1",
+  "readback": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s01-qb-query-tls-independent/final02/readback.json",
+    "bytes": 7645,
+    "sha256": "b700f8acc4cc61a9be9082d64b55eb4acca880347134272d09aa835ca458e958"
+  },
+  "preexec02": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s01-qb-query-tls-independent/preexec02/seal.json",
+    "bytes": 4163,
+    "sha256": "960ad60c0a6593680bf958249a622a1856dbf12ed45b3f427e3d600f96fb26c5"
+  },
+  "original01_failure": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s01-qb-query-tls-independent/normal01-failure/readback.json",
+    "bytes": 3888,
+    "sha256": "edb5d9844a799255725e8105870a3557f3bee65bebbcce3baf693f35ccc308b5"
+  },
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate02.json",
+    "bytes": 3569,
+    "sha256": "22eaadf630d91021e030dc4cd0bcc75cadc1533472e37bdd589e21b8505b2c28"
+  },
+  "actual_summary": [
+    {
+      "label": "s01-qb-query-tls-native02",
+      "inputs": 2803,
+      "declarations": 2826,
+      "program": "a0b9cf7081e58820991d529f562cd7bd7b3e80b608f82e476c1976859a1fe22d",
+      "roots": [
+        "TestQBittorrentCompletedPrivateTLSAndScope"
+      ],
+      "race": false,
+      "exit": 0
+    },
+    {
+      "label": "s01-qb-query-tls-native-race02",
+      "inputs": 2811,
+      "declarations": 2834,
+      "program": "0974b401afe6017a95f1eb1d244d620122dfd1d4fb00af5d59a8dd39325f85b9",
+      "roots": [
+        "TestQBittorrentCompletedPrivateTLSAndScope"
+      ],
+      "race": true,
+      "exit": 0
+    }
+  ],
+  "accepted_assertions": [
+    "qB-only completed constructor successfully issues actual POST/filter=completed on fixed owned self-signed TLS, retainingAPIkey/guard/logging/mutation/session/20s/denyredirect ordering.",
+    "Same endpoint default strict client produces actual x509.UnknownAuthorityError beforeHTTP; unchanged mixedIYUU also remains strict. No global transport replacement,verification disable orRootCAs change after normal standard initialization.",
+    "Owned302 response not followed, otherownedorigin handler count0; guardrevocation and canceledcontext preventHTTP; wrongTRconstructor rejected. Exact successful root checks handler counts2, not a general traffic trace.",
+    "Private clonedtransport policy and one native normal/race root accepted; inherited S01 source/pure/App/CLI credit remains only its previous layer, not rerun/expanded."
+  ],
+  "limitations": [
+    "Original native01 root FAIL remains unchanged and race01 never ran. Test-only02 initializes standard HTTP2 metadata before baseline; productionbe066d79 byte-identical.",
+    "No new App/worker/ordinaryCLI/realqBdaemon/sourceexecution/fullS01 completion; parent whole-item acceptance still requires remaining integration layers.",
+    "No upstream/CONNECT/fallback/proxy/CAenvironment changes; original inherited process timezone not normalized in this gate.",
+    "VetNOT_RUN, no current vet failure asserted from historical runner string.",
+    "Toolreceipts are coordinator transcriptions bound to actualresults, not raw replay. Reviewer only read/hash/JSON inspection."
+  ]
+}

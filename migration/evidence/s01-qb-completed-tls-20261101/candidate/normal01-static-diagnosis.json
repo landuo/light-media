@@ -1,0 +1,41 @@
+{
+  "status": "STATIC_DIAGNOSIS_OF_REAL_TEST_FAIL_NOT_NEW_RUNTIME",
+  "failure": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s01-qb-query-tls-native01/tests.stdout",
+    "bytes": 1461,
+    "sha256": "28c2594ea7eaee238ddc2eac2c1ecb36f372e0de44014eb8066a85ead3c1c7e6"
+  },
+  "result": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s01-qb-query-tls-native01/result.json",
+    "bytes": 3343,
+    "sha256": "568e7729336b6b3b4444b3e4bda1f66b9f84fc9e9bbb2d39f8de044c81423ce9"
+  },
+  "bound_original_toolchain_sources": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/src/net/http/transport.go",
+      "bytes": 100272,
+      "sha256": "1c170ec3581321bd19ccd1b15863f46b16dc749ac6d54d00f5e97f7ffa2ccb5f"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/src/net/http/h2_bundle.go",
+      "bytes": 397052,
+      "sha256": "ab688dbefd062d0e8f2b440f315d010c942df0a3b31d3c6685d90374d36783b1"
+    }
+  ],
+  "source_path": [
+    "DefaultTransport ForceAttemptHTTP2=true transport.go52",
+    "Clone transport.go338 initializes original nextProtoOnce",
+    "onceSetNextProtoDefaults transport.go434 calls http2configureTransports",
+    "h2_bundle.go7536-7537 nil TLSClientConfig gets new strict tls.Config",
+    "Clone transport.go363 clones initialized TLS config"
+  ],
+  "actual_observed": "root sole assertion failure at test140 after earlier owned request, exact UnknownAuthorityError, old-client strict and redirect/guard/cancel assertions returned normally; entire root remains FAIL",
+  "not_observed": "original assertion did not print which OR operand or before/after TLS pointer; no fabricated pointer capture or new runtime",
+  "static_conclusion": "pointer equality across documented lazy initialization is stronger than absence of policy mutation; product writes only the cloned TLS config, while Go may initialize the original default during Clone/firstRoundTrip",
+  "proposed_test_only_correction": "prime standard global.Clone without any request, close that private empty clone; then capture initialized baseline pointer and RootCAs; preserve pointer, skipverify, cert-rejection and global identity assertions",
+  "product_unchanged": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate/internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed.go",
+    "bytes": 5494,
+    "sha256": "be066d79fd60e5074bc427bdcff9f0b14d0d5b6359c0e7498f36b85592d2482d"
+  }
+}

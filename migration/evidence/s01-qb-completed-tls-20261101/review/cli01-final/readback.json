@@ -1,0 +1,182 @@
+{
+  "utc": "2026-11-01T11:24:33.301449+00:00",
+  "status": "ACTUAL_ORDINARY_HTTPS_AFFECTED_CHAIN_PASS",
+  "baseline": "bd4ec4513e6ff9edc6eb4e0a357febf7d4ec30e0",
+  "input_count": 4094,
+  "current_drift": [],
+  "control_calls": 20,
+  "public_bodies": 18,
+  "hosts": [
+    23,
+    53
+  ],
+  "host_exit_codes": [
+    0,
+    0
+  ],
+  "worker_observations": [
+    38,
+    38,
+    38,
+    68
+  ],
+  "business_statuses": [
+    200,
+    502,
+    200,
+    200
+  ],
+  "endpoint_counts": {
+    "GET /artifact/index": 1,
+    "GET /artifact/worker.zip": 1,
+    "POST /api/v2/auth/login": 4,
+    "POST /api/v2/torrents/info": 4
+  },
+  "same_database_config_public_readback": {
+    "downloader_id": "owned-qb",
+    "ids_json": "null",
+    "tags_json": "\"owned\""
+  },
+  "actual_failure_public_body": {
+    "detail": "Plugin execution failed"
+  },
+  "observations_only_and_401_no_qB_calls": true,
+  "environment_unchanged": true,
+  "receipt": {
+    "at": "2026-11-01T11:23:27.528723+00:00",
+    "actual_session": 48539,
+    "launch_chunk": "d10e47",
+    "terminal_chunk": "e0195c",
+    "exit_code": 0,
+    "command_file": "target-drafts/s01-qb-query-tls-cli01/COMMAND.txt",
+    "result_sha256": "feab755d158ac0fe267ae83e12a1382c0b719b34d2d4d889a1c72eec1cdfea10",
+    "boundary": "Actual ordinaryApp+installedSDKworker+ownedfixedHTTPSprotocol; no real qBdaemon/realcredentials/browser/newTRclaims"
+  },
+  "public_artifacts": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/coordinator-tool-receipt.json",
+      "bytes": 440,
+      "sha256": "15ec5b5bcfd058eea09c10120935189988d59ebe231e2048bdd1384956585733"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/driver.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/host-1.log",
+      "bytes": 5537,
+      "sha256": "7a821e6ee988936badfc3b2f3c28aedfdfb1de078773aed7ebd707e13ef1e97f"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/host-2.log",
+      "bytes": 2870,
+      "sha256": "b0459fb1be25c24263b4d8cae87f3334b0a7d9b90f6d49ece38487d53a48aea7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/resources.jsonl",
+      "bytes": 2304,
+      "sha256": "a29e003a432f73424b6ccbd40e5d5e05e5e36bdf52761d28a6df60d5a38e9b21"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-001.body",
+      "bytes": 88,
+      "sha256": "bdfe78c3d0866e5d3bfbc6210ae2bd211fa1458768f21a5a75ed4005c08e4edb"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-003.body",
+      "bytes": 288,
+      "sha256": "90ab643f6ed86d15ad5302f908a806bb415301b462e70303378a86068e644f55"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-004.body",
+      "bytes": 70,
+      "sha256": "28786002eacd8dc6f519e42a256f7324220dde4369172ffebe8bb19f79218af2"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-005.body",
+      "bytes": 70,
+      "sha256": "9d5557ba857931b5333fb319a2d6a0311b43ba9d8da90f4822929eadabe120ba"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-006.body",
+      "bytes": 124,
+      "sha256": "c4fe3acb739e811a42260c1d44a9306930e0e1f2b0a43e4bb7ff84f8446b0990"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-007.body",
+      "bytes": 72,
+      "sha256": "23c0e825cc0b901744e6fbfb19a700798e8cd72f9f977887390a22036ffccc87"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-008.body",
+      "bytes": 31,
+      "sha256": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-009.body",
+      "bytes": 170,
+      "sha256": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-010.body",
+      "bytes": 37,
+      "sha256": "3cf25cfeec180ed603151c97f7e565ca0cae4d41bdb8136b30f43082b20e326e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-011.body",
+      "bytes": 72,
+      "sha256": "23c0e825cc0b901744e6fbfb19a700798e8cd72f9f977887390a22036ffccc87"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-012.body",
+      "bytes": 170,
+      "sha256": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-013.body",
+      "bytes": 72,
+      "sha256": "23c0e825cc0b901744e6fbfb19a700798e8cd72f9f977887390a22036ffccc87"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-014.body",
+      "bytes": 88,
+      "sha256": "b38641d4a8f071c642a0a52d39cbb3acdda7a08a7e9951478a08708c78b0e1aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-016.body",
+      "bytes": 288,
+      "sha256": "ddecc356fe62ba30846b8d438413f7fe50dc63c0c331a4d8c3ce886ea73548b0"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-017.body",
+      "bytes": 124,
+      "sha256": "dd9d0f532067840f2b5b9ab1b8a3027cdbab1dd701a60ab106bdae109cb37103"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-018.body",
+      "bytes": 72,
+      "sha256": "65c666adf49272ce8ea0241e7c1907869566b14796c909cd18ddad86112e3351"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-019.body",
+      "bytes": 31,
+      "sha256": "54f3c001dd9badd7aee7eca0fdb39cc8c2f052c8cf286213546dcdf56e29b72b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/response-020.body",
+      "bytes": 170,
+      "sha256": "94befd02ef1e18bc352b3de6b1889346945b7f099e53fd407a187efeb1f07dd2"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/result.json",
+      "bytes": 18385,
+      "sha256": "feab755d158ac0fe267ae83e12a1382c0b719b34d2d4d889a1c72eec1cdfea10"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s01-qb-query-tls-cli01/worker-manifest.json",
+      "bytes": 631,
+      "sha256": "d2eb1fc09d69c41cb009a200554c2bb3d9da2aa2159dc82fcaa90fd00f507e49"
+    }
+  ]
+}

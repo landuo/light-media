@@ -1,0 +1,90 @@
+{
+  "status": "PASS",
+  "started": "2026-11-01T11:19:24.500478+00:00",
+  "base": "bd4ec4513e6ff9edc6eb4e0a357febf7d4ec30e0",
+  "kind": "compile-only normal worker and server; no program executed",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/gates03-build/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-json",
+        "./cmd/owned-qbittorrent-completed-fixture",
+        "./cmd/server"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "build-worker",
+      "argv": [
+        "go",
+        "build",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/gates03-build/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s01-qb-query-tls-worker01",
+        "./cmd/owned-qbittorrent-completed-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "build-server",
+      "argv": [
+        "go",
+        "build",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/gates03-build/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s01-qb-query-tls-server01",
+        "./cmd/server"
+      ],
+      "exit": 0
+    }
+  ],
+  "programs": {
+    "worker": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s01-qb-query-tls-worker01",
+      "sha256": "766f111fab98abf49047992a9f53347040d722413ffb956271d1bd63559073bc",
+      "bytes": 5265191,
+      "package": "./cmd/owned-qbittorrent-completed-fixture"
+    },
+    "server": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s01-qb-query-tls-server01",
+      "sha256": "bb787344617cc8705b4a410dc40c0092144c9b4417ebd75df7fb13cd77f2fd4c",
+      "bytes": 75548750,
+      "package": "./cmd/server"
+    }
+  },
+  "proxy_environment_unchanged": true,
+  "tests_executed": false,
+  "vet": "NOT_RUN (go build only)",
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "scratch_free": 39403290624,
+      "tmp_free": 5225328640
+    },
+    {
+      "phase": "build-worker",
+      "scratch_free": 39399411712,
+      "tmp_free": 5225328640
+    },
+    {
+      "phase": "build-server",
+      "scratch_free": 39392845824,
+      "tmp_free": 5225328640
+    }
+  ],
+  "input_count": 4060,
+  "input_drift": [],
+  "ended": "2026-11-01T11:19:37.332756+00:00"
+}

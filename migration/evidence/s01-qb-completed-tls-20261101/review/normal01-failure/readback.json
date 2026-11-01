@@ -1,0 +1,62 @@
+{
+  "utc": "2026-11-01T10:45:20.937949+00:00",
+  "status": "ACTUAL_NORMAL1_FAIL_RETAINED",
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s01-qb-query-tls-native01/result.json",
+      "bytes": 3343,
+      "sha256": "568e7729336b6b3b4444b3e4bda1f66b9f84fc9e9bbb2d39f8de044c81423ce9"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s01-qb-query-tls-native01/inputs-before.json",
+      "bytes": 612775,
+      "sha256": "57f277619c79a7e837a6034c2e80a1ae0e8bdd4271d7ce0a1bc540b99ff83cac"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s01-qb-query-tls-native01/inputs-after-compile.json",
+      "bytes": 612775,
+      "sha256": "57f277619c79a7e837a6034c2e80a1ae0e8bdd4271d7ce0a1bc540b99ff83cac"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s01-qb-query-tls-native01/tests.stdout",
+      "bytes": 1461,
+      "sha256": "28c2594ea7eaee238ddc2eac2c1ecb36f372e0de44014eb8066a85ead3c1c7e6"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s01-qb-query-tls-native01/tests.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s01-qb-query-tls-native01/tests.exit",
+      "bytes": 2,
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/src/net/http/transport.go",
+      "bytes": 100272,
+      "sha256": "1c170ec3581321bd19ccd1b15863f46b16dc749ac6d54d00f5e97f7ffa2ccb5f"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/src/net/http/h2_bundle.go",
+      "bytes": 397052,
+      "sha256": "ab688dbefd062d0e8f2b440f315d010c942df0a3b31d3c6685d90374d36783b1"
+    }
+  ],
+  "input_count": 2798,
+  "before_after_compile_equal": true,
+  "independent_post_failure_current_drift": [],
+  "after_test_map_absent_as_runner_stopped_on_nonzero": true,
+  "program_sha256": "ea8585c8de7cb81c7432ff185a428cf0e4ee9e407116fd0734ae5c9bb40ee76f",
+  "findings": [
+    "Actual unique root failed at test line140 global TLS/transport pointer identity; aggregate FAIL. No race executed after set-e shell stopped.",
+    "Pinned net/http Transport.Clone calls nextProtoOnce.Do before exported deep copy. HTTP2 standard initialization may allocate strict TLSClientConfig on original transport and add ALPN; TLSConfig.Clone then deep-copies to new transport. Thus pre-Clone nil pointer identity is not a valid invariant for standard Clone.",
+    "Actual execution reached later line140, so preceding completed self-signed request, strict x509.UnknownAuthorityError, old generalIYUU strict failure,302no-follow,revoked guard and canceled context assertions did not fail. These are partial trace observations, not a rootPASS; final wrong-TR constructor assertion after140 did not execute.",
+    "Proposed narrow test-only correction: invoke standard Clone before recording global TLS config/RootCAs baseline, close only this no-connection private clone; retain actual strict negative control and ensure global verification/RootCAs remain unchanged. No product change justified by this failure."
+  ],
+  "limits": [
+    "This reviewer only read and hashed files; no tests/source/native/network execution.",
+    "Coordinator messages identify session13476 c8aec3→e7ac18 exit1; independent artifact proof is bound here without inventing raw tool replay.",
+    "Before/aftercompile/current maps verified; no after-test map is manufactured. Original FAIL evidence remains unchanged."
+  ]
+}

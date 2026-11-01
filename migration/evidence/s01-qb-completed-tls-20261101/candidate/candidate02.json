@@ -1,0 +1,75 @@
+{
+  "status": "EXTERNAL_FROZEN_NOT_EXECUTED",
+  "baseline": "808148abfad0b7fe230c426387a3b7b49eeedb18",
+  "products": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate/internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed.go",
+      "bytes": 5494,
+      "sha256": "be066d79fd60e5074bc427bdcff9f0b14d0d5b6359c0e7498f36b85592d2482d",
+      "target": "internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed.go"
+    }
+  ],
+  "tests": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate02/internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed_tls_test.go",
+      "bytes": 6544,
+      "sha256": "723c4486a24a9cb6ae86a10ffd5a42b36252cc2a6529fddbde745af10bb7c25a",
+      "target": "internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed_tls_test.go"
+    }
+  ],
+  "source": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/qbittorrent/qbittorrent.py",
+    "bytes": 27897,
+    "sha256": "114b2f5e78a89bd3384c1bb0fe29a9e6b5144e575ef63fb852bfe148387b29b0"
+  },
+  "preimage": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/before/shared_qbittorrent_completed.go",
+    "bytes": 4618,
+    "sha256": "ea9a7952068a106671f8710fb780413f8afe91967adc7b10b24eac62517b2883"
+  },
+  "patch": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate01.patch",
+    "bytes": 8447,
+    "sha256": "9bbabba62a56fdc29c885c42a9deb92eb6a39011331a5d2e36d5403f41c861f3"
+  },
+  "contract": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/CONTRACT.md",
+    "bytes": 4338,
+    "sha256": "ef397f711aef1ce1063eafc233ba9e883f5148734ef523446525004fdf8afc83"
+  },
+  "source_and_inheritance": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/source-and-inheritance.json",
+    "bytes": 5930,
+    "sha256": "6e5f76c563e56a7553909331612d4b2305dc14202a3eedf0c1f1a15a04149ba5"
+  },
+  "normal_roots": [
+    "TestQBittorrentCompletedPrivateTLSAndScope"
+  ],
+  "race_roots": [
+    "TestQBittorrentCompletedPrivateTLSAndScope"
+  ],
+  "not_claimed": [
+    "source rerun",
+    "App/installed worker/ordinary CLI",
+    "real qB daemon",
+    "whole S01 completion",
+    "TR or global TLS changes"
+  ],
+  "revision": 2,
+  "supersedes_test_only": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate01.json",
+    "bytes": 2597,
+    "sha256": "9d609a1624193fc309de4c6a82a902d12a19d904d95ba2c6e90f350bb11f1517"
+  },
+  "test_delta": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate01-to02-test-only.patch",
+    "bytes": 1740,
+    "sha256": "81f276013303bc98c3ee8fa6f5774bbf053e35c2c4c5513d3e30f6930833baea"
+  },
+  "diagnosis": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/normal01-static-diagnosis.json",
+    "bytes": 2627,
+    "sha256": "9962bf1e1a2f26c733c45bf3bd7df16006fb77afe77f98a63a078da7fef8d53e"
+  },
+  "original01_runtime": "actual whole root FAIL retained; no product changes or independent success claims for intermediate assertions"
+}

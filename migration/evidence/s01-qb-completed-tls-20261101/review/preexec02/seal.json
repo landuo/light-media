@@ -1,0 +1,72 @@
+{
+  "utc": "2026-11-01T10:45:54.834818+00:00",
+  "reviewer": "/root/continue_platform_astra/meta_target_review",
+  "status": "PREEXEC_READY_TEST_ONLY_REVISION02_NORMAL1_THEN_RACE1",
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate02.json",
+    "bytes": 3569,
+    "sha256": "22eaadf630d91021e030dc4cd0bcc75cadc1533472e37bdd589e21b8505b2c28"
+  },
+  "preparation": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/preparation-seal02.json",
+    "bytes": 3090,
+    "sha256": "d29ff0934b968627bb2006e224bbac92d9bfd3ba902e4eaf46147d7f8eacc91a"
+  },
+  "command": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/gates02/run.sh",
+    "bytes": 1156,
+    "sha256": "671ae5f516b608bcec7cf8eaae3a9d47af446356b36e37293cf4d4faef51a16e"
+  },
+  "binding": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/gates02/overlay-inputs.json",
+    "bytes": 12653,
+    "sha256": "23b1c125cbce57c4e87829450627ef3638a042fc54f647faed8d8756e8794040"
+  },
+  "delta": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate01-to02-test-only.patch",
+    "bytes": 1740,
+    "sha256": "81f276013303bc98c3ee8fa6f5774bbf053e35c2c4c5513d3e30f6930833baea"
+  },
+  "rows_checked": 64,
+  "unique_paths_checked": 46,
+  "product_byte_exact_unchanged": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate/internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed.go",
+      "bytes": 5494,
+      "sha256": "be066d79fd60e5074bc427bdcff9f0b14d0d5b6359c0e7498f36b85592d2482d",
+      "target": "internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed.go"
+    }
+  ],
+  "baseline": "808148abfad0b7fe230c426387a3b7b49eeedb18",
+  "prior_preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s01-qb-query-tls-independent/preexec01/seal.json",
+    "bytes": 4340,
+    "sha256": "4e6503d899b92aebddab38d3e1acb6f082c00c7b5ec7a12c2b5eda5907bad3f4"
+  },
+  "original_failure": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s01-qb-query-tls-independent/normal01-failure/readback.json",
+    "bytes": 3888,
+    "sha256": "edb5d9844a799255725e8105870a3557f3bee65bebbcce3baf693f35ccc308b5"
+  },
+  "findings": [
+    "Exact two-hunk test delta verified from old/new bytes; standard Clone initialization before baseline has no request or connection, private unused clone close does not close global transport.",
+    "Keeps actual strict x509.UnknownAuthorityError control and all original completed request, redirect-no-follow, guard/cancel and TR-rejection assertions; additionally verifies RootCAs pointer unchanged after policy use.",
+    "Production qB completed private clone bytes unchanged. Source same qbc scope and15 non-target references inherit preexec01 exact credit.",
+    "Binding adds exact pinned transport.go/h2_bundle.go that explain the old fixture failure; no source imports/network/proxy/CA modification or policy bypass added."
+  ],
+  "execution": {
+    "normal_label": "s01-qb-query-tls-native02",
+    "race_label": "s01-qb-query-tls-native-race02",
+    "package": "./internal/plugins/iyuuautoseed/native",
+    "roots": [
+      "TestQBittorrentCompletedPrivateTLSAndScope"
+    ],
+    "ordering": "Coordinator serial normal then race only after normal terminal PASS; stop on failure."
+  },
+  "boundaries": [
+    "No run by reviewer; READY is not PASS. Original native01 actual root FAIL and no race01 retained.",
+    "No old native root replay, source rerun, App/worker/CLI/realdaemon/wholeS01 completion.",
+    "Vet NOT_RUN; inherited automatic vet explanation is historical, not a current vet failure.",
+    "Owned explicit tcp4 TLS only, existing env/proxy/CA unchanged, no fallback/CONNECT/upstream or credential expansion."
+  ]
+}

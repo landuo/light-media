@@ -1,0 +1,11 @@
+--- normal-cli-driver.py
++++ normal-cli-driver02.py
+@@ -12,7 +12,7 @@
+ args=P.parse_args();AUDIT=Path(__file__).resolve().parent;ROOT=AUDIT.parents[1]
+ BINDINGS=AUDIT/'execution-bindings.json'
+ SERVER,WORKER,E=(Path(p).resolve() for p in (args.server,args.worker,args.output))
+-BASE='808148abfad0b7fe230c426387a3b7b49eeedb18'
++BASE='bd4ec4513e6ff9edc6eb4e0a357febf7d4ec30e0'
+ CANDIDATE=ROOT/'target-drafts/s01-qb-query-tls01/candidate02.json'
+ CANDIDATE_SHA='22eaadf630d91021e030dc4cd0bcc75cadc1533472e37bdd589e21b8505b2c28'
+ TESTCERT=ROOT.parent/'plugins-cloud-20261028/toolchain/go/src/net/http/internal/testcert/testcert.go'

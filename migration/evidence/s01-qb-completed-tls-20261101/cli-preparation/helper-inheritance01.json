@@ -1,0 +1,86 @@
+{
+  "mode": "static AST comparison only; neither driver imported/executed",
+  "original": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only-cli01/normal-cli-driver.py",
+    "bytes": 28173,
+    "sha256": "8f34baf68940fbbbd09e0c8fe1fd1c95570f95e7599f14c516add35ef39c5128"
+  },
+  "new": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls-cli01/normal-cli-driver.py",
+    "bytes": 28027,
+    "sha256": "042262ba94e2781a6a0be19d57e805d5aad2edb6aa68676a9a28b344ba899c68"
+  },
+  "same_full_nodes": [
+    {
+      "name": "bind_worker",
+      "ast_sha256": "062536b7f856f9266a791e72beaacaf92d22ebf6f3cb915cfb830d7d96f8fd98"
+    },
+    {
+      "name": "check",
+      "ast_sha256": "58a6782f78194fba1925d7dfdec61aa2c64922c1e0a7fa52f78636a6ade9f2a6"
+    },
+    {
+      "name": "exact_owned_listener",
+      "ast_sha256": "cb6a6441ec98f5c03c2967ee8befeac656f677ec39c7f8ced16bdad8817db34e"
+    },
+    {
+      "name": "held_host",
+      "ast_sha256": "df2d6bdf5eda697dedcbec7696e29787b574f1cc3b2b8891f676ad45d1721b9f"
+    },
+    {
+      "name": "identity",
+      "ast_sha256": "8b8efe7ac3b3c9bf20af5a9cd771adea04f73f01789f923f5de4a3a768544a4b"
+    },
+    {
+      "name": "make_tls_peer",
+      "ast_sha256": "566f1e698745e8cd778866b50fad99d79e72c86bf7e3c3cec7263bef6a846ba4"
+    },
+    {
+      "name": "now",
+      "ast_sha256": "b99c66735a3e9c6a78ff6f0985160e715909dcc5dfa52c1a5ac6a107ddb1977a"
+    },
+    {
+      "name": "peer_counts",
+      "ast_sha256": "02a9f8beba15e1289898d03cfea51ecebb93d907b50f1af83b8e719355b96e75"
+    },
+    {
+      "name": "reserve",
+      "ast_sha256": "76c0d66df4b9bc576b72d63e0518a0b2b73922ef56af70d880f3114cf951d657"
+    },
+    {
+      "name": "save",
+      "ast_sha256": "7ae6c55d662f77748ff4aa412a1e3ccbcffa8ee601fc3d9ecd2df719678d97cc"
+    },
+    {
+      "name": "sha",
+      "ast_sha256": "f43200c2ab9413b67d32fb0f879a9b25c7d90b843e57a584062f8efed5e604e9"
+    },
+    {
+      "name": "stop",
+      "ast_sha256": "fd6b1bb2b46945b348d6641bc4368b0799e2d8ddaf5c2357856856940c5648bb"
+    },
+    {
+      "name": "wait_workers",
+      "ast_sha256": "0e701186f275c059bee0639d7a1dc2df15b0be64ca6bd234713d538b2f195d38"
+    }
+  ],
+  "changed_common_nodes": [
+    "Peer",
+    "call",
+    "preflight",
+    "start"
+  ],
+  "new_nodes": [
+    "business",
+    "counts",
+    "observe_worker",
+    "quiet",
+    "safe_summary"
+  ],
+  "same_controller_authority": "exact http://127.0.0.1:39123, held child PID/starttime/exe and owned listener inode, no redirects",
+  "business_inheritance": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/migration/evidence/s01-qb-completed-minimal-20261031/cli-driver.py",
+    "bytes": 22474,
+    "sha256": "d2bb0571f8eb24b743a35abbdfb385a5174d3d5819c8c2ce11cc064f3e54387d"
+  }
+}

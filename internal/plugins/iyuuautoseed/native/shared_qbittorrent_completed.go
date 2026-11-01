@@ -3,18 +3,22 @@ package download
 import (
 	"bytes"
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
 	"unicode/utf8"
+
+	"light-media/internal/logging"
 )
 
 // QBittorrentCompletedClient exposes only the source completed info request.
-// Authentication, timeouts, TLS verification, redirect policy, response budget,
-// lock and per-dispatch guard remain the existing native client's behavior.
-// No old IYUU/Transfer method or session policy is changed by this adapter.
+// This qB-only private client follows the approved original constructor's
+// VERIFY_WEBUI_CERTIFICATE=False. Authentication, timeout, redirect policy,
+// response budget, lock and per-dispatch guard remain the existing behavior.
+// The global transport, old IYUU/Transfer clients and TR are not changed.
 type QBittorrentCompletedClient struct{ native *IYUUClient }
 
 func NewQBittorrentCompletedClient(config Config, apiKey string, guard func(context.Context) error) (*QBittorrentCompletedClient, error) {
@@ -29,6 +33,22 @@ func NewQBittorrentCompletedClient(config Config, apiKey string, guard func(cont
 	if err != nil {
 		return nil, err
 	}
+	original, ok := http.DefaultTransport.(*http.Transport)
+	if !ok {
+		return nil, failure("qb_completed", "unsupported_default_transport")
+	}
+	transport := original.Clone()
+	if transport.TLSClientConfig == nil {
+		transport.TLSClientConfig = &tls.Config{}
+	}
+	// Clone owns its TLS config and connection pool. Retain its existing proxy,
+	// dialer and all other defaults; no direct fallback or global CA mutation.
+	transport.TLSClientConfig.InsecureSkipVerify = true
+	var rt http.RoundTripper = &mutationDispatchTransport{next: logging.Transport(transport)}
+	if apiKey != "" {
+		rt = &iyuuBearer{next: rt, origin: client.client.base.Scheme + "://" + client.client.base.Host, token: apiKey}
+	}
+	client.client.http.Transport = &iyuuGuard{next: rt, guard: guard}
 	return &QBittorrentCompletedClient{native: client}, nil
 }
 

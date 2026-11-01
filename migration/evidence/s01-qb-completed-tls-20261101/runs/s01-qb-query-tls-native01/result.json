@@ -1,0 +1,94 @@
+{
+  "started": "2026-11-01T10:42:21.251602+00:00",
+  "driver_pid": 2,
+  "package": "./internal/plugins/iyuuautoseed/native",
+  "pattern": "^TestQBittorrentCompletedPrivateTLSAndScope$",
+  "race": false,
+  "status": "FAIL",
+  "vet": "NOT_RUN: virtual-only package directory; prior automatic vet chdir failure retained",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/gates01/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins/iyuuautoseed/native"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/gates01/overlay.json",
+        "-vet=off",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s01-qb-query-tls-native01.test",
+        "./internal/plugins/iyuuautoseed/native"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/iyuuautoseed/native",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s01-qb-query-tls-native01.test",
+        "-test.v",
+        "-test.run",
+        "^TestQBittorrentCompletedPrivateTLSAndScope$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ],
+      "exit": 1
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "overlay": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate/internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed_tls_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate/internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed_tls_test.go"
+  },
+  "extra_inputs": [],
+  "preflight_verified_files": 37,
+  "preflight_verified_replacements": 2,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T10:42:21.354813+00:00",
+      "scratch_free": 40225972224,
+      "tmp_free": 5225402368
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T10:42:22.039001+00:00",
+      "scratch_free": 40223707136,
+      "tmp_free": 5225402368
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T10:42:24.325335+00:00",
+      "scratch_free": 40202690560,
+      "tmp_free": 5225402368
+    }
+  ],
+  "input_count": 2798,
+  "program_sha256": "ea8585c8de7cb81c7432ff185a428cf0e4ee9e407116fd0734ae5c9bb40ee76f",
+  "error_class": "RuntimeError",
+  "error": "tests exited 1",
+  "ended": "2026-11-01T10:42:24.414258+00:00"
+}

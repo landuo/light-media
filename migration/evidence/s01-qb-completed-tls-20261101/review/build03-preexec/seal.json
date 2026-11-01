@@ -1,0 +1,78 @@
+{
+  "utc": "2026-11-01T11:15:05.982924+00:00",
+  "reviewer": "/root/continue_platform_astra/meta_target_review",
+  "status": "PREEXEC_READY_BD4_NORMAL_WORKER_THEN_SERVER_COMPILE_ONLY",
+  "preparation": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/gates03-build/preparation-seal.json",
+    "bytes": 2428,
+    "sha256": "d0261c52741ddd1c57b8f6d2b037fde2b6fdaa92cf2ed8a3acb4ea328e2610be"
+  },
+  "binding": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/gates03-build/binding.json",
+    "bytes": 31158,
+    "sha256": "500baeec25427788ef25abafd795ee8600baedc34f83b144bfb7e02c473b91b0"
+  },
+  "overlay": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/gates03-build/overlay.json",
+    "bytes": 3971,
+    "sha256": "cfe915560b726de5d9ee9d8c1e9f634bdac5f6a2319f0d9cd1e4124445af994a"
+  },
+  "builder": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/gates03-build/build.py",
+    "bytes": 5099,
+    "sha256": "d34739c628ab7295080f54ba0df0275c31007c9ecce6a8dad214ace02e61b344"
+  },
+  "command": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/gates03-build/run.sh",
+    "bytes": 599,
+    "sha256": "fe9b7273e7576257bbc42b4e494d8ec78f3e22325c05b106c68c3e0da9f681c8"
+  },
+  "rebase_proof": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/gates03-build/rebase-proof.json",
+    "bytes": 11894,
+    "sha256": "496c4cfff875262ddaa78400a09ce5b34e12984a9983b0ab768b892c843b59cb"
+  },
+  "checks": {
+    "head": "bd4ec4513e6ff9edc6eb4e0a357febf7d4ec30e0",
+    "explicit_binding_inputs": 63,
+    "checked_rows_including_duplicates": 131,
+    "mappings": 21,
+    "headcopies_git_blob_exact": 3,
+    "compile_hidden_only": 17,
+    "qB_private_tls_product": 1,
+    "protected_Meta25_byte_exact": true,
+    "new_cli_driver_change": "BASE one string only",
+    "normal_outputs_absent": true
+  },
+  "native02_semantic_inheritance": {
+    "accepted": "Existing normal1/race1 result credit retained for unchanged qB TLS behavior, not newly run onbd4.",
+    "old_input_current_differences": [
+      "internal/plugins/downloadercommands/tr_final.go",
+      "internal/plugins/downloadercommands/tr_final_test.go"
+    ],
+    "S13_changed_go_paths": [
+      "cmd/owned-tr-final-fixture/main.go",
+      "cmd/owned-tr-final-fixture/numeric_test.go",
+      "internal/app/plugin_shared_transmission_numeric_test.go",
+      "internal/plugins/downloadercommands/tr_final.go",
+      "internal/plugins/downloadercommands/tr_final_test.go",
+      "internal/plugins/downloadercommands/tr_numeric.go",
+      "internal/plugins/downloadercommands/tr_numeric_test.go",
+      "internal/plugins/shared_transmission_numeric_test.go"
+    ],
+    "callgraph": "OnlyTRcommandnumeric conversion functions changed: trFinalInt/Float\u2192trFinalNumericString literaldecimal/space tables. CalledfromTRfinal command optionplanning; qBCompleted\u2192NewIYUU(config qb)\u2192nativeLock/qb auth\u2192torrents/info\u2192vendorRows neverinvokesTRcommandnumericplanner. No initfunc/globaltransport mutation. OthernewGo aretests/TRfixture, not thisnormalworkerpath.",
+    "not_claimed": "Oldwholecompileclosure isnotcurrent-identical; finalordinaryworker/server builtfromnewbd4 view suppliescurrentintegration."
+  },
+  "admission": [
+    "Coordinator only exactrun.sh once, offline pinnedtoolchain, onego-list union thennormalworker andnormalserver sequentially.",
+    "Builder checksallbindingfiles/backings/hiddenpreimages beforecompile, strictdeclaredmapping,generatedcachecopies, fullbefore/afterworker/afterservermaps, freshoutput/evidenceonly, HEADbefore/after.",
+    "No tests,program--manifest,service/HTTP/sourceimports,vet,race orCLI execution in thisgate.",
+    "Sourcecandidatebe066d79 unchanged; tests notmapped intoordinaryprograms. A-only/S13HEAD remain, noB/Calendar/combining/Meta productsinserted."
+  ],
+  "limitations": [
+    "FinalordinaryCLI remainsnotready untilactualprograms/hash/fullclosure/finalbindings/COMMAND nonauthorreview.",
+    "38 isfrozenaftertwoactualCLIfailures; notpartofthisgate, no re-run orproductadoption.",
+    "S01fullparentneedsnewordinaryHTTPSchain andexactpublicationreview; oldsource/TRcredit retainedunderpriorconditionalreuse.",
+    "Revieweronlyread/hash/Git/AST, no executionorACTIVE/ledger/index writes."
+  ]
+}

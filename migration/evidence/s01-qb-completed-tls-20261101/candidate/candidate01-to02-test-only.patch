@@ -1,0 +1,28 @@
+--- /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate/internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed_tls_test.go
++++ /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s01-qb-query-tls01/candidate02/internal/plugins/iyuuautoseed/native/shared_qbittorrent_completed_tls_test.go
+@@ -34,7 +34,16 @@
+ 	if !ok {
+ 		t.Fatal("requires the existing standard default transport")
+ 	}
++	// Standard Clone performs the original transport's lazy HTTP/2 setup.
++	// Establish that permitted initialization before comparing policy identity;
++	// the returned clone has never made a request or opened any connection.
++	baselineClone := global.Clone()
++	baselineClone.CloseIdleConnections()
+ 	globalTLS := global.TLSClientConfig
++	var globalRoots *x509.CertPool
++	if globalTLS != nil {
++		globalRoots = globalTLS.RootCAs
++	}
+ 	if globalTLS != nil && globalTLS.InsecureSkipVerify {
+ 		t.Fatal("existing global transport is unexpectedly non-verifying")
+ 	}
+@@ -136,7 +145,7 @@
+ 	if _, err = client.Rows(cancelled, nil); !errors.Is(err, context.Canceled) || calls.Load() != 2 {
+ 		t.Fatal("caller cancellation did not prevent dispatch", err, calls.Load())
+ 	}
+-	if http.DefaultTransport != global || global.TLSClientConfig != globalTLS || (globalTLS != nil && globalTLS.InsecureSkipVerify) {
++	if http.DefaultTransport != global || global.TLSClientConfig != globalTLS || (globalTLS != nil && (globalTLS.InsecureSkipVerify || globalTLS.RootCAs != globalRoots)) {
+ 		t.Fatal("global TLS/transport mutated")
+ 	}
+ 	if _, err = NewQBittorrentCompletedClient(Config{ID: "owned-tr", Kind: "transmission", BaseURL: peer.URL}, "", guard); err == nil {

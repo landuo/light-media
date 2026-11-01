@@ -1,0 +1,7 @@
+# S01 normal-program build gate on actual bd4ec451
+
+Compile only. Coordinator executes once after non-author review. Two normal programs, worker then server, one complete union go-list -deps invocation, all declared files strictly mapped; hidden files must never be declared. Before / after worker / after server immutable snapshots. No test, program --manifest, server startup, HTTP or source import occurs here. No -race claim and no vet pass claim.
+
+21 overlays: three current HEAD copies for dirty Meta hooks, seventeen exact empty overlays excluding untracked Meta Go, one previously reviewed qB completed private-TLS source. ACTIVE files are not rewritten/deleted. All 25 Meta preimages are equal to their previous protected bytes and bound. Existing committed A-only and S13 products come directly from new HEAD; B TLS is not inserted. Test-only S01 TLS file is not needed for normal programs. Both programs include the same current source view. Original 808 CLI remains; driver02 differs only in BASE.
+
+Pinned tools/env/cache, offline module resolution, original proxy environment. This is inherited compile machinery, not network permission. Record all failures; never reuse an existing output/evidence path. Fresh runtime/s01-qb-query-tls-worker01 and server01. Final CLI requires independently reviewed actual result, full immutable union, binary hashes and exact command; this build preparation does not authorize service execution.
