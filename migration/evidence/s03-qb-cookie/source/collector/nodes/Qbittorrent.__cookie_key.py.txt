@@ -1,0 +1,8 @@
+    @staticmethod
+    def __cookie_key(cookie: dict) -> Optional[tuple]:
+        name = cookie.get("name")
+        domain = cookie.get("domain")
+        path = cookie.get("path") or "/"
+        if not name or not domain:
+            return None
+        return domain, path, name

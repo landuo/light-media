@@ -1,0 +1,17 @@
+    def __parse_add_torrent_response(self, response: Any) -> Tuple[bool, List[str]]:
+        if not response:
+            return False, []
+        if isinstance(response, str):
+            return "Ok" in response, []
+
+        success_count = self.__get_mapping_value(response, "success_count") or 0
+        pending_count = self.__get_mapping_value(response, "pending_count") or 0
+        added_torrent_ids = self.__get_mapping_value(response, "added_torrent_ids") or []
+        if not isinstance(added_torrent_ids, list):
+            added_torrent_ids = list(added_torrent_ids)
+        added_torrent_ids = [str(torrent_id) for torrent_id in added_torrent_ids if torrent_id]
+        if added_torrent_ids:
+            return True, added_torrent_ids
+        if success_count or pending_count:
+            return True, []
+        return "Ok" in str(response), []

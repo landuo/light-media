@@ -1,0 +1,834 @@
+{
+  "kind": "synthetic owned JSON inputs and recording protocol controls; no asserted expected source outcome",
+  "cases": [
+    {
+      "id": "threshold-ordered-merge",
+      "purpose": "2.11.3; normalize existing entries, stable key order, duplicate overwrite, domain/path distinction and new site-cookie overwrite",
+      "initial_cookie_store": [
+        {
+          "domain": "unrelated.invalid",
+          "path": "/",
+          "name": "keep",
+          "value": "owned-keep",
+          "expirationDate": 2000000000,
+          "ignored": "drop"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "name": "sid",
+          "value": "owned-first",
+          "expirationDate": 0
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-last",
+          "expirationDate": 2100000000
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/other",
+          "name": "sid",
+          "value": "owned-path"
+        },
+        {
+          "domain": ".owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-dot"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "blank",
+          "value": "",
+          "expirationDate": 0
+        },
+        {
+          "domain": "",
+          "name": "bad",
+          "value": "owned"
+        },
+        {
+          "name": "no-domain",
+          "value": "owned"
+        },
+        null,
+        3
+      ],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": "2.11.3",
+            "set_reply": null,
+            "add_reply": "Ok."
+          }
+        }
+      ]
+    },
+    {
+      "id": "below-threshold",
+      "purpose": "2.11.2 skips cookie store and preserves per-add cookie",
+      "initial_cookie_store": [
+        {
+          "domain": "unrelated.invalid",
+          "path": "/",
+          "name": "keep",
+          "value": "owned-keep",
+          "expirationDate": 2000000000,
+          "ignored": "drop"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "name": "sid",
+          "value": "owned-first",
+          "expirationDate": 0
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-last",
+          "expirationDate": 2100000000
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/other",
+          "name": "sid",
+          "value": "owned-path"
+        },
+        {
+          "domain": ".owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-dot"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "blank",
+          "value": "",
+          "expirationDate": 0
+        },
+        {
+          "domain": "",
+          "name": "bad",
+          "value": "owned"
+        },
+        {
+          "name": "no-domain",
+          "value": "owned"
+        },
+        null,
+        3
+      ],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": "2.11.2",
+            "set_reply": null,
+            "add_reply": "Ok."
+          }
+        }
+      ]
+    },
+    {
+      "id": "threshold-prerelease",
+      "purpose": "actual packaging Version prerelease comparison, not string comparison",
+      "initial_cookie_store": [],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": "2.11.3rc1",
+            "set_reply": null,
+            "add_reply": "Ok."
+          }
+        }
+      ]
+    },
+    {
+      "id": "threshold-local-release",
+      "purpose": "actual packaging Version local release comparison",
+      "initial_cookie_store": [],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": "2.11.3+owned",
+            "set_reply": null,
+            "add_reply": "Ok."
+          }
+        }
+      ]
+    },
+    {
+      "id": "invalid-version",
+      "purpose": "invalid version ordinary catch; no substitute comparator",
+      "initial_cookie_store": [],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": "owned-not-a-version",
+            "set_reply": null,
+            "add_reply": "Ok."
+          }
+        }
+      ]
+    },
+    {
+      "id": "null-version",
+      "purpose": "original str(None) then Version invalid",
+      "initial_cookie_store": [],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": null,
+            "set_reply": null,
+            "add_reply": "Ok."
+          }
+        }
+      ]
+    },
+    {
+      "id": "version-runtime-error",
+      "purpose": "version query ordinary RuntimeError log and fallback",
+      "initial_cookie_store": [],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": "2.11.3",
+            "set_reply": null,
+            "add_reply": "Ok.",
+            "version_raise": "owned version failure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "empty-store-null",
+      "purpose": "app_cookies None follows original or []",
+      "initial_cookie_store": null,
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": "2.11.3",
+            "set_reply": null,
+            "add_reply": "Ok."
+          }
+        }
+      ]
+    },
+    {
+      "id": "cookie-no-morsels",
+      "purpose": "truthy whitespace header yields no cookies, no store read/write",
+      "initial_cookie_store": [],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "   "
+          },
+          "protocol": {
+            "version_reply": "2.11.3",
+            "set_reply": null,
+            "add_reply": "Ok."
+          }
+        }
+      ]
+    },
+    {
+      "id": "cookie-invalid-name",
+      "purpose": "actual SimpleCookie parser input; result/error is observed rather than predicted",
+      "initial_cookie_store": [],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "owned@bad=value"
+          },
+          "protocol": {
+            "version_reply": "2.11.3",
+            "set_reply": null,
+            "add_reply": "Ok."
+          }
+        }
+      ]
+    },
+    {
+      "id": "url-no-host",
+      "purpose": "urlparse has no hostname; no cookie store read/write",
+      "initial_cookie_store": [
+        {
+          "domain": "unrelated.invalid",
+          "path": "/",
+          "name": "keep",
+          "value": "owned-keep",
+          "expirationDate": 2000000000,
+          "ignored": "drop"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "name": "sid",
+          "value": "owned-first",
+          "expirationDate": 0
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-last",
+          "expirationDate": 2100000000
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/other",
+          "name": "sid",
+          "value": "owned-path"
+        },
+        {
+          "domain": ".owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-dot"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "blank",
+          "value": "",
+          "expirationDate": 0
+        },
+        {
+          "domain": "",
+          "name": "bad",
+          "value": "owned"
+        },
+        {
+          "name": "no-domain",
+          "value": "owned"
+        },
+        null,
+        3
+      ],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "relative/owned.torrent",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": "2.11.3",
+            "set_reply": null,
+            "add_reply": "Ok."
+          }
+        }
+      ]
+    },
+    {
+      "id": "cookie-store-read-error",
+      "purpose": "read error keeps store; original error then add with original cookie",
+      "initial_cookie_store": [
+        {
+          "domain": "unrelated.invalid",
+          "path": "/",
+          "name": "keep",
+          "value": "owned-keep",
+          "expirationDate": 2000000000,
+          "ignored": "drop"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "name": "sid",
+          "value": "owned-first",
+          "expirationDate": 0
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-last",
+          "expirationDate": 2100000000
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/other",
+          "name": "sid",
+          "value": "owned-path"
+        },
+        {
+          "domain": ".owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-dot"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "blank",
+          "value": "",
+          "expirationDate": 0
+        },
+        {
+          "domain": "",
+          "name": "bad",
+          "value": "owned"
+        },
+        {
+          "name": "no-domain",
+          "value": "owned"
+        },
+        null,
+        3
+      ],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": "2.11.3",
+            "set_reply": null,
+            "add_reply": "Ok.",
+            "cookies_raise": "owned cookie read failure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "cookie-store-set-error",
+      "purpose": "recording pre-effect set error leaves owned store unchanged; source fallback, no daemon effect inference",
+      "initial_cookie_store": [
+        {
+          "domain": "unrelated.invalid",
+          "path": "/",
+          "name": "keep",
+          "value": "owned-keep",
+          "expirationDate": 2000000000,
+          "ignored": "drop"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "name": "sid",
+          "value": "owned-first",
+          "expirationDate": 0
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-last",
+          "expirationDate": 2100000000
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/other",
+          "name": "sid",
+          "value": "owned-path"
+        },
+        {
+          "domain": ".owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-dot"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "blank",
+          "value": "",
+          "expirationDate": 0
+        },
+        {
+          "domain": "",
+          "name": "bad",
+          "value": "owned"
+        },
+        {
+          "name": "no-domain",
+          "value": "owned"
+        },
+        null,
+        3
+      ],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": "2.11.3",
+            "set_reply": null,
+            "add_reply": "Ok.",
+            "set_raise": "owned cookie set failure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "add-error-after-cookie-write",
+      "purpose": "successful owned cookie write is not rolled back when subsequent add raises",
+      "initial_cookie_store": [
+        {
+          "domain": "unrelated.invalid",
+          "path": "/",
+          "name": "keep",
+          "value": "owned-keep",
+          "expirationDate": 2000000000,
+          "ignored": "drop"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "name": "sid",
+          "value": "owned-first",
+          "expirationDate": 0
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-last",
+          "expirationDate": 2100000000
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/other",
+          "name": "sid",
+          "value": "owned-path"
+        },
+        {
+          "domain": ".owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-dot"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "blank",
+          "value": "",
+          "expirationDate": 0
+        },
+        {
+          "domain": "",
+          "name": "bad",
+          "value": "owned"
+        },
+        {
+          "name": "no-domain",
+          "value": "owned"
+        },
+        null,
+        3
+      ],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": "2.11.3",
+            "set_reply": null,
+            "add_reply": "Ok.",
+            "add_raise": "owned add failure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "add-false-after-cookie-write",
+      "purpose": "cookie write is retained when source add parser returns false tuple",
+      "initial_cookie_store": [
+        {
+          "domain": "unrelated.invalid",
+          "path": "/",
+          "name": "keep",
+          "value": "owned-keep",
+          "expirationDate": 2000000000,
+          "ignored": "drop"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "name": "sid",
+          "value": "owned-first",
+          "expirationDate": 0
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-last",
+          "expirationDate": 2100000000
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/other",
+          "name": "sid",
+          "value": "owned-path"
+        },
+        {
+          "domain": ".owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-dot"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "blank",
+          "value": "",
+          "expirationDate": 0
+        },
+        {
+          "domain": "",
+          "name": "bad",
+          "value": "owned"
+        },
+        {
+          "name": "no-domain",
+          "value": "owned"
+        },
+        null,
+        3
+      ],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": "2.11.3",
+            "set_reply": null,
+            "add_reply": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "magnet-truthy-cookie",
+      "purpose": "original is_magnet_link bypasses cookie API despite truthy Cookie; no network payload",
+      "initial_cookie_store": [
+        {
+          "domain": "unrelated.invalid",
+          "path": "/",
+          "name": "keep",
+          "value": "owned-keep",
+          "expirationDate": 2000000000,
+          "ignored": "drop"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "name": "sid",
+          "value": "owned-first",
+          "expirationDate": 0
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-last",
+          "expirationDate": 2100000000
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/other",
+          "name": "sid",
+          "value": "owned-path"
+        },
+        {
+          "domain": ".owned-cookie.invalid",
+          "path": "/",
+          "name": "sid",
+          "value": "owned-dot"
+        },
+        {
+          "domain": "owned-cookie.invalid",
+          "path": "/",
+          "name": "blank",
+          "value": "",
+          "expirationDate": 0
+        },
+        {
+          "domain": "",
+          "name": "bad",
+          "value": "owned"
+        },
+        {
+          "name": "no-domain",
+          "value": "owned"
+        },
+        null,
+        3
+      ],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "magnet:?xt=urn:btih:OwnedCookieOnly",
+            "cookie": "sid=owned-new; token=\"owned value\""
+          },
+          "protocol": {
+            "version_reply": "2.11.3",
+            "set_reply": null,
+            "add_reply": "Ok."
+          }
+        }
+      ]
+    },
+    {
+      "id": "same-client-second-merge",
+      "purpose": "two complete original add calls retain the owned cookie store between writes",
+      "initial_cookie_store": [],
+      "instance": {
+        "category": false,
+        "sequential": false,
+        "first_last_piece": false
+      },
+      "steps": [
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-one; keep=owned-keep"
+          },
+          "protocol": {
+            "version_reply": "2.11.3",
+            "set_reply": null,
+            "add_reply": "Ok."
+          }
+        },
+        {
+          "args": {
+            "content": "https://owned-cookie.invalid/owned.torrent",
+            "cookie": "sid=owned-two; last=owned-last"
+          },
+          "protocol": {
+            "version_reply": "2.11.3",
+            "set_reply": null,
+            "add_reply": "Ok."
+          }
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    "Original complete selected methods, real stdlib SimpleCookie/urlparse and exact pure packaging Version only.",
+    "qB protocol/client/container/daemon, HTTP authentication/form encoding and actual daemon cookie persistence are not executed.",
+    "Recording app_set_cookies commits an owned deep-copy store only on successful port return; configured RuntimeError is pre-effect. This is not evidence of real daemon error atomicity.",
+    "Ordinary JSON cookie entries only; arbitrary custom Python getters/vendor model behavior remain outside this oracle.",
+    "No other AddTorrent commands, real URLs/cookies/downloads, source constructor/settings or plugin/SDK host execution."
+  ]
+}

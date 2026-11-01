@@ -1,0 +1,29 @@
+{
+  "cwd": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/normal-cli-driver.py",
+    "--server",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-server01",
+    "--worker",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-app01.worker",
+    "--output",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-qb-cookie-cli01",
+    "--expected-server-sha",
+    "36be807e8534e624a1a372d40bb80e118722dfbfe89610e24c69e09df6537b77",
+    "--expected-worker-sha",
+    "75b1f85df152f0cb5dc9b0da6850ebd76632aa175e72d25aa486ab3457cb16e7",
+    "--expected-driver-sha",
+    "bdd94373cb9c38f443abb3cc070ceb0c3b5ced157b78328e2689e7d1da5ba10d",
+    "--expected-bindings-sha",
+    "e4dbc38b46a923b81881d2818c75e3bc0a6fe0b7804699495f8ac420902bde1f"
+  ],
+  "environment": "inherit all existing entries; add only S03_QB_COOKIE_CLI_GRANTED=1",
+  "interpreter": {
+    "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+    "bytes": 30894944,
+    "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"
+  },
+  "executed_by_reviewer": false,
+  "purpose": "Exact coordinator-only ordinary CLI frozen window; no alternate fallback or permission escalation."
+}

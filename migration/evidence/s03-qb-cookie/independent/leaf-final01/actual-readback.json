@@ -1,0 +1,198 @@
+{
+  "status": "ACCEPT_FINITE_PURE_LEAF_NORMAL03",
+  "reviewed_at": "2026-11-01T07:20:16.646664+00:00",
+  "actual_tool_receipt": {
+    "session_id": 54275,
+    "initial_chunk": "aac97d",
+    "terminal_chunk": "ebf639",
+    "exit_code": 0,
+    "result_sha256": "ec8e9e26ff784e637712c0f10cd79e789d6f92c4a3c7f576052029f5f6da8d2b"
+  },
+  "result": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/result.json",
+    "bytes": 5572,
+    "sha256": "ec8e9e26ff784e637712c0f10cd79e789d6f92c4a3c7f576052029f5f6da8d2b"
+  },
+  "started": "2026-11-01T07:18:52.990345+00:00",
+  "ended": "2026-11-01T07:18:54.422460+00:00",
+  "program": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-leaf01.test",
+    "bytes": 6656744,
+    "sha256": "16f1bc08e21e6ac52728068594c9f573132f7ebab854a8f455ece5e32a4cd90b"
+  },
+  "input_count": 1845,
+  "three_recorded_maps_equal": true,
+  "current_drift": [],
+  "root_passes": [
+    "TestDownloaderLeafSourceObservations",
+    "TestDownloaderLeafBoundaryErrors",
+    "TestQBCookieOriginalSource17"
+  ],
+  "new_original_scenarios": [
+    "threshold-ordered-merge",
+    "below-threshold",
+    "threshold-prerelease",
+    "threshold-local-release",
+    "invalid-version",
+    "null-version",
+    "version-runtime-error",
+    "empty-store-null",
+    "cookie-no-morsels",
+    "cookie-invalid-name",
+    "url-no-host",
+    "cookie-store-read-error",
+    "cookie-store-set-error",
+    "add-error-after-cookie-write",
+    "add-false-after-cookie-write",
+    "magnet-truthy-cookie",
+    "same-client-second-merge"
+  ],
+  "new_original_add_subtests": [
+    "TestQBCookieOriginalSource17/threshold-ordered-merge/0",
+    "TestQBCookieOriginalSource17/below-threshold/0",
+    "TestQBCookieOriginalSource17/threshold-prerelease/0",
+    "TestQBCookieOriginalSource17/threshold-local-release/0",
+    "TestQBCookieOriginalSource17/invalid-version/0",
+    "TestQBCookieOriginalSource17/null-version/0",
+    "TestQBCookieOriginalSource17/version-runtime-error/0",
+    "TestQBCookieOriginalSource17/empty-store-null/0",
+    "TestQBCookieOriginalSource17/cookie-no-morsels/0",
+    "TestQBCookieOriginalSource17/cookie-invalid-name/0",
+    "TestQBCookieOriginalSource17/url-no-host/0",
+    "TestQBCookieOriginalSource17/cookie-store-read-error/0",
+    "TestQBCookieOriginalSource17/cookie-store-set-error/0",
+    "TestQBCookieOriginalSource17/add-error-after-cookie-write/0",
+    "TestQBCookieOriginalSource17/add-false-after-cookie-write/0",
+    "TestQBCookieOriginalSource17/magnet-truthy-cookie/0",
+    "TestQBCookieOriginalSource17/same-client-second-merge/0",
+    "TestQBCookieOriginalSource17/same-client-second-merge/1"
+  ],
+  "old_source_observation_subtests": 34,
+  "new_trace_summary": "qb_cookie_source_test.go:213: exact original projection: 17 scenarios / 18 adds / 52 outer protocol calls / 2 false-but-truthy source tuples; no daemon or HTTP",
+  "fail_or_skip": [],
+  "stderr_empty": [
+    "go-list",
+    "compile",
+    "tests"
+  ],
+  "generated_sources": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/generated-source/52d9937bc6e65475ede0b80845260b63a242289931d58f2a389e1950f615c032.go",
+      "bytes": 1392,
+      "sha256": "52d9937bc6e65475ede0b80845260b63a242289931d58f2a389e1950f615c032"
+    }
+  ],
+  "native_compile_declarations": [],
+  "native_executed": false,
+  "vet": "NOT_RUN",
+  "race": false,
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/compile.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/compile.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/generated-source-map.json",
+      "bytes": 246,
+      "sha256": "d8e8c86594f89b7fc0e542fb39139a8cb99dd92f7789bf2564727cb65f2449ec"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/go-list.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/go-list.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/go-list.stdout",
+      "bytes": 339696,
+      "sha256": "dced581b8607808067d6e81171022331e23e64af38a3b4a20b742a2ff875c6ac"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/inputs-after-compile.json",
+      "bytes": 398253,
+      "sha256": "c3e91ea0262709d75637adb2dd054133728458d74227994085491678a3c31d7f"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/inputs-after-test.json",
+      "bytes": 398253,
+      "sha256": "c3e91ea0262709d75637adb2dd054133728458d74227994085491678a3c31d7f"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/inputs-before.json",
+      "bytes": 398253,
+      "sha256": "c3e91ea0262709d75637adb2dd054133728458d74227994085491678a3c31d7f"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/result.json",
+      "bytes": 5572,
+      "sha256": "ec8e9e26ff784e637712c0f10cd79e789d6f92c4a3c7f576052029f5f6da8d2b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/tests.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/tests.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/tests.stdout",
+      "bytes": 64487,
+      "sha256": "af4aa08615324f94d769942f7ccdc3e932963434cd8a728f435058cd0b8978ab"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/tool-receipt.json",
+      "bytes": 190,
+      "sha256": "cc1f77d5b6b17bde4c4160655cb68f8a60d5ea2ed7e7d2ce25a5ee2547a5e061"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-leaf01/virtual-compile-inputs.json",
+      "bytes": 581664,
+      "sha256": "f3bf1a1cc37814fd9ba331148aa31fbaea6dfef0bee51e061b9cbacc76ff8e8d"
+    }
+  ],
+  "source_raw": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-source01/stdout.json",
+    "bytes": 152283,
+    "sha256": "758df1e970dad525d564dc6732e2153f545dc8a0314fbbfd0b3e846156f02b6a"
+  },
+  "oracle_test": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-oracle-tests01/qb_cookie_source_test.go",
+    "bytes": 10197,
+    "sha256": "53de9886d2cd5ceae8b92bb7a1d2a5dfed235409ce8cb3ecfc2d83b13dda376a"
+  },
+  "candidate06": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate06.json",
+    "bytes": 4591,
+    "sha256": "73c6902c4d0c4c7d01eaffa4e86fa376dbc9e22067b23558823ca717f4f21dff"
+  },
+  "preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/target-preexec01/preexec-seal.json",
+    "bytes": 1234,
+    "sha256": "c45b99ba74b3e01ddbbe900267c6eafe5e491a7d32c07be0e1474287ad6623f1"
+  },
+  "boundaries": [
+    "Recording qbc/log ports and pure merge/parser algorithm, not native HTTP/vendor/daemon/App/SDK worker",
+    "This raw source set has 17 scenarios and18 Adds; old34source cases reran under current leaf closure",
+    "Unicode-derived new native assertions have not run in this leaf gate",
+    "Old native layout comparator pending narrow change; not certified by this pure result",
+    "No source or Go reexecution by reviewer"
+  ]
+}

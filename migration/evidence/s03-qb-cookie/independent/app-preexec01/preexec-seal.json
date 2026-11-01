@@ -1,0 +1,96 @@
+{
+  "status": "READY_EXACT_NORMAL_APP_WORKER_SINGLE_ROOT",
+  "sealed_at": "2026-11-01T07:37:40.271518+00:00",
+  "reviewer": "/root/continue_platform_astra/meta_target_review",
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/app-preexec01/REVIEW.md",
+      "bytes": 4653,
+      "sha256": "c269a526ffd9918e61708e118666d6a312bc0a455171d91e664d1598f57ceb68"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/app-preexec01/readback.json",
+      "bytes": 118971,
+      "sha256": "d48d381bd8b400dd5807f4db12e50dfb9c89468eeed9b9b0226cc48df098e7f9"
+    }
+  ],
+  "author_freeze": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/app01/candidate01.json",
+      "bytes": 3653,
+      "sha256": "8bff58bef3ea9be4c6c45e8853199f4173403468c4af620e7cc92621674b93b6"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/app01/clean-view01/seal.json",
+      "bytes": 3440,
+      "sha256": "615374e82d7768e905f91dc52ffa14def6393f7d64f80bbd826e92216d0bcebd"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/app01/clean-view01/overlay-inputs.json",
+      "bytes": 50166,
+      "sha256": "6d59f462164802b672816d18bd2fcc715a91b967d78f098360b0ce71b0b29605"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/app01/clean-view01/run.sh",
+      "bytes": 1016,
+      "sha256": "43368fc5e8e52fbe40a7d8bfcf9321dfd27a289e2e4d2586fb9a7f57de2b5d6c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/app01/clean-view01/COMMAND.txt",
+      "bytes": 452,
+      "sha256": "ba731d39937d6bc041bc5c64dca9c37246992a412c3b262afd995c16e73db732"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s11-overlay-go-gate03.py",
+      "bytes": 7776,
+      "sha256": "3d2a49e7723e5897c01e1e655f702eff64e4db8fdd1db1d07e3bdb6404a7f214"
+    }
+  ],
+  "inherited_finite_seals": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/source-final01/final-seal.json",
+      "bytes": 2929,
+      "sha256": "023bb4825139bee6c3c2530bb9a62b3ae522fd2af32f6c2ebfcf8069137bbb9d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/leaf-final01/final-seal.json",
+      "bytes": 872,
+      "sha256": "f07764a6eed78d38fdc6a6cde20b57436e40dfe9292220305f377e4292da185a"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/native-final02/final-seal.json",
+      "bytes": 1134,
+      "sha256": "c246e40a19fa9d9f320b6bb9486798c440b278aaf2d7ad18476a76cdd6fadec6"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/vet-final01/final-seal.json",
+      "bytes": 689,
+      "sha256": "654276b9d3cfdc7731bb605b4e0f9cb29eb588246b918f175827a5657453f533"
+    }
+  ],
+  "root": "TestSharedQBCookieActualWorkerRecoveryAndCold",
+  "baseline": "60206809a9c46b9f11d8fb67590a889e24919df6",
+  "overlay_counts": {
+    "head_hooks": 3,
+    "hidden_meta_go": 17,
+    "candidate07_product": 7,
+    "app_test": 1
+  },
+  "protected_meta_current": 25,
+  "hash_drift": [],
+  "blockers": [],
+  "tests_executed_by_reviewer": false,
+  "actual_gate_result": "NOT_EXECUTED_AT_REVIEW",
+  "planned_counts_not_observed": {
+    "current_sdk_invokes": 5,
+    "rejected_previous_callback": 1,
+    "qb_http": 34,
+    "artifact_get": 2
+  },
+  "pending": [
+    "coordinator actual frozen normal command",
+    "actual App+worker compile closure and three maps",
+    "both actual binary digests and terminal receipts",
+    "exact root and protocol/state assertions"
+  ]
+}

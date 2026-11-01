@@ -1,0 +1,229 @@
+{
+  "status": "STATIC_TEMPLATE_ACCEPTED_EXECUTION_NOT_READY",
+  "reviewed_at": "2026-11-01T07:39:55.666741+00:00",
+  "candidate02": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/candidate02.json",
+    "bytes": 2998,
+    "sha256": "d46ce4e3e64e7e679d5f6ce09863c281c0b6254e1393f281162ec442b37dcd69"
+  },
+  "driver": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/normal-cli-driver.py",
+    "bytes": 38069,
+    "sha256": "bdd94373cb9c38f443abb3cc070ceb0c3b5ced157b78328e2689e7d1da5ba10d"
+  },
+  "prepared_bindings": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/prepared-bindings.json",
+    "bytes": 4180,
+    "sha256": "b3e5ec4f2dcf6a9e6b250efb1d4386998823a955fbbcf380420450e7a1b4a1db"
+  },
+  "all_prepared_rows_current_match": true,
+  "program_bindings_pending": {
+    "server_sha256": null,
+    "worker_path": null,
+    "worker_sha256": null,
+    "execution_bindings_file_present": false,
+    "actual_clean_view_proof_and_build_closures_required": true
+  },
+  "inherited_old_driver": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-command-cli/normal-cli-driver.py",
+    "bytes": 37704,
+    "sha256": "fe2e2440877e8c296c5059115d37a7b0ea84c3f8237d8d68f64b20a7a012af38"
+  },
+  "unchanged_helpers": [
+    {
+      "name": "now",
+      "ast_sha256": "b99c66735a3e9c6a78ff6f0985160e715909dcc5dfa52c1a5ac6a107ddb1977a"
+    },
+    {
+      "name": "sha",
+      "ast_sha256": "f43200c2ab9413b67d32fb0f879a9b25c7d90b843e57a584062f8efed5e604e9"
+    },
+    {
+      "name": "check",
+      "ast_sha256": "58a6782f78194fba1925d7dfdec61aa2c64922c1e0a7fa52f78636a6ade9f2a6"
+    },
+    {
+      "name": "save",
+      "ast_sha256": "7ae6c55d662f77748ff4aa412a1e3ccbcffa8ee601fc3d9ecd2df719678d97cc"
+    },
+    {
+      "name": "reserve",
+      "ast_sha256": "76c0d66df4b9bc576b72d63e0518a0b2b73922ef56af70d880f3114cf951d657"
+    },
+    {
+      "name": "identity",
+      "ast_sha256": "8b8efe7ac3b3c9bf20af5a9cd771adea04f73f01789f923f5de4a3a768544a4b"
+    },
+    {
+      "name": "held_host",
+      "ast_sha256": "df2d6bdf5eda697dedcbec7696e29787b574f1cc3b2b8891f676ad45d1721b9f"
+    },
+    {
+      "name": "exact_owned_listener",
+      "ast_sha256": "cb6a6441ec98f5c03c2967ee8befeac656f677ec39c7f8ced16bdad8817db34e"
+    },
+    {
+      "name": "call",
+      "ast_sha256": "e0cf6f39f76641d44dc0912848a0e9a2fb147dc93de7df907b6b7fa0b3378d5c"
+    },
+    {
+      "name": "peer_counts",
+      "ast_sha256": "02a9f8beba15e1289898d03cfea51ecebb93d907b50f1af83b8e719355b96e75"
+    },
+    {
+      "name": "bind_worker",
+      "ast_sha256": "062536b7f856f9266a791e72beaacaf92d22ebf6f3cb915cfb830d7d96f8fd98"
+    },
+    {
+      "name": "wait_workers",
+      "ast_sha256": "0e701186f275c059bee0639d7a1dc2df15b0be64ca6bd234713d538b2f195d38"
+    },
+    {
+      "name": "start",
+      "ast_sha256": "b1d7da7fb8e4308221405008c6b9393a3ffbb50e36a9a1f2041b130ea7227f65"
+    },
+    {
+      "name": "stop",
+      "ast_sha256": "fd6b1bb2b46945b348d6641bc4368b0799e2d8ddaf5c2357856856940c5648bb"
+    },
+    {
+      "name": "registered",
+      "ast_sha256": "a8fcd25ece48d17ac5aac494a538ba5adfca5527ea5394494e60fc5c5e1fe7a5"
+    },
+    {
+      "name": "selected_counts",
+      "ast_sha256": "f061c1208ea9677422dbe7558b2bb1902ff774cc9115de7a9afaad86a2656410"
+    },
+    {
+      "name": "query",
+      "ast_sha256": "ef0d944e3e67ba096f03eeeb83a3435e84ccae5eb87f68228de650a5e5bcf7bd"
+    },
+    {
+      "name": "callbacks",
+      "ast_sha256": "853a7a0c5546b56492a12510686dd540faea04c715ef7260beb6259faae68f6c"
+    }
+  ],
+  "same_finally": {
+    "bytes": 1989,
+    "sha256": "fce478b1fce84fc5b9310776610d3e84763e63c84ca11c29826e28b6c1a20819"
+  },
+  "controller": {
+    "origin": "http://127.0.0.1:39123",
+    "routes": [
+      [
+        "GET",
+        "/healthz"
+      ],
+      [
+        "POST",
+        "/api/auth/login"
+      ],
+      [
+        "GET",
+        "/api/plugins/markets"
+      ],
+      [
+        "POST",
+        "/api/plugins/install"
+      ],
+      [
+        "GET",
+        "/api/v1/plugin/OwnedDownloaderCommands/commands"
+      ],
+      [
+        "POST",
+        "/api/v1/plugin/OwnedDownloaderCommands/commands"
+      ]
+    ],
+    "exact_url_checks_and_held_PID_starttime_exe_listener_inode_before_every_request": true,
+    "redirects": false,
+    "environment_rewrite": false,
+    "not_a_generic_direct_fallback": true
+  },
+  "peer": {
+    "listener": "stdlib ThreadingHTTPServer AF_INET, literal127.0.0.1:0; no alternate family retry",
+    "routes": [
+      "GET /index",
+      "GET /worker",
+      "GET /api/v2/app/webapiVersion",
+      "GET /api/v2/app/cookies",
+      "POST /api/v2/auth/login",
+      "POST /api/v2/app/setCookies",
+      "POST /api/v2/torrents/add"
+    ],
+    "no_upstream_fetch_forward_CONNECT": true,
+    "dummy_owned_secrets_only": true,
+    "torrent_url_passive_payload_only": true
+  },
+  "planned_only": {
+    "business": 5,
+    "current_callbacks": 5,
+    "stale_callback_attempts": 1,
+    "qb_requests": 34,
+    "artifact_GETs": 2,
+    "qb_counts": {
+      "login": 5,
+      "version": 17,
+      "cookies": 4,
+      "setCookies": 4,
+      "add": 4
+    },
+    "normal_host_processes": 2
+  },
+  "process_lifecycle": "bootstrap private data once; held normal server children; installed worker hash+parent+starttime binding; natural SIGTERM Wait0 and old workers gone; same DATA new host/worker cold; forced cleanup only owned identities and marks FAIL",
+  "file_boundary": "new exclusive test-instances dir; no DB reads/deletion; private data/logs not publication whitelist; login/bootstrap secret response not retained",
+  "exact_02_delta": "reuse original coordinator-owned App worker location under ROOT/runtime or ROOT/evidence, actual binding worker_path must match resolved argument; no semantic business changes",
+  "gates_not_claimed": [
+    "no execution admission without real program hashes/builds/current full closure/clean HEAD602068+candidate07 proof",
+    "not actual observations or PASS yet",
+    "not real qB daemon/vendor HTTP oracle, full S03, Meta/UI or production Cookie use"
+  ],
+  "reviewer_executed_source_Go_process_HTTP": false,
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/candidate02.json",
+      "bytes": 2998,
+      "sha256": "d46ce4e3e64e7e679d5f6ce09863c281c0b6254e1393f281162ec442b37dcd69"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/normal-cli-driver.py",
+      "bytes": 38069,
+      "sha256": "bdd94373cb9c38f443abb3cc070ceb0c3b5ced157b78328e2689e7d1da5ba10d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/helper-reuse.json",
+      "bytes": 752,
+      "sha256": "2204e5ecbbb9ed928265a7cf7ce0a5b5fa81be6701bc1d3cf362ceec8121227b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/candidate02.diff",
+      "bytes": 1373,
+      "sha256": "d90cc1a819802bdadeefa37a86c3fa5b010c599de22fc9128faa06367a081dc7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/PLAN.md",
+      "bytes": 6266,
+      "sha256": "1292e16f0c7dd227576f41d2cddf31f8010524ddd7606ab373640157268bff8c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/PREEXEC-REQUIREMENTS.md",
+      "bytes": 1549,
+      "sha256": "aa9812dfba65780f0be9e3f1443308c42cb1fe6041b13f358ef364100417b2c6"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/COMMAND.template.txt",
+      "bytes": 727,
+      "sha256": "7adaa6b28672fc621c6ef660a7a0881611df390f687a8a6467ee7be1dad8497e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/prepared-bindings.json",
+      "bytes": 4180,
+      "sha256": "b3e5ec4f2dcf6a9e6b250efb1d4386998823a955fbbcf380420450e7a1b4a1db"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/preparation-seal.json",
+      "bytes": 2998,
+      "sha256": "d46ce4e3e64e7e679d5f6ce09863c281c0b6254e1393f281162ec442b37dcd69"
+    }
+  ]
+}

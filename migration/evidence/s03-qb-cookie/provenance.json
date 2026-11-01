@@ -1,0 +1,98 @@
+{
+  "baseline": "60206809a9c46b9f11d8fb67590a889e24919df6",
+  "original_core_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "candidate07": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07.json",
+    "bytes": 5090,
+    "sha256": "891130b2e513f7fd74cf5be2bf8707aebe398f8559750c09e37f973bbc7eebbd"
+  },
+  "source_bindings": "source-bindings.json",
+  "licenses": "licenses/",
+  "translated_dependencies": [
+    {
+      "source": "CPython 3.12 http/cookies.py",
+      "sha256": "6387f676095ae5374943eff99fbcd2d9c681172c00209fadf54c311cf7228149",
+      "license": [
+        "PSF-LICENSE.txt",
+        "http-cookies-O-Malley.txt"
+      ]
+    },
+    {
+      "source": "packaging 26.3 version.py",
+      "sha256": "558b2fb50fd198c660a4c082f96b8919c565911b6b4b6e07f34b6b60c074be97",
+      "license": [
+        "packaging-LICENSE.txt",
+        "packaging-LICENSE.APACHE",
+        "packaging-LICENSE.BSD"
+      ]
+    }
+  ],
+  "scope": "Fixed qB URL + truthy Cookie and fixed 2.11.3 comparison, not a general Cookie/URL/PEP440 API. No Python runtime dependency. Historical source bindings contain original legacy helper preimage SHA, not the published corrected target SHA.",
+  "relative_test_inputs": [
+    {
+      "test": "internal/plugins/downloadercommands/qb_cookie_source_test.go",
+      "mechanism": "go:embed testdata/source-qb-cookie01.json",
+      "resolved_destination": "internal/plugins/downloadercommands/testdata/source-qb-cookie01.json",
+      "sha256": "758df1e970dad525d564dc6732e2153f545dc8a0314fbbfd0b3e846156f02b6a",
+      "layer": "17 original recording scenarios /18 add calls, complete trace/log/store comparison"
+    },
+    {
+      "test": "internal/plugins/iyuuautoseed/native/shared_qb_cookie_add_test.go",
+      "mechanism": "os.ReadFile ../reference/native-projection-oracle.json",
+      "resolved_destination": "internal/plugins/iyuuautoseed/reference/native-projection-oracle.json",
+      "sha256": "de6cdbe4e03a9c6d9d9828285a7c4973d264254ae40d96039dc381bc6099fdb4",
+      "layer": "Only original23 versions; four Unicode rejections are separately current pinned-regex-derived, not old actual observations"
+    }
+  ],
+  "unchanged_baseline_dependencies": [
+    {
+      "destination": "internal/plugins/iyuuautoseed/reference/native-projection-oracle.json",
+      "already_in_baseline": true,
+      "bytes": 9237,
+      "sha256": "de6cdbe4e03a9c6d9d9828285a7c4973d264254ae40d96039dc381bc6099fdb4"
+    },
+    {
+      "destination": "internal/plugins/downloadercommands/testdata/source-leaves.json",
+      "already_in_baseline": true,
+      "bytes": 48216,
+      "sha256": "8de99e30850e6a111b9b97de08de755b50452bbd6da463567111e11872952e26"
+    },
+    {
+      "destination": "cmd/owned-downloader-command-fixture/main.go",
+      "already_in_baseline": true,
+      "bytes": 20081,
+      "sha256": "f0f8e7a362e290a94f4f99cfb87ca4dee24b83f7ba172790212de1f8e673559a"
+    },
+    {
+      "destination": "internal/app/plugin_shared_downloader_commands_worker_test.go",
+      "already_in_baseline": true,
+      "bytes": 32440,
+      "sha256": "8b4363c966a2bca4b0276ac5df2da1ded1e4e0873740669d3719dfae887dd89b"
+    },
+    {
+      "destination": "internal/app/plugin_original_market_parity_test.go",
+      "already_in_baseline": true,
+      "bytes": 10270,
+      "sha256": "3fcb03d6404793cca5d3f0533d4a489c6a273623985a6c0b9df09eacd033f37b"
+    },
+    {
+      "destination": "internal/app/plugin_original_reset_name_test.go",
+      "already_in_baseline": true,
+      "bytes": 9954,
+      "sha256": "ce85a3db18aa4319cb2f2949fa573ae84ddaf9165032f1d7d5d7dcd94e80b9f5"
+    },
+    {
+      "destination": "internal/app/runtime_test.go",
+      "already_in_baseline": true,
+      "bytes": 6822,
+      "sha256": "54171f76d365af5b6395796e3493732f31d05227d11a711c2b7572137e2460e6"
+    }
+  ],
+  "protected_exclusions": [
+    "all Meta WIP (25 files)",
+    "S14",
+    "Name external drafts",
+    "global settings/SDK/App production/worker changes",
+    "ledger (coordinator-owned)"
+  ]
+}

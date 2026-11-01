@@ -1,0 +1,164 @@
+{
+  "raw_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/reference/native-projection-oracle.json",
+  "raw_sha256": "de6cdbe4e03a9c6d9d9828285a7c4973d264254ae40d96039dc381bc6099fdb4",
+  "version_count": 23,
+  "accepted": 20,
+  "exceptions": 3,
+  "non_ascii_cases": [
+    {
+      "input": "٢.١١",
+      "result": {
+        "exception": "InvalidVersion"
+      }
+    }
+  ],
+  "four_fold_character_cases": [],
+  "raw_source_keys": [
+    "qb.py",
+    "tr_torrent.py",
+    "tr_types.py",
+    "tr.py"
+  ],
+  "packaging_identity_inside_this_raw": false,
+  "versions": [
+    {
+      "input": "2.10",
+      "result": {
+        "value": false
+      }
+    },
+    {
+      "input": "2.11",
+      "result": {
+        "value": true
+      }
+    },
+    {
+      "input": "2.11.0",
+      "result": {
+        "value": true
+      }
+    },
+    {
+      "input": "2.11.0rc1",
+      "result": {
+        "value": false
+      }
+    },
+    {
+      "input": "2.11.0.post1",
+      "result": {
+        "value": true
+      }
+    },
+    {
+      "input": "2.11.dev1",
+      "result": {
+        "value": false
+      }
+    },
+    {
+      "input": "v2.11",
+      "result": {
+        "value": true
+      }
+    },
+    {
+      "input": " 2.11\t",
+      "result": {
+        "value": true
+      }
+    },
+    {
+      "input": "2!0.1",
+      "result": {
+        "value": true
+      }
+    },
+    {
+      "input": "2.11.0+abc",
+      "result": {
+        "value": true
+      }
+    },
+    {
+      "input": "2.11.0.post0.dev1",
+      "result": {
+        "value": true
+      }
+    },
+    {
+      "input": "2.11.0-1",
+      "result": {
+        "value": true
+      }
+    },
+    {
+      "input": "2.11.0a",
+      "result": {
+        "value": false
+      }
+    },
+    {
+      "input": "2.11.0preview2",
+      "result": {
+        "value": false
+      }
+    },
+    {
+      "input": "2.11.0_rev1",
+      "result": {
+        "value": true
+      }
+    },
+    {
+      "input": "2.11.0dev",
+      "result": {
+        "value": false
+      }
+    },
+    {
+      "input": "2.11.0.post",
+      "result": {
+        "value": true
+      }
+    },
+    {
+      "input": "invalid",
+      "result": {
+        "exception": "InvalidVersion"
+      }
+    },
+    {
+      "input": "2.11.",
+      "result": {
+        "exception": "InvalidVersion"
+      }
+    },
+    {
+      "input": "٢.١١",
+      "result": {
+        "exception": "InvalidVersion"
+      }
+    },
+    {
+      "input": "2.11.0+abc-d_e",
+      "result": {
+        "value": true
+      }
+    },
+    {
+      "input": "2.11.0rc1.post2",
+      "result": {
+        "value": false
+      }
+    },
+    {
+      "input": "2.11.0post1.dev1",
+      "result": {
+        "value": true
+      }
+    }
+  ],
+  "not_new_source_execution": true
+}

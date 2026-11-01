@@ -1,0 +1,72 @@
+{
+  "status": "READY_FINITE_ORIGINAL_QB_COOKIE01_PREEXEC_ONLY",
+  "utc": "2026-11-01T07:04:44.396196+00:00",
+  "reviewer": "/root/continue_platform_astra/meta_target_review",
+  "author_preparation_seal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/s03-qb-cookie01/preparation-seal.json",
+    "bytes": 1504,
+    "sha256": "ac96fe41cec1e4175efbde51935db39772877f93564741c88339c1a2a8356844"
+  },
+  "input_manifest": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/s03-qb-cookie01/input-bindings.json",
+    "bytes": 29502,
+    "sha256": "c71ac0091a841618ce3cc4fb4d0a8467874b6da568d0f04cb1e5decfefa6761e"
+  },
+  "collector": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/s03-qb-cookie01/collect_qb_cookie.py",
+    "bytes": 13581,
+    "sha256": "dbdc91b4e271ab01b83d1e19fb8f590a0349ca8adb2ad117fe9c100d89a0beb1"
+  },
+  "command": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/s03-qb-cookie01/COMMAND.txt",
+    "bytes": 687,
+    "sha256": "2fadbf3ef7a191111748cd60047de80d1ec34acab287e6886b3b69e5cac7fb9f"
+  },
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/source-preexec01/readback.json",
+      "bytes": 46969,
+      "sha256": "0197e2956371c22d66465e972298535cbbaa4bf1e3714851485007febb76a745"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/source-preexec01/REVIEW.md",
+      "bytes": 6425,
+      "sha256": "f8ef48d6178828e158566ea2d4003b202db732848d9e284aa5f280b5696ff410"
+    }
+  ],
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "verified": {
+    "input_paths": 119,
+    "current_drift": [],
+    "source_files_exact_git": 2,
+    "complete_original_nodes": 9,
+    "stdlib_source_files": 53,
+    "stdlib_readable_pycache_files": 40,
+    "packaging_whole_sources": 2,
+    "packaging_matches_historical_S05": true,
+    "cases": 17,
+    "complete_add_calls": 18,
+    "last_two_calls_same_instance": true
+  },
+  "execution_flags": [
+    "-I",
+    "-S",
+    "-B"
+  ],
+  "blockers": [],
+  "preconditions": [
+    "Coordinator sole execution, fixed interpreter and exact command.",
+    "Retain stdout/stderr and actual tool terminal; no overwrite or silent retry.",
+    "Any audit rejection/source boundary/input drift stays visible and prevents passing acceptance."
+  ],
+  "not_claimed": [
+    "Actual source observations before execution",
+    "real daemon cookie store or error atomicity",
+    "vendor request/version gate counts or HTTP/form/authentication behavior",
+    "target Go/SDK/App/worker/full S03 acceptance",
+    "arbitrary Python getters/all Cookie/Version input domains",
+    "generic syscall sandbox or compile/exec identity allowlist"
+  ],
+  "reviewer_source_packaging_Go_or_network_execution": false,
+  "active_or_ledger_written": false
+}

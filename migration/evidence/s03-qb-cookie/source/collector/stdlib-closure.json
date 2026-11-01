@@ -1,0 +1,570 @@
+{
+  "kind": "stdlib-only preparation imports; not original execution",
+  "modules": {
+    "_frozen_importlib": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap.py",
+    "_frozen_importlib_external": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap_external.py",
+    "zipimport": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/zipimport.py",
+    "codecs": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/codecs.py",
+    "encodings.aliases": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/aliases.py",
+    "encodings": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__init__.py",
+    "encodings.utf_8": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/utf_8.py",
+    "abc": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/abc.py",
+    "io": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/io.py",
+    "__future__": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__future__.py",
+    "types": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/types.py",
+    "operator": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/operator.py",
+    "_collections_abc": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_collections_abc.py",
+    "keyword": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/keyword.py",
+    "reprlib": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/reprlib.py",
+    "collections": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/__init__.py",
+    "functools": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/functools.py",
+    "enum": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/enum.py",
+    "re._constants": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_constants.py",
+    "re._parser": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_parser.py",
+    "re._casefix": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_casefix.py",
+    "re._compiler": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_compiler.py",
+    "copyreg": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/copyreg.py",
+    "re": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__init__.py",
+    "stat": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/stat.py",
+    "genericpath": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/genericpath.py",
+    "posixpath": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/posixpath.py",
+    "os.path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/posixpath.py",
+    "os": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/os.py",
+    "contextlib": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py",
+    "ast": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ast.py",
+    "_weakrefset": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_weakrefset.py",
+    "weakref": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/weakref.py",
+    "copy": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/copy.py",
+    "hashlib": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/hashlib.py",
+    "importlib._bootstrap": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap.py",
+    "importlib._bootstrap_external": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap_external.py",
+    "warnings": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/warnings.py",
+    "importlib": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/__init__.py",
+    "importlib._abc": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_abc.py",
+    "importlib.util": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/util.py",
+    "json.scanner": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/scanner.py",
+    "json.decoder": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py",
+    "json.encoder": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py",
+    "json": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py",
+    "collections.abc": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/abc.py",
+    "typing": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/typing.py",
+    "http": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/__init__.py",
+    "string": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/string.py",
+    "http.cookies": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/cookies.py",
+    "fnmatch": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/fnmatch.py",
+    "ntpath": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ntpath.py",
+    "urllib": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/__init__.py",
+    "ipaddress": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ipaddress.py",
+    "urllib.parse": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py",
+    "pathlib": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py"
+  },
+  "files": [
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap.py",
+      "bytes": 57057,
+      "sha256": "d112d54b7831cf4a818d4841d5ff8003b54df220a6dabafa61f67d7c7a5603f7"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap_external.py",
+      "bytes": 69428,
+      "sha256": "e6ad72f3f0f9b65c99ab52598cd02ab748511dcdce1dd51f18dace9be9a680c6"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/zipimport.py",
+      "bytes": 27840,
+      "sha256": "a96f1d7a7b6aaf421a3cf382b94b1422f4f0ad452fdd0bb61d635b560d7a4e91"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/codecs.py",
+      "bytes": 36870,
+      "sha256": "7b7839e53a77961153240aecfe11edc8054d05b1dedd83894450dae21ec05785"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/aliases.py",
+      "bytes": 15677,
+      "sha256": "6fdcc49ba23a0203ae6cf28e608f8e6297d7c4d77d52e651db3cb49b9564c6d2"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__init__.py",
+      "bytes": 5884,
+      "sha256": "78c4744d407690f321565488710b5aaf6486b5afa8d185637aa1e7633ab59cd8"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/utf_8.py",
+      "bytes": 1005,
+      "sha256": "ba0cac060269583523ca9506473a755203037c57d466a11aa89a30a5f6756f3d"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/abc.py",
+      "bytes": 6538,
+      "sha256": "e558702a95cdce3febd289da021715d2b92bc43995b8a1bc58dfa1c3d8010287"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/io.py",
+      "bytes": 3582,
+      "sha256": "7cec3cb8ac004058dd0a5af246e6d950fb59c7ddd0058fda48bcb3fcb98d8822"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__future__.py",
+      "bytes": 5218,
+      "sha256": "981d4c398849f9ebcab72300d9c1fe288fd6d7f28957b3b3fa3a493a5836d95c"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/types.py",
+      "bytes": 10993,
+      "sha256": "345474ef027a1273f353da9bdc1f7c18f65335e72e681bcc0376774cc51f2405"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/operator.py",
+      "bytes": 10965,
+      "sha256": "b2af20f67667203c1730e686cc5d0427becc94db4c97f1d3efe3ed2158473f6a"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_collections_abc.py",
+      "bytes": 32089,
+      "sha256": "d4945c8410c4bab351741b04bca3de066f7c27ed7e38df89e206a96617102ffb"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/keyword.py",
+      "bytes": 1073,
+      "sha256": "18c2be738c04ad20ad375f6a71db34b3823c7f40b0340f5294d0e89f3c9b093b"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/reprlib.py",
+      "bytes": 7148,
+      "sha256": "e177bc70da83a7fbcde6fd261dc15da34e8a20873b1cccd4f9a1f8f27cca3779"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/__init__.py",
+      "bytes": 52378,
+      "sha256": "7fdb04dd248ab37909f46d2085bfee56b32d7e91e49ad3a2fad99c453295659b"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/functools.py",
+      "bytes": 37940,
+      "sha256": "de4a1d37c795e2a065124b5c49357893433bc6bb111b41277ccc9930ef08d4c9"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/enum.py",
+      "bytes": 81540,
+      "sha256": "f35e542d8c4c1d2b5e910138d726fa48774925f3c4dc5462793ebcb66aa55501"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_constants.py",
+      "bytes": 5930,
+      "sha256": "fa4fdb200f238f9e7817b63892b0d69833d8165134801e775e10cc113348a375"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_parser.py",
+      "bytes": 41201,
+      "sha256": "a51a85b37cf3f44ba7ff25754da5f31306e4ccfa6eb3c017f9d37bdf4e770840"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_casefix.py",
+      "bytes": 5444,
+      "sha256": "1b12d9136f23db6c3f6f26053fefc15ca964b886838c7b9c1fabf8d2efc1e5c8"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_compiler.py",
+      "bytes": 26399,
+      "sha256": "c75620761098a70ed75b9accef63ef2881d8abb6d4e5cbfd10074bd165eefe4d"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/copyreg.py",
+      "bytes": 7614,
+      "sha256": "c8eda41f05c6bf95a4da4726a530409d2485ae060b8d019b3a8034389a15d3e9"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__init__.py",
+      "bytes": 16315,
+      "sha256": "8ff3c37c63b917fcf8dc8d50993a502292a3dc159e41de4f4018c72a53d1c07b"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/stat.py",
+      "bytes": 5485,
+      "sha256": "052af0327eae6941b69b05c088b3e748f79995635f80ac4cc7125eb333eb4c77"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/genericpath.py",
+      "bytes": 5572,
+      "sha256": "2b0b35d2206778af4081cf81dd9b513876e72c35a55bec941402e1fa62b1f1aa"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/posixpath.py",
+      "bytes": 17356,
+      "sha256": "03825681086638649a43480954f7f6a16b4da3bd41ece956864ae96e4f795cd9"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/os.py",
+      "bytes": 40821,
+      "sha256": "54c43a1fc69c979c70d8f7d097174cee163bfe59937723ee353043dd4a0211e1"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py",
+      "bytes": 27637,
+      "sha256": "8b7a477f978a8532852fd81e241c78182516bc4975d672d580a5848a76e11eb6"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ast.py",
+      "bytes": 64452,
+      "sha256": "b515c23dbbc459329d3b802a3aac742cc456d7472e66f7ed6e9dc97e40596d7d"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_weakrefset.py",
+      "bytes": 5893,
+      "sha256": "91895a451d06e9f521a1171b31b9b19bc9740f35af00d4fa106338ab7167c9ac"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/weakref.py",
+      "bytes": 21513,
+      "sha256": "56f8d313fb74019e53eb9287400702fbce788b7fe30e097b0b6e06296f3f080c"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/copy.py",
+      "bytes": 8412,
+      "sha256": "cbd25547933176fcf6bb05c2adc9f4796d15ac20b9b82dcf890daea7203daeab"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/hashlib.py",
+      "bytes": 9349,
+      "sha256": "6dbdebf270868b391080e21dc9687eddfaf321c965ad979f68d3f5c423c613ab"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/warnings.py",
+      "bytes": 21909,
+      "sha256": "6405e281882932205eae641b2d31fba7776f94517a206d289465a1caffbf310e"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/__init__.py",
+      "bytes": 4784,
+      "sha256": "d540b5ac137fcb3e26a8d5f2939649e34373c6685f98a30a9f682cf231be5854"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_abc.py",
+      "bytes": 1354,
+      "sha256": "80aab7931dc999dee581c8b8b56fcd973fe156335a96ceeaf6acfc03cebf10e8"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/util.py",
+      "bytes": 10994,
+      "sha256": "671f2995653f673f6d5056a1089debef473bc28ae7114f7a8db71475733d6876"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/scanner.py",
+      "bytes": 2434,
+      "sha256": "572958017eae8842eeddd0e3d18d3c56cc0a197348224915e1d87ce937841764"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py",
+      "bytes": 12525,
+      "sha256": "382cd02af6f7efede5a6d4abbcda1015e5c7a75794b0016022878f9cf32a24f6"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py",
+      "bytes": 16075,
+      "sha256": "52bfb1b66029cc70fa3bd7fe11df9f2e03922d413407a341b387a22c987f24f8"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py",
+      "bytes": 14020,
+      "sha256": "d5d41e2c29049515d295d81a6d40b4890fbec8d8482cfb401630f8ef2f77e4d5"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/abc.py",
+      "bytes": 119,
+      "sha256": "9cb4208f99128a0489b6c8e6c61637617dd7d4250c59e065491957eda084dd10"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/typing.py",
+      "bytes": 118836,
+      "sha256": "be92d60fb8382bb29ead21c128825d7c96d0e8c915b44f840791e49f5a8d554c"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/__init__.py",
+      "bytes": 8308,
+      "sha256": "17f4f6832cfc84b5b9600414bab80b77e67ccb611bdfed10a3f2beca9d0d568b"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/string.py",
+      "bytes": 11786,
+      "sha256": "24aeae1f0526250f442022022bf98df9a823b1cb330543ee79e70e44907462e9"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/cookies.py",
+      "bytes": 21568,
+      "sha256": "6387f676095ae5374943eff99fbcd2d9c681172c00209fadf54c311cf7228149"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/fnmatch.py",
+      "bytes": 5999,
+      "sha256": "6683da36e47af523f3f41e18ad244d837783e19e98911cc0b7415dea81494ebc"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ntpath.py",
+      "bytes": 30404,
+      "sha256": "6c0d55ee892f98ef87b1ed3c50c9dfc7e267a98d2db47e08d3dc67529af56725"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ipaddress.py",
+      "bytes": 81414,
+      "sha256": "ba8d3389ff084fcb232b48204ec04f2b3ea4bd0eadf7b18c814947d185de2c64"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py",
+      "bytes": 45676,
+      "sha256": "e6af7f475262f1de335bb2e41e26adb94d6103977cf5fe1ddc430dc6a3b1623f"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py",
+      "bytes": 51052,
+      "sha256": "10ba48ae8063cfe7589436041d0d4628c05f427c7709cf8e75e486f8930cc32c"
+    }
+  ],
+  "readable_bytecode_cache_files": [
+    {
+      "module": "encodings.aliases",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__pycache__/aliases.cpython-312.pyc",
+      "bytes": 12512,
+      "sha256": "e95f64f9caefd59683017f4626737a14108f9b3e36df0340b9e1939490bc5666"
+    },
+    {
+      "module": "encodings",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__pycache__/__init__.cpython-312.pyc",
+      "bytes": 5879,
+      "sha256": "b880a2f131261ca0ac9e2e15d946d0de4e93f7d4cac57bee6d9043a02dfa2b1a"
+    },
+    {
+      "module": "encodings.utf_8",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__pycache__/utf_8.cpython-312.pyc",
+      "bytes": 2251,
+      "sha256": "1cf08faf189815b361115f9ed044e561900327b799e137bde5613c223cef5a44"
+    },
+    {
+      "module": "__future__",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/__future__.cpython-312.pyc",
+      "bytes": 4808,
+      "sha256": "2de7e02be2d153c0038e70e85914f121917ea2ce703a990bc8d64f9e2f438e4f"
+    },
+    {
+      "module": "types",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/types.cpython-312.pyc",
+      "bytes": 15049,
+      "sha256": "88ec73f8d0950300788aff4eb2aaef2c5d29591982b80bc1c69ccb0e0658eb8a"
+    },
+    {
+      "module": "operator",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/operator.cpython-312.pyc",
+      "bytes": 17456,
+      "sha256": "aa8d2bacbbb098e68840a8d37dcd98c84cdefcd4c9d84de6477509bd5c964559"
+    },
+    {
+      "module": "keyword",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/keyword.cpython-312.pyc",
+      "bytes": 1145,
+      "sha256": "51226b1159cff699270144d73e2e806750763ffcef1acab4d7f8e293446dbd7a"
+    },
+    {
+      "module": "reprlib",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/reprlib.cpython-312.pyc",
+      "bytes": 10330,
+      "sha256": "0d8f93d1391810aa134bf4c63c2f4d44237361317b4ab91c2f9e53671716c51c"
+    },
+    {
+      "module": "collections",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/__pycache__/__init__.cpython-312.pyc",
+      "bytes": 73041,
+      "sha256": "9aa048ba3486866a065cdd55c94e335e4bfe690ea060d94a3b7341340ba5130d"
+    },
+    {
+      "module": "functools",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/functools.cpython-312.pyc",
+      "bytes": 40446,
+      "sha256": "43bb47512a875f9f074e21054b2fb816ca45eca4898fa6335d674f2069bd8b26"
+    },
+    {
+      "module": "enum",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/enum.cpython-312.pyc",
+      "bytes": 80448,
+      "sha256": "865e7c73467e74c49956e41cc0b264a75075a006938f428d03a06f5d9722a6fe"
+    },
+    {
+      "module": "re._constants",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/_constants.cpython-312.pyc",
+      "bytes": 5407,
+      "sha256": "d68688e4d2cb15ba5014447dc29411f58a0bae38a4216a9c9e9dd7ae47bc7532"
+    },
+    {
+      "module": "re._parser",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/_parser.cpython-312.pyc",
+      "bytes": 42051,
+      "sha256": "5799cdf4f718287b2288a141ea74c02387a221456d11f3f7fcbdddf85df4f3d0"
+    },
+    {
+      "module": "re._casefix",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/_casefix.cpython-312.pyc",
+      "bytes": 1920,
+      "sha256": "30c7c1a2a5bdf0052e28cc0ace5726062588ffbf63760c0829079c67db854934"
+    },
+    {
+      "module": "re._compiler",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/_compiler.cpython-312.pyc",
+      "bytes": 26598,
+      "sha256": "f68b416dc89abae352dd07f49aaf6b6ce11404d417ff006dc8697f40ca9c0a59"
+    },
+    {
+      "module": "copyreg",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/copyreg.cpython-312.pyc",
+      "bytes": 7503,
+      "sha256": "b464d78428416fbcb85bf6d6866b9db8876a90273167ef1928e2de7e6c5142d7"
+    },
+    {
+      "module": "re",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/__init__.cpython-312.pyc",
+      "bytes": 18034,
+      "sha256": "7594ba703631219c4a29c6b189846743216f0dcd9aa857fee9fe3cf0ae5217b3"
+    },
+    {
+      "module": "contextlib",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/contextlib.cpython-312.pyc",
+      "bytes": 30454,
+      "sha256": "3f6a00709748f4d8f43b1b98b28095feba71eafcf3a0c50e9f9f38a6379b8129"
+    },
+    {
+      "module": "ast",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/ast.cpython-312.pyc",
+      "bytes": 99838,
+      "sha256": "8f5df789648d80218abc53cf39b3487bf149f34b08f58c5c33aa3500640c3ea3"
+    },
+    {
+      "module": "_weakrefset",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/_weakrefset.cpython-312.pyc",
+      "bytes": 11841,
+      "sha256": "6c124e6b222d3dcd8b56d0788f6362329bd0a119418633d89f82aa8a529ee158"
+    },
+    {
+      "module": "weakref",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/weakref.cpython-312.pyc",
+      "bytes": 31315,
+      "sha256": "8978ef12ffdb85e46f5da964463a8e0e6ad3039ea9c5aaf8e054473e1d6a0fb3"
+    },
+    {
+      "module": "copy",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/copy.cpython-312.pyc",
+      "bytes": 9861,
+      "sha256": "b754e6275cf356d43ed859fb53f37c4416ec3de464fbbd0e88dc3ba974436009"
+    },
+    {
+      "module": "hashlib",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/hashlib.cpython-312.pyc",
+      "bytes": 8184,
+      "sha256": "3a61cf0ec7a6c7104df2b823b39d4da38600185fad0d45b1cf8219981283bd33"
+    },
+    {
+      "module": "warnings",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/warnings.cpython-312.pyc",
+      "bytes": 23931,
+      "sha256": "4b5a6ea425e2056965db4ec507bd89e66cb1a45140be229deaccf2f66bc86b64"
+    },
+    {
+      "module": "importlib",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/__pycache__/__init__.cpython-312.pyc",
+      "bytes": 4663,
+      "sha256": "1195daae6640bc0eb0aa9acf03e65c3db8146b10da454bca29e7de610ff3481b"
+    },
+    {
+      "module": "importlib._abc",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/__pycache__/_abc.cpython-312.pyc",
+      "bytes": 1747,
+      "sha256": "7d6b4a4fcffd9e1706fec64c3fd3174c4fc61fc931b8a83162053e8f46b127ec"
+    },
+    {
+      "module": "json.scanner",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__pycache__/scanner.cpython-312.pyc",
+      "bytes": 3434,
+      "sha256": "b3ee2c1afa8588fa8b9ab846518a02e42af22fb2be06b8bc29fcfa079f567b2b"
+    },
+    {
+      "module": "json.decoder",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__pycache__/decoder.cpython-312.pyc",
+      "bytes": 14017,
+      "sha256": "a8bf8f1ee1fd425d852f0da3645a9711b8b4ccad075ad70030560f51117de31d"
+    },
+    {
+      "module": "json.encoder",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__pycache__/encoder.cpython-312.pyc",
+      "bytes": 15192,
+      "sha256": "ab3f5b458c1fb17a604d363279a1de126874ff82f5089f3af87ac9b6b6f04a76"
+    },
+    {
+      "module": "json",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__pycache__/__init__.cpython-312.pyc",
+      "bytes": 13719,
+      "sha256": "5d36b903e240f48dd5417ebff8b1a13cceda8409bd1e03da7fab4780332d9d54"
+    },
+    {
+      "module": "collections.abc",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/__pycache__/abc.cpython-312.pyc",
+      "bytes": 353,
+      "sha256": "9cf29c02bfeb430aa6b88bb1c806e1eeee062370b6e2e8d7c8799a96221669e7"
+    },
+    {
+      "module": "typing",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/typing.cpython-312.pyc",
+      "bytes": 142490,
+      "sha256": "452f6c1e53e74c67abaead3d1a1030075af510fe62d4f80b8b28c0fe25e331c4"
+    },
+    {
+      "module": "http",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/__pycache__/__init__.cpython-312.pyc",
+      "bytes": 9591,
+      "sha256": "d9095dc1f9c79eecbdf9111a26418a817ee72efa63c988569984e0b12692e52d"
+    },
+    {
+      "module": "string",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/string.cpython-312.pyc",
+      "bytes": 11566,
+      "sha256": "fb6ca6c44c09cac3988aec4bf4782e9d90fd1362e75465338ede144170ff1a94"
+    },
+    {
+      "module": "http.cookies",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/http/__pycache__/cookies.cpython-312.pyc",
+      "bytes": 22618,
+      "sha256": "7d9e01894e59b96cd7c80f6779b3008d4ceefa041c1e2911575fc5159c7315bd"
+    },
+    {
+      "module": "fnmatch",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/fnmatch.cpython-312.pyc",
+      "bytes": 6584,
+      "sha256": "ea3d51a8c9303470736602dca7e401f2619ba481890c027e807fd8fdc2cea0a9"
+    },
+    {
+      "module": "urllib",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/__pycache__/__init__.cpython-312.pyc",
+      "bytes": 239,
+      "sha256": "e88d78a96b45bfda7f645480bfb28a690d7dff2ec248662753930d257969de9d"
+    },
+    {
+      "module": "ipaddress",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/ipaddress.cpython-312.pyc",
+      "bytes": 93880,
+      "sha256": "604716aaa8c575d01f8e5b3ed76fe00d8f03b270dc96d6c687d99982e5dd16ee"
+    },
+    {
+      "module": "urllib.parse",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/__pycache__/parse.cpython-312.pyc",
+      "bytes": 50717,
+      "sha256": "33ae6c76466863d412592032f3bed552a56d93dd8d8e20589180c33297c9b306"
+    },
+    {
+      "module": "pathlib",
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/pathlib.cpython-312.pyc",
+      "bytes": 61802,
+      "sha256": "1ed77c5efeadd1ad16b4f4de0c46bb5b00583e0e7bf1fe226f3d056ff316c59c"
+    }
+  ]
+}

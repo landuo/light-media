@@ -1,0 +1,128 @@
+{
+  "production_count": 10,
+  "direct_test_count": 1,
+  "direct_calls": [
+    {
+      "path": "internal/plugins/iyuuautoseed/native/brush_flow.go",
+      "line": 61,
+      "function": "func (c *IYUUClient) BrushFlowControl(ctx context.Context, op string, hashes []string, tags []string, uploadKB, downloadKB *int64) (out IYUUReceipt, err error) {",
+      "statement": "modern, e := iyuuVersionAtLeast(v, 2, 11)",
+      "test": false
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/iyuu.go",
+      "line": 588,
+      "function": "func (c *IYUUClient) control(ctx context.Context, hashes []string, start bool) (IYUUReceipt, error) {",
+      "statement": "modern, e := iyuuVersionAtLeast(version, 2, 11)",
+      "test": false
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/iyuu_projection_test.go",
+      "line": 139,
+      "function": "func TestIYUUInstalledNativeProjectionOracle(t *testing.T) {",
+      "statement": "got, e := iyuuVersionAtLeast(row[\"input\"].(string), 2, 11)",
+      "test": true
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/iyuu_version.go",
+      "line": 79,
+      "function": "func (c *IYUUClient) webVersionLocked(ctx context.Context) (string, error) {",
+      "statement": "if _, e := iyuuVersionAtLeast(value, 0, 0); e != nil {",
+      "test": false
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/shared_downloader_commands.go",
+      "line": 228,
+      "function": "func (q *sharedQBCommands) version(ctx context.Context) (string, error) {",
+      "statement": "if _, err = iyuuVersionAtLeast(string(raw), 0, 0); err != nil {",
+      "test": false
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/shared_downloader_commands.go",
+      "line": 249,
+      "function": "func (q *sharedQBCommands) control(ctx context.Context, operation string, ids any) (any, error) {",
+      "statement": "modern, err := iyuuVersionAtLeast(version, 2, 11)",
+      "test": false
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/shared_downloader_commands.go",
+      "line": 373,
+      "function": "func (q *sharedQBCommands) Add(ctx context.Context, in downloadercommands.QBAddCall) (any, error) {",
+      "statement": "modern, err := iyuuVersionAtLeast(version, 2, 7)",
+      "test": false
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands.go",
+      "line": 25,
+      "function": "func (q *sharedQBCommands) AddTags(ctx context.Context, ids, tags any) (any, error) {",
+      "statement": "supported, err := iyuuVersionAtLeast(version, 2, 3)",
+      "test": false
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands.go",
+      "line": 74,
+      "function": "func (q *sharedQBCommands) Stop(ctx context.Context, ids any) (any, error) {",
+      "statement": "modern, err := iyuuVersionAtLeast(version, 2, 11)",
+      "test": false
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/shared_qb_tag_commands.go",
+      "line": 137,
+      "function": "func (p *sharedQBTagScope) Info(ctx context.Context, status any) (*downloadercommands.QBTagRows, error) {",
+      "statement": "modern, err := iyuuVersionAtLeast(version, 2, 11)",
+      "test": false
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/shared_qb_tag_commands.go",
+      "line": 242,
+      "function": "func (p *sharedQBTagScope) write(ctx context.Context, endpoint string, form url.Values) (any, error) {",
+      "statement": "supported, err := iyuuVersionAtLeast(version, 2, 3)",
+      "test": false
+    }
+  ],
+  "webVersionLocked_indirect_calls": [
+    {
+      "path": "internal/plugins/iyuuautoseed/native/brush_flow.go",
+      "line": 57,
+      "function": "func (c *IYUUClient) BrushFlowControl(ctx context.Context, op string, hashes []string, tags []string, uploadKB, downloadKB *int64) (out IYUUReceipt, err error) {",
+      "statement": "v, e := c.webVersionLocked(ctx)"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/brush_flow_add.go",
+      "line": 44,
+      "function": "func (c *IYUUClient) BrushFlowAddDownloading(ctx context.Context, spec IYUUAddSpec, uploadBytes, downloadBytes *int64, expected *IYUUDestination) (out IYUUAddResult, err error) {",
+      "statement": "if _, e := c.webVersionLocked(ctx); e != nil {"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/iyuu.go",
+      "line": 243,
+      "function": "func (c *IYUUClient) addPaused(ctx context.Context, spec IYUUAddSpec, expected *IYUUDestination) (out IYUUAddResult, err error) {",
+      "statement": "if _, e := c.webVersionLocked(ctx); e != nil {"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/iyuu.go",
+      "line": 583,
+      "function": "func (c *IYUUClient) control(ctx context.Context, hashes []string, start bool) (IYUUReceipt, error) {",
+      "statement": "version, e := c.webVersionLocked(ctx)"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/seed_rescue.go",
+      "line": 50,
+      "function": "func (c *IYUUClient) SeedRescueAddDownloading(ctx context.Context, spec IYUUAddSpec) (out IYUUAddResult, err error) {",
+      "statement": "if _, e := c.webVersionLocked(ctx); e != nil {"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/seed_rescue.go",
+      "line": 211,
+      "function": "func (c *IYUUClient) SeedRescueConnected(ctx context.Context) error {",
+      "statement": "_, e := c.webVersionLocked(ctx)"
+    },
+    {
+      "path": "internal/plugins/iyuuautoseed/native/transfer.go",
+      "line": 22,
+      "function": "func (c *IYUUClient) TransferConnected(ctx context.Context) error {",
+      "statement": "_, e := c.webVersionLocked(ctx)"
+    }
+  ],
+  "scope": "ACTIVE current text only; candidate Add-to-addInside extraction separately documented"
+}

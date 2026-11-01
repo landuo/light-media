@@ -1,0 +1,108 @@
+{
+  "started": "2026-11-01T07:26:39.925685+00:00",
+  "driver_pid": 2,
+  "package": "./internal/plugins/iyuuautoseed/native",
+  "pattern": "^(TestSharedQBCookieScopeWireAndVersionGuards|TestSharedQBCookieScopeAggregateUnknownAndRecovery|TestSharedQBCookieScopeGuardsAndLifetime|TestSharedQBCookieVersionOriginal23)$",
+  "race": false,
+  "status": "PASS",
+  "vet": "NOT_RUN: virtual-only package directory; prior automatic vet chdir failure retained",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/gates02/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins/iyuuautoseed/native"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/gates02/overlay.json",
+        "-vet=off",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-native02.test",
+        "./internal/plugins/iyuuautoseed/native"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/iyuuautoseed/native",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-native02.test",
+        "-test.v",
+        "-test.run",
+        "^(TestSharedQBCookieScopeWireAndVersionGuards|TestSharedQBCookieScopeAggregateUnknownAndRecovery|TestSharedQBCookieScopeGuardsAndLifetime|TestSharedQBCookieVersionOriginal23)$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "overlay": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/leaf.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/leaf/leaf.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/qb_cookie_add.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/leaf/qb_cookie_add.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/qb_cookie_parse.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/leaf/qb_cookie_parse.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/qb_cookie_values.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/leaf/qb_cookie_values.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/shared_downloader_commands.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/native/shared_downloader_commands.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/shared_qb_cookie_add.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/native/shared_qb_cookie_add.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/shared_qb_cookie_add_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/native/shared_qb_cookie_add_test.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/qb_cookie_source_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-oracle-tests01/qb_cookie_source_test.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/testdata/source-qb-cookie01.json": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-oracle-tests01/testdata/source-qb-cookie01.json",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/iyuu_version.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/native/iyuu_version.go.txt"
+  },
+  "extra_inputs": [
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/reference/native-projection-oracle.json"
+  ],
+  "preflight_verified_files": 76,
+  "preflight_verified_replacements": 10,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T07:26:39.994742+00:00",
+      "scratch_free": 43200466944,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T07:26:40.632511+00:00",
+      "scratch_free": 43198197760,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T07:26:42.913876+00:00",
+      "scratch_free": 43176325120,
+      "tmp_free": 5225586688
+    }
+  ],
+  "input_count": 2829,
+  "program_sha256": "70c2cda3323b8f58c7f47f6a13f54485db270fac3e450d73241148cf19ee35ed",
+  "root_passes": [
+    "TestSharedQBCookieScopeWireAndVersionGuards",
+    "TestSharedQBCookieVersionOriginal23",
+    "TestSharedQBCookieScopeAggregateUnknownAndRecovery",
+    "TestSharedQBCookieScopeGuardsAndLifetime"
+  ],
+  "ended": "2026-11-01T07:26:43.144264+00:00"
+}

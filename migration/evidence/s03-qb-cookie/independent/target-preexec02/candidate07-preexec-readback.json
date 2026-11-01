@@ -1,0 +1,72 @@
+{
+  "status": "READY_EXACT_NATIVE_NORMAL4_AND_GUARD_RACE1",
+  "reviewed_at": "2026-11-01T07:25:33.516955+00:00",
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07.json",
+    "bytes": 5090,
+    "sha256": "891130b2e513f7fd74cf5be2bf8707aebe398f8559750c09e37f973bbc7eebbd"
+  },
+  "candidate_files_checked": 19,
+  "changed_or_added_from06": [
+    "native/shared_qb_cookie_add_test.go.txt",
+    "native/iyuu_version.go.txt",
+    "LEGACY-VERSION-ADDENDUM.md"
+  ],
+  "production_delta": "old iyuu_version.go: exactly four Unicode fold switch cases removed; all other old statements unchanged",
+  "six_prior_products_equal06": true,
+  "gate_seal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/gates02/seal.json",
+    "bytes": 2565,
+    "sha256": "92ab43056a951f7a73e83464cbd6cc23098173c32526817c006135f368bd1aae"
+  },
+  "binding": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/gates02/overlay-inputs.json",
+    "bytes": 24090,
+    "sha256": "a86df37884de76d4005213dcc4387f83438944031e706def2dbf943dbd71d692"
+  },
+  "run": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/gates02/run.sh",
+    "bytes": 1707,
+    "sha256": "ef08f060a65135dc1c3574ea1e23de94bba451e4e375053c1753ec4cf055ae23"
+  },
+  "overlay": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/gates02/overlay.json",
+    "bytes": 3098,
+    "sha256": "b89f35d2a862fa017c7ced2e2adb7f30424bf58cc62b12d8f15722a5daa75692"
+  },
+  "mapping_count": 10,
+  "bound_rows_checked": 76,
+  "drift": [],
+  "original_version_raw": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/reference/native-projection-oracle.json",
+    "bytes": 9237,
+    "sha256": "de6cdbe4e03a9c6d9d9828285a7c4973d264254ae40d96039dc381bc6099fdb4"
+  },
+  "original_versions": 23,
+  "new_Unicode4_members_in_old_raw": false,
+  "runtime_raw_binding": "same actual file in additional_bound_files, explicit --extra-input, test SHA; cwd exact native package",
+  "test_delta": "existing Wire root adds invalid short version 2GET/0selected; one standalone old23 version root plus4 statically-derived rejections; original scope roots otherwise retained",
+  "reviewer_correction": {
+    "initial_concern": "Thought inherited invalid_webapi_version native error bypassed direct source catch",
+    "withdrawn": true,
+    "actual_path": "sharedQBCommands.version lines223–230 validates at0,0 and converts to commandValueError; this exact invalid input never reaches later layout2.7 comparison. Direct SourceException ValueError enters permitted preselected catch. No classifier edit needed or made."
+  },
+  "normal_roots": [
+    "TestSharedQBCookieScopeWireAndVersionGuards",
+    "TestSharedQBCookieScopeAggregateUnknownAndRecovery",
+    "TestSharedQBCookieScopeGuardsAndLifetime",
+    "TestSharedQBCookieVersionOriginal23"
+  ],
+  "race_roots": [
+    "TestSharedQBCookieScopeGuardsAndLifetime"
+  ],
+  "evidence_boundary": [
+    "native not run yet",
+    "exact source-helper unsupported-vs-invalid routing; not all vendor messages/False equivalence",
+    "old raw does not record packaging hash; current bound packaging26.3 static provenance not backfilled",
+    "same explicit tcp4/no fallback; inherited proxy/guard controls unchanged",
+    "leaf06 actual PASS retained without rerun",
+    "vet disabled; current package dirs exist, inherited virtual-only explanation is not a current failure"
+  ],
+  "reviewer_execution": false
+}

@@ -1,0 +1,108 @@
+--- preimages/iyuu_version.go
++++ native/iyuu_version.go.txt
+@@ -18,14 +18,6 @@
+ func iyuuVersionAtLeast(value string, major, minor int) (bool, error) {
+ 	s := legacyanime.Strip(value)
+ 	s = strings.Map(func(r rune) rune {
+-		switch r {
+-		case 'İ', 'ı':
+-			return 'i'
+-		case 'ſ':
+-			return 's'
+-		case 'K':
+-			return 'k'
+-		}
+ 		if r >= 'A' && r <= 'Z' {
+ 			return r + 32
+ 		}
+--- candidate06-files/native/shared_qb_cookie_add_test.go.txt
++++ native/shared_qb_cookie_add_test.go.txt
+@@ -2,12 +2,15 @@
+ 
+ import (
+ 	"context"
++	"crypto/sha256"
++	"encoding/hex"
+ 	"encoding/json"
+ 	"errors"
+ 	"io"
+ 	"net"
+ 	"net/http"
+ 	"net/http/httptest"
++	"os"
+ 	"reflect"
+ 	"strings"
+ 	"sync"
+@@ -149,6 +152,72 @@
+ 			}
+ 		})
+ 	}
++	t.Run("invalid-source-version-no-selected-write", func(t *testing.T) {
++		var requests, selected atomic.Int32
++		peer := qbCookieOwnedPeer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++			requests.Add(1)
++			if r.Method != "GET" || r.URL.Path != "/api/v2/app/webapiVersion" {
++				selected.Add(1)
++				t.Error("invalid version reached non-version endpoint", r.Method, r.URL.Path)
++				w.WriteHeader(500)
++				return
++			}
++			io.WriteString(w, "2.11.3+K")
++		}))
++		defer peer.Close()
++		qb, _, closeClient, err := NewSharedDownloaderCommands(Config{ID: "owned-cookie-invalid-version", Kind: "qb", BaseURL: peer.URL}, "", func(ctx context.Context) error { return ctx.Err() })
++		if err != nil {
++			t.Fatal(err)
++		}
++		defer closeClient()
++		leaf := downloadercommands.QBittorrent{Client: qb, Config: downloadercommands.DefaultQBConfig()}
++		result, err := leaf.AddTorrent(context.Background(), downloadercommands.Arguments{"content": "https://owned-cookie.invalid/item.torrent", "cookie": "sid=owned"})
++		if err != nil || result.Success || len(result.IDs) != 0 || requests.Load() != 2 || selected.Load() != 0 {
++			t.Fatalf("invalid version result=%#v err=%v requests=%d selected=%d", result, err, requests.Load(), selected.Load())
++		}
++	})
++}
++
++// Exact original raw23 intersection only; this does not run the mixed
++// completed/add/TR projection cases or invent their packaging provenance.
++func TestSharedQBCookieVersionOriginal23(t *testing.T) {
++	raw, err := os.ReadFile("../reference/native-projection-oracle.json")
++	if err != nil {
++		t.Fatal(err)
++	}
++	digest := sha256.Sum256(raw)
++	if hex.EncodeToString(digest[:]) != "de6cdbe4e03a9c6d9d9828285a7c4973d264254ae40d96039dc381bc6099fdb4" {
++		t.Fatal("legacy raw bytes changed")
++	}
++	value, err := iyuuJSON(raw)
++	if err != nil {
++		t.Fatal(err)
++	}
++	rows := value.(map[string]any)["versions"].([]any)
++	if len(rows) != 23 {
++		t.Fatalf("versions=%d", len(rows))
++	}
++	for _, item := range rows {
++		row := item.(map[string]any)
++		want := row["result"].(map[string]any)
++		got, err := iyuuVersionAtLeast(row["input"].(string), 2, 11)
++		if want["exception"] != nil {
++			if err == nil {
++				t.Fatalf("invalid legacy version admitted: %v", row["input"])
++			}
++			continue
++		}
++		if err != nil || got != want["value"] {
++			t.Fatalf("legacy version=%v got=%v/%v want=%v", row["input"], got, err, want)
++		}
++	}
++	// New static witnesses from bound packaging26.3 (?a:...) source tokens;
++	// not claimed to have existed among or been executed by the legacy23 raw.
++	for _, input := range []string{"2.11.3+İ", "2.11.3+ı", "2.11.3poſt1", "2.11.3+K"} {
++		if got, err := iyuuVersionAtLeast(input, 2, 11); got || err == nil {
++			t.Fatalf("non-ASCII source version accepted %q: %v/%v", input, got, err)
++		}
++	}
+ }
+ 
+ func TestSharedQBCookieScopeAggregateUnknownAndRecovery(t *testing.T) {

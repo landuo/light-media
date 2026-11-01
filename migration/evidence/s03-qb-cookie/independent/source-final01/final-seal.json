@@ -1,0 +1,71 @@
+{
+  "status": "ACCEPT_FINITE_ORIGINAL_QB_COOKIE01_RECORDING_OBSERVATIONS",
+  "utc": "2026-11-01T07:08:31.606685+00:00",
+  "reviewer": "/root/continue_platform_astra/meta_target_review",
+  "preexec_seal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/source-preexec01/preexec-seal.json",
+    "bytes": 3077,
+    "sha256": "761952fd9f0fdb0cbb3356a3f921eda1dba2f9c653f2a232d839e0e343fed758"
+  },
+  "raw": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-source01/stdout.json",
+    "bytes": 152283,
+    "sha256": "758df1e970dad525d564dc6732e2153f545dc8a0314fbbfd0b3e846156f02b6a"
+  },
+  "actual_tool_receipt": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-source01/tool-receipt.json",
+    "bytes": 238,
+    "sha256": "a17b4456a60858821f7f707d2bbd55ee7c223124bc18e3d7868004a07180869c"
+  },
+  "artifacts": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/source-final01/readback.json",
+      "bytes": 69982,
+      "sha256": "a4e2618e3f549d5831e8b4c8f679f9cfa930ef2de46472c74f0044efbf78ed2c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/source-final01/REVIEW.md",
+      "bytes": 5264,
+      "sha256": "efc2c5199b6e9e11be059ac52270c59b35ed97e6ce217e54ce90a8f03538d1d5"
+    }
+  ],
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "actual": {
+    "tool_chunk": "3d9730",
+    "exit_code": 0,
+    "stderr_bytes": 0,
+    "cases": 17,
+    "complete_add_calls": 18,
+    "complete_original_nodes": 9,
+    "input_count": 119,
+    "current_drift": [],
+    "file_backed_modules_before": 57,
+    "file_backed_modules_after": 59,
+    "added_modules_only": [
+      "packaging",
+      "packaging.version"
+    ],
+    "audit_rejections": []
+  },
+  "observations": {
+    "protocol_calls": 52,
+    "protocol_returns": 48,
+    "owned_pre_effect_RuntimeErrors": 4,
+    "owned_store_commits": 7,
+    "original_logs": 5,
+    "tuple_success_true": 16,
+    "tuple_success_false": 2,
+    "all_18_tuples_truthy": true,
+    "same_instance_second_merge_preserved": true
+  },
+  "mandatory_boundary": "Setter ordinary RuntimeError is explicitly owned pre-effect recording only. It proves neither daemon error atomicity nor safety of swallowing/replaying unknown already-delegated target operations.",
+  "not_claimed": [
+    "Real daemon/HTTP/vendor/cookie persistence/download",
+    "target Go/SDK/App/worker/full S03 equivalence",
+    "all Python getter/Cookie/PEP440 domains",
+    "generic syscall sandbox or per-code-identity audit trace"
+  ],
+  "blockers_within_finite_oracle_layer": [],
+  "reviewer_source_packaging_Go_or_network_execution": false,
+  "active_or_ledger_written": false
+}

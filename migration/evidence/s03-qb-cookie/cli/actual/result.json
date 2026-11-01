@@ -1,0 +1,1140 @@
+{
+  "status": "PASS",
+  "kind": "S03 URL-cookie ordinary normal hosts / installed SDK / owned qB HTTP",
+  "calls": [
+    {
+      "at": "2026-11-01T07:47:58.565273+00:00",
+      "host_pid": 22,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-001.body",
+      "sha256": "ab5605d503d92e4f31f25ef77760810ea6cd53b69671411d86c679c4f78787ce"
+    },
+    {
+      "at": "2026-11-01T07:47:58.567640+00:00",
+      "host_pid": 22,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-11-01T07:47:58.636250+00:00",
+      "host_pid": 22,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-003.body",
+      "sha256": "2ceb20ccb21da79a879fbb8458a6b1ebd8b77f42bcb797fe3629b465a3b5e161"
+    },
+    {
+      "at": "2026-11-01T07:47:58.638414+00:00",
+      "host_pid": 22,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-004.body",
+      "sha256": "20d9f1c1bbc119377ae8e740204d6db74c949f316730d5c6c311bcdf0e16687e"
+    },
+    {
+      "at": "2026-11-01T07:47:58.729486+00:00",
+      "host_pid": 22,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedDownloaderCommands/commands",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-005.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-11-01T07:47:58.731842+00:00",
+      "host_pid": 22,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedDownloaderCommands/commands",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-006.body",
+      "sha256": "91442cf2f74caeda124f02d501e6bf76d176a96e35e38d56f1fce45947cc7bde"
+    },
+    {
+      "at": "2026-11-01T07:47:58.755923+00:00",
+      "host_pid": 22,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedDownloaderCommands/commands",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-007.body",
+      "sha256": "e5311fd86f287c75e437edb25509b5a9618228110825cec90b28cc6da7861961"
+    },
+    {
+      "at": "2026-11-01T07:47:58.772462+00:00",
+      "host_pid": 22,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedDownloaderCommands/commands",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-008.body",
+      "sha256": "2bb3ba3d611920b1660830cc5ed82af5c193fbc623ebd3217d4f7271a7aa0390"
+    },
+    {
+      "at": "2026-11-01T07:47:58.792748+00:00",
+      "host_pid": 22,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedDownloaderCommands/commands",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-009.body",
+      "sha256": "144df53aa544d14e217c5ea75c61fd257900f8c8468d49e59727c0525c56ce63"
+    },
+    {
+      "at": "2026-11-01T07:47:59.071219+00:00",
+      "host_pid": 71,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-010.body",
+      "sha256": "dab28df92d98d1ab25ae6412c2ee6a8de5487b8e10dc02bac192065fdf357107"
+    },
+    {
+      "at": "2026-11-01T07:47:59.073606+00:00",
+      "host_pid": 71,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-11-01T07:47:59.147181+00:00",
+      "host_pid": 71,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-012.body",
+      "sha256": "6b4069fcedd8243dc98ed5be511cfda415cb0bebd548646316509579f3c6126a"
+    },
+    {
+      "at": "2026-11-01T07:47:59.149440+00:00",
+      "host_pid": 71,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedDownloaderCommands/commands",
+      "authenticated": true,
+      "status": 405,
+      "raw_file": "response-013.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b"
+    },
+    {
+      "at": "2026-11-01T07:47:59.151911+00:00",
+      "host_pid": 71,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedDownloaderCommands/commands",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-014.body",
+      "sha256": "a47fd34ed108540771ee87acae528704f024b02711ff5c0bfc1091b1eff95000"
+    }
+  ],
+  "peer_calls": [
+    {
+      "method": "GET",
+      "path": "/index",
+      "request_body_bytes": 0,
+      "at": "2026-11-01T07:47:58.640093+00:00",
+      "status": 200,
+      "response_bytes": 1320,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/worker",
+      "request_body_bytes": 0,
+      "at": "2026-11-01T07:47:58.641322+00:00",
+      "status": 200,
+      "response_bytes": 5358855,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/auth/login",
+      "request_body_bytes": 68,
+      "phase": "modern",
+      "step": 1,
+      "at": "2026-11-01T07:47:58.734287+00:00",
+      "status": 200,
+      "response_bytes": 3,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "modern",
+      "step": 2,
+      "at": "2026-11-01T07:47:58.735232+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "modern",
+      "step": 3,
+      "at": "2026-11-01T07:47:58.736158+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/cookies",
+      "request_body_bytes": 0,
+      "phase": "modern",
+      "step": 4,
+      "at": "2026-11-01T07:47:58.737350+00:00",
+      "status": 200,
+      "response_bytes": 161,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "modern",
+      "step": 5,
+      "at": "2026-11-01T07:47:58.739129+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/app/setCookies",
+      "request_body_bytes": 434,
+      "phase": "modern",
+      "step": 6,
+      "selected_operation": "setCookies",
+      "owned_memory_committed": true,
+      "ordered_json_sha256": "a6b4e7889ab683a75db670271b496ee4581750fb49fe82329e502b3bf78b8958",
+      "at": "2026-11-01T07:47:58.740524+00:00",
+      "status": 200,
+      "response_bytes": 13,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "modern",
+      "step": 7,
+      "at": "2026-11-01T07:47:58.742095+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/add",
+      "request_body_bytes": 119,
+      "phase": "modern",
+      "step": 8,
+      "selected_operation": "add",
+      "per_add_cookie_present": false,
+      "at": "2026-11-01T07:47:58.743209+00:00",
+      "status": 200,
+      "response_bytes": 40,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/auth/login",
+      "request_body_bytes": 68,
+      "phase": "old",
+      "step": 1,
+      "at": "2026-11-01T07:47:58.758882+00:00",
+      "status": 200,
+      "response_bytes": 3,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "old",
+      "step": 2,
+      "at": "2026-11-01T07:47:58.759861+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "old",
+      "step": 3,
+      "at": "2026-11-01T07:47:58.760900+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/add",
+      "request_body_bytes": 171,
+      "phase": "old",
+      "step": 4,
+      "selected_operation": "add",
+      "per_add_cookie_present": true,
+      "at": "2026-11-01T07:47:58.762203+00:00",
+      "status": 200,
+      "response_bytes": 40,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/auth/login",
+      "request_body_bytes": 68,
+      "phase": "selected-failure",
+      "step": 1,
+      "at": "2026-11-01T07:47:58.774988+00:00",
+      "status": 200,
+      "response_bytes": 3,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "selected-failure",
+      "step": 2,
+      "at": "2026-11-01T07:47:58.775984+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "selected-failure",
+      "step": 3,
+      "at": "2026-11-01T07:47:58.777077+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/cookies",
+      "request_body_bytes": 0,
+      "phase": "selected-failure",
+      "step": 4,
+      "at": "2026-11-01T07:47:58.778818+00:00",
+      "status": 200,
+      "response_bytes": 254,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "selected-failure",
+      "step": 5,
+      "at": "2026-11-01T07:47:58.779941+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/app/setCookies",
+      "request_body_bytes": 437,
+      "phase": "selected-failure",
+      "step": 6,
+      "selected_operation": "setCookies500",
+      "owned_memory_committed": true,
+      "ordered_json_sha256": "2c8f16eb22979b5e2627a5ec1b01cffb01e551b88ff741bdf67076f2ebb85a10",
+      "at": "2026-11-01T07:47:58.781265+00:00",
+      "status": 500,
+      "response_bytes": 31,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/auth/login",
+      "request_body_bytes": 68,
+      "phase": "recovery",
+      "step": 1,
+      "at": "2026-11-01T07:47:58.795204+00:00",
+      "status": 200,
+      "response_bytes": 3,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "recovery",
+      "step": 2,
+      "at": "2026-11-01T07:47:58.796479+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "recovery",
+      "step": 3,
+      "at": "2026-11-01T07:47:58.797470+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/cookies",
+      "request_body_bytes": 0,
+      "phase": "recovery",
+      "step": 4,
+      "at": "2026-11-01T07:47:58.798715+00:00",
+      "status": 200,
+      "response_bytes": 257,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "recovery",
+      "step": 5,
+      "at": "2026-11-01T07:47:58.799958+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/app/setCookies",
+      "request_body_bytes": 440,
+      "phase": "recovery",
+      "step": 6,
+      "selected_operation": "setCookies",
+      "owned_memory_committed": true,
+      "ordered_json_sha256": "6a48032122f8f1bb1c9be8b99f11837e05082e4ecae0f605b6df57d63306fa83",
+      "at": "2026-11-01T07:47:58.801209+00:00",
+      "status": 200,
+      "response_bytes": 13,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "recovery",
+      "step": 7,
+      "at": "2026-11-01T07:47:58.802087+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/add",
+      "request_body_bytes": 119,
+      "phase": "recovery",
+      "step": 8,
+      "selected_operation": "add",
+      "per_add_cookie_present": false,
+      "at": "2026-11-01T07:47:58.803032+00:00",
+      "status": 200,
+      "response_bytes": 40,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/auth/login",
+      "request_body_bytes": 68,
+      "phase": "cold",
+      "step": 1,
+      "at": "2026-11-01T07:47:59.154120+00:00",
+      "status": 200,
+      "response_bytes": 3,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "cold",
+      "step": 2,
+      "at": "2026-11-01T07:47:59.155143+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "cold",
+      "step": 3,
+      "at": "2026-11-01T07:47:59.156831+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/cookies",
+      "request_body_bytes": 0,
+      "phase": "cold",
+      "step": 4,
+      "at": "2026-11-01T07:47:59.159259+00:00",
+      "status": 200,
+      "response_bytes": 260,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "cold",
+      "step": 5,
+      "at": "2026-11-01T07:47:59.160176+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/app/setCookies",
+      "request_body_bytes": 434,
+      "phase": "cold",
+      "step": 6,
+      "selected_operation": "setCookies",
+      "owned_memory_committed": true,
+      "ordered_json_sha256": "a6b4e7889ab683a75db670271b496ee4581750fb49fe82329e502b3bf78b8958",
+      "at": "2026-11-01T07:47:59.161277+00:00",
+      "status": 200,
+      "response_bytes": 13,
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "phase": "cold",
+      "step": 7,
+      "at": "2026-11-01T07:47:59.162319+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "response_completed": true
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/add",
+      "request_body_bytes": 119,
+      "phase": "cold",
+      "step": 8,
+      "selected_operation": "add",
+      "per_add_cookie_present": false,
+      "at": "2026-11-01T07:47:59.163341+00:00",
+      "status": 200,
+      "response_bytes": 40,
+      "response_completed": true
+    }
+  ],
+  "processes": [
+    {
+      "pid": 22,
+      "identity": {
+        "ppid": 2,
+        "starttime": "7635732"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-qb-cookie-cli01/private-data",
+      "executable_sha256": "36be807e8534e624a1a372d40bb80e118722dfbfe89610e24c69e09df6537b77",
+      "owned_listener_inode": "1447817",
+      "exit": 0
+    },
+    {
+      "pid": 71,
+      "identity": {
+        "ppid": 2,
+        "starttime": "7635772"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-qb-cookie-cli01/private-data",
+      "executable_sha256": "36be807e8534e624a1a372d40bb80e118722dfbfe89610e24c69e09df6537b77",
+      "owned_listener_inode": "1447826",
+      "exit": 0
+    }
+  ],
+  "queries": [
+    {
+      "label": "modern_ordered_merge_then_add_without_cookie",
+      "host_pid": 22,
+      "response": {
+        "pid": 39,
+        "init_count": 1,
+        "invocation": 1,
+        "had_previous": false,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "add",
+            "downloader_id": "owned-command-qb",
+            "ok": true,
+            "result": {
+              "success": true,
+              "ids": [
+                "9007199254740993"
+              ]
+            },
+            "result_kind": "qbittorrent_source_tuple",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 162,
+              "output_json_bytes": 43,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 162
+            }
+          }
+        ]
+      },
+      "selected_before": {},
+      "selected_after": {
+        "setCookies": 1,
+        "add": 1
+      },
+      "selected_delta": {
+        "add": 1,
+        "setCookies": 1
+      }
+    },
+    {
+      "label": "old_version_per_add_cookie_and_stale_callback_denied",
+      "host_pid": 22,
+      "response": {
+        "pid": 39,
+        "init_count": 1,
+        "invocation": 2,
+        "had_previous": true,
+        "previous_probe": {
+          "label": "previous_invocation_host_caller_denied",
+          "available": true,
+          "source_invocation": 1,
+          "kind": "qbittorrent",
+          "operation": "add",
+          "private_frame_operation": "invoke",
+          "callback_attempts": 1,
+          "input_json_bytes": 162,
+          "output_json_bytes": 0,
+          "denied": true,
+          "error_code": "invalid_host_call"
+        },
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "add",
+            "downloader_id": "owned-command-qb",
+            "ok": true,
+            "result": {
+              "success": true,
+              "ids": [
+                "9007199254740993"
+              ]
+            },
+            "result_kind": "qbittorrent_source_tuple",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 162,
+              "output_json_bytes": 43,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 162
+            }
+          }
+        ]
+      },
+      "selected_before": {
+        "setCookies": 1,
+        "add": 1
+      },
+      "selected_after": {
+        "setCookies": 1,
+        "add": 2
+      },
+      "selected_delta": {
+        "add": 1
+      }
+    },
+    {
+      "label": "selected_set500_no_add_no_replay",
+      "host_pid": 22,
+      "response": {
+        "pid": 39,
+        "init_count": 1,
+        "invocation": 3,
+        "had_previous": true,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 0,
+        "failed": 1,
+        "ok": false,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "add",
+            "downloader_id": "owned-command-qb",
+            "ok": false,
+            "error_code": "host_operation_failed",
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 0,
+              "failed": 1,
+              "input_json_bytes": 165,
+              "output_json_bytes": 0,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 165
+            }
+          }
+        ]
+      },
+      "selected_before": {
+        "setCookies": 1,
+        "add": 2
+      },
+      "selected_after": {
+        "setCookies": 1,
+        "add": 2,
+        "setCookies500": 1
+      },
+      "selected_delta": {
+        "setCookies500": 1
+      }
+    },
+    {
+      "label": "explicit_same_worker_recovery_not_a_retry",
+      "host_pid": 22,
+      "response": {
+        "pid": 39,
+        "init_count": 1,
+        "invocation": 4,
+        "had_previous": true,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "add",
+            "downloader_id": "owned-command-qb",
+            "ok": true,
+            "result": {
+              "success": true,
+              "ids": [
+                "9007199254740993"
+              ]
+            },
+            "result_kind": "qbittorrent_source_tuple",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 168,
+              "output_json_bytes": 43,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 168
+            }
+          }
+        ]
+      },
+      "selected_before": {
+        "setCookies": 1,
+        "add": 2,
+        "setCookies500": 1
+      },
+      "selected_after": {
+        "setCookies": 2,
+        "add": 3,
+        "setCookies500": 1
+      },
+      "selected_delta": {
+        "setCookies": 1,
+        "add": 1
+      }
+    },
+    {
+      "label": "cold_same_DB_new_worker_explicit_add",
+      "host_pid": 71,
+      "response": {
+        "pid": 86,
+        "init_count": 1,
+        "invocation": 1,
+        "had_previous": false,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "add",
+            "downloader_id": "owned-command-qb",
+            "ok": true,
+            "result": {
+              "success": true,
+              "ids": [
+                "9007199254740993"
+              ]
+            },
+            "result_kind": "qbittorrent_source_tuple",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "begin": 0,
+              "append": 0,
+              "submit": 0,
+              "abort": 0,
+              "invoke": 1,
+              "other": 0,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 162,
+              "output_json_bytes": 43,
+              "append_payload_bytes": 0,
+              "max_input_json_bytes": 162
+            }
+          }
+        ]
+      },
+      "selected_before": {
+        "setCookies": 2,
+        "add": 3,
+        "setCookies500": 1
+      },
+      "selected_after": {
+        "setCookies": 3,
+        "add": 4,
+        "setCookies500": 1
+      },
+      "selected_delta": {
+        "setCookies": 1,
+        "add": 1
+      }
+    }
+  ],
+  "store_observations": [
+    {
+      "label": "modern",
+      "rows": 3,
+      "ordered_json_sha256": "a6b4e7889ab683a75db670271b496ee4581750fb49fe82329e502b3bf78b8958",
+      "field_order": [
+        [
+          "domain",
+          "path",
+          "name",
+          "value",
+          "expirationDate"
+        ],
+        [
+          "domain",
+          "path",
+          "name",
+          "value"
+        ],
+        [
+          "domain",
+          "path",
+          "name",
+          "value"
+        ]
+      ],
+      "exact_synthetic_expected_equal": true
+    },
+    {
+      "label": "old_store_unchanged",
+      "rows": 3,
+      "ordered_json_sha256": "a6b4e7889ab683a75db670271b496ee4581750fb49fe82329e502b3bf78b8958",
+      "field_order": [
+        [
+          "domain",
+          "path",
+          "name",
+          "value",
+          "expirationDate"
+        ],
+        [
+          "domain",
+          "path",
+          "name",
+          "value"
+        ],
+        [
+          "domain",
+          "path",
+          "name",
+          "value"
+        ]
+      ],
+      "exact_synthetic_expected_equal": true
+    },
+    {
+      "label": "selected_failure_retains_possible_owned_side_effect",
+      "rows": 3,
+      "ordered_json_sha256": "2c8f16eb22979b5e2627a5ec1b01cffb01e551b88ff741bdf67076f2ebb85a10",
+      "field_order": [
+        [
+          "domain",
+          "path",
+          "name",
+          "value",
+          "expirationDate"
+        ],
+        [
+          "domain",
+          "path",
+          "name",
+          "value"
+        ],
+        [
+          "domain",
+          "path",
+          "name",
+          "value"
+        ]
+      ],
+      "exact_synthetic_expected_equal": true
+    },
+    {
+      "label": "recovery",
+      "rows": 3,
+      "ordered_json_sha256": "6a48032122f8f1bb1c9be8b99f11837e05082e4ecae0f605b6df57d63306fa83",
+      "field_order": [
+        [
+          "domain",
+          "path",
+          "name",
+          "value",
+          "expirationDate"
+        ],
+        [
+          "domain",
+          "path",
+          "name",
+          "value"
+        ],
+        [
+          "domain",
+          "path",
+          "name",
+          "value"
+        ]
+      ],
+      "exact_synthetic_expected_equal": true
+    },
+    {
+      "label": "cold_init_unchanged",
+      "rows": 3,
+      "ordered_json_sha256": "6a48032122f8f1bb1c9be8b99f11837e05082e4ecae0f605b6df57d63306fa83",
+      "field_order": [
+        [
+          "domain",
+          "path",
+          "name",
+          "value",
+          "expirationDate"
+        ],
+        [
+          "domain",
+          "path",
+          "name",
+          "value"
+        ],
+        [
+          "domain",
+          "path",
+          "name",
+          "value"
+        ]
+      ],
+      "exact_synthetic_expected_equal": true
+    },
+    {
+      "label": "cold_explicit_add",
+      "rows": 3,
+      "ordered_json_sha256": "a6b4e7889ab683a75db670271b496ee4581750fb49fe82329e502b3bf78b8958",
+      "field_order": [
+        [
+          "domain",
+          "path",
+          "name",
+          "value",
+          "expirationDate"
+        ],
+        [
+          "domain",
+          "path",
+          "name",
+          "value"
+        ],
+        [
+          "domain",
+          "path",
+          "name",
+          "value"
+        ]
+      ],
+      "exact_synthetic_expected_equal": true
+    }
+  ],
+  "physical_plugin_wire_counters": {
+    "measured": false,
+    "available_from_ordinary_API": false
+  },
+  "measured_layers": [
+    "worker logical SDK callback counters",
+    "owned endpoint HTTP requests and entity-body bytes"
+  ],
+  "not_claimed": [
+    "real qB daemon/download/NAS",
+    "source vendor HTTP runtime oracle",
+    "UI/browser/Meta",
+    "all Cookie or PEP440 inputs",
+    "full S03/platform completion"
+  ],
+  "scenario_basis": "same five calls as App01; handwritten protocol expectations, source17 separate",
+  "bindings_sha256": "e4dbc38b46a923b81881d2818c75e3bc0a6fe0b7804699495f8ac420902bde1f",
+  "execution_environment": "inherited after coordinator grant marker; no proxy or startup rewrites",
+  "clean_view_proof": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-cli01/actual-clean-view-build-proof.json",
+    "sha256": "a6fbc7bd1d76770ac7e1c1c08acc1155b75be6e3495bba4945e2f9b0e57b39bd",
+    "bytes": 4255
+  },
+  "owned_peer_origin": "http://127.0.0.1:35445",
+  "bootstrap_exit": 0,
+  "worker_identities": [
+    {
+      "ppid": 22,
+      "starttime": "7635761",
+      "pid": 39,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-qb-cookie-cli01/private-data/plugin-packages/OwnedDownloaderCommands/owned-downloader-command-sdk-fixture",
+      "executable_sha256": "75b1f85df152f0cb5dc9b0da6850ebd76632aa175e72d25aa486ab3457cb16e7",
+      "host_pid": 22
+    },
+    {
+      "ppid": 22,
+      "starttime": "7635761",
+      "pid": 39,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-qb-cookie-cli01/private-data/plugin-packages/OwnedDownloaderCommands/owned-downloader-command-sdk-fixture",
+      "executable_sha256": "75b1f85df152f0cb5dc9b0da6850ebd76632aa175e72d25aa486ab3457cb16e7",
+      "host_pid": 22
+    },
+    {
+      "ppid": 22,
+      "starttime": "7635761",
+      "pid": 39,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-qb-cookie-cli01/private-data/plugin-packages/OwnedDownloaderCommands/owned-downloader-command-sdk-fixture",
+      "executable_sha256": "75b1f85df152f0cb5dc9b0da6850ebd76632aa175e72d25aa486ab3457cb16e7",
+      "host_pid": 22
+    },
+    {
+      "ppid": 22,
+      "starttime": "7635761",
+      "pid": 39,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-qb-cookie-cli01/private-data/plugin-packages/OwnedDownloaderCommands/owned-downloader-command-sdk-fixture",
+      "executable_sha256": "75b1f85df152f0cb5dc9b0da6850ebd76632aa175e72d25aa486ab3457cb16e7",
+      "host_pid": 22
+    },
+    {
+      "ppid": 71,
+      "starttime": "7635791",
+      "pid": 86,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s03-qb-cookie-cli01/private-data/plugin-packages/OwnedDownloaderCommands/owned-downloader-command-sdk-fixture",
+      "executable_sha256": "75b1f85df152f0cb5dc9b0da6850ebd76632aa175e72d25aa486ab3457cb16e7",
+      "host_pid": 71
+    }
+  ],
+  "selected_failure": {
+    "owned_memory_changed_before_500": true,
+    "selected_requests": 1,
+    "add_requests": 0,
+    "automatic_write_replays": 0,
+    "sdk_error_code": "host_operation_failed",
+    "no_source_result_returned": true
+  },
+  "actual_endpoint_request_counts": {
+    "GET /index": 1,
+    "GET /worker": 1,
+    "POST /api/v2/auth/login": 5,
+    "GET /api/v2/app/webapiVersion": 17,
+    "GET /api/v2/app/cookies": 4,
+    "POST /api/v2/app/setCookies": 4,
+    "POST /api/v2/torrents/add": 4
+  },
+  "current_sdk_invokes": 5,
+  "old_callback_attempts": 1,
+  "input_drift": [],
+  "environment_unchanged": true,
+  "finished_at": "2026-11-01T07:48:00.072793+00:00"
+}

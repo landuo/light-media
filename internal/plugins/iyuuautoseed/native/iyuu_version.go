@@ -18,14 +18,6 @@ var iyuuVersionPattern = regexp.MustCompile(`^v?(?:(?P<epoch>[0-9]+)!)?(?P<relea
 func iyuuVersionAtLeast(value string, major, minor int) (bool, error) {
 	s := legacyanime.Strip(value)
 	s = strings.Map(func(r rune) rune {
-		switch r {
-		case 'İ', 'ı':
-			return 'i'
-		case 'ſ':
-			return 's'
-		case 'K':
-			return 'k'
-		}
 		if r >= 'A' && r <= 'Z' {
 			return r + 32
 		}

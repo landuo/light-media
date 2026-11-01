@@ -1,0 +1,406 @@
+{
+  "status": "ACCEPT_FINITE_NATIVE_NORMAL4_AND_RACE_GUARD1",
+  "reviewed_at": "2026-11-01T07:28:23.813970+00:00",
+  "gates": [
+    {
+      "label": "s03-qb-cookie-native02",
+      "recorded_tool_receipt": {
+        "session_id": 40474,
+        "initial_chunk": "a7a2f6",
+        "terminal_chunk": "9a80aa",
+        "exit_code": 0,
+        "result_sha256": "8154aa6a54c612e44a3762470466522278db905469f7ed8b3677b812c34df90d"
+      },
+      "started": "2026-11-01T07:26:39.925685+00:00",
+      "ended": "2026-11-01T07:26:43.144264+00:00",
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-native02.test",
+        "bytes": 14717523,
+        "sha256": "70c2cda3323b8f58c7f47f6a13f54485db270fac3e450d73241148cf19ee35ed"
+      },
+      "bound_inputs": 2829,
+      "three_maps_identical": true,
+      "current_drift": [],
+      "root_passes": [
+        "TestSharedQBCookieScopeWireAndVersionGuards",
+        "TestSharedQBCookieVersionOriginal23",
+        "TestSharedQBCookieScopeAggregateUnknownAndRecovery",
+        "TestSharedQBCookieScopeGuardsAndLifetime"
+      ],
+      "subtest_passes": [
+        "TestSharedQBCookieScopeWireAndVersionGuards/normal-four-version-reads",
+        "TestSharedQBCookieScopeWireAndVersionGuards/vendor-gates-recheck-current-version",
+        "TestSharedQBCookieScopeWireAndVersionGuards/invalid-later-vendor-version-falls-back",
+        "TestSharedQBCookieScopeWireAndVersionGuards/invalid-source-version-no-selected-write",
+        "TestSharedQBCookieScopeAggregateUnknownAndRecovery/read-500-fallback",
+        "TestSharedQBCookieScopeAggregateUnknownAndRecovery/set-500-no-add",
+        "TestSharedQBCookieScopeAggregateUnknownAndRecovery/add-500-store-remains",
+        "TestSharedQBCookieScopeAggregateUnknownAndRecovery/after-set-version-500",
+        "TestSharedQBCookieScopeGuardsAndLifetime/revoke-after-set",
+        "TestSharedQBCookieScopeGuardsAndLifetime/cancel-after-set",
+        "TestSharedQBCookieScopeGuardsAndLifetime/concurrent-aggregate-lock-and-stale-port"
+      ],
+      "race": false,
+      "fail_skip_or_race_warning": false,
+      "stderr_empty": true,
+      "generated_copies": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/generated-source/be548d29c9551ad745e4541dc07627570d00f0103c8d687c54ca43f8e646949d.go",
+          "bytes": 8180,
+          "sha256": "be548d29c9551ad745e4541dc07627570d00f0103c8d687c54ca43f8e646949d"
+        }
+      ],
+      "original_raw_actual_extra_binding": {
+        "sha256": "de6cdbe4e03a9c6d9d9828285a7c4973d264254ae40d96039dc381bc6099fdb4",
+        "bytes": 9237
+      },
+      "vet_clarification": {
+        "status": "CLARIFICATION_RAW_RESULT_UNCHANGED",
+        "actual": "This run explicitly used -vet=off. The shared runner static reason refers to an earlier S11 virtual-package failure, not a current S03 vet failure. Both S03 package directories exist. No vet was executed or passed here."
+      },
+      "evidence_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/compile.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/generated-source-map.json",
+          "bytes": 246,
+          "sha256": "f7cda44b83047037a08ed9319595376e737560a0d54c197597d01e793d95f1d8"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/go-list.stdout",
+          "bytes": 645861,
+          "sha256": "558adc17811c079e03da31c9d47603ba2e5bd2177ca110329447ec985ccf4803"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/inputs-after-compile.json",
+          "bytes": 620145,
+          "sha256": "239c622dda646cbc3021ca9e4d8fc44d0c09fc87bcfd3107b0fe2fa562b68c07"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/inputs-after-test.json",
+          "bytes": 620145,
+          "sha256": "239c622dda646cbc3021ca9e4d8fc44d0c09fc87bcfd3107b0fe2fa562b68c07"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/inputs-before.json",
+          "bytes": 620145,
+          "sha256": "239c622dda646cbc3021ca9e4d8fc44d0c09fc87bcfd3107b0fe2fa562b68c07"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/result.json",
+          "bytes": 6277,
+          "sha256": "8154aa6a54c612e44a3762470466522278db905469f7ed8b3677b812c34df90d"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/tests.stdout",
+          "bytes": 14352,
+          "sha256": "9242ccc5425e7051eb172498488b4407e03a013d2b1ddb2d1eca25a16def8afd"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/tool-receipt.json",
+          "bytes": 190,
+          "sha256": "09604bc7e261f7371db64e56152d6a9d91fd7a87e741d825defdc443767ac17a"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/vet-scope-clarification.json",
+          "bytes": 288,
+          "sha256": "2655a6db91829c97a5910125d93f56f98079e7919ae9e00ea9ef6d0ab6b284a3"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/virtual-compile-inputs.json",
+          "bytes": 933631,
+          "sha256": "526e650e51288159d46257d8d0cbf52488f56e7921db8d09d2e46545b9a5a403"
+        }
+      ]
+    },
+    {
+      "label": "s03-qb-cookie-native-race02",
+      "recorded_tool_receipt": {
+        "session_id": 87477,
+        "initial_chunk": "4242ec",
+        "terminal_chunk": "7b99d7",
+        "exit_code": 0,
+        "result_sha256": "928ef041a40c1122fd373c5f7b9bd16f63c293d268124169a95584ba791cb021"
+      },
+      "started": "2026-11-01T07:26:55.731287+00:00",
+      "ended": "2026-11-01T07:27:00.816426+00:00",
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-native-race02.test",
+        "bytes": 18523387,
+        "sha256": "92988e452dae9ec7cdd509223a17b71569f87dca37f3c0a2ee9753bdb0611f37"
+      },
+      "bound_inputs": 2837,
+      "three_maps_identical": true,
+      "current_drift": [],
+      "root_passes": [
+        "TestSharedQBCookieScopeGuardsAndLifetime"
+      ],
+      "subtest_passes": [
+        "TestSharedQBCookieScopeGuardsAndLifetime/revoke-after-set",
+        "TestSharedQBCookieScopeGuardsAndLifetime/cancel-after-set",
+        "TestSharedQBCookieScopeGuardsAndLifetime/concurrent-aggregate-lock-and-stale-port"
+      ],
+      "race": true,
+      "fail_skip_or_race_warning": false,
+      "stderr_empty": true,
+      "generated_copies": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/generated-source/be548d29c9551ad745e4541dc07627570d00f0103c8d687c54ca43f8e646949d.go",
+          "bytes": 8180,
+          "sha256": "be548d29c9551ad745e4541dc07627570d00f0103c8d687c54ca43f8e646949d"
+        }
+      ],
+      "original_raw_actual_extra_binding": {
+        "sha256": "de6cdbe4e03a9c6d9d9828285a7c4973d264254ae40d96039dc381bc6099fdb4",
+        "bytes": 9237
+      },
+      "vet_clarification": {
+        "status": "CLARIFICATION_RAW_RESULT_UNCHANGED",
+        "actual": "This run explicitly used -vet=off. The shared runner static reason refers to an earlier S11 virtual-package failure, not a current S03 vet failure. Both S03 package directories exist. No vet was executed or passed here."
+      },
+      "evidence_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/compile.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/generated-source-map.json",
+          "bytes": 246,
+          "sha256": "f7cda44b83047037a08ed9319595376e737560a0d54c197597d01e793d95f1d8"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/go-list.stdout",
+          "bytes": 648672,
+          "sha256": "ff417c943a21eb805dd8b2dc52b36f336e264dfeb6bc42d0514ba7202701a17a"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/inputs-after-compile.json",
+          "bytes": 621871,
+          "sha256": "dc453244218d88b623c4382c609951beeb7da9dddbdd4e3899727a4d56a28696"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/inputs-after-test.json",
+          "bytes": 621871,
+          "sha256": "dc453244218d88b623c4382c609951beeb7da9dddbdd4e3899727a4d56a28696"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/inputs-before.json",
+          "bytes": 621871,
+          "sha256": "dc453244218d88b623c4382c609951beeb7da9dddbdd4e3899727a4d56a28696"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/result.json",
+          "bytes": 5906,
+          "sha256": "928ef041a40c1122fd373c5f7b9bd16f63c293d268124169a95584ba791cb021"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/tests.stdout",
+          "bytes": 3979,
+          "sha256": "196df35e44891e23b355cfceda29be2964991b7450aa3240b2647e29335f0663"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/tool-receipt.json",
+          "bytes": 190,
+          "sha256": "c0e75ea72153cb0d4dde77a01ba4971eef472232c54605759dda3c42319a241a"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/vet-scope-clarification.json",
+          "bytes": 288,
+          "sha256": "2655a6db91829c97a5910125d93f56f98079e7919ae9e00ea9ef6d0ab6b284a3"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native-race02/virtual-compile-inputs.json",
+          "bytes": 936225,
+          "sha256": "e54651a43fedc74914aab7456af7ab52d7e9cb2a2cee1bb0e291c44d5cac4b3e"
+        }
+      ]
+    }
+  ],
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07.json",
+    "bytes": 5090,
+    "sha256": "891130b2e513f7fd74cf5be2bf8707aebe398f8559750c09e37f973bbc7eebbd"
+  },
+  "candidate_copy_checks": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/leaf/qb_cookie_values.go.txt",
+      "bytes": 4184,
+      "sha256": "7eaabf2730bb5640af7e5ef9216124dbcb314321171903206707018e3b902195"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/leaf/qb_cookie_add.go.txt",
+      "bytes": 4411,
+      "sha256": "c20ccfdb3e7dde5f396e051137ac054df7e7e41d65a9537dc9a0f592c6050354"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/leaf/qb_cookie_parse.go.txt",
+      "bytes": 6020,
+      "sha256": "c2fee2afd613ceb6ecd5cbd7006e80d5df062f03034def2b2ce7a6cbe7fa5ff5"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/leaf/leaf.go.txt",
+      "bytes": 13206,
+      "sha256": "84cf25101711ff3dd6b804e7f7581d980c8a4fb85ae86d6868e0aab37cea432e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/native/shared_downloader_commands.go.txt",
+      "bytes": 21338,
+      "sha256": "947f807d380a8788084730354b7b2a38c704203c602859689d54aec0b799912b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/native/shared_qb_cookie_add.go.txt",
+      "bytes": 8319,
+      "sha256": "ec034a6af39d6f74fa7ed4df7946268871179210453ba03408f05f140f60747f"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/native/shared_qb_cookie_add_test.go.txt",
+      "bytes": 16777,
+      "sha256": "4130bc150fe0ab02cdc80137e3e7b4c5ad666f137f909e23192e09fd614ab21b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/licenses/packaging-LICENSE.APACHE",
+      "bytes": 10174,
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/licenses/packaging-LICENSE.BSD",
+      "bytes": 1344,
+      "sha256": "b70e7e9b742f1cc6f948b34c16aa39ffece94196364bc88ff0d2180f0028fac5"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/licenses/http-cookies-O-Malley.txt",
+      "bytes": 1059,
+      "sha256": "772c72e95ef41d12edfc7f7b7d8ee4d9c9fd385451f5c10d0e90b21400e6ba75"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/licenses/packaging-LICENSE.txt",
+      "bytes": 197,
+      "sha256": "cad1ef5bd340d73e074ba614d26f7deaca5c7940c3d8c34852e65c4909686c48"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/licenses/PSF-LICENSE.txt",
+      "bytes": 13936,
+      "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/CONTRACT.md",
+      "bytes": 4931,
+      "sha256": "986e6c79c476c817773d646f826deab1ea34e50cdbd7636913b6c32d134a541c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/source-bindings.json",
+      "bytes": 2977,
+      "sha256": "5ed255084928031e14e00aab1f250268b1efc3468581cbeadf5d638b0e2e1bc7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/leaf-hook.patch",
+      "bytes": 548,
+      "sha256": "17693fe5766fa3f32420a3d29d71adc4dea37f9e7dd7bd7c777b7d33ba48ae25"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/native-add-extraction.patch",
+      "bytes": 11833,
+      "sha256": "e0ff0736930e899c7a8ec8398f0636107c68a186f4202772b00e25c66dc622d3"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/add-extraction-proof.json",
+      "bytes": 649,
+      "sha256": "98793b316404aad754c63f8c2e9d725a213d13f08097f73c50fe2c972e858b66"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/native/iyuu_version.go.txt",
+      "bytes": 2166,
+      "sha256": "567a8234834024c6b8c89c8ce657df8235d2f39cdd950bd91ecacb43d8d9b0e7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate07-files/LEGACY-VERSION-ADDENDUM.md",
+      "bytes": 1583,
+      "sha256": "8f3261d6a3f7c3bd2c01e18c616744908d13e564a68081dba77b0233a8238be9"
+    }
+  ],
+  "preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/target-preexec02/preexec-seal.json",
+    "bytes": 898,
+    "sha256": "0c1546bb8e4a31671dc80a99ba41fcdbd34033eb6edb146dfdf4c21ba8d9a4ee"
+  },
+  "leaf_prior_actual": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/leaf-final01/final-seal.json",
+    "bytes": 872,
+    "sha256": "f07764a6eed78d38fdc6a6cde20b57436e40dfe9292220305f377e4292da185a"
+  },
+  "old23_scope": "test root executes exactly old23 version loop plus4 current-source static witnesses; not other mixed raw projections; original raw packaging provenance not invented",
+  "fixed_short_witness": "Wire invalid-source-version-no-selected-write actually passed:2version GETs/0selected/sourceFalse through existing directValueError bridge",
+  "native_unknown_scope": "read500 may fall back; selectedset500/add500/laterread500 remains error with store mutation fact retained; no implicit retry; explicit later same-client call recovers",
+  "race_scope": "revoke-after-set,cancel-after-set,concurrent aggregate lock and stale-port only",
+  "limits": [
+    "synthetic owned IPv4 HTTP peer, not Python vendor runtime or actual qB daemon",
+    "no App/installed SDKworker/ordinaryserverCLI",
+    "no whole-source vendor error strings/retries/False or general URL/PEP440 equivalence",
+    "vet NOT_RUN in these gates; inherited virtual-only explanation corrected in separate artifacts"
+  ],
+  "reviewer_reran_or_networked": false
+}

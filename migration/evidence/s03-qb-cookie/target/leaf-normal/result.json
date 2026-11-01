@@ -1,0 +1,104 @@
+{
+  "started": "2026-11-01T07:18:52.990345+00:00",
+  "driver_pid": 2,
+  "package": "./internal/plugins/downloadercommands",
+  "pattern": "^(TestQBCookieOriginalSource17|TestDownloaderLeafSourceObservations|TestDownloaderLeafBoundaryErrors)$",
+  "race": false,
+  "status": "PASS",
+  "vet": "NOT_RUN: virtual-only package directory; prior automatic vet chdir failure retained",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/gates01/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins/downloadercommands"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/gates01/overlay.json",
+        "-vet=off",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-leaf01.test",
+        "./internal/plugins/downloadercommands"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/downloadercommands",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-leaf01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestQBCookieOriginalSource17|TestDownloaderLeafSourceObservations|TestDownloaderLeafBoundaryErrors)$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "overlay": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/leaf.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate06-files/leaf/leaf.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/qb_cookie_add.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate06-files/leaf/qb_cookie_add.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/qb_cookie_parse.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate06-files/leaf/qb_cookie_parse.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/qb_cookie_values.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate06-files/leaf/qb_cookie_values.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/shared_downloader_commands.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate06-files/native/shared_downloader_commands.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/shared_qb_cookie_add.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate06-files/native/shared_qb_cookie_add.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/shared_qb_cookie_add_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate06-files/native/shared_qb_cookie_add_test.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/qb_cookie_source_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-oracle-tests01/qb_cookie_source_test.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/testdata/source-qb-cookie01.json": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-oracle-tests01/testdata/source-qb-cookie01.json"
+  },
+  "extra_inputs": [],
+  "preflight_verified_files": 68,
+  "preflight_verified_replacements": 9,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T07:18:53.063946+00:00",
+      "scratch_free": 43213328384,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T07:18:53.475064+00:00",
+      "scratch_free": 43211964416,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T07:18:54.248838+00:00",
+      "scratch_free": 43202572288,
+      "tmp_free": 5225586688
+    }
+  ],
+  "input_count": 1845,
+  "program_sha256": "16f1bc08e21e6ac52728068594c9f573132f7ebab854a8f455ece5e32a4cd90b",
+  "root_passes": [
+    "TestDownloaderLeafSourceObservations",
+    "TestDownloaderLeafBoundaryErrors",
+    "TestQBCookieOriginalSource17"
+  ],
+  "ended": "2026-11-01T07:18:54.422460+00:00"
+}

@@ -1,0 +1,17 @@
+    @staticmethod
+    def __build_site_cookies(url: str, cookie_header: str) -> List[dict]:
+        domain = urlparse(url).hostname
+        if not domain:
+            return []
+
+        raw_cookies = SimpleCookie()
+        raw_cookies.load(cookie_header)
+        return [
+            {
+                "domain": domain,
+                "path": "/",
+                "name": morsel.key,
+                "value": morsel.value,
+            }
+            for morsel in raw_cookies.values()
+        ]

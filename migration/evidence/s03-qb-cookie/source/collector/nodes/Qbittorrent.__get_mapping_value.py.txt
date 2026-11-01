@@ -1,0 +1,13 @@
+    @staticmethod
+    def __get_mapping_value(data: Any, key: str) -> Any:
+        if data is None:
+            return None
+        if isinstance(data, dict):
+            return data.get(key)
+        getter = getattr(data, "get", None)
+        if callable(getter):
+            try:
+                return getter(key)
+            except Exception:
+                pass
+        return getattr(data, key, None)

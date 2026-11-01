@@ -1,0 +1,41 @@
+--- candidate05/leaf/qb_cookie_values.go.txt
++++ candidate06/leaf/qb_cookie_values.go.txt
+@@ -35,15 +35,9 @@
+ // source compatibility probe, InvalidVersion must reach its surrounding catch.
+ func QBRequireCookieAPI(s string) (bool, error) {
+ 	s = legacyanime.Strip(s)
++	// packaging 26.3 _VERSION_PATTERN uses (?a:...) for these tokens.
++	// Do not inherit the old comparator's Unicode IGNORECASE aliases.
+ 	s = strings.Map(func(r rune) rune {
+-		switch r {
+-		case 'İ', 'ı':
+-			return 'i'
+-		case 'ſ':
+-			return 's'
+-		case 'K':
+-			return 'k'
+-		}
+ 		if r >= 'A' && r <= 'Z' {
+ 			return r + 32
+ 		}
+--- candidate05/native/shared_qb_cookie_add_test.go.txt
++++ candidate06/native/shared_qb_cookie_add_test.go.txt
+@@ -34,6 +34,18 @@
+ // not execution of the pinned vendor or a substitute for the original leaf
+ // recording oracle. No proxy/environment rewrite or forwarding is performed.
+ func TestSharedQBCookieScopeWireAndVersionGuards(t *testing.T) {
++	// Static source-regex witnesses, not a new source runtime oracle: pinned
++	// packaging26.3 version.py194-225 wraps pre/post/dev/local in (?a:...).
++	for _, version := range []string{"2.11.3+K", "2.11.3poſt1"} {
++		if supported, err := downloadercommands.QBSupportsCookieAPI(version); err != nil || supported {
++			t.Fatalf("ASCII-only source probe %q: %v %v", version, supported, err)
++		}
++		if supported, err := downloadercommands.QBRequireCookieAPI(version); supported || err == nil {
++			t.Fatalf("ASCII-only vendor guard %q: %v %v", version, supported, err)
++		} else if source, ok := err.(*downloadercommands.SourceException); !ok || source.Class != "InvalidVersion" {
++			t.Fatalf("version classification %T", err)
++		}
++	}
+ 	type step struct {
+ 		method, path, reply string
+ 		cookie              *string

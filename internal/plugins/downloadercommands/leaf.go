@@ -248,8 +248,8 @@ func (q QBittorrent) AddTorrent(ctx context.Context, args Arguments) (QBAddResul
 			return emptyQB(), &BoundaryError{"duplicate vendor keyword source TypeError detail is pending: " + key}
 		}
 	}
-	if truth(call.URLs) && truth(call.Cookie) {
-		return emptyQB(), &BoundaryError{"string URL/cookie StringUtils/sync/Version branch is pending"}
+	if urls, ok := call.URLs.(string); ok && truth(urls) && truth(call.Cookie) && !strings.HasPrefix(urls, "magnet:") {
+		return q.addWithCookieScope(ctx, call)
 	}
 	reply, err := q.Client.Add(ctx, call)
 	if err == nil {

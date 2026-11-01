@@ -1,0 +1,25 @@
+# S03 qB URL + truthy Cookie — ordinary CLI actual final
+
+**ACCEPT for this frozen finite ordinary-server slice. No new blocker found.** This review read actual evidence; it did not rerun the driver, Go, source or network, and did not read `private-data` or `secret.key`.
+
+## Actual terminal and immutable inputs
+
+The coordinator's recorded actual session98853 (`ad2407`→`99986e`) exited0. Driver exit is0, result isPASS (`390b17ba86804b89b6558900ef22e374356616566654d7c5d63275f5728091c6`). The tool receipt references the exact independently approved command; it is a coordinator transcription, not newly fetched raw tool-store evidence.
+
+All **6,398** execution-binding entries were independently rehashed after completion and matched at the readback timestamp. Binding `e4dbc38b…`, unchanged driver `bdd94373…`, actual server `36be807e…` and original App worker `75b1f85d…` remain exact. Clean HEAD602068 + candidate07 build/Meta protection is inherited from the immediately preceding actual binding review. This zero-drift fact belongs to this time and these bytes; future authorized materialization is not silently included.
+
+## Responses, source-shaped business and lifecycle
+
+- Read all12 retained non-login response bodies and verified their recorded SHA. The five business bodies equal the separately recorded queries. Login secret bodies were intentionally not retained/read. One actual install succeeded; both hosts reported healthy ordinary runtime and registered the existing worker API.
+- Warm host22/worker39 completed invocations1–4 with init_count1; cold host71/worker86 began invocation1 with init_count1. Worker executable SHA and actual PID/starttime/parent bindings agree. Both hosts used the identical private DATA path. First host's stopped log precedes second host's started log; both natural Wait results are0, with no forced-stop/forced-worker/cleanup-error flags. Frozen driver reached its owned-worker-disappearance checks. No new process probes were used by this reviewer.
+- Actual endpoint trace is exactly **34 qB requests +2 artifact GETs**: login5,version17,cookies4,setCookies4,add4. Each phase's method/path order, step numbering, status and completed response was independently checked: modern8,old4,selected-failure6,recovery8,cold8. No peer rejection or extra recorded route occurred.
+- Modern ordered merge retains expirationDate0 and replaces sid at its original position, appending token; compact JSON hashes were independently reconstructed from the fixed synthetic rows. Add then has no per-add Cookie. Old2.11.2 keeps the exact per-add Cookie, does not read/write the global store, and preserves the prior store digest.
+- Setter failure is one actual owned HTTP500 **after its synthetic in-memory mutation**. Its phase has zeroAdd and zero automatic write replay. The ordinary API HTTP200 contains the genuine worker failure `host_operation_failed`, no source result or source_truthy; it is not misreported as successful business or sourceFalse. The host's one external.downloader ERROR500 is linked by parent_request_id to that business request. A subsequent explicit invocation succeeds on the same worker, with the retained effect observed and then updated.
+- The old HostCaller probe makes one attempt, returns `invalid_host_call`, produces no output JSON and causes no extra qB request. Four successful current results preserve qB tuple truthiness and the exact string ID `9007199254740993`. Five current logical SDK invokes are counted; these are not physical plugin-wire measurements.
+- Cold startup performs no second installation, artifact fetch or implicit native replay. The peer store remains at the recovery digest until the explicit fifth call. Same-DB evidence is the same DATA argument, retained installed API and absence of refetch; no database-file inspection was performed.
+
+## Safety and scope
+
+The frozen driver checks the exact39123 owned controller before every request, rejects redirects/alternate routes and uses only the synthetic IPv4 peer with no upstream/CONNECT forwarding or torrent-URI fetch. Runtime recorded unchanged inherited environment and no input drift; old statistics/public-center isolation remains explicit owned bootstrap settings, not a claim of unmodified settings. Eighteen resource samples remain over the admitted floor (minimum scratch42,824,044,544B and tmp5,225,586,688B). Host logs contain the expected lifecycle/request records and selected500; the frozen runtime assertion checked generated credentials were absent.
+
+This establishes the selected ordinary cmd/server→installed SDK→native owned HTTP flow and recovery/cold behavior. It does **not** establish a real qB daemon/download, full Python vendor HTTP/error-message equivalence, physical plugin protocol wire bytes, arbitrary Cookie/URL/PEP440 inputs, Meta/UI, full S03 or whole-platform completion. The peer trace is not packet-level surveillance of all process networking. Original17/18 source, leaf3, native4/raceGuard1, independent two-package vet and Appnormal1 remain separately scoped evidence; this CLI does not reclassify their boundaries.

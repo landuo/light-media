@@ -1,0 +1,63 @@
+{
+  "started": "2026-11-01T07:40:44.702427+00:00",
+  "status": "PASS",
+  "kind": "normal cmd/server compile only; no service/test/browser execution",
+  "base": "60206809a9c46b9f11d8fb67590a889e24919df6",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/app01/clean-view01/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-json",
+        "./cmd/server"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "build",
+      "argv": [
+        "go",
+        "build",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/app01/clean-view01/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-server01",
+        "./cmd/server"
+      ],
+      "exit": 0
+    }
+  ],
+  "proxy_environment_unchanged": true,
+  "worker_reuse": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-app01.worker",
+    "sha256": "75b1f85df152f0cb5dc9b0da6850ebd76632aa175e72d25aa486ab3457cb16e7"
+  },
+  "overlay": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/app01/clean-view01/overlay.json",
+  "preflight_rows": 144,
+  "app_reuse_inputs_verified": 6378,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "scratch_free": 42941972480,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "build",
+      "scratch_free": 42938130432,
+      "tmp_free": 5225586688
+    }
+  ],
+  "input_count": 4114,
+  "app_reuse_inputs_verified_after": 6378,
+  "program_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-server01",
+  "program_sha256": "36be807e8534e624a1a372d40bb80e118722dfbfe89610e24c69e09df6537b77",
+  "input_drift": [],
+  "ended": "2026-11-01T07:40:55.752758+00:00"
+}

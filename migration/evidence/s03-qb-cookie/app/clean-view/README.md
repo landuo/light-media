@@ -1,0 +1,9 @@
+# Exact 602068 + S03 cookie App test view
+
+Prepared, not executed. Actual current HEAD is 60206809a9c46b9f11d8fb67590a889e24919df6. Twenty clean-base mappings: three tracked Meta hooks restored from exact git-show HEAD bytes, seventeen untracked Meta Go files mapped to empty strings only. The actual 25 Meta files remain on disk and copied to preimages, with status and SHA checked before/after preparation. Five non-Go Meta files remain protected, not hidden; no new source path depends on them. Active coordinator ledger is allowed to change and excluded from compile invariance; its initial byte snapshot remains a restoration artifact.
+
+Add exactly seven S03 candidate07 production mappings and one new App test (28 total). No test-only origin/proxy/client replacement. References to delivered installation/worker/auth helpers were separately compared byte-for-byte with HEAD602068. User data, dependencies, DBs and prior evidence are not touched or copied. The existing ordinary worker source is unchanged.
+
+Runner03 validates actual go-list union closures for App and the generic worker, maps declared virtual sources and embeds to actual bytes, preserves generated-source bytes, binds pre/after-compile/after-test maps and both binaries. It compiles that normal worker once, then one App test program and executes only the one root. Wrapper preserves environment proxy/guards and the fixed offline toolchain/cache. Every new owned listener is explicit tcp4 and fatal on refusal; no IPv6 or alternate-route fallback. No source/vendor execution or real downloader.
+
+This gate is actual installed-worker composition if it succeeds, not ordinary cmd/server CLI or real-daemon evidence. Current source/native/leaf results remain their own layers. Ordinary CLI belongs to the separate owner; no extra matrix or hidden tests here.

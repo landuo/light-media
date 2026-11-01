@@ -1,0 +1,11 @@
+    def __supports_cookie_api(self) -> bool:
+        if not self.qbc:
+            return False
+        try:
+            web_api_version = self.qbc.app_web_api_version()
+            return Version(str(web_api_version)) >= Version("2.11.3")
+        except (InvalidVersion, TypeError, ValueError):
+            return False
+        except Exception as err:
+            logger.warn(f"获取 qbittorrent Web API 版本失败，跳过 Cookie API 兼容：{err}")
+            return False

@@ -1,0 +1,53 @@
+--- checkpoint02/leaf/qb_cookie_parse.go.txt
++++ candidate03/leaf/qb_cookie_parse.go.txt
+@@ -26,6 +26,14 @@
+ func qbCookieError() error {
+ 	return &SourceException{Class: "CookieError", Message: "Invalid cookie header"}
+ } // Never log credential-bearing parser details.
++// Cookie grammar keys are ASCII and cannot contain double quotes/backslashes.
++// Match Python repr's quote selection without exposing any Cookie value.
++func qbCookieKeyRepr(key string) string {
++	if strings.Contains(key, "'") {
++		return `"` + key + `"`
++	}
++	return "'" + key + "'"
++}
+ func qbCookieUnquote(s string) string {
+ 	if len(s) < 2 || s[0] != '"' || s[len(s)-1] != '"' {
+ 		return s
+@@ -100,12 +108,22 @@
+ 	positions := map[string]int{}
+ 	for _, p := range parts {
+ 		if p.attribute {
+-			if !qbCookieReserved[strings.ToLower(p.key)] || qbCookieControl(p.key) || qbCookieControl(p.value) {
++			lower := strings.ToLower(p.key)
++			if !qbCookieReserved[lower] {
++				return nil, &SourceException{Class: "CookieError", Message: "Invalid attribute " + qbCookieKeyRepr(lower)}
++			}
++			if qbCookieControl(p.key) || qbCookieControl(p.value) {
+ 				return nil, qbCookieError()
+ 			}
+ 			continue
+ 		}
+-		if !qbCookieLegalKey.MatchString(p.key) || qbCookieReserved[strings.ToLower(p.key)] || qbCookieControl(p.key) || qbCookieControl(p.raw) || qbCookieControl(p.value) {
++		if qbCookieReserved[strings.ToLower(p.key)] {
++			return nil, &SourceException{Class: "CookieError", Message: "Attempt to set a reserved key " + qbCookieKeyRepr(p.key)}
++		}
++		if !qbCookieLegalKey.MatchString(p.key) {
++			return nil, &SourceException{Class: "CookieError", Message: "Illegal key " + qbCookieKeyRepr(p.key)}
++		}
++		if qbCookieControl(p.key) || qbCookieControl(p.raw) || qbCookieControl(p.value) {
+ 			return nil, qbCookieError()
+ 		}
+ 		item := qbCookiePair{p.key, p.value}
+--- checkpoint02/CONTRACT.md
++++ candidate03/CONTRACT.md
+@@ -16,7 +16,7 @@
+ 
+ Only direct definite `SourceException` enters new source ordinary catches. Original version-read or cookie preparation/read failure may fall back to Add with its original Cookie. Successful sync clears that per-add Cookie. Source setter result None/False is not failure. Native unknown transport/body/resource-limit, owner revocation, cancellation, boundary and every error after selected dispatch propagate, never becoming a fallback add. This deliberate aggregate safety boundary means a recording source `set_raises_before_effect` case is not a claim that a native selected HTTP failure is known harmless. Likewise selected Add errors remain unknown rather than source False; completed false textual/JSON replies remain real source results.
+ 
+-Ordinary finite JSON Cookie headers are strings. Non-string headers, truthy non-list CookieList construction, structured stored cookie fields, non-string truthy stored cookie identities, and URL hostname shapes outside the explicitly consumed ASCII/net-url-compatible domain remain explicit Boundary errors; not fabricated source False or silently discarded data. Domain/hostname reading does not fetch the torrent URL; daemon endpoint remains the already-authorized configured client. No IDNA/general URL ecosystem claim. Parser CookieError message is fixed/redacted to avoid credential disclosure; source class and catch/log prefix are retained, not arbitrary credential-bearing source exception text.
++Ordinary finite JSON Cookie headers are strings. Non-string headers, truthy non-list CookieList construction, structured stored cookie fields, non-string truthy stored cookie identities, and URL hostname shapes outside the explicitly consumed ASCII/net-url-compatible domain remain explicit Boundary errors; not fabricated source False or silently discarded data. Domain/hostname reading does not fetch the torrent URL; daemon endpoint remains the already-authorized configured client. No IDNA/general URL ecosystem claim. Illegal-key / invalid-attribute CookieError preserves the exact source key diagnostic (never the Cookie value/header). Control-character errors whose original messages contain cookie values remain fixed/redacted under the existing credential-log boundary; no exact full-domain log claim. This unobserved branch is not used to weaken the actual 17-scenario raw differential.
+ 
+ This slice preserves existing qB-only TLS permission, redirects, environment proxy routing, auth isolation and close behavior. No TR changes or global policy edits. Tests will bind actual source raw separately; no target-generated oracle.
+ 

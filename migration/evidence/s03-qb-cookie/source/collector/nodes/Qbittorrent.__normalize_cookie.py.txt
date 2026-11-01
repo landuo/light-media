@@ -1,0 +1,7 @@
+    def __normalize_cookie(self, cookie: Any) -> dict:
+        result = {}
+        for key in ("domain", "path", "name", "value", "expirationDate"):
+            value = self.__get_mapping_value(cookie, key)
+            if value not in (None, ""):
+                result[key] = value
+        return result

@@ -1,0 +1,78 @@
+{
+  "reviewed_at": "2026-11-01T07:15:52.536327+00:00",
+  "status": "HOLD_ONE_SOURCE_VERSION_DIFFERENCE_PENDING_NARROW_FIX",
+  "execution_performed": false,
+  "candidate_manifests": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate03.json",
+      "bytes": 4523,
+      "sha256": "5633bed08600cf5cfac4138931fccc141a98e427f96e135d9018b2fa96ac7ce7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate04.json",
+      "bytes": 4584,
+      "sha256": "437da5bff05793b5f8ac2ad32115d2e0a947e01597a25ed7c7df08d8d2f7ebd6"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/candidate05.json",
+      "bytes": 4574,
+      "sha256": "fe5ce4428c85efa608134b61593fa5c71bde499954bd7b1d852dc08d80f7beb0"
+    }
+  ],
+  "source_bindings": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/source-bindings.json",
+    "bytes": 2977,
+    "sha256": "5ed255084928031e14e00aab1f250268b1efc3468581cbeadf5d638b0e2e1bc7"
+  },
+  "source_binding_current_drift": [],
+  "frozen_copy_checks": [
+    {
+      "candidate": "candidate03.json",
+      "files": 17,
+      "drift": []
+    },
+    {
+      "candidate": "candidate04.json",
+      "files": 17,
+      "drift": []
+    },
+    {
+      "candidate": "candidate05.json",
+      "files": 17,
+      "drift": []
+    }
+  ],
+  "independent_add_extraction": {
+    "callback_body_bytes": 5362,
+    "callback_body_sha256": "18315a55ee923e1b6f14b477f8e012e81d38f4431cc699dc436c79c5ee590aff",
+    "only_change": "one indentation tab removed; old public Add delegates inside its same owner.run; entire file outside old/new function block identical"
+  },
+  "source_oracle": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-source01/stdout.json",
+    "bytes": 152283,
+    "sha256": "758df1e970dad525d564dc6732e2153f545dc8a0314fbbfd0b3e846156f02b6a"
+  },
+  "oracle_test": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie-oracle-tests01/qb_cookie_source_test.go",
+    "bytes": 10197,
+    "sha256": "53de9886d2cd5ceae8b92bb7a1d2a5dfed235409ce8cb3ecfc2d83b13dda376a"
+  },
+  "blocking_finding": {
+    "id": "PEP440_ASCII_SCOPE",
+    "source": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/packaging/version.py",
+      "bytes": 39040,
+      "sha256": "558b2fb50fd198c660a4c082f96b8919c565911b6b4b6e07f34b6b60c074be97"
+    },
+    "lines": "192–225; scoped (?a:...) covers pre/post/dev/local",
+    "examples": [
+      "2.11.3+K",
+      "2.11.3poſt1"
+    ],
+    "static_original_result": "InvalidVersion, source compatibility probe False",
+    "candidate_through_05_result": "Unicode pre-fold makes valid final/local/post release; returns True",
+    "impact": "Extra global cookie preparation/write branch instead of original per-add Cookie fallback",
+    "not_executed": true,
+    "minimal_fix": "Remove four Unicode-specific folding cases; retain ASCII case folding and pinned regex. No source oracle change."
+  }
+}

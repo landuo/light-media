@@ -1,0 +1,26 @@
+    def __sync_download_cookies(self, url: str, cookie_header: str) -> bool:
+        if not self.qbc or not url or not cookie_header or not self.__supports_cookie_api():
+            return False
+
+        try:
+            site_cookies = self.__build_site_cookies(url=url, cookie_header=cookie_header)
+            if not site_cookies:
+                return False
+
+            merged_cookies = {}
+            for cookie in self.qbc.app_cookies() or []:
+                normalized = self.__normalize_cookie(cookie)
+                cookie_key = self.__cookie_key(normalized)
+                if cookie_key:
+                    merged_cookies[cookie_key] = normalized
+
+            for cookie in site_cookies:
+                cookie_key = self.__cookie_key(cookie)
+                if cookie_key:
+                    merged_cookies[cookie_key] = cookie
+
+            self.qbc.app_set_cookies(cookies=list(merged_cookies.values()))
+            return True
+        except Exception as err:
+            logger.error(f"同步下载Cookie出错：{str(err)}")
+            return False

@@ -1,0 +1,79 @@
+{
+  "status": "ACCEPT_FINITE_APP_NORMAL1",
+  "sealed_at": "2026-11-01T07:41:18.940988+00:00",
+  "reviewer": "/root/continue_platform_astra/meta_target_review",
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/app-final01/REVIEW.md",
+      "bytes": 5047,
+      "sha256": "e367dbc9b7a8fb9b17fc7c2c012d9741ca48b59a3ca889b89f74ba97d5aeee63"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/app-final01/actual-readback.json",
+      "bytes": 21555,
+      "sha256": "a24fc7a9e76634c9a70f4af289a64d312dd8ebab30cbfd90e6c1a02492bfe8f5"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/app-final01/worker-declared-inputs.json",
+      "bytes": 385479,
+      "sha256": "a5cc0fd75c02248b74256ed5a52e250845222cd4ec1956e4420784dc765526ae"
+    }
+  ],
+  "preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/app-preexec01/preexec-seal.json",
+    "bytes": 4186,
+    "sha256": "5b8ee30c9f3460560a19ba995e1d0f7ba3f4995d37939c0fc56fb51ab59def7d"
+  },
+  "actual_result": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-app01/result.json",
+    "bytes": 9453,
+    "sha256": "24b836328ae5aa9c5396b886b9fb82fb195f5c22fdaa6cf2881f60429f642e22"
+  },
+  "tool_receipt": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-app01/tool-receipt.json",
+    "bytes": 224,
+    "sha256": "0776a5ba2b87b548639f76a38e92222cb9d96ebdd8bfd591692557b79d853159"
+  },
+  "vet_clarification": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-app01/vet-scope-clarification.json",
+    "bytes": 288,
+    "sha256": "2655a6db91829c97a5910125d93f56f98079e7919ae9e00ea9ef6d0ab6b284a3"
+  },
+  "root": "TestSharedQBCookieActualWorkerRecoveryAndCold",
+  "normal_roots": 1,
+  "race_roots": 0,
+  "inputs": 6378,
+  "declaration_rows": 7814,
+  "declared_effective_unique_files": 6274,
+  "three_maps_and_current_equal": true,
+  "input_drift": [],
+  "protected_meta_current": 25,
+  "worker": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-app01.worker",
+    "bytes": 5358855,
+    "sha256": "75b1f85df152f0cb5dc9b0da6850ebd76632aa175e72d25aa486ab3457cb16e7"
+  },
+  "program": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s03-qb-cookie-app01.test",
+    "bytes": 93039958,
+    "sha256": "d6250d516c2f6999cb79483b3026d8fc6d078d54cb1ecd1cd6a9711c5682d1c9"
+  },
+  "counts": {
+    "current_sdk_invokes": 5,
+    "rejected_prior_callback": 1,
+    "qb_http": 34,
+    "login": 5,
+    "version": 17,
+    "cookie_read": 4,
+    "cookie_set": 4,
+    "add": 4,
+    "selected_setter_failure": 1,
+    "artifact_get": 2,
+    "warm_worker_pid": 145,
+    "cold_worker_pid": 153
+  },
+  "ordinary_cli_or_real_daemon_acceptance": false,
+  "vet_in_this_gate": "NOT_RUN (-vet=off); separate two-package vet credit retained",
+  "reviewer_reran": false,
+  "blockers": []
+}

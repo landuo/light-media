@@ -1,0 +1,33 @@
+{
+  "status": "PASS",
+  "started": "2026-11-01T07:28:17.424436+00:00",
+  "command": [
+    "go",
+    "vet",
+    "-overlay",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s03-qb-cookie01/gates02/overlay.json",
+    "./internal/plugins/downloadercommands",
+    "./internal/plugins/iyuuautoseed/native"
+  ],
+  "scope": "static vet only; no target/source tests/HTTP executed",
+  "proxy_environment_unchanged": true,
+  "input_count": 2829,
+  "extra_inputs": {
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/vet": {
+      "sha256": "de9894a135bca12beaec965b062016bf7f3bc708b36513817c50f218a2930040",
+      "bytes": 8757515
+    },
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s03-qb-cookie-native02/inputs-after-test.json": {
+      "sha256": "239c622dda646cbc3021ca9e4d8fc44d0c09fc87bcfd3107b0fe2fa562b68c07",
+      "bytes": 620145
+    },
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-qb-cookie-independent/target-preexec02/preexec-seal.json": {
+      "sha256": "0c1546bb8e4a31671dc80a99ba41fcdbd34033eb6edb146dfdf4c21ba8d9a4ee",
+      "bytes": 898
+    }
+  },
+  "pid": 6,
+  "exit_code": 0,
+  "ended": "2026-11-01T07:28:22.680310+00:00",
+  "input_drift": []
+}
