@@ -1,0 +1,73 @@
+{
+  "at": "2026-11-01T11:59:47.815827+00:00",
+  "base": "5f829f8d6dba7572e48b8bf3d261c99e8f2447da",
+  "runs": [
+    {
+      "mode": "normal",
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-artifacts-normal01/result.json",
+        "bytes": 7974,
+        "sha256": "f7269e0029d0e757ceb2a6573e0be76a28f78a28948c1d7cce616821496ec0c0"
+      },
+      "receipt": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-artifacts-normal01/coordinator-tool-receipt.json",
+        "bytes": 441,
+        "sha256": "dab5de3c4e2036a23a3be5de6ef7c726827c6f2c0e357ae6d3f838820e54f7e5"
+      },
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/market-display-body-artifacts-normal01.test",
+        "bytes": 13082718,
+        "sha256": "b02dff59df6f0bcaeefc249b99a17a03d21e8ba662a73f369304b7ca0c3a2b4f"
+      },
+      "inputs": 2672,
+      "three_maps_equal": true,
+      "current_drift": [],
+      "declarations": 2696,
+      "generated_saved": 1,
+      "roots": [
+        "TestPythonSourcePackageBodyBeyondNativeIndexBudget",
+        "TestPythonSourcePackageReaderFailuresAndCancellation",
+        "TestPythonSourcePackageRetainsTransportGuards",
+        "TestNativeRepositoryAndArtifactBodyBudgetsRemainBounded"
+      ],
+      "actual_vet": "NOT_RUN (-vet=off); inherited virtual-directory reason is historical, clarified in real receipt"
+    },
+    {
+      "mode": "race",
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-artifacts-race01/result.json",
+        "bytes": 8001,
+        "sha256": "4359389b2613e183da0fdbd4b7e689cbcfb794af4a38aceaa32389a6fd5789fa"
+      },
+      "receipt": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-artifacts-race01/coordinator-tool-receipt.json",
+        "bytes": 448,
+        "sha256": "465ccbb6aaacc39f674fce782874386503a043c328e1ec6fd313cce436c48b13"
+      },
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/market-display-body-artifacts-race01.test",
+        "bytes": 16528971,
+        "sha256": "d5b78032c1b57c74a7f06d84f79cafe12b2d244344620367ac1aaf9ce19f47cc"
+      },
+      "inputs": 2680,
+      "three_maps_equal": true,
+      "current_drift": [],
+      "declarations": 2704,
+      "generated_saved": 1,
+      "roots": [
+        "TestPythonSourcePackageBodyBeyondNativeIndexBudget",
+        "TestPythonSourcePackageReaderFailuresAndCancellation",
+        "TestPythonSourcePackageRetainsTransportGuards",
+        "TestNativeRepositoryAndArtifactBodyBudgetsRemainBounded"
+      ],
+      "actual_vet": "NOT_RUN (-vet=off); inherited virtual-directory reason is historical, clarified in real receipt"
+    }
+  ],
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/candidate01/manifest.json",
+    "bytes": 2578,
+    "sha256": "3dd41134036a6eac8561bbeb5279f9c499518478f61ee6470697d3618b830e35"
+  },
+  "normal4_race4": "actual PASS, fixed RoundTripper only",
+  "closure_boundary": "Declaration backing mapping/current inputs and stored generated source verified; no App/worker/service/real HTTP executed."
+}

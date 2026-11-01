@@ -1,0 +1,52 @@
+{
+  "source_raw_sha256": "04b5ec00d1faa5af6be4febd702762038d98dd690c0c117581bed07160cfd69f",
+  "source_actual_only_projection": true,
+  "projection": "Only irrelevant padding output string omitted; its size/hash retained, full original outcome remains in bound stdout.json. No target-generated expected values.",
+  "cases": [
+    {
+      "id": "large_padding",
+      "input_recipe": {
+        "id": "large_padding",
+        "prefix": "{\"OwnedLarge\":{\"name\":\"owned metadata\",\"version\":\"2.0\",\"v2\":true,\"history\":{\"2.0\":\"current\"},\"padding\":\"",
+        "repeat": "x",
+        "count": 2097152,
+        "suffix": "\"}}"
+      },
+      "input_utf8_bytes": 2097259,
+      "input_sha256": "9bfdbfde6efd6dc48a241d5886c7b8cd2293dc4a07a5c064d61c5bb9c3ace910",
+      "after_input_sha256": "9bfdbfde6efd6dc48a241d5886c7b8cd2293dc4a07a5c064d61c5bb9c3ace910",
+      "outcome_kind": "return",
+      "python_type": "dict",
+      "source_fields": {
+        "OwnedLarge": {
+          "name": "owned metadata",
+          "version": "2.0",
+          "v2": true,
+          "history": {
+            "2.0": "current"
+          }
+        }
+      },
+      "omitted_irrelevant_padding": {
+        "utf8_bytes": 2097152,
+        "sha256": "6932fd31e5daf4739b9fa78ff777b2831b0995cc1d0b0093cac80601902013bc"
+      }
+    },
+    {
+      "id": "large_malformed",
+      "input_recipe": {
+        "id": "large_malformed",
+        "prefix": "{\"OwnedLarge\":{\"name\":\"owned metadata\",\"version\":\"2.0\",\"v2\":true,\"history\":{\"2.0\":\"current\"},\"padding\":\"",
+        "repeat": "x",
+        "count": 2097152,
+        "suffix": "\"}}trailing"
+      },
+      "input_utf8_bytes": 2097267,
+      "input_sha256": "707a6fc8c951ad7b7ea9e378aed85585ac3e99de6d3b90b2d5a9bcb360e854df",
+      "after_input_sha256": "707a6fc8c951ad7b7ea9e378aed85585ac3e99de6d3b90b2d5a9bcb360e854df",
+      "outcome_kind": "return",
+      "python_type": "NoneType",
+      "source_fields": null
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "status": "PREEXEC_READY_SERVER_COMPILE_ONLY",
+  "at": "2026-11-01T12:19:12.301098+00:00",
+  "preparation": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/cli01/build-preparation-seal.json",
+    "bytes": 3144,
+    "sha256": "ef1c6f526b8cfb07c751f54bd256e53e8adea3e01f7a71c41766551980128f9e"
+  },
+  "driver": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/cli01/build-programs.py",
+    "bytes": 8367,
+    "sha256": "4192ae6657d0b9deb03637b3e67abeb2d31ae9a22587f955b3bbf61cb2bc66c2"
+  },
+  "command": [
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/cli01/build.sh",
+    "--expected-app-normal-result-sha",
+    "c962e8b6d5a459207a80d2a03ace8df262b9ab610127131b3a5c99be73514fc3",
+    "--expected-app-race-result-sha",
+    "4727239ed604535c59b89021e547a1e6f5d54f8c6b4195a28d9995ff6402f350"
+  ],
+  "app_final": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/market-display-body-independent/app-final01/seal.json",
+    "bytes": 3154,
+    "sha256": "5a402b52a8457130689a3500d32b781b8250b9772ed0fbaca22810896169117b"
+  },
+  "actual_results": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-app-normal01/result.json",
+      "bytes": 8300,
+      "sha256": "c962e8b6d5a459207a80d2a03ace8df262b9ab610127131b3a5c99be73514fc3"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-app-race01/result.json",
+      "bytes": 8327,
+      "sha256": "4727239ed604535c59b89021e547a1e6f5d54f8c6b4195a28d9995ff6402f350"
+    }
+  ],
+  "actual_app_inputs_current_drift": [],
+  "scope": "One offline go list and ordinary cmd/server go build using unchanged App25 overlay; no server/worker/test/source execution. Fresh output paths, full before/after effective input hashes and generated snapshots. No ACTIVE writes.",
+  "environment": "Fixed pinned Go/local toolchain, GOPROXY=off/GOSUMDB=off, inherited ordinary proxy/CA/TZ unchanged.",
+  "resource_contract": "User removes additional2MiB cap for source PluginHelper Python package display reading. Native Go index/install/receipt limits remain previously scoped artifact adaptation, not a blanket license to truncate arbitrary display metadata. Candidate replaces common Python package base/v2 reader used by market/cache/history/release; no second source-shaped Python package fetch reader found in affected artifact/App call sites.",
+  "limits": "Compile admission only. No actual program/build PASS or whole four-parent closure. App final is independently referenced, not retroactively inserted into frozen driver inputs."
+}

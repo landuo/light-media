@@ -1,0 +1,124 @@
+{
+  "started": "2026-11-01T12:16:41.611415+00:00",
+  "driver_pid": 8,
+  "package": "./internal/app",
+  "pattern": "^(TestOriginalLargePythonPackageHTTPAndCacheRecovery|TestOriginalMarketPackageCacheFullSourceErrorEmptyAndRecovery)$",
+  "race": true,
+  "status": "PASS",
+  "vet": "NOT_RUN: virtual-only package directory; prior automatic vet chdir failure retained",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/gates01/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/gates01/overlay.json",
+        "-vet=off",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/market-display-body-app-race01.test",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/market-display-body-app-race01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestOriginalLargePythonPackageHTTPAndCacheRecovery|TestOriginalMarketPackageCacheFullSourceErrorEmptyAndRecovery)$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "overlay": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_modules.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/clean-view/plugin_original_modules.go.head.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_media_recognition.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/clean-view/plugin_shared_media_recognition.go.head.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/runtime.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/clean-view/runtime.go.head.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/cmd/owned-media-recognition-meta-fixture/main.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/cmd/owned-media-recognition-meta-fixture/main_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_cache.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_cache_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_runtime.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_algorithm.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_algorithm_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_dispatch.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_dispatch_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_native.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_owned_worker_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_report.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_report_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta_module.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/artifacts/github_repository.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/candidate01/overlay/internal/plugins/artifacts/github_repository.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/artifacts/python_source_http.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/candidate01/overlay/internal/plugins/artifacts/python_source_http.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/artifacts/python_source_http_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/candidate01/overlay/internal/plugins/artifacts/python_source_http_test.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_market_large_body_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/overlay/internal/app/plugin_original_market_large_body_test.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/testdata/market-display-body-source.json": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/overlay/internal/app/testdata/market-display-body-source.json"
+  },
+  "extra_inputs": [
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/gates01/race.sh",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/gates01/seal.json"
+  ],
+  "preflight_verified_files": 2509,
+  "preflight_verified_replacements": 25,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T12:16:41.689321+00:00",
+      "scratch_free": 38847184896,
+      "tmp_free": 5225267200
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T12:16:43.531707+00:00",
+      "scratch_free": 38841020416,
+      "tmp_free": 5225267200
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T12:17:23.811630+00:00",
+      "scratch_free": 38616985600,
+      "tmp_free": 5225267200
+    }
+  ],
+  "input_count": 6366,
+  "program_sha256": "c0ba1cb338684f04dc3973dd4e7f5ea7e9184b6989a30ad1d6da6a515e16f30f",
+  "root_passes": [
+    "TestOriginalLargePythonPackageHTTPAndCacheRecovery",
+    "TestOriginalMarketPackageCacheFullSourceErrorEmptyAndRecovery"
+  ],
+  "ended": "2026-11-01T12:17:29.371160+00:00"
+}

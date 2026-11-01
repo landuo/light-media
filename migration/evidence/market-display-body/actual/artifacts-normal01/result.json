@@ -1,0 +1,122 @@
+{
+  "started": "2026-11-01T11:54:15.249083+00:00",
+  "driver_pid": 6,
+  "package": "./internal/plugins/artifacts",
+  "pattern": "^(TestPythonSourcePackageBodyBeyondNativeIndexBudget|TestPythonSourcePackageReaderFailuresAndCancellation|TestPythonSourcePackageRetainsTransportGuards|TestNativeRepositoryAndArtifactBodyBudgetsRemainBounded)$",
+  "race": false,
+  "status": "PASS",
+  "vet": "NOT_RUN: virtual-only package directory; prior automatic vet chdir failure retained",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins/artifacts"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/overlay.json",
+        "-vet=off",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/market-display-body-artifacts-normal01.test",
+        "./internal/plugins/artifacts"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/artifacts",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/market-display-body-artifacts-normal01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestPythonSourcePackageBodyBeyondNativeIndexBudget|TestPythonSourcePackageReaderFailuresAndCancellation|TestPythonSourcePackageRetainsTransportGuards|TestNativeRepositoryAndArtifactBodyBudgetsRemainBounded)$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "overlay": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_modules.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/clean-view/plugin_original_modules.go.head.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_media_recognition.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/clean-view/plugin_shared_media_recognition.go.head.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/runtime.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/clean-view/runtime.go.head.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/cmd/owned-media-recognition-meta-fixture/main.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/cmd/owned-media-recognition-meta-fixture/main_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_cache.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_cache_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_runtime.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_algorithm.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_algorithm_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_dispatch.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_dispatch_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_native.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_owned_worker_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_report.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_report_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta_module.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/artifacts/github_repository.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/candidate01/overlay/internal/plugins/artifacts/github_repository.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/artifacts/python_source_http.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/candidate01/overlay/internal/plugins/artifacts/python_source_http.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/artifacts/python_source_http_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/candidate01/overlay/internal/plugins/artifacts/python_source_http_test.go"
+  },
+  "extra_inputs": [
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/normal.sh",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/seal.json"
+  ],
+  "preflight_verified_files": 302,
+  "preflight_verified_replacements": 23,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T11:54:15.259747+00:00",
+      "scratch_free": 39104516096,
+      "tmp_free": 5225271296
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T11:54:15.813360+00:00",
+      "scratch_free": 39102361600,
+      "tmp_free": 5225271296
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T11:54:17.285813+00:00",
+      "scratch_free": 39085305856,
+      "tmp_free": 5225271296
+    }
+  ],
+  "input_count": 2672,
+  "program_sha256": "b02dff59df6f0bcaeefc249b99a17a03d21e8ba662a73f369304b7ca0c3a2b4f",
+  "root_passes": [
+    "TestPythonSourcePackageBodyBeyondNativeIndexBudget",
+    "TestPythonSourcePackageReaderFailuresAndCancellation",
+    "TestPythonSourcePackageRetainsTransportGuards",
+    "TestNativeRepositoryAndArtifactBodyBudgetsRemainBounded"
+  ],
+  "ended": "2026-11-01T11:54:17.608234+00:00"
+}

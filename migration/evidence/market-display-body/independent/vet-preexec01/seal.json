@@ -1,0 +1,33 @@
+{
+  "status": "PREEXEC_READY_SINGLE_PACKAGE_STATIC_VET_ONLY",
+  "at": "2026-11-01T12:00:21.616876+00:00",
+  "preparation": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/vet01/preparation-seal.json",
+    "bytes": 1194,
+    "sha256": "aac7a07be758e054ea8b539adcb58979cf4e09670536cc72c1bb789961c70508"
+  },
+  "command": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/vet01/run.sh",
+    "bytes": 500,
+    "sha256": "232209ab21619c671b4bd77830436ef86e8793b69984ec692b05d7bd5e6732d4"
+  },
+  "runner": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/vet01/run_vet.py",
+    "bytes": 2431,
+    "sha256": "92639e83e650b6275db7d2c9c902c47561b632ac9f44d55a442f78f055235ab2"
+  },
+  "binding": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/vet01/bindings.json",
+    "bytes": 643825,
+    "sha256": "a7a553c4577b0e2a469314416a7f3a2ea30ddb563c0213209a1b62f24ddc1b18"
+  },
+  "normal_actual_final": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/market-display-body-independent/package-final01/seal.json",
+    "bytes": 2065,
+    "sha256": "baef9a3338c2e497385bab2dada5cf6c33a507224358a976e58144759cb9f421"
+  },
+  "inputs": 2681,
+  "current_drift": [],
+  "scope": "Coordinator only exact run.sh, frozen23 overlay, one artifacts package, offline module/sum/toolchain; before/after capture. No source/test/service/network execution.",
+  "boundary": "Old normal/race vet=off results remain unchanged. This is admission, not actual vet PASS; no parent acceptance."
+}

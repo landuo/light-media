@@ -1,0 +1,33 @@
+diff --git a/web/src/components/Plugins.vue b/web/src/components/Plugins.vue
+index 2ada470c..4ef7e0de 100644
+--- a/web/src/components/Plugins.vue
++++ b/web/src/components/Plugins.vue
+@@ -133,7 +133,6 @@ const tab = ref("installed"),
+ const marketFailures = ref<{ repo_url: string; message: string }[]>([]);
+ const marketAuthors = ref<string[]>([]), marketLabels = ref<string[]>([]), marketRepositories = ref<string[]>([]);
+ const marketSort = ref<PluginMarketSort>('count'), marketStatistics = ref<Record<string, number>>({});
+-const marketStatisticsError = ref('');
+ const marketLimit = ref(20), marketListVersion = ref(0);
+ const marketSortOptions: {title: string; value: PluginMarketSort}[] = [
+   {title:'热度',value:'count'},{title:'名称',value:'name'},{title:'作者',value:'author'},
+@@ -331,10 +330,10 @@ async function loadOnce(forceMarket = false) {
+         if (serial !== loadSerial) return;
+         if (!statistics || typeof statistics !== 'object' || Array.isArray(statistics)) throw new Error('插件统计响应无效');
+         marketStatistics.value = statistics;
+-        marketStatisticsError.value = '';
+       } catch (e) {
+         if (serial !== loadSerial) return;
+-        marketStatisticsError.value = errorText(e);
++        // Fixed getPluginStatistics logs failure and retains the last value.
++        console.error(e);
+       }
+     const groups = await api("/plugins/organization");
+     if (serial !== loadSerial) return;
+@@ -730,7 +729,6 @@ onActivated(() => {
+                 <VSelect v-if="authorOptions.length" v-model="marketAuthors" :items="authorOptions" label="作者" multiple chips closable-chips clearable density="compact" variant="outlined" hide-details />
+                 <VSelect v-if="labelOptions.length" v-model="marketLabels" :items="labelOptions" label="标签" multiple chips closable-chips clearable density="compact" variant="outlined" hide-details />
+                 <VSelect v-if="repositoryOptions.length" v-model="marketRepositories" :items="repositoryOptions" label="仓库" multiple chips closable-chips clearable density="compact" variant="outlined" hide-details />
+-              <p v-if="marketStatisticsError" class="text-caption mt-2" role="status">{{ marketStatisticsError }}；{{ Object.keys(marketStatistics).length ? '当前使用上次取得的统计数据。' : '当前保留市场返回顺序。' }}</p>
+               </div
+           ></VCard>
+         </VMenu>

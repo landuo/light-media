@@ -1,0 +1,95 @@
+{
+  "status": "PASS",
+  "started": "2026-11-01T12:19:34.951951+00:00",
+  "kind": "normal cmd/server compile only; no service/worker execution",
+  "base": "5f829f8d6dba7572e48b8bf3d261c99e8f2447da",
+  "package": "./cmd/server",
+  "overlay": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_modules.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/clean-view/plugin_original_modules.go.head.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_media_recognition.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/clean-view/plugin_shared_media_recognition.go.head.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/runtime.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/clean-view/runtime.go.head.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/cmd/owned-media-recognition-meta-fixture/main.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/cmd/owned-media-recognition-meta-fixture/main_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_cache.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_cache_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_runtime.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_algorithm.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_algorithm_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_dispatch.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_dispatch_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_native.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_owned_worker_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_report.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_report_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta_module.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/artifacts/github_repository.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/candidate01/overlay/internal/plugins/artifacts/github_repository.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/artifacts/python_source_http.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/candidate01/overlay/internal/plugins/artifacts/python_source_http.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/artifacts/python_source_http_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/candidate01/overlay/internal/plugins/artifacts/python_source_http_test.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_market_large_body_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/overlay/internal/app/plugin_original_market_large_body_test.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/testdata/market-display-body-source.json": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/overlay/internal/app/testdata/market-display-body-source.json"
+  },
+  "commands": [
+    {
+      "phase": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/gates01/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-json",
+        "./cmd/server"
+      ],
+      "exit": 0
+    },
+    {
+      "phase": "build",
+      "argv": [
+        "go",
+        "build",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/gates01/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/market-display-body-server01",
+        "./cmd/server"
+      ],
+      "exit": 0
+    }
+  ],
+  "prior_gates": {
+    "app-normal": {
+      "result_sha256": "c962e8b6d5a459207a80d2a03ace8df262b9ab610127131b3a5c99be73514fc3",
+      "input_count": 6357,
+      "program_sha256": "701acb511a4a0643b2e926377db4d7e0ba127a28cf5caacf538dc7c7fbac2c59"
+    },
+    "app-race": {
+      "result_sha256": "4727239ed604535c59b89021e547a1e6f5d54f8c6b4195a28d9995ff6402f350",
+      "input_count": 6366,
+      "program_sha256": "c0ba1cb338684f04dc3973dd4e7f5ea7e9184b6989a30ad1d6da6a515e16f30f"
+    }
+  },
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "scratch_free": 38615220224,
+      "tmp_free": 5225267200
+    },
+    {
+      "phase": "build",
+      "scratch_free": 38610681856,
+      "tmp_free": 5225267200
+    }
+  ],
+  "input_count": 6392,
+  "program_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/market-display-body-server01",
+  "program_sha256": "609ecad85dbd818473d15a0d939a9874ca2b4320612c920fe59617efbfffb05c",
+  "input_drift": [],
+  "ended": "2026-11-01T12:19:47.018842+00:00"
+}

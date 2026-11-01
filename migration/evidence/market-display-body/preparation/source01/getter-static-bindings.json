@@ -1,0 +1,31 @@
+{
+  "scope": "Static chain only, not new getter/cache/HTTP execution",
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/plugin.py",
+      "bytes": 136832,
+      "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/core/plugin.py",
+      "bytes": 93047,
+      "sha256": "b0d26b661624ca4dd643af20553dd23c70ab3e38be4573844e053dffa3c3e4b7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/api/endpoints/plugin.py",
+      "bytes": 40236,
+      "sha256": "16e96285764587b266c07af21b6df140836c00f916d6626b87584a492a4031ce"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/utils/http.py",
+      "bytes": 62612,
+      "sha256": "f8d90a731717de14a822d8035a14486caba2e25d52018c87d6ec0d9fcd3b2b27"
+    }
+  ],
+  "call_sites": [
+    "PluginHelper.get_plugins:487-513 uses complete res.text",
+    "PluginHelper.async_get_plugins:2187-2214 uses complete res.text",
+    "__parse_plugin_index_response:399-415 complete selected AST"
+  ],
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60"
+}

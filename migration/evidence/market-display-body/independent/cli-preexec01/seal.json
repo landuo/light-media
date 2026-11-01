@@ -1,0 +1,45 @@
+{
+  "status": "PREEXEC_READY_EXACT_ORDINARY_CLI",
+  "at": "2026-11-01T12:22:01.399095+00:00",
+  "static_review": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/market-display-body-independent/cli-static01/seal.json",
+    "bytes": 3195,
+    "sha256": "d5891996e8f47e308e68dbc1a4a829e1643ee1c22212298c4912dee2a8dd654a"
+  },
+  "actual_server_review": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/market-display-body-independent/server-final01/seal.json",
+    "bytes": 2104,
+    "sha256": "64cb91337e01d123c2d8e9b5ac510dbde003d00229b1c89dcdb8b62e8a33588c"
+  },
+  "binding": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/cli01/execution-bindings.json",
+    "bytes": 1664634,
+    "sha256": "4d194a0044eae3e809c9fc060c6f07dc65b8b7ba0d4beb1c84dcb59efab2e8f0"
+  },
+  "command": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/cli01/execution-command.json",
+    "bytes": 838,
+    "sha256": "52d5b3cbecf62b4784fd55b39bcbeacbc3cde62e3ecbdd04c6deba8caaa9e722"
+  },
+  "run_script": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/cli01/run-cli.sh",
+    "bytes": 743,
+    "sha256": "1d7263c3221e3c27e5051778fc07b16fd5a3f29ee687dd8d33679245b99dca3e"
+  },
+  "server": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/market-display-body-server01",
+    "bytes": 75555185,
+    "sha256": "609ecad85dbd818473d15a0d939a9874ca2b4320612c920fe59617efbfffb05c"
+  },
+  "inputs": 6405,
+  "actual_build_union_inputs": 6392,
+  "current_drift": [],
+  "exact_head": "5f829f8d6dba7572e48b8bf3d261c99e8f2447da",
+  "command_to_run": [
+    "bash",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/cli01/run-cli.sh"
+  ],
+  "conditions": "Coordinator sole execution, fresh owned instance, inherited exact NO_PROXY/normal startup required; no proxy/CA/environment repair or route retry on failure. Preserve all terminal outcomes.",
+  "scope": "Two ordinary normal cmd/server children same DB, fixed owned TLS threeGET endpoint/five phases15requests; metadata selection/cache/error/recovery/cold, no worker/install/original source execution.",
+  "limits": "Admission only. Actual response/closed-process/input/environment final proof pending. No UI/four-parent/remote/CI claim; private DB/log/key not for publication. Reviewer seals referenced separately, not falsely included retroactively in frozen execution input union."
+}

@@ -1,0 +1,46 @@
+{
+  "status": "ACCEPTED_ACTUAL_SINGLE_PACKAGE_VET",
+  "at": "2026-11-01T12:13:51.964824+00:00",
+  "result": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-artifacts-vet01/result.json",
+    "bytes": 811,
+    "sha256": "4fceb9be2a00f7588c3a8408153f5805d8d9c1b61850dc17f6268aa0d4b70b74"
+  },
+  "receipt": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-artifacts-vet01/coordinator-tool-receipt.json",
+    "bytes": 332,
+    "sha256": "ffb771ad7bcf93d5b9b9e8486274a234ee333f66c672bec30406b57f96632cca"
+  },
+  "preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/market-display-body-independent/vet-preexec01/seal.json",
+    "bytes": 1790,
+    "sha256": "18ae5e1f6837a83852b284e51467bf92ed94e1d343644a7b91f03b3849853690"
+  },
+  "inputs": 2681,
+  "maps_equal": true,
+  "current_drift": [],
+  "maps": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-artifacts-vet01/inputs-before.json",
+      "bytes": 584235,
+      "sha256": "5773a342950f7cc42b6d925758dd0745c04ab4f942c4635f2388abbc867a2284"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-artifacts-vet01/inputs-after.json",
+      "bytes": 584235,
+      "sha256": "5773a342950f7cc42b6d925758dd0745c04ab4f942c4635f2388abbc867a2284"
+    }
+  ],
+  "command": [
+    "go",
+    "vet",
+    "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/overlay.json",
+    "-mod=readonly",
+    "-buildvcs=false",
+    "./internal/plugins/artifacts"
+  ],
+  "exit": 0,
+  "stdout_bytes": 0,
+  "stderr_bytes": 0,
+  "limits": "Only explicit static vet of artifacts with frozen 23-map overlay. Does not alter prior normal/race NOT_RUN vet facts or count as additional behavior/HTTP/App acceptance."
+}

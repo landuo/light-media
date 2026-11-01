@@ -1,0 +1,55 @@
+{
+  "at": "2026-11-01T11:58:59.438634+00:00",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "input_count": 89,
+  "current_drift": [],
+  "selected_complete_ast": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/plugin.py",
+    "bytes": 136832,
+    "sha256": "a7455fbb0f0e09267476b2628459dcfd1af26a94e9fc4eea04b51e5f08dfdcba",
+    "class": "PluginHelper",
+    "node_name": "__parse_plugin_index_response",
+    "first_line_including_decorators": 399,
+    "last_line": 415,
+    "node_ast_sha256": "35a13e5b5d35be00e97e09e6d6beacc02ddadf660eb16297ffba9fa44a4204b3",
+    "node_source_sha256": "c56687bf01bc1620f849932322f78f4b8abc3d0d40007bfedfbe29666aacc7de",
+    "decorators": [
+      "Name(id='staticmethod', ctx=Load(), lineno=399, col_offset=5, end_lineno=399, end_col_offset=17)"
+    ]
+  },
+  "input_recipes": [
+    {
+      "id": "large_padding",
+      "input_bytes": 2097259,
+      "input_sha256": "9bfdbfde6efd6dc48a241d5886c7b8cd2293dc4a07a5c064d61c5bb9c3ace910"
+    },
+    {
+      "id": "large_whitespace",
+      "input_bytes": 2097259,
+      "input_sha256": "f2179518c09ef29a2b7f69320e9bc8d215663bf4ac4cef53ed268fb8834a10f1"
+    },
+    {
+      "id": "large_malformed",
+      "input_bytes": 2097267,
+      "input_sha256": "707a6fc8c951ad7b7ea9e378aed85585ac3e99de6d3b90b2d5a9bcb360e854df"
+    },
+    {
+      "id": "large_nonobject",
+      "input_bytes": 2097154,
+      "input_sha256": "805a6ae8cfdb7f9edad92c34c4bd60295b9ff0186d487b7ded15b705fe7419ca"
+    },
+    {
+      "id": "not_found_literal",
+      "input_bytes": 14,
+      "input_sha256": "d5558cd419c8d46bdc958064cb97f963d1ea793866414c025906ec15033512ed"
+    },
+    {
+      "id": "small_dict",
+      "input_bytes": 107,
+      "input_sha256": "71326b4bf27673d3de0df1702c4c31b6754bb1ffc3c852f039cf714d1ff71651"
+    }
+  ],
+  "source_executed": false,
+  "collector_executed": false,
+  "scope": "Only metadata/hash/AST checks, immutable original parser and explicit WARN hash port; no runtime/source import."
+}

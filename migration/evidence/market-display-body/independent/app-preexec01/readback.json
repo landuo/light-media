@@ -1,0 +1,65 @@
+{
+  "at": "2026-11-01T12:15:34.179888+00:00",
+  "head": "5f829f8d6dba7572e48b8bf3d261c99e8f2447da",
+  "gate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/gates01/seal.json",
+    "bytes": 2136,
+    "sha256": "f4e6a89fe6b9cea07aa61520ee9063d4b83768ea8b6180040dc8e7457796408e"
+  },
+  "manifest": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/manifest.json",
+    "bytes": 1773,
+    "sha256": "3c96a5ae0f86c4caf2207367d85b6727561d44e3b802f994d1b125723e300a59"
+  },
+  "binding_normal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/gates01/overlay-inputs-normal.json",
+    "bytes": 705214,
+    "sha256": "b760312a2ad4bd71368b4590dd186b1b9ae2f32b9b89c73bd6b8b5b75f3991cd"
+  },
+  "binding_race": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/gates01/overlay-inputs-race.json",
+    "bytes": 705211,
+    "sha256": "eb6e66130d150cd717a66723347928085d0336a7b24f9723a888061918333b16"
+  },
+  "overlay": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/gates01/overlay.json",
+    "bytes": 5254,
+    "sha256": "e3dbab080a5ffe0340c95819f1e96ad5e554b1ca1a253c85ff954af58a8bb4b9"
+  },
+  "commands": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/gates01/normal.sh",
+      "bytes": 1292,
+      "sha256": "97959f40d876002f1c49c225dcbdea42f86862fdcb14015d6823650b9f483760"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/app01/gates01/race.sh",
+      "bytes": 1286,
+      "sha256": "ec8986b55a9fae4d42e7224d5d6b55c3d9b64496502f2891cc23d3884ff5e98c"
+    }
+  ],
+  "static_bound_files": 2480,
+  "static_directories_with_exact_go_inventory": 91,
+  "additional_bound_files": 2481,
+  "current_drift": [],
+  "meta25_unchanged": true,
+  "head_backings": 3,
+  "compiler_hidden_only": 17,
+  "overlay_count": 25,
+  "inherited_overlay23_unchanged": true,
+  "projection_exact_source_cases": [
+    "large_padding",
+    "large_malformed"
+  ],
+  "runner": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s11-overlay-go-gate03.py",
+    "bytes": 7776,
+    "sha256": "3d2a49e7723e5897c01e1e655f702eff64e4db8fdd1db1d07e3bdb6404a7f214"
+  },
+  "old_cache_test": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_market_package_cache_test.go",
+    "bytes": 11691,
+    "sha256": "54169c8a7a076198e9eddd83d843ee2b723d8ed599cdab6b5cd5bbe070169d5b"
+  },
+  "reviewer_note": "First metadata checker used wrong assumption that runner row was in preparatory additional_bound_files; it is in actual effective input map, now directly matched. No product/Go/source execution or change."
+}

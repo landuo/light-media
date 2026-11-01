@@ -1,0 +1,33 @@
+{
+  "status": "ACCEPTED_ACTUAL_ORIGINAL_PARSER_SIX_CASE_ANNEX",
+  "at": "2026-11-01T12:02:05.229850+00:00",
+  "reviewer": "/root/continue_platform_astra/meta_target_review",
+  "preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/market-display-body-independent/source-preexec01/seal.json",
+    "bytes": 2741,
+    "sha256": "7637ca990f74a6e93c02f78c99853cae8684fd4e06844ef0fe4841d94ce04109"
+  },
+  "readback": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/market-display-body-independent/source-final01/readback.json",
+    "bytes": 2909,
+    "sha256": "d067ef2c8d4a8dab14b8727fbacf830477984f5221d97938aeac6907e41260b6"
+  },
+  "raw": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-source01/stdout.json",
+    "bytes": 2123524,
+    "sha256": "04b5ec00d1faa5af6be4febd702762038d98dd690c0c117581bed07160cfd69f"
+  },
+  "outcomes": "3 dictionary returns (large padding/large whitespace/small), 3 None returns (malformed/nonobject/literal404); 2 actual WARN identities, no uncaught exceptions.",
+  "observations": [
+    "Original whole-text parser accepted 2097259-byte valid padding and whitespace documents; returned full 2MiB padding, not truncated prefix.",
+    "Malformed trailing content and wrong top-level list returned None with actual warning identity; literal404 text returned None without warning.",
+    "89 current inputs unchanged;46 bound module files unchanged;28 source line events below fatal harness budget, no audit rejection."
+  ],
+  "boundaries": [
+    "One exact original parser AST only; original getter/requests/cache/decorator/Manager/HTTP did not execute. Literal404 is body-text behavior, not actual HTTP404 observation.",
+    "New actual annex is not recovered missing historical raw; old evidence remains separate.",
+    "Target package normal/race already accepted only at RoundTripper layer; this source annex does not independently complete App/ownedHTTP/ordinary/UI affected-parent integration.",
+    "No arbitrary body sizes or actual memory exhaustiveness claimed; finite counterexample to extra2MiB threshold only.",
+    "No reviewer source/Go/network/service execution or ACTIVE/index/ledger writes."
+  ]
+}

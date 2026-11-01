@@ -1,0 +1,103 @@
+diff --git a/internal/app/http.go b/internal/app/http.go
+index 8c161848..c25a1614 100644
+--- a/internal/app/http.go
++++ b/internal/app/http.go
+@@ -53,6 +53,9 @@ func writeJSON(w http.ResponseWriter, r *http.Request, data any) {
+ 	_ = json.NewEncoder(w).Encode(map[string]any{"data": data, "request_id": w.Header().Get("X-Request-ID")})
+ }
+ func (a *App) writeError(w http.ResponseWriter, r *http.Request, e error) {
++	if writeOriginalPluginServerError(w, e) {
++		return
++	}
+ 	var marketQuery *originalMarketQueryError
+ 	if errors.As(e, &marketQuery) {
+ 		w.Header().Set("Content-Type", "application/json")
+@@ -130,7 +133,7 @@ func (a *App) handler() http.Handler {
+ 		w.Header().Set("X-Content-Type-Options", "nosniff")
+ 		w.Header().Set("Referrer-Policy", "same-origin")
+ 		w.Header().Set("X-Frame-Options", "DENY")
+-		if a.servePluginOrganizationCompatAPI(w, r) || a.servePluginCustomAPI(w, r) || a.serveOriginalSchedulerTokenAPI(w, r) {
++		if a.serveOriginalPluginServerAPI(w, r) || a.servePluginOrganizationCompatAPI(w, r) || a.servePluginCustomAPI(w, r) || a.serveOriginalSchedulerTokenAPI(w, r) {
+ 			return
+ 		}
+ 		if strings.HasPrefix(r.URL.Path, "/api/") {
+@@ -152,6 +155,15 @@ func (a *App) handler() http.Handler {
+ 				return
+ 			}
+ 		}
++		// Known source service paths must reach their own slash redirect before
++		// ServeMux canonicalizes repeated slashes. Existing origin/session checks
++		// above still run first; token routes keep their separate authority path.
++		if strings.HasPrefix(r.URL.Path, "/api/") {
++			if route, ok := originalServiceWirePath(strings.TrimPrefix(r.URL.Path, "/api/")); ok && !route.token {
++				a.originalServiceWireHTTP(w, r, route)
++				return
++			}
++		}
+ 		if a.serveOriginalPluginFrontend(w, r) {
+ 			return
+ 		}
+@@ -740,6 +752,11 @@ func (a *App) preserveSecrets(c *Settings) {
+ 	c.IndexerSites = a.Settings().IndexerSites
+ 	c.RSSSites = a.Settings().RSSSites
+ 	old := a.Settings()
++	// Existing forms do not edit this source-consumed cleanup option.
++	// Preserve an omitted value; explicit zero and negative days remain values.
++	if c.TempFileDays == nil {
++		c.TempFileDays = old.TempFileDays
++	}
+ 	if c.ClearProxyHost {
+ 		c.ProxyHost = ""
+ 	} else if strings.TrimSpace(c.ProxyHost) == "" {
+diff --git a/internal/app/plugin_original_market_cache.go b/internal/app/plugin_original_market_cache.go
+index 930c5dac..f0d0b993 100644
+--- a/internal/app/plugin_original_market_cache.go
++++ b/internal/app/plugin_original_market_cache.go
+@@ -99,7 +99,7 @@ func (a *App) originalMarketSource(ctx context.Context, repository string, force
+ 			fetchURL = parsed.String()
+ 		}
+ 	}
+-	client, err := a.originalPluginHTTPClient(30*time.Second, true)
++	client, err := a.originalPluginMaterialHTTPClient(30 * time.Second)
+ 	var discoveries []artifacts.Discovery
+ 	sourcePackages, packagesCached, packageSucceeded := false, false, false
+ 	loadPackages := func(ctx context.Context, sourceURL string, client *http.Client) ([]artifacts.Discovery, error) {
+diff --git a/web/dist/index.html b/web/dist/index.html
+index 9f1514c4..991ff7db 100644
+--- a/web/dist/index.html
++++ b/web/dist/index.html
+@@ -1,19 +1,20 @@
+-<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark light"><title>光影 · Light Media</title>  <script type="module" crossorigin src="./assets/index-h2Rqg3w2.js"></script>
++<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark light"><title>光影 · Light Media</title>  <script type="module" crossorigin src="./assets/index-DNRPL9b-.js"></script>
+   <link rel="modulepreload" crossorigin href="./assets/vue.runtime.esm-bundler-B_uJFHiR.js">
+-  <link rel="modulepreload" crossorigin href="./assets/ripple-CyPktWe9.js">
++  <link rel="modulepreload" crossorigin href="./assets/ripple-B9xANesy.js">
+   <link rel="modulepreload" crossorigin href="./assets/forwardRefs-BPrGNN_C.js">
+-  <link rel="modulepreload" crossorigin href="./assets/transitions-D-Korhxk.js">
+-  <link rel="modulepreload" crossorigin href="./assets/VAvatar-zSPDnMLa.js">
+-  <link rel="modulepreload" crossorigin href="./assets/VInput--mD3hBBk.js">
+-  <link rel="modulepreload" crossorigin href="./assets/display-CyiCPko5.js">
+-  <link rel="modulepreload" crossorigin href="./assets/VOverlay-DbDa-bAU.js">
+-  <link rel="modulepreload" crossorigin href="./assets/createSimpleFunctional-DNdLBnka.js">
+-  <link rel="modulepreload" crossorigin href="./assets/VTextField-DfIZ_NYA.js">
+-  <link rel="modulepreload" crossorigin href="./assets/goto-CWFOMKaS.js">
+-  <link rel="modulepreload" crossorigin href="./assets/VChip-DNd5J-ID.js">
+-  <link rel="modulepreload" crossorigin href="./assets/VDivider-DL_5_zLI.js">
+-  <link rel="modulepreload" crossorigin href="./assets/VList-CQhmCI7m.js">
+-  <link rel="modulepreload" crossorigin href="./assets/VSelectionControl-B9XaLrdI.js">
++  <link rel="modulepreload" crossorigin href="./assets/transitions-DiUNBLn5.js">
++  <link rel="modulepreload" crossorigin href="./assets/VAvatar-DBcZYs9d.js">
++  <link rel="modulepreload" crossorigin href="./assets/VInput-9mThMZnB.js">
++  <link rel="modulepreload" crossorigin href="./assets/display-DuBqncnr.js">
++  <link rel="modulepreload" crossorigin href="./assets/VOverlay-gDo-T4oc.js">
++  <link rel="modulepreload" crossorigin href="./assets/createSimpleFunctional-CLKpCapg.js">
++  <link rel="modulepreload" crossorigin href="./assets/VTextField-CaxAHKEl.js">
++  <link rel="modulepreload" crossorigin href="./assets/resizeObserver-CItEYFo2.js">
++  <link rel="modulepreload" crossorigin href="./assets/goto-CVRb9z-1.js">
++  <link rel="modulepreload" crossorigin href="./assets/VChip-C2mLDxaw.js">
++  <link rel="modulepreload" crossorigin href="./assets/VDivider-C_8DR2nS.js">
++  <link rel="modulepreload" crossorigin href="./assets/VList-of3P_Fo-.js">
++  <link rel="modulepreload" crossorigin href="./assets/VSelectionControl-CUzax6iR.js">
+   <link rel="stylesheet" crossorigin href="./assets/ripple-C6Aur8ak.css">
+   <link rel="stylesheet" crossorigin href="./assets/VAvatar-IiVKe-Ky.css">
+   <link rel="stylesheet" crossorigin href="./assets/VInput-CpVQVW2X.css">

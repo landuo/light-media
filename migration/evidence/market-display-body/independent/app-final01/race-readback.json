@@ -1,0 +1,102 @@
+{
+  "status": "RACE2_ACCEPTED",
+  "at": "2026-11-01T12:18:23.465687+00:00",
+  "result": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-app-race01/result.json",
+    "bytes": 8327,
+    "sha256": "4727239ed604535c59b89021e547a1e6f5d54f8c6b4195a28d9995ff6402f350"
+  },
+  "receipt": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-app-race01/coordinator-tool-receipt.json",
+    "bytes": 365,
+    "sha256": "dd2128c0551c7199af1df6b47e83e59738a3308f9bc4fd9739e97dec3b118e4e"
+  },
+  "program": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/market-display-body-app-race01.test",
+    "bytes": 120570732,
+    "sha256": "c0ba1cb338684f04dc3973dd4e7f5ea7e9184b6989a30ad1d6da6a515e16f30f"
+  },
+  "maps": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-app-race01/inputs-before.json",
+      "bytes": 1513446,
+      "sha256": "f676e741b7b8a4457fd42f49c176186e4c9b344e40f2144a17fb328c360e7854"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-app-race01/inputs-after-compile.json",
+      "bytes": 1513446,
+      "sha256": "f676e741b7b8a4457fd42f49c176186e4c9b344e40f2144a17fb328c360e7854"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-app-race01/inputs-after-test.json",
+      "bytes": 1513446,
+      "sha256": "f676e741b7b8a4457fd42f49c176186e4c9b344e40f2144a17fb328c360e7854"
+    }
+  ],
+  "current_drift": [],
+  "input_count": 6366,
+  "go_list_declarations": 7850,
+  "generated_saved": 1,
+  "roots": [
+    "TestOriginalLargePythonPackageHTTPAndCacheRecovery",
+    "TestOriginalMarketPackageCacheFullSourceErrorEmptyAndRecovery"
+  ],
+  "old_cache_subcases": 10,
+  "actual_new_root_phases": [
+    [
+      "large-initial",
+      1,
+      1,
+      1
+    ],
+    [
+      "ordinary-list-cached",
+      1,
+      1,
+      1
+    ],
+    [
+      "history-release-cached",
+      1,
+      1,
+      1
+    ],
+    [
+      "large-malformed-fresh",
+      2,
+      2,
+      2
+    ],
+    [
+      "malformed-did-not-erase-cache",
+      2,
+      2,
+      2
+    ],
+    [
+      "received-503-no-upstream-replay",
+      3,
+      3,
+      3
+    ],
+    [
+      "http-failure-did-not-erase-cache",
+      3,
+      3,
+      3
+    ],
+    [
+      "explicit-large-recovery",
+      4,
+      4,
+      4
+    ]
+  ],
+  "tests_stdout": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/market-display-body-app-race01/tests.stdout",
+    "bytes": 21713,
+    "sha256": "b153770ed5e75bb44267756e669ac88206d62a88d62871b6cb386714bb517fec"
+  },
+  "no_reported_race": true,
+  "vet": "NOT_RUN only; inherited runner reason is not current App failure"
+}

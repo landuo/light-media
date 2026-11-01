@@ -114,7 +114,7 @@ func DiscoverGitHubSourcePackage(ctx context.Context, repository, version string
 	if client == nil {
 		client = &http.Client{Timeout: 30 * time.Second}
 	}
-	body, err := download(ctx, client, address, MaxIndexBytes)
+	body, err := downloadPythonSourcePackage(ctx, client, address)
 	if err != nil {
 		var status *downloadStatusError
 		if errors.As(err, &status) && status.Code == http.StatusNotFound {
@@ -123,6 +123,9 @@ func DiscoverGitHubSourcePackage(ctx context.Context, repository, version string
 		return nil, err
 	}
 	values, err := discoverPythonMetadataForVersion(body, repository, version == "")
+	if ctx.Err() != nil {
+		return nil, ctx.Err()
+	}
 	if err != nil {
 		return nil, err
 	}

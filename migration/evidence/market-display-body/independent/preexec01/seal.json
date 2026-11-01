@@ -1,0 +1,49 @@
+{
+  "status": "PREEXEC_READY_NORMAL4_AND_CONDITIONAL_RACE4_NO_SOCKET",
+  "at": "2026-11-01T11:53:23.729210+00:00",
+  "reviewer": "/root/continue_platform_astra/meta_target_review",
+  "readback": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/market-display-body-independent/preexec01/readback.json",
+    "bytes": 76948,
+    "sha256": "65d8b2d313ba67c801096dde18f9c70cabaef7877830211b4cbbe7e2e87db4f1"
+  },
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/candidate01/manifest.json",
+    "bytes": 2578,
+    "sha256": "3dd41134036a6eac8561bbeb5279f9c499518478f61ee6470697d3618b830e35"
+  },
+  "author_gate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/seal.json",
+    "bytes": 2450,
+    "sha256": "128debc3665a9c64e866aacfd8abc6a581b871becfcd28e02e1194635f1738dd"
+  },
+  "normal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/normal.sh",
+    "bytes": 1352,
+    "sha256": "6ef2964382664c34e844fc2af4508e3d69680a5bdc452898768e241add75f7c9"
+  },
+  "race": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/market-display-body01/gates01/race.sh",
+    "bytes": 1510,
+    "sha256": "fe368fd99f283c4d148649c4dfafd511e98405a8d6659e61bcea041a3647e415"
+  },
+  "runner": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s11-overlay-go-gate03.py",
+    "bytes": 7776,
+    "sha256": "3d2a49e7723e5897c01e1e655f702eff64e4db8fdd1db1d07e3bdb6404a7f214"
+  },
+  "scope": [
+    "Coordinator first runs exact normal.sh, compiling actual artifacts package and only four fixed no-socket roots. Preserve failure; race.sh only after genuine normal PASS and unchanged candidate/input binding.",
+    "Dedicated Python metadata reader removes only old 2MiB response cap; base/v2 known/unknown lengths >2MiB use existing parser and remain non-executable metadata.",
+    "Existing URL validation, five-redirect limit, HTTPS downgrade protection, previous redirect policy, status handling, redacted errors, body closure retained. Request context checked at body reads and after parsing.",
+    "Native executable indexes/archive/acquisition budgets remain exact HEAD; no global TLS/proxy/credential widening.",
+    "20 clean-view maps + 3 candidate maps; Meta25 physical hashes protected, no tree mutation."
+  ],
+  "boundaries": [
+    "Tests use only fixed in-process RoundTrippers; no source/HTTP/server/App/worker/browser or upstream request execution.",
+    "Source statement full res.text statically supports removal; inherited source_oracle field is only historical report, not raw re-capture or new differential runtime proof.",
+    "Normal/race execution and actual compiler closure remain pending; current static local prebinding is not compiler evidence.",
+    "Four-parent affected integration/ordinary/UI acceptance is not claimed by this small gate.",
+    "Reviewer did not execute Go, source imports, services or network; no ACTIVE/index/ledger writes."
+  ]
+}
