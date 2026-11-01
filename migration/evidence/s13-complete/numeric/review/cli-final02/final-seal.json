@@ -1,0 +1,73 @@
+{
+  "status": "NUMERIC_ORDINARY_INSTALLED_CLI02_ACTUAL_ACCEPTED",
+  "created_utc": "2026-11-01T10:55:19.315721+00:00",
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/cli-final02/check_actual.py",
+      "bytes": 9624,
+      "sha256": "d42bf7bcd2ea608ba6c82ebd4dee837db915261a9c23f6e0b67476b89c17cca7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/cli-final02/readback.json",
+      "bytes": 10092,
+      "sha256": "7c350c73e47eb00b8626d56bc2ec72be6d40f922711d7f2eb00f67e6005fae5b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/cli-final02/REVIEW.md",
+      "bytes": 2926,
+      "sha256": "81997728d11cbe83ec852a71f1b3369e758cfa31d24c72a74a9f7eb44a41c97d"
+    }
+  ],
+  "preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/cli-preexec02/preexec-seal.json",
+    "bytes": 2889,
+    "sha256": "5893d08bd808781524bc68ea475d63453506890c01e4e960515aa46f46cd835b"
+  },
+  "native_final": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/native-final02/final-seal.json",
+    "bytes": 2345,
+    "sha256": "863375262ee4811d3b030e6209d5ca0a45bf4dc3dbe147d18a147fee417e0d86"
+  },
+  "source_final": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/source-final01/final-seal.json",
+    "bytes": 2022,
+    "sha256": "8a96fd52aa1272da1acb0b8743b6edd84cf43151b43717fa1c29e800564f4bdc"
+  },
+  "result": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-tr-numeric-normal02/result.json",
+    "bytes": 20916,
+    "sha256": "2fb5b908091a8738374c4c552c1043051e0a7331f4afe0b363b99936e1d8f6f9"
+  },
+  "receipt": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-tr-numeric-normal02/coordinator-tool-receipt.json",
+    "bytes": 637,
+    "sha256": "d7681c01abf081406142305bf0c65abdffbff3663fe3ff110335c6a1f3e5fdc7"
+  },
+  "retained_failure": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/native-attempt01/readback.json",
+    "bytes": 6546,
+    "sha256": "2b89c37019c7effe83490e391d497b17a9f1ff8e7f0ea075767c8245dae31f8f"
+  },
+  "actual": {
+    "business_requests": 5,
+    "operation_true": 4,
+    "source_ValueError": 1,
+    "RPC_requests": 8,
+    "artifact_GETs": 2,
+    "normal_host_PIDs": [
+      25,
+      53
+    ],
+    "installed_worker_PIDs": [
+      41,
+      68
+    ],
+    "current_bound_inputs": 6406,
+    "current_drift": [],
+    "Meta25_unchanged": true,
+    "environment_unchanged": true,
+    "forced_cleanup": []
+  },
+  "reviewer_execution": "read/hash JSON only; no source/Go/HTTP/DB",
+  "publication_and_remote_complete": false
+}

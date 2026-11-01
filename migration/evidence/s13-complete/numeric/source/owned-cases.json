@@ -1,0 +1,192 @@
+{
+  "cases": [
+    {
+      "id": "numeric-underscores-all-settings",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "upload_limit": "1_000",
+        "download_limit": "2_048",
+        "ratio_limit": "2_6.7_5",
+        "seeding_time_limit": "1_0"
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "change_torrent",
+          "reply": null
+        }
+      ],
+      "purpose": "One ordinary valid underscore spelling per conversion branch; original bool/int/float/round and exact kwargs/types."
+    },
+    {
+      "id": "numeric-unicode-nd-and-space",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "upload_limit": " +١٢٣ ",
+        "download_limit": "４_२　",
+        "ratio_limit": " +१_२.५_०e-१ ",
+        "seeding_time_limit": "　-٠　"
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "change_torrent",
+          "reply": null
+        }
+      ],
+      "purpose": "Representative Nd scripts/mixed Nd, non-ASCII numeric whitespace, ASCII sign/exponent; nonempty Unicode zero retains original truthiness."
+    },
+    {
+      "id": "numeric-float-exponent-underscores",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "ratio_limit": "1_2.5_0e+0_1"
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "change_torrent",
+          "reply": null
+        }
+      ],
+      "purpose": "Ordinary finite decimal exponent with digit-separated underscores; no hex/nonfinite/range expansion."
+    },
+    {
+      "id": "int-adjacent-underscores",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "upload_limit": "1__0"
+      },
+      "client_present": true,
+      "steps": [],
+      "purpose": "Outside-try int conversion; adjacent underscores are not a digit-separated separator."
+    },
+    {
+      "id": "int-leading-underscore",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "upload_limit": "1_0",
+        "download_limit": "_10"
+      },
+      "client_present": true,
+      "steps": [],
+      "purpose": "Valid earlier upload conversion then invalid download spelling; no final recording call."
+    },
+    {
+      "id": "int-trailing-underscore",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "upload_limit": "1_0",
+        "ratio_limit": "1_2.5_0",
+        "seeding_time_limit": "10_"
+      },
+      "client_present": true,
+      "steps": [],
+      "purpose": "Valid earlier preparations then invalid idle spelling; original exception boundary unchanged."
+    },
+    {
+      "id": "float-adjacent-underscores",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "ratio_limit": "1.2__5"
+      },
+      "client_present": true,
+      "steps": [],
+      "purpose": "Original float invalid adjacent underscores, not a platform range boundary."
+    },
+    {
+      "id": "float-leading-underscore",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "ratio_limit": "_1.25"
+      },
+      "client_present": true,
+      "steps": [],
+      "purpose": "Original float invalid initial underscore."
+    },
+    {
+      "id": "float-trailing-underscore",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "ratio_limit": "1.25_"
+      },
+      "client_present": true,
+      "steps": [],
+      "purpose": "Original float invalid terminal underscore."
+    },
+    {
+      "id": "float-underscore-before-point",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "ratio_limit": "1_.25"
+      },
+      "client_present": true,
+      "steps": [],
+      "purpose": "Underscore cannot neighbor decimal point on its left."
+    },
+    {
+      "id": "float-underscore-after-point",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "ratio_limit": "1._25"
+      },
+      "client_present": true,
+      "steps": [],
+      "purpose": "Underscore cannot neighbor decimal point on its right."
+    },
+    {
+      "id": "float-underscore-after-exponent",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "ratio_limit": "1e_2"
+      },
+      "client_present": true,
+      "steps": [],
+      "purpose": "Underscore cannot neighbor exponent marker."
+    },
+    {
+      "id": "int-ascii-information-separator",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "upload_limit": "\u001c12\u001c"
+      },
+      "client_present": true,
+      "steps": [],
+      "purpose": "Python str/re whitespace table is not the int/float numeric trim table; ASCII U+001C is deliberate counterexample."
+    },
+    {
+      "id": "float-nondecimal-digit-symbol",
+      "method": "change_torrent",
+      "args": {
+        "hash_string": "owned-numeric",
+        "ratio_limit": "².5"
+      },
+      "client_present": true,
+      "steps": [],
+      "purpose": "Digit-like non-Nd codepoint must not be normalized as a decimal digit."
+    }
+  ],
+  "boundaries": [
+    "Same complete two original methods as accepted TR final collector; only change_torrent called in this annex.",
+    "Real original int/float/round conversions; no authored converted kwargs, return values, exception messages or normalized numeric outputs.",
+    "Recording client/logger only; synthetic owned id is not a daemon selector claim.",
+    "Exactly short JSON strings/None; no arbitrary Python object, huge integer, nonfinite value, vendor or real downloader.",
+    "Planned zero/one dependency steps are fixed harness inputs; unexpected/unused calls are fatal, not silently filled.",
+    "No change to source try boundaries; ordinary conversion failures outside try must remain raw uncaught observations.",
+    "No whole Unicode scan or Cartesian-product enumeration; fixed existing Unicode data are reference-only.",
+    "Old S13 eight-operation accepted scope and all source23 evidence are retained, not rerun or cleared."
+  ]
+}

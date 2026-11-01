@@ -1,0 +1,70 @@
+{
+  "status": "READY_STATIC_BUILD_AND_METADATA_ONLY_AFTER_ACTUAL_GATES",
+  "created_utc": "2026-11-01T10:41:46.778957+00:00",
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/cli02/preparation-seal.json",
+    "bytes": 3454,
+    "sha256": "e465c3d76bfc44e86407f7896fcb129000d6d58360f91e51b10bfea2b56e13ff"
+  },
+  "driver": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/cli02/normal-cli-driver.py",
+    "bytes": 32434,
+    "sha256": "8a849c5d7698e29ff3b6c325052f012a8f239092c08a04c1df33ea4e32408b14"
+  },
+  "original_driver": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-normal-cli01/normal-cli-driver.py",
+    "bytes": 33327,
+    "sha256": "5a5adddeeae0c21149d4627ab80d31500cb7199918cad008f8f76496c4d35c8e"
+  },
+  "unchanged_original_helpers": [
+    "bind_worker",
+    "call",
+    "callbacks",
+    "check",
+    "exact_owned_listener",
+    "held_host",
+    "identity",
+    "now",
+    "peer_counts",
+    "registered",
+    "reserve",
+    "save",
+    "selected_counts",
+    "sha",
+    "source_bool",
+    "start",
+    "stop",
+    "wait_workers"
+  ],
+  "peer_original_methods_unchanged": [
+    "log_message",
+    "reply",
+    "reject",
+    "common",
+    "emit",
+    "do_CONNECT",
+    "do_PUT",
+    "do_DELETE",
+    "do_HEAD",
+    "do_GET"
+  ],
+  "successor_driver_text_exact": true,
+  "fixed_source": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-source01/stdout.json",
+    "bytes": 36397,
+    "sha256": "1235d5889dd7c2c87bda487c628fc78567387deb98dd552c2384b88bafada29d"
+  },
+  "previous_native_preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/native-preexec02/preexec-seal.json",
+    "bytes": 1166,
+    "sha256": "6473b4d2d9fc303574e10ed0f3f0df2fa3188e392d0c87edd305b0cea207760e"
+  },
+  "required_actual": [
+    "fixture-normal01 2 PASS inherited",
+    "app-normal02 2 PASS",
+    "app-race02 2 PASS"
+  ],
+  "actual_program_bindings": "not generated/not accepted yet",
+  "CLI_execution_ready": false,
+  "reviewer_executed": "stdlib AST/JSON/hash only"
+}

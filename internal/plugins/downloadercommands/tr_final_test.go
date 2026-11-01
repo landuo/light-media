@@ -299,7 +299,8 @@ func TestTRFinalLeafBoundariesAndOwnership(t *testing.T) {
 		t.Fatal("missing client swallowed preparation error")
 	}
 	tr, p = trFinalFixture(t)
-	for _, v := range []any{json.Number("9223372036854775808"), float64(0x1p63), []any{1}, "１２", []byte("1")} {
+	// Unicode Nd spellings now belong to the source-backed numeric annex, not this boundary list.
+	for _, v := range []any{json.Number("9223372036854775808"), float64(0x1p63), []any{1}, []byte("1")} {
 		_, err := tr.ChangeTorrent(ctx, "owned", v, nil, nil, nil)
 		var b *BoundaryError
 		if !errors.As(err, &b) || p.calls != 0 {

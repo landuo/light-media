@@ -1,0 +1,71 @@
+{
+  "status": "PREPARED_NOT_EXECUTED_FIXTURE_ONLY_SUCCESSOR",
+  "base": "808148abfad0b7fe230c426387a3b7b49eeedb18",
+  "previous_candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/native01/candidate01.json",
+    "bytes": 3025,
+    "sha256": "494e7755e551e004f7183bcba20250b8dc932f3b2e06c96ec3dbd96c8f437c26"
+  },
+  "unchanged_product": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/preparation-seal.json",
+    "bytes": 3323,
+    "sha256": "3087b4cbbc2135defceedbe4fcd1318b4403c54c49e22eb380967b68e4548534"
+  },
+  "old_test": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/native01/files/app-numeric-test.go.txt",
+    "bytes": 4866,
+    "sha256": "bb41f02ca48c9fa2ce55b7929d36b4d8f92f5cca68a8d9fcedfd4e5eae3c8aad"
+  },
+  "new_test": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/native02/files/app-numeric-test.go.txt",
+    "bytes": 5029,
+    "sha256": "8f72a009ba71b66ef323cd501a5b9905a93de9f2ce451c8a92c3dbfc3defd21e"
+  },
+  "delta": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/native02/files/fixture-only.patch",
+    "bytes": 1501,
+    "sha256": "6256235a80b0ea53b2d0bc0712ce62126c808538f5df00cafebcbe5b5707af99"
+  },
+  "unchanged_worker": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/native01/files/worker-main.go.txt",
+    "bytes": 14123,
+    "sha256": "c43563737ed0ecec8bd3ec3cb853e195ba2cdf03912863023383007590b110e9"
+  },
+  "actual_original_failure": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal01/result.json",
+    "bytes": 9793,
+    "sha256": "97dddd5e47f28b744ec23d203e47669b889cb095918681fc71f203337da0fca7"
+  },
+  "actual_small_fixture_PASS": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/result.json",
+    "bytes": 9903,
+    "sha256": "c42802b3c6a0e7bcf6aa60d9cd96e68aaaa7eb0c79e2bae44666de9635a7775b"
+  },
+  "static_cause_inputs": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/client.go",
+      "bytes": 11897,
+      "sha256": "447f67afdafd394c2afc4dff98be2383d805e073fe0d75fc1914458e948bc2ca"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/iyuuautoseed/native/shared_downloader_commands.go",
+      "bytes": 21338,
+      "sha256": "947f807d380a8788084730354b7b2a38c704203c602859689d54aec0b799912b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_downloader_commands_test.go",
+      "bytes": 16897,
+      "sha256": "d976c135ca417f60c12827e8237ac62bc25c357a259191dee40541dc098ee296"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/src/net/http/request.go",
+      "bytes": 50447,
+      "sha256": "4a34a9e157a606a046d5b9f8f761c571c4762668fa351d92048515a595939c38"
+    }
+  ],
+  "cause": "Native TR always SetBasicAuth(empty,empty), producing Basic Og==; old new-test combined guard wrongly required no Authorization. Actual raw records combined guard failure, not individual observed header; contradiction deterministically established from bound current source. Route config remains /transmission/rpc.",
+  "source_product_worker_changed": false,
+  "oldraw_modified": false,
+  "original_source_executed": false,
+  "Go_executed": false
+}

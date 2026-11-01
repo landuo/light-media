@@ -1,0 +1,151 @@
+{
+  "status": "FINITE_NUMERIC_APP_NORMAL_ACTUAL_ACCEPTED",
+  "mode": "normal",
+  "gate_preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/native-preexec02/preexec-seal.json",
+    "bytes": 1166,
+    "sha256": "6473b4d2d9fc303574e10ed0f3f0df2fa3188e392d0c87edd305b0cea207760e"
+  },
+  "candidate_manifest": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/native02/candidate02.json",
+    "bytes": 3877,
+    "sha256": "b97b113940af470734294f9d13fb9de7b2e55902957e8bdf569abeea0b52594f"
+  },
+  "reports": [
+    {
+      "label": "s13-tr-numeric-app-normal02",
+      "package": "./internal/app",
+      "race": false,
+      "started": "2026-11-01T10:40:22.081401+00:00",
+      "ended": "2026-11-01T10:40:49.007583+00:00",
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-numeric-app-normal02.test",
+        "bytes": 93149664,
+        "sha256": "4307741416e43e1ac64fe2438ff639c2c03d61bbb625c82ba5f832ac04fa2f4f"
+      },
+      "receipt": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/coordinator-tool-receipt.json",
+        "bytes": 268,
+        "sha256": "92ecff16d1d88065ef15396e53a3c46bab0b00d87f60349aead34772b7de0d8b"
+      },
+      "tool_receipt_contents": {
+        "session": 6332,
+        "launch_tool_chunk": "570bef",
+        "terminal_tool_chunk": "0b6213",
+        "exit": 0,
+        "result_sha256": "b7f5267065eb3022203f80019b254adf84fabad32c25bf4ac5538131afd7b7a4",
+        "scope": "fixture-onlycorrected App2normal actualownedHTTP, notworker/CLI"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/result.json",
+        "bytes": 9845,
+        "sha256": "b7f5267065eb3022203f80019b254adf84fabad32c25bf4ac5538131afd7b7a4"
+      },
+      "input_count": 6344,
+      "three_snapshots_equal": true,
+      "current_input_count": 6344,
+      "missing_cache_recovered": [],
+      "go_list_package_count": 429,
+      "declaration_count": 7832,
+      "generated_source_count": 1,
+      "generated_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/generated-source/f87202cf7f5da9957cd48847f8a7ac9c2a360476779d61b9131f38c6c71766d4.go",
+          "bytes": 158682,
+          "sha256": "f87202cf7f5da9957cd48847f8a7ac9c2a360476779d61b9131f38c6c71766d4"
+        }
+      ],
+      "root_passes": [
+        "TestOriginalTRFinalHostScopeAndUnknown",
+        "TestOriginalTRNumericNativeSourceCases"
+      ],
+      "numeric_original_case_passes": [
+        "numeric-underscores-all-settings",
+        "int-adjacent-underscores",
+        "numeric-unicode-nd-and-space",
+        "numeric-float-exponent-underscores"
+      ],
+      "event_counts": {
+        "start": 1,
+        "run": 6,
+        "output": 17,
+        "pass": 7
+      },
+      "evidence_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/inputs-before.json",
+          "bytes": 1507757,
+          "sha256": "4b26bdb8ede3f5d75d270699372c6749bac4a0b5c18b73d7d4f309811dd6798a"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/inputs-after-compile.json",
+          "bytes": 1507757,
+          "sha256": "4b26bdb8ede3f5d75d270699372c6749bac4a0b5c18b73d7d4f309811dd6798a"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/inputs-after-test.json",
+          "bytes": 1507757,
+          "sha256": "4b26bdb8ede3f5d75d270699372c6749bac4a0b5c18b73d7d4f309811dd6798a"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/go-list.stdout",
+          "bytes": 1445371,
+          "sha256": "1cf970abe0f2c7aae073c32d156a1503a97ff7351d1cb94fe906ccd4dca51218"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/compile.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/tests.stdout",
+          "bytes": 7165,
+          "sha256": "80c7574881aba3928b1794c45ffa09cc4cdd232a40b1524a4841b963a416fe4e"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/virtual-compile-inputs.json",
+          "bytes": 3019038,
+          "sha256": "28ceb9b3461a220fb809c5ddbea906798726d7ff1de1588a93b94f6efdc21c6d"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal02/generated-source-map.json",
+          "bytes": 246,
+          "sha256": "a8f780fb7a9a1d1c3287a7f1abab35717cd8e5187e6dd4b41bd58ae47af3eeef"
+        }
+      ],
+      "vet_not_run": true
+    }
+  ],
+  "source_or_Go_rerun_by_reviewer": false,
+  "layer": "actual App fixed native owned HTTP; not installed worker/CLI/daemon/full S13"
+}

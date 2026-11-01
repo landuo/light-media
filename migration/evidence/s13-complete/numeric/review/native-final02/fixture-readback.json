@@ -1,0 +1,152 @@
+{
+  "status": "FIXTURE_NORMAL01_ACTUAL_ACCEPTED_WITH_OUTER_APP_FAILURE_RETAINED",
+  "mode": "normal",
+  "gate_preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/native-preexec01/preexec-seal.json",
+    "bytes": 1653,
+    "sha256": "edc6521b03da3cfc0adb026dacf9ee5ab142460d6130ea79fbdf0ae7e964c928"
+  },
+  "candidate_manifest": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/native01/candidate01.json",
+    "bytes": 3025,
+    "sha256": "494e7755e551e004f7183bcba20250b8dc932f3b2e06c96ec3dbd96c8f437c26"
+  },
+  "reports": [
+    {
+      "label": "s13-tr-numeric-fixture-normal01",
+      "package": "./cmd/owned-tr-final-fixture",
+      "race": false,
+      "started": "2026-11-01T10:35:43.100103+00:00",
+      "ended": "2026-11-01T10:35:44.589412+00:00",
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-numeric-fixture-normal01.test",
+        "bytes": 6186412,
+        "sha256": "e63fd3723d813ea78ea307c1d51c384cccc4ad790b374661218baefd10fe7fb4"
+      },
+      "receipt": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/coordinator-tool-receipt.json",
+        "bytes": 345,
+        "sha256": "3730d46c93f1d3ebb72f555cb1e5917538541fe8d45fcd795b18c02bde7a1178"
+      },
+      "tool_receipt_contents": {
+        "session": 49215,
+        "launch_tool_chunk": "b6bd12",
+        "terminal_tool_chunk": "0268fe",
+        "outer_exit": 1,
+        "this_gate_status": "PASS",
+        "result_sha256": "c42802b3c6a0e7bcf6aa60d9cd96e68aaaa7eb0c79e2bae44666de9635a7775b",
+        "boundary": "fixture2PASS; App newnumeric root FAIL atownedhandler400, oldscope rootPASS; no race/build retry yet"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/result.json",
+        "bytes": 9903,
+        "sha256": "c42802b3c6a0e7bcf6aa60d9cd96e68aaaa7eb0c79e2bae44666de9635a7775b"
+      },
+      "input_count": 4131,
+      "three_snapshots_equal": true,
+      "current_input_count": 4131,
+      "missing_cache_recovered": [],
+      "go_list_package_count": 166,
+      "declaration_count": 1942,
+      "generated_source_count": 1,
+      "generated_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/generated-source/47660b67c555c8ca4016d8c161a84b113ce49260febde67c66bca3f88476e45a.go",
+          "bytes": 784,
+          "sha256": "47660b67c555c8ca4016d8c161a84b113ce49260febde67c66bca3f88476e45a"
+        }
+      ],
+      "root_passes": [
+        "TestOwnedTRFinalFixtureManifestAndRoute",
+        "TestOwnedTRNumericFixedSourceInputs"
+      ],
+      "numeric_original_case_passes": [
+        "numeric-underscores-all-settings",
+        "numeric-unicode-nd-and-space",
+        "numeric-float-exponent-underscores",
+        "int-adjacent-underscores"
+      ],
+      "event_counts": {
+        "start": 1,
+        "run": 6,
+        "output": 13,
+        "pass": 7
+      },
+      "evidence_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/inputs-before.json",
+          "bytes": 982382,
+          "sha256": "8721fa2dcc41a462d4886de88269b0c0500026ad91094e7a35a34afbec7bcbb4"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/inputs-after-compile.json",
+          "bytes": 982382,
+          "sha256": "8721fa2dcc41a462d4886de88269b0c0500026ad91094e7a35a34afbec7bcbb4"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/inputs-after-test.json",
+          "bytes": 982382,
+          "sha256": "8721fa2dcc41a462d4886de88269b0c0500026ad91094e7a35a34afbec7bcbb4"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/go-list.stdout",
+          "bytes": 365725,
+          "sha256": "138302897d605526d6ea8102dec47070416655c039cc92c0813efbcf87a86188"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/compile.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/tests.stdout",
+          "bytes": 5541,
+          "sha256": "192d0096c1ba3c95cfbe456f57a2448e6b43cf4209e1b088d83e0a3aeafa8c8c"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/virtual-compile-inputs.json",
+          "bytes": 624008,
+          "sha256": "67959965c36ec813ab9b9755429e79e32846e2fe3846d6aab89a26712c432ebe"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/generated-source-map.json",
+          "bytes": 246,
+          "sha256": "cdba87fbe2ffbbb4204c1644313bb35657d0aa1ba662aa9d2654c0e9f942e7ed"
+        }
+      ],
+      "vet_not_run": true
+    }
+  ],
+  "source_or_Go_rerun_by_reviewer": false,
+  "layer": "actual fixed fixture and SDK recording callback; no native HTTP or installed worker; outer command failed later App01"
+}

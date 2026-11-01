@@ -1,0 +1,308 @@
+{
+  "status": "FINITE_NUMERIC_NORMAL_ACTUAL_ACCEPTED",
+  "mode": "normal",
+  "gate_preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/gates-preexec01/preexec-seal.json",
+    "bytes": 1274,
+    "sha256": "7c751374b10fb00ca50c0a2a0ed921a5b194bcaddc0daca049e4de587cd7ea97"
+  },
+  "candidate_manifest": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/candidate-manifest.json",
+    "bytes": 7326,
+    "sha256": "96e12fa94475a9c9e5f7d31dfe20529cbd7aab34ce98b701becb76972ced4fbd"
+  },
+  "cases_original14_and_retained23": true,
+  "reports": [
+    {
+      "label": "s13-tr-numeric-leaf-normal01",
+      "package": "./internal/plugins/downloadercommands",
+      "race": false,
+      "started": "2026-11-01T10:25:27.409834+00:00",
+      "ended": "2026-11-01T10:25:28.829875+00:00",
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-numeric-leaf-normal01.test",
+        "bytes": 6703522,
+        "sha256": "63795b9a829983c6fc8ae052f466b4b1bedb4c814bccc2d47210931ca08dc59e"
+      },
+      "receipt": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/coordinator-tool-receipt.json",
+        "bytes": 248,
+        "sha256": "44b485851f7cd2070b698e1757dcf34edd7e88246a10462b3d445fbbb6ef2eef"
+      },
+      "tool_receipt_contents": {
+        "session": 88257,
+        "launch_tool_chunk": "4251b2",
+        "terminal_tool_chunk": "fa79bb",
+        "tool_exit": 0,
+        "result_sha256": "41d972b289a2ad2d60d3a469e586ca72beaf31a04b1ab57aa09ff1f09ed9f7cd",
+        "scope": "actual normal; no vet/host/clientHTTP"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/result.json",
+        "bytes": 5205,
+        "sha256": "41d972b289a2ad2d60d3a469e586ca72beaf31a04b1ab57aa09ff1f09ed9f7cd"
+      },
+      "input_count": 1993,
+      "three_snapshots_equal": true,
+      "current_input_count": 1993,
+      "missing_cache_recovered": [],
+      "go_list_package_count": 158,
+      "declaration_count": 1824,
+      "generated_source_count": 1,
+      "generated_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/generated-source/4064b0a2bcdcaa51489b256bca141bc48ac8b1102a515b75d6571ae016b6a15d.go",
+          "bytes": 1600,
+          "sha256": "4064b0a2bcdcaa51489b256bca141bc48ac8b1102a515b75d6571ae016b6a15d"
+        }
+      ],
+      "root_passes": [
+        "TestTRFinalLeafActualSourceObservations",
+        "TestTRFinalLeafBoundariesAndOwnership",
+        "TestTRNumericLeafActualSourceObservations",
+        "TestTRNumericRetainsRangeAndNonfiniteBoundaries"
+      ],
+      "numeric_original_case_passes": [
+        "numeric-underscores-all-settings",
+        "numeric-unicode-nd-and-space",
+        "numeric-float-exponent-underscores",
+        "int-adjacent-underscores",
+        "int-leading-underscore",
+        "int-trailing-underscore",
+        "float-adjacent-underscores",
+        "float-leading-underscore",
+        "float-trailing-underscore",
+        "float-underscore-before-point",
+        "float-underscore-after-point",
+        "float-underscore-after-exponent",
+        "int-ascii-information-separator",
+        "float-nondecimal-digit-symbol"
+      ],
+      "event_counts": {
+        "start": 1,
+        "run": 41,
+        "output": 86,
+        "pass": 42
+      },
+      "evidence_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/inputs-before.json",
+          "bytes": 434504,
+          "sha256": "e89c769001ccc64ad05a9e77970e62e915725f40c441c566f9c416d636086b5c"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/inputs-after-compile.json",
+          "bytes": 434504,
+          "sha256": "e89c769001ccc64ad05a9e77970e62e915725f40c441c566f9c416d636086b5c"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/inputs-after-test.json",
+          "bytes": 434504,
+          "sha256": "e89c769001ccc64ad05a9e77970e62e915725f40c441c566f9c416d636086b5c"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/go-list.stdout",
+          "bytes": 339991,
+          "sha256": "abd62ce48b23ef4806fed14577d24f7ed1345359e307ac78fbc2f9b4096b2196"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/compile.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/tests.stdout",
+          "bytes": 40121,
+          "sha256": "1e53f600000ac5d92dd99f0a15991c35a7c7cd8fb560f62e3e1f59cdbd9582e3"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/virtual-compile-inputs.json",
+          "bytes": 585819,
+          "sha256": "41db7ec831fb81aa9d9c974b37a5d7c57b9aba94bb2260a0ae393d7ee5ca704f"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-normal01/generated-source-map.json",
+          "bytes": 246,
+          "sha256": "938a32d7e52c007fb904ec6e43dec16ff35b982711cb50785a50469fa80416f6"
+        }
+      ],
+      "vet_not_run": true
+    },
+    {
+      "label": "s13-tr-numeric-sdk-normal01",
+      "package": "./internal/plugins",
+      "race": false,
+      "started": "2026-11-01T10:25:28.877110+00:00",
+      "ended": "2026-11-01T10:25:32.221061+00:00",
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-numeric-sdk-normal01.test",
+        "bytes": 9618255,
+        "sha256": "01e4d8dc7c639c97b21fdd0a7d6d339ab9551e085b83feee461f62c662378315"
+      },
+      "receipt": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/coordinator-tool-receipt.json",
+        "bytes": 248,
+        "sha256": "6dfc565902c2034aa3362e0de11498ed27269603725aa36ee291769d7c64add7"
+      },
+      "tool_receipt_contents": {
+        "session": 88257,
+        "launch_tool_chunk": "4251b2",
+        "terminal_tool_chunk": "fa79bb",
+        "tool_exit": 0,
+        "result_sha256": "fa29c59224221a3dce92ea8180fa64774b9225bedfba4cbac739d18972db5a90",
+        "scope": "actual normal; no vet/host/clientHTTP"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/result.json",
+        "bytes": 5031,
+        "sha256": "fa29c59224221a3dce92ea8180fa64774b9225bedfba4cbac739d18972db5a90"
+      },
+      "input_count": 2123,
+      "three_snapshots_equal": true,
+      "current_input_count": 2123,
+      "missing_cache_recovered": [],
+      "go_list_package_count": 175,
+      "declaration_count": 2253,
+      "generated_source_count": 1,
+      "generated_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/generated-source/bffb3370fa469c185287b73fac4910f051c574b9f6d25ac5ec972b8d44053051.go",
+          "bytes": 18542,
+          "sha256": "bffb3370fa469c185287b73fac4910f051c574b9f6d25ac5ec972b8d44053051"
+        }
+      ],
+      "root_passes": [
+        "TestSharedTRFinalWireAndSourceErrors",
+        "TestSharedTRFinalStrictBoundaryAndNoReplay",
+        "TestSharedTRNumericOriginalStringsAndSourceClassification"
+      ],
+      "numeric_original_case_passes": [
+        "numeric-underscores-all-settings",
+        "numeric-unicode-nd-and-space",
+        "numeric-float-exponent-underscores",
+        "int-adjacent-underscores",
+        "int-leading-underscore",
+        "int-trailing-underscore",
+        "float-adjacent-underscores",
+        "float-leading-underscore",
+        "float-trailing-underscore",
+        "float-underscore-before-point",
+        "float-underscore-after-point",
+        "float-underscore-after-exponent",
+        "int-ascii-information-separator",
+        "float-nondecimal-digit-symbol"
+      ],
+      "event_counts": {
+        "start": 1,
+        "run": 21,
+        "output": 43,
+        "pass": 22
+      },
+      "evidence_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/inputs-before.json",
+          "bytes": 465903,
+          "sha256": "c4964fbfeb2dd219d120d4d7be76c606cfbd14c8aab377b82a736ef660494efd"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/inputs-after-compile.json",
+          "bytes": 465903,
+          "sha256": "c4964fbfeb2dd219d120d4d7be76c606cfbd14c8aab377b82a736ef660494efd"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/inputs-after-test.json",
+          "bytes": 465903,
+          "sha256": "c4964fbfeb2dd219d120d4d7be76c606cfbd14c8aab377b82a736ef660494efd"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/go-list.stdout",
+          "bytes": 397672,
+          "sha256": "9439e997b5d28f4c0b4bbaab4ae52a89b6cf3f55d0feec4d145f1737cf3eb038"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/compile.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/tests.stdout",
+          "bytes": 19767,
+          "sha256": "dbee965d4e34b06bf400e33cae5675bfcfc253b2a14f1e7cea4ff31864497ded"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/virtual-compile-inputs.json",
+          "bytes": 753773,
+          "sha256": "6e7891c1571ca7b25cad6fc6c12d94f4e7a7e256bfdd34c4b18334aacfed418a"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-normal01/generated-source-map.json",
+          "bytes": 246,
+          "sha256": "c4d15c998577cf081bca105b5803b0ef2ffdfae5920afe5459afad6ed53708d2"
+        }
+      ],
+      "vet_not_run": true
+    }
+  ],
+  "source_or_Go_rerun_by_reviewer": false,
+  "HTTP_App_daemon_or_fullS13_accepted": false
+}

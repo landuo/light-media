@@ -188,16 +188,16 @@ func decodeOperation(raw json.RawMessage) (fixtureOperation, error) {
 		if out.HashString, err = ownedValue(fields["hash_string"], `"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"`); err != nil {
 			return out, err
 		}
-		if out.UploadLimit, err = ownedValue(fields["upload_limit"], `"0"`, `"owned-invalid"`, `null`); err != nil {
+		if out.UploadLimit, err = ownedValue(fields["upload_limit"], `"0"`, `"owned-invalid"`, `null`, `"1_000"`, `" +١٢٣ "`, `"1__0"`); err != nil {
 			return out, err
 		}
-		if out.DownloadLimit, err = ownedValue(fields["download_limit"], `-4`, `null`); err != nil {
+		if out.DownloadLimit, err = ownedValue(fields["download_limit"], `-4`, `null`, `"2_048"`, `"４_२　"`); err != nil {
 			return out, err
 		}
-		if out.RatioLimit, err = ownedValue(fields["ratio_limit"], `2.675`, `null`); err != nil {
+		if out.RatioLimit, err = ownedValue(fields["ratio_limit"], `2.675`, `null`, `"2_6.7_5"`, `" +१_२.५_०e-१ "`, `"1_2.5_0e+0_1"`); err != nil {
 			return out, err
 		}
-		out.SeedingTimeLimit, err = ownedValue(fields["seeding_time_limit"], `0`, `null`)
+		out.SeedingTimeLimit, err = ownedValue(fields["seeding_time_limit"], `0`, `null`, `"1_0"`, `"　-٠　"`)
 	default:
 		return out, errors.New("unsupported owned Transmission operation")
 	}

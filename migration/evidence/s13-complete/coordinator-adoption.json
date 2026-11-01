@@ -1,0 +1,48 @@
+{
+  "status": "WHOLE_S13_EXACT_EIGHT_ACCEPTED_AND_ADOPTED_COMMIT_REMOTE_SEPARATELY_VERIFIED",
+  "created": "2026-11-01T11:03:50.601506+00:00",
+  "base": "808148abfad0b7fe230c426387a3b7b49eeedb18",
+  "parent": "S13",
+  "parent_final_sha256": "4087a84402ccd10f2303c93881415a948bfd3cc1e10e107a7269290b2e572aab",
+  "adoption": {
+    "status": "EXACT_ACCEPTED11_AND137_EVIDENCE_ADOPTED_NOT_COMMITTED_OR_PUSHED",
+    "at": "2026-11-01T11:03:50.540970+00:00",
+    "base": "808148abfad0b7fe230c426387a3b7b49eeedb18",
+    "parent": "S13",
+    "parent_final_sha256": "4087a84402ccd10f2303c93881415a948bfd3cc1e10e107a7269290b2e572aab",
+    "payload_final_sha256": "a0c1a45ffcf4405f9b1229b6f7650bf2f0a34e81170f5e300ef2208a81f85f71",
+    "product_test_paths": [
+      "cmd/owned-tr-final-fixture/main.go",
+      "cmd/owned-tr-final-fixture/numeric_test.go",
+      "cmd/owned-tr-final-fixture/testdata/source-tr-numeric.json",
+      "internal/app/plugin_shared_transmission_numeric_test.go",
+      "internal/app/testdata/source-tr-numeric.json",
+      "internal/plugins/downloadercommands/testdata/source-tr-numeric.json",
+      "internal/plugins/downloadercommands/tr_final.go",
+      "internal/plugins/downloadercommands/tr_final_test.go",
+      "internal/plugins/downloadercommands/tr_numeric.go",
+      "internal/plugins/downloadercommands/tr_numeric_test.go",
+      "internal/plugins/shared_transmission_numeric_test.go"
+    ],
+    "source_addendum_sha256": "2edb8cec27f8191b113ecc155e78709963161171c4d44959b7d21388dba1bf67",
+    "count": 148,
+    "protected_Meta25_unchanged": true,
+    "expected_preimage_drift_after_adoption": [
+      "cmd/owned-tr-final-fixture/main.go",
+      "internal/plugins/downloadercommands/tr_final.go",
+      "internal/plugins/downloadercommands/tr_final_test.go"
+    ],
+    "compiled_candidate_logic": "adopted11 exactbacking bytes fromacceptedoverlay; no unverifiedMeta/S01/38 copied"
+  },
+  "source_receipt_addendum": {
+    "path": "numeric/source/tool-receipt.json",
+    "sha256": "2edb8cec27f8191b113ecc155e78709963161171c4d44959b7d21388dba1bf67"
+  },
+  "frozen_evidence_index_note": "evidence-index.json is immutable authorassembly snapshot beforecoordinatoradoption; use thisaddendum andsoleledger forcurrentacceptance. Actualpostpushreceipt cannotprecedecommit.",
+  "counts": {
+    "complete": 40,
+    "partial": 19,
+    "dependency_or_final": 2
+  },
+  "not_ci_green": true
+}

@@ -1,0 +1,54 @@
+{
+  "status": "S13_EXACT_EIGHT_METHOD_BEHAVIOR_AND_HOST_CHAIN_ACCEPTED",
+  "created_utc": "2026-11-01T10:56:26.658711+00:00",
+  "methods": {
+    "qB": [
+      "delete_torrents_tag",
+      "set_torrents_tag",
+      "get_torrent_id_by_tag",
+      "stop_torrents",
+      "set_torrent_category"
+    ],
+    "TR": [
+      "set_torrent_tag",
+      "stop_torrents",
+      "change_torrent"
+    ]
+  },
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-parent-closure-final01/check_composition.py",
+      "bytes": 3008,
+      "sha256": "0af5f5df07ad9214e740ea9e716ed0d08120d31c10136a956b26edd66c3bc5fa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-parent-closure-final01/readback.json",
+      "bytes": 18469,
+      "sha256": "e4a2c2fab740dc15f4d63111b0dee1fc366a859a40f71a43695393619bb569ad"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-parent-closure-final01/REVIEW.md",
+      "bytes": 3066,
+      "sha256": "3f287bf2329f2f1fca8e6111a77b21d7a43ce0c20d6cf9432ff99152ef60f13b"
+    }
+  ],
+  "inheritance": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-parent-closure-precheck01/precheck-seal.json",
+    "bytes": 1021,
+    "sha256": "d6d4dea73828549238b8aac03237aef40dc57b73a8b5820ec7f3968f1fa93e30"
+  },
+  "new_CLI_final": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/cli-final02/final-seal.json",
+    "bytes": 3084,
+    "sha256": "ac02d7124efdcec992c7938f2cee97405af73ee042c32f9b1671c48980eb9016"
+  },
+  "remaining_behavior_or_host_chain_blockers_within_contract": [],
+  "publication_remaining": [
+    "exact11 source/test/raw adoption plus hash-bound evidence",
+    "authoritative ledger whole-parent count once; protected Meta25 unchanged",
+    "final dirty whitelist/precommit and actual commit/remote/CI reporting"
+  ],
+  "publication_done": false,
+  "reviewer_source_Go_HTTP_execution": false,
+  "historical_matrices_rerun": false
+}

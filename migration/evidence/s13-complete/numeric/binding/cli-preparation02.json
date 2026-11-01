@@ -1,0 +1,74 @@
+{
+  "status": "PREPARED_NOT_EXECUTED_COORDINATOR_ONLY",
+  "at": "2026-11-01T10:40:13.369148+00:00",
+  "base": "808148abfad0b7fe230c426387a3b7b49eeedb18",
+  "native": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/native02/preparation-seal.json",
+    "bytes": 1499,
+    "sha256": "a47846440be5e3b39f6e668018db1686acd73ff5eeaf6dc9724e7b15cb0773cc"
+  },
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/cli02/COMMAND.txt",
+      "bytes": 1036,
+      "sha256": "d10e51677b488af1032d25cb52052973fe132cf76789b8b60e78cffe59ce5c6d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/cli02/README.md",
+      "bytes": 2092,
+      "sha256": "bc78abe40c96c198b4045ef1790daa3e2910c311e1bdef5190acbc5a5f70b209"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/cli02/build-programs.py",
+      "bytes": 8624,
+      "sha256": "4a003aa77a70bebbeb9e42d3390a3bcab5fa4ca7ffe823c81a9effe404aa892b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/cli02/build.sh",
+      "bytes": 412,
+      "sha256": "82c30a49a7bddc7f06109238774446ce76cb5e422a3c0c6c3bb10a005cf69262"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/cli02/driver-reuse.json",
+      "bytes": 1911,
+      "sha256": "b5c66038c01663f440d67165c90715dc7a8d39ec8917d53ca5d245c5e72bfa6e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/cli02/freeze-execution-bindings.py",
+      "bytes": 3832,
+      "sha256": "d1573d0f62ac952d5b2233133d7cff33191e956342932eb4cadbc54902a5cd42"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/cli02/normal-cli-driver.py",
+      "bytes": 32434,
+      "sha256": "8a849c5d7698e29ff3b6c325052f012a8f239092c08a04c1df33ea4e32408b14"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/cli02/successor02.patch",
+      "bytes": 10824,
+      "sha256": "48f5051882e10262da49af74de93cef78bceb5bdba81a956d3c70b0de29eb87f"
+    }
+  ],
+  "driver": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/cli02/normal-cli-driver.py",
+    "bytes": 32434,
+    "sha256": "8a849c5d7698e29ff3b6c325052f012a8f239092c08a04c1df33ea4e32408b14"
+  },
+  "prior_cli01_preserved": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/cli01/preparation-seal.json",
+    "bytes": 3222,
+    "sha256": "a2011beed72a84d22d8d9a9aec8f7c1bacedcb6e900eddbaea9a611712a2ebcb"
+  },
+  "prerequisites": [
+    "fixture-normal01 PASS reused",
+    "app-normal02 required actual PASS",
+    "app-race02 required actual PASS"
+  ],
+  "program_labels": [
+    "s13-tr-numeric-fixture02",
+    "s13-tr-numeric-server02"
+  ],
+  "output": "test-instances/s13-tr-numeric-normal02",
+  "actual_binary_bindings": "not generated until actual new builds and independent review",
+  "execution_count": 0
+}

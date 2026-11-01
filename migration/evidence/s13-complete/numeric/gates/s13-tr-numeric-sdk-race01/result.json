@@ -1,0 +1,106 @@
+{
+  "started": "2026-11-01T10:26:05.520129+00:00",
+  "driver_pid": 96,
+  "package": "./internal/plugins",
+  "pattern": "^(TestSharedTRFinalWireAndSourceErrors|TestSharedTRFinalStrictBoundaryAndNoReplay|TestSharedTRNumericOriginalStringsAndSourceClassification)$",
+  "race": true,
+  "status": "PASS",
+  "vet": "NOT_RUN: virtual-only package directory; prior automatic vet chdir failure retained",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/gates01/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/gates01/overlay.json",
+        "-vet=off",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-numeric-sdk-race01.test",
+        "-race",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-numeric-sdk-race01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestSharedTRFinalWireAndSourceErrors|TestSharedTRFinalStrictBoundaryAndNoReplay|TestSharedTRNumericOriginalStringsAndSourceClassification)$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "overlay": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/testdata/source-tr-numeric.json": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/overlay/internal/plugins/downloadercommands/testdata/source-tr-numeric.json",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/tr_final.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/overlay/internal/plugins/downloadercommands/tr_final.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/tr_final_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/overlay/internal/plugins/downloadercommands/tr_final_test.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/tr_numeric.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/overlay/internal/plugins/downloadercommands/tr_numeric.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/downloadercommands/tr_numeric_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/overlay/internal/plugins/downloadercommands/tr_numeric_test.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_transmission_numeric_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/overlay/internal/plugins/shared_transmission_numeric_test.go"
+  },
+  "extra_inputs": [
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/gates01/race.sh",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/gates01/seal.json"
+  ],
+  "preflight_verified_files": 289,
+  "preflight_verified_replacements": 6,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T10:26:05.544116+00:00",
+      "scratch_free": 40874188800,
+      "tmp_free": 5225414656
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T10:26:06.020404+00:00",
+      "scratch_free": 40872509440,
+      "tmp_free": 5225414656
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T10:26:09.295081+00:00",
+      "scratch_free": 40850067456,
+      "tmp_free": 5225414656
+    }
+  ],
+  "input_count": 2160,
+  "program_sha256": "86755df3096a7522c886dc64bd2c20f4f388c2c3849332f6436297755a191ef6",
+  "root_passes": [
+    "TestSharedTRFinalWireAndSourceErrors",
+    "TestSharedTRFinalStrictBoundaryAndNoReplay",
+    "TestSharedTRNumericOriginalStringsAndSourceClassification"
+  ],
+  "ended": "2026-11-01T10:26:10.544103+00:00"
+}

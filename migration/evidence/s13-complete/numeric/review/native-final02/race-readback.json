@@ -1,0 +1,151 @@
+{
+  "status": "FINITE_NUMERIC_APP_RACE_ACTUAL_ACCEPTED",
+  "mode": "race",
+  "gate_preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/native-preexec02/preexec-seal.json",
+    "bytes": 1166,
+    "sha256": "6473b4d2d9fc303574e10ed0f3f0df2fa3188e392d0c87edd305b0cea207760e"
+  },
+  "candidate_manifest": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/native02/candidate02.json",
+    "bytes": 3877,
+    "sha256": "b97b113940af470734294f9d13fb9de7b2e55902957e8bdf569abeea0b52594f"
+  },
+  "reports": [
+    {
+      "label": "s13-tr-numeric-app-race02",
+      "package": "./internal/app",
+      "race": true,
+      "started": "2026-11-01T10:41:00.429156+00:00",
+      "ended": "2026-11-01T10:41:41.562898+00:00",
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-numeric-app-race02.test",
+        "bytes": 120511219,
+        "sha256": "a7ada06d011cc214f4d7eebe591a5a8c7d035c539045853bb277ec112b85ceb2"
+      },
+      "receipt": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/coordinator-tool-receipt.json",
+        "bytes": 243,
+        "sha256": "74d92aae4087219916f7049000deb7c28c8fa4c6df08af7cb25ab2dcad7e2f1d"
+      },
+      "tool_receipt_contents": {
+        "session": 18282,
+        "launch_tool_chunk": "3feb3c",
+        "terminal_tool_chunk": "c245b2",
+        "exit": 0,
+        "result_sha256": "3ea2bba825078ae49845f3f11a56435d91cb6fa3ebb33024e418a581287a4a04",
+        "scope": "actualApp2race/ownedHTTPonly,noCLIyet"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/result.json",
+        "bytes": 9872,
+        "sha256": "3ea2bba825078ae49845f3f11a56435d91cb6fa3ebb33024e418a581287a4a04"
+      },
+      "input_count": 6353,
+      "three_snapshots_equal": true,
+      "current_input_count": 6353,
+      "missing_cache_recovered": [],
+      "go_list_package_count": 431,
+      "declaration_count": 7841,
+      "generated_source_count": 1,
+      "generated_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/generated-source/f87202cf7f5da9957cd48847f8a7ac9c2a360476779d61b9131f38c6c71766d4.go",
+          "bytes": 158682,
+          "sha256": "f87202cf7f5da9957cd48847f8a7ac9c2a360476779d61b9131f38c6c71766d4"
+        }
+      ],
+      "root_passes": [
+        "TestOriginalTRFinalHostScopeAndUnknown",
+        "TestOriginalTRNumericNativeSourceCases"
+      ],
+      "numeric_original_case_passes": [
+        "numeric-underscores-all-settings",
+        "int-adjacent-underscores",
+        "numeric-unicode-nd-and-space",
+        "numeric-float-exponent-underscores"
+      ],
+      "event_counts": {
+        "start": 1,
+        "run": 6,
+        "output": 17,
+        "pass": 7
+      },
+      "evidence_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/inputs-before.json",
+          "bytes": 1509742,
+          "sha256": "48e93e409ffdf71ee3dc4ff8750a1cb2ac34e48b74b894c90d0ec95119981821"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/inputs-after-compile.json",
+          "bytes": 1509742,
+          "sha256": "48e93e409ffdf71ee3dc4ff8750a1cb2ac34e48b74b894c90d0ec95119981821"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/inputs-after-test.json",
+          "bytes": 1509742,
+          "sha256": "48e93e409ffdf71ee3dc4ff8750a1cb2ac34e48b74b894c90d0ec95119981821"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/go-list.stdout",
+          "bytes": 1448859,
+          "sha256": "42e2e7b6116937b34dc08cd7e5598b9dd0738b568a2a5011cc2491251e833a24"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/compile.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/tests.stdout",
+          "bytes": 7131,
+          "sha256": "c8236cad9bbbcf55e4454871f2a0d52aaa7ecf1a2981dbc56d40b9133d8fa991"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/virtual-compile-inputs.json",
+          "bytes": 3022066,
+          "sha256": "147bfb1ffce7e32df4f2d2df7ebd9c15c66c343887b8e8f692635f6cb8df3927"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-race02/generated-source-map.json",
+          "bytes": 246,
+          "sha256": "a8f780fb7a9a1d1c3287a7f1abab35717cd8e5187e6dd4b41bd58ae47af3eeef"
+        }
+      ],
+      "vet_not_run": true
+    }
+  ],
+  "source_or_Go_rerun_by_reviewer": false,
+  "layer": "actual App fixed native owned HTTP; not installed worker/CLI/daemon/full S13"
+}

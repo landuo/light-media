@@ -1,0 +1,587 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "case_count": 14,
+  "selected_original_public_method_count": 2,
+  "called_original_public_method_count": 1,
+  "called_original_public_methods": [
+    "change_torrent"
+  ],
+  "selected_original_helper_count": 0,
+  "selected_original_complete_node_count": 2,
+  "method_decorators": [],
+  "new_runtime_dependencies": false,
+  "python_invocation": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+  "python_resolved": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+  "vendor_files_are_static_reference_only": true,
+  "target_snapshot_files_are_static_reference_only": true,
+  "inherited_old15_inputs_unchanged": true,
+  "absent_cache_paths": [],
+  "inputs": [
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "bytes": 30894944,
+      "sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__future__.py",
+      "bytes": 5218,
+      "sha256": "981d4c398849f9ebcab72300d9c1fe288fd6d7f28957b3b3fa3a493a5836d95c"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/__future__.cpython-312.pyc",
+      "bytes": 4808,
+      "sha256": "2de7e02be2d153c0038e70e85914f121917ea2ce703a990bc8d64f9e2f438e4f"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/_weakrefset.cpython-312.pyc",
+      "bytes": 11841,
+      "sha256": "6c124e6b222d3dcd8b56d0788f6362329bd0a119418633d89f82aa8a529ee158"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/ast.cpython-312.pyc",
+      "bytes": 99838,
+      "sha256": "8f5df789648d80218abc53cf39b3487bf149f34b08f58c5c33aa3500640c3ea3"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/contextlib.cpython-312.pyc",
+      "bytes": 30454,
+      "sha256": "3f6a00709748f4d8f43b1b98b28095feba71eafcf3a0c50e9f9f38a6379b8129"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/copy.cpython-312.pyc",
+      "bytes": 9861,
+      "sha256": "b754e6275cf356d43ed859fb53f37c4416ec3de464fbbd0e88dc3ba974436009"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/copyreg.cpython-312.pyc",
+      "bytes": 7503,
+      "sha256": "b464d78428416fbcb85bf6d6866b9db8876a90273167ef1928e2de7e6c5142d7"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/enum.cpython-312.pyc",
+      "bytes": 80448,
+      "sha256": "865e7c73467e74c49956e41cc0b264a75075a006938f428d03a06f5d9722a6fe"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/fnmatch.cpython-312.pyc",
+      "bytes": 6584,
+      "sha256": "ea3d51a8c9303470736602dca7e401f2619ba481890c027e807fd8fdc2cea0a9"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/functools.cpython-312.pyc",
+      "bytes": 40446,
+      "sha256": "43bb47512a875f9f074e21054b2fb816ca45eca4898fa6335d674f2069bd8b26"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/hashlib.cpython-312.pyc",
+      "bytes": 8184,
+      "sha256": "3a61cf0ec7a6c7104df2b823b39d4da38600185fad0d45b1cf8219981283bd33"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/ipaddress.cpython-312.pyc",
+      "bytes": 93880,
+      "sha256": "604716aaa8c575d01f8e5b3ed76fe00d8f03b270dc96d6c687d99982e5dd16ee"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/keyword.cpython-312.pyc",
+      "bytes": 1145,
+      "sha256": "51226b1159cff699270144d73e2e806750763ffcef1acab4d7f8e293446dbd7a"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/operator.cpython-312.pyc",
+      "bytes": 17456,
+      "sha256": "aa8d2bacbbb098e68840a8d37dcd98c84cdefcd4c9d84de6477509bd5c964559"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/pathlib.cpython-312.pyc",
+      "bytes": 61802,
+      "sha256": "1ed77c5efeadd1ad16b4f4de0c46bb5b00583e0e7bf1fe226f3d056ff316c59c"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/reprlib.cpython-312.pyc",
+      "bytes": 10330,
+      "sha256": "0d8f93d1391810aa134bf4c63c2f4d44237361317b4ab91c2f9e53671716c51c"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/types.cpython-312.pyc",
+      "bytes": 15049,
+      "sha256": "88ec73f8d0950300788aff4eb2aaef2c5d29591982b80bc1c69ccb0e0658eb8a"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/warnings.cpython-312.pyc",
+      "bytes": 23931,
+      "sha256": "4b5a6ea425e2056965db4ec507bd89e66cb1a45140be229deaccf2f66bc86b64"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/weakref.cpython-312.pyc",
+      "bytes": 31315,
+      "sha256": "8978ef12ffdb85e46f5da964463a8e0e6ad3039ea9c5aaf8e054473e1d6a0fb3"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_collections_abc.py",
+      "bytes": 32089,
+      "sha256": "d4945c8410c4bab351741b04bca3de066f7c27ed7e38df89e206a96617102ffb"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_weakrefset.py",
+      "bytes": 5893,
+      "sha256": "91895a451d06e9f521a1171b31b9b19bc9740f35af00d4fa106338ab7167c9ac"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/abc.py",
+      "bytes": 6538,
+      "sha256": "e558702a95cdce3febd289da021715d2b92bc43995b8a1bc58dfa1c3d8010287"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ast.py",
+      "bytes": 64452,
+      "sha256": "b515c23dbbc459329d3b802a3aac742cc456d7472e66f7ed6e9dc97e40596d7d"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/codecs.py",
+      "bytes": 36870,
+      "sha256": "7b7839e53a77961153240aecfe11edc8054d05b1dedd83894450dae21ec05785"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/__init__.py",
+      "bytes": 52378,
+      "sha256": "7fdb04dd248ab37909f46d2085bfee56b32d7e91e49ad3a2fad99c453295659b"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/__pycache__/__init__.cpython-312.pyc",
+      "bytes": 73041,
+      "sha256": "9aa048ba3486866a065cdd55c94e335e4bfe690ea060d94a3b7341340ba5130d"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py",
+      "bytes": 27637,
+      "sha256": "8b7a477f978a8532852fd81e241c78182516bc4975d672d580a5848a76e11eb6"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/copy.py",
+      "bytes": 8412,
+      "sha256": "cbd25547933176fcf6bb05c2adc9f4796d15ac20b9b82dcf890daea7203daeab"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/copyreg.py",
+      "bytes": 7614,
+      "sha256": "c8eda41f05c6bf95a4da4726a530409d2485ae060b8d019b3a8034389a15d3e9"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__init__.py",
+      "bytes": 5884,
+      "sha256": "78c4744d407690f321565488710b5aaf6486b5afa8d185637aa1e7633ab59cd8"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__pycache__/__init__.cpython-312.pyc",
+      "bytes": 5879,
+      "sha256": "b880a2f131261ca0ac9e2e15d946d0de4e93f7d4cac57bee6d9043a02dfa2b1a"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__pycache__/aliases.cpython-312.pyc",
+      "bytes": 12512,
+      "sha256": "e95f64f9caefd59683017f4626737a14108f9b3e36df0340b9e1939490bc5666"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__pycache__/utf_8.cpython-312.pyc",
+      "bytes": 2251,
+      "sha256": "1cf08faf189815b361115f9ed044e561900327b799e137bde5613c223cef5a44"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/aliases.py",
+      "bytes": 15677,
+      "sha256": "6fdcc49ba23a0203ae6cf28e608f8e6297d7c4d77d52e651db3cb49b9564c6d2"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/utf_8.py",
+      "bytes": 1005,
+      "sha256": "ba0cac060269583523ca9506473a755203037c57d466a11aa89a30a5f6756f3d"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/enum.py",
+      "bytes": 81540,
+      "sha256": "f35e542d8c4c1d2b5e910138d726fa48774925f3c4dc5462793ebcb66aa55501"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/fnmatch.py",
+      "bytes": 5999,
+      "sha256": "6683da36e47af523f3f41e18ad244d837783e19e98911cc0b7415dea81494ebc"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/functools.py",
+      "bytes": 37940,
+      "sha256": "de4a1d37c795e2a065124b5c49357893433bc6bb111b41277ccc9930ef08d4c9"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/genericpath.py",
+      "bytes": 5572,
+      "sha256": "2b0b35d2206778af4081cf81dd9b513876e72c35a55bec941402e1fa62b1f1aa"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/hashlib.py",
+      "bytes": 9349,
+      "sha256": "6dbdebf270868b391080e21dc9687eddfaf321c965ad979f68d3f5c423c613ab"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap_external.py",
+      "bytes": 69428,
+      "sha256": "e6ad72f3f0f9b65c99ab52598cd02ab748511dcdce1dd51f18dace9be9a680c6"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/io.py",
+      "bytes": 3582,
+      "sha256": "7cec3cb8ac004058dd0a5af246e6d950fb59c7ddd0058fda48bcb3fcb98d8822"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ipaddress.py",
+      "bytes": 81414,
+      "sha256": "ba8d3389ff084fcb232b48204ec04f2b3ea4bd0eadf7b18c814947d185de2c64"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py",
+      "bytes": 14020,
+      "sha256": "d5d41e2c29049515d295d81a6d40b4890fbec8d8482cfb401630f8ef2f77e4d5"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__pycache__/__init__.cpython-312.pyc",
+      "bytes": 13719,
+      "sha256": "5d36b903e240f48dd5417ebff8b1a13cceda8409bd1e03da7fab4780332d9d54"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__pycache__/decoder.cpython-312.pyc",
+      "bytes": 14017,
+      "sha256": "a8bf8f1ee1fd425d852f0da3645a9711b8b4ccad075ad70030560f51117de31d"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__pycache__/encoder.cpython-312.pyc",
+      "bytes": 15192,
+      "sha256": "ab3f5b458c1fb17a604d363279a1de126874ff82f5089f3af87ac9b6b6f04a76"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__pycache__/scanner.cpython-312.pyc",
+      "bytes": 3434,
+      "sha256": "b3ee2c1afa8588fa8b9ab846518a02e42af22fb2be06b8bc29fcfa079f567b2b"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py",
+      "bytes": 12525,
+      "sha256": "382cd02af6f7efede5a6d4abbcda1015e5c7a75794b0016022878f9cf32a24f6"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py",
+      "bytes": 16075,
+      "sha256": "52bfb1b66029cc70fa3bd7fe11df9f2e03922d413407a341b387a22c987f24f8"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/scanner.py",
+      "bytes": 2434,
+      "sha256": "572958017eae8842eeddd0e3d18d3c56cc0a197348224915e1d87ce937841764"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/keyword.py",
+      "bytes": 1073,
+      "sha256": "18c2be738c04ad20ad375f6a71db34b3823c7f40b0340f5294d0e89f3c9b093b"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ntpath.py",
+      "bytes": 30404,
+      "sha256": "6c0d55ee892f98ef87b1ed3c50c9dfc7e267a98d2db47e08d3dc67529af56725"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/operator.py",
+      "bytes": 10965,
+      "sha256": "b2af20f67667203c1730e686cc5d0427becc94db4c97f1d3efe3ed2158473f6a"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/os.py",
+      "bytes": 40821,
+      "sha256": "54c43a1fc69c979c70d8f7d097174cee163bfe59937723ee353043dd4a0211e1"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py",
+      "bytes": 51052,
+      "sha256": "10ba48ae8063cfe7589436041d0d4628c05f427c7709cf8e75e486f8930cc32c"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/posixpath.py",
+      "bytes": 17356,
+      "sha256": "03825681086638649a43480954f7f6a16b4da3bd41ece956864ae96e4f795cd9"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__init__.py",
+      "bytes": 16315,
+      "sha256": "8ff3c37c63b917fcf8dc8d50993a502292a3dc159e41de4f4018c72a53d1c07b"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/__init__.cpython-312.pyc",
+      "bytes": 18034,
+      "sha256": "7594ba703631219c4a29c6b189846743216f0dcd9aa857fee9fe3cf0ae5217b3"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/_casefix.cpython-312.pyc",
+      "bytes": 1920,
+      "sha256": "30c7c1a2a5bdf0052e28cc0ace5726062588ffbf63760c0829079c67db854934"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/_compiler.cpython-312.pyc",
+      "bytes": 26598,
+      "sha256": "f68b416dc89abae352dd07f49aaf6b6ce11404d417ff006dc8697f40ca9c0a59"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/_constants.cpython-312.pyc",
+      "bytes": 5407,
+      "sha256": "d68688e4d2cb15ba5014447dc29411f58a0bae38a4216a9c9e9dd7ae47bc7532"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/_parser.cpython-312.pyc",
+      "bytes": 42051,
+      "sha256": "5799cdf4f718287b2288a141ea74c02387a221456d11f3f7fcbdddf85df4f3d0"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_casefix.py",
+      "bytes": 5444,
+      "sha256": "1b12d9136f23db6c3f6f26053fefc15ca964b886838c7b9c1fabf8d2efc1e5c8"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_compiler.py",
+      "bytes": 26399,
+      "sha256": "c75620761098a70ed75b9accef63ef2881d8abb6d4e5cbfd10074bd165eefe4d"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_constants.py",
+      "bytes": 5930,
+      "sha256": "fa4fdb200f238f9e7817b63892b0d69833d8165134801e775e10cc113348a375"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_parser.py",
+      "bytes": 41201,
+      "sha256": "a51a85b37cf3f44ba7ff25754da5f31306e4ccfa6eb3c017f9d37bdf4e770840"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/reprlib.py",
+      "bytes": 7148,
+      "sha256": "e177bc70da83a7fbcde6fd261dc15da34e8a20873b1cccd4f9a1f8f27cca3779"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/stat.py",
+      "bytes": 5485,
+      "sha256": "052af0327eae6941b69b05c088b3e748f79995635f80ac4cc7125eb333eb4c77"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/types.py",
+      "bytes": 10993,
+      "sha256": "345474ef027a1273f353da9bdc1f7c18f65335e72e681bcc0376774cc51f2405"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/__init__.py",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/__pycache__/__init__.cpython-312.pyc",
+      "bytes": 239,
+      "sha256": "e88d78a96b45bfda7f645480bfb28a690d7dff2ec248662753930d257969de9d"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/__pycache__/parse.cpython-312.pyc",
+      "bytes": 50717,
+      "sha256": "33ae6c76466863d412592032f3bed552a56d93dd8d8e20589180c33297c9b306"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py",
+      "bytes": 45676,
+      "sha256": "e6af7f475262f1de335bb2e41e26adb94d6103977cf5fe1ddc430dc6a3b1623f"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/warnings.py",
+      "bytes": 21909,
+      "sha256": "6405e281882932205eae641b2d31fba7776f94517a206d289465a1caffbf310e"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/weakref.py",
+      "bytes": 21513,
+      "sha256": "56f8d313fb74019e53eb9287400702fbce788b7fe30e097b0b6e06296f3f080c"
+    },
+    {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/zipimport.py",
+      "bytes": 27840,
+      "sha256": "a96f1d7a7b6aaf421a3cf382b94b1422f4f0ad452fdd0bb61d635b560d7a4e91"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/contract-seal.json",
+      "bytes": 2943,
+      "sha256": "1408e139f95aeea88fd955b2f481f7454773324ba6e1e2b58afe7a53956e49ea"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/input-bindings.json",
+      "bytes": 17578,
+      "sha256": "16e0be65f0e490e0f4f5d757133a206fdeb9adbdcc549b7e133b70a1ec939c5f"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-native-contract/vendor-tr/client.py",
+      "bytes": 45742,
+      "sha256": "5d34047c37bcadb00f3320fd8dbbe46aae6583acb5fd7877ed9a4ca0eea4bf34"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-source-independent/SOURCE01-REVIEW.md",
+      "bytes": 2722,
+      "sha256": "263f91865e91b417ecf26c7fa7d0253d7e879547c6836338ddb6e54e0775626e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-source-independent/source01-final.json",
+      "bytes": 12440,
+      "sha256": "d997cf68a2b0aa46326a96b316191d32b3c64d4c32b8c1eb3019d65f829d12e1"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-source-preparation/capture_qb_tags.py",
+      "bytes": 10150,
+      "sha256": "5a147c3f8e907b2f8ee56eae20a95eda32b9c9202cf04043a28ade38a355f9a7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-source-preparation/input-bindings.json",
+      "bytes": 4659,
+      "sha256": "51104abdb171aabe7a4456b4fb42e05490aa93ded4daab0139fcb44aeef13a58"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-source-preparation/preparation-seal.json",
+      "bytes": 2379,
+      "sha256": "d740c0acdf10fbcd3080c0a636534301b04ce0d67bc6a12662b965ac8b496830"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-remaining-next/INPUTS.json",
+      "bytes": 7303,
+      "sha256": "031eb3e2992c3530e3ab5208c08c905debfe4496fb51b4232b572596b602163f"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-remaining-next/REVIEW.md",
+      "bytes": 10165,
+      "sha256": "4f8edc503e86e4135e7658414fb91956022c69a816b318a39f3f4d58441516ba"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-independent/PREEXEC-REVIEW.md",
+      "bytes": 5716,
+      "sha256": "1322a81b2c489d471443d5cbde65b8dbe49d020b2fb8f5045895b2b13d5d0401"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-independent/SOURCE01-REVIEW.md",
+      "bytes": 6756,
+      "sha256": "6750ac2aa4f68715a5869924b24bdbc930f0ad4891effd61e75f2538433cc338"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-independent/source01-final.json",
+      "bytes": 2937,
+      "sha256": "834916129067ee20a776411b2a4446db52751f0fda01e26ba68c7c5d2de5b5b8"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-preparation/README.md",
+      "bytes": 4450,
+      "sha256": "cbab6e8a7c02b8dcd1b1713ac2bf65e50c9b49a1b2333696445823b58ea94bfe"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-preparation/capture_tr_final.py",
+      "bytes": 9676,
+      "sha256": "e17692d15863311bf6e23c7f0699719670a15de7f9473ac59295e2feda614abd"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-preparation/input-bindings.json",
+      "bytes": 4430,
+      "sha256": "09bb374fe2acd3aa1a46613d45eac4a54caf40fd42dc9f9f42123044d6aab80c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-preparation/owned-cases.json",
+      "bytes": 11456,
+      "sha256": "e990f177a8204a60398c4528a26587e22c5c2b0000dd51a4ec16701e6c1ea751"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-preparation/preparation-seal.json",
+      "bytes": 2387,
+      "sha256": "e835f5963117a25864fd0a413782e0b4c6827dbea43484f41ca96191805cde8e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-preparation/selected-source.txt",
+      "bytes": 2482,
+      "sha256": "df2dace871b9af124a040c25bae4f77ef3f211cc912f585dd38042413d7b480e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-preparation/source-nodes.json",
+      "bytes": 1109,
+      "sha256": "1ad5b20f07bd5c9cc4374092feecf830e7de4c8fdba64ae00ab75347aaf6b25b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-scope01/REVIEW.md",
+      "bytes": 5044,
+      "sha256": "d79610ba7c8acae18c21277d4aebab03f5105b07cd055c08e57586fb67a0b463"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-scope01/frozen-existing-python-numeric-tables.json",
+      "bytes": 1865,
+      "sha256": "833278d44ad6bc7b55b0041653509044c8cc5562b16e0c591853456bb4a62580"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-scope01/target-bindings.json",
+      "bytes": 2290,
+      "sha256": "f3769bcac5376d6aea1f63508de0e9493457e70ef2a54b946905277eee088172"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-scope01/target-tr_final.go.txt",
+      "bytes": 8970,
+      "sha256": "d7c497979dfa36dbf3f7a9405d1147a346706bff6a1820f2a2c852bd1e6e747f"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-scope01/target-unicode_table.go.txt",
+      "bytes": 2143,
+      "sha256": "10ed4801e88b24d456e1497e6c0963ce27a5ecd5550d8bceed3c432b74e15707"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-final-source01/stdout.json",
+      "bytes": 32975,
+      "sha256": "1c3a9652c19898ed1aa98d63b1650f07587dee87654384490047e7872f62671e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/s13-tr-numeric01/COMMAND.txt",
+      "bytes": 749,
+      "sha256": "f3a1a1eeced80d44d8b0173b10235b7352a58c470ddf87d44b282f7b9f5f3bbc"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/s13-tr-numeric01/README.md",
+      "bytes": 4482,
+      "sha256": "59a224c6f686f0b5d6268b9e7a9443917b3a40420ce64f63955aa299cbbfb623"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/s13-tr-numeric01/capture_tr_numeric.py",
+      "bytes": 11741,
+      "sha256": "1e2f0ce94ae6ac76a242193024f0ed126b62e7810f86405c33a41a34846507fc"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/s13-tr-numeric01/driver-delta.json",
+      "bytes": 989,
+      "sha256": "a913a657d5bfc1db0e6265f9a8852f3aef4b53a41a3ca1a0bccede5178cd8b63"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/s13-tr-numeric01/owned-cases.json",
+      "bytes": 6310,
+      "sha256": "71928c73bbefd321362208e3a4dd7908096ca31bafeeb0416b4434941e320bfd"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/s13-tr-numeric01/selected-source.txt",
+      "bytes": 2482,
+      "sha256": "df2dace871b9af124a040c25bae4f77ef3f211cc912f585dd38042413d7b480e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/s13-tr-numeric01/source-nodes.json",
+      "bytes": 1109,
+      "sha256": "1ad5b20f07bd5c9cc4374092feecf830e7de4c8fdba64ae00ab75347aaf6b25b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/s13-tr-numeric01/stdlib-bindings.json",
+      "bytes": 29451,
+      "sha256": "22c7c89e58bdc45d87f8da57aaf72313348a754e7fc9c08f8676747a29c62ee7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/transmission/transmission.py",
+      "bytes": 18483,
+      "sha256": "6fc20e208b86e9e68ada074643f82b88270c2e51749e460ad881b10f744cf676"
+    }
+  ]
+}

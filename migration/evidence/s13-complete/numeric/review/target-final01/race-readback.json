@@ -1,0 +1,308 @@
+{
+  "status": "FINITE_NUMERIC_RACE_ACTUAL_ACCEPTED",
+  "mode": "race",
+  "gate_preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-numeric-independent/gates-preexec01/preexec-seal.json",
+    "bytes": 1274,
+    "sha256": "7c751374b10fb00ca50c0a2a0ed921a5b194bcaddc0daca049e4de587cd7ea97"
+  },
+  "candidate_manifest": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/candidate-manifest.json",
+    "bytes": 7326,
+    "sha256": "96e12fa94475a9c9e5f7d31dfe20529cbd7aab34ce98b701becb76972ced4fbd"
+  },
+  "cases_original14_and_retained23": true,
+  "reports": [
+    {
+      "label": "s13-tr-numeric-leaf-race01",
+      "package": "./internal/plugins/downloadercommands",
+      "race": true,
+      "started": "2026-11-01T10:26:02.698430+00:00",
+      "ended": "2026-11-01T10:26:05.479569+00:00",
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-numeric-leaf-race01.test",
+        "bytes": 8331374,
+        "sha256": "8ebf0622debf143f21ee897c837195361b2e0f60306295d689f9671e9da88721"
+      },
+      "receipt": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/coordinator-tool-receipt.json",
+        "bytes": 250,
+        "sha256": "ca5d5ee24198f6c81013de8d2ffa03bcfe1a8297c8c3676702ff099b83140e07"
+      },
+      "tool_receipt_contents": {
+        "session": 2920,
+        "launch_tool_chunk": "4860ed",
+        "terminal_tool_chunk": "b194e9",
+        "tool_exit": 0,
+        "result_sha256": "fc15a1fe38fe98a441b448f09971580b335901cabe15d693445dcdc900f7d024",
+        "scope": "actual race leaf4/SDK3; no vet/HTTP/host"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/result.json",
+        "bytes": 5232,
+        "sha256": "fc15a1fe38fe98a441b448f09971580b335901cabe15d693445dcdc900f7d024"
+      },
+      "input_count": 2030,
+      "three_snapshots_equal": true,
+      "current_input_count": 2030,
+      "missing_cache_recovered": [],
+      "go_list_package_count": 161,
+      "declaration_count": 1861,
+      "generated_source_count": 1,
+      "generated_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/generated-source/4064b0a2bcdcaa51489b256bca141bc48ac8b1102a515b75d6571ae016b6a15d.go",
+          "bytes": 1600,
+          "sha256": "4064b0a2bcdcaa51489b256bca141bc48ac8b1102a515b75d6571ae016b6a15d"
+        }
+      ],
+      "root_passes": [
+        "TestTRFinalLeafActualSourceObservations",
+        "TestTRFinalLeafBoundariesAndOwnership",
+        "TestTRNumericLeafActualSourceObservations",
+        "TestTRNumericRetainsRangeAndNonfiniteBoundaries"
+      ],
+      "numeric_original_case_passes": [
+        "numeric-underscores-all-settings",
+        "numeric-unicode-nd-and-space",
+        "numeric-float-exponent-underscores",
+        "int-adjacent-underscores",
+        "int-leading-underscore",
+        "int-trailing-underscore",
+        "float-adjacent-underscores",
+        "float-leading-underscore",
+        "float-trailing-underscore",
+        "float-underscore-before-point",
+        "float-underscore-after-point",
+        "float-underscore-after-exponent",
+        "int-ascii-information-separator",
+        "float-nondecimal-digit-symbol"
+      ],
+      "event_counts": {
+        "start": 1,
+        "run": 41,
+        "output": 86,
+        "pass": 42
+      },
+      "evidence_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/inputs-before.json",
+          "bytes": 442277,
+          "sha256": "a964b8023fe94e3f949fa0ad0d6a21ec290cc9a6226e30f366c97413d7655a61"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/inputs-after-compile.json",
+          "bytes": 442277,
+          "sha256": "a964b8023fe94e3f949fa0ad0d6a21ec290cc9a6226e30f366c97413d7655a61"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/inputs-after-test.json",
+          "bytes": 442277,
+          "sha256": "a964b8023fe94e3f949fa0ad0d6a21ec290cc9a6226e30f366c97413d7655a61"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/go-list.stdout",
+          "bytes": 346067,
+          "sha256": "e2cfb52494fbbda38e60e3b0dcab2d24a76f5aa7074b472647b9858d48541ab3"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/compile.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/tests.stdout",
+          "bytes": 40137,
+          "sha256": "0b4d354faf2ef742a2d5175aa0a95f928d1be0a96b427fd8f9145511b86689f6"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/virtual-compile-inputs.json",
+          "bytes": 597127,
+          "sha256": "e9ade448682c568b2a639766af225c5878729e1e6702b58862fa84297df4c30d"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-leaf-race01/generated-source-map.json",
+          "bytes": 246,
+          "sha256": "938a32d7e52c007fb904ec6e43dec16ff35b982711cb50785a50469fa80416f6"
+        }
+      ],
+      "vet_not_run": true
+    },
+    {
+      "label": "s13-tr-numeric-sdk-race01",
+      "package": "./internal/plugins",
+      "race": true,
+      "started": "2026-11-01T10:26:05.520129+00:00",
+      "ended": "2026-11-01T10:26:10.544103+00:00",
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-numeric-sdk-race01.test",
+        "bytes": 12225055,
+        "sha256": "86755df3096a7522c886dc64bd2c20f4f388c2c3849332f6436297755a191ef6"
+      },
+      "receipt": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/coordinator-tool-receipt.json",
+        "bytes": 250,
+        "sha256": "2fc3458fea1ca35630093d0e0ab39808b8e19a74a2308d8b589e83a74b139a89"
+      },
+      "tool_receipt_contents": {
+        "session": 2920,
+        "launch_tool_chunk": "4860ed",
+        "terminal_tool_chunk": "b194e9",
+        "tool_exit": 0,
+        "result_sha256": "0e68a75fe4d4f8490b265ddb6d04b6c03e2048fdf73bc7d3a07444d0e6a255f1",
+        "scope": "actual race leaf4/SDK3; no vet/HTTP/host"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/result.json",
+        "bytes": 5058,
+        "sha256": "0e68a75fe4d4f8490b265ddb6d04b6c03e2048fdf73bc7d3a07444d0e6a255f1"
+      },
+      "input_count": 2160,
+      "three_snapshots_equal": true,
+      "current_input_count": 2160,
+      "missing_cache_recovered": [],
+      "go_list_package_count": 178,
+      "declaration_count": 2290,
+      "generated_source_count": 1,
+      "generated_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/generated-source/bffb3370fa469c185287b73fac4910f051c574b9f6d25ac5ec972b8d44053051.go",
+          "bytes": 18542,
+          "sha256": "bffb3370fa469c185287b73fac4910f051c574b9f6d25ac5ec972b8d44053051"
+        }
+      ],
+      "root_passes": [
+        "TestSharedTRFinalWireAndSourceErrors",
+        "TestSharedTRFinalStrictBoundaryAndNoReplay",
+        "TestSharedTRNumericOriginalStringsAndSourceClassification"
+      ],
+      "numeric_original_case_passes": [
+        "numeric-underscores-all-settings",
+        "numeric-unicode-nd-and-space",
+        "numeric-float-exponent-underscores",
+        "int-adjacent-underscores",
+        "int-leading-underscore",
+        "int-trailing-underscore",
+        "float-adjacent-underscores",
+        "float-leading-underscore",
+        "float-trailing-underscore",
+        "float-underscore-before-point",
+        "float-underscore-after-point",
+        "float-underscore-after-exponent",
+        "int-ascii-information-separator",
+        "float-nondecimal-digit-symbol"
+      ],
+      "event_counts": {
+        "start": 1,
+        "run": 21,
+        "output": 43,
+        "pass": 22
+      },
+      "evidence_files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/inputs-before.json",
+          "bytes": 473675,
+          "sha256": "9e0515e3bbca04d23bc814c2f7a28b2e98156c03a7a58e8e4e39ea2328e6e27c"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/inputs-after-compile.json",
+          "bytes": 473675,
+          "sha256": "9e0515e3bbca04d23bc814c2f7a28b2e98156c03a7a58e8e4e39ea2328e6e27c"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/inputs-after-test.json",
+          "bytes": 473675,
+          "sha256": "9e0515e3bbca04d23bc814c2f7a28b2e98156c03a7a58e8e4e39ea2328e6e27c"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/go-list.stdout",
+          "bytes": 403748,
+          "sha256": "c775f53074005d76a323ca835d4badd1519f5e715c4a1cb8f1d6b6f44a8bfbc0"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/compile.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/tests.stdout",
+          "bytes": 19771,
+          "sha256": "b523dfab87fae5e956deb91bf401ae914b6140f29b1c366c23ae33cb44b02b10"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/virtual-compile-inputs.json",
+          "bytes": 765079,
+          "sha256": "511ed0295503899e3770e67972913dea1d464104535ed6107271f43ce70ab434"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-sdk-race01/generated-source-map.json",
+          "bytes": 246,
+          "sha256": "c4d15c998577cf081bca105b5803b0ef2ffdfae5920afe5459afad6ed53708d2"
+        }
+      ],
+      "vet_not_run": true
+    }
+  ],
+  "source_or_Go_rerun_by_reviewer": false,
+  "HTTP_App_daemon_or_fullS13_accepted": false
+}

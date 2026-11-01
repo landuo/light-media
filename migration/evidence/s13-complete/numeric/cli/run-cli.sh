@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+[[ "$#" == 0 ]]
+export S13_TR_NUMERIC_CLI_GRANTED=1
+exec python3 /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s13-tr-numeric01/cli02/normal-cli-driver.py --server /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-numeric-server02 --worker /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-numeric-fixture02 --output /workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-tr-numeric-normal02 --expected-server-sha 461a4c9005942b51b63532ef2a759254ed70b94683abb529008858730bc38651 --expected-worker-sha 2f0a8c2006119a77c2085d2d00e564020cab81cadb86841b6d19fa6a235abe99 --expected-driver-sha 8a849c5d7698e29ff3b6c325052f012a8f239092c08a04c1df33ea4e32408b14 --expected-bindings-sha 2718241ff25ac201c433c6e5e0b187e85f5f53bfad622f6424846a5c93bb4c27

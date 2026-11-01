@@ -1,0 +1,137 @@
+{
+  "status": "ACTUAL_FIXTURE_PASS_APP_FAILURE_PRESERVED",
+  "at": "2026-11-01T10:39:21.091784+00:00",
+  "gates": [
+    {
+      "label": "s13-tr-numeric-fixture-normal01",
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/result.json",
+        "bytes": 9903,
+        "sha256": "c42802b3c6a0e7bcf6aa60d9cd96e68aaaa7eb0c79e2bae44666de9635a7775b"
+      },
+      "status": "PASS",
+      "tool": {
+        "session": 49215,
+        "launch_tool_chunk": "b6bd12",
+        "terminal_tool_chunk": "0268fe",
+        "outer_exit": 1,
+        "this_gate_status": "PASS",
+        "result_sha256": "c42802b3c6a0e7bcf6aa60d9cd96e68aaaa7eb0c79e2bae44666de9635a7775b",
+        "boundary": "fixture2PASS; App newnumeric root FAIL atownedhandler400, oldscope rootPASS; no race/build retry yet"
+      },
+      "inputs": 4131,
+      "before_equals_after_compile": true,
+      "current_drift": [],
+      "after_test_snapshot_present": true,
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-numeric-fixture-normal01.test",
+        "bytes": 6186412,
+        "sha256": "e63fd3723d813ea78ea307c1d51c384cccc4ad790b374661218baefd10fe7fb4"
+      },
+      "passes": [
+        "TestOwnedTRFinalFixtureManifestAndRoute",
+        "TestOwnedTRNumericFixedSourceInputs/numeric-underscores-all-settings",
+        "TestOwnedTRNumericFixedSourceInputs/numeric-unicode-nd-and-space",
+        "TestOwnedTRNumericFixedSourceInputs/numeric-float-exponent-underscores",
+        "TestOwnedTRNumericFixedSourceInputs/int-adjacent-underscores",
+        "TestOwnedTRNumericFixedSourceInputs"
+      ],
+      "fails": [],
+      "raw_logs": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/tests.stdout",
+          "bytes": 5541,
+          "sha256": "192d0096c1ba3c95cfbe456f57a2448e6b43cf4209e1b088d83e0a3aeafa8c8c"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-fixture-normal01/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        }
+      ]
+    },
+    {
+      "label": "s13-tr-numeric-app-normal01",
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal01/result.json",
+        "bytes": 9793,
+        "sha256": "97dddd5e47f28b744ec23d203e47669b889cb095918681fc71f203337da0fca7"
+      },
+      "status": "FAIL",
+      "tool": {
+        "session": 49215,
+        "launch_tool_chunk": "b6bd12",
+        "terminal_tool_chunk": "0268fe",
+        "outer_exit": 1,
+        "this_gate_status": "FAIL",
+        "result_sha256": "97dddd5e47f28b744ec23d203e47669b889cb095918681fc71f203337da0fca7",
+        "boundary": "fixture2PASS; App newnumeric root FAIL atownedhandler400, oldscope rootPASS; no race/build retry yet"
+      },
+      "inputs": 6341,
+      "before_equals_after_compile": true,
+      "current_drift": [],
+      "after_test_snapshot_present": false,
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-numeric-app-normal01.test",
+        "bytes": 93149936,
+        "sha256": "5d905bbd4eceba02abb8eb9b09bbc272aa2f2fc23b5e598623d0b972e96a9f35"
+      },
+      "passes": [
+        "TestOriginalTRFinalHostScopeAndUnknown",
+        "TestOriginalTRNumericNativeSourceCases/int-adjacent-underscores"
+      ],
+      "fails": [
+        "TestOriginalTRNumericNativeSourceCases/numeric-underscores-all-settings",
+        "TestOriginalTRNumericNativeSourceCases/numeric-unicode-nd-and-space",
+        "TestOriginalTRNumericNativeSourceCases/numeric-float-exponent-underscores",
+        "TestOriginalTRNumericNativeSourceCases",
+        "package"
+      ],
+      "raw_logs": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal01/tests.stdout",
+          "bytes": 8889,
+          "sha256": "28e811e19ac2b5bca1c2488d20edc771f5996111f5237d36492db8fda8bd97bc"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal01/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal01/tests.exit",
+          "bytes": 2,
+          "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-numeric-app-normal01/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        }
+      ]
+    }
+  ],
+  "diagnosis": {
+    "actual": "new App handler combined request guard emitted HTTP400 on three success cases before parsing; ValueError case and old scope root PASS",
+    "static_exact_cause": "native client.go TR request unconditionally SetBasicAuth; helper credentials are empty -> Basic Og==; new test incorrectly required missing Authorization",
+    "header_capture": "not present in original logs; no claim actual header bytes were captured",
+    "required_change": "test-only accept precisely owned empty Basic; no product/auth/TLS change",
+    "initial_review_miss": "native-preexec01 missed conflict between new header assertion and existing native client; its original READY and all failure material remain unchanged"
+  },
+  "gates_blocked": [
+    "App race01",
+    "CLI01 build requiring App01 PASS",
+    "CLI01 actual"
+  ],
+  "reviewer_execution": "read/hash only"
+}

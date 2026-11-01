@@ -165,15 +165,6 @@ func trFinalLabels(tags, orgTags any) ([]string, error) {
 	return labels, nil
 }
 
-func trFinalASCII(s string) (string, error) {
-	for _, r := range s {
-		if r > 127 || r == '_' {
-			return "", &BoundaryError{"TR numeric string spelling outside finite ASCII domain"}
-		}
-	}
-	return strings.Trim(s, " \t\n\r\v\f"), nil
-}
-
 func trFinalInt(v any) (int64, error) {
 	var err error
 	v, err = trFinalNumber(v)
@@ -196,9 +187,9 @@ func trFinalInt(v any) (int64, error) {
 		}
 		return int64(math.Trunc(x)), nil
 	case string:
-		s, e := trFinalASCII(x)
-		if e != nil {
-			return 0, e
+		s, valid := trFinalNumericString(x)
+		if !valid {
+			return 0, &SourceException{"ValueError", "invalid literal for int() with base 10: " + exec.PythonRepr(exec.ToValue(x))}
 		}
 		i, e := strconv.ParseInt(s, 10, 64)
 		if e == nil {
@@ -232,14 +223,15 @@ func trFinalFloat(v any) (float64, error) {
 	case float64:
 		f = x
 	case string:
-		s, e := trFinalASCII(x)
-		if e != nil {
-			return 0, e
+		s, valid := trFinalNumericString(x)
+		if !valid {
+			return 0, &SourceException{"ValueError", "could not convert string to float: " + exec.PythonRepr(exec.ToValue(x))}
 		}
 		// Go accepts hexadecimal float syntax, Python float(str) does not.
 		if strings.ContainsAny(s, "xXpP") {
 			return 0, &SourceException{"ValueError", "could not convert string to float: " + exec.PythonRepr(exec.ToValue(x))}
 		}
+		var e error
 		f, e = strconv.ParseFloat(s, 64)
 		if e != nil {
 			if ne, ok := e.(*strconv.NumError); ok && ne.Err == strconv.ErrRange {
