@@ -1,0 +1,563 @@
+{
+  "read_at": "2026-11-01T09:43:21.906203+00:00",
+  "references": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/docs/validation/plugin-module-no-official-auth-20261026.json",
+      "sha256": "fd43c5b1dd9ae28ff7f78c71b7c169921c4821a180479a31da423a955598084e",
+      "bytes": 206865
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/docs/validation/plugin-module-scoped-20261025.json",
+      "sha256": "b60694ad19d10b864afc2c23634817d035d68b8d89320e744694d61077e30286",
+      "bytes": 16913
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/docs/validation/plugin-module-final-20261029.json",
+      "sha256": "f968b61a2db611e7e30caa579adbfc5cce9b452f059693dc187b7e2689cf98d6",
+      "bytes": 5205
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/docs/validation/plugin-clone-frontend-r3-20261027/result.json",
+      "sha256": "a0e15b7c138f969660e51195270c96494a1f8b57674643370abf2372a2c69240",
+      "bytes": 3693
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/migration/evidence/mirror-response/current-integration-review.json",
+      "sha256": "f3a3fe566a5b9348e69880288d2091c45d4d9225fdef653f88e20f293a433337",
+      "bytes": 27056
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/migration/evidence/mirror-response/candidate.json",
+      "sha256": "5cacd05a9949aa28cecb85e7853f3d974702c1325c92c3a5c7117048b97e2473",
+      "bytes": 906
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/migration/evidence/market-pipeline/independent-review.json",
+      "sha256": "76c1e15f5a3b1e92eee5bcce3a1fa1412427da36a2fdb15ffcdcd707910d5b0e",
+      "bytes": 11528
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/migration/evidence/market-pipeline/shared-impact.json",
+      "sha256": "5bb54c42e0b1efb779d9c330c43c092095f31b62a8324432024eebb7f49ccaa0",
+      "bytes": 2774
+    }
+  ],
+  "raw_readback": [
+    {
+      "name": "management-cache-final.jsonl",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/management-cache-final.jsonl.gz",
+        "sha256": "0657a8f4abd4ff3f882199871263b68a524294050142759f90eed10230bc187e",
+        "bytes": 157911
+      },
+      "uncompressed_sha256": "ff1ab68b3938c05433b66d668b46d468c9fd1904a76c50a3d09da3ea2cbe0861",
+      "uncompressed_bytes": 1635826,
+      "matched_parent_roots": [
+        {
+          "Test": "TestPluginOriginalArtifactForceDownloadFailureKeepsLoadedObjectUntilReload",
+          "Action": "pass",
+          "Elapsed": 0.83
+        },
+        {
+          "Test": "TestPluginOriginalArtifactInstallSaveErrorAndReloadPersistentObject",
+          "Action": "pass",
+          "Elapsed": 0.56
+        },
+        {
+          "Test": "TestPluginOriginalArtifactSourceUpgradeKeepsCopiedCloneVersion",
+          "Action": "pass",
+          "Elapsed": 1.52
+        },
+        {
+          "Test": "TestOriginalMarketCatalogExactCloneUpdatePreservesSourceAndRecreatesAfterUninstall",
+          "Action": "pass",
+          "Elapsed": 2.11
+        },
+        {
+          "Test": "TestOriginalMarketCatalogAcrossSourcesKeepsVersionAndConfiguredOrder",
+          "Action": "pass",
+          "Elapsed": 0.03
+        },
+        {
+          "Test": "TestPluginOriginalFrontendCloneUpgradeSameVersionAndForceFailure",
+          "Action": "pass",
+          "Elapsed": 2.4
+        },
+        {
+          "Test": "TestOriginalMarketFreshFailureCacheSourceOracle",
+          "Action": "pass",
+          "Elapsed": 0.05
+        },
+        {
+          "Test": "TestOriginalMarketGuideHistoryReleasesMetadataOnlyAndFailures",
+          "Action": "pass",
+          "Elapsed": 0.09
+        },
+        {
+          "Test": "TestOriginalMarketVersionAndSourceOracle",
+          "Action": "pass",
+          "Elapsed": 0
+        },
+        {
+          "Test": "TestOriginalMarketHTTPHighestVersionCacheRefreshAndActualUpgrade",
+          "Action": "pass",
+          "Elapsed": 1.86
+        },
+        {
+          "Test": "TestOriginalMarketConcurrentRefreshJoinsAndWaiterCancellation",
+          "Action": "pass",
+          "Elapsed": 0.03
+        },
+        {
+          "Test": "TestPluginOriginalMarketSourcesPersistenceDiscoveryAndActualCards",
+          "Action": "pass",
+          "Elapsed": 0.67
+        },
+        {
+          "Test": "TestOriginalSafeModeKeepsManagementWithoutStartupExecution",
+          "Action": "pass",
+          "Elapsed": 0.42
+        },
+        {
+          "Test": "TestOriginalStandardDirectModuleEndToEnd",
+          "Action": "pass",
+          "Elapsed": 2.01
+        },
+        {
+          "Test": "TestOriginalStandardActualArtifactUpgradePreservesClone",
+          "Action": "pass",
+          "Elapsed": 1.79
+        },
+        {
+          "Test": "TestOriginalPluginSyncUpgradeRepairAndNoop",
+          "Action": "pass",
+          "Elapsed": 2.13
+        },
+        {
+          "Test": "TestOriginalPluginSyncFailureIsolationAndInstalledSelection",
+          "Action": "pass",
+          "Elapsed": 1.05
+        },
+        {
+          "Test": "TestOriginalPluginSyncActualStartAndCloseCancellation",
+          "Action": "pass",
+          "Elapsed": 2.22
+        }
+      ],
+      "historical_not_new_execution": true
+    },
+    {
+      "name": "history-order-market-final-tests.jsonl",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/history-order-market-final-tests.jsonl.gz",
+        "sha256": "342aa5eb56dc9057258aced992b62df2b971c59b520c021b12d5b0d7fac1a951",
+        "bytes": 10265
+      },
+      "uncompressed_sha256": "c673ef9587c9d32bd7019419ff25ec5cd32dd3d28f82ce6a193d0c1ba4cf4eab",
+      "uncompressed_bytes": 95603,
+      "matched_parent_roots": [
+        {
+          "Test": "TestOriginalMarketCatalogExactCloneUpdatePreservesSourceAndRecreatesAfterUninstall",
+          "Action": "pass",
+          "Elapsed": 2.51
+        },
+        {
+          "Test": "TestOriginalMarketCatalogAcrossSourcesKeepsVersionAndConfiguredOrder",
+          "Action": "pass",
+          "Elapsed": 0.03
+        },
+        {
+          "Test": "TestOriginalMarketFreshFailureCacheSourceOracle",
+          "Action": "pass",
+          "Elapsed": 0.06
+        },
+        {
+          "Test": "TestOriginalMarketHistoryPreservesAuthorWireOrder",
+          "Action": "pass",
+          "Elapsed": 0.09
+        },
+        {
+          "Test": "TestOriginalMarketGuideHistoryReleasesMetadataOnlyAndFailures",
+          "Action": "pass",
+          "Elapsed": 0.09
+        },
+        {
+          "Test": "TestOriginalMarketVersionAndSourceOracle",
+          "Action": "pass",
+          "Elapsed": 0
+        },
+        {
+          "Test": "TestOriginalMarketHTTPHighestVersionCacheRefreshAndActualUpgrade",
+          "Action": "pass",
+          "Elapsed": 1.63
+        },
+        {
+          "Test": "TestOriginalMarketConcurrentRefreshJoinsAndWaiterCancellation",
+          "Action": "pass",
+          "Elapsed": 0.03
+        },
+        {
+          "Test": "TestOriginalMarketReleaseForceReturnsCacheThenRefreshesSourceOracle",
+          "Action": "pass",
+          "Elapsed": 0.09
+        }
+      ],
+      "historical_not_new_execution": true
+    },
+    {
+      "name": "release-market-tests.jsonl",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/release-market-tests.jsonl.gz",
+        "sha256": "9426fc7f195bc9809fdd0ea9834459441ebfcecf1ffeaaa2aedafbfa61271431",
+        "bytes": 9788
+      },
+      "uncompressed_sha256": "e37e6cd9708639422a70a74681010e8f54762c36ee9b08d0c5b855240c1f2fe0",
+      "uncompressed_bytes": 91415,
+      "matched_parent_roots": [
+        {
+          "Test": "TestOriginalMarketCatalogExactCloneUpdatePreservesSourceAndRecreatesAfterUninstall",
+          "Action": "pass",
+          "Elapsed": 1.51
+        },
+        {
+          "Test": "TestOriginalMarketCatalogAcrossSourcesKeepsVersionAndConfiguredOrder",
+          "Action": "pass",
+          "Elapsed": 0.03
+        },
+        {
+          "Test": "TestOriginalMarketFreshFailureCacheSourceOracle",
+          "Action": "pass",
+          "Elapsed": 0.05
+        },
+        {
+          "Test": "TestOriginalMarketGuideHistoryReleasesMetadataOnlyAndFailures",
+          "Action": "pass",
+          "Elapsed": 0.09
+        },
+        {
+          "Test": "TestOriginalMarketVersionAndSourceOracle",
+          "Action": "pass",
+          "Elapsed": 0
+        },
+        {
+          "Test": "TestOriginalMarketHTTPHighestVersionCacheRefreshAndActualUpgrade",
+          "Action": "pass",
+          "Elapsed": 0.91
+        },
+        {
+          "Test": "TestOriginalMarketConcurrentRefreshJoinsAndWaiterCancellation",
+          "Action": "pass",
+          "Elapsed": 0.04
+        },
+        {
+          "Test": "TestOriginalMarketReleaseForceReturnsCacheThenRefreshesSourceOracle",
+          "Action": "pass",
+          "Elapsed": 0.09
+        }
+      ],
+      "historical_not_new_execution": true
+    },
+    {
+      "name": "management-class-final.jsonl",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/management-class-final.jsonl.gz",
+        "sha256": "6a1d8f6c9dcee1320e8a5f66b5ebf02f02acc7e7b0060e143113c407f0c05f29",
+        "bytes": 156853
+      },
+      "uncompressed_sha256": "08b02a6258b6e12c1698efa9a2e98c7c122cb07d433ed7a339a4be8238fc51dc",
+      "uncompressed_bytes": 1627934,
+      "matched_parent_roots": [
+        {
+          "Test": "TestPluginOriginalArtifactForceDownloadFailureKeepsLoadedObjectUntilReload",
+          "Action": "pass",
+          "Elapsed": 0.34
+        },
+        {
+          "Test": "TestPluginOriginalArtifactInstallSaveErrorAndReloadPersistentObject",
+          "Action": "pass",
+          "Elapsed": 0.34
+        },
+        {
+          "Test": "TestPluginOriginalArtifactSourceUpgradeKeepsCopiedCloneVersion",
+          "Action": "pass",
+          "Elapsed": 1.43
+        },
+        {
+          "Test": "TestOriginalMarketCatalogExactCloneUpdatePreservesSourceAndRecreatesAfterUninstall",
+          "Action": "pass",
+          "Elapsed": 1.16
+        },
+        {
+          "Test": "TestOriginalMarketCatalogAcrossSourcesKeepsVersionAndConfiguredOrder",
+          "Action": "pass",
+          "Elapsed": 0.04
+        },
+        {
+          "Test": "TestOriginalHistoryActualStatesAndImportedClassVersion",
+          "Action": "pass",
+          "Elapsed": 1.03
+        },
+        {
+          "Test": "TestPluginOriginalFrontendCloneUpgradeSameVersionAndForceFailure",
+          "Action": "pass",
+          "Elapsed": 2.46
+        },
+        {
+          "Test": "TestOriginalMarketFreshFailureCacheSourceOracle",
+          "Action": "pass",
+          "Elapsed": 0.06
+        },
+        {
+          "Test": "TestOriginalMarketHistoryPreservesAuthorWireOrder",
+          "Action": "pass",
+          "Elapsed": 0.09
+        },
+        {
+          "Test": "TestOriginalMarketGuideHistoryReleasesMetadataOnlyAndFailures",
+          "Action": "pass",
+          "Elapsed": 0.09
+        },
+        {
+          "Test": "TestOriginalMarketVersionAndSourceOracle",
+          "Action": "pass",
+          "Elapsed": 0
+        },
+        {
+          "Test": "TestOriginalMarketHTTPHighestVersionCacheRefreshAndActualUpgrade",
+          "Action": "pass",
+          "Elapsed": 0.73
+        },
+        {
+          "Test": "TestOriginalMarketConcurrentRefreshJoinsAndWaiterCancellation",
+          "Action": "pass",
+          "Elapsed": 0.03
+        },
+        {
+          "Test": "TestPluginOriginalMarketSourcesPersistenceDiscoveryAndActualCards",
+          "Action": "pass",
+          "Elapsed": 0.36
+        },
+        {
+          "Test": "TestOriginalMarketReleaseForceReturnsCacheThenRefreshesSourceOracle",
+          "Action": "pass",
+          "Elapsed": 0.09
+        },
+        {
+          "Test": "TestOriginalSafeModeKeepsManagementWithoutStartupExecution",
+          "Action": "pass",
+          "Elapsed": 0.37
+        },
+        {
+          "Test": "TestOriginalStandardDirectModuleEndToEnd",
+          "Action": "pass",
+          "Elapsed": 1.66
+        },
+        {
+          "Test": "TestOriginalStandardActualArtifactUpgradePreservesClone",
+          "Action": "pass",
+          "Elapsed": 0.85
+        },
+        {
+          "Test": "TestOriginalPluginSyncUpgradeRepairAndNoop",
+          "Action": "pass",
+          "Elapsed": 1.32
+        },
+        {
+          "Test": "TestOriginalPluginSyncFailureIsolationAndInstalledSelection",
+          "Action": "pass",
+          "Elapsed": 0.38
+        },
+        {
+          "Test": "TestOriginalPluginSyncActualStartAndCloseCancellation",
+          "Action": "pass",
+          "Elapsed": 1
+        }
+      ],
+      "historical_not_new_execution": true
+    },
+    {
+      "name": "process-market-menu-final-browser.log",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/process-market-menu-final-browser.log.gz",
+        "sha256": "9122753f65336495d7c468b115d8c347e80c4841fe391f538e3f0a623f3c5950",
+        "bytes": 367
+      },
+      "uncompressed_sha256": "d2f54f1b07d6ed8f9cfa3533b4b5d25f948ecb3f53e1e49a3e52b575c51f860a",
+      "uncompressed_bytes": 655,
+      "matched_parent_roots": [],
+      "historical_not_new_execution": true
+    },
+    {
+      "name": "linux-market-fixed-card-verdict.json",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/linux-market-fixed-card-verdict.json.gz",
+        "sha256": "03eebdd1cc5661d3dbaf4d78b3021a5cf7600faf8be54e64891711932d9f8ffd",
+        "bytes": 677
+      },
+      "uncompressed_sha256": "745ce66819c00ef0b2a34320a39f6952508c618ffe7c9fd8fe0072573d4654a7",
+      "uncompressed_bytes": 1563,
+      "matched_parent_roots": [],
+      "historical_not_new_execution": true
+    },
+    {
+      "name": "linux-class-release-cache.json",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/linux-class-release-cache.json.gz",
+        "sha256": "e57b54150db828d262c6279fe93b22f08fb2d0923fa9230cbbe0dd4435883144",
+        "bytes": 403
+      },
+      "uncompressed_sha256": "ec9a0923ad4746bf3806871ecf9d0721c72f45188de72d5220fa4e498fcd4aa0",
+      "uncompressed_bytes": 753,
+      "matched_parent_roots": [],
+      "historical_not_new_execution": true
+    },
+    {
+      "name": "linux-browser-clone-update.json",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/linux-browser-clone-update.json.gz",
+        "sha256": "3307fe4a3fb40df7e72e0dff9503c938cd84ebc7f5553c816fa322cfbab6fd43",
+        "bytes": 339
+      },
+      "uncompressed_sha256": "ee9fc4ff28c683182a8a2c79bdef2c3344f77adbc86a48333b66f040f519acb3",
+      "uncompressed_bytes": 873,
+      "matched_parent_roots": [],
+      "historical_not_new_execution": true
+    },
+    {
+      "name": "process-github-settings-browser.log",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/process-github-settings-browser.log.gz",
+        "sha256": "a4e980610924f7cc4eb44734be93e326ef399fd54c1461d67d0e9a82f6aa2464",
+        "bytes": 366
+      },
+      "uncompressed_sha256": "f86a0123cfe2477305a918e6dd9e00cecf23509db2c5f9d1644bf84baf6011e0",
+      "uncompressed_bytes": 654,
+      "matched_parent_roots": [],
+      "historical_not_new_execution": true
+    },
+    {
+      "name": "process-startup-linux.log",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/process-startup-linux.log.gz",
+        "sha256": "da1ce3ddff27fb46b89879e201b47a2d810d4c8f8d14842d9e1fd178c6fb3581",
+        "bytes": 359
+      },
+      "uncompressed_sha256": "f3a967bf47d840e66d2decf5636ff82452f6ddfd9b08a7f111572d116315605f",
+      "uncompressed_bytes": 555,
+      "matched_parent_roots": [],
+      "historical_not_new_execution": true
+    },
+    {
+      "name": "process-startup-wait-linux.log",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/process-startup-wait-linux.log.gz",
+        "sha256": "ca97772095cfb172867e467c5194660f61b448b2ba433cc9b9abb7ad1b4adb36",
+        "bytes": 465
+      },
+      "uncompressed_sha256": "da6fc2ea7e4d27b019f65fa9887506274f2523d94b83143f83df9113613fe7c6",
+      "uncompressed_bytes": 900,
+      "matched_parent_roots": [],
+      "historical_not_new_execution": true
+    },
+    {
+      "name": "startup-backup-host-race.jsonl",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/startup-backup-host-race.jsonl.gz",
+        "sha256": "719db0b3bfebf110c8be8430df852953b852e89026f5bbe582de757b8ca77439",
+        "bytes": 4996
+      },
+      "uncompressed_sha256": "98d399588c8b928699d9e362ff272ebc2087f98bd62421966d545a023b66db66",
+      "uncompressed_bytes": 39607,
+      "matched_parent_roots": [
+        {
+          "Test": "TestOriginalSafeModeKeepsManagementWithoutStartupExecution",
+          "Action": "pass",
+          "Elapsed": 1.55
+        },
+        {
+          "Test": "TestOriginalPluginSyncUpgradeRepairAndNoop",
+          "Action": "pass",
+          "Elapsed": 2.99
+        },
+        {
+          "Test": "TestOriginalPluginSyncFailureIsolationAndInstalledSelection",
+          "Action": "pass",
+          "Elapsed": 1.33
+        },
+        {
+          "Test": "TestOriginalPluginSyncActualStartAndCloseCancellation",
+          "Action": "pass",
+          "Elapsed": 3.18
+        }
+      ],
+      "historical_not_new_execution": true
+    },
+    {
+      "name": "web-cache-tests.log",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/web-cache-tests.log.gz",
+        "sha256": "91f9f19d535d01dc4d27371aabd5bb401d12b4ab9e0894ed423ebf1fae834d75",
+        "bytes": 15450
+      },
+      "uncompressed_sha256": "c9ef77d41e9022ed36370c3ab1bc66eb958eddf831f04cdebd2ce314f394fcc9",
+      "uncompressed_bytes": 48233,
+      "matched_parent_roots": [],
+      "historical_not_new_execution": true
+    },
+    {
+      "name": "web-history-source-final-tests.log",
+      "file": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/testdata/plugin-module-no-official-auth-20261026/web-history-source-final-tests.log.gz",
+        "sha256": "7ebc0b3b67a6f7eae0ba936859b504158b8af5df365ab241fbb1c34cc33f4a96",
+        "bytes": 15532
+      },
+      "uncompressed_sha256": "5555e56de1ddbab54881097e6a713d9b995d46a24b92d5281d8df525cf9dd8f2",
+      "uncompressed_bytes": 48404,
+      "matched_parent_roots": [],
+      "historical_not_new_execution": true
+    }
+  ],
+  "parent_root_crossreference": {
+    "08": [
+      "TestPluginOriginalMarketSourcesPersistenceDiscoveryAndActualCards",
+      "TestOriginalMarketCatalogAcrossSourcesKeepsVersionAndConfiguredOrder"
+    ],
+    "10": [
+      "TestOriginalMarketFreshFailureCacheSourceOracle",
+      "TestOriginalMarketConcurrentRefreshJoinsAndWaiterCancellation",
+      "TestOriginalMarketHTTPHighestVersionCacheRefreshAndActualUpgrade"
+    ],
+    "11": [
+      "TestPluginOriginalArtifactForceDownloadFailureKeepsLoadedObjectUntilReload",
+      "TestPluginOriginalArtifactInstallSaveErrorAndReloadPersistentObject",
+      "TestOriginalStandardDirectModuleEndToEnd"
+    ],
+    "12": [
+      "TestOriginalMarketHistoryPreservesAuthorWireOrder",
+      "TestOriginalMarketGuideHistoryReleasesMetadataOnlyAndFailures",
+      "TestOriginalMarketReleaseForceReturnsCacheThenRefreshesSourceOracle",
+      "TestOriginalHistoryActualStatesAndImportedClassVersion"
+    ],
+    "13": [
+      "TestOriginalMarketVersionAndSourceOracle",
+      "TestOriginalMarketGuideHistoryReleasesMetadataOnlyAndFailures"
+    ],
+    "14": [
+      "TestOriginalMarketCatalogExactCloneUpdatePreservesSourceAndRecreatesAfterUninstall",
+      "TestPluginOriginalArtifactSourceUpgradeKeepsCopiedCloneVersion",
+      "TestOriginalStandardActualArtifactUpgradePreservesClone",
+      "TestPluginOriginalFrontendCloneUpgradeSameVersionAndForceFailure"
+    ],
+    "20": [
+      "TestOriginalPluginSyncUpgradeRepairAndNoop",
+      "TestOriginalPluginSyncFailureIsolationAndInstalledSelection",
+      "TestOriginalPluginSyncActualStartAndCloseCancellation",
+      "TestOriginalSafeModeKeepsManagementWithoutStartupExecution"
+    ]
+  },
+  "boundaries": [
+    "Historical preserved raw read/hash only, not rerun or assertion that all old dependency closures are current.",
+    "Old startup premature502 failure remains in process-startup-linux; later held-startup test explicitly passed.",
+    "Old received502->origin success expectation in TestOriginalMarketProxyMetadataInstallFallbackAndWikiFailure is superseded only for that assertion/root, not reused as proof."
+  ]
+}

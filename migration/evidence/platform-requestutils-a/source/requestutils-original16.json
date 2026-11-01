@@ -1,0 +1,1434 @@
+{
+  "status": "ORIGINAL_POST_JSON_REQUEST_RECORDING_COMPONENT_OBSERVED",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "input_manifest_sha256": "458849ad686aeca99ce89bce6ea8fd72480abd3cc8dfa120683a9722ef6b938b",
+  "python": {
+    "version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+    "isolated": 1,
+    "no_site": 1,
+    "dont_write_bytecode": 1
+  },
+  "source_nodes": [
+    {
+      "name": "request",
+      "first_line": 397,
+      "last_line": 464,
+      "source_bytes_sha256": "18eb1dfba126e1e6c44eec8bee7822ca6118f7d3c4aedc9d686f9cc0b5ab8149",
+      "ast_sha256": "1a78e3cb9d373e10c18834d322eb70fd1f879b40614020ed21f712669eb52331",
+      "decorators": []
+    },
+    {
+      "name": "post_json",
+      "first_line": 684,
+      "last_line": 709,
+      "source_bytes_sha256": "f60e73972c610b2b541c544e855658dbc1bdd969c40136b7edbe6204d306c32d",
+      "ast_sha256": "7df1580344fa44468b0b794dac9129d7fb08de64785b3d47418ba237233d40db",
+      "decorators": []
+    }
+  ],
+  "case_count": 16,
+  "cases": [
+    {
+      "id": "success-object-default-json",
+      "input": {
+        "id": "success-object-default-json",
+        "purpose": "Original json=None becomes{} before request; supplied response JSON object is returned.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": null
+        },
+        "response": {
+          "status": 200,
+          "json_text": "{\"owned\": true}",
+          "close_raises": false
+        },
+        "request_raises": null
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": {
+          "owned": true
+        },
+        "python_type": "dict"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {},
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_response",
+          "status": 200
+        },
+        {
+          "event": "recording_response_truth",
+          "status": 200,
+          "value": true
+        },
+        {
+          "event": "recording_response_json_call",
+          "body_text": "{\"owned\": true}"
+        },
+        {
+          "event": "recording_response_json_return",
+          "value": {
+            "owned": true
+          }
+        },
+        {
+          "event": "recording_response_close_call"
+        },
+        {
+          "event": "recording_response_close_return"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": {
+        "truth": 1,
+        "json": 1,
+        "close": 1,
+        "close_completed": true
+      }
+    },
+    {
+      "id": "success-null",
+      "input": {
+        "id": "success-null",
+        "purpose": "Return decoded JSON value without dict/result/solution coercion.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": {
+            "cmd": "request.get",
+            "url": "https://owned.invalid/page"
+          }
+        },
+        "response": {
+          "status": 200,
+          "json_text": "null",
+          "close_raises": false
+        },
+        "request_raises": null
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {
+              "cmd": "request.get",
+              "url": "https://owned.invalid/page"
+            },
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_response",
+          "status": 200
+        },
+        {
+          "event": "recording_response_truth",
+          "status": 200,
+          "value": true
+        },
+        {
+          "event": "recording_response_json_call",
+          "body_text": "null"
+        },
+        {
+          "event": "recording_response_json_return",
+          "value": null
+        },
+        {
+          "event": "recording_response_close_call"
+        },
+        {
+          "event": "recording_response_close_return"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": {
+        "truth": 1,
+        "json": 1,
+        "close": 1,
+        "close_completed": true
+      }
+    },
+    {
+      "id": "success-false",
+      "input": {
+        "id": "success-false",
+        "purpose": "Return decoded JSON value without dict/result/solution coercion.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": {
+            "cmd": "request.get",
+            "url": "https://owned.invalid/page"
+          }
+        },
+        "response": {
+          "status": 200,
+          "json_text": "false",
+          "close_raises": false
+        },
+        "request_raises": null
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {
+              "cmd": "request.get",
+              "url": "https://owned.invalid/page"
+            },
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_response",
+          "status": 200
+        },
+        {
+          "event": "recording_response_truth",
+          "status": 200,
+          "value": true
+        },
+        {
+          "event": "recording_response_json_call",
+          "body_text": "false"
+        },
+        {
+          "event": "recording_response_json_return",
+          "value": false
+        },
+        {
+          "event": "recording_response_close_call"
+        },
+        {
+          "event": "recording_response_close_return"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": {
+        "truth": 1,
+        "json": 1,
+        "close": 1,
+        "close_completed": true
+      }
+    },
+    {
+      "id": "success-list",
+      "input": {
+        "id": "success-list",
+        "purpose": "Return decoded JSON value without dict/result/solution coercion.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": {
+            "cmd": "request.get",
+            "url": "https://owned.invalid/page"
+          }
+        },
+        "response": {
+          "status": 200,
+          "json_text": "[1, null, false, {\"owned\": \"value\"}]",
+          "close_raises": false
+        },
+        "request_raises": null
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": [
+          1,
+          null,
+          false,
+          {
+            "owned": "value"
+          }
+        ],
+        "python_type": "list"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {
+              "cmd": "request.get",
+              "url": "https://owned.invalid/page"
+            },
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_response",
+          "status": 200
+        },
+        {
+          "event": "recording_response_truth",
+          "status": 200,
+          "value": true
+        },
+        {
+          "event": "recording_response_json_call",
+          "body_text": "[1, null, false, {\"owned\": \"value\"}]"
+        },
+        {
+          "event": "recording_response_json_return",
+          "value": [
+            1,
+            null,
+            false,
+            {
+              "owned": "value"
+            }
+          ]
+        },
+        {
+          "event": "recording_response_close_call"
+        },
+        {
+          "event": "recording_response_close_return"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": {
+        "truth": 1,
+        "json": 1,
+        "close": 1,
+        "close_completed": true
+      }
+    },
+    {
+      "id": "status-399",
+      "input": {
+        "id": "status-399",
+        "purpose": "RecordingResponse truth follows fixed vendor range; original post_json decides whether json() runs and always closes.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": {
+            "cmd": "sessions.destroy",
+            "session": "owned-session"
+          }
+        },
+        "response": {
+          "status": 399,
+          "json_text": "[\"owned status\"]",
+          "close_raises": false
+        },
+        "request_raises": null
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": [
+          "owned status"
+        ],
+        "python_type": "list"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {
+              "cmd": "sessions.destroy",
+              "session": "owned-session"
+            },
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_response",
+          "status": 399
+        },
+        {
+          "event": "recording_response_truth",
+          "status": 399,
+          "value": true
+        },
+        {
+          "event": "recording_response_json_call",
+          "body_text": "[\"owned status\"]"
+        },
+        {
+          "event": "recording_response_json_return",
+          "value": [
+            "owned status"
+          ]
+        },
+        {
+          "event": "recording_response_close_call"
+        },
+        {
+          "event": "recording_response_close_return"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": {
+        "truth": 1,
+        "json": 1,
+        "close": 1,
+        "close_completed": true
+      }
+    },
+    {
+      "id": "status-400",
+      "input": {
+        "id": "status-400",
+        "purpose": "RecordingResponse truth follows fixed vendor range; original post_json decides whether json() runs and always closes.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": {
+            "cmd": "sessions.destroy",
+            "session": "owned-session"
+          }
+        },
+        "response": {
+          "status": 400,
+          "json_text": "[\"owned status\"]",
+          "close_raises": false
+        },
+        "request_raises": null
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {
+              "cmd": "sessions.destroy",
+              "session": "owned-session"
+            },
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_response",
+          "status": 400
+        },
+        {
+          "event": "recording_response_truth",
+          "status": 400,
+          "value": false
+        },
+        {
+          "event": "recording_response_close_call"
+        },
+        {
+          "event": "recording_response_close_return"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": {
+        "truth": 1,
+        "json": 0,
+        "close": 1,
+        "close_completed": true
+      }
+    },
+    {
+      "id": "status-499",
+      "input": {
+        "id": "status-499",
+        "purpose": "RecordingResponse truth follows fixed vendor range; original post_json decides whether json() runs and always closes.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": {
+            "cmd": "sessions.destroy",
+            "session": "owned-session"
+          }
+        },
+        "response": {
+          "status": 499,
+          "json_text": "[\"owned status\"]",
+          "close_raises": false
+        },
+        "request_raises": null
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {
+              "cmd": "sessions.destroy",
+              "session": "owned-session"
+            },
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_response",
+          "status": 499
+        },
+        {
+          "event": "recording_response_truth",
+          "status": 499,
+          "value": false
+        },
+        {
+          "event": "recording_response_close_call"
+        },
+        {
+          "event": "recording_response_close_return"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": {
+        "truth": 1,
+        "json": 0,
+        "close": 1,
+        "close_completed": true
+      }
+    },
+    {
+      "id": "status-500",
+      "input": {
+        "id": "status-500",
+        "purpose": "RecordingResponse truth follows fixed vendor range; original post_json decides whether json() runs and always closes.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": {
+            "cmd": "sessions.destroy",
+            "session": "owned-session"
+          }
+        },
+        "response": {
+          "status": 500,
+          "json_text": "[\"owned status\"]",
+          "close_raises": false
+        },
+        "request_raises": null
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {
+              "cmd": "sessions.destroy",
+              "session": "owned-session"
+            },
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_response",
+          "status": 500
+        },
+        {
+          "event": "recording_response_truth",
+          "status": 500,
+          "value": false
+        },
+        {
+          "event": "recording_response_close_call"
+        },
+        {
+          "event": "recording_response_close_return"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": {
+        "truth": 1,
+        "json": 0,
+        "close": 1,
+        "close_completed": true
+      }
+    },
+    {
+      "id": "status-599",
+      "input": {
+        "id": "status-599",
+        "purpose": "RecordingResponse truth follows fixed vendor range; original post_json decides whether json() runs and always closes.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": {
+            "cmd": "sessions.destroy",
+            "session": "owned-session"
+          }
+        },
+        "response": {
+          "status": 599,
+          "json_text": "[\"owned status\"]",
+          "close_raises": false
+        },
+        "request_raises": null
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {
+              "cmd": "sessions.destroy",
+              "session": "owned-session"
+            },
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_response",
+          "status": 599
+        },
+        {
+          "event": "recording_response_truth",
+          "status": 599,
+          "value": false
+        },
+        {
+          "event": "recording_response_close_call"
+        },
+        {
+          "event": "recording_response_close_return"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": {
+        "truth": 1,
+        "json": 0,
+        "close": 1,
+        "close_completed": true
+      }
+    },
+    {
+      "id": "status-600",
+      "input": {
+        "id": "status-600",
+        "purpose": "RecordingResponse truth follows fixed vendor range; original post_json decides whether json() runs and always closes.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": {
+            "cmd": "sessions.destroy",
+            "session": "owned-session"
+          }
+        },
+        "response": {
+          "status": 600,
+          "json_text": "[\"owned status\"]",
+          "close_raises": false
+        },
+        "request_raises": null
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": [
+          "owned status"
+        ],
+        "python_type": "list"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {
+              "cmd": "sessions.destroy",
+              "session": "owned-session"
+            },
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_response",
+          "status": 600
+        },
+        {
+          "event": "recording_response_truth",
+          "status": 600,
+          "value": true
+        },
+        {
+          "event": "recording_response_json_call",
+          "body_text": "[\"owned status\"]"
+        },
+        {
+          "event": "recording_response_json_return",
+          "value": [
+            "owned status"
+          ]
+        },
+        {
+          "event": "recording_response_close_call"
+        },
+        {
+          "event": "recording_response_close_return"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": {
+        "truth": 1,
+        "json": 1,
+        "close": 1,
+        "close_completed": true
+      }
+    },
+    {
+      "id": "invalid-json",
+      "input": {
+        "id": "invalid-json",
+        "purpose": "Supplied json() uses stdlib malformed JSON exception; original broad parse catch emits DEBUG then finally closes.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": null
+        },
+        "response": {
+          "status": 200,
+          "json_text": "{",
+          "close_raises": false
+        },
+        "request_raises": null
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {},
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_response",
+          "status": 200
+        },
+        {
+          "event": "recording_response_truth",
+          "status": 200,
+          "value": true
+        },
+        {
+          "event": "recording_response_json_call",
+          "body_text": "{"
+        },
+        {
+          "event": "recording_response_json_exception",
+          "class": "JSONDecodeError",
+          "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+        },
+        {
+          "event": "log",
+          "level": "DEBUG",
+          "message": "解析JSON失败: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+        },
+        {
+          "event": "recording_response_close_call"
+        },
+        {
+          "event": "recording_response_close_return"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": {
+        "truth": 1,
+        "json": 1,
+        "close": 1,
+        "close_completed": true
+      }
+    },
+    {
+      "id": "request-connection-error",
+      "input": {
+        "id": "request-connection-error",
+        "purpose": "Original first RequestException-family handler returns None without retry with fixed sessionNone.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": null
+        },
+        "response": null,
+        "request_raises": "ConnectionError"
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {},
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_exception",
+          "dependency_class": "ConnectionError",
+          "actual_recording_class": "RecordingConnectionError",
+          "message": "owned ConnectionError failure"
+        },
+        {
+          "event": "log",
+          "level": "DEBUG",
+          "message": "同步请求失败(不重试): owned ConnectionError failure"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": null
+    },
+    {
+      "id": "request-base-requestexception",
+      "input": {
+        "id": "request-base-requestexception",
+        "purpose": "Original second RequestException handler logs then returnsNone; no response assigned/closed.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": null
+        },
+        "response": null,
+        "request_raises": "RequestException"
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {},
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_exception",
+          "dependency_class": "RequestException",
+          "actual_recording_class": "RecordingRequestException",
+          "message": "owned RequestException failure"
+        },
+        {
+          "event": "log",
+          "level": "DEBUG",
+          "message": "请求失败: owned RequestException failure"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": null
+    },
+    {
+      "id": "request-unexpected-runtimeerror",
+      "input": {
+        "id": "request-unexpected-runtimeerror",
+        "purpose": "Unexpected non-RequestException escapes request before post_json response try/finally.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": null
+        },
+        "response": null,
+        "request_raises": "RuntimeError"
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "uncaught_exception",
+        "class": "RuntimeError",
+        "message": "owned RuntimeError failure"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {},
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_exception",
+          "dependency_class": "RuntimeError",
+          "actual_recording_class": "RuntimeError",
+          "message": "owned RuntimeError failure"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": null
+    },
+    {
+      "id": "close-error-after-value",
+      "input": {
+        "id": "close-error-after-value",
+        "purpose": "Original finally close failure overrides the already computed successful return.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": null
+        },
+        "response": {
+          "status": 200,
+          "json_text": "{\"owned\": true}",
+          "close_raises": true
+        },
+        "request_raises": null
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "uncaught_exception",
+        "class": "RuntimeError",
+        "message": "owned response close failure"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {},
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_response",
+          "status": 200
+        },
+        {
+          "event": "recording_response_truth",
+          "status": 200,
+          "value": true
+        },
+        {
+          "event": "recording_response_json_call",
+          "body_text": "{\"owned\": true}"
+        },
+        {
+          "event": "recording_response_json_return",
+          "value": {
+            "owned": true
+          }
+        },
+        {
+          "event": "recording_response_close_call"
+        },
+        {
+          "event": "recording_response_close_exception",
+          "class": "RuntimeError",
+          "message": "owned response close failure"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": {
+        "truth": 1,
+        "json": 1,
+        "close": 1,
+        "close_completed": false
+      }
+    },
+    {
+      "id": "close-error-after-json-error",
+      "input": {
+        "id": "close-error-after-json-error",
+        "purpose": "Parse DEBUG occurs first, but ordinary close failure overrides the planned None return.",
+        "call": {
+          "url": "https://owned-fs.invalid/v1",
+          "json": null
+        },
+        "response": {
+          "status": 200,
+          "json_text": "{",
+          "close_raises": true
+        },
+        "request_raises": null
+      },
+      "fixed_receiver_fields": {
+        "session": null,
+        "proxies": null,
+        "cookies": null,
+        "timeout": 60,
+        "headers": {
+          "User-Agent": null,
+          "Content-Type": "application/json",
+          "Accept": null,
+          "referer": null
+        }
+      },
+      "outcome": {
+        "kind": "uncaught_exception",
+        "class": "RuntimeError",
+        "message": "owned response close failure"
+      },
+      "trace": [
+        {
+          "event": "recording_requests_request",
+          "ordinal": 1,
+          "method": "post",
+          "url": "https://owned-fs.invalid/v1",
+          "kwargs": {
+            "data": null,
+            "json": {},
+            "headers": {
+              "User-Agent": null,
+              "Content-Type": "application/json",
+              "Accept": null,
+              "referer": null
+            },
+            "cookies": null,
+            "proxies": null,
+            "timeout": 60,
+            "verify": false,
+            "stream": false
+          }
+        },
+        {
+          "event": "recording_requests_response",
+          "status": 200
+        },
+        {
+          "event": "recording_response_truth",
+          "status": 200,
+          "value": true
+        },
+        {
+          "event": "recording_response_json_call",
+          "body_text": "{"
+        },
+        {
+          "event": "recording_response_json_exception",
+          "class": "JSONDecodeError",
+          "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+        },
+        {
+          "event": "log",
+          "level": "DEBUG",
+          "message": "解析JSON失败: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+        },
+        {
+          "event": "recording_response_close_call"
+        },
+        {
+          "event": "recording_response_close_exception",
+          "class": "RuntimeError",
+          "message": "owned response close failure"
+        }
+      ],
+      "recording_request_calls": 1,
+      "recording_response_counts": {
+        "truth": 1,
+        "json": 1,
+        "close": 1,
+        "close_completed": false
+      }
+    }
+  ],
+  "boundaries": [
+    "Exactly complete original RequestUtils.request and post_json nodes; no original constructor or whole module.",
+    "Fixed FS receiver sessionNone/timeout60/no cookies/proxies; actual header preparation is outside this capture.",
+    "Named requests request/exception family ports, not vendor import/execution or sys.modules replacement.",
+    "Response truth rule is supplied from static fixed vendor; stdlib JSON text parsing and close are recording dependencies.",
+    "Exact trace retains original DEBUG and finally order; no Go expected values or postprocessed source results.",
+    "No HTTP/TLS/proxy/redirect/charset/decompression/real Session/engine/credential/DB evidence is produced.",
+    "Original helper18 remains inherited and is not recaptured; this is only its direct HTTP abstraction return/error boundary."
+  ],
+  "forbidden_imports_absent": true,
+  "input_drift": []
+}

@@ -1,0 +1,736 @@
+--- a/internal/app/plugin_original_install.go
++++ b/internal/app/plugin_original_install.go
+@@ -72,7 +72,7 @@
+ 		return map[string]any{"success": true}, nil
+ 	}
+ 	if input.Repository != "" {
+-		client, clientErr := a.originalPluginHTTPClient(0, true)
++		client, clientErr := a.originalPluginMaterialHTTPClient(0)
+ 		if clientErr != nil {
+ 			return map[string]any{"success": false, "message": "插件仓库代理配置无效"}, nil
+ 		}
+@@ -131,7 +131,7 @@
+ 	if localWatch {
+ 		beforeCode, beforeErr = artifacts.ReadInstalled(a.pluginPackageRoot(), id, validatePluginArtifactContract)
+ 	}
+-	client, err := a.originalPluginHTTPClient(0, true)
++	client, err := a.originalPluginMaterialHTTPClient(0)
+ 	if err != nil {
+ 		return true, bad("INVALID_PROXY", "插件仓库代理配置无效")
+ 	}
+--- a/internal/app/plugin_original_market_cache.go
++++ b/internal/app/plugin_original_market_cache.go
+@@ -99,7 +99,7 @@
+ 			fetchURL = parsed.String()
+ 		}
+ 	}
+-	client, err := a.originalPluginHTTPClient(30*time.Second, true)
++	client, err := a.originalPluginMaterialHTTPClient(30 * time.Second)
+ 	var discoveries []artifacts.Discovery
+ 	sourcePackages, packagesCached, packageSucceeded := false, false, false
+ 	loadPackages := func(ctx context.Context, sourceURL string, client *http.Client) ([]artifacts.Discovery, error) {
+--- a/internal/app/plugin_original_network.go
++++ b/internal/app/plugin_original_network.go
+@@ -4,6 +4,8 @@
+ 	"net/http"
+ 	"strings"
+ 	"time"
++
++	"light-media/internal/networkproxy"
+ )
+ 
+ // Reuse the host PROXY configuration. Wiki supplies that mapping directly;
+@@ -11,6 +13,12 @@
+ // requests' ordinary environment transport after an explicit proxy fails.
+ // Artifact code retains its own bounded metadata/download contexts.
+ func (a *App) originalPluginHTTPClient(timeout time.Duration, repositoryFallback bool) (*http.Client, error) {
++	return a.originalPluginHTTPClientWithBase(timeout, repositoryFallback, nil)
++}
++
++// A base is supplied only by the explicitly named source-compatible consumers.
++// The ordinary entry above, including Wiki, retains its existing TLS policy.
++func (a *App) originalPluginHTTPClientWithBase(timeout time.Duration, repositoryFallback bool, base *http.Transport) (*http.Client, error) {
+ 	settings := a.Settings()
+ 	if repositoryFallback {
+ 		if err := validateOriginalGitHubSettings(settings); err != nil {
+@@ -21,7 +29,7 @@
+ 	if err != nil {
+ 		return nil, err
+ 	}
+-	transport, err := config.Transport(nil)
++	transport, err := config.Transport(base)
+ 	if err != nil {
+ 		return nil, err
+ 	}
+@@ -29,16 +37,16 @@
+ 		closeOriginalPluginTransport(transport)
+ 		// Source has no explicit PROXY strategy unless PROXY_HOST is set.
+ 		// Its ordinary requests path still observes ALL_PROXY and NO_PROXY.
+-		transport = originalPluginEnvironmentTransport()
++		transport = networkproxy.NewRequestsTransport(base, nil)
+ 	} else if repositoryFallback {
+ 		// This is requests' ordinary environment route, not another explicit
+ 		// PROXY mapping. In particular NO_PROXY can bypass the same URL that
+ 		// was just used explicitly; equal proxy strings do not skip this step.
+-		fallback := originalPluginEnvironmentTransport()
++		fallback := networkproxy.NewRequestsTransport(base, nil)
+ 		transport = &originalPluginFallbackTransport{preferred: transport, fallback: fallback}
+ 	}
+ 	if repositoryFallback {
+-		transport = &originalGitHubTransport{base: transport, mirror: originalPluginEnvironmentTransport(), settings: Settings{GitHubProxy: settings.GitHubProxy, GitHubToken: settings.GitHubToken, RepoGitHubToken: settings.RepoGitHubToken}}
++		transport = &originalGitHubTransport{base: transport, mirror: networkproxy.NewRequestsTransport(base, nil), settings: Settings{GitHubProxy: settings.GitHubProxy, GitHubToken: settings.GitHubToken, RepoGitHubToken: settings.RepoGitHubToken}}
+ 	}
+ 	return &http.Client{Timeout: timeout, Transport: transport}, nil
+ }
+@@ -53,9 +61,11 @@
+ 	preferred, fallback http.RoundTripper
+ }
+ 
++// Source get_res(raise_exception=True) advances strategies only on transport
++// exceptions. A received HTTP failure is still a response for the caller.
+ func (t *originalPluginFallbackTransport) RoundTrip(request *http.Request) (*http.Response, error) {
+ 	response, err := t.preferred.RoundTrip(request)
+-	if request.Method != http.MethodGet || request.Context().Err() != nil || (err == nil && response.StatusCode < http.StatusBadRequest) {
++	if request.Method != http.MethodGet || request.Context().Err() != nil || err == nil {
+ 		return response, err
+ 	}
+ 	if response != nil && response.Body != nil {
+--- /dev/null
++++ b/internal/app/plugin_original_requestutils_tls.go
+@@ -0,0 +1,29 @@
++package app
++
++import (
++	"crypto/tls"
++	"net/http"
++	"time"
++)
++
++// originalPluginSourceTLSBase is a private template, never a mutation of the
++// default transport, system roots, environment, or another consumer's client.
++// Fixed RequestUtils.request uses verify=False. This A-only candidate covers
++// only plugin material requests below. Statistics, Wiki and future callers of
++// the existing originalPluginHTTPClient entry point retain their old policy.
++func originalPluginSourceTLSBase() *http.Transport {
++	base := http.DefaultTransport.(*http.Transport).Clone()
++	if base.TLSClientConfig == nil {
++		base.TLSClientConfig = &tls.Config{}
++	} else {
++		base.TLSClientConfig = base.TLSClientConfig.Clone()
++	}
++	base.TLSClientConfig.InsecureSkipVerify = true
++	return base
++}
++
++// A: exact existing index/release/compatibility/acquisition requests. Proxy
++// selection, mirror/API routing, credential isolation and budgets are unchanged.
++func (a *App) originalPluginMaterialHTTPClient(timeout time.Duration) (*http.Client, error) {
++	return a.originalPluginHTTPClientWithBase(timeout, true, originalPluginSourceTLSBase())
++}
+--- a/internal/app/plugin_original_network_test.go
++++ b/internal/app/plugin_original_network_test.go
+@@ -1,103 +1,85 @@
+ package app
+ 
+ import (
+-	"context"
+-	"encoding/json"
++	"io"
++	"light-media/internal/networkproxy"
++	"net"
+ 	"net/http"
+ 	"net/http/httptest"
+-	"reflect"
+-	"strings"
+ 	"sync/atomic"
+ 	"testing"
+ 	"time"
+ )
+ 
+-// Fixed helper/plugin.py:1643 prefers the configured proxy and retries the
+-// ordinary request on HTTP/network failure. system.py:835 supplies PROXY to
+-// Wiki directly, without that repository fallback. No global transport changes.
++// The historical test name is retained, but its incorrect received502 ->
++// successful origin/install expectation is retired. This finite replacement
++// checks only the shared HTTP response boundary and Wiki's no-fallback route;
++// it does not claim to install a worker or exercise a Wiki public endpoint.
+ func TestOriginalMarketProxyMetadataInstallFallbackAndWikiFailure(t *testing.T) {
+-	for _, name := range []string{"HTTP_PROXY", "http_proxy", "HTTPS_PROXY", "https_proxy", "ALL_PROXY", "all_proxy", "NO_PROXY", "no_proxy"} {
+-		t.Setenv(name, "")
+-	}
+-	index, binary := originalMarketOwnedIndex(t, "OWNED_STANDARD_FIXTURE_BINARY")
+-	var originIndexes, originPayloads, proxyGets, proxyConnects atomic.Int32
+-	origin := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+-		if r.URL.Path == "/index" {
+-			originIndexes.Add(1)
+-			json.NewEncoder(w).Encode(index)
+-		} else if r.URL.Path == "/worker" {
+-			originPayloads.Add(1)
+-			w.Write(binary)
+-		} else {
+-			http.NotFound(w, r)
+-		}
++	var originHits, proxyHits atomic.Int32
++	origin := originalMarketProxyOwnedHTTP(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		originHits.Add(1)
++		_, _ = io.WriteString(w, "unexpected origin")
+ 	}))
+-	defer origin.Close()
+-	index.Releases[0].Artifacts[0].URL = origin.URL + "/worker"
+-	var proxyFails atomic.Bool
+-	proxy := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+-		if r.Method == http.MethodConnect {
+-			proxyConnects.Add(1)
+-			if r.Host != "raw.githubusercontent.com:443" {
+-				t.Error("Wiki proxy received an unrelated destination")
+-			}
+-			http.Error(w, "synthetic proxy failure body must stay private", 502)
++	proxy := originalMarketProxyOwnedHTTP(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		if r.Method != http.MethodGet || r.URL.Scheme != "http" || r.URL.Host != origin.Listener.Addr().String() || r.URL.Path != "/index" || r.URL.RawQuery != "" || r.Header.Get("Authorization") != "" || r.Header.Get("Proxy-Authorization") != "" {
++			t.Error("fixed HTTP response peer rejected unknown route")
++			w.WriteHeader(http.StatusForbidden)
+ 			return
+ 		}
+-		proxyGets.Add(1)
+-		if proxyFails.Load() {
+-			http.Error(w, "synthetic proxy failure body must stay private", 502)
+-			return
+-		}
+-		json.NewEncoder(w).Encode(index)
++		proxyHits.Add(1)
++		w.WriteHeader(http.StatusBadGateway)
++		_, _ = io.WriteString(w, "owned received502")
+ 	}))
+-	defer proxy.Close()
+-	// An equal environment proxy must still allow the ordinary NO_PROXY
+-	// fallback after the explicitly configured route fails.
+-	t.Setenv("HTTP_PROXY", proxy.URL)
+-	t.Setenv("HTTPS_PROXY", proxy.URL)
+-	t.Setenv("NO_PROXY", "127.0.0.1")
+-	a := newTestApp(t)
+-	cookie := setupTestAdmin(t, a)
+-	settings := a.Settings()
+-	settings.PluginMarkets = []string{origin.URL + "/index"}
+-	settings.ProxyHost = proxy.URL
+-	if err := a.saveSettings(context.Background(), settings); err != nil {
++	request, err := http.NewRequest(http.MethodGet, origin.URL+"/index", nil)
++	if err != nil {
+ 		t.Fatal(err)
+ 	}
+-	read := func() {
+-		t.Helper()
+-		response := callTest(t, a.Handler(), "GET", "/api/plugins/market?details=true&force=true", "", cookie, "")
+-		if response.Code != 200 || !strings.Contains(response.Body.String(), `"plugin_id":"`+index.PluginID+`"`) {
+-			t.Fatal("actual proxied metadata was not returned")
++	// If a broken candidate enters its inherited fallback, that path must
++	// still target only our owned origin. Do not rewrite NO_PROXY or swap a
++	// route to make the test pass; fail before dispatch if env differs.
++	nextProxy, err := networkproxy.RequestsProxy(request)
++	if err != nil || nextProxy != nil {
++		t.Fatal("owned fallback guard blocked by inherited environment; no request sent")
++	}
++	empty := ""
++	a := &App{config: Settings{ProxyHost: proxy.URL, PluginServerURL: &empty}}
++	material, err := a.originalPluginMaterialHTTPClient(3 * time.Second)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer material.CloseIdleConnections()
++	wiki, err := a.originalPluginHTTPClient(3*time.Second, false)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer wiki.CloseIdleConnections()
++	for _, client := range []*http.Client{material, wiki} {
++		response, err := client.Do(request.Clone(request.Context()))
++		if err != nil {
++			t.Fatal(err)
++		}
++		body, readErr := io.ReadAll(response.Body)
++		response.Body.Close()
++		if readErr != nil || response.StatusCode != 502 || string(body) != "owned received502" {
++			t.Fatal("received proxy response changed", response.StatusCode, readErr)
+ 		}
+ 	}
+-	read()
+-	if originIndexes.Load() != 0 || proxyGets.Load() != 1 {
+-		t.Fatal("configured proxy did not supply successful metadata")
++	if proxyHits.Load() != 2 || originHits.Load() != 0 {
++		t.Fatal("received HTTP502 entered origin fallback", proxyHits.Load(), originHits.Load())
+ 	}
+-	proxyFails.Store(true)
+-	read()
+-	if originIndexes.Load() != 1 || proxyGets.Load() != 2 {
+-		t.Fatal("repository HTTP failure did not use ordinary fallback")
++}
++
++func originalMarketProxyOwnedHTTP(t *testing.T, handler http.Handler) *httptest.Server {
++	t.Helper()
++	listener, err := net.Listen("tcp4", "127.0.0.1:0")
++	if err != nil {
++		t.Fatal(err)
+ 	}
+-	input, _ := json.Marshal(map[string]any{"plugin_id": index.PluginID, "repo_url": origin.URL + "/index"})
+-	response := callTest(t, a.Handler(), "POST", "/api/plugins/install", string(input), cookie, "")
+-	assertOriginalRegistrySuccess(t, response.Code, response.Body.Bytes())
+-	loaded, ok := a.pluginRunningInstances.Load(index.PluginID)
+-	if !ok || ownedStandardVersionRead(t, loaded.(*originalPluginInstance)).Version != "1.0" || originPayloads.Load() != 1 || proxyGets.Load() != 4 {
+-		t.Fatal("proxy fallback did not acquire and execute the actual Go artifact")
+-	}
+-	before := a.Settings().PluginMarkets
+-	response = callTest(t, a.Handler(), "POST", "/api/plugins/markets/sync-wiki", `{}`, cookie, "")
+-	var result struct{ Data struct{ Success bool } }
+-	if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &result) != nil || result.Data.Success || proxyConnects.Load() != 1 || !reflect.DeepEqual(before, a.Settings().PluginMarkets) || strings.Contains(response.Body.String(), "failure body") {
+-		t.Fatal("Wiki proxy failure changed settings, escaped its direct proxy policy or leaked a remote body")
+-	}
+-	response = callTest(t, a.Handler(), "POST", "/api/plugins/markets/sync-wiki", `{"wiki_url":"https://other.invalid/wiki"}`, cookie, "")
+-	if proxyConnects.Load() != 1 || !strings.Contains(response.Body.String(), "不支持的 Wiki") {
+-		t.Fatal("unapproved Wiki destination reached the network")
+-	}
++	peer := &httptest.Server{Listener: listener, Config: &http.Server{Handler: handler}}
++	peer.Start()
++	t.Cleanup(peer.Close)
++	return peer
+ }
+ 
+ // The pinned no-PROXY_HOST strategy invokes ordinary requests, including
+--- /dev/null
++++ b/internal/app/plugin_original_requestutils_tls_test.go
+@@ -0,0 +1,212 @@
++package app
++
++import (
++	"context"
++	"crypto/x509"
++	"errors"
++	"io"
++	"log"
++	"net"
++	"net/http"
++	"net/http/httptest"
++	"strings"
++	"sync/atomic"
++	"testing"
++	"time"
++
++	"light-media/internal/networkproxy"
++)
++
++type originalRequestUtilsTestRoundTrip func(*http.Request) (*http.Response, error)
++
++func (f originalRequestUtilsTestRoundTrip) RoundTrip(r *http.Request) (*http.Response, error) {
++	return f(r)
++}
++
++// No constructor listener with an IPv6 fallback; no upstream client, CONNECT,
++// forwarding, environment rewrite, UID discovery or production App startup.
++func originalRequestUtilsOwnedTLS(t *testing.T, handler http.Handler) *httptest.Server {
++	t.Helper()
++	listener, err := net.Listen("tcp4", "127.0.0.1:0")
++	if err != nil {
++		t.Fatal(err)
++	}
++	peer := &httptest.Server{Listener: listener, Config: &http.Server{Handler: handler, ErrorLog: log.New(io.Discard, "", 0)}}
++	peer.StartTLS()
++	t.Cleanup(peer.Close)
++	return peer
++}
++
++func originalRequestUtilsTestApp(proxy string) *App {
++	empty := ""
++	return &App{config: Settings{ProxyHost: proxy, PluginServerURL: &empty}}
++}
++
++func TestOriginalRequestUtilsPrivateTLSBaseIsolation(t *testing.T) {
++	original := http.DefaultTransport.(*http.Transport)
++	originalTLS := original.TLSClientConfig
++	originalSkip := originalTLS != nil && originalTLS.InsecureSkipVerify
++	first, second := originalPluginSourceTLSBase(), originalPluginSourceTLSBase()
++	defer first.CloseIdleConnections()
++	defer second.CloseIdleConnections()
++	if first == original || second == original || first == second || first.TLSClientConfig == nil || second.TLSClientConfig == nil || first.TLSClientConfig == second.TLSClientConfig || !first.TLSClientConfig.InsecureSkipVerify || !second.TLSClientConfig.InsecureSkipVerify {
++		t.Fatal("source TLS templates are not private")
++	}
++	first.TLSClientConfig.InsecureSkipVerify = false
++	if !second.TLSClientConfig.InsecureSkipVerify || http.DefaultTransport != original || original.TLSClientConfig != originalTLS || (originalTLS != nil && originalTLS.InsecureSkipVerify) != originalSkip {
++		t.Fatal("TLS policy leaked across templates or default transport")
++	}
++	// Construct A and two independent strict generic clients without dispatch.
++	// The original B server hook and Wiki both retain the generic strict policy.
++	a := originalRequestUtilsTestApp("")
++	material, err := a.originalPluginMaterialHTTPClient(time.Second)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer material.CloseIdleConnections()
++	strictSecond, err := a.originalPluginHTTPClient(time.Second, false)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer strictSecond.CloseIdleConnections()
++	strict, err := a.originalPluginHTTPClient(time.Second, false)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer strict.CloseIdleConnections()
++	if material.Transport == strictSecond.Transport || strict.Transport == strictSecond.Transport || material.Transport == strict.Transport {
++		t.Fatal("consumer transports unexpectedly shared")
++	}
++}
++
++func TestOriginalRequestUtilsOwnedHTTPSMaterial(t *testing.T) {
++	var calls atomic.Int32
++	peer := originalRequestUtilsOwnedTLS(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		if r.Method != http.MethodGet || r.URL.IsAbs() || (r.URL.Path != "/index" && r.URL.Path != "/received503") || r.URL.RawQuery != "" || r.Header.Get("Authorization") != "" || r.Header.Get("Proxy-Authorization") != "" {
++			t.Error("fixed owned HTTPS endpoint rejected unknown request")
++			w.WriteHeader(http.StatusForbidden)
++			return
++		}
++		calls.Add(1)
++		if r.URL.Path == "/received503" {
++			w.WriteHeader(http.StatusServiceUnavailable)
++		}
++		_, _ = io.WriteString(w, "owned-response")
++	}))
++	a := originalRequestUtilsTestApp("")
++	material, err := a.originalPluginMaterialHTTPClient(3 * time.Second)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer material.CloseIdleConnections()
++	request := func(ctx context.Context, path string) *http.Request {
++		t.Helper()
++		r, err := http.NewRequestWithContext(ctx, http.MethodGet, peer.URL+path, nil)
++		if err != nil {
++			t.Fatal(err)
++		}
++		// Resolve with the exact production requests environment resolver. If
++		// the current environment no longer directly authorizes this owned
++		// endpoint via its existing NO_PROXY, stop BEFORE any dispatch. Never
++		// modify env, select a substitute route, retry direct, or use CONNECT.
++		proxy, err := networkproxy.RequestsProxy(r)
++		if err != nil || proxy != nil {
++			t.Fatal("owned endpoint blocked by inherited proxy route; no request sent")
++		}
++		return r
++	}
++	for _, row := range []struct {
++		path   string
++		status int
++	}{{"/index", 200}, {"/received503", 503}} {
++		response, err := material.Do(request(context.Background(), row.path))
++		if err != nil {
++			t.Fatal("owned target HTTPS failed", err)
++		}
++		body, readErr := io.ReadAll(response.Body)
++		response.Body.Close()
++		if readErr != nil || response.StatusCode != row.status || string(body) != "owned-response" {
++			t.Fatal("received response changed", response.StatusCode, readErr)
++		}
++	}
++	// Exact existing strict environment transport, same inherited route. This
++	// is a strict-template negative control, NOT a Wiki/B real request claim.
++	strict := &http.Client{Transport: originalPluginEnvironmentTransport(), Timeout: 3 * time.Second}
++	defer strict.CloseIdleConnections()
++	response, err := strict.Do(request(context.Background(), "/index"))
++	if response != nil {
++		response.Body.Close()
++	}
++	var untrusted x509.UnknownAuthorityError
++	if err == nil || !errors.As(err, &untrusted) || calls.Load() != 2 {
++		t.Fatal("strict template changed or unexpected HTTP reached owned endpoint", calls.Load(), err)
++	}
++	ctx, cancel := context.WithCancel(context.Background())
++	cancel()
++	response, err = material.Do(request(ctx, "/index"))
++	if response != nil {
++		response.Body.Close()
++	}
++	if !errors.Is(err, context.Canceled) || calls.Load() != 2 {
++		t.Fatal("canceled request reached owned endpoint", calls.Load(), err)
++	}
++}
++
++type originalRequestUtilsTestBody struct {
++	io.Reader
++	closed bool
++}
++
++func (b *originalRequestUtilsTestBody) Close() error { b.closed = true; return nil }
++
++func TestOriginalRequestUtilsFallbackSourceResponses(t *testing.T) {
++	for _, status := range []int{200, 400, 503} {
++		body := &originalRequestUtilsTestBody{Reader: strings.NewReader("received")}
++		response := &http.Response{StatusCode: status, Body: body}
++		fallbackCalls := 0
++		transport := &originalPluginFallbackTransport{
++			preferred: originalRequestUtilsTestRoundTrip(func(*http.Request) (*http.Response, error) { return response, nil }),
++			fallback: originalRequestUtilsTestRoundTrip(func(*http.Request) (*http.Response, error) {
++				fallbackCalls++
++				return nil, errors.New("unexpected fallback")
++			}),
++		}
++		request, _ := http.NewRequest(http.MethodGet, "http://owned.invalid/recording-only", nil)
++		got, err := transport.RoundTrip(request)
++		if err != nil || got != response || body.closed || fallbackCalls != 0 {
++			t.Fatal("HTTP response must reach caller unchanged", status, err)
++		}
++		got.Body.Close()
++	}
++	body := &originalRequestUtilsTestBody{Reader: strings.NewReader("incomplete")}
++	first := &http.Response{StatusCode: 200, Body: body}
++	last := &http.Response{StatusCode: 204, Body: io.NopCloser(strings.NewReader(""))}
++	fallbackCalls := 0
++	transport := &originalPluginFallbackTransport{
++		preferred: originalRequestUtilsTestRoundTrip(func(*http.Request) (*http.Response, error) { return first, io.EOF }),
++		fallback: originalRequestUtilsTestRoundTrip(func(*http.Request) (*http.Response, error) {
++			fallbackCalls++
++			if !body.closed {
++				t.Error("failed response body not closed before fallback")
++			}
++			return last, nil
++		}),
++	}
++	request, _ := http.NewRequest(http.MethodGet, "http://owned.invalid/recording-only", nil)
++	got, err := transport.RoundTrip(request)
++	if err != nil || got != last || fallbackCalls != 1 || !body.closed {
++		t.Fatal("transport exception fallback changed", err)
++	}
++	got.Body.Close()
++	ctx, cancel := context.WithCancel(context.Background())
++	cancel()
++	request = request.WithContext(ctx)
++	canceledBody := &originalRequestUtilsTestBody{Reader: strings.NewReader("caller-owned")}
++	canceledResponse := &http.Response{StatusCode: 200, Body: canceledBody}
++	transport.preferred = originalRequestUtilsTestRoundTrip(func(*http.Request) (*http.Response, error) { return canceledResponse, io.EOF })
++	got, err = transport.RoundTrip(request)
++	if got != canceledResponse || err != io.EOF || fallbackCalls != 1 || canceledBody.closed {
++		t.Fatal("canceled request entered fallback", err)
++	}
++	got.Body.Close()
++}
+--- /dev/null
++++ b/internal/app/plugin_original_requestutils_owned_install_test.go
+@@ -0,0 +1,222 @@
++package app
++
++import (
++	"context"
++	"database/sql"
++	"encoding/json"
++	"errors"
++	"net/http"
++	"net/url"
++	"reflect"
++	"strings"
++	"sync/atomic"
++	"testing"
++
++	"light-media/internal/networkproxy"
++	"light-media/internal/plugins/artifacts"
++)
++
++// One real A consumer chain. It does not test B, a normal server process,
++// public GitHub, a distinct-version update, or any UI. The inherited old center
++// isolation is explicit; proxy/env/TLS policy is never rewritten by this root.
++func TestOriginalRequestUtilsOwnedTLSInstallRecoveryAndCold(t *testing.T) {
++	ctx := context.Background()
++	index, binary := originalMarketOwnedIndex(t, "OWNED_STANDARD_FIXTURE_BINARY")
++	if index.PluginID != ownedStandardFixtureID || index.CurrentVersion != "1.0" {
++		t.Fatal("requires the bound, already compiled ordinary owned standard worker")
++	}
++	index.History = map[string]string{"1.0": "owned actual release"}
++	var indexes, payloads, unexpected atomic.Int32
++	var failPayload atomic.Bool
++	failPayload.Store(true)
++	peer := originalRequestUtilsOwnedTLS(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		if r.Method != http.MethodGet || r.URL.IsAbs() || r.Header.Get("Authorization") != "" || r.Header.Get("Proxy-Authorization") != "" {
++			unexpected.Add(1)
++			http.Error(w, "fixed owned request required", 403)
++			return
++		}
++		for key := range r.URL.Query() {
++			if key != "_refresh" || r.URL.Path != "/index" {
++				unexpected.Add(1)
++				http.Error(w, "unknown owned query", 403)
++				return
++			}
++		}
++		switch r.URL.Path {
++		case "/index":
++			indexes.Add(1)
++			_ = json.NewEncoder(w).Encode(index)
++		case "/worker":
++			payloads.Add(1)
++			if failPayload.Load() {
++				http.Error(w, "owned-artifact-failure-private-marker", 503)
++				return
++			}
++			_, _ = w.Write(binary)
++		default:
++			unexpected.Add(1)
++			http.NotFound(w, r)
++		}
++	}))
++	index.Releases[0].Artifacts[0].URL = peer.URL + "/worker"
++	// The production ordinary environment route must already select these
++	// owned destinations. No request is sent if that condition does not hold.
++	for _, path := range []string{"/index", "/worker"} {
++		r, _ := http.NewRequest(http.MethodGet, peer.URL+path, nil)
++		proxy, err := networkproxy.RequestsProxy(r)
++		if err != nil || proxy != nil {
++			t.Fatal("owned A endpoint unavailable on inherited route; no alternate route")
++		}
++	}
++	dir := t.TempDir()
++	a, err := New(Options{DataDir: dir})
++	if err != nil {
++		t.Fatal(err)
++	}
++	t.Cleanup(func() {
++		if a != nil {
++			_ = a.Close()
++		}
++	})
++	disableResetFixtureStatistics(t, a) // old PluginStatisticShare/PluginServerURL only; not a B result
++	cookie := setupTestAdmin(t, a)
++	settings := a.Settings()
++	if settings.ProxyHost != "" {
++		t.Fatal("fresh app unexpectedly supplies explicit proxy")
++	}
++	settings.PluginMarkets = []string{peer.URL + "/index"}
++	if err := a.saveSettings(ctx, settings); err != nil {
++		t.Fatal(err)
++	}
++	checkCounts := func(label string, wantIndex, wantPayload int32) {
++		t.Helper()
++		a.wg.Wait()
++		if indexes.Load() != wantIndex || payloads.Load() != wantPayload || unexpected.Load() != 0 {
++			t.Fatalf("%s owned counts index=%d payload=%d unexpected=%d", label, indexes.Load(), payloads.Load(), unexpected.Load())
++		}
++		t.Logf("owned_phase=%s index=%d payload=%d", label, wantIndex, wantPayload)
++	}
++	market := callTest(t, a.Handler(), "GET", "/api/plugins/market?details=true&force=true", "", cookie, "")
++	if market.Code != 200 || !strings.Contains(market.Body.String(), `"plugin_id":"`+index.PluginID+`"`) {
++		t.Fatal("actual HTTPS market metadata missing", market.Code)
++	}
++	checkCounts("market", 1, 0)
++	install := func(force bool, success bool) {
++		t.Helper()
++		raw, _ := json.Marshal(map[string]any{"plugin_id": index.PluginID, "repo_url": peer.URL + "/index", "force": force})
++		response := callTest(t, a.Handler(), "POST", "/api/plugins/install", string(raw), cookie, "")
++		var envelope struct {
++			Data struct {
++				Success bool   `json:"success"`
++				Message string `json:"message"`
++			} `json:"data"`
++		}
++		if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &envelope) != nil || envelope.Data.Success != success {
++			t.Fatal("actual install result differs", response.Code, success)
++		}
++		if strings.Contains(response.Body.String(), "owned-artifact-failure-private-marker") {
++			t.Fatal("remote failure body leaked")
++		}
++	}
++	install(false, false)
++	checkCounts("failed_acquisition_no_replay", 2, 1)
++	if _, ok := a.pluginRunningInstances.Load(index.PluginID); ok {
++		t.Fatal("failed artifact started a worker")
++	}
++	if _, err := a.pluginStore.Installation(ctx, index.PluginID); !errors.Is(err, sql.ErrNoRows) {
++		t.Fatal("failed artifact published installation", err)
++	}
++	failPayload.Store(false)
++	install(false, true)
++	checkCounts("explicit_recovery", 3, 2)
++	read := func() ownedStandardVersionSnapshot {
++		t.Helper()
++		value, ok := a.pluginRunningInstances.Load(index.PluginID)
++		if !ok {
++			t.Fatal("actual installed worker missing")
++		}
++		out := ownedStandardVersionRead(t, value.(*originalPluginInstance))
++		if out.Version != "1.0" || out.Nonce <= 0 {
++			t.Fatal("actual worker identity missing")
++		}
++		return out
++	}
++	first := read()
++	response := callTest(t, a.Handler(), "PUT", "/api/plugins/"+index.PluginID, `{"enabled":false,"key":"owned-a-persisted"}`, cookie, "")
++	assertOriginalRegistrySuccess(t, response.Code, response.Body.Bytes())
++	before, err := a.pluginStore.Config(ctx, index.PluginID)
++	if err != nil {
++		t.Fatal(err)
++	}
++	// Already-present class takes the second A call site: InspectCompatible,
++	// not payload acquisition. Reload still creates an actual new object.
++	install(false, true)
++	checkCounts("existing_class_compatibility", 4, 2)
++	second := read()
++	if second.Nonce == first.Nonce {
++		t.Fatal("existing class reinstall did not reload actual worker")
++	}
++	// Exercise the real force/update publication branch with identical bound
++	// executable bytes; do not relabel this as a distinct-version upgrade.
++	install(true, true)
++	checkCounts("same_version_force_reinstall", 5, 3)
++	third := read()
++	if third.Nonce == second.Nonce {
++		t.Fatal("force reinstall retained old worker")
++	}
++	after, err := a.pluginStore.Config(ctx, index.PluginID)
++	if err != nil || !reflect.DeepEqual(before.Value, after.Value) {
++		t.Fatal("reinstall lost actual stored config", err)
++	}
++	installed, err := artifacts.ReadInstalled(a.pluginPackageRoot(), index.PluginID, validatePluginArtifactContract)
++	if err != nil || installed.SHA256 != index.Releases[0].Artifacts[0].ExecutableSHA256 {
++		t.Fatal("installed bytes differ from bound worker", err)
++	}
++	for i, path := range []string{
++		"/api/plugins/history/" + index.PluginID + "?force=true",
++		"/api/plugins/releases/" + index.PluginID + "?repo_url=" + url.QueryEscape(peer.URL+"/index"),
++	} {
++		response := callTest(t, a.Handler(), "GET", path, "", cookie, "")
++		var got struct {
++			Data originalPluginHistory `json:"data"`
++		}
++		if response.Code != 200 || json.Unmarshal(response.Body.Bytes(), &got) != nil || got.Data.CurrentVersion != "1.0" || got.Data.LatestVersion != "1.0" || got.Data.Source == nil || !got.Data.Source.Success {
++			t.Fatal("actual HTTPS history/release missing", response.Code)
++		}
++		if i == 0 && got.Data.History["1.0"] != "owned actual release" {
++			t.Fatal("history lost owned authored field")
++		}
++		if i == 1 && len(got.Data.Items) != 1 {
++			t.Fatal("release did not expose exact bound artifact")
++		}
++		checkCounts("history_release", int32(6+i), 3)
++	}
++	if err := a.Close(); err != nil {
++		t.Fatal(err)
++	}
++	a = nil
++	reopened, err := New(Options{DataDir: dir})
++	if err != nil {
++		t.Fatal(err)
++	}
++	a = reopened
++	if a.Settings().PluginServerURL == nil || *a.Settings().PluginServerURL != "" || originalPluginStatisticShared(a.Settings()) {
++		t.Fatal("old center isolation did not persist")
++	}
++	if err := a.initializeOriginalPlugins(ctx); err != nil {
++		t.Fatal(err)
++	}
++	cold := read()
++	if cold.Nonce == third.Nonce || !reflect.DeepEqual(cold.Config, third.Config) {
++		t.Fatal("cold actual process/config differs")
++	}
++	checkCounts("cold_load_without_artifact_fetch", 7, 3)
++	// The real startup synchronizer reads HTTPS market material, then finds
++	// the already-current installed implementation; no fake missing package.
++	a.synchronizeOriginalPluginsAtStartup(ctx)
++	checkCounts("cold_startup_sync_current", 8, 3)
++	if read().Nonce != cold.Nonce {
++		t.Fatal("current-package startup sync replaced worker")
++	}
++	t.Logf("actual_worker_pids initial=%d compatible=%d force=%d cold=%d; bound_version=1.0", first.Nonce, second.Nonce, third.Nonce, cold.Nonce)
++}

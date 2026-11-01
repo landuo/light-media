@@ -1,0 +1,208 @@
+{
+  "utc": "2026-11-01T09:47:26.831653+00:00",
+  "verdict": "A_DEPENDENCY_REUSE_SUPPORTED_FOR_11_13_14_20_CONDITIONAL_ON_NEW_A_ONLY_INTEGRATION",
+  "proposal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/progress-61-parent-reconciliation01/a-consumer-closure01/seal.json",
+    "bytes": 1354,
+    "sha256": "4798aa737003868c320f6c32572878b93791cc9ae45026304ad075e7236291bc"
+  },
+  "historical_raw_rechecked": [
+    {
+      "name": "management-cache-final.jsonl",
+      "uncompressed_sha256": "ff1ab68b3938c05433b66d668b46d468c9fd1904a76c50a3d09da3ea2cbe0861",
+      "uncompressed_bytes": 1635826
+    },
+    {
+      "name": "history-order-market-final-tests.jsonl",
+      "uncompressed_sha256": "c673ef9587c9d32bd7019419ff25ec5cd32dd3d28f82ce6a193d0c1ba4cf4eab",
+      "uncompressed_bytes": 95603
+    },
+    {
+      "name": "release-market-tests.jsonl",
+      "uncompressed_sha256": "e37e6cd9708639422a70a74681010e8f54762c36ee9b08d0c5b855240c1f2fe0",
+      "uncompressed_bytes": 91415
+    },
+    {
+      "name": "management-class-final.jsonl",
+      "uncompressed_sha256": "08b02a6258b6e12c1698efa9a2e98c7c122cb07d433ed7a339a4be8238fc51dc",
+      "uncompressed_bytes": 1627934
+    },
+    {
+      "name": "process-market-menu-final-browser.log",
+      "uncompressed_sha256": "d2f54f1b07d6ed8f9cfa3533b4b5d25f948ecb3f53e1e49a3e52b575c51f860a",
+      "uncompressed_bytes": 655
+    },
+    {
+      "name": "linux-market-fixed-card-verdict.json",
+      "uncompressed_sha256": "745ce66819c00ef0b2a34320a39f6952508c618ffe7c9fd8fe0072573d4654a7",
+      "uncompressed_bytes": 1563
+    },
+    {
+      "name": "linux-class-release-cache.json",
+      "uncompressed_sha256": "ec9a0923ad4746bf3806871ecf9d0721c72f45188de72d5220fa4e498fcd4aa0",
+      "uncompressed_bytes": 753
+    },
+    {
+      "name": "linux-browser-clone-update.json",
+      "uncompressed_sha256": "ee9fc4ff28c683182a8a2c79bdef2c3344f77adbc86a48333b66f040f519acb3",
+      "uncompressed_bytes": 873
+    },
+    {
+      "name": "process-github-settings-browser.log",
+      "uncompressed_sha256": "f86a0123cfe2477305a918e6dd9e00cecf23509db2c5f9d1644bf84baf6011e0",
+      "uncompressed_bytes": 654
+    },
+    {
+      "name": "process-startup-linux.log",
+      "uncompressed_sha256": "f3a967bf47d840e66d2decf5636ff82452f6ddfd9b08a7f111572d116315605f",
+      "uncompressed_bytes": 555
+    },
+    {
+      "name": "process-startup-wait-linux.log",
+      "uncompressed_sha256": "da6fc2ea7e4d27b019f65fa9887506274f2523d94b83143f83df9113613fe7c6",
+      "uncompressed_bytes": 900
+    },
+    {
+      "name": "startup-backup-host-race.jsonl",
+      "uncompressed_sha256": "98d399588c8b928699d9e362ff272ebc2087f98bd62421966d545a023b66db66",
+      "uncompressed_bytes": 39607
+    },
+    {
+      "name": "web-cache-tests.log",
+      "uncompressed_sha256": "c9ef77d41e9022ed36370c3ab1bc66eb958eddf831f04cdebd2ce314f394fcc9",
+      "uncompressed_bytes": 48233
+    },
+    {
+      "name": "web-history-source-final-tests.log",
+      "uncompressed_sha256": "5555e56de1ddbab54881097e6a713d9b995d46a24b92d5281d8df525cf9dd8f2",
+      "uncompressed_bytes": 48404
+    }
+  ],
+  "historical_reference_files_rechecked": 8,
+  "current_code_comparison": [
+    {
+      "relative": "internal/app/plugin_original_sync.go",
+      "current_sha256": "3a18b002c84fc90082b2ed9e8464a897d46da2a429ae5e0b37c2bac4b1528754",
+      "same_as_historical_target": true
+    },
+    {
+      "relative": "internal/app/plugin_original_startup.go",
+      "current_sha256": "45157ded3a95ea17e4564f2d4e20767ab66199e7d1e72feafe23f61a92126f7d",
+      "same_as_historical_target": true
+    },
+    {
+      "relative": "internal/app/plugin_original_market_refresh.go",
+      "current_sha256": "6639ec85b495b22057b0ac66699ab4ca190a3142221e7d0dde65e22439b8d378",
+      "same_as_historical_target": true
+    },
+    {
+      "relative": "internal/app/plugin_original_release_cache.go",
+      "current_sha256": "16ca535eb36073656c944beaf1e3c25bf77e259e49616234c7e7149e74204b6d",
+      "same_as_historical_target": true
+    },
+    {
+      "relative": "internal/app/plugin_original_market_version.go",
+      "current_sha256": "8fecf000d043a29ecf41bdc9dc07abb374014af18478cb90d2c7c03fde2dceb5",
+      "same_as_historical_target": false
+    },
+    {
+      "relative": "internal/app/plugin_original_market_cards.go",
+      "current_sha256": "4b9c500f47a49a9d92d62d13a4f459a012c65f97a0ce5d3ac7763834d63c038c",
+      "same_as_historical_target": false
+    },
+    {
+      "relative": "internal/app/plugin_original_markets.go",
+      "current_sha256": "098c28fff390d0dcf6e8c9d18dab922909c63ae24bb92487b43394d2c4b1b9d4",
+      "same_as_historical_target": false
+    },
+    {
+      "relative": "internal/app/plugin_original_history.go",
+      "current_sha256": "d178fc835e14dda8108ebc4cce4308eb543d573722b28f3d4546caf50aec9c11",
+      "same_as_historical_target": false
+    },
+    {
+      "relative": "internal/app/plugin_original_market_package_cache.go",
+      "current_sha256": "a92d3ee60a24685c19c31e19e20ad0577db9114244c1ed0655f96980fe8abaa0",
+      "same_as_historical_target": false
+    },
+    {
+      "relative": "internal/app/plugin_original_github_network.go",
+      "current_sha256": "6ed81226bcde845223527ae593ae8c40d18986242b3d328af419be27d7ec5728",
+      "same_as_historical_target": false
+    },
+    {
+      "relative": "internal/app/plugin_original_market_wiki.go",
+      "current_sha256": "5f7c8c46ed3c566aa8276006f096aa6b74ab6a5e25882751e321adec79960678",
+      "same_as_historical_target": true
+    },
+    {
+      "relative": "internal/plugins/artifacts/clone_frontend.go",
+      "current_sha256": "2ea5c5610648dbb3198dd4285ae40ccbce824f538a8f1eadfe9f2bdef71af73b",
+      "same_as_historical_target": true
+    },
+    {
+      "relative": "internal/plugins/artifacts/frontend.go",
+      "current_sha256": "6e2fa7bb3d87fa548e966f281217daeae07fd46205625319d468752682d7a194",
+      "same_as_historical_target": true
+    },
+    {
+      "relative": "internal/plugins/artifacts/installed.go",
+      "current_sha256": "fd2d1bc431fcba12b01be6d985d745ba526da69acc7f96f3d363851f332f8fb3",
+      "same_as_historical_target": true
+    },
+    {
+      "relative": "internal/plugins/artifacts/acquire.go",
+      "current_sha256": "c50fad3f7dd7f9f0ecdcc879dfe8e831b125f9329c4d7387723bf7b5ea99150a",
+      "same_as_historical_target": true
+    },
+    {
+      "relative": "internal/plugins/artifacts/github_repository.go",
+      "current_sha256": "f562ff2544b60bd9cde4d5305ce4613b53037d7e749604636a065fc188fbedd7",
+      "same_as_historical_target": false
+    },
+    {
+      "relative": "internal/plugins/artifacts/python_metadata.go",
+      "current_sha256": "957c3079a20b5de3479f7e153b3a654c3098a88c17d03ad9cc663010754689c0",
+      "same_as_historical_target": false
+    },
+    {
+      "relative": "web/src/components/Plugins.vue",
+      "current_sha256": "d1045c8d6cf16526f1da497feb54dca32baa7a76df554409396af5f8922fb583",
+      "same_as_historical_target": false
+    },
+    {
+      "relative": "web/src/components/PluginManageCard.vue",
+      "current_sha256": "02fdb436ceaed732923f27ddb1ee3e06bfcf5efe32e0e6a506d2b05eafff4fec",
+      "same_as_historical_target": true
+    },
+    {
+      "relative": "web/src/components/PluginVersionHistoryDialog.vue",
+      "current_sha256": "9a02acfc037c884343b8ae67ea10a96da4b28d4eb0b5b6dbe615294ecbe47059",
+      "same_as_historical_target": true
+    },
+    {
+      "relative": "web/src/features/plugin-market.ts",
+      "current_sha256": "31431185219c18cffc47f40b70e73120fa24498d2e280f13123ca5af0834e717",
+      "same_as_historical_target": true
+    },
+    {
+      "relative": "web/src/features/plugin-history-markdown.ts",
+      "current_sha256": "66665e9bc41183ed0350a607084a379fa242ce7646db35605d3066e9ff36573e",
+      "same_as_historical_target": true
+    }
+  ],
+  "mechanical_A_consumer_substitutions": 3,
+  "findings": [
+    "11/13: native install/compatible acquisition publication and state machinery unchanged by three named-client substitutions. Inherit old actual rollback/version/settings evidence; retire received-502 erroneous fallback expectation specifically using actual A4.",
+    "14: historical 1-to-2/clone exact-ID/frontend inheritance retained, not rerun; new same-version force and SDK/config/KV/cold chain establish changed A acquisition dependency.",
+    "20: startup/sync files match historical Git bytes; held-startup 3.67s PASS and premature-502 FAIL both present. New A App/CLI tests cover current-package cold startup, not missing/outdated repair anew.",
+    "SourceDisplay always has UnavailableReason and sync skips it before version/repair. Concrete display >2MiB counterexample remains 08/09/10/12; it does not alone prove native20 repair defect. Verified-Go artifact adaptation is not unlimited Python execution equivalence."
+  ],
+  "conditions": [
+    "A/B bytes remain historical accepted A evidence only. Await reviewed A-only candidate and targeted App/CLI/race results before exact adoption; exclude B hook.",
+    "No mechanical +7/full old closure equality/fresh full four-parent or61 claim. Coordinator owns ledger and whole-parent publication.",
+    "07 Wiki and23/24 B timeout/query/body boundaries independent."
+  ],
+  "blocking_findings_in_this_dependency_delta": [],
+  "no_runtime_or_product_ledger_changes": true
+}

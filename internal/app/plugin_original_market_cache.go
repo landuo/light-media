@@ -99,7 +99,7 @@ func (a *App) originalMarketSource(ctx context.Context, repository string, force
 			fetchURL = parsed.String()
 		}
 	}
-	client, err := a.originalPluginHTTPClient(30*time.Second, true)
+	client, err := a.originalPluginMaterialHTTPClient(30 * time.Second)
 	var discoveries []artifacts.Discovery
 	sourcePackages, packagesCached, packageSucceeded := false, false, false
 	loadPackages := func(ctx context.Context, sourceURL string, client *http.Client) ([]artifacts.Discovery, error) {

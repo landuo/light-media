@@ -15,10 +15,10 @@
     "remote": "https://github.com/landuo/light-media.git",
     "branch": "plugins-refactor",
     "baseline_revision": "97476582910dc4b696f7ccd5010f28d823812d40",
-    "revision": "db671b145270084bc769e433cd7c68952cb8c6d0",
-    "remote_revision": "db671b145270084bc769e433cd7c68952cb8c6d0",
+    "revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+    "remote_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
     "delivery_mode": "remote",
-    "delivery_reason": "Per accepted functional slice commit, push and readback; no merge or deployment.",
+    "delivery_reason": "User corrected2026-11-01T08:26:45Z: push only after a whole current61 top-level agreed feature closes its required source/target/independent/real gates. Finite child increments remainlocal/Space; preserve alreadyremote commits anddirty. No merge/main/deployment.",
     "metadata_paths": [
       "migration/ledger.json",
       "docs/plugin-module-parity-matrix.md",
@@ -42,8 +42,16 @@
       "migration/evidence/s13-qb-tags/README.md",
       "migration/evidence/s13-qb-tags/evidence-index.json"
     ],
-    "revision_note": "Actual cloud standard HTTPS push/readback db671 at2026-11-01T02:54UTC;9 previouslyaccepted local slices now remote. 24finite remote slices total, NOT24top-level completed groups. CI checks0/runs0/status0, noCIgreen; main97476582unchanged. S14pureWIPnotcommitted.",
-    "revision_note_history_before_qb_tags": "Last actual remote11f922; local fivecommit chain760720→b9e667→41c8→7b9b→f913, no push/CIgreen. main unchanged."
+    "revision_note": "Actual cloud normalpush/readback90d214 at2026-11-01T08:00UTC;26finite remote slices NOT26top-levelcomplete. Exact214 current slice independent accepted; inheritedoldscope retained. CI checks0/runs0/statuses0 notgreen;main97476582unchanged. Meta/S14/Name/CalendarWIPnotdelivered.",
+    "revision_note_history_before_qb_tags": "Last actual remote11f922; local fivecommit chain760720→b9e667→41c8→7b9b→f913, no push/CIgreen. main unchanged.",
+    "revision_history": [
+      {
+        "revision": "db671b145270084bc769e433cd7c68952cb8c6d0",
+        "remote_revision": "db671b145270084bc769e433cd7c68952cb8c6d0",
+        "revision_note": "Actual cloud standard HTTPS push/readback db671 at2026-11-01T02:54UTC;9 previouslyaccepted local slices now remote. 24finite remote slices total, NOT24top-level completed groups. CI checks0/runs0/status0, noCIgreen; main97476582unchanged. S14pureWIPnotcommitted."
+      }
+    ],
+    "delivery_reason_history_before_20261101_0826": "Per accepted functional slice commit, push and readback; no merge or deployment."
   },
   "legacy_business_migration": {
     "preservation": "Exact historical ledger remains reachable in the baseline commit; no historical evidence is rewritten or credited to this run.",
@@ -17531,7 +17539,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:13",
-      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json"
+      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json",
+      "parent_acceptance_current": {
+        "id": "01",
+        "description": "01 · 1.1 代码 配置 数据和运行对象各放在哪里",
+        "scope": [
+          "代码制品、运行对象、配置KV和本地文件分别存储",
+          "冷重启保留配置/KV",
+          "重置及普通卸载保留既有本地文件"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:13",
+        "historical_evidence_reference": "docs/validation/plugin-module-scoped-20261025.json",
+        "existing_evidence_ids": [
+          "reset-name.current-e2e"
+        ],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "02",
@@ -17671,7 +17704,33 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:14",
-      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json"
+      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json",
+      "parent_acceptance_current": {
+        "id": "02",
+        "description": "02 · 1.2 安装后的代码怎样变成可调用的插件",
+        "scope": [
+          "安装后校验制品、加载并初始化真实对象",
+          "从对象getter注册API/服务",
+          "启停和初始化失败隔离",
+          "源与分身对象独立"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:14",
+        "historical_evidence_reference": "docs/validation/plugin-module-scoped-20261025.json",
+        "existing_evidence_ids": [
+          "reset-name.current-e2e"
+        ],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "03",
@@ -17801,7 +17860,33 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:15",
-      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json"
+      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json",
+      "parent_acceptance_current": {
+        "id": "03",
+        "description": "03 · 1.3 保存设置为什么能改变正在运行的插件",
+        "scope": [
+          "全量保存配置",
+          "对同一对象重新init",
+          "刷新API/服务/命令注册",
+          "保存失败与恢复不伪称成功"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:15",
+        "historical_evidence_reference": "docs/validation/plugin-module-scoped-20261025.json",
+        "existing_evidence_ids": [
+          "reset-name.current-e2e"
+        ],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "04",
@@ -17929,7 +18014,33 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:16",
-      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json"
+      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json",
+      "parent_acceptance_current": {
+        "id": "04",
+        "description": "04 · 1.4 重载为什么能运行刚换上的代码",
+        "scope": [
+          "停止旧对象和服务后加载替换代码",
+          "替换PID/保留对应配置",
+          "失败与恢复",
+          "reload事件、旧调用撤销及分身不受影响"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:16",
+        "historical_evidence_reference": "docs/validation/plugin-module-scoped-20261025.json",
+        "existing_evidence_ids": [
+          "reset-name.current-e2e"
+        ],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "05",
@@ -18094,7 +18205,34 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:17",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "05",
+        "description": "05 · 1.5 插件怎样读写配置 记录和文件",
+        "scope": [
+          "Base配置全量替换和缓存/DB分别删除",
+          "KV单键/全量查询删除及稳定行号",
+          "false/0/大整数",
+          "显式命名空间和分身隔离",
+          "本地数据目录及冷恢复"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:17",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [
+          "reset-name.current-e2e"
+        ],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "06",
@@ -18247,7 +18385,34 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:18",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "06",
+        "description": "06 · 2.1 仓库设置：保存的是来源清单，不是立即安装一批插件",
+        "scope": [
+          "有序来源增删改/拖动/文本编辑与去重校验",
+          "保存不安装不重初始化",
+          "取消草稿与重开持久值",
+          "环境覆盖只读",
+          "系统开关与仓库列表分别保存"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:18",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [
+          "existing-06.real-e2e"
+        ],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "07",
@@ -18299,7 +18464,33 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:19",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "07",
+        "description": "07 · 2.2 从 Wiki 同步仓库：立即合并保存，不是一个未提交的预览",
+        "scope": [
+          "固定Wiki提取/标记回退/规范化合并",
+          "同步立即保存不等全局保存",
+          "既有顺序和重复同步幂等",
+          "网络/非法地址失败不改清单",
+          "认证及安全重定向边界"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:19",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [
+          "Wiki源AsyncRequestUtils默认verify=False；当前wiki148→originalPluginHTTPClient(false)仍strict。Wiki独立文档请求不能仅因共享helper自动纳已批准A市场/安装材料范围，授权细项尚待既存原证据核明；暂保strict。提取/合并/立即保存/失败不改旧清单的历史信用保留。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "08",
@@ -18352,7 +18543,33 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:20",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "08",
+        "description": "08 · 2.3 市场列表：后端把索引加工成卡片，前端再做搜索和筛选",
+        "scope": [
+          "索引加工本地/在线卡片",
+          "标签/作者/仓库搜索筛选",
+          "20条追加与同数量刷新重置",
+          "空结果/失败重试",
+          "分身显示逻辑版本与真实对象访问隔离"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:20",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [
+          "实际在线列表originalPluginCatalog→originalOnlineMarketDeclarations→originalMarketSource102依赖A类当前strictTLS；此源false差异待私有client修复。卡片/搜索/筛选/20条追加等历史信用不清零。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "09",
@@ -18417,7 +18634,35 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": "版本/包层级/来源/缓存/raw元数据；有限09.market_pipeline已交付，2MiB预算差异未获批准。",
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:21",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "09",
+        "description": "09 · 2.4 多来源选版本：版本优先，相同版本才看来源顺序",
+        "scope": [
+          "非SemVer版本比较",
+          "高版本优先、同版本在线优先于本地、再按设置顺序",
+          "真实多仓库/本地高版本/在线同版本/在线来源顺序以及重启",
+          "Go完整manifest、平台、内容哈希适配不运行Python"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:21",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [
+          "market-pipeline.current-e2e"
+        ],
+        "remaining": [
+          "合法市场包加无关padding超过2MiB时，源仍显示卡、目标预算拒绝/空；已实证普通可见差异，预算保留不等于获准等价。包半失败缓存、key碰撞、排序和公开500已闭，不重复开发。",
+          "共享A类PluginHelper网络路径仍默认strictTLS，与源verify=False不符；用户已批准精确A范围，但当前实现未落，和11/13共用一次修复归属。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "10",
@@ -18473,7 +18718,33 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:22",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "10",
+        "description": "10 · 2.5 刷新市场：刷新的是索引，不是把插件升级一遍",
+        "scope": [
+          "强制刷新市场索引而非升级",
+          "失败不回填旧索引但旧普通缓存仍有效",
+          "空成功/过期/重试",
+          "30分钟元数据任务不改SDK状态",
+          "无额外5秒市场覆盖"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:22",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [
+          "force市场刷新→originalMarketSource102同A类strictTLS实际差异；索引缓存/force/失败/后台刷新语义已验，不重复开发。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "11",
@@ -18641,7 +18912,66 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": "镜像收到HTTP错误与transport异常fallback；11.mirror_response已交付，不清零已验安装链。",
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:23",
-      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json"
+      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json",
+      "parent_acceptance_current": {
+        "id": "11",
+        "description": "11 · 2.6 安装：先把代码放好，再登记和创建运行实例",
+        "scope": [
+          "来源/版本选择、取得代码、校验和安装",
+          "登记后创建真实对象并注册",
+          "旧真实HTTP/浏览器安装、配置、更新、分身、重置、卸载生命周期",
+          "Go校验制品和长期worker替代Python导入"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:23",
+        "historical_evidence_reference": "docs/validation/plugin-module-scoped-20261025.json",
+        "existing_evidence_ids": [
+          "existing-11.real-e2e"
+        ],
+        "remaining": [],
+        "repaired_subbehavior_credit_only": {
+          "children": [
+            "11.mirror_response",
+            "09.market_pipeline"
+          ],
+          "evidence": [
+            "mirror-response.current-review"
+          ],
+          "rationale": "历史安装全链信用 + 唯一明确mirror收到503不应fallback反例已闭；此前09半包/cache依赖亦已修。09剩余超预算展示归09，不将同一已闭安装反例永久扩为未闭全部市场。",
+          "current_impact": "核心github网络三文件与已验candidate同；共享resources/runtime后续新增路由不改变received-response vs exception规则。历史与后续安装/生命周期门分层继承，不声称全部旧closure当前相同。"
+        },
+        "status": "complete_agreed_scope_reopened_operation_closed",
+        "authoritative_as_of": "2026-11-01T10:10:00.739212+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": true,
+        "publication_unit": "whole_current61_parent_only",
+        "closed_remaining_history": [
+          "mirror收到HTTP503不fallback的反例及后续market半包/cache已闭，历史安装全链信用保留。",
+          "本次最终静核新确认：source PluginHelper.__request_with_fallback→RequestUtils.request默认verify=False；当前originalPluginHTTPClient→config.Transport(nil)/NewRequestsTransport(nil,nil)仍clone默认strict TLS。A类用户授权已存在，不等于实现/真实门已交；仅此精确平台下载/更新私有TLS路径待闭，不能关闭父项。"
+        ],
+        "worktree_candidate": {
+          "base_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+          "candidate_sha256": "90f3158450af416597c216d9dfe5da0d87b8abfde1d31705c67719cc8b17de8c",
+          "adopted_product_paths": 4,
+          "adopted_test_paths": 3
+        },
+        "delivery_state": "local_accepted_pending_commit_and_remote_readback",
+        "current_acceptance_evidence": {
+          "root": "migration/evidence/platform-requestutils-a",
+          "normal_App_roots": 1,
+          "race_App_roots": 2,
+          "normal_server_and_twohost_CLI": "actual61142 exit0, no realpublicGitHub/daemon/freshbrowser claim",
+          "private_TLS_only_A": true,
+          "B_server_unchanged": true,
+          "independent_parent_dependency_sha256": "7df02729dfa88e82853a69f3b035591e26796281cf286b37cbed214e93523ec9",
+          "independent_cli_final_sha256": "4d5834a942c526946eb0410aaac1c4597d1b9668baf6c67a9e57fdea8f094c36",
+          "adoption_composition_sha256": "b6344aa8829d0f695fb2f4622d52d1091634e64a574510136781bfc3792e79d9",
+          "old_evidence": "retained exact old whole-scope operations; no fresh distinctversion/clone/browser claim"
+        }
+      }
     },
     {
       "id": "12",
@@ -18702,7 +19032,33 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:24",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "12",
+        "description": "12 · 2.7 Release 与历史：更新日志、可下载资产和指定版本是三件事",
+        "scope": [
+          "历史说明与Release列表分开",
+          "指定版本后台接口和最新更新",
+          "force旧缓存先回后后台刷新",
+          "无仓库/缺类/init失败/分身版本分支",
+          "原UI无旧版本选择器"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:24",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [
+          "history131及release_cache22/76最终走originalMarketSource102；指定Release安装也走acquire。A类当前strictTLS与源false差异待闭，原历史/Release/指定版本分离与缓存信用保留。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "13",
@@ -18811,7 +19167,64 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": "与11同一GitHub网络共因，不另算独立整组缺陷。",
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:25",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "13",
+        "description": "13 · 2.8 兼容性与依赖：判断能否安装，以及让代码具备运行条件",
+        "scope": [
+          "system_version兼容与旧Release范围",
+          "Go平台/SDK/SHA制品替代pip",
+          "代理/镜像/API路由与凭据域隔离",
+          "基础/高级/开发设置保存和冷恢复",
+          "DEV放宽不污染一般安装"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:25",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "repaired_subbehavior_credit_only": {
+          "children": [
+            "11.mirror_response"
+          ],
+          "evidence": [
+            "mirror-response.current-review"
+          ],
+          "rationale": "与11同一mirror共因已修；system_version1251、旧Release、平台/SDK/SHA制品适配、真实兼容性拒绝/恢复及设置冷恢复旧信用保留。26.2固定复现不是原exact锁、26.3另列，均不是新未实现能力。",
+          "current_impact": "复用11同一当前网络修复。不是另跑或重复计同一503缺陷；不把Go制品替代pip这个已接受架构适配重新算缺项。"
+        },
+        "status": "complete_agreed_scope_reopened_operation_closed",
+        "authoritative_as_of": "2026-11-01T10:10:00.739212+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": true,
+        "publication_unit": "whole_current61_parent_only",
+        "closed_remaining_history": [
+          "与11同一个A类TLS实际依赖缺口；mirror503、旧兼容性/Release/制品/设置冷恢复信用全部保留。",
+          "不得用旧verifiedTLS测试或批准记录替代私有verifyFalse当前实现。只对已明确A消费者修复/验证，不扩Git全局TLS、认证47或任意网络。"
+        ],
+        "worktree_candidate": {
+          "base_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+          "candidate_sha256": "90f3158450af416597c216d9dfe5da0d87b8abfde1d31705c67719cc8b17de8c",
+          "adopted_product_paths": 4,
+          "adopted_test_paths": 3
+        },
+        "delivery_state": "local_accepted_pending_commit_and_remote_readback",
+        "current_acceptance_evidence": {
+          "root": "migration/evidence/platform-requestutils-a",
+          "normal_App_roots": 1,
+          "race_App_roots": 2,
+          "normal_server_and_twohost_CLI": "actual61142 exit0, no realpublicGitHub/daemon/freshbrowser claim",
+          "private_TLS_only_A": true,
+          "B_server_unchanged": true,
+          "independent_parent_dependency_sha256": "7df02729dfa88e82853a69f3b035591e26796281cf286b37cbed214e93523ec9",
+          "independent_cli_final_sha256": "4d5834a942c526946eb0410aaac1c4597d1b9668baf6c67a9e57fdea8f094c36",
+          "adoption_composition_sha256": "b6344aa8829d0f695fb2f4622d52d1091634e64a574510136781bfc3792e79d9",
+          "old_evidence": "retained exact old whole-scope operations; no fresh distinctversion/clone/browser claim"
+        }
+      }
     },
     {
       "id": "14",
@@ -18863,7 +19276,52 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:26",
-      "historical_evidence_source": "docs/validation/plugin-clone-frontend-r3-20261027/result.json"
+      "historical_evidence_source": "docs/validation/plugin-clone-frontend-r3-20261027/result.json",
+      "parent_acceptance_current": {
+        "id": "14",
+        "description": "14 · 2.9 更新：原 ID 原目录替换，再让同一个配置驱动新代码",
+        "scope": [
+          "同ID更新代码、重新加载且保留配置/KV",
+          "分身逻辑版本比较和精确ID属性替换",
+          "分身JS/CSS/顶层资源派生",
+          "坏包保留/重试/冷恢复"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:26",
+        "historical_evidence_reference": "docs/validation/plugin-clone-frontend-r3-20261027/result.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "status": "complete_agreed_scope_reopened_operation_closed",
+        "authoritative_as_of": "2026-11-01T10:10:00.739212+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": true,
+        "publication_unit": "whole_current61_parent_only",
+        "closed_remaining_history": [
+          "更新复用install force→acquireOriginalImplementationMode134，A类strictTLS影响实际替换材料取得。保持既有同ID/config/KV/坏包恢复/冷启信用，仅共享请求差异待闭。"
+        ],
+        "worktree_candidate": {
+          "base_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+          "candidate_sha256": "90f3158450af416597c216d9dfe5da0d87b8abfde1d31705c67719cc8b17de8c",
+          "adopted_product_paths": 4,
+          "adopted_test_paths": 3
+        },
+        "delivery_state": "local_accepted_pending_commit_and_remote_readback",
+        "current_acceptance_evidence": {
+          "root": "migration/evidence/platform-requestutils-a",
+          "normal_App_roots": 1,
+          "race_App_roots": 2,
+          "normal_server_and_twohost_CLI": "actual61142 exit0, no realpublicGitHub/daemon/freshbrowser claim",
+          "private_TLS_only_A": true,
+          "B_server_unchanged": true,
+          "independent_parent_dependency_sha256": "7df02729dfa88e82853a69f3b035591e26796281cf286b37cbed214e93523ec9",
+          "independent_cli_final_sha256": "4d5834a942c526946eb0410aaac1c4597d1b9668baf6c67a9e57fdea8f094c36",
+          "adoption_composition_sha256": "b6344aa8829d0f695fb2f4622d52d1091634e64a574510136781bfc3792e79d9",
+          "old_evidence": "retained exact old whole-scope operations; no fresh distinctversion/clone/browser claim"
+        }
+      }
     },
     {
       "id": "15",
@@ -18917,7 +19375,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": "metadata/UI trim/advisory suffix/文件夹写错；专职clone独审负责。 名称和描述普通文本是本轮批准，不倒算旧验收。",
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:27",
-      "historical_evidence_source": "docs/validation/plugin-clone-frontend-r3-20261027/result.json"
+      "historical_evidence_source": "docs/validation/plugin-clone-frontend-r3-20261027/result.json",
+      "parent_acceptance_current": {
+        "id": "15",
+        "description": "15 · 2.10 分身 怎样让同一份插件变成两份独立实例",
+        "scope": [
+          "独立身份、代码与配置派生且不复制数据库运行数据",
+          "旧前端文本/JS/CSS资源与名称派生、精确clone更新、DEV ticker、失败冷恢复",
+          "旧suffix API/UI区分和Unicode/NFKC条件；26实例11loaded/15复制成功未加载"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:27",
+        "historical_evidence_reference": "docs/validation/plugin-clone-frontend-r3-20261027/result.json",
+        "existing_evidence_ids": [],
+        "remaining": [
+          "UI/handler外层名称trim仍需对齐已批准的普通文本合同；当前clone使用strings.TrimSpace(request.Name)。",
+          "分身folder更新原cache→SQL失败时序以及版本/icon特殊显示载体、旧worker兼容的metadata05收口仍未完整集成；不重做既有独立身份/代码/config/clone更新。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "16",
@@ -18972,7 +19455,39 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": "失败回调读取name再次异常的清理前中止；16.failure_name已交付。",
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:28",
-      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json"
+      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json",
+      "parent_acceptance_current": {
+        "id": "16",
+        "description": "16 · 2.11 重置 怎样清除设置和运行记录但保留插件",
+        "scope": [
+          "重置清除设置和运行记录但保留插件",
+          "旧真实HTTP/浏览器生命周期的reset操作及状态快照",
+          "源代码/文件与分身独立保留"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:28",
+        "historical_evidence_reference": "docs/validation/plugin-module-scoped-20261025.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "closure_basis": {
+          "children": [
+            "16.failure_name"
+          ],
+          "evidence": [
+            "reset-name.current-review"
+          ],
+          "rationale": "原error后读取name导致的abort/continue顺序已source、真实worker、SQL失败、clone、normalCLI和官方UI闭合。成功callback不读name、错误前通知保留、删除顺序及cold均有实际门。",
+          "current_impact": "plugin_original_reset.go与接受字节完全同；reset-name当前影响复核已记录。全77业务插件任意补偿不是本父新增条件。"
+        },
+        "status": "complete_agreed_scope_reopened_operation_closed",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "17",
@@ -19027,7 +19542,40 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": "文件夹warm-before-SQL/重复首项/失败重试；17.folder_failure已交付。",
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:29",
-      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json"
+      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json",
+      "parent_acceptance_current": {
+        "id": "17",
+        "description": "17 · 2.12 卸载 怎样让插件退出系统以及为什么还有残留文件",
+        "scope": [
+          "移除安装记录/API/服务/运行对象/文件夹成员",
+          "普通插件保留代码/配置/KV",
+          "分身额外清除自有代码/配置/KV",
+          "旧真实HTTP/浏览器卸载生命周期及状态快照"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:29",
+        "historical_evidence_reference": "docs/validation/plugin-module-scoped-20261025.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "closure_basis": {
+          "children": [
+            "17.folder_failure"
+          ],
+          "evidence": [
+            "folder-failure.current-review"
+          ],
+          "rationale": "folder cache先变/SQL失败、重复first、retry和cold原反例已闭；普通与clone卸载的既有差异保留，真实普通服务器与官方UI已完成。",
+          "current_impact": "folder/SQL核心同；uninstall后续只有API直接Delete改为已验S10 unregister锁外release。位置/其余顺序不变；见reset-uninstall-since-accepted.diff和S10集成终审。"
+        },
+        "status": "complete_agreed_scope_reopened_operation_closed",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "18",
@@ -19089,7 +19637,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:30",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "18",
+        "description": "18 · 2.13 本地仓库：开发目录也是一种明确的安装来源",
+        "scope": [
+          "多本地仓库路径解析/顺序/重复/未来目录",
+          "发现与保存分离",
+          "最高版本和同版本目录顺序",
+          "实际安装及坏包恢复",
+          "Go预编译制品与路径安全适配"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:30",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "19",
@@ -19139,7 +19712,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:31",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "19",
+        "description": "19 · 2.14 源码热重载：文件事件触发复制与重新导入",
+        "scope": [
+          "DEV/自动监测开关和仅已安装同步",
+          "已构建资源变化不重启worker",
+          "后端变化真实重载",
+          "坏资源回滚与冷热恢复",
+          "防同步回环及分身独立"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:31",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "20",
@@ -19232,7 +19830,53 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:32",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "20",
+        "description": "20 · 2.15 启动修复：先尽量启动现有插件，再后台补齐和更新",
+        "scope": [
+          "启动先恢复/加载现有对象与API",
+          "后台修复缺失/落后兼容插件",
+          "成功后注册服务/命令",
+          "安全模式跳过插件子系统",
+          "逐阶段失败隔离与关闭备份"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:32",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "status": "complete_agreed_scope_reopened_operation_closed",
+        "authoritative_as_of": "2026-11-01T10:10:00.739212+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": true,
+        "publication_unit": "whole_current61_parent_only",
+        "closed_remaining_history": [
+          "syncOriginalPlugins49实际取市场、81实际acquire缺失/旧代码，启动后台修复可达A类strictTLS差异。启动先加载/分阶段隔离/安全模式等旧信用保留。"
+        ],
+        "worktree_candidate": {
+          "base_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+          "candidate_sha256": "90f3158450af416597c216d9dfe5da0d87b8abfde1d31705c67719cc8b17de8c",
+          "adopted_product_paths": 4,
+          "adopted_test_paths": 3
+        },
+        "delivery_state": "local_accepted_pending_commit_and_remote_readback",
+        "current_acceptance_evidence": {
+          "root": "migration/evidence/platform-requestutils-a",
+          "normal_App_roots": 1,
+          "race_App_roots": 2,
+          "normal_server_and_twohost_CLI": "actual61142 exit0, no realpublicGitHub/daemon/freshbrowser claim",
+          "private_TLS_only_A": true,
+          "B_server_unchanged": true,
+          "independent_parent_dependency_sha256": "7df02729dfa88e82853a69f3b035591e26796281cf286b37cbed214e93523ec9",
+          "independent_cli_final_sha256": "4d5834a942c526946eb0410aaac1c4597d1b9668baf6c67a9e57fdea8f094c36",
+          "adoption_composition_sha256": "b6344aa8829d0f695fb2f4622d52d1091634e64a574510136781bfc3792e79d9",
+          "old_evidence": "retained exact old whole-scope operations; no fresh distinctversion/clone/browser claim"
+        }
+      }
     },
     {
       "id": "21",
@@ -19295,7 +19939,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:33",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "21",
+        "description": "21 · 2.16 备份与复原：安装失败保护和 Docker 持久备份用途不同",
+        "scope": [
+          "普通安装临时备份与force无恢复",
+          "Docker关闭/安装持久代码快照",
+          "启动恢复/消费快照、逐项失败隔离",
+          "只插件代码不提供数据库备份UI/API",
+          "Go持久目录权威与摘要检查"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:33",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "22",
@@ -19412,7 +20081,35 @@
       "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
       "verified_incremental_slices": [
         "23.usage_rating_wire"
-      ]
+      ],
+      "parent_acceptance_current": {
+        "id": "23",
+        "description": "23 · 2.18 安装统计：安装事件上报，列表查询汇总后展示",
+        "scope": [
+          "安装事件上报与统计查询分离",
+          "开关/默认与显式空持久化",
+          "Linux UID/UA及代理/网络失败",
+          "统计展示、合成peer503恢复、全局回执及冷恢复",
+          "官方仅GET只读未向官方写入"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:35",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [
+          "安装报告repository整体RawQuery清空会同时删非敏感query；不能由凭据保护推导此普通字段差异已获准。",
+          "中心响应2MiB预算与原无该总预算的响应行为尚有明确差异；保安全上限，按可安全对齐方案收口。公开wire/统计UI/冷恢复已实际通过，不再列未验。",
+          "requestOriginalPluginServer→originalPluginHTTPClient(timeout,false)当前仍strict TLS；用户已批准B类RequestUtils verifyFalse，但现实现未落。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "24",
@@ -19493,7 +20190,33 @@
       "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
       "verified_incremental_slices": [
         "23.usage_rating_wire"
-      ]
+      ],
+      "parent_acceptance_current": {
+        "id": "24",
+        "description": "24 · 2.19 插件评分：后端有接口，当前前端没有已接通的评分控件",
+        "scope": [
+          "单项/批量评分查询与已安装才提交",
+          "旧Pydantic缺省、数字字符串、布尔、大整数和0.1浮点算法对照",
+          "旧真实SDK/peer默认、缺失、503、Unicode路径、重复参数、代理、同源重定向",
+          "原前端无评分控件；官方未投票"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:36",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [
+          "评分查询/提交的2MiB响应/正文预算差异仍需处理或明确裁定；23的repository query删除不是24独有重复任务。公开HTTP wire已闭；原没有评分UI，不能另造UI作为完成条件。",
+          "与23同一B类原RequestUtils默认verifyFalse/当前strictTLS实际差异，批准不等于实现；精确私有client修复，不改全局CA/环境。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "25",
@@ -19549,7 +20272,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:37",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "25",
+        "description": "25 · 3.1 卡片列表：页面显示的插件来自哪里",
+        "scope": [
+          "state=installed只读本地类且初始化失败类仍可见",
+          "all保留本地与更新候选",
+          "plugin_order与真实卡片",
+          "仓库失败本地仍可用",
+          "不生成空卡或周期重复读取"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:37",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "26",
@@ -19605,7 +20353,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:38",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "26",
+        "description": "26 · 3.2 搜索、筛选与排序：多数操作发生在浏览器内",
+        "scope": [
+          "名称/运行/更新/标签/作者/仓库筛选优先级",
+          "混合全局/分组拖拽排序",
+          "单用户偏好持久化",
+          "KeepAlive草稿及返回刷新",
+          "显示顺序不改插件执行顺序"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:38",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "27",
@@ -19660,7 +20433,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:39",
-      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json"
+      "historical_evidence_source": "docs/validation/plugin-module-no-official-auth-20261026.json",
+      "parent_acceptance_current": {
+        "id": "27",
+        "description": "27 · 3.3 文件夹：保存的是分组字典，不是磁盘目录",
+        "scope": [
+          "文件夹有序JSON而非物理目录",
+          "旧数组/新字典和外观字段",
+          "创建/成员/移动/重命名/删除/小数order",
+          "首组分身和首个重复移除",
+          "失败本地mutation、重试及冷恢复"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:39",
+        "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "28",
@@ -19716,7 +20514,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:40",
-      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json"
+      "historical_evidence_source": "docs/validation/plugin-module-scoped-20261025.json",
+      "parent_acceptance_current": {
+        "id": "28",
+        "description": "28 · 3.4 打开设置：默认 model 与已保存 config 怎样合成",
+        "scope": [
+          "真实get_form返回组件树/默认model",
+          "已保存config覆盖默认",
+          "再次打开显示已存",
+          "缺实例404/异常空对象",
+          "源与分身配置独立"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:40",
+        "historical_evidence_reference": "docs/validation/plugin-module-scoped-20261025.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "29",
@@ -19773,7 +20596,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:41",
-      "historical_evidence_source": "docs/validation/plugin-render29-30-parity-20261027.json"
+      "historical_evidence_source": "docs/validation/plugin-render29-30-parity-20261027.json",
+      "parent_acceptance_current": {
+        "id": "29",
+        "description": "29 · 3.5 JSON 表单递归渲染，以及点击保存后真正发生的事",
+        "scope": [
+          "递归组件/表达式/插槽/Ace/中文键/动态SVG/CSS渲染",
+          "真实配置保存init",
+          "SQL失败保留重试",
+          "Vue与JSON路径",
+          "分身及冷恢复"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:41",
+        "historical_evidence_reference": "docs/validation/plugin-render29-30-parity-20261027.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "30",
@@ -19832,7 +20680,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:42",
-      "historical_evidence_source": "docs/validation/plugin-render29-30-parity-20261027.json"
+      "historical_evidence_source": "docs/validation/plugin-render29-30-parity-20261027.json",
+      "parent_acceptance_current": {
+        "id": "30",
+        "description": "30 · 3.6 详情页：数据先变成组件树，按钮再调用插件接口",
+        "scope": [
+          "真实get_page组件树",
+          "GETquery/POSTbody动作及当前分身前缀",
+          "进度打开/结束/失败提示",
+          "动作后刷新",
+          "失败恢复与独立配置/KV"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:42",
+        "historical_evidence_reference": "docs/validation/plugin-render29-30-parity-20261027.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "31",
@@ -19887,7 +20760,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:43",
-      "historical_evidence_source": "docs/validation/plugin-ui31-33-r3-20261027.json"
+      "historical_evidence_source": "docs/validation/plugin-ui31-33-r3-20261027.json",
+      "parent_acceptance_current": {
+        "id": "31",
+        "description": "31 · 3.7 Vue federation：宿主从插件目录装入已构建的前端模块",
+        "scope": [
+          "真实已构建ESM/Vite federation加载",
+          "发现、共享依赖与首次失败重试",
+          "Config/Page/Dashboard/AuthPage与AppPage回退",
+          "子路径代理和静态资源鉴权",
+          "分身派生"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:43",
+        "historical_evidence_reference": "docs/validation/plugin-ui31-33-r3-20261027.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "32",
@@ -19953,7 +20851,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:44",
-      "historical_evidence_source": "docs/validation/plugin-ui31-33-r3-20261027.json"
+      "historical_evidence_source": "docs/validation/plugin-ui31-33-r3-20261027.json",
+      "parent_acceptance_current": {
+        "id": "32",
+        "description": "32 · 3.8 首页仪表板：发现可选组件与选择展示是两次独立动作",
+        "scope": [
+          "仪表板meta发现与选择分离",
+          "旧0/1/多参数和三元组约定",
+          "拖动/resize/轮询",
+          "桌面平板移动布局独立",
+          "SQL失败local-first/刷新恢复与五偏好冷恢复"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:44",
+        "historical_evidence_reference": "docs/validation/plugin-ui31-33-r3-20261027.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "33",
@@ -20012,7 +20935,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:45",
-      "historical_evidence_source": "docs/validation/plugin-ui31-33-r3-20261027.json"
+      "historical_evidence_source": "docs/validation/plugin-ui31-33-r3-20261027.json",
+      "parent_acceptance_current": {
+        "id": "33",
+        "description": "33 · 3.9 侧栏导航和 App 快捷访问：两个不同的数据来源",
+        "scope": [
+          "动态sidebar导航与App中心不同来源",
+          "key/顺序/启用/页面回退",
+          "最近访问及冷恢复",
+          "原触屏手势及弹窗防叠加",
+          "仅浏览器触屏模拟非实体手机"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:45",
+        "historical_evidence_reference": "docs/validation/plugin-ui31-33-r3-20261027.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "34",
@@ -20067,7 +21015,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:46",
-      "historical_evidence_source": "docs/validation/plugin-logs34-parity-20261027.json"
+      "historical_evidence_source": "docs/validation/plugin-logs34-parity-20261027.json",
+      "parent_acceptance_current": {
+        "id": "34",
+        "description": "34 · 3.10 插件日志：读文件、SSE 推送、浏览器过滤和下载各做什么",
+        "scope": [
+          "按实例日志文件与轮转/ZIP",
+          "formatter/多行/逆序/环境大小边界",
+          "SSE重连/gap/暂停补读及筛选下载",
+          "路径鉴权/脱敏",
+          "冷恢复与分身隔离"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:46",
+        "historical_evidence_reference": "docs/validation/plugin-logs34-parity-20261027.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "35",
@@ -20135,7 +21108,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:47",
-      "historical_evidence_source": "docs/validation/plugin-api35-r3-20261027/result.json"
+      "historical_evidence_source": "docs/validation/plugin-api35-r3-20261027/result.json",
+      "parent_acceptance_current": {
+        "id": "35",
+        "description": "35 · 3.11 自定义 API 怎样把浏览器请求送到插件方法",
+        "scope": [
+          "API声明注册与重载卸载清理",
+          "请求参数/原始体/二进制/Axios/静态文件",
+          "单用户Cookie/同源凭据与匿名资源区分",
+          "取消后排空且不重启",
+          "Latin1/非Latin1静态响应边界"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:47",
+        "historical_evidence_reference": "docs/validation/plugin-api35-r3-20261027/result.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "36",
@@ -20257,7 +21255,31 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed. Old36/37 only claimed applicable existing-host emitters/consumers, not newly built business hosts.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:48",
-      "historical_evidence_source": "docs/validation/plugin-events-final-20261028.json"
+      "historical_evidence_source": "docs/validation/plugin-events-final-20261028.json",
+      "parent_acceptance_current": {
+        "id": "36",
+        "description": "36 · 4.1 广播事件：某件事已经发生，请感兴趣的插件各自处理",
+        "scope": [
+          "普通广播注册/优先级/浅拷贝/目标分身/启停身份",
+          "异常SystemError防递归",
+          "既有宿主真实输入输出副作用",
+          "无独立业务宿主生产方保留适用性判断不伪造执行"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:48",
+        "historical_evidence_reference": "docs/validation/plugin-events-final-20261028.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "37",
@@ -20376,7 +21398,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed. Old36/37 only claimed applicable existing-host emitters/consumers, not newly built business hosts.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:49",
-      "historical_evidence_source": "docs/validation/plugin-events-final-20261028.json"
+      "historical_evidence_source": "docs/validation/plugin-events-final-20261028.json",
+      "parent_acceptance_current": {
+        "id": "37",
+        "description": "37 · 4.2 同步 Chain 事件：业务先问一圈，再使用被修改的输入",
+        "scope": [
+          "同步Chain共享可变数据和顺序",
+          "异常后mutation及取消结果",
+          "无处理器/async分别处理",
+          "既有宿主消费者与冷恢复",
+          "不因AI排除删除普通链"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:49",
+        "historical_evidence_reference": "docs/validation/plugin-events-final-20261028.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "38",
@@ -20452,7 +21499,33 @@
       "historical_evidence_source": "testdata/plugin-module-no-official-auth-20261026/services38-result.json",
       "verified_incremental_slices": [
         "38.runtime_wire"
-      ]
+      ],
+      "parent_acceptance_current": {
+        "id": "38",
+        "description": "38 · 4.3 插件定时服务：把一个真实函数交给系统时钟",
+        "scope": [
+          "旧trigger实际合同仅interval/cron/date三族；calendar/timezone文字不是CalendarIntervalTrigger",
+          "旧coalesce/misfire/max_instances/jitter及进度TLRU对照",
+          "真实SDK/clock/manual同步异步回调、取消、移除、分身和cold",
+          "旧ServiceView运行首位/nullnext/非阻塞提交/重复点击/失败进度；24h用受控时钟"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:50",
+        "historical_evidence_reference": "testdata/plugin-module-no-official-auth-20261026/services38-result.json",
+        "existing_evidence_ids": [],
+        "remaining": [
+          "补CalendarInterval、AND、OR及实际可达嵌套组合trigger，与既有注册/clock执行衔接。Calendar原19例/45次Next已封，目标仍候选阶段。",
+          "AND已知不推进必须保持有界/可取消，不执行源挂起以求一致；默认timezone/clock/jitter未测部分按实际构造入口收口。旧interval/cron/date与runtime-wire信用不清零。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "39",
@@ -20523,7 +21596,40 @@
       "historical_evidence_source": "testdata/plugin-module-no-official-auth-20261026/services38-result.json",
       "verified_incremental_slices": [
         "38.runtime_wire"
-      ]
+      ],
+      "parent_acceptance_current": {
+        "id": "39",
+        "description": "39 · 4.4 手动运行服务：立即走同一个运行入口，不另造一套任务",
+        "scope": [
+          "手动运行同一真实服务入口",
+          "旧浏览器非阻塞提交与重复点击只执行一次",
+          "旧列表运行首位/nullnext、失败进度与源UI等待",
+          "来源/分身/重启、真实SDK及CLI证据"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:51",
+        "historical_evidence_reference": "testdata/plugin-module-no-official-auth-20261026/services38-result.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "closure_basis": {
+          "children": [
+            "38.runtime_wire"
+          ],
+          "evidence": [
+            "service-usage.current-review"
+          ],
+          "rationale": "手动运行同一入口、非阻塞与重复一次、failure/progress、running-first/null-next和首页只读服务卡已有实际normal/race、CLI108与官方UI。Calendar/AND/OR构造是38剩余，不是39第二套任务入口。",
+          "current_impact": "service代码后续只S10 retained/globalID/owner release接缝，已有真实S10正常23/race23/双host与相关异步replacement门；见service-since-runtime-acceptance.diff。UI数值37/100仅backend证据，未抬为可见UI。"
+        },
+        "status": "complete_agreed_scope_reopened_operation_closed",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "40",
@@ -20611,7 +21717,34 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": "普通内建clear_cache此前501已有限修复；其余preset按旧合同与真实宿主适用性逐个判定，不能把插件命令全降级。",
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:52",
-      "historical_evidence_source": "testdata/plugin-module-no-official-auth-20261026/services40-result.json"
+      "historical_evidence_source": "testdata/plugin-module-no-official-auth-20261026/services40-result.json",
+      "parent_acceptance_current": {
+        "id": "40",
+        "description": "40 · 4.5 插件命令：把“/daily”转换成插件自己的业务事件",
+        "scope": [
+          "preset/plugin/other聚合及注册拦截",
+          "普通消息斜杠命令和参数/用户/channel/source注入",
+          "真实插件事件与processing最终结束",
+          "失败恢复和分身",
+          "旧证据不声明新增Telegram或媒体preset业务"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:52",
+        "historical_evidence_reference": "testdata/plugin-module-no-official-auth-20261026/services40-result.json",
+        "existing_evidence_ids": [],
+        "remaining": [
+          "已修/clear_cache之外，当前普通消息入口对未被plugin覆盖的preset仍501；须按旧适用性精确裁定并闭合普通管理/version、/restart等，而非再造Telegram或全媒体preset业务。",
+          "旧合同明确不声明新增媒体preset业务；/transfer、/redo、/sites等不能在未核所属合同前自动扩为40新开发；AI/agent/skills排除。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "41",
@@ -20692,7 +21825,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:53",
-      "historical_evidence_source": "testdata/plugin-module-no-official-auth-20261026/services40-result.json"
+      "historical_evidence_source": "testdata/plugin-module-no-official-auth-20261026/services40-result.json",
+      "parent_acceptance_current": {
+        "id": "41",
+        "description": "41 · 4.6 插件输入交互：把用户的下一条回复交回提问的插件",
+        "scope": [
+          "插件提问建立pending",
+          "按用户/channel/source匹配回复",
+          "消费移除和目标marker剥离",
+          "不匹配/取消/到期/冷恢复",
+          "不随AI交互排除"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:53",
+        "historical_evidence_reference": "testdata/plugin-module-no-official-auth-20261026/services40-result.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "42",
@@ -20777,7 +21935,37 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:54",
-      "historical_evidence_source": "docs/validation/plugin-web-message42-parity-20261027.json"
+      "historical_evidence_source": "docs/validation/plugin-web-message42-parity-20261027.json",
+      "parent_acceptance_current": {
+        "id": "42",
+        "description": "42 · 4.7 通知：构造消息之后，还要经过路由、时段和渠道发送",
+        "scope": [
+          "Base到通知事件/路由/时段/用户/渠道队列",
+          "真实发送失败恢复",
+          "系统消息分页/图片Markdown链接",
+          "冷恢复不重投",
+          "旧源队列/note语义边界"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:54",
+        "historical_evidence_reference": "docs/validation/plugin-web-message42-parity-20261027.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only",
+        "bounded_tls_recheck": {
+          "report": "../audits/notification42-tls-scope01/result.json",
+          "sha256": "39a0cf20ec26f020eb2b65afd22df8f9a964d5599cd62a19af7fcb8a576bd343",
+          "verdict": "no in-contract RequestUtils HTTP consumer identified; no whole external notification-channel expansion; retain historical acceptance"
+        }
+      }
     },
     {
       "id": "43",
@@ -24981,7 +26169,30 @@
         "historical_credit": "retain 68direct+1indirect and unchanged algorithm/assertion evidence; only newINFO ordering/visibility reopened and verified, not whole43 reset"
       },
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:55",
-      "historical_evidence_source": "docs/validation/plugin-module-host43-final-20261029.json"
+      "historical_evidence_source": "docs/validation/plugin-module-host43-final-20261029.json",
+      "parent_acceptance_current": {
+        "id": "43",
+        "description": "43 · 4.8 模块覆盖：宿主准备做某件事时，优先询问插件的实现",
+        "scope": [
+          "动态模块声明/派发平台按旧report适用域保留",
+          "68个既有宿主方法+1个间接post_message已有实际证据，逐方法详ledger-43-historical-operations.json",
+          "113个旧边界方法和16个旧AI分类是旧适用性解释，不把其本身标为已执行或用户豁免"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:55",
+        "historical_evidence_reference": "docs/validation/plugin-module-host43-final-20261029.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "44",
@@ -25351,7 +26562,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:59",
-      "historical_evidence_source": "docs/validation/plugin-auth47-parity-20261027.json"
+      "historical_evidence_source": "docs/validation/plugin-auth47-parity-20261027.json",
+      "parent_acceptance_current": {
+        "id": "47",
+        "description": "47 · 4.12 认证 provider：插件验证外部身份，核心兑换系统登录",
+        "scope": [
+          "启用provider发现与匿名AuthPage限定资源",
+          "外部身份验证后一次票据换本机登录",
+          "120秒过期/并发一次/重放拒绝",
+          "Cookie冷恢复与票据冷丢失",
+          "单管理员适配非多用户权限系统"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:59",
+        "historical_evidence_reference": "docs/validation/plugin-auth47-parity-20261027.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "48",
@@ -25400,7 +26636,31 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:60",
-      "historical_evidence_source": "docs/validation/plugin-composite48-49-evidence-audit-20261027.json"
+      "historical_evidence_source": "docs/validation/plugin-composite48-49-evidence-audit-20261027.json",
+      "parent_acceptance_current": {
+        "id": "48",
+        "description": "48 · 5.1 从安装到升级 实际改变的是哪一层",
+        "scope": [
+          "安装/保存/重置/升级的代码、对象、配置、KV、文件层分别验证",
+          "精确更新源2.0后reset清源配置/KV不改源代码文件",
+          "分身1.0/PID/init/数据保留",
+          "冷恢复"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:60",
+        "historical_evidence_reference": "docs/validation/plugin-composite48-49-evidence-audit-20261027.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "49",
@@ -25454,7 +26714,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:61",
-      "historical_evidence_source": "docs/validation/plugin-composite48-49-evidence-audit-20261027.json"
+      "historical_evidence_source": "docs/validation/plugin-composite48-49-evidence-audit-20261027.json",
+      "parent_acceptance_current": {
+        "id": "49",
+        "description": "49 · 5.2 最容易混淆的五组操作",
+        "scope": [
+          "市场刷新与更新：前者保留PID/init/config/KV，后者改变代码/版本",
+          "表单打开与保存：读取默认/已存值不等同同对象init增加",
+          "普通Web保存半边：同worker重新init和API/命令/服务注册，AI配置半边排除",
+          "显示排序与执行优先级：真实拖动不改变同event来源→分身/模块顺序，cold无重放",
+          "注册与执行普通半边：真实API/clock/event/command调用证明，不用getter存在冒充执行"
+        ],
+        "counts_once": true,
+        "credit_basis": "unchanged historical whole-parent credit, no new execution claim",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:61",
+        "historical_evidence_reference": "docs/validation/plugin-composite48-49-evidence-audit-20261027.json",
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "50",
@@ -25493,7 +26778,32 @@
       "historical_operation_credit_boundary": "The historical parent acceptance and quoted exact evidence are preserved. These operation clusters are scope summaries, NOT claims that every now-discovered branch/input was historically executed. Fine-grained executed assertions must be linked to the cited old report before marking a specific new edge case passed.",
       "new_or_repaired_boundary_not_historical_credit": null,
       "historical_scope_source": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:62",
-      "historical_evidence_source": null
+      "historical_evidence_source": null,
+      "parent_acceptance_current": {
+        "id": "50",
+        "description": "50 · 5.3 本次哪些结论已经确认 哪些仍然有限",
+        "scope": [
+          "综合结论与范围闭合审计",
+          "真实/回放/合成/触屏及多历史二进制证据分型",
+          "旧最新已重开50而非维持历史46/46结论"
+        ],
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:62",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [],
+        "remaining": [
+          "最后综合审计由唯一61父项的原范围闭合、实际集成与证据分型形成；不是额外空白业务实现。",
+          "官方结构checker既有664未绿事实保留；不得global --final伪绿或以26个已交slice当26个父项。"
+        ],
+        "status": "dependency_or_final_gate",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "S01",
@@ -25566,6 +26876,27 @@
         "semantic_judgment": "旧需求是无预知hash的已完成任务枚举；当前全任务get_torrents/下载中查询与通用服务选择是支持或额外范围，不把全部下载器查询自动写成旧承诺。Transmission已验与qB具体剩余分开。",
         "current_ledger_status": "implementing",
         "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
+      },
+      "parent_acceptance_current": {
+        "id": "S01",
+        "description": "S01 · 下载器任务完整枚举",
+        "scope": "qB/Transmission get_completed_torrents(ids,tags)，包括未提供ids的完成任务枚举",
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [],
+        "remaining": [
+          "原精确两项qB/TR completed枚举均已有实现和真实门；剩余已知差异是qB completed仍走旧NewIYUUClient严格TLS，而源qB ctor VERIFY_WEBUI_CERTIFICATE=False。新独立qB commands的单独授权不自动覆盖此旧query客户端。",
+          "不将全get_torrents/downloading、全部service发现或真实qB daemon新增为旧completed两项要求。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
       }
     },
     {
@@ -25654,6 +26985,30 @@
         "before_cloud_push_state": "finite_backend_locally_committed_bundle_ready_remote_pending",
         "remote_readback": "db671b145270084bc769e433cd7c68952cb8c6d0",
         "remote_receipt": "../audits/git-cloud-delivery-db671/push-receipt.json"
+      },
+      "parent_acceptance_current": {
+        "id": "S02",
+        "description": "S02 · 本机下载器备份、fastresume和临时材料",
+        "scope": "本机备份目录选择/只读访问；.torrent与fastresume重建；临时材料处理及清理",
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [
+          "s02-local.source-target",
+          "s02-local.normal-cli"
+        ],
+        "remaining": [
+          "备份选择、torrent/fastresume重建、确定临时hash文件与年龄清理已交；仍有每份材料16MiB显式资源差异，未获任意源等价豁免。",
+          "不重复要求NAS、真实下载器或业务插件全链；与S03/S12同类资源策略可共用一次方案，但各实际消费者须准确关联。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
       }
     },
     {
@@ -25734,7 +27089,7 @@
         "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
       },
       "local_reconstruction": {
-        "status": "prior eight-operation finite delivery remains remote; current URL/Cookie extension independently accepted and assembled, not yet committed/pushed",
+        "status": "prior eightoperation delivery inherited; current finite Cookie extension90d214 remote readbackmatched; fullparentopen",
         "source_contract": "../audits/s03-next-scope/REVIEW.md",
         "boundary": "Finite ordinary URL/string Cookie aggregate now accepted; arbitrary Python/getters, broader URI/cookie/version domains and realdaemon remain unverified. Existing scoped qB TLS/redirect/credential/no selectedreplay policies unchanged."
       },
@@ -25746,12 +27101,17 @@
         "Vendor-source acquisition incident side effects unknown; final content integrity not proof of no side effects."
       ],
       "completion": {
-        "state": "finite_cookie_backend_verified_publication_ready_remote_pending",
+        "state": "finite_cookie_backend_verified_remote_delivered",
         "full_parent_verified": false,
-        "remote_delivery": false,
+        "remote_delivery": true,
         "manifest": "migration/evidence/s03-qb-cookie/publication-finalization.json",
         "parent_commit": "60206809a9c46b9f11d8fb67590a889e24919df6",
-        "prior_delivered_scope_retained": true
+        "prior_delivered_scope_retained": true,
+        "new_commit": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "remote_readback": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "remote_receipt": "../audits/git-cloud-delivery-90d214fc/push-receipt.json",
+        "bundle_library_id": "libfile_ef64e4e6cba08191969e3266237e50de",
+        "bundle_sha256": "2f2006ad2b0666f9a0c3b48dae1ede71f4b1e3c8706453fc5563d73958148e29"
       },
       "completion_history": [
         {
@@ -25779,7 +27139,34 @@
           ],
           "scope": "finite backend only; full parent remains implementing"
         }
-      ]
+      ],
+      "parent_acceptance_current": {
+        "id": "S03",
+        "description": "S03 · 添加、复核、开始与保留数据删除种子",
+        "scope": "qB/TR add_torrent/recheck_torrents/start_torrents/delete_torrents(delete_file=False)",
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [
+          "s03-commands.source-target",
+          "s03-commands.normal-cli",
+          "s03-qb-cookie.source-target",
+          "s03-qb-cookie.normal-cli"
+        ],
+        "remaining": [
+          "两家add/recheck/start/deleteKeepFiles及普通qB URL+truthyCookie已实际交；16MiB材料上限仍是具体源差异。",
+          "native仍显式不支持部分原add输入（例如本地file/path/file-like及未映射vendor kwargs）；只按原已知普通消费者需要逐项归属，不将任意Python对象/全部vendor生态算新增合同。",
+          "未知已委派效果不得吞为False或自动重放是保留安全边界；真实daemon未运行是证据层级说明，不单独把已验8操作判成未实现。qB command私有TLSfalse已有明确授权，不再虚挂该旧pending。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "S04",
@@ -25921,6 +27308,31 @@
         "before_cloud_push_state": "finite_backend_verified_localcommit_remote_pending",
         "remote_readback": "db671b145270084bc769e433cd7c68952cb8c6d0",
         "remote_receipt": "../audits/git-cloud-delivery-db671/push-receipt.json"
+      },
+      "parent_acceptance_current": {
+        "id": "S04",
+        "description": "S04 · 站点资料、历史账户数据、访问结果与刷新",
+        "scope": "SiteOper.get/list_order_by_pri/list_active/get_userdata_by_date/get_userdata_latest/success/fail + SiteChain.refresh_userdata",
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [
+          "s04-access.source-target",
+          "s04-access.normal-cli"
+        ],
+        "remaining": [
+          "原8操作中success/fail已交；get/list_order_by_pri/list_active只有真实源三读基准，目标22列nullable/定义时默认时间/原整数ID及旧row来源尚待收口。",
+          "另get_userdata_by_date/get_userdata_latest和SiteChain.refresh_userdata实际producer/consumer尚缺；合计剩余5读+refresh，不扩全Site CRUD/DAO。",
+          "access有限int64 note域与原可有null值note的具体兼容边界保留，不伪造旧完整row。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
       }
     },
     {
@@ -25991,6 +27403,26 @@
         "remaining_work_rule": "Require exact missing operation, concrete counterexample or changed dependency; do not reopen completed ordinary operations merely because parent bucket broad.",
         "historical_scope_source": "Formal Mac full-audit read relayed by root at2026-10-30T16:40Z",
         "old_named_scope_fully_covered": true
+      },
+      "parent_acceptance_current": {
+        "id": "S05",
+        "description": "S05 · 订阅查询与原始记录更新",
+        "scope": "SubscribeOper.get/list/update/list_by_tmdbid",
+        "counts_once": true,
+        "credit_basis": "old explicit host operation inventory completed; inherited without re-audit",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "exact_old_methods": "SubscribeOper.get/list/update/list_by_tmdbid",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
       }
     },
     {
@@ -26207,6 +27639,28 @@
         "semantic_judgment": "两整理查询完成继承；剩余是下载get_by_hash与整理delete。旧没有DownloadHistory.delete，不得扩写下载历史删除。",
         "current_ledger_status": "implementing",
         "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
+      },
+      "parent_acceptance_current": {
+        "id": "S06",
+        "description": "S06 · 下载与整理历史查询/删除",
+        "scope": "DownloadHistoryOper.get_by_hash；TransferHistoryOper.get_by_src/get_by_dest/delete",
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [],
+        "remaining": [
+          "原4操作中transfer src/dest查询已交；DownloadHistoryOper.get_by_hash的SDK/新producer纯投影尚未接实际accepted事件快照和完整返回row。",
+          "新整数ID稳定映射与旧accepted缺snapshot返回None/不回填边界待精确裁定；TransferHistoryOper.delete的旧/过期ID安全适配待用户选择。",
+          "不新增DownloadHistory.delete或整个DAO；复用已封source DAO/producer及既有torrent parser。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
       }
     },
     {
@@ -26354,6 +27808,27 @@
         "semantic_judgment": "CustomIdentifiers已验继承；其它key需真实消费者。任意SQL/凭据/全Settings不在合同内。",
         "current_ledger_status": "implementing",
         "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
+      },
+      "parent_acceptance_current": {
+        "id": "S07",
+        "description": "S07 · 限定全局系统配置读写",
+        "scope": "SystemConfigOper.get/set，按真实普通消费者使用key；旧未穷举key",
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [],
+        "remaining": [
+          "CustomIdentifiers既有get/set+原生消费者已交；IndexerSites/RssSites原cache/SQLite语义与纯/store候选已验但9产品受保护未进入当前主树。",
+          "真正fresh host、两个key的实际consumer，以及旧Settings有效站点选择如何初始化source-origin raw存在性/ID命名空间待收口；不扩全Settings或任意SystemConfig键。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
       }
     },
     {
@@ -26414,6 +27889,27 @@
         "semantic_judgment": "v1漏写get_configs，现补明。返回配置、实际实例状态、刷新不可互换；不要求额外媒体库内容UI。",
         "current_ledger_status": "discovered",
         "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
+      },
+      "parent_acceptance_current": {
+        "id": "S08",
+        "description": "S08 · 现有媒体服务器查询与刷新",
+        "scope": "get_configs/get_services/get_service；is_inactive；refresh_library_by_items/refresh_root_library",
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [],
+        "remaining": [
+          "六操作get_configs/get_services/get_service/is_inactive/refresh_library_by_items/refresh_root_library依赖真实MediaServers配置来源及长寿命module实例。当前仅单FNOS配置不能重建原6字段presence/name/type/nullable语义。",
+          "first/last重复name选择、inactive依据实际实例、各vendor实际refresh能力需保源；不能给Jellyfin伪造原无by-items方法。现有native客户端可复用但不是六操作已实现。"
+        ],
+        "status": "dependency_or_final_gate",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
       }
     },
     {
@@ -26522,6 +28018,26 @@
         "remaining_work_rule": "Require exact missing operation, concrete counterexample or changed dependency; do not reopen completed ordinary operations merely because parent bucket broad.",
         "historical_scope_source": "Formal Mac full-audit read relayed by root at2026-10-30T16:40Z",
         "old_named_scope_fully_covered": true
+      },
+      "parent_acceptance_current": {
+        "id": "S09",
+        "description": "S09 · 受管本地存储exists/list/delete",
+        "scope": "StorageChain.exists/list_files/delete_file；RemoveLink:1674/1679/1757",
+        "counts_once": true,
+        "credit_basis": "old explicit host operation inventory completed; inherited without re-audit",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "exact_old_methods": "StorageChain.exists/list_files/delete_file",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
       }
     },
     {
@@ -26741,6 +28257,30 @@
             "s10-original8.independent-review"
           ]
         }
+      },
+      "parent_acceptance_current": {
+        "id": "S10",
+        "description": "S10 · 跨插件生命周期与关联调度",
+        "scope": "PluginManager.init_plugin/remove_plugin/delete_plugin_config/delete_plugin_data/get_plugin_state/get_local_plugins；Scheduler.remove_plugin_job/update_plugin_job",
+        "counts_once": true,
+        "credit_basis": "old explicit host operation inventory completed; inherited without re-audit",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [
+          "s10-original8.source-target",
+          "s10-original8.normal-cli",
+          "s10-original8.independent-review"
+        ],
+        "remaining": [],
+        "remaining_note": "No new actual defect identified in assigned scope; do not reopen all dependencies solely because more files exist in App compile closure.",
+        "exact_old_methods": "PluginManager init/remove/delete_config/delete_data/get_state/get_local + Scheduler remove/update",
+        "status": "complete_agreed_scope_inherited",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
       }
     },
     {
@@ -26929,7 +28469,34 @@
           "manifest": "migration/evidence/s11-cn-title-enrichment/product-manifest.json",
           "remote_delivery": false
         }
-      ]
+      ],
+      "parent_acceptance_current": {
+        "id": "S11",
+        "description": "S11 · 主动使用宿主影视识别",
+        "scope": "ChainBase.recognize_media",
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [
+          "s11-explicit-id.source-target",
+          "s11-explicit-id.owned-hosts",
+          "s11-cn-title.source-target",
+          "s11-cn-title.owned-host"
+        ],
+        "remaining": [
+          "explicit-ID/noMeta及CN后端已交；完整recognize_media普通Meta+name/defaultsource、identity/provider cache、report及当前host组合尚未全部交付。",
+          "Meta/name/Hans/source-cache已有实际组件与普通plugin-priority CLI信用，不能重写；report实际App owned请求仍因环境代理/待精确fixture授权未闭，不能关share/清名称/伪cachehit绕过。",
+          "仅原recognize_media实际链，不将43反向modules或全媒体平台算本项。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "S12",
@@ -27040,7 +28607,29 @@
       },
       "accepted_subfeatures": [
         "S12.material"
-      ]
+      ],
+      "parent_acceptance_current": {
+        "id": "S12",
+        "description": "S12 · 宿主站点浏览、RSS和种子材料",
+        "scope": "TorrentsChain.browse/rss；download_torrent；RSS None→renew→get_rss_link→site_conf.render→get_page_source(FlareSolverr/CloakBrowser)→更新passkey/RSS或失败消息",
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [],
+        "remaining": [
+          "原3操作download_torrent/browse/rss中material真实链已交，但16MiB材料上限仍显式差异。",
+          "browse缺SitesHelper.check流控/完整profile DSL可恢复输入与host接线；已存17row schema摘要不等于完整profile。固定原artifact locator缺失不可用latest替代。",
+          "RSS renew/getlink/render/S14/update passkey或RSS/fail notice实际链未闭；这条RSS只归S12一次，S14是依赖而非再计一条父功能。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "S13",
@@ -27189,7 +28778,36 @@
           "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
           "local_commit": "cd21eaf2bd8aeeb4af012e7a934faad8c5b9b288"
         }
-      ]
+      ],
+      "parent_acceptance_current": {
+        "id": "S13",
+        "description": "S13 · 下载器标签、分类、暂停与重新通告",
+        "scope": "qB delete_torrents_tag/set_torrents_tag/get_torrent_id_by_tag/stop_torrents/set_torrent_category；TR set_torrent_tag/stop_torrents/change_torrent",
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [
+          "s13-controls.source-target",
+          "s13-controls.normal-cli",
+          "s13-tags.source-target",
+          "s13-tags.normal-cli",
+          "s13-tr-final.source-target",
+          "s13-tr-final.normal-cli"
+        ],
+        "remaining": [
+          "旧精确8方法全部已有source/SDK/leaf/native/App及普通CLI实际信用，不能再写8操作未实现，也不扩reannounce。",
+          "可定位普通标量兼容差异：原Transmission.change_torrent在try外直接int()/float()；现trFinalASCII拒绝所有下划线和非ASCII。例合法普通JSON upload_limit=\"1_000\"被Boundary拒绝，而原int语义可接受。此为静态源差分，未新执行；只需有限数值字符串修复/合同裁定，不是任意Python矩阵。",
+          "标签仅字符串set membership/cardinality已验；未知已委派效果/身份guard保留。真实daemon和Python hash随机分布未实测不是额外旧操作。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "S14",
@@ -27252,6 +28870,28 @@
         "at": "2026-11-01T02:56UTC",
         "pure_component": "actual18source normal2/race2 independentlyaccepted; noengine/HTTP/SDK/hostcompletion",
         "resume_key": "new_s14_page_reconstruction"
+      },
+      "parent_acceptance_current": {
+        "id": "S14",
+        "description": "S14 · 普通动态浏览器、Cookie与RSS页面链",
+        "scope": "S12 RSS render页面支路；普通直接get_page_source/action/Cookie入口仅按已知真实消费者",
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [],
+        "remaining": [
+          "get_page_source完整helper/FS依赖的原录制基准和Go纯/transport候选信用保留；真正browser engine与SDK/host集成尚缺。",
+          "官方固定engine输入恢复/安全launch权限须真实获得，不能拿未验SHA256SUMS、--no-sandbox或默认fallback作许可；禁止网络/IPv6等旧边界不绕过。",
+          "普通Cookie/browser依赖按实际源调用收口；不扩CookieCloud/AI/任意action矩阵。"
+        ],
+        "status": "partial_specific_remaining",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
       }
     },
     {
@@ -27309,7 +28949,35 @@
       },
       "accepted_subfeatures": [
         "S15.ordinary_ocr"
-      ]
+      ],
+      "parent_acceptance_current": {
+        "id": "S15",
+        "description": "S15 · 普通非LLM OCR验证码识别",
+        "scope": "autosignin/sites/hdsky.py:102、opencd.py:97→OcrHelper.get_captcha_text；Cookie验证码支路为依赖",
+        "counts_once": true,
+        "credit_basis": "original parent scope plus delivered child evidence, not child count",
+        "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
+        "historical_evidence_reference": null,
+        "existing_evidence_ids": [],
+        "remaining": [],
+        "closure_basis": {
+          "children": [
+            "S15.ordinary_ocr"
+          ],
+          "evidence": [
+            "s15-ordinary-ocr.independent-review"
+          ],
+          "rationale": "旧明确OcrHelper.get_captcha_text普通操作已source52、SDK/helper/ownedHTTP、真实installed worker、normal双host和race闭合。原直接hdsky/opencd调用范围不是OCR engine产品；Cookie登录/S14未闭不得重复悬挂已完成helper。",
+          "current_impact": "22产品19字节同；共享transport只material!=nil分支增量，OCR nil-mode保留且S12 transport正常13包含5旧OCR+3旧Do实际通过；resources/runtime仅接线扩展。"
+        },
+        "status": "complete_agreed_scope_reopened_operation_closed",
+        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+        "legacy_schema_status_not_parent_progress": true,
+        "new_test_execution_claimed": false,
+        "publication_unit": "whole_current61_parent_only"
+      }
     },
     {
       "id": "40.clear_cache",
@@ -29767,6 +31435,43 @@
         "text": "关闭证书校验"
       },
       "scope": "Only newly implemented independent qB native command client, preserving source VERIFY_WEBUI_CERTIFICATE=False. Clone its transport/TLS config; no change to global CA/default transport, other clients, Git/browser, cross-origin credentials, source import or real downloader access. Owned isolated TLS verification only; no broader future-client authority."
+    },
+    {
+      "id": "calendar_interval_extreme_date_fault_isolation_20261101",
+      "status": "approved",
+      "authorization": {
+        "source": "trustedrootrelay explicit user approval",
+        "user_utc": "2026-11-01T08:18:42Z",
+        "user_message_id": "Sentinel_d2e7ebc7b2788191b87194c0063dd5de",
+        "user_text": "可以",
+        "assistant_proposal": "日历调度发现一个原版缺陷：极端日期越界可能让整个调度线程退出，影响其他定时任务。是否允许改为：只停掉计算出错的那条日历任务并显示错误，其他任务继续；本次已提交的回调照常执行，重新保存任务后可恢复？正常日期的行为仍按原版。"
+      },
+      "scope": "CalendarInterval extreme date computation errors only: stopfaultingclock with visibleerror, otherclockscontinue, do not cancel already submitted callback, explicit correctedconfigsave/redeclaration restores;normaldate behavior sourcefaithful",
+      "excluded": [
+        "ordinarybusinesscallbackerrors",
+        "othertriggerfamilies",
+        "arbitrarynegative/nonprogressinputcompleteequivalence",
+        "permissiontoexecuteoriginalinfiniteloops",
+        "Meta reportProxyHost",
+        "olddata compatibility choices"
+      ],
+      "source_evidence": "../audits/calendar-interval-independent/target-review01/ERROR-PROPAGATION.md",
+      "source_observed_component": "19constructors45next actual source02, including OverflowError; full backgroundSchedulerthread controlflow staticonly",
+      "implementation_and_runtime_tests": "pending"
+    },
+    {
+      "id": "trigger-combining-finite-cancellable-budget-20261101",
+      "status": "user_approved",
+      "user_at": "2026-11-01T09:29:36Z",
+      "message_id": "Sentinel_6cd3344e56dc819191dfb50ef54d5550",
+      "user_text": "允许",
+      "scope": "AND/OR or negative/nonprogressing calendar computation finite cancellable budget; exceeded/nonprogress stop only faulting task with visible error; other tasks/manual/already-submitted callbacks unaffected; huge but terminating search may be rejected; normal algorithm and ordering retained",
+      "implementation_state": "not_yet_host_integrated_or_accepted",
+      "not_expanded_to": [
+        "Meta-report-proxy",
+        "old-data-compatibility",
+        "Wiki-TLS"
+      ]
     }
   ],
   "evidence": [
@@ -44835,19 +46540,35 @@
         "text": "清除无用的目录"
       }
     },
-    "progress_reporting": "Completion is features[].completion, distinct from legacy schema current-evidence status. 45 historical completed groups retained:6 current-reverified,28 historical-completed with only necessary changed-dependency binding checks,11 retain completion except specific affected subbehaviors. No new test execution implied. Do not call28 incomplete or require blanket rerun. Original13 host scope now:2 exact operationsets completed(S05/S09),3partiallycovered(S01/S06/S07); Manager3queries are extra current discovery and do not fulfill oldS10eightmethods. S14/15 were oldpending browser/OCR dependencies, separately indexed withRSS shared once.",
-    "latest_scope_selection": "Current complete61-entry inventory retained by user164510; historical same-scope completion inherited; exact source-discovered missing behaviors continue, no whole-source redevelopment or duplicate shared-chain credit."
+    "progress_reporting": "Use current61 top-level agreed contracts and actual features[].completion, not rawschema status/childIDs/commitcounts. Preserve historical45 credit(6reverified+28historical+11 onlyspecificaffectedsuboperations). S05 old4/S09 old3/S10 original8 completed; Manager3query extra isnotoldS10 credit. Latest read-only conservative lowerbound37agreedcompleted/22partial-or-parentcloseout/2dependency-or-finalintegration; independent parentreconciliation pending so no finalpercentage. No blanket reruns/arbitraryDAO/Python expansion; S12/S14sharedRSS countedonce.",
+    "latest_scope_selection": "Current complete61-entry inventory retained by user164510; historical same-scope completion inherited; exact source-discovered missing behaviors continue, no whole-source redevelopment or duplicate shared-chain credit.",
+    "publication_granularity_current": {
+      "policy": "WHOLE_CURRENT61_TOPLEVEL_ONLY_NO_NEW_FINITE_SUBSLICE_PUSH",
+      "user_utc": "2026-11-01T08:26:45Z",
+      "user_message_id": "Sentinel_6b029a561d888191b78cd13680aa7fd2",
+      "user_text": "为什么都发起推送了但是不能确定已完成了26个，我不是让你完成了才推送么",
+      "interpretation": "Existingremote90d214 andall dirty retained;noreset/revert. Continue development/testing, reuseacceptedsource/target. Partial Calendar/local increments stay local andSpace; only complete agreedtop-level scope closure+independentreview+requiredactualgates permits newpush. OrdinarynondestructiveGit authority unchanged butthis constrainsdeliveryunit.",
+      "applies_from": "2026-11-01T08:27Z trustedrootrelay",
+      "current_group": "38 withtriggerfamily closures; Calendar alone notparentcomplete"
+    },
+    "progress_reporting_history_before_20261101_0826": "Completion is features[].completion, distinct from legacy schema current-evidence status. 45 historical completed groups retained:6 current-reverified,28 historical-completed with only necessary changed-dependency binding checks,11 retain completion except specific affected subbehaviors. No new test execution implied. Do not call28 incomplete or require blanket rerun. Original13 host scope now:2 exact operationsets completed(S05/S09),3partiallycovered(S01/S06/S07); Manager3queries are extra current discovery and do not fulfill oldS10eightmethods. S14/15 were oldpending browser/OCR dependencies, separately indexed withRSS shared once.",
+    "parent_status_authority": {
+      "field": "features[].parent_acceptance_current",
+      "scope": "exact61 rows only",
+      "legacy_status": "features[].status remains legacy structural evidence/binding state, not authoritative parent completion; child statuses never counted as top-level",
+      "publishing": "No new partial-child push; corresponding complete61 parent required with current related evidence/dependency regression and applicable real gates"
+    }
   },
   "resume": {
-    "next_slice": "Continue602068-based name/Search pure App and catalog gates; Meta report fixture and old data compatibility decisions remain unanswered",
+    "next_slice": "Finish current Calendar localactualgates then remaining38 completecontract;no finitechildpush. Reconcile top-levelcompletion withouterasinghistory.",
     "dirty_work": "Current ACTIVE db671 protected: new Meta SDK/App/cache/report/worker/docs plus3 narrowexistinghooks and soleledger. Component roots+ordinaryCLI verified, actual owned-App report path failed and retained. Do not commit current incomplete vertical or discard dirty.",
     "workers": {
-      "coordinator": "continue_platform_astra sole ledger/integration Astra ultra",
-      "CNsourcefinal": "meta_target_review final read-only audit",
-      "CNpatch": "c_userdata_owner isolated provider-CN02 draft",
-      "name_native": "s11_cache_oracle isolated name-native-integration01 draft",
-      "name_component_final": "tls_ab_independent completed ACCEPT",
-      "CNsourceauthor": "s01_release_owner completed source preparation"
+      "coordinator": "continue_platform_astra sole ledger/integration gpt-6-astra ultra",
+      "calendar_owner": "c_userdata_owner external frozen pure03/host05, app fixture02 ready, no childpush",
+      "calendar_independent": "meta_target_review source/target/actual exact gates",
+      "combining_source": "s11_cache_oracle bounded original AND/OR source scope and safe collector preparation",
+      "parent_reconciliation": "tls_ab_independent read-only current61 inherited and reopened-parent reconciliation",
+      "command40_scope": "command40_scope read-only ordinary built-in route applicability; no fullmedia expansion"
     },
     "blockers": [
       "Old20261030 uncommitted candidates remain inaccessible; do not infer new code or reuse historical PASS as current acceptance.",
@@ -44980,19 +46701,19 @@
       }
     ],
     "last_delivery": {
-      "commit": "60206809a9c46b9f11d8fb67590a889e24919df6",
+      "commit": "90d214fc5ca861d327e71327488aa77ee7011e2b",
       "branch": "plugins-refactor",
-      "readback": "60206809a9c46b9f11d8fb67590a889e24919df6",
+      "readback": "90d214fc5ca861d327e71327488aa77ee7011e2b",
       "main_unchanged": "97476582910dc4b696f7ccd5010f28d823812d40",
-      "finite_remote_slice_count": 25,
-      "count_boundary": "finite backend slices, not25 top-level groups complete; inherited61 scope unchanged",
-      "ci": "actual check-runs0/workflow-runs0/statuses0; combinedpendingwithzero statuses; noCIgreen",
-      "receipt_directory": "../audits/git-cloud-delivery-60206809",
-      "scope": "CN explicitID/noMeta title enrichment+pureGo Hans finite source domains; fullS11/Meta/report/name stillimplementing",
-      "source_of_readback": "actual cloud normalpush session78749 initial348881 terminal3766d1 exit0; CI33286 8faa6a→87f98e exit0",
-      "external_bundle": "libfile_6fedcf1a04608191aaf4a410d0efd487"
+      "finite_remote_slice_count": 26,
+      "count_boundary": "finite independently accepted backend slices, NOT26 top-level groups complete; inherited61scope unchanged",
+      "ci": "actualcheckruns0/workflowruns0/statuses0; combinedpendingwithzero statuses; NOT CIgreen",
+      "receipt_directory": "../audits/git-cloud-delivery-90d214fc",
+      "scope": "S03 ordinary URL+Cookie synchronization + precise legacyversionASCII correction; fullS03/realdaemon remainopen",
+      "source_of_readback": "actual normalcloudpush74098 4c014a→c10ec1 exit0; CI11231 f1ce44→c83f17 exit0",
+      "external_bundle": "libfile_ef64e4e6cba08191969e3266237e50de"
     },
-    "updated_at": "2026-11-01T07:55:10.199248+00:00",
+    "updated_at": "2026-11-01T10:10:00.739212+00:00",
     "latest_integrations": {
       "services_portable": "../evidence/coordinator/services-main-integration/portable-integration.json",
       "services_web": "../evidence/coordinator/services-main-integration/web-v3-result.json",
@@ -46643,7 +48364,7 @@
         "converter_race": "evidence/s11-cn-zhconv-integrated-race01"
       },
       "s03_qb_cookie_extension": {
-        "status": "FINITE_CURRENT_COOKIE_SLICE_ACCEPTED_ASSEMBLED_PENDING_FINAL_WHITELIST",
+        "status": "REMOTE_DELIVERED_AND_POSTCOMMIT_INDEPENDENT_ACCEPT",
         "base": "60206809a9c46b9f11d8fb67590a889e24919df6",
         "source_checkpoint": "source-collectors/s03-qb-cookie01/CHECKPOINT.md",
         "scope": "existing AddTorrent URL+truthy Cookie pending branch: version/cookie merge/store/add; existing delivered S03 credit inherited",
@@ -46652,7 +48373,7 @@
           "s11_cache_oracle source preparation",
           "c_userdata_owner target draft"
         ],
-        "next": "Exact compiled-byte projection/whitelist independent final, then normalcommit/push/readback/CI",
+        "next": "Postcommit byteaudit/externalbundle;38 calendar source/target preparation proceeds",
         "source_preparation": {
           "binding": "source-collectors/s03-qb-cookie01/input-bindings.json",
           "sha256": "c71ac0091a841618ce3cc4fb4d0a8467874b6da568d0f04cb1e5decfefa6761e",
@@ -46881,7 +48602,169 @@
           "product_and_test_and_raw_files": 11,
           "physical_materialization": "exact20;Meta25preserved",
           "manifest_sha256": "edaf1365cd2dae3a235027bacb66775ca3251ec9126e561230a04ce34852227e",
-          "not_committed": true
+          "not_committed": false,
+          "independent_final_seal_sha256": "581abd1048795f2926b2b64befdf027520f839b5e2dab33b489ee6bb15d934d9"
+        },
+        "local_commit": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "remote_commit": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "delivery_receipt": "../audits/git-cloud-delivery-90d214fc/push-receipt.json",
+        "external_bundle": {
+          "library_file_id": "libfile_ef64e4e6cba08191969e3266237e50de",
+          "version": 0,
+          "filename": "light-media-s03-qb-cookie-90d214fc.bundle",
+          "bytes": 307283,
+          "sha256": "2f2006ad2b0666f9a0c3b48dae1ede71f4b1e3c8706453fc5563d73958148e29",
+          "head": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+          "prerequisite": "60206809a9c46b9f11d8fb67590a889e24919df6",
+          "saved_by": "root actualSpaceupload/tool0xattrs",
+          "recorded_at": "2026-11-01T08:02:55.331139+00:00"
+        },
+        "postcommit": {
+          "path": "../audits/s03-qb-cookie-independent/postcommit01/postcommit-seal.json",
+          "sha256": "85c66f3efa8d3be450fc09381617473a9cbbe0a0a433fb78d6aaf6bfd8c09ac3",
+          "status": "ACCEPT_EXACT214_PARENT_TREE_REMOTE_RECEIPT_META25"
+        },
+        "external_postcommit0804": {
+          "library_file_id": "libfile_136757e241e48191b559ff38cea8043a",
+          "version": 0,
+          "filename": "s03-cookie-postcommit-calendar-checkpoint-20261101T0804.tar.gz",
+          "bytes": 1716890,
+          "sha256": "678f46ba59ba80e97cd54050adf0dacf419082f08e29264d1da3305c3f689a5e",
+          "recorded_at": "2026-11-01T08:06:47.837838+00:00",
+          "scope": "S03 remote/postcommit/CI/ledgertrue;CalendarfirstDTOonly, no sourceexecution",
+          "saved_by": "root Spaceactual/tool0xattrs"
+        }
+      },
+      "calendar_interval": {
+        "status": "PURE03_NORMAL_ACTUALLY_STARTED_32100",
+        "scope_report": "../audits/next-independent-slice-after-cookie/REVIEW.md",
+        "scope_sha256": "1ed61e33239506d1d2df49b3a252f23bb64ea80d525cf30e78632a0c51a6b67e",
+        "parent_feature": "38",
+        "boundary": "calendarintervalonly, noANDOR, preserve cron33/oldservicecredit; no true downloader/NAS",
+        "owners": [
+          "s11_cache_oracle source",
+          "c_userdata_owner target",
+          "tls_ab_independent preexec"
+        ],
+        "source_preexec": "pending; avoid wholeAPS util asyncio/socket/localzoneTermuxsideeffects, exact selectednodes only",
+        "target_checkpoint01": {
+          "path": "../target-drafts/calendar-interval01/checkpoint01.json",
+          "sha256": "312823e85b1d52ed6e8fec737b1c34f111c468c3061a0faf34314cf1ab46107c",
+          "status": "typedDTO/contracts onlynotexecuted"
+        },
+        "external_checkpoint0804": {
+          "library_file_id": "libfile_136757e241e48191b559ff38cea8043a",
+          "version": 0,
+          "filename": "s03-cookie-postcommit-calendar-checkpoint-20261101T0804.tar.gz",
+          "bytes": 1716890,
+          "sha256": "678f46ba59ba80e97cd54050adf0dacf419082f08e29264d1da3305c3f689a5e",
+          "recorded_at": "2026-11-01T08:06:47.837838+00:00",
+          "scope": "S03 remote/postcommit/CI/ledgertrue;CalendarfirstDTOonly, no sourceexecution",
+          "saved_by": "root Spaceactual/tool0xattrs"
+        },
+        "source_prepared02": {
+          "path": "../source-collectors/calendar-interval01/preparation-seal02.json",
+          "sha256": "d3ce2fbe01dd2c0bb7652aa58db250b4b798bb5b285ca5ab851e40ac2d494399",
+          "manifest_sha256": "21ea1b826c20ddab3cef74207e1bde4622d77bf3b2fcae1fb1eb89bde35ca30f",
+          "cases": 19,
+          "next_calls_upper_bound": 45,
+          "bound_inputs": 115,
+          "actual_execution": false,
+          "status": "independentpreexecpending"
+        },
+        "preexec_static_correction": {
+          "original_coordinator_inference": "years1 from9999 assumedterminating",
+          "source_readback": "caughtValueError inside loop -> nonterminating; never executed",
+          "actualselectedreplacement": "days1 from9999-12-31 timedelta outsidecatch -> boundedOverflowError; notexecutedpendingpreexec",
+          "all_old01_files_preserved": true
+        },
+        "actual_source02": {
+          "tool_chunk": "40364e",
+          "exit_code": 0,
+          "raw": "../evidence/calendar-interval-source02/stdout.json",
+          "sha256": "00e4f815fa723990833ba60420f1982e9b4774b527bc823917069d58b561fbb8",
+          "bytes": 149839,
+          "cases": 19,
+          "next_calls": 45,
+          "stderr_bytes": 0,
+          "input_drift": [],
+          "audit_rejections": [],
+          "independent_final": {
+            "path": "../audits/calendar-interval-independent/source-final02/final-seal.json",
+            "sha256": "b1c8a15f20216727262d9836c2b03cbe4a133dcd66930ef961459f1e4053285e",
+            "scope": "ACCEPT19/45finiteoriginalnodes;no scheduler/import/network/defaultlocalzone/realRNG"
+          },
+          "scope": "5completeoriginalnodes withrealstdlib/TZif,recordinguniform; no fullAPS scheduler/worker/probes"
+        },
+        "pending_runtime_choice": "Resolved onlyfor the explicit Calendar extreme date proposal;otherpendingchoices unchanged",
+        "external_source0813": {
+          "library_file_id": "libfile_eee21671e8ec8191ad655d93d301d8a3",
+          "version": 0,
+          "filename": "calendar-source02-terminal-20261101T0813.tar.gz",
+          "bytes": 858125,
+          "sha256": "80f645e2f62ddaf8b24d27e9a00b9ba5448aa80da8150a9c7b36d4806f05f9f6",
+          "recorded_at": "2026-11-01T08:15:46.457361+00:00",
+          "scope": "19/45actualoriginalfinite accepted;Go pending;extremehostpolicy NOT approved",
+          "saved_by": "root actualSpace/tool0xattrs"
+        },
+        "runtime_choice": {
+          "decision_id": "calendar_interval_extreme_date_fault_isolation_20261101",
+          "status": "approvedexactCalendaronly;implementationandtargetgatespending"
+        },
+        "external_candidate0819": {
+          "library_file_id": "libfile_c323a8d786e08191a522b2092ae7c0d1",
+          "version": 0,
+          "filename": "calendar-candidate02-wip-20261101T0819.tar.gz",
+          "bytes": 861719,
+          "sha256": "00d3832280a6477c95f1dc3610fe187f39ea66720eb536b74d47e1bb769c7cc3",
+          "scope": "archiveduncompiled02 beforeapproval/typefix, not retroactivePASS",
+          "recorded_at": "2026-11-01T08:21:23.782613+00:00"
+        },
+        "candidate03": {
+          "path": "../target-drafts/calendar-interval01/candidate03.json",
+          "gate_seal_sha256": "99c89d7701460a293239b98dd93f6bb712eaffa417b6ba2fb58db25b1ebb7a3c",
+          "normal_roots": 7,
+          "race_roots_planned": 1,
+          "App_unexecuted": true
+        },
+        "normal_actual": {
+          "status": "ACTUAL_PASS_PENDING_INDEPENDENT",
+          "session": 32100,
+          "initial_chunk": "181f52",
+          "terminal_chunk": "537a02",
+          "exit_code": 0,
+          "roots": 7,
+          "source_cases": 19,
+          "source_next_calls": 45,
+          "input_count": 1454,
+          "program_sha256": "757e9ccfe63b921f4859b2409e6d0ef2d9cb79b678fc966ad2aada224798b025",
+          "evidence": "../evidence/calendar-interval-pure03",
+          "vet": "NOT_RUN_here;historicaldriverwording clarified"
+        },
+        "race_actual": {
+          "status": "ACTUAL_PASS_PENDING_INDEPENDENT",
+          "session": 7440,
+          "initial_chunk": "378ce7",
+          "terminal_chunk": "d88661",
+          "exit_code": 0,
+          "roots": [
+            "TestCalendarIntervalSnapshotAndFiniteBoundary"
+          ],
+          "input_count": 1491,
+          "program_sha256": "cd36f2548eb6a248ac29f2f4508c9d94b624bb8d778a68dae3358cbc495321da",
+          "evidence": "../evidence/calendar-interval-pure-race03",
+          "not_full19_race": true
+        },
+        "vet_actual": {
+          "tool_chunk": "9782e6",
+          "exit_code": 0,
+          "evidence": "../evidence/calendar-interval-vet03",
+          "input_count": 1454,
+          "input_drift": [],
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "scope": "separateexact schedulepackage staticvet notfullproject/CI",
+          "independent_final": "pending"
         }
       }
     },
@@ -50838,7 +52721,7 @@
         "status": "parentconfirmedactualSpace saved/xattrs0; finite localf913 terminal originals, no remote/fullS04 claim"
       }
     },
-    "next_action": "freeze finite Name/Search components; next independent complete S03 qB URL+truthy cookie branch source preparation; withMeta report remains pending",
+    "next_action": "Complete whole38 using finite combining source16/34 and newoptional builtin tree; A/B private TLS scope repair in parallel. No new finitechildpush;35/24/2 authoritative until exactparentclosure.",
     "workers_history_before_s04_publication": [
       {
         "name": "terminate_independent",
@@ -53522,7 +55405,828 @@
       "receipt_directory": "../audits/git-cloud-delivery-db671",
       "dirty_protection": "pre/post status same; ledger pre/post SHA206c5957a44804364ddef30bb1ffe8527e134e8f2a13f7c9c76b779b4b3b198a; S14threepathcandidate not staged or pushed",
       "external_receipt": "libfile_094859b5977c819184203fabacba2c93"
-    }
+    },
+    "delivery_history": [
+      {
+        "commit": "60206809a9c46b9f11d8fb67590a889e24919df6",
+        "branch": "plugins-refactor",
+        "readback": "60206809a9c46b9f11d8fb67590a889e24919df6",
+        "main_unchanged": "97476582910dc4b696f7ccd5010f28d823812d40",
+        "finite_remote_slice_count": 25,
+        "count_boundary": "finite backend slices, not25 top-level groups complete; inherited61 scope unchanged",
+        "ci": "actual check-runs0/workflow-runs0/statuses0; combinedpendingwithzero statuses; noCIgreen",
+        "receipt_directory": "../audits/git-cloud-delivery-60206809",
+        "scope": "CN explicitID/noMeta title enrichment+pureGo Hans finite source domains; fullS11/Meta/report/name stillimplementing",
+        "source_of_readback": "actual cloud normalpush session78749 initial348881 terminal3766d1 exit0; CI33286 8faa6a→87f98e exit0",
+        "external_bundle": "libfile_6fedcf1a04608191aaf4a410d0efd487"
+      }
+    ],
+    "metadata_corrections": [
+      {
+        "at": "2026-11-01T08:03:37.641238+00:00",
+        "fields": [
+          "target.revision",
+          "target.remote_revision",
+          "target.revision_note"
+        ],
+        "old_snapshot": {
+          "revision": "db671b145270084bc769e433cd7c68952cb8c6d0",
+          "remote_revision": "db671b145270084bc769e433cd7c68952cb8c6d0",
+          "revision_note": "Actual cloud standard HTTPS push/readback db671 at2026-11-01T02:54UTC;9 previouslyaccepted local slices now remote. 24finite remote slices total, NOT24top-level completed groups. CI checks0/runs0/status0, noCIgreen; main97476582unchanged. S14pureWIPnotcommitted."
+        },
+        "reason": "top-leveltarget stilldb671 although last_delivery correctlytracked602068 then90d214; synchronizedtoactualreadback withoutrewritinghistoriccommit/sourceevidence",
+        "not_product_change": true
+      }
+    ],
+    "progress_readonly_20261101T0829": {
+      "path": "../audits/progress-61-20261101T0827/read-only-count.json",
+      "minimum_completed_agreed_scope": 37,
+      "partial_or_notparentclosed": 22,
+      "pending_dependency_or_finalintegration": 2,
+      "not_finalpercentage": true,
+      "historical45_credit_retained": true
+    },
+    "new_calendar_interval": {
+      "updated_at": "2026-11-01T08:40:28.869171+00:00",
+      "status": "finite_Calendar_source_pure_App_race_normalCLI_accepted_not_whole38",
+      "source_final_sha256": "b1c8a15f20216727262d9836c2b03cbe4a133dcd66930ef961459f1e4053285e",
+      "pure_final_sha256": "8137662bf790410618c9697970ca5ff840bdb1c0c4c57e4d302743316a77b8db",
+      "normal": {
+        "roots": 7,
+        "source_cases": 19,
+        "source_next_calls": 45,
+        "session": 32100,
+        "exit": 0
+      },
+      "race": {
+        "roots": 1,
+        "session": 7440,
+        "exit": 0
+      },
+      "vet": {
+        "package": "./internal/plugins/schedule",
+        "tool_chunk": "9782e6",
+        "exit": 0
+      },
+      "candidate": "../target-drafts/calendar-interval01",
+      "remaining": "Whole38 combining/default/valid zero-time optional representation and approved bounded semantics plus related final integration/UI; Calendar standalone notpublishable",
+      "app01": {
+        "session": 8812,
+        "exit": 1,
+        "tool_terminal": "ada799",
+        "evidence": "../evidence/calendar-interval-app01",
+        "failure": "Both tests public row assertion got zero value; overflow actual log exists; cause pending independent diagnosis"
+      },
+      "latest_external_backup": {
+        "confirmed_at": "2026-11-01T09:12:59.961921+00:00",
+        "library_file_id": "libfile_8ed249c26bcc819181d4ee9d0c54fc9c",
+        "version": 0,
+        "filename": "calendar-cli-combining-ab-wip-20261101T0911.tar.gz",
+        "bytes": 1958907,
+        "sha256": "4373545492ca11ddfce1ec60c5f286582ed643802ec5283d3854319746253be5",
+        "xattrs": "tool0",
+        "status": "actualSpaceSaveConfirmedByRoot",
+        "scope": "Calendar finiteCLI accepted; sourcecombining01 trace limitation retained; A/B02 and combinedtarget checkpoint unexecuted; no newGitdelivery"
+      },
+      "app02": {
+        "status": "independently_ACCEPTED",
+        "path": "../target-drafts/calendar-interval01/app-gate02",
+        "source_and_product_unchanged": true,
+        "change": "Fix actual v1/native DTO fixture distinction and v1 paused500 body; original app01 failure preserved",
+        "session": 22165,
+        "exit": 0,
+        "tool_terminal": "518644",
+        "evidence": "../evidence/calendar-interval-app02",
+        "input_count": 6364,
+        "root_count": 2,
+        "review_sha256": "5d18e7f9f06d719806bdaa9457f998fb27dceb038daf1ba00250353826032edb"
+      },
+      "app_race01": {
+        "status": "independently_ACCEPTED",
+        "session": 65594,
+        "tool_terminal": "bb5a97",
+        "exit": 0,
+        "root_count": 1,
+        "evidence": "../evidence/calendar-interval-app-race01"
+      },
+      "server01": {
+        "status": "actual_build_PASS",
+        "session": 63383,
+        "terminal_tool": "edef27",
+        "exit": 0,
+        "input_count": 4098,
+        "evidence": "../evidence/calendar-interval-server01",
+        "program_sha256": "c99fda16c3f0ad41420c32b3b2d87638dbcf745cfefb4d78b45daf96017c4fd0",
+        "service_started": false
+      },
+      "cli01": {
+        "status": "independently_ACCEPTED",
+        "binding_sha256": "a80c03359b857e021d0e08332017742e9e0b2282d3eb4e2789b693689e307c9a",
+        "input_count": 6380,
+        "path": "../target-drafts/calendar-interval-cli01",
+        "session": 79142,
+        "exit": 0,
+        "terminal_tool": "85ff82",
+        "hosts": [
+          25,
+          53
+        ],
+        "callbacks": 4,
+        "evidence": "../test-instances/calendar-interval-normal01",
+        "review_sha256": "bc5deeaa46b5a9c6f1bfec48bc78a7311088e50536b6418ab583d2045bf95d1f"
+      }
+    },
+    "workers_history_before_calendar_20261101": {
+      "coordinator": "continue_platform_astra sole ledger/integration Astra ultra",
+      "CNsourcefinal": "meta_target_review final read-only audit",
+      "CNpatch": "c_userdata_owner isolated provider-CN02 draft",
+      "name_native": "s11_cache_oracle isolated name-native-integration01 draft",
+      "name_component_final": "tls_ab_independent completed ACCEPT",
+      "CNsourceauthor": "s01_release_owner completed source preparation"
+    },
+    "parent_progress_current": {
+      "as_of": "2026-11-01T10:10:00.739212+00:00",
+      "authoritative_field": "features[].parent_acceptance_current",
+      "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+      "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+      "denominator": 61,
+      "counts": {
+        "complete": 39,
+        "partial": 20,
+        "dependency_or_final": 2
+      },
+      "complete_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "11",
+        "13",
+        "14",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "39",
+        "41",
+        "42",
+        "43",
+        "47",
+        "48",
+        "49",
+        "S05",
+        "S09",
+        "S10",
+        "S15"
+      ],
+      "partial_ids": [
+        "07",
+        "08",
+        "09",
+        "10",
+        "12",
+        "15",
+        "23",
+        "24",
+        "38",
+        "40",
+        "S01",
+        "S02",
+        "S03",
+        "S04",
+        "S06",
+        "S07",
+        "S11",
+        "S12",
+        "S13",
+        "S14"
+      ],
+      "dependency_or_final_ids": [
+        "50",
+        "S08"
+      ],
+      "basis": "Original35 accepted scopes retained;4precise sharedA gaps closed by actual original/request/normal/race/App/ordinaryCLI and nonauthor acceptance. Four new closures are local awaiting ordinary commit/push/readback. This is not finalwhole61percentage or CIgreen.",
+      "correction_from_prior37": "New exact shared TLS source/target discrepancy affects six previously inherited parents07/08/10/12/14/20; four previously reopened parents16/17/39/S15 now closed.37+4-6=35. Prior43/41 review drafts withdrawn, preserved.",
+      "independent_review": "../audits/progress-61-parent-reconciliation01/final-seal.json",
+      "independent_review_sha256": "fa4921cec1548e9db85d7f4307a706a383c26a0c0fe06b27e82dfbe683aad020",
+      "current_product_wip_not_integrated": "Other Meta25/S13/Calendar/combining/S14/B candidates not included in A-only adoption",
+      "global_final_checker": "664 inherited structural issues remain; not green, feature50 not complete",
+      "user_notification": {
+        "reported_by_root_at": "2026-11-01T08:54Z",
+        "confirmed_at": "2026-11-01T08:54:54.369892+00:00",
+        "message": "User was told authoritative35/24/2 and prioratleast37 correction +4closed-6preciseTLSaffected; do not restore37/43/41 as current count",
+        "root_memory_followup": "thread limit; memory task not launched, use soleledger and externalbackup"
+      },
+      "external_backup": {
+        "confirmed_at": "2026-11-01T08:56:12.829545+00:00",
+        "library_file_id": "libfile_451bb8657078819191eb21d718047358",
+        "version": 0,
+        "filename": "calendar-app-terminal-parent61-20261101T0855.tar.gz",
+        "bytes": 3661157,
+        "sha256": "e0e590a4295be4d0b339be27332b8477604027aa42ed555d8668339a77a51829",
+        "xattrs": "tool0",
+        "status": "actualSpaceSaveConfirmedByRoot",
+        "scope": "CalendarApp02normal2/race1 accepted; authoritative61=35/24/2; CLI only prepared; notnewGitdelivery"
+      },
+      "newly_closed_local_parents": [
+        "11",
+        "13",
+        "14",
+        "20"
+      ],
+      "newly_closed_local_delivery": "accepted/adopted but commit/push not yet performed; remote still90d214",
+      "latest_independent_parent_dependency": "migration/evidence/platform-requestutils-a/parents",
+      "previous_count_reference": "35/24/2 independently reconciled20261101T0853; historic37 remains withdrawn"
+    },
+    "new_trigger_combining": {
+      "status": "source02_finiteAccepted_target03_actualCompileSelf2PASS_oracle16Pending",
+      "source_evidence": "../evidence/trigger-combining-source01",
+      "source_tool_chunk": "8f230e",
+      "source_exit": 0,
+      "case_count": 16,
+      "actual_root_calls": 34,
+      "source_stdout_sha256": "e2e65a7cf42c9db5207fd5f30549c685ee07c45adb6f2d04a5dccd9bc421b79b",
+      "source_preexec": "../audits/trigger-combining-independent/source-preexec01/review.json",
+      "unsafe_source_witnesses_executed": false,
+      "product_bounded_fault_policy": {
+        "status": "explicitly_user_approved",
+        "user_at": "2026-11-01T09:29:36Z",
+        "message_id": "Sentinel_6cd3344e56dc819191dfb50ef54d5550",
+        "user_text": "允许",
+        "scope": "AND/OR or negative/nonprogressing calendar computation finite cancellable budget; exceeded/nonprogress stop only faulting task with visible error; other tasks/manual/already-submitted callbacks unaffected; huge but terminating search may be rejected; normal algorithm and ordering retained",
+        "not_authorized": "No Meta ProxyHost, old-data compatibility, Wiki TLS, or other unrelated policy changes",
+        "acceptance": "Exact production budget, cancellation, visible error, resave recovery still require targeted acceptance"
+      },
+      "target": "../target-drafts/trigger-combining-target01",
+      "publication": "whole38_only_nochildpush",
+      "source01_trace_defect": {
+        "case": "nested_or_child_exception",
+        "actual_call_outcome": "ValueError",
+        "incorrect_observer_trace_tail": "return/null at root",
+        "effect": "Cannot accept complete trace oracle; original output retained, source returns layer not erased",
+        "repair": "New observer-only collector02/cases unchanged; independent review then new related16case run, no dangeroussource"
+      },
+      "latest_external_backup": {
+        "confirmed_at": "2026-11-01T09:48:59.622291+00:00",
+        "library_file_id": "libfile_9ac65b82719881919e61c4b4c31518a5",
+        "version": 0,
+        "filename": "a-cli-terminal-combining04-wip-20261101T0948.tar.gz",
+        "bytes": 1182777,
+        "sha256": "cbc1215455770c6e96ee52e7784e46afdddc6b2554b02773d70a8b59b7e0ef3a",
+        "xattrs": "tool0",
+        "status": "actualSpaceSaveConfirmedByRoot"
+      },
+      "source02": {
+        "tool": "f98bf4",
+        "exit": 0,
+        "cases": 16,
+        "root_calls": 34,
+        "stdout_sha256": "7eaf2df17af4f6d3f9fc0db501145b3146e9058374d6198d2aa65d4c6841af97",
+        "evidence": "../evidence/trigger-combining-source02",
+        "status": "independently_ACCEPTED_finite_source",
+        "review": "../audits/trigger-combining-independent/source-final02/REVIEW.md",
+        "review_sha256": "081b5f436f75885204ef26686124fb5ccbe50b69ad95316302f333806dba90ca"
+      },
+      "target_pure01": {
+        "status": "independently_ACCEPTED_self2_not_sourceoracle",
+        "session": 98324,
+        "initial_tool": "06dcc2",
+        "terminal_tool": "a2f6af",
+        "exit": 0,
+        "roots": 2,
+        "inputs": 1453,
+        "candidate": "03",
+        "scope": "Not source16oracle or productionbudgetapproval",
+        "evidence": "../evidence/trigger-combining-pure01",
+        "review": "../audits/trigger-combining-independent/target-review03/pure01-final-seal.json",
+        "review_sha256": "967d2fbfc5db2115e248a49ef9a548894023f4952c50540671b06dd42d0d9434"
+      },
+      "target_oracle01": {
+        "status": "independently_ACCEPTED_normal16_source_differential",
+        "session": 73775,
+        "initial_tool": "d1ede0",
+        "expected_roots": 1,
+        "source_cases": 16,
+        "source_calls": 34,
+        "source_trace_events": 255,
+        "evidence": "../evidence/trigger-combining-oracle01",
+        "terminal_tool": "6d67cd",
+        "exit": 0,
+        "inputs": 1465,
+        "program_sha256": "23735b6699f3aca2bc8b5735e739bb9dfb7f032f3e7a0f009c4ba2ad5166980b",
+        "review": "../audits/trigger-combining-independent/target-review03/oracle01-final-seal.json",
+        "review_sha256": "c92a3af82d644c1289c2959d2d24d8bde1ec51bcd22cc742ea616544215f349b"
+      },
+      "default_zero_annex01": {
+        "status": "independently_ACCEPTED_finite_source8",
+        "evidence": "../evidence/trigger-builtin-annex-source01",
+        "tool": "a0c7e0",
+        "exit": 0,
+        "cases": 8,
+        "root_calls": 16,
+        "stdout_sha256": "4cf3402ba246cb4f7d907de3f23e44fa7391d02fd71e9f68b23c7dd14db950ff",
+        "scope": "Real source selected nodes, actual clocks process Asia/Tokyo, unchanged environment; year0001 precision uses ISO/fold/offset, not derived float epoch",
+        "review": "../audits/trigger-builtin-annex-independent/final01/REVIEW.md",
+        "review_sha256": "8128fdfe632ac2358c85fccd94664d409a4a7319f27d92ec3df7ca71068d3dc1",
+        "time_returns": 13,
+        "none_returns": 3,
+        "year1_float_epoch_precision": "6 trace values lose1microsecond; exactISO remains authority"
+      },
+      "host04_checkpoint01": {
+        "path": "../target-drafts/trigger-combining-target01/host04/checkpoint01.json",
+        "sha256": "59c7fd828eb352f9fd76dd25ab045f0789d53988972aa771bdc2deb5610f8899",
+        "status": "PARTIAL_sources_landed_not_compiled_not_dispatch_integrated",
+        "external_backup": "libfile_9ac65b82719881919e61c4b4c31518a5"
+      },
+      "missing_trigger_source_correction": {
+        "at": "2026-11-01T09:44:44Z",
+        "source": "app/scheduler.py1353-1391",
+        "fact": "service[trigger] missing raisesKeyError after _jobs manual registration; explicitnull reaches APS _create_trigger(None) defaultDate; explicitobject{}invalid",
+        "coordinator_prior_suggestion": "missingtrigger defaultDate was overbroad and withdrawn before implementation",
+        "scope": "annex None evidence does not establish pluginservice missingkey default",
+        "tool_readback": "8660b5"
+      },
+      "pure04": {
+        "status": "independently_ACCEPTED_normal3_finite_source24cases",
+        "path": "../target-drafts/trigger-combining-target01/candidate04.json",
+        "sha256": "51111aeba381ff67a872c6796f9a3fcccf2339d45cffeb0f7c86efc791f7fea2",
+        "scope": "source defaults, signed finiteNext, sharedEvaluation; original03 retained",
+        "session": 10455,
+        "terminal_tool": "264e39",
+        "exit": 0,
+        "input_count": 1480,
+        "program_sha256": "91e480019c9704f07071ac1402e41f92f6f53b4f08fdc67a62512c0fcf945083",
+        "review": "../audits/trigger-combining-independent/target-review04/pure04-final-seal.json",
+        "review_sha256": "51cfb662083110bd7caef84251a9345beea662e5f59531789e3c0fd83be5c5ac"
+      },
+      "host04_checkpoint02": {
+        "path": "../target-drafts/trigger-combining-target01/host04/checkpoint02.json",
+        "sha256": "dd61407c92fadc73eb8dbe5f9885d5a71734073d52d3ac95ba2d2b6604159cf1",
+        "status": "9sourcefiles_frozen_not_compiled",
+        "scope": "raw trigger missing/null/object distinction; optionaldue; sharedbudget; callbacks separate"
+      },
+      "pure05": {
+        "path": "../target-drafts/trigger-combining-target01/candidate05.json",
+        "sha256": "67bf764c3b4e2aa8a7f2c9de85f0cbde337623d84cc644fa1e60ebe37b9070a2",
+        "status": "actual_normal3_PASS_pending_independent_final",
+        "scope": "Only remove newlyintroduced rejection of already-supported Go-native explicitRFC3339Nano timestamp; Python microsecond sourceoracle unchanged; not new broad Python domain approval",
+        "required_actual": "new native-nanos regression plus same newprogram source16/default8 normaldomain",
+        "session": 78606,
+        "terminal_tool": "8a3da4",
+        "exit": 0,
+        "input_count": 1485,
+        "program_sha256": "30ccab0d329842aebcd09e04fc7ef90da450db73b61bda22becf0687092d85af"
+      }
+    },
+    "platform_requestutils_tls_repair": {
+      "status": "A4_actual_PASS_B1_actual_FAIL_samebinary_route_stopped_pending_readonly_classification",
+      "path": "../target-drafts/platform-requestutils-tls01",
+      "candidate_sha256": "c5809fd002fa9d675034a9ad18113ad7135333a273483dbf13a02c4d73fc2e94",
+      "code_review_sha256": "f6022601f25c028371fb966f12e7c271ea1ffefcb621598a409d0ec7d6bd9f01",
+      "scope": "Only privateA pluginmarket/installation materials andB stats/ratings; Wiki strict. Preserve receivedHTTP failures; no newproxy/CONNECTfixture/globalTLS/envchange. B ownedHTTPS once normalexistingroute allowed; denial stops that path.",
+      "latest_external_backup": {
+        "confirmed_at": "2026-11-01T09:48:59.622291+00:00",
+        "library_file_id": "libfile_9ac65b82719881919e61c4b4c31518a5",
+        "version": 0,
+        "filename": "a-cli-terminal-combining04-wip-20261101T0948.tar.gz",
+        "bytes": 1182777,
+        "sha256": "cbc1215455770c6e96ee52e7784e46afdddc6b2554b02773d70a8b59b7e0ef3a",
+        "xattrs": "tool0",
+        "status": "actualSpaceSaveConfirmedByRoot"
+      },
+      "publication": "Nochildpush, onlycompletecurrent61parentaccepted",
+      "actual_results": {
+        "session": 45530,
+        "terminal_tool": "4e8916",
+        "outer_exit": 1,
+        "A": {
+          "status": "PASS",
+          "roots": 4,
+          "inputs": 6357
+        },
+        "B": {
+          "status": "FAIL",
+          "roots": 1,
+          "inputs": 6362,
+          "retry": false,
+          "route_rewrite": false
+        },
+        "program_sha256": "8982feda02cb2049bb51cb9849e93f0f7d8ecf3ca334d48702bb811e89f010e2"
+      },
+      "actual_review": {
+        "path": "../audits/platform-requestutils-tls-independent/actual02/final-seal.json",
+        "sha256": "f0214f621a0f7243252bc70d75a49c53c22a046af6a445f7856413d45d5741cc",
+        "A": "4accepted",
+        "B": "1actualFAIL_timeout5s_no_policydenial_inferred_nopeer_count_claim"
+      },
+      "actual_A_consumer_app01": {
+        "status": "independently_ACCEPTED_finite_App_consumer",
+        "session": 20932,
+        "B_route_not_retried": true,
+        "initial_tool": "d91ecf",
+        "terminal_tool": "2e812e",
+        "exit": 0,
+        "roots": 1,
+        "inputs": 6377,
+        "program_sha256": "7fcaf28e368e658d0b5f2a73c36e9de71ead2f4750f28ff4a43564817cdc9dca",
+        "evidence": "../evidence/platform-requestutils-owned-app01",
+        "ended": "2026-11-01T09:28:00.304046+00:00",
+        "review": "../audits/platform-requestutils-tls-independent/owned-app01-final/final-seal.json",
+        "review_sha256": "7635e8580b27d3a1cd2abe8f6d7167b874ba5e8a0b7396d64b11458ce431997c",
+        "actual_index_requests": 8,
+        "actual_payload_requests": 3,
+        "worker_pids": [
+          98,
+          105,
+          113,
+          119
+        ]
+      },
+      "server01": {
+        "status": "actual_compile_PASS_no_service_yet",
+        "session": 97678,
+        "initial_tool": "632639",
+        "terminal_tool": "e27c8b",
+        "exit": 0,
+        "input_count": 4112,
+        "program_sha256": "2d4d6e06fda76099eb95c36b2c2db1d9dbd481462204c3c663c961a384eb13fd"
+      },
+      "normal_cli01": {
+        "status": "independently_ACCEPTED_AB_candidate_A_only_runtime_path",
+        "session": 18235,
+        "initial_tool": "c98a2b",
+        "evidence": "../test-instances/platform-requestutils-a01",
+        "terminal_tool": "4470fe",
+        "exit": 0,
+        "host_pids": [
+          25,
+          70
+        ],
+        "query_count": 4,
+        "review": "../audits/platform-requestutils-tls-independent/server-cli01/cli01-final-seal.json",
+        "review_sha256": "4f705f95bbddf7cf8a3a9577ea6d52775f228016983ae1f98453c59e9779ac7d",
+        "control_requests": 21,
+        "peer_requests": 12,
+        "index_requests": 9,
+        "payload_requests": 3,
+        "worker_pids": [
+          46,
+          53,
+          62,
+          85
+        ],
+        "host_wait_exits": [
+          0,
+          0
+        ]
+      },
+      "A_only_release_preparation": {
+        "status": "whole_parents11_13_14_20_locally_accepted_exact_adopted_commit_pending",
+        "path": "../target-drafts/platform-requestutils-a-only01",
+        "scope": "4Aproductionpaths; serverBhook restoredHEAD; A/base functionbodies unchanged; originalAB02/results preserved",
+        "why": "New whole-parent-only publication rule; unverified B must not piggyback",
+        "race_preparation_hold": "../target-drafts/platform-requestutils-tls01/gates03/run-race-a.sh was never executed; replaced by A-only exact candidate gate later",
+        "parent_proposal": "../audits/progress-61-parent-reconciliation01/a-consumer-closure01/seal.json",
+        "parent_proposal_sha256": "4798aa737003868c320f6c32572878b93791cc9ae45026304ad075e7236291bc",
+        "conditional_possible_complete": [
+          "11",
+          "13",
+          "14",
+          "20"
+        ],
+        "still_no_count_update": true,
+        "candidate_sha256": "90f3158450af416597c216d9dfe5da0d87b8abfde1d31705c67719cc8b17de8c",
+        "independent_parent_dependency_sha256": "7df02729dfa88e82853a69f3b035591e26796281cf286b37cbed214e93523ec9",
+        "normal_session": 75434,
+        "preexec_sha256": "83de5e135d7ca7db12595ea8f451b2fb3fd172d9ae6798aa652ece00527ee6b7",
+        "normal_result": {
+          "session": 75434,
+          "initial_tool": "f0c866",
+          "terminal_tool": "91d154",
+          "exit": 0,
+          "input_count": 6384,
+          "program_sha256": "ceee006ab1e39fb78c958d1d6530d1da798eae5b2974825d02a1a0c4624ae658",
+          "evidence": "../evidence/platform-requestutils-a-only-app01"
+        },
+        "race_result": {
+          "session": 93532,
+          "initial_tool": "4ddf8a",
+          "terminal_tool": "fe7635",
+          "exit": 0,
+          "inputs": 6393,
+          "program_sha256": "0307a5c610a0f842d444d4fd5af0630bbff211f47215cdb6b2b2e9674e1d5ebf",
+          "evidence": "../evidence/platform-requestutils-a-only-race01",
+          "worker": "reusedhistoricalnormalnotrace"
+        },
+        "normal_race_review_sha256": "56fed9e6b949a96d035d7e51334ca3cf9b47c6609108b6f6fd0f39eff1fbb250",
+        "server_build_session": 12168,
+        "server": {
+          "session": 12168,
+          "initial_tool": "c3e7aa",
+          "terminal_tool": "b64926",
+          "exit": 0,
+          "input_count": 4119,
+          "program_sha256": "4aae15a1fa3584ae587e00f4c84046811cfb8f3cf61a1e5abb5cc2d00ccc9b9e",
+          "evidence": "../evidence/platform-requestutils-a-only-server01"
+        },
+        "cli_session": 61142,
+        "cli_result": {
+          "session": 61142,
+          "initial_tool": "fade12",
+          "terminal_tool": "e391b6",
+          "exit": 0,
+          "hosts": [
+            23,
+            69
+          ],
+          "queries": 4,
+          "evidence": "../test-instances/platform-requestutils-a-only01"
+        },
+        "cli_review_sha256": "4d5834a942c526946eb0410aaac1c4597d1b9668baf6c67a9e57fdea8f094c36",
+        "adoption": "../audits/platform-requestutils-a-adoption01/result.json",
+        "adoption_tool": "7e8cd3",
+        "protected_meta_files": 25,
+        "commit": null,
+        "push": null
+      }
+    },
+    "s13_numeric_remaining": {
+      "status": "original14_independently_ACCEPTED_target_in_progress",
+      "owner": "command40_scope Astra ultra",
+      "scope": "ordinaryJSON numeric spelling only; old8methods accepted retained; not arbitraryPython constructors",
+      "target": "internal/plugins/downloadercommands/tr_final.go",
+      "source_preparation": "../source-collectors/s13-tr-numeric01",
+      "publication": "wholeS13only",
+      "evidence": "../evidence/s13-tr-numeric-source01",
+      "tool": "cc88c0",
+      "exit": 0,
+      "cases": 14,
+      "recording_calls": 3,
+      "source_stdout_sha256": "1235d5889dd7c2c87bda487c628fc78567387deb98dd552c2384b88bafada29d",
+      "actual_python": "3.12.14",
+      "independent_final": "../audits/s13-tr-numeric-independent/source-final01/final-seal.json",
+      "independent_final_sha256": "8a96fd52aa1272da1acb0b8743b6edd84cf43151b43717fa1c29e800564f4bdc",
+      "target_candidate": {
+        "path": "../target-drafts/s13-tr-numeric01/preparation-seal.json",
+        "sha256": "3087b4cbbc2135defceedbe4fcd1318b4403c54c49e22eb380967b68e4548534",
+        "status": "6files_frozen_not_formatted_compiled_or_tested",
+        "reviewer": "s11_cache_oracle nonauthor"
+      }
+    },
+    "parent_acceptance_history": [
+      {
+        "before": {
+          "as_of": "2026-11-01T08:53:45.574601+00:00",
+          "authoritative_field": "features[].parent_acceptance_current",
+          "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+          "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+          "denominator": 61,
+          "counts": {
+            "complete": 35,
+            "partial": 24,
+            "dependency_or_final": 2
+          },
+          "complete_ids": [
+            "01",
+            "02",
+            "03",
+            "04",
+            "05",
+            "06",
+            "16",
+            "17",
+            "18",
+            "19",
+            "21",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "39",
+            "41",
+            "42",
+            "43",
+            "47",
+            "48",
+            "49",
+            "S05",
+            "S09",
+            "S10",
+            "S15"
+          ],
+          "partial_ids": [
+            "07",
+            "08",
+            "09",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "20",
+            "23",
+            "24",
+            "38",
+            "40",
+            "S01",
+            "S02",
+            "S03",
+            "S04",
+            "S06",
+            "S07",
+            "S11",
+            "S12",
+            "S13",
+            "S14"
+          ],
+          "dependency_or_final_ids": [
+            "S08",
+            "50"
+          ],
+          "basis": "Historical accepted exact operation scopes inherited plus four reopened parents independently closed; current actual TLS/other gaps affect only precise suboperations. No new whole61 test claim or percentage. Historical45 credit remains; finite remote26 are not parent count.",
+          "correction_from_prior37": "New exact shared TLS source/target discrepancy affects six previously inherited parents07/08/10/12/14/20; four previously reopened parents16/17/39/S15 now closed.37+4-6=35. Prior43/41 review drafts withdrawn, preserved.",
+          "independent_review": "../audits/progress-61-parent-reconciliation01/final-seal.json",
+          "independent_review_sha256": "fa4921cec1548e9db85d7f4307a706a383c26a0c0fe06b27e82dfbe683aad020",
+          "current_product_wip_not_integrated": "Calendar overlays and Meta protected dirty do not change delivered baseline acceptance",
+          "global_final_checker": "664 inherited structural issues remain; not green, feature50 not complete",
+          "user_notification": {
+            "reported_by_root_at": "2026-11-01T08:54Z",
+            "confirmed_at": "2026-11-01T08:54:54.369892+00:00",
+            "message": "User was told authoritative35/24/2 and prioratleast37 correction +4closed-6preciseTLSaffected; do not restore37/43/41 as current count",
+            "root_memory_followup": "thread limit; memory task not launched, use soleledger and externalbackup"
+          },
+          "external_backup": {
+            "confirmed_at": "2026-11-01T08:56:12.829545+00:00",
+            "library_file_id": "libfile_451bb8657078819191eb21d718047358",
+            "version": 0,
+            "filename": "calendar-app-terminal-parent61-20261101T0855.tar.gz",
+            "bytes": 3661157,
+            "sha256": "e0e590a4295be4d0b339be27332b8477604027aa42ed555d8668339a77a51829",
+            "xattrs": "tool0",
+            "status": "actualSpaceSaveConfirmedByRoot",
+            "scope": "CalendarApp02normal2/race1 accepted; authoritative61=35/24/2; CLI only prepared; notnewGitdelivery"
+          }
+        },
+        "affected_parent_rows": {
+          "11": {
+            "id": "11",
+            "description": "11 · 2.6 安装：先把代码放好，再登记和创建运行实例",
+            "scope": [
+              "来源/版本选择、取得代码、校验和安装",
+              "登记后创建真实对象并注册",
+              "旧真实HTTP/浏览器安装、配置、更新、分身、重置、卸载生命周期",
+              "Go校验制品和长期worker替代Python导入"
+            ],
+            "counts_once": true,
+            "credit_basis": "original parent scope plus delivered child evidence, not child count",
+            "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:23",
+            "historical_evidence_reference": "docs/validation/plugin-module-scoped-20261025.json",
+            "existing_evidence_ids": [
+              "existing-11.real-e2e"
+            ],
+            "remaining": [
+              "mirror收到HTTP503不fallback的反例及后续market半包/cache已闭，历史安装全链信用保留。",
+              "本次最终静核新确认：source PluginHelper.__request_with_fallback→RequestUtils.request默认verify=False；当前originalPluginHTTPClient→config.Transport(nil)/NewRequestsTransport(nil,nil)仍clone默认strict TLS。A类用户授权已存在，不等于实现/真实门已交；仅此精确平台下载/更新私有TLS路径待闭，不能关闭父项。"
+            ],
+            "repaired_subbehavior_credit_only": {
+              "children": [
+                "11.mirror_response",
+                "09.market_pipeline"
+              ],
+              "evidence": [
+                "mirror-response.current-review"
+              ],
+              "rationale": "历史安装全链信用 + 唯一明确mirror收到503不应fallback反例已闭；此前09半包/cache依赖亦已修。09剩余超预算展示归09，不将同一已闭安装反例永久扩为未闭全部市场。",
+              "current_impact": "核心github网络三文件与已验candidate同；共享resources/runtime后续新增路由不改变received-response vs exception规则。历史与后续安装/生命周期门分层继承，不声称全部旧closure当前相同。"
+            },
+            "status": "partial_specific_remaining",
+            "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+            "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+            "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+            "legacy_schema_status_not_parent_progress": true,
+            "new_test_execution_claimed": false,
+            "publication_unit": "whole_current61_parent_only"
+          },
+          "13": {
+            "id": "13",
+            "description": "13 · 2.8 兼容性与依赖：判断能否安装，以及让代码具备运行条件",
+            "scope": [
+              "system_version兼容与旧Release范围",
+              "Go平台/SDK/SHA制品替代pip",
+              "代理/镜像/API路由与凭据域隔离",
+              "基础/高级/开发设置保存和冷恢复",
+              "DEV放宽不污染一般安装"
+            ],
+            "counts_once": true,
+            "credit_basis": "original parent scope plus delivered child evidence, not child count",
+            "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:25",
+            "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+            "existing_evidence_ids": [],
+            "remaining": [
+              "与11同一个A类TLS实际依赖缺口；mirror503、旧兼容性/Release/制品/设置冷恢复信用全部保留。",
+              "不得用旧verifiedTLS测试或批准记录替代私有verifyFalse当前实现。只对已明确A消费者修复/验证，不扩Git全局TLS、认证47或任意网络。"
+            ],
+            "repaired_subbehavior_credit_only": {
+              "children": [
+                "11.mirror_response"
+              ],
+              "evidence": [
+                "mirror-response.current-review"
+              ],
+              "rationale": "与11同一mirror共因已修；system_version1251、旧Release、平台/SDK/SHA制品适配、真实兼容性拒绝/恢复及设置冷恢复旧信用保留。26.2固定复现不是原exact锁、26.3另列，均不是新未实现能力。",
+              "current_impact": "复用11同一当前网络修复。不是另跑或重复计同一503缺陷；不把Go制品替代pip这个已接受架构适配重新算缺项。"
+            },
+            "status": "partial_specific_remaining",
+            "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+            "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+            "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+            "legacy_schema_status_not_parent_progress": true,
+            "new_test_execution_claimed": false,
+            "publication_unit": "whole_current61_parent_only"
+          },
+          "14": {
+            "id": "14",
+            "description": "14 · 2.9 更新：原 ID 原目录替换，再让同一个配置驱动新代码",
+            "scope": [
+              "同ID更新代码、重新加载且保留配置/KV",
+              "分身逻辑版本比较和精确ID属性替换",
+              "分身JS/CSS/顶层资源派生",
+              "坏包保留/重试/冷恢复"
+            ],
+            "counts_once": true,
+            "credit_basis": "original parent scope plus delivered child evidence, not child count",
+            "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:26",
+            "historical_evidence_reference": "docs/validation/plugin-clone-frontend-r3-20261027/result.json",
+            "existing_evidence_ids": [],
+            "remaining": [
+              "更新复用install force→acquireOriginalImplementationMode134，A类strictTLS影响实际替换材料取得。保持既有同ID/config/KV/坏包恢复/冷启信用，仅共享请求差异待闭。"
+            ],
+            "status": "partial_specific_remaining",
+            "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+            "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+            "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+            "legacy_schema_status_not_parent_progress": true,
+            "new_test_execution_claimed": false,
+            "publication_unit": "whole_current61_parent_only"
+          },
+          "20": {
+            "id": "20",
+            "description": "20 · 2.15 启动修复：先尽量启动现有插件，再后台补齐和更新",
+            "scope": [
+              "启动先恢复/加载现有对象与API",
+              "后台修复缺失/落后兼容插件",
+              "成功后注册服务/命令",
+              "安全模式跳过插件子系统",
+              "逐阶段失败隔离与关闭备份"
+            ],
+            "counts_once": true,
+            "credit_basis": "original parent scope plus delivered child evidence, not child count",
+            "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:32",
+            "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
+            "existing_evidence_ids": [],
+            "remaining": [
+              "syncOriginalPlugins49实际取市场、81实际acquire缺失/旧代码，启动后台修复可达A类strictTLS差异。启动先加载/分阶段隔离/安全模式等旧信用保留。"
+            ],
+            "status": "partial_specific_remaining",
+            "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
+            "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+            "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+            "legacy_schema_status_not_parent_progress": true,
+            "new_test_execution_claimed": false,
+            "publication_unit": "whole_current61_parent_only"
+          }
+        },
+        "why": "A-only original/request/normal/race/twohostCLI/independent plus retained complete old scopes; exact7 adopted",
+        "at": "2026-11-01T10:10:00.739212+00:00"
+      }
+    ]
   },
   "external_inventory": [
     {

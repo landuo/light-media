@@ -72,7 +72,7 @@ func (a *App) originalPluginInstallHTTP(w http.ResponseWriter, r *http.Request, 
 		return map[string]any{"success": true}, nil
 	}
 	if input.Repository != "" {
-		client, clientErr := a.originalPluginHTTPClient(0, true)
+		client, clientErr := a.originalPluginMaterialHTTPClient(0)
 		if clientErr != nil {
 			return map[string]any{"success": false, "message": "插件仓库代理配置无效"}, nil
 		}
@@ -131,7 +131,7 @@ func (a *App) acquireOriginalImplementationMode(ctx context.Context, id, reposit
 	if localWatch {
 		beforeCode, beforeErr = artifacts.ReadInstalled(a.pluginPackageRoot(), id, validatePluginArtifactContract)
 	}
-	client, err := a.originalPluginHTTPClient(0, true)
+	client, err := a.originalPluginMaterialHTTPClient(0)
 	if err != nil {
 		return true, bad("INVALID_PROXY", "插件仓库代理配置无效")
 	}

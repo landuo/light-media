@@ -1,0 +1,31 @@
+--- actual-ab-cli01/normal-cli-driver.py
++++ a-only-cli01/normal-cli-driver.py
+@@ -14,8 +14,8 @@
+ BINDINGS=AUDIT/'execution-bindings.json'
+ SERVER,WORKER,E=(Path(p).resolve() for p in (args.server,args.worker,args.output))
+ BASE='90d214fc5ca861d327e71327488aa77ee7011e2b'
+-CANDIDATE=ROOT/'target-drafts/platform-requestutils-tls01/candidate02.json'
+-CANDIDATE_SHA='c5809fd002fa9d675034a9ad18113ad7135333a273483dbf13a02c4d73fc2e94'
++CANDIDATE=ROOT/'target-drafts/platform-requestutils-a-only01/candidate01.json'
++CANDIDATE_SHA='90f3158450af416597c216d9dfe5da0d87b8abfde1d31705c67719cc8b17de8c'
+ TESTCERT=ROOT.parent/'plugins-cloud-20261028/toolchain/go/src/net/http/internal/testcert/testcert.go'
+ INITIAL_ENV=os.environ.copy(); ENV=INITIAL_ENV.copy()
+ peer=thread=proc=log=cookie=None
+@@ -68,7 +68,7 @@
+ 
+ def preflight():
+     check(INITIAL_ENV.get('PLATFORM_A_TLS_CLI_GRANTED') == '1', 'coordinator execution window required')
+-    check(SERVER == ROOT / 'runtime/platform-requestutils-server01'
++    check(SERVER == ROOT / 'runtime/platform-requestutils-a-only-server01'
+           and (WORKER.is_relative_to(ROOT / 'runtime') or WORKER.is_relative_to(ROOT / 'evidence')),
+           'exact new server and coordinator-owned existing worker required')
+     check(sha(WORKER) == args.expected_worker_sha and sha(SERVER) == args.expected_server_sha
+@@ -96,7 +96,7 @@
+           and rows.get(clean['path']) == clean['sha256'], 'reviewed clean-view proof not bound')
+     for item in binding['inputs']:
+         check(sha(item['path']) == item['sha256'], 'frozen input changed: ' + item['path'])
+-    check(E.parent == ROOT / 'test-instances' and E.name == 'platform-requestutils-a01'
++    check(E.parent == ROOT / 'test-instances' and E.name == 'platform-requestutils-a-only01'
+           and not E.exists(), 'exclusive new A test-instance required')
+     for name in ('PLUGIN_MARKET', 'LIGHT_MEDIA_MEDIA_ROOTS'):
+         check(not ENV.get(name), 'inherited endpoint/mount conflicts; no rewrite')

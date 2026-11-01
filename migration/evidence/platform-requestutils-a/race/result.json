@@ -1,0 +1,124 @@
+{
+  "started": "2026-11-01T09:50:24.274318+00:00",
+  "driver_pid": 2,
+  "package": "./internal/app",
+  "pattern": "^(TestOriginalRequestUtilsPrivateTLSBaseIsolation|TestOriginalRequestUtilsOwnedTLSInstallRecoveryAndCold)$",
+  "race": true,
+  "status": "PASS",
+  "vet": "NOT_RUN: virtual-only package directory; prior automatic vet chdir failure retained",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/gates01/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/gates01/overlay.json",
+        "-vet=off",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/platform-requestutils-a-only-race01.test",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/platform-requestutils-a-only-race01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestOriginalRequestUtilsPrivateTLSBaseIsolation|TestOriginalRequestUtilsOwnedTLSInstallRecoveryAndCold)$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "overlay": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_modules.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-tls01/gates02/head-files/internal/app/plugin_original_modules.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_media_recognition.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-tls01/gates02/head-files/internal/app/plugin_shared_media_recognition.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/runtime.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-tls01/gates02/head-files/internal/app/runtime.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/cmd/owned-media-recognition-meta-fixture/main.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/cmd/owned-media-recognition-meta-fixture/main_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_cache.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_cache_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_runtime.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_algorithm.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_algorithm_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_dispatch.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_dispatch_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_native.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_owned_worker_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_report.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_report_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta_module.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_install.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/candidate/internal/app/plugin_original_install.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_market_cache.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/candidate/internal/app/plugin_original_market_cache.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_network.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/candidate/internal/app/plugin_original_network.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_network_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/candidate/internal/app/plugin_original_network_test.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_requestutils_tls.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/candidate/internal/app/plugin_original_requestutils_tls.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_requestutils_tls_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/candidate/internal/app/plugin_original_requestutils_tls_test.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_server.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/gates01/head-files/internal/app/plugin_original_server.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_requestutils_owned_install_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/candidate/internal/app/plugin_original_requestutils_owned_install_test.go"
+  },
+  "extra_inputs": [],
+  "preflight_verified_files": 148,
+  "preflight_verified_replacements": 28,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T09:50:24.392133+00:00",
+      "scratch_free": 41325146112,
+      "tmp_free": 5225455616
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T09:50:26.445791+00:00",
+      "scratch_free": 41318981632,
+      "tmp_free": 5225455616
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T09:51:03.962089+00:00",
+      "scratch_free": 41100333056,
+      "tmp_free": 5225455616
+    }
+  ],
+  "input_count": 6393,
+  "program_sha256": "0307a5c610a0f842d444d4fd5af0630bbff211f47215cdb6b2b2e9674e1d5ebf",
+  "root_passes": [
+    "TestOriginalRequestUtilsOwnedTLSInstallRecoveryAndCold",
+    "TestOriginalRequestUtilsPrivateTLSBaseIsolation"
+  ],
+  "ended": "2026-11-01T09:51:08.465848+00:00"
+}

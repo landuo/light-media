@@ -1,0 +1,61 @@
+{
+  "utc": "2026-11-01T09:48:57.385480+00:00",
+  "verdict": "PREEXEC_READY_A_ONLY_NORMAL_APP1_THEN_RACE2",
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/candidate01.json",
+    "bytes": 7382,
+    "sha256": "90f3158450af416597c216d9dfe5da0d87b8abfde1d31705c67719cc8b17de8c"
+  },
+  "preparation": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/preparation-seal01.json",
+    "bytes": 2395,
+    "sha256": "f94c7040e85b4f2e69deeef073b73d268d4cba2bf05e5d873c54e45919505099"
+  },
+  "bindings": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/gates01/overlay-inputs.json",
+    "bytes": 49756,
+    "sha256": "d0a1da994e63fbc3c91f5cf2a91641fecc3b60ecbd75e3e0eb2fbef79c03c2dc"
+  },
+  "overlay": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/gates01/overlay.json",
+    "bytes": 6204,
+    "sha256": "acc4afed9332cf3e24ac4f8d1441b40d6d735a6d4cd2e96382f370ff5aeb241c"
+  },
+  "scripts": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/gates01/normal.sh",
+      "bytes": 1008,
+      "sha256": "3bb40b971117f9d38918c54c1ac698395f60328fae917e9134de23f89a241706"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only01/gates01/race.sh",
+      "bytes": 1123,
+      "sha256": "247af81d8d3caec06ea7c91d858cb7f3d654084db5116b8da4416fe128b7ed2a"
+    }
+  ],
+  "verified_binding_rows": 148,
+  "maps": 28,
+  "base": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+  "checks": [
+    "install/cache/network exact previous accepted A/B02; A wrapper and TLS base exact function bytes; B-only wrapper removed",
+    "statistics server explicit restore equals current HEAD/ACTIVE bytes; no new B TLS behavior",
+    "owned App test exact accepted prior bytes; isolation root changes only B constructor to second independent strict client; B actual root removed",
+    "normal1 and race2 exact roots; original runner03; old normalworker60403 exact bound, not fresh/race worker build",
+    "original25 Meta preimages and hidden/restored paths remain bound, no ACTIVE writes"
+  ],
+  "race_root_note": "Two roots are private clone isolation plus owned App install/recovery/cold, NOT old OwnedHTTPSMaterial root. Race instruments App/transport, not reused historical worker.",
+  "environment_scope": "Owned fixed tcp4 self-signed material only, inherited NO_PROXY required; no B request, new proxy/CONNECT fixture, proxy/CA/TZ mutation or whole old matrix.",
+  "CLI_template": {
+    "file": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only-cli01/normal-cli-driver.py",
+      "bytes": 28173,
+      "sha256": "8f34baf68940fbbbd09e0c8fe1fd1c95570f95e7599f14c516add35ef39c5128"
+    },
+    "status": "STATIC_DELTA_ACCEPTED_NOT_EXECUTION_READY",
+    "changes": "exact four bound path/hash substitutions only; all other bytes same prior actual CLI",
+    "missing": "new actual A-only server build, complete execution inputs/cleanproof and frozen command"
+  },
+  "old_gates03_hold_retained": true,
+  "blocking_findings": [],
+  "reviewer_executed": false
+}

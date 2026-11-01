@@ -1,0 +1,674 @@
+{
+  "status": "PASS",
+  "kind": "A private TLS actual ordinary normal-server install/recovery/cold",
+  "calls": [
+    {
+      "at": "2026-11-01T09:57:41.720098+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-001.body",
+      "sha256": "b9f76171593621a02c4cb407ccbede280ce8bf015a3ea66ddaa143e09ca9b792"
+    },
+    {
+      "at": "2026-11-01T09:57:41.721987+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-11-01T09:57:41.786257+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-003.body",
+      "sha256": "91699b558adf5409400301e300c67ef9f58213f8d1a3e18af25a5708e8e6cd97"
+    },
+    {
+      "at": "2026-11-01T09:57:41.788326+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/plugins/market?details=true",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-004.body",
+      "sha256": "0664b6f50978b7a9f4f5a910d871bce992fe04f92cb13a0c3efd6b037248f9cf"
+    },
+    {
+      "at": "2026-11-01T09:57:41.790273+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/plugins/market?details=true&force=true",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-005.body",
+      "sha256": "ebd5537e800b2446bd39ae43c5ec8991bf72c85f9cafb585a0e70ddb115976de"
+    },
+    {
+      "at": "2026-11-01T09:57:41.794854+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-006.body",
+      "sha256": "fec6d09bbacaf1f72d802590fe5b12ecf09ceb292f05b5fac2e9ef8e9c32041d"
+    },
+    {
+      "at": "2026-11-01T09:57:41.801772+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedStandardFixture/echo",
+      "authenticated": true,
+      "status": 404,
+      "raw_file": "response-007.body",
+      "sha256": "14af680cdc3f19f84be8d5fc90dc9a0ce0da6ded70906c41e4fc6c7edf8e06e6"
+    },
+    {
+      "at": "2026-11-01T09:57:41.803298+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-008.body",
+      "sha256": "cd2ef51efc0432c26fef82a39b1eabe9e83089b5ae6a637d801cb9e878cf9038"
+    },
+    {
+      "at": "2026-11-01T09:57:41.870173+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedStandardFixture/echo",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-009.body",
+      "sha256": "ba8949b9d18b87cb4beb107ff0373181bcd13c6681ae2b429902bbbfd7cdbaf7"
+    },
+    {
+      "at": "2026-11-01T09:57:41.878064+00:00",
+      "host_pid": 23,
+      "method": "PUT",
+      "path": "/api/plugins/OwnedStandardFixture",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-010.body",
+      "sha256": "f92d6850aa1113af777fc361a135f6d097c656ee7a684e9a744edbbc2aea6ad1"
+    },
+    {
+      "at": "2026-11-01T09:57:41.886425+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-011.body",
+      "sha256": "92689071e0694fdda0ea63b892f0338e1cffac7f51f623c7a88e8b6ba325039b"
+    },
+    {
+      "at": "2026-11-01T09:57:41.946693+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedStandardFixture/echo",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-012.body",
+      "sha256": "891e9d0ebbc43dcf269d693173f3fc486a217e353fc670e3e635d1e2a6bea837"
+    },
+    {
+      "at": "2026-11-01T09:57:41.955188+00:00",
+      "host_pid": 23,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-013.body",
+      "sha256": "eeffe10e9b88c1c452bc3362602f7a307d5a3bbed1efca3d78582ec5e4719a16"
+    },
+    {
+      "at": "2026-11-01T09:57:42.031234+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedStandardFixture/echo",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-014.body",
+      "sha256": "f911063a1f0fa026ca7f599affa2696de143431506399d8450a42b9a6fb49543"
+    },
+    {
+      "at": "2026-11-01T09:57:42.040248+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/plugins/history/OwnedStandardFixture?force=true",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-015.body",
+      "sha256": "adb2010173004784c8e2e938563cb67ccc8f83b0109b01a9aa47a35946d66977"
+    },
+    {
+      "at": "2026-11-01T09:57:42.045964+00:00",
+      "host_pid": 23,
+      "method": "GET",
+      "path": "/api/plugins/releases/OwnedStandardFixture?repo_url=https%3A%2F%2F127.0.0.1%3A42751%2Findex",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-016.body",
+      "sha256": "7c65fd36bbfff664ab560c3ba17ef1cf9a1b808877bd8d535bd3bc5e19b3b276"
+    },
+    {
+      "at": "2026-11-01T09:57:42.303251+00:00",
+      "host_pid": 69,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "status": 200,
+      "raw_file": "response-017.body",
+      "sha256": "be1da21752fa07fcfc26c984040fe7dd44ce887feb5bd82ef3bfd0664419bcdd"
+    },
+    {
+      "at": "2026-11-01T09:57:42.307346+00:00",
+      "host_pid": 69,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "status": 200,
+      "private_headers_body_not_retained": true
+    },
+    {
+      "at": "2026-11-01T09:57:42.381956+00:00",
+      "host_pid": 69,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-019.body",
+      "sha256": "e4480c5f83a437e5a29dae4be9ac449e75d2b3b207c36cb02e58bc035ad29d76"
+    },
+    {
+      "at": "2026-11-01T09:57:42.384024+00:00",
+      "host_pid": 69,
+      "method": "GET",
+      "path": "/api/plugins/market?details=true",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-020.body",
+      "sha256": "a59a7996721873f2f134e85a01185caed52425d308e5f1d17e2d8e277e10c0bf"
+    },
+    {
+      "at": "2026-11-01T09:57:42.387610+00:00",
+      "host_pid": 69,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedStandardFixture/echo",
+      "authenticated": true,
+      "status": 200,
+      "raw_file": "response-021.body",
+      "sha256": "428fba2e110950e2026365f494b7bfd53029fa808efbe7d4a3918e059cf33551"
+    }
+  ],
+  "peer_calls": [
+    {
+      "method": "GET",
+      "path": "/index",
+      "phase": "warm-startup",
+      "ordinal": 1,
+      "query_keys": [],
+      "status": 200,
+      "response_bytes": 1301,
+      "response_sha256": "de908bcdc598ba44b98ab92a4d039c7a7a6c0b992b626c2ccbc4dc55b8b0f4d0",
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/index",
+      "phase": "market-force",
+      "ordinal": 1,
+      "query_keys": [
+        "_refresh"
+      ],
+      "status": 200,
+      "response_bytes": 1301,
+      "response_sha256": "de908bcdc598ba44b98ab92a4d039c7a7a6c0b992b626c2ccbc4dc55b8b0f4d0",
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/index",
+      "phase": "install-failure",
+      "ordinal": 1,
+      "query_keys": [],
+      "status": 200,
+      "response_bytes": 1301,
+      "response_sha256": "de908bcdc598ba44b98ab92a4d039c7a7a6c0b992b626c2ccbc4dc55b8b0f4d0",
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/worker",
+      "phase": "install-failure",
+      "ordinal": 2,
+      "query_keys": [],
+      "status": 503,
+      "response_bytes": 37,
+      "response_sha256": "6631dc83e9d58000cc7cdedc150a4a48b2be8c78ecd3a263c2f65ea3378fec22",
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/index",
+      "phase": "install-recovery",
+      "ordinal": 1,
+      "query_keys": [],
+      "status": 200,
+      "response_bytes": 1301,
+      "response_sha256": "de908bcdc598ba44b98ab92a4d039c7a7a6c0b992b626c2ccbc4dc55b8b0f4d0",
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/worker",
+      "phase": "install-recovery",
+      "ordinal": 2,
+      "query_keys": [],
+      "status": 200,
+      "response_bytes": 5278957,
+      "response_sha256": "60403e493ba75c73f24ec7786058d2b93cc2ec7b3cd521680a84c15b0c240808",
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/index",
+      "phase": "compatibility",
+      "ordinal": 1,
+      "query_keys": [],
+      "status": 200,
+      "response_bytes": 1301,
+      "response_sha256": "de908bcdc598ba44b98ab92a4d039c7a7a6c0b992b626c2ccbc4dc55b8b0f4d0",
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/index",
+      "phase": "same-version-force",
+      "ordinal": 1,
+      "query_keys": [],
+      "status": 200,
+      "response_bytes": 1301,
+      "response_sha256": "de908bcdc598ba44b98ab92a4d039c7a7a6c0b992b626c2ccbc4dc55b8b0f4d0",
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/worker",
+      "phase": "same-version-force",
+      "ordinal": 2,
+      "query_keys": [],
+      "status": 200,
+      "response_bytes": 5278957,
+      "response_sha256": "60403e493ba75c73f24ec7786058d2b93cc2ec7b3cd521680a84c15b0c240808",
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/index",
+      "phase": "history",
+      "ordinal": 1,
+      "query_keys": [
+        "_refresh"
+      ],
+      "status": 200,
+      "response_bytes": 1301,
+      "response_sha256": "de908bcdc598ba44b98ab92a4d039c7a7a6c0b992b626c2ccbc4dc55b8b0f4d0",
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/index",
+      "phase": "release",
+      "ordinal": 1,
+      "query_keys": [
+        "_refresh"
+      ],
+      "status": 200,
+      "response_bytes": 1301,
+      "response_sha256": "de908bcdc598ba44b98ab92a4d039c7a7a6c0b992b626c2ccbc4dc55b8b0f4d0",
+      "response_completed": true
+    },
+    {
+      "method": "GET",
+      "path": "/index",
+      "phase": "cold-startup",
+      "ordinal": 1,
+      "query_keys": [],
+      "status": 200,
+      "response_bytes": 1301,
+      "response_sha256": "de908bcdc598ba44b98ab92a4d039c7a7a6c0b992b626c2ccbc4dc55b8b0f4d0",
+      "response_completed": true
+    }
+  ],
+  "processes": [
+    {
+      "pid": 23,
+      "identity": {
+        "ppid": 5,
+        "starttime": "8414048"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/platform-requestutils-a-only01/private-data",
+      "executable_sha256": "4aae15a1fa3584ae587e00f4c84046811cfb8f3cf61a1e5abb5cc2d00ccc9b9e",
+      "owned_listener_inode": "1619931",
+      "exit": 0
+    },
+    {
+      "pid": 69,
+      "identity": {
+        "ppid": 5,
+        "starttime": "8414096"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/platform-requestutils-a-only01/private-data",
+      "executable_sha256": "4aae15a1fa3584ae587e00f4c84046811cfb8f3cf61a1e5abb5cc2d00ccc9b9e",
+      "owned_listener_inode": "1623225",
+      "exit": 0
+    }
+  ],
+  "queries": [
+    {
+      "label": "install-failure",
+      "response": {
+        "data": {
+          "message": "\u63d2\u4ef6\u5236\u54c1\u83b7\u53d6\u5931\u8d25: plugin acquisition prepare: HTTP status 503",
+          "success": false
+        },
+        "request_id": "req_qAdGE6ZcfnnFaz37l75MfD4p"
+      },
+      "peer_counts": {
+        "GET /index": 3,
+        "GET /worker": 1
+      }
+    },
+    {
+      "label": "install-recovery",
+      "response": {
+        "data": {
+          "success": true
+        },
+        "request_id": "req_QnWTo3XBMFfxxmCAFmgfBzOj"
+      },
+      "peer_counts": {
+        "GET /index": 4,
+        "GET /worker": 2
+      }
+    },
+    {
+      "label": "compatibility",
+      "response": {
+        "data": {
+          "success": true
+        },
+        "request_id": "req_eb5A9uOUNkR2zH-J_SZryZMS"
+      },
+      "peer_counts": {
+        "GET /index": 5,
+        "GET /worker": 2
+      }
+    },
+    {
+      "label": "same-version-force",
+      "response": {
+        "data": {
+          "success": true
+        },
+        "request_id": "req_aaXLpDaZX_kSmUip20TDETsE"
+      },
+      "peer_counts": {
+        "GET /index": 6,
+        "GET /worker": 3
+      }
+    }
+  ],
+  "not_claimed": [
+    "B success",
+    "real/public repository or telemetry",
+    "UI/browser",
+    "distinct-version update",
+    "all parent completion",
+    "whole source host/network audit",
+    "push/CI"
+  ],
+  "bindings_sha256": "aff777e7ed44e140f028e4fe4c61e55cde557342fa1f2597bb95a2265c3737de",
+  "execution_environment": "inherited after coordinator grant marker; no proxy or startup rewrites",
+  "clean_view_proof": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-a-only-cli01/actual-clean-view-build-proof.json",
+    "sha256": "f75c840ed7be163d8632d56837e7040cf3ecc9699f97939522ae1a9b00c55e00",
+    "bytes": 8749
+  },
+  "public_testcert_source_sha256": "812c69f79fc71384de1d93fb1058ab20e5b58ab2860dea72167681048d14a12e",
+  "private_test_key_not_for_evidence_export": true,
+  "owned_peer_origin": "https://127.0.0.1:42751",
+  "bootstrap_exit": 0,
+  "worker_identities": [
+    {
+      "ppid": 23,
+      "starttime": "8414075",
+      "pid": 44,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/platform-requestutils-a-only01/private-data/plugin-packages/OwnedStandardFixture/owned-standard-fixture",
+      "executable_sha256": "60403e493ba75c73f24ec7786058d2b93cc2ec7b3cd521680a84c15b0c240808",
+      "host_pid": 23
+    },
+    {
+      "ppid": 23,
+      "starttime": "8414083",
+      "pid": 52,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/platform-requestutils-a-only01/private-data/plugin-packages/OwnedStandardFixture/owned-standard-fixture",
+      "executable_sha256": "60403e493ba75c73f24ec7786058d2b93cc2ec7b3cd521680a84c15b0c240808",
+      "host_pid": 23
+    },
+    {
+      "ppid": 23,
+      "starttime": "8414091",
+      "pid": 60,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/platform-requestutils-a-only01/private-data/plugin-packages/OwnedStandardFixture/owned-standard-fixture",
+      "executable_sha256": "60403e493ba75c73f24ec7786058d2b93cc2ec7b3cd521680a84c15b0c240808",
+      "host_pid": 23
+    },
+    {
+      "ppid": 69,
+      "starttime": "8414113",
+      "pid": 84,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/platform-requestutils-a-only01/private-data/plugin-packages/OwnedStandardFixture/owned-standard-fixture",
+      "executable_sha256": "60403e493ba75c73f24ec7786058d2b93cc2ec7b3cd521680a84c15b0c240808",
+      "host_pid": 69
+    }
+  ],
+  "worker_snapshots": [
+    {
+      "label": "installed",
+      "response": {
+        "calls": {
+          "get_api": 1,
+          "get_state": 4,
+          "http": 1,
+          "init": 1
+        },
+        "config": null,
+        "init_after": null,
+        "init_count": 1,
+        "init_input": {},
+        "lastpayload": {
+          "get_api": {},
+          "get_state": {},
+          "http": {
+            "request_id": "req_IDqdE9LJG8d5sSG_k8A8CK7V",
+            "key": "echo",
+            "method": "GET",
+            "path": "/echo",
+            "params": {},
+            "query": {},
+            "credential_matches": {},
+            "headers": {}
+          },
+          "init": {}
+        },
+        "nonce": 44,
+        "order": null,
+        "stale_denied": true,
+        "value": null,
+        "version": "1.0"
+      }
+    },
+    {
+      "label": "compatible",
+      "response": {
+        "calls": {
+          "get_api": 1,
+          "get_state": 4,
+          "http": 1,
+          "init": 1
+        },
+        "config": {
+          "enabled": false,
+          "key": "owned-a-persisted"
+        },
+        "init_after": {
+          "enabled": false,
+          "key": "owned-a-persisted"
+        },
+        "init_count": 1,
+        "init_input": {
+          "enabled": false,
+          "key": "owned-a-persisted"
+        },
+        "lastpayload": {
+          "get_api": {},
+          "get_state": {},
+          "http": {
+            "request_id": "req_mSecjUPn9Z4JTA2tdD9hXP2I",
+            "key": "echo",
+            "method": "GET",
+            "path": "/echo",
+            "params": {},
+            "query": {},
+            "credential_matches": {},
+            "headers": {}
+          },
+          "init": {
+            "enabled": false,
+            "key": "owned-a-persisted"
+          }
+        },
+        "nonce": 52,
+        "order": null,
+        "stale_denied": true,
+        "value": "owned-a-persisted",
+        "version": "1.0"
+      }
+    },
+    {
+      "label": "forced",
+      "response": {
+        "calls": {
+          "get_api": 1,
+          "get_state": 4,
+          "http": 1,
+          "init": 1
+        },
+        "config": {
+          "enabled": false,
+          "key": "owned-a-persisted"
+        },
+        "init_after": {
+          "enabled": false,
+          "key": "owned-a-persisted"
+        },
+        "init_count": 1,
+        "init_input": {
+          "enabled": false,
+          "key": "owned-a-persisted"
+        },
+        "lastpayload": {
+          "get_api": {},
+          "get_state": {},
+          "http": {
+            "request_id": "req_239UGQpQR6nYJ0Uz3Mx2ZpIk",
+            "key": "echo",
+            "method": "GET",
+            "path": "/echo",
+            "params": {},
+            "query": {},
+            "credential_matches": {},
+            "headers": {}
+          },
+          "init": {
+            "enabled": false,
+            "key": "owned-a-persisted"
+          }
+        },
+        "nonce": 60,
+        "order": null,
+        "stale_denied": true,
+        "value": "owned-a-persisted",
+        "version": "1.0"
+      }
+    },
+    {
+      "label": "cold",
+      "response": {
+        "calls": {
+          "get_api": 1,
+          "get_state": 6,
+          "http": 1,
+          "init": 1
+        },
+        "config": {
+          "enabled": false,
+          "key": "owned-a-persisted"
+        },
+        "init_after": {
+          "enabled": false,
+          "key": "owned-a-persisted"
+        },
+        "init_count": 1,
+        "init_input": {
+          "enabled": false,
+          "key": "owned-a-persisted"
+        },
+        "lastpayload": {
+          "get_api": {},
+          "get_state": {},
+          "http": {
+            "request_id": "req_oNqPzRm7HwMn2yTwCR7owohQ",
+            "key": "echo",
+            "method": "GET",
+            "path": "/echo",
+            "params": {},
+            "query": {},
+            "credential_matches": {},
+            "headers": {}
+          },
+          "init": {
+            "enabled": false,
+            "key": "owned-a-persisted"
+          }
+        },
+        "nonce": 84,
+        "order": null,
+        "stale_denied": true,
+        "value": "owned-a-persisted",
+        "version": "1.0"
+      }
+    }
+  ],
+  "actual_endpoint_request_counts": {
+    "GET /index": 9,
+    "GET /worker": 3
+  },
+  "input_drift": [],
+  "environment_unchanged": true,
+  "finished_at": "2026-11-01T09:57:43.125838+00:00"
+}

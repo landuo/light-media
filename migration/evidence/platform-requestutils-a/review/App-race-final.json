@@ -1,0 +1,215 @@
+{
+  "utc": "2026-11-01T09:53:04.544185+00:00",
+  "verdict": "FINITE_A_ONLY_NORMAL_APP1_AND_RACE2_ACTUAL_PASS_ACCEPTED",
+  "observed": [
+    {
+      "label": "platform-requestutils-a-only-app01",
+      "files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-app01/result.json",
+          "bytes": 8796,
+          "sha256": "42c89abd2dd14897404427607bda22e50de237f93be02038b8ee0b658ffc22d3"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-app01/coordinator-tool-receipt.json",
+          "bytes": 199,
+          "sha256": "bdc4a914dc0ee14aad0655d1b93b1810dce128ec8462197b3b86898bf1caccbe"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-app01/vet-scope-clarification.json",
+          "bytes": 115,
+          "sha256": "ec226a66604555a0001c2151c255ecbd5c78a430ca336df601a5e52f7e89cc8c"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-app01/inputs-before.json",
+          "bytes": 1517112,
+          "sha256": "c613a728f15a64aff38ed0ca797ab34fae02cd4ecc99d28b363acf9fc9f61bf1"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-app01/inputs-after-compile.json",
+          "bytes": 1517112,
+          "sha256": "c613a728f15a64aff38ed0ca797ab34fae02cd4ecc99d28b363acf9fc9f61bf1"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-app01/inputs-after-test.json",
+          "bytes": 1517112,
+          "sha256": "c613a728f15a64aff38ed0ca797ab34fae02cd4ecc99d28b363acf9fc9f61bf1"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-app01/virtual-compile-inputs.json",
+          "bytes": 3015919,
+          "sha256": "ff8c68dd81b2ff808c5453d3e6fd0d7601eebddacd33f8bd107b8a5f5b786b2f"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-app01/generated-source-map.json",
+          "bytes": 246,
+          "sha256": "180af28e79b97b12024488cd9c969a6d9e9fec19d98e8d096d0d68bc4941bd0a"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-app01/tests.stdout",
+          "bytes": 10772,
+          "sha256": "78bd4aa35ca29b5506fdff6b3ef2d5cd51bf6e27861f956c166e62c7da857e0b"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-app01/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-app01/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-app01/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-app01/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "three_maps_equal_current": true,
+      "input_count": 6384,
+      "declarations_independently_rederived": 7823,
+      "generated_source_copies_verified": 1,
+      "preflight_rows": 148,
+      "program_sha256": "ceee006ab1e39fb78c958d1d6530d1da798eae5b2974825d02a1a0c4624ae658",
+      "actual_receipt": {
+        "session": 75434,
+        "initial_tool": "f0c866",
+        "terminal_tool": "91d154",
+        "exit": 0,
+        "observed_at": "2026-11-01T09:50:24.139089+00:00",
+        "status": "actual original singleApp normal gate"
+      },
+      "roots": [
+        "TestOriginalRequestUtilsOwnedTLSInstallRecoveryAndCold"
+      ],
+      "phases": [
+        "plugin_original_requestutils_owned_install_test.go:103: owned_phase=market index=1 payload=0",
+        "plugin_original_requestutils_owned_install_test.go:122: owned_phase=failed_acquisition_no_replay index=2 payload=1",
+        "plugin_original_requestutils_owned_install_test.go:131: owned_phase=explicit_recovery index=3 payload=2",
+        "plugin_original_requestutils_owned_install_test.go:154: owned_phase=existing_class_compatibility index=4 payload=2",
+        "plugin_original_requestutils_owned_install_test.go:162: owned_phase=same_version_force_reinstall index=5 payload=3",
+        "plugin_original_requestutils_owned_install_test.go:192: owned_phase=history_release index=6 payload=3",
+        "plugin_original_requestutils_owned_install_test.go:192: owned_phase=history_release index=7 payload=3",
+        "plugin_original_requestutils_owned_install_test.go:213: owned_phase=cold_load_without_artifact_fetch index=7 payload=3",
+        "plugin_original_requestutils_owned_install_test.go:217: owned_phase=cold_startup_sync_current index=8 payload=3",
+        "plugin_original_requestutils_owned_install_test.go:221: actual_worker_pids initial=99 compatible=106 force=112 cold=119; bound_version=1.0"
+      ]
+    },
+    {
+      "label": "platform-requestutils-a-only-race01",
+      "files": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-race01/result.json",
+          "bytes": 8986,
+          "sha256": "2e4b777fc5c2f1f8d176cf1af111b4b81a1747a7838d9742d8573dac3e1a96c3"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-race01/coordinator-tool-receipt.json",
+          "bytes": 234,
+          "sha256": "dd7724b5b13c7eef572a740b4d4f3aae211ff53ae9a2851acbf3bf5446cbc57e"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-race01/vet-scope-clarification.json",
+          "bytes": 100,
+          "sha256": "af8117dcb375d76e242e352125ee1dd930c8380da90e433b6bdfe784aa5ab3b6"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-race01/inputs-before.json",
+          "bytes": 1519099,
+          "sha256": "33624fc06fb03dbc3ac1e907cfb3c681105eb8a485aded2b491f33dc76d8fb9e"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-race01/inputs-after-compile.json",
+          "bytes": 1519099,
+          "sha256": "33624fc06fb03dbc3ac1e907cfb3c681105eb8a485aded2b491f33dc76d8fb9e"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-race01/inputs-after-test.json",
+          "bytes": 1519099,
+          "sha256": "33624fc06fb03dbc3ac1e907cfb3c681105eb8a485aded2b491f33dc76d8fb9e"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-race01/virtual-compile-inputs.json",
+          "bytes": 3018947,
+          "sha256": "7730a92c1eec35bc5d21a3b6a8c711637cf6722c647a676783a81514248608eb"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-race01/generated-source-map.json",
+          "bytes": 246,
+          "sha256": "180af28e79b97b12024488cd9c969a6d9e9fec19d98e8d096d0d68bc4941bd0a"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-race01/tests.stdout",
+          "bytes": 11533,
+          "sha256": "183642f1a27552aea037f8748f4c19dc5fe9c005eeaea9b76d5a514fc80e8695"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-race01/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-race01/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-race01/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-a-only-race01/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "three_maps_equal_current": true,
+      "input_count": 6393,
+      "declarations_independently_rederived": 7832,
+      "generated_source_copies_verified": 1,
+      "preflight_rows": 148,
+      "program_sha256": "0307a5c610a0f842d444d4fd5af0630bbff211f47215cdb6b2b2e9674e1d5ebf",
+      "actual_receipt": {
+        "session": 93532,
+        "initial_tool": "4ddf8a",
+        "terminal_tool": "fe7635",
+        "exit": 0,
+        "observed_at": "2026-11-01T09:52:13.767515+00:00",
+        "status": "actual original App race2 terminal; reusedworker normal, not worker race"
+      },
+      "roots": [
+        "TestOriginalRequestUtilsOwnedTLSInstallRecoveryAndCold",
+        "TestOriginalRequestUtilsPrivateTLSBaseIsolation"
+      ],
+      "phases": [
+        "plugin_original_requestutils_owned_install_test.go:103: owned_phase=market index=1 payload=0",
+        "plugin_original_requestutils_owned_install_test.go:122: owned_phase=failed_acquisition_no_replay index=2 payload=1",
+        "plugin_original_requestutils_owned_install_test.go:131: owned_phase=explicit_recovery index=3 payload=2",
+        "plugin_original_requestutils_owned_install_test.go:154: owned_phase=existing_class_compatibility index=4 payload=2",
+        "plugin_original_requestutils_owned_install_test.go:162: owned_phase=same_version_force_reinstall index=5 payload=3",
+        "plugin_original_requestutils_owned_install_test.go:192: owned_phase=history_release index=6 payload=3",
+        "plugin_original_requestutils_owned_install_test.go:192: owned_phase=history_release index=7 payload=3",
+        "plugin_original_requestutils_owned_install_test.go:213: owned_phase=cold_load_without_artifact_fetch index=7 payload=3",
+        "plugin_original_requestutils_owned_install_test.go:217: owned_phase=cold_startup_sync_current index=8 payload=3",
+        "plugin_original_requestutils_owned_install_test.go:221: actual_worker_pids initial=120 compatible=127 force=134 cold=141; bound_version=1.0"
+      ]
+    }
+  ],
+  "Meta25_current_unchanged": true,
+  "count_correction": "Earlier chat repeated author149, but binding/independent preexec seal and actual runner all148. No byte or execution discrepancy.",
+  "runtime_scope": "owned self-signed index+worker acquisition, failure503/no replay, explicit recovery, compatibility, force, history/release, sameDB cold actual installed worker; private-clone strict isolation race. A-only4products; B hook restoredHEAD, B timeout untouched/unretried.",
+  "limits": [
+    "historical normalworker60403 reused exactly; App/transport race does not race-instrument worker",
+    "no fresh ordinary CLI or server accepted yet for A-only",
+    "no B/Wiki/publicrepo/fullparent/61/push/CI claim",
+    "automatic vet NOT_RUN, generic historic message not current failure"
+  ],
+  "reviewer_execution": false
+}

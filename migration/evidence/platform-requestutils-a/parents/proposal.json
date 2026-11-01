@@ -1,0 +1,220 @@
+{
+  "utc": "2026-11-01T09:43:21.993955+00:00",
+  "kind": "author impact/readback proposal; not self-approval of authored A candidate",
+  "source_proposal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/progress-61-parent-reconciliation01/proposal-61.json",
+    "sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
+    "bytes": 125513
+  },
+  "historical_readback": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/progress-61-parent-reconciliation01/a-consumer-closure01/historical-readback.json",
+    "sha256": "e359a2b75316223f26df6fcd259cf3d9693f75bb467b863f362b89429b9f6e6e",
+    "bytes": 22187
+  },
+  "current_code_impact": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/progress-61-parent-reconciliation01/a-consumer-closure01/current-code-impact.json",
+    "sha256": "34d1f4bf9daf493ff93f01003b402c78e547c8fa236ef6be5ec9c486ee66bc18",
+    "bytes": 17673
+  },
+  "independent_actual_and_build_refs": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/platform-requestutils-tls-independent/owned-app01-final/final-seal.json",
+      "sha256": "7635e8580b27d3a1cd2abe8f6d7167b874ba5e8a0b7396d64b11458ce431997c",
+      "bytes": 1970
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/platform-requestutils-tls-independent/owned-app01-final/readback.json",
+      "sha256": "e7c26723fe2c96a1af97875721fa87516f5f49d4f75b7fc85995ef4d8e3e4317",
+      "bytes": 4641
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-owned-app01/result.json",
+      "sha256": "fa079f2d06e15099fc92cc59a6eeeba4eb2e90fc36b7404132f0dfc6c0e38ed0",
+      "bytes": 8756
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-tls-a02/result.json",
+      "sha256": "e6af627456d14f8642d6e763d21045febbaa2c798f8af7249d467ff4a3f32ee1",
+      "bytes": 8869
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-tls-b02/result.json",
+      "sha256": "cc382f0056aaa75097b9b1c9ff092b1b007307d40e2d31a02d281bb31a0e979c",
+      "bytes": 1481
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/platform-requestutils-server01/result.json",
+      "sha256": "a3e0824d8d84fd42e191d0316c2cd74e7f54cfc0ec09baab5cf771cd36a0f186",
+      "bytes": 2161
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/platform-requestutils-cli01/execution-preparation-seal.json",
+      "sha256": "b9ef6c70b4fb9f834f9b4c08bf9f3e1d0c5341fc00274a829a7696d5d1d1d8b0",
+      "bytes": 1576
+    }
+  ],
+  "rows": [
+    {
+      "id": "08",
+      "original_scope": [
+        "索引加工本地/在线卡片",
+        "标签/作者/仓库搜索筛选",
+        "20条追加与同数量刷新重置",
+        "空结果/失败重试",
+        "分身显示逻辑版本与真实对象访问隔离"
+      ],
+      "call_chain": "market cards -> online declarations -> marketSource -> A",
+      "historical_credit": "原23卡/13字段、20→25分页、筛选/空结果/失败恢复等历史证据保留。TLS变化不改UI/卡片算法。",
+      "new_dependency_observation": "实际自签HTTPS索引进入市场卡，固定源包>2MiB读取仍在相同SourcePackages链截断。",
+      "recommendation": "PARTIAL_SHARED_SOURCE_METADATA_LIMIT",
+      "minimum_remaining": "A普通CLI完成后不需重跑全部UI；继续保留09同一已证>2MiB源包差异，修一次共享读取后做受影响消费小增量。",
+      "historical_roots": [
+        "TestPluginOriginalMarketSourcesPersistenceDiscoveryAndActualCards",
+        "TestOriginalMarketCatalogAcrossSourcesKeepsVersionAndConfiguredOrder"
+      ]
+    },
+    {
+      "id": "10",
+      "original_scope": [
+        "强制刷新市场索引而非升级",
+        "失败不回填旧索引但旧普通缓存仍有效",
+        "空成功/过期/重试",
+        "30分钟元数据任务不改SDK状态",
+        "无额外5秒市场覆盖"
+      ],
+      "call_chain": "force/ordinary/background refresh -> marketSource -> A",
+      "historical_credit": "旧force失败不污染普通缓存、空成功、等待取消/并发join和30分钟metadata任务保留；refresh实现仍与旧Git字节同。",
+      "new_dependency_observation": "App实际HTTPS读取，普通CLI拟ordinary/cache/force；旧失败/cache边界并未因TLS改变。源包>2MiB仍会使force失败。",
+      "recommendation": "PARTIAL_SHARED_SOURCE_METADATA_LIMIT",
+      "minimum_remaining": "不重测整scheduler/UI；完成共享源包预算处置才可整父关闭。",
+      "historical_roots": [
+        "TestOriginalMarketFreshFailureCacheSourceOracle",
+        "TestOriginalMarketConcurrentRefreshJoinsAndWaiterCancellation",
+        "TestOriginalMarketHTTPHighestVersionCacheRefreshAndActualUpgrade"
+      ]
+    },
+    {
+      "id": "11",
+      "original_scope": [
+        "来源/版本选择、取得代码、校验和安装",
+        "登记后创建真实对象并注册",
+        "旧真实HTTP/浏览器安装、配置、更新、分身、重置、卸载生命周期",
+        "Go校验制品和长期worker替代Python导入"
+      ],
+      "call_chain": "install compatibility GET + acquire/publish GET -> named A wrappers",
+      "historical_credit": "旧实际SDK安装、失败保原对象、配置/重装/冷恢复及mirror收到503不fallback已独立实证；当前install只2个client替换。",
+      "new_dependency_observation": "新App实际payload503无安装/无重放，显式恢复、真实worker、三A调用点、cold通过独审；普通server链待实际终态。",
+      "recommendation": "CONDITIONAL_CLOSURE_AFTER_CLI_AND_EXACT_ADOPTION",
+      "minimum_remaining": "本轮不需再跑旧全UI/全生命周期。普通CLI真实成功+独审并精确采用已测字节后，可建议关闭本轮已证A剩余；source-display大JSON不是native可安装制品，不能未经证据把它制造为安装新缺陷。",
+      "historical_roots": [
+        "TestPluginOriginalArtifactForceDownloadFailureKeepsLoadedObjectUntilReload",
+        "TestPluginOriginalArtifactInstallSaveErrorAndReloadPersistentObject",
+        "TestOriginalStandardDirectModuleEndToEnd"
+      ]
+    },
+    {
+      "id": "12",
+      "original_scope": [
+        "历史说明与Release列表分开",
+        "指定版本后台接口和最新更新",
+        "force旧缓存先回后后台刷新",
+        "无仓库/缺类/init失败/分身版本分支",
+        "原UI无旧版本选择器"
+      ],
+      "call_chain": "history / Release cache -> marketSource -> A; selected-version acquire -> A",
+      "historical_credit": "旧作者history顺序、local/init/clone版本、Release独立32/30min缓存、指定版本接口/无UI选择器保留。history后来source-display变化由market-pipeline独审继承，不冒全文件与旧Git同。",
+      "new_dependency_observation": "新App已实际history及Release两次独立获取，普通CLI拟同链；合法源显示metadata>2MiB仍影响在线history候选。",
+      "recommendation": "PARTIAL_SHARED_SOURCE_METADATA_LIMIT",
+      "minimum_remaining": "原native Release/指定版本信用无需全重跑；原源显示history同一个预算缺口必须列出，不将A成功即整12绿。",
+      "historical_roots": [
+        "TestOriginalMarketHistoryPreservesAuthorWireOrder",
+        "TestOriginalMarketGuideHistoryReleasesMetadataOnlyAndFailures",
+        "TestOriginalMarketReleaseForceReturnsCacheThenRefreshesSourceOracle",
+        "TestOriginalHistoryActualStatesAndImportedClassVersion"
+      ]
+    },
+    {
+      "id": "13",
+      "original_scope": [
+        "system_version兼容与旧Release范围",
+        "Go平台/SDK/SHA制品替代pip",
+        "代理/镜像/API路由与凭据域隔离",
+        "基础/高级/开发设置保存和冷恢复",
+        "DEV放宽不污染一般安装"
+      ],
+      "call_chain": "compatibility InspectCompatible / native acquisition -> A; github strategy wrappers",
+      "historical_credit": "旧system-version/Release/平台/SDK/SHA、DEV设置与实际冷恢复原信用保留；GitHub credential/origin策略文件当前逐字保持已验mirror版本。",
+      "new_dependency_observation": "新A私有TLS实际可取自签材料且generic strict隔离；兼容已加载对象路径和失败恢复实际通过。B/Wiki没有借此变为已验。",
+      "recommendation": "CONDITIONAL_CLOSURE_AFTER_CLI_AND_EXACT_ADOPTION",
+      "minimum_remaining": "无需重验完整pip替代/全部平台/UI。普通CLI及独审采纳后，已证唯一A差异可闭；Go制品适配内既有安全校验不重新伪造为未实现。",
+      "historical_roots": [
+        "TestOriginalMarketVersionAndSourceOracle",
+        "TestOriginalMarketGuideHistoryReleasesMetadataOnlyAndFailures"
+      ]
+    },
+    {
+      "id": "14",
+      "original_scope": [
+        "同ID更新代码、重新加载且保留配置/KV",
+        "分身逻辑版本比较和精确ID属性替换",
+        "分身JS/CSS/顶层资源派生",
+        "坏包保留/重试/冷恢复"
+      ],
+      "call_chain": "force update -> acquireOriginalImplementationMode -> A",
+      "historical_credit": "旧真实1→2、clone9.7逻辑版本、exact clone属性、JS/CSS/顶层派生、坏包保留/恢复/cold证据保留。clone frontend/installed核心与旧Git完全同。",
+      "new_dependency_observation": "新App同版本force实际重取binary/换PID/保配置/KV；只证明共享材料取得与publication接线，绝不冒本次新跑不同版本/clone。",
+      "recommendation": "CONDITIONAL_CLOSURE_AFTER_CLI_AND_EXACT_ADOPTION",
+      "minimum_remaining": "旧已证不同版本分支与新shared acquisition组合可用；不要求为同一TLS改动再整套v2/clone/browser。普通CLI终态和精确源采用后可建议闭。",
+      "historical_roots": [
+        "TestOriginalMarketCatalogExactCloneUpdatePreservesSourceAndRecreatesAfterUninstall",
+        "TestPluginOriginalArtifactSourceUpgradeKeepsCopiedCloneVersion",
+        "TestOriginalStandardActualArtifactUpgradePreservesClone",
+        "TestPluginOriginalFrontendCloneUpgradeSameVersionAndForceFailure"
+      ]
+    },
+    {
+      "id": "20",
+      "original_scope": [
+        "启动先恢复/加载现有对象与API",
+        "后台修复缺失/落后兼容插件",
+        "成功后注册服务/命令",
+        "安全模式跳过插件子系统",
+        "逐阶段失败隔离与关闭备份"
+      ],
+      "call_chain": "App.Start -> startupSynchronizer -> market declarations -> native acquire -> A",
+      "historical_credit": "旧3.67s真实normalserver仓库阻塞时旧worker先可用，释放后整体reinit、no-op、缺失/坏SHA失败/合法修复/safemode及6race保留；sync和startup叶与旧Git同。",
+      "new_dependency_observation": "新App冷现有包/同步metadata已验，普通CLI拟正常Start。它不重新观察missing/outdated repair；其信用来自旧真实门+未变算法与新A acquisition依赖。",
+      "recommendation": "CONDITIONAL_CLOSURE_NATIVE_STARTUP_DOMAIN",
+      "minimum_remaining": "无需重跑全startup/backup。source-display行在python_metadata明确UnavailableReason且sync先跳过，不可仅凭旧报告not-globally-closed句子将display-only2MiB反例自动升格20新坏修复；native完整manifest原资源上限仍明确为已接受制品边界，不声明source无界。",
+      "historical_roots": [
+        "TestOriginalPluginSyncUpgradeRepairAndNoop",
+        "TestOriginalPluginSyncFailureIsolationAndInstalledSelection",
+        "TestOriginalPluginSyncActualStartAndCloseCancellation",
+        "TestOriginalSafeModeKeepsManagementWithoutStartupExecution"
+      ]
+    }
+  ],
+  "direct_recommendation": {
+    "a_tls_remaining": "App consumer independently accepted; ordinary normalCLI and final exact-source adoption still pending at this report time.",
+    "after_those_conditions_can_close": [
+      "11",
+      "13",
+      "14",
+      "20"
+    ],
+    "retain_specific_shared_2MiB_boundary": [
+      "08",
+      "09",
+      "10",
+      "12"
+    ],
+    "not_automatically_closed": [
+      "07 Wiki",
+      "23/24 B timeout, query and body limit"
+    ],
+    "counts": "No ledger/count mutation. Do not add7 mechanically; coordinator must apply actual final gates and shared-boundary ownership to one61 ledger."
+  },
+  "correction_to_initial_message": "Old market-pipeline not-globally-closed sentence is finite-proof scope, not evidence every named parent has a separate defect. Concrete SourceDisplay unavailable rows cannot establish a missing native startup-repair defect.",
+  "no_new_runtime_or_product_changes": true,
+  "push_rule": "whole current61 parents completed before push; no child-slice push"
+}
