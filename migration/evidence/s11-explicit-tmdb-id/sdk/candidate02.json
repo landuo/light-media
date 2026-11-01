@@ -1,0 +1,86 @@
+{
+  "at": "2026-11-01T01:16:03.070010+00:00",
+  "status": "TEST_ONLY_CANDIDATE02_PREPARED_NOT_INSTALLED_OR_EXECUTED",
+  "base": "911846b9a0cfe61da96d948d6b170f90f098c214",
+  "candidate01_retained": {
+    "path": "audits/s11-id-sdk/candidate01.json",
+    "bytes": 4342,
+    "sha256": "c8b32d99bec091a175798b5f522c6d2f55d735904d48a92c35022c735e1ead9f"
+  },
+  "candidate01_tar_retained": {
+    "path": "audits/s11-id-sdk/candidate01.tar",
+    "bytes": 30720,
+    "sha256": "e1eb505e61f835a51b7d5530dbd4823e0345d9d154a25c14902f53e47abdc06f"
+  },
+  "before_test_retained": {
+    "path": "audits/s11-id-sdk/shared_media_recognition_test.go.txt",
+    "bytes": 8916,
+    "sha256": "697891aafa22df71c2ac89c22e2d1bbbd163b9493fef2bf7182d4a6f73425c4f"
+  },
+  "test": {
+    "path": "audits/s11-id-sdk/shared_media_recognition_test.candidate02.go.txt",
+    "bytes": 8911,
+    "sha256": "a9c16e395a0b8392b526ec786da7165f947b1ac6923b59cb3bc7c484ced3bfb1",
+    "intended_product": "internal/plugins/shared_media_recognition_test.go"
+  },
+  "product_unchanged": {
+    "path": "audits/s11-id-sdk/shared_media_recognition.go.txt",
+    "bytes": 4391,
+    "sha256": "b50e33f16aaac00c67776592ffee39d3e682ad995ab7f5156b7b35607a5fefd0"
+  },
+  "api_unchanged": {
+    "path": "audits/s11-id-sdk/API.md",
+    "bytes": 4694,
+    "sha256": "563c098d7e2915e6f170ab9bbc965394f54161bd06862ab6d0468c29b61ce503"
+  },
+  "narrow_diff": {
+    "path": "audits/s11-id-sdk/candidate02.patch",
+    "bytes": 621,
+    "sha256": "e687465490a45e4715197cb25daaadec2c8912ff69f49a17fb046edf3b2fa21a"
+  },
+  "reason": "Author test used wire DTO *ReplyError as error. Actual compile rejects it. Replace only sentinel with existing *plugins.Error, which implements Error() and preserves pointer identity. No product semantics/test assertions changed.",
+  "actual_failure_bindings": [
+    {
+      "path": "evidence/s11-id-sdk01/result.json",
+      "bytes": 1366,
+      "sha256": "678a44000ca96a5c34b422db727579b8bda916efe13c957bc05ea7c1a7b8daba"
+    },
+    {
+      "path": "evidence/s11-id-sdk01/compile.stderr",
+      "bytes": 278,
+      "sha256": "f428edc3da2c7ebf4a3168282b254d84fa67ee2f02b0124b2e1c3f258ebdd848"
+    },
+    {
+      "path": "evidence/s11-id-sdk01/compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "evidence/s11-id-sdk-race01/result.json",
+      "bytes": 1404,
+      "sha256": "d38b3e81808e7f6e3996de346ea0658a04ebc52790e54b353baf40f575840525"
+    },
+    {
+      "path": "evidence/s11-id-sdk-race01/compile.stderr",
+      "bytes": 278,
+      "sha256": "f428edc3da2c7ebf4a3168282b254d84fa67ee2f02b0124b2e1c3f258ebdd848"
+    },
+    {
+      "path": "evidence/s11-id-sdk-race01/compile.stdout",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "error_type_source": {
+    "path": "release-light-media/internal/plugins/protocol.go",
+    "bytes": 38673,
+    "sha256": "1ef28b4aa12c6d7a6f88a847d34687c0327fda6ea887c5daa0a5594be634b8c9",
+    "lines": "265–271; Error.Error() and failure()"
+  },
+  "roots": [
+    "TestSharedMediaRecognitionWireAndOwnership",
+    "TestSharedMediaRecognitionStrictBoundaryAndNoReplay"
+  ],
+  "no_main_tree_or_ledger_changes": true,
+  "execution": "none by this author; original normal01/race01 actual compile failures preserved, coordinator owns new normal02/race02"
+}

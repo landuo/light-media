@@ -1,0 +1,81 @@
+{
+  "started": "2026-11-01T01:47:39.264524+00:00",
+  "driver_pid": 6,
+  "package": "./internal/app",
+  "pattern": "^(TestOriginalRecognitionSnapshotCacheFreshAndIsolation|TestOriginalRecognitionNativeModelAndGroupBoundaries|TestPluginNoticeV2TMDBMediaInfoOriginalAST|TestOriginalMediaRecognitionWireNormalization|TestOriginalMediaRecognitionAdmissionAndFresh|TestOriginalMediaRecognitionOwnedWorkerProviderAndCold)$",
+  "race": false,
+  "status": "FAIL",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/app",
+        "./cmd/owned-media-recognition-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-owned-app01.worker",
+        "./cmd/owned-media-recognition-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-owned-app01.test",
+        "./internal/app"
+      ],
+      "exit": 1
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T01:47:39.264540+00:00",
+      "scratch_free": 46368587776,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "compile-worker",
+      "at": "2026-11-01T01:47:40.350593+00:00",
+      "scratch_free": 46365286400,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T01:47:40.690697+00:00",
+      "scratch_free": 46359633920,
+      "tmp_free": 5225586688
+    }
+  ],
+  "input_count": 6266,
+  "fixture_sha256": "3ed8554e1e5331bae945574602dc714c1a267edfa46ddcc17b5cee1ec16e87d3",
+  "fixture_env": "OWNED_MEDIA_RECOGNITION_WORKER",
+  "error_class": "RuntimeError",
+  "error": "compile exited 1",
+  "ended": "2026-11-01T01:47:42.304428+00:00"
+}

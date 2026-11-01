@@ -1,0 +1,85 @@
+{
+  "started": "2026-11-01T01:16:23.636235+00:00",
+  "driver_pid": 6,
+  "package": "./internal/plugins",
+  "pattern": "^(TestSharedMediaRecognitionWireAndOwnership|TestSharedMediaRecognitionStrictBoundaryAndNoReplay)$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-sdk02.test",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-sdk02.test",
+        "-test.v",
+        "-test.run",
+        "^(TestSharedMediaRecognitionWireAndOwnership|TestSharedMediaRecognitionStrictBoundaryAndNoReplay)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T01:16:23.636252+00:00",
+      "scratch_free": 47133913088,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T01:16:23.908599+00:00",
+      "scratch_free": 47133081600,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T01:16:26.274714+00:00",
+      "scratch_free": 47115821056,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 1937,
+  "program_sha256": "5e4b2e0a3677382b559582b1ed7c0da0b95ccbc916ec9d1d0ede04b81fb0bae7",
+  "root_passes": [
+    "TestSharedMediaRecognitionWireAndOwnership",
+    "TestSharedMediaRecognitionStrictBoundaryAndNoReplay"
+  ],
+  "ended": "2026-11-01T01:16:26.434329+00:00"
+}

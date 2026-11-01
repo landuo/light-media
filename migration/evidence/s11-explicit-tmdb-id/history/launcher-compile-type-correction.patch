@@ -1,0 +1,20 @@
+--- candidate02/internal/app/plugin_shared_media_recognition_owned_worker_test.go
++++ candidate03/internal/app/plugin_shared_media_recognition_owned_worker_test.go
+@@ -183,7 +183,7 @@
+ 		t.Fatal("owned server transport type differs")
+ 	}
+ 	transport := &ownedRecognitionTransport{peer: peer, endpoint: peer.server.URL, base: base.Clone()}
+-	client := catalog.NewWithTransport(settings.TMDB, transport)
++	client := catalog.NewWithTransport(catalog.Credentials{APIKey: settings.TMDB.APIKey, AccessToken: settings.TMDB.AccessToken}, transport)
+ 	a.catMu.Lock()
+ 	if a.catClient != nil {
+ 		a.catClient.CloseIdleConnections()
+@@ -377,7 +377,7 @@
+ 	settings.PluginMarkets, settings.PluginLocalRepoPaths = []string{}, []string{}
+ 	settings.PluginAutoReload = false
+ 	settings.Sites, settings.Downloaders, settings.Roots, settings.AllowedRoots = []SiteConfig{}, []DownloaderConfig{}, []Root{}, []string{}
+-	settings.TMDB = catalog.Credentials{APIKey: ownedRecognitionKey}
++	settings.TMDB = TMDBConfig{APIKey: ownedRecognitionKey}
+ 	if err := a.saveSettings(context.Background(), settings); err != nil {
+ 		t.Fatal("save owned recognition settings failed")
+ 	}

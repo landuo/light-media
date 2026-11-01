@@ -1,0 +1,49 @@
+{
+  "at": "2026-11-01T01:54:44.749094+00:00",
+  "status": "PASS",
+  "kind": "normal owned S11 explicit-ID fixture; SDK HostCaller only, no worker localfilesystem/network/daemon; compile only",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-json",
+        "./cmd/owned-media-recognition-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "build",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-fixture01",
+        "./cmd/owned-media-recognition-fixture"
+      ],
+      "exit": 0
+    }
+  ],
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "scratch_free": 45823598592,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "build",
+      "scratch_free": 45823037440,
+      "tmp_free": 5225586688
+    }
+  ],
+  "input_count": 1090,
+  "program_sha256": "3ed8554e1e5331bae945574602dc714c1a267edfa46ddcc17b5cee1ec16e87d3",
+  "ended": "2026-11-01T01:54:45.144456+00:00"
+}

@@ -1,0 +1,85 @@
+{
+  "started": "2026-11-01T01:17:46.868400+00:00",
+  "driver_pid": 6,
+  "package": "./internal/catalog",
+  "pattern": "^(TestSourceRecognitionDetailRawBeforeCompact|TestSourceRecognitionDetailFiniteErrors)$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/catalog"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-catalog01.test",
+        "./internal/catalog"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/catalog",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-catalog01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestSourceRecognitionDetailRawBeforeCompact|TestSourceRecognitionDetailFiniteErrors)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T01:17:46.868422+00:00",
+      "scratch_free": 47092862976,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T01:17:47.195202+00:00",
+      "scratch_free": 47091802112,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T01:17:48.469593+00:00",
+      "scratch_free": 47076409344,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 2283,
+  "program_sha256": "ec3a82d0db168943b2bcbc0a0c0368193884474804a25de5ab78945a1315bf95",
+  "root_passes": [
+    "TestSourceRecognitionDetailRawBeforeCompact",
+    "TestSourceRecognitionDetailFiniteErrors"
+  ],
+  "ended": "2026-11-01T01:17:48.605343+00:00"
+}

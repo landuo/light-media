@@ -1,0 +1,2803 @@
+{
+  "status": "ORIGINAL_S11_CACHE_RECORDING_OBSERVATION_COMPLETE",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "input_manifest_sha256": "f54c26f7b3a934dad4e93fddf81935bcc17ab7c782ee24fe1f8f13bcefc6cfb7",
+  "case_count": 10,
+  "cases": [
+    {
+      "id": "normal-fresh-snapshot-isolation",
+      "input": {
+        "id": "normal-fresh-snapshot-isolation",
+        "owns_session": true,
+        "steps": [
+          {
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          },
+          {
+            "json": {
+              "id": 900011,
+              "title": "Owned replacement",
+              "nested": {
+                "items": [
+                  "replacement"
+                ]
+              }
+            }
+          }
+        ],
+        "actions": [
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          {
+            "kind": "mutate_previous"
+          },
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          {
+            "kind": "request_obj",
+            "call_cached": false,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          }
+        ]
+      },
+      "outcomes": [
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned replacement",
+            "nested": {
+              "items": [
+                "replacement"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned replacement",
+            "nested": {
+              "items": [
+                "replacement"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        }
+      ],
+      "trace": [
+        {
+          "event": "recording_cache_factory",
+          "config": {
+            "cache_type": "ttl",
+            "maxsize": 256,
+            "ttl": 86400
+          }
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 1,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "recording_response_json"
+        },
+        {
+          "event": "recording_cache_set",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          },
+          "options": {
+            "ttl": 86400,
+            "maxsize": 256,
+            "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request"
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "event": "owned_caller_mutation",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original",
+                "owned mutation"
+              ]
+            },
+            "owned_augmented": true
+          }
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": false,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 2,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "recording_response_json"
+        },
+        {
+          "event": "recording_cache_set",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned replacement",
+              "nested": {
+                "items": [
+                  "replacement"
+                ]
+              }
+            }
+          },
+          "options": {
+            "ttl": 86400,
+            "maxsize": 256,
+            "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request"
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned replacement",
+            "nested": {
+              "items": [
+                "replacement"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned replacement",
+              "nested": {
+                "items": [
+                  "replacement"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned replacement",
+            "nested": {
+              "items": [
+                "replacement"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        }
+      ],
+      "recording_read_count": 2,
+      "recording_session_reset_count": 0
+    },
+    {
+      "id": "fresh-failure-keeps-prior",
+      "input": {
+        "id": "fresh-failure-keeps-prior",
+        "owns_session": true,
+        "steps": [
+          {
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          },
+          {
+            "raises": "RuntimeError"
+          }
+        ],
+        "actions": [
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          {
+            "kind": "request_obj",
+            "call_cached": false,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          }
+        ]
+      },
+      "outcomes": [
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "kind": "uncaught_exception",
+          "class": "RuntimeError",
+          "message": "owned read failure",
+          "fresh_after": false
+        },
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        }
+      ],
+      "trace": [
+        {
+          "event": "recording_cache_factory",
+          "config": {
+            "cache_type": "ttl",
+            "maxsize": 256,
+            "ttl": 86400
+          }
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 1,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "recording_response_json"
+        },
+        {
+          "event": "recording_cache_set",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          },
+          "options": {
+            "ttl": 86400,
+            "maxsize": 256,
+            "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request"
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": false,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 2,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "uncaught_exception",
+          "class": "RuntimeError",
+          "message": "owned read failure",
+          "fresh_after": false
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        }
+      ],
+      "recording_read_count": 2,
+      "recording_session_reset_count": 0
+    },
+    {
+      "id": "valid-error-json-cached-before-handler",
+      "input": {
+        "id": "valid-error-json-cached-before-handler",
+        "owns_session": true,
+        "steps": [
+          {
+            "json": {
+              "success": false,
+              "status_code": 34,
+              "status_message": "Owned missing resource"
+            },
+            "status": 404
+          }
+        ],
+        "actions": [
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          }
+        ]
+      },
+      "outcomes": [
+        {
+          "kind": "uncaught_exception",
+          "class": "TMDbException",
+          "message": "Owned missing resource",
+          "fresh_after": false
+        },
+        {
+          "kind": "uncaught_exception",
+          "class": "TMDbException",
+          "message": "Owned missing resource",
+          "fresh_after": false
+        }
+      ],
+      "trace": [
+        {
+          "event": "recording_cache_factory",
+          "config": {
+            "cache_type": "ttl",
+            "maxsize": 256,
+            "ttl": 86400
+          }
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 1,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "recording_response_json"
+        },
+        {
+          "event": "recording_cache_set",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "success": false,
+              "status_code": 34,
+              "status_message": "Owned missing resource"
+            }
+          },
+          "options": {
+            "ttl": 86400,
+            "maxsize": 256,
+            "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request"
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "uncaught_exception",
+          "class": "TMDbException",
+          "message": "Owned missing resource",
+          "fresh_after": false
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "success": false,
+              "status_code": 34,
+              "status_message": "Owned missing resource"
+            }
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "uncaught_exception",
+          "class": "TMDbException",
+          "message": "Owned missing resource",
+          "fresh_after": false
+        }
+      ],
+      "recording_read_count": 1,
+      "recording_session_reset_count": 0
+    },
+    {
+      "id": "owned-get-none-reset-once-success",
+      "input": {
+        "id": "owned-get-none-reset-once-success",
+        "owns_session": true,
+        "steps": [
+          {
+            "none": true
+          },
+          {
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          }
+        ],
+        "actions": [
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          }
+        ]
+      },
+      "outcomes": [
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        }
+      ],
+      "trace": [
+        {
+          "event": "recording_cache_factory",
+          "config": {
+            "cache_type": "ttl",
+            "maxsize": 256,
+            "ttl": 86400
+          }
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 1,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "log",
+          "level": "DEBUG",
+          "message": "TMDB同步请求失败，重建会话后重试一次"
+        },
+        {
+          "event": "recording_session_close",
+          "ordinal": 1
+        },
+        {
+          "event": "recording_init_session",
+          "ordinal": 1
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 2,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "recording_response_json"
+        },
+        {
+          "event": "recording_cache_set",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          },
+          "options": {
+            "ttl": 86400,
+            "maxsize": 256,
+            "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request"
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        }
+      ],
+      "recording_read_count": 2,
+      "recording_session_reset_count": 1
+    },
+    {
+      "id": "owned-get-none-reset-once-exhausted",
+      "input": {
+        "id": "owned-get-none-reset-once-exhausted",
+        "owns_session": true,
+        "steps": [
+          {
+            "none": true
+          },
+          {
+            "none": true
+          }
+        ],
+        "actions": [
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          }
+        ]
+      },
+      "outcomes": [
+        {
+          "kind": "uncaught_exception",
+          "class": "TMDbException",
+          "message": "无法连接TheMovieDb，请检查网络连接！",
+          "fresh_after": false
+        }
+      ],
+      "trace": [
+        {
+          "event": "recording_cache_factory",
+          "config": {
+            "cache_type": "ttl",
+            "maxsize": 256,
+            "ttl": 86400
+          }
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 1,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "log",
+          "level": "DEBUG",
+          "message": "TMDB同步请求失败，重建会话后重试一次"
+        },
+        {
+          "event": "recording_session_close",
+          "ordinal": 1
+        },
+        {
+          "event": "recording_init_session",
+          "ordinal": 1
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 2,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "uncaught_exception",
+          "class": "TMDbException",
+          "message": "无法连接TheMovieDb，请检查网络连接！",
+          "fresh_after": false
+        }
+      ],
+      "recording_read_count": 2,
+      "recording_session_reset_count": 1
+    },
+    {
+      "id": "external-get-none-no-reset",
+      "input": {
+        "id": "external-get-none-no-reset",
+        "owns_session": false,
+        "steps": [
+          {
+            "none": true
+          }
+        ],
+        "actions": [
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          }
+        ]
+      },
+      "outcomes": [
+        {
+          "kind": "uncaught_exception",
+          "class": "TMDbException",
+          "message": "无法连接TheMovieDb，请检查网络连接！",
+          "fresh_after": false
+        }
+      ],
+      "trace": [
+        {
+          "event": "recording_cache_factory",
+          "config": {
+            "cache_type": "ttl",
+            "maxsize": 256,
+            "ttl": 86400
+          }
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 1,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "uncaught_exception",
+          "class": "TMDbException",
+          "message": "无法连接TheMovieDb，请检查网络连接！",
+          "fresh_after": false
+        }
+      ],
+      "recording_read_count": 1,
+      "recording_session_reset_count": 0
+    },
+    {
+      "id": "read-exception-not-cached",
+      "input": {
+        "id": "read-exception-not-cached",
+        "owns_session": true,
+        "steps": [
+          {
+            "raises": "RuntimeError"
+          },
+          {
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          }
+        ],
+        "actions": [
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          }
+        ]
+      },
+      "outcomes": [
+        {
+          "kind": "uncaught_exception",
+          "class": "RuntimeError",
+          "message": "owned read failure",
+          "fresh_after": false
+        },
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        }
+      ],
+      "trace": [
+        {
+          "event": "recording_cache_factory",
+          "config": {
+            "cache_type": "ttl",
+            "maxsize": 256,
+            "ttl": 86400
+          }
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 1,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "uncaught_exception",
+          "class": "RuntimeError",
+          "message": "owned read failure",
+          "fresh_after": false
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 2,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "recording_response_json"
+        },
+        {
+          "event": "recording_cache_set",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          },
+          "options": {
+            "ttl": 86400,
+            "maxsize": 256,
+            "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request"
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        }
+      ],
+      "recording_read_count": 2,
+      "recording_session_reset_count": 0
+    },
+    {
+      "id": "invalid-json-not-cached",
+      "input": {
+        "id": "invalid-json-not-cached",
+        "owns_session": true,
+        "steps": [
+          {
+            "json_error": true,
+            "status": 502,
+            "headers": {
+              "Content-Type": "text/plain"
+            },
+            "text": "owned invalid"
+          },
+          {
+            "json": 23
+          },
+          {
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          }
+        ],
+        "actions": [
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          }
+        ]
+      },
+      "outcomes": [
+        {
+          "kind": "uncaught_exception",
+          "class": "TMDbException",
+          "message": "TheMovieDb 返回数据不是有效JSON，HTTP状态码：502，Content-Type：text/plain，响应内容：'owned invalid'",
+          "fresh_after": false
+        },
+        {
+          "kind": "uncaught_exception",
+          "class": "TMDbException",
+          "message": "TheMovieDb 返回数据格式异常：期望JSON对象或数组，实际为int，内容：23",
+          "fresh_after": false
+        },
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        }
+      ],
+      "trace": [
+        {
+          "event": "recording_cache_factory",
+          "config": {
+            "cache_type": "ttl",
+            "maxsize": 256,
+            "ttl": 86400
+          }
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 1,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "recording_response_json"
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "uncaught_exception",
+          "class": "TMDbException",
+          "message": "TheMovieDb 返回数据不是有效JSON，HTTP状态码：502，Content-Type：text/plain，响应内容：'owned invalid'",
+          "fresh_after": false
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 2,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "recording_response_json"
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "uncaught_exception",
+          "class": "TMDbException",
+          "message": "TheMovieDb 返回数据格式异常：期望JSON对象或数组，实际为int，内容：23",
+          "fresh_after": false
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 3,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "recording_response_json"
+        },
+        {
+          "event": "recording_cache_set",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          },
+          "options": {
+            "ttl": 86400,
+            "maxsize": 256,
+            "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request"
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        }
+      ],
+      "recording_read_count": 3,
+      "recording_session_reset_count": 0
+    },
+    {
+      "id": "local-day-changes-key",
+      "input": {
+        "id": "local-day-changes-key",
+        "owns_session": true,
+        "steps": [
+          {
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          },
+          {
+            "json": {
+              "id": 900011,
+              "title": "Owned replacement",
+              "nested": {
+                "items": [
+                  "replacement"
+                ]
+              }
+            }
+          }
+        ],
+        "actions": [
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261102",
+            "outer_fresh": false
+          }
+        ]
+      },
+      "outcomes": [
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned replacement",
+            "nested": {
+              "items": [
+                "replacement"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        }
+      ],
+      "trace": [
+        {
+          "event": "recording_cache_factory",
+          "config": {
+            "cache_type": "ttl",
+            "maxsize": 256,
+            "ttl": 86400
+          }
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 1,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "recording_response_json"
+        },
+        {
+          "event": "recording_cache_set",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          },
+          "options": {
+            "ttl": 86400,
+            "maxsize": 256,
+            "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request"
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261102",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261102"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261102"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:55d86dff393876b2082033ed11439d2e901f65012c33a6238f840930b4be44e9",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 2,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "recording_response_json"
+        },
+        {
+          "event": "recording_cache_set",
+          "key": "request_recording-only:55d86dff393876b2082033ed11439d2e901f65012c33a6238f840930b4be44e9",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned replacement",
+              "nested": {
+                "items": [
+                  "replacement"
+                ]
+              }
+            }
+          },
+          "options": {
+            "ttl": 86400,
+            "maxsize": 256,
+            "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request"
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned replacement",
+            "nested": {
+              "items": [
+                "replacement"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        }
+      ],
+      "recording_read_count": 2,
+      "recording_session_reset_count": 0
+    },
+    {
+      "id": "outer-fresh-inherits-through-false-inner-and-restores",
+      "input": {
+        "id": "outer-fresh-inherits-through-false-inner-and-restores",
+        "owns_session": true,
+        "steps": [
+          {
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          },
+          {
+            "json": {
+              "id": 900011,
+              "title": "Owned replacement",
+              "nested": {
+                "items": [
+                  "replacement"
+                ]
+              }
+            }
+          }
+        ],
+        "actions": [
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": true
+          },
+          {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          {
+            "kind": "fresh_context"
+          }
+        ]
+      },
+      "outcomes": [
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned replacement",
+            "nested": {
+              "items": [
+                "replacement"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned replacement",
+            "nested": {
+              "items": [
+                "replacement"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "kind": "fresh_states",
+          "values": [
+            false,
+            true,
+            true,
+            true,
+            false,
+            false,
+            false
+          ]
+        }
+      ],
+      "trace": [
+        {
+          "event": "recording_cache_factory",
+          "config": {
+            "cache_type": "ttl",
+            "maxsize": 256,
+            "ttl": 86400
+          }
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 1,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "recording_response_json"
+        },
+        {
+          "event": "recording_cache_set",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned first",
+              "nested": {
+                "items": [
+                  "original"
+                ]
+              }
+            }
+          },
+          "options": {
+            "ttl": 86400,
+            "maxsize": 256,
+            "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request"
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": true
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_read",
+          "ordinal": 2,
+          "method": "GET",
+          "url": "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+          "data": null,
+          "json": null
+        },
+        {
+          "event": "recording_response_json"
+        },
+        {
+          "event": "recording_cache_set",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned replacement",
+              "nested": {
+                "items": [
+                  "replacement"
+                ]
+              }
+            }
+          },
+          "options": {
+            "ttl": 86400,
+            "maxsize": 256,
+            "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request"
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned replacement",
+            "nested": {
+              "items": [
+                "replacement"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        },
+        {
+          "event": "owned_action",
+          "action": {
+            "kind": "request_obj",
+            "call_cached": true,
+            "day": "20261101",
+            "outer_fresh": false
+          },
+          "fresh_before": false
+        },
+        {
+          "event": "recording_local_day",
+          "day": "20261101"
+        },
+        {
+          "event": "recording_hashkey_arguments",
+          "ordered_values": [
+            "GET",
+            "https://owned.invalid/3/movie/900011?api_key=owned-synthetic-key&&language=en-US",
+            null,
+            null,
+            {
+              "_ts": "20261101"
+            }
+          ]
+        },
+        {
+          "event": "recording_cache_get",
+          "key": "request_recording-only:8faebac1bdf449be995e1a758599d0a504c8cf1d5d41eb54fceaf32f3179873e",
+          "region": "app.modules.themoviedb.tmdbv3api.tmdb:TMDb:request",
+          "value": {
+            "__mp_tmdb_response_snapshot__": true,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "json": {
+              "id": 900011,
+              "title": "Owned replacement",
+              "nested": {
+                "items": [
+                  "replacement"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "event": "owned_outcome",
+          "kind": "return",
+          "value": {
+            "id": 900011,
+            "title": "Owned replacement",
+            "nested": {
+              "items": [
+                "replacement"
+              ]
+            }
+          },
+          "python_type": "dict",
+          "fresh_after": false
+        }
+      ],
+      "recording_read_count": 2,
+      "recording_session_reset_count": 0
+    }
+  ],
+  "source_nodes": [
+    {
+      "class": null,
+      "source_relative_path": "app/core/cache.py",
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/core/cache.py",
+      "bytes": 52275,
+      "sha256": "fbcd0a557be024741891b539321fd06d09e0025c15f699d3bfdab5cebec2a91d",
+      "original_bases": [],
+      "nodes": [
+        {
+          "name": "_fresh",
+          "definition_line": 31,
+          "first_line": 31,
+          "last_line": 31,
+          "node_type": "Assign",
+          "source_bytes_sha256": "bec3ad94dd9bdbb04e8bda29bd9c4485e25b00afcc5caf91d8a1d6bad77cf565",
+          "ast_sha256": "e2c58a14b80f9d03c8da93fb9254e9816159e5b1c1775b150d3f43cd19bf2e88",
+          "decorators": []
+        },
+        {
+          "name": "fresh",
+          "definition_line": 1027,
+          "first_line": 1026,
+          "last_line": 1039,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "d50c6fe7c9fb51078866fe9f3c418c36068f0c6e67cc371df651c18dd9bddf46",
+          "ast_sha256": "0554fa147a42e320773ebfe0dc8c727dc94f784cc422d1f800feebdd46967a1f",
+          "decorators": [
+            "contextmanager"
+          ]
+        },
+        {
+          "name": "is_fresh",
+          "definition_line": 1056,
+          "first_line": 1056,
+          "last_line": 1063,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "7c7c3c3c36accc3887bf7d9d1255fccdc80d460ee78d4d36ba8d2b5054ecc362",
+          "ast_sha256": "b7d78e8a980d05471b5a46c8e5b9a6f2cd9a7b5a2f1a80e27017d616c236194a",
+          "decorators": []
+        },
+        {
+          "name": "cached",
+          "definition_line": 1125,
+          "first_line": 1125,
+          "last_line": 1341,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "83c8469ad5389da04fef2e3f47cea0c10a7c3d216ae2b1f0ae33c6f96d8bdbbe",
+          "ast_sha256": "533069a0d17bf0f802fb9499272dbf4f81f1def92ea7f2c8b383d2cc9018283f",
+          "decorators": []
+        }
+      ]
+    },
+    {
+      "class": null,
+      "source_relative_path": "app/modules/themoviedb/tmdbv3api/exceptions.py",
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/themoviedb/tmdbv3api/exceptions.py",
+      "bytes": 41,
+      "sha256": "a7bee9010ebe5d0bf8e6a061dab66efdd1c18ab415b3cd01a83e29bba5d2e3d6",
+      "original_bases": [],
+      "nodes": [
+        {
+          "name": "TMDbException",
+          "definition_line": 1,
+          "first_line": 1,
+          "last_line": 2,
+          "node_type": "ClassDef",
+          "source_bytes_sha256": "a7bee9010ebe5d0bf8e6a061dab66efdd1c18ab415b3cd01a83e29bba5d2e3d6",
+          "ast_sha256": "2a3ce290f7f6448a8ab61c91ee504980eec5b9fed9564dde555eef602e72c79d",
+          "decorators": []
+        }
+      ]
+    },
+    {
+      "class": "TMDb",
+      "source_relative_path": "app/modules/themoviedb/tmdbv3api/tmdb.py",
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/themoviedb/tmdbv3api/tmdb.py",
+      "bytes": 14923,
+      "sha256": "cf868d6d0d50a17b710ba4bac6c41f8ec51aa6ac3acf4fc89f7c7d642a4746a6",
+      "original_bases": [
+        "object"
+      ],
+      "nodes": [
+        {
+          "name": "_RESPONSE_SNAPSHOT_MARKER",
+          "definition_line": 21,
+          "first_line": 21,
+          "last_line": 21,
+          "node_type": "Assign",
+          "source_bytes_sha256": "b0b5c335bae9ad4660349fd382873d3cbd9dc1f682f600bf2164eb10b965b28c",
+          "ast_sha256": "6a1c5a3da9d9814c91ce6ced719e464f1e4cddf8a0ffefae6541d668da16973d",
+          "decorators": []
+        },
+        {
+          "name": "_reset_owned_session",
+          "definition_line": 60,
+          "first_line": 60,
+          "last_line": 71,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "388b2d50c4d0896357c35916e8a04cd07f1f24426fe8b151e22858d4427da333",
+          "ast_sha256": "420918830ee77a3d340af9959b1c3abeb7c4ecdbb3bb8b4db50dd8aebea9a7ec",
+          "decorators": []
+        },
+        {
+          "name": "api_key",
+          "definition_line": 86,
+          "first_line": 85,
+          "last_line": 87,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "84de65bb9f21e849623246f2e6221b1e1f687d5b7e1baf92a6115e8c0336e8bf",
+          "ast_sha256": "aa539a35ba5fe1f5c71f6e15ba80a0781ee87ecc96f2d9207539d3fe76c9dce6",
+          "decorators": [
+            "property"
+          ]
+        },
+        {
+          "name": "domain",
+          "definition_line": 90,
+          "first_line": 89,
+          "last_line": 91,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "84c54a156ed29580082e0f4aae9549be2e7241018e5e2c11673d1d8007e148e6",
+          "ast_sha256": "79874490af88c288a3fd5d5bf5b55c464c71b36f442cae304907d737a402a280",
+          "decorators": [
+            "property"
+          ]
+        },
+        {
+          "name": "api_key",
+          "definition_line": 102,
+          "first_line": 101,
+          "last_line": 103,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "e77e8203f58f03b5aa164ed1cbcd8898169624f6517f13d952a8cb93d07d5cac",
+          "ast_sha256": "2428512c56f1584fc8256e50b91a8e04aecf5875252afe081765e5a96a83bbdd",
+          "decorators": [
+            "api_key.setter"
+          ]
+        },
+        {
+          "name": "domain",
+          "definition_line": 106,
+          "first_line": 105,
+          "last_line": 107,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "9f38dee8e730b1258f94bc0b2b0da6fbf5a5eed913bc9898919b0e2e1441cc1f",
+          "ast_sha256": "bc3c2517fc57e777298dadf7c74f2c5f50e1e254e7d4253fe69c6c66fd04e434",
+          "decorators": [
+            "domain.setter"
+          ]
+        },
+        {
+          "name": "language",
+          "definition_line": 110,
+          "first_line": 109,
+          "last_line": 111,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "57890a58289297a4dbbf58ef757cb9285e48a34e0b5b2f1091646ead7324b742",
+          "ast_sha256": "a3d9902067156a7254847ccb169a62304e0340c8ff56e244855560a2f35cfeac",
+          "decorators": [
+            "property"
+          ]
+        },
+        {
+          "name": "language",
+          "definition_line": 114,
+          "first_line": 113,
+          "last_line": 115,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "232df22aa5d763978985520cd7caa9c99c2012d73a5fcea18a81abcb2907aab8",
+          "ast_sha256": "1b8bba253390c78c64f8d2300db21e01b9403f19ac7376ff00885860c8f0aac3",
+          "decorators": [
+            "language.setter"
+          ]
+        },
+        {
+          "name": "wait_on_rate_limit",
+          "definition_line": 132,
+          "first_line": 131,
+          "last_line": 133,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "484a416201320a1aaa4b6884dcd67d96c3769ebd7f0cec4c8d6122a27a70dde7",
+          "ast_sha256": "446fac16ebed507de026f6264aa1d4c093150efacf4df3acb3874c573d17a776",
+          "decorators": [
+            "property"
+          ]
+        },
+        {
+          "name": "wait_on_rate_limit",
+          "definition_line": 136,
+          "first_line": 135,
+          "last_line": 137,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "2199f5721adbc072dd4c49acccfff984bdbdc17758f59437c21f2ed581d66deb",
+          "ast_sha256": "61bc5a90c536c5edaaba79b4c2178d033c8098bd65e05297883734243400a5e6",
+          "decorators": [
+            "wait_on_rate_limit.setter"
+          ]
+        },
+        {
+          "name": "request",
+          "definition_line": 140,
+          "first_line": 139,
+          "last_line": 148,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "51f295073b112faad66be3367cff2998f21b2dda57b773ebd14086d0f7016151",
+          "ast_sha256": "6bcbadd0cd7e1f958ed4819c38bd0d3e5c617366a9a10801ff8bf27fad09f330",
+          "decorators": [
+            "cached(maxsize=settings.CONF.tmdb, ttl=settings.CONF.meta, skip_none=True)"
+          ]
+        },
+        {
+          "name": "_request_once",
+          "definition_line": 150,
+          "first_line": 150,
+          "last_line": 156,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "946a716a14a4e7460c2f67a0af5e30cfecf0d5a03cb0cfb09d245ea90dbb603c",
+          "ast_sha256": "29a2d126e829401c41241091c4b1f9a47f7b0c5a675c9f5c2c05d1a46561c0bb",
+          "decorators": []
+        },
+        {
+          "name": "_snapshot_response",
+          "definition_line": 169,
+          "first_line": 168,
+          "last_line": 180,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "049186595229863a1fac788dd3b54f19b2b819e6aee9ff219f5d4f856316dc8d",
+          "ast_sha256": "929d05eae87d66e9dffcc86de888dd38b4ae3200006f6bd4e9eb3a963829268c",
+          "decorators": [
+            "classmethod"
+          ]
+        },
+        {
+          "name": "_get_response_headers",
+          "definition_line": 183,
+          "first_line": 182,
+          "last_line": 186,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "8e7e02055dd6886714465371fb4a746f0259aa9c74136f7ec5ade18387ab67b8",
+          "ast_sha256": "a8e6a9adb583e8866091974e8457d79da9a8710a4f5a3d107535b03b6ad3e113",
+          "decorators": [
+            "classmethod"
+          ]
+        },
+        {
+          "name": "_get_response_json",
+          "definition_line": 189,
+          "first_line": 188,
+          "last_line": 193,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "d5dcbfd399004e7ed8c56be7ba4bca78d8ae3c23d2e6aabff1f1ce9325c30967",
+          "ast_sha256": "201313fb88f6a4747a52e8c704c3ad7381bc7cb633569e7087cf9ae8cb27ebd1",
+          "decorators": [
+            "classmethod"
+          ]
+        },
+        {
+          "name": "_decode_response_json",
+          "definition_line": 196,
+          "first_line": 195,
+          "last_line": 203,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "bda4cc14b36ec428d8a1cead65ffdb8321e7c610caa638c21d6de268d73de389",
+          "ast_sha256": "90f32b3b3ada18a6aa3ace7e384edb1a62857f5602ef973aa4f0a5e2bcef7b88",
+          "decorators": [
+            "classmethod"
+          ]
+        },
+        {
+          "name": "_get_header_value",
+          "definition_line": 206,
+          "first_line": 205,
+          "last_line": 224,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "a6cafde8e3d0b35c9adb5a856653ff1ad300ce875195fed1cfe3dff017847932",
+          "ast_sha256": "b6878159f8dce03cd7073deacd7eabc31e156c661f1afe9e75cf7ca56065219d",
+          "decorators": [
+            "staticmethod"
+          ]
+        },
+        {
+          "name": "_build_invalid_json_message",
+          "definition_line": 227,
+          "first_line": 226,
+          "last_line": 263,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "d8039fff35ba96ffd7c3d2951d9282e00ee09648f68dd4fb1e7b2d0a82b0549a",
+          "ast_sha256": "1175b98ad083f8a33b010713b8efba97d6582c5cd51bc3132d1a2ee456f7e259",
+          "decorators": [
+            "classmethod"
+          ]
+        },
+        {
+          "name": "_validate_json_response",
+          "definition_line": 266,
+          "first_line": 265,
+          "last_line": 279,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "28cac3f6e8641ec4066f6b00a8a3423039ed1c8e5d7e65d078ed156a0ae0bccc",
+          "ast_sha256": "e05392700e052cbfdd7e539ab8261815ebb003845ad3345a88e13795bf98cc2f",
+          "decorators": [
+            "staticmethod"
+          ]
+        },
+        {
+          "name": "_get_json_key",
+          "definition_line": 282,
+          "first_line": 281,
+          "last_line": 291,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "cd60b9150ae7c7f061263bf5444204099a5a3cb32f5914e6887e9453be79e765",
+          "ast_sha256": "595daaca587f65b589405af49215fb8fa5baa5a184ced0e55f7f8361f0986a20",
+          "decorators": [
+            "staticmethod"
+          ]
+        },
+        {
+          "name": "_validate_api_key",
+          "definition_line": 296,
+          "first_line": 296,
+          "last_line": 298,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "b228b370e506a8d2bd8a3e14150d9d9f5fa22bd38f1d91954b5b9d575ea617b8",
+          "ast_sha256": "bdbed90bdb601b3398ab524211decf147409e51833d72914896115ff5c77305b",
+          "decorators": []
+        },
+        {
+          "name": "_build_url",
+          "definition_line": 300,
+          "first_line": 300,
+          "last_line": 307,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "575b2d9ed51cf51b6cc3cb115b4db9e0f674f09c630e17cc2d75a042afb80512",
+          "ast_sha256": "fc2ddcdd20db70d2b0be7bc96f307d7eaa5437e3ed7af5c6ca416501b3ed541e",
+          "decorators": []
+        },
+        {
+          "name": "_handle_headers",
+          "definition_line": 309,
+          "first_line": 309,
+          "last_line": 318,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "99023086c45b8ad028f5470daf2263be42a3e7c67db5e2d1cfb3b5f33685c5c6",
+          "ast_sha256": "fa6c8c54a2888c21a1ef8a0e36e8dca180ae3685e1acd1ff85f2f163bf82461c",
+          "decorators": []
+        },
+        {
+          "name": "_handle_rate_limit",
+          "definition_line": 320,
+          "first_line": 320,
+          "last_line": 330,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "ebb872e61cf9f69c07331dc10d34958fba333c349cc795a4b010b8b634345545",
+          "ast_sha256": "28b571f4360c22e6416b25f9f3ab2ccd42108ceb0ed9edd23ee3ef41742ca79c",
+          "decorators": []
+        },
+        {
+          "name": "_process_json_response",
+          "definition_line": 332,
+          "first_line": 332,
+          "last_line": 346,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "2d8568903f294e044fc78a68dacc6a113e0463b5969cc05603cf6063620a12d3",
+          "ast_sha256": "862979887b91b5457f58ac60ea0623a6046d49dd0462991e59b1bb78b8a439c6",
+          "decorators": []
+        },
+        {
+          "name": "_handle_errors",
+          "definition_line": 349,
+          "first_line": 348,
+          "last_line": 360,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "8ed355d4fbea5580cb191e028841d2cd27c3b55d9f44b68f8c51f4f0a9c07391",
+          "ast_sha256": "e38219a25061511bd7b27c63b158760a9435b022ae63faa654911b7a6be97b98",
+          "decorators": [
+            "staticmethod"
+          ]
+        },
+        {
+          "name": "_request_obj",
+          "definition_line": 362,
+          "first_line": 362,
+          "last_line": 389,
+          "node_type": "FunctionDef",
+          "source_bytes_sha256": "25229c638be9dae88e7a28baec7943707de1f6ce5ed61747c9b0ccb9ddeb8bab",
+          "ast_sha256": "f663b2fca0183290ca0caab3631a798823774ad826534541feace8321e15ecde",
+          "decorators": []
+        }
+      ]
+    }
+  ],
+  "python": {
+    "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+    "version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "isolated": 1,
+    "no_site": 1,
+    "dont_write_bytecode": 1
+  },
+  "boundaries": [
+    "Complete original fresh/is_fresh/cached and selected synchronous TMDb methods; original decorators retained.",
+    "Original module imports, TMDb constructor/init_session, RequestUtils and requests are not executed.",
+    "Original ContextVar and stdlib inspect/wraps/deepcopy execute; async cached body retained but not exercised.",
+    "No installed cachetools found in recorded scoped static search: recording Cache factory/hashkey ports only.",
+    "Recording backend has NO TTL/LRU/storage/Redis/concurrency fidelity; key token is NOT cachetools precise encoding.",
+    "Recording hashkey arguments show original signature order/self exclusion/**kwargs including local-day _ts.",
+    "Response read/json/session-init and local datetime.now are explicit owned input ports, not provider/HTTP evidence.",
+    "Original reset_owned_session close/guard and request retry decision execute against recording session lifecycle.",
+    "No rate-limit wait/reentry, POST, native Go, full App or normal CLI/provider network acceptance.",
+    "CONF normal-mode values 256 and 86400 are fixed inputs; no real timer or nondefault config mapping claim.",
+    "No source12/SDK2/selector/catalog3 rerun; this evidence is only new synchronous cache/response component."
+  ],
+  "forbidden_imports_absent": true,
+  "input_drift": []
+}

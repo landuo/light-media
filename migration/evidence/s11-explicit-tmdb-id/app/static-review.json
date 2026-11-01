@@ -1,0 +1,44 @@
+{
+  "decision": "EXACT_DELTA_STATIC_READY_FOR_INTEGRATION_NOT_STANDALONE_RUNTIME_READY",
+  "reviewed_utc": "2026-11-01T01:29:26.438278+00:00",
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-id-app/candidate04.json",
+    "bytes": 1743,
+    "sha256": "d9377abbb0cb62fb5d348d650e31416fb0a6a8df1cd70b9d96d0ddf9fdc0ab12"
+  },
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-id-app/plugin_shared_media_recognition.go.txt",
+      "bytes": 11951,
+      "sha256": "3e27765135491cb5feff1ccd08d682b8237032393992158ab31d54b35318f907"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-id-app/plugin_shared_media_recognition_test.go.txt",
+      "bytes": 8657,
+      "sha256": "aed6523612b3928750623985c6fb1d8aec52aa117907756e85125533ebdb21b9"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-id-app/resources.patch",
+      "bytes": 3739,
+      "sha256": "bfe2ef2899627570deef2cbdce2d490f34597b411df89bc294b9ae7670eed34e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-id-app/candidate04.patch",
+      "bytes": 1273,
+      "sha256": "0358bd0b71dd1ac4361127e3c3c313065c2b68195b52d8ba54415954f323ee43"
+    }
+  ],
+  "prior_delta_review": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-id-app-independent/CANDIDATE03-DELTA-REVIEW.md",
+    "bytes": 1975,
+    "sha256": "97b7f89cad94102f6b2fb50a467c557743add4e06611f81cb62b9bfed6d8b2ee"
+  },
+  "exact_delta_verified": true,
+  "findings": [
+    "This route has already rejected nonnull meta/share_meta. The existing normalizer returns an interface containing a nil map; explicit kwargs[meta]=nil restores the actual source None for direct native tests without changing wire null.",
+    "Test retains JSONnull assertion and additionally checks the Go interface is nil; both unchanged roots remain component tests.",
+    "Only three comment/assignment lines and one assertion changed; resources patch, numeric fix and error seam unchanged.",
+    "Native final type/method and overall integration runtime acceptance remain separately pending; no Go or source execution here."
+  ],
+  "blocking_findings": []
+}

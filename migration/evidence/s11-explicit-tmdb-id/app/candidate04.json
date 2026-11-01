@@ -1,0 +1,38 @@
+{
+  "stage": "candidate04-external-prepared-not-executed",
+  "prior": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-id-app/candidate03.json",
+    "bytes": 2321,
+    "sha256": "1b4bc0656f217075146789e1aa89adf3b611a607c4b9132d59f9fce03f9519dd"
+  },
+  "reason": "exact no-meta route normalizes typed-nil map to nil interface; old helper unchanged",
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-id-app/plugin_shared_media_recognition.go.txt",
+      "bytes": 11951,
+      "sha256": "3e27765135491cb5feff1ccd08d682b8237032393992158ab31d54b35318f907"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-id-app/plugin_shared_media_recognition_test.go.txt",
+      "bytes": 8657,
+      "sha256": "aed6523612b3928750623985c6fb1d8aec52aa117907756e85125533ebdb21b9"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-id-app/resources.patch",
+      "bytes": 3739,
+      "sha256": "bfe2ef2899627570deef2cbdce2d490f34597b411df89bc294b9ae7670eed34e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-id-app/candidate04.patch",
+      "bytes": 1273,
+      "sha256": "0358bd0b71dd1ac4361127e3c3c313065c2b68195b52d8ba54415954f323ee43"
+    }
+  ],
+  "roots": [
+    "TestOriginalMediaRecognitionWireNormalization",
+    "TestOriginalMediaRecognitionAdmissionAndFresh"
+  ],
+  "native_status": "fixed method and direct error type now exist in separate external native checkpoint02; not integrated or runtime-ready",
+  "no_product_changes": true,
+  "no_execution": true
+}

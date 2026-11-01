@@ -1,0 +1,7 @@
+# S11 worker02 — delta and actual unit ACCEPT
+
+Candidate02 adds only fixed `native_tv` / `native_unknown` routes at existing ID900045, with TV / JSON null type. Null means the source unknown-type selector input, not the enum UNKNOWN. The module still declines those routes with null; existing non-native identities remain movie-only. The old test is an exact unchanged prefix. No new network, credentials, endpoint or protocol behavior is introduced.
+
+Actual normal and race each pass the two named roots, including three native/type subcases, with no skip/failure/race warning. Session90789, initial66f81e, terminale2a753 exit0. Normal 1,935 inputs / program e1ce7e44… ended01:38:10.030229; race1,972 / cffa437a… ended01:38:12.303009 UTC. Three-phase closures, current file hashes, programs and retained generated inputs all match. The old/current closure deltas are recorded; oldworker01 is not relabeled current zero drift.
+
+The new root supplies a recording HostCaller returning `{value:null}` and checks fixed SDK arguments, one callback and direct module decline. It does **not** prove native/provider/HTTP/cache execution or real concurrent protocol negotiation. Existing ordinary CLI driver bytes remain8d860b9f…, and its allowed operations are unchanged; its old prepared worker source hash is now superseded. Current worker and final normal server must be built and explicitly rebound before any CLI execution. No rerun or product modification by this reviewer.

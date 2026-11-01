@@ -1,0 +1,326 @@
+{
+  "at": "2026-11-01T01:56:18.310841+00:00",
+  "status": "observed terminal gates only; ordinary CLI notrun atthis snapshot",
+  "source_oracle_boundary": "actualoriginal selected four ID methods/12cases and32cache/requestnodes/10scenarios; recordingports notfullApp/provider/cachebackend",
+  "rows": [
+    {
+      "label": "s11-id-sdk01",
+      "result_sha256": "678a44000ca96a5c34b422db727579b8bda916efe13c957bc05ea7c1a7b8daba",
+      "status": "FAIL",
+      "started": "2026-11-01T01:15:30.613764+00:00",
+      "ended": "2026-11-01T01:15:31.062843+00:00",
+      "program_sha256": null,
+      "fixture_sha256": null,
+      "input_count": 1937,
+      "root_passes": [],
+      "compile_only": false,
+      "error": "compile exited 1"
+    },
+    {
+      "label": "s11-id-sdk-race01",
+      "result_sha256": "d38b3e81808e7f6e3996de346ea0658a04ebc52790e54b353baf40f575840525",
+      "status": "FAIL",
+      "started": "2026-11-01T01:15:31.103996+00:00",
+      "ended": "2026-11-01T01:15:31.602926+00:00",
+      "program_sha256": null,
+      "fixture_sha256": null,
+      "input_count": 1974,
+      "root_passes": [],
+      "compile_only": false,
+      "error": "compile exited 1"
+    },
+    {
+      "label": "s11-id-sdk02",
+      "result_sha256": "e36b8c7acafa15a9278e903023dd9cb9e061aa040634eb7146ee8945b6430acf",
+      "status": "PASS",
+      "started": "2026-11-01T01:16:23.636235+00:00",
+      "ended": "2026-11-01T01:16:26.434329+00:00",
+      "program_sha256": "5e4b2e0a3677382b559582b1ed7c0da0b95ccbc916ec9d1d0ede04b81fb0bae7",
+      "fixture_sha256": null,
+      "input_count": 1937,
+      "root_passes": [
+        "TestSharedMediaRecognitionWireAndOwnership",
+        "TestSharedMediaRecognitionStrictBoundaryAndNoReplay"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-sdk-race02",
+      "result_sha256": "1f2ec3a225d3b4a2c0cd827716db09d1112a9477b9a7bca5761be3bf4f530e78",
+      "status": "PASS",
+      "started": "2026-11-01T01:16:26.476901+00:00",
+      "ended": "2026-11-01T01:16:31.370412+00:00",
+      "program_sha256": "f41a53b6a6eaa4990a59bc75d78d4870ef95ffd8b1080cf2f77a0640bcd6557e",
+      "fixture_sha256": null,
+      "input_count": 1974,
+      "root_passes": [
+        "TestSharedMediaRecognitionWireAndOwnership",
+        "TestSharedMediaRecognitionStrictBoundaryAndNoReplay"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-catalog01",
+      "result_sha256": "e870d5b61086977247300e8a541f5bebd1a6374669b498ba4feb62dc2a842e10",
+      "status": "PASS",
+      "started": "2026-11-01T01:17:46.868400+00:00",
+      "ended": "2026-11-01T01:17:48.605343+00:00",
+      "program_sha256": "ec3a82d0db168943b2bcbc0a0c0368193884474804a25de5ab78945a1315bf95",
+      "fixture_sha256": null,
+      "input_count": 2283,
+      "root_passes": [
+        "TestSourceRecognitionDetailRawBeforeCompact",
+        "TestSourceRecognitionDetailFiniteErrors"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-catalog-race01",
+      "result_sha256": "a6789489255ce97c5f54003332b20c09a16527d6b34b358f5713a91211021033",
+      "status": "PASS",
+      "started": "2026-11-01T01:18:24.399905+00:00",
+      "ended": "2026-11-01T01:18:27.754224+00:00",
+      "program_sha256": "f37024124589d4e594f803d9581a7ec11899f6c0d26799370d692bf339845f22",
+      "fixture_sha256": null,
+      "input_count": 2291,
+      "root_passes": [
+        "TestSourceRecognitionDetailRawBeforeCompact",
+        "TestSourceRecognitionDetailFiniteErrors"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-selector01",
+      "result_sha256": "90b4c65e7f8f3da27f45878729327d305070cc998f0faee878e112eca852a9a1",
+      "status": "PASS",
+      "started": "2026-11-01T01:17:48.649117+00:00",
+      "ended": "2026-11-01T01:18:24.342395+00:00",
+      "program_sha256": "7c5a838b55dad72fb6ce5ba4e424645dd8063f3402ed2fb8fecfaacd6fba56c8",
+      "fixture_sha256": null,
+      "input_count": 6250,
+      "root_passes": [
+        "TestOriginalRecognitionIDActualSource"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-selector-race01",
+      "result_sha256": "bba81844f6a855f34dfa4ac0ce5817110bf5e047fde3ae8ab422b56a5185640f",
+      "status": "PASS",
+      "started": "2026-11-01T01:18:27.799061+00:00",
+      "ended": "2026-11-01T01:19:17.686291+00:00",
+      "program_sha256": "dea50eb11e9d4d4424835891fea72e1279ae55e17380c70f0c1885137b3dd8d1",
+      "fixture_sha256": null,
+      "input_count": 6259,
+      "root_passes": [
+        "TestOriginalRecognitionIDActualSource"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-worker01",
+      "result_sha256": "aae3750d2cf37ef965903c7a9799fefca4bfdef55fa3da65ec43bb209744ebcf",
+      "status": "PASS",
+      "started": "2026-11-01T01:23:10.553592+00:00",
+      "ended": "2026-11-01T01:23:11.467058+00:00",
+      "program_sha256": "4129e1ee3c8ee7ba807d310f528261ea3a88bfb3b70f66d99dbfe1ab48dcf2bb",
+      "fixture_sha256": null,
+      "input_count": 1935,
+      "root_passes": [
+        "TestOwnedMediaRecognitionFixtureManifestAndReentry"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-worker-race01",
+      "result_sha256": "bc18b9a6b54fadeb85892513c34a2e4914c6d9a7510c36212d96f4e4a8be6e16",
+      "status": "PASS",
+      "started": "2026-11-01T01:23:11.510318+00:00",
+      "ended": "2026-11-01T01:23:13.750771+00:00",
+      "program_sha256": "ab8f0d8e80d4dcb3f98d27441df96fa520e6218fd71633023f4e5cf051baf9f6",
+      "fixture_sha256": null,
+      "input_count": 1972,
+      "root_passes": [
+        "TestOwnedMediaRecognitionFixtureManifestAndReentry"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-worker02",
+      "result_sha256": "bffbfecf9d6305ee9f203aa73498413f5a8e5b0664bde28e1cf5570e6066e2da",
+      "status": "PASS",
+      "started": "2026-11-01T01:38:09.158918+00:00",
+      "ended": "2026-11-01T01:38:10.030229+00:00",
+      "program_sha256": "e1ce7e443170e848d81b2e14d917612f3b4a9546f22d32869618c2e1a0fdb177",
+      "fixture_sha256": null,
+      "input_count": 1935,
+      "root_passes": [
+        "TestOwnedMediaRecognitionFixtureManifestAndReentry",
+        "TestOwnedMediaRecognitionFixtureNativeTypeRoutes"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-worker-race02",
+      "result_sha256": "c9a6969d4367b0c24a4178d750e3aef8c48497ad804a3fba3c52b189a2cee98c",
+      "status": "PASS",
+      "started": "2026-11-01T01:38:10.073414+00:00",
+      "ended": "2026-11-01T01:38:12.303009+00:00",
+      "program_sha256": "cffa437a3ad814be27776de0e119486b2ff576b36ce1c04a40c3d1fcd902f12f",
+      "fixture_sha256": null,
+      "input_count": 1972,
+      "root_passes": [
+        "TestOwnedMediaRecognitionFixtureManifestAndReentry",
+        "TestOwnedMediaRecognitionFixtureNativeTypeRoutes"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-native-catalog05",
+      "result_sha256": "3dd46f1a173787b2ed9948a618a94f7aac477484a8b02545264380318e30e0bb",
+      "status": "PASS",
+      "started": "2026-11-01T01:44:51.700455+00:00",
+      "ended": "2026-11-01T01:44:53.454587+00:00",
+      "program_sha256": "2066e25fbab00908a25d482f2087a354285189b526b992bcbf572a38c0612ebc",
+      "fixture_sha256": null,
+      "input_count": 2288,
+      "root_passes": [
+        "TestConfiguredTokenNeverSentAsQuery",
+        "TestRedirectNeverForwardsCredentials",
+        "TestTransportErrorDoesNotExposeRequestOrCause",
+        "TestSourceRecognitionOwnedRetryAndPrivateTLS",
+        "TestSourceRecognitionSnapshotErrorsAndGuard"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-native-app05",
+      "result_sha256": "302ad77d33512f86356cb37f7bc3bb0d3b4af0b9edae5bab0680451019c4a832",
+      "status": "PASS",
+      "started": "2026-11-01T01:44:53.494977+00:00",
+      "ended": "2026-11-01T01:45:23.264943+00:00",
+      "program_sha256": "e95f691df2fc0ac56cecb24275e85b4270e966a44d097aefd2935c7bbc7f4d57",
+      "fixture_sha256": null,
+      "input_count": 6262,
+      "root_passes": [
+        "TestPluginNoticeV2TMDBMediaInfoOriginalAST",
+        "TestOriginalMediaRecognitionWireNormalization",
+        "TestOriginalMediaRecognitionAdmissionAndFresh",
+        "TestOriginalRecognitionSnapshotCacheFreshAndIsolation",
+        "TestOriginalRecognitionNativeModelAndGroupBoundaries"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-native-catalog-race05",
+      "result_sha256": "53a9bc7712cdc0f76513037c40cd963c819f63b44ff52c479b9ab6ca1aeed98a",
+      "status": "PASS",
+      "started": "2026-11-01T01:51:04.771161+00:00",
+      "ended": "2026-11-01T01:51:08.199523+00:00",
+      "program_sha256": "bdfa179a78cab8c9cb4a9bbc33620286178541fa5726a4facbd38a62d07a7b01",
+      "fixture_sha256": null,
+      "input_count": 2296,
+      "root_passes": [
+        "TestConfiguredTokenNeverSentAsQuery",
+        "TestRedirectNeverForwardsCredentials",
+        "TestTransportErrorDoesNotExposeRequestOrCause",
+        "TestSourceRecognitionOwnedRetryAndPrivateTLS",
+        "TestSourceRecognitionSnapshotErrorsAndGuard"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-owned-app01",
+      "result_sha256": "8b2ba63ddc3f633599e1671dd54c87cf3dd3801c66c59022d42563ae2fb11dfd",
+      "status": "FAIL",
+      "started": "2026-11-01T01:47:39.264524+00:00",
+      "ended": "2026-11-01T01:47:42.304428+00:00",
+      "program_sha256": null,
+      "fixture_sha256": "3ed8554e1e5331bae945574602dc714c1a267edfa46ddcc17b5cee1ec16e87d3",
+      "input_count": 6266,
+      "root_passes": [],
+      "compile_only": false,
+      "error": "compile exited 1"
+    },
+    {
+      "label": "s11-id-owned-app02",
+      "result_sha256": "40fa9f47af104032078c96e444695ca3ba6277be98a8fee9401ad78b5da94be8",
+      "status": "PASS",
+      "started": "2026-11-01T01:52:28.695370+00:00",
+      "ended": "2026-11-01T01:52:59.547084+00:00",
+      "program_sha256": "e663941f600b64f38004ff1284fb3b8e102594633eb67299f05dff8cf4849550",
+      "fixture_sha256": "3ed8554e1e5331bae945574602dc714c1a267edfa46ddcc17b5cee1ec16e87d3",
+      "input_count": 6266,
+      "root_passes": [
+        "TestPluginNoticeV2TMDBMediaInfoOriginalAST",
+        "TestOriginalMediaRecognitionOwnedWorkerProviderAndCold",
+        "TestOriginalMediaRecognitionWireNormalization",
+        "TestOriginalMediaRecognitionAdmissionAndFresh",
+        "TestOriginalRecognitionSnapshotCacheFreshAndIsolation",
+        "TestOriginalRecognitionNativeModelAndGroupBoundaries"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-owned-app-race02",
+      "result_sha256": "b4a4643e441c00db19243359dcce639d2d17d6e1e3741b8ec30713745b396c4c",
+      "status": "PASS",
+      "started": "2026-11-01T01:53:24.301106+00:00",
+      "ended": "2026-11-01T01:54:13.033784+00:00",
+      "program_sha256": "c0739d479ebb2bf5918006ad1d49f5654310fd3cc2120097c06b27c4da728d44",
+      "fixture_sha256": "3ee0860cc30391390e8c250f601021698c7b0d130c267dedcbc48da7977b847b",
+      "input_count": 6275,
+      "root_passes": [
+        "TestPluginNoticeV2TMDBMediaInfoOriginalAST",
+        "TestOriginalMediaRecognitionOwnedWorkerProviderAndCold",
+        "TestOriginalMediaRecognitionWireNormalization",
+        "TestOriginalMediaRecognitionAdmissionAndFresh",
+        "TestOriginalRecognitionSnapshotCacheFreshAndIsolation",
+        "TestOriginalRecognitionNativeModelAndGroupBoundaries"
+      ],
+      "compile_only": false,
+      "error": null
+    },
+    {
+      "label": "s11-id-server01",
+      "result_sha256": "efb3f12dbebcb31732f209a5ccdf10747c8813976ca9d0d0bab559c48bd3801d",
+      "status": "PASS",
+      "started": "2026-11-01T01:54:34.713418+00:00",
+      "ended": "2026-11-01T01:54:44.710415+00:00",
+      "program_sha256": "c2054b4627da3962502d49ae0ecc365210a83efa794735e1c2f886d74e37a371",
+      "fixture_sha256": null,
+      "input_count": 3995,
+      "root_passes": [],
+      "compile_only": true,
+      "error": null
+    },
+    {
+      "label": "s11-id-fixture01",
+      "result_sha256": "39497dc1bdbb9fdb8790c7a0a9d57e9d9a8c4624bbbc22118d8ed19e21a61150",
+      "status": "PASS",
+      "started": "2026-11-01T01:54:44.749094+00:00",
+      "ended": "2026-11-01T01:54:45.144456+00:00",
+      "program_sha256": "3ed8554e1e5331bae945574602dc714c1a267edfa46ddcc17b5cee1ec16e87d3",
+      "fixture_sha256": null,
+      "input_count": 1090,
+      "root_passes": [],
+      "compile_only": true,
+      "error": null
+    }
+  ],
+  "layers": "SDK/selector/catalog recording; nativecatalog newownedTLS; finalApp6 includesHandler installedworker+ownedHTTP notnormalserver/productionTMDB; compilefail rootszero preserved; earlier worker01 supersededby02"
+}

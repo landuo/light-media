@@ -37,6 +37,7 @@ var (
 type Client struct {
 	credentials Credentials
 	http        *http.Client
+	recognition sourceRecognitionSession
 	configError *Error
 	interval    time.Duration
 	inflight    chan struct{}
@@ -63,12 +64,18 @@ func NewWithProxy(credentials Credentials, config networkproxy.Config) *Client {
 		c.configError = &Error{Code: "invalid_input"}
 		return c
 	}
-	return newClient(credentials, transport, 250*time.Millisecond)
+	c := newClient(credentials, transport, 250*time.Millisecond)
+	// Rebuild only the new recognition session with the same immutable proxy configuration and recognition-only approved TLS policy.
+	c.recognition.factory = func() (http.RoundTripper, error) {
+		return networkproxy.Apply(sourceRecognitionTLSClone(nil), config.HTTPS)
+	}
+	return c
 }
 
 func (c *Client) CloseIdleConnections() {
 	if c != nil && c.http != nil {
 		c.http.CloseIdleConnections()
+		c.recognition.closeIdle()
 	}
 }
 
@@ -76,6 +83,8 @@ func (c *Client) CloseIdleConnections() {
 // callers cannot configure another origin or disable TLS verification.
 func newClient(credentials Credentials, transport http.RoundTripper, interval time.Duration) *Client {
 	c := &Client{credentials: credentials, interval: interval, inflight: make(chan struct{}, 4)}
+	c.recognition.configure(transport)
+	c.recognition.namespace = sourceRecognitionNamespace(credentials)
 	c.http = &http.Client{
 		Timeout:   requestLimit,
 		Transport: logging.Transport(transport),

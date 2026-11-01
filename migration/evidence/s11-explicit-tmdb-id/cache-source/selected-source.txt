@@ -1,0 +1,565 @@
+### app/core/cache.py::module._fresh 31-31
+_fresh = contextvars.ContextVar('fresh', default=False)
+
+### app/core/cache.py::module.fresh 1026-1039
+@contextmanager
+def fresh(fresh: bool = True):
+    """
+    是否获取新数据（不使用缓存的值）
+
+    Usage:
+    with fresh():
+        result = some_cached_function()
+    """
+    token = _fresh.set(fresh or is_fresh())
+    try:
+        yield
+    finally:
+        _fresh.reset(token)
+
+### app/core/cache.py::module.is_fresh 1056-1063
+def is_fresh() -> bool:
+    """
+    是否获取新数据
+    """
+    try:
+        return _fresh.get()
+    except LookupError:
+        return False
+
+### app/core/cache.py::module.cached 1125-1341
+def cached(region: Optional[str] = None, maxsize: Optional[int] = 1024, ttl: Optional[int] = None,
+           skip_none: Optional[bool] = True, skip_empty: Optional[bool] = False, shared_key: Optional[str] = None):
+    """
+    自定义缓存装饰器，支持配置缓存区域的 maxsize 和每个 key 的 ttl
+
+    :param region: 缓存区域的标识符，默认根据模块名、函数名等自动生成标识
+    :param maxsize: 缓存区内的最大条目数
+    :param ttl: 缓存的存活时间，单位秒；未传入时使用 LRU 缓存
+    :param skip_none: 跳过 None 缓存，默认为 True
+    :param skip_empty: 跳过空值缓存（如 None, [], {}, "", set()），默认为 False
+    :param shared_key: 同步/异步函数共享缓存的键，默认使用函数名（异步函数名会标准化为同步格式，如移除 `async_` 前缀）
+    :return: 装饰器函数
+    """
+
+    def decorator(func):
+        # 函数签名在装饰后不会变化，预计算可避免每次缓存访问都重复反射。
+        signature = inspect.signature(func)
+        parameter_names = list(signature.parameters.keys())
+        cache_parameter_names = (
+            parameter_names[1:]
+            if parameter_names and parameter_names[0] in ("self", "cls")
+            else parameter_names
+        )
+
+        def should_cache(value: Any) -> bool:
+            """
+            判断是否应该缓存结果，如果返回值是 None 或空值则不缓存
+
+            :param value: 要判断的缓存值
+            :return: 是否缓存结果
+            """
+            if skip_none and value is None:
+                return False
+            # if skip_empty and value in [None, [], {}, "", set()]:
+            if skip_empty and not value:
+                return False
+            return True
+
+        def is_valid_cache_value(_cache_key: str, _cached_value: Any, _cache_region: str) -> bool:
+            """
+            判断指定的值是否为一个有效的缓存值
+
+            :param _cache_key: 缓存的键
+            :param _cached_value: 缓存的值
+            :param _cache_region: 缓存的区
+            :return: 若值是有效的缓存值返回 True，否则返回 False
+            """
+            # 如果 skip_none 为 False，且 value 为 None，需要判断缓存实际是否存在
+            if not skip_none and _cached_value is None:
+                if not cache_backend.exists(key=_cache_key, region=_cache_region):
+                    return False
+            return True
+
+        async def async_is_valid_cache_value(_cache_key: str, _cached_value: Any, _cache_region: str) -> bool:
+            """
+            判断指定的值是否为一个有效的缓存值（异步版本）
+
+            :param _cache_key: 缓存的键
+            :param _cached_value: 缓存的值
+            :param _cache_region: 缓存的区
+            :return: 若值是有效的缓存值返回 True，否则返回 False
+            """
+            # 如果 skip_none 为 False，且 value 为 None，需要判断缓存实际是否存在
+            if not skip_none and _cached_value is None:
+                if not await cache_backend.exists(key=_cache_key, region=_cache_region):
+                    return False
+            return True
+
+        def __standardize_func_name() -> str:
+            """
+            将异步函数名标准化为同步函数的命名，以生成统一的缓存键
+            """
+            # XXX 假设异步函数名与同步版本仅差`async_`前缀或`_async`后缀（当前MP代码大多符合），否则需通过`shared_key`参数显式指定
+            return (
+                func.__name__.removeprefix("async_").removesuffix("_async")
+                if is_async
+                else func.__name__
+            )
+
+        def __get_cache_key(args, kwargs) -> str:
+            """
+            根据函数和参数生成缓存键
+
+            :param args: 位置参数
+            :param kwargs: 关键字参数
+            :return: 缓存键
+            """
+            # 绑定传入的参数并应用默认值
+            bound = signature.bind(*args, **kwargs)
+            bound.apply_defaults()
+            # 按照函数签名顺序提取参数值列表
+            keys = [
+                bound.arguments[param] for param in cache_parameter_names if param in bound.arguments
+            ]
+            # 使用有序参数生成缓存键
+            return f"{func_name}_{hashkey(*keys)}"
+
+        # 被装饰函数的上层名称（如类名或外层函数名）
+        enclosing_name = (
+            func.__qualname__[:last_dot]
+            if (last_dot := func.__qualname__.rfind(".")) != -1
+            else ""
+        )
+        # 检查是否为异步函数
+        is_async = inspect.iscoroutinefunction(func)
+        # 生成标准化后的函数名称，用于同步/异步函数共享缓存
+        func_name = shared_key if shared_key else __standardize_func_name()
+        # 获取缓存区
+        cache_region = (
+            region if region is not None else f"{func.__module__}:{enclosing_name}:{func_name}"
+        )
+
+        if is_async:
+            # 异步函数使用异步缓存后端
+            cache_backend = AsyncCache(cache_type="ttl" if ttl is not None else "lru", maxsize=maxsize, ttl=ttl)
+            # 异步函数的缓存装饰器
+            @wraps(func)
+            async def async_wrapper(*args, **kwargs):
+                # 获取缓存键
+                cache_key = __get_cache_key(args, kwargs)
+
+                if not is_fresh():
+                    # 尝试获取缓存
+                    cached_value = await cache_backend.get(cache_key, region=cache_region)
+                    if should_cache(cached_value) and await async_is_valid_cache_value(cache_key, cached_value,
+                                                                                    cache_region):
+                        return cached_value
+                # 执行异步函数并缓存结果
+                result = await func(*args, **kwargs)
+                # 判断是否需要缓存
+                if not should_cache(result):
+                    return result
+                # 设置缓存（如果有传入的 maxsize 和 ttl，则覆盖默认值）
+                await cache_backend.set(cache_key, result, ttl=ttl, maxsize=maxsize, region=cache_region)
+                return result
+
+            async def cache_clear():
+                """
+                清理缓存区
+                """
+                await cache_backend.clear(region=cache_region)
+
+            async def cache_exists(*args, **kwargs) -> bool:
+                """
+                判断当前参数对应的有效缓存是否存在。
+                """
+                cache_key = __get_cache_key(args, kwargs)
+                cached_value = await cache_backend.get(cache_key, region=cache_region)
+                return should_cache(cached_value) and await async_is_valid_cache_value(
+                    cache_key, cached_value, cache_region
+                )
+
+            async def cache_delete(*args, **kwargs) -> None:
+                """
+                删除当前参数对应的缓存。
+                """
+                cache_key = __get_cache_key(args, kwargs)
+                await cache_backend.delete(cache_key, region=cache_region)
+
+            async_wrapper.cache_region = cache_region
+            async_wrapper.cache_clear = cache_clear
+            async_wrapper.cache_exists = cache_exists
+            async_wrapper.cache_delete = cache_delete
+            return async_wrapper
+        else:
+            # 同步函数使用同步缓存后端
+            cache_backend = Cache(cache_type="ttl" if ttl is not None else "lru", maxsize=maxsize, ttl=ttl)
+            # 同步函数的缓存装饰器
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                # 获取缓存键
+                cache_key = __get_cache_key(args, kwargs)
+
+                if not is_fresh():
+                    # 尝试获取缓存
+                    cached_value = cache_backend.get(cache_key, region=cache_region)
+                    if should_cache(cached_value) and is_valid_cache_value(cache_key, cached_value, cache_region):
+                        return cached_value
+                # 执行函数并缓存结果
+                result = func(*args, **kwargs)
+                # 判断是否需要缓存
+                if not should_cache(result):
+                    return result
+                # 设置缓存（如果有传入的 maxsize 和 ttl，则覆盖默认值）
+                cache_backend.set(cache_key, result, ttl=ttl, maxsize=maxsize, region=cache_region)
+                return result
+
+            def cache_clear():
+                """
+                清理缓存区
+                """
+                cache_backend.clear(region=cache_region)
+
+            def cache_exists(*args, **kwargs) -> bool:
+                """
+                判断当前参数对应的有效缓存是否存在。
+                """
+                cache_key = __get_cache_key(args, kwargs)
+                cached_value = cache_backend.get(cache_key, region=cache_region)
+                return should_cache(cached_value) and is_valid_cache_value(
+                    cache_key, cached_value, cache_region
+                )
+
+            def cache_delete(*args, **kwargs) -> None:
+                """
+                删除当前参数对应的缓存。
+                """
+                cache_key = __get_cache_key(args, kwargs)
+                cache_backend.delete(cache_key, region=cache_region)
+
+            wrapper.cache_region = cache_region
+            wrapper.cache_clear = cache_clear
+            wrapper.cache_exists = cache_exists
+            wrapper.cache_delete = cache_delete
+            return wrapper
+
+    return decorator
+
+### app/modules/themoviedb/tmdbv3api/exceptions.py::module.TMDbException 1-2
+class TMDbException(Exception):
+    pass
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._RESPONSE_SNAPSHOT_MARKER 21-21
+    _RESPONSE_SNAPSHOT_MARKER = "__mp_tmdb_response_snapshot__"
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._reset_owned_session 60-71
+    def _reset_owned_session(self):
+        """
+        重建当前实例自持有的同步请求会话。
+        """
+        if not self._owns_session:
+            return
+        if self._session:
+            try:
+                self._session.close()
+            except Exception as err:
+                logger.debug(f"关闭TMDB同步会话失败：{err!r}")
+        self._init_session()
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb.api_key 85-87
+    @property
+    def api_key(self):
+        return self._api_key
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb.domain 89-91
+    @property
+    def domain(self):
+        return self._domain
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb.api_key 101-103
+    @api_key.setter
+    def api_key(self, api_key):
+        self._api_key = str(api_key)
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb.domain 105-107
+    @domain.setter
+    def domain(self, domain):
+        self._domain = str(domain)
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb.language 109-111
+    @property
+    def language(self):
+        return self._language
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb.language 113-115
+    @language.setter
+    def language(self, language):
+        self._language = language
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb.wait_on_rate_limit 131-133
+    @property
+    def wait_on_rate_limit(self):
+        return self._wait_on_rate_limit
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb.wait_on_rate_limit 135-137
+    @wait_on_rate_limit.setter
+    def wait_on_rate_limit(self, wait_on_rate_limit):
+        self._wait_on_rate_limit = bool(wait_on_rate_limit)
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb.request 139-148
+    @cached(maxsize=settings.CONF.tmdb, ttl=settings.CONF.meta, skip_none=True)
+    def request(self, method, url, data, json, **kwargs):
+        req = self._request_once(method, url, data, json)
+        if req is None and method == "GET" and self._owns_session:
+            logger.debug("TMDB同步请求失败，重建会话后重试一次")
+            self._reset_owned_session()
+            req = self._request_once(method, url, data, json)
+        if req is None:
+            raise TMDbException("无法连接TheMovieDb，请检查网络连接！")
+        return self._snapshot_response(req)
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._request_once 150-156
+    def _request_once(self, method, url, data, json):
+        """
+        执行一次TMDB同步请求，调用方负责决定是否重建会话后重试。
+        """
+        if method == "GET":
+            return self._req.get_res(url, params=data, json=json)
+        return self._req.post_res(url, data=data, json=json)
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._snapshot_response 168-180
+    @classmethod
+    def _snapshot_response(cls, response):
+        """
+        生成可缓存的响应快照，并在入缓存前拦截明显异常的TMDB响应结构。
+        """
+        json_data = cls._decode_response_json(response)
+        cls._validate_json_response(json_data)
+        # Redis 不能稳定序列化 requests/httpx 响应对象，缓存里只保留当前流程会用到的数据。
+        return {
+            cls._RESPONSE_SNAPSHOT_MARKER: True,
+            "headers": dict(response.headers.items()),
+            "json": json_data,
+        }
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._get_response_headers 182-186
+    @classmethod
+    def _get_response_headers(cls, response):
+        if isinstance(response, dict) and response.get(cls._RESPONSE_SNAPSHOT_MARKER):
+            return response.get("headers") or {}
+        return response.headers
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._get_response_json 188-193
+    @classmethod
+    def _get_response_json(cls, response):
+        if isinstance(response, dict) and response.get(cls._RESPONSE_SNAPSHOT_MARKER):
+            # 调用方会补充 media_type 等字段，缓存快照必须隔离这些原地修改。
+            return deepcopy(response.get("json"))
+        return cls._decode_response_json(response)
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._decode_response_json 195-203
+    @classmethod
+    def _decode_response_json(cls, response):
+        """
+        解析TMDB响应JSON，并把空响应、代理错误页或错误编码的响应统一转换为TMDB异常。
+        """
+        try:
+            return response.json()
+        except (ValueError, UnicodeDecodeError) as err:
+            raise TMDbException(cls._build_invalid_json_message(response, err)) from err
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._get_header_value 205-224
+    @staticmethod
+    def _get_header_value(headers, name):
+        """
+        从不同响应头对象中按大小写兼容读取指定响应头。
+        """
+        try:
+            value = headers.get(name)
+        except AttributeError:
+            return None
+        if value is not None:
+            return value
+
+        lower_name = name.lower()
+        try:
+            for header_name, header_value in headers.items():
+                if str(header_name).lower() == lower_name:
+                    return header_value
+        except AttributeError:
+            return None
+        return None
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._build_invalid_json_message 226-263
+    @classmethod
+    def _build_invalid_json_message(cls, response, parse_error: Exception = None):
+        """
+        生成非JSON响应的诊断信息，避免日志只保留JSONDecodeError文本。
+        """
+        status_code = getattr(response, "status_code", None)
+        headers = getattr(response, "headers", {}) or {}
+        content_type = cls._get_header_value(headers, "Content-Type")
+        is_encoding_error = isinstance(parse_error, UnicodeDecodeError)
+
+        # 编码错误或压缩字节时响应体是乱码，打印内容只会污染日志。
+        content_encoding = cls._get_header_value(headers, "Content-Encoding")
+        response_text = ""
+        if not is_encoding_error and not content_encoding:
+            try:
+                response_text = getattr(response, "text", "") or ""
+            except Exception as err:  # pragma: no cover - 防御异常响应对象
+                response_text = f"<读取响应内容失败：{err!r}>"
+            if not isinstance(response_text, str):
+                response_text = repr(response_text)
+            response_text = response_text.strip()
+            if len(response_text) > 200:
+                response_text = f"{response_text[:200]}..."
+
+        message_parts = ["TheMovieDb 返回数据不是有效JSON"]
+        if status_code is not None:
+            message_parts.append(f"HTTP状态码：{status_code}")
+        if content_type:
+            message_parts.append(f"Content-Type：{content_type}")
+        if content_encoding:
+            message_parts.append(f"Content-Encoding：{content_encoding}")
+        if is_encoding_error or content_encoding:
+            message_parts.append("响应内容编码异常，已省略原始内容")
+        elif response_text:
+            message_parts.append(f"响应内容：{response_text!r}")
+        else:
+            message_parts.append("响应内容为空")
+        return "，".join(message_parts)
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._validate_json_response 265-279
+    @staticmethod
+    def _validate_json_response(json_data):
+        """
+        校验TMDB响应JSON顶层结构，避免代理错误页等标量值继续按字典解析。
+        """
+        if isinstance(json_data, (dict, list)):
+            return
+
+        payload_preview = repr(json_data)
+        if len(payload_preview) > 200:
+            payload_preview = f"{payload_preview[:200]}..."
+        raise TMDbException(
+            "TheMovieDb 返回数据格式异常：期望JSON对象或数组，"
+            f"实际为{type(json_data).__name__}，内容：{payload_preview}"
+        )
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._get_json_key 281-291
+    @staticmethod
+    def _get_json_key(json_data, key):
+        """
+        从TMDB对象响应中读取指定字段，避免异常顶层结构触发AttributeError。
+        """
+        if not isinstance(json_data, dict):
+            raise TMDbException(
+                "TheMovieDb 返回数据格式异常："
+                f"期望JSON对象包含字段 {key!r}，实际为{type(json_data).__name__}"
+            )
+        return json_data.get(key)
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._validate_api_key 296-298
+    def _validate_api_key(self):
+        if self.api_key is None or self.api_key == "":
+            raise TMDbException("TheMovieDb API Key 未设置！")
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._build_url 300-307
+    def _build_url(self, action, params=""):
+        return "https://%s/3%s?api_key=%s&%s&language=%s" % (
+            self.domain,
+            action,
+            self.api_key,
+            params,
+            self.language,
+        )
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._handle_headers 309-318
+    def _handle_headers(self, headers):
+        normalized_headers = {
+            str(key).lower(): value for key, value in dict(headers or {}).items()
+        }
+
+        if "x-ratelimit-remaining" in normalized_headers:
+            self._remaining = int(normalized_headers["x-ratelimit-remaining"])
+
+        if "x-ratelimit-reset" in normalized_headers:
+            self._reset = int(normalized_headers["x-ratelimit-reset"])
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._handle_rate_limit 320-330
+    def _handle_rate_limit(self):
+        if self._remaining < 1:
+            current_time = int(time.time())
+            sleep_time = self._reset - current_time
+
+            if self.wait_on_rate_limit:
+                logger.warning("达到请求频率限制，休眠：%d 秒..." % sleep_time)
+                return abs(sleep_time)
+            else:
+                raise TMDbException("达到请求频率限制，请稍后再试！")
+        return 0
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._process_json_response 332-346
+    def _process_json_response(self, json_data, is_async=False):
+        """
+        从TMDB对象响应中记录分页信息；数组响应没有分页字段，直接跳过。
+        """
+        if not isinstance(json_data, dict):
+            return
+
+        if "page" in json_data:
+            self._page = json_data["page"]
+
+        if "total_results" in json_data:
+            self._total_results = json_data["total_results"]
+
+        if "total_pages" in json_data:
+            self._total_pages = json_data["total_pages"]
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._handle_errors 348-360
+    @staticmethod
+    def _handle_errors(json_data):
+        """
+        将TMDB标准错误字段转换为统一异常，非对象响应由结构校验提前处理。
+        """
+        if not isinstance(json_data, dict):
+            return
+
+        if "errors" in json_data:
+            raise TMDbException(json_data["errors"])
+
+        if "success" in json_data and json_data["success"] is False:
+            raise TMDbException(json_data["status_message"])
+
+### app/modules/themoviedb/tmdbv3api/tmdb.py::TMDb._request_obj 362-389
+    def _request_obj(self, action, params="", call_cached=True,
+                     method="GET", data=None, json=None, key=None):
+        self._validate_api_key()
+        url = self._build_url(action, params)
+
+        with fresh(not call_cached or method == "POST"):
+            req = self.request(method, url, data, json,
+                                      _ts=datetime.strftime(datetime.now(), '%Y%m%d'))
+
+        if req is None:
+            return None
+
+        self._handle_headers(self._get_response_headers(req))
+
+        rate_limit_result = self._handle_rate_limit()
+        if rate_limit_result:
+            logger.warning("达到请求频率限制，将在 %d 秒后重试..." % rate_limit_result)
+            time.sleep(rate_limit_result)
+            return self._request_obj(action, params, False, method, data, json, key)
+
+        json_data = self._get_response_json(req)
+        self._validate_json_response(json_data)
+        self._process_json_response(json_data, is_async=False)
+        self._handle_errors(json_data)
+
+        if key:
+            return self._get_json_key(json_data, key)
+        return json_data
+

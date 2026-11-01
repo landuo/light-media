@@ -1,0 +1,11 @@
+--- a/internal/plugins/shared_media_recognition_test.go
++++ b/internal/plugins/shared_media_recognition_test.go
+@@ -156,7 +156,7 @@
+ 	if out, err := oversize.RecognizeMedia(ctx, RecognizeMediaRequest{}); err == nil || out != nil || calls != before+1 {
+ 		t.Fatal("oversize response accepted/retried")
+ 	}
+-	sentinel := &ReplyError{Code: "invalid_invocation"}
++	sentinel := &Error{Code: "invalid_invocation"}
+ 	for _, hostErr := range []error{sentinel, errors.New("owned host error")} {
+ 		before := calls
+ 		failed := SharedMediaRecognition{Host: func(context.Context, string, json.RawMessage) (json.RawMessage, error) {

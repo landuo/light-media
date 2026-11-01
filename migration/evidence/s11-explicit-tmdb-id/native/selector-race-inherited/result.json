@@ -1,0 +1,86 @@
+{
+  "started": "2026-11-01T01:18:27.799061+00:00",
+  "driver_pid": 2,
+  "package": "./internal/app",
+  "pattern": "^TestOriginalRecognitionIDActualSource$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-selector-race01.test",
+        "-race",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-selector-race01.test",
+        "-test.v",
+        "-test.run",
+        "^TestOriginalRecognitionIDActualSource$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T01:18:27.799075+00:00",
+      "scratch_free": 46853865472,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T01:18:28.826901+00:00",
+      "scratch_free": 46850756608,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T01:19:15.905025+00:00",
+      "scratch_free": 46605524992,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 6259,
+  "program_sha256": "dea50eb11e9d4d4424835891fea72e1279ae55e17380c70f0c1885137b3dd8d1",
+  "root_passes": [
+    "TestOriginalRecognitionIDActualSource"
+  ],
+  "ended": "2026-11-01T01:19:17.686291+00:00"
+}

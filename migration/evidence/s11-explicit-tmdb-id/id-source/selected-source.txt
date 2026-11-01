@@ -1,0 +1,159 @@
+### app/schemas/types.py::MediaType.MediaType 6-20
+class MediaType(Enum):
+    MOVIE = '电影'
+    TV = '电视剧'
+    COLLECTION = '系列'
+    UNKNOWN = '未知'
+
+    @staticmethod
+    def from_agent(key: str) -> Optional["MediaType"]:
+        """'movie' -> MediaType.MOVIE, 'tv' -> MediaType.TV, 否则 None"""
+        _map = {"movie": MediaType.MOVIE, "tv": MediaType.TV}
+        return _map.get(key.strip().lower() if key else "")
+
+    def to_agent(self) -> str:
+        """MediaType.MOVIE -> 'movie', MediaType.TV -> 'tv', 其他返回 .value"""
+        return {MediaType.MOVIE: "movie", MediaType.TV: "tv"}.get(self, self.value)
+
+### app/modules/themoviedb/__init__.py::TheMovieDbModule._validate_recognize_params 94-118
+    @staticmethod
+    def _validate_recognize_params(
+        meta: MetaBase,
+        tmdbid: Optional[int],
+        source: Optional[str] = None,
+    ) -> bool:
+        """
+        验证识别参数
+
+        :param meta: 标题解析元数据
+        :param tmdbid: TMDB ID
+        :param source: 请求级识别数据源
+        :return: 参数是否可用于TMDB识别
+        """
+        if not tmdbid and not meta:
+            return False
+
+        if meta and not tmdbid and (source or settings.RECOGNIZE_SOURCE) != "themoviedb":
+            return False
+
+        if meta and not meta.name and not tmdbid:
+            logger.warn("识别媒体信息时未提供元数据名称")
+            return False
+
+        return True
+
+### app/modules/themoviedb/__init__.py::TheMovieDbModule._get_info_by_tmdbid 183-200
+    def _get_info_by_tmdbid(self, tmdbid: int, mtype: Optional[MediaType],
+                             meta: Optional[MetaBase]) -> Optional[dict]:
+        """
+        根据tmdbid查询媒体信息，当类型未知且同时存在电影和电视剧时，通过元数据消歧
+        """
+        if mtype:
+            return self.tmdb.get_info(mtype=mtype, tmdbid=tmdbid)
+        # 类型未知，分别查询电影和电视剧
+        info_tv = self.tmdb.get_info(mtype=MediaType.TV, tmdbid=tmdbid)
+        info_movie = self.tmdb.get_info(mtype=MediaType.MOVIE, tmdbid=tmdbid)
+        if info_tv and info_movie:
+            # 同时存在，尝试通过元数据消歧
+            result = self._disambiguate_by_meta(info_tv, info_movie, meta)
+            if result:
+                return result
+            logger.warn(f"无法判断tmdb_id:{tmdbid} 是电影还是电视剧")
+            return None
+        return info_tv or info_movie or None
+
+### app/modules/themoviedb/__init__.py::TheMovieDbModule._disambiguate_by_meta 221-273
+    @staticmethod
+    def _disambiguate_by_meta(info_tv: dict, info_movie: dict,
+                               meta: Optional[MetaBase]) -> Optional[dict]:
+        """
+        通过元数据（标题、年份、类型）对同tmdbid的电影和电视剧进行消歧
+        """
+        if not meta:
+            return None
+
+        def _collect_titles(info: dict) -> set:
+            titles = set()
+            for key in ('title', 'name', 'original_title', 'original_name'):
+                if info.get(key):
+                    titles.add(info[key])
+            for name in (info.get('names') or []):
+                titles.add(name)
+            return titles
+
+        def _match_score(info: dict) -> int:
+            score = 0
+            # 标题匹配
+            titles = _collect_titles(info)
+            meta_names = [n for n in [meta.cn_name, meta.en_name] if n]
+            for meta_name in meta_names:
+                if any(meta_name in t or t in meta_name for t in titles):
+                    score += 2
+                    break
+            # 年份匹配
+            if meta.year:
+                release_date = info.get('release_date') or info.get('first_air_date') or ''
+                if release_date and release_date[:4] == meta.year:
+                    score += 1
+            return score
+
+        score_tv = _match_score(info_tv)
+        score_movie = _match_score(info_movie)
+
+        if score_tv > score_movie:
+            logger.info(f"通过元数据消歧，tmdb_id:{info_tv.get('id')} 识别为电视剧")
+            return info_tv
+        elif score_movie > score_tv:
+            logger.info(f"通过元数据消歧，tmdb_id:{info_movie.get('id')} 识别为电影")
+            return info_movie
+
+        # 评分相同时参考meta.type
+        if meta.type == MediaType.TV:
+            logger.info(f"通过媒体类型提示消歧，tmdb_id:{info_tv.get('id')} 识别为电视剧")
+            return info_tv
+        elif meta.type == MediaType.MOVIE:
+            logger.info(f"通过媒体类型提示消歧，tmdb_id:{info_movie.get('id')} 识别为电影")
+            return info_movie
+
+        return None
+
+### app/helper/server.py::MoviePilotServerHelper._build_recognize_report_payload 1565-1602
+    @classmethod
+    def _build_recognize_report_payload(
+            cls,
+            meta: Optional[MetaBase],
+            mediainfo: Optional[MediaInfo],
+            keyword_meta: Optional[MetaBase] = None,
+    ) -> Optional[dict]:
+        """
+        组装共享识别上报载荷。
+        """
+        if not meta or not mediainfo:
+            return None
+
+        keyword = cls._extract_keyword(keyword_meta or meta)
+        media_type = cls._extract_media_type(meta=meta, mediainfo=mediainfo)
+        if not keyword or not media_type:
+            return None
+        media_source, media_id = resolve_media_identity(media=mediainfo)
+        if not media_id:
+            return None
+
+        return {
+            "keyword": keyword,
+            "type": media_type,
+            "title": mediainfo.title or keyword,
+            "year": cls._extract_year(meta=meta, mediainfo=mediainfo),
+            "season": cls._extract_season(
+                media_type=media_type,
+                meta=meta,
+                mediainfo=mediainfo,
+            ),
+            "tmdbid": mediainfo.tmdb_id,
+            "doubanid": mediainfo.douban_id,
+            "bangumiid": mediainfo.bangumi_id,
+            "anilistid": mediainfo.anilist_id,
+            "media_source": media_source,
+            "media_id": media_id,
+        }
+

@@ -1,0 +1,739 @@
+{
+  "status": "ORIGINAL_S11_ID_RECORDING_OBSERVATION_COMPLETE",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "input_manifest_sha256": "5418684949fe6d0c48e14cefdef220bb0be5f58e15431dce27df1d9465f219f5",
+  "python": {
+    "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+    "version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "isolated": 1,
+    "no_site": 1,
+    "dont_write_bytecode": 1
+  },
+  "case_count": 12,
+  "cases": [
+    {
+      "id": "validate-id-none",
+      "input": {
+        "id": "validate-id-none",
+        "operation": "validate",
+        "args": {
+          "meta": null,
+          "tmdbid": null
+        },
+        "steps": [],
+        "purpose": "Execute complete original validation with no MetaBase; no settings/HTTP use."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool"
+      },
+      "trace": [],
+      "recording_read_count": 0
+    },
+    {
+      "id": "validate-id-zero",
+      "input": {
+        "id": "validate-id-zero",
+        "operation": "validate",
+        "args": {
+          "meta": null,
+          "tmdbid": 0
+        },
+        "steps": [],
+        "purpose": "Execute complete original validation with no MetaBase; no settings/HTTP use."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool"
+      },
+      "trace": [],
+      "recording_read_count": 0
+    },
+    {
+      "id": "validate-id-positive",
+      "input": {
+        "id": "validate-id-positive",
+        "operation": "validate",
+        "args": {
+          "meta": null,
+          "tmdbid": 900011
+        },
+        "steps": [],
+        "purpose": "Execute complete original validation with no MetaBase; no settings/HTTP use."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool"
+      },
+      "trace": [],
+      "recording_read_count": 0
+    },
+    {
+      "id": "known-movie-hit",
+      "input": {
+        "id": "known-movie-hit",
+        "operation": "get_info",
+        "args": {
+          "meta": null,
+          "tmdbid": 900011,
+          "mtype": "MOVIE"
+        },
+        "steps": [
+          {
+            "reply": {
+              "id": 900011,
+              "title": "Owned ID movie",
+              "original_title": "Owned ID original",
+              "release_date": "2026-01-01",
+              "names": [
+                "Owned alias"
+              ]
+            }
+          }
+        ],
+        "purpose": "Known type directly returns original dependency result."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": {
+          "id": 900011,
+          "title": "Owned ID movie",
+          "original_title": "Owned ID original",
+          "release_date": "2026-01-01",
+          "names": [
+            "Owned alias"
+          ]
+        },
+        "python_type": "dict"
+      },
+      "trace": [
+        {
+          "event": "recording_read",
+          "method": "get_info",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "电影",
+            "tmdbid": 900011
+          },
+          "python_types": {
+            "mtype": "MediaType",
+            "tmdbid": "int"
+          }
+        },
+        {
+          "event": "recording_return",
+          "value": {
+            "id": 900011,
+            "title": "Owned ID movie",
+            "original_title": "Owned ID original",
+            "release_date": "2026-01-01",
+            "names": [
+              "Owned alias"
+            ]
+          }
+        }
+      ],
+      "recording_read_count": 1
+    },
+    {
+      "id": "known-tv-none",
+      "input": {
+        "id": "known-tv-none",
+        "operation": "get_info",
+        "args": {
+          "meta": null,
+          "tmdbid": 900011,
+          "mtype": "TV"
+        },
+        "steps": [
+          {
+            "reply": null
+          }
+        ],
+        "purpose": "Known type None is not an alternate-type search."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType"
+      },
+      "trace": [
+        {
+          "event": "recording_read",
+          "method": "get_info",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "电视剧",
+            "tmdbid": 900011
+          },
+          "python_types": {
+            "mtype": "MediaType",
+            "tmdbid": "int"
+          }
+        },
+        {
+          "event": "recording_return",
+          "value": null
+        }
+      ],
+      "recording_read_count": 1
+    },
+    {
+      "id": "unknown-tv-only",
+      "input": {
+        "id": "unknown-tv-only",
+        "operation": "get_info",
+        "args": {
+          "meta": null,
+          "tmdbid": 900011,
+          "mtype": null
+        },
+        "steps": [
+          {
+            "reply": {
+              "id": 900011,
+              "name": "Owned ID series",
+              "original_name": "Owned TV original",
+              "first_air_date": "2026-02-01",
+              "names": [
+                "Owned TV alias"
+              ]
+            }
+          },
+          {
+            "reply": null
+          }
+        ],
+        "purpose": "Record original TV then movie reads."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": {
+          "id": 900011,
+          "name": "Owned ID series",
+          "original_name": "Owned TV original",
+          "first_air_date": "2026-02-01",
+          "names": [
+            "Owned TV alias"
+          ]
+        },
+        "python_type": "dict"
+      },
+      "trace": [
+        {
+          "event": "recording_read",
+          "method": "get_info",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "电视剧",
+            "tmdbid": 900011
+          },
+          "python_types": {
+            "mtype": "MediaType",
+            "tmdbid": "int"
+          }
+        },
+        {
+          "event": "recording_return",
+          "value": {
+            "id": 900011,
+            "name": "Owned ID series",
+            "original_name": "Owned TV original",
+            "first_air_date": "2026-02-01",
+            "names": [
+              "Owned TV alias"
+            ]
+          }
+        },
+        {
+          "event": "recording_read",
+          "method": "get_info",
+          "ordinal": 2,
+          "kwargs": {
+            "mtype": "电影",
+            "tmdbid": 900011
+          },
+          "python_types": {
+            "mtype": "MediaType",
+            "tmdbid": "int"
+          }
+        },
+        {
+          "event": "recording_return",
+          "value": null
+        }
+      ],
+      "recording_read_count": 2
+    },
+    {
+      "id": "unknown-movie-only",
+      "input": {
+        "id": "unknown-movie-only",
+        "operation": "get_info",
+        "args": {
+          "meta": null,
+          "tmdbid": 900011,
+          "mtype": null
+        },
+        "steps": [
+          {
+            "reply": null
+          },
+          {
+            "reply": {
+              "id": 900011,
+              "title": "Owned ID movie",
+              "original_title": "Owned ID original",
+              "release_date": "2026-01-01",
+              "names": [
+                "Owned alias"
+              ]
+            }
+          }
+        ],
+        "purpose": "Record original TV then movie reads."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": {
+          "id": 900011,
+          "title": "Owned ID movie",
+          "original_title": "Owned ID original",
+          "release_date": "2026-01-01",
+          "names": [
+            "Owned alias"
+          ]
+        },
+        "python_type": "dict"
+      },
+      "trace": [
+        {
+          "event": "recording_read",
+          "method": "get_info",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "电视剧",
+            "tmdbid": 900011
+          },
+          "python_types": {
+            "mtype": "MediaType",
+            "tmdbid": "int"
+          }
+        },
+        {
+          "event": "recording_return",
+          "value": null
+        },
+        {
+          "event": "recording_read",
+          "method": "get_info",
+          "ordinal": 2,
+          "kwargs": {
+            "mtype": "电影",
+            "tmdbid": 900011
+          },
+          "python_types": {
+            "mtype": "MediaType",
+            "tmdbid": "int"
+          }
+        },
+        {
+          "event": "recording_return",
+          "value": {
+            "id": 900011,
+            "title": "Owned ID movie",
+            "original_title": "Owned ID original",
+            "release_date": "2026-01-01",
+            "names": [
+              "Owned alias"
+            ]
+          }
+        }
+      ],
+      "recording_read_count": 2
+    },
+    {
+      "id": "unknown-both-no-meta",
+      "input": {
+        "id": "unknown-both-no-meta",
+        "operation": "get_info",
+        "args": {
+          "meta": null,
+          "tmdbid": 900011,
+          "mtype": null
+        },
+        "steps": [
+          {
+            "reply": {
+              "id": 900011,
+              "name": "Owned ID series",
+              "original_name": "Owned TV original",
+              "first_air_date": "2026-02-01",
+              "names": [
+                "Owned TV alias"
+              ]
+            }
+          },
+          {
+            "reply": {
+              "id": 900011,
+              "title": "Owned ID movie",
+              "original_title": "Owned ID original",
+              "release_date": "2026-01-01",
+              "names": [
+                "Owned alias"
+              ]
+            }
+          }
+        ],
+        "purpose": "Both truthy: execute complete original disambiguation no-meta early return and actual WARN."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType"
+      },
+      "trace": [
+        {
+          "event": "recording_read",
+          "method": "get_info",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "电视剧",
+            "tmdbid": 900011
+          },
+          "python_types": {
+            "mtype": "MediaType",
+            "tmdbid": "int"
+          }
+        },
+        {
+          "event": "recording_return",
+          "value": {
+            "id": 900011,
+            "name": "Owned ID series",
+            "original_name": "Owned TV original",
+            "first_air_date": "2026-02-01",
+            "names": [
+              "Owned TV alias"
+            ]
+          }
+        },
+        {
+          "event": "recording_read",
+          "method": "get_info",
+          "ordinal": 2,
+          "kwargs": {
+            "mtype": "电影",
+            "tmdbid": 900011
+          },
+          "python_types": {
+            "mtype": "MediaType",
+            "tmdbid": "int"
+          }
+        },
+        {
+          "event": "recording_return",
+          "value": {
+            "id": 900011,
+            "title": "Owned ID movie",
+            "original_title": "Owned ID original",
+            "release_date": "2026-01-01",
+            "names": [
+              "Owned alias"
+            ]
+          }
+        },
+        {
+          "event": "log",
+          "level": "WARN",
+          "message": "无法判断tmdb_id:900011 是电影还是电视剧"
+        }
+      ],
+      "recording_read_count": 2
+    },
+    {
+      "id": "unknown-neither-empty-null",
+      "input": {
+        "id": "unknown-neither-empty-null",
+        "operation": "get_info",
+        "args": {
+          "meta": null,
+          "tmdbid": 900011,
+          "mtype": null
+        },
+        "steps": [
+          {
+            "reply": {}
+          },
+          {
+            "reply": null
+          }
+        ],
+        "purpose": "Original truthy selection of empty dictionary and None; do not inject expected output."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType"
+      },
+      "trace": [
+        {
+          "event": "recording_read",
+          "method": "get_info",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "电视剧",
+            "tmdbid": 900011
+          },
+          "python_types": {
+            "mtype": "MediaType",
+            "tmdbid": "int"
+          }
+        },
+        {
+          "event": "recording_return",
+          "value": {}
+        },
+        {
+          "event": "recording_read",
+          "method": "get_info",
+          "ordinal": 2,
+          "kwargs": {
+            "mtype": "电影",
+            "tmdbid": 900011
+          },
+          "python_types": {
+            "mtype": "MediaType",
+            "tmdbid": "int"
+          }
+        },
+        {
+          "event": "recording_return",
+          "value": null
+        }
+      ],
+      "recording_read_count": 2
+    },
+    {
+      "id": "unknown-first-read-error",
+      "input": {
+        "id": "unknown-first-read-error",
+        "operation": "get_info",
+        "args": {
+          "meta": null,
+          "tmdbid": 900011,
+          "mtype": null
+        },
+        "steps": [
+          {
+            "raises": {
+              "class": "RuntimeError",
+              "message": "owned read failure"
+            }
+          }
+        ],
+        "purpose": "Propagated supplied read exception stops before second read."
+      },
+      "outcome": {
+        "kind": "uncaught_exception",
+        "class": "RuntimeError",
+        "message": "owned read failure"
+      },
+      "trace": [
+        {
+          "event": "recording_read",
+          "method": "get_info",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "电视剧",
+            "tmdbid": 900011
+          },
+          "python_types": {
+            "mtype": "MediaType",
+            "tmdbid": "int"
+          }
+        },
+        {
+          "event": "recording_exception",
+          "class": "RuntimeError",
+          "message": "owned read failure"
+        }
+      ],
+      "recording_read_count": 1
+    },
+    {
+      "id": "unknown-second-read-error",
+      "input": {
+        "id": "unknown-second-read-error",
+        "operation": "get_info",
+        "args": {
+          "meta": null,
+          "tmdbid": 900011,
+          "mtype": null
+        },
+        "steps": [
+          {
+            "reply": {
+              "id": 900011,
+              "name": "Owned ID series",
+              "original_name": "Owned TV original",
+              "first_air_date": "2026-02-01",
+              "names": [
+                "Owned TV alias"
+              ]
+            }
+          },
+          {
+            "raises": {
+              "class": "RuntimeError",
+              "message": "owned read failure"
+            }
+          }
+        ],
+        "purpose": "Second original read still occurs after a truthy first result; exception is not caught here."
+      },
+      "outcome": {
+        "kind": "uncaught_exception",
+        "class": "RuntimeError",
+        "message": "owned read failure"
+      },
+      "trace": [
+        {
+          "event": "recording_read",
+          "method": "get_info",
+          "ordinal": 1,
+          "kwargs": {
+            "mtype": "电视剧",
+            "tmdbid": 900011
+          },
+          "python_types": {
+            "mtype": "MediaType",
+            "tmdbid": "int"
+          }
+        },
+        {
+          "event": "recording_return",
+          "value": {
+            "id": 900011,
+            "name": "Owned ID series",
+            "original_name": "Owned TV original",
+            "first_air_date": "2026-02-01",
+            "names": [
+              "Owned TV alias"
+            ]
+          }
+        },
+        {
+          "event": "recording_read",
+          "method": "get_info",
+          "ordinal": 2,
+          "kwargs": {
+            "mtype": "电影",
+            "tmdbid": 900011
+          },
+          "python_types": {
+            "mtype": "MediaType",
+            "tmdbid": "int"
+          }
+        },
+        {
+          "event": "recording_exception",
+          "class": "RuntimeError",
+          "message": "owned read failure"
+        }
+      ],
+      "recording_read_count": 2
+    },
+    {
+      "id": "report-no-meta-early-return",
+      "input": {
+        "id": "report-no-meta-early-return",
+        "operation": "report_payload",
+        "args": {
+          "meta": null,
+          "mediainfo": {
+            "owned_sentinel": true
+          },
+          "keyword_meta": null
+        },
+        "steps": [],
+        "purpose": "Original no-meta guard; the sentinel is an owned dependency input, not MediaInfo/provider proof."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType"
+      },
+      "trace": [],
+      "recording_read_count": 0
+    }
+  ],
+  "source_nodes": [
+    {
+      "class": "MediaType",
+      "name": "MediaType",
+      "first_line": 6,
+      "last_line": 20,
+      "source_bytes_sha256": "ad128f3d9c9b9839449c19df10b517aaa151025e324923132cca70fdbe78c402",
+      "ast_sha256": "6715cda6cdfdb423055abd389d22bf4acdeff5a9513d60439231280f94a3192b",
+      "decorators": []
+    },
+    {
+      "class": "TheMovieDbModule",
+      "name": "_validate_recognize_params",
+      "first_line": 94,
+      "last_line": 118,
+      "source_bytes_sha256": "962013f9c0b464c4356f3e83735e9ff3af3c7d2ca9e33adebc6302a4e69db411",
+      "ast_sha256": "f380f029695dab29058577ec3b46d4d2c14af5e58b3179fc06801fcb2cdcb80e",
+      "decorators": [
+        "staticmethod"
+      ]
+    },
+    {
+      "class": "TheMovieDbModule",
+      "name": "_get_info_by_tmdbid",
+      "first_line": 183,
+      "last_line": 200,
+      "source_bytes_sha256": "19d8e3b1ee2c4237f18d9c871a91ef91ee3539ec004b84345e8e97f902d74f8d",
+      "ast_sha256": "5d5c11b6819fac59d19a6c8d21a653021c82992164e40c2593326aaacef05ed7",
+      "decorators": []
+    },
+    {
+      "class": "TheMovieDbModule",
+      "name": "_disambiguate_by_meta",
+      "first_line": 221,
+      "last_line": 273,
+      "source_bytes_sha256": "ae3c6e4ad42a85451734b53a7972dfbc30e34b9240f08ffe37d00d0ecd0873d7",
+      "ast_sha256": "86be6abedf9c2db34586000656c0e0e508a5f7f50a5268286b1809cbb639580f",
+      "decorators": [
+        "staticmethod"
+      ]
+    },
+    {
+      "class": "MoviePilotServerHelper",
+      "name": "_build_recognize_report_payload",
+      "first_line": 1565,
+      "last_line": 1602,
+      "source_bytes_sha256": "aa6a5c27dfbc368e8e09666014139ebdf528380ebb56aeb7cb87d55081023def",
+      "ast_sha256": "1f8b51083c123e03eb0abe0b9cac418d820bf7aea51ba2b9825884e453c91292",
+      "decorators": [
+        "classmethod"
+      ]
+    }
+  ],
+  "boundaries": [
+    "Original four complete method nodes and original complete MediaType enum; original staticmethod/classmethod retained.",
+    "Class shell only: no original _ModuleBase, constructor, module imports or lifecycle.",
+    "All meta inputs are None. Full disambiguation inner functions retained, but scoring branches are not executed.",
+    "Recording get_info inputs/replies/errors are not actual HTTP, vendor, daemon or final MediaInfo output.",
+    "Source WARN and uncaught exceptions preserved; no invented outer handler or ERROR log.",
+    "No fresh/cache or complete ChainBase wrapper execution; old ten-case oracle only inherited at its original layer.",
+    "No network, DB, requests/urllib3/App/vendor import, probe, Go output oracle or arbitrary Python object input."
+  ],
+  "forbidden_imports_absent": true,
+  "input_drift": []
+}

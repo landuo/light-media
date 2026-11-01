@@ -1,0 +1,84 @@
+{
+  "started": "2026-11-01T01:17:48.649117+00:00",
+  "driver_pid": 103,
+  "package": "./internal/app",
+  "pattern": "^TestOriginalRecognitionIDActualSource$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-selector01.test",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-selector01.test",
+        "-test.v",
+        "-test.run",
+        "^TestOriginalRecognitionIDActualSource$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T01:17:48.649133+00:00",
+      "scratch_free": 47075909632,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T01:17:49.806634+00:00",
+      "scratch_free": 47072632832,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T01:18:23.830168+00:00",
+      "scratch_free": 46875967488,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 6250,
+  "program_sha256": "7c5a838b55dad72fb6ce5ba4e424645dd8063f3402ed2fb8fecfaacd6fba56c8",
+  "root_passes": [
+    "TestOriginalRecognitionIDActualSource"
+  ],
+  "ended": "2026-11-01T01:18:24.342395+00:00"
+}

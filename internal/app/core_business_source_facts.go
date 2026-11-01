@@ -413,7 +413,9 @@ func sourceImagePath(path any, domain string) (any, error) {
 	return "https://" + domain + "/t/p/original/" + strings.TrimLeft(value, "/"), nil
 }
 
-func sourceTMDBMediaInfo(raw json.RawMessage, kind, domain, category string) (json.RawMessage, error) {
+// sourceTMDBProviderInfo 保留原 get_info 的详情增强，供识别消歧前使用。
+// 与 MediaInfo 构造分离；旧 sourceTMDBMediaInfo 仍依次执行两阶段。
+func sourceTMDBProviderInfo(raw json.RawMessage, kind string) (json.RawMessage, error) {
 	value, e := decodeSourceJSON(raw)
 	if e != nil || sourceMap(value) == nil || kind != "movie" && kind != "tv" {
 		return nil, bad("SOURCE_MEDIA_PROJECTION_UNSUPPORTED", "未获取原TMDB媒体详情")
@@ -508,11 +510,24 @@ func sourceTMDBMediaInfo(raw json.RawMessage, kind, domain, category string) (js
 	if e != nil {
 		return nil, e
 	}
+	return encoded, nil
+}
+
+func sourceTMDBMediaInfo(raw json.RawMessage, kind, domain, category string) (json.RawMessage, error) {
+	encoded, e := sourceTMDBProviderInfo(raw, kind)
+	if e != nil {
+		return nil, e
+	}
+	return sourceTMDBRecognitionModel(encoded, kind, domain, category)
+}
+
+// sourceTMDBRecognitionModel 在类型消歧之后构造完整模型，保留旧后处理。
+func sourceTMDBRecognitionModel(encoded json.RawMessage, kind, domain, category string) (json.RawMessage, error) {
 	model, e := sourceTMDBMediaModel(encoded, kind, domain, category)
 	if e != nil {
 		return nil, e
 	}
-	value, e = decodeSourceJSON(model)
+	value, e := decodeSourceJSON(model)
 	if e != nil {
 		return nil, e
 	}

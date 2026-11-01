@@ -77,6 +77,7 @@ type App struct {
 	catMu                            sync.Mutex
 	mediaCategories                  mediaCategoryRuntime
 	catClient                        *catalog.Client
+	originalRecognitionRequests      originalRecognitionRequestCache // Active explicit-ID provider snapshots only.
 	catCreds                         TMDBConfig
 	catProxy                         networkproxy.Config
 	metadataProxyMu                  sync.Mutex

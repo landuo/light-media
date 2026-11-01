@@ -1,0 +1,245 @@
+{
+  "cases": [
+    {
+      "id": "validate-id-none",
+      "operation": "validate",
+      "args": {
+        "meta": null,
+        "tmdbid": null
+      },
+      "steps": [],
+      "purpose": "Execute complete original validation with no MetaBase; no settings/HTTP use."
+    },
+    {
+      "id": "validate-id-zero",
+      "operation": "validate",
+      "args": {
+        "meta": null,
+        "tmdbid": 0
+      },
+      "steps": [],
+      "purpose": "Execute complete original validation with no MetaBase; no settings/HTTP use."
+    },
+    {
+      "id": "validate-id-positive",
+      "operation": "validate",
+      "args": {
+        "meta": null,
+        "tmdbid": 900011
+      },
+      "steps": [],
+      "purpose": "Execute complete original validation with no MetaBase; no settings/HTTP use."
+    },
+    {
+      "id": "known-movie-hit",
+      "operation": "get_info",
+      "args": {
+        "meta": null,
+        "tmdbid": 900011,
+        "mtype": "MOVIE"
+      },
+      "steps": [
+        {
+          "reply": {
+            "id": 900011,
+            "title": "Owned ID movie",
+            "original_title": "Owned ID original",
+            "release_date": "2026-01-01",
+            "names": [
+              "Owned alias"
+            ]
+          }
+        }
+      ],
+      "purpose": "Known type directly returns original dependency result."
+    },
+    {
+      "id": "known-tv-none",
+      "operation": "get_info",
+      "args": {
+        "meta": null,
+        "tmdbid": 900011,
+        "mtype": "TV"
+      },
+      "steps": [
+        {
+          "reply": null
+        }
+      ],
+      "purpose": "Known type None is not an alternate-type search."
+    },
+    {
+      "id": "unknown-tv-only",
+      "operation": "get_info",
+      "args": {
+        "meta": null,
+        "tmdbid": 900011,
+        "mtype": null
+      },
+      "steps": [
+        {
+          "reply": {
+            "id": 900011,
+            "name": "Owned ID series",
+            "original_name": "Owned TV original",
+            "first_air_date": "2026-02-01",
+            "names": [
+              "Owned TV alias"
+            ]
+          }
+        },
+        {
+          "reply": null
+        }
+      ],
+      "purpose": "Record original TV then movie reads."
+    },
+    {
+      "id": "unknown-movie-only",
+      "operation": "get_info",
+      "args": {
+        "meta": null,
+        "tmdbid": 900011,
+        "mtype": null
+      },
+      "steps": [
+        {
+          "reply": null
+        },
+        {
+          "reply": {
+            "id": 900011,
+            "title": "Owned ID movie",
+            "original_title": "Owned ID original",
+            "release_date": "2026-01-01",
+            "names": [
+              "Owned alias"
+            ]
+          }
+        }
+      ],
+      "purpose": "Record original TV then movie reads."
+    },
+    {
+      "id": "unknown-both-no-meta",
+      "operation": "get_info",
+      "args": {
+        "meta": null,
+        "tmdbid": 900011,
+        "mtype": null
+      },
+      "steps": [
+        {
+          "reply": {
+            "id": 900011,
+            "name": "Owned ID series",
+            "original_name": "Owned TV original",
+            "first_air_date": "2026-02-01",
+            "names": [
+              "Owned TV alias"
+            ]
+          }
+        },
+        {
+          "reply": {
+            "id": 900011,
+            "title": "Owned ID movie",
+            "original_title": "Owned ID original",
+            "release_date": "2026-01-01",
+            "names": [
+              "Owned alias"
+            ]
+          }
+        }
+      ],
+      "purpose": "Both truthy: execute complete original disambiguation no-meta early return and actual WARN."
+    },
+    {
+      "id": "unknown-neither-empty-null",
+      "operation": "get_info",
+      "args": {
+        "meta": null,
+        "tmdbid": 900011,
+        "mtype": null
+      },
+      "steps": [
+        {
+          "reply": {}
+        },
+        {
+          "reply": null
+        }
+      ],
+      "purpose": "Original truthy selection of empty dictionary and None; do not inject expected output."
+    },
+    {
+      "id": "unknown-first-read-error",
+      "operation": "get_info",
+      "args": {
+        "meta": null,
+        "tmdbid": 900011,
+        "mtype": null
+      },
+      "steps": [
+        {
+          "raises": {
+            "class": "RuntimeError",
+            "message": "owned read failure"
+          }
+        }
+      ],
+      "purpose": "Propagated supplied read exception stops before second read."
+    },
+    {
+      "id": "unknown-second-read-error",
+      "operation": "get_info",
+      "args": {
+        "meta": null,
+        "tmdbid": 900011,
+        "mtype": null
+      },
+      "steps": [
+        {
+          "reply": {
+            "id": 900011,
+            "name": "Owned ID series",
+            "original_name": "Owned TV original",
+            "first_air_date": "2026-02-01",
+            "names": [
+              "Owned TV alias"
+            ]
+          }
+        },
+        {
+          "raises": {
+            "class": "RuntimeError",
+            "message": "owned read failure"
+          }
+        }
+      ],
+      "purpose": "Second original read still occurs after a truthy first result; exception is not caught here."
+    },
+    {
+      "id": "report-no-meta-early-return",
+      "operation": "report_payload",
+      "args": {
+        "meta": null,
+        "mediainfo": {
+          "owned_sentinel": true
+        },
+        "keyword_meta": null
+      },
+      "steps": [],
+      "purpose": "Original no-meta guard; the sentinel is an owned dependency input, not MediaInfo/provider proof."
+    }
+  ],
+  "boundaries": [
+    "Original four complete method nodes and original complete MediaType enum; original staticmethod/classmethod retained.",
+    "Class shell only: no original _ModuleBase, constructor, module imports or lifecycle.",
+    "All meta inputs are None. Full disambiguation inner functions retained, but scoring branches are not executed.",
+    "Recording get_info inputs/replies/errors are not actual HTTP, vendor, daemon or final MediaInfo output.",
+    "Source WARN and uncaught exceptions preserved; no invented outer handler or ERROR log.",
+    "No fresh/cache or complete ChainBase wrapper execution; old ten-case oracle only inherited at its original layer.",
+    "No network, DB, requests/urllib3/App/vendor import, probe, Go output oracle or arbitrary Python object input."
+  ]
+}

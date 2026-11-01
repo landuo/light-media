@@ -1,0 +1,1216 @@
+{
+  "status": "PASS",
+  "kind": "S11 normal host / installed SDK / plugin-first self-provider only",
+  "calls": [
+    {
+      "at": "2026-11-01T01:57:42.175940+00:00",
+      "host_pid": 25,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 55341.077467879,
+      "status": 200,
+      "raw_file": "response-001.body",
+      "sha256": "77214ddfa26a154400d5df6de620877a280be9ddebe462ef2f4c80f9f5d09655",
+      "ended_monotonic": 55341.078677012
+    },
+    {
+      "at": "2026-11-01T01:57:42.178155+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 55341.079681927,
+      "status": 200,
+      "private_headers_body_not_retained": true,
+      "ended_monotonic": 55341.143319577
+    },
+    {
+      "at": "2026-11-01T01:57:42.243049+00:00",
+      "host_pid": 25,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 55341.144575079,
+      "status": 200,
+      "raw_file": "response-003.body",
+      "sha256": "91ceb9de9eb3a9de534fb58901a15561ed718d286327f6c11fe551b760a77769",
+      "ended_monotonic": 55341.145478261
+    },
+    {
+      "at": "2026-11-01T01:57:42.244932+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 55341.146456966,
+      "status": 200,
+      "raw_file": "response-004.body",
+      "sha256": "3db9aa534b917f3deaf4777ee9ba69e8ff6ab021c5cd81325c9eebc4b4fe065c",
+      "ended_monotonic": 55341.208135663
+    },
+    {
+      "at": "2026-11-01T01:57:42.307834+00:00",
+      "host_pid": 25,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedMediaRecognition/media-recognize",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 55341.209361481,
+      "status": 405,
+      "raw_file": "response-005.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "ended_monotonic": 55341.210149399
+    },
+    {
+      "at": "2026-11-01T01:57:42.309651+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedMediaRecognition/media-recognize",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 55341.211176337,
+      "status": 200,
+      "raw_file": "response-006.body",
+      "sha256": "134193042f1fef6e5cd602229fadc6e64da661cf9a4d05164da5e89d9101d205",
+      "ended_monotonic": 55341.221239927
+    },
+    {
+      "at": "2026-11-01T01:57:42.327534+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedMediaRecognition/media-recognize",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 55341.229061718,
+      "status": 200,
+      "raw_file": "response-007.body",
+      "sha256": "ed4604840e999274c2588d20dc59c0ba7dcbf0f53c5ea84619c0c3e33ce563e9",
+      "ended_monotonic": 55341.233880331
+    },
+    {
+      "at": "2026-11-01T01:57:42.342853+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedMediaRecognition/media-recognize",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 55341.244385543,
+      "status": 200,
+      "raw_file": "response-008.body",
+      "sha256": "eb375a44b31d5c37a9bcb516d408d7cbda1e8c2dc13e63cc617b2f6a470dbc69",
+      "ended_monotonic": 55341.250895126
+    },
+    {
+      "at": "2026-11-01T01:57:42.548952+00:00",
+      "host_pid": 50,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 55341.450477528,
+      "status": 200,
+      "raw_file": "response-009.body",
+      "sha256": "b311655469bbbb04d0e7fdd68a0658a1ab37c4fcdf34969909c90070f9c593a0",
+      "ended_monotonic": 55341.451572729
+    },
+    {
+      "at": "2026-11-01T01:57:42.551080+00:00",
+      "host_pid": 50,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 55341.452605777,
+      "status": 200,
+      "private_headers_body_not_retained": true,
+      "ended_monotonic": 55341.520642077
+    },
+    {
+      "at": "2026-11-01T01:57:42.620325+00:00",
+      "host_pid": 50,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 55341.521852441,
+      "status": 200,
+      "raw_file": "response-011.body",
+      "sha256": "787811a6876b421eef6b1b1a201a6cf50d4b65575e2fa01cca890718e15fb2ab",
+      "ended_monotonic": 55341.52276019
+    },
+    {
+      "at": "2026-11-01T01:57:42.622335+00:00",
+      "host_pid": 50,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedMediaRecognition/media-recognize",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 55341.52386131,
+      "status": 405,
+      "raw_file": "response-012.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "ended_monotonic": 55341.524679293
+    },
+    {
+      "at": "2026-11-01T01:57:42.624245+00:00",
+      "host_pid": 50,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedMediaRecognition/media-recognize",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 55341.525771289,
+      "status": 200,
+      "raw_file": "response-013.body",
+      "sha256": "c31eaaae154c85c5849832decf1b722da684f3bfdda58e1453abd6b4b46957ad",
+      "ended_monotonic": 55341.5348868
+    }
+  ],
+  "peer_calls": [
+    {
+      "method": "GET",
+      "path": "/index",
+      "request_body_bytes": 0,
+      "at": "2026-11-01T01:57:42.246295+00:00",
+      "status": 200,
+      "response_bytes": 1086,
+      "reply_monotonic": 55341.147821037,
+      "response_completed": true,
+      "completed_monotonic": 55341.147917453
+    },
+    {
+      "method": "GET",
+      "path": "/worker",
+      "request_body_bytes": 0,
+      "at": "2026-11-01T01:57:42.247458+00:00",
+      "status": 200,
+      "response_bytes": 5287889,
+      "reply_monotonic": 55341.14898404,
+      "response_completed": true,
+      "completed_monotonic": 55341.151227642
+    }
+  ],
+  "processes": [
+    {
+      "pid": 25,
+      "identity": {
+        "ppid": 6,
+        "starttime": "5534094"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s11-id-normal01/private-data",
+      "executable_sha256": "c2054b4627da3962502d49ae0ecc365210a83efa794735e1c2f886d74e37a371",
+      "owned_listener_inode": "1067217",
+      "exit": 0
+    },
+    {
+      "pid": 50,
+      "identity": {
+        "ppid": 6,
+        "starttime": "5534126"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s11-id-normal01/private-data",
+      "executable_sha256": "c2054b4627da3962502d49ae0ecc365210a83efa794735e1c2f886d74e37a371",
+      "owned_listener_inode": "1064614",
+      "exit": 0
+    }
+  ],
+  "queries": [
+    {
+      "label": "cache_default_false_null",
+      "host_pid": 25,
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 1,
+        "requested": 3,
+        "completed": 3,
+        "succeeded": 3,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "op": "module_hit",
+            "ok": true,
+            "result": {
+              "actors": [],
+              "adult": false,
+              "anidb_id": null,
+              "anilist_id": null,
+              "anilist_info": {},
+              "backdrop_path": null,
+              "bangumi_id": null,
+              "bangumi_info": {},
+              "category": "owned",
+              "collection_id": null,
+              "content_rating": null,
+              "created_by": [],
+              "detail_link": "https://www.themoviedb.org/movie/900043",
+              "directors": [],
+              "douban_id": null,
+              "douban_info": {},
+              "en_title": null,
+              "episode_group": null,
+              "episode_groups": [],
+              "episode_run_time": [],
+              "first_air_date": null,
+              "genre_ids": [],
+              "genres": [],
+              "hk_title": null,
+              "homepage": null,
+              "imdb_id": null,
+              "languages": [],
+              "last_air_date": null,
+              "logo_path": null,
+              "media_id": "900043",
+              "names": [
+                "Owned active recognition",
+                "Owned original title"
+              ],
+              "networks": [],
+              "next_episode_to_air": {},
+              "number_of_episodes": null,
+              "number_of_seasons": null,
+              "origin_country": [],
+              "original_language": null,
+              "original_name": null,
+              "original_title": "Owned original title",
+              "overview": "Owned plugin model; not a native provider result",
+              "popularity": null,
+              "poster_path": null,
+              "production_companies": [],
+              "production_countries": [],
+              "recognize_cache_hit": true,
+              "release_date": null,
+              "release_dates": [],
+              "runtime": null,
+              "scrape_source": null,
+              "season": null,
+              "season_info": [],
+              "season_years": {},
+              "seasons": {},
+              "sg_title": null,
+              "source": "themoviedb",
+              "spoken_languages": [],
+              "status": null,
+              "tagline": null,
+              "title": "Owned active recognition",
+              "title_year": "Owned active recognition (2026)",
+              "tmdb_id": 900043,
+              "tmdb_info": {
+                "id": 900043,
+                "owned_precise_integer": 900719925474099312345,
+                "title": "Owned embedded provider-shaped payload"
+              },
+              "tvdb_id": null,
+              "tw_title": null,
+              "type": "\u7535\u5f71",
+              "vote_average": null,
+              "vote_count": null,
+              "year": "2026"
+            },
+            "result_kind": "full_raw_media_info",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 73,
+              "output_json_bytes": 1556
+            },
+            "before": {
+              "state": 4,
+              "declaration": 0,
+              "recognize": 0
+            },
+            "after": {
+              "state": 5,
+              "declaration": 1,
+              "recognize": 1
+            }
+          },
+          {
+            "index": 1,
+            "op": "module_hit",
+            "ok": true,
+            "result": {
+              "actors": [],
+              "adult": false,
+              "anidb_id": null,
+              "anilist_id": null,
+              "anilist_info": {},
+              "backdrop_path": null,
+              "bangumi_id": null,
+              "bangumi_info": {},
+              "category": "owned",
+              "collection_id": null,
+              "content_rating": null,
+              "created_by": [],
+              "detail_link": "https://www.themoviedb.org/movie/900043",
+              "directors": [],
+              "douban_id": null,
+              "douban_info": {},
+              "en_title": null,
+              "episode_group": null,
+              "episode_groups": [],
+              "episode_run_time": [],
+              "first_air_date": null,
+              "genre_ids": [],
+              "genres": [],
+              "hk_title": null,
+              "homepage": null,
+              "imdb_id": null,
+              "languages": [],
+              "last_air_date": null,
+              "logo_path": null,
+              "media_id": "900043",
+              "names": [
+                "Owned active recognition",
+                "Owned original title"
+              ],
+              "networks": [],
+              "next_episode_to_air": {},
+              "number_of_episodes": null,
+              "number_of_seasons": null,
+              "origin_country": [],
+              "original_language": null,
+              "original_name": null,
+              "original_title": "Owned original title",
+              "overview": "Owned plugin model; not a native provider result",
+              "popularity": null,
+              "poster_path": null,
+              "production_companies": [],
+              "production_countries": [],
+              "recognize_cache_hit": true,
+              "release_date": null,
+              "release_dates": [],
+              "runtime": null,
+              "scrape_source": null,
+              "season": null,
+              "season_info": [],
+              "season_years": {},
+              "seasons": {},
+              "sg_title": null,
+              "source": "themoviedb",
+              "spoken_languages": [],
+              "status": null,
+              "tagline": null,
+              "title": "Owned active recognition",
+              "title_year": "Owned active recognition (2026)",
+              "tmdb_id": 900043,
+              "tmdb_info": {
+                "id": 900043,
+                "owned_precise_integer": 900719925474099312345,
+                "title": "Owned embedded provider-shaped payload"
+              },
+              "tvdb_id": null,
+              "tw_title": null,
+              "type": "\u7535\u5f71",
+              "vote_average": null,
+              "vote_count": null,
+              "year": "2026"
+            },
+            "result_kind": "full_raw_media_info",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 87,
+              "output_json_bytes": 1556
+            },
+            "before": {
+              "state": 5,
+              "declaration": 1,
+              "recognize": 1
+            },
+            "after": {
+              "state": 6,
+              "declaration": 2,
+              "recognize": 2
+            }
+          },
+          {
+            "index": 2,
+            "op": "module_hit",
+            "ok": true,
+            "result": {
+              "actors": [],
+              "adult": false,
+              "anidb_id": null,
+              "anilist_id": null,
+              "anilist_info": {},
+              "backdrop_path": null,
+              "bangumi_id": null,
+              "bangumi_info": {},
+              "category": "owned",
+              "collection_id": null,
+              "content_rating": null,
+              "created_by": [],
+              "detail_link": "https://www.themoviedb.org/movie/900043",
+              "directors": [],
+              "douban_id": null,
+              "douban_info": {},
+              "en_title": null,
+              "episode_group": null,
+              "episode_groups": [],
+              "episode_run_time": [],
+              "first_air_date": null,
+              "genre_ids": [],
+              "genres": [],
+              "hk_title": null,
+              "homepage": null,
+              "imdb_id": null,
+              "languages": [],
+              "last_air_date": null,
+              "logo_path": null,
+              "media_id": "900043",
+              "names": [
+                "Owned active recognition",
+                "Owned original title"
+              ],
+              "networks": [],
+              "next_episode_to_air": {},
+              "number_of_episodes": null,
+              "number_of_seasons": null,
+              "origin_country": [],
+              "original_language": null,
+              "original_name": null,
+              "original_title": "Owned original title",
+              "overview": "Owned plugin model; not a native provider result",
+              "popularity": null,
+              "poster_path": null,
+              "production_companies": [],
+              "production_countries": [],
+              "recognize_cache_hit": true,
+              "release_date": null,
+              "release_dates": [],
+              "runtime": null,
+              "scrape_source": null,
+              "season": null,
+              "season_info": [],
+              "season_years": {},
+              "seasons": {},
+              "sg_title": null,
+              "source": "themoviedb",
+              "spoken_languages": [],
+              "status": null,
+              "tagline": null,
+              "title": "Owned active recognition",
+              "title_year": "Owned active recognition (2026)",
+              "tmdb_id": 900043,
+              "tmdb_info": {
+                "id": 900043,
+                "owned_precise_integer": 900719925474099312345,
+                "title": "Owned embedded provider-shaped payload"
+              },
+              "tvdb_id": null,
+              "tw_title": null,
+              "type": "\u7535\u5f71",
+              "vote_average": null,
+              "vote_count": null,
+              "year": "2026"
+            },
+            "result_kind": "full_raw_media_info",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 86,
+              "output_json_bytes": 1556
+            },
+            "before": {
+              "state": 6,
+              "declaration": 2,
+              "recognize": 2
+            },
+            "after": {
+              "state": 7,
+              "declaration": 3,
+              "recognize": 3
+            }
+          }
+        ],
+        "module_trace": [
+          {
+            "sequence": 1,
+            "input": {
+              "args": [],
+              "kwargs": {
+                "anilistid": null,
+                "bangumiid": null,
+                "cache": true,
+                "doubanid": null,
+                "episode_group": null,
+                "mediaid": null,
+                "meta": null,
+                "mtype": "\u7535\u5f71",
+                "source": "themoviedb",
+                "tmdbid": 900043
+              }
+            },
+            "returned": "owned_complete_model"
+          },
+          {
+            "sequence": 2,
+            "input": {
+              "args": [],
+              "kwargs": {
+                "anilistid": null,
+                "bangumiid": null,
+                "cache": false,
+                "doubanid": null,
+                "episode_group": null,
+                "mediaid": null,
+                "meta": null,
+                "mtype": "\u7535\u5f71",
+                "source": "themoviedb",
+                "tmdbid": 900043
+              }
+            },
+            "returned": "owned_complete_model"
+          },
+          {
+            "sequence": 3,
+            "input": {
+              "args": [],
+              "kwargs": {
+                "anilistid": null,
+                "bangumiid": null,
+                "cache": null,
+                "doubanid": null,
+                "episode_group": null,
+                "mediaid": null,
+                "meta": null,
+                "mtype": "\u7535\u5f71",
+                "source": "themoviedb",
+                "tmdbid": 900043
+              }
+            },
+            "returned": "owned_complete_model"
+          }
+        ]
+      },
+      "artifact_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1
+      },
+      "artifact_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1
+      }
+    },
+    {
+      "label": "false_terminal_none",
+      "host_pid": 25,
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 2,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "op": "module_false",
+            "ok": true,
+            "result": null,
+            "result_kind": "source_none",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 73,
+              "output_json_bytes": 14
+            },
+            "before": {
+              "state": 7,
+              "declaration": 3,
+              "recognize": 3
+            },
+            "after": {
+              "state": 8,
+              "declaration": 4,
+              "recognize": 4
+            }
+          }
+        ],
+        "module_trace": [
+          {
+            "sequence": 1,
+            "input": {
+              "args": [],
+              "kwargs": {
+                "anilistid": null,
+                "bangumiid": null,
+                "cache": true,
+                "doubanid": null,
+                "episode_group": null,
+                "mediaid": null,
+                "meta": null,
+                "mtype": "\u7535\u5f71",
+                "source": "themoviedb",
+                "tmdbid": 900043
+              }
+            },
+            "returned": "owned_complete_model"
+          },
+          {
+            "sequence": 2,
+            "input": {
+              "args": [],
+              "kwargs": {
+                "anilistid": null,
+                "bangumiid": null,
+                "cache": false,
+                "doubanid": null,
+                "episode_group": null,
+                "mediaid": null,
+                "meta": null,
+                "mtype": "\u7535\u5f71",
+                "source": "themoviedb",
+                "tmdbid": 900043
+              }
+            },
+            "returned": "owned_complete_model"
+          },
+          {
+            "sequence": 3,
+            "input": {
+              "args": [],
+              "kwargs": {
+                "anilistid": null,
+                "bangumiid": null,
+                "cache": null,
+                "doubanid": null,
+                "episode_group": null,
+                "mediaid": null,
+                "meta": null,
+                "mtype": "\u7535\u5f71",
+                "source": "themoviedb",
+                "tmdbid": 900043
+              }
+            },
+            "returned": "owned_complete_model"
+          },
+          {
+            "sequence": 4,
+            "input": {
+              "args": [],
+              "kwargs": {
+                "anilistid": null,
+                "bangumiid": null,
+                "cache": true,
+                "doubanid": null,
+                "episode_group": null,
+                "mediaid": null,
+                "meta": null,
+                "mtype": "\u7535\u5f71",
+                "source": "themoviedb",
+                "tmdbid": 900044
+              }
+            },
+            "returned": "source_false_terminal"
+          }
+        ]
+      },
+      "artifact_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1
+      },
+      "artifact_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1
+      }
+    },
+    {
+      "label": "errors_then_same_worker_recovery",
+      "host_pid": 25,
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 3,
+        "requested": 3,
+        "completed": 3,
+        "succeeded": 1,
+        "failed": 2,
+        "ok": false,
+        "results": [
+          {
+            "index": 0,
+            "op": "unsupported_type",
+            "ok": false,
+            "error_code": "host_operation_failed",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 0,
+              "failed": 1,
+              "input_json_bytes": 73,
+              "output_json_bytes": 0
+            },
+            "before": {
+              "state": 8,
+              "declaration": 4,
+              "recognize": 4
+            },
+            "after": {
+              "state": 8,
+              "declaration": 4,
+              "recognize": 4
+            }
+          },
+          {
+            "index": 1,
+            "op": "pre_canceled",
+            "ok": false,
+            "error_code": "context_canceled",
+            "host_calls": {
+              "total": 0,
+              "succeeded": 0,
+              "failed": 0,
+              "input_json_bytes": 0,
+              "output_json_bytes": 0
+            },
+            "before": {
+              "state": 8,
+              "declaration": 4,
+              "recognize": 4
+            },
+            "after": {
+              "state": 8,
+              "declaration": 4,
+              "recognize": 4
+            }
+          },
+          {
+            "index": 2,
+            "op": "module_hit",
+            "ok": true,
+            "result": {
+              "actors": [],
+              "adult": false,
+              "anidb_id": null,
+              "anilist_id": null,
+              "anilist_info": {},
+              "backdrop_path": null,
+              "bangumi_id": null,
+              "bangumi_info": {},
+              "category": "owned",
+              "collection_id": null,
+              "content_rating": null,
+              "created_by": [],
+              "detail_link": "https://www.themoviedb.org/movie/900043",
+              "directors": [],
+              "douban_id": null,
+              "douban_info": {},
+              "en_title": null,
+              "episode_group": null,
+              "episode_groups": [],
+              "episode_run_time": [],
+              "first_air_date": null,
+              "genre_ids": [],
+              "genres": [],
+              "hk_title": null,
+              "homepage": null,
+              "imdb_id": null,
+              "languages": [],
+              "last_air_date": null,
+              "logo_path": null,
+              "media_id": "900043",
+              "names": [
+                "Owned active recognition",
+                "Owned original title"
+              ],
+              "networks": [],
+              "next_episode_to_air": {},
+              "number_of_episodes": null,
+              "number_of_seasons": null,
+              "origin_country": [],
+              "original_language": null,
+              "original_name": null,
+              "original_title": "Owned original title",
+              "overview": "Owned plugin model; not a native provider result",
+              "popularity": null,
+              "poster_path": null,
+              "production_companies": [],
+              "production_countries": [],
+              "recognize_cache_hit": true,
+              "release_date": null,
+              "release_dates": [],
+              "runtime": null,
+              "scrape_source": null,
+              "season": null,
+              "season_info": [],
+              "season_years": {},
+              "seasons": {},
+              "sg_title": null,
+              "source": "themoviedb",
+              "spoken_languages": [],
+              "status": null,
+              "tagline": null,
+              "title": "Owned active recognition",
+              "title_year": "Owned active recognition (2026)",
+              "tmdb_id": 900043,
+              "tmdb_info": {
+                "id": 900043,
+                "owned_precise_integer": 900719925474099312345,
+                "title": "Owned embedded provider-shaped payload"
+              },
+              "tvdb_id": null,
+              "tw_title": null,
+              "type": "\u7535\u5f71",
+              "vote_average": null,
+              "vote_count": null,
+              "year": "2026"
+            },
+            "result_kind": "full_raw_media_info",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 73,
+              "output_json_bytes": 1556
+            },
+            "before": {
+              "state": 8,
+              "declaration": 4,
+              "recognize": 4
+            },
+            "after": {
+              "state": 9,
+              "declaration": 5,
+              "recognize": 5
+            }
+          }
+        ],
+        "module_trace": [
+          {
+            "sequence": 1,
+            "input": {
+              "args": [],
+              "kwargs": {
+                "anilistid": null,
+                "bangumiid": null,
+                "cache": true,
+                "doubanid": null,
+                "episode_group": null,
+                "mediaid": null,
+                "meta": null,
+                "mtype": "\u7535\u5f71",
+                "source": "themoviedb",
+                "tmdbid": 900043
+              }
+            },
+            "returned": "owned_complete_model"
+          },
+          {
+            "sequence": 2,
+            "input": {
+              "args": [],
+              "kwargs": {
+                "anilistid": null,
+                "bangumiid": null,
+                "cache": false,
+                "doubanid": null,
+                "episode_group": null,
+                "mediaid": null,
+                "meta": null,
+                "mtype": "\u7535\u5f71",
+                "source": "themoviedb",
+                "tmdbid": 900043
+              }
+            },
+            "returned": "owned_complete_model"
+          },
+          {
+            "sequence": 3,
+            "input": {
+              "args": [],
+              "kwargs": {
+                "anilistid": null,
+                "bangumiid": null,
+                "cache": null,
+                "doubanid": null,
+                "episode_group": null,
+                "mediaid": null,
+                "meta": null,
+                "mtype": "\u7535\u5f71",
+                "source": "themoviedb",
+                "tmdbid": 900043
+              }
+            },
+            "returned": "owned_complete_model"
+          },
+          {
+            "sequence": 4,
+            "input": {
+              "args": [],
+              "kwargs": {
+                "anilistid": null,
+                "bangumiid": null,
+                "cache": true,
+                "doubanid": null,
+                "episode_group": null,
+                "mediaid": null,
+                "meta": null,
+                "mtype": "\u7535\u5f71",
+                "source": "themoviedb",
+                "tmdbid": 900044
+              }
+            },
+            "returned": "source_false_terminal"
+          },
+          {
+            "sequence": 5,
+            "input": {
+              "args": [],
+              "kwargs": {
+                "anilistid": null,
+                "bangumiid": null,
+                "cache": true,
+                "doubanid": null,
+                "episode_group": null,
+                "mediaid": null,
+                "meta": null,
+                "mtype": "\u7535\u5f71",
+                "source": "themoviedb",
+                "tmdbid": 900043
+              }
+            },
+            "returned": "owned_complete_model"
+          }
+        ]
+      },
+      "artifact_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1
+      },
+      "artifact_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1
+      }
+    },
+    {
+      "label": "cold_same_DB",
+      "host_pid": 50,
+      "response": {
+        "pid": 65,
+        "init_count": 1,
+        "invocation": 1,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "op": "module_hit",
+            "ok": true,
+            "result": {
+              "actors": [],
+              "adult": false,
+              "anidb_id": null,
+              "anilist_id": null,
+              "anilist_info": {},
+              "backdrop_path": null,
+              "bangumi_id": null,
+              "bangumi_info": {},
+              "category": "owned",
+              "collection_id": null,
+              "content_rating": null,
+              "created_by": [],
+              "detail_link": "https://www.themoviedb.org/movie/900043",
+              "directors": [],
+              "douban_id": null,
+              "douban_info": {},
+              "en_title": null,
+              "episode_group": null,
+              "episode_groups": [],
+              "episode_run_time": [],
+              "first_air_date": null,
+              "genre_ids": [],
+              "genres": [],
+              "hk_title": null,
+              "homepage": null,
+              "imdb_id": null,
+              "languages": [],
+              "last_air_date": null,
+              "logo_path": null,
+              "media_id": "900043",
+              "names": [
+                "Owned active recognition",
+                "Owned original title"
+              ],
+              "networks": [],
+              "next_episode_to_air": {},
+              "number_of_episodes": null,
+              "number_of_seasons": null,
+              "origin_country": [],
+              "original_language": null,
+              "original_name": null,
+              "original_title": "Owned original title",
+              "overview": "Owned plugin model; not a native provider result",
+              "popularity": null,
+              "poster_path": null,
+              "production_companies": [],
+              "production_countries": [],
+              "recognize_cache_hit": true,
+              "release_date": null,
+              "release_dates": [],
+              "runtime": null,
+              "scrape_source": null,
+              "season": null,
+              "season_info": [],
+              "season_years": {},
+              "seasons": {},
+              "sg_title": null,
+              "source": "themoviedb",
+              "spoken_languages": [],
+              "status": null,
+              "tagline": null,
+              "title": "Owned active recognition",
+              "title_year": "Owned active recognition (2026)",
+              "tmdb_id": 900043,
+              "tmdb_info": {
+                "id": 900043,
+                "owned_precise_integer": 900719925474099312345,
+                "title": "Owned embedded provider-shaped payload"
+              },
+              "tvdb_id": null,
+              "tw_title": null,
+              "type": "\u7535\u5f71",
+              "vote_average": null,
+              "vote_count": null,
+              "year": "2026"
+            },
+            "result_kind": "full_raw_media_info",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 73,
+              "output_json_bytes": 1556
+            },
+            "before": {
+              "state": 4,
+              "declaration": 1,
+              "recognize": 0
+            },
+            "after": {
+              "state": 5,
+              "declaration": 2,
+              "recognize": 1
+            }
+          }
+        ],
+        "module_trace": [
+          {
+            "sequence": 1,
+            "input": {
+              "args": [],
+              "kwargs": {
+                "anilistid": null,
+                "bangumiid": null,
+                "cache": true,
+                "doubanid": null,
+                "episode_group": null,
+                "mediaid": null,
+                "meta": null,
+                "mtype": "\u7535\u5f71",
+                "source": "themoviedb",
+                "tmdbid": 900043
+              }
+            },
+            "returned": "owned_complete_model"
+          }
+        ]
+      },
+      "artifact_counts_before": {
+        "GET /index": 1,
+        "GET /worker": 1
+      },
+      "artifact_counts_after": {
+        "GET /index": 1,
+        "GET /worker": 1
+      }
+    }
+  ],
+  "physical_plugin_wire_counters": {
+    "measured": false,
+    "available_from_ordinary_API": false
+  },
+  "measured_layers": [
+    "worker logical SDK callback counters",
+    "self-module observations",
+    "owned artifact HTTP requests"
+  ],
+  "not_claimed": [
+    "native TMDB/provider/HTTP/cache freshness",
+    "real site/media/downloader/NAS",
+    "arbitrary MetaObject state",
+    "in-flight cancellation",
+    "browser/UI",
+    "full S11/platform/delivery"
+  ],
+  "bindings_sha256": "8c68255f6ff09132fded5245e5c59fcb9caca25685b154aa16c86dc441999238",
+  "execution_environment": "inherited after coordinator grant marker; no proxy or startup rewrites",
+  "started_at": "2026-11-01T01:57:41.818964+00:00",
+  "owned_peer_origin": "http://127.0.0.1:36557",
+  "bootstrap_exit": 0,
+  "worker_identities": [
+    {
+      "ppid": 25,
+      "starttime": "5534119",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s11-id-normal01/private-data/plugin-packages/OwnedMediaRecognition/owned-media-recognition-fixture",
+      "executable_sha256": "3ed8554e1e5331bae945574602dc714c1a267edfa46ddcc17b5cee1ec16e87d3",
+      "host_pid": 25
+    },
+    {
+      "ppid": 25,
+      "starttime": "5534119",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s11-id-normal01/private-data/plugin-packages/OwnedMediaRecognition/owned-media-recognition-fixture",
+      "executable_sha256": "3ed8554e1e5331bae945574602dc714c1a267edfa46ddcc17b5cee1ec16e87d3",
+      "host_pid": 25
+    },
+    {
+      "ppid": 25,
+      "starttime": "5534119",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s11-id-normal01/private-data/plugin-packages/OwnedMediaRecognition/owned-media-recognition-fixture",
+      "executable_sha256": "3ed8554e1e5331bae945574602dc714c1a267edfa46ddcc17b5cee1ec16e87d3",
+      "host_pid": 25
+    },
+    {
+      "ppid": 50,
+      "starttime": "5534141",
+      "pid": 65,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s11-id-normal01/private-data/plugin-packages/OwnedMediaRecognition/owned-media-recognition-fixture",
+      "executable_sha256": "3ed8554e1e5331bae945574602dc714c1a267edfa46ddcc17b5cee1ec16e87d3",
+      "host_pid": 50
+    }
+  ],
+  "actual_artifact_request_counts": {
+    "GET /index": 1,
+    "GET /worker": 1
+  },
+  "actual_typed_attempts": 8,
+  "actual_host_callbacks": {
+    "total": 7,
+    "succeeded": 6,
+    "failed": 1,
+    "pre_canceled_zero_callback": 1
+  },
+  "input_drift": [],
+  "environment_unchanged": true,
+  "finished_at": "2026-11-01T01:57:43.042299+00:00"
+}

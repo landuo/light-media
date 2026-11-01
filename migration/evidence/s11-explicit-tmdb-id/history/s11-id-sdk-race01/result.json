@@ -1,0 +1,60 @@
+{
+  "started": "2026-11-01T01:15:31.103996+00:00",
+  "driver_pid": 2,
+  "package": "./internal/plugins",
+  "pattern": "^(TestSharedMediaRecognitionWireAndOwnership|TestSharedMediaRecognitionStrictBoundaryAndNoReplay)$",
+  "race": true,
+  "status": "FAIL",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-sdk-race01.test",
+        "-race",
+        "./internal/plugins"
+      ],
+      "exit": 1
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T01:15:31.104008+00:00",
+      "scratch_free": 47134818304,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T01:15:31.403819+00:00",
+      "scratch_free": 47133974528,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 1974,
+  "error_class": "RuntimeError",
+  "error": "compile exited 1",
+  "ended": "2026-11-01T01:15:31.602926+00:00"
+}

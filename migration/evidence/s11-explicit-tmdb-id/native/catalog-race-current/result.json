@@ -1,0 +1,90 @@
+{
+  "started": "2026-11-01T01:51:04.771161+00:00",
+  "driver_pid": 2,
+  "package": "./internal/catalog",
+  "pattern": "^(TestSourceRecognitionSnapshotErrorsAndGuard|TestSourceRecognitionOwnedRetryAndPrivateTLS|TestConfiguredTokenNeverSentAsQuery|TestRedirectNeverForwardsCredentials|TestTransportErrorDoesNotExposeRequestOrCause)$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/catalog"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-native-catalog-race05.test",
+        "-race",
+        "./internal/catalog"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/catalog",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-native-catalog-race05.test",
+        "-test.v",
+        "-test.run",
+        "^(TestSourceRecognitionSnapshotErrorsAndGuard|TestSourceRecognitionOwnedRetryAndPrivateTLS|TestConfiguredTokenNeverSentAsQuery|TestRedirectNeverForwardsCredentials|TestTransportErrorDoesNotExposeRequestOrCause)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T01:51:04.771176+00:00",
+      "scratch_free": 46359543808,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T01:51:05.094340+00:00",
+      "scratch_free": 46358487040,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T01:51:06.959517+00:00",
+      "scratch_free": 46338273280,
+      "tmp_free": 5225586688
+    }
+  ],
+  "input_count": 2296,
+  "program_sha256": "bdfa179a78cab8c9cb4a9bbc33620286178541fa5726a4facbd38a62d07a7b01",
+  "root_passes": [
+    "TestConfiguredTokenNeverSentAsQuery",
+    "TestRedirectNeverForwardsCredentials",
+    "TestTransportErrorDoesNotExposeRequestOrCause",
+    "TestSourceRecognitionOwnedRetryAndPrivateTLS",
+    "TestSourceRecognitionSnapshotErrorsAndGuard"
+  ],
+  "ended": "2026-11-01T01:51:08.199523+00:00"
+}

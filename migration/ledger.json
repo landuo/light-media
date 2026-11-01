@@ -42,7 +42,7 @@
       "migration/evidence/s13-qb-tags/README.md",
       "migration/evidence/s13-qb-tags/evidence-index.json"
     ],
-    "revision_note": "Last actualremote11f922; acceptedlocal sevencommit chain760720→b9e667→41c8→7b9b→f913→55f2→cd21; bundleactualSpace saved; no push/CIgreen; main unchanged.",
+    "revision_note": "Last actualremote11f922; eightacceptedlocalcommits760720→b9e667→41c8→7b9b→f913→55f2→cd21→911846; actualSpacebundle saved; no push/CIgreen; main unchanged.",
     "revision_note_history_before_qb_tags": "Last actual remote11f922; local fivecommit chain760720→b9e667→41c8→7b9b→f913, no push/CIgreen. main unchanged."
   },
   "legacy_business_migration": {
@@ -26701,7 +26701,7 @@
     {
       "id": "S11",
       "description": "S11 · 主动使用宿主影视识别",
-      "status": "discovered",
+      "status": "implementing",
       "source_paths": [
         "app/api/endpoints/media.py",
         "app/api/endpoints/tmdb.py",
@@ -26781,17 +26781,56 @@
         "scope.discovery.44"
       ],
       "dependencies": [],
-      "target_paths": [],
+      "target_paths": [
+        "internal/plugins/shared_media_recognition.go",
+        "internal/plugins/shared_media_recognition_test.go",
+        "internal/app/plugin_shared_recognition_id.go",
+        "internal/app/plugin_shared_recognition_id_test.go",
+        "internal/app/testdata/recognition-id-source01.json",
+        "internal/catalog/source_recognition_id.go",
+        "internal/catalog/source_recognition_id_test.go",
+        "cmd/owned-media-recognition-fixture/main.go",
+        "cmd/owned-media-recognition-fixture/main_test.go",
+        "internal/catalog/source_recognition_snapshot.go",
+        "internal/catalog/source_recognition_snapshot_test.go",
+        "internal/catalog/source_recognition_session.go",
+        "internal/catalog/source_recognition_session_test.go",
+        "internal/catalog/source_recognition_category.go",
+        "internal/catalog/client.go",
+        "internal/app/plugin_shared_recognition_cache.go",
+        "internal/app/plugin_shared_recognition_cache_test.go",
+        "internal/app/plugin_shared_recognition_native.go",
+        "internal/app/plugin_shared_recognition_native_test.go",
+        "internal/app/core_business_source_facts.go",
+        "internal/app/runtime.go",
+        "internal/app/plugin_shared_media_recognition.go",
+        "internal/app/plugin_shared_media_recognition_test.go",
+        "internal/app/plugin_original_resources.go",
+        "internal/app/plugin_shared_media_recognition_owned_worker_test.go"
+      ],
       "owner": "coordinator",
-      "scenarios": [],
-      "evidence_ids": [],
+      "scenarios": [
+        "Actual original four selected ID methods:12 cases/13 recording reads/10 returns/2 uncaught RuntimeError; original cache/request32 nodes:10 recording scenarios/23 actions, not full App/cachetools/provider networking.",
+        "Current native catalog5 normal/race:source error snapshots, isolated owned TLS/session retry plus3 affected credential regressions; SDK2 and worker2 normal/race inherited exact unchanged leaves.",
+        "Current App6 normal/race:real App Handler/installed concurrent Go worker/native recognition and owned provider HTTP;10 callbacks/9 provider reads/2 artifact GETs, cached errors/fresh recovery/type fallback/private DB cold reopening. Not ordinary production TMDB networking.",
+        "Ordinary cmd/server dual host:4 business calls/8 typed attempts/7 callbacks(6 successful envelopes+1 host error)/6 self-module calls; false terminal, pre-canceled zero callback, sameworker recovery, sameDB cold with no artifact re-fetch."
+      ],
+      "evidence_ids": [
+        "s11-explicit-id.source-target",
+        "s11-explicit-id.owned-hosts"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "component-specific Astra ultra reviewers; not own semantic authors",
+        "evidence_ids": [
+          "s11-explicit-id.independent-review"
+        ],
+        "scope": "finite explicit-ID/no-Meta vertical slice; no full parent or upstream acceptance"
       },
       "external_source_paths": [],
-      "work_kind": "unclassified_shared_host",
-      "work_kind_note": "New shared-host checklist group. Exact missing capabilities versus usable existing ordinary host/HTTP/JSON chains remain to be adjudicated, not presumed absent.",
+      "work_kind": "faithful_incremental_shared_host",
+      "work_kind_note": "Original active ChainBase.recognize_media direction, not the inherited reverse host-to-plugin hook. One no-Meta explicit TMDB-ID vertical slice now finite locally accepted; parent and remaining provider/meta/name paths stay implementing.",
       "semantic_scope_reconciliation": {
         "id": "S11",
         "old_operation_scope": "主动请求宿主影视识别",
@@ -26800,6 +26839,20 @@
         "semantic_judgment": "方向与43宿主询问插件不同；真实原生识别可复用，不能以反向桥已验抵消。",
         "current_ledger_status": "discovered",
         "old_scope_provenance": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt."
+      },
+      "boundaries": [
+        "Finite no-Meta explicit TMDB-ID only. Name/Meta mutation, persistent identity cache, query/report/backfill/statistics, other providers, complete phrase conversion and unsupported group/key domains remain pending; no full S11/platform certification.",
+        "Source recording cache/key/session ports do not establish real cachetools/Redis/TTL/LRU or upstream HTTP equivalence. Nondefault META_CACHE_EXPIRE, recursive rate-limit wait and full RequestUtils internal retry remain explicit open boundaries.",
+        "Recognize-only private TLS adaptation follows scoped approved F permission; global/oldcatalog/Git/browser/proxy/CA/hosts unchanged. Owned provider routing is test-only, no production TMDB networking claim.",
+        "Current compiled/gated layers and inherited unchanged leaves are separately bound. Original first SDK normal/race and owned App compilation failures retained; ownedApp01 outer tool receipt unavailable, not fabricated."
+      ],
+      "completion": {
+        "state": "finite_backend_locally_accepted_commit_pending",
+        "full_parent_verified": false,
+        "remote_delivery": false,
+        "manifest": "migration/evidence/s11-explicit-tmdb-id/evidence-index.json",
+        "parent_commit": "911846b9a0cfe61da96d948d6b170f90f098c214",
+        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4"
       }
     },
     {
@@ -27022,12 +27075,13 @@
         "mapping_time_ledger_status": "discovered"
       },
       "completion": {
-        "state": "finite_backend_verified_publication_ready_remote_pending",
+        "state": "finite_backend_locally_committed_remote_pending",
         "full_parent_verified": false,
         "remote_delivery": false,
         "manifest": "migration/evidence/s13-tr-final/evidence-index.json",
         "parent_commit": "cd21eaf2bd8aeeb4af012e7a934faad8c5b9b288",
-        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4"
+        "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "local_commit": "911846b9a0cfe61da96d948d6b170f90f098c214"
       },
       "boundaries": [
         "Finite declared ordinary JSON/vendor mapping only, not arbitraryPython/vendor runtime or realdaemon certification.",
@@ -44142,6 +44196,189 @@
       "commands": {
         "actual_argv": "source/gate command results plus cli/command and actual toolreceipt"
       }
+    },
+    {
+      "id": "s11-explicit-id.source-target",
+      "kind": "differential",
+      "status": "passed",
+      "feature_ids": [
+        "S11"
+      ],
+      "independent": false,
+      "reviewer": "coordinator actual serial execution",
+      "observations": "Finite layers only: source recording; App Handler installedworker/ownedprovider; ordinary server pluginpriority separately. No full parent/real TMDB/UI/remote claim.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "source": "complete selected original nodes with explicit recording dependencies, no vendor imports/network",
+          "target": "Go1.26 normal/race; owned HTTP/TLS test peers and normalserver owned install; inherited proxy/CA/startup",
+          "limits": "explicit-ID/no-Meta finite domains; production provider not invoked"
+        },
+        "target_files": {
+          "cmd/owned-media-recognition-fixture/main.go": "f74485c7eee4b7de81a1a1e7e0bfe195a87aa87088fc0aa93286e055e10a4058",
+          "cmd/owned-media-recognition-fixture/main_test.go": "8316740a07d38b65e11012f96b46e9dc77774ad2a8e63beb0011d2df471055a7",
+          "internal/app/core_business_source_facts.go": "664ed8e6fbdbf097e4d885b083b8189c176d67a2d8be7215e67c45fbebd8704c",
+          "internal/app/plugin_original_resources.go": "49898a45ea3d388e79467c13a0c600c4fedf70c53706c34f05d6c175124efd26",
+          "internal/app/plugin_shared_media_recognition.go": "3e27765135491cb5feff1ccd08d682b8237032393992158ab31d54b35318f907",
+          "internal/app/plugin_shared_media_recognition_owned_worker_test.go": "cb01fb9621aae57ad405883d1464d39b353a422e1009bccdba993d442187766b",
+          "internal/app/plugin_shared_media_recognition_test.go": "aed6523612b3928750623985c6fb1d8aec52aa117907756e85125533ebdb21b9",
+          "internal/app/plugin_shared_recognition_cache.go": "cd17d97e7cec256c3115ae9bdb44a0287681e07769dd7ae774f758758c213637",
+          "internal/app/plugin_shared_recognition_cache_test.go": "82df81a4c977c69228abb9e80c7640f823c9c765fa58207b25b26328e6c28edb",
+          "internal/app/plugin_shared_recognition_id.go": "39157add2fab5ee67bc604368726f35321e3dd8dc0f543ed3850ef765000e0f3",
+          "internal/app/plugin_shared_recognition_id_test.go": "70b60db52fb178af44fa273f5292d214ea1f2c34764e8b539fe52df1f9619092",
+          "internal/app/plugin_shared_recognition_native.go": "791ced7179e39b822fe0fa6bc1187f9871b5a301b91317b929b194964db8727c",
+          "internal/app/plugin_shared_recognition_native_test.go": "6f373f66f24e0c25747bdefe2a9879d7b8706117863b2fcd565d6f73f1ab8657",
+          "internal/app/runtime.go": "8b3c3ca3e035f7a1f0825ed80827c0cffdd08d478a899032d1c040a7596e24b7",
+          "internal/app/testdata/recognition-id-source01.json": "e517f848ee9e8aaff54170f30335be4a2eb5aaecf7cffff07806fecb81801ecb",
+          "internal/catalog/client.go": "2607180bcfefa8ecebe7df9a89a57077e7053b98949d5d39ea4c569b70cc3e93",
+          "internal/catalog/source_recognition_category.go": "6c253471d522bebbeb06f1c9811dc3608020c090c627fc931f4db0f4816b6c66",
+          "internal/catalog/source_recognition_id.go": "6f581806bec704f2a68f8ca9457acb67f17b472cddef28b61a4542c06e5a3322",
+          "internal/catalog/source_recognition_id_test.go": "05fdc86ff55e4769e11e145243572ba75336154a5fff1ac12b9ec7d18917729a",
+          "internal/catalog/source_recognition_session.go": "99f4e21b55beb465b11e812614a3fbcf384be35a41f0280b355e6354d85863d9",
+          "internal/catalog/source_recognition_session_test.go": "be94a8f3e4b08a0a26136730a7490b264fb315d4ab6c19127045d8e5be9fe84c",
+          "internal/catalog/source_recognition_snapshot.go": "2ac1c6b0d50ef33ce22067e73600b0fdd229f8f060a5ef428269776f1a569c2d",
+          "internal/catalog/source_recognition_snapshot_test.go": "bbf9415b3e927468a73105afeca70e7cf6d0ac1ef6388b84f88f30185f91fcea",
+          "internal/plugins/shared_media_recognition.go": "b50e33f16aaac00c67776592ffee39d3e682ad995ab7f5156b7b35607a5fefd0",
+          "internal/plugins/shared_media_recognition_test.go": "a9c16e395a0b8392b526ec786da7165f947b1ac6923b59cb3bc7c484ced3bfb1"
+        },
+        "fixture_files": {
+          "evidence/s11-explicit-tmdb-id/cli/driver.py": "8d860b9f014054322d0b9206c7e36a4b9051077e44912f4468ed43ba04e75d69"
+        }
+      },
+      "artifacts": {
+        "evidence/s11-explicit-tmdb-id/id-source/independent.json": "90066c6bfe29183b6809b4c5f0bdf47a5ae260979ea056ff659acb982734444f",
+        "evidence/s11-explicit-tmdb-id/cache-source/independent.json": "294349f0a01a390c329331ad5ef1c52a17384fa3ca4881a981009b8fc1a70443",
+        "evidence/s11-explicit-tmdb-id/native/catalog-race-current/result.json": "53a9bc7712cdc0f76513037c40cd963c819f63b44ff52c479b9ab6ca1aeed98a",
+        "evidence/s11-explicit-tmdb-id/app/race-current/result.json": "b4a4643e441c00db19243359dcce639d2d17d6e1e3741b8ec30713745b396c4c"
+      },
+      "inputs": {
+        "full_maps": "exact local and external Space maps; 4040 actual CLI bindings referenced in evidence-index; no dependencies copied"
+      },
+      "commands": {
+        "actual_argv": "source/gate result and terminal/cli-command.json plus actual tool receipts"
+      }
+    },
+    {
+      "id": "s11-explicit-id.owned-hosts",
+      "kind": "real_e2e",
+      "status": "passed",
+      "feature_ids": [
+        "S11"
+      ],
+      "independent": false,
+      "reviewer": "coordinator actual serial execution",
+      "observations": "Finite layers only: source recording; App Handler installedworker/ownedprovider; ordinary server pluginpriority separately. No full parent/real TMDB/UI/remote claim.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "source": "complete selected original nodes with explicit recording dependencies, no vendor imports/network",
+          "target": "Go1.26 normal/race; owned HTTP/TLS test peers and normalserver owned install; inherited proxy/CA/startup",
+          "limits": "explicit-ID/no-Meta finite domains; production provider not invoked"
+        },
+        "target_files": {
+          "cmd/owned-media-recognition-fixture/main.go": "f74485c7eee4b7de81a1a1e7e0bfe195a87aa87088fc0aa93286e055e10a4058",
+          "cmd/owned-media-recognition-fixture/main_test.go": "8316740a07d38b65e11012f96b46e9dc77774ad2a8e63beb0011d2df471055a7",
+          "internal/app/core_business_source_facts.go": "664ed8e6fbdbf097e4d885b083b8189c176d67a2d8be7215e67c45fbebd8704c",
+          "internal/app/plugin_original_resources.go": "49898a45ea3d388e79467c13a0c600c4fedf70c53706c34f05d6c175124efd26",
+          "internal/app/plugin_shared_media_recognition.go": "3e27765135491cb5feff1ccd08d682b8237032393992158ab31d54b35318f907",
+          "internal/app/plugin_shared_media_recognition_owned_worker_test.go": "cb01fb9621aae57ad405883d1464d39b353a422e1009bccdba993d442187766b",
+          "internal/app/plugin_shared_media_recognition_test.go": "aed6523612b3928750623985c6fb1d8aec52aa117907756e85125533ebdb21b9",
+          "internal/app/plugin_shared_recognition_cache.go": "cd17d97e7cec256c3115ae9bdb44a0287681e07769dd7ae774f758758c213637",
+          "internal/app/plugin_shared_recognition_cache_test.go": "82df81a4c977c69228abb9e80c7640f823c9c765fa58207b25b26328e6c28edb",
+          "internal/app/plugin_shared_recognition_id.go": "39157add2fab5ee67bc604368726f35321e3dd8dc0f543ed3850ef765000e0f3",
+          "internal/app/plugin_shared_recognition_id_test.go": "70b60db52fb178af44fa273f5292d214ea1f2c34764e8b539fe52df1f9619092",
+          "internal/app/plugin_shared_recognition_native.go": "791ced7179e39b822fe0fa6bc1187f9871b5a301b91317b929b194964db8727c",
+          "internal/app/plugin_shared_recognition_native_test.go": "6f373f66f24e0c25747bdefe2a9879d7b8706117863b2fcd565d6f73f1ab8657",
+          "internal/app/runtime.go": "8b3c3ca3e035f7a1f0825ed80827c0cffdd08d478a899032d1c040a7596e24b7",
+          "internal/app/testdata/recognition-id-source01.json": "e517f848ee9e8aaff54170f30335be4a2eb5aaecf7cffff07806fecb81801ecb",
+          "internal/catalog/client.go": "2607180bcfefa8ecebe7df9a89a57077e7053b98949d5d39ea4c569b70cc3e93",
+          "internal/catalog/source_recognition_category.go": "6c253471d522bebbeb06f1c9811dc3608020c090c627fc931f4db0f4816b6c66",
+          "internal/catalog/source_recognition_id.go": "6f581806bec704f2a68f8ca9457acb67f17b472cddef28b61a4542c06e5a3322",
+          "internal/catalog/source_recognition_id_test.go": "05fdc86ff55e4769e11e145243572ba75336154a5fff1ac12b9ec7d18917729a",
+          "internal/catalog/source_recognition_session.go": "99f4e21b55beb465b11e812614a3fbcf384be35a41f0280b355e6354d85863d9",
+          "internal/catalog/source_recognition_session_test.go": "be94a8f3e4b08a0a26136730a7490b264fb315d4ab6c19127045d8e5be9fe84c",
+          "internal/catalog/source_recognition_snapshot.go": "2ac1c6b0d50ef33ce22067e73600b0fdd229f8f060a5ef428269776f1a569c2d",
+          "internal/catalog/source_recognition_snapshot_test.go": "bbf9415b3e927468a73105afeca70e7cf6d0ac1ef6388b84f88f30185f91fcea",
+          "internal/plugins/shared_media_recognition.go": "b50e33f16aaac00c67776592ffee39d3e682ad995ab7f5156b7b35607a5fefd0",
+          "internal/plugins/shared_media_recognition_test.go": "a9c16e395a0b8392b526ec786da7165f947b1ac6923b59cb3bc7c484ced3bfb1"
+        },
+        "fixture_files": {
+          "evidence/s11-explicit-tmdb-id/cli/driver.py": "8d860b9f014054322d0b9206c7e36a4b9051077e44912f4468ed43ba04e75d69"
+        }
+      },
+      "artifacts": {
+        "evidence/s11-explicit-tmdb-id/cli/result.json": "9866e9e01f18f9c71c6cf5298f50043e46c68998329cca31d58daf7532cbdcca",
+        "evidence/s11-explicit-tmdb-id/cli/actual-execution-receipt.json": "6e7d3a90b76a1c94603127f471ff67f880160a00a188fef27a17cefaaf4f35c9",
+        "evidence/s11-explicit-tmdb-id/terminal/cli-tool.json": "b3ba850d295e205d3d9236bbefb364a08c3f107f92c713f070bf82291790dec3",
+        "evidence/s11-explicit-tmdb-id/app/normal-current/tests.jsonl": "cf6aca99d5b7296fcd9202472d3ce7ab7c8ad43efbacfd16c136cfce0853e40a"
+      },
+      "inputs": {
+        "full_maps": "exact local and external Space maps; 4040 actual CLI bindings referenced in evidence-index; no dependencies copied"
+      },
+      "commands": {
+        "actual_argv": "source/gate result and terminal/cli-command.json plus actual tool receipts"
+      }
+    },
+    {
+      "id": "s11-explicit-id.independent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "S11"
+      ],
+      "independent": true,
+      "reviewer": "independent component-specific Astra ultra",
+      "observations": "Finite layers only: source recording; App Handler installedworker/ownedprovider; ordinary server pluginpriority separately. No full parent/real TMDB/UI/remote claim.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "source": "complete selected original nodes with explicit recording dependencies, no vendor imports/network",
+          "target": "Go1.26 normal/race; owned HTTP/TLS test peers and normalserver owned install; inherited proxy/CA/startup",
+          "limits": "explicit-ID/no-Meta finite domains; production provider not invoked"
+        },
+        "target_files": {
+          "cmd/owned-media-recognition-fixture/main.go": "f74485c7eee4b7de81a1a1e7e0bfe195a87aa87088fc0aa93286e055e10a4058",
+          "cmd/owned-media-recognition-fixture/main_test.go": "8316740a07d38b65e11012f96b46e9dc77774ad2a8e63beb0011d2df471055a7",
+          "internal/app/core_business_source_facts.go": "664ed8e6fbdbf097e4d885b083b8189c176d67a2d8be7215e67c45fbebd8704c",
+          "internal/app/plugin_original_resources.go": "49898a45ea3d388e79467c13a0c600c4fedf70c53706c34f05d6c175124efd26",
+          "internal/app/plugin_shared_media_recognition.go": "3e27765135491cb5feff1ccd08d682b8237032393992158ab31d54b35318f907",
+          "internal/app/plugin_shared_media_recognition_owned_worker_test.go": "cb01fb9621aae57ad405883d1464d39b353a422e1009bccdba993d442187766b",
+          "internal/app/plugin_shared_media_recognition_test.go": "aed6523612b3928750623985c6fb1d8aec52aa117907756e85125533ebdb21b9",
+          "internal/app/plugin_shared_recognition_cache.go": "cd17d97e7cec256c3115ae9bdb44a0287681e07769dd7ae774f758758c213637",
+          "internal/app/plugin_shared_recognition_cache_test.go": "82df81a4c977c69228abb9e80c7640f823c9c765fa58207b25b26328e6c28edb",
+          "internal/app/plugin_shared_recognition_id.go": "39157add2fab5ee67bc604368726f35321e3dd8dc0f543ed3850ef765000e0f3",
+          "internal/app/plugin_shared_recognition_id_test.go": "70b60db52fb178af44fa273f5292d214ea1f2c34764e8b539fe52df1f9619092",
+          "internal/app/plugin_shared_recognition_native.go": "791ced7179e39b822fe0fa6bc1187f9871b5a301b91317b929b194964db8727c",
+          "internal/app/plugin_shared_recognition_native_test.go": "6f373f66f24e0c25747bdefe2a9879d7b8706117863b2fcd565d6f73f1ab8657",
+          "internal/app/runtime.go": "8b3c3ca3e035f7a1f0825ed80827c0cffdd08d478a899032d1c040a7596e24b7",
+          "internal/app/testdata/recognition-id-source01.json": "e517f848ee9e8aaff54170f30335be4a2eb5aaecf7cffff07806fecb81801ecb",
+          "internal/catalog/client.go": "2607180bcfefa8ecebe7df9a89a57077e7053b98949d5d39ea4c569b70cc3e93",
+          "internal/catalog/source_recognition_category.go": "6c253471d522bebbeb06f1c9811dc3608020c090c627fc931f4db0f4816b6c66",
+          "internal/catalog/source_recognition_id.go": "6f581806bec704f2a68f8ca9457acb67f17b472cddef28b61a4542c06e5a3322",
+          "internal/catalog/source_recognition_id_test.go": "05fdc86ff55e4769e11e145243572ba75336154a5fff1ac12b9ec7d18917729a",
+          "internal/catalog/source_recognition_session.go": "99f4e21b55beb465b11e812614a3fbcf384be35a41f0280b355e6354d85863d9",
+          "internal/catalog/source_recognition_session_test.go": "be94a8f3e4b08a0a26136730a7490b264fb315d4ab6c19127045d8e5be9fe84c",
+          "internal/catalog/source_recognition_snapshot.go": "2ac1c6b0d50ef33ce22067e73600b0fdd229f8f060a5ef428269776f1a569c2d",
+          "internal/catalog/source_recognition_snapshot_test.go": "bbf9415b3e927468a73105afeca70e7cf6d0ac1ef6388b84f88f30185f91fcea",
+          "internal/plugins/shared_media_recognition.go": "b50e33f16aaac00c67776592ffee39d3e682ad995ab7f5156b7b35607a5fefd0",
+          "internal/plugins/shared_media_recognition_test.go": "a9c16e395a0b8392b526ec786da7165f947b1ac6923b59cb3bc7c484ced3bfb1"
+        },
+        "fixture_files": {
+          "evidence/s11-explicit-tmdb-id/cli/driver.py": "8d860b9f014054322d0b9206c7e36a4b9051077e44912f4468ed43ba04e75d69"
+        }
+      },
+      "artifacts": {
+        "evidence/s11-explicit-tmdb-id/terminal/cli-independent.json": "17d2ef40c32d107e512e1359ffe9c0ed786d8943e2b6c6fa68a2f97ae6ae390c",
+        "evidence/s11-explicit-tmdb-id/terminal/launcher-independent.json": "c7d66825b9e6dcc7888503395c20ecdcdbaebe5f7c58bd192c28718e18ae620f",
+        "evidence/s11-explicit-tmdb-id/native/reader-runtime-seal.json": "723347321f2bfa14f9070b23c04bafbb63e834b85b8257c9b2a22a5aa4ea41f1",
+        "evidence/s11-explicit-tmdb-id/native/model-runtime-seal.json": "68c4ef12d797dc8efeb2ff8cf3eac2d3c2706b073ae0d80c05520871b41b96b3"
+      },
+      "inputs": {
+        "full_maps": "exact local and external Space maps; 4040 actual CLI bindings referenced in evidence-index; no dependencies copied"
+      },
+      "commands": {
+        "actual_argv": "source/gate result and terminal/cli-command.json plus actual tool receipts"
+      }
     }
   ],
   "execution_contract": {
@@ -44168,33 +44405,38 @@
     "latest_scope_selection": "Current complete61-entry inventory retained by user164510; historical same-scope completion inherited; exact source-discovered missing behaviors continue, no whole-source redevelopment or duplicate shared-chain credit."
   },
   "resume": {
-    "next_slice": "TR final exactwhitelistreview/localcommit/bundle; S08sixoperation scope then dependency slice",
-    "dirty_work": "TR13productpaths+this finiteevidence+authoritativeledger overcd21; S06/S07/Browse protected",
+    "next_slice": "S11 final independent composition review/local commit/incremental bundle; S14 exact browser dependency source feasibility, no unapproved engine substitution",
+    "dirty_work": "S11 exact25 product/test paths plus finite evidence and authoritative ledger over911846; unrelated S06/S07/Browse remain protected",
     "workers": [
       {
         "name": "coordinator",
         "model": "Astra ultra",
-        "task": "soleledger/integration; TR actualgates done, finitepublication preparing"
-      },
-      {
-        "name": "tls_ab_independent",
-        "model": "Astra ultra",
-        "task": "TR source/native/normalrace/actualCLI finitefinalACCEPT; completed noactiveexecution"
-      },
-      {
-        "name": "s01_release_owner",
-        "model": "Astra ultra",
-        "task": "TRnativeauthor, App/worker/CLIpreexecreviewer completed; noactive execution"
-      },
-      {
-        "name": "terminate_independent",
-        "model": "Astra ultra",
-        "task": "active TR publicationcomposition reviewer only; SDKleaf author not selfsemantic approval"
+        "task": "sole ledger/integration/serial execution; SDK/selector/catalog/worker finite normal+race terminal, new App/native pending"
       },
       {
         "name": "c_userdata_owner",
         "model": "Astra ultra",
-        "task": "TRApp/worker author completed; S08readonlyscope sealed; S11oneentry readonlymapping active"
+        "task": "S11 source12 author complete; App handler candidate03 narrow numeric fix and typedsourceerror external, no production writes"
+      },
+      {
+        "name": "s01_release_owner",
+        "model": "Astra ultra",
+        "task": "S11 native request/snapshot/cache/fullmodel/owned test transport external candidate author, no Go execution"
+      },
+      {
+        "name": "terminate_independent",
+        "model": "Astra ultra",
+        "task": "S11 SDK/worker author complete; ordinary normal CLI driver module-priority-only external preparation"
+      },
+      {
+        "name": "tls_ab_independent",
+        "model": "Astra ultra",
+        "task": "S11 source/SDK/selector/catalog accepted finite; cache-source preexec and App03 static review"
+      },
+      {
+        "name": "s11_cache_oracle",
+        "model": "Astra ultra",
+        "task": "S11 original cached/fresh/request/snapshot recording-port collector frozen pending independentpreexec; no collector execution"
       }
     ],
     "blockers": [
@@ -44335,7 +44577,7 @@
       "source_of_readback": "Parent relayed actual Mac push/readback; evidence-s15-11f922896377/{push-receipt,protected-after-push,ci-receipt}.json",
       "mac_protection": "Original three worktree HEAD/branch/index unchanged. Main had concurrent changes to2 existing files+5 new paths retained; other2 trees unchanged. Do not falsely claim all Mac files unchanged."
     },
-    "updated_at": "2026-11-01T00:56:45.814524+00:00",
+    "updated_at": "2026-11-01T02:03:19.344884+00:00",
     "latest_integrations": {
       "services_portable": "../evidence/coordinator/services-main-integration/portable-integration.json",
       "services_web": "../evidence/coordinator/services-main-integration/web-v3-result.json",
@@ -44395,7 +44637,7 @@
       "free_after": "2.3GiB including authorized oldbinary archive"
     },
     "delivery_pending": {
-      "commit": "cd21eaf2bd8aeeb4af012e7a934faad8c5b9b288",
+      "commit": "911846b9a0cfe61da96d948d6b170f90f098c214",
       "included_commits": [
         "760720ed0a96fd9e7a647914c14545bde5ef857e",
         "b9e667cbc9532cb996993af30531327af3dcc541",
@@ -44403,11 +44645,12 @@
         "7b9b1d038b11d6235108889bea634e53e8b19d27",
         "f91359b612cefc068ff590d6c99622d329e6d474",
         "55f2ed32b098ab67845cca24520202fa7562e9af",
-        "cd21eaf2bd8aeeb4af012e7a934faad8c5b9b288"
+        "cd21eaf2bd8aeeb4af012e7a934faad8c5b9b288",
+        "911846b9a0cfe61da96d948d6b170f90f098c214"
       ],
       "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
       "remote_confirmed": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
-      "bundle_status": "actualSpace saved libfile_ee92ac458c048191874bd1040ef4a2d0 v0, seven acceptedlocalcommits; no remote",
+      "bundle_status": "actualSpace libfile_7c78b400102081919a0c5c7af1ca76dd v0, eightacceptedlocalcommits notremote",
       "blocker": "Macquota lastobserved; no blindretry/model/auth routechange"
     },
     "terminal_binary_archive": {
@@ -45457,7 +45700,7 @@
         "publication_independent_sha256": "d664bb7e11e7586f43cfd70bdf5490810042c93903f2e069eea57490143fbb6b"
       }
     },
-    "last_local_commit": "55f2ed32b098ab67845cca24520202fa7562e9af",
+    "last_local_commit": "911846b9a0cfe61da96d948d6b170f90f098c214",
     "new_s06_getbyhash_reconstruction": {
       "base": "760720ed0a96fd9e7a647914c14545bde5ef857e",
       "source": "8a83efeacd3e26b82be495e17d50146e31c96a60",
@@ -49570,7 +49813,7 @@
         "status": "parentconfirmedactualSpace saved/xattrs0; finite localf913 terminal originals, no remote/fullS04 claim"
       }
     },
-    "next_action": "TR final exactwhitelistreview/localcommit/bundle; S08sixoperation scope then dependency slice",
+    "next_action": "S11 final independent composition review/local commit/incremental bundle; S14 exact browser dependency source feasibility, no unapproved engine substitution",
     "workers_history_before_s04_publication": [
       {
         "name": "terminate_independent",
@@ -51040,7 +51283,7 @@
     "new_s13_tr_final_reconstruction": {
       "base": "cd21eaf2bd8aeeb4af012e7a934faad8c5b9b288",
       "scope": "originalTRset_torrent_tag/change_torrent only, no newkwargs/reannounce",
-      "status": "finiteordinaryTRtwo source/target/normaldualhost independentlyaccepted; publicationfinalreviewpending",
+      "status": "finitepair locallycommitted911846; independentpostcommitPASS and Space8bundle saved; remoteblocked",
       "source_preparation": "../audits/s13-tr-final-source-preparation",
       "independent_preexec": "../audits/s13-tr-final-source-independent/preexec-readback.json",
       "active_session": null,
@@ -51163,7 +51406,55 @@
       },
       "publication": {
         "path": "migration/evidence/s13-tr-final",
-        "status": "assembled candidate not committed/pushed"
+        "status": "99paths committed911846; source/normal/race/CLI finiteaccepted; notremote"
+      },
+      "local_publication": {
+        "at": "2026-11-01T01:00:26.022145+00:00",
+        "head": "911846b9a0cfe61da96d948d6b170f90f098c214",
+        "parent": "cd21eaf2bd8aeeb4af012e7a934faad8c5b9b288",
+        "files": 99,
+        "all_commit_blob_hashes_match": true,
+        "bundle": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/external-backups/light-media-s13-tr-final-911846b9a0cf-20261101.bundle",
+        "bytes": 2673829,
+        "sha256": "1a1f6dd2f3cc00d97a333748e3758f6172f60bf3481f5d58b293233a23cf5a9a",
+        "ref": "refs/codex/delivery/s13-tr-final-911846b9a0cf",
+        "prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+        "commit_chain": [
+          "760720ed0a96fd9e7a647914c14545bde5ef857e",
+          "b9e667cbc9532cb996993af30531327af3dcc541",
+          "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+          "7b9b1d038b11d6235108889bea634e53e8b19d27",
+          "f91359b612cefc068ff590d6c99622d329e6d474",
+          "55f2ed32b098ab67845cca24520202fa7562e9af",
+          "cd21eaf2bd8aeeb4af012e7a934faad8c5b9b288",
+          "911846b9a0cfe61da96d948d6b170f90f098c214"
+        ],
+        "bundle_heads": [
+          "911846b9a0cfe61da96d948d6b170f90f098c214 refs/codex/delivery/s13-tr-final-911846b9a0cf"
+        ],
+        "remote_delivery": "not attempted; last verified remote11f922; Mac quota blocker unchanged",
+        "tool_receipt": {
+          "session": 55295,
+          "initial_tool": "c022f3",
+          "terminal_tool": "b68069",
+          "exit": 0,
+          "operation": "standard exactstage/commit/bundle; no push"
+        },
+        "space": {
+          "library_file_id": "libfile_7c78b400102081919a0c5c7af1ca76dd",
+          "version": 0,
+          "bytes": 2673829,
+          "sha256": "1a1f6dd2f3cc00d97a333748e3758f6172f60bf3481f5d58b293233a23cf5a9a",
+          "prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+          "head": "911846b9a0cfe61da96d948d6b170f90f098c214",
+          "status": "parentconfirmedactualSpace/xattrs0; eightlocalcommits, notremote"
+        }
+      },
+      "next": "independentpostcommit then S11source grounding/explicitTMDB-ID active path",
+      "postcommit_independent": {
+        "path": "../audits/s13-tr-final-publication/POSTCOMMIT.json",
+        "sha256": "4b280f7226f9aa99a3abe23492cc56810df9b94c8cea2aee2ac4f38765529c3a",
+        "status": "PASS actual99blobs/eightchain/bundle/PACK/namedprotection; onlypostcommitledger dirty"
       }
     },
     "s08_readonly_scope": {
@@ -51171,7 +51462,388 @@
       "sha256": "667692e311784e2907eac3e0a72e912a90305bc6770fd05619ce6c996573f9b0",
       "seal_sha256": "164d204280c884d9eb42bd3b8ebbdc986a88298b9c3b828fe067ac97915aca3a",
       "status": "readonly precise6methods; sourceoriginMediaServers producer+actualinstances missing; FNOS not falselytranslated, noexecution/newapproval"
-    }
+    },
+    "delivery_pending_historical_cd21": {
+      "commit": "cd21eaf2bd8aeeb4af012e7a934faad8c5b9b288",
+      "included_commits": [
+        "760720ed0a96fd9e7a647914c14545bde5ef857e",
+        "b9e667cbc9532cb996993af30531327af3dcc541",
+        "41c8e93571bdb3551533d7817d20f9d967dc8eda",
+        "7b9b1d038b11d6235108889bea634e53e8b19d27",
+        "f91359b612cefc068ff590d6c99622d329e6d474",
+        "55f2ed32b098ab67845cca24520202fa7562e9af",
+        "cd21eaf2bd8aeeb4af012e7a934faad8c5b9b288"
+      ],
+      "bundle_prerequisite": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "remote_confirmed": "11f922896377cb0d02bf481ef0df10f11a1cb4c4",
+      "bundle_status": "actualSpace saved libfile_ee92ac458c048191874bd1040ef4a2d0 v0, seven acceptedlocalcommits; no remote",
+      "blocker": "Macquota lastobserved; no blindretry/model/auth routechange"
+    },
+    "s11_readonly_scope": {
+      "path": "../audits/s11-next-scope/REVIEW.md",
+      "sha256": "379bd9e9c747effe2840dcaa657988480479d7663a35d27bef343ddb0c04e75f",
+      "seal_sha256": "55c787f88896013d7f526fa953795c207ac677c954fce98abb3aa86bd4af66c0",
+      "status": "explicitTMDB-ID activepath independentofolddata choices; currentnative fixedorigin fixture seam and selfreentry to resolve technically, no probe executed"
+    },
+    "new_s11_id_reconstruction": {
+      "base": "911846b9a0cfe61da96d948d6b170f90f098c214",
+      "status": "finite explicit-ID/no-Meta slice actual source/normal/race/dual-layer hosts independently accepted; publication composition review pending",
+      "scope": "active ChainBase.recognize_media noMeta explicitTMDB ID, current61S11 finitevertical; old10 sourceintersection retained",
+      "owners": {
+        "source": "c_userdata_owner",
+        "SDK": "terminate_independent",
+        "native": "s01_release_owner",
+        "independent": "tls_ab_independent",
+        "host_integration": "coordinator",
+        "cache_source_preparation": "s11_cache_oracle, Astra ultra; no execution before independentpreexec"
+      },
+      "active_session": null,
+      "boundaries": [
+        "no olddata decision dependency",
+        "no wholeApp/requests imports/IPv6/netlink",
+        "fixedproductionTMDBorigin unchanged; no testnetworkbypass/CONNECT/envproxy/hosts rewrites",
+        "normalproducer fixture seam remains technicalreview, notclaimed tested"
+      ],
+      "source_execution": {
+        "tool": "cdd5bc",
+        "exit": 0,
+        "session": null,
+        "path": "../evidence/s11-id-source01",
+        "stdout_sha256": "e517f848ee9e8aaff54170f30335be4a2eb5aaecf7cffff07806fecb81801ecb",
+        "cases": 12,
+        "recording_reads": 13,
+        "returns": 10,
+        "uncaught_RuntimeError": 2,
+        "layer": "original selected four methods+enum; not providerHTTP/fullApp/cache"
+      },
+      "source_independent": {
+        "path": "../audits/s11-id-source-independent/source01-final.json",
+        "sha256": "90066c6bfe29183b6809b4c5f0bdf47a5ae260979ea056ff659acb982734444f",
+        "decision": "ACCEPT_SOURCE_COMPONENT_ONLY"
+      },
+      "sdk_integration": "../audits/s11-id-coordinator-review/sdk-integration01.json",
+      "prior_external_scope_checkpoint": {
+        "library_file_id": "libfile_966ce8b2fb688191acb0f9ff49f4dd62",
+        "version": 0,
+        "bytes": 1566168,
+        "sha256": "c925545a3b3c41676b756f2456c3bcc698bcb67fb1d5800485d9070a4ac14e9e",
+        "prerequisites": [
+          "libfile_7c78b400102081919a0c5c7af1ca76dd",
+          "libfile_00f09a858f2881918b25782482df8e00"
+        ],
+        "status": "parentconfirmed actual Space/xattrs0; TR postcommit and S08/S11 readonly scope only; no new S11 collector/products"
+      },
+      "sdk_first_compile": {
+        "session": 9023,
+        "initial_tool": "13565a",
+        "terminal_tool": "013f14",
+        "exit": 1,
+        "normal": "../evidence/s11-id-sdk01",
+        "race": "../evidence/s11-id-sdk-race01",
+        "reason": "test sentinel *ReplyError is protocol value, not Go error; both same compile failure; no test assertions executed",
+        "next": "author narrow test-only correction; normal then race02 with fail-fast shell"
+      },
+      "owned_http_test_seam": {
+        "status": "parent permitted narrowly at2026-11-01T01:16Z; not yet implemented/executed",
+        "boundary": "test compilation target constructor-fixed owned literal endpoint/synthetic key/exact GET whitelist/no redirects/CONNECT/upstream; no production origin or environment network change, no failure fallback",
+        "evidence_label": "test launcher real App with owned provider HTTP; ordinary cmd/server independently only observed SDK/plugin path; not production TMDB networking"
+      },
+      "sdk02_execution": {
+        "session": 58322,
+        "initial_tool": "9d5b77",
+        "terminal_tool": "aa57df",
+        "exit": 0,
+        "normal_roots": 2,
+        "race_roots": 2,
+        "normal": "../evidence/s11-id-sdk02",
+        "race": "../evidence/s11-id-sdk-race02",
+        "status": "actual PASS; wire layer only"
+      },
+      "native_component_integration": "../audits/s11-id-coordinator-review/native-integration01.json",
+      "external_a1_checkpoint": {
+        "library_file_id": "libfile_593c3e14d39081919c0d898878301bfb",
+        "version": 0,
+        "bytes": 1794864,
+        "sha256": "c80aec0f918e2b1d9ae4df1537678b7b190136afc5e0a4c4abcdb5a5f4296a42",
+        "status": "parentconfirmed actual Space/xattrs0; package-time native gate active/excluded, SDK runtime independent pending, App external uncompiled",
+        "prerequisites": [
+          "libfile_7c78b400102081919a0c5c7af1ca76dd",
+          "libfile_966ce8b2fb688191acb0f9ff49f4dd62"
+        ]
+      },
+      "sdk_independent": {
+        "path": "../audits/s11-id-sdk-independent/sdk02-final-seal.json",
+        "sha256": "b2ea90885966cc6a5f2da125d0a0c354aaa03501e1e16d732c31491ba35039a0",
+        "status": "ACCEPT actual wire only normal2/race2; firstcompile failures retained"
+      },
+      "component01_execution": {
+        "session": 79493,
+        "initial_tool": "b35d72",
+        "intermediate_tools": [
+          "945738",
+          "619e26"
+        ],
+        "terminal_tool": "fc2db7",
+        "exit": 0,
+        "normal_roots": 3,
+        "race_roots": 3,
+        "labels": [
+          "s11-id-catalog01",
+          "s11-id-selector01",
+          "s11-id-catalog-race01",
+          "s11-id-selector-race01"
+        ],
+        "status": "actualPASS; source selector8-recording cases+fixed RoundTripper protocol, not realproviderHTTP/fullmodel/host"
+      },
+      "worker_integration": "../audits/s11-id-coordinator-review/worker-static-integration01.json",
+      "component_independent": {
+        "path": "../audits/s11-id-native-independent/normal-race01-final-seal.json",
+        "sha256": "80d1f2f7b13c44f53977645d546dae3d04c18b82cf943642a84a9fe70c4ec2f3",
+        "status": "ACCEPT3normal/3race finite selector and recording transport only"
+      },
+      "worker01_execution": {
+        "session": 57828,
+        "initial_tool": "e1898f",
+        "terminal_tool": "53c956",
+        "exit": 0,
+        "normal_roots": 1,
+        "race_roots": 1,
+        "labels": [
+          "s11-id-worker01",
+          "s11-id-worker-race01"
+        ],
+        "status": "actualPASS unit recording/reentry only; not protocol negotiation/install/nativeHTTP"
+      },
+      "cache_source_execution": {
+        "tool": "c1fed5",
+        "session": null,
+        "exit": 0,
+        "path": "../evidence/s11-cache-source01",
+        "stdout_bytes": 80668,
+        "stdout_sha256": "9be629e95537437fd8f60dc3dcf5b092af95f64e9f4fe8b90d0d8d386b825d80",
+        "cases": 10,
+        "nodes": 32,
+        "layer": "actual complete selected cached/fresh/request/snapshot nodes with named recording Cache/hashkey/read/session ports; not cachetoolsTTL/LRU/key/HTTP",
+        "independent_status": "ACCEPT selected original with recordingports; not true TTL/key/HTTP"
+      },
+      "external_b1_checkpoint": {
+        "library_file_id": "libfile_6e3946d1ae5c8191b540a6a536c7a746",
+        "version": 0,
+        "bytes": 4593360,
+        "sha256": "6867839e461e16c875513396960e66118f9a33cd50a9a54f1a0f3ac6c866f43a",
+        "prerequisite": "libfile_593c3e14d39081919c0d898878301bfb",
+        "status": "parentconfirmedactual Space/xattrs0; package-time App/nativeexternal WIP notruntime; native retry/TLS stillpending"
+      },
+      "cache_source_independent": {
+        "path": "../audits/s11-cache-source-independent/source01-final-seal.json",
+        "sha256": "294349f0a01a390c329331ad5ef1c52a17384fa3ca4881a981009b8fc1a70443",
+        "observations": "10scenarios=23request actions15return8uncaught plusfreshstate sequence;19reads11sets20gets2ownedresets"
+      },
+      "worker01_independent": {
+        "path": "../audits/s11-id-worker-independent/worker01-final-seal.json",
+        "sha256": "9c0d9f4102697da0045acfbb74671f5c02fdbf324c07cf2a8ecbf6f2e2e0a805",
+        "scope": "normal/race1 each actual unit/reentry only"
+      },
+      "app_external_candidate": {
+        "path": "../audits/s11-id-app/candidate04.json",
+        "sha256": "d9377abbb0cb62fb5d348d650e31416fb0a6a8df1cd70b9d96d0ddf9fdc0ab12",
+        "independent_delta": "../audits/s11-id-app-independent/candidate04-delta-readback.json",
+        "status": "static integration READY, not installed/runtime; number bounded+meta typednil+sourceerror direct fix"
+      },
+      "native_checkpoint02": {
+        "path": "../audits/s11-id-native/checkpoint02.json",
+        "sha256": "aebcbf0afa9c95424535d46590ed09db079c86733a778844e3a320a673ee2c79",
+        "status": "NOT_READY partialcode frozen; independentlyfound compact-category extra rejection/group sourcecatch/key collision and client-namespace binding/emptyarray logging being narrowed; GET retry/TLS newindependentfactory pending"
+      },
+      "worker_candidate02_integration": "../audits/s11-id-coordinator-review/worker02-integration.json",
+      "worker02_execution": {
+        "session": 90789,
+        "initial_tool": "66f81e",
+        "terminal_tool": "e2a753",
+        "exit": 0,
+        "normal_roots": 2,
+        "race_roots": 2,
+        "labels": [
+          "s11-id-worker02",
+          "s11-id-worker-race02"
+        ],
+        "scope": "fixed TV/null worker routes, recording only"
+      },
+      "worker02_independent": {
+        "path": "../audits/s11-id-worker-independent/worker02-final-seal.json",
+        "sha256": "4eeb488c8882538617cdf6c91c0fd701699d64936ee37f178b81c5018301e316",
+        "status": "finite actual2normal/2race accepted; prior CLI workerhash stale requiring newbuildbinding"
+      },
+      "native05_candidate": {
+        "path": "../audits/s11-id-native/candidate05.json",
+        "sha256": "ecac8aa2a9410920348c2586e3055d443980be005e4e2855c14c5a1a42fec072",
+        "reader_preexec_seal": "../audits/s11-id-native-chain-independent/SEAL-candidate05-reader-delta.json",
+        "reader_seal_sha256": "02c5c74a7f5bc90e4b74f09f670b9a39ca965a40f6724ce0ba8b703e6897c502",
+        "status": "independent reader/model + App04 delta READY; exact15 paths installed and pinned formatted; tests now starting"
+      },
+      "integration05": "../audits/s11-id-integration05/integration.json",
+      "normal05_execution": {
+        "session": 57627,
+        "initial_tool": "bb1203",
+        "intermediate_tool": "7a761e",
+        "terminal_tool": "5079e7",
+        "exit": 0,
+        "catalog_roots": 5,
+        "app_roots": 5,
+        "labels": [
+          "s11-id-native-catalog05",
+          "s11-id-native-app05"
+        ],
+        "scope": "2newcatalog inclactualownedTLS+3affectedcredentialregression; App4new+old80case root; noinstalled nativeworker yet"
+      },
+      "owned_launcher_integration": "../audits/s11-id-integration05/launcher-integration02.json",
+      "owned_app01_compile_failure": {
+        "path": "../evidence/s11-id-owned-app01",
+        "status": "FAIL compile; zero test roots executed; following catalog/App race not started because set-e",
+        "ended": "2026-11-01T01:47:42.304428+00:00",
+        "cause": "two test-only TMDBConfig/catalog.Credentials type assignments",
+        "original_outer_tool_receipt": "not visible after context truncation; no fabricated session/exit; actual compile.exit and result.json verified via d28f38/1db49a",
+        "result_sha256": "8b2ba63ddc3f633599e1671dd54c87cf3dd3801c66c59022d42563ae2fb11dfd"
+      },
+      "native_catalog_race05_execution": {
+        "session": 24593,
+        "initial_tool": "2c691a",
+        "terminal_tool": "2ed039",
+        "exit": 0,
+        "roots": 5,
+        "path": "../evidence/s11-id-native-catalog-race05",
+        "program_sha256": "bdfa179a78cab8c9cb4a9bbc33620286178541fa5726a4facbd38a62d07a7b01",
+        "status": "actual PASS"
+      },
+      "owned_launcher_correction03": {
+        "integration": "../audits/s11-id-integration05/launcher-integration03.json",
+        "test_sha256": "cb01fb9621aae57ad405883d1464d39b353a422e1009bccdba993d442187766b",
+        "status": "two-line compile correction independently accepted; actual gate02 starting"
+      },
+      "external_c1_checkpoint": {
+        "library_file_id": "libfile_c5db7cb2db648191a7647fc0a1a5d05c",
+        "version": 0,
+        "bytes": 4318078,
+        "sha256": "c855e8abc69947e184e9b3b672b0196ebd4249ce997c531dd6a517989ed49747",
+        "prerequisite": "libfile_6e3946d1ae5c8191b540a6a536c7a746",
+        "status": "parentconfirmed actualSpace xattrs0; package-time original launcher compileFAIL and externaltwo-linefix; newownedApp02notincluded"
+      },
+      "owned_app02_execution": {
+        "session": 89496,
+        "initial_tool": "3d4802",
+        "intermediate_tool": "daf6d7",
+        "terminal_tool": "539fcf",
+        "exit": 0,
+        "roots": 6,
+        "path": "../evidence/s11-id-owned-app02",
+        "status": "actual PASS, testlauncher App.Handler+installed Go worker+owned providerHTTP; not App.Start/normalserver/productionTMDB"
+      },
+      "owned_app_race02_execution": {
+        "session": 28608,
+        "initial_tool": "227a2e",
+        "intermediate_tool": "16dc1b",
+        "terminal_tool": "830fb8",
+        "exit": 0,
+        "roots": 6,
+        "path": "../evidence/s11-id-owned-app-race02",
+        "status": "actual PASS samefiniteownedlayer"
+      },
+      "ordinary_build01_execution": {
+        "session": 54829,
+        "initial_tool": "fcc34b",
+        "terminal_tool": "9263ef",
+        "exit": 0,
+        "labels": [
+          "s11-id-server01",
+          "s11-id-fixture01"
+        ],
+        "status": "actual two serial builds PASS; ordinary server not yet launched"
+      },
+      "ordinary_cli_prepared": {
+        "bindings": "../audits/s11-id-normal-cli01/execution-bindings.json",
+        "bindings_sha256": "8c68255f6ff09132fded5245e5c59fcb9caca25685b154aa16c86dc441999238",
+        "input_count": 4040,
+        "command": "../audits/s11-id-normal-cli01/execution-command.json",
+        "status": "actual programs built; finalindependentpreexec inprogress; driver notrun"
+      },
+      "owned_app02_independent": {
+        "path": "../audits/s11-id-owned-launcher-independent/owned-app02-final-seal.json",
+        "sha256": "c7d66825b9e6dcc7888503395c20ecdcdbaebe5f7c58bd192c28718e18ae620f",
+        "status": "ACCEPT normal6/race6 finite Handler+installedworker+ownedprovider; not App.Start/normalserver/productionTMDB"
+      },
+      "native_catalog_and_cache_independent": {
+        "path": "../audits/s11-id-native-chain-independent/SEAL-normal-catalog-race05-readback.json",
+        "sha256": "723347321f2bfa14f9070b23c04bafbb63e834b85b8257c9b2a22a5aa4ea41f1",
+        "status": "ACCEPT catalognormal5/race5 + Appnormalcachefresh root, finite boundary"
+      },
+      "native_model_independent": {
+        "path": "../audits/s11-id-native-model-independent/actual05-model-seal.json",
+        "sha256": "68c4ef12d797dc8efeb2ff8cf3eac2d3c2706b073ae0d80c05520871b41b96b3",
+        "status": "ACCEPT model/group + original80case relatedregression actualnormal; no selfreviewApp"
+      },
+      "ordinary_cli_preexec": {
+        "path": "../audits/s11-id-normal-cli-independent/final-preexec.json",
+        "sha256": "0f93bc363098e0723e1439f0c3e64a4dfbcec0dbd5e69471cf0053961801cf94",
+        "status": "independentREADY; exact frozen command launched"
+      },
+      "ordinary_cli_actual": {
+        "session": 32928,
+        "initial_tool": "4a0267",
+        "terminal_tool": "6fbf90",
+        "exit": 0,
+        "path": "../test-instances/s11-id-normal01",
+        "hosts": [
+          25,
+          50
+        ],
+        "business_calls": 4,
+        "status": "actualPASS4 and independentfiniteACCEPT; pluginpriority only, notnativeTMDB"
+      },
+      "external_d1_checkpoint": {
+        "library_file_id": "libfile_6d202167392c819180a3e01618ca081d",
+        "version": 0,
+        "bytes": 7480601,
+        "sha256": "6c514639f285251f5beb8c3ec7d9235b9df75f09ae829496348527b833248eee",
+        "prerequisite": "libfile_c5db7cb2db648191a7647fc0a1a5d05c",
+        "status": "parentconfirmedactualSpace xattrs0; package-time CLI finalindependentpending; raw2normalhost4calls actualPASS"
+      },
+      "ordinary_cli_independent": {
+        "path": "../audits/s11-id-normal-cli-independent/final-ordinary-seal.json",
+        "sha256": "17d2ef40c32d107e512e1359ffe9c0ed786d8943e2b6c6fa68a2f97ae6ae390c",
+        "status": "ACCEPT_FINITE_ORDINARY_PLUGIN_PRIORITY_CLI01"
+      },
+      "publication": {
+        "path": "migration/evidence/s11-explicit-tmdb-id",
+        "status": "assembled exactcandidate; not committed/pushed"
+      }
+    },
+    "workers_history_before_s11": [
+      {
+        "name": "coordinator",
+        "model": "Astra ultra",
+        "task": "soleledger/integration; TR actualgates done, finitepublication preparing"
+      },
+      {
+        "name": "tls_ab_independent",
+        "model": "Astra ultra",
+        "task": "TR source/native/normalrace/actualCLI finitefinalACCEPT; completed noactiveexecution"
+      },
+      {
+        "name": "s01_release_owner",
+        "model": "Astra ultra",
+        "task": "TRnativeauthor, App/worker/CLIpreexecreviewer completed; noactive execution"
+      },
+      {
+        "name": "terminate_independent",
+        "model": "Astra ultra",
+        "task": "active TR publicationcomposition reviewer only; SDKleaf author not selfsemantic approval"
+      },
+      {
+        "name": "c_userdata_owner",
+        "model": "Astra ultra",
+        "task": "TRApp/worker author completed; S08readonlyscope sealed; S11oneentry readonlymapping active"
+      }
+    ]
   },
   "external_inventory": [
     {

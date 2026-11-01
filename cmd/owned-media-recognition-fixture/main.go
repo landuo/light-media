@@ -1,0 +1,416 @@
+// Owned S11 active-recognition fixture. No provider, endpoint, credentials, DB,
+// filesystem data, retry or timeout policy. The module model is synthetic.
+package main
+
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
+	"os"
+	"sync"
+
+	"light-media/internal/plugins"
+)
+
+// Prepared from the existing source MediaInfo field-default vocabulary, with
+// explicit owned values. It is not an oracle or a native TMDB response.
+const ownedMediaModel = `{"recognize_cache_hit":true,"source":"themoviedb","media_id":"900043","scrape_source":null,"type":"电影","title":"Owned active recognition","en_title":null,"hk_title":null,"tw_title":null,"sg_title":null,"year":"2026","season":null,"tmdb_id":900043,"imdb_id":null,"tvdb_id":null,"douban_id":null,"bangumi_id":null,"anilist_id":null,"anidb_id":null,"collection_id":null,"original_language":null,"original_title":"Owned original title","release_date":null,"backdrop_path":null,"poster_path":null,"logo_path":null,"vote_average":null,"overview":"Owned plugin model; not a native provider result","genre_ids":[],"names":["Owned active recognition","Owned original title"],"seasons":{},"season_info":[],"season_years":{},"category":"owned","tmdb_info":{"id":900043,"title":"Owned embedded provider-shaped payload","owned_precise_integer":900719925474099312345},"douban_info":{},"bangumi_info":{},"anilist_info":{},"directors":[],"actors":[],"adult":false,"created_by":[],"episode_run_time":[],"genres":[],"first_air_date":null,"homepage":null,"languages":[],"last_air_date":null,"networks":[],"number_of_episodes":null,"number_of_seasons":null,"origin_country":[],"original_name":null,"production_companies":[],"production_countries":[],"spoken_languages":[],"release_dates":[],"status":null,"tagline":null,"vote_count":null,"popularity":null,"runtime":null,"next_episode_to_air":{},"content_rating":null,"episode_groups":[],"episode_group":null}`
+
+func fixtureManifest() plugins.Manifest {
+	return plugins.Manifest{
+		SchemaVersion: 1, PluginID: "OwnedMediaRecognition", Name: "Owned active media recognition", Version: "1.0",
+		Runtime: "go-executable", Entry: "owned-media-recognition-fixture", HostAPIMin: 1, HostAPIMax: 1,
+		Methods:      []string{"init", "get_state", "get_module", "recognize_owned", "get_service", "get_command", "get_api", "get_form", "get_page", "get_render_mode", "snapshot", "http", "close", "stop_service", "stop"},
+		Capabilities: []string{plugins.MediaRecognizeCapability},
+		APIs:         []plugins.HTTPAPI{{Key: "media_recognize", Path: "/media-recognize", Methods: []string{"POST"}, Auth: "bear", Body: "json", BodyRequired: true}},
+	}
+}
+
+func exactObject(raw json.RawMessage, allowed ...string) (map[string]json.RawMessage, error) {
+	invalid := errors.New("invalid owned recognition object")
+	if len(raw) == 0 || len(raw) > 16<<10 || plugins.ValidateSystemConfigUTF8JSON(raw) != nil {
+		return nil, invalid
+	}
+	d := json.NewDecoder(bytes.NewReader(raw))
+	token, err := d.Token()
+	if err != nil || token != json.Delim('{') {
+		return nil, invalid
+	}
+	fields := make(map[string]json.RawMessage)
+	for d.More() {
+		token, err := d.Token()
+		key, ok := token.(string)
+		if err != nil || !ok {
+			return nil, invalid
+		}
+		permitted := false
+		for _, name := range allowed {
+			permitted = permitted || name == key
+		}
+		if _, duplicate := fields[key]; duplicate || !permitted {
+			return nil, invalid
+		}
+		var rawValue json.RawMessage
+		if d.Decode(&rawValue) != nil {
+			return nil, invalid
+		}
+		fields[key] = rawValue
+	}
+	token, err = d.Token()
+	if err != nil || token != json.Delim('}') || d.Decode(new(any)) != io.EOF {
+		return nil, invalid
+	}
+	return fields, nil
+}
+
+type fixtureOperation struct {
+	Op    string
+	Cache json.RawMessage
+}
+type fixtureInput struct {
+	Operations      []fixtureOperation
+	ContinueOnError bool
+}
+
+func decodeFixtureInput(raw json.RawMessage) (fixtureInput, error) {
+	var input fixtureInput
+	fields, err := exactObject(raw, "operations", "continue_on_error")
+	if err != nil {
+		return input, err
+	}
+	if value, exists := fields["continue_on_error"]; exists {
+		if string(value) != "true" && string(value) != "false" {
+			return input, errors.New("invalid owned continue flag")
+		}
+		input.ContinueOnError = string(value) == "true"
+	}
+	var operations []json.RawMessage
+	if json.Unmarshal(fields["operations"], &operations) != nil || len(operations) < 1 || len(operations) > 8 {
+		return input, errors.New("requires one through eight owned recognition operations")
+	}
+	for _, rawOperation := range operations {
+		fields, err := exactObject(rawOperation, "op", "cache")
+		if err != nil {
+			return input, err
+		}
+		var op fixtureOperation
+		if json.Unmarshal(fields["op"], &op.Op) != nil {
+			return input, errors.New("missing owned recognition operation")
+		}
+		switch op.Op {
+		case "module_hit", "module_false", "native", "native_tv", "native_unknown", "unsupported_type", "pre_canceled":
+		default:
+			return input, errors.New("unknown owned recognition operation")
+		}
+		if cache, exists := fields["cache"]; exists {
+			cache = bytes.TrimSpace(cache)
+			if string(cache) != "null" && string(cache) != "true" && string(cache) != "false" {
+				return input, errors.New("invalid owned cache value")
+			}
+			op.Cache = append(json.RawMessage(nil), cache...)
+		}
+		input.Operations = append(input.Operations, op)
+	}
+	return input, nil
+}
+
+func safeErrorCode(err error) string {
+	if errors.Is(err, context.Canceled) {
+		return "context_canceled"
+	}
+	if errors.Is(err, context.DeadlineExceeded) {
+		return "context_deadline_exceeded"
+	}
+	var protocol *plugins.Error
+	if errors.As(err, &protocol) && len(protocol.Code) > 0 && len(protocol.Code) <= 96 {
+		valid := true
+		for _, c := range protocol.Code {
+			valid = valid && (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '_')
+		}
+		if valid {
+			return protocol.Code
+		}
+	}
+	return "owned_recognition_operation_failed"
+}
+
+type moduleCounters struct {
+	State       int `json:"state"`
+	Declaration int `json:"declaration"`
+	Recognize   int `json:"recognize"`
+}
+type moduleObservation struct {
+	Sequence int             `json:"sequence"`
+	Input    json.RawMessage `json:"input"`
+	Returned string          `json:"returned"`
+}
+type hostCallCounts struct {
+	Total           int `json:"total"`
+	Succeeded       int `json:"succeeded"`
+	Failed          int `json:"failed"`
+	InputJSONBytes  int `json:"input_json_bytes"`
+	OutputJSONBytes int `json:"output_json_bytes"`
+}
+type recognitionAttempt struct {
+	Index      int             `json:"index"`
+	Op         string          `json:"op"`
+	OK         bool            `json:"ok"`
+	Result     json.RawMessage `json:"result,omitempty"`
+	ResultKind string          `json:"result_kind,omitempty"`
+	ErrorCode  string          `json:"error_code,omitempty"`
+	HostCalls  hostCallCounts  `json:"host_calls"`
+	Before     moduleCounters  `json:"before"`
+	After      moduleCounters  `json:"after"`
+}
+type fixtureSnapshot struct {
+	PID         int                  `json:"pid"`
+	InitCount   int                  `json:"init_count"`
+	Invocation  int                  `json:"invocation"`
+	Requested   int                  `json:"requested"`
+	Completed   int                  `json:"completed"`
+	Succeeded   int                  `json:"succeeded"`
+	Failed      int                  `json:"failed"`
+	OK          bool                 `json:"ok"`
+	Interrupted string               `json:"interrupted,omitempty"`
+	Results     []recognitionAttempt `json:"results"`
+	ModuleTrace []moduleObservation  `json:"module_trace"`
+}
+type fixtureObject struct {
+	// Only external business snapshots take businessMu. Reentrant discovery and
+	// module handlers never take it. stateMu is never held across HostCaller.
+	businessMu            sync.Mutex
+	stateMu               sync.Mutex
+	initCount, invocation int
+	counters              moduleCounters
+	trace                 []moduleObservation // last 64 owned observations, not an object registry
+}
+
+func (o *fixtureObject) readCounters() moduleCounters {
+	o.stateMu.Lock()
+	defer o.stateMu.Unlock()
+	return o.counters
+}
+
+func (o *fixtureObject) recognize(raw json.RawMessage) (json.RawMessage, error) {
+	outer, err := exactObject(raw, "args", "kwargs")
+	if err != nil || len(outer) != 2 {
+		return nil, errors.New("invalid owned module envelope")
+	}
+	var args []json.RawMessage
+	if json.Unmarshal(outer["args"], &args) != nil || args == nil || len(args) != 0 {
+		return nil, errors.New("owned module requires no positional arguments")
+	}
+	kwargs, err := exactObject(outer["kwargs"], "meta", "mtype", "source", "mediaid", "tmdbid", "doubanid", "bangumiid", "anilistid", "episode_group", "cache")
+	if err != nil || len(kwargs) != 10 {
+		return nil, errors.New("owned module requires ten normalized arguments")
+	}
+	for _, key := range []string{"meta", "mediaid", "doubanid", "bangumiid", "anilistid", "episode_group"} {
+		if string(kwargs[key]) != "null" {
+			return nil, errors.New("outside owned null metadata arguments")
+		}
+	}
+	mtype := string(kwargs["mtype"])
+	if string(kwargs["source"]) != `"themoviedb"` || (mtype != `"电影"` && !(string(kwargs["tmdbid"]) == "900045" && (mtype == `"电视剧"` || mtype == "null"))) {
+		return nil, errors.New("outside owned source/type")
+	}
+	if cache := string(kwargs["cache"]); cache != "true" && cache != "false" && cache != "null" {
+		return nil, errors.New("outside owned cache values")
+	}
+	var result json.RawMessage
+	var kind string
+	switch string(kwargs["tmdbid"]) {
+	case "900043":
+		result, kind = json.RawMessage(ownedMediaModel), "owned_complete_model"
+	case "900044":
+		result, kind = json.RawMessage(`false`), "source_false_terminal"
+	case "900045":
+		result, kind = json.RawMessage(`null`), "source_none_continue_to_native"
+	default:
+		return nil, errors.New("outside owned TMDB identities")
+	}
+	o.stateMu.Lock()
+	o.counters.Recognize++
+	o.trace = append(o.trace, moduleObservation{o.counters.Recognize, append(json.RawMessage(nil), raw...), kind})
+	if len(o.trace) > 64 {
+		o.trace = append([]moduleObservation(nil), o.trace[len(o.trace)-64:]...)
+	}
+	o.stateMu.Unlock()
+	return result, nil
+}
+
+func (o *fixtureObject) dispatch(ctx context.Context, host plugins.HostCaller, index int, operation fixtureOperation) recognitionAttempt {
+	out := recognitionAttempt{Index: index, Op: operation.Op, Before: o.readCounters()}
+	id := "900043"
+	if operation.Op == "module_false" {
+		id = "900044"
+	}
+	if operation.Op == "native" || operation.Op == "native_tv" || operation.Op == "native_unknown" {
+		id = "900045"
+	}
+	input := plugins.RecognizeMediaRequest{Meta: json.RawMessage(`null`), MType: json.RawMessage(`"电影"`), TMDBID: json.RawMessage(id), Cache: operation.Cache, ShareMeta: json.RawMessage(`null`)}
+	if operation.Op == "native_tv" {
+		input.MType = json.RawMessage(`"电视剧"`)
+	}
+	if operation.Op == "native_unknown" {
+		input.MType = json.RawMessage(`null`)
+	}
+	if operation.Op == "unsupported_type" {
+		input.MType = json.RawMessage(`"未知"`)
+	}
+	if operation.Op == "pre_canceled" {
+		canceled, cancel := context.WithCancel(ctx)
+		cancel()
+		ctx = canceled
+	}
+	counted := func(ctx context.Context, method string, raw json.RawMessage) (json.RawMessage, error) {
+		if method != plugins.MediaRecognizeCapability || host == nil {
+			return nil, errors.New("invalid owned callback")
+		}
+		out.HostCalls.Total++
+		out.HostCalls.InputJSONBytes += len(raw)
+		response, err := host(ctx, method, raw)
+		out.HostCalls.OutputJSONBytes += len(response)
+		if err == nil {
+			out.HostCalls.Succeeded++
+		} else {
+			out.HostCalls.Failed++
+		}
+		return response, err
+	}
+	model, err := (plugins.SharedMediaRecognition{Host: counted}).RecognizeMedia(ctx, input)
+	out.After = o.readCounters()
+	if err == nil {
+		if model == nil {
+			out.Result, out.ResultKind = json.RawMessage(`null`), "source_none"
+		} else {
+			out.Result, err = json.Marshal(model.Fields)
+			out.ResultKind = "full_raw_media_info"
+		}
+	}
+	if err != nil {
+		out.ErrorCode = safeErrorCode(err)
+		out.Result = nil
+		out.ResultKind = ""
+		return out
+	}
+	out.OK = true
+	return out
+}
+
+func (o *fixtureObject) snapshot(ctx context.Context, raw json.RawMessage, host plugins.HostCaller) (fixtureSnapshot, error) {
+	input, err := decodeFixtureInput(raw)
+	if err != nil {
+		return fixtureSnapshot{}, err
+	}
+	o.businessMu.Lock()
+	defer o.businessMu.Unlock()
+	o.stateMu.Lock()
+	o.invocation++
+	count, init := o.invocation, o.initCount
+	o.stateMu.Unlock()
+	out := fixtureSnapshot{PID: os.Getpid(), InitCount: init, Invocation: count, Requested: len(input.Operations), OK: true, Results: []recognitionAttempt{}}
+	for index, operation := range input.Operations {
+		if err := ctx.Err(); err != nil {
+			out.Interrupted, out.OK = safeErrorCode(err), false
+			break
+		}
+		attempt := o.dispatch(ctx, host, index, operation)
+		out.Results = append(out.Results, attempt)
+		out.Completed++
+		if attempt.OK {
+			out.Succeeded++
+		} else {
+			out.Failed++
+			out.OK = false
+			if !input.ContinueOnError {
+				break
+			}
+		}
+	}
+	if out.Completed != out.Requested {
+		out.OK = false
+	}
+	o.stateMu.Lock()
+	out.ModuleTrace = append([]moduleObservation{}, o.trace...)
+	o.stateMu.Unlock()
+	return out, nil
+}
+
+func (o *fixtureObject) handle(manifest plugins.Manifest) plugins.Handler {
+	return func(ctx context.Context, method string, raw json.RawMessage, host plugins.HostCaller) (json.RawMessage, error) {
+		isHTTP := method == "http"
+		if isHTTP {
+			var request plugins.HTTPRequest
+			if json.Unmarshal(raw, &request) != nil || request.Key != "media_recognize" || request.Method != "POST" || request.Path != "/media-recognize" {
+				return nil, errors.New("unsupported owned recognition route")
+			}
+			method, raw = "snapshot", request.Body
+		}
+		switch method {
+		case "init":
+			o.stateMu.Lock()
+			o.initCount++
+			o.stateMu.Unlock()
+			return json.RawMessage(`null`), nil
+		case "get_state":
+			o.stateMu.Lock()
+			o.counters.State++
+			o.stateMu.Unlock()
+			return json.RawMessage(`true`), nil
+		case "get_module":
+			o.stateMu.Lock()
+			o.counters.Declaration++
+			o.stateMu.Unlock()
+			return json.RawMessage(`{"recognize_media":"recognize_owned"}`), nil
+		case "recognize_owned":
+			return o.recognize(raw)
+		case "get_service", "get_command", "get_page":
+			return json.RawMessage(`[]`), nil
+		case "get_form":
+			return json.RawMessage(`[[],{}]`), nil
+		case "get_render_mode":
+			return json.RawMessage(`["vuetify",""]`), nil
+		case "get_api":
+			return json.Marshal(manifest.APIs)
+		case "close", "stop_service", "stop":
+			return json.RawMessage(`null`), nil
+		case "snapshot":
+			out, err := o.snapshot(ctx, raw, host)
+			if err != nil {
+				return nil, err
+			}
+			if isHTTP {
+				return plugins.JSONHTTPResponse(200, out)
+			}
+			return json.Marshal(out)
+		default:
+			return nil, errors.New("unsupported owned recognition method")
+		}
+	}
+}
+
+func main() {
+	manifest := fixtureManifest()
+	if manifest.Validate() != nil {
+		os.Exit(1)
+	}
+	if len(os.Args) == 2 && os.Args[1] == "--manifest" {
+		if json.NewEncoder(os.Stdout).Encode(manifest) != nil {
+			os.Exit(81)
+		}
+		return
+	}
+	if len(os.Args) != 1 {
+		os.Exit(80)
+	}
+	object := &fixtureObject{}
+	// This fixture genuinely negotiates the existing concurrent protocol. A
+	// declaration/get_state reentry must not wait behind its active SDK caller.
+	if plugins.ServeConcurrent(context.Background(), os.Stdin, os.Stdout, manifest, object.handle(manifest)) != nil {
+		fmt.Fprintln(os.Stderr, "owned media recognition SDK stopped with an error")
+		os.Exit(82)
+	}
+}

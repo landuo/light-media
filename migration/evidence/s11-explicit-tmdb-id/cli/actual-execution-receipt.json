@@ -1,0 +1,27 @@
+{
+  "started": "2026-11-01T01:57:41.474191+00:00",
+  "status": "PASS",
+  "argv": [
+    "python3",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-id-normal-cli01/normal-cli-driver.py",
+    "--server",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-server01",
+    "--worker",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-id-fixture01",
+    "--output",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s11-id-normal01",
+    "--expected-server-sha",
+    "c2054b4627da3962502d49ae0ecc365210a83efa794735e1c2f886d74e37a371",
+    "--expected-worker-sha",
+    "3ed8554e1e5331bae945574602dc714c1a267edfa46ddcc17b5cee1ec16e87d3",
+    "--expected-driver-sha",
+    "8d860b9f014054322d0b9206c7e36a4b9051077e44912f4468ed43ba04e75d69",
+    "--expected-bindings-sha",
+    "8c68255f6ff09132fded5245e5c59fcb9caca25685b154aa16c86dc441999238"
+  ],
+  "driver_launcher_pid": 5,
+  "preexec_sha256": "0f93bc363098e0723e1439f0c3e64a4dfbcec0dbd5e69471cf0053961801cf94",
+  "environment_delta_only": "S11_ID_CLI_GRANTED=1; proxy/CA/hosts/startup unchanged",
+  "exit": 0,
+  "ended": "2026-11-01T01:57:43.054819+00:00"
+}

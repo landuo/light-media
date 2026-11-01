@@ -1,0 +1,388 @@
+{
+  "cases": [
+    {
+      "id": "normal-fresh-snapshot-isolation",
+      "owns_session": true,
+      "steps": [
+        {
+          "json": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          }
+        },
+        {
+          "json": {
+            "id": 900011,
+            "title": "Owned replacement",
+            "nested": {
+              "items": [
+                "replacement"
+              ]
+            }
+          }
+        }
+      ],
+      "actions": [
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        },
+        {
+          "kind": "mutate_previous"
+        },
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        },
+        {
+          "kind": "request_obj",
+          "call_cached": false,
+          "day": "20261101",
+          "outer_fresh": false
+        },
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        }
+      ]
+    },
+    {
+      "id": "fresh-failure-keeps-prior",
+      "owns_session": true,
+      "steps": [
+        {
+          "json": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          }
+        },
+        {
+          "raises": "RuntimeError"
+        }
+      ],
+      "actions": [
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        },
+        {
+          "kind": "request_obj",
+          "call_cached": false,
+          "day": "20261101",
+          "outer_fresh": false
+        },
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        }
+      ]
+    },
+    {
+      "id": "valid-error-json-cached-before-handler",
+      "owns_session": true,
+      "steps": [
+        {
+          "json": {
+            "success": false,
+            "status_code": 34,
+            "status_message": "Owned missing resource"
+          },
+          "status": 404
+        }
+      ],
+      "actions": [
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        },
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        }
+      ]
+    },
+    {
+      "id": "owned-get-none-reset-once-success",
+      "owns_session": true,
+      "steps": [
+        {
+          "none": true
+        },
+        {
+          "json": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          }
+        }
+      ],
+      "actions": [
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        }
+      ]
+    },
+    {
+      "id": "owned-get-none-reset-once-exhausted",
+      "owns_session": true,
+      "steps": [
+        {
+          "none": true
+        },
+        {
+          "none": true
+        }
+      ],
+      "actions": [
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        }
+      ]
+    },
+    {
+      "id": "external-get-none-no-reset",
+      "owns_session": false,
+      "steps": [
+        {
+          "none": true
+        }
+      ],
+      "actions": [
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        }
+      ]
+    },
+    {
+      "id": "read-exception-not-cached",
+      "owns_session": true,
+      "steps": [
+        {
+          "raises": "RuntimeError"
+        },
+        {
+          "json": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          }
+        }
+      ],
+      "actions": [
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        },
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        }
+      ]
+    },
+    {
+      "id": "invalid-json-not-cached",
+      "owns_session": true,
+      "steps": [
+        {
+          "json_error": true,
+          "status": 502,
+          "headers": {
+            "Content-Type": "text/plain"
+          },
+          "text": "owned invalid"
+        },
+        {
+          "json": 23
+        },
+        {
+          "json": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          }
+        }
+      ],
+      "actions": [
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        },
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        },
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        }
+      ]
+    },
+    {
+      "id": "local-day-changes-key",
+      "owns_session": true,
+      "steps": [
+        {
+          "json": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          }
+        },
+        {
+          "json": {
+            "id": 900011,
+            "title": "Owned replacement",
+            "nested": {
+              "items": [
+                "replacement"
+              ]
+            }
+          }
+        }
+      ],
+      "actions": [
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        },
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        },
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261102",
+          "outer_fresh": false
+        }
+      ]
+    },
+    {
+      "id": "outer-fresh-inherits-through-false-inner-and-restores",
+      "owns_session": true,
+      "steps": [
+        {
+          "json": {
+            "id": 900011,
+            "title": "Owned first",
+            "nested": {
+              "items": [
+                "original"
+              ]
+            }
+          }
+        },
+        {
+          "json": {
+            "id": 900011,
+            "title": "Owned replacement",
+            "nested": {
+              "items": [
+                "replacement"
+              ]
+            }
+          }
+        }
+      ],
+      "actions": [
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        },
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": true
+        },
+        {
+          "kind": "request_obj",
+          "call_cached": true,
+          "day": "20261101",
+          "outer_fresh": false
+        },
+        {
+          "kind": "fresh_context"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    "Complete original fresh/is_fresh/cached and selected synchronous TMDb methods; original decorators retained.",
+    "Original module imports, TMDb constructor/init_session, RequestUtils and requests are not executed.",
+    "Original ContextVar and stdlib inspect/wraps/deepcopy execute; async cached body retained but not exercised.",
+    "No installed cachetools found in recorded scoped static search: recording Cache factory/hashkey ports only.",
+    "Recording backend has NO TTL/LRU/storage/Redis/concurrency fidelity; key token is NOT cachetools precise encoding.",
+    "Recording hashkey arguments show original signature order/self exclusion/**kwargs including local-day _ts.",
+    "Response read/json/session-init and local datetime.now are explicit owned input ports, not provider/HTTP evidence.",
+    "Original reset_owned_session close/guard and request retry decision execute against recording session lifecycle.",
+    "No rate-limit wait/reentry, POST, native Go, full App or normal CLI/provider network acceptance.",
+    "CONF normal-mode values 256 and 86400 are fixed inputs; no real timer or nondefault config mapping claim.",
+    "No source12/SDK2/selector/catalog3 rerun; this evidence is only new synchronous cache/response component."
+  ]
+}
