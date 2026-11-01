@@ -1,0 +1,502 @@
+{
+  "status": "ACTUAL_SELECTED_SOURCE_OBSERVATION_COMPLETE",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "python": {
+    "version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python"
+  },
+  "input_manifest_sha256": "50518798377046a53d98cda5926c343c2004b25eded39cfec93f3451b1de458d",
+  "payload": {
+    "id": "valid_large_padding",
+    "bytes": 16777378,
+    "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5",
+    "recipe": {
+      "prefix_base64": "ZDg6YW5ub3VuY2UzMjpodHRwczovL3RyYWNrZXIuaW52YWxpZC9hbm5vdW5jZTQ6aW5mb2Q2Omxlbmd0aGkxZTQ6bmFtZTE1Om93bmVkLWxhcmdlLmJpbjEyOnBpZWNlIGxlbmd0aGkxNjM4NGU2OnBpZWNlczIwOgAAAAAAAAAAAAAAAAAAAAAAAAAAZTc6cGFkZGluZzE2Nzc3MjE3Og==",
+      "repeat_ascii": "x",
+      "repeat_count": 16777217,
+      "suffix_base64": "ZQ=="
+    },
+    "domain": "One canonical ordinary valid torrent, one file; top-level inert padding only; generated input is not expected output."
+  },
+  "root_calls": 4,
+  "selected_nodes": [
+    {
+      "name": "TorrentoolException",
+      "first_line": 2,
+      "last_line": 3,
+      "ast_sha256": "e8334505bdac4d8446f4ed8ab78bfd67f5e4d0b72228d279eb548ab97289e922",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/exceptions.py"
+    },
+    {
+      "name": "BencodeError",
+      "first_line": 6,
+      "last_line": 7,
+      "ast_sha256": "5b247d52182cde4077765fa708094592896072298bfcd9065363de5635f15935",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/exceptions.py"
+    },
+    {
+      "name": "BencodeDecodingError",
+      "first_line": 10,
+      "last_line": 11,
+      "ast_sha256": "b788decbb3a5317f3d51bede67b1022bda47d40e5455578375b33f9a061dbcc0",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/exceptions.py"
+    },
+    {
+      "name": "decode",
+      "first_line": 61,
+      "last_line": 179,
+      "ast_sha256": "27185ccb160a9a4f1a29118b37ee18b19d506e69997ce7cb06480948213c512a",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/bencode.py"
+    },
+    {
+      "name": "read_string",
+      "first_line": 181,
+      "last_line": 196,
+      "ast_sha256": "1704430d9cf1038d21d226b3dd2f88ea9baa98473bf5745284d8244f84a78377",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/bencode.py"
+    },
+    {
+      "name": "TorrentFile",
+      "first_line": 18,
+      "last_line": 22,
+      "ast_sha256": "053d56513364a650df327a6374d0af1353881a5c4b07dc4b684ae85b1d925554",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/torrent.py"
+    },
+    {
+      "name": "__init__",
+      "first_line": 28,
+      "last_line": 31,
+      "ast_sha256": "f1908112d5ef139395c479288c3e15a443bcc01919ba574bd3c23f32ebb41d8a",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/torrent.py"
+    },
+    {
+      "name": "files",
+      "first_line": 82,
+      "last_line": 104,
+      "ast_sha256": "86eafd516a447094798c1977838e8a2c3866395fe9cf60477422936f43b1d3cb",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/torrent.py"
+    },
+    {
+      "name": "name",
+      "first_line": 231,
+      "last_line": 234,
+      "ast_sha256": "a0aaa3ee0bcb4f4429fbc5b87cbcda9183bbb3238ece88d6c8358dddadf22628",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/torrent.py"
+    },
+    {
+      "name": "from_string",
+      "first_line": 420,
+      "last_line": 427,
+      "ast_sha256": "fcc7be6eee4d021408b9504934654ad19134f5dac296005078576e3e5a190a3b",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s06-torrentool-source/unpacked/torrentool/torrent.py"
+    },
+    {
+      "name": "md5_hash",
+      "first_line": 484,
+      "last_line": 491,
+      "ast_sha256": "e802393c5640aca36cbf24c86af748b5d8dca5a8a109bdfcf62b5b207217f3e6",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/utils/string.py"
+    },
+    {
+      "name": "is_magnet_link",
+      "first_line": 986,
+      "last_line": 997,
+      "ast_sha256": "33bec441dd330862084b120cb91fa0c3fb4c2bdf97649c7b80dc57a58b2b22f0",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/utils/string.py"
+    },
+    {
+      "name": "download_torrent",
+      "first_line": 66,
+      "last_line": 190,
+      "ast_sha256": "f18e9dcbb831190424b9ce19bff32b0253adde4827aa23883abe9d7c5e2ef3bc",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py"
+    },
+    {
+      "name": "get_fileinfo_from_torrent",
+      "first_line": 208,
+      "last_line": 237,
+      "ast_sha256": "6eafce03d960b697a027d54884da4259beda45bc94b5bed8b647b6507e403c86",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py"
+    },
+    {
+      "name": "get_fileinfo_from_torrent_content",
+      "first_line": 239,
+      "last_line": 260,
+      "ast_sha256": "a26d309125903d34d27db92483dc1740302cd965bff6945b1f1c604cef21cb73",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/torrent.py"
+    },
+    {
+      "name": "__get_mapping_value",
+      "first_line": 49,
+      "last_line": 61,
+      "ast_sha256": "6ba092dc4101af741ff0fc1148c95b924d12b18a91dcb1823ca15b6541ece96d",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/qbittorrent/qbittorrent.py"
+    },
+    {
+      "name": "__parse_add_torrent_response",
+      "first_line": 98,
+      "last_line": 114,
+      "ast_sha256": "9a374e833e5031a70fbd866bed06a8e03f45ad3de83a5294bd3004cfe8fd9448",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/qbittorrent/qbittorrent.py"
+    },
+    {
+      "name": "add_torrent",
+      "first_line": 401,
+      "last_line": 475,
+      "ast_sha256": "76aa473db38703c1a0b934084489b3af3c570b503dc2424cddad43450accb86d",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/qbittorrent/qbittorrent.py"
+    },
+    {
+      "name": "add_torrent",
+      "first_line": 201,
+      "last_line": 225,
+      "ast_sha256": "e62bc183208e5d375def31a03f6450bde01757af39c51411c57b0d1d64fdb784",
+      "source_path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/transmission/transmission.py"
+    }
+  ],
+  "cases": [
+    {
+      "id": "s12_cold",
+      "input": {
+        "type": "bytes",
+        "length": 16777378,
+        "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+      },
+      "outcome": {
+        "kind": "return",
+        "python_type": "tuple",
+        "value": {
+          "type": "tuple",
+          "items": [
+            {
+              "type": "Path",
+              "value": "41fde80e9fdee177d8758e7e3b909fb0.torrent"
+            },
+            {
+              "type": "bytes",
+              "length": 16777378,
+              "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+            },
+            "",
+            [
+              "owned-large.bin"
+            ],
+            ""
+          ]
+        }
+      },
+      "trace": [
+        {
+          "op": "cache.init"
+        },
+        {
+          "op": "cache.get",
+          "key": "41fde80e9fdee177d8758e7e3b909fb0.torrent",
+          "region": "torrents",
+          "value": null
+        },
+        {
+          "op": "request.init",
+          "kwargs": {
+            "ua": "owned-material/1",
+            "cookies": null,
+            "referer": null,
+            "proxies": null
+          }
+        },
+        {
+          "op": "request.get_res",
+          "kwargs": {
+            "url": "https://owned.invalid/large.torrent",
+            "allow_redirects": false
+          }
+        },
+        {
+          "op": "response.bool",
+          "value": true
+        },
+        {
+          "op": "response.bool",
+          "value": true
+        },
+        {
+          "op": "response.content",
+          "value": {
+            "type": "bytes",
+            "length": 16777378,
+            "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+          }
+        },
+        {
+          "op": "response.content",
+          "value": {
+            "type": "bytes",
+            "length": 16777378,
+            "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+          }
+        },
+        {
+          "op": "response.content",
+          "value": {
+            "type": "bytes",
+            "length": 16777378,
+            "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+          }
+        },
+        {
+          "op": "response.content",
+          "value": {
+            "type": "bytes",
+            "length": 16777378,
+            "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+          }
+        },
+        {
+          "op": "response.content",
+          "value": {
+            "type": "bytes",
+            "length": 16777378,
+            "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+          }
+        },
+        {
+          "op": "log",
+          "level": "debug",
+          "message": "解析种子：owned-large.bin => 目录：，文件清单：['owned-large.bin']"
+        },
+        {
+          "op": "response.content",
+          "value": {
+            "type": "bytes",
+            "length": 16777378,
+            "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+          }
+        },
+        {
+          "op": "cache.set",
+          "key": "41fde80e9fdee177d8758e7e3b909fb0.torrent",
+          "region": "torrents",
+          "value": {
+            "type": "bytes",
+            "length": 16777378,
+            "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+          }
+        },
+        {
+          "op": "response.content",
+          "value": {
+            "type": "bytes",
+            "length": 16777378,
+            "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+          }
+        }
+      ],
+      "logs": [
+        {
+          "level": "debug",
+          "message": "解析种子：owned-large.bin => 目录：，文件清单：['owned-large.bin']"
+        }
+      ],
+      "after_input": {
+        "type": "bytes",
+        "length": 16777378,
+        "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+      },
+      "cache_after": {
+        "41fde80e9fdee177d8758e7e3b909fb0.torrent": {
+          "type": "bytes",
+          "length": 16777378,
+          "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+        }
+      },
+      "request_count_after": 1
+    },
+    {
+      "id": "s12_hot",
+      "input": {
+        "type": "bytes",
+        "length": 16777378,
+        "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+      },
+      "outcome": {
+        "kind": "return",
+        "python_type": "tuple",
+        "value": {
+          "type": "tuple",
+          "items": [
+            {
+              "type": "Path",
+              "value": "41fde80e9fdee177d8758e7e3b909fb0.torrent"
+            },
+            {
+              "type": "bytes",
+              "length": 16777378,
+              "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+            },
+            "",
+            [
+              "owned-large.bin"
+            ],
+            ""
+          ]
+        }
+      },
+      "trace": [
+        {
+          "op": "cache.init"
+        },
+        {
+          "op": "cache.get",
+          "key": "41fde80e9fdee177d8758e7e3b909fb0.torrent",
+          "region": "torrents",
+          "value": {
+            "type": "bytes",
+            "length": 16777378,
+            "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+          }
+        },
+        {
+          "op": "log",
+          "level": "debug",
+          "message": "解析种子：owned-large.bin => 目录：，文件清单：['owned-large.bin']"
+        }
+      ],
+      "logs": [
+        {
+          "level": "debug",
+          "message": "解析种子：owned-large.bin => 目录：，文件清单：['owned-large.bin']"
+        }
+      ],
+      "after_input": {
+        "type": "bytes",
+        "length": 16777378,
+        "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+      },
+      "cache_after": {
+        "41fde80e9fdee177d8758e7e3b909fb0.torrent": {
+          "type": "bytes",
+          "length": 16777378,
+          "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+        }
+      },
+      "request_count_after": 1
+    },
+    {
+      "id": "s03_qb_bytes",
+      "input": {
+        "type": "bytes",
+        "length": 16777378,
+        "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+      },
+      "outcome": {
+        "kind": "return",
+        "python_type": "tuple",
+        "value": {
+          "type": "tuple",
+          "items": [
+            true,
+            []
+          ]
+        }
+      },
+      "trace": [
+        {
+          "op": "qb.torrents_add",
+          "kwargs": {
+            "urls": null,
+            "torrent_files": {
+              "type": "bytes",
+              "length": 16777378,
+              "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+            },
+            "save_path": "/owned/save",
+            "is_paused": true,
+            "tags": [
+              "owned"
+            ],
+            "use_auto_torrent_management": false,
+            "is_sequential_download": false,
+            "is_first_last_piece_priority": false,
+            "cookie": null,
+            "category": null
+          }
+        }
+      ],
+      "logs": [],
+      "after_input": {
+        "type": "bytes",
+        "length": 16777378,
+        "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+      },
+      "cache_after": {
+        "41fde80e9fdee177d8758e7e3b909fb0.torrent": {
+          "type": "bytes",
+          "length": 16777378,
+          "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+        }
+      },
+      "request_count_after": 1
+    },
+    {
+      "id": "s03_tr_bytes",
+      "input": {
+        "type": "bytes",
+        "length": 16777378,
+        "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+      },
+      "outcome": {
+        "kind": "return",
+        "python_type": "dict",
+        "value": {
+          "hashString": "owned-recorded-transmission-id"
+        },
+        "same_recording_reply_identity": true
+      },
+      "trace": [
+        {
+          "op": "tr.add_torrent",
+          "kwargs": {
+            "torrent": {
+              "type": "bytes",
+              "length": 16777378,
+              "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+            },
+            "download_dir": "/owned/save",
+            "paused": true,
+            "labels": [
+              "owned"
+            ],
+            "cookies": null
+          }
+        }
+      ],
+      "logs": [],
+      "after_input": {
+        "type": "bytes",
+        "length": 16777378,
+        "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+      },
+      "cache_after": {
+        "41fde80e9fdee177d8758e7e3b909fb0.torrent": {
+          "type": "bytes",
+          "length": 16777378,
+          "sha256": "24a8cca8ab9e597b0672f2bfeca9be4e97bca649e1f07089d237c6681c417ba5"
+        }
+      },
+      "request_count_after": 1
+    }
+  ],
+  "source_line_events": 1218,
+  "audit_rejections": [],
+  "input_drift": [],
+  "forbidden_imports_absent": true,
+  "not_claimed": [
+    "S02 fast-bencode large reconstruction (separate dependency recovery pending)",
+    "real RequestUtils HTTP/decompression",
+    "real FileCache disk IO",
+    "daemon/vendor SDK/native wire",
+    "whole DownloadChain branches rerun",
+    "target Go execution",
+    "unbounded physical resources"
+  ]
+}

@@ -1,6 +1,16 @@
-# S03 SDK private protocol — accepted finite contract
+# S03 SDK private protocol — historical legacy contract and material/v1 successor
 
 2026-10-31. The coordinator accepted this proposed protocol before implementation. Only the two new SDK files are owned here. App/native/leaf, global transport limits, environment and ledger are unchanged by this owner. This contract is not executed native/daemon proof.
+
+## Current negotiated bytes successor
+
+The public eight command methods and result types below are unchanged. For a typed `[]byte` argument, an actually negotiated material/v1 peer uses `upload_material_begin` (ordinary callback, args exclude content, total+SHA) → exact ToHost/bytes grant → bounded private write pages → finish → one ordinary `upload_material_submit`. The current page maximum is 256 KiB. Successful Add therefore uses two ordinary callbacks; private material frames are not legacy append callbacks. Length/SHA/current identity/capability/generation are independently checked by the host, and claim consumes a terminal one-use handle before native dispatch.
+
+Only this negotiated bytes path removes the old extra 16 MiB material cap. Ordinary request/frame/callback/time restrictions remain; material traffic is separately accounted, not smuggled through ordinary counters. The public `[]byte` API, one necessary caller-input snapshot and final native materialization remain O(n). The native selected Add streams multipart/base64 from owned bytes rather than retaining multiple whole encoded bodies.
+
+No negotiated failure falls back or retries using legacy upload/invoke. Before submit, only best-effort scope-owned abort is permitted; after any submit attempt there is no abort/replay and uncertain selected effects remain errors. Scope cleanup removes only its newly created spool, not source backup/cache/hash files. An unnegotiated peer continues to use the bounded legacy protocol below. Typed nil bytes still mean empty bytes, not JSON null. See [current material documentation](../../../../docs/plugin-downloader-material.md).
+
+## Original 2026-10-31 contract (legacy path)
 
 ## Public types and eight capabilities
 
@@ -12,7 +22,7 @@
 
 qB's `SourceTruthy()` remains true for its two-member source tuple even when Success is false. TR Value is finite observed native response JSON only, pending the native mapping contract; it does not invent a complete Python Torrent, Fields or its properties. `null` is a nonempty RawMessage, not an absent value. Host errors and uncertain effects remain Go errors, never fabricated source false/null.
 
-## Private frames
+## Legacy private frames (when material/v1 is not negotiated)
 
 Nonbytes add: `{op:"invoke",downloader_id,args}` with required content, including explicit null/string. Controls: `{op:"invoke",downloader_id,ids}` with required ids, including null/empty values without normalization.
 
@@ -29,7 +39,7 @@ Final replies are exact `{success:bool,ids:[string...]}` for qB add, `{value:<or
 
 ## Bounds and proof level
 
-Generic requests remain 128 KiB. Only append gets `4*((1MiB+2)/3)+512`; material maximum remains the inherited 16 MiB. All existing global frame/wire/callback budgets remain unchanged. Source Python does not have this identical material bound; this is explicit existing platform adaptation, not unlimited source equivalence.
+For the legacy path only, generic requests remain 128 KiB, append gets `4*((1MiB+2)/3)+512`, and material maximum is the inherited 16 MiB. The historical ordinary frame/wire/callback budgets are unchanged. Source Python has no identical material bound; the negotiated successor above addresses that extra material limit without rewriting this old protocol.
 
 Ordinary UTF-8 Go values and explicit raw JSON are supported; custom marshalers/arbitrary objects and implicit non-content []byte coercion are not. Args are snapshotted before begin; byte content is snapshotted before hashing/upload. There is no retry after invoke or submit. A malformed begin without an unambiguous admitted handle is left to scope-close reclamation rather than guessing a token.
 

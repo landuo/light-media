@@ -1,6 +1,6 @@
-# S03 finite ordinary downloader command bridge
+# S03 ordinary downloader command bridge — historical finite evidence
 
-This local candidate extends 41c8e935. It is not full S03 or full-platform equivalence, not a remote push, and has no CI-green claim.
+Historical record: this finite candidate extended 41c8e935. Its measurements and failures below describe that version, not the later material/v1 executable. Current bytes material behavior is documented in [plugin-downloader-material.md](../../../docs/plugin-downloader-material.md); the later source-grounded URL/Cookie synchronization is recorded in [s03-qb-cookie](../s03-qb-cookie/README.md). Neither successor changes these original observations or implies full-platform/CI acceptance.
 
 ## Implemented and actually exercised
 
@@ -18,7 +18,7 @@ Final normal CLI actually ran two non-safe-mode hosts, PID25 then73, same owned 
 
 ## Retained boundaries
 
-The existing 16 MiB material, 128 KiB generic request, 64 callbacks and framing budgets remain explicit limits, not source-unlimited equivalence. Arbitrary Python objects/file-like values, unrestricted vendor kwargs, full Transmission Torrent object properties, qB URL-plus-truthy-Cookie/global synchronization and real service behavior remain pending. Source constructor/global settings synchronization is not certified.
+The historical unnegotiated upload protocol retains its 16 MiB material limit. The current negotiated material/v1 bytes path removes that extra material cap without enlarging ordinary 128 KiB requests, callback counts, bounded physical frames or invocation time budgets. Material frames have separate authorized accounting; this is not unlimited ordinary traffic or O(1) memory. Arbitrary Python objects/file-like values, unrestricted vendor kwargs, full Transmission Torrent properties and real daemon behavior are not certified by this historical finite record. URL-plus-truthy-Cookie synchronization has a separate later accepted source/native/host record linked above; it must not be described as still pending solely from this old note. Source constructor/global settings synchronization is not certified here.
 
 After selected delegation an error retains unknown-effect semantics; no application-level selected mutation replay is promised. Go may internally retry an empty-body request on a reused connection after proven nothingWrittenError: do not infer universally one physical attempt. Old callback probes do not prove arbitrary old live upload-submit tokens. No real files, media, torrents, NAS, daemon, browser or deployment were mutated/tested.
 

@@ -88,22 +88,42 @@ func materialExchange(ctx context.Context, grant MaterialGrant, operation string
 	}
 	return bridge(ctx, grant, operation, offset, data)
 }
+
+// This value is created only below from an independently marshaled payload.
+// It is not a cached validation bit on Frame or on caller-owned RawMessage.
+// The sole reader/serial gate or one pending exchange owns its lifetime.
+type materialPreparedRequest struct {
+	frame   Frame
+	checked materialRequest
+}
+
+// Existing Frame-returning seam remains unchanged for the concurrent runtime.
 func materialPeerRequest(identity Identity, invocation string, grant MaterialGrant, operation string, offset int64, data []byte) (Frame, error) {
+	prepared, err := materialPreparePeerRequest(identity, invocation, grant, operation, offset, data)
+	return prepared.frame, err
+}
+
+func materialPreparePeerRequest(identity Identity, invocation string, grant MaterialGrant, operation string, offset int64, data []byte) (materialPreparedRequest, error) {
 	if grant.Invocation != invocation {
-		return Frame{}, failure("material_identity_mismatch")
+		return materialPreparedRequest{}, failure("material_identity_mismatch")
 	}
 	if data == nil {
 		data = []byte{}
 	}
 	raw, err := json.Marshal(materialRequest{Grant: grant, Operation: operation, Offset: offset, Data: data})
 	if err != nil {
-		return Frame{}, err
+		return materialPreparedRequest{}, err
 	}
 	frame := Frame{Protocol: ProtocolVersion, ID: invocation + "." + grant.Token, Type: "host_call", Identity: identity, Method: materialMethod, Payload: raw}
-	if _, err = decodeMaterialRequest(frame); err != nil {
-		return Frame{}, err
+	checked, err := decodeMaterialRequest(frame)
+	if err != nil {
+		return materialPreparedRequest{}, err
 	}
-	return frame, nil
+	// json.Marshal allocated the payload above, with no caller-owned raw alias.
+	// Reply validation needs only immutable grant/operation/offset metadata;
+	// do not retain an additional decoded copy of the entire data page.
+	checked.Data = nil
+	return materialPreparedRequest{frame: frame, checked: checked}, nil
 }
 
 func (s *wireSession) serialMaterialContext(ctx context.Context, invocation string, gate chan struct{}, phase *callbackPhase) context.Context {
@@ -125,13 +145,13 @@ func (s *wireSession) serialMaterialContext(ctx context.Context, invocation stri
 		if phase.closed.Load() || callCtx.Err() != nil || ctx.Err() != nil {
 			return materialResponse{}, failure("execution_canceled")
 		}
-		request, err := materialPeerRequest(s.identity, invocation, grant, operation, offset, data)
+		request, err := materialPreparePeerRequest(s.identity, invocation, grant, operation, offset, data)
 		if err != nil {
 			return materialResponse{}, err
 		}
 		stop := context.AfterFunc(callCtx, s.abort)
 		defer stop()
-		value, err := s.materialPeerExchange(callCtx, invocation, request)
+		value, err := s.materialPeerExchangePrepared(callCtx, invocation, request)
 		if err != nil {
 			s.abort()
 		}

@@ -47,6 +47,7 @@ type fixtureOperation struct {
 	Args            map[string]any
 	IDs             any
 	SyntheticLength *int
+	SourceMaterial  bool
 }
 
 type fixtureInput struct {
@@ -130,7 +131,7 @@ func optionalBool(fields map[string]json.RawMessage, name string) (bool, error) 
 
 func decodeOperation(raw json.RawMessage) (fixtureOperation, error) {
 	var out fixtureOperation
-	fields, err := exactObject(raw, "kind", "op", "downloader_id", "args", "ids", "synthetic_content")
+	fields, err := exactObject(raw, "kind", "op", "downloader_id", "args", "ids", "synthetic_content", "source_material")
 	if err != nil {
 		return out, err
 	}
@@ -163,6 +164,15 @@ func decodeOperation(raw json.RawMessage) (fixtureOperation, error) {
 		if !object {
 			return out, errors.New("owned add requires an ordinary JSON args object")
 		}
+		if source, exists := fields["source_material"]; exists {
+			var name string
+			_, conflict := out.Args["content"]
+			_, generated := fields["synthetic_content"]
+			if json.Unmarshal(source, &name) != nil || name != "valid_large_padding" || conflict || generated {
+				return out, errors.New("owned source material requires its exact recipe selector")
+			}
+			out.SourceMaterial = true
+		}
 		if generated, exists := fields["synthetic_content"]; exists {
 			if _, conflict := out.Args["content"]; conflict {
 				return out, errors.New("synthetic content cannot replace an explicit content argument")
@@ -181,7 +191,8 @@ func decodeOperation(raw json.RawMessage) (fixtureOperation, error) {
 	case "start", "recheck", "delete_keep_files":
 		_, hasArgs := fields["args"]
 		_, hasSynthetic := fields["synthetic_content"]
-		if hasArgs || hasSynthetic {
+		_, hasSource := fields["source_material"]
+		if hasArgs || hasSynthetic || hasSource {
 			return out, errors.New("owned control accepts ids only")
 		}
 		out.IDs, err = jsonValue(fields["ids"])
@@ -234,6 +245,7 @@ type materialObservation struct {
 type hostCallCounts struct {
 	Total              int   `json:"total"`
 	Begin              int   `json:"begin"`
+	MaterialBegin      int   `json:"material_begin"`
 	Append             int   `json:"append"`
 	Submit             int   `json:"submit"`
 	Abort              int   `json:"abort"`
@@ -247,18 +259,26 @@ type hostCallCounts struct {
 	MaxInputJSONBytes  int   `json:"max_input_json_bytes"`
 }
 
+// Fixed grant metadata only: token, handle and input values remain private.
+type ownedCommandMaterialGrant struct {
+	Contract, Capability, Direction, Kind, SHA256 string
+	Total                                         int64
+	ChunkBytes                                    int `json:"chunk_bytes"`
+}
+
 type commandAttempt struct {
-	Index        int                  `json:"index"`
-	Kind         string               `json:"kind"`
-	Op           string               `json:"op"`
-	DownloaderID string               `json:"downloader_id"`
-	OK           bool                 `json:"ok"`
-	Result       json.RawMessage      `json:"result,omitempty"`
-	ResultKind   string               `json:"result_kind,omitempty"`
-	SourceTruthy *bool                `json:"source_truthy,omitempty"`
-	Generated    *materialObservation `json:"generated,omitempty"`
-	ErrorCode    string               `json:"error_code,omitempty"`
-	HostCalls    hostCallCounts       `json:"host_calls"`
+	Index         int                        `json:"index"`
+	Kind          string                     `json:"kind"`
+	Op            string                     `json:"op"`
+	DownloaderID  string                     `json:"downloader_id"`
+	OK            bool                       `json:"ok"`
+	Result        json.RawMessage            `json:"result,omitempty"`
+	ResultKind    string                     `json:"result_kind,omitempty"`
+	SourceTruthy  *bool                      `json:"source_truthy,omitempty"`
+	Generated     *materialObservation       `json:"generated,omitempty"`
+	ErrorCode     string                     `json:"error_code,omitempty"`
+	HostCalls     hostCallCounts             `json:"host_calls"`
+	MaterialGrant *ownedCommandMaterialGrant `json:"material_grant,omitempty"`
 }
 
 // Captured payloads remain private, are never serialized into a report, and are
@@ -347,16 +367,19 @@ func observeHostCall(counts *hostCallCounts, raw json.RawMessage) string {
 		return "unrecognized"
 	}
 	switch frame.Op {
-	case "upload_begin":
+	case "upload_begin", "upload_material_begin":
 		counts.Begin++
+		if frame.Op == "upload_material_begin" {
+			counts.MaterialBegin++
+		}
 	case "upload_append":
 		counts.Append++
 		if content, err := base64.StdEncoding.Strict().DecodeString(frame.Data); err == nil {
 			counts.AppendPayloadBytes += int64(len(content))
 		}
-	case "upload_submit":
+	case "upload_submit", "upload_material_submit":
 		counts.Submit++
-	case "upload_abort":
+	case "upload_abort", "upload_material_abort":
 		counts.Abort++
 	case "invoke":
 		counts.Invoke++
@@ -366,10 +389,30 @@ func observeHostCall(counts *hostCallCounts, raw json.RawMessage) string {
 	return frame.Op
 }
 
+// Exact owned original input recipe; no file/URL/environment selection.
+func ownedSourceMaterial() []byte {
+	const prefix = "d8:announce32:https://tracker.invalid/announce4:infod6:lengthi1e4:name15:owned-large.bin12:piece lengthi16384e6:pieces20:\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000e7:padding16777217:"
+	const suffix = "e"
+	const padding = 16777217
+	content := make([]byte, len(prefix)+padding+len(suffix))
+	copy(content, prefix)
+	for i := len(prefix); i < len(prefix)+padding; i++ {
+		content[i] = 'x'
+	}
+	copy(content[len(prefix)+padding:], suffix)
+	return content
+}
+
 func generatedArgs(input fixtureOperation) (map[string]any, *materialObservation) {
 	args := make(map[string]any, len(input.Args)+1)
 	for key, value := range input.Args {
 		args[key] = value
+	}
+	if input.SourceMaterial {
+		content := ownedSourceMaterial()
+		digest := sha256.Sum256(content)
+		args["content"] = content
+		return args, &materialObservation{Kind: "valid_large_padding", Length: len(content), SHA256: hex.EncodeToString(digest[:])}
 	}
 	if input.SyntheticLength == nil {
 		return args, nil
@@ -406,6 +449,14 @@ func dispatchCommand(ctx context.Context, host plugins.HostCaller, index int, in
 		response, err := host(callCtx, method, raw)
 		attempt.HostCalls.OutputJSONBytes += int64(len(response))
 		if err == nil {
+			if op == "upload_material_begin" {
+				var metadata struct {
+					Material *ownedCommandMaterialGrant `json:"material"`
+				}
+				if json.Unmarshal(response, &metadata) == nil {
+					attempt.MaterialGrant = metadata.Material
+				}
+			}
 			attempt.HostCalls.Succeeded++
 			if first == nil {
 				first = &successfulFrame{Method: method, Payload: bytes.Clone(raw), Operation: op}
@@ -503,7 +554,7 @@ func (o *fixtureObject) snapshot(ctx context.Context, raw json.RawMessage, host 
 			probe.CallbackAttempts = 1
 			probe.InputJSONBytes = len(lastSuccessful.Frame.Payload)
 			// Exactly one captured, previously successful frame on the OLD caller.
-			// For byte adds this is upload_begin, NOT submit or live-token proof.
+			// For byte adds this is the actual legacy or material begin, NOT submit or live-token proof.
 			// No retry even if an expiration bug accepts the owned synthetic call.
 			response, probeErr := previous(ctx, lastSuccessful.Frame.Method, lastSuccessful.Frame.Payload)
 			probe.OutputJSONBytes, probe.ErrorCode = len(response), safeErrorCode(probeErr)

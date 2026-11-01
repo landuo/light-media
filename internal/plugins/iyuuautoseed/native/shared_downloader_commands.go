@@ -6,17 +6,13 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
-	"encoding/base64"
 	"encoding/json"
 	"io"
 	"math"
 	"math/big"
-	"mime/multipart"
 	"net"
 	"net/http"
-	"net/textproto"
 	"net/url"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -291,9 +287,6 @@ func (q *sharedQBCommands) addInside(ctx context.Context, in downloadercommands.
 		if !ok {
 			return nil, commandBoundary("file mappings, paths and file-like values are not exposed")
 		}
-		if len(content) > 16<<20 {
-			return nil, commandBoundary("material exceeds retained 16MiB bound")
-		}
 	}
 	form := url.Values{}
 	if cookie != nil {
@@ -401,33 +394,12 @@ func (q *sharedQBCommands) addInside(ctx context.Context, in downloadercommands.
 	if in.Extra["use_download_path"] == nil && in.Extra["download_path"] != nil {
 		form.Set("useDownloadPath", "True")
 	}
-	payload, contentType := form.Encode(), "application/x-www-form-urlencoded"
+	var raw []byte
 	if len(content) > 0 {
-		var body bytes.Buffer
-		writer := multipart.NewWriter(&body)
-		keys := make([]string, 0, len(form))
-		for key := range form {
-			keys = append(keys, key)
-		}
-		sort.Strings(keys)
-		for _, key := range keys {
-			if err = writer.WriteField(key, form.Get(key)); err != nil {
-				return nil, err
-			}
-		}
-		part, err := writer.CreatePart(textproto.MIMEHeader{"Content-Disposition": {`form-data; name="torrent__0"; filename="torrent__0"`}})
-		if err != nil {
-			return nil, err
-		}
-		if _, err = part.Write(content); err != nil {
-			return nil, err
-		}
-		if err = writer.Close(); err != nil {
-			return nil, err
-		}
-		payload, contentType = body.String(), writer.FormDataContentType()
+		raw, err = q.addMaterial(ctx, form, content)
+	} else {
+		raw, err = q.owner.iyuu.client.qbSelected(ctx, http.MethodPost, "torrents/add", form.Encode(), "application/x-www-form-urlencoded")
 	}
-	raw, err := q.owner.iyuu.client.qbSelected(ctx, http.MethodPost, "torrents/add", payload, contentType)
 	if err != nil {
 		return nil, err
 	}
@@ -611,6 +583,7 @@ func (t *sharedTRCommands) DeleteKeepFiles(ctx context.Context, ids any) (any, e
 func (t *sharedTRCommands) Add(ctx context.Context, in downloadercommands.TRAddCall) (any, error) {
 	return t.owner.run(ctx, func(ctx context.Context) (any, error) {
 		args := map[string]any{}
+		var material []byte
 		switch value := in.Content.(type) {
 		case nil:
 			return nil, commandValueError("add_torrent requires data or a URI.")
@@ -618,10 +591,8 @@ func (t *sharedTRCommands) Add(ctx context.Context, in downloadercommands.TRAddC
 			if len(value) == 0 {
 				return nil, commandValueError("Torrent metadata is empty")
 			}
-			if len(value) > 16<<20 {
-				return nil, commandBoundary("material exceeds retained 16MiB bound")
-			}
-			args["metainfo"] = base64.StdEncoding.EncodeToString(value)
+			// Preserve the old pre-session encoding snapshot with one raw clone.
+			material = bytes.Clone(value)
 		case string:
 			// This layer does not parse/fetch/normalize the remote URL. The
 			// selected source branch only distinguishes its explicit scheme.
@@ -681,7 +652,12 @@ func (t *sharedTRCommands) Add(ctx context.Context, in downloadercommands.TRAddC
 		if err = t.owner.trInit(ctx); err != nil {
 			return nil, err
 		}
-		result, err := t.owner.trRequest(ctx, "torrent-add", args, true)
+		var result map[string]any
+		if material != nil {
+			result, err = t.owner.addTRMaterial(ctx, args, material)
+		} else {
+			result, err = t.owner.trRequest(ctx, "torrent-add", args, true)
+		}
 		if err != nil {
 			return nil, err
 		}

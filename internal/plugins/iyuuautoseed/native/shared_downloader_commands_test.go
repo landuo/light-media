@@ -92,7 +92,7 @@ func TestSharedDownloaderCommandQBControls(t *testing.T) {
 func TestSharedDownloaderCommandQBAdd(t *testing.T) {
 	data := []byte("owned unparsed torrent bytes")
 	var adds, versions atomic.Int32
-	peer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	peer := ownedMaterialStreamPeer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/api/v2/app/webapiVersion":
 			versions.Add(1)
@@ -294,7 +294,7 @@ func TestSharedDownloaderCommandTRControls(t *testing.T) {
 func TestSharedDownloaderCommandTRAdd(t *testing.T) {
 	data := []byte("owned invalid-bencode-but-vendor-byte-input")
 	var total, adds atomic.Int32
-	peer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	peer := ownedMaterialStreamPeer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		total.Add(1)
 		var req map[string]any
 		d := json.NewDecoder(r.Body)

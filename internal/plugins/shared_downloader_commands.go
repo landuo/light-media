@@ -191,6 +191,9 @@ func downloaderCommandAdd(ctx context.Context, host HostCaller, id, capability s
 		}
 		return downloaderCommandCall(ctx, host, capability, request, downloaderCommandRequestMaxBytes)
 	}
+	if materialPeerAvailable(ctx) {
+		return downloaderCommandAddMaterial(ctx, host, id, capability, plain, payload)
+	}
 	if len(payload) > TorrentMaterialMaxBytes {
 		return nil, errors.New("downloader add material exceeds the existing 16MiB bound")
 	}

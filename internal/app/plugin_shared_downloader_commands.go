@@ -232,6 +232,43 @@ func (a *App) originalDownloaderCommandResourceWithFactory(ctx context.Context, 
 		return out, nil
 	}
 	switch operation {
+	case "upload_material_begin":
+		if action != "add" {
+			return nil, originalDownloaderUploadInvalid()
+		}
+		return a.beginOriginalDownloaderMaterial(ctx, scope, method, kind, fields)
+	case "upload_material_submit", "upload_material_abort":
+		if action != "add" || !originalDownloaderCommandKeys(fields, "op", "handle") {
+			return nil, originalDownloaderUploadInvalid()
+		}
+		if err = plugins.CheckMaterialHost(ctx, method); err != nil {
+			return nil, err
+		}
+		var handle string
+		if json.Unmarshal(fields["handle"], &handle) != nil {
+			return nil, originalDownloaderUploadInvalid()
+		}
+		snapshot, err = scope.downloaderUploads.snapshotMaterial(ctx, method, handle)
+		if err != nil {
+			return nil, err
+		}
+		guard = a.originalDownloaderCommandGuard(scope, kind, snapshot)
+		if err = guard(ctx); err != nil {
+			return nil, err
+		}
+		if operation == "upload_material_abort" {
+			if err = scope.downloaderUploads.abortMaterial(ctx, method, handle); err != nil {
+				return nil, err
+			}
+			return respond(map[string]bool{"aborted": true})
+		}
+		var content []byte
+		snapshot, content, err = scope.downloaderUploads.claimMaterialBound(ctx, method, handle)
+		if err != nil {
+			return nil, err
+		}
+		snapshot.args["content"] = content
+		guard = a.originalDownloaderCommandGuard(scope, kind, snapshot)
 	case "upload_append", "upload_submit", "upload_abort":
 		if action != "add" {
 			return nil, originalDownloaderUploadInvalid()

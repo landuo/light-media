@@ -187,6 +187,33 @@ func (s *wireSession) materialPeerExchange(ctx context.Context, invocation strin
 	return value, nil
 }
 
+// Runtime-only fast path for the private constructor-owned immutable request.
+// The original Frame seam above still revalidates arbitrary supplied frames.
+func (s *wireSession) materialPeerExchangePrepared(ctx context.Context, invocation string, request materialPreparedRequest) (materialResponse, error) {
+	var zero materialResponse
+	if s.role != "worker" || request.frame.Identity != s.identity || request.checked.Grant.Invocation != invocation {
+		return zero, failure("material_identity_mismatch")
+	}
+	if err := s.materialWrite(ctx, request.frame); err != nil {
+		return zero, err
+	}
+	reply, n, err := s.materialRead()
+	if err != nil {
+		return zero, err
+	}
+	value, err := materialAcceptPreparedReply(request, reply)
+	if err != nil {
+		return zero, err
+	}
+	if err = s.materialAdmitRead(n); err != nil {
+		return zero, err
+	}
+	if err = ctx.Err(); err != nil {
+		return zero, err
+	}
+	return value, nil
+}
+
 func (s *wireSession) materialStats() materialWireStats {
 	return materialWireStats{s.materialInputBytes, s.materialOutputBytes, s.materialSentFrames, s.materialReadFrames}
 }

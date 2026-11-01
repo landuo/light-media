@@ -88,7 +88,13 @@ func materialUniqueJSON(raw []byte) error {
 
 func materialExactFields(raw []byte, names ...string) bool {
 	var fields map[string]json.RawMessage
-	if json.Unmarshal(raw, &fields) != nil || len(fields) != len(names) {
+	return json.Unmarshal(raw, &fields) == nil && materialExactFieldMap(fields, names...)
+}
+
+// Reuse the one locally decoded map; this does not validate duplicate keys.
+// Every material packet still performs materialUniqueJSON before typed decode.
+func materialExactFieldMap(fields map[string]json.RawMessage, names ...string) bool {
+	if len(fields) != len(names) {
 		return false
 	}
 	for _, name := range names {
@@ -101,11 +107,10 @@ func materialExactFields(raw []byte, names ...string) bool {
 
 func decodeMaterialRequest(frame Frame) (materialRequest, error) {
 	var r materialRequest
-	if frame.Protocol != ProtocolVersion || frame.Type != "host_call" || frame.Method != materialMethod || frame.Result != nil || frame.Error != nil || len(frame.Payload) > 4*((MaterialFrameBytes+2)/3)+2048 || materialUniqueJSON(frame.Payload) != nil || !materialExactFields(frame.Payload, "grant", "operation", "offset", "data") || strictJSON(frame.Payload, &r) != nil {
+	var fields map[string]json.RawMessage
+	if frame.Protocol != ProtocolVersion || frame.Type != "host_call" || frame.Method != materialMethod || frame.Result != nil || frame.Error != nil || len(frame.Payload) > 4*((MaterialFrameBytes+2)/3)+2048 || materialUniqueJSON(frame.Payload) != nil || json.Unmarshal(frame.Payload, &fields) != nil || !materialExactFieldMap(fields, "grant", "operation", "offset", "data") || strictJSON(frame.Payload, &r) != nil {
 		return r, failure("invalid_material_frame")
 	}
-	var fields map[string]json.RawMessage
-	_ = json.Unmarshal(frame.Payload, &fields)
 	if !materialExactFields(fields["grant"], "contract", "token", "invocation", "chunk_bytes", "capability", "direction", "kind", "total", "sha256") || !validMaterialSpec(r.Grant.MaterialSpec) || r.Grant.Contract != MaterialContract || r.Grant.ChunkBytes < 1 || r.Grant.ChunkBytes > MaterialFrameBytes || len(r.Grant.Token) != 64 || frame.ID != r.Grant.Invocation+"."+r.Grant.Token || r.Offset < 0 || r.Data == nil || len(r.Data) > r.Grant.ChunkBytes || !materialCanonicalData(fields["data"], r.Data) {
 		return r, failure("invalid_material_frame")
 	}
@@ -214,16 +219,25 @@ func (s *materialHostScope) handle(ctx context.Context, frame Frame) (Frame, err
 // worker-side authority grant: the host still looks up its independently issued
 // token and checks its current owner on every frame.
 func materialAcceptReply(request Frame, reply Frame) (materialResponse, error) {
-	var response materialResponse
 	r, err := decodeMaterialRequest(request)
 	if err != nil {
-		return response, err
+		return materialResponse{}, err
 	}
-	if reply.Protocol != ProtocolVersion || reply.Identity != request.Identity || reply.Type != "host_result" || reply.ID != request.ID || reply.Method != "" || reply.Payload != nil || reply.Error != nil || materialUniqueJSON(reply.Result) != nil || !materialExactFields(reply.Result, "token", "offset", "next", "data", "finished") || strictJSON(reply.Result, &response) != nil || response.Token != r.Grant.Token || response.Offset != r.Offset || response.Next < r.Offset || response.Next > r.Grant.Total || response.Data == nil {
+	return materialAcceptReplyDecoded(request, r, reply)
+}
+
+// Only a private locally generated request may reuse its decoded metadata.
+// Incoming replies still undergo every original external-boundary check.
+func materialAcceptPreparedReply(request materialPreparedRequest, reply Frame) (materialResponse, error) {
+	return materialAcceptReplyDecoded(request.frame, request.checked, reply)
+}
+
+func materialAcceptReplyDecoded(request Frame, r materialRequest, reply Frame) (materialResponse, error) {
+	var response materialResponse
+	var fields map[string]json.RawMessage
+	if reply.Protocol != ProtocolVersion || reply.Identity != request.Identity || reply.Type != "host_result" || reply.ID != request.ID || reply.Method != "" || reply.Payload != nil || reply.Error != nil || materialUniqueJSON(reply.Result) != nil || json.Unmarshal(reply.Result, &fields) != nil || !materialExactFieldMap(fields, "token", "offset", "next", "data", "finished") || strictJSON(reply.Result, &response) != nil || response.Token != r.Grant.Token || response.Offset != r.Offset || response.Next < r.Offset || response.Next > r.Grant.Total || response.Data == nil {
 		return response, failure("invalid_material_reply")
 	}
-	var fields map[string]json.RawMessage
-	_ = json.Unmarshal(reply.Result, &fields)
 	if !materialCanonicalData(fields["data"], response.Data) {
 		return response, failure("invalid_material_reply")
 	}
@@ -252,8 +266,10 @@ func materialCanonicalData(raw json.RawMessage, data []byte) bool {
 	if json.Unmarshal(raw, &encoded) != nil {
 		return false
 	}
-	decoded, err := base64.StdEncoding.Strict().DecodeString(encoded)
-	return err == nil && bytes.Equal(decoded, data) && base64.StdEncoding.EncodeToString(data) == encoded
+	// Equality with the canonical encoder implies successful strict decoding
+	// back to data. Keep exact string equality (including padding/no CRLF);
+	// decoding the same bytes a second time adds no acceptance constraint.
+	return base64.StdEncoding.EncodeToString(data) == encoded
 }
 
 // Size the exact fixed-schema worst-case empty controls using the real physical

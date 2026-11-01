@@ -104,9 +104,10 @@ func decodeOriginalDownloaderUploadAppend(raw json.RawMessage) (originalDownload
 // current capability/identity/scope and typed add parameters before every use.
 // This pure owner never authorizes or dispatches any downloader operation.
 type originalDownloaderCommandUploads struct {
-	mu     sync.Mutex
-	closed bool
-	values map[string]*originalDownloaderCommandUpload
+	mu        sync.Mutex
+	closed    bool
+	values    map[string]*originalDownloaderCommandUpload
+	materials map[string]*originalDownloaderMaterialUpload
 }
 
 type originalDownloaderCommandUpload struct {
@@ -120,7 +121,7 @@ type originalDownloaderCommandUpload struct {
 }
 
 func newOriginalDownloaderCommandUploads() *originalDownloaderCommandUploads {
-	return &originalDownloaderCommandUploads{values: make(map[string]*originalDownloaderCommandUpload)}
+	return &originalDownloaderCommandUploads{values: make(map[string]*originalDownloaderCommandUpload), materials: make(map[string]*originalDownloaderMaterialUpload)}
 }
 
 func (s *originalDownloaderCommandUploads) check(ctx context.Context) error {
@@ -177,7 +178,7 @@ func (s *originalDownloaderCommandUploads) beginBound(ctx context.Context, capab
 		return "", err
 	}
 	handle := "u_" + hex.EncodeToString(nonce[:])
-	if _, exists := s.values[handle]; exists {
+	if _, exists := s.values[handle]; exists || s.materials[handle] != nil {
 		return "", bad("PLUGIN_RESOURCE_CONFLICT", "入站材料句柄发生冲突")
 	}
 	// Do not allocate the declared total at begin: only received bytes consume
@@ -307,7 +308,9 @@ func (s *originalDownloaderCommandUploads) close() {
 	if s.closed {
 		return
 	}
-	s.closed, s.values = true, nil
+	s.closed, s.values, s.materials = true, nil, nil
+	// Negotiated spools are closed/joined by their exact framework grant owner;
+	// no file enumeration or user/source path cleanup occurs in this registry.
 	// Never zero backing arrays: a previously claimed slice is now owned by an
 	// actual in-flight host callback whose Drained receipt may still be pending.
 }

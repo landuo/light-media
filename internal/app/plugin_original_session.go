@@ -79,9 +79,9 @@ func (p *originalPluginInstance) originalSessionClient(ctx context.Context, runn
 		}
 		p.sessionStarted = true
 		runner.ConcurrentCalls = true
-		// S02 opts in only for the existing resource capability. Old workers
-		// without the advertisement retain the original bounded protocol.
-		runner.MaterialContinuation = p.hostContract == pluginResourcesSDKContract && slices.Contains(p.manifest.Capabilities, plugins.LocalTorrentBackupCapability)
+		// Only existing S02/S03 material capabilities opt in; old workers keep
+		// their original finite protocol without the material advertisement.
+		runner.MaterialContinuation = p.hostContract == pluginResourcesSDKContract && (slices.Contains(p.manifest.Capabilities, plugins.LocalTorrentBackupCapability) || slices.Contains(p.manifest.Capabilities, plugins.QBittorrentAddCapability) || slices.Contains(p.manifest.Capabilities, plugins.TransmissionAddCapability))
 		// Startup has a finite transport budget; it is not the business-method
 		// budget. Idle process lifetime is independent of one HTTP request.
 		p.session, err = runner.Start(context.WithoutCancel(ctx), implementation.Command, implementation.Manifest, plugins.SessionBinding{Identity: plugins.Identity{PluginID: current.PluginID, InstanceID: current.InstanceID, Version: current.Version}, Generation: current.Generation})
