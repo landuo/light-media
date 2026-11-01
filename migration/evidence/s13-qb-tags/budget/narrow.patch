@@ -1,0 +1,96 @@
+--- before/pending_call.go
++++ candidate/pending_call.go
+@@ -59,6 +59,9 @@
+ 	if c == nil || !c.SupportsConcurrent() {
+ 		return nil, failure("concurrent_session_unsupported")
+ 	}
++	if options.ExcludeHostMethod != "" {
++		return nil, failure("invalid_limits") // This opt-in is serial-only.
++	}
+ 	if options.CallerDeadlineOnly && options.Timeout != 0 {
+ 		return nil, failure("invalid_limits")
+ 	}
+--- before/plugin_original_session.go
++++ candidate/plugin_original_session.go
+@@ -39,6 +39,11 @@
+ 	options := plugins.CallOptions{Timeout: runner.Timeout, ExcludeHostTime: runner.ExcludeHostTime}
+ 	if client.SupportsConcurrent() {
+ 		options = plugins.CallOptions{CallerDeadlineOnly: true}
++	} else if !options.ExcludeHostTime && p.hostContract == pluginResourcesSDKContract && slices.Contains(p.manifest.Capabilities, plugins.QBittorrentGetIDByTagCapability) {
++		// Only the source-owned nine delayed reads (plus their cleanup) are
++		// native host time. Other callbacks retain this invocation's original
++		// worker budget, grants and admitted serial cancellation semantics.
++		options.ExcludeHostMethod = plugins.QBittorrentGetIDByTagCapability
+ 	}
+ 	return p.callRetainedSession(ctx, client, method, payload, callback, options, lease, closePhase)
+ }
+--- before/protocol.go
++++ candidate/protocol.go
+@@ -517,6 +517,7 @@
+ 	aborted                                                   atomic.Bool
+ 	host                                                      HostHandler
+ 	hostBudget                                                *runnerBudget
++	hostBudgetMethod                                          string // Empty preserves existing all-host exclusion.
+ 	businessFailure                                           bool
+ 	scopedCallbacks                                           bool
+ 	callbackErrors                                            bool
+@@ -819,6 +820,11 @@
+ 	CallerDeadlineOnly bool
+ 	Timeout            time.Duration
+ 	ExcludeHostTime    bool
++	// ExcludeHostMethod is trusted host-only timing for one exact callback in
++	// this serial invocation. It does not grant the capability or reset the
++	// worker budget. Mutually exclusive with both timing modes above; not
++	// supported on negotiated concurrent calls. Startup/Stop are unchanged.
++	ExcludeHostMethod string
+ }
+ 
+ func (c *Client) defaultCallOptions() CallOptions {
+@@ -835,6 +841,9 @@
+ // CallWithOptions uses fresh per-action timing policy without replacing the
+ // live object. Invalid options are rejected before sending any invocation.
+ func (c *Client) CallWithOptions(ctx context.Context, method string, payload json.RawMessage, host HostHandler, options CallOptions) (out RunResult, err error) {
++	if options.ExcludeHostMethod != "" && (options.ExcludeHostTime || options.CallerDeadlineOnly || c.concurrent != nil || !methodPattern.MatchString(options.ExcludeHostMethod) || strings.HasPrefix(options.ExcludeHostMethod, "transport.")) {
++		return out, failure("invalid_limits")
++	}
+ 	if options.CallerDeadlineOnly && options.Timeout != 0 {
+ 		return out, failure("invalid_limits")
+ 	}
+@@ -883,10 +892,17 @@
+ 	parent, cancelParent := context.WithCancel(ctx)
+ 	stopLife := context.AfterFunc(c.life, cancelParent)
+ 	defer func() { stopLife(); cancelParent() }()
+-	call, finish, budget := invocationContext(parent, options)
++	budgetOptions := options
++	if options.ExcludeHostMethod != "" {
++		// Reuse the pauseable cumulative timer, but select pauses separately
++		// in callHost. Other callbacks still consume this worker budget.
++		budgetOptions.ExcludeHostTime = true
++	}
++	call, finish, budget := invocationContext(parent, budgetOptions)
+ 	s := c.session
+ 	s.resetEpoch()
+ 	s.ctx, s.host, s.hostBudget = call, host, budget
++	s.hostBudgetMethod = options.ExcludeHostMethod
+ 	before, _ := c.stderr.snapshot()
+ 	stopped := make(chan struct{})
+ 	stopCancel := context.AfterFunc(call, func() { s.abort(); c.cancel(); close(stopped) })
+@@ -897,6 +913,7 @@
+ 		canceled := call.Err() != nil || c.life.Err() != nil
+ 		finish()
+ 		s.host, s.hostBudget, s.ctx = nil, nil, c.life
++		s.hostBudgetMethod = ""
+ 		out.HostCalls, out.SentWireBytes, out.ReadWireBytes = s.hostCalls, s.inputBytes, s.outputBytes
+ 		out.SentChunks, out.ReadChunks = s.sentChunks, s.readChunks
+ 		after, exceeded := c.stderr.snapshot()
+--- before/runner_budget.go
++++ candidate/runner_budget.go
+@@ -93,7 +93,7 @@
+ }
+ 
+ func (s *wireSession) callHost(method string, payload json.RawMessage) (json.RawMessage, error) {
+-	if s.hostBudget != nil {
++	if s.hostBudget != nil && (s.hostBudgetMethod == "" || s.hostBudgetMethod == method) {
+ 		if !s.hostBudget.pause() {
+ 			return nil, failure("execution_canceled")
+ 		}

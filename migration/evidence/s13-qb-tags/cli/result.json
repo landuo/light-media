@@ -1,0 +1,1209 @@
+{
+  "status": "PASS",
+  "kind": "S13 qB tags normal host / installed SDK / fixed owned HTTP protocol",
+  "calls": [
+    {
+      "at": "2026-11-01T00:22:06.283410+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 49605.184939056,
+      "status": 200,
+      "raw_file": "response-001.body",
+      "sha256": "b677786bd88b504ae12ece69ad05ebee8c8b06c4b3f61e17d5036439e46e0a8d",
+      "ended_monotonic": 49605.18599646
+    },
+    {
+      "at": "2026-11-01T00:22:06.285616+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 49605.18714401,
+      "status": 200,
+      "private_headers_body_not_retained": true,
+      "ended_monotonic": 49605.254190969
+    },
+    {
+      "at": "2026-11-01T00:22:06.354008+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 49605.255535986,
+      "status": 200,
+      "raw_file": "response-003.body",
+      "sha256": "5cdacc43475c4781bad627bc743cd5f7344ec94b7da4bd77590e9d63ca2215aa",
+      "ended_monotonic": 49605.256845455
+    },
+    {
+      "at": "2026-11-01T00:22:06.356374+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 49605.257900195,
+      "status": 200,
+      "raw_file": "response-004.body",
+      "sha256": "13ee72c1d78ed8d62a3686acf7c2231311c1e11b9b6923b860a8588b1a046ac6",
+      "ended_monotonic": 49605.32437044
+    },
+    {
+      "at": "2026-11-01T00:22:06.424117+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 49605.32564377,
+      "status": 405,
+      "raw_file": "response-005.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "ended_monotonic": 49605.326673422
+    },
+    {
+      "at": "2026-11-01T00:22:06.426379+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 49605.327906922,
+      "status": 200,
+      "raw_file": "response-006.body",
+      "sha256": "7e389eafbd2bd537e9f6006dd012299f0a34a45ecf23c72acf0e41782328e8a8",
+      "ended_monotonic": 49605.335924107
+    },
+    {
+      "at": "2026-11-01T00:22:06.441915+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 49605.343442961,
+      "status": 200,
+      "raw_file": "response-007.body",
+      "sha256": "4805107105e62e034d901013a7040d93886ba54fbbcc708e3f843cbc9322ed9b",
+      "ended_monotonic": 49605.360373313
+    },
+    {
+      "at": "2026-11-01T00:22:06.464772+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 49605.366298996,
+      "status": 200,
+      "raw_file": "response-008.body",
+      "sha256": "c7291e551eb40aa2bb394f688eb2ba84d13dbdb0aedaf876249f779f6751ee7d",
+      "ended_monotonic": 49608.37824698
+    },
+    {
+      "at": "2026-11-01T00:22:09.483793+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 49608.38532515,
+      "status": 200,
+      "raw_file": "response-009.body",
+      "sha256": "c8dc47e938bfabda64f1f212744bad6833bcd0c2b499b2b13b36e75b864805e0",
+      "ended_monotonic": 49611.394912895
+    },
+    {
+      "at": "2026-11-01T00:22:12.499294+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "authenticated": true,
+      "timeout_seconds": 90,
+      "started_monotonic": 49611.400821773,
+      "status": 200,
+      "raw_file": "response-010.body",
+      "sha256": "a23229d291484897353c20145a7bb84c1ebe0138244f3a85838364f7598442e6",
+      "ended_monotonic": 49642.944220309
+    },
+    {
+      "at": "2026-11-01T00:22:44.050819+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 49642.952348372,
+      "status": 200,
+      "raw_file": "response-011.body",
+      "sha256": "fb9134cacbbb75e6fd9aff9428a14c31d6a890b9689e07342c988a11a5ccd140",
+      "ended_monotonic": 49642.961489787
+    },
+    {
+      "at": "2026-11-01T00:22:44.264416+00:00",
+      "host_pid": 79,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 49643.165944122,
+      "status": 200,
+      "raw_file": "response-012.body",
+      "sha256": "81852c18954b02979040a15a13cf19f233c3b1abca5027a6af35a2c49ea80612",
+      "ended_monotonic": 49643.166685835
+    },
+    {
+      "at": "2026-11-01T00:22:44.266439+00:00",
+      "host_pid": 79,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 49643.167966205,
+      "status": 200,
+      "private_headers_body_not_retained": true,
+      "ended_monotonic": 49643.238877706
+    },
+    {
+      "at": "2026-11-01T00:22:44.338683+00:00",
+      "host_pid": 79,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 49643.240209874,
+      "status": 200,
+      "raw_file": "response-014.body",
+      "sha256": "d30605ba79de50319e07c960cba6f04d9ec5f6a1be22c207684d1393766d2247",
+      "ended_monotonic": 49643.24114251
+    },
+    {
+      "at": "2026-11-01T00:22:44.340656+00:00",
+      "host_pid": 79,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 49643.242181476,
+      "status": 405,
+      "raw_file": "response-015.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "ended_monotonic": 49643.24292007
+    },
+    {
+      "at": "2026-11-01T00:22:44.342615+00:00",
+      "host_pid": 79,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 49643.244142903,
+      "status": 200,
+      "raw_file": "response-016.body",
+      "sha256": "6ae033ee56155edaac2874d11fbdc07730750d9fb41f01562663d01702dbd8bf",
+      "ended_monotonic": 49643.252475013
+    }
+  ],
+  "peer_calls": [
+    {
+      "method": "GET",
+      "path": "/index",
+      "request_body_bytes": 0,
+      "received_monotonic": 49605.259351288,
+      "at": "2026-11-01T00:22:06.357834+00:00",
+      "status": 200,
+      "response_bytes": 1069,
+      "reply_monotonic": 49605.25935974,
+      "response_completed": true,
+      "completed_monotonic": 49605.259475735
+    },
+    {
+      "method": "GET",
+      "path": "/worker",
+      "request_body_bytes": 0,
+      "received_monotonic": 49605.260429633,
+      "at": "2026-11-01T00:22:06.358911+00:00",
+      "status": 200,
+      "response_bytes": 5306628,
+      "reply_monotonic": 49605.260436494,
+      "response_completed": true,
+      "completed_monotonic": 49605.262667216
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "received_monotonic": 49605.330465238,
+      "at": "2026-11-01T00:22:06.428947+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "reply_monotonic": 49605.330472169,
+      "response_completed": true,
+      "completed_monotonic": 49605.330556857
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/removeTags",
+      "request_body_bytes": 31,
+      "phase": "delete",
+      "received_monotonic": 49605.33143503,
+      "selected_operation": "remove_tags",
+      "at": "2026-11-01T00:22:06.429969+00:00",
+      "status": 200,
+      "response_bytes": 20,
+      "reply_monotonic": 49605.331495482,
+      "response_completed": true,
+      "completed_monotonic": 49605.331566088
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "received_monotonic": 49605.33254239,
+      "at": "2026-11-01T00:22:06.431023+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "reply_monotonic": 49605.332548289,
+      "response_completed": true,
+      "completed_monotonic": 49605.332613086
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/deleteTags",
+      "request_body_bytes": 16,
+      "phase": "delete",
+      "received_monotonic": 49605.33349458,
+      "selected_operation": "delete_tags",
+      "at": "2026-11-01T00:22:06.432009+00:00",
+      "status": 200,
+      "response_bytes": 20,
+      "reply_monotonic": 49605.33353398,
+      "response_completed": true,
+      "completed_monotonic": 49605.333662724
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "received_monotonic": 49605.346876748,
+      "at": "2026-11-01T00:22:06.445359+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "reply_monotonic": 49605.346885661,
+      "response_completed": true,
+      "completed_monotonic": 49605.346967655
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/removeTags",
+      "request_body_bytes": 30,
+      "phase": "failure-recovery",
+      "received_monotonic": 49605.348413384,
+      "selected_operation": "remove_tags",
+      "at": "2026-11-01T00:22:06.446930+00:00",
+      "status": 200,
+      "response_bytes": 20,
+      "reply_monotonic": 49605.348455768,
+      "response_completed": true,
+      "completed_monotonic": 49605.348505002
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "received_monotonic": 49605.349680949,
+      "at": "2026-11-01T00:22:06.448162+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "reply_monotonic": 49605.349686979,
+      "response_completed": true,
+      "completed_monotonic": 49605.349750755
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/deleteTags",
+      "request_body_bytes": 15,
+      "phase": "failure-recovery",
+      "received_monotonic": 49605.350726035,
+      "selected_operation": "delete_tags_unknown500",
+      "at": "2026-11-01T00:22:06.449249+00:00",
+      "status": 500,
+      "response_bytes": 17,
+      "reply_monotonic": 49605.350774738,
+      "response_completed": true,
+      "completed_monotonic": 49605.350844243
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "received_monotonic": 49605.353138066,
+      "at": "2026-11-01T00:22:06.451620+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "reply_monotonic": 49605.353145156,
+      "response_completed": true,
+      "completed_monotonic": 49605.353219799
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/removeTags",
+      "request_body_bytes": 31,
+      "phase": "failure-recovery",
+      "received_monotonic": 49605.354916006,
+      "selected_operation": "remove_tags",
+      "at": "2026-11-01T00:22:06.453429+00:00",
+      "status": 200,
+      "response_bytes": 20,
+      "reply_monotonic": 49605.354953703,
+      "response_completed": true,
+      "completed_monotonic": 49605.355006272
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "received_monotonic": 49605.356158729,
+      "at": "2026-11-01T00:22:06.454640+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "reply_monotonic": 49605.356165209,
+      "response_completed": true,
+      "completed_monotonic": 49605.356494485
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/deleteTags",
+      "request_body_bytes": 16,
+      "phase": "failure-recovery",
+      "received_monotonic": 49605.357675531,
+      "selected_operation": "delete_tags",
+      "at": "2026-11-01T00:22:06.456186+00:00",
+      "status": 200,
+      "response_bytes": 20,
+      "reply_monotonic": 49605.357711084,
+      "response_completed": true,
+      "completed_monotonic": 49605.357766328
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/info",
+      "request_body_bytes": 0,
+      "phase": "found",
+      "received_monotonic": 49608.370464017,
+      "at": "2026-11-01T00:22:09.469004+00:00",
+      "status": 200,
+      "response_bytes": 53,
+      "reply_monotonic": 49608.370535975,
+      "response_completed": true,
+      "completed_monotonic": 49608.370639491
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "received_monotonic": 49608.371736189,
+      "at": "2026-11-01T00:22:09.470217+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "reply_monotonic": 49608.371742809,
+      "response_completed": true,
+      "completed_monotonic": 49608.371799896
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/removeTags",
+      "request_body_bytes": 40,
+      "phase": "found",
+      "received_monotonic": 49608.372725601,
+      "selected_operation": "remove_tags",
+      "at": "2026-11-01T00:22:09.471235+00:00",
+      "status": 200,
+      "response_bytes": 20,
+      "reply_monotonic": 49608.372760434,
+      "response_completed": true,
+      "completed_monotonic": 49608.372814275
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "received_monotonic": 49608.373637841,
+      "at": "2026-11-01T00:22:09.472119+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "reply_monotonic": 49608.373645313,
+      "response_completed": true,
+      "completed_monotonic": 49608.373714026
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/deleteTags",
+      "request_body_bytes": 16,
+      "phase": "found",
+      "received_monotonic": 49608.374789342,
+      "selected_operation": "delete_tags",
+      "at": "2026-11-01T00:22:09.473296+00:00",
+      "status": 200,
+      "response_bytes": 20,
+      "reply_monotonic": 49608.37482111,
+      "response_completed": true,
+      "completed_monotonic": 49608.37487386
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/info",
+      "request_body_bytes": 0,
+      "phase": "attribute",
+      "received_monotonic": 49611.389234095,
+      "at": "2026-11-01T00:22:12.487775+00:00",
+      "status": 200,
+      "response_bytes": 3,
+      "reply_monotonic": 49611.389307295,
+      "response_completed": true,
+      "completed_monotonic": 49611.389397021
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/info",
+      "request_body_bytes": 0,
+      "phase": "slow-empty",
+      "received_monotonic": 49614.405165156,
+      "owned_response_delay_seconds": 0.5,
+      "at": "2026-11-01T00:22:16.003844+00:00",
+      "status": 200,
+      "response_bytes": 2,
+      "reply_monotonic": 49614.905391653,
+      "response_completed": true,
+      "completed_monotonic": 49614.905533196
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/info",
+      "request_body_bytes": 0,
+      "phase": "slow-empty",
+      "received_monotonic": 49617.910289385,
+      "owned_response_delay_seconds": 0.5,
+      "at": "2026-11-01T00:22:19.509003+00:00",
+      "status": 200,
+      "response_bytes": 2,
+      "reply_monotonic": 49618.410549404,
+      "response_completed": true,
+      "completed_monotonic": 49618.410696145
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/info",
+      "request_body_bytes": 0,
+      "phase": "slow-empty",
+      "received_monotonic": 49621.413534569,
+      "owned_response_delay_seconds": 0.5,
+      "at": "2026-11-01T00:22:23.012217+00:00",
+      "status": 200,
+      "response_bytes": 2,
+      "reply_monotonic": 49621.91376214,
+      "response_completed": true,
+      "completed_monotonic": 49621.913932186
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/info",
+      "request_body_bytes": 0,
+      "phase": "slow-empty",
+      "received_monotonic": 49624.917276772,
+      "owned_response_delay_seconds": 0.5,
+      "at": "2026-11-01T00:22:26.516178+00:00",
+      "status": 200,
+      "response_bytes": 2,
+      "reply_monotonic": 49625.417804098,
+      "response_completed": true,
+      "completed_monotonic": 49625.418308669
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/info",
+      "request_body_bytes": 0,
+      "phase": "slow-empty",
+      "received_monotonic": 49628.421690281,
+      "owned_response_delay_seconds": 0.5,
+      "at": "2026-11-01T00:22:30.020379+00:00",
+      "status": 200,
+      "response_bytes": 2,
+      "reply_monotonic": 49628.921927016,
+      "response_completed": true,
+      "completed_monotonic": 49628.922108159
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/info",
+      "request_body_bytes": 0,
+      "phase": "slow-empty",
+      "received_monotonic": 49631.925463186,
+      "owned_response_delay_seconds": 0.5,
+      "at": "2026-11-01T00:22:33.524138+00:00",
+      "status": 200,
+      "response_bytes": 2,
+      "reply_monotonic": 49632.425685327,
+      "response_completed": true,
+      "completed_monotonic": 49632.426020192
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/info",
+      "request_body_bytes": 0,
+      "phase": "slow-empty",
+      "received_monotonic": 49635.431175936,
+      "owned_response_delay_seconds": 0.5,
+      "at": "2026-11-01T00:22:37.030187+00:00",
+      "status": 200,
+      "response_bytes": 2,
+      "reply_monotonic": 49635.931732442,
+      "response_completed": true,
+      "completed_monotonic": 49635.932236732
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/info",
+      "request_body_bytes": 0,
+      "phase": "slow-empty",
+      "received_monotonic": 49638.935150339,
+      "owned_response_delay_seconds": 0.5,
+      "at": "2026-11-01T00:22:40.533826+00:00",
+      "status": 200,
+      "response_bytes": 2,
+      "reply_monotonic": 49639.43537215,
+      "response_completed": true,
+      "completed_monotonic": 49639.435542237
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/info",
+      "request_body_bytes": 0,
+      "phase": "slow-empty",
+      "received_monotonic": 49642.439371732,
+      "owned_response_delay_seconds": 0.5,
+      "at": "2026-11-01T00:22:44.038061+00:00",
+      "status": 200,
+      "response_bytes": 2,
+      "reply_monotonic": 49642.939606635,
+      "response_completed": true,
+      "completed_monotonic": 49642.939797342
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "received_monotonic": 49642.955427268,
+      "at": "2026-11-01T00:22:44.053910+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "reply_monotonic": 49642.955437353,
+      "response_completed": true,
+      "completed_monotonic": 49642.955517534
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/removeTags",
+      "request_body_bytes": 31,
+      "phase": "after-slow",
+      "received_monotonic": 49642.956284715,
+      "selected_operation": "remove_tags",
+      "at": "2026-11-01T00:22:44.054800+00:00",
+      "status": 200,
+      "response_bytes": 20,
+      "reply_monotonic": 49642.956325247,
+      "response_completed": true,
+      "completed_monotonic": 49642.956482023
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "received_monotonic": 49642.957464028,
+      "at": "2026-11-01T00:22:44.055945+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "reply_monotonic": 49642.957469807,
+      "response_completed": true,
+      "completed_monotonic": 49642.95751826
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/deleteTags",
+      "request_body_bytes": 16,
+      "phase": "after-slow",
+      "received_monotonic": 49642.958388987,
+      "selected_operation": "delete_tags",
+      "at": "2026-11-01T00:22:44.056890+00:00",
+      "status": 200,
+      "response_bytes": 20,
+      "reply_monotonic": 49642.958415157,
+      "response_completed": true,
+      "completed_monotonic": 49642.958470971
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "received_monotonic": 49643.246267191,
+      "at": "2026-11-01T00:22:44.344749+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "reply_monotonic": 49643.246274492,
+      "response_completed": true,
+      "completed_monotonic": 49643.246352429
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/removeTags",
+      "request_body_bytes": 31,
+      "phase": "cold",
+      "received_monotonic": 49643.247193873,
+      "selected_operation": "remove_tags",
+      "at": "2026-11-01T00:22:44.345709+00:00",
+      "status": 200,
+      "response_bytes": 20,
+      "reply_monotonic": 49643.247234905,
+      "response_completed": true,
+      "completed_monotonic": 49643.247317659
+    },
+    {
+      "method": "GET",
+      "path": "/api/v2/app/webapiVersion",
+      "request_body_bytes": 0,
+      "received_monotonic": 49643.249296477,
+      "at": "2026-11-01T00:22:44.347777+00:00",
+      "status": 200,
+      "response_bytes": 6,
+      "reply_monotonic": 49643.249302586,
+      "response_completed": true,
+      "completed_monotonic": 49643.249357819
+    },
+    {
+      "method": "POST",
+      "path": "/api/v2/torrents/deleteTags",
+      "request_body_bytes": 16,
+      "phase": "cold",
+      "received_monotonic": 49643.250346175,
+      "selected_operation": "delete_tags",
+      "at": "2026-11-01T00:22:44.348859+00:00",
+      "status": 200,
+      "response_bytes": 20,
+      "reply_monotonic": 49643.250384442,
+      "response_completed": true,
+      "completed_monotonic": 49643.250439475
+    }
+  ],
+  "processes": [
+    {
+      "pid": 24,
+      "identity": {
+        "ppid": 2,
+        "starttime": "4960505"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/private-data",
+      "executable_sha256": "bf088d4f11cb91c0d97cab106fc8edd5904f8874c40cbfa0c6d5b6c45cdc5837",
+      "owned_listener_inode": "904634",
+      "exit": 0
+    },
+    {
+      "pid": 79,
+      "identity": {
+        "ppid": 2,
+        "starttime": "4964297"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/private-data",
+      "executable_sha256": "bf088d4f11cb91c0d97cab106fc8edd5904f8874c40cbfa0c6d5b6c45cdc5837",
+      "owned_listener_inode": "901775",
+      "exit": 0
+    }
+  ],
+  "queries": [
+    {
+      "label": "actual_two_write_delete",
+      "host_pid": 24,
+      "response": {
+        "pid": 41,
+        "init_count": 1,
+        "invocation": 1,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "delete_tags",
+            "downloader_id": "owned-qb-tags-qb",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 88,
+              "output_json_bytes": 14
+            }
+          }
+        ]
+      },
+      "phase": "delete",
+      "selected_before": {},
+      "selected_after": {
+        "remove_tags": 1,
+        "delete_tags": 1
+      },
+      "selected_delta": {
+        "delete_tags": 1,
+        "remove_tags": 1
+      },
+      "peer_entry_start": 2,
+      "peer_entry_end": 6,
+      "controller_timeout_seconds": 30,
+      "elapsed_seconds": 0.008017184998607263
+    },
+    {
+      "label": "second_selected500_unknown_then_same_worker_recovery",
+      "host_pid": 24,
+      "response": {
+        "pid": 41,
+        "init_count": 1,
+        "invocation": 2,
+        "requested": 2,
+        "completed": 2,
+        "succeeded": 1,
+        "failed": 1,
+        "ok": false,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "delete_tags",
+            "downloader_id": "owned-qb-tags-qb",
+            "ok": false,
+            "error_code": "host_operation_failed",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 0,
+              "failed": 1,
+              "input_json_bytes": 87,
+              "output_json_bytes": 0
+            }
+          },
+          {
+            "index": 1,
+            "kind": "qbittorrent",
+            "op": "delete_tags",
+            "downloader_id": "owned-qb-tags-qb",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 88,
+              "output_json_bytes": 14
+            }
+          }
+        ]
+      },
+      "phase": "failure-recovery",
+      "selected_before": {
+        "remove_tags": 1,
+        "delete_tags": 1
+      },
+      "selected_after": {
+        "remove_tags": 3,
+        "delete_tags": 2,
+        "delete_tags_unknown500": 1
+      },
+      "selected_delta": {
+        "remove_tags": 2,
+        "delete_tags": 1,
+        "delete_tags_unknown500": 1
+      },
+      "peer_entry_start": 6,
+      "peer_entry_end": 14,
+      "controller_timeout_seconds": 30,
+      "elapsed_seconds": 0.016930352001509164
+    },
+    {
+      "label": "actual_lookup_found_after_real3s",
+      "host_pid": 24,
+      "response": {
+        "pid": 41,
+        "init_count": 1,
+        "invocation": 3,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "get_id_by_tag",
+            "downloader_id": "owned-qb-tags-qb",
+            "ok": true,
+            "result": "owned-found-hash",
+            "result_kind": "source_json",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 85,
+              "output_json_bytes": 28
+            }
+          }
+        ]
+      },
+      "phase": "found",
+      "selected_before": {
+        "remove_tags": 3,
+        "delete_tags": 2,
+        "delete_tags_unknown500": 1
+      },
+      "selected_after": {
+        "remove_tags": 4,
+        "delete_tags": 3,
+        "delete_tags_unknown500": 1
+      },
+      "selected_delta": {
+        "remove_tags": 1,
+        "delete_tags": 1
+      },
+      "peer_entry_start": 14,
+      "peer_entry_end": 19,
+      "controller_timeout_seconds": 30,
+      "elapsed_seconds": 3.011947983999562
+    },
+    {
+      "label": "actual_original_attributeerror_after_real3s",
+      "host_pid": 24,
+      "response": {
+        "pid": 41,
+        "init_count": 1,
+        "invocation": 4,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 0,
+        "failed": 1,
+        "ok": false,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "get_id_by_tag",
+            "downloader_id": "owned-qb-tags-qb",
+            "ok": false,
+            "error_code": "source_exception",
+            "source_error": "AttributeError",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 76,
+              "output_json_bytes": 55
+            }
+          }
+        ]
+      },
+      "phase": "attribute",
+      "selected_before": {
+        "remove_tags": 4,
+        "delete_tags": 3,
+        "delete_tags_unknown500": 1
+      },
+      "selected_after": {
+        "remove_tags": 4,
+        "delete_tags": 3,
+        "delete_tags_unknown500": 1
+      },
+      "selected_delta": {},
+      "peer_entry_start": 19,
+      "peer_entry_end": 20,
+      "controller_timeout_seconds": 30,
+      "elapsed_seconds": 3.0095877450003172
+    },
+    {
+      "label": "actual_nine_slow_empty_rounds_exceed_old30s",
+      "host_pid": 24,
+      "response": {
+        "pid": 41,
+        "init_count": 1,
+        "invocation": 5,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "get_id_by_tag",
+            "downloader_id": "owned-qb-tags-qb",
+            "ok": true,
+            "result": null,
+            "result_kind": "source_json",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 85,
+              "output_json_bytes": 14
+            }
+          }
+        ]
+      },
+      "phase": "slow-empty",
+      "selected_before": {
+        "remove_tags": 4,
+        "delete_tags": 3,
+        "delete_tags_unknown500": 1
+      },
+      "selected_after": {
+        "remove_tags": 4,
+        "delete_tags": 3,
+        "delete_tags_unknown500": 1
+      },
+      "selected_delta": {},
+      "peer_entry_start": 20,
+      "peer_entry_end": 29,
+      "controller_timeout_seconds": 90,
+      "elapsed_seconds": 31.543398535999586,
+      "timing_proof": {
+        "actual_info_requests": 9,
+        "first_request_after_minimum3s": true,
+        "inter_round_start_gaps_minimum3point5s": true,
+        "owned_response_delay_seconds_each": 0.5,
+        "total_elapsed_minimum31point5s": true,
+        "cleanup_requests": 0
+      }
+    },
+    {
+      "label": "same_worker_after_nine_rounds_and_old_caller_denied",
+      "host_pid": 24,
+      "response": {
+        "pid": 41,
+        "init_count": 1,
+        "invocation": 6,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "previous_probe": {
+          "label": "previous_invocation_delete_tags_caller_denied",
+          "available": true,
+          "denied": true,
+          "error_code": "invalid_host_call",
+          "host_calls": {
+            "total": 1,
+            "succeeded": 0,
+            "failed": 1,
+            "input_json_bytes": 79,
+            "output_json_bytes": 0
+          }
+        },
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "delete_tags",
+            "downloader_id": "owned-qb-tags-qb",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 88,
+              "output_json_bytes": 14
+            }
+          }
+        ]
+      },
+      "phase": "after-slow",
+      "selected_before": {
+        "remove_tags": 4,
+        "delete_tags": 3,
+        "delete_tags_unknown500": 1
+      },
+      "selected_after": {
+        "remove_tags": 5,
+        "delete_tags": 4,
+        "delete_tags_unknown500": 1
+      },
+      "selected_delta": {
+        "remove_tags": 1,
+        "delete_tags": 1
+      },
+      "peer_entry_start": 29,
+      "peer_entry_end": 33,
+      "controller_timeout_seconds": 30,
+      "elapsed_seconds": 0.009141415001067799
+    },
+    {
+      "label": "cold_same_DB_new_worker_delete",
+      "host_pid": 79,
+      "response": {
+        "pid": 94,
+        "init_count": 1,
+        "invocation": 1,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "qbittorrent",
+            "op": "delete_tags",
+            "downloader_id": "owned-qb-tags-qb",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 88,
+              "output_json_bytes": 14
+            }
+          }
+        ]
+      },
+      "phase": "cold",
+      "selected_before": {
+        "remove_tags": 5,
+        "delete_tags": 4,
+        "delete_tags_unknown500": 1
+      },
+      "selected_after": {
+        "remove_tags": 6,
+        "delete_tags": 5,
+        "delete_tags_unknown500": 1
+      },
+      "selected_delta": {
+        "remove_tags": 1,
+        "delete_tags": 1
+      },
+      "peer_entry_start": 33,
+      "peer_entry_end": 37,
+      "controller_timeout_seconds": 30,
+      "elapsed_seconds": 0.008332110002811532
+    }
+  ],
+  "physical_plugin_wire_counters": {
+    "measured": false,
+    "available_from_ordinary_API": false
+  },
+  "measured_layers": [
+    "worker logical SDK callback counters",
+    "owned endpoint HTTP requests and entity-body bytes"
+  ],
+  "not_claimed": [
+    "real daemon/download/NAS",
+    "filesystem or data deletion",
+    "lookup None as mutation success receipt",
+    "wall-clock behavior of a real downloader",
+    "browser/UI",
+    "full S13/platform/delivery"
+  ],
+  "bindings_sha256": "f6a59834fbfc4c3231b4128c4c1536dc420279550fc5440eec592f919899089b",
+  "execution_environment": "inherited after coordinator grant marker; no proxy or startup rewrites",
+  "owned_peer_origin": "http://127.0.0.1:42011",
+  "bootstrap_exit": 0,
+  "worker_identities": [
+    {
+      "ppid": 24,
+      "starttime": "4960531",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/private-data/plugin-packages/OwnedQBTags/owned-qb-tags-fixture",
+      "executable_sha256": "48c271e305bd4c4dd2e656473f74b24d39f999e691aebd610896f82d4b83fef3",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "4960531",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/private-data/plugin-packages/OwnedQBTags/owned-qb-tags-fixture",
+      "executable_sha256": "48c271e305bd4c4dd2e656473f74b24d39f999e691aebd610896f82d4b83fef3",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "4960531",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/private-data/plugin-packages/OwnedQBTags/owned-qb-tags-fixture",
+      "executable_sha256": "48c271e305bd4c4dd2e656473f74b24d39f999e691aebd610896f82d4b83fef3",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "4960531",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/private-data/plugin-packages/OwnedQBTags/owned-qb-tags-fixture",
+      "executable_sha256": "48c271e305bd4c4dd2e656473f74b24d39f999e691aebd610896f82d4b83fef3",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "4960531",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/private-data/plugin-packages/OwnedQBTags/owned-qb-tags-fixture",
+      "executable_sha256": "48c271e305bd4c4dd2e656473f74b24d39f999e691aebd610896f82d4b83fef3",
+      "host_pid": 24
+    },
+    {
+      "ppid": 24,
+      "starttime": "4960531",
+      "pid": 41,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/private-data/plugin-packages/OwnedQBTags/owned-qb-tags-fixture",
+      "executable_sha256": "48c271e305bd4c4dd2e656473f74b24d39f999e691aebd610896f82d4b83fef3",
+      "host_pid": 24
+    },
+    {
+      "ppid": 79,
+      "starttime": "4964315",
+      "pid": 94,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/private-data/plugin-packages/OwnedQBTags/owned-qb-tags-fixture",
+      "executable_sha256": "48c271e305bd4c4dd2e656473f74b24d39f999e691aebd610896f82d4b83fef3",
+      "host_pid": 79
+    }
+  ],
+  "owned500_outcome": {
+    "effect": "unknown_by_product_not_replayed",
+    "fixture": "removeTags200 then deleteTags500; no actual daemon mutation"
+  },
+  "actual_endpoint_request_counts": {
+    "GET /index": 1,
+    "GET /worker": 1,
+    "GET /api/v2/app/webapiVersion": 12,
+    "POST /api/v2/torrents/removeTags": 6,
+    "POST /api/v2/torrents/deleteTags": 6,
+    "POST /api/v2/torrents/info": 11
+  },
+  "input_drift": [],
+  "environment_unchanged": true,
+  "finished_at": "2026-11-01T00:22:45.147879+00:00"
+}

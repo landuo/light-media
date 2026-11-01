@@ -93,7 +93,7 @@ func (b *runnerBudget) close() {
 }
 
 func (s *wireSession) callHost(method string, payload json.RawMessage) (json.RawMessage, error) {
-	if s.hostBudget != nil {
+	if s.hostBudget != nil && (s.hostBudgetMethod == "" || s.hostBudgetMethod == method) {
 		if !s.hostBudget.pause() {
 			return nil, failure("execution_canceled")
 		}

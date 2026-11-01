@@ -1,0 +1,29 @@
+# S13 lookup timing: bounded read-only analysis and proposed narrow candidate
+
+## Finding
+
+The normal worker `Serve` advertises no concurrent session; `ServeConcurrent` is explicit (worker.go:22–29,67–72). App requests negotiation but respects the actual result. Serial external HTTP/direct calls use 30s (`plugin_original_external_http.go:50`, direct_dispatch.go:52). `callSession` strips cancellation only after serial admission, intentionally retaining loaded-object drain semantics; concurrent calls already use CallerDeadlineOnly. Do not change the fixture to concurrent and claim serial coverage.
+
+Source lookup performs nine sleeps of three seconds, including the first, plus all HTTP/filter/cleanup work. The old serial total budget therefore has only about three seconds for everything else. An App handler WithTimeout cannot postpone an already running outer deadline. Existing ExcludeHostTime pauses every callback and would change unrelated capabilities; globally extending Timeout/CallerDeadlineOnly is also wrong.
+
+## Minimal correct timing separation
+
+One host-selected `CallOptions.ExcludeHostMethod string`, zero=old behavior. Nonempty validates an exact ordinary method; mutually exclusive with ExcludeHostTime and CallerDeadlineOnly, rejected on negotiated concurrent Call/StartCall. No Runner default, wire negotiation or worker-supplied policy. The serial exchange creates the existing pauseable runnerBudget but installs this one exact method selector beside it. Only matching `wireSession.callHost` pauses/resumes; all other callbacks remain charged to the original cumulative worker/transport time. A new callback never resets remaining time. The per-exchange selector installs and clears with the existing budget on every return path, never retained into the next invocation.
+
+Only App resources/v1 serial objects declaring the new get_id_by_tag cap receive this field in their CallOptions. Existing explicit all-host exclusion, startup, stop/cleanup, old capabilities, identity/generation/grants, frame/chunk/host-count bounds, invocation counters and the negotiated concurrent path remain unchanged. Selection changes timing only, not admission/capability authorization.
+
+**Keep serial cancellation semantics unchanged.** No new HTTP disconnect bridge and no change to context.WithoutCancel. Existing worker/client life cancellation, shutdown and native authority guards remain active while timing is paused. `exchange` already links c.life to the parent; paused runnerBudget never pauses parent cancellation. App Close seals background admission and stops sessions before waiting for producers; native scope checks guard before/after sleep/HTTP, and native lock polling honors context. Serial cancellation still aborts/reaps its worker according to the existing transport contract; it is not the concurrent per-call cancellation feature.
+
+## Finite work is not a newly invented total wall-clock cap
+
+Current independent qB client has a 20s HTTP client timeout and 16MiB response limit; redirects are not followed. Each readonly qb helper can perform at most initial login + selected readonly request + one 401/403 login refresh + one retry (conservative four HTTP calls). Info may first obtain a version only for the four alias statuses; then it makes one readonly info helper. At most nine info iterations and at most two tag writes; each write has one fresh readonly version helper and at most initial login + one selected POST, never a selected replay. Conservative request-count bound: 9*(4+4)+2*(4+2)=84 HTTP calls, plus exactly up to27s prescribed sleeps. This is intentionally a loose finite bound, not a claim that all branches reach it or a real daemon measurement.
+
+84*20+27=1707 seconds bounds only summed configured HTTP-timeout windows plus prescribed sleeps under those assumptions. It is **not** a proved hard whole-host wall-clock limit: guard/store lock waits, decoding/logging/CPU/scheduling and response processing also exist. The handler remains cancellable by existing lifecycle/guards. Do not silently invent 60/300 seconds or treat the current30-minute CallOptions validation ceiling as approval for a new host deadline. Strict global host elapsed-time SLA would require a separately chosen resource-policy bound; this candidate instead preserves source finite steps plus existing native/resource/lifecycle guards. MaxHostCalls64(default),256(max) is unchanged and limits repeated lookup callbacks in an invocation.
+
+## Literal concurrent alternative / legacy distinction
+
+An actually negotiated ServeConcurrent object already avoids this 30s business runner deadline via CallerDeadlineOnly and supports isolated cancel/drain. That is valid evidence only for that advertised worker. The new option is rejected there rather than silently ignored; App does not set it. Standard serial Serve and serial fallback keep their old protocol and object synchronization, with only this trusted per-cap timing exclusion. No transport capability, concurrency requirement or extra manifest permission is introduced.
+
+## Scope / tests
+
+External audit candidate only: narrow copies of protocol.go (CallOptions/validation/exchange-local selector), runner_budget.go (conditional pause), pending_call.go (reject serial-only option), plugin_original_session.go (host-selected exact cap), and one new runner_budget_method_test.go. No production write or execution by this author. Real self-contained SDK test children use default Serve for selected/other callbacks, cumulative worker time, life cancel and next-call reset; a separately explicit concurrent child only proves invalid-option rejection, not source lookup timing. Parent coordinator will compile/run and independent review will bind the exact before/after files. No arbitrary RPC, fake clock in production, daemon/source import or environment change.

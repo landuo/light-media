@@ -1,0 +1,646 @@
+{
+  "base": "55f2ed32b098ab67845cca24520202fa7562e9af",
+  "status": "finite backend verified locally; remote pending",
+  "product_files": {
+    "internal/app/plugin_original_resources.go": "d9392065dc4ce0c9c6664fbdc40931611e57ad857fc5683948192244783a1abd",
+    "internal/app/plugin_original_session.go": "335a0911c74a73f94a001900c8351da7def430bf2d568aea851513221a1bf748",
+    "internal/plugins/pending_call.go": "c628bf31af2cfd7f2be44d652b6b7807109653ccd3ade0613f715c9f61eed4bd",
+    "internal/plugins/protocol.go": "1ef28b4aa12c6d7a6f88a847d34687c0327fda6ea887c5daa0a5594be634b8c9",
+    "internal/plugins/runner_budget.go": "4b62807f0870257a185b61dd505dbd5463f65a3abacb5dd0a86070e15eaeb369",
+    "cmd/owned-qb-tags-fixture/main.go": "8c8d1b359dea4b3553309f786d25ed62edf0e417a11b7871754e6486ca6ab443",
+    "cmd/owned-qb-tags-fixture/main_test.go": "c87665640e3df790d917e01f7bccf96de8b5d7c2e5a297a57ba0eead26194445",
+    "internal/app/plugin_shared_qbittorrent_tags.go": "4fe070d593484fe7e19fd972877373cc45e5f39c0bde825b5fc521f2844412fe",
+    "internal/app/plugin_shared_qbittorrent_tags_test.go": "95b7bcbd3c29414e46795f5203f554194913bdc50d211143744e0984c06f9be1",
+    "internal/plugins/downloadercommands/qb_tags.go": "7e1f6e818f794b6a1d88fec74243d90173b6e61823593bbcf7820ecc47e949bf",
+    "internal/plugins/downloadercommands/qb_tags_test.go": "8accc3beb41317b60d8c1b858839b9d1bfb59b16bc0679c15100d097237e36c7",
+    "internal/plugins/downloadercommands/testdata/source-qb-tags.json": "267d2e4fa62ed38ce53e4e6a6bf8ebfc5676058b413adbc072e74aa81c9c8617",
+    "internal/plugins/iyuuautoseed/native/shared_qb_tag_commands.go": "e57d41303397e69512e8a3207a5e680c42f01a927714ebcca059000810730296",
+    "internal/plugins/iyuuautoseed/native/shared_qb_tag_commands_test.go": "afc4e9f69c138aaaf9a2cd2d1338e4739634bdb555372e6c33583bdd6ac28cf3",
+    "internal/plugins/runner_budget_method_test.go": "6d9b9d2b184f8022e18b74b3610bda56c1a261bb4b577a3d485be403de35bfb0",
+    "internal/plugins/shared_qbittorrent_tags.go": "13fad7b8aead44b069d5a3f483461454fdbf2b2e019dfb4091d31593f91cdc86",
+    "internal/plugins/shared_qbittorrent_tags_test.go": "402efd2d0f823a9ab54d6c4c63a45be6e76dc940e3fb39962d489bd0cfe7d2ef"
+  },
+  "published_evidence": {
+    "evidence/s13-qb-tags/README.md": "60a77842b99598c7450868a18a751abfbb43ce239f876ea7c7334d047d9096a4",
+    "evidence/s13-qb-tags/app/normal/result.json": "59be3b65a51286b97ac773a4ff784e64172f6ad4fd4f72015337fbe5f3657c51",
+    "evidence/s13-qb-tags/app/normal/tests.jsonl": "d123c54054f8972d5476453ae5518521e0ae186e58b267b2291638c262a870dd",
+    "evidence/s13-qb-tags/app/normal/tool-receipt.json": "4d60a05e463d9428e0a57a026c4b5e343a53a63ae50220754bc53cfdc866c9fd",
+    "evidence/s13-qb-tags/app/race/result.json": "de24c142d8ee386680c6e948ea178ca89c87668948279c6503cb5e79be2d10f3",
+    "evidence/s13-qb-tags/app/race/tests.jsonl": "33cf350f6297772d6cdd1071feea731e2a1bc08e07601271e4e5d215db483da2",
+    "evidence/s13-qb-tags/app/race/tool-receipt.json": "ca19d0cafd73f62f89ffda62d21014a5482927c29702c265765fbb6643f0bf35",
+    "evidence/s13-qb-tags/app/static-review.md": "6b6f27820dec6387e25d0e9e7b9526370aaaf400a9906a86b6f17a80061f9310",
+    "evidence/s13-qb-tags/app/two-hooks.json": "a7de562b420493f69db6a0eaa48709a31fcd65913fab1646809e2cf8a4811bd4",
+    "evidence/s13-qb-tags/budget/contract.md": "cb627b8f3376052bafafac976b1f679d5cc17a709b09dcd8820789c20b516992",
+    "evidence/s13-qb-tags/budget/narrow.patch": "4dbcd90848f1e2047d8b8a82ad6faa49d81c43ab146ad873903fe8c6cf72dede",
+    "evidence/s13-qb-tags/budget/static-review.md": "1a84ff04a11e1f872ce15fcb91033c3dda4e3c8ed2e2fc74228b4ea047efe27a",
+    "evidence/s13-qb-tags/cli/command.json": "da04534278b95abda1d53f6bb7a6def980d608660e40abcffbdce1e8b87e1b3b",
+    "evidence/s13-qb-tags/cli/driver.py": "6694848f8fc4fb4f97fbc8e8509d0ca1b276ad92533ba97c222bcaf9b751ff83",
+    "evidence/s13-qb-tags/cli/independent-readback.json": "793974ca7fa14eb607e4dcfed9e754544c53de146d6669cce5fdca33adb8e1c2",
+    "evidence/s13-qb-tags/cli/inputs.json": "f6a59834fbfc4c3231b4128c4c1536dc420279550fc5440eec592f919899089b",
+    "evidence/s13-qb-tags/cli/preexec.json": "a9773c9aa4b8b6a53fa13d7a8b6d9999887eeabf742c8eaae2c382cee1ce2e51",
+    "evidence/s13-qb-tags/cli/raw/response-001.body": "b677786bd88b504ae12ece69ad05ebee8c8b06c4b3f61e17d5036439e46e0a8d",
+    "evidence/s13-qb-tags/cli/raw/response-003.body": "5cdacc43475c4781bad627bc743cd5f7344ec94b7da4bd77590e9d63ca2215aa",
+    "evidence/s13-qb-tags/cli/raw/response-004.body": "13ee72c1d78ed8d62a3686acf7c2231311c1e11b9b6923b860a8588b1a046ac6",
+    "evidence/s13-qb-tags/cli/raw/response-005.body": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+    "evidence/s13-qb-tags/cli/raw/response-006.body": "7e389eafbd2bd537e9f6006dd012299f0a34a45ecf23c72acf0e41782328e8a8",
+    "evidence/s13-qb-tags/cli/raw/response-007.body": "4805107105e62e034d901013a7040d93886ba54fbbcc708e3f843cbc9322ed9b",
+    "evidence/s13-qb-tags/cli/raw/response-008.body": "c7291e551eb40aa2bb394f688eb2ba84d13dbdb0aedaf876249f779f6751ee7d",
+    "evidence/s13-qb-tags/cli/raw/response-009.body": "c8dc47e938bfabda64f1f212744bad6833bcd0c2b499b2b13b36e75b864805e0",
+    "evidence/s13-qb-tags/cli/raw/response-010.body": "a23229d291484897353c20145a7bb84c1ebe0138244f3a85838364f7598442e6",
+    "evidence/s13-qb-tags/cli/raw/response-011.body": "fb9134cacbbb75e6fd9aff9428a14c31d6a890b9689e07342c988a11a5ccd140",
+    "evidence/s13-qb-tags/cli/raw/response-012.body": "81852c18954b02979040a15a13cf19f233c3b1abca5027a6af35a2c49ea80612",
+    "evidence/s13-qb-tags/cli/raw/response-014.body": "d30605ba79de50319e07c960cba6f04d9ec5f6a1be22c207684d1393766d2247",
+    "evidence/s13-qb-tags/cli/raw/response-015.body": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+    "evidence/s13-qb-tags/cli/raw/response-016.body": "6ae033ee56155edaac2874d11fbdc07730750d9fb41f01562663d01702dbd8bf",
+    "evidence/s13-qb-tags/cli/result.json": "58d4c25e3a3c345c5936cf627c5c6a44e7555f0327ed3d37fa569c676603d036",
+    "evidence/s13-qb-tags/cli/runtime-review.md": "debe96127ffa0486b08013053d14456c2246db875f7332d69d835ad26959a8d1",
+    "evidence/s13-qb-tags/cli/server-result.json": "231ea43f099faaeea1e05e33374fdabf63d9516982e76c7067cb9df970448307",
+    "evidence/s13-qb-tags/cli/server-tool-receipt.json": "6856198431b15e2549f51ad40cdc9b47d6be3c82ae2a1ed4d680f58560e41e0d",
+    "evidence/s13-qb-tags/cli/tool-receipt.json": "8d8a774db3bc6b8373445ec956759a29ce8219584d32811ad792d0873ceea310",
+    "evidence/s13-qb-tags/cli/worker-result.json": "7fa2732243f9cdbe442425897b0fa22b3fd7b6a7add705a2eece74d416655014",
+    "evidence/s13-qb-tags/cli/worker-tool-receipt.json": "d7d3bd604a8efbf2a9503eab5cebccaa7b6f75447dd4e65032f10d64cc7f001f",
+    "evidence/s13-qb-tags/current-runtime-review.md": "e706ef7978371bd0c3958dcf3c36858ec8b4ec32b7542207c18245121b878061",
+    "evidence/s13-qb-tags/current-runtime-seal.json": "0c8606e8f7855b267c173f00822c81334163aaa9d76fdf26f435df5d510c6988",
+    "evidence/s13-qb-tags/current-runtime-summary.json": "62e0ce2ce9c59b4aa1bca44364841d0d6a2132984794646d36a39797f704bf47",
+    "evidence/s13-qb-tags/failure/install-response.json": "ed791f4ca54743c91973fb55083bd6ed81f1e75e94d93722f6f335fc8f5439c1",
+    "evidence/s13-qb-tags/failure/original-preexec.json": "05f5a2486136c4f110f14c8316e27a370b01dce730d0d3b4b1d01a5f4df46030",
+    "evidence/s13-qb-tags/failure/result.json": "99419db2af2b362d9d973213cf87c031848e442ccf67a20000d551d50088f3c7",
+    "evidence/s13-qb-tags/failure/review.md": "b27017d715e4c0f2ebc75559b0ee4adb40d13e3ffbda0ec60ac4ea4b21da2bb4",
+    "evidence/s13-qb-tags/failure/tool-receipt.json": "873b456a4a02f0ae7a6907038f6349b5356c2afa772d494052a993353cf878af",
+    "evidence/s13-qb-tags/fixture/correction.json": "144da549d5d6d83c7bfd13ced6a33f873e87f2db58173ff8a56cb00a2a4b0749",
+    "evidence/s13-qb-tags/fixture/manifest-test/result.json": "a30869b9a9b8d622cf0a32775fa503ed34e39c3ac57b20186f3d7e75807a5045",
+    "evidence/s13-qb-tags/fixture/manifest-test/tests.jsonl": "40d605f54f7d471516da0b54f8e1e3bbb7622527372fe84d86a3c209a989dd37",
+    "evidence/s13-qb-tags/fixture/manifest-test/tool-receipt.json": "513ee14f389e024bfe0edf138454fc0d1ce4ef3d1b9e9e1d5a07d21b7beb2953",
+    "evidence/s13-qb-tags/fixture/original-invalid-main.go.txt": "b917c7beeabdd8d55151d20876e91e2e1e608a967eeb77dffc094af3ddc15481",
+    "evidence/s13-qb-tags/leaf/current-inheritance.json": "b0a514bf6b368ea5b3bce001ca8159b36d7f1a398a26a12b83f2ceb376c5264d",
+    "evidence/s13-qb-tags/leaf/normal/result.json": "4c78c3a208faf690029638d78545a75bac15dfa6533cebfe756555c0750276fd",
+    "evidence/s13-qb-tags/leaf/normal/tests.jsonl": "0fbdfcdcec24bd67ff1f572ebc5e1b2f2e6a39be1b19aabe20fdc8f19a228185",
+    "evidence/s13-qb-tags/leaf/normal/tool-receipt.json": "6723b01b2a3ba343481da4d81da73db2ef4219827e6db695257a7440e442255f",
+    "evidence/s13-qb-tags/leaf/race/result.json": "caf6a7e82b23c5ef414d331e777efb5fd694ca765a9276af4d342e06543c6aca",
+    "evidence/s13-qb-tags/leaf/race/tests.jsonl": "8f9f21bbeed200145795041a41243d2a0b5984c05a0abcafa633bf5628554bb2",
+    "evidence/s13-qb-tags/leaf/race/tool-receipt.json": "4a927845c1377699b1ba504632556a3b62f792e0fbd7267585cd3f740677409a",
+    "evidence/s13-qb-tags/native/contract.md": "dc2599d39886d13007a37f869c35885ed292dfd0bc603ee07d3e4520d65b7706",
+    "evidence/s13-qb-tags/native/normal/result.json": "895e45ea692e3af593f58d3bcfa6eef481d8aad862984d87ec93605fe2ed327b",
+    "evidence/s13-qb-tags/native/normal/tests.jsonl": "88fc8267350170a58f44941064acbbb4c6605ec0c8e503319cc36bfeee9f1f57",
+    "evidence/s13-qb-tags/native/normal/tool-receipt.json": "7a636169009f7af8323362e11fa4754ef94f5772953c97ce526e8b79f9cad7d3",
+    "evidence/s13-qb-tags/native/race/result.json": "f2389cf61817ff236cc68a408f690567b8657e33393d5099432d48f30e46365a",
+    "evidence/s13-qb-tags/native/race/tests.jsonl": "adfc688853d466156898088f69bd2e38b0a68c2a1a619f78220bb869535e5132",
+    "evidence/s13-qb-tags/native/race/tool-receipt.json": "fd11a3cabfaded5112362378af0e151176d155f417bfb2666aedc5d0b9ea826a",
+    "evidence/s13-qb-tags/native/static-corrections.md": "6bb7f34575e703e1e0ad0376950a41278b270d68af1805a97949b940ec339076",
+    "evidence/s13-qb-tags/native/static-review.md": "13a351f60de791726bfa0e7190cb462f46ea9208ddf47416ea47574a437583e4",
+    "evidence/s13-qb-tags/retention/budget-checkpoint.json": "1e8cdc1c86d8b4eb80fc8c7b26a1c208627672f1add4b5cd38ac4a9cc9cd38d1",
+    "evidence/s13-qb-tags/retention/failure-and-fix-checkpoint.json": "89bf5ab090ef58236222a45ad3a3addb0a00df104256c18d7f7f9fefbb7060e5",
+    "evidence/s13-qb-tags/retention/first-checkpoint.json": "16dcdc581be4c7a10179b438895ac1fc436a0ac9f5d2e6ca9d789f09163a74a7",
+    "evidence/s13-qb-tags/scope-before-implementation.md": "4f8edc503e86e4135e7658414fb91956022c69a816b318a39f3f4d58441516ba",
+    "evidence/s13-qb-tags/sdk-budget/normal/result.json": "3c903b41235c7cef86853b62e47c761d03611ca846b1c0b4d0fbb989f1a77c72",
+    "evidence/s13-qb-tags/sdk-budget/normal/tests.jsonl": "84349743566e14df2a471b128b1ea22647a0acaa0f8c345600bf6868899b6488",
+    "evidence/s13-qb-tags/sdk-budget/normal/tool-receipt.json": "e35e7677af60422a5c072dd582cad1d8bb3e4508700880b91f8145d3af5bf63e",
+    "evidence/s13-qb-tags/sdk-budget/race/result.json": "77d1bc03f9036c73d3a6a4d156b04a592724ce7c09b76d2090ac58d4474ee9c6",
+    "evidence/s13-qb-tags/sdk-budget/race/tests.jsonl": "0aefd369ab9894a8ad4437682e98669454f7f226972a96c665943215b95f8db1",
+    "evidence/s13-qb-tags/sdk-budget/race/tool-receipt.json": "0865ef904f163f7bf1a874f2de90faf6bdcaa57bbf5170a612bf082ce51df70c",
+    "evidence/s13-qb-tags/sdk-leaf/contract.md": "a3b42ae118189142cf7ca7cd90d7c6179293a4080afcf378c817751378b637d6",
+    "evidence/s13-qb-tags/sdk-leaf/static-review.json": "8a1b410a38e8755cd022a524febab154e8ccd8a308ea2b54e4e8666ac8d485a8",
+    "evidence/s13-qb-tags/source/cases.json": "80aad9fbac18d85b2ead751ab80369d84a5c1a9ce972e2234521bbf28eebb76a",
+    "evidence/s13-qb-tags/source/collector.py": "5a147c3f8e907b2f8ee56eae20a95eda32b9c9202cf04043a28ade38a355f9a7",
+    "evidence/s13-qb-tags/source/independent.json": "d997cf68a2b0aa46326a96b316191d32b3c64d4c32b8c1eb3019d65f829d12e1",
+    "evidence/s13-qb-tags/source/inputs.json": "51104abdb171aabe7a4456b4fb42e05490aa93ded4daab0139fcb44aeef13a58",
+    "evidence/s13-qb-tags/source/nodes.json": "c38023c338bced0ba3972300ae6394a5beef117c9a713cd3f588f217c405dbbe",
+    "evidence/s13-qb-tags/source/result.json": "d1876ebec5d448c3349478fa0970f8cdbaaa94621123a220932d96b7ac58ee23",
+    "evidence/s13-qb-tags/source/review.md": "263f91865e91b417ecf26c7fa7d0253d7e879547c6836338ddb6e54e0775626e",
+    "evidence/s13-qb-tags/source/tool-receipt.json": "2884928d573506e92c43c3f40072a04b9da3c0f081496ca130831eec42e3c630",
+    "evidence/s13-qb-tags/worker/original-contract.md": "942939a2e55698479835999cbbd470eeab2bedaee247a3274761f0dc3f4e3141",
+    "evidence/s13-qb-tags/worker/sequence.md": "721c8cf0e7f9ea12b4295b9f3cc16b83e65b530afcb82a022939c3e896747ec3"
+  },
+  "exact_copies": [
+    {
+      "source": "audits/s13-remaining-next/REVIEW.md",
+      "destination": "migration/evidence/s13-qb-tags/scope-before-implementation.md",
+      "sha256": "4f8edc503e86e4135e7658414fb91956022c69a816b318a39f3f4d58441516ba",
+      "bytes": 10165
+    },
+    {
+      "source": "audits/s13-qb-tags-source-preparation/capture_qb_tags.py",
+      "destination": "migration/evidence/s13-qb-tags/source/collector.py",
+      "sha256": "5a147c3f8e907b2f8ee56eae20a95eda32b9c9202cf04043a28ade38a355f9a7",
+      "bytes": 10150
+    },
+    {
+      "source": "audits/s13-qb-tags-source-preparation/owned-cases.json",
+      "destination": "migration/evidence/s13-qb-tags/source/cases.json",
+      "sha256": "80aad9fbac18d85b2ead751ab80369d84a5c1a9ce972e2234521bbf28eebb76a",
+      "bytes": 12163
+    },
+    {
+      "source": "audits/s13-qb-tags-source-preparation/source-nodes.json",
+      "destination": "migration/evidence/s13-qb-tags/source/nodes.json",
+      "sha256": "c38023c338bced0ba3972300ae6394a5beef117c9a713cd3f588f217c405dbbe",
+      "bytes": 1768
+    },
+    {
+      "source": "audits/s13-qb-tags-source-preparation/input-bindings.json",
+      "destination": "migration/evidence/s13-qb-tags/source/inputs.json",
+      "sha256": "51104abdb171aabe7a4456b4fb42e05490aa93ded4daab0139fcb44aeef13a58",
+      "bytes": 4659
+    },
+    {
+      "source": "evidence/s13-qb-tags-source01/result.json",
+      "destination": "migration/evidence/s13-qb-tags/source/result.json",
+      "sha256": "d1876ebec5d448c3349478fa0970f8cdbaaa94621123a220932d96b7ac58ee23",
+      "bytes": 889
+    },
+    {
+      "source": "evidence/s13-qb-tags-source01/tool-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/source/tool-receipt.json",
+      "sha256": "2884928d573506e92c43c3f40072a04b9da3c0f081496ca130831eec42e3c630",
+      "bytes": 172
+    },
+    {
+      "source": "audits/s13-qb-tags-source-independent/SOURCE01-REVIEW.md",
+      "destination": "migration/evidence/s13-qb-tags/source/review.md",
+      "sha256": "263f91865e91b417ecf26c7fa7d0253d7e879547c6836338ddb6e54e0775626e",
+      "bytes": 2722
+    },
+    {
+      "source": "audits/s13-qb-tags-source-independent/source01-final.json",
+      "destination": "migration/evidence/s13-qb-tags/source/independent.json",
+      "sha256": "d997cf68a2b0aa46326a96b316191d32b3c64d4c32b8c1eb3019d65f829d12e1",
+      "bytes": 12440
+    },
+    {
+      "source": "audits/s13-qb-tags-sdk-leaf/API.md",
+      "destination": "migration/evidence/s13-qb-tags/sdk-leaf/contract.md",
+      "sha256": "a3b42ae118189142cf7ca7cd90d7c6179293a4080afcf378c817751378b637d6",
+      "bytes": 5821
+    },
+    {
+      "source": "audits/s13-qb-tags-coordinator-review/sdk-leaf-static01.json",
+      "destination": "migration/evidence/s13-qb-tags/sdk-leaf/static-review.json",
+      "sha256": "8a1b410a38e8755cd022a524febab154e8ccd8a308ea2b54e4e8666ac8d485a8",
+      "bytes": 1271
+    },
+    {
+      "source": "audits/s13-qb-tags-coordinator-review/leaf-current-inheritance.json",
+      "destination": "migration/evidence/s13-qb-tags/leaf/current-inheritance.json",
+      "sha256": "b0a514bf6b368ea5b3bce001ca8159b36d7f1a398a26a12b83f2ceb376c5264d",
+      "bytes": 714
+    },
+    {
+      "source": "audits/s13-qb-tags-native/CONTRACT.md",
+      "destination": "migration/evidence/s13-qb-tags/native/contract.md",
+      "sha256": "dc2599d39886d13007a37f869c35885ed292dfd0bc603ee07d3e4520d65b7706",
+      "bytes": 3420
+    },
+    {
+      "source": "audits/s13-qb-tags-native/CORRECTIONS.md",
+      "destination": "migration/evidence/s13-qb-tags/native/static-corrections.md",
+      "sha256": "6bb7f34575e703e1e0ad0376950a41278b270d68af1805a97949b940ec339076",
+      "bytes": 1611
+    },
+    {
+      "source": "audits/s13-qb-tags-source-independent/NATIVE01-STATIC-REVIEW.md",
+      "destination": "migration/evidence/s13-qb-tags/native/static-review.md",
+      "sha256": "13a351f60de791726bfa0e7190cb462f46ea9208ddf47416ea47574a437583e4",
+      "bytes": 3212
+    },
+    {
+      "source": "audits/s13-qb-tags-source-independent/APP02-STATIC-REVIEW.md",
+      "destination": "migration/evidence/s13-qb-tags/app/static-review.md",
+      "sha256": "6b6f27820dec6387e25d0e9e7b9526370aaaf400a9906a86b6f17a80061f9310",
+      "bytes": 3538
+    },
+    {
+      "source": "audits/s13-qb-tags-coordinator-review/app-integration01.json",
+      "destination": "migration/evidence/s13-qb-tags/app/two-hooks.json",
+      "sha256": "a7de562b420493f69db6a0eaa48709a31fcd65913fab1646809e2cf8a4811bd4",
+      "bytes": 1382
+    },
+    {
+      "source": "audits/s13-qb-tags-budget/REVIEW.md",
+      "destination": "migration/evidence/s13-qb-tags/budget/contract.md",
+      "sha256": "cb627b8f3376052bafafac976b1f679d5cc17a709b09dcd8820789c20b516992",
+      "bytes": 5848
+    },
+    {
+      "source": "audits/s13-qb-tags-budget/narrow.patch",
+      "destination": "migration/evidence/s13-qb-tags/budget/narrow.patch",
+      "sha256": "4dbcd90848f1e2047d8b8a82ad6faa49d81c43ab146ad873903fe8c6cf72dede",
+      "bytes": 4663
+    },
+    {
+      "source": "audits/s13-qb-tags-source-independent/BUDGET01-STATIC-REVIEW.md",
+      "destination": "migration/evidence/s13-qb-tags/budget/static-review.md",
+      "sha256": "1a84ff04a11e1f872ce15fcb91033c3dda4e3c8ed2e2fc74228b4ea047efe27a",
+      "bytes": 4247
+    },
+    {
+      "source": "audits/s13-qb-tags-source-independent/POSTBUDGET-RUNTIME-REVIEW.md",
+      "destination": "migration/evidence/s13-qb-tags/current-runtime-review.md",
+      "sha256": "e706ef7978371bd0c3958dcf3c36858ec8b4ec32b7542207c18245121b878061",
+      "bytes": 4461
+    },
+    {
+      "source": "audits/s13-qb-tags-source-independent/postbudget-runtime-seal.json",
+      "destination": "migration/evidence/s13-qb-tags/current-runtime-seal.json",
+      "sha256": "0c8606e8f7855b267c173f00822c81334163aaa9d76fdf26f435df5d510c6988",
+      "bytes": 3373
+    },
+    {
+      "source": "audits/s13-qb-tags-coordinator-review/postbudget-runtime-readback01.json",
+      "destination": "migration/evidence/s13-qb-tags/current-runtime-summary.json",
+      "sha256": "62e0ce2ce9c59b4aa1bca44364841d0d6a2132984794646d36a39797f704bf47",
+      "bytes": 4367
+    },
+    {
+      "source": "audits/s13-qb-tags-worker/CONTRACT.md",
+      "destination": "migration/evidence/s13-qb-tags/worker/original-contract.md",
+      "sha256": "942939a2e55698479835999cbbd470eeab2bedaee247a3274761f0dc3f4e3141",
+      "bytes": 7493
+    },
+    {
+      "source": "audits/s13-qb-tags-worker/CLI-SEQUENCE-ADDENDUM.md",
+      "destination": "migration/evidence/s13-qb-tags/worker/sequence.md",
+      "sha256": "721c8cf0e7f9ea12b4295b9f3cc16b83e65b530afcb82a022939c3e896747ec3",
+      "bytes": 2360
+    },
+    {
+      "source": "audits/s13-qb-tags-fixture-key-fix/correction.json",
+      "destination": "migration/evidence/s13-qb-tags/fixture/correction.json",
+      "sha256": "144da549d5d6d83c7bfd13ced6a33f873e87f2db58173ff8a56cb00a2a4b0749",
+      "bytes": 1044
+    },
+    {
+      "source": "audits/s13-qb-tags-fixture-key-fix/before-main.go.txt",
+      "destination": "migration/evidence/s13-qb-tags/fixture/original-invalid-main.go.txt",
+      "sha256": "b917c7beeabdd8d55151d20876e91e2e1e608a967eeb77dffc094af3ddc15481",
+      "bytes": 14817
+    },
+    {
+      "source": "audits/s13-qb-tags-source-independent/CLI01-FAILURE-AND-FIX02.md",
+      "destination": "migration/evidence/s13-qb-tags/failure/review.md",
+      "sha256": "b27017d715e4c0f2ebc75559b0ee4adb40d13e3ffbda0ec60ac4ea4b21da2bb4",
+      "bytes": 1968
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal01/result.json",
+      "destination": "migration/evidence/s13-qb-tags/failure/result.json",
+      "sha256": "99419db2af2b362d9d973213cf87c031848e442ccf67a20000d551d50088f3c7",
+      "bytes": 3542
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal01/tool-execution-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/failure/tool-receipt.json",
+      "sha256": "873b456a4a02f0ae7a6907038f6349b5356c2afa772d494052a993353cf878af",
+      "bytes": 319
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal01/response-004.body",
+      "destination": "migration/evidence/s13-qb-tags/failure/install-response.json",
+      "sha256": "ed791f4ca54743c91973fb55083bd6ed81f1e75e94d93722f6f335fc8f5439c1",
+      "bytes": 164
+    },
+    {
+      "source": "audits/s13-qb-tags-normal-cli-independent/preexec-final.json",
+      "destination": "migration/evidence/s13-qb-tags/failure/original-preexec.json",
+      "sha256": "05f5a2486136c4f110f14c8316e27a370b01dce730d0d3b4b1d01a5f4df46030",
+      "bytes": 9026
+    },
+    {
+      "source": "audits/s13-qb-tags-normal-cli02/normal-cli-driver.py",
+      "destination": "migration/evidence/s13-qb-tags/cli/driver.py",
+      "sha256": "6694848f8fc4fb4f97fbc8e8509d0ca1b276ad92533ba97c222bcaf9b751ff83",
+      "bytes": 36899
+    },
+    {
+      "source": "audits/s13-qb-tags-normal-cli02/execution-bindings.json",
+      "destination": "migration/evidence/s13-qb-tags/cli/inputs.json",
+      "sha256": "f6a59834fbfc4c3231b4128c4c1536dc420279550fc5440eec592f919899089b",
+      "bytes": 1044777
+    },
+    {
+      "source": "audits/s13-qb-tags-normal-cli02/execution-command.json",
+      "destination": "migration/evidence/s13-qb-tags/cli/command.json",
+      "sha256": "da04534278b95abda1d53f6bb7a6def980d608660e40abcffbdce1e8b87e1b3b",
+      "bytes": 1237
+    },
+    {
+      "source": "audits/s13-qb-tags-source-independent/cli02-preexec-rebind.json",
+      "destination": "migration/evidence/s13-qb-tags/cli/preexec.json",
+      "sha256": "a9773c9aa4b8b6a53fa13d7a8b6d9999887eeabf742c8eaae2c382cee1ce2e51",
+      "bytes": 15999
+    },
+    {
+      "source": "audits/s13-qb-tags-source-independent/CLI02-FINAL-REVIEW.md",
+      "destination": "migration/evidence/s13-qb-tags/cli/runtime-review.md",
+      "sha256": "debe96127ffa0486b08013053d14456c2246db875f7332d69d835ad26959a8d1",
+      "bytes": 5551
+    },
+    {
+      "source": "audits/s13-qb-tags-source-independent/cli02-actual-readback.json",
+      "destination": "migration/evidence/s13-qb-tags/cli/independent-readback.json",
+      "sha256": "793974ca7fa14eb607e4dcfed9e754544c53de146d6669cce5fdca33adb8e1c2",
+      "bytes": 8970
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/result.json",
+      "destination": "migration/evidence/s13-qb-tags/cli/result.json",
+      "sha256": "58d4c25e3a3c345c5936cf627c5c6a44e7555f0327ed3d37fa569c676603d036",
+      "bytes": 37377
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/tool-execution-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/cli/tool-receipt.json",
+      "sha256": "8d8a774db3bc6b8373445ec956759a29ce8219584d32811ad792d0873ceea310",
+      "bytes": 295
+    },
+    {
+      "source": "external-backups/space-backup-receipt-s13-qb-tags-0005.json",
+      "destination": "migration/evidence/s13-qb-tags/retention/first-checkpoint.json",
+      "sha256": "16dcdc581be4c7a10179b438895ac1fc436a0ac9f5d2e6ca9d789f09163a74a7",
+      "bytes": 328
+    },
+    {
+      "source": "external-backups/space-backup-receipt-s13-qb-tags-0014.json",
+      "destination": "migration/evidence/s13-qb-tags/retention/budget-checkpoint.json",
+      "sha256": "1e8cdc1c86d8b4eb80fc8c7b26a1c208627672f1add4b5cd38ac4a9cc9cd38d1",
+      "bytes": 354
+    },
+    {
+      "source": "external-backups/space-backup-receipt-s13-qb-tags-0021.json",
+      "destination": "migration/evidence/s13-qb-tags/retention/failure-and-fix-checkpoint.json",
+      "sha256": "89bf5ab090ef58236222a45ad3a3addb0a00df104256c18d7f7f9fefbb7060e5",
+      "bytes": 382
+    },
+    {
+      "source": "evidence/s13-qb-tags-budget-sdk01/result.json",
+      "destination": "migration/evidence/s13-qb-tags/sdk-budget/normal/result.json",
+      "sha256": "3c903b41235c7cef86853b62e47c761d03611ca846b1c0b4d0fbb989f1a77c72",
+      "bytes": 2937
+    },
+    {
+      "source": "evidence/s13-qb-tags-budget-sdk01/tests.stdout",
+      "destination": "migration/evidence/s13-qb-tags/sdk-budget/normal/tests.jsonl",
+      "sha256": "84349743566e14df2a471b128b1ea22647a0acaa0f8c345600bf6868899b6488",
+      "bytes": 11354
+    },
+    {
+      "source": "evidence/s13-qb-tags-budget-sdk01/tool-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/sdk-budget/normal/tool-receipt.json",
+      "sha256": "e35e7677af60422a5c072dd582cad1d8bb3e4508700880b91f8145d3af5bf63e",
+      "bytes": 328
+    },
+    {
+      "source": "evidence/s13-qb-tags-budget-sdk-race01/result.json",
+      "destination": "migration/evidence/s13-qb-tags/sdk-budget/race/result.json",
+      "sha256": "77d1bc03f9036c73d3a6a4d156b04a592724ce7c09b76d2090ac58d4474ee9c6",
+      "bytes": 2981
+    },
+    {
+      "source": "evidence/s13-qb-tags-budget-sdk-race01/tests.stdout",
+      "destination": "migration/evidence/s13-qb-tags/sdk-budget/race/tests.jsonl",
+      "sha256": "0aefd369ab9894a8ad4437682e98669454f7f226972a96c665943215b95f8db1",
+      "bytes": 11334
+    },
+    {
+      "source": "evidence/s13-qb-tags-budget-sdk-race01/tool-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/sdk-budget/race/tool-receipt.json",
+      "sha256": "0865ef904f163f7bf1a874f2de90faf6bdcaa57bbf5170a612bf082ce51df70c",
+      "bytes": 328
+    },
+    {
+      "source": "evidence/s13-qb-tags-leaf01/result.json",
+      "destination": "migration/evidence/s13-qb-tags/leaf/normal/result.json",
+      "sha256": "4c78c3a208faf690029638d78545a75bac15dfa6533cebfe756555c0750276fd",
+      "bytes": 2159
+    },
+    {
+      "source": "evidence/s13-qb-tags-leaf01/tests.stdout",
+      "destination": "migration/evidence/s13-qb-tags/leaf/normal/tests.jsonl",
+      "sha256": "0fbdfcdcec24bd67ff1f572ebc5e1b2f2e6a39be1b19aabe20fdc8f19a228185",
+      "bytes": 17397
+    },
+    {
+      "source": "evidence/s13-qb-tags-leaf01/tool-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/leaf/normal/tool-receipt.json",
+      "sha256": "6723b01b2a3ba343481da4d81da73db2ef4219827e6db695257a7440e442255f",
+      "bytes": 248
+    },
+    {
+      "source": "evidence/s13-qb-tags-leaf-race01/result.json",
+      "destination": "migration/evidence/s13-qb-tags/leaf/race/result.json",
+      "sha256": "caf6a7e82b23c5ef414d331e777efb5fd694ca765a9276af4d342e06543c6aca",
+      "bytes": 2230
+    },
+    {
+      "source": "evidence/s13-qb-tags-leaf-race01/tests.stdout",
+      "destination": "migration/evidence/s13-qb-tags/leaf/race/tests.jsonl",
+      "sha256": "8f9f21bbeed200145795041a41243d2a0b5984c05a0abcafa633bf5628554bb2",
+      "bytes": 17405
+    },
+    {
+      "source": "evidence/s13-qb-tags-leaf-race01/tool-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/leaf/race/tool-receipt.json",
+      "sha256": "4a927845c1377699b1ba504632556a3b62f792e0fbd7267585cd3f740677409a",
+      "bytes": 199
+    },
+    {
+      "source": "evidence/s13-qb-tags-native02/result.json",
+      "destination": "migration/evidence/s13-qb-tags/native/normal/result.json",
+      "sha256": "895e45ea692e3af593f58d3bcfa6eef481d8aad862984d87ec93605fe2ed327b",
+      "bytes": 2352
+    },
+    {
+      "source": "evidence/s13-qb-tags-native02/tests.stdout",
+      "destination": "migration/evidence/s13-qb-tags/native/normal/tests.jsonl",
+      "sha256": "88fc8267350170a58f44941064acbbb4c6605ec0c8e503319cc36bfeee9f1f57",
+      "bytes": 14277
+    },
+    {
+      "source": "evidence/s13-qb-tags-native02/tool-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/native/normal/tool-receipt.json",
+      "sha256": "7a636169009f7af8323362e11fa4754ef94f5772953c97ce526e8b79f9cad7d3",
+      "bytes": 328
+    },
+    {
+      "source": "evidence/s13-qb-tags-native-race02/result.json",
+      "destination": "migration/evidence/s13-qb-tags/native/race/result.json",
+      "sha256": "f2389cf61817ff236cc68a408f690567b8657e33393d5099432d48f30e46365a",
+      "bytes": 2395
+    },
+    {
+      "source": "evidence/s13-qb-tags-native-race02/tests.stdout",
+      "destination": "migration/evidence/s13-qb-tags/native/race/tests.jsonl",
+      "sha256": "adfc688853d466156898088f69bd2e38b0a68c2a1a619f78220bb869535e5132",
+      "bytes": 14284
+    },
+    {
+      "source": "evidence/s13-qb-tags-native-race02/tool-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/native/race/tool-receipt.json",
+      "sha256": "fd11a3cabfaded5112362378af0e151176d155f417bfb2666aedc5d0b9ea826a",
+      "bytes": 328
+    },
+    {
+      "source": "evidence/s13-qb-tags-app02/result.json",
+      "destination": "migration/evidence/s13-qb-tags/app/normal/result.json",
+      "sha256": "59be3b65a51286b97ac773a4ff784e64172f6ad4fd4f72015337fbe5f3657c51",
+      "bytes": 2120
+    },
+    {
+      "source": "evidence/s13-qb-tags-app02/tests.stdout",
+      "destination": "migration/evidence/s13-qb-tags/app/normal/tests.jsonl",
+      "sha256": "d123c54054f8972d5476453ae5518521e0ae186e58b267b2291638c262a870dd",
+      "bytes": 3569
+    },
+    {
+      "source": "evidence/s13-qb-tags-app02/tool-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/app/normal/tool-receipt.json",
+      "sha256": "4d60a05e463d9428e0a57a026c4b5e343a53a63ae50220754bc53cfdc866c9fd",
+      "bytes": 328
+    },
+    {
+      "source": "evidence/s13-qb-tags-app-race02/result.json",
+      "destination": "migration/evidence/s13-qb-tags/app/race/result.json",
+      "sha256": "de24c142d8ee386680c6e948ea178ca89c87668948279c6503cb5e79be2d10f3",
+      "bytes": 2163
+    },
+    {
+      "source": "evidence/s13-qb-tags-app-race02/tests.stdout",
+      "destination": "migration/evidence/s13-qb-tags/app/race/tests.jsonl",
+      "sha256": "33cf350f6297772d6cdd1071feea731e2a1bc08e07601271e4e5d215db483da2",
+      "bytes": 3571
+    },
+    {
+      "source": "evidence/s13-qb-tags-app-race02/tool-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/app/race/tool-receipt.json",
+      "sha256": "ca19d0cafd73f62f89ffda62d21014a5482927c29702c265765fbb6643f0bf35",
+      "bytes": 328
+    },
+    {
+      "source": "evidence/s13-qb-tags-fixture-key01/result.json",
+      "destination": "migration/evidence/s13-qb-tags/fixture/manifest-test/result.json",
+      "sha256": "a30869b9a9b8d622cf0a32775fa503ed34e39c3ac57b20186f3d7e75807a5045",
+      "bytes": 2049
+    },
+    {
+      "source": "evidence/s13-qb-tags-fixture-key01/tests.stdout",
+      "destination": "migration/evidence/s13-qb-tags/fixture/manifest-test/tests.jsonl",
+      "sha256": "40d605f54f7d471516da0b54f8e1e3bbb7622527372fe84d86a3c209a989dd37",
+      "bytes": 1087
+    },
+    {
+      "source": "evidence/s13-qb-tags-fixture-key01/tool-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/fixture/manifest-test/tool-receipt.json",
+      "sha256": "513ee14f389e024bfe0edf138454fc0d1ce4ef3d1b9e9e1d5a07d21b7beb2953",
+      "bytes": 249
+    },
+    {
+      "source": "evidence/s13-qb-tags-server01/result.json",
+      "destination": "migration/evidence/s13-qb-tags/cli/server-result.json",
+      "sha256": "231ea43f099faaeea1e05e33374fdabf63d9516982e76c7067cb9df970448307",
+      "bytes": 1123
+    },
+    {
+      "source": "evidence/s13-qb-tags-server01/tool-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/cli/server-tool-receipt.json",
+      "sha256": "6856198431b15e2549f51ad40cdc9b47d6be3c82ae2a1ed4d680f58560e41e0d",
+      "bytes": 328
+    },
+    {
+      "source": "evidence/s13-qb-tags-fixture02/result.json",
+      "destination": "migration/evidence/s13-qb-tags/cli/worker-result.json",
+      "sha256": "7fa2732243f9cdbe442425897b0fa22b3fd7b6a7add705a2eece74d416655014",
+      "bytes": 1174
+    },
+    {
+      "source": "evidence/s13-qb-tags-fixture02/tool-receipt.json",
+      "destination": "migration/evidence/s13-qb-tags/cli/worker-tool-receipt.json",
+      "sha256": "d7d3bd604a8efbf2a9503eab5cebccaa7b6f75447dd4e65032f10d64cc7f001f",
+      "bytes": 249
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-001.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-001.body",
+      "sha256": "b677786bd88b504ae12ece69ad05ebee8c8b06c4b3f61e17d5036439e46e0a8d",
+      "bytes": 88
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-003.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-003.body",
+      "sha256": "5cdacc43475c4781bad627bc743cd5f7344ec94b7da4bd77590e9d63ca2215aa",
+      "bytes": 288
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-004.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-004.body",
+      "sha256": "13ee72c1d78ed8d62a3686acf7c2231311c1e11b9b6923b860a8588b1a046ac6",
+      "bytes": 70
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-005.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-005.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "bytes": 32
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-006.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-006.body",
+      "sha256": "7e389eafbd2bd537e9f6006dd012299f0a34a45ecf23c72acf0e41782328e8a8",
+      "bytes": 370
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-007.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-007.body",
+      "sha256": "4805107105e62e034d901013a7040d93886ba54fbbcc708e3f843cbc9322ed9b",
+      "bytes": 600
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-008.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-008.body",
+      "sha256": "c7291e551eb40aa2bb394f688eb2ba84d13dbdb0aedaf876249f779f6751ee7d",
+      "bytes": 365
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-009.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-009.body",
+      "sha256": "c8dc47e938bfabda64f1f212744bad6833bcd0c2b499b2b13b36e75b864805e0",
+      "bytes": 375
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-010.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-010.body",
+      "sha256": "a23229d291484897353c20145a7bb84c1ebe0138244f3a85838364f7598442e6",
+      "bytes": 351
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-011.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-011.body",
+      "sha256": "fb9134cacbbb75e6fd9aff9428a14c31d6a890b9689e07342c988a11a5ccd140",
+      "bytes": 603
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-012.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-012.body",
+      "sha256": "81852c18954b02979040a15a13cf19f233c3b1abca5027a6af35a2c49ea80612",
+      "bytes": 88
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-014.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-014.body",
+      "sha256": "d30605ba79de50319e07c960cba6f04d9ec5f6a1be22c207684d1393766d2247",
+      "bytes": 288
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-015.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-015.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "bytes": 32
+    },
+    {
+      "source": "test-instances/s13-qb-tags-normal02/response-016.body",
+      "destination": "migration/evidence/s13-qb-tags/cli/raw/response-016.body",
+      "sha256": "6ae033ee56155edaac2874d11fbdc07730750d9fb41f01562663d01702dbd8bf",
+      "bytes": 370
+    }
+  ],
+  "source_raw_single_copy": "internal/plugins/downloadercommands/testdata/source-qb-tags.json",
+  "excluded": "DB/bin/dependencies/credentials/private host logs/unrelated S06/S07/Browse; no prior failure overwritten"
+}

@@ -1,0 +1,88 @@
+{
+  "started": "2026-11-01T00:14:04.586052+00:00",
+  "driver_pid": 448,
+  "package": "./internal/plugins/iyuuautoseed/native",
+  "pattern": "^(TestSharedQBTagScopeWireAndVersionGates|TestSharedQBTagScopeErrorAndAggregate|TestSharedQBTagActualLeafPollingAndCleanup)$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/plugins/iyuuautoseed/native"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-native-race02.test",
+        "-race",
+        "./internal/plugins/iyuuautoseed/native"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/iyuuautoseed/native",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-native-race02.test",
+        "-test.v",
+        "-test.run",
+        "^(TestSharedQBTagScopeWireAndVersionGates|TestSharedQBTagScopeErrorAndAggregate|TestSharedQBTagActualLeafPollingAndCleanup)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T00:14:04.586068+00:00",
+      "scratch_free": 48467750912,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T00:14:04.940474+00:00",
+      "scratch_free": 48466534400,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T00:14:08.937190+00:00",
+      "scratch_free": 48437682176,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 2622,
+  "program_sha256": "966e1305087069efcc803bf9afc39920e5cb9c094d1e698c1cc20988aca7d3a8",
+  "root_passes": [
+    "TestSharedQBTagScopeWireAndVersionGates",
+    "TestSharedQBTagScopeErrorAndAggregate",
+    "TestSharedQBTagActualLeafPollingAndCleanup"
+  ],
+  "ended": "2026-11-01T00:14:10.175146+00:00"
+}

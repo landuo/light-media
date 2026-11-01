@@ -1,0 +1,49 @@
+{
+  "at": "2026-11-01T00:20:01.805621+00:00",
+  "status": "PASS",
+  "kind": "normal owned S13 qB-tag fixture; SDK HostCaller only, no worker localfilesystem/network/daemon; compile only",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-json",
+        "./cmd/owned-qb-tags-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "build",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-fixture02",
+        "./cmd/owned-qb-tags-fixture"
+      ],
+      "exit": 0
+    }
+  ],
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "scratch_free": 47881265152,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "build",
+      "scratch_free": 47880708096,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 1088,
+  "program_sha256": "48c271e305bd4c4dd2e656473f74b24d39f999e691aebd610896f82d4b83fef3",
+  "ended": "2026-11-01T00:20:02.310975+00:00"
+}

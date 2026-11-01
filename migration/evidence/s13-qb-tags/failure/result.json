@@ -1,0 +1,111 @@
+{
+  "status": "FAIL",
+  "kind": "S13 qB tags normal host / installed SDK / fixed owned HTTP protocol",
+  "calls": [
+    {
+      "at": "2026-11-01T00:18:18.598205+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 49377.499733085,
+      "status": 200,
+      "raw_file": "response-001.body",
+      "sha256": "2a7936af3d4cf56adf1b18570cbd38ea9d3f3c6d8f1e248c06dae6bf6e7e42c3",
+      "ended_monotonic": 49377.500942979
+    },
+    {
+      "at": "2026-11-01T00:18:18.600524+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 49377.502052812,
+      "status": 200,
+      "private_headers_body_not_retained": true,
+      "ended_monotonic": 49377.571328512
+    },
+    {
+      "at": "2026-11-01T00:18:18.671169+00:00",
+      "host_pid": 24,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 49377.572697946,
+      "status": 200,
+      "raw_file": "response-003.body",
+      "sha256": "5b8f94b37f3a5f4d36e805fab6431d9101fee1b1a12bd3890f2a641b5d5ed61b",
+      "ended_monotonic": 49377.573986979
+    },
+    {
+      "at": "2026-11-01T00:18:18.673455+00:00",
+      "host_pid": 24,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 49377.574981098,
+      "status": 200,
+      "raw_file": "response-004.body",
+      "sha256": "ed791f4ca54743c91973fb55083bd6ed81f1e75e94d93722f6f335fc8f5439c1",
+      "ended_monotonic": 49377.577814259
+    }
+  ],
+  "peer_calls": [
+    {
+      "method": "GET",
+      "path": "/index",
+      "request_body_bytes": 0,
+      "received_monotonic": 49377.576334689,
+      "at": "2026-11-01T00:18:18.674816+00:00",
+      "status": 200,
+      "response_bytes": 1069,
+      "reply_monotonic": 49377.576341349,
+      "response_completed": true,
+      "completed_monotonic": 49377.576433918
+    }
+  ],
+  "processes": [
+    {
+      "pid": 24,
+      "identity": {
+        "ppid": 2,
+        "starttime": "4937737"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal01/private-data",
+      "executable_sha256": "bf088d4f11cb91c0d97cab106fc8edd5904f8874c40cbfa0c6d5b6c45cdc5837",
+      "owned_listener_inode": "900434",
+      "exit": 0
+    }
+  ],
+  "queries": [],
+  "physical_plugin_wire_counters": {
+    "measured": false,
+    "available_from_ordinary_API": false
+  },
+  "measured_layers": [
+    "worker logical SDK callback counters",
+    "owned endpoint HTTP requests and entity-body bytes"
+  ],
+  "not_claimed": [
+    "real daemon/download/NAS",
+    "filesystem or data deletion",
+    "lookup None as mutation success receipt",
+    "wall-clock behavior of a real downloader",
+    "browser/UI",
+    "full S13/platform/delivery"
+  ],
+  "bindings_sha256": "0692ef03976e6687ddffbd52138a76708735aa9972482148e0ca837eb1c109aa",
+  "execution_environment": "inherited after coordinator grant marker; no proxy or startup rewrites",
+  "owned_peer_origin": "http://127.0.0.1:45355",
+  "bootstrap_exit": 0,
+  "error_class": "AssertionError",
+  "error": "normal installation business failure",
+  "input_drift": [],
+  "environment_unchanged": true,
+  "finished_at": "2026-11-01T00:18:19.474407+00:00"
+}

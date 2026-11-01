@@ -1,0 +1,87 @@
+{
+  "started": "2026-11-01T00:05:51.073136+00:00",
+  "driver_pid": 104,
+  "package": "./internal/plugins/downloadercommands",
+  "pattern": "^(TestQBTagLeafActualSourceObservations|TestQBTagLeafAggregateBoundaries)$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/plugins/downloadercommands"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-leaf-race01.test",
+        "-race",
+        "./internal/plugins/downloadercommands"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/downloadercommands",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-leaf-race01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestQBTagLeafActualSourceObservations|TestQBTagLeafAggregateBoundaries)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T00:05:51.073151+00:00",
+      "scratch_free": 48826646528,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T00:05:51.311301+00:00",
+      "scratch_free": 48825892864,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T00:05:52.202367+00:00",
+      "scratch_free": 48816009216,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 1809,
+  "program_sha256": "db9e389fc211e5bee6bafae6fd1ac4b81aae91c61866d30d38aced80e5de3025",
+  "root_passes": [
+    "TestQBTagLeafActualSourceObservations",
+    "TestQBTagLeafAggregateBoundaries"
+  ],
+  "ended": "2026-11-01T00:05:53.385995+00:00"
+}

@@ -1,0 +1,9 @@
+# CLI01 failure and exact fixture-key correction
+
+The original CLI01 result is **FAIL**, not a source/native/product success: install returned HTTP200 with data.success=false and plugin acquisition preflight invalid_manifest. Raw response hash matches its call receipt. Only one owned index GET occurred; no artifact worker fetch, no business query and no qB operation. The single normal host PID24 exited naturally with Wait0; original result reports no bound-input drift and unchanged inherited environment. All failed-run evidence remains in place.
+
+The concrete cause is the owned fixture API key qb-tags, which fails the existing HTTPAPI method-pattern validator; its URL path /qb-tags is legal and unchanged. This was an actual missing manifest-validation check in preparation, not a policy/network denial or a reason to relax production validation.
+
+**READY for the narrow fixture compile/one-root and fresh fixture02 build.** Inspected exact before/after: only the manifest key and worker expected request key become qb_tags, and main now validates the manifest before either --manifest output or Serve. The new fixture test validates the corrected key/path, rejects the old hyphenated key, and dispatches the correct HTTP request to exactly one recording SDK HostCaller. It is a fixture-level protocol test, not a real daemon or service run.
+
+The replacement CLI driver differs only in expected fixture02 path and expected manifest key; the six controller routes, fixed peer behavior, /qb-tags path, two-host lifecycle, environment inheritance, seven business requests and long-lookup assertions are unchanged. Its driver SHA is 6694848f8fc4fb4f97fbc8e8509d0ca1b276ad92533ba97c222bcaf9b751ff83. Prior safety-shell static review is inherited for those unchanged bytes, not falsely applied to the old failed fixture manifest. Actual new worker program/build-input hashes must be bound before execution; no new CLI outcome is accepted by this correction review.

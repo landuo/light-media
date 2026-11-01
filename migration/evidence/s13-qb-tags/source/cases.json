@@ -1,0 +1,495 @@
+{
+  "cases": [
+    {
+      "id": "delete-missing-client",
+      "method": "delete_torrents_tag",
+      "args": {
+        "ids": [
+          "owned-a",
+          "owned-a"
+        ],
+        "tag": [
+          "owned-label",
+          "owned-label"
+        ]
+      },
+      "client_present": false,
+      "steps": [],
+      "purpose": "Observe original two-write order, ignored returns and ordinary exception boundaries; no vendor mutation."
+    },
+    {
+      "id": "delete-two-false-replies",
+      "method": "delete_torrents_tag",
+      "args": {
+        "ids": [
+          "owned-a",
+          "owned-a"
+        ],
+        "tag": [
+          "owned-label",
+          "owned-label"
+        ]
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_remove_tags",
+          "reply": false
+        },
+        {
+          "method": "torrents_delete_tags",
+          "reply": false
+        }
+      ],
+      "purpose": "Observe original two-write order, ignored returns and ordinary exception boundaries; no vendor mutation."
+    },
+    {
+      "id": "delete-two-none-replies",
+      "method": "delete_torrents_tag",
+      "args": {
+        "ids": [
+          "owned-a",
+          "owned-a"
+        ],
+        "tag": [
+          "owned-label",
+          "owned-label"
+        ]
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_remove_tags",
+          "reply": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "reply": null
+        }
+      ],
+      "purpose": "Observe original two-write order, ignored returns and ordinary exception boundaries; no vendor mutation."
+    },
+    {
+      "id": "delete-first-write-exception",
+      "method": "delete_torrents_tag",
+      "args": {
+        "ids": [
+          "owned-a",
+          "owned-a"
+        ],
+        "tag": [
+          "owned-label",
+          "owned-label"
+        ]
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_remove_tags",
+          "raises": {
+            "class": "RuntimeError",
+            "message": "owned recording failure"
+          }
+        }
+      ],
+      "purpose": "Observe original two-write order, ignored returns and ordinary exception boundaries; no vendor mutation."
+    },
+    {
+      "id": "delete-second-write-exception",
+      "method": "delete_torrents_tag",
+      "args": {
+        "ids": [
+          "owned-a",
+          "owned-a"
+        ],
+        "tag": [
+          "owned-label",
+          "owned-label"
+        ]
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_remove_tags",
+          "reply": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "raises": {
+            "class": "RuntimeError",
+            "message": "owned recording failure"
+          }
+        }
+      ],
+      "purpose": "Observe original two-write order, ignored returns and ordinary exception boundaries; no vendor mutation."
+    },
+    {
+      "id": "poll-missing-client",
+      "method": "get_torrent_id_by_tag",
+      "args": {
+        "tags": "owned",
+        "status": null
+      },
+      "client_present": false,
+      "steps": [],
+      "purpose": "Original delay loop despite absent client."
+    },
+    {
+      "id": "poll-nine-empty-results",
+      "method": "get_torrent_id_by_tag",
+      "args": {
+        "tags": "owned",
+        "status": null
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_info",
+          "reply": []
+        },
+        {
+          "method": "torrents_info",
+          "reply": []
+        },
+        {
+          "method": "torrents_info",
+          "reply": []
+        },
+        {
+          "method": "torrents_info",
+          "reply": []
+        },
+        {
+          "method": "torrents_info",
+          "reply": []
+        },
+        {
+          "method": "torrents_info",
+          "reply": []
+        },
+        {
+          "method": "torrents_info",
+          "reply": []
+        },
+        {
+          "method": "torrents_info",
+          "reply": []
+        },
+        {
+          "method": "torrents_info",
+          "reply": []
+        }
+      ],
+      "purpose": "Observe original range and sleep/query trace, not wall time."
+    },
+    {
+      "id": "poll-missing-null-then-empty-hash",
+      "method": "get_torrent_id_by_tag",
+      "args": {
+        "tags": "owned",
+        "status": null
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_info",
+          "reply": [
+            {
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "method": "torrents_info",
+          "reply": [
+            {
+              "hash": null,
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "method": "torrents_info",
+          "reply": [
+            {
+              "hash": "",
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "method": "torrents_remove_tags",
+          "reply": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "reply": null
+        }
+      ],
+      "purpose": "Do not conflate absent/null hash with a present empty string."
+    },
+    {
+      "id": "poll-full-filter-first-selected-row",
+      "method": "get_torrent_id_by_tag",
+      "args": {
+        "tags": [
+          "owned",
+          "second"
+        ],
+        "status": "paused"
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_info",
+          "reply": [
+            {
+              "hash": "owned-no-match",
+              "tags": "owned"
+            },
+            {
+              "hash": "owned-z-first",
+              "tags": " second , owned "
+            },
+            {
+              "hash": "owned-a-second",
+              "tags": "owned,second"
+            }
+          ]
+        },
+        {
+          "method": "torrents_remove_tags",
+          "reply": false
+        },
+        {
+          "method": "torrents_delete_tags",
+          "reply": false
+        }
+      ],
+      "purpose": "Full client-side subset filter; strip returned tags, preserve daemon row order and first selected row."
+    },
+    {
+      "id": "poll-later-malformed-row-invalidates-earlier-match",
+      "method": "get_torrent_id_by_tag",
+      "args": {
+        "tags": "owned,second",
+        "status": "stopped"
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_info",
+          "reply": [
+            {
+              "hash": "owned-early",
+              "tags": "owned,second"
+            },
+            {
+              "hash": "owned-bad",
+              "tags": null
+            }
+          ]
+        },
+        {
+          "method": "torrents_info",
+          "reply": [
+            {
+              "hash": "owned-later",
+              "tags": " second , owned "
+            }
+          ]
+        },
+        {
+          "method": "torrents_remove_tags",
+          "reply": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "reply": null
+        }
+      ],
+      "purpose": "The complete get_torrents filter must visit later rows and its finally must clear the returned list."
+    },
+    {
+      "id": "poll-query-exception-then-found",
+      "method": "get_torrent_id_by_tag",
+      "args": {
+        "tags": "owned",
+        "status": null
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_info",
+          "raises": {
+            "class": "RuntimeError",
+            "message": "owned recording failure"
+          }
+        },
+        {
+          "method": "torrents_info",
+          "reply": [
+            {
+              "hash": "owned-found",
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "method": "torrents_remove_tags",
+          "reply": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "reply": null
+        }
+      ],
+      "purpose": "Observe original query catch/log followed by another original delayed read."
+    },
+    {
+      "id": "poll-cleanup-first-write-exception",
+      "method": "get_torrent_id_by_tag",
+      "args": {
+        "tags": "owned",
+        "status": null
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_info",
+          "reply": [
+            {
+              "hash": "owned-found",
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "method": "torrents_remove_tags",
+          "raises": {
+            "class": "RuntimeError",
+            "message": "owned recording failure"
+          }
+        }
+      ],
+      "purpose": "Source cleanup False is ignored by the original polling caller."
+    },
+    {
+      "id": "poll-cleanup-second-write-exception",
+      "method": "get_torrent_id_by_tag",
+      "args": {
+        "tags": "owned",
+        "status": null
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_info",
+          "reply": [
+            {
+              "hash": "owned-found",
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "method": "torrents_remove_tags",
+          "reply": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "raises": {
+            "class": "RuntimeError",
+            "message": "owned recording failure"
+          }
+        }
+      ],
+      "purpose": "Second-write failure does not replace the original found hash."
+    },
+    {
+      "id": "poll-cleanup-none-replies",
+      "method": "get_torrent_id_by_tag",
+      "args": {
+        "tags": "owned",
+        "status": null
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_info",
+          "reply": [
+            {
+              "hash": "owned-found",
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "method": "torrents_remove_tags",
+          "reply": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "reply": null
+        }
+      ],
+      "purpose": "Supplied nonthrowing None replies, not actual vendor unsupported-version execution."
+    },
+    {
+      "id": "poll-false-hash",
+      "method": "get_torrent_id_by_tag",
+      "args": {
+        "tags": "owned",
+        "status": null
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_info",
+          "reply": [
+            {
+              "hash": false,
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "method": "torrents_remove_tags",
+          "reply": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "reply": null
+        }
+      ],
+      "purpose": "JSON false is distinct from None in the original identity check."
+    },
+    {
+      "id": "poll-nonmapping-first-row-falsey-tags",
+      "method": "get_torrent_id_by_tag",
+      "args": {
+        "tags": null,
+        "status": null
+      },
+      "client_present": true,
+      "steps": [
+        {
+          "method": "torrents_info",
+          "reply": [
+            7
+          ]
+        }
+      ],
+      "purpose": "Original first-row .get occurs outside the private helper try; observe propagation without blanket catch."
+    }
+  ],
+  "boundaries": [
+    "Complete original four-node closure, original class name/private mangle; no original constructor/module import.",
+    "Qbc/logger/time are explicitly supplied recording dependency inputs, not vendor/HTTP/daemon execution.",
+    "Sleep only records requested 3-second intervals; no wall-clock timing proof.",
+    "Original all-row filtering and actual ordinary-list clear mutations retained.",
+    "None cleanup reply does not prove vendor unsupported endpoint behavior.",
+    "Ordinary dependency exceptions are supplied inputs, not network/authority/unknown-effect failures.",
+    "No target Go results are used to generate expected source outputs."
+  ]
+}

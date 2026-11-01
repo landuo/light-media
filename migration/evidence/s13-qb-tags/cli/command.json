@@ -1,0 +1,26 @@
+{
+  "at": "2026-11-01T00:22:05.561677+00:00",
+  "argv": [
+    "python3",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-normal-cli02/normal-cli-driver.py",
+    "--server",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-server01",
+    "--worker",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-fixture02",
+    "--output",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02",
+    "--expected-server-sha",
+    "bf088d4f11cb91c0d97cab106fc8edd5904f8874c40cbfa0c6d5b6c45cdc5837",
+    "--expected-worker-sha",
+    "48c271e305bd4c4dd2e656473f74b24d39f999e691aebd610896f82d4b83fef3",
+    "--expected-driver-sha",
+    "6694848f8fc4fb4f97fbc8e8509d0ca1b276ad92533ba97c222bcaf9b751ff83",
+    "--expected-bindings-sha",
+    "f6a59834fbfc4c3231b4128c4c1536dc420279550fc5440eec592f919899089b"
+  ],
+  "explicit_test_environment": {
+    "S13_QB_TAGS_CLI_GRANTED": "1"
+  },
+  "scope": "exactreviewedCLI02 correctedfixture; originalsfailedinstancepreserved",
+  "preexec_sha256": "a9773c9aa4b8b6a53fa13d7a8b6d9999887eeabf742c8eaae2c382cee1ce2e51"
+}

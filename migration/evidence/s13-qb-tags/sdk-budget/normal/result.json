@@ -1,0 +1,90 @@
+{
+  "started": "2026-11-01T00:13:44.341872+00:00",
+  "driver_pid": 54,
+  "package": "./internal/plugins",
+  "pattern": "^(TestSharedQBTagsWireAndSourceValues|TestSharedQBTagsStrictErrorsAndNoReplay|TestSerialSpecificHostBudgetSelectedAndFreshCall|TestSerialSpecificHostBudgetOtherAndCumulativeWorker|TestSerialSpecificHostBudgetLifeCancellation|TestSpecificHostBudgetOptionsRejectBeforeDispatch|TestPersistentSessionCallOptionsHostExclusionCanBeEnabled)$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-budget-sdk01.test",
+        "./internal/plugins"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-budget-sdk01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestSharedQBTagsWireAndSourceValues|TestSharedQBTagsStrictErrorsAndNoReplay|TestSerialSpecificHostBudgetSelectedAndFreshCall|TestSerialSpecificHostBudgetOtherAndCumulativeWorker|TestSerialSpecificHostBudgetLifeCancellation|TestSpecificHostBudgetOptionsRejectBeforeDispatch|TestPersistentSessionCallOptionsHostExclusionCanBeEnabled)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T00:13:44.341888+00:00",
+      "scratch_free": 48530513920,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T00:13:44.623498+00:00",
+      "scratch_free": 48529649664,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T00:13:47.071086+00:00",
+      "scratch_free": 48512663552,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 1933,
+  "program_sha256": "27235acd8f2207fc6dd8fcf26c1df9ef34aa52bed4d127cd73201efab7fb6b4b",
+  "root_passes": [
+    "TestSerialSpecificHostBudgetSelectedAndFreshCall",
+    "TestSerialSpecificHostBudgetOtherAndCumulativeWorker",
+    "TestSerialSpecificHostBudgetLifeCancellation",
+    "TestSpecificHostBudgetOptionsRejectBeforeDispatch",
+    "TestPersistentSessionCallOptionsHostExclusionCanBeEnabled",
+    "TestSharedQBTagsWireAndSourceValues",
+    "TestSharedQBTagsStrictErrorsAndNoReplay"
+  ],
+  "ended": "2026-11-01T00:13:50.100907+00:00"
+}

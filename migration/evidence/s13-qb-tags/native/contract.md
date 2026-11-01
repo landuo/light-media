@@ -1,0 +1,17 @@
+# qB tag cleanup + delayed lookup: native candidate contract
+
+Prepared only, baseline 55f2; no product writes, Go, original/vendor imports, network or daemon execution by this owner. Source algorithms belong to the separate leaf owner; original complete four-node/16-case recording remains independent evidence, not native HTTP proof.
+
+## Scoped interface (agreed with SDK/leaf owner)
+
+`QBTagScopePort.WithTagScope(ctx, func(context.Context, QBTagPrimitives)(any,error))(any,error)` on the existing `*sharedQBCommands`. Exactly one existing `owner.run` obtains the native lock and fresh monotonic mutation proof for the entire callback. Private scope primitives are only `Info(ctx,status)(*QBTagRows,error)`, `RemoveTags(ctx,ids,tags)(any,error)`, `DeleteTags(ctx,tags)(any,error)`, `Sleep(ctx,time.Duration)error`; no primitive calls run/locks again. The private object expires when the callback returns and accepts only the current proof context. It is not an arbitrary SDK RPC or worker-accessible closure.
+
+Info: readonly POST torrents/info; status None omits filter, ordinary scalar value is rendered by the retained finite source scalar preparation. Only paused/stopped/resumed/running obtains a fresh version and uses the original 2.11 alias table. No server-side tags/hash filter or completed predicate. Reuse the existing vendor-row normalization component (not completed selection) then UseNumber decode; preserve row order and values into QBTagRows. Invalid native JSON/query errors remain source-caught only when proven known read-only failure; response capacity, unknown transport, authority/cancellation and Boundary are not disguised as SourceException.
+
+RemoveTags prepares hashes with `|` and tags with `,`, then independently checks fresh API >=2.3; selected POST torrents/removeTags. DeleteTags prepares only tags, checks its own fresh >=2.3 and selected POST torrents/deleteTags. Unsupported gates return None without a selected request, preserving the existing default vendor nonraising policy. Both share one aggregate proof; a later failure never erases the first selected delegation. No rollback/retry or double run. Any SourceException encountered after prior selected delegation must be reclassified as unknown aggregate, not caught by the source leaf and erased into False.
+
+Sleep delegates the existing IYUUOptions.Sleep cancellable production timer with current guard/context before and after; nonnull clients cannot override it through leaf user input. Pure leaf controls the exact nine calls of three seconds and full tag filtering/cleanup sequence. No new timing framework, timeout/environment/TLS setting, global tags/task discovery or arbitrary method is added.
+
+## Initial intended files / tests
+
+Only new audit candidates for `internal/plugins/iyuuautoseed/native/shared_qb_tag_commands.go` and `_test.go`; old S03/eight and S13/four, constructor/TLS/proof/transport and old PollByTag/RemoveTag remain unchanged. Actual native tests will use only fixed owned HTTP and owned Sleep duration recorder, then cover (1) exact info/status/form/version and two writes, (2) readonly known errors vs owner/cancel/unknown and first/second selected failure aggregate, (3) complete leaf integration using the finalized optional port when available. No source expectation invented from target code, no real delay bypass in production. Roots and final file hashes follow the small actual candidate.

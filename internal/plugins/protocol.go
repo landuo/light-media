@@ -517,6 +517,7 @@ type wireSession struct {
 	aborted                                                   atomic.Bool
 	host                                                      HostHandler
 	hostBudget                                                *runnerBudget
+	hostBudgetMethod                                          string // Empty preserves existing all-host exclusion.
 	businessFailure                                           bool
 	scopedCallbacks                                           bool
 	callbackErrors                                            bool
@@ -819,6 +820,11 @@ type CallOptions struct {
 	CallerDeadlineOnly bool
 	Timeout            time.Duration
 	ExcludeHostTime    bool
+	// ExcludeHostMethod is trusted host-only timing for one exact callback in
+	// this serial invocation. It does not grant the capability or reset the
+	// worker budget. Mutually exclusive with both timing modes above; not
+	// supported on negotiated concurrent calls. Startup/Stop are unchanged.
+	ExcludeHostMethod string
 }
 
 func (c *Client) defaultCallOptions() CallOptions {
@@ -835,6 +841,9 @@ func (c *Client) Call(ctx context.Context, method string, payload json.RawMessag
 // CallWithOptions uses fresh per-action timing policy without replacing the
 // live object. Invalid options are rejected before sending any invocation.
 func (c *Client) CallWithOptions(ctx context.Context, method string, payload json.RawMessage, host HostHandler, options CallOptions) (out RunResult, err error) {
+	if options.ExcludeHostMethod != "" && (options.ExcludeHostTime || options.CallerDeadlineOnly || c.concurrent != nil || !methodPattern.MatchString(options.ExcludeHostMethod) || strings.HasPrefix(options.ExcludeHostMethod, "transport.")) {
+		return out, failure("invalid_limits")
+	}
 	if options.CallerDeadlineOnly && options.Timeout != 0 {
 		return out, failure("invalid_limits")
 	}
@@ -883,10 +892,17 @@ func (c *Client) exchange(ctx context.Context, method string, payload json.RawMe
 	parent, cancelParent := context.WithCancel(ctx)
 	stopLife := context.AfterFunc(c.life, cancelParent)
 	defer func() { stopLife(); cancelParent() }()
-	call, finish, budget := invocationContext(parent, options)
+	budgetOptions := options
+	if options.ExcludeHostMethod != "" {
+		// Reuse the pauseable cumulative timer, but select pauses separately
+		// in callHost. Other callbacks still consume this worker budget.
+		budgetOptions.ExcludeHostTime = true
+	}
+	call, finish, budget := invocationContext(parent, budgetOptions)
 	s := c.session
 	s.resetEpoch()
 	s.ctx, s.host, s.hostBudget = call, host, budget
+	s.hostBudgetMethod = options.ExcludeHostMethod
 	before, _ := c.stderr.snapshot()
 	stopped := make(chan struct{})
 	stopCancel := context.AfterFunc(call, func() { s.abort(); c.cancel(); close(stopped) })
@@ -897,6 +913,7 @@ func (c *Client) exchange(ctx context.Context, method string, payload json.RawMe
 		canceled := call.Err() != nil || c.life.Err() != nil
 		finish()
 		s.host, s.hostBudget, s.ctx = nil, nil, c.life
+		s.hostBudgetMethod = ""
 		out.HostCalls, out.SentWireBytes, out.ReadWireBytes = s.hostCalls, s.inputBytes, s.outputBytes
 		out.SentChunks, out.ReadChunks = s.sentChunks, s.readChunks
 		after, exceeded := c.stderr.snapshot()

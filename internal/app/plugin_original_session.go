@@ -39,6 +39,11 @@ func (p *originalPluginInstance) callSession(ctx context.Context, runner plugins
 	options := plugins.CallOptions{Timeout: runner.Timeout, ExcludeHostTime: runner.ExcludeHostTime}
 	if client.SupportsConcurrent() {
 		options = plugins.CallOptions{CallerDeadlineOnly: true}
+	} else if !options.ExcludeHostTime && p.hostContract == pluginResourcesSDKContract && slices.Contains(p.manifest.Capabilities, plugins.QBittorrentGetIDByTagCapability) {
+		// Only the source-owned nine delayed reads (plus their cleanup) are
+		// native host time. Other callbacks retain this invocation's original
+		// worker budget, grants and admitted serial cancellation semantics.
+		options.ExcludeHostMethod = plugins.QBittorrentGetIDByTagCapability
 	}
 	return p.callRetainedSession(ctx, client, method, payload, callback, options, lease, closePhase)
 }

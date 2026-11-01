@@ -1,0 +1,393 @@
+{
+  "status": "READY_CLI02_NARROW_REBIND_NOT_EXECUTED",
+  "at": "2026-11-01T00:21:20.277Z",
+  "bindings": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-normal-cli02/execution-bindings.json",
+    "bytes": 1044777,
+    "sha256": "f6a59834fbfc4c3231b4128c4c1536dc420279550fc5440eec592f919899089b"
+  },
+  "bound_count": 3996,
+  "drift": [],
+  "gates": [
+    {
+      "name": "s13-qb-tags-fixture-key01",
+      "status": "PASS",
+      "input_count": 1931,
+      "maps_equal": true,
+      "current_drift": [],
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-fixture-key01.test",
+        "bytes": 6089380,
+        "sha256": "0c0d75486b933ffca7b808c634905956c7c6d488fafafb2a64b1e326797fc533"
+      },
+      "program_matches": true,
+      "all_build_inputs_in_cli": null,
+      "roots": [
+        "TestOwnedQBTagFixtureManifestAndRoute"
+      ],
+      "bad": [],
+      "commands": [
+        {
+          "label": "go-list",
+          "argv": [
+            "go",
+            "list",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-deps",
+            "-test",
+            "-json",
+            "./cmd/owned-qb-tags-fixture"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "compile",
+          "argv": [
+            "go",
+            "test",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-p=1",
+            "-c",
+            "-o",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-fixture-key01.test",
+            "./cmd/owned-qb-tags-fixture"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "tests",
+          "argv": [
+            "go",
+            "tool",
+            "test2json",
+            "-t",
+            "-p",
+            "./cmd/owned-qb-tags-fixture",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-fixture-key01.test",
+            "-test.v",
+            "-test.run",
+            "^TestOwnedQBTagFixtureManifestAndRoute$",
+            "-test.count=1",
+            "-test.timeout=90s"
+          ],
+          "exit": 0
+        }
+      ],
+      "receipt": {
+        "session_id": 72249,
+        "initial_chunk": "e18bdb",
+        "terminal_chunk": "cf34c6",
+        "exit_code": 0,
+        "result_sha256": "a30869b9a9b8d622cf0a32775fa503ed34e39c3ac57b20186f3d7e75807a5045",
+        "scope": "minimalfixture1root andnormalworker02compile"
+      },
+      "evidence": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/result.json",
+          "bytes": 2049,
+          "sha256": "a30869b9a9b8d622cf0a32775fa503ed34e39c3ac57b20186f3d7e75807a5045"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/tool-receipt.json",
+          "bytes": 249,
+          "sha256": "513ee14f389e024bfe0edf138454fc0d1ce4ef3d1b9e9e1d5a07d21b7beb2953"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/inputs-before.json",
+          "bytes": 417794,
+          "sha256": "41970a48f49c71d06749849994c4cc73dc323115703ccef0c630182a1da03461"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/inputs-after-compile.json",
+          "bytes": 417794,
+          "sha256": "41970a48f49c71d06749849994c4cc73dc323115703ccef0c630182a1da03461"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/inputs-after-test.json",
+          "bytes": 417794,
+          "sha256": "41970a48f49c71d06749849994c4cc73dc323115703ccef0c630182a1da03461"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/go-list.stdout",
+          "bytes": 364851,
+          "sha256": "98395e2f2bcecb3efaa6cb9f6fb8f4d046446012506f7ab5c997ac751181c7ff"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/compile.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/compile.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/compile.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/tests.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/tests.stdout",
+          "bytes": 1087,
+          "sha256": "40d605f54f7d471516da0b54f8e1e3bbb7622527372fe84d86a3c209a989dd37"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture-key01/tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "s13-qb-tags-fixture02",
+      "status": "PASS",
+      "input_count": 1088,
+      "maps_equal": true,
+      "current_drift": [],
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-fixture02",
+        "bytes": 5306628,
+        "sha256": "48c271e305bd4c4dd2e656473f74b24d39f999e691aebd610896f82d4b83fef3"
+      },
+      "program_matches": true,
+      "all_build_inputs_in_cli": true,
+      "roots": [],
+      "bad": [],
+      "commands": [
+        {
+          "label": "go-list",
+          "argv": [
+            "go",
+            "list",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-deps",
+            "-json",
+            "./cmd/owned-qb-tags-fixture"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "build",
+          "argv": [
+            "go",
+            "build",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-p=1",
+            "-o",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-fixture02",
+            "./cmd/owned-qb-tags-fixture"
+          ],
+          "exit": 0
+        }
+      ],
+      "receipt": {
+        "session_id": 72249,
+        "initial_chunk": "e18bdb",
+        "terminal_chunk": "cf34c6",
+        "exit_code": 0,
+        "result_sha256": "7fa2732243f9cdbe442425897b0fa22b3fd7b6a7add705a2eece74d416655014",
+        "scope": "minimalfixture1root andnormalworker02compile"
+      },
+      "evidence": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture02/result.json",
+          "bytes": 1174,
+          "sha256": "7fa2732243f9cdbe442425897b0fa22b3fd7b6a7add705a2eece74d416655014"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture02/tool-receipt.json",
+          "bytes": 249,
+          "sha256": "d7d3bd604a8efbf2a9503eab5cebccaa7b6f75447dd4e65032f10d64cc7f001f"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture02/inputs-before.json",
+          "bytes": 235146,
+          "sha256": "dd44e9462117df04b87e0f15c0ac3db3655ba3ebca730fe60253d0d5108a8322"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture02/inputs-after.json",
+          "bytes": 235146,
+          "sha256": "dd44e9462117df04b87e0f15c0ac3db3655ba3ebca730fe60253d0d5108a8322"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture02/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture02/go-list.stdout",
+          "bytes": 315386,
+          "sha256": "c38fc50007d2f71228bc86991bf50393c45e4cd97fe923ae94c0ed81963bd00c"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture02/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture02/build.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture02/build.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-fixture02/build.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    {
+      "name": "s13-qb-tags-server01",
+      "status": "PASS",
+      "input_count": 3982,
+      "maps_equal": true,
+      "current_drift": [],
+      "program": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-server01",
+        "bytes": 75179068,
+        "sha256": "bf088d4f11cb91c0d97cab106fc8edd5904f8874c40cbfa0c6d5b6c45cdc5837"
+      },
+      "program_matches": true,
+      "all_build_inputs_in_cli": true,
+      "roots": [],
+      "bad": [],
+      "commands": [
+        {
+          "label": "go-list",
+          "argv": [
+            "go",
+            "list",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-deps",
+            "-json",
+            "./cmd/server"
+          ],
+          "exit": 0
+        },
+        {
+          "label": "build",
+          "argv": [
+            "go",
+            "build",
+            "-mod=readonly",
+            "-buildvcs=false",
+            "-p=1",
+            "-o",
+            "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-server01",
+            "./cmd/server"
+          ],
+          "exit": 0
+        }
+      ],
+      "receipt": {
+        "session_id": 14977,
+        "initial_chunk": "6a41d8",
+        "intermediate_chunks": [
+          "9b4c8c",
+          "3a04a0"
+        ],
+        "terminal_chunk": "685238",
+        "exit_code": 0,
+        "result_sha256": "231ea43f099faaeea1e05e33374fdabf63d9516982e76c7067cb9df970448307",
+        "scope": "oneactualserialstream allselectedgates andnormal2builds terminal"
+      },
+      "evidence": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-server01/result.json",
+          "bytes": 1123,
+          "sha256": "231ea43f099faaeea1e05e33374fdabf63d9516982e76c7067cb9df970448307"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-server01/tool-receipt.json",
+          "bytes": 328,
+          "sha256": "6856198431b15e2549f51ad40cdc9b47d6be3c82ae2a1ed4d680f58560e41e0d"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-server01/inputs-before.json",
+          "bytes": 953047,
+          "sha256": "e261d607a7ae9593cbd354ff8833b22bfb99079fc75a66a15208004b2a4a4db9"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-server01/inputs-after.json",
+          "bytes": 953047,
+          "sha256": "e261d607a7ae9593cbd354ff8833b22bfb99079fc75a66a15208004b2a4a4db9"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-server01/go-list.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-server01/go-list.stdout",
+          "bytes": 1312740,
+          "sha256": "ccc359aaea8e92050d3f5c20a0b0d4542834cf04f5d28954721c285ed09e3cb8"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-server01/go-list.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-server01/build.exit",
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-server01/build.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-server01/build.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "driver": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-normal-cli02/normal-cli-driver.py",
+    "bytes": 36899,
+    "sha256": "6694848f8fc4fb4f97fbc8e8509d0ca1b276ad92533ba97c222bcaf9b751ff83"
+  },
+  "driver_matches": true,
+  "worker_matches": true,
+  "server_matches": true,
+  "prior_driver_static": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-normal-cli-independent/preexec-seal.json",
+    "bytes": 664,
+    "sha256": "c098532622e2cf3943d3d5709ff039c9f74fcd68fcfc53b49cd0a45c3fba82d3"
+  },
+  "failure_and_delta": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-source-independent/cli01-failure-fix02-seal.json",
+    "bytes": 3190,
+    "sha256": "cc4d47626ee07e2aa988b5fd16111d1189608d3e3f7f5bb5478b38f2bd06ef0b"
+  },
+  "reviewer_executed": false
+}

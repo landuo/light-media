@@ -59,6 +59,9 @@ func (c *Client) StartCallWithAdmission(admissionCtx, ctx context.Context, metho
 	if c == nil || !c.SupportsConcurrent() {
 		return nil, failure("concurrent_session_unsupported")
 	}
+	if options.ExcludeHostMethod != "" {
+		return nil, failure("invalid_limits") // This opt-in is serial-only.
+	}
 	if options.CallerDeadlineOnly && options.Timeout != 0 {
 		return nil, failure("invalid_limits")
 	}

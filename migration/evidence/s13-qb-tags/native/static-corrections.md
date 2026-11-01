@@ -1,0 +1,8 @@
+# Candidate 01 narrow source/authority corrections
+
+Both prior product/test preimages remain in this directory; none was executed.
+
+1. Escaping first-row AttributeError: WithTagScope saves only the callback's direct SourceException pointer with Class AttributeError. After the existing owner.run it restores that pointer only if the result is the exact private sealed mutationNotDispatched/native object with that same cause, the same proof has no delegation or terminal condition, and the caller context remains live. The unchanged cause proves the existing final guard did not replace it. No errors.As unwrapping, old-run change, provider-derived class or already-delegated downgrade. Third root exercises actual native scope + leaf + nonmapping row; App's envelope gate is separate.
+2. Source16 false-hash case: only the new tag field preparer supports noniterable ordinary scalars through existing source scalar rendering. False remains False and renders hashes=False during real owned cleanup; both POSTs occur and lookup returns false. It is not normalized to None, hex-validated or silently retried. Old commandJoined and all old operations remain unchanged; maps/other Python iterables are not added.
+
+The native protocol expectations derive from the pinned source/static vendor contract. Full source16 fixture is the independent pure leaf evidence, not fabricated native responses. Test Sleep override exists only on the test's private client options and records every requested three-second duration; production retains its original cancellable timer. No native tests have run in this author process.

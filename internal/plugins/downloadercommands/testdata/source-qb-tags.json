@@ -1,0 +1,1982 @@
+{
+  "status": "ORIGINAL_QB_TAG_RECORDING_COMPONENT_OBSERVATION_COMPLETE",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "input_manifest_sha256": "51104abdb171aabe7a4456b4fb42e05490aa93ded4daab0139fcb44aeef13a58",
+  "python": {
+    "version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+    "isolated": 1,
+    "no_site": 1,
+    "dont_write_bytecode": 1
+  },
+  "source_nodes": [
+    {
+      "name": "get_torrents",
+      "first_line": 224,
+      "last_line": 252,
+      "source_bytes_sha256": "696bc8f0f9591f58e5a6b50e30e565fb099ffb199005cdcb4986983319be8a89",
+      "ast_sha256": "fcd74985e0874da56fa738c6dbd46d08f57996a7e3179e259f6c661f02206c31",
+      "decorators": []
+    },
+    {
+      "name": "delete_torrents_tag",
+      "first_line": 304,
+      "last_line": 319,
+      "source_bytes_sha256": "e4f6f4aa42c1c0e5ea4e390fb1a774982894596298f307b7d226dbf8f347981a",
+      "ast_sha256": "a660282e89e92d5d9d8fea5eba283529571bf1b016f99c3054990944999cc495",
+      "decorators": []
+    },
+    {
+      "name": "__get_last_add_torrentid_by_tag",
+      "first_line": 367,
+      "last_line": 381,
+      "source_bytes_sha256": "bd46444dfbf081bef56a1aafe9b7a00e6bc09ea9b5739275ea39c3fa61585f4c",
+      "ast_sha256": "98d4f2c1ffbdd2668cc3d05c8c5b85d7709ba1e9b171eefb9216785bf02b5b8e",
+      "decorators": []
+    },
+    {
+      "name": "get_torrent_id_by_tag",
+      "first_line": 383,
+      "last_line": 399,
+      "source_bytes_sha256": "1242a9f66f0b3b15e5e21c7ca8e56549641ddfac87b792f95ccae79e045b4891",
+      "ast_sha256": "d02639c81cf5724cb5c0f67813c10e5adb6e49906e3b682a069de98a0217be1e",
+      "decorators": []
+    }
+  ],
+  "case_count": 16,
+  "cases": [
+    {
+      "id": "delete-missing-client",
+      "input": {
+        "id": "delete-missing-client",
+        "method": "delete_torrents_tag",
+        "args": {
+          "ids": [
+            "owned-a",
+            "owned-a"
+          ],
+          "tag": [
+            "owned-label",
+            "owned-label"
+          ]
+        },
+        "client_present": false,
+        "steps": [],
+        "purpose": "Observe original two-write order, ignored returns and ordinary exception boundaries; no vendor mutation."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [],
+      "vendor_calls": 0,
+      "sleep_requests": [],
+      "requested_sleep_seconds": 0,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": []
+    },
+    {
+      "id": "delete-two-false-replies",
+      "input": {
+        "id": "delete-two-false-replies",
+        "method": "delete_torrents_tag",
+        "args": {
+          "ids": [
+            "owned-a",
+            "owned-a"
+          ],
+          "tag": [
+            "owned-label",
+            "owned-label"
+          ]
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_remove_tags",
+            "reply": false
+          },
+          {
+            "method": "torrents_delete_tags",
+            "reply": false
+          }
+        ],
+        "purpose": "Observe original two-write order, ignored returns and ordinary exception boundaries; no vendor mutation."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "torrents_remove_tags",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": [
+              "owned-a",
+              "owned-a"
+            ],
+            "tags": [
+              "owned-label",
+              "owned-label"
+            ]
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_remove_tags",
+          "value": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_delete_tags",
+          "ordinal": 2,
+          "kwargs": {
+            "tags": [
+              "owned-label",
+              "owned-label"
+            ]
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_delete_tags",
+          "value": false
+        }
+      ],
+      "vendor_calls": 2,
+      "sleep_requests": [],
+      "requested_sleep_seconds": 0,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": [
+        {
+          "method": "torrents_remove_tags",
+          "ordinal": 1,
+          "value": false
+        },
+        {
+          "method": "torrents_delete_tags",
+          "ordinal": 2,
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "delete-two-none-replies",
+      "input": {
+        "id": "delete-two-none-replies",
+        "method": "delete_torrents_tag",
+        "args": {
+          "ids": [
+            "owned-a",
+            "owned-a"
+          ],
+          "tag": [
+            "owned-label",
+            "owned-label"
+          ]
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_remove_tags",
+            "reply": null
+          },
+          {
+            "method": "torrents_delete_tags",
+            "reply": null
+          }
+        ],
+        "purpose": "Observe original two-write order, ignored returns and ordinary exception boundaries; no vendor mutation."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "torrents_remove_tags",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": [
+              "owned-a",
+              "owned-a"
+            ],
+            "tags": [
+              "owned-label",
+              "owned-label"
+            ]
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_remove_tags",
+          "value": null
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_delete_tags",
+          "ordinal": 2,
+          "kwargs": {
+            "tags": [
+              "owned-label",
+              "owned-label"
+            ]
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_delete_tags",
+          "value": null
+        }
+      ],
+      "vendor_calls": 2,
+      "sleep_requests": [],
+      "requested_sleep_seconds": 0,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": [
+        {
+          "method": "torrents_remove_tags",
+          "ordinal": 1,
+          "value": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "ordinal": 2,
+          "value": null
+        }
+      ]
+    },
+    {
+      "id": "delete-first-write-exception",
+      "input": {
+        "id": "delete-first-write-exception",
+        "method": "delete_torrents_tag",
+        "args": {
+          "ids": [
+            "owned-a",
+            "owned-a"
+          ],
+          "tag": [
+            "owned-label",
+            "owned-label"
+          ]
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_remove_tags",
+            "raises": {
+              "class": "RuntimeError",
+              "message": "owned recording failure"
+            }
+          }
+        ],
+        "purpose": "Observe original two-write order, ignored returns and ordinary exception boundaries; no vendor mutation."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "torrents_remove_tags",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": [
+              "owned-a",
+              "owned-a"
+            ],
+            "tags": [
+              "owned-label",
+              "owned-label"
+            ]
+          }
+        },
+        {
+          "event": "vendor_exception",
+          "method": "torrents_remove_tags",
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "删除种子Tag出错：owned recording failure"
+        }
+      ],
+      "vendor_calls": 1,
+      "sleep_requests": [],
+      "requested_sleep_seconds": 0,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": []
+    },
+    {
+      "id": "delete-second-write-exception",
+      "input": {
+        "id": "delete-second-write-exception",
+        "method": "delete_torrents_tag",
+        "args": {
+          "ids": [
+            "owned-a",
+            "owned-a"
+          ],
+          "tag": [
+            "owned-label",
+            "owned-label"
+          ]
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_remove_tags",
+            "reply": null
+          },
+          {
+            "method": "torrents_delete_tags",
+            "raises": {
+              "class": "RuntimeError",
+              "message": "owned recording failure"
+            }
+          }
+        ],
+        "purpose": "Observe original two-write order, ignored returns and ordinary exception boundaries; no vendor mutation."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [
+        {
+          "event": "vendor_call",
+          "method": "torrents_remove_tags",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": [
+              "owned-a",
+              "owned-a"
+            ],
+            "tags": [
+              "owned-label",
+              "owned-label"
+            ]
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_remove_tags",
+          "value": null
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_delete_tags",
+          "ordinal": 2,
+          "kwargs": {
+            "tags": [
+              "owned-label",
+              "owned-label"
+            ]
+          }
+        },
+        {
+          "event": "vendor_exception",
+          "method": "torrents_delete_tags",
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "删除种子Tag出错：owned recording failure"
+        }
+      ],
+      "vendor_calls": 2,
+      "sleep_requests": [],
+      "requested_sleep_seconds": 0,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": [
+        {
+          "method": "torrents_remove_tags",
+          "ordinal": 1,
+          "value": null
+        }
+      ]
+    },
+    {
+      "id": "poll-missing-client",
+      "input": {
+        "id": "poll-missing-client",
+        "method": "get_torrent_id_by_tag",
+        "args": {
+          "tags": "owned",
+          "status": null
+        },
+        "client_present": false,
+        "steps": [],
+        "purpose": "Original delay loop despite absent client."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType",
+        "python_truthy": false
+      },
+      "trace": [
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 1,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 2,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 3,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 4,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 5,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 6,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 7,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 8,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 9,
+          "actual_wall_sleep": false
+        }
+      ],
+      "vendor_calls": 0,
+      "sleep_requests": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "requested_sleep_seconds": 27,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": []
+    },
+    {
+      "id": "poll-nine-empty-results",
+      "input": {
+        "id": "poll-nine-empty-results",
+        "method": "get_torrent_id_by_tag",
+        "args": {
+          "tags": "owned",
+          "status": null
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_info",
+            "reply": []
+          },
+          {
+            "method": "torrents_info",
+            "reply": []
+          },
+          {
+            "method": "torrents_info",
+            "reply": []
+          },
+          {
+            "method": "torrents_info",
+            "reply": []
+          },
+          {
+            "method": "torrents_info",
+            "reply": []
+          },
+          {
+            "method": "torrents_info",
+            "reply": []
+          },
+          {
+            "method": "torrents_info",
+            "reply": []
+          },
+          {
+            "method": "torrents_info",
+            "reply": []
+          },
+          {
+            "method": "torrents_info",
+            "reply": []
+          }
+        ],
+        "purpose": "Observe original range and sleep/query trace, not wall time."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType",
+        "python_truthy": false
+      },
+      "trace": [
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 1,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": []
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 2,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 2,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": []
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 3,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 3,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": []
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 4,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 4,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": []
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 5,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 5,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": []
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 6,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 6,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": []
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 7,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 7,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": []
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 8,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 8,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": []
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 9,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 9,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": []
+        }
+      ],
+      "vendor_calls": 9,
+      "sleep_requests": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "requested_sleep_seconds": 27,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 2,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 3,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 4,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 5,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 6,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 7,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 8,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 9,
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "poll-missing-null-then-empty-hash",
+      "input": {
+        "id": "poll-missing-null-then-empty-hash",
+        "method": "get_torrent_id_by_tag",
+        "args": {
+          "tags": "owned",
+          "status": null
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_info",
+            "reply": [
+              {
+                "tags": "owned"
+              }
+            ]
+          },
+          {
+            "method": "torrents_info",
+            "reply": [
+              {
+                "hash": null,
+                "tags": "owned"
+              }
+            ]
+          },
+          {
+            "method": "torrents_info",
+            "reply": [
+              {
+                "hash": "",
+                "tags": "owned"
+              }
+            ]
+          },
+          {
+            "method": "torrents_remove_tags",
+            "reply": null
+          },
+          {
+            "method": "torrents_delete_tags",
+            "reply": null
+          }
+        ],
+        "purpose": "Do not conflate absent/null hash with a present empty string."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": "",
+        "python_type": "str",
+        "python_truthy": false
+      },
+      "trace": [
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 1,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": [
+            {
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 2,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 2,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": [
+            {
+              "hash": null,
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 3,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 3,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": [
+            {
+              "hash": "",
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_remove_tags",
+          "ordinal": 4,
+          "kwargs": {
+            "torrent_hashes": "",
+            "tags": "owned"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_remove_tags",
+          "value": null
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_delete_tags",
+          "ordinal": 5,
+          "kwargs": {
+            "tags": "owned"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_delete_tags",
+          "value": null
+        }
+      ],
+      "vendor_calls": 5,
+      "sleep_requests": [
+        3,
+        3,
+        3
+      ],
+      "requested_sleep_seconds": 9,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 2,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 3,
+          "value": []
+        },
+        {
+          "method": "torrents_remove_tags",
+          "ordinal": 4,
+          "value": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "ordinal": 5,
+          "value": null
+        }
+      ]
+    },
+    {
+      "id": "poll-full-filter-first-selected-row",
+      "input": {
+        "id": "poll-full-filter-first-selected-row",
+        "method": "get_torrent_id_by_tag",
+        "args": {
+          "tags": [
+            "owned",
+            "second"
+          ],
+          "status": "paused"
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_info",
+            "reply": [
+              {
+                "hash": "owned-no-match",
+                "tags": "owned"
+              },
+              {
+                "hash": "owned-z-first",
+                "tags": " second , owned "
+              },
+              {
+                "hash": "owned-a-second",
+                "tags": "owned,second"
+              }
+            ]
+          },
+          {
+            "method": "torrents_remove_tags",
+            "reply": false
+          },
+          {
+            "method": "torrents_delete_tags",
+            "reply": false
+          }
+        ],
+        "purpose": "Full client-side subset filter; strip returned tags, preserve daemon row order and first selected row."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": "owned-z-first",
+        "python_type": "str",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 1,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": "paused"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": [
+            {
+              "hash": "owned-no-match",
+              "tags": "owned"
+            },
+            {
+              "hash": "owned-z-first",
+              "tags": " second , owned "
+            },
+            {
+              "hash": "owned-a-second",
+              "tags": "owned,second"
+            }
+          ]
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_remove_tags",
+          "ordinal": 2,
+          "kwargs": {
+            "torrent_hashes": "owned-z-first",
+            "tags": [
+              "owned",
+              "second"
+            ]
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_remove_tags",
+          "value": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_delete_tags",
+          "ordinal": 3,
+          "kwargs": {
+            "tags": [
+              "owned",
+              "second"
+            ]
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_delete_tags",
+          "value": false
+        }
+      ],
+      "vendor_calls": 3,
+      "sleep_requests": [
+        3
+      ],
+      "requested_sleep_seconds": 3,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        },
+        {
+          "method": "torrents_remove_tags",
+          "ordinal": 2,
+          "value": false
+        },
+        {
+          "method": "torrents_delete_tags",
+          "ordinal": 3,
+          "value": false
+        }
+      ]
+    },
+    {
+      "id": "poll-later-malformed-row-invalidates-earlier-match",
+      "input": {
+        "id": "poll-later-malformed-row-invalidates-earlier-match",
+        "method": "get_torrent_id_by_tag",
+        "args": {
+          "tags": "owned,second",
+          "status": "stopped"
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_info",
+            "reply": [
+              {
+                "hash": "owned-early",
+                "tags": "owned,second"
+              },
+              {
+                "hash": "owned-bad",
+                "tags": null
+              }
+            ]
+          },
+          {
+            "method": "torrents_info",
+            "reply": [
+              {
+                "hash": "owned-later",
+                "tags": " second , owned "
+              }
+            ]
+          },
+          {
+            "method": "torrents_remove_tags",
+            "reply": null
+          },
+          {
+            "method": "torrents_delete_tags",
+            "reply": null
+          }
+        ],
+        "purpose": "The complete get_torrents filter must visit later rows and its finally must clear the returned list."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": "owned-later",
+        "python_type": "str",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 1,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": "stopped"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": [
+            {
+              "hash": "owned-early",
+              "tags": "owned,second"
+            },
+            {
+              "hash": "owned-bad",
+              "tags": null
+            }
+          ]
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "获取种子列表出错：'NoneType' object has no attribute 'split'"
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 2,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 2,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": "stopped"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": [
+            {
+              "hash": "owned-later",
+              "tags": " second , owned "
+            }
+          ]
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_remove_tags",
+          "ordinal": 3,
+          "kwargs": {
+            "torrent_hashes": "owned-later",
+            "tags": "owned,second"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_remove_tags",
+          "value": null
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_delete_tags",
+          "ordinal": 4,
+          "kwargs": {
+            "tags": "owned,second"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_delete_tags",
+          "value": null
+        }
+      ],
+      "vendor_calls": 4,
+      "sleep_requests": [
+        3,
+        3
+      ],
+      "requested_sleep_seconds": 6,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 2,
+          "value": []
+        },
+        {
+          "method": "torrents_remove_tags",
+          "ordinal": 3,
+          "value": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "ordinal": 4,
+          "value": null
+        }
+      ]
+    },
+    {
+      "id": "poll-query-exception-then-found",
+      "input": {
+        "id": "poll-query-exception-then-found",
+        "method": "get_torrent_id_by_tag",
+        "args": {
+          "tags": "owned",
+          "status": null
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_info",
+            "raises": {
+              "class": "RuntimeError",
+              "message": "owned recording failure"
+            }
+          },
+          {
+            "method": "torrents_info",
+            "reply": [
+              {
+                "hash": "owned-found",
+                "tags": "owned"
+              }
+            ]
+          },
+          {
+            "method": "torrents_remove_tags",
+            "reply": null
+          },
+          {
+            "method": "torrents_delete_tags",
+            "reply": null
+          }
+        ],
+        "purpose": "Observe original query catch/log followed by another original delayed read."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": "owned-found",
+        "python_type": "str",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 1,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_exception",
+          "method": "torrents_info",
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "获取种子列表出错：owned recording failure"
+        },
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 2,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 2,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": [
+            {
+              "hash": "owned-found",
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_remove_tags",
+          "ordinal": 3,
+          "kwargs": {
+            "torrent_hashes": "owned-found",
+            "tags": "owned"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_remove_tags",
+          "value": null
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_delete_tags",
+          "ordinal": 4,
+          "kwargs": {
+            "tags": "owned"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_delete_tags",
+          "value": null
+        }
+      ],
+      "vendor_calls": 4,
+      "sleep_requests": [
+        3,
+        3
+      ],
+      "requested_sleep_seconds": 6,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": [
+        {
+          "method": "torrents_info",
+          "ordinal": 2,
+          "value": []
+        },
+        {
+          "method": "torrents_remove_tags",
+          "ordinal": 3,
+          "value": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "ordinal": 4,
+          "value": null
+        }
+      ]
+    },
+    {
+      "id": "poll-cleanup-first-write-exception",
+      "input": {
+        "id": "poll-cleanup-first-write-exception",
+        "method": "get_torrent_id_by_tag",
+        "args": {
+          "tags": "owned",
+          "status": null
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_info",
+            "reply": [
+              {
+                "hash": "owned-found",
+                "tags": "owned"
+              }
+            ]
+          },
+          {
+            "method": "torrents_remove_tags",
+            "raises": {
+              "class": "RuntimeError",
+              "message": "owned recording failure"
+            }
+          }
+        ],
+        "purpose": "Source cleanup False is ignored by the original polling caller."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": "owned-found",
+        "python_type": "str",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 1,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": [
+            {
+              "hash": "owned-found",
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_remove_tags",
+          "ordinal": 2,
+          "kwargs": {
+            "torrent_hashes": "owned-found",
+            "tags": "owned"
+          }
+        },
+        {
+          "event": "vendor_exception",
+          "method": "torrents_remove_tags",
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "删除种子Tag出错：owned recording failure"
+        }
+      ],
+      "vendor_calls": 2,
+      "sleep_requests": [
+        3
+      ],
+      "requested_sleep_seconds": 3,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "poll-cleanup-second-write-exception",
+      "input": {
+        "id": "poll-cleanup-second-write-exception",
+        "method": "get_torrent_id_by_tag",
+        "args": {
+          "tags": "owned",
+          "status": null
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_info",
+            "reply": [
+              {
+                "hash": "owned-found",
+                "tags": "owned"
+              }
+            ]
+          },
+          {
+            "method": "torrents_remove_tags",
+            "reply": null
+          },
+          {
+            "method": "torrents_delete_tags",
+            "raises": {
+              "class": "RuntimeError",
+              "message": "owned recording failure"
+            }
+          }
+        ],
+        "purpose": "Second-write failure does not replace the original found hash."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": "owned-found",
+        "python_type": "str",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 1,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": [
+            {
+              "hash": "owned-found",
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_remove_tags",
+          "ordinal": 2,
+          "kwargs": {
+            "torrent_hashes": "owned-found",
+            "tags": "owned"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_remove_tags",
+          "value": null
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_delete_tags",
+          "ordinal": 3,
+          "kwargs": {
+            "tags": "owned"
+          }
+        },
+        {
+          "event": "vendor_exception",
+          "method": "torrents_delete_tags",
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "删除种子Tag出错：owned recording failure"
+        }
+      ],
+      "vendor_calls": 3,
+      "sleep_requests": [
+        3
+      ],
+      "requested_sleep_seconds": 3,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        },
+        {
+          "method": "torrents_remove_tags",
+          "ordinal": 2,
+          "value": null
+        }
+      ]
+    },
+    {
+      "id": "poll-cleanup-none-replies",
+      "input": {
+        "id": "poll-cleanup-none-replies",
+        "method": "get_torrent_id_by_tag",
+        "args": {
+          "tags": "owned",
+          "status": null
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_info",
+            "reply": [
+              {
+                "hash": "owned-found",
+                "tags": "owned"
+              }
+            ]
+          },
+          {
+            "method": "torrents_remove_tags",
+            "reply": null
+          },
+          {
+            "method": "torrents_delete_tags",
+            "reply": null
+          }
+        ],
+        "purpose": "Supplied nonthrowing None replies, not actual vendor unsupported-version execution."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": "owned-found",
+        "python_type": "str",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 1,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": [
+            {
+              "hash": "owned-found",
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_remove_tags",
+          "ordinal": 2,
+          "kwargs": {
+            "torrent_hashes": "owned-found",
+            "tags": "owned"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_remove_tags",
+          "value": null
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_delete_tags",
+          "ordinal": 3,
+          "kwargs": {
+            "tags": "owned"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_delete_tags",
+          "value": null
+        }
+      ],
+      "vendor_calls": 3,
+      "sleep_requests": [
+        3
+      ],
+      "requested_sleep_seconds": 3,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        },
+        {
+          "method": "torrents_remove_tags",
+          "ordinal": 2,
+          "value": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "ordinal": 3,
+          "value": null
+        }
+      ]
+    },
+    {
+      "id": "poll-false-hash",
+      "input": {
+        "id": "poll-false-hash",
+        "method": "get_torrent_id_by_tag",
+        "args": {
+          "tags": "owned",
+          "status": null
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_info",
+            "reply": [
+              {
+                "hash": false,
+                "tags": "owned"
+              }
+            ]
+          },
+          {
+            "method": "torrents_remove_tags",
+            "reply": null
+          },
+          {
+            "method": "torrents_delete_tags",
+            "reply": null
+          }
+        ],
+        "purpose": "JSON false is distinct from None in the original identity check."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 1,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": [
+            {
+              "hash": false,
+              "tags": "owned"
+            }
+          ]
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_remove_tags",
+          "ordinal": 2,
+          "kwargs": {
+            "torrent_hashes": false,
+            "tags": "owned"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_remove_tags",
+          "value": null
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_delete_tags",
+          "ordinal": 3,
+          "kwargs": {
+            "tags": "owned"
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_delete_tags",
+          "value": null
+        }
+      ],
+      "vendor_calls": 3,
+      "sleep_requests": [
+        3
+      ],
+      "requested_sleep_seconds": 3,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        },
+        {
+          "method": "torrents_remove_tags",
+          "ordinal": 2,
+          "value": null
+        },
+        {
+          "method": "torrents_delete_tags",
+          "ordinal": 3,
+          "value": null
+        }
+      ]
+    },
+    {
+      "id": "poll-nonmapping-first-row-falsey-tags",
+      "input": {
+        "id": "poll-nonmapping-first-row-falsey-tags",
+        "method": "get_torrent_id_by_tag",
+        "args": {
+          "tags": null,
+          "status": null
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "torrents_info",
+            "reply": [
+              7
+            ]
+          }
+        ],
+        "purpose": "Original first-row .get occurs outside the private helper try; observe propagation without blanket catch."
+      },
+      "outcome": {
+        "kind": "uncaught_exception",
+        "class": "AttributeError",
+        "message": "'int' object has no attribute 'get'"
+      },
+      "trace": [
+        {
+          "event": "sleep_request",
+          "seconds": 3,
+          "ordinal": 1,
+          "actual_wall_sleep": false
+        },
+        {
+          "event": "vendor_call",
+          "method": "torrents_info",
+          "ordinal": 1,
+          "kwargs": {
+            "torrent_hashes": null,
+            "status_filter": null
+          }
+        },
+        {
+          "event": "vendor_return",
+          "method": "torrents_info",
+          "value": [
+            7
+          ]
+        }
+      ],
+      "vendor_calls": 1,
+      "sleep_requests": [
+        3
+      ],
+      "requested_sleep_seconds": 3,
+      "actual_wall_sleep": false,
+      "dependency_return_values_after_source": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": [
+            7
+          ]
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    "Complete original four-node closure, original class name/private mangle; no original constructor/module import.",
+    "Qbc/logger/time are explicitly supplied recording dependency inputs, not vendor/HTTP/daemon execution.",
+    "Sleep only records requested 3-second intervals; no wall-clock timing proof.",
+    "Original all-row filtering and actual ordinary-list clear mutations retained.",
+    "None cleanup reply does not prove vendor unsupported endpoint behavior.",
+    "Ordinary dependency exceptions are supplied inputs, not network/authority/unknown-effect failures.",
+    "No target Go results are used to generate expected source outputs."
+  ],
+  "forbidden_imports_absent": true,
+  "input_drift": []
+}

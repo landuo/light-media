@@ -1,0 +1,289 @@
+{
+  "status": "ACCEPT_ACTUAL_CLI02_FINITE_ORDINARY_SERIAL",
+  "at": "2026-11-01T00:24:12.368Z",
+  "receipt": {
+    "session_id": 91780,
+    "initial_chunk": "3cc9bb",
+    "terminal_chunk": "b1855e",
+    "exit_code": 0,
+    "result_sha256": "58d4c25e3a3c345c5936cf627c5c6a44e7555f0327ed3d37fa569c676603d036",
+    "scope": "actualordinaryserialnormaltwohosts/ownedfixedHTTP/31.5s9round; notrealdaemon/UI/fullparent"
+  },
+  "bindings": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-normal-cli02/execution-bindings.json",
+    "bytes": 1044777,
+    "sha256": "f6a59834fbfc4c3231b4128c4c1536dc420279550fc5440eec592f919899089b"
+  },
+  "input_count": 3996,
+  "current_drift": [],
+  "driver": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-normal-cli02/normal-cli-driver.py",
+    "bytes": 36899,
+    "sha256": "6694848f8fc4fb4f97fbc8e8509d0ca1b276ad92533ba97c222bcaf9b751ff83"
+  },
+  "programs": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-server01",
+      "bytes": 75179068,
+      "sha256": "bf088d4f11cb91c0d97cab106fc8edd5904f8874c40cbfa0c6d5b6c45cdc5837"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-qb-tags-fixture02",
+      "bytes": 5306628,
+      "sha256": "48c271e305bd4c4dd2e656473f74b24d39f999e691aebd610896f82d4b83fef3"
+    }
+  ],
+  "bodies": [
+    {
+      "path": "/healthz",
+      "bytes": 88,
+      "sha256": "b677786bd88b504ae12ece69ad05ebee8c8b06c4b3f61e17d5036439e46e0a8d",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/plugins/markets",
+      "bytes": 288,
+      "sha256": "5cdacc43475c4781bad627bc743cd5f7344ec94b7da4bd77590e9d63ca2215aa",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/plugins/install",
+      "bytes": 70,
+      "sha256": "13ee72c1d78ed8d62a3686acf7c2231311c1e11b9b6923b860a8588b1a046ac6",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "bytes": 32,
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "status": 405,
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "bytes": 370,
+      "sha256": "7e389eafbd2bd537e9f6006dd012299f0a34a45ecf23c72acf0e41782328e8a8",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "bytes": 600,
+      "sha256": "4805107105e62e034d901013a7040d93886ba54fbbcc708e3f843cbc9322ed9b",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "bytes": 365,
+      "sha256": "c7291e551eb40aa2bb394f688eb2ba84d13dbdb0aedaf876249f779f6751ee7d",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "bytes": 375,
+      "sha256": "c8dc47e938bfabda64f1f212744bad6833bcd0c2b499b2b13b36e75b864805e0",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "bytes": 351,
+      "sha256": "a23229d291484897353c20145a7bb84c1ebe0138244f3a85838364f7598442e6",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "bytes": 603,
+      "sha256": "fb9134cacbbb75e6fd9aff9428a14c31d6a890b9689e07342c988a11a5ccd140",
+      "status": 200,
+      "method": "POST"
+    },
+    {
+      "path": "/healthz",
+      "bytes": 88,
+      "sha256": "81852c18954b02979040a15a13cf19f233c3b1abca5027a6af35a2c49ea80612",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/plugins/markets",
+      "bytes": 288,
+      "sha256": "d30605ba79de50319e07c960cba6f04d9ec5f6a1be22c207684d1393766d2247",
+      "status": 200,
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "bytes": 32,
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "status": 405,
+      "method": "GET"
+    },
+    {
+      "path": "/api/v1/plugin/OwnedQBTags/qb-tags",
+      "bytes": 370,
+      "sha256": "6ae033ee56155edaac2874d11fbdc07730750d9fb41f01562663d01702dbd8bf",
+      "status": 200,
+      "method": "POST"
+    }
+  ],
+  "raw_business_projection_equal": true,
+  "actual_queries": 7,
+  "actual_peer_counts": {
+    "GET /index": 1,
+    "GET /worker": 1,
+    "GET /api/v2/app/webapiVersion": 12,
+    "POST /api/v2/torrents/removeTags": 6,
+    "POST /api/v2/torrents/deleteTags": 6,
+    "POST /api/v2/torrents/info": 11
+  },
+  "peer_total": 37,
+  "timing": {
+    "total": 31.543398535999586,
+    "first": 3.00434338299965,
+    "response_delays": [
+      0.5002264970025863,
+      0.5002600189982331,
+      0.5002275709994137,
+      0.5005273259957903,
+      0.5002367350025452,
+      0.500222140995902,
+      0.5005565059982473,
+      0.5002218110021204,
+      0.5002349030037294
+    ],
+    "inter_round_gaps": [
+      3.5051242289991933,
+      3.503245184001571,
+      3.5037422030000016,
+      3.504413508999278,
+      3.5037729050018243,
+      3.5057127499967464,
+      3.5039744030000293,
+      3.5042213929991703
+    ]
+  },
+  "logical_counters": {
+    "sdk_attempts": 8,
+    "sdk_ok": 6,
+    "host_attempts": 8,
+    "host_ok": 7,
+    "host_failed": 1
+  },
+  "separate_old_callback": {
+    "label": "previous_invocation_delete_tags_caller_denied",
+    "available": true,
+    "denied": true,
+    "error_code": "invalid_host_call",
+    "host_calls": {
+      "total": 1,
+      "succeeded": 0,
+      "failed": 1,
+      "input_json_bytes": 79,
+      "output_json_bytes": 0
+    }
+  },
+  "host_processes": [
+    {
+      "pid": 24,
+      "identity": {
+        "ppid": 2,
+        "starttime": "4960505"
+      },
+      "normal_not_safe": true,
+      "executable_sha256": "bf088d4f11cb91c0d97cab106fc8edd5904f8874c40cbfa0c6d5b6c45cdc5837",
+      "owned_listener_inode": "904634",
+      "exit": 0,
+      "same_owned_data": true
+    },
+    {
+      "pid": 79,
+      "identity": {
+        "ppid": 2,
+        "starttime": "4964297"
+      },
+      "normal_not_safe": true,
+      "executable_sha256": "bf088d4f11cb91c0d97cab106fc8edd5904f8874c40cbfa0c6d5b6c45cdc5837",
+      "owned_listener_inode": "901775",
+      "exit": 0,
+      "same_owned_data": true
+    }
+  ],
+  "worker_pid_sequence": [
+    41,
+    41,
+    41,
+    41,
+    41,
+    41,
+    94
+  ],
+  "invocation_sequence": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    1
+  ],
+  "cold_no_artifact_refetch": true,
+  "resource_samples": {
+    "count": 20,
+    "min_scratch": 47861432320,
+    "min_tmp": 5225615360,
+    "continuous": false
+  },
+  "environment_unchanged_within_driver": true,
+  "forced_cleanup": false,
+  "evidence": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/result.json",
+      "bytes": 37377,
+      "sha256": "58d4c25e3a3c345c5936cf627c5c6a44e7555f0327ed3d37fa569c676603d036"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/tool-execution-receipt.json",
+      "bytes": 295,
+      "sha256": "8d8a774db3bc6b8373445ec956759a29ce8219584d32811ad792d0873ceea310"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/driver.exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/worker-manifest.json",
+      "bytes": 561,
+      "sha256": "fd44b1f6022257eb41a06054989a813586d9d4cbdc8db3b22c4367dd2aa4c772"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/resources.jsonl",
+      "bytes": 1920,
+      "sha256": "9fc8584ba2c67c0f368eb2f8fc3615e345679d452b5504888c3def02e6949acd"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/host-1.log",
+      "bytes": 5206,
+      "sha256": "17e6ce1cb90f1522c2ef8435f18fe51fd3fb239f67fb5425d0f8fbdcda158e4c"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-qb-tags-normal02/host-2.log",
+      "bytes": 2521,
+      "sha256": "b3af73159b91841b894d9dfe5a9342c99611f21964de663553e769e8aad5a5e7"
+    }
+  ],
+  "execution_command": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-normal-cli02/execution-command.json",
+    "bytes": 1237,
+    "sha256": "da04534278b95abda1d53f6bb7a6def980d608660e40abcffbdce1e8b87e1b3b"
+  },
+  "read_private_db_or_login": false,
+  "reviewer_executed": false
+}

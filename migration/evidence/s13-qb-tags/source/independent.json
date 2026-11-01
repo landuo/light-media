@@ -1,0 +1,471 @@
+{
+  "status": "ACCEPT_ACTUAL_ORIGINAL_QB_TAG_COMPONENT_ONLY",
+  "at_utc": "2026-10-31T23:51:31.580Z",
+  "coordinator_reported_tool": "1c91ee exit0; local raw/result/exit checked independently",
+  "execution": {
+    "argv": [
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+      "-I",
+      "-S",
+      "-B",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-source-preparation/capture_qb_tags.py"
+    ],
+    "started_at": "2026-10-31T23:50:53.229840+00:00",
+    "scope": "actualcomplete4coremethods/16cases with recordingvendor/logger/sleep-request ports, no real sleep/HTTP/daemon",
+    "environment": "inherited no proxy/guard edits",
+    "exclusive_evidence": "mkdir exist raises before opening any evidence; not original shell command failure-continuation",
+    "ended_at": "2026-10-31T23:50:53.842263+00:00",
+    "exit_code": 0,
+    "stdout_sha256": "267d2e4fa62ed38ce53e4e6a6bf8ebfc5676058b413adbc072e74aa81c9c8617",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-source01/stdout.json",
+      "bytes": 48834,
+      "sha256": "267d2e4fa62ed38ce53e4e6a6bf8ebfc5676058b413adbc072e74aa81c9c8617"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-source01/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-source01/exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-source01/command.json",
+      "bytes": 647,
+      "sha256": "93f5a6eec19c68f4368784f7db515ba910803960b2285611628e4a28fbd9fa92"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-qb-tags-source01/result.json",
+      "bytes": 889,
+      "sha256": "d1876ebec5d448c3349478fa0970f8cdbaaa94621123a220932d96b7ac58ee23"
+    }
+  ],
+  "current_input_count": 16,
+  "current_input_drift": [],
+  "actual_node_binding_equal": true,
+  "actual_owned_inputs_equal": true,
+  "case_count": 16,
+  "outcomes": [
+    {
+      "id": "delete-missing-client",
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 0,
+      "sleep_requests": [],
+      "requested_sleep_seconds": 0,
+      "log_messages": [],
+      "post_source_returned_lists": []
+    },
+    {
+      "id": "delete-two-false-replies",
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "vendor_calls": 2,
+      "sleep_requests": [],
+      "requested_sleep_seconds": 0,
+      "log_messages": [],
+      "post_source_returned_lists": []
+    },
+    {
+      "id": "delete-two-none-replies",
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "vendor_calls": 2,
+      "sleep_requests": [],
+      "requested_sleep_seconds": 0,
+      "log_messages": [],
+      "post_source_returned_lists": []
+    },
+    {
+      "id": "delete-first-write-exception",
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 1,
+      "sleep_requests": [],
+      "requested_sleep_seconds": 0,
+      "log_messages": [
+        "删除种子Tag出错：owned recording failure"
+      ],
+      "post_source_returned_lists": []
+    },
+    {
+      "id": "delete-second-write-exception",
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 2,
+      "sleep_requests": [],
+      "requested_sleep_seconds": 0,
+      "log_messages": [
+        "删除种子Tag出错：owned recording failure"
+      ],
+      "post_source_returned_lists": []
+    },
+    {
+      "id": "poll-missing-client",
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType",
+        "python_truthy": false
+      },
+      "vendor_calls": 0,
+      "sleep_requests": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "requested_sleep_seconds": 27,
+      "log_messages": [],
+      "post_source_returned_lists": []
+    },
+    {
+      "id": "poll-nine-empty-results",
+      "outcome": {
+        "kind": "return",
+        "value": null,
+        "python_type": "NoneType",
+        "python_truthy": false
+      },
+      "vendor_calls": 9,
+      "sleep_requests": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "requested_sleep_seconds": 27,
+      "log_messages": [],
+      "post_source_returned_lists": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 2,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 3,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 4,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 5,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 6,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 7,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 8,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 9,
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "poll-missing-null-then-empty-hash",
+      "outcome": {
+        "kind": "return",
+        "value": "",
+        "python_type": "str",
+        "python_truthy": false
+      },
+      "vendor_calls": 5,
+      "sleep_requests": [
+        3,
+        3,
+        3
+      ],
+      "requested_sleep_seconds": 9,
+      "log_messages": [],
+      "post_source_returned_lists": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 2,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 3,
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "poll-full-filter-first-selected-row",
+      "outcome": {
+        "kind": "return",
+        "value": "owned-z-first",
+        "python_type": "str",
+        "python_truthy": true
+      },
+      "vendor_calls": 3,
+      "sleep_requests": [
+        3
+      ],
+      "requested_sleep_seconds": 3,
+      "log_messages": [],
+      "post_source_returned_lists": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "poll-later-malformed-row-invalidates-earlier-match",
+      "outcome": {
+        "kind": "return",
+        "value": "owned-later",
+        "python_type": "str",
+        "python_truthy": true
+      },
+      "vendor_calls": 4,
+      "sleep_requests": [
+        3,
+        3
+      ],
+      "requested_sleep_seconds": 6,
+      "log_messages": [
+        "获取种子列表出错：'NoneType' object has no attribute 'split'"
+      ],
+      "post_source_returned_lists": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        },
+        {
+          "method": "torrents_info",
+          "ordinal": 2,
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "poll-query-exception-then-found",
+      "outcome": {
+        "kind": "return",
+        "value": "owned-found",
+        "python_type": "str",
+        "python_truthy": true
+      },
+      "vendor_calls": 4,
+      "sleep_requests": [
+        3,
+        3
+      ],
+      "requested_sleep_seconds": 6,
+      "log_messages": [
+        "获取种子列表出错：owned recording failure"
+      ],
+      "post_source_returned_lists": [
+        {
+          "method": "torrents_info",
+          "ordinal": 2,
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "poll-cleanup-first-write-exception",
+      "outcome": {
+        "kind": "return",
+        "value": "owned-found",
+        "python_type": "str",
+        "python_truthy": true
+      },
+      "vendor_calls": 2,
+      "sleep_requests": [
+        3
+      ],
+      "requested_sleep_seconds": 3,
+      "log_messages": [
+        "删除种子Tag出错：owned recording failure"
+      ],
+      "post_source_returned_lists": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "poll-cleanup-second-write-exception",
+      "outcome": {
+        "kind": "return",
+        "value": "owned-found",
+        "python_type": "str",
+        "python_truthy": true
+      },
+      "vendor_calls": 3,
+      "sleep_requests": [
+        3
+      ],
+      "requested_sleep_seconds": 3,
+      "log_messages": [
+        "删除种子Tag出错：owned recording failure"
+      ],
+      "post_source_returned_lists": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "poll-cleanup-none-replies",
+      "outcome": {
+        "kind": "return",
+        "value": "owned-found",
+        "python_type": "str",
+        "python_truthy": true
+      },
+      "vendor_calls": 3,
+      "sleep_requests": [
+        3
+      ],
+      "requested_sleep_seconds": 3,
+      "log_messages": [],
+      "post_source_returned_lists": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "poll-false-hash",
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "vendor_calls": 3,
+      "sleep_requests": [
+        3
+      ],
+      "requested_sleep_seconds": 3,
+      "log_messages": [],
+      "post_source_returned_lists": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": []
+        }
+      ]
+    },
+    {
+      "id": "poll-nonmapping-first-row-falsey-tags",
+      "outcome": {
+        "kind": "uncaught_exception",
+        "class": "AttributeError",
+        "message": "'int' object has no attribute 'get'"
+      },
+      "vendor_calls": 1,
+      "sleep_requests": [
+        3
+      ],
+      "requested_sleep_seconds": 3,
+      "log_messages": [],
+      "post_source_returned_lists": [
+        {
+          "method": "torrents_info",
+          "ordinal": 1,
+          "value": [
+            7
+          ]
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    "Complete original four-node closure, original class name/private mangle; no original constructor/module import.",
+    "Qbc/logger/time are explicitly supplied recording dependency inputs, not vendor/HTTP/daemon execution.",
+    "Sleep only records requested 3-second intervals; no wall-clock timing proof.",
+    "Original all-row filtering and actual ordinary-list clear mutations retained.",
+    "None cleanup reply does not prove vendor unsupported endpoint behavior.",
+    "Ordinary dependency exceptions are supplied inputs, not network/authority/unknown-effect failures.",
+    "No target Go results are used to generate expected source outputs."
+  ],
+  "preexec_seal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-qb-tags-source-independent/preexec-seal.json",
+    "bytes": 2547,
+    "sha256": "f5ddd98a6314f9cba9eaa7a3f6d39ad304bbbc8359e7889612545db6adb5c25a"
+  },
+  "not_claimed": [
+    "vendor/version gate execution",
+    "real HTTP/daemon",
+    "wall clock sleep",
+    "target Go equivalence",
+    "native unknown-effect handling"
+  ]
+}
