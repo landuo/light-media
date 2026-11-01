@@ -1,0 +1,5 @@
+{
+  "status": "vet NOT_RUN remains accurate; inherited driver reason clarified",
+  "scope": "s11-cn-zhconv-integrated-normal01 and race01",
+  "clarification": "The package was materialized on disk before these gates; overlay is empty. Shared runner03 explicitly uses -vet=off inherited from the App virtual-package gate. The static result.vet suffix virtual-only package directory describes that prior App reason, not this materialized package. No new vet failure or vet pass occurred; raw result and old actual failure remain unchanged."
+}

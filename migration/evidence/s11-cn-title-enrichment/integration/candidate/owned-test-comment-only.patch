@@ -1,0 +1,17 @@
+--- old-frozen-owned01-test
++++ new-release01-test
+@@ -323,9 +323,11 @@
+ 	settings.PluginAutoReload = false
+ 	settings.Sites, settings.Downloaders, settings.Roots, settings.AllowedRoots = []SiteConfig{}, []DownloaderConfig{}, []Root{}, []string{}
+ 	settings.TMDB = TMDBConfig{APIKey: ownedRecognitionKey}
+-	// No share/report setting, ProxyHost, environment, CA or production origin
+-	// is altered. Meta is null in every actual SDK call, so source report payload
+-	// construction returns None; the noMeta target route has no report call.
++	// The inherited statistics helper disables PluginStatisticShare and clears
++	// PluginServerURL (owned center isolation). It does not change media-report
++	// Share/API, ProxyHost, environment, CA or production origin. Meta is null
++	// in every SDK call: the source report payload is None, independently of
++	// that statistics isolation; the noMeta target route has no report call.
+ 	if e = a.saveSettings(context.Background(), settings); e != nil {
+ 		t.Fatal(e)
+ 	}

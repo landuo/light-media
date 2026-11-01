@@ -1,0 +1,26 @@
+{"Time":"2026-11-01T06:12:59.184405944Z","Action":"start","Package":"./internal/zhconv"}
+{"Time":"2026-11-01T06:12:59.186308892Z","Action":"run","Package":"./internal/zhconv","Test":"TestHansSourceDelta03AdjacentAndRemoval"}
+{"Time":"2026-11-01T06:12:59.186349614Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansSourceDelta03AdjacentAndRemoval","Output":"=== RUN   TestHansSourceDelta03AdjacentAndRemoval\n"}
+{"Time":"2026-11-01T06:12:59.188933133Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansSourceDelta03AdjacentAndRemoval","Output":"    hans_delta_test.go:41: exact byte comparison: 5 independent source-delta03 returns; original source4789 unchanged\n"}
+{"Time":"2026-11-01T06:12:59.188962528Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansSourceDelta03AdjacentAndRemoval","Output":"--- PASS: TestHansSourceDelta03AdjacentAndRemoval (0.00s)\n"}
+{"Time":"2026-11-01T06:12:59.188965813Z","Action":"pass","Package":"./internal/zhconv","Test":"TestHansSourceDelta03AdjacentAndRemoval","Elapsed":0}
+{"Time":"2026-11-01T06:12:59.188971812Z","Action":"run","Package":"./internal/zhconv","Test":"TestHansOrderedSourceOracle"}
+{"Time":"2026-11-01T06:12:59.188974035Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansOrderedSourceOracle","Output":"=== RUN   TestHansOrderedSourceOracle\n"}
+{"Time":"2026-11-01T06:12:59.223820053Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansOrderedSourceOracle","Output":"    hans_test.go:106: exact source comparisons: 4783 returns + 1 exception; 5 D cases explicitly separate\n"}
+{"Time":"2026-11-01T06:12:59.223856909Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansOrderedSourceOracle","Output":"--- PASS: TestHansOrderedSourceOracle (0.03s)\n"}
+{"Time":"2026-11-01T06:12:59.223860404Z","Action":"pass","Package":"./internal/zhconv","Test":"TestHansOrderedSourceOracle","Elapsed":0.03}
+{"Time":"2026-11-01T06:12:59.223870389Z","Action":"run","Package":"./internal/zhconv","Test":"TestHansBoundedDescriptionSourceComparison"}
+{"Time":"2026-11-01T06:12:59.223872172Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansBoundedDescriptionSourceComparison","Output":"=== RUN   TestHansBoundedDescriptionSourceComparison\n"}
+{"Time":"2026-11-01T06:12:59.248776008Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansBoundedDescriptionSourceComparison","Output":"    hans_test.go:153: description-multi: source_raw=\"简体：甲；繁体：乙；大陆：丙；\" target_raw=\"简体：甲；繁体：乙；大陆：丙；\" byte_equal=true; comparison=bounded_clause_permutation_not_order\n"}
+{"Time":"2026-11-01T06:12:59.248824371Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansBoundedDescriptionSourceComparison","Output":"    hans_test.go:153: description-unid: source_raw=\"Other⇒zh-cn: 乙Owned⇒zh-hans: 甲\" target_raw=\"Owned⇒zh-hans: 甲Other⇒zh-cn: 乙\" byte_equal=false; comparison=bounded_clause_permutation_not_order\n"}
+{"Time":"2026-11-01T06:12:59.248827586Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansBoundedDescriptionSourceComparison","Output":"    hans_test.go:153: description-repeat-0: source_raw=\"大陆：丙；简体：甲；繁体：乙；\" target_raw=\"简体：甲；繁体：乙；大陆：丙；\" byte_equal=false; comparison=bounded_clause_permutation_not_order\n"}
+{"Time":"2026-11-01T06:12:59.248833184Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansBoundedDescriptionSourceComparison","Output":"    hans_test.go:153: description-repeat-1: source_raw=\"简体：甲；繁体：乙；大陆：丙；\" target_raw=\"简体：甲；繁体：乙；大陆：丙；\" byte_equal=true; comparison=bounded_clause_permutation_not_order\n"}
+{"Time":"2026-11-01T06:12:59.248835638Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansBoundedDescriptionSourceComparison","Output":"    hans_test.go:153: description-repeat-2: source_raw=\"大陆：丙；简体：甲；繁体：乙；\" target_raw=\"简体：甲；繁体：乙；大陆：丙；\" byte_equal=false; comparison=bounded_clause_permutation_not_order\n"}
+{"Time":"2026-11-01T06:12:59.248849659Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansBoundedDescriptionSourceComparison","Output":"--- PASS: TestHansBoundedDescriptionSourceComparison (0.02s)\n"}
+{"Time":"2026-11-01T06:12:59.248852033Z","Action":"pass","Package":"./internal/zhconv","Test":"TestHansBoundedDescriptionSourceComparison","Elapsed":0.02}
+{"Time":"2026-11-01T06:12:59.248856019Z","Action":"run","Package":"./internal/zhconv","Test":"TestHansConcurrentIsolation"}
+{"Time":"2026-11-01T06:12:59.248857901Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansConcurrentIsolation","Output":"=== RUN   TestHansConcurrentIsolation\n"}
+{"Time":"2026-11-01T06:12:59.278998637Z","Action":"output","Package":"./internal/zhconv","Test":"TestHansConcurrentIsolation","Output":"--- PASS: TestHansConcurrentIsolation (0.03s)\n"}
+{"Time":"2026-11-01T06:12:59.279028842Z","Action":"pass","Package":"./internal/zhconv","Test":"TestHansConcurrentIsolation","Elapsed":0.03}
+{"Time":"2026-11-01T06:12:59.2790337Z","Action":"output","Package":"./internal/zhconv","Output":"PASS\n"}
+{"Time":"2026-11-01T06:12:59.280253218Z","Action":"pass","Package":"./internal/zhconv","Elapsed":0.096}

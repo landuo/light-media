@@ -1,0 +1,104 @@
+{
+  "gates": [
+    {
+      "gate": "s11-cn-release-normal01",
+      "roots": [
+        "TestOriginalRecognitionNativeModelAndGroupBoundaries",
+        "TestOriginalMediaRecognitionOwnedProviderCNSource05",
+        "TestSourceTMDBProviderInfoCNSource05"
+      ],
+      "input_count": 6352,
+      "program_sha256": "8acd74e2321a07f678aa355ede4ef8505f8e86c155259e5e5719d00923cb560b",
+      "worker_sha256": "dafb69c8f2282d015c01e52291c6ac43bf91e57fa75ecf6efe4b8dea12ce52cd",
+      "ended": "2026-11-01T06:08:48.088368+00:00",
+      "status": "PASS",
+      "vet": "NOT_RUN",
+      "result": {
+        "source": "evidence/s11-cn-release-normal01/result.json",
+        "bytes": 10560,
+        "sha256": "4b2bd777c7a745edf42dbe9922b2c5cae9284a2665d2b8effc1fb5bd8e5c639b"
+      },
+      "tool_receipt": {
+        "source": "evidence/s11-cn-release-normal01/tool-receipt.json",
+        "bytes": 259,
+        "sha256": "77e0c3d7429d3e61c97a65e7f1725d4ad5252d2e07fffb95a41cda298fdf6415"
+      }
+    },
+    {
+      "gate": "s11-cn-release-race01",
+      "roots": [
+        "TestOriginalRecognitionNativeModelAndGroupBoundaries",
+        "TestOriginalMediaRecognitionOwnedProviderCNSource05",
+        "TestSourceTMDBProviderInfoCNSource05"
+      ],
+      "input_count": 6361,
+      "program_sha256": "c84577039beb608ad3fefa4f44c6be3edf1bbb45af0e95f9a13823bd627b5601",
+      "worker_sha256": "3f142f1fa5e63e4e5a2ba2e8b9c0d8212fce3edfdc664911cf2af246a365459e",
+      "ended": "2026-11-01T06:09:44.129104+00:00",
+      "status": "PASS",
+      "vet": "NOT_RUN",
+      "result": {
+        "source": "evidence/s11-cn-release-race01/result.json",
+        "bytes": 10604,
+        "sha256": "df16a79a68975a22e1647b5e111c0f1429dacf1fa09472e493f267e768d1624c"
+      },
+      "tool_receipt": {
+        "source": "evidence/s11-cn-release-race01/tool-receipt.json",
+        "bytes": 258,
+        "sha256": "03eb702266093e462eef84670e960384b573b4f52c16d1dd6112f7916d8e082b"
+      }
+    },
+    {
+      "gate": "s11-cn-zhconv-integrated-normal01",
+      "roots": [
+        "TestHansSourceDelta03AdjacentAndRemoval",
+        "TestHansOrderedSourceOracle",
+        "TestHansBoundedDescriptionSourceComparison",
+        "TestHansConcurrentIsolation"
+      ],
+      "input_count": 1448,
+      "program_sha256": "27337f01065526dd8e50eb0c13195eee1ab256a039df7351b5c9bd045f7b9040",
+      "worker_sha256": null,
+      "ended": "2026-11-01T06:12:59.400442+00:00",
+      "status": "PASS",
+      "vet": "NOT_RUN",
+      "result": {
+        "source": "evidence/s11-cn-zhconv-integrated-normal01/result.json",
+        "bytes": 3190,
+        "sha256": "ea4eef6f05e3ce78b3ed870b23a1165459f2ad8f1674deb21b5e2bf17ca0ba4f"
+      },
+      "tool_receipt": {
+        "source": "evidence/s11-cn-zhconv-integrated-normal01/tool-receipt.json",
+        "bytes": 259,
+        "sha256": "55449eaa89ddd8fbe96aabd62316e1332ac2ed213c814f6672d06e1de307e5b9"
+      }
+    },
+    {
+      "gate": "s11-cn-zhconv-integrated-race01",
+      "roots": [
+        "TestHansSourceDelta03AdjacentAndRemoval",
+        "TestHansOrderedSourceOracle",
+        "TestHansBoundedDescriptionSourceComparison",
+        "TestHansConcurrentIsolation"
+      ],
+      "input_count": 1485,
+      "program_sha256": "9587a8d3193bfdb7b0eea25fae369abb52bca3894e68b64faf20985dc36a9e9f",
+      "worker_sha256": null,
+      "ended": "2026-11-01T06:13:11.404687+00:00",
+      "status": "PASS",
+      "vet": "NOT_RUN",
+      "result": {
+        "source": "evidence/s11-cn-zhconv-integrated-race01/result.json",
+        "bytes": 3219,
+        "sha256": "8bfbe5c48ff765a3ace559b4e7b7898b9a01605c88fab2ff19b013073410af59"
+      },
+      "tool_receipt": {
+        "source": "evidence/s11-cn-zhconv-integrated-race01/tool-receipt.json",
+        "bytes": 259,
+        "sha256": "c4a3ef270e443dacf64d0c6b302659672b24ca5c073dabada42acea9aa4ed7e8"
+      }
+    }
+  ],
+  "no_execution_by_preparer": true,
+  "not_new_independent_closure_review": true
+}

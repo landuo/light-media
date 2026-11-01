@@ -1,0 +1,49 @@
+{
+  "recorded_by": "execution owner from actual tool returns; not an independent verdict",
+  "receipts": [
+    {
+      "gate": "normal01",
+      "tool": "exec_command",
+      "initial_chunk": "a845b8",
+      "session_id": null,
+      "terminal_chunk": "a845b8",
+      "tool_exit_code": 1,
+      "observation": "go list failed automatic VCS status; zero compiled/test roots",
+      "result_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-zhconv-go01/.audit/normal01/result.json",
+      "result_sha256": "6a16c8798f0e2537e770cf507062a7ac5f77debd0d41827b8ede4c962885b5d2"
+    },
+    {
+      "gate": "normal02",
+      "tool": "exec_command",
+      "initial_chunk": "90d784",
+      "session_id": null,
+      "terminal_chunk": "90d784",
+      "tool_exit_code": 0,
+      "observation": "short-call terminal; 3 roots",
+      "result_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-zhconv-go01/.audit/normal02/result.json",
+      "result_sha256": "ce42603bb92caccf9f840509a8e06589f42b494d6a755c3f3d476d19b5f4622d"
+    },
+    {
+      "gate": "delta03",
+      "tool": "exec_command",
+      "initial_chunk": "15ac41",
+      "session_id": null,
+      "terminal_chunk": "15ac41",
+      "tool_exit_code": 0,
+      "observation": "short-call terminal; only new delta root",
+      "result_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-zhconv-go01/.audit/delta03/result.json",
+      "result_sha256": "33d803ef6ba1a636cfb96029d3ef668de2e1169dde9b4e1e57fc7de222df86b9"
+    },
+    {
+      "gate": "race01",
+      "tool": "exec_command then write_stdin",
+      "initial_chunk": "f401fb",
+      "session_id": 50352,
+      "terminal_chunk": "17fa59",
+      "tool_exit_code": 0,
+      "observation": "4 race roots; no active session remains",
+      "result_path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-zhconv-go01/.audit/race01/result.json",
+      "result_sha256": "a0f7d829e79fa7247b2b637ef639703c021194cc4c4f64ba6e8d97364ea3876e"
+    }
+  ]
+}

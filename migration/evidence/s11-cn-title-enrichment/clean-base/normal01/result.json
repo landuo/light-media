@@ -1,0 +1,157 @@
+{
+  "started": "2026-11-01T06:08:20.931419+00:00",
+  "driver_pid": 5,
+  "package": "./internal/app",
+  "pattern": "^(TestSourceTMDBProviderInfoCNSource05|TestOriginalMediaRecognitionOwnedProviderCNSource05|TestOriginalRecognitionNativeModelAndGroupBoundaries)$",
+  "race": false,
+  "status": "PASS",
+  "vet": "NOT_RUN: virtual-only package directory; prior automatic vet chdir failure retained",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/app",
+        "./cmd/owned-media-recognition-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker",
+      "argv": [
+        "go",
+        "build",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-cn-release-normal01.worker",
+        "./cmd/owned-media-recognition-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/overlay.json",
+        "-vet=off",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-cn-release-normal01.test",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-cn-release-normal01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestSourceTMDBProviderInfoCNSource05|TestOriginalMediaRecognitionOwnedProviderCNSource05|TestOriginalRecognitionNativeModelAndGroupBoundaries)$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "overlay": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/cmd/owned-media-recognition-fixture/main.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/release-files/internal/app/testdata/owned-media-recognition-cn-main.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/cmd/owned-media-recognition-meta-fixture/main.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/cmd/owned-media-recognition-meta-fixture/main_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/core_business_source_facts.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/release-files/internal/app/core_business_source_facts.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_modules.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/baseline-files/internal/app/plugin_original_modules.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_media_recognition.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/baseline-files/internal/app/plugin_shared_media_recognition.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_cache.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_cache_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_identity_runtime.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_algorithm.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_algorithm_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_dispatch.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_dispatch_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_native.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_meta_owned_worker_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_provider_cn_owned_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/release-files/internal/app/plugin_shared_recognition_provider_cn_owned_test.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_provider_cn_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/release-files/internal/app/plugin_shared_recognition_provider_cn_test.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_report.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_report_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/runtime.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/baseline-files/internal/app/runtime.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/testdata/source-provider-cn05.json": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/release-files/internal/app/testdata/source-provider-cn05.json",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta_module.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/plugins/shared_media_recognition_meta_test.go": "",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/zhconv/data/zh_to_hans.json": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/release-files/internal/zhconv/data/zh_to_hans.json",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/zhconv/hans.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/release-files/internal/zhconv/hans.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/zhconv/rules.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/release-files/internal/zhconv/rules.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/zhconv/wikitext.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/release-files/internal/zhconv/wikitext.go"
+  },
+  "extra_inputs": [
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/bin/go",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/compile",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/link",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/asm",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/cgo",
+    "/usr/bin/gcc",
+    "/usr/bin/ld"
+  ],
+  "preflight_verified_files": 123,
+  "preflight_verified_replacements": 29,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T06:08:20.939148+00:00",
+      "scratch_free": 43889840128,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "compile-worker",
+      "at": "2026-11-01T06:08:22.840434+00:00",
+      "scratch_free": 43883114496,
+      "tmp_free": 5225537536
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T06:08:23.236909+00:00",
+      "scratch_free": 43877441536,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T06:08:47.256458+00:00",
+      "scratch_free": 43709952000,
+      "tmp_free": 5225586688
+    }
+  ],
+  "input_count": 6352,
+  "fixture_sha256": "dafb69c8f2282d015c01e52291c6ac43bf91e57fa75ecf6efe4b8dea12ce52cd",
+  "fixture_env": "OWNED_MEDIA_RECOGNITION_WORKER",
+  "program_sha256": "8acd74e2321a07f678aa355ede4ef8505f8e86c155259e5e5719d00923cb560b",
+  "root_passes": [
+    "TestOriginalRecognitionNativeModelAndGroupBoundaries",
+    "TestOriginalMediaRecognitionOwnedProviderCNSource05",
+    "TestSourceTMDBProviderInfoCNSource05"
+  ],
+  "ended": "2026-11-01T06:08:48.088368+00:00"
+}

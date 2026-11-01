@@ -1,0 +1,41 @@
+{
+  "status": "PREPARED INPUTS ONLY; NO EXPECTED OUTPUTS",
+  "variant": "zh-hans",
+  "positional_argument_count": 2,
+  "third_argument_omitted": true,
+  "source_table_sha256": "5cb0019b32bb39ec5c6e662029f90bd166f7a844efb3bc877f9be41fdd511bf2",
+  "data_keys": 0,
+  "case_count": 5,
+  "cases": [
+    {
+      "id": "correct-adjacent-add-remove-add",
+      "text": "Owned-{H|Owned=>zh-hans:甲;}--{-|Owned=>zh-hans:甲;}--{H|Owned=>zh-hans:乙;}-Owned",
+      "purpose": "Three correctly delimited adjacent rules, including both }--{ boundaries; source removal persistence after later add.",
+      "group": "static-source-dataflow-delta03"
+    },
+    {
+      "id": "correct-adjacent-remove-before-add",
+      "text": "Owned-{-|Owned=>zh-hans:甲;}--{H|Owned=>zh-hans:乙;}-Owned",
+      "purpose": "Remove preceding add for same source key; correct adjacent delimiters.",
+      "group": "static-source-dataflow-delta03"
+    },
+    {
+      "id": "remove-builtin-replacement-long",
+      "text": "專著-{-|专著}-專著",
+      "purpose": "Remove key equals actual builtin replacement 专著, not source 專著; longer builtin also has shorter prefix 專.",
+      "group": "static-source-dataflow-delta03"
+    },
+    {
+      "id": "remove-builtin-source-long",
+      "text": "專著-{-|專著}-專著",
+      "purpose": "Same input word but remove key equals builtin source, distinguishing replacement comparison.",
+      "group": "static-source-dataflow-delta03"
+    },
+    {
+      "id": "secondary-overlap-remove-long",
+      "text": "專著-{H|專=>zh-hans:甲;專著=>zh-hans:乙;}--{-|專著=>zh-hans:乙;}-專著",
+      "purpose": "Overlapping secondary keys and builtin longer key; explicit long secondary removal with valid adjacent rule delimiters.",
+      "group": "static-source-dataflow-delta03"
+    }
+  ]
+}

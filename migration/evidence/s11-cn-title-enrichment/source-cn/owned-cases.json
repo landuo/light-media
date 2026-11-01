@@ -1,0 +1,362 @@
+[
+  {
+    "id": "movie-traditional-phrase-first-unchanged-cn",
+    "mtype": "MOVIE",
+    "tmdbid": 900071,
+    "language": "zh-CN",
+    "detail": {
+      "id": 900071,
+      "title": "Owned English",
+      "original_title": "Owned Original",
+      "original_language": "en",
+      "genres": [
+        {
+          "id": 18
+        },
+        {
+          "id": 35
+        }
+      ],
+      "alternative_titles": {
+        "titles": [
+          {
+            "iso_3166_1": "HK",
+            "title": "非CN简体不选"
+          },
+          {
+            "iso_3166_1": "CN",
+            "title": "電影標題"
+          },
+          {
+            "iso_3166_1": "CN",
+            "title": "專著"
+          },
+          {
+            "iso_3166_1": "CN",
+            "title": "电影专著"
+          },
+          {
+            "iso_3166_1": "CN",
+            "title": "后续简体"
+          }
+        ]
+      },
+      "translations": {
+        "translations": [
+          {
+            "iso_3166_1": "US",
+            "data": {
+              "title": "Owned US"
+            }
+          },
+          {
+            "iso_3166_1": "HK",
+            "data": {
+              "title": "香港譯名"
+            }
+          },
+          {
+            "iso_3166_1": "TW",
+            "data": {
+              "title": "臺灣譯名"
+            }
+          },
+          {
+            "iso_3166_1": "SG",
+            "data": {
+              "title": "新加坡候选"
+            }
+          }
+        ]
+      },
+      "content_ratings": null,
+      "release_dates": {
+        "results": [
+          {
+            "iso_3166_1": "CN",
+            "release_dates": [
+              {
+                "certification": "PG"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "purpose": "Real converter equality filter skips changed traditional/phrase aliases; preserves alias order; CN selected before SG."
+  },
+  {
+    "id": "tv-default-wikitext-to-sg",
+    "mtype": "TV",
+    "tmdbid": 900071,
+    "language": "zh-CN",
+    "detail": {
+      "id": 900071,
+      "name": "Owned English",
+      "original_name": "Owned Original",
+      "original_language": "en",
+      "genres": [
+        {
+          "id": 18
+        },
+        {
+          "id": 35
+        }
+      ],
+      "alternative_titles": {
+        "results": [
+          {
+            "iso_3166_1": "CN",
+            "title": "-{zh-hans:默认标题;}-"
+          },
+          {
+            "iso_3166_1": "CN",
+            "title": "電影"
+          }
+        ]
+      },
+      "translations": {
+        "translations": [
+          {
+            "iso_3166_1": "US",
+            "data": {
+              "name": "Owned US"
+            }
+          },
+          {
+            "iso_3166_1": "HK",
+            "data": {
+              "name": "香港譯名"
+            }
+          },
+          {
+            "iso_3166_1": "TW",
+            "data": {
+              "name": "臺灣譯名"
+            }
+          },
+          {
+            "iso_3166_1": "SG",
+            "data": {
+              "name": "新加坡中文"
+            }
+          }
+        ]
+      },
+      "content_ratings": {
+        "results": [
+          {
+            "iso_3166_1": "US",
+            "rating": "TV-PG"
+          }
+        ]
+      },
+      "release_dates": null
+    },
+    "purpose": "Default wiki is really enabled; converter output equality controls eligibility, then SG translation fallback."
+  },
+  {
+    "id": "movie-empty-sg-falls-back-original",
+    "mtype": "MOVIE",
+    "tmdbid": 900071,
+    "language": "zh-CN",
+    "detail": {
+      "id": 900071,
+      "title": "Owned English",
+      "original_title": "原始中文",
+      "original_language": "zh",
+      "genres": [
+        {
+          "id": 18
+        },
+        {
+          "id": 35
+        }
+      ],
+      "alternative_titles": {
+        "titles": [
+          {
+            "iso_3166_1": "CN",
+            "title": "電影"
+          }
+        ]
+      },
+      "translations": {
+        "translations": [
+          {
+            "iso_3166_1": "US",
+            "data": {
+              "title": "Owned US"
+            }
+          },
+          {
+            "iso_3166_1": "HK",
+            "data": {
+              "title": "香港譯名"
+            }
+          },
+          {
+            "iso_3166_1": "TW",
+            "data": {
+              "title": "臺灣譯名"
+            }
+          },
+          {
+            "iso_3166_1": "SG",
+            "data": {
+              "title": ""
+            }
+          }
+        ]
+      },
+      "content_ratings": null,
+      "release_dates": {
+        "results": [
+          {
+            "iso_3166_1": "CN",
+            "release_dates": [
+              {
+                "certification": "PG"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "purpose": "Extra-title helper applies empty SG→original before CN selection fallback."
+  },
+  {
+    "id": "existing-chinese-title-not-overwritten",
+    "mtype": "MOVIE",
+    "tmdbid": 900071,
+    "language": "zh-CN",
+    "detail": {
+      "id": 900071,
+      "title": "已有中文",
+      "original_title": "Owned Original",
+      "original_language": "en",
+      "genres": [
+        {
+          "id": 18
+        },
+        {
+          "id": 35
+        }
+      ],
+      "alternative_titles": {
+        "titles": [
+          {
+            "iso_3166_1": "CN",
+            "title": "另一简体"
+          }
+        ]
+      },
+      "translations": {
+        "translations": [
+          {
+            "iso_3166_1": "US",
+            "data": {
+              "title": "Owned US"
+            }
+          },
+          {
+            "iso_3166_1": "HK",
+            "data": {
+              "title": "香港譯名"
+            }
+          },
+          {
+            "iso_3166_1": "TW",
+            "data": {
+              "title": "臺灣譯名"
+            }
+          },
+          {
+            "iso_3166_1": "SG",
+            "data": {
+              "title": "新加坡不覆盖"
+            }
+          }
+        ]
+      },
+      "content_ratings": null,
+      "release_dates": {
+        "results": [
+          {
+            "iso_3166_1": "CN",
+            "release_dates": [
+              {
+                "certification": "PG"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "purpose": "Original title already contains Han; no conversion/filter/SG replacement call required."
+  },
+  {
+    "id": "cn-scalar-title-source-typeerror",
+    "mtype": "MOVIE",
+    "tmdbid": 900071,
+    "language": "zh-CN",
+    "detail": {
+      "id": 900071,
+      "title": "Owned English",
+      "original_title": "Owned Original",
+      "original_language": "en",
+      "genres": [
+        {
+          "id": 18
+        },
+        {
+          "id": 35
+        }
+      ],
+      "alternative_titles": {
+        "titles": [
+          {
+            "iso_3166_1": "CN",
+            "title": 7
+          }
+        ]
+      },
+      "translations": {
+        "translations": [
+          {
+            "iso_3166_1": "US",
+            "data": {
+              "title": "Owned US"
+            }
+          },
+          {
+            "iso_3166_1": "HK",
+            "data": {
+              "title": "香港譯名"
+            }
+          },
+          {
+            "iso_3166_1": "TW",
+            "data": {
+              "title": "臺灣譯名"
+            }
+          }
+        ]
+      },
+      "content_ratings": null,
+      "release_dates": {
+        "results": [
+          {
+            "iso_3166_1": "CN",
+            "release_dates": [
+              {
+                "certification": "PG"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    "purpose": "Ordinary JSON malformed title reaches original is_chinese/re.search; record full original exception and mutation prefix, no synthesized error."
+  }
+]

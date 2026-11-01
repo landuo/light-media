@@ -17,6 +17,7 @@ import (
 	"light-media/internal/priorityrules"
 	"light-media/internal/releasemeta"
 	"light-media/internal/subscriptiondefaults"
+	"light-media/internal/zhconv"
 	"math/big"
 	"reflect"
 	"regexp"
@@ -469,15 +470,35 @@ func sourceTMDBProviderInfo(raw json.RawMessage, kind string) (json.RawMessage, 
 		info["sg_title"] = original
 	}
 	if !sourceHasChinese(sourceText(info[titleKey])) {
+		selectedCN := false
 		for _, row := range sourceRows(sourceMap(info["alternative_titles"])[alternativeKey]) {
 			item := sourceMap(row)
-			if item["iso_3166_1"] == "CN" && sourceHasChinese(sourceText(item["title"])) {
-				// This source branch uses full zhconv phrase rules. Never replace
-				// it with a character-only guess or silently skip the CN alias.
-				return nil, bad("SOURCE_MEDIA_CONVERSION_PENDING", "原TMDB中文别名需要完整简繁转换规则，当前未接入")
+			if item["iso_3166_1"] == "CN" {
+				if number, numeric := item["title"].(json.Number); numeric {
+					// JSON float truth follows binary64 (including underflow to
+					// zero); every truthy numeric title reaches the source regex
+					// with a non-string and raises an ordinary TypeError.
+					value, _ := number.Float64()
+					if value != 0 {
+						return nil, &originalMediaRecognitionSourceError{Class: "TypeError"}
+					}
+				}
+			}
+			title := sourceText(item["title"])
+			if item["iso_3166_1"] == "CN" && sourceHasChinese(title) {
+				converted, err := zhconv.Hans(title)
+				if err != nil {
+					return nil, err
+				}
+				// The source accepts an already-Hans alias, not its converted
+				// replacement. Preserve the first qualifying original title.
+				if converted == title {
+					info[titleKey], selectedCN = title, true
+					break
+				}
 			}
 		}
-		if sourceHasChinese(sourceText(info["sg_title"])) && info["sg_title"] != info[titleKey] {
+		if !selectedCN && sourceHasChinese(sourceText(info["sg_title"])) && info["sg_title"] != info[titleKey] {
 			info[titleKey] = info["sg_title"]
 		}
 	}

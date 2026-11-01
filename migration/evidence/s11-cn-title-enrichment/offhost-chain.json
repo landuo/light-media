@@ -1,0 +1,219 @@
+{
+  "status": "EXISTING_ROOT_CONFIRMED_RECEIPTS_READ_ONLY",
+  "chain": [
+    {
+      "checkpoint": "0616",
+      "manifest": {
+        "source": "external-backups/s11-cn-clean-terminal-20261101T0616.manifest.json",
+        "bytes": 37138,
+        "sha256": "4f23ec8118936b76956e7b7652677bd710820c5f84ca754bf22543dff603f4a7"
+      },
+      "receipt": {
+        "source": "external-backups/space-backup-receipt-s11-cn-clean-0616.json",
+        "bytes": 332,
+        "sha256": "1f1fcfb961dae25c3ea9f7fb688ed1c73a978d68a71b367a17032a47bbc50c79"
+      },
+      "receipt_fields": {
+        "library_file_id": "libfile_10609585da94819182f7ccfb7f739e4b",
+        "version": 0,
+        "bytes": 4970366,
+        "sha256": "61439f966b35420d7520590507d4a551583a03977cbf1a1444f3a408b8050e61",
+        "filename": "s11-cn-clean-terminal-20261101T0616.tar.gz",
+        "confirmed_by": "root",
+        "status": "OFFHOST_SAVED_FINITE_TERMINAL_NOT_GIT_DELIVERY"
+      },
+      "prerequisite": "0603 libfile_8d53a205cebc81918bfc9f59f4723f95 plus declared chain",
+      "archive_not_copied_to_git": "s11-cn-clean-terminal-20261101T0616.tar.gz",
+      "tar_members": 184,
+      "manifest_payload_rows": 183,
+      "extra_tar_member": "MANIFEST.json",
+      "local_archive_sha_verified": true,
+      "remote_verification": "root-confirmed receipt; this preparer did not independently download Space archive"
+    },
+    {
+      "checkpoint": "0603",
+      "manifest": {
+        "source": "external-backups/s11-cn-owned-parser-wip-20261101T0603.manifest.json",
+        "bytes": 36549,
+        "sha256": "ff0ca204b542472bc7aafee709d1a3831dff8f13ed5fa7aa8222916bf04b605e"
+      },
+      "receipt": {
+        "source": "external-backups/space-backup-receipt-s11-cn-parser-0603.json",
+        "bytes": 322,
+        "sha256": "f3449c9088fda079105f2c4456c5903b0e88bea2296dd356b9e8469761eedd65"
+      },
+      "receipt_fields": {
+        "library_file_id": "libfile_8d53a205cebc81918bfc9f59f4723f95",
+        "version": 0,
+        "bytes": 2938550,
+        "sha256": "9e6b8174bd7214e14ab347e1cbb156c42b9d43ca51c2051e658d971ec3bca715",
+        "filename": "s11-cn-owned-parser-wip-20261101T0603.tar.gz",
+        "confirmed_by": "root",
+        "status": "OFFHOST_SAVED_WIP_NOT_GIT_DELIVERY"
+      },
+      "prerequisite": "0552 libfile_260ed21f5be8819189442ad435047ce7 plus its listed chain",
+      "archive_not_copied_to_git": "s11-cn-owned-parser-wip-20261101T0603.tar.gz"
+    },
+    {
+      "checkpoint": "0552",
+      "manifest": {
+        "source": "external-backups/s11-cn-function-parser-native-wip-20261101T0552.manifest.json",
+        "bytes": 25170,
+        "sha256": "0ffd24ec8fda4ee7d932a9db58ff34437f00e9e5bb84de036eac850c89a228a7"
+      },
+      "receipt": {
+        "source": "external-backups/space-backup-receipt-s11-cn-parser-0552.json",
+        "bytes": 332,
+        "sha256": "4c55d80c6d64e6c34b0d476dbd0c3ea8fa828aa602dfa4c992b9e762a71c9d5e"
+      },
+      "receipt_fields": {
+        "library_file_id": "libfile_260ed21f5be8819189442ad435047ce7",
+        "version": 0,
+        "bytes": 2595330,
+        "sha256": "419ab23aa583df4dbb6e8f7af3f09696508a960e1af4bbab2fe7a0d1d179775a",
+        "filename": "s11-cn-function-parser-native-wip-20261101T0552.tar.gz",
+        "confirmed_by": "root",
+        "status": "OFFHOST_SAVED_WIP_NOT_GIT_DELIVERY"
+      },
+      "prerequisite": [
+        "libfile_98efddca56a08191899beedf25448324 v0 with declared0506/0456predecessors for converter/name source"
+      ],
+      "archive_not_copied_to_git": "s11-cn-function-parser-native-wip-20261101T0552.tar.gz"
+    },
+    {
+      "checkpoint": "0517",
+      "manifest": {
+        "source": "external-backups/s11-name-go-terminal-cn-pretest-20261101T0517.manifest.json",
+        "bytes": 34684,
+        "sha256": "c185029be99b67c89abdb34a55031c0bd2a495fd8e2223dacf07eb5a448d4a71"
+      },
+      "receipt": {
+        "source": "external-backups/space-backup-receipt-s11-name-cn-0517.json",
+        "bytes": 347,
+        "sha256": "3ad0334e51d6533aedf8de5e5251b2ab0479e8ff256f93319c5330e28c22fb48"
+      },
+      "receipt_fields": {
+        "utc": "2026-11-01T05:21:08.183402+00:00",
+        "library_file_id": "libfile_98efddca56a08191899beedf25448324",
+        "version": 0,
+        "archive": "s11-name-go-terminal-cn-pretest-20261101T0517.tar.gz",
+        "bytes": 1565459,
+        "sha256": "b8f0eda1889fce748efe8bfb37fdef9188734ef1342c4ef4fda33d1e43d76586",
+        "parent_confirmed": true,
+        "xattrs": "tool0"
+      },
+      "prerequisite": [
+        "libfile_699fa6fa41c081918d827f6704c7a37b v0 with preceding0456; includes actual sibling pure-Go converter source/data/licenses/runtime review"
+      ],
+      "archive_not_copied_to_git": "s11-name-go-terminal-cn-pretest-20261101T0517.tar.gz"
+    },
+    {
+      "checkpoint": "0506",
+      "manifest": {
+        "source": "external-backups/s11-zhconv-go-name-wip-20261101T0506.manifest.json",
+        "bytes": 29279,
+        "sha256": "63bee8ff70df72a5b8bfb901f0d3cb5fb3880cc914592fc4e358787c8842dc99"
+      },
+      "receipt": {
+        "source": "external-backups/space-backup-receipt-s11-zhconv-go-name-0506.json",
+        "bytes": 338,
+        "sha256": "aa1bda4ae38cd9b00e9a440cf84ad4a1998f21b2955ea04d7398fd3249040e08"
+      },
+      "receipt_fields": {
+        "utc": "2026-11-01T05:07:24.172965+00:00",
+        "library_file_id": "libfile_699fa6fa41c081918d827f6704c7a37b",
+        "version": 0,
+        "archive": "s11-zhconv-go-name-wip-20261101T0506.tar.gz",
+        "bytes": 3265401,
+        "sha256": "feee543f40d025f4af64a9e1c3d99442cab51616ce91f5c4e4d0502a73f4e0ff",
+        "parent_confirmed": true,
+        "xattrs": "tool0"
+      },
+      "prerequisite": [
+        "libfile_cd4c11c180088191aa73543c320a435f v0 (with declared0433/0443predecessors)"
+      ],
+      "archive_not_copied_to_git": "s11-zhconv-go-name-wip-20261101T0506.tar.gz"
+    },
+    {
+      "checkpoint": "0456",
+      "manifest": {
+        "source": "external-backups/s11-name-zhconv-source-terminal-20261101T0456.manifest.json",
+        "bytes": 12314,
+        "sha256": "a5b8bee6f5f7472ec6da62eaa3d58247c92fae2a2e968d68e9a8ffa452823e6e"
+      },
+      "receipt": {
+        "source": "external-backups/space-backup-receipt-s11-name-zhconv-0456.json",
+        "bytes": 347,
+        "sha256": "9d4a13b948bb7a5c5a0cd9d010416c75825c919bd2ad594ff75e53727c679583"
+      },
+      "receipt_fields": {
+        "utc": "2026-11-01T04:57:05.862567+00:00",
+        "library_file_id": "libfile_cd4c11c180088191aa73543c320a435f",
+        "version": 0,
+        "archive": "s11-name-zhconv-source-terminal-20261101T0456.tar.gz",
+        "bytes": 1641368,
+        "sha256": "bbf7b539d503a78d3f919dcce227fb5f7bbff566baa6f778c7842bfd1525856a",
+        "parent_confirmed": true,
+        "xattrs": "tool0"
+      },
+      "prerequisite": [
+        "libfile_5d5fd15a7c7881919ef2ba1555c838a6 v0 officialwheel+sdist/source19preparation",
+        "libfile_47e361bedfac8191af8375d1b295b162 v0 first02failure+1REJECT"
+      ],
+      "archive_not_copied_to_git": "s11-name-zhconv-source-terminal-20261101T0456.tar.gz"
+    },
+    {
+      "checkpoint": "0443",
+      "manifest": {
+        "source": "external-backups/s11-name-source02-failure-20261101T0443.manifest.json",
+        "bytes": 6366,
+        "sha256": "f507d1cbc73a1e465aa7b516383c0b996151fd25cdae485a973e55a4e811c430"
+      },
+      "receipt": {
+        "source": "external-backups/space-backup-receipt-s11-name-failure-0443.json",
+        "bytes": 340,
+        "sha256": "384cf8b4ca46837afcad2eadab43178aabcb7766bc21e97c1dbac40d7f1c0a69"
+      },
+      "receipt_fields": {
+        "utc": "2026-11-01T04:44:57.187285+00:00",
+        "library_file_id": "libfile_47e361bedfac8191af8375d1b295b162",
+        "version": 0,
+        "archive": "s11-name-source02-failure-20261101T0443.tar.gz",
+        "bytes": 841748,
+        "sha256": "1e96b89343ebe6854587e0085d90cc4d67b46b6579c40bc0b6b910a1e2fa433f",
+        "parent_confirmed": true,
+        "xattrs": "tool0"
+      },
+      "prerequisite": "libfile_5d5fd15a7c7881919ef2ba1555c838a6 v0",
+      "archive_not_copied_to_git": "s11-name-source02-failure-20261101T0443.tar.gz"
+    },
+    {
+      "checkpoint": "0433",
+      "manifest": {
+        "source": "external-backups/s11-name-source-dependency-pretest-20261101T0433.manifest.json",
+        "bytes": 12343,
+        "sha256": "00fd74506248a4463d95ba8df928bbeb52b5ad0c7f368e3e81578b46b811ecf1"
+      },
+      "receipt": {
+        "source": "external-backups/space-backup-receipt-s11-name-dependency-0433.json",
+        "bytes": 350,
+        "sha256": "795bfb047b9c6181105f035ac81072a27d166cec694e248859992ace417c8b53"
+      },
+      "receipt_fields": {
+        "utc": "2026-11-01T04:34:14.337186+00:00",
+        "library_file_id": "libfile_5d5fd15a7c7881919ef2ba1555c838a6",
+        "version": 0,
+        "archive": "s11-name-source-dependency-pretest-20261101T0433.tar.gz",
+        "bytes": 8859231,
+        "sha256": "add667b6070ead54bc9effed46573c92c7fc8e52efc5d8d619aa03b2cdc1c97d",
+        "parent_confirmed": true,
+        "xattrs": "tool0"
+      },
+      "prerequisite": [],
+      "archive_not_copied_to_git": "s11-name-source-dependency-pretest-20261101T0433.tar.gz"
+    }
+  ],
+  "no_new_upload": true,
+  "not_all_0603_bytes_are_in_this_publication": "The backup chain contains unrelated WIP. Extract only exact matching whitelisted member paths; never unpack wholesale into ACTIVE.",
+  "latest": "0616 finite actual terminal, not Git delivery"
+}

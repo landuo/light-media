@@ -1,0 +1,29 @@
+--- a/cmd/owned-media-recognition-fixture/main.go
++++ b/cmd/owned-media-recognition-fixture/main.go
+@@ -213,7 +213,7 @@
+ 		}
+ 	}
+ 	mtype := string(kwargs["mtype"])
+-	if string(kwargs["source"]) != `"themoviedb"` || (mtype != `"电影"` && !(string(kwargs["tmdbid"]) == "900045" && (mtype == `"电视剧"` || mtype == "null"))) {
++	if string(kwargs["source"]) != `"themoviedb"` || (mtype != `"电影"` && !(string(kwargs["tmdbid"]) == "900071" && (mtype == `"电视剧"` || mtype == "null"))) {
+ 		return nil, errors.New("outside owned source/type")
+ 	}
+ 	if cache := string(kwargs["cache"]); cache != "true" && cache != "false" && cache != "null" {
+@@ -226,7 +226,7 @@
+ 		result, kind = json.RawMessage(ownedMediaModel), "owned_complete_model"
+ 	case "900044":
+ 		result, kind = json.RawMessage(`false`), "source_false_terminal"
+-	case "900045":
++	case "900071":
+ 		result, kind = json.RawMessage(`null`), "source_none_continue_to_native"
+ 	default:
+ 		return nil, errors.New("outside owned TMDB identities")
+@@ -248,7 +248,7 @@
+ 		id = "900044"
+ 	}
+ 	if operation.Op == "native" || operation.Op == "native_tv" || operation.Op == "native_unknown" {
+-		id = "900045"
++		id = "900071"
+ 	}
+ 	input := plugins.RecognizeMediaRequest{Meta: json.RawMessage(`null`), MType: json.RawMessage(`"电影"`), TMDBID: json.RawMessage(id), Cache: operation.Cache, ShareMeta: json.RawMessage(`null`)}
+ 	if operation.Op == "native_tv" {

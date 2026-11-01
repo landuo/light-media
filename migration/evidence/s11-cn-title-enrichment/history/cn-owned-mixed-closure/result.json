@@ -1,0 +1,135 @@
+{
+  "started": "2026-11-01T05:59:19.823801+00:00",
+  "driver_pid": 5,
+  "package": "./internal/app",
+  "pattern": "^TestOriginalMediaRecognitionOwnedProviderCNSource05$",
+  "race": false,
+  "status": "PASS",
+  "vet": "NOT_RUN: virtual-only package directory; prior automatic vet chdir failure retained",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-provider-cn-owned-coordinator/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/app",
+        "./cmd/owned-media-recognition-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile-worker",
+      "argv": [
+        "go",
+        "build",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-provider-cn-owned-coordinator/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-provider-cn-owned-app01.worker",
+        "./cmd/owned-media-recognition-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-provider-cn-owned-coordinator/overlay.json",
+        "-vet=off",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-provider-cn-owned-app01.test",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/app",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-provider-cn-owned-app01.test",
+        "-test.v",
+        "-test.run",
+        "^TestOriginalMediaRecognitionOwnedProviderCNSource05$",
+        "-test.count=1",
+        "-test.timeout=120s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "overlay": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/core_business_source_facts.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-provider-cn-go01/candidate02/core_business_source_facts.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_provider_cn_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-provider-cn-go01/candidate02/plugin_shared_recognition_provider_cn_test.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/testdata/source-provider-cn05.json": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-provider-cn-go01/testdata/source05.json",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/zhconv/hans.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-zhconv-go01/hans.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/zhconv/rules.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-zhconv-go01/rules.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/zhconv/wikitext.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-zhconv-go01/wikitext.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/zhconv/data/zh_to_hans.json": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-zhconv-go01/data/zh_to_hans.json",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_provider_cn_owned_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-provider-cn-owned01/plugin_shared_recognition_provider_cn_owned_test.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/cmd/owned-media-recognition-fixture/main.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-provider-cn-owned01/owned_media_recognition_cn_fixture_main.go.txt"
+  },
+  "extra_inputs": [
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/bin/go",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/compile",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/link",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/asm",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/cgo",
+    "/usr/bin/gcc",
+    "/usr/bin/ld"
+  ],
+  "preflight_verified_files": 52,
+  "preflight_verified_replacements": 9,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T05:59:19.825703+00:00",
+      "scratch_free": 44091789312,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "compile-worker",
+      "at": "2026-11-01T05:59:21.469718+00:00",
+      "scratch_free": 44084715520,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T05:59:21.831977+00:00",
+      "scratch_free": 44078686208,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T05:59:47.317097+00:00",
+      "scratch_free": 43907911680,
+      "tmp_free": 5225586688
+    }
+  ],
+  "input_count": 6322,
+  "fixture_sha256": "dcb3a8d5cfa50d92f98c8e79be7359fbb8d5c18277224913d595cc9a692e14c0",
+  "fixture_env": "OWNED_MEDIA_RECOGNITION_WORKER",
+  "program_sha256": "151dcd3d5718ae8393530c7ccf43d867f37d542d0fc766afe26c3bcf33e22c89",
+  "root_passes": [
+    "TestOriginalMediaRecognitionOwnedProviderCNSource05"
+  ],
+  "ended": "2026-11-01T05:59:48.146705+00:00"
+}

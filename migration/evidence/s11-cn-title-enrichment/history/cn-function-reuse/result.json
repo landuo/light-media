@@ -1,0 +1,32 @@
+{
+  "status": "PASS_TEST_ROOT_ONLY_VET_BLOCKED",
+  "started": "2026-11-01T05:36:06.503968+00:00",
+  "program_sha256": "dc8be993c49458e9a8faca2a4a83d504fb1c9c35fbc3a33f0acdbe1e737355e1",
+  "input_count": 6297,
+  "argv": [
+    "go",
+    "tool",
+    "test2json",
+    "-t",
+    "-p",
+    "./internal/app",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-provider-cn-app-overlay01.test",
+    "-test.v",
+    "-test.run",
+    "^TestSourceTMDBProviderInfoCNSource05$",
+    "-test.count=1",
+    "-test.timeout=90s"
+  ],
+  "cwd": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app",
+  "compilation_origin": "../s11-provider-cn-app-overlay01/result.json: go test -c produced this program but command exit1 from automatic vet virtual-dir chdir; original failure retained, vet not passed",
+  "same_approved_test_argv": true,
+  "original_preexec_seal": "85817445dcf3070623381bb5b5fda47fedc91f11a6896f20c9c06f6ce40ce3da",
+  "new_compile": false,
+  "source_inputs_drift": [],
+  "exit": 0,
+  "root_passes": [
+    "TestSourceTMDBProviderInfoCNSource05"
+  ],
+  "fail_or_skip": [],
+  "ended": "2026-11-01T05:36:07.024482+00:00"
+}

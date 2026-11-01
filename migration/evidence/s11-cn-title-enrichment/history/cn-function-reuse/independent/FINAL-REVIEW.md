@@ -1,0 +1,18 @@
+# CN App overlay candidate02: finite function test ACCEPT; vet remains blocked
+
+The actual single App-package function root passed using the unchanged binary produced by the original failed `go test -c` command. This accepts only the five fixed source observations at the pure function boundary. It does not turn the original command or vet into PASS.
+
+## Actual sequence independently read
+1. Original attempt: tool215294/session49829 → terminal330f6e exit1. `go list` exit0; `go test -c` exit1. Its only stderr is the pinned vet tool failing `chdir` to virtual-only `internal/zhconv` (no such file/directory). This is not a permission/tool denial. No tests ran in this attempt; original FAIL/stdout/stderr/exit remain intact.
+2. The frozen runner rejects a pre-existing output program before invoking Go. Its single compile command names the retained 93,972,955-byte ELF, SHA `dc8be993c49458e9a8faca2a4a83d504fb1c9c35fbc3a33f0acdbe1e737355e1`; failure readback and subsequent run bind that same binary. This is evidence of a produced executable despite the command's vet failure, not a claim that compilation command exited successfully.
+3. Reused-test tool33846f exit0, no new compilation or flags/ACTIVE-directory workaround. Exact pattern `^TestSourceTMDBProviderInfoCNSource05$`, cwd `internal/app`. One root PASS, no fail/skip, empty stderr. The loop inside the frozen root asserts all five cases; there are not five separate test2json case events. Tool receipts are explicitly coordinator transcriptions, not raw tool replay.
+
+## Input integrity
+Independently rehashed all 6,297 declared inputs: zero current drift. Before original compile, after failure, before reuse and after reuse maps are identical. There is no successful original after-compile map to invent. All 7,839 declarations from 429 go-list package records independently reconstruct the saved virtual/backing mapping; none were silently dropped. All seven overlays, both embedded JSON files and the original App preimage are bound. One generated testmain and its retained copy hash match, and it registers the selected root. Six new virtual files remain absent on disk. The pinned compiler/tool/environment inputs remain bound and proxy variables were not rewritten by the runner; inherited App TestMain only clears MP_SERVER_HOST.
+
+## Proven function boundary
+The complete original raw (SHA `285ad4a28c5b5bc03533baff22ff1bb43da490fa27be99222d3de1aa2f86dffa`) is embedded unchanged. Four full provider dictionaries compare via UseNumber and DeepEqual; only the explicit top-level source MediaType enum maps to `.value`. The fifth numeric-title case must return nil plus direct `originalMediaRecognitionSourceError{Class:"TypeError"}`. The real accepted Go Hans component is called, including default wikitext handling and original-title equality selection, with existing SG fallback and first-alias order.
+
+No external shared-detail identity/error-prefix mutation, exact Python exception message/frames, full helper trace order, runtime cache/model/Chain handling, App construction, HTTP/provider, server, worker, native Python or race gate is asserted. The source original error-prefix mutation stays in the raw, not falsely projected onto the rawJSON interface. This is an overlay function test, not on-disk integration. Standard vet remains unresolved for the virtual-only package and must be assessed at later authorized real integration; no workaround or repeat is requested here.
+
+Reviewer performed static/readback/hash checks only, without executing any source, native, Go or network operation; only this independent audit was written.

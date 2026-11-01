@@ -1,0 +1,81 @@
+{
+  "started": "2026-11-01T05:32:05.392132+00:00",
+  "driver_pid": 6,
+  "package": "./internal/app",
+  "pattern": "^TestSourceTMDBProviderInfoCNSource05$",
+  "race": false,
+  "status": "FAIL",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-provider-cn-go01/candidate02/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/app"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-overlay=/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-provider-cn-go01/candidate02/overlay.json",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s11-provider-cn-app-overlay01.test",
+        "./internal/app"
+      ],
+      "exit": 1
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "overlay": {
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/core_business_source_facts.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-provider-cn-go01/candidate02/core_business_source_facts.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_recognition_provider_cn_test.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-provider-cn-go01/candidate02/plugin_shared_recognition_provider_cn_test.go.txt",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/testdata/source-provider-cn05.json": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-provider-cn-go01/testdata/source05.json",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/zhconv/hans.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-zhconv-go01/hans.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/zhconv/rules.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-zhconv-go01/rules.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/zhconv/wikitext.go": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-zhconv-go01/wikitext.go",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/zhconv/data/zh_to_hans.json": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-zhconv-go01/data/zh_to_hans.json"
+  },
+  "extra_inputs": [
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/bin/go",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/compile",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/link",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/asm",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/cgo",
+    "/usr/bin/gcc",
+    "/usr/bin/ld"
+  ],
+  "preflight_verified_files": 10,
+  "preflight_verified_replacements": 7,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T05:32:05.392950+00:00",
+      "scratch_free": 44285669376,
+      "tmp_free": 5225586688
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T05:32:07.240517+00:00",
+      "scratch_free": 44278079488,
+      "tmp_free": 5225586688
+    }
+  ],
+  "input_count": 6297,
+  "error_class": "RuntimeError",
+  "error": "compile exited 1",
+  "ended": "2026-11-01T05:32:35.242968+00:00"
+}

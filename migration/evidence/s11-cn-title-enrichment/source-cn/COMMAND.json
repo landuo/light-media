@@ -1,0 +1,19 @@
+{
+  "status": "PREPARED NOT EXECUTED",
+  "argv": [
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python3.12",
+    "-I",
+    "-S",
+    "-B",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-provider-cn-source-preparation/capture_provider_cn.py"
+  ],
+  "cwd": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s11-provider-cn-source-preparation",
+  "environment_changes": {},
+  "outputs": "coordinator-owned new evidence/s11-provider-cn-source01 stdout.json/stderr/exit; preserve unedited",
+  "prohibitions": [
+    "No original imports/full application/constructor",
+    "No network/provider request/requests",
+    "No Go/native compiler/browser",
+    "No make_converter or native path API; only zhconv(text,zh-hans) two args"
+  ]
+}

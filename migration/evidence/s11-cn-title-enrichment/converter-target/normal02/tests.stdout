@@ -1,0 +1,13 @@
+=== RUN   TestHansOrderedSourceOracle
+    hans_test.go:106: exact source comparisons: 4783 returns + 1 exception; 5 D cases explicitly separate
+--- PASS: TestHansOrderedSourceOracle (0.04s)
+=== RUN   TestHansBoundedDescriptionSourceComparison
+    hans_test.go:153: description-multi: source_raw="简体：甲；繁体：乙；大陆：丙；" target_raw="繁体：乙；大陆：丙；简体：甲；" byte_equal=false; comparison=bounded_clause_permutation_not_order
+    hans_test.go:153: description-unid: source_raw="Other⇒zh-cn: 乙Owned⇒zh-hans: 甲" target_raw="Owned⇒zh-hans: 甲Other⇒zh-cn: 乙" byte_equal=false; comparison=bounded_clause_permutation_not_order
+    hans_test.go:153: description-repeat-0: source_raw="大陆：丙；简体：甲；繁体：乙；" target_raw="简体：甲；繁体：乙；大陆：丙；" byte_equal=false; comparison=bounded_clause_permutation_not_order
+    hans_test.go:153: description-repeat-1: source_raw="简体：甲；繁体：乙；大陆：丙；" target_raw="简体：甲；繁体：乙；大陆：丙；" byte_equal=true; comparison=bounded_clause_permutation_not_order
+    hans_test.go:153: description-repeat-2: source_raw="大陆：丙；简体：甲；繁体：乙；" target_raw="简体：甲；繁体：乙；大陆：丙；" byte_equal=false; comparison=bounded_clause_permutation_not_order
+--- PASS: TestHansBoundedDescriptionSourceComparison (0.03s)
+=== RUN   TestHansConcurrentIsolation
+--- PASS: TestHansConcurrentIsolation (0.03s)
+PASS

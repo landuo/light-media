@@ -1,0 +1,116 @@
+{
+  "status": "PREPARED_NOT_EXECUTED",
+  "utc": "2026-11-01T06:06:58.470894+00:00",
+  "argv": [
+    "python3",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runners/s11-overlay-go-gate03.py",
+    "--root",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305",
+    "--label",
+    "s11-cn-release-race01",
+    "--package",
+    "./internal/app",
+    "--run",
+    "^(TestSourceTMDBProviderInfoCNSource05|TestOriginalMediaRecognitionOwnedProviderCNSource05|TestOriginalRecognitionNativeModelAndGroupBoundaries)$",
+    "--fixture",
+    "./cmd/owned-media-recognition-fixture",
+    "--fixture-env",
+    "OWNED_MEDIA_RECOGNITION_WORKER",
+    "--overlay",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/overlay.json",
+    "--binding",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/s11-cn-release01/overlay-inputs.json",
+    "--expect",
+    "TestSourceTMDBProviderInfoCNSource05",
+    "--expect",
+    "TestOriginalMediaRecognitionOwnedProviderCNSource05",
+    "--expect",
+    "TestOriginalRecognitionNativeModelAndGroupBoundaries",
+    "--race",
+    "--extra-input",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh",
+    "--extra-input",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/bin/go",
+    "--extra-input",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/compile",
+    "--extra-input",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/link",
+    "--extra-input",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/asm",
+    "--extra-input",
+    "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/cgo",
+    "--extra-input",
+    "/usr/bin/gcc",
+    "--extra-input",
+    "/usr/bin/ld"
+  ],
+  "cwd": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media",
+  "shell_setup": "source existing pinned toolchain/env.sh; no proxy/guard changes",
+  "build_overrides": {
+    "GOTOOLCHAIN": "local",
+    "GOPROXY": "off",
+    "GOSUMDB": "off",
+    "GOMAXPROCS": "2",
+    "CGO_ENABLED": "1",
+    "TZ": "UTC",
+    "LANG": "C.UTF-8"
+  },
+  "actual_root_behavior": "exact db671+CN compiled closure via non-mutating overlay; same finite owned App chain and direct affected old model/guard regression",
+  "tools": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh",
+      "realpath": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/env.sh",
+      "bytes": 403,
+      "sha256": "80756813e780127347e18a2a36f3b2fcdd735426e43b10fb8f146de8ff5f3f8b"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/bin/go",
+      "realpath": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/bin/go",
+      "bytes": 15388811,
+      "sha256": "61e7455a40a2fdfcdab99e881cd30ba10e216e3d0f32ab5f8e59d10cac4ecf57"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/compile",
+      "realpath": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/compile",
+      "bytes": 25766202,
+      "sha256": "853468ad3a060025afd42da43d0448adb555c70cba98df803eb9c3eb8dfada13"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/link",
+      "realpath": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/link",
+      "bytes": 6615499,
+      "sha256": "562e1390537d365a53fe1714671348422eec01b97f01d06dd206556548519196"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/asm",
+      "realpath": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/asm",
+      "bytes": 5012229,
+      "sha256": "cce37026489298c5497c81a079853b47187e569f6145bb80f72c5973cdb39d12"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/cgo",
+      "realpath": "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/toolchain/go/pkg/tool/linux_amd64/cgo",
+      "bytes": 4520431,
+      "sha256": "70f0a568b9cdbf8e787d0d1e7d4c0e607b8d9828208cda532dbd23a2ecc47a37"
+    },
+    {
+      "path": "/usr/bin/gcc",
+      "realpath": "/usr/bin/x86_64-linux-gnu-gcc-14",
+      "bytes": 1162264,
+      "sha256": "a23ecab8ff08f09ad8c80602c2c5df7f49e09c25905cb8975902e101bf72635f"
+    },
+    {
+      "path": "/usr/bin/ld",
+      "realpath": "/usr/bin/x86_64-linux-gnu-ld.bfd",
+      "bytes": 1861256,
+      "sha256": "d2766988b6a1b1d1518cdc09242e726d1f24e151e16410ada3092b11ffd9081b"
+    }
+  ],
+  "vet": "explicitly not run; old virtual-directory vet failure retained",
+  "expected_roots": [
+    "TestSourceTMDBProviderInfoCNSource05",
+    "TestOriginalMediaRecognitionOwnedProviderCNSource05",
+    "TestOriginalRecognitionNativeModelAndGroupBoundaries"
+  ],
+  "baseline": "db671b145270084bc769e433cd7c68952cb8c6d0"
+}
