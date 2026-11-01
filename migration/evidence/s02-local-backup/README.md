@@ -1,4 +1,18 @@
-# S02 local backup material — finite backend slice
+# S02 local backup material
+
+## Current S02 material/v1 completion (2026-11-01)
+
+The exact original S02 parent scope is independently closed by the new large-material source → codec/filesystem → SDK/installed worker → normal dual-host CLI evidence, while retaining the directory-selection/reconstruction/age-cleanup credit below. See [current evidence and reproduction](../s02-material-v1/README.md) and [SDK/lifecycle contract](../../../docs/plugin-local-torrent-backup-material.md). Initial parent closure SHA: `3eff82e1dd37f0886c7d45ce61bda59acd96f19314cb80bf0ac0f917f0c6c299`; after the affected-test maintenance described below, successor closure SHA: `ae7d972c6e9873a2d5baac9c8f276fccf9ebfa4f9b311943eccf6015e3ce32ec`.
+
+New host + new SDK negotiate `material/v1` for S02: no additional 16 MiB material-total cap, fixed bounded frames and checked complete length/SHA. Public `LocalTorrentBackup.Prepare` still returns `[]byte` and materializes O(n); this is not O(1) memory or an unlimited ordinary-message API. Unnegotiated old peers retain their original bounded prepare/read/release protocol; failed negotiated operations never downgrade/retry. Ordinary payload/frame/wire/callback/deadline budgets remain unchanged.
+
+Only exact invocation-owned random files under `temp/plugin-material-spool` are cleaned on scope termination. The separate original deterministic `temp/plugin-torrent-backup/<hash>.torrent`, backup/library bytes, and S12 cache are not deleted by spool cleanup. Original S02 age cleanup remains separate. This completion does not remove S03/S12 material limits or complete unrelated parents.
+
+Build the current fixture from `./cmd/owned-local-torrent-backup-fixture` and set `OWNED_LOCAL_TORRENT_BACKUP_WORKER` to that artifact. The two existing `TestSharedLocalTorrentBackupActualWorker*` roots have been maintained and actually rerun against current material/v1, alongside the separately accepted new `TestSharedLocalBackupMaterialLargeWorkerAndCold` root. All original business/permission/backup/temp/cold root bodies remain unchanged; common helpers now require actual grant metadata, one ordinary prepare_material callback, invocation-end spool cleanup and stale HostCaller denial. No legacy handle exists in this mode, so its released-handle observation must be absent. Explicit unnegotiated compatibility remains exercised by `TestLocalTorrentBackupWireAndBoundary` and `TestLocalTorrentBackupPagedBytesAndCleanup`. The historical raw results below remain records of their original execution, not the updated-protocol result.
+
+## Historical original bounded delivery record (unchanged evidence)
+
+Everything below describes the earlier bounded artifact and its original verification date; its old 16 MiB/full-S02 and source-native-runtime statements are superseded only for current S02 by the section above. Its raw evidence is retained, not rewritten as a new execution.
 
 Base: `b9e667cbc9532cb996993af30531327af3dcc541`; fixed delivery: `plugins-refactor`. This is a locally verified backend candidate, not a remote-push or CI receipt.
 

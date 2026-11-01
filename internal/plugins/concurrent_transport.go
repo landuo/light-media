@@ -145,13 +145,19 @@ func (t *concurrentTransport) readLine() (frame Frame, count concurrentWireCount
 			continue
 		}
 		if e != nil {
-			if errors.Is(e, io.EOF) && len(raw) == 0 { return frame, count, io.EOF }
+			if errors.Is(e, io.EOF) && len(raw) == 0 {
+				return frame, count, io.EOF
+			}
 			return frame, count, failure("worker_io_failed")
 		}
 		break
 	}
 	if decodeTransportFrame(raw, &frame) != nil {
 		return frame, count, failure("invalid_frame")
+	}
+	if t.wire.materialEnabled {
+		frame.materialPhysical = true
+		frame.materialStrict = materialUniqueJSON(raw) == nil
 	}
 	if frame.Protocol != ProtocolVersion || frame.Identity != t.wire.identity {
 		return frame, count, failure("identity_mismatch")
@@ -165,7 +171,9 @@ func (t *concurrentTransport) read() (frame Frame, count concurrentWireCount, er
 		current, part, err := t.readLine()
 		count.bytes += part.bytes
 		if err != nil {
-			if assembly != nil && errors.Is(err, io.EOF) { return frame, count, failure("incomplete_transport_message") }
+			if assembly != nil && errors.Is(err, io.EOF) {
+				return frame, count, failure("incomplete_transport_message")
+			}
 			return frame, count, err
 		}
 		if count.bytes > t.wire.maxOutput {
@@ -215,7 +223,7 @@ func (t *concurrentTransport) read() (frame Frame, count concurrentWireCount, er
 			return frame, count, failure("invalid_transport_length")
 		}
 		if c.Last {
-			if decodeTransportFrame(a.raw, &frame) != nil || frame.Protocol != ProtocolVersion || frame.Identity != t.wire.identity || frame.ID != a.logicalID || frame.Type != a.logicalType || strings.HasPrefix(frame.Method, "transport.concurrent_chunk") {
+			if decodeTransportFrame(a.raw, &frame) != nil || frame.Protocol != ProtocolVersion || frame.Identity != t.wire.identity || frame.ID != a.logicalID || frame.Type != a.logicalType || strings.HasPrefix(frame.Method, "transport.concurrent_chunk") || frame.Method == materialMethod {
 				return Frame{}, count, failure("invalid_transport_message")
 			}
 			return frame, count, nil
@@ -225,11 +233,15 @@ func (t *concurrentTransport) read() (frame Frame, count concurrentWireCount, er
 
 // Accounting belongs to one invocation, never a resettable shared epoch.
 type concurrentAccount struct {
-	mu         sync.Mutex
-	sent, read concurrentWireCount
-	hostCalls  int
-	limits     transportLimits
-	worker     bool
+	mu                                            sync.Mutex
+	sent, read                                    concurrentWireCount
+	hostCalls                                     int
+	materialScope                                 *materialHostScope
+	materialSentBytes, materialReadBytes          int
+	materialSentFrames, materialReadFrames        int
+	materialReservedBytes, materialReservedFrames int
+	limits                                        transportLimits
+	worker                                        bool
 }
 
 func (a *concurrentAccount) send(n concurrentWireCount) error {
@@ -239,13 +251,24 @@ func (a *concurrentAccount) send(n concurrentWireCount) error {
 	if a.worker {
 		maxBytes = a.limits.HostReadBytes
 	}
-	if n.bytes > maxBytes-a.sent.bytes {
+	if n.bytes > maxBytes-(a.sent.bytes-a.materialSentBytes) {
 		return failure("input_limit")
 	}
 	if n.chunks > a.limits.SessionChunks-a.sent.chunks {
 		return failure("transport_chunk_limit")
 	}
-	a.sent.bytes += n.bytes
+	reserved, err := materialAddCount(a.sent.bytes, a.materialReservedBytes)
+	if err != nil {
+		return err
+	}
+	if _, err = materialAddCount(reserved, n.bytes); err != nil {
+		return err
+	}
+	next, err := materialAddCount(a.sent.bytes, n.bytes)
+	if err != nil {
+		return err
+	}
+	a.sent.bytes = next
 	a.sent.chunks += n.chunks
 	return nil
 }
@@ -256,13 +279,17 @@ func (a *concurrentAccount) receive(n concurrentWireCount) error {
 	if a.worker {
 		maxBytes = a.limits.HostSendBytes
 	}
-	if n.bytes > maxBytes-a.read.bytes {
+	if n.bytes > maxBytes-(a.read.bytes-a.materialReadBytes) {
 		return failure("output_limit")
 	}
 	if n.chunks > a.limits.SessionChunks-a.read.chunks {
 		return failure("transport_chunk_limit")
 	}
-	a.read.bytes += n.bytes
+	next, err := materialAddCount(a.read.bytes, n.bytes)
+	if err != nil {
+		return err
+	}
+	a.read.bytes = next
 	a.read.chunks += n.chunks
 	return nil
 }

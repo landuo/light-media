@@ -51,19 +51,33 @@ type materialObservation struct {
 }
 
 type hostCallCounts struct {
-	Total   int `json:"total"`
-	Prepare int `json:"prepare"`
-	Read    int `json:"read"`
-	Release int `json:"release"`
+	Total           int `json:"total"`
+	Prepare         int `json:"prepare"`
+	MaterialPrepare int `json:"material_prepare"`
+	Read            int `json:"read"`
+	Release         int `json:"release"`
+}
+
+// Test-only metadata observation: never output token/path or count private frames
+// as ordinary HostCaller read/release callbacks.
+type ownedMaterialGrantObservation struct {
+	Contract   string `json:"contract"`
+	Capability string `json:"capability"`
+	Direction  string `json:"direction"`
+	Kind       string `json:"kind"`
+	Total      int64  `json:"total"`
+	SHA256     string `json:"sha256"`
+	ChunkBytes int    `json:"chunk_bytes"`
 }
 
 type materialAttempt struct {
-	Index     int                  `json:"index"`
-	OK        bool                 `json:"ok"`
-	Result    *materialObservation `json:"result,omitempty"`
-	Error     string               `json:"error,omitempty"`
-	ErrorCode string               `json:"error_code,omitempty"`
-	HostCalls hostCallCounts       `json:"host_calls"`
+	Index     int                            `json:"index"`
+	OK        bool                           `json:"ok"`
+	Result    *materialObservation           `json:"result,omitempty"`
+	Error     string                         `json:"error,omitempty"`
+	ErrorCode string                         `json:"error_code,omitempty"`
+	HostCalls hostCallCounts                 `json:"host_calls"`
+	Grant     *ownedMaterialGrantObservation `json:"material_grant,omitempty"`
 }
 
 type fixtureSnapshot struct {
@@ -104,8 +118,8 @@ func decodeFixtureInput(raw json.RawMessage) (fixtureInput, error) {
 	if d.Decode(new(any)) != io.EOF {
 		return input, errors.New("trailing owned backup input")
 	}
-	if len(input.Requests) < 1 || len(input.Requests) > 2 {
-		return input, errors.New("owned backup fixture requires one or two requests")
+	if len(input.Requests) < 1 || len(input.Requests) > 3 {
+		return input, errors.New("owned backup fixture requires one to three requests")
 	}
 	return input, nil
 }
@@ -121,7 +135,7 @@ func observeMaterial(value plugins.LocalTorrentBackupResult) (*materialObservati
 	if value.Content == nil {
 		return nil, errors.New("SDK successful bytes became nil")
 	}
-	// Hash the complete slice returned AFTER actual SDK page reads and release,
+	// Hash the complete slice returned AFTER actual SDK material completion,
 	// not the host prepare metadata or a guessed digest/size.
 	length := len(value.Content)
 	digest := sha256.Sum256(value.Content)
@@ -154,14 +168,25 @@ func runMaterial(ctx context.Context, host plugins.HostCaller, index int, input 
 			return nil, errors.New("invalid SDK frame")
 		}
 		switch operation.Op {
-		case "prepare":
+		case "prepare", "prepare_material":
 			attempt.HostCalls.Prepare++
+			if operation.Op == "prepare_material" {
+				attempt.HostCalls.MaterialPrepare++
+			}
 		case "read":
 			attempt.HostCalls.Read++
 		case "release":
 			attempt.HostCalls.Release++
 		}
 		response, err := host(callCtx, method, raw)
+		if err == nil && operation.Op == "prepare_material" {
+			var value struct {
+				Material *ownedMaterialGrantObservation `json:"material"`
+			}
+			if json.Unmarshal(response, &value) == nil {
+				attempt.Grant = value.Material
+			}
+		}
 		if err == nil && operation.Op == "prepare" {
 			var value struct {
 				Handle string `json:"handle"`

@@ -11,15 +11,16 @@ import (
 )
 
 type concurrentWorkerCall struct {
-	cleanup bool
-	request Frame
-	ctx     context.Context
-	cancel  context.CancelFunc
-	phase   callbackPhase
-	account concurrentAccount
-	gate    chan struct{}
-	mu      sync.Mutex
-	pending map[string]chan Frame
+	materialPending map[string]*materialPendingReply
+	cleanup         bool
+	request         Frame
+	ctx             context.Context
+	cancel          context.CancelFunc
+	phase           callbackPhase
+	account         concurrentAccount
+	gate            chan struct{}
+	mu              sync.Mutex
+	pending         map[string]chan Frame
 }
 
 type concurrentWorker struct {
@@ -96,6 +97,27 @@ func (w *concurrentWorker) readLoop() {
 			w.mu.Unlock()
 			// Late replies after cancellation have no receiver or authority.
 			if call == nil {
+				continue
+			}
+			call.mu.Lock()
+			materialPending := call.materialPending[request.ID]
+			if materialPending != nil {
+				delete(call.materialPending, request.ID)
+			}
+			call.mu.Unlock()
+			if materialPending != nil {
+				_, materialErr := materialAcceptReply(materialPending.request, request)
+				if !request.materialPhysical || !request.materialStrict || count.chunks != 0 {
+					materialErr = failure("invalid_material_reply")
+				}
+				if chargeErr := call.account.materialChargeRead(count.bytes, materialErr == nil); chargeErr != nil {
+					materialErr = chargeErr
+				}
+				materialPending.reply <- concurrentOutcome{frame: request, err: materialErr}
+				if materialErr != nil {
+					w.finish(materialErr)
+					return
+				}
 				continue
 			}
 			if err = call.account.receive(count); err != nil {
@@ -196,7 +218,7 @@ func (w *concurrentWorker) readLoop() {
 			return
 		}
 		ctx, cancel := context.WithCancel(w.ctx)
-		call := &concurrentWorkerCall{request: request, ctx: ctx, cancel: cancel, account: concurrentAccount{limits: w.transport.wire.limits, worker: true}, gate: make(chan struct{}, 1), pending: map[string]chan Frame{}}
+		call := &concurrentWorkerCall{request: request, ctx: ctx, cancel: cancel, account: concurrentAccount{limits: w.transport.wire.limits, worker: true}, gate: make(chan struct{}, 1), pending: map[string]chan Frame{}, materialPending: map[string]*materialPendingReply{}}
 		if err = call.account.receive(count); err != nil {
 			cancel()
 			w.finish(err)
@@ -239,7 +261,8 @@ func (w *concurrentWorker) invoke(call *concurrentWorkerCall) {
 	host := func(ctx context.Context, method string, payload json.RawMessage) (json.RawMessage, error) {
 		return w.host(call, ctx, method, payload)
 	}
-	result, err := w.handle(call.ctx, call.request.Method, call.request.Payload, host)
+	handlerCtx := w.materialContext(call)
+	result, err := w.handle(handlerCtx, call.request.Method, call.request.Payload, host)
 	call.phase.closed.Store(true)
 	canceled := call.ctx.Err() != nil
 	call.cancel()

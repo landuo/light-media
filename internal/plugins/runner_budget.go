@@ -99,5 +99,5 @@ func (s *wireSession) callHost(method string, payload json.RawMessage) (json.Raw
 		}
 		defer s.hostBudget.resume()
 	}
-	return s.host(s.ctx, s.identity, method, payload)
+	return materialHostCallback(s.materialScope, s.ctx, s.host, s.identity, method, payload)
 }

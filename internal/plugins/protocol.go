@@ -235,9 +235,10 @@ type ReplyError struct {
 // Frame is a single bounded JSON line. All calls, including reverse host calls,
 // are tied to the same installed plugin instance and pinned implementation.
 type Frame struct {
-	Protocol int    `json:"protocol"`
-	ID       string `json:"request_id"`
-	Type     string `json:"type"`
+	materialPhysical, materialStrict bool   // Local physical-reader evidence; never serialized.
+	Protocol                         int    `json:"protocol"`
+	ID                               string `json:"request_id"`
+	Type                             string `json:"type"`
 	Identity
 	Method  string          `json:"method,omitempty"`
 	Payload json.RawMessage `json:"payload,omitempty"`
@@ -246,6 +247,7 @@ type Frame struct {
 }
 
 type Handshake struct {
+	Material          string                  `json:"material,omitempty"`
 	CallbackErrors    int                     `json:"callback_errors,omitempty"`
 	TransportClose    int                     `json:"transport_close,omitempty"`
 	ConcurrentSession int                     `json:"concurrent_session,omitempty"`
@@ -281,6 +283,8 @@ type Command struct {
 }
 
 type Runner struct {
+	// MaterialContinuation explicitly negotiates scoped material/v1 only for Start.
+	MaterialContinuation bool
 	// ConcurrentCalls attempts explicit same-object multiplexing. An old
 	// worker retains the serial contract; RequireConcurrent rejects fallback.
 	ConcurrentCalls   bool
@@ -317,6 +321,9 @@ type RunResult struct {
 // serves bounded host calls, then requests cleanup before accepting success.
 func (runner Runner) Run(ctx context.Context, command Command, manifest Manifest, instanceID, method string, payload json.RawMessage, host HostHandler) (out RunResult, err error) {
 	runner.observe(PhaseRunEntered, ctx)
+	if runner.MaterialContinuation {
+		return out, failure("material_persistent_binding_required")
+	}
 	// This closure runs after cleanup and result counters, but before the caller.
 	// Its context is updated below to the actual Runner context.
 	var observationContext context.Context
@@ -500,11 +507,17 @@ func sameSet(a, b []string) bool {
 }
 
 type wireSession struct {
+	materialEnabled                                           bool
+	materialBinding                                           SessionBinding
+	materialCapabilities                                      []string
+	materialScope                                             *materialHostScope
 	reader                                                    *bufio.Reader
 	writer                                                    io.Writer
 	identity                                                  Identity
 	ctx                                                       context.Context
 	maxFrame, maxOutput, maxHostCalls, outputBytes, hostCalls int
+	materialInputBytes, materialOutputBytes                   int
+	materialSentFrames, materialReadFrames                    int
 	maxInput, inputBytes                                      int
 	role                                                      string
 	enabled                                                   bool
@@ -523,13 +536,31 @@ type wireSession struct {
 	callbackErrors                                            bool
 }
 
-func (s *wireSession) exchange(method string, payload json.RawMessage) (json.RawMessage, error) {
+func (s *wireSession) exchange(method string, payload json.RawMessage) (result json.RawMessage, err error) {
 	s.businessFailure = false
 	nonce := make([]byte, 16)
 	if _, err := rand.Read(nonce); err != nil {
 		return nil, failure("request_failed")
 	}
 	id := hex.EncodeToString(nonce)
+	if s.materialEnabled {
+		id = "t" + id
+	}
+	scope, scopeErr := s.beginMaterialInvocation(id, method)
+	if scopeErr != nil {
+		return nil, scopeErr
+	}
+	if scope != nil {
+		s.materialScope = scope
+		defer func() {
+			closeErr := scope.close()
+			s.materialScope = nil
+			if err == nil && closeErr != nil {
+				result = nil
+				err = closeErr
+			}
+		}()
+	}
 	if err := s.write(Frame{Protocol: ProtocolVersion, ID: id, Type: "call", Identity: s.identity, Method: method, Payload: payload}); err != nil {
 		return nil, err
 	}
@@ -634,6 +665,8 @@ func (w *byteCounter) snapshot() (int64, bool) {
 // failure never resets abort state or makes an incomplete exchange reusable.
 func (s *wireSession) resetEpoch() {
 	s.inputBytes, s.outputBytes, s.hostCalls = 0, 0, 0
+	s.materialInputBytes, s.materialOutputBytes = 0, 0
+	s.materialSentFrames, s.materialReadFrames = 0, 0
 	s.sentChunks, s.readChunks = 0, 0
 	s.seenTransfers = map[string]bool{}
 	s.assembly = nil
@@ -711,6 +744,8 @@ func (runner Runner) Start(lifeCtx context.Context, command Command, manifest Ma
 	cmd.Stdout = writer
 	s := &wireSession{maxInput: runner.MaxInputBytes, role: "host", closeIO: func() { stdin.Close(); stdout.Close(); writer.Close() }, reader: bufio.NewReaderSize(stdout, 4096), writer: stdin, identity: binding.Identity, maxFrame: runner.MaxFrameBytes, maxOutput: runner.MaxOutputBytes, maxHostCalls: runner.MaxHostCalls, ctx: life}
 	c.session = s
+	s.materialBinding = binding
+	s.materialCapabilities = slices.Clone(manifest.Capabilities)
 	if err = cmd.Start(); err != nil {
 		cancel()
 		s.abort()
@@ -775,6 +810,9 @@ func (runner Runner) Start(lifeCtx context.Context, command Command, manifest Ma
 		return nil, failure("transport_mismatch")
 	}
 	s.enable(limits)
+	if err = s.negotiateMaterial(runner.MaterialContinuation, agreed.Material); err != nil {
+		return nil, err
+	}
 	raw, err = s.exchange("transport.session", json.RawMessage(`{"version":1}`))
 	if err != nil {
 		return nil, err

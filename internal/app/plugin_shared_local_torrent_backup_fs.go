@@ -193,9 +193,6 @@ func (p *originalLocalTorrentBackupIO) read(ctx context.Context, path string) ([
 	if !info.Mode().IsRegular() {
 		return nil, p.ioError(bad("INVALID_FILE", "种子材料必须是普通文件"))
 	}
-	if info.Size() > plugins.TorrentMaterialMaxBytes {
-		return nil, p.ioError(bad("PLUGIN_VALUE_TOO_LARGE", "种子材料超过 16 MiB 上限"))
-	}
 	if err := sharedLocalStorageSameDirectory(filepath.Dir(path), parent); err != nil {
 		return nil, p.ioError(err)
 	}
@@ -212,12 +209,9 @@ func (p *originalLocalTorrentBackupIO) read(ctx context.Context, path string) ([
 	if !opened.Mode().IsRegular() || !os.SameFile(info, opened) {
 		return nil, p.ioError(bad("FILE_CHANGED", "种子材料在打开时已变化"))
 	}
-	content, err := io.ReadAll(io.LimitReader(file, plugins.TorrentMaterialMaxBytes+1))
+	content, err := io.ReadAll(originalLocalBackupMaterialReader{ctx: ctx, source: file, check: p.check})
 	if err != nil {
 		return nil, err
-	}
-	if len(content) > plugins.TorrentMaterialMaxBytes {
-		return nil, p.ioError(bad("PLUGIN_VALUE_TOO_LARGE", "种子材料超过 16 MiB 上限"))
 	}
 	if err := sharedLocalStorageSameDirectory(filepath.Dir(path), parent); err != nil {
 		return nil, p.ioError(err)
@@ -255,9 +249,6 @@ func (p *originalLocalTorrentBackupIO) WriteTemporary(ctx context.Context, conte
 	defer p.app.pluginMu.Unlock()
 	if err := p.check(ctx); err != nil {
 		return err
-	}
-	if len(content) > plugins.TorrentMaterialMaxBytes {
-		return p.ioError(bad("PLUGIN_VALUE_TOO_LARGE", "重建种子材料超过 16 MiB 上限"))
 	}
 	parent, err := importDir(base, true)
 	if err != nil {

@@ -79,17 +79,25 @@ func (a *App) originalSharedLocalTorrentBackupResource(ctx context.Context, scop
 			return nil, err
 		}
 		return marshal(map[string]bool{"released": true}, "")
-	case "prepare":
+	case "prepare", "prepare_material":
 		if len(fields) != 2 || request.Input == nil || request.Handle != nil || request.Offset != nil {
 			return nil, bad("INVALID_PLUGIN_VALUE", "本机种子材料准备参数无效")
 		}
 	default:
 		return nil, bad("INVALID_PLUGIN_VALUE", "未知本机种子材料操作")
 	}
+	if request.Op == "prepare_material" {
+		if err := plugins.CheckMaterialHost(ctx, plugins.LocalTorrentBackupCapability); err != nil {
+			return nil, err
+		}
+	}
 	if !a.admitOriginalBackground() {
 		return nil, bad("APP_STOPPING", "服务正在停止")
 	}
 	defer a.wg.Done()
+	if request.Op == "prepare_material" {
+		return a.prepareOriginalLocalTorrentBackupMaterial(ctx, scope, *request.Input)
+	}
 	result, err := a.prepareOriginalLocalTorrentBackup(ctx, scope, *request.Input)
 	if guardErr := scope.validate(ctx); guardErr != nil {
 		return nil, guardErr

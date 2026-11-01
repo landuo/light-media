@@ -37,8 +37,10 @@ type LocalTorrentBackupResult struct {
 type LocalTorrentBackup struct{ Host HostCaller }
 
 // Prepare is one public logical operation. Private prepare/read/release frames
-// reuse the existing 1MiB chunks, 16MiB material bound, strict decoder and opaque
-// token shape. No TorrentInfo, folder/files, or reusable host pathname is exposed.
+// use negotiated material/v1 when present. Unnegotiated workers retain the old
+// bounded prepare/read/release protocol. No TorrentInfo, folder/files, or reusable
+// host pathname is exposed, and failed negotiated operations are never retried
+// through the legacy branch.
 func (c LocalTorrentBackup) Prepare(ctx context.Context, input LocalTorrentBackupRequest) (out LocalTorrentBackupResult, err error) {
 	if ctx == nil || c.Host == nil {
 		return out, errors.New("local torrent backup requires an active context and host caller")
@@ -51,6 +53,9 @@ func (c LocalTorrentBackup) Prepare(ctx context.Context, input LocalTorrentBacku
 	}
 	if input.Hash == "" || input.Hash == "." || input.Hash == ".." || strings.ContainsAny(input.Hash, "/\\\x00") {
 		return out, errors.New("local torrent backup requires one safe hash basename")
+	}
+	if materialPeerAvailable(ctx) {
+		return c.prepareMaterial(ctx, input)
 	}
 	request, err := json.Marshal(struct {
 		Operation string                    `json:"op"`

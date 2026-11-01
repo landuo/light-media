@@ -7,6 +7,7 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
+	"net"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -40,7 +41,15 @@ type ownedLocalBackupWorkerResult struct {
 			SHA256             *string
 			SmallBase64        *string `json:"small_base64"`
 		}
-		HostCalls struct{ Total, Prepare, Read, Release int } `json:"host_calls"`
+		HostCalls struct {
+			Total, Prepare, Read, Release int
+			MaterialPrepare               int `json:"material_prepare"`
+		} `json:"host_calls"`
+		Grant *struct {
+			Contract, Capability, Direction, Kind, SHA256 string
+			Total                                         int64
+			ChunkBytes                                    int `json:"chunk_bytes"`
+		} `json:"material_grant"`
 	}
 }
 
@@ -57,7 +66,7 @@ func ownedLocalBackupWorkerInstall(t *testing.T, a *App, cookie *http.Cookie) st
 	}
 	index.Releases[0].Artifacts[0].HostContract = pluginResourcesSDKContract
 	var indexHits, artifactHits, unexpected atomic.Int32
-	server := httptest.NewUnstartedServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {
 			unexpected.Add(1)
 			http.Error(w, "owned read-only artifact", 405)
@@ -74,7 +83,14 @@ func ownedLocalBackupWorkerInstall(t *testing.T, a *App, cookie *http.Cookie) st
 			unexpected.Add(1)
 			http.NotFound(w, r)
 		}
-	}))
+	})
+	// Fix the owned address family before starting; a bind refusal is fatal.
+	// No IPv6 retry, proxy change, forwarding, CONNECT or external upstream.
+	listener, err := net.Listen("tcp4", "127.0.0.1:0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	server := &httptest.Server{Listener: listener, Config: &http.Server{Handler: handler}}
 	index.Releases[0].Artifacts[0].URL = "http://" + server.Listener.Addr().String() + "/worker"
 	server.Start()
 	t.Cleanup(func() {
@@ -159,6 +175,19 @@ func ownedLocalBackupWorkerQuery(t *testing.T, a *App, cookie *http.Cookie, id s
 	if result.HadPrevious && (result.StaleDenied == nil || !*result.StaleDenied) {
 		t.Fatal("known-successful old callback was not denied", result)
 	}
+	// Current fixture negotiates material/v1: no legacy handle was allocated
+	// or released. Do not manufacture a released-handle security observation.
+	// Explicit unnegotiated SDK roots retain the legacy read/release checks.
+	if result.PriorReleasedHandleDenied != nil {
+		t.Fatal("material invocation unexpectedly reported a legacy released handle", result)
+	}
+	entries, err := os.ReadDir(filepath.Join(a.Dir, "temp", "plugin-material-spool"))
+	if err != nil && !os.IsNotExist(err) {
+		t.Fatal(err)
+	}
+	if len(entries) != 0 {
+		t.Fatal("completed invocation retained owner transport spools", len(entries))
+	}
 	return result
 }
 
@@ -176,23 +205,26 @@ func ownedLocalBackupWorkerBytes(t *testing.T, result ownedLocalBackupWorkerResu
 	} else if attempt.Result.SmallBase64 != nil {
 		t.Fatal("large content unexpectedly exposed as fixture base64")
 	}
-	reads := (len(want) + plugins.TorrentMaterialChunkBytes - 1) / plugins.TorrentMaterialChunkBytes
-	if attempt.HostCalls.Prepare != 1 || attempt.HostCalls.Read != reads || attempt.HostCalls.Release != 1 || attempt.HostCalls.Total != reads+2 {
-		t.Fatalf("actual SDK page/cleanup count differs: %+v", attempt.HostCalls)
+	if attempt.HostCalls.Prepare != 1 || attempt.HostCalls.MaterialPrepare != 1 || attempt.HostCalls.Read != 0 || attempt.HostCalls.Release != 0 || attempt.HostCalls.Total != 1 {
+		t.Fatalf("actual material prepare versus ordinary callback count differs: %+v", attempt.HostCalls)
+	}
+	g := attempt.Grant
+	if g == nil || g.Contract != plugins.MaterialContract || g.Capability != plugins.LocalTorrentBackupCapability || g.Direction != string(plugins.MaterialToWorker) || g.Kind != "bytes" || g.Total != int64(len(want)) || g.SHA256 != hex.EncodeToString(digest[:]) || g.ChunkBytes < 1 || g.ChunkBytes > plugins.MaterialFrameBytes {
+		t.Fatalf("actual material grant summary differs: %+v", g)
 	}
 }
 
 func ownedLocalBackupWorkerSkip(t *testing.T, result ownedLocalBackupWorkerResult) {
 	t.Helper()
 	attempt := result.Results[0]
-	if !result.OK || !attempt.OK || attempt.Result == nil || !attempt.Result.Skipped || attempt.Result.Temporary || attempt.Result.Length != nil || attempt.Result.SHA256 != nil || attempt.Result.SmallBase64 != nil || attempt.HostCalls.Prepare != 1 || attempt.HostCalls.Read != 0 || attempt.HostCalls.Release != 0 || attempt.HostCalls.Total != 1 {
+	if !result.OK || !attempt.OK || attempt.Result == nil || !attempt.Result.Skipped || attempt.Result.Temporary || attempt.Result.Length != nil || attempt.Result.SHA256 != nil || attempt.Result.SmallBase64 != nil || attempt.HostCalls.Prepare != 1 || attempt.HostCalls.MaterialPrepare != 1 || attempt.HostCalls.Read != 0 || attempt.HostCalls.Release != 0 || attempt.HostCalls.Total != 1 || attempt.Grant != nil {
 		t.Fatalf("source failed-item skip became bytes or host error: %+v", result)
 	}
 }
 
 func ownedLocalBackupWorkerWarm(t *testing.T, before, after ownedLocalBackupWorkerResult) {
 	t.Helper()
-	if before.PID != after.PID || before.InitCount != after.InitCount || after.Invocation != before.Invocation+1 || !after.HadPrevious || after.StaleDenied == nil || !*after.StaleDenied || after.PriorReleasedHandleDenied == nil || !*after.PriorReleasedHandleDenied {
+	if before.PID != after.PID || before.InitCount != after.InitCount || after.Invocation != before.Invocation+1 || !after.HadPrevious || after.StaleDenied == nil || !*after.StaleDenied {
 		t.Fatalf("warm identity/init/scope changed: %+v -> %+v", before, after)
 	}
 }

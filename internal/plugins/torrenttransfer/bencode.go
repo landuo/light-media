@@ -14,9 +14,6 @@ import (
 var errBencode = errors.New("not a valid bencoded string")
 
 func bdecode(raw []byte) (any, error) {
-	if len(raw) > 16<<20 {
-		return nil, errBencode
-	}
 	pos := 0
 	var parse func(int) (any, error)
 	parse = func(depth int) (any, error) {

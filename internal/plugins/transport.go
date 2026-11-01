@@ -102,11 +102,17 @@ func (s *wireSession) writeEncodedPhysical(raw []byte) error {
 	if s.maxInput == 0 {
 		s.maxInput = defaultWireBytes
 	}
-	if len(raw)+1 > s.maxInput-s.inputBytes {
+	if len(raw)+1 > s.maxInput-(s.inputBytes-s.materialInputBytes) {
 		return failure("input_limit")
+	}
+	if _, err := materialAddCount(s.inputBytes, len(raw)+1); err != nil {
+		return err
 	}
 	raw = append(raw, '\n')
 	n, err := s.writer.Write(raw)
+	if n < 0 || n > len(raw) {
+		return failure("worker_io_failed")
+	}
 	s.inputBytes += n
 	if err != nil || n != len(raw) {
 		return failure("worker_io_failed")
@@ -114,6 +120,12 @@ func (s *wireSession) writeEncodedPhysical(raw []byte) error {
 	return nil
 }
 func (s *wireSession) readPhysical() (Frame, error) {
+	if s.materialEnabled && s.role == "host" && s.materialScope != nil {
+		return s.readMaterialRuntimePhysical()
+	}
+	return s.readOrdinaryPhysical()
+}
+func (s *wireSession) readOrdinaryPhysical() (Frame, error) {
 	var frame Frame
 	var raw []byte
 	if s.aborted.Load() || s.ctx.Err() != nil {
@@ -121,8 +133,12 @@ func (s *wireSession) readPhysical() (Frame, error) {
 	}
 	for {
 		part, err := s.reader.ReadSlice('\n')
-		s.outputBytes += len(part)
-		if len(raw)+len(part) > s.maxFrame || s.outputBytes > s.maxOutput {
+		var countErr error
+		s.outputBytes, countErr = materialAddCount(s.outputBytes, len(part))
+		if countErr != nil {
+			return frame, countErr
+		}
+		if len(raw)+len(part) > s.maxFrame || s.outputBytes-s.materialOutputBytes > s.maxOutput {
 			return frame, failure("output_limit")
 		}
 		raw = append(raw, part...)

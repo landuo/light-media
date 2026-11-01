@@ -67,7 +67,7 @@ func serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 	if concurrent {
 		advertisedConcurrent = 1
 	}
-	helloResult, _ := json.Marshal(Handshake{CallbackErrors: 1, TransportClose: advertisedConcurrent, ConcurrentSession: advertisedConcurrent, Protocol: ProtocolVersion, PluginID: manifest.PluginID, Version: manifest.Version, HostAPI: HostAPIVersion, Methods: manifest.Methods, Capabilities: manifest.Capabilities, Transport: &transportAdvertisement{Version: 1}, PersistentSession: 1})
+	helloResult, _ := json.Marshal(Handshake{Material: MaterialContract, CallbackErrors: 1, TransportClose: advertisedConcurrent, ConcurrentSession: advertisedConcurrent, Protocol: ProtocolVersion, PluginID: manifest.PluginID, Version: manifest.Version, HostAPI: HostAPIVersion, Methods: manifest.Methods, Capabilities: manifest.Capabilities, Transport: &transportAdvertisement{Version: 1}, PersistentSession: 1})
 	if err = s.write(Frame{Protocol: ProtocolVersion, ID: first.ID, Type: "result", Identity: s.identity, Result: helloResult}); err != nil {
 		return err
 	}
@@ -102,6 +102,16 @@ func serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 				return err
 			}
 			s.enable(limits)
+			continue
+		}
+		if request.Method == "transport.material_negotiate" {
+			if invoked || s.materialEnabled || !s.enabled || !validMaterialNegotiation(request.Payload) {
+				return failure("material_negotiation_mismatch")
+			}
+			if err = s.write(Frame{Protocol: ProtocolVersion, ID: request.ID, Type: "result", Identity: s.identity, Result: json.RawMessage(`{"contract":"material/v1"}`)}); err != nil {
+				return err
+			}
+			s.materialEnabled = true
 			continue
 		}
 		if request.Method == "transport.session" {
@@ -182,7 +192,8 @@ func serve(ctx context.Context, input io.Reader, output io.Writer, manifest Mani
 			}
 			return reply.Result, nil
 		}
-		result, handleErr := handle(ctx, request.Method, request.Payload, host)
+		handlerCtx := s.serialMaterialContext(ctx, request.ID, gate, phase)
+		result, handleErr := handle(handlerCtx, request.Method, request.Payload, host)
 		phase.closed.Store(true)
 		select {
 		case gate <- struct{}{}:

@@ -14,6 +14,7 @@ type concurrentOutcome struct {
 	err   error
 }
 type concurrentHostCall struct {
+	material    *materialHostScope
 	id          string
 	method      string
 	ctx         context.Context
@@ -103,7 +104,7 @@ func (m *concurrentClient) readLoop() {
 			call.stopLife()
 			call.finish()
 			delete(m.calls, id)
-			if call.drained != nil {
+			if call.drained != nil || call.material != nil {
 				observed = append(observed, call)
 			}
 		}
@@ -135,6 +136,26 @@ func (m *concurrentClient) readLoop() {
 		if call == nil {
 			m.abort(failure("invalid_reply"))
 			return
+		}
+		if m.transport.wire.materialEnabled && frame.Method == materialMethod {
+			if call.material == nil || !frame.materialPhysical || !frame.materialStrict || count.chunks != 0 {
+				_ = call.account.materialChargeRead(count.bytes, false)
+				m.abort(failure("invalid_material_frame"))
+				return
+			}
+			call.mu.Lock()
+			if call.closed || call.ctx.Err() != nil || call.inHost {
+				call.mu.Unlock()
+				_ = call.account.materialChargeRead(count.bytes, false)
+				m.abort(failure("invalid_material_scope"))
+				return
+			}
+			call.inHost = true
+			call.hosts.Add(1)
+			m.hosts.Add(1)
+			call.mu.Unlock()
+			go m.callMaterial(call, frame, count)
+			continue
 		}
 		if err = call.account.receive(count); err != nil {
 			m.abort(err)
@@ -214,6 +235,11 @@ func (m *concurrentClient) readLoop() {
 
 func (m *concurrentClient) complete(call *concurrentHostCall, outcome concurrentOutcome) {
 	call.hosts.Wait()
+	if call.material != nil {
+		if err := call.material.close(); err != nil && outcome.err == nil {
+			outcome.err = err
+		}
+	}
 	m.mu.Lock()
 	if m.calls[call.id] == call {
 		delete(m.calls, call.id)
@@ -241,6 +267,9 @@ func (call *concurrentHostCall) notifyDrained() {
 func (m *concurrentClient) observeTerminatedCall(call *concurrentHostCall) {
 	<-m.client.done
 	call.hosts.Wait()
+	if call.material != nil {
+		_ = call.material.close()
+	}
 	call.notifyDrained()
 }
 func (m *concurrentClient) replyDenied(call *concurrentHostCall, id string) {
@@ -258,7 +287,7 @@ func (m *concurrentClient) callHost(call *concurrentHostCall, host HostHandler, 
 		err = failure("execution_canceled")
 	} else {
 		if call.ctx.Err() == nil {
-			reply.Result, err = host(call.ctx, m.client.binding.Identity, frame.Method, frame.Payload)
+			reply.Result, err = materialHostCallback(call.material, call.ctx, host, m.client.binding.Identity, frame.Method, frame.Payload)
 		} else {
 			err = call.ctx.Err()
 		}
@@ -318,6 +347,41 @@ func (m *concurrentClient) callStarted(ctx context.Context, method string, paylo
 	stopLife := context.AfterFunc(m.client.life, cancel)
 	callCtx, finish, budget := invocationContext(parent, options)
 	call := &concurrentHostCall{id: id, method: method, ctx: callCtx, cancel: cancel, finish: finish, stopLife: stopLife, budget: budget, host: host, cleanup: cleanup, account: concurrentAccount{limits: m.client.session.limits}, result: make(chan concurrentOutcome, 1), sent: make(chan struct{}), drained: drained, seen: map[string]bool{}}
+	if m.client.session.materialEnabled && method != "stop" {
+		binding := m.client.binding
+		call.material, err = newMaterialHostScope(callCtx, binding, id, m.client.session.maxFrame, m.client.manifest.Capabilities, func(ctx context.Context) error {
+			if ctx.Err() != nil {
+				return ctx.Err()
+			}
+			if callCtx.Err() != nil {
+				return callCtx.Err()
+			}
+			if m.client.life.Err() != nil {
+				return m.client.life.Err()
+			}
+			if m.client.binding != binding {
+				return failure("material_scope_closed")
+			}
+			return nil
+		})
+		if err == nil {
+			err = call.account.bindMaterialScope(call.material)
+		}
+		if err != nil {
+			stopLife()
+			cancel()
+			finish()
+			if call.material != nil {
+				_ = call.material.close()
+			}
+			return out, err
+		}
+		defer func() {
+			if !registered {
+				_ = call.material.close()
+			}
+		}()
+	}
 	m.mu.Lock()
 	if admissionCtx != nil && admissionCtx.Err() != nil {
 		m.mu.Unlock()
