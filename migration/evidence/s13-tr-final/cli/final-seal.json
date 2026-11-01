@@ -1,0 +1,149 @@
+{
+  "decision": "ACCEPT_FINITE_ORDINARY_TR_FINAL_TWO_METHOD_SLICE",
+  "at": "2026-11-01T00:56:25.487169+00:00",
+  "scope": [
+    "Transmission.set_torrent_tag ordinary string labels/selectors",
+    "Transmission.change_torrent fixed ordinary JSON nullable parameters"
+  ],
+  "independent_reviewer": "tls_ab_independent, non-author of these products/driver",
+  "actual_layers": {
+    "source_recording_complete_methods": 2,
+    "source_cases": 23,
+    "normal_roots": {
+      "leaf": 2,
+      "SDK": 2,
+      "native": 6,
+      "App_component": 2
+    },
+    "race_roots": {
+      "leaf": 2,
+      "SDK": 2,
+      "native": 6,
+      "App_component": 2
+    },
+    "normal_installed_CLI_business_scenarios": 7,
+    "logical_SDK_callbacks": 8,
+    "owned_HTTP_peer_requests": 14,
+    "normal_host_exits": [
+      0,
+      0
+    ],
+    "normal_cold_new_worker": true
+  },
+  "actual_current_candidate_paths": [
+    {
+      "path": "release-light-media/internal/plugins/shared_transmission_final.go",
+      "sha256": "14f6e545ae3133a4ef3901e8d782f0525b46d588869b420fcddc31f1dd8ad462",
+      "bytes": 3144
+    },
+    {
+      "path": "release-light-media/internal/plugins/shared_transmission_final_test.go",
+      "sha256": "8b99aa37a8f179288b583505bc738341a0ad31bd64dd9de22cc80c2ab3ed3afb",
+      "bytes": 5576
+    },
+    {
+      "path": "release-light-media/internal/plugins/downloadercommands/tr_final.go",
+      "sha256": "d7c497979dfa36dbf3f7a9405d1147a346706bff6a1820f2a2c852bd1e6e747f",
+      "bytes": 8970
+    },
+    {
+      "path": "release-light-media/internal/plugins/downloadercommands/tr_final_test.go",
+      "sha256": "403938a827b98f14e8c5f36a7f5c5e491c8e10b4464bb9f6ae57d05909b297e8",
+      "bytes": 10957
+    },
+    {
+      "path": "release-light-media/internal/plugins/downloadercommands/testdata/source-tr-final.json",
+      "sha256": "1c3a9652c19898ed1aa98d63b1650f07587dee87654384490047e7872f62671e",
+      "bytes": 32975
+    },
+    {
+      "path": "release-light-media/internal/plugins/iyuuautoseed/native/shared_transmission_final.go",
+      "sha256": "a153190b5daff0742d2578cba0b095c7d54739e004b7c6071d393f2191b1bc45",
+      "bytes": 4499
+    },
+    {
+      "path": "release-light-media/internal/plugins/iyuuautoseed/native/shared_transmission_final_test.go",
+      "sha256": "e98a7ccb0649fdc7456cdc5a9898030fe15ed1616308d18f97fc0a1a7ad3bc34",
+      "bytes": 10802
+    },
+    {
+      "path": "release-light-media/internal/plugins/iyuuautoseed/native/shared_downloader_commands.go",
+      "sha256": "43350defc0233a42b83adaa21d095e3df8de83928dbfcc50fa9764c708fe955b",
+      "bytes": 21215
+    },
+    {
+      "path": "release-light-media/internal/app/plugin_shared_transmission_final.go",
+      "sha256": "9feed834c112e25b51805cd74d9066871ba26cef9c882006f2220f970abd078b",
+      "bytes": 4602
+    },
+    {
+      "path": "release-light-media/internal/app/plugin_shared_transmission_final_test.go",
+      "sha256": "8dc0d831b9c78c5c2aa4ccca9d267cebed77618512dc34ad9f47422cfde7afdc",
+      "bytes": 16383
+    },
+    {
+      "path": "release-light-media/internal/app/plugin_original_resources.go",
+      "sha256": "29fec5fb012a75129336a236b882640df9da9d56f52a01dc8a6689b4f40c7c9f",
+      "bytes": 7413
+    },
+    {
+      "path": "release-light-media/cmd/owned-tr-final-fixture/main.go",
+      "sha256": "fcf289218c1179cfc8ab9488b2e06bf184dafc6826383d239b4a79829d05659f",
+      "bytes": 13968
+    },
+    {
+      "path": "release-light-media/cmd/owned-tr-final-fixture/main_test.go",
+      "sha256": "0e4986de5ad3440d2ca86202c8eaba0b5b458642fbe0f25c99fece3b4a77a6d9",
+      "bytes": 4837
+    }
+  ],
+  "files": [
+    {
+      "path": "audits/s13-tr-final-native-independent/CLI01-FINAL-REVIEW.md",
+      "sha256": "b60d3cb7546b738c0333fee1da26742ac0d91c81e42565ffd38080a258c43cf7",
+      "bytes": 5220
+    },
+    {
+      "path": "audits/s13-tr-final-native-independent/cli01-actual-readback.json",
+      "sha256": "1b4799ddc8abf7b92a865b3bd1643bd33291266c3c5b3dfd118513dc0b954aec",
+      "bytes": 13957
+    },
+    {
+      "path": "audits/s13-tr-final-native-independent/normal-race01-final-seal.json",
+      "sha256": "32a5aeeb5b9e488138a66d3d952364c2e9c0403e14c00301e234194af48ee3f3",
+      "bytes": 3049
+    },
+    {
+      "path": "audits/s13-tr-final-source-independent/source01-final.json",
+      "sha256": "834916129067ee20a776411b2a4446db52751f0fda01e26ba68c7c5d2de5b5b8",
+      "bytes": 2937
+    },
+    {
+      "path": "audits/s13-tr-final-normal-independent/preexec-seal.json",
+      "sha256": "0716129af189dc10be99cc68cead618fd63853fa813af2ae31c201ffa38d38fe",
+      "bytes": 564
+    },
+    {
+      "path": "audits/s13-tr-final-normal-cli01/actual-execution-receipt.json",
+      "sha256": "8b6df62c3aeeb30e7dec0763d31cac161b32dfc7eb4fe502724e37fcb186f054",
+      "bytes": 1255
+    },
+    {
+      "path": "audits/s13-tr-final-normal-cli01/execution-bindings.json",
+      "sha256": "40adb43e343c9bc05ed1f42feab158c7fc8718ec50bad522a2a7c80f21e7bb4c",
+      "bytes": 1045658
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/result.json",
+      "sha256": "ff3e46f123b9e4a986c2d34b6b2e17c38397095a9e52ab301ad06abfb0a1916e",
+      "bytes": 26447
+    }
+  ],
+  "input_drift": [],
+  "blocking_findings": [],
+  "normal_CLI_host_and_worker_race_instrumented": false,
+  "normalization": "Only exact string-label unique membership/cardinality; all source and target raw orders preserved. No wire-array ordering equivalence assertion.",
+  "retained_boundary": "Finite ordinary contract with configured ownership/credential/TLS and unknown-mutation protection; not arbitrary Python or every vendor kwargs branch. No real daemon/browser/full S13/remote delivery claim.",
+  "reviewer_reran_tests_or_services": false,
+  "old_evidence_unchanged": true
+}

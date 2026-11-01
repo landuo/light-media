@@ -1,0 +1,54 @@
+### /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/transmission/transmission.py Transmission.set_torrent_tag 168-181
+    def set_torrent_tag(self, ids: str, tags: list, org_tags: list = None) -> bool:
+        """
+        设置种子标签，注意TR默认会覆盖原有标签，如需追加需传入原有标签
+        """
+        if not self.trc:
+            return False
+        if not ids or not tags:
+            return False
+        try:
+            self.trc.change_torrent(labels=list(set((org_tags or []) + tags)), ids=ids)
+            return True
+        except Exception as err:
+            logger.error(f"设置种子标签出错：{str(err)}")
+            return False
+
+### /workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/modules/transmission/transmission.py Transmission.change_torrent 388-423
+    def change_torrent(self,
+                       hash_string: str,
+                       upload_limit=None,
+                       download_limit=None,
+                       ratio_limit=None,
+                       seeding_time_limit=None) -> bool:
+        """
+        设置种子
+        :param hash_string: ID
+        :param upload_limit: 上传限速 Kb/s
+        :param download_limit: 下载限速 Kb/s
+        :param ratio_limit: 分享率限制
+        :param seeding_time_limit: 做种时间限制
+        :return: bool
+        """
+        if not hash_string:
+            return False
+        change_kwargs = {"ids": hash_string}
+        if upload_limit is not None:
+            change_kwargs["uploadLimited"] = bool(upload_limit)
+            change_kwargs["uploadLimit"] = int(upload_limit)
+        if download_limit is not None:
+            change_kwargs["downloadLimited"] = bool(download_limit)
+            change_kwargs["downloadLimit"] = int(download_limit)
+        if ratio_limit is not None:
+            change_kwargs["seedRatioMode"] = 1 if ratio_limit else 2
+            change_kwargs["seedRatioLimit"] = round(float(ratio_limit), 2) if ratio_limit else 0
+        if seeding_time_limit is not None:
+            change_kwargs["seedIdleMode"] = 1 if seeding_time_limit else 2
+            change_kwargs["seedIdleLimit"] = int(seeding_time_limit) if seeding_time_limit else 0
+        try:
+            self.trc.change_torrent(**change_kwargs)
+            return True
+        except Exception as err:
+            logger.error(f"设置种子出错：{str(err)}")
+            return False
+

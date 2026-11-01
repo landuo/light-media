@@ -1,0 +1,62 @@
+{
+  "decision": "ACCEPT_SOURCE_RECORDING_COMPONENT_ONLY",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-independent/SOURCE01-REVIEW.md",
+      "bytes": 6756,
+      "sha256": "6750ac2aa4f68715a5869924b24bdbc930f0ad4891effd61e75f2538433cc338"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-independent/source01-readback.json",
+      "bytes": 20517,
+      "sha256": "435c768a8e8173a283458ff05fc8607ce254804a9085077e9760b101702b4824"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-independent/preexec-seal.json",
+      "bytes": 2064,
+      "sha256": "719b0e9ed065d6c6e26c39f54de9c166e627d1ba1c8653e0035861baa3cdbb92"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-final-source01/stdout.json",
+      "bytes": 32975,
+      "sha256": "1c3a9652c19898ed1aa98d63b1650f07587dee87654384490047e7872f62671e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-final-source01/command.json",
+      "bytes": 621,
+      "sha256": "bf47c85d3f90317d34b2ca1ffe075e8b2f4c54e0c3c5c66efda9f482f3a73b03"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-final-source01/result.json",
+      "bytes": 461,
+      "sha256": "861f7977c0bfb2d875546fa4ad7aa82399b89fba3c554e65c96ad92d4c22b106"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-final-source01/stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/evidence/s13-tr-final-source01/exit",
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  ],
+  "counts": {
+    "original_complete_methods": 2,
+    "fixed_cases": 23,
+    "inputs": 15,
+    "returns_true": 9,
+    "returns_false": 10,
+    "uncaught_ValueError": 4,
+    "recording_calls": 12,
+    "error_logs": 6
+  },
+  "input_drift": [],
+  "target_acceptance": false,
+  "vendor_executed": false,
+  "actual_source_rerun_by_reviewer": false,
+  "next_contract": "Two wrapper algorithms and their recording boundary only; pinned vendor no-args error remains required at native seam; original numeric conversions and source exception placement preserved.",
+  "label_comparison": "Retain actual raw order. String-only exact membership and unique cardinality may be compared independently of run-local ordering; disclose permutations. No wire-order or daemon-order equivalence claim."
+}

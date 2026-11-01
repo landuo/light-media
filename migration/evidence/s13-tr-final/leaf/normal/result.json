@@ -1,0 +1,85 @@
+{
+  "started": "2026-11-01T00:43:53.921973+00:00",
+  "driver_pid": 5,
+  "package": "./internal/plugins/downloadercommands",
+  "pattern": "^(TestTRFinalLeafActualSourceObservations|TestTRFinalLeafBoundariesAndOwnership)$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./internal/plugins/downloadercommands"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-final-leaf01.test",
+        "./internal/plugins/downloadercommands"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/downloadercommands",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-final-leaf01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestTRFinalLeafActualSourceObservations|TestTRFinalLeafBoundariesAndOwnership)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T00:43:53.921993+00:00",
+      "scratch_free": 47847956480,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T00:43:54.227935+00:00",
+      "scratch_free": 47847161856,
+      "tmp_free": 5225566208
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T00:43:54.960642+00:00",
+      "scratch_free": 47838597120,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 1775,
+  "program_sha256": "ea14dc51bd8cd49cce6729f76f7bc5d1abf7b11c014e4a0fb1a6ac85d3afaa01",
+  "root_passes": [
+    "TestTRFinalLeafActualSourceObservations",
+    "TestTRFinalLeafBoundariesAndOwnership"
+  ],
+  "ended": "2026-11-01T00:43:55.073740+00:00"
+}

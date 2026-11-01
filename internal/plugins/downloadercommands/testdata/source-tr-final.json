@@ -1,0 +1,1189 @@
+{
+  "status": "ORIGINAL_TR_FINAL_RECORDING_COMPONENT_OBSERVATION_COMPLETE",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "input_manifest_sha256": "09bb374fe2acd3aa1a46613d45eac4a54caf40fd42dc9f9f42123044d6aab80c",
+  "python": {
+    "version": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/bin/python",
+    "isolated": 1,
+    "no_site": 1,
+    "dont_write_bytecode": 1,
+    "hash_randomization": 1,
+    "hash_algorithm": "siphash13"
+  },
+  "source_nodes": [
+    {
+      "name": "set_torrent_tag",
+      "first_line": 168,
+      "last_line": 181,
+      "source_bytes_sha256": "facd90a64d7d85d51f4356dd06cf779cfc8a7f2700e7ea02d785da4ba5df8cca",
+      "ast_sha256": "dd77707e8e35f974b4afb2529777a10451dacee00c922632f9944c8c149bbfce",
+      "decorators": []
+    },
+    {
+      "name": "change_torrent",
+      "first_line": 388,
+      "last_line": 423,
+      "source_bytes_sha256": "7535910f0bfbaec720999c754421d6316353bf9a36bcbc46075b7cd73f97ace0",
+      "ast_sha256": "a5696d5c636919f87d450151c441cf66f5127666381b44ddf6afc25c3992859f",
+      "decorators": []
+    }
+  ],
+  "case_count": 23,
+  "cases": [
+    {
+      "id": "tag-missing-client",
+      "input": {
+        "id": "tag-missing-client",
+        "method": "set_torrent_tag",
+        "args": {
+          "ids": "owned-a",
+          "tags": [
+            "owned-new"
+          ]
+        },
+        "client_present": false,
+        "steps": [],
+        "purpose": "Missing source client returns before concat/vendor call."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [],
+      "recording_client_calls": 0,
+      "arguments_after_source": {
+        "ids": "owned-a",
+        "tags": [
+          "owned-new"
+        ]
+      }
+    },
+    {
+      "id": "tag-falsey-ids",
+      "input": {
+        "id": "tag-falsey-ids",
+        "method": "set_torrent_tag",
+        "args": {
+          "ids": [],
+          "tags": [
+            "owned-new"
+          ]
+        },
+        "client_present": true,
+        "steps": [],
+        "purpose": "Falsey ordinary ids return before concat/vendor call."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [],
+      "recording_client_calls": 0,
+      "arguments_after_source": {
+        "ids": [],
+        "tags": [
+          "owned-new"
+        ]
+      }
+    },
+    {
+      "id": "tag-falsey-tags",
+      "input": {
+        "id": "tag-falsey-tags",
+        "method": "set_torrent_tag",
+        "args": {
+          "ids": "owned-a",
+          "tags": []
+        },
+        "client_present": true,
+        "steps": [],
+        "purpose": "Empty tags do not clear labels or call the dependency."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [],
+      "recording_client_calls": 0,
+      "arguments_after_source": {
+        "ids": "owned-a",
+        "tags": []
+      }
+    },
+    {
+      "id": "tag-merge-duplicates",
+      "input": {
+        "id": "tag-merge-duplicates",
+        "method": "set_torrent_tag",
+        "args": {
+          "ids": [
+            "owned-a",
+            "owned-b"
+          ],
+          "tags": [
+            "owned-new",
+            "owned-old",
+            "owned-new"
+          ],
+          "org_tags": [
+            "owned-old",
+            "owned-retained",
+            "owned-old"
+          ]
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "change_torrent",
+            "reply": null
+          }
+        ],
+        "purpose": "Original list concatenation and set dedup; actual raw label order retained, never sorted."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "recording_client_call",
+          "method": "change_torrent",
+          "ordinal": 1,
+          "kwargs": {
+            "labels": [
+              "owned-new",
+              "owned-retained",
+              "owned-old"
+            ],
+            "ids": [
+              "owned-a",
+              "owned-b"
+            ]
+          },
+          "python_types": {
+            "labels": "list",
+            "ids": "list"
+          }
+        },
+        {
+          "event": "recording_client_return",
+          "method": "change_torrent",
+          "value": null
+        }
+      ],
+      "recording_client_calls": 1,
+      "arguments_after_source": {
+        "ids": [
+          "owned-a",
+          "owned-b"
+        ],
+        "tags": [
+          "owned-new",
+          "owned-old",
+          "owned-new"
+        ],
+        "org_tags": [
+          "owned-old",
+          "owned-retained",
+          "owned-old"
+        ]
+      }
+    },
+    {
+      "id": "tag-default-org-tags",
+      "input": {
+        "id": "tag-default-org-tags",
+        "method": "set_torrent_tag",
+        "args": {
+          "ids": "owned-a",
+          "tags": [
+            "owned-only",
+            "owned-only"
+          ]
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "change_torrent",
+            "reply": false
+          }
+        ],
+        "purpose": "Omit org_tags to exercise original default None; ignore the supplied nonthrowing False dependency result."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "recording_client_call",
+          "method": "change_torrent",
+          "ordinal": 1,
+          "kwargs": {
+            "labels": [
+              "owned-only"
+            ],
+            "ids": "owned-a"
+          },
+          "python_types": {
+            "labels": "list",
+            "ids": "str"
+          }
+        },
+        {
+          "event": "recording_client_return",
+          "method": "change_torrent",
+          "value": false
+        }
+      ],
+      "recording_client_calls": 1,
+      "arguments_after_source": {
+        "ids": "owned-a",
+        "tags": [
+          "owned-only",
+          "owned-only"
+        ]
+      }
+    },
+    {
+      "id": "tag-invalid-concat",
+      "input": {
+        "id": "tag-invalid-concat",
+        "method": "set_torrent_tag",
+        "args": {
+          "ids": "owned-a",
+          "tags": "owned-not-a-list"
+        },
+        "client_present": true,
+        "steps": [],
+        "purpose": "Original list plus string error is inside source try; no dependency call."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "设置种子标签出错：can only concatenate list (not \"str\") to list"
+        }
+      ],
+      "recording_client_calls": 0,
+      "arguments_after_source": {
+        "ids": "owned-a",
+        "tags": "owned-not-a-list"
+      }
+    },
+    {
+      "id": "tag-unhashable-label",
+      "input": {
+        "id": "tag-unhashable-label",
+        "method": "set_torrent_tag",
+        "args": {
+          "ids": "owned-a",
+          "tags": [
+            [
+              "owned-nested"
+            ]
+          ]
+        },
+        "client_present": true,
+        "steps": [],
+        "purpose": "Ordinary JSON unhashable label causes original set error inside try."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "设置种子标签出错：unhashable type: 'list'"
+        }
+      ],
+      "recording_client_calls": 0,
+      "arguments_after_source": {
+        "ids": "owned-a",
+        "tags": [
+          [
+            "owned-nested"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "tag-call-exception",
+      "input": {
+        "id": "tag-call-exception",
+        "method": "set_torrent_tag",
+        "args": {
+          "ids": "owned-a",
+          "tags": [
+            "owned-new"
+          ]
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "change_torrent",
+            "raises": {
+              "class": "RuntimeError",
+              "message": "owned recording failure"
+            }
+          }
+        ],
+        "purpose": "Fixed supplied ordinary dependency exception, not actual vendor/transport failure."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [
+        {
+          "event": "recording_client_call",
+          "method": "change_torrent",
+          "ordinal": 1,
+          "kwargs": {
+            "labels": [
+              "owned-new"
+            ],
+            "ids": "owned-a"
+          },
+          "python_types": {
+            "labels": "list",
+            "ids": "str"
+          }
+        },
+        {
+          "event": "recording_client_exception",
+          "method": "change_torrent",
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "设置种子标签出错：owned recording failure"
+        }
+      ],
+      "recording_client_calls": 1,
+      "arguments_after_source": {
+        "ids": "owned-a",
+        "tags": [
+          "owned-new"
+        ]
+      }
+    },
+    {
+      "id": "change-falsey-hash-before-conversion",
+      "input": {
+        "id": "change-falsey-hash-before-conversion",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "",
+          "upload_limit": "owned-invalid"
+        },
+        "client_present": true,
+        "steps": [],
+        "purpose": "Falsey hash exits before even invalid numeric preparation."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [],
+      "recording_client_calls": 0,
+      "arguments_after_source": {
+        "hash_string": "",
+        "upload_limit": "owned-invalid"
+      }
+    },
+    {
+      "id": "change-all-none-nonthrowing-port",
+      "input": {
+        "id": "change-all-none-nonthrowing-port",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": null,
+          "download_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "change_torrent",
+            "reply": null
+          }
+        ],
+        "purpose": "Record only ids; nonthrowing port reply is ignored. This is not real vendor no-args behavior."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "recording_client_call",
+          "method": "change_torrent",
+          "ordinal": 1,
+          "kwargs": {
+            "ids": "owned-a"
+          },
+          "python_types": {
+            "ids": "str"
+          }
+        },
+        {
+          "event": "recording_client_return",
+          "method": "change_torrent",
+          "value": null
+        }
+      ],
+      "recording_client_calls": 1,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": null,
+        "download_limit": null,
+        "ratio_limit": null,
+        "seeding_time_limit": null
+      }
+    },
+    {
+      "id": "change-all-none-supplied-noargs-error",
+      "input": {
+        "id": "change-all-none-supplied-noargs-error",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": null,
+          "download_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "change_torrent",
+            "raises": {
+              "class": "ValueError",
+              "message": "No arguments to set"
+            }
+          }
+        ],
+        "purpose": "Supply statically documented vendor no-args ValueError as a dependency input; original wrapper catch observed, vendor not executed."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [
+        {
+          "event": "recording_client_call",
+          "method": "change_torrent",
+          "ordinal": 1,
+          "kwargs": {
+            "ids": "owned-a"
+          },
+          "python_types": {
+            "ids": "str"
+          }
+        },
+        {
+          "event": "recording_client_exception",
+          "method": "change_torrent",
+          "class": "ValueError",
+          "message": "No arguments to set"
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "设置种子出错：No arguments to set"
+        }
+      ],
+      "recording_client_calls": 1,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": null,
+        "download_limit": null,
+        "ratio_limit": null,
+        "seeding_time_limit": null
+      }
+    },
+    {
+      "id": "change-zero",
+      "input": {
+        "id": "change-zero",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": 0,
+          "download_limit": 0,
+          "ratio_limit": 0,
+          "seeding_time_limit": 0
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "change_torrent",
+            "reply": null
+          }
+        ],
+        "purpose": "Explicit zero remains different from None; original modes, flags and value types."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "recording_client_call",
+          "method": "change_torrent",
+          "ordinal": 1,
+          "kwargs": {
+            "ids": "owned-a",
+            "uploadLimited": false,
+            "uploadLimit": 0,
+            "downloadLimited": false,
+            "downloadLimit": 0,
+            "seedRatioMode": 2,
+            "seedRatioLimit": 0,
+            "seedIdleMode": 2,
+            "seedIdleLimit": 0
+          },
+          "python_types": {
+            "ids": "str",
+            "uploadLimited": "bool",
+            "uploadLimit": "int",
+            "downloadLimited": "bool",
+            "downloadLimit": "int",
+            "seedRatioMode": "int",
+            "seedRatioLimit": "int",
+            "seedIdleMode": "int",
+            "seedIdleLimit": "int"
+          }
+        },
+        {
+          "event": "recording_client_return",
+          "method": "change_torrent",
+          "value": null
+        }
+      ],
+      "recording_client_calls": 1,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": 0,
+        "download_limit": 0,
+        "ratio_limit": 0,
+        "seeding_time_limit": 0
+      }
+    },
+    {
+      "id": "change-negative",
+      "input": {
+        "id": "change-negative",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": -3,
+          "download_limit": -4,
+          "ratio_limit": -2.675,
+          "seeding_time_limit": -5
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "change_torrent",
+            "reply": null
+          }
+        ],
+        "purpose": "Original negative values remain truthy; Python int/float/round, no positive-only policy."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "recording_client_call",
+          "method": "change_torrent",
+          "ordinal": 1,
+          "kwargs": {
+            "ids": "owned-a",
+            "uploadLimited": true,
+            "uploadLimit": -3,
+            "downloadLimited": true,
+            "downloadLimit": -4,
+            "seedRatioMode": 1,
+            "seedRatioLimit": -2.67,
+            "seedIdleMode": 1,
+            "seedIdleLimit": -5
+          },
+          "python_types": {
+            "ids": "str",
+            "uploadLimited": "bool",
+            "uploadLimit": "int",
+            "downloadLimited": "bool",
+            "downloadLimit": "int",
+            "seedRatioMode": "int",
+            "seedRatioLimit": "float",
+            "seedIdleMode": "int",
+            "seedIdleLimit": "int"
+          }
+        },
+        {
+          "event": "recording_client_return",
+          "method": "change_torrent",
+          "value": null
+        }
+      ],
+      "recording_client_calls": 1,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": -3,
+        "download_limit": -4,
+        "ratio_limit": -2.675,
+        "seeding_time_limit": -5
+      }
+    },
+    {
+      "id": "change-booleans",
+      "input": {
+        "id": "change-booleans",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": true,
+          "download_limit": false,
+          "ratio_limit": true,
+          "seeding_time_limit": false
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "change_torrent",
+            "reply": null
+          }
+        ],
+        "purpose": "Python bool and numeric conversion are executed by original source."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "recording_client_call",
+          "method": "change_torrent",
+          "ordinal": 1,
+          "kwargs": {
+            "ids": "owned-a",
+            "uploadLimited": true,
+            "uploadLimit": 1,
+            "downloadLimited": false,
+            "downloadLimit": 0,
+            "seedRatioMode": 1,
+            "seedRatioLimit": 1.0,
+            "seedIdleMode": 2,
+            "seedIdleLimit": 0
+          },
+          "python_types": {
+            "ids": "str",
+            "uploadLimited": "bool",
+            "uploadLimit": "int",
+            "downloadLimited": "bool",
+            "downloadLimit": "int",
+            "seedRatioMode": "int",
+            "seedRatioLimit": "float",
+            "seedIdleMode": "int",
+            "seedIdleLimit": "int"
+          }
+        },
+        {
+          "event": "recording_client_return",
+          "method": "change_torrent",
+          "value": null
+        }
+      ],
+      "recording_client_calls": 1,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": true,
+        "download_limit": false,
+        "ratio_limit": true,
+        "seeding_time_limit": false
+      }
+    },
+    {
+      "id": "change-numeric-strings",
+      "input": {
+        "id": "change-numeric-strings",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": "0",
+          "download_limit": "-4",
+          "ratio_limit": "0",
+          "seeding_time_limit": "0"
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "change_torrent",
+            "reply": null
+          }
+        ],
+        "purpose": "Nonempty numeric strings are truthy before conversion, including string zero."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "recording_client_call",
+          "method": "change_torrent",
+          "ordinal": 1,
+          "kwargs": {
+            "ids": "owned-a",
+            "uploadLimited": true,
+            "uploadLimit": 0,
+            "downloadLimited": true,
+            "downloadLimit": -4,
+            "seedRatioMode": 1,
+            "seedRatioLimit": 0.0,
+            "seedIdleMode": 1,
+            "seedIdleLimit": 0
+          },
+          "python_types": {
+            "ids": "str",
+            "uploadLimited": "bool",
+            "uploadLimit": "int",
+            "downloadLimited": "bool",
+            "downloadLimit": "int",
+            "seedRatioMode": "int",
+            "seedRatioLimit": "float",
+            "seedIdleMode": "int",
+            "seedIdleLimit": "int"
+          }
+        },
+        {
+          "event": "recording_client_return",
+          "method": "change_torrent",
+          "value": null
+        }
+      ],
+      "recording_client_calls": 1,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": "0",
+        "download_limit": "-4",
+        "ratio_limit": "0",
+        "seeding_time_limit": "0"
+      }
+    },
+    {
+      "id": "change-round-2-675",
+      "input": {
+        "id": "change-round-2-675",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": null,
+          "download_limit": null,
+          "ratio_limit": 2.675,
+          "seeding_time_limit": null
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "change_torrent",
+            "reply": null
+          }
+        ],
+        "purpose": "Original Python binary64 round(value,2), not decimal half-up or target-generated expected result."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "recording_client_call",
+          "method": "change_torrent",
+          "ordinal": 1,
+          "kwargs": {
+            "ids": "owned-a",
+            "seedRatioMode": 1,
+            "seedRatioLimit": 2.67
+          },
+          "python_types": {
+            "ids": "str",
+            "seedRatioMode": "int",
+            "seedRatioLimit": "float"
+          }
+        },
+        {
+          "event": "recording_client_return",
+          "method": "change_torrent",
+          "value": null
+        }
+      ],
+      "recording_client_calls": 1,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": null,
+        "download_limit": null,
+        "ratio_limit": 2.675,
+        "seeding_time_limit": null
+      }
+    },
+    {
+      "id": "change-round-string-2-685",
+      "input": {
+        "id": "change-round-string-2-685",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": null,
+          "download_limit": null,
+          "ratio_limit": "2.685",
+          "seeding_time_limit": null
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "change_torrent",
+            "reply": null
+          }
+        ],
+        "purpose": "Original float(string) followed by two-place Python round, captured without custom rounding."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": true,
+        "python_type": "bool",
+        "python_truthy": true
+      },
+      "trace": [
+        {
+          "event": "recording_client_call",
+          "method": "change_torrent",
+          "ordinal": 1,
+          "kwargs": {
+            "ids": "owned-a",
+            "seedRatioMode": 1,
+            "seedRatioLimit": 2.69
+          },
+          "python_types": {
+            "ids": "str",
+            "seedRatioMode": "int",
+            "seedRatioLimit": "float"
+          }
+        },
+        {
+          "event": "recording_client_return",
+          "method": "change_torrent",
+          "value": null
+        }
+      ],
+      "recording_client_calls": 1,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": null,
+        "download_limit": null,
+        "ratio_limit": "2.685",
+        "seeding_time_limit": null
+      }
+    },
+    {
+      "id": "change-invalid-upload-limit",
+      "input": {
+        "id": "change-invalid-upload-limit",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": "owned-invalid",
+          "download_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null
+        },
+        "client_present": true,
+        "steps": [],
+        "purpose": "This original conversion is outside try: capture propagated class/message and absence of source caught-call log."
+      },
+      "outcome": {
+        "kind": "uncaught_exception",
+        "class": "ValueError",
+        "message": "invalid literal for int() with base 10: 'owned-invalid'"
+      },
+      "trace": [],
+      "recording_client_calls": 0,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": "owned-invalid",
+        "download_limit": null,
+        "ratio_limit": null,
+        "seeding_time_limit": null
+      }
+    },
+    {
+      "id": "change-invalid-download-limit",
+      "input": {
+        "id": "change-invalid-download-limit",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": null,
+          "download_limit": "owned-invalid",
+          "ratio_limit": null,
+          "seeding_time_limit": null
+        },
+        "client_present": true,
+        "steps": [],
+        "purpose": "This original conversion is outside try: capture propagated class/message and absence of source caught-call log."
+      },
+      "outcome": {
+        "kind": "uncaught_exception",
+        "class": "ValueError",
+        "message": "invalid literal for int() with base 10: 'owned-invalid'"
+      },
+      "trace": [],
+      "recording_client_calls": 0,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": null,
+        "download_limit": "owned-invalid",
+        "ratio_limit": null,
+        "seeding_time_limit": null
+      }
+    },
+    {
+      "id": "change-invalid-ratio-limit",
+      "input": {
+        "id": "change-invalid-ratio-limit",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": null,
+          "download_limit": null,
+          "ratio_limit": "owned-invalid",
+          "seeding_time_limit": null
+        },
+        "client_present": true,
+        "steps": [],
+        "purpose": "This original conversion is outside try: capture propagated class/message and absence of source caught-call log."
+      },
+      "outcome": {
+        "kind": "uncaught_exception",
+        "class": "ValueError",
+        "message": "could not convert string to float: 'owned-invalid'"
+      },
+      "trace": [],
+      "recording_client_calls": 0,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": null,
+        "download_limit": null,
+        "ratio_limit": "owned-invalid",
+        "seeding_time_limit": null
+      }
+    },
+    {
+      "id": "change-invalid-seeding-time-limit",
+      "input": {
+        "id": "change-invalid-seeding-time-limit",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": null,
+          "download_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": "owned-invalid"
+        },
+        "client_present": true,
+        "steps": [],
+        "purpose": "This original conversion is outside try: capture propagated class/message and absence of source caught-call log."
+      },
+      "outcome": {
+        "kind": "uncaught_exception",
+        "class": "ValueError",
+        "message": "invalid literal for int() with base 10: 'owned-invalid'"
+      },
+      "trace": [],
+      "recording_client_calls": 0,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": null,
+        "download_limit": null,
+        "ratio_limit": null,
+        "seeding_time_limit": "owned-invalid"
+      }
+    },
+    {
+      "id": "change-missing-client-inside-try",
+      "input": {
+        "id": "change-missing-client-inside-try",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": 1,
+          "download_limit": null,
+          "ratio_limit": null,
+          "seeding_time_limit": null
+        },
+        "client_present": false,
+        "steps": [],
+        "purpose": "No original early client guard; native None attribute failure occurs inside source try."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "设置种子出错：'NoneType' object has no attribute 'change_torrent'"
+        }
+      ],
+      "recording_client_calls": 0,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": 1,
+        "download_limit": null,
+        "ratio_limit": null,
+        "seeding_time_limit": null
+      }
+    },
+    {
+      "id": "change-call-exception",
+      "input": {
+        "id": "change-call-exception",
+        "method": "change_torrent",
+        "args": {
+          "hash_string": "owned-a",
+          "upload_limit": 1,
+          "download_limit": 2,
+          "ratio_limit": 3,
+          "seeding_time_limit": 4
+        },
+        "client_present": true,
+        "steps": [
+          {
+            "method": "change_torrent",
+            "raises": {
+              "class": "RuntimeError",
+              "message": "owned recording failure"
+            }
+          }
+        ],
+        "purpose": "Prepared original camelCase kwargs reach fixed recording port before its supplied ordinary exception."
+      },
+      "outcome": {
+        "kind": "return",
+        "value": false,
+        "python_type": "bool",
+        "python_truthy": false
+      },
+      "trace": [
+        {
+          "event": "recording_client_call",
+          "method": "change_torrent",
+          "ordinal": 1,
+          "kwargs": {
+            "ids": "owned-a",
+            "uploadLimited": true,
+            "uploadLimit": 1,
+            "downloadLimited": true,
+            "downloadLimit": 2,
+            "seedRatioMode": 1,
+            "seedRatioLimit": 3.0,
+            "seedIdleMode": 1,
+            "seedIdleLimit": 4
+          },
+          "python_types": {
+            "ids": "str",
+            "uploadLimited": "bool",
+            "uploadLimit": "int",
+            "downloadLimited": "bool",
+            "downloadLimit": "int",
+            "seedRatioMode": "int",
+            "seedRatioLimit": "float",
+            "seedIdleMode": "int",
+            "seedIdleLimit": "int"
+          }
+        },
+        {
+          "event": "recording_client_exception",
+          "method": "change_torrent",
+          "class": "RuntimeError",
+          "message": "owned recording failure"
+        },
+        {
+          "event": "log",
+          "level": "ERROR",
+          "message": "设置种子出错：owned recording failure"
+        }
+      ],
+      "recording_client_calls": 1,
+      "arguments_after_source": {
+        "hash_string": "owned-a",
+        "upload_limit": 1,
+        "download_limit": 2,
+        "ratio_limit": 3,
+        "seeding_time_limit": 4
+      }
+    }
+  ],
+  "labels_order": "Actual original list(set(...)) order retained without sorting; run-local observation.",
+  "boundaries": [
+    "Complete original two methods, original class name/defaults/try scopes; no constructor, whole module or vendor import.",
+    "Client/logger are explicit recording dependency inputs. This is not daemon, HTTP/RPC or original vendor execution.",
+    "Original set output is retained in actual raw order; no sorting, fixed hash seed or portable wire-order claim.",
+    "Only finite ordinary JSON values; no arbitrary Python objects or extra change_torrent kwargs.",
+    "Original Python bool/int/float/round execute unchanged; conversion errors outside try are not forced into False.",
+    "No-args ValueError is a supplied statically grounded recording reply, not executed vendor validation.",
+    "No target Go results or precomputed return/kwargs expectations are used as source oracle."
+  ],
+  "forbidden_imports_absent": true,
+  "input_drift": []
+}

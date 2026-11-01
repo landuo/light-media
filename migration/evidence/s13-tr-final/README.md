@@ -1,0 +1,29 @@
+# S13: ordinary Transmission labels and limits
+
+Finite backend slice on `cd21eaf2bd8aeeb4af012e7a934faad8c5b9b288`, fixed delivery branch `plugins-refactor`. Local validation is not remote delivery: the last confirmed remote remains `11f922896377cb0d02bf481ef0df10f11a1cb4c4`, with Mac quota blocking the accepted local chain. No main/NAS change or CI-green claim.
+
+## Original behavior and retained boundaries
+
+This implements the last two methods in the original eight-operation S13 inventory: `Transmission.set_torrent_tag` and `Transmission.change_torrent`, from core `8a83efeacd3e26b82be495e17d50146e31c96a60`. The prior four ordinary controls and two qB tag methods retain their accepted evidence. All eight now have finite ordinary implementations; this is not certification of arbitrary Python inputs, every vendor domain or the whole S13 parent. Reannounce and unrelated methods are not silently added.
+
+Tags merge only the supplied old labels and new labels, deduplicate them, and make one change call; there is no invented old-label fetch. Missing client/falsey IDs/falsey tags preserve the early False path. The source set has process-dependent iteration order. Raw source and actual target label sequences are retained, including permutations. Only exact case-sensitive string membership and unique cardinality are compared without order; no wire-array-order equivalence or real-daemon order-insensitivity claim is made.
+
+Limits preserve upload/download/ratio/idle conversion order, None omission, explicit zero, camelCase keys, and truthiness before conversion. Nonempty string `"0"` enables a setting despite converting to zero. Ratio uses correctly rounded binary64 to two decimal places, including the observed `2.675 → 2.67`; truthy ratio results retain float type while falsey ratio is integer zero. The four conversion errors occur outside the source try and escape as exact class-only ValueError envelopes, without HTTP or caught-call logs. The pinned vendor’s empty-arguments validation is reproduced by the native implementation and caught and logged False, not the recording-port all-None True control result.
+
+The public SDK uses two fixed capabilities, one ordinary 128 KiB host call each. Existing downloader identity/configuration snapshots, current scope guards, admission, Close and mutation certainty stay enforced. The optional typed native port does not change the old TRC/QBC interfaces or admit arbitrary RPC/kwargs. One existing mutation scope covers each operation; only exact local non-dispatched source validation can enter the source catch. Cancellation, authority failures, wrapped errors and uncertain selected effects never become ordinary False or source envelopes.
+
+The original cached RPC version controls the fixed low-version warning; version 15 still sends labels rather than silently skipping them. A narrowly discovered App seam mapped source WARNING to the existing runtime WARN level, so WARN-threshold logging does not lose it. The original candidate, static finding and corrected candidate are retained. The shared logger is not changed. TR's existing strict TLS, proxy and cross-domain credential protections are unchanged; qB-specific certificate permission is not extended here.
+
+Supported preparation is the declared ordinary JSON/string-label, signed-int64, finite-binary64 and bounded ASCII numeric-string domain. Unicode/underscore numeric spellings, arbitrary objects and unverified ranges/type combinations remain explicit boundaries, not silently fabricated source exceptions. These unresolved domains prevent a whole-parent equivalence claim.
+
+## Actual validation
+
+Two complete original methods ran against explicit recording ports: 23 cases, comprising 9 True, 10 False and four uncaught ValueErrors, with 12 dependency calls and six caught-call error logs. The raw 32,975-byte oracle is included once as product test data. Pure leaf tests compare outcomes, ordered effects/logs, Python numeric types and unchanged arguments; only the declared string-set projection is normalized.
+
+Separate normal and race gates each passed leaf 2, SDK 2, native 6 and App 2 roots. The native six include the three affected existing TR controls/add/stop regressions. An additional single worker manifest/route root passed before the normal executable builds. Independent review verified current compile-input maps, program hashes and generated-source copies; no old unrelated gate was needlessly rerun.
+
+The real ordinary installed serial worker ran through two normal Go hosts against a fixed owned HTTP protocol responder, not a real Transmission daemon. Hosts 25 and 58 exited naturally with code 0. Seven business requests made eight logical SDK callbacks and 14 peer HTTP requests (12 RPC plus two artifact reads). Source ValueError and native no-arguments False both made zero HTTP requests. One selected HTTP 500 remained unknown without replay; a distinct next operation and next invocation succeeded on the same worker. Same-database cold restart used a new worker without refetching artifacts or contacting the downloader at startup.
+
+At runtime WARN threshold, two low-version warnings and one no-arguments ERROR were actually persisted with plugin/call attribution. Non-login API response bytes, typed results, synthetic RPC argument projections, label sequences and log projection are retained. Logical callback counts are not physical plugin-frame counts. Environment proxy/CA mappings were not cleared or rewritten.
+
+No browser/UI, real downloader, download/media/NAS mutation, vendor-runtime or full-parent acceptance is claimed. Databases, credentials, binaries, dependencies and private full host logs are excluded from publication. Necessary complete raw build maps and restoration checkpoints remain in the approved external backups. Inherited structural ledger errors remain explicit and are not called a green global/final gate.

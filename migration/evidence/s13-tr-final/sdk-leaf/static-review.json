@@ -1,0 +1,29 @@
+{
+  "status": "STATIC_READY_FOR_NARROW_INTEGRATION_NOT_RUNTIME_ACCEPTANCE",
+  "reviewer": "coordinator independent of SDK/leaf author terminate_independent",
+  "at": "2026-11-01T00:43:37.272470+00:00",
+  "candidate_sha256": "ca76c9938e2a3bb6b6033abcb5d48c128ce18c6e3ba3f2b4052c4b9f613e8eaf",
+  "source_actual_sha256": "1c3a9652c19898ed1aa98d63b1650f07587dee87654384490047e7872f62671e",
+  "checked": [
+    "both complete original methods vs candidate",
+    "source23 raw/outcomes/ordered effects/exception placement/types",
+    "nil client/falsey guards before call vs conversions outside catch",
+    "ratio exact binary64 round two decimals, truthy float vs falsey int",
+    "fixed optional DTO leaves old TRC/QBC interfaces unchanged",
+    "SDK one 128KiB call and strict ValueError envelope only",
+    "wrapped/cancel/authority/unknown errors never become false/source envelope",
+    "unique string labels only projection and source/target sequence logs before normalization",
+    "finite int64/binary64/ASCII limits explicitly remain boundaries rather than invented Python behavior"
+  ],
+  "required_actual_roots": {
+    "SDK": [
+      "TestSharedTRFinalWireAndSourceErrors",
+      "TestSharedTRFinalStrictBoundaryAndNoReplay"
+    ],
+    "leaf": [
+      "TestTRFinalLeafActualSourceObservations",
+      "TestTRFinalLeafBoundariesAndOwnership"
+    ]
+  },
+  "not_claimed": "vendor runtime/nativeRPC/real downloader/full S13"
+}

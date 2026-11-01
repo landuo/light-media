@@ -1,0 +1,84 @@
+{
+  "started": "2026-11-01T00:47:54.143822+00:00",
+  "driver_pid": 6,
+  "package": "./cmd/owned-tr-final-fixture",
+  "pattern": "^TestOwnedTRFinalFixtureManifestAndRoute$",
+  "race": false,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "./cmd/owned-tr-final-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-final-fixture-key01.test",
+        "./cmd/owned-tr-final-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./cmd/owned-tr-final-fixture",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-final-fixture-key01.test",
+        "-test.v",
+        "-test.run",
+        "^TestOwnedTRFinalFixtureManifestAndRoute$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T00:47:54.143840+00:00",
+      "scratch_free": 47282438144,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T00:47:54.416017+00:00",
+      "scratch_free": 47281610752,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T00:47:54.928937+00:00",
+      "scratch_free": 47274434560,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 1933,
+  "program_sha256": "a3b7bb46edeb9a0648e850610e0208518a1d5e36e53f8260f97ff01d544ed197",
+  "root_passes": [
+    "TestOwnedTRFinalFixtureManifestAndRoute"
+  ],
+  "ended": "2026-11-01T00:47:55.042377+00:00"
+}

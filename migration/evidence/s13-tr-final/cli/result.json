@@ -1,0 +1,884 @@
+{
+  "status": "PASS",
+  "kind": "S13 final TR normal host / installed SDK / fixed owned HTTP protocol",
+  "calls": [
+    {
+      "at": "2026-11-01T00:50:13.012302+00:00",
+      "host_pid": 25,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 51291.913830074,
+      "status": 200,
+      "raw_file": "response-001.body",
+      "sha256": "d895222f5bfbfd3c6e8322ddad4192b78916fc92ff53d5c2f2419974fdb6553e",
+      "ended_monotonic": 51291.914827397
+    },
+    {
+      "at": "2026-11-01T00:50:13.014335+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 51291.915862698,
+      "status": 200,
+      "private_headers_body_not_retained": true,
+      "ended_monotonic": 51291.987223869
+    },
+    {
+      "at": "2026-11-01T00:50:13.086971+00:00",
+      "host_pid": 25,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 51291.98849849,
+      "status": 200,
+      "raw_file": "response-003.body",
+      "sha256": "d3b22074b4fa9dec8030d3f5916ba431211e5d5c14659ec4bc8b7457b1175cc2",
+      "ended_monotonic": 51291.990162559
+    },
+    {
+      "at": "2026-11-01T00:50:13.089650+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/plugins/install",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 51291.991176127,
+      "status": 200,
+      "raw_file": "response-004.body",
+      "sha256": "bb4f41340f84e090c42272ccd462380bf64c0cde627cfceed9453eba926c8117",
+      "ended_monotonic": 51292.050676744
+    },
+    {
+      "at": "2026-11-01T00:50:13.150448+00:00",
+      "host_pid": 25,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedTRFinal/tr-final",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 51292.051974781,
+      "status": 405,
+      "raw_file": "response-005.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "ended_monotonic": 51292.052824351
+    },
+    {
+      "at": "2026-11-01T00:50:13.152590+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTRFinal/tr-final",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 51292.05411715,
+      "status": 200,
+      "raw_file": "response-006.body",
+      "sha256": "400cbc5ffada6ba4ad18039ff30350324e2783e90825a551aa814fc5a413ef39",
+      "ended_monotonic": 51292.058782924
+    },
+    {
+      "at": "2026-11-01T00:50:13.164122+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTRFinal/tr-final",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 51292.065647832,
+      "status": 200,
+      "raw_file": "response-007.body",
+      "sha256": "9df92ed4f1c4eef19f015051e4a54d6765596cf291a5fd5764a0b844af798cdd",
+      "ended_monotonic": 51292.071139761
+    },
+    {
+      "at": "2026-11-01T00:50:13.175176+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTRFinal/tr-final",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 51292.076702416,
+      "status": 200,
+      "raw_file": "response-008.body",
+      "sha256": "26f078666fc512b1aadede43bec3950a6bb24f63bd68d65f94e587bd37ec6c40",
+      "ended_monotonic": 51292.079662618
+    },
+    {
+      "at": "2026-11-01T00:50:13.183358+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTRFinal/tr-final",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 51292.08488493,
+      "status": 200,
+      "raw_file": "response-009.body",
+      "sha256": "da4fcc784924d6dba1b472e0f54dc2578e58954c3463de764120acecf6446ddb",
+      "ended_monotonic": 51292.088121389
+    },
+    {
+      "at": "2026-11-01T00:50:13.192299+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTRFinal/tr-final",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 51292.093825498,
+      "status": 200,
+      "raw_file": "response-010.body",
+      "sha256": "576e7be2c794f294510dd4d33759a23b1decefe6ed26ac333f435ff6eb878729",
+      "ended_monotonic": 51292.102267283
+    },
+    {
+      "at": "2026-11-01T00:50:13.206315+00:00",
+      "host_pid": 25,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTRFinal/tr-final",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 51292.107842227,
+      "status": 200,
+      "raw_file": "response-011.body",
+      "sha256": "e993a4c5548989b923d82b083be2badc94824b02a7c9dafc3f87c770234b6198",
+      "ended_monotonic": 51292.113061359
+    },
+    {
+      "at": "2026-11-01T00:50:13.406777+00:00",
+      "host_pid": 58,
+      "method": "GET",
+      "path": "/healthz",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 51292.308303921,
+      "status": 200,
+      "raw_file": "response-012.body",
+      "sha256": "bba880198a72127074f8f3f8b2e56d80e0e384a09e2b63d95b14622e5ae833b1",
+      "ended_monotonic": 51292.309055825
+    },
+    {
+      "at": "2026-11-01T00:50:13.408610+00:00",
+      "host_pid": 58,
+      "method": "POST",
+      "path": "/api/auth/login",
+      "authenticated": false,
+      "timeout_seconds": 30,
+      "started_monotonic": 51292.310135152,
+      "status": 200,
+      "private_headers_body_not_retained": true,
+      "ended_monotonic": 51292.373105475
+    },
+    {
+      "at": "2026-11-01T00:50:13.472968+00:00",
+      "host_pid": 58,
+      "method": "GET",
+      "path": "/api/plugins/markets",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 51292.374494939,
+      "status": 200,
+      "raw_file": "response-014.body",
+      "sha256": "58f270afdd4e64a25ede01e23be4aa463c320645eb00f493b4f00697bca46cbb",
+      "ended_monotonic": 51292.375829361
+    },
+    {
+      "at": "2026-11-01T00:50:13.475762+00:00",
+      "host_pid": 58,
+      "method": "GET",
+      "path": "/api/v1/plugin/OwnedTRFinal/tr-final",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 51292.37728853,
+      "status": 405,
+      "raw_file": "response-015.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "ended_monotonic": 51292.378318253
+    },
+    {
+      "at": "2026-11-01T00:50:13.477871+00:00",
+      "host_pid": 58,
+      "method": "POST",
+      "path": "/api/v1/plugin/OwnedTRFinal/tr-final",
+      "authenticated": true,
+      "timeout_seconds": 30,
+      "started_monotonic": 51292.379396648,
+      "status": 200,
+      "raw_file": "response-016.body",
+      "sha256": "9b9891a499d4c9e9e109a03c0475f64132997fecad6cf006fa29742473ed5ce0",
+      "ended_monotonic": 51292.385108859
+    }
+  ],
+  "peer_calls": [
+    {
+      "method": "GET",
+      "path": "/index",
+      "request_body_bytes": 0,
+      "at": "2026-11-01T00:50:13.090966+00:00",
+      "status": 200,
+      "response_bytes": 1068,
+      "reply_monotonic": 51291.992491325,
+      "response_completed": true,
+      "completed_monotonic": 51291.992586508
+    },
+    {
+      "method": "GET",
+      "path": "/worker",
+      "request_body_bytes": 0,
+      "at": "2026-11-01T00:50:13.091922+00:00",
+      "status": 200,
+      "response_bytes": 5310811,
+      "reply_monotonic": 51291.993447481,
+      "response_completed": true,
+      "completed_monotonic": 51291.9952642
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "phase": "tags",
+      "request_body_bytes": 39,
+      "rpc_method": "session-get",
+      "arguments": {},
+      "at": "2026-11-01T00:50:13.154635+00:00",
+      "status": 200,
+      "response_bytes": 55,
+      "reply_monotonic": 51292.056160866,
+      "response_completed": true,
+      "completed_monotonic": 51292.056233115
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "phase": "tags",
+      "request_body_bytes": 100,
+      "rpc_method": "torrent-set",
+      "arguments": {
+        "ids": [
+          7
+        ],
+        "labels": [
+          "owned-old",
+          "owned-retained",
+          "owned-new"
+        ]
+      },
+      "selected_operation": "labels",
+      "label_sequence_not_normalized": [
+        "owned-old",
+        "owned-retained",
+        "owned-new"
+      ],
+      "at": "2026-11-01T00:50:13.155457+00:00",
+      "status": 200,
+      "response_bytes": 38,
+      "reply_monotonic": 51292.056982044,
+      "response_completed": true,
+      "completed_monotonic": 51292.05726436
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "phase": "limits",
+      "request_body_bytes": 39,
+      "rpc_method": "session-get",
+      "arguments": {},
+      "at": "2026-11-01T00:50:13.166659+00:00",
+      "status": 200,
+      "response_bytes": 55,
+      "reply_monotonic": 51292.068184761,
+      "response_completed": true,
+      "completed_monotonic": 51292.068248708
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "phase": "limits",
+      "request_body_bytes": 243,
+      "rpc_method": "torrent-set",
+      "arguments": {
+        "downloadLimit": -4,
+        "downloadLimited": true,
+        "ids": [
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ],
+        "seedIdleLimit": 0,
+        "seedIdleMode": 2,
+        "seedRatioLimit": 2.67,
+        "seedRatioMode": 1,
+        "uploadLimit": 0,
+        "uploadLimited": true
+      },
+      "selected_operation": "limits",
+      "at": "2026-11-01T00:50:13.167797+00:00",
+      "status": 200,
+      "response_bytes": 38,
+      "reply_monotonic": 51292.069322506,
+      "response_completed": true,
+      "completed_monotonic": 51292.069378641
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "phase": "failure-recovery",
+      "request_body_bytes": 39,
+      "rpc_method": "session-get",
+      "arguments": {},
+      "at": "2026-11-01T00:50:13.194948+00:00",
+      "status": 200,
+      "response_bytes": 55,
+      "reply_monotonic": 51292.09647392,
+      "response_completed": true,
+      "completed_monotonic": 51292.096579059
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "phase": "failure-recovery",
+      "request_body_bytes": 243,
+      "rpc_method": "torrent-set",
+      "arguments": {
+        "downloadLimit": -4,
+        "downloadLimited": true,
+        "ids": [
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ],
+        "seedIdleLimit": 0,
+        "seedIdleMode": 2,
+        "seedRatioLimit": 2.67,
+        "seedRatioMode": 1,
+        "uploadLimit": 0,
+        "uploadLimited": true
+      },
+      "selected_operation": "limits_unknown500",
+      "at": "2026-11-01T00:50:13.196073+00:00",
+      "status": 500,
+      "response_bytes": 17,
+      "reply_monotonic": 51292.09759836,
+      "response_completed": true,
+      "completed_monotonic": 51292.09765808
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "phase": "failure-recovery",
+      "request_body_bytes": 39,
+      "rpc_method": "session-get",
+      "arguments": {},
+      "at": "2026-11-01T00:50:13.197950+00:00",
+      "status": 200,
+      "response_bytes": 55,
+      "reply_monotonic": 51292.099476732,
+      "response_completed": true,
+      "completed_monotonic": 51292.099536793
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "phase": "failure-recovery",
+      "request_body_bytes": 243,
+      "rpc_method": "torrent-set",
+      "arguments": {
+        "downloadLimit": -4,
+        "downloadLimited": true,
+        "ids": [
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ],
+        "seedIdleLimit": 0,
+        "seedIdleMode": 2,
+        "seedRatioLimit": 2.67,
+        "seedRatioMode": 1,
+        "uploadLimit": 0,
+        "uploadLimited": true
+      },
+      "selected_operation": "limits",
+      "at": "2026-11-01T00:50:13.198950+00:00",
+      "status": 200,
+      "response_bytes": 38,
+      "reply_monotonic": 51292.100474906,
+      "response_completed": true,
+      "completed_monotonic": 51292.100538102
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "phase": "after-failure",
+      "request_body_bytes": 39,
+      "rpc_method": "session-get",
+      "arguments": {},
+      "at": "2026-11-01T00:50:13.208255+00:00",
+      "status": 200,
+      "response_bytes": 55,
+      "reply_monotonic": 51292.109780584,
+      "response_completed": true,
+      "completed_monotonic": 51292.1098514
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "phase": "after-failure",
+      "request_body_bytes": 100,
+      "rpc_method": "torrent-set",
+      "arguments": {
+        "ids": [
+          7
+        ],
+        "labels": [
+          "owned-old",
+          "owned-retained",
+          "owned-new"
+        ]
+      },
+      "selected_operation": "labels",
+      "label_sequence_not_normalized": [
+        "owned-old",
+        "owned-retained",
+        "owned-new"
+      ],
+      "at": "2026-11-01T00:50:13.209156+00:00",
+      "status": 200,
+      "response_bytes": 38,
+      "reply_monotonic": 51292.110681281,
+      "response_completed": true,
+      "completed_monotonic": 51292.110736675
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "phase": "cold",
+      "request_body_bytes": 39,
+      "rpc_method": "session-get",
+      "arguments": {},
+      "at": "2026-11-01T00:50:13.480701+00:00",
+      "status": 200,
+      "response_bytes": 55,
+      "reply_monotonic": 51292.382234561,
+      "response_completed": true,
+      "completed_monotonic": 51292.382333731
+    },
+    {
+      "method": "POST",
+      "path": "/transmission/rpc",
+      "phase": "cold",
+      "request_body_bytes": 243,
+      "rpc_method": "torrent-set",
+      "arguments": {
+        "downloadLimit": -4,
+        "downloadLimited": true,
+        "ids": [
+          "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        ],
+        "seedIdleLimit": 0,
+        "seedIdleMode": 2,
+        "seedRatioLimit": 2.67,
+        "seedRatioMode": 1,
+        "uploadLimit": 0,
+        "uploadLimited": true
+      },
+      "selected_operation": "limits",
+      "at": "2026-11-01T00:50:13.481813+00:00",
+      "status": 200,
+      "response_bytes": 38,
+      "reply_monotonic": 51292.383338686,
+      "response_completed": true,
+      "completed_monotonic": 51292.383393929
+    }
+  ],
+  "processes": [
+    {
+      "pid": 25,
+      "identity": {
+        "ppid": 6,
+        "starttime": "5129173"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-tr-final-normal01/private-data",
+      "executable_sha256": "4eb819e1e03e5e04fd8affeca2b8961fb85288aa711a8ee41e3400cc69dd1ba3",
+      "owned_listener_inode": "952953",
+      "exit": 0
+    },
+    {
+      "pid": 58,
+      "identity": {
+        "ppid": 6,
+        "starttime": "5129212"
+      },
+      "normal_not_safe": true,
+      "same_private_data": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-tr-final-normal01/private-data",
+      "executable_sha256": "4eb819e1e03e5e04fd8affeca2b8961fb85288aa711a8ee41e3400cc69dd1ba3",
+      "owned_listener_inode": "956154",
+      "exit": 0
+    }
+  ],
+  "queries": [
+    {
+      "label": "original_tag_set_and_low_version_warning",
+      "host_pid": 25,
+      "phase": "tags",
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 1,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "transmission",
+            "op": "set_tags",
+            "downloader_id": "owned-tr-final-tr",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 146,
+              "output_json_bytes": 14
+            }
+          }
+        ]
+      },
+      "selected_delta": {
+        "labels": 1
+      },
+      "peer_entry_start": 2,
+      "peer_entry_end": 4
+    },
+    {
+      "label": "original_truth_before_conversion_and_rounding",
+      "host_pid": 25,
+      "phase": "limits",
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 2,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "transmission",
+            "op": "change",
+            "downloader_id": "owned-tr-final-tr",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 190,
+              "output_json_bytes": 14
+            }
+          }
+        ]
+      },
+      "selected_delta": {
+        "limits": 1
+      },
+      "peer_entry_start": 4,
+      "peer_entry_end": 6
+    },
+    {
+      "label": "outside_try_ValueError_zero_HTTP",
+      "host_pid": 25,
+      "phase": "invalid",
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 3,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 0,
+        "failed": 1,
+        "ok": false,
+        "results": [
+          {
+            "index": 0,
+            "kind": "transmission",
+            "op": "change",
+            "downloader_id": "owned-tr-final-tr",
+            "ok": false,
+            "error_code": "source_exception",
+            "source_error": "ValueError",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 206,
+              "output_json_bytes": 51
+            }
+          }
+        ]
+      },
+      "selected_delta": {},
+      "peer_entry_start": 6,
+      "peer_entry_end": 6
+    },
+    {
+      "label": "native_noargs_caught_false_zero_HTTP",
+      "host_pid": 25,
+      "phase": "none",
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 4,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "transmission",
+            "op": "change",
+            "downloader_id": "owned-tr-final-tr",
+            "ok": true,
+            "result": false,
+            "result_kind": "source_bool",
+            "source_truthy": false,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 195,
+              "output_json_bytes": 15
+            }
+          }
+        ]
+      },
+      "selected_delta": {},
+      "peer_entry_start": 6,
+      "peer_entry_end": 6
+    },
+    {
+      "label": "selected500_unknown_then_same_invocation_recovery",
+      "host_pid": 25,
+      "phase": "failure-recovery",
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 5,
+        "requested": 2,
+        "completed": 2,
+        "succeeded": 1,
+        "failed": 1,
+        "ok": false,
+        "results": [
+          {
+            "index": 0,
+            "kind": "transmission",
+            "op": "change",
+            "downloader_id": "owned-tr-final-tr",
+            "ok": false,
+            "error_code": "host_operation_failed",
+            "host_calls": {
+              "total": 1,
+              "succeeded": 0,
+              "failed": 1,
+              "input_json_bytes": 190,
+              "output_json_bytes": 0
+            }
+          },
+          {
+            "index": 1,
+            "kind": "transmission",
+            "op": "change",
+            "downloader_id": "owned-tr-final-tr",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 190,
+              "output_json_bytes": 14
+            }
+          }
+        ]
+      },
+      "selected_delta": {
+        "limits_unknown500": 1,
+        "limits": 1
+      },
+      "peer_entry_start": 6,
+      "peer_entry_end": 10
+    },
+    {
+      "label": "next_call_same_worker_recovery",
+      "host_pid": 25,
+      "phase": "after-failure",
+      "response": {
+        "pid": 42,
+        "init_count": 1,
+        "invocation": 6,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "transmission",
+            "op": "set_tags",
+            "downloader_id": "owned-tr-final-tr",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 146,
+              "output_json_bytes": 14
+            }
+          }
+        ]
+      },
+      "selected_delta": {
+        "labels": 1
+      },
+      "peer_entry_start": 10,
+      "peer_entry_end": 12
+    },
+    {
+      "label": "cold_same_DB_new_worker_limits",
+      "host_pid": 58,
+      "phase": "cold",
+      "response": {
+        "pid": 72,
+        "init_count": 1,
+        "invocation": 1,
+        "requested": 1,
+        "completed": 1,
+        "succeeded": 1,
+        "failed": 0,
+        "ok": true,
+        "results": [
+          {
+            "index": 0,
+            "kind": "transmission",
+            "op": "change",
+            "downloader_id": "owned-tr-final-tr",
+            "ok": true,
+            "result": true,
+            "result_kind": "source_bool",
+            "source_truthy": true,
+            "host_calls": {
+              "total": 1,
+              "succeeded": 1,
+              "failed": 0,
+              "input_json_bytes": 190,
+              "output_json_bytes": 14
+            }
+          }
+        ]
+      },
+      "selected_delta": {
+        "limits": 1
+      },
+      "peer_entry_start": 12,
+      "peer_entry_end": 14
+    }
+  ],
+  "physical_plugin_wire_counters": {
+    "measured": false,
+    "available_from_ordinary_API": false
+  },
+  "measured_layers": [
+    "worker logical SDK callback counters",
+    "owned endpoint HTTP requests and entity-body bytes"
+  ],
+  "not_claimed": [
+    "real daemon/download/NAS",
+    "filesystem or data deletion",
+    "wall-clock behavior of a real downloader",
+    "browser/UI",
+    "full S13/platform/delivery"
+  ],
+  "bindings_sha256": "40adb43e343c9bc05ed1f42feab158c7fc8718ec50bad522a2a7c80f21e7bb4c",
+  "execution_environment": "inherited after coordinator grant marker; no proxy or startup rewrites",
+  "owned_peer_origin": "http://127.0.0.1:33699",
+  "bootstrap_exit": 0,
+  "worker_identities": [
+    {
+      "ppid": 25,
+      "starttime": "5129203",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-tr-final-normal01/private-data/plugin-packages/OwnedTRFinal/owned-tr-final-fixture",
+      "executable_sha256": "c5759a06729cd3947bc6efa2e52931a343b8856cecc7519f81e704530ccd8ec0",
+      "host_pid": 25
+    },
+    {
+      "ppid": 25,
+      "starttime": "5129203",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-tr-final-normal01/private-data/plugin-packages/OwnedTRFinal/owned-tr-final-fixture",
+      "executable_sha256": "c5759a06729cd3947bc6efa2e52931a343b8856cecc7519f81e704530ccd8ec0",
+      "host_pid": 25
+    },
+    {
+      "ppid": 25,
+      "starttime": "5129203",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-tr-final-normal01/private-data/plugin-packages/OwnedTRFinal/owned-tr-final-fixture",
+      "executable_sha256": "c5759a06729cd3947bc6efa2e52931a343b8856cecc7519f81e704530ccd8ec0",
+      "host_pid": 25
+    },
+    {
+      "ppid": 25,
+      "starttime": "5129203",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-tr-final-normal01/private-data/plugin-packages/OwnedTRFinal/owned-tr-final-fixture",
+      "executable_sha256": "c5759a06729cd3947bc6efa2e52931a343b8856cecc7519f81e704530ccd8ec0",
+      "host_pid": 25
+    },
+    {
+      "ppid": 25,
+      "starttime": "5129203",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-tr-final-normal01/private-data/plugin-packages/OwnedTRFinal/owned-tr-final-fixture",
+      "executable_sha256": "c5759a06729cd3947bc6efa2e52931a343b8856cecc7519f81e704530ccd8ec0",
+      "host_pid": 25
+    },
+    {
+      "ppid": 25,
+      "starttime": "5129203",
+      "pid": 42,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-tr-final-normal01/private-data/plugin-packages/OwnedTRFinal/owned-tr-final-fixture",
+      "executable_sha256": "c5759a06729cd3947bc6efa2e52931a343b8856cecc7519f81e704530ccd8ec0",
+      "host_pid": 25
+    },
+    {
+      "ppid": 58,
+      "starttime": "5129229",
+      "pid": 72,
+      "executable": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-tr-final-normal01/private-data/plugin-packages/OwnedTRFinal/owned-tr-final-fixture",
+      "executable_sha256": "c5759a06729cd3947bc6efa2e52931a343b8856cecc7519f81e704530ccd8ec0",
+      "host_pid": 58
+    }
+  ],
+  "log_projection_sha256": "d18d203ac5e476e063da6a930cd29e1c2dfa562552ef5e936b2434be5e540f49",
+  "actual_endpoint_request_counts": {
+    "GET /index": 1,
+    "GET /worker": 1,
+    "POST /transmission/rpc": 12
+  },
+  "input_drift": [],
+  "environment_unchanged": true,
+  "finished_at": "2026-11-01T00:50:14.284688+00:00"
+}

@@ -1,0 +1,58 @@
+{
+  "status": "READY_STATIC_APP02_FOR_COORDINATOR_INTEGRATION_AND_BOUNDED_GATE_NOT_EXECUTED",
+  "at": "2026-11-01T00:43:02.297472+00:00",
+  "candidate_sha256": "50a6d0117eece06b3f1e53ba364fe027a0147902562487cbb87bc078a60cb123",
+  "product_sha256": "9feed834c112e25b51805cd74d9066871ba26cef9c882006f2220f970abd078b",
+  "test_sha256": "8dc0d831b9c78c5c2aa4ccca9d267cebed77618512dc34ad9f47422cfde7afdc",
+  "resource_patch_sha256": "67492ad5f6ade6e7f1ec5901d4e990ea939ac1a1b03ef5c0f0ebcefdfe3dc23d",
+  "resource_memory_applied_sha256": "29fec5fb012a75129336a236b882640df9da9d56f52a01dc8a6689b4f40c7c9f",
+  "all_bound_candidate_and_source_inputs_equal": true,
+  "prior01_retained_equal": true,
+  "existing_seven_inputs_equal": true,
+  "new_target_paths_absent": true,
+  "closed_finding": {
+    "id": "APP-TR-WARNING-LEVEL-01",
+    "change": "Only new App trusted Log closure maps source WARNING to platform WARN. Same existing root configures WARN threshold and requires persisted WARN/message/plugin/call/phase. Native source level and global logger untouched."
+  },
+  "accepted_scope": [
+    "exact two ordinary resource capabilities and precise required fields; inherited strict framing, UseNumber,128KiB bound",
+    "host-selected exact configured TR identity and snapshot; no endpoint/credential/fallback from wire",
+    "admission and wg lifetime; fixed factory; guard before/after factory/leaf/marshal; Close deferred even factory error",
+    "bool-only source success/False, direct-only change ValueError envelope; no wrapped/native/owner/cancel/unknown downgrade",
+    "resource in-memory patch exact two hooks, unchanged old routes and methods",
+    "two component roots distinguish fake-port source wrapper layer versus real factory ownedHTTP/native layer, current config revocation and finite callback counts, no real daemon/file effect",
+    "trusted existing log attribution and WARN severity preserved by bounded correction"
+  ],
+  "tests_pending": [
+    "TestOriginalTRFinalHostWireAndSourceEnvelope",
+    "TestOriginalTRFinalHostScopeAndUnknown"
+  ],
+  "no_fixture_env_or_source_execution": true,
+  "independence": "Reviewer did not author App/SDK/leaf/test. Reviewer authored native: no independent native semantics claim; native reviewed separately by tls.",
+  "evidence": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-app/candidate02.json",
+      "sha256": "50a6d0117eece06b3f1e53ba364fe027a0147902562487cbb87bc078a60cb123"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-app/candidate01.json",
+      "sha256": "da4a2214a9d8091e9e1cdfb43e971ba632950caa77c112448359fc22e3022250"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-app-independent/candidate01-static.json",
+      "sha256": "5599b16e6f07a1b1777af400588c3bbdc26fca5ce2d5a27601e82b4674c901e4"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_shared_downloader_commands.go",
+      "sha256": "decad941135e41ed408cbfa94dc3bdbf2217b909f35922f9554be295b2a7d9a8"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_logs.go",
+      "sha256": "db7e2964045a83065b7ced76f9aea4891eddb36890a29617c312fbdd8b2a7ab2"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/logs_runtime.go",
+      "sha256": "e9cf4b0a4fc940b02bb5b615dadcdbcd8ac8e5662cebeaa169fe660d632029f9"
+    }
+  ]
+}

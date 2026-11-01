@@ -1,0 +1,70 @@
+{
+  "decision": "ACCEPT_FINITE_NORMAL_AND_RACE_COMPONENTS",
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-native-independent/NORMAL-RACE01-REVIEW.md",
+      "bytes": 5841,
+      "sha256": "740938b5c432b06cd716582ad69494f510d241ac820d62fca2cc6d0dcb0a3c27"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-native-independent/normal01-actual-readback.json",
+      "bytes": 26517,
+      "sha256": "f47164a83eb04d68714f887adf4cdf7c074dec30ed8b3411c60fad7343ff27a5"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-native-independent/race01-actual-readback.json",
+      "bytes": 25895,
+      "sha256": "e9c9298a5ebd10fc6ad275f5570da15987b5372b7174f7dcbef9d6f75a18d3b0"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-native-independent/candidate01-static-seal.json",
+      "bytes": 1248,
+      "sha256": "e31b86f44e7efc6686ca6b83a674e314b41bc2d5d4a2c348e22b26fb070ceef2"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-source-independent/source01-final.json",
+      "bytes": 2937,
+      "sha256": "834916129067ee20a776411b2a4446db52751f0fda01e26ba68c7c5d2de5b5b8"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-integration/integration01.json",
+      "bytes": 4576,
+      "sha256": "079f6c87ada7e6137e6beabe2745004c0d276104a916b322463a6c53331246e4"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-integration/SDK-LEAF-INDEPENDENT.json",
+      "bytes": 1428,
+      "sha256": "a67338757829df56a96425de0272a74f0dba263071164a2e2054a88aff7d3ab7"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-app-independent/candidate02-static-final.json",
+      "bytes": 3716,
+      "sha256": "20e0cbd9430926b6708ec7fa0333a6113bc34ce412cd14a951234a735c364a36"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-app-independent/candidate02-seal.json",
+      "bytes": 590,
+      "sha256": "726018344798a020fd2c5042786b03961f656b5bce2614addf4cc2be09c9d41a"
+    }
+  ],
+  "executed_roots_each_mode": {
+    "leaf": 2,
+    "SDK": 2,
+    "native_new": 3,
+    "native_affected_old": 3,
+    "App_component": 2
+  },
+  "each_gate_input_and_program_drift": [],
+  "normal_source_cases": 23,
+  "race_source_cases": 23,
+  "no_skip_or_race_warning": true,
+  "reviewer_reexecuted_tests": false,
+  "not_claimed": [
+    "installed SDK worker",
+    "normal CLI",
+    "real downloader daemon",
+    "full S13",
+    "identical label wire ordering"
+  ],
+  "next_step": "Independent ordinary installed-worker/server gate under separately frozen bindings."
+}

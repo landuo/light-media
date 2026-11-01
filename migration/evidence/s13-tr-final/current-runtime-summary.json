@@ -1,0 +1,93 @@
+{
+  "actual_results": [
+    {
+      "label": "leaf01",
+      "input_count": 1775,
+      "root_passes": [
+        "TestTRFinalLeafActualSourceObservations",
+        "TestTRFinalLeafBoundariesAndOwnership"
+      ],
+      "program_sha256": "ea14dc51bd8cd49cce6729f76f7bc5d1abf7b11c014e4a0fb1a6ac85d3afaa01"
+    },
+    {
+      "label": "sdk01",
+      "input_count": 1935,
+      "root_passes": [
+        "TestSharedTRFinalWireAndSourceErrors",
+        "TestSharedTRFinalStrictBoundaryAndNoReplay"
+      ],
+      "program_sha256": "c2ffa51089ca1a5005d12078186ad844446c336eef6f579f7d56f58911564f84"
+    },
+    {
+      "label": "native01",
+      "input_count": 2620,
+      "root_passes": [
+        "TestSharedDownloaderCommandTRControls",
+        "TestSharedDownloaderCommandTRAdd",
+        "TestSharedDownloaderFourTRStopSelectors",
+        "TestSharedTransmissionFinalWireAndWarning",
+        "TestSharedTransmissionFinalValidationAndUnknown",
+        "TestSharedTransmissionFinalActualLeaf"
+      ],
+      "program_sha256": "9a27f0ccae3ddd0c9ca9a9d4e0c6342b4fa91c903c5728006e7733891a4306c2"
+    },
+    {
+      "label": "app01",
+      "input_count": 6243,
+      "root_passes": [
+        "TestOriginalTRFinalHostWireAndSourceEnvelope",
+        "TestOriginalTRFinalHostScopeAndUnknown"
+      ],
+      "program_sha256": "131df58aa7a1d870cc76d75247ddf37a8542887bcd5eb75015fcf84b34fcdc57"
+    },
+    {
+      "label": "leaf-race01",
+      "input_count": 1812,
+      "root_passes": [
+        "TestTRFinalLeafActualSourceObservations",
+        "TestTRFinalLeafBoundariesAndOwnership"
+      ],
+      "program_sha256": "83b4d1b382409b1b44f1558fcec8f53387524638a351ff848546cca94f2eed8a"
+    },
+    {
+      "label": "sdk-race01",
+      "input_count": 1972,
+      "root_passes": [
+        "TestSharedTRFinalWireAndSourceErrors",
+        "TestSharedTRFinalStrictBoundaryAndNoReplay"
+      ],
+      "program_sha256": "ef62b940cb4773ff787edb77013bc2c4797786278442df5c965d3464d095dd75"
+    },
+    {
+      "label": "native-race01",
+      "input_count": 2628,
+      "root_passes": [
+        "TestSharedDownloaderCommandTRControls",
+        "TestSharedDownloaderCommandTRAdd",
+        "TestSharedDownloaderFourTRStopSelectors",
+        "TestSharedTransmissionFinalWireAndWarning",
+        "TestSharedTransmissionFinalValidationAndUnknown",
+        "TestSharedTransmissionFinalActualLeaf"
+      ],
+      "program_sha256": "fde6319c6bebaadb0b3afe3103b54d4cf46290fa32985a00adfa88aba216cf58"
+    },
+    {
+      "label": "app-race01",
+      "input_count": 6252,
+      "root_passes": [
+        "TestOriginalTRFinalHostWireAndSourceEnvelope",
+        "TestOriginalTRFinalHostScopeAndUnknown"
+      ],
+      "program_sha256": "48c4afcde3c75de129dc50000edee1e7ecf775f0a728a651fe3118baced8a98b"
+    },
+    {
+      "label": "fixture-key01",
+      "input_count": 1933,
+      "root_passes": [
+        "TestOwnedTRFinalFixtureManifestAndRoute"
+      ],
+      "program_sha256": "a3b7bb46edeb9a0648e850610e0208518a1d5e36e53f8260f97ff01d544ed197"
+    }
+  ],
+  "not_claimed": "actual normal CLI not yet run; notfull S13/daemon/UI/remote"
+}

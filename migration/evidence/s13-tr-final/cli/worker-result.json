@@ -1,0 +1,49 @@
+{
+  "at": "2026-11-01T00:47:55.085743+00:00",
+  "status": "PASS",
+  "kind": "normal owned S13 final-TR fixture; SDK HostCaller only, no worker localfilesystem/network/daemon; compile only",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-json",
+        "./cmd/owned-tr-final-fixture"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "build",
+      "argv": [
+        "go",
+        "build",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-final-fixture01",
+        "./cmd/owned-tr-final-fixture"
+      ],
+      "exit": 0
+    }
+  ],
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "scratch_free": 47274000384,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "build",
+      "scratch_free": 47273439232,
+      "tmp_free": 5225566208
+    }
+  ],
+  "input_count": 1089,
+  "program_sha256": "c5759a06729cd3947bc6efa2e52931a343b8856cecc7519f81e704530ccd8ec0",
+  "ended": "2026-11-01T00:47:55.616048+00:00"
+}

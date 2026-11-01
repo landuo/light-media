@@ -1,0 +1,91 @@
+{
+  "started": "2026-11-01T00:46:35.001894+00:00",
+  "driver_pid": 203,
+  "package": "./internal/plugins/iyuuautoseed/native",
+  "pattern": "^(TestSharedTransmissionFinalWireAndWarning|TestSharedTransmissionFinalValidationAndUnknown|TestSharedTransmissionFinalActualLeaf|TestSharedDownloaderFourTRStopSelectors|TestSharedDownloaderCommandTRControls|TestSharedDownloaderCommandTRAdd)$",
+  "race": true,
+  "status": "PASS",
+  "commands": [
+    {
+      "label": "go-list",
+      "argv": [
+        "go",
+        "list",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-deps",
+        "-test",
+        "-json",
+        "-race",
+        "./internal/plugins/iyuuautoseed/native"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "compile",
+      "argv": [
+        "go",
+        "test",
+        "-mod=readonly",
+        "-buildvcs=false",
+        "-p=1",
+        "-c",
+        "-o",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-final-native-race01.test",
+        "-race",
+        "./internal/plugins/iyuuautoseed/native"
+      ],
+      "exit": 0
+    },
+    {
+      "label": "tests",
+      "argv": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "./internal/plugins/iyuuautoseed/native",
+        "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-final-native-race01.test",
+        "-test.v",
+        "-test.run",
+        "^(TestSharedTransmissionFinalWireAndWarning|TestSharedTransmissionFinalValidationAndUnknown|TestSharedTransmissionFinalActualLeaf|TestSharedDownloaderFourTRStopSelectors|TestSharedDownloaderCommandTRControls|TestSharedDownloaderCommandTRAdd)$",
+        "-test.count=1",
+        "-test.timeout=90s"
+      ],
+      "exit": 0
+    }
+  ],
+  "environment_proxy_unchanged": true,
+  "resource_samples": [
+    {
+      "phase": "go-list",
+      "at": "2026-11-01T00:46:35.001910+00:00",
+      "scratch_free": 47561342976,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "compile",
+      "at": "2026-11-01T00:46:35.405364+00:00",
+      "scratch_free": 47560122368,
+      "tmp_free": 5225615360
+    },
+    {
+      "phase": "tests",
+      "at": "2026-11-01T00:46:40.137018+00:00",
+      "scratch_free": 47529869312,
+      "tmp_free": 5225615360
+    }
+  ],
+  "input_count": 2628,
+  "program_sha256": "fde6319c6bebaadb0b3afe3103b54d4cf46290fa32985a00adfa88aba216cf58",
+  "root_passes": [
+    "TestSharedDownloaderCommandTRControls",
+    "TestSharedDownloaderCommandTRAdd",
+    "TestSharedDownloaderFourTRStopSelectors",
+    "TestSharedTransmissionFinalWireAndWarning",
+    "TestSharedTransmissionFinalValidationAndUnknown",
+    "TestSharedTransmissionFinalActualLeaf"
+  ],
+  "ended": "2026-11-01T00:46:41.389129+00:00"
+}

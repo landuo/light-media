@@ -1,0 +1,384 @@
+{
+  "status": "ACCEPT_FINITE_ACTUAL_ORDINARY_TR_TWO_METHOD_SLICE",
+  "reviewed_at": "2026-11-01T00:55:18.452326+00:00",
+  "reviewer": "tls_ab_independent; non-author of products and driver",
+  "actions": "Static source/driver reading and local artifact SHA/JSON readback only; no product/test/source/vendor execution, HTTP, Go, process probing, DB reading or product mutation. Exact owned persisted app log read for projection comparison only.",
+  "execution_provenance": {
+    "disk_receipt": {
+      "path": "audits/s13-tr-final-normal-cli01/actual-execution-receipt.json",
+      "sha256": "8b6df62c3aeeb30e7dec0763d31cac161b32dfc7eb4fe502724e37fcb186f054",
+      "bytes": 1255
+    },
+    "outer_tool_reference_from_coordinator_message_only": {
+      "session": 65003,
+      "initial": "af9ab3",
+      "terminal": "995f5f",
+      "exit": 0
+    },
+    "disk_receipt_has_outer_tool_ids": false
+  },
+  "frozen_inputs": {
+    "declared_count": 3999,
+    "current_verified_count": 3999,
+    "drift": [],
+    "bindings": {
+      "path": "audits/s13-tr-final-normal-cli01/execution-bindings.json",
+      "sha256": "40adb43e343c9bc05ed1f42feab158c7fc8718ec50bad522a2a7c80f21e7bb4c",
+      "bytes": 1045658
+    },
+    "all_build_maps_verified": [
+      {
+        "gate": "s13-tr-final-server01",
+        "input_count": 3986,
+        "phases_equal": true,
+        "current_hash_drift": [],
+        "program": {
+          "path": "runtime/s13-tr-final-server01",
+          "sha256": "4eb819e1e03e5e04fd8affeca2b8961fb85288aa711a8ee41e3400cc69dd1ba3",
+          "bytes": 75224466
+        },
+        "result": {
+          "path": "evidence/s13-tr-final-server01/result.json",
+          "sha256": "b1d11839d56ee50e03b4653cd054dfd0566e1e451d18277a83684a14262439af",
+          "bytes": 1124
+        },
+        "input_map": {
+          "path": "evidence/s13-tr-final-server01/inputs-before.json",
+          "sha256": "5da83d1efd11afbb89bf39833e1fe7570e88394ddad2c5cd83c181082dfd8d09",
+          "bytes": 954069
+        },
+        "tool_receipt": {
+          "path": "evidence/s13-tr-final-server01/tool-receipt.json",
+          "sha256": "5e78c88a392b1bd1efe327dc906d5f13d0387c6494c244b167a932b255a83f0d",
+          "bytes": 93
+        },
+        "all_build_inputs_in_3999_bindings": true
+      },
+      {
+        "gate": "s13-tr-final-fixture01",
+        "input_count": 1089,
+        "phases_equal": true,
+        "current_hash_drift": [],
+        "program": {
+          "path": "runtime/s13-tr-final-fixture01",
+          "sha256": "c5759a06729cd3947bc6efa2e52931a343b8856cecc7519f81e704530ccd8ec0",
+          "bytes": 5310811
+        },
+        "result": {
+          "path": "evidence/s13-tr-final-fixture01/result.json",
+          "sha256": "96027535302121631d97ff3d75c7e2108108b3bb97ff40f3c0f9929c1d6f82e4",
+          "bytes": 1179
+        },
+        "input_map": {
+          "path": "evidence/s13-tr-final-fixture01/inputs-before.json",
+          "sha256": "906a600e545b64ebf4ca2d1db8e09d77a505fee2e1d476810ec96c5501a01f79",
+          "bytes": 235397
+        },
+        "tool_receipt": {
+          "path": "evidence/s13-tr-final-fixture01/tool-receipt.json",
+          "sha256": "5e78c88a392b1bd1efe327dc906d5f13d0387c6494c244b167a932b255a83f0d",
+          "bytes": 93
+        },
+        "all_build_inputs_in_3999_bindings": true
+      },
+      {
+        "gate": "s13-tr-final-fixture-key01",
+        "input_count": 1933,
+        "phases_equal": true,
+        "current_hash_drift": [],
+        "program": {
+          "path": "runtime/s13-tr-final-fixture-key01.test",
+          "sha256": "a3b7bb46edeb9a0648e850610e0208518a1d5e36e53f8260f97ff01d544ed197",
+          "bytes": 6103183
+        },
+        "result": {
+          "path": "evidence/s13-tr-final-fixture-key01/result.json",
+          "sha256": "000092d35f873d06473ce5639be5783f9a3be3c76aacb4db8645ed6725f6ccd3",
+          "bytes": 2061
+        },
+        "input_map": {
+          "path": "evidence/s13-tr-final-fixture-key01/inputs-before.json",
+          "sha256": "80676f1b231d57e76b5409ea04258ea121cb954eacb623c98a5bbe7e2d6c9635",
+          "bytes": 418299
+        },
+        "tool_receipt": {
+          "path": "evidence/s13-tr-final-fixture-key01/tool-receipt.json",
+          "sha256": "5e78c88a392b1bd1efe327dc906d5f13d0387c6494c244b167a932b255a83f0d",
+          "bytes": 93
+        },
+        "root_passes": [
+          "TestOwnedTRFinalFixtureManifestAndRoute"
+        ],
+        "raw_tests": {
+          "path": "evidence/s13-tr-final-fixture-key01/tests.stdout",
+          "sha256": "aedc9fcb885c8600d5fee1ad3c2c07d943e8fb1c74d98e6da1f655ca36c94dd3",
+          "bytes": 1110
+        },
+        "generated_copies_verified": 1
+      }
+    ]
+  },
+  "raw_controller_responses": [
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-001.body",
+      "sha256": "d895222f5bfbfd3c6e8322ddad4192b78916fc92ff53d5c2f2419974fdb6553e",
+      "bytes": 88
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-003.body",
+      "sha256": "d3b22074b4fa9dec8030d3f5916ba431211e5d5c14659ec4bc8b7457b1175cc2",
+      "bytes": 288
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-004.body",
+      "sha256": "bb4f41340f84e090c42272ccd462380bf64c0cde627cfceed9453eba926c8117",
+      "bytes": 70
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-005.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "bytes": 32
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-006.body",
+      "sha256": "400cbc5ffada6ba4ad18039ff30350324e2783e90825a551aa814fc5a413ef39",
+      "bytes": 370
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-007.body",
+      "sha256": "9df92ed4f1c4eef19f015051e4a54d6765596cf291a5fd5764a0b844af798cdd",
+      "bytes": 368
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-008.body",
+      "sha256": "26f078666fc512b1aadede43bec3950a6bb24f63bd68d65f94e587bd37ec6c40",
+      "bytes": 367
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-009.body",
+      "sha256": "da4fcc784924d6dba1b472e0f54dc2578e58954c3463de764120acecf6446ddb",
+      "bytes": 370
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-010.body",
+      "sha256": "576e7be2c794f294510dd4d33759a23b1decefe6ed26ac333f435ff6eb878729",
+      "bytes": 596
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-011.body",
+      "sha256": "e993a4c5548989b923d82b083be2badc94824b02a7c9dafc3f87c770234b6198",
+      "bytes": 370
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-012.body",
+      "sha256": "bba880198a72127074f8f3f8b2e56d80e0e384a09e2b63d95b14622e5ae833b1",
+      "bytes": 88
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-014.body",
+      "sha256": "58f270afdd4e64a25ede01e23be4aa463c320645eb00f493b4f00697bca46cbb",
+      "bytes": 288
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-015.body",
+      "sha256": "4b4fa753bb7b01050346208637961d3722f2af610b87dae60a9113149221014b",
+      "bytes": 32
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/response-016.body",
+      "sha256": "9b9891a499d4c9e9e109a03c0475f64132997fecad6cf006fa29742473ed5ce0",
+      "bytes": 368
+    }
+  ],
+  "business": {
+    "queries": 7,
+    "logical_sdk_attempts": 8,
+    "host_callbacks": 8,
+    "host_callback_successful_returns": 7,
+    "host_callback_errors": 1,
+    "typed_sdk_returns": 6,
+    "source_true_results": 5,
+    "source_false_results": 1,
+    "source_ValueError": 1,
+    "platform_unknown_failure": 1,
+    "zero_http_phases": [
+      "invalid",
+      "none"
+    ],
+    "failure_recovery": "One selected HTTP500 yields host_operation_failed/no source False; explicit second SDK operation recovers, not automatic replay. Next invocation same worker also succeeds.",
+    "actual_label_sequences": [
+      [
+        "owned-old",
+        "owned-retained",
+        "owned-new"
+      ],
+      [
+        "owned-old",
+        "owned-retained",
+        "owned-new"
+      ]
+    ],
+    "label_comparison": "Actual order retained; only string-only exact unique membership/cardinality normalized against source set semantics. No claim wire ordering equivalence.",
+    "limits_typed_arguments": {
+      "downloadLimit": -4,
+      "downloadLimited": true,
+      "ids": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "seedIdleLimit": 0,
+      "seedIdleMode": 2,
+      "seedRatioLimit": 2.67,
+      "seedRatioMode": 1,
+      "uploadLimit": 0,
+      "uploadLimited": true
+    }
+  },
+  "owned_peer": {
+    "total": 14,
+    "counts": {
+      "GET /index": 1,
+      "GET /worker": 1,
+      "POST /transmission/rpc": 12
+    },
+    "session_get": 6,
+    "torrent_set": 6,
+    "selected_500": 1,
+    "all_response_completed": true,
+    "protocol_level": "Real Go HTTP request/response to fixed owned synthetic peer, not a Transmission daemon. Structured typed RPC arguments/entity byte counts retained; raw RPC entity bytes not separately retained."
+  },
+  "lifecycle": {
+    "host_pids": [
+      25,
+      58
+    ],
+    "host_exit_codes": [
+      0,
+      0
+    ],
+    "normal_not_safe": true,
+    "same_private_data": true,
+    "warm_worker_pid": 42,
+    "warm_invocations": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "cold_worker_pid": 72,
+    "cold_invocation": 1,
+    "artifact_fetches_total": 2,
+    "cold_refetches": 0,
+    "known_worker_identity_gone_checks": "Driver actual known PID/starttime checks after natural host exits; no new reviewer process probe.",
+    "forced_cleanup": false
+  },
+  "logs": {
+    "projection": {
+      "path": "test-instances/s13-tr-final-normal01/owned-plugin-log-projection.json",
+      "sha256": "d18d203ac5e476e063da6a930cd29e1c2dfa562552ef5e936b2434be5e540f49",
+      "bytes": 1615
+    },
+    "exact_owned_persistent_log_projection_equal": true,
+    "host_log_same_ids_and_calls": true,
+    "levels": [
+      "WARN",
+      "ERROR",
+      "WARN"
+    ],
+    "call_attribution_matches_business_intervals": true,
+    "private_log_not_published": true
+  },
+  "environment": {
+    "driver_inherited_environment_comparison_true": true,
+    "coordinator_marker_only_added": true,
+    "no_full_environment_identity_claim_across_execs": true
+  },
+  "resources": {
+    "samples": 20,
+    "minimum_scratch_free": 47152427008,
+    "minimum_tmp_free": 5225615360,
+    "terminal_reserve_checked": true,
+    "not_continuous_monitoring": true
+  },
+  "artifacts": [
+    {
+      "path": "audits/s13-tr-final-normal-cli01/normal-cli-driver.py",
+      "sha256": "5a5adddeeae0c21149d4627ab80d31500cb7199918cad008f8f76496c4d35c8e",
+      "bytes": 33327
+    },
+    {
+      "path": "audits/s13-tr-final-normal-cli01/execution-bindings.json",
+      "sha256": "40adb43e343c9bc05ed1f42feab158c7fc8718ec50bad522a2a7c80f21e7bb4c",
+      "bytes": 1045658
+    },
+    {
+      "path": "audits/s13-tr-final-normal-cli01/execution-command.json",
+      "sha256": "dd001bbfcfa30286f6460207c36503a1547a322e946457cd1ed4785bc39e20f1",
+      "bytes": 1037
+    },
+    {
+      "path": "audits/s13-tr-final-normal-cli01/actual-execution-receipt.json",
+      "sha256": "8b6df62c3aeeb30e7dec0763d31cac161b32dfc7eb4fe502724e37fcb186f054",
+      "bytes": 1255
+    },
+    {
+      "path": "audits/s13-tr-final-normal-cli01/execution.stdout",
+      "sha256": "f446913f3753d851cdac3ed010144a075f4031507d80987d52b42e7e93ad7d0c",
+      "bytes": 190
+    },
+    {
+      "path": "audits/s13-tr-final-normal-cli01/execution.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/result.json",
+      "sha256": "ff3e46f123b9e4a986c2d34b6b2e17c38397095a9e52ab301ad06abfb0a1916e",
+      "bytes": 26447
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/driver.exit",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "bytes": 2
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/worker-manifest.json",
+      "sha256": "714d6955fac1e29ebad72394956aea40e6015e12fb64e007c83522df472cfda7",
+      "bytes": 559
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/owned-plugin-log-projection.json",
+      "sha256": "d18d203ac5e476e063da6a930cd29e1c2dfa562552ef5e936b2434be5e540f49",
+      "bytes": 1615
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/host-1.log",
+      "sha256": "0a471420b71350722aabda7ee206cdc07125e3967f80edc8f0a55ace1a44e195",
+      "bytes": 2677
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/host-2.log",
+      "sha256": "0b2023ec8b44ed66ddb24b5cdf52de94bacc34f318113d40bffb0521b7507536",
+      "bytes": 723
+    },
+    {
+      "path": "test-instances/s13-tr-final-normal01/resources.jsonl",
+      "sha256": "6be4ea1eee4a75cfe76631f16a969759453580e819410ffbbb020b7e17f67c5c",
+      "bytes": 1920
+    },
+    {
+      "path": "audits/s13-tr-final-normal-independent/preexec-seal.json",
+      "sha256": "0716129af189dc10be99cc68cead618fd63853fa813af2ae31c201ffa38d38fe",
+      "bytes": 564
+    }
+  ],
+  "limits": [
+    "Finite ordinary JSON/nullable field contract; not arbitrary Python objects or all change_torrent kwargs.",
+    "Source recording collector is not vendor or daemon execution; native all-None noargs False is pinned-vendor-backed and actual zero HTTP.",
+    "Labels raw source/target permutations preserved; only exact string membership/cardinality comparison authorized.",
+    "Platform configured-owner/credential/TLS/unknown-effect protections retained; no new global trust or environment permissions.",
+    "Normal CLI host and worker binaries are not race-built; prior package race gates are separate.",
+    "No browser/UI, real Transmission daemon, full S13/platform, remote push or delivery claim."
+  ]
+}

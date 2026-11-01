@@ -1,0 +1,29 @@
+{
+  "status": "NARROW_WARNING_LEVEL_FIX_REQUIRED_BEFORE_APP_GATE",
+  "at": "2026-11-01T00:42:22.372790+00:00",
+  "candidate_sha256": "da4a2214a9d8091e9e1cdfb43e971ba632950caa77c112448359fc22e3022250",
+  "product_sha256": "685c1760fe8b843b15b781990a118e522466883362a97fd02647bccb2a689fa4",
+  "test_sha256": "e2f481b90f2da9c25b2303301d776d19c6329f58760b1378159e35947818a340",
+  "all_candidate_bindings_equal": true,
+  "existing_seven_inputs_equal": true,
+  "new_targets_absent": true,
+  "finding": {
+    "id": "APP-TR-WARNING-LEVEL-01",
+    "actual_path": "new App Log closure passes WARNING unchanged to logOriginalPluginContext; logs_runtime.logPriority accepts WARN only, so configured WARN threshold drops WARNING as INFO",
+    "minimal_fix": "new App closure WARNING->WARN only, following existing pluginOriginalLogHost convention; existing actual native test asserts WARN level under WARN threshold; no global/native logger edit"
+  },
+  "otherwise_checked": [
+    "exact2cap selector and required fixed fields/no unknown/duplicate/trailing, inherited UTF8/scalar guards,128KiB ordinary limit",
+    "UseNumber and raw JSON null/precision preserved into new leaf; new fixed factory only",
+    "current exact configured enabled TR ID, snapshot clone, guards before/after factory/leaf/marshal, Close on all postfactory returns, App admission wg",
+    "direct-only change ValueError envelope after guard, tags bool only, wrapped/platform/cancel/unknown not unwrapped or normalized",
+    "source recording nonthrowing allNone True clearly separate from native validation False; component fake versus actual fixed ownedHTTP tests distinguished",
+    "source string-label membership/cardinality only, not sorted array equivalence",
+    "resource patch adds only own capability helper and own dispatch; old method predicates untouched",
+    "owned component setup disables statistics, actual HTTP fixed route on ownedserver, no source import/proxy/env/realdaemon/FS probes"
+  ],
+  "not_claimed": [
+    "Go compilation/test/race/worker/normalCLI passed",
+    "independent native semantic review (reviewer authored native)"
+  ]
+}

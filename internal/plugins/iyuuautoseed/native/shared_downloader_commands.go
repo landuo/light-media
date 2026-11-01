@@ -27,8 +27,9 @@ import (
 )
 
 type sharedDownloaderCommands struct {
-	iyuu    *IYUUClient
-	trReady bool // Protected by the existing native client mutex.
+	iyuu          *IYUUClient
+	trReady       bool           // Protected by the existing native client mutex.
+	trSessionInfo map[string]any // Existing session-get response; same mutex, read only by the new fixed change port.
 }
 type sharedQBCommands struct{ owner *sharedDownloaderCommands }
 type sharedTRCommands struct{ owner *sharedDownloaderCommands }
@@ -567,9 +568,11 @@ func (c *sharedDownloaderCommands) trInit(ctx context.Context) error {
 	if c.trReady {
 		return nil
 	}
-	if _, err := c.trRequest(ctx, "session-get", map[string]any{}, false); err != nil {
+	result, err := c.trRequest(ctx, "session-get", map[string]any{}, false)
+	if err != nil {
 		return err
 	}
+	c.trSessionInfo = result
 	c.trReady = true
 	return nil
 }

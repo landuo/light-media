@@ -17,7 +17,7 @@ func originalStandardCapabilityAllowed(contract, method string) bool {
 			return true
 		}
 	}
-	return contract == pluginResourcesSDKContract && (method == plugins.BrushInventoryReadCapability || method == plugins.LogWriteCapability || method == plugins.DownloaderTasksReadCapability || method == plugins.BackgroundSubmitCapability || method == plugins.ServicesRefreshCapability || method == plugins.ServiceProgressCapability || method == plugins.AuthTicketCreateCapability || method == plugins.PostMessageCapability || method == plugins.EventSendCapability || method == plugins.EventCheckCapability || method == plugins.EventManageCapability || originalInputCapability(method) || categoryEditorCapability(method) || originalSharedSubscriptionsCapability(method) || originalSharedSystemConfigCapability(method) || originalSharedHistoryCapability(method) || originalSharedManagerQueryCapability(method) || originalSharedManagerMutationCapability(method) || originalSharedManagerRuntimeCapability(method) || method == plugins.SharedPluginRemove || originalSharedSchedulerCapability(method) || originalSharedTransmissionQueryCapability(method) || originalSharedQBittorrentCompletedCapability(method) || originalSharedLocalStorageCapability(method) || originalSharedOCRCapability(method) || originalSharedTorrentMaterialCapability(method) || originalSharedLocalTorrentBackupCapability(method) || originalSharedDownloaderCommandCapability(method) || originalSharedDownloaderControlCapability(method) || originalSharedQBTagCapability(method) || originalSharedSiteAccessCapability(method))
+	return contract == pluginResourcesSDKContract && (method == plugins.BrushInventoryReadCapability || method == plugins.LogWriteCapability || method == plugins.DownloaderTasksReadCapability || method == plugins.BackgroundSubmitCapability || method == plugins.ServicesRefreshCapability || method == plugins.ServiceProgressCapability || method == plugins.AuthTicketCreateCapability || method == plugins.PostMessageCapability || method == plugins.EventSendCapability || method == plugins.EventCheckCapability || method == plugins.EventManageCapability || originalInputCapability(method) || categoryEditorCapability(method) || originalSharedSubscriptionsCapability(method) || originalSharedSystemConfigCapability(method) || originalSharedHistoryCapability(method) || originalSharedManagerQueryCapability(method) || originalSharedManagerMutationCapability(method) || originalSharedManagerRuntimeCapability(method) || method == plugins.SharedPluginRemove || originalSharedSchedulerCapability(method) || originalSharedTransmissionQueryCapability(method) || originalSharedQBittorrentCompletedCapability(method) || originalSharedLocalStorageCapability(method) || originalSharedOCRCapability(method) || originalSharedTorrentMaterialCapability(method) || originalSharedLocalTorrentBackupCapability(method) || originalSharedDownloaderCommandCapability(method) || originalSharedDownloaderControlCapability(method) || originalSharedQBTagCapability(method) || originalSharedTRFinalCapability(method) || originalSharedSiteAccessCapability(method))
 }
 
 func originalResourceDecode(raw json.RawMessage, output any) error {
@@ -52,6 +52,9 @@ func (a *App) pluginOriginalResourceHost(ctx context.Context, scope originalBase
 	ctx = withOriginalPluginLogContext(ctx, scope)
 	if originalSharedSiteAccessCapability(method) {
 		return a.originalSharedSiteAccessResource(ctx, scope, method, raw)
+	}
+	if originalSharedTRFinalCapability(method) {
+		return a.originalSharedTRFinalResource(ctx, scope, method, raw)
 	}
 	if originalSharedQBTagCapability(method) {
 		return a.originalSharedQBTagResource(ctx, scope, method, raw)

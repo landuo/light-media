@@ -1,0 +1,27 @@
+{
+  "status": "TERMINAL",
+  "started": "2026-11-01T00:50:12.238082+00:00",
+  "driver_pid": 5,
+  "preexec_seal_sha256": "0716129af189dc10be99cc68cead618fd63853fa813af2ae31c201ffa38d38fe",
+  "argv": [
+    "python3",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-tr-final-normal-cli01/normal-cli-driver.py",
+    "--server",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-final-server01",
+    "--worker",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/runtime/s13-tr-final-fixture01",
+    "--output",
+    "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/test-instances/s13-tr-final-normal01",
+    "--expected-server-sha",
+    "4eb819e1e03e5e04fd8affeca2b8961fb85288aa711a8ee41e3400cc69dd1ba3",
+    "--expected-worker-sha",
+    "c5759a06729cd3947bc6efa2e52931a343b8856cecc7519f81e704530ccd8ec0",
+    "--expected-driver-sha",
+    "5a5adddeeae0c21149d4627ab80d31500cb7199918cad008f8f76496c4d35c8e",
+    "--expected-bindings-sha",
+    "40adb43e343c9bc05ed1f42feab158c7fc8718ec50bad522a2a7c80f21e7bb4c"
+  ],
+  "only_environment_added": "S13_TR_FINAL_CLI_GRANTED=1",
+  "exit": 0,
+  "ended": "2026-11-01T00:50:14.295861+00:00"
+}
