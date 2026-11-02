@@ -31,11 +31,10 @@ func (a *App) catalogExploreAPI(r *http.Request, action string) (any, error) {
 	if err != nil {
 		return nil, err
 	}
-	transport, err := proxy.Transport(nil)
+	explorer, err := catalog.NewOriginalPluginExplorer(a.catalog(), proxy)
 	if err != nil {
 		return nil, err
 	}
-	explorer := catalog.NewExplorer(a.catalog(), transport)
 	defer explorer.CloseIdleConnections()
 	ctx := r.Context()
 	switch action {
@@ -46,7 +45,7 @@ func (a *App) catalogExploreAPI(r *http.Request, action string) (any, error) {
 		// provider caching remains inside this fallback and cannot hide plugins.
 		p, err = a.originalCatalogFeed(ctx, method, kwargs, query.Page, func() (catalog.ExplorePage, error) {
 			var core catalog.ExplorePage
-			_, e := a.cached(ctx, query.CacheKey(), time.Hour, &core, func() (any, error) { return explorer.Explore(ctx, query) })
+			_, e := a.cached(ctx, query.CacheKey(), time.Hour, &core, func() (any, error) { return explorer.Explore(catalog.OriginalPluginContext(ctx), query) })
 			return core, e
 		})
 		cachedAt := time.Now().UTC()
@@ -77,7 +76,7 @@ func (a *App) catalogExploreAPI(r *http.Request, action string) (any, error) {
 		if err != nil {
 			return nil, catalogExploreError(err)
 		}
-		resolved, err := a.catalog().ResolveExploreMedia(ctx, m)
+		resolved, err := a.catalog().ResolveExploreMedia(catalog.OriginalPluginContext(ctx), m)
 		if err != nil {
 			return nil, catalogExploreError(err)
 		}

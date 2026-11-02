@@ -93,10 +93,11 @@ func (a *App) markOriginalTorrentCompleted(ctx context.Context, intent Intent) e
 	if err != nil {
 		return err
 	}
-	client, err := download.New(d.Config)
+	client, err := download.NewOriginalCorePlugin(d.Config)
 	if err != nil {
 		return err
 	}
+	defer client.CloseIdleConnections()
 	kwargs := map[string]any{"status": nil, "hashs": intent.Hash, "downloader": d.Name, "include_all_tags": false}
 	result, err := a.originalTransferDownloaderModule(ctx, d, "list_torrents", kwargs, func() (any, error) {
 		raw, err := client.SourceTorrentSnapshots(ctx, intent.Hash)

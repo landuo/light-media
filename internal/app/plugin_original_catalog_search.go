@@ -31,7 +31,7 @@ func (a *App) originalCatalogSearch(ctx context.Context, title, kind, source str
 	}
 	result, err := a.originalCatalogFeed(ctx, "async_search_medias", map[string]any{"meta": fields, "source": requested}, page, func() (catalog.ExplorePage, error) {
 		var core catalog.Page
-		_, err := a.cached(ctx, "search:"+kind+":"+title+":"+fmt.Sprint(page), time.Hour, &core, func() (any, error) { return a.catalog().Search(ctx, title, kind, page) })
+		_, err := a.cached(ctx, "search:"+kind+":"+title+":"+fmt.Sprint(page), time.Hour, &core, func() (any, error) { return a.catalog().Search(catalog.OriginalPluginContext(ctx), title, kind, page) })
 		rows := make([]catalog.ExploreMedia, len(core.Results))
 		for i, media := range core.Results {
 			rows[i] = catalog.ExploreMedia{Media: media, Source: "themoviedb", SourceID: strconv.FormatInt(media.ID, 10)}
@@ -129,7 +129,7 @@ func (a *App) originalCatalogSourceSearch(ctx context.Context, title, kind, sour
 		}
 		var rows []json.RawMessage
 		_, e := a.cached(ctx, "source-search:"+mediaKind+":"+meta.Name()+":"+sourceStringValue(meta.Get("year")), time.Hour, &rows, func() (any, error) {
-			return a.catalog().SourceSearchRows(ctx, meta.Name(), mediaKind, sourceStringValue(meta.Get("year")))
+			return a.catalog().SourceSearchRows(catalog.OriginalPluginContext(ctx), meta.Name(), mediaKind, sourceStringValue(meta.Get("year")))
 		})
 		if e != nil {
 			return empty, e

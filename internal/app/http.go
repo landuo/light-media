@@ -1030,13 +1030,17 @@ func (a *App) catalogAPI(r *http.Request, action string) (any, error) {
 	case "person":
 		var p json.RawMessage
 		result, e = a.originalCatalogPerson(ctx, int64(atoi(q.Get("id"))), func() (json.RawMessage, error) {
-			_, err := a.cached(ctx, "source-person:"+q.Get("id"), 7*24*time.Hour, &p, func() (any, error) { return a.catalog().SourcePersonInformation(ctx, int64(atoi(q.Get("id")))) })
+			_, err := a.cached(ctx, "source-person:"+q.Get("id"), 7*24*time.Hour, &p, func() (any, error) {
+				return a.catalog().SourcePersonInformation(catalog.OriginalPluginContext(ctx), int64(atoi(q.Get("id"))))
+			})
 			return p, err
 		})
 	case "person/credits":
 		result, e = a.originalCatalogPersonCredits(ctx, int64(atoi(q.Get("id"))), page, func() (catalog.Page, error) {
 			var p catalog.Page
-			_, err := a.cached(ctx, "source-credits:"+q.Get("id")+":"+strconv.Itoa(page), 24*time.Hour, &p, func() (any, error) { return a.catalog().SourcePersonCredits(ctx, int64(atoi(q.Get("id"))), page) })
+			_, err := a.cached(ctx, "source-credits:"+q.Get("id")+":"+strconv.Itoa(page), 24*time.Hour, &p, func() (any, error) {
+				return a.catalog().SourcePersonCredits(catalog.OriginalPluginContext(ctx), int64(atoi(q.Get("id"))), page)
+			})
 			if err != nil {
 				a.log("WARN", "catalog", "source_person_credits_failed", "人物参演作品读取失败", "", "")
 				return catalog.Page{Results: []catalog.Media{}, Page: page, TotalPages: page}, nil

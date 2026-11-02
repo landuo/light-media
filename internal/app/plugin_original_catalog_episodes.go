@@ -178,7 +178,7 @@ func originalCatalogSeasonProjection(view catalog.Season, rows []map[string]any)
 }
 
 func (a *App) originalCatalogNativeEpisodeRows(ctx context.Context, id int64, season int, group any, view *catalog.Season) (json.RawMessage, error) {
-	info, err := a.catalog().SourceSeasonInformation(ctx, id, season, sourceText(group))
+	info, err := a.catalog().SourceSeasonInformation(catalog.OriginalPluginContext(ctx), id, season, sourceText(group))
 	if err != nil {
 		if ctx.Err() != nil {
 			return nil, ctx.Err()

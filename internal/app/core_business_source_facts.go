@@ -199,7 +199,7 @@ func (a *App) sourceRecognizeTMDBCore(ctx context.Context, input catalog.Media) 
 	if e != nil {
 		return sourceMediaInformation{}, e
 	}
-	raw, media, e := a.catalog().SourceInformation(ctx, input.MediaType, input.ID, policy.extraFields(input.MediaType))
+	raw, media, e := a.catalog().SourceInformation(catalog.OriginalPluginContext(ctx), input.MediaType, input.ID, policy.extraFields(input.MediaType))
 	if e != nil {
 		return sourceMediaInformation{}, e
 	}

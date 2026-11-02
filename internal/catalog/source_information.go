@@ -11,7 +11,11 @@ import (
 // NewWithTransport keeps the fixed API origin, credential and redirect checks.
 // A native owner may supply its transport; no public configuration can do so.
 func NewWithTransport(credentials Credentials, transport http.RoundTripper) *Client {
-	return newClient(credentials, transport, 0)
+	c := newClient(credentials, transport, 0)
+	// Preserve this explicit trusted-owner transport seam, including recording
+	// and fixed-endpoint transports. Production a.catalog uses NewWithProxy.
+	c.pluginHTTP.suppliedByOwner = true
+	return c
 }
 
 // SourceInformation reads the full response consumed by TmdbApi.get_info.

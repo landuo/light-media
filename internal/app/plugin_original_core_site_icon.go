@@ -34,7 +34,7 @@ func (a *App) consumeOriginalCoreSiteIcon(ctx context.Context, raw json.RawMessa
 			continue
 		}
 		value := originalSiteIcon{SiteID: site.ID, ConfigKey: a.managedSiteKey(site)}
-		err := a.withSite(allowDisabledSiteRequests(ctx), site, false, func(client *sites.Client) error {
+		err := a.withSite(originalPluginSiteContext(allowDisabledSiteRequests(ctx)), site, false, func(client *sites.Client) error {
 			var readErr error
 			value.URL, value.Data, readErr = client.ReadFavicon(ctx, originalPluginServerUserAgent())
 			return readErr

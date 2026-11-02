@@ -109,7 +109,7 @@ func (a *App) originalTransferObtainImages(ctx context.Context, recognized json.
 			if e != nil {
 				return nil, e
 			}
-			return a.catalog().SourceImages(ctx, kind, parsed, "zh", sourceText(language))
+			return a.catalog().SourceImages(catalog.OriginalPluginContext(ctx), kind, parsed, "zh", sourceText(language))
 		}, a.Settings().TMDBImageDomain)
 	})
 }

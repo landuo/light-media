@@ -27,7 +27,7 @@ func (a *App) consumeOriginalCoreSiteUpdated(ctx context.Context, raw json.RawMe
 		if standardSiteEventDomain(site.BaseURL) != domain {
 			continue
 		}
-		ctx = allowDisabledSiteRequests(ctx)
+		ctx = originalPluginSiteContext(allowDisabledSiteRequests(ctx))
 		snapshot, err := a.collectManagedSiteObserved(ctx, site.ID, "", &siteCollectionHooks{OrdinaryEvent: true})
 		if err != nil {
 			return err

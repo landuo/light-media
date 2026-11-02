@@ -223,7 +223,7 @@ func (a *App) originalCatalogExploreDetail(ctx context.Context, source, kind, id
 				return complete.MediaInfo, e
 			}
 			var view catalog.ExploreMedia
-			_, e := a.cached(ctx, "explore-detail:v1:"+source+":"+kind+":"+id, 12*time.Hour, &view, func() (any, error) { return explorer.Detail(ctx, source, kind, id) })
+			_, e := a.cached(ctx, "explore-detail:v1:"+source+":"+kind+":"+id, 12*time.Hour, &view, func() (any, error) { return explorer.Detail(catalog.OriginalPluginContext(ctx), source, kind, id) })
 			if e != nil {
 				return nil, e
 			}
@@ -242,7 +242,7 @@ func (a *App) originalCatalogExploreDetail(ctx context.Context, source, kind, id
 			if meta.Get("type") == "电视剧" {
 				query.MediaType = "tv"
 			}
-			resolved, e := a.catalog().ResolveExploreMedia(ctx, query)
+			resolved, e := a.catalog().ResolveExploreMedia(catalog.OriginalPluginContext(ctx), query)
 			if e != nil || resolved.Media == nil {
 				return nil, e
 			}
@@ -262,7 +262,7 @@ func (a *App) originalCatalogExploreDetail(ctx context.Context, source, kind, id
 			if e != nil {
 				return nil, e
 			}
-			return a.catalog().SourceImages(ctx, imageKind, n, "zh", sourceText(language))
+			return a.catalog().SourceImages(catalog.OriginalPluginContext(ctx), imageKind, n, "zh", sourceText(language))
 		}, a.Settings().TMDBImageDomain)
 	})
 	if err != nil {

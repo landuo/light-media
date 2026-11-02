@@ -88,7 +88,9 @@ func (a *App) serveOriginalCatalogMedia(w http.ResponseWriter, r *http.Request, 
 			}
 			result, err := a.originalCatalogPerson(r.Context(), id, func() (json.RawMessage, error) {
 				var raw json.RawMessage
-				_, e := a.cached(r.Context(), "source-person:"+parts[1], 7*24*time.Hour, &raw, func() (any, error) { return a.catalog().SourcePersonInformation(r.Context(), id) })
+				_, e := a.cached(r.Context(), "source-person:"+parts[1], 7*24*time.Hour, &raw, func() (any, error) {
+					return a.catalog().SourcePersonInformation(catalog.OriginalPluginContext(r.Context()), id)
+				})
 				return raw, e
 			})
 			if err != nil {
@@ -157,12 +159,11 @@ func (a *App) serveOriginalCatalogMedia(w http.ResponseWriter, r *http.Request, 
 		a.writeError(w, r, err)
 		return true
 	}
-	transport, err := proxy.Transport(nil)
+	explorer, err := catalog.NewOriginalPluginExplorer(a.catalog(), proxy)
 	if err != nil {
 		a.writeError(w, r, err)
 		return true
 	}
-	explorer := catalog.NewExplorer(a.catalog(), transport)
 	defer explorer.CloseIdleConnections()
 	// Preserve a key without a colon for the legacy conversion event. The
 	// native query helper normally reconstructs a key from two distinct fields.

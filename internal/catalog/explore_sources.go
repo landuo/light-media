@@ -49,17 +49,19 @@ func (e *ExploreError) Error() string {
 // Explorer uses public provider endpoints; no old MoviePilot service or user
 // account is needed. A native owner supplies the application's outbound route.
 type Explorer struct {
-	tmdb *Client
-	http *http.Client
+	tmdb       *Client
+	http       *http.Client
+	pluginHTTP originalPluginHTTPPool
 }
 
 func NewExplorer(tmdb *Client, transport http.RoundTripper) *Explorer {
-	return &Explorer{tmdb: tmdb, http: &http.Client{Timeout: requestLimit, Transport: logging.Transport(transport), CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}}
+	return &Explorer{tmdb: tmdb, pluginHTTP: originalPluginHTTPPool{suppliedByOwner: true}, http: &http.Client{Timeout: requestLimit, Transport: logging.Transport(transport), CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}}
 }
 
 func (e *Explorer) CloseIdleConnections() {
 	if e != nil && e.http != nil {
 		e.http.CloseIdleConnections()
+		e.pluginHTTP.closeIdle()
 	}
 }
 
@@ -121,7 +123,11 @@ func (e *Explorer) request(ctx context.Context, source, method, path string, par
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
-	response, err := e.http.Do(req)
+	client, err := e.pluginHTTP.forContext(ctx, e.http)
+	if err != nil {
+		return failure("unavailable", 0)
+	}
+	response, err := client.Do(req)
 	if err != nil {
 		if ctx.Err() != nil || errors.Is(err, context.DeadlineExceeded) || errors.Is(err, context.Canceled) {
 			return failure("canceled", 0)

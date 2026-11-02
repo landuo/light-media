@@ -31,7 +31,7 @@ func (a *App) originalCatalogTMDBDetail(ctx context.Context, kind string, id int
 		}
 		// Retain the existing native detail view's related-title presentation. The
 		// full source model above is required for ordinary plugin module arguments.
-		if view, e := a.media(ctx, kind, id); e == nil {
+		if view, e := a.media(catalog.OriginalPluginContext(ctx), kind, id); e == nil {
 			nativeView = &view
 		} else {
 			view := complete.Media
@@ -51,7 +51,7 @@ func (a *App) originalCatalogTMDBDetail(ctx context.Context, kind string, id int
 			if e != nil {
 				return nil, e
 			}
-			return a.catalog().SourceImages(ctx, imageKind, parsed, "zh", sourceText(originalLanguage))
+			return a.catalog().SourceImages(catalog.OriginalPluginContext(ctx), imageKind, parsed, "zh", sourceText(originalLanguage))
 		}, a.Settings().TMDBImageDomain)
 	})
 	if err != nil {

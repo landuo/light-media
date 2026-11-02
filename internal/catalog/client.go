@@ -38,6 +38,7 @@ type Client struct {
 	credentials Credentials
 	http        *http.Client
 	recognition sourceRecognitionSession
+	pluginHTTP  originalPluginHTTPPool
 	configError *Error
 	interval    time.Duration
 	inflight    chan struct{}
@@ -54,7 +55,9 @@ func (*Client) GoString() string     { return "catalog.Client{[redacted]}" }
 // New holds the supplied credential in memory, never reads environment/files,
 // and performs no network request. Credential errors are returned by operations.
 func New(credentials Credentials) *Client {
-	return newClient(credentials, http.DefaultTransport, 250*time.Millisecond)
+	c := newClient(credentials, http.DefaultTransport, 250*time.Millisecond)
+	c.pluginHTTP.factory = originalPluginBaseFactory(http.DefaultTransport)
+	return c
 }
 
 func NewWithProxy(credentials Credentials, config networkproxy.Config) *Client {
@@ -65,6 +68,7 @@ func NewWithProxy(credentials Credentials, config networkproxy.Config) *Client {
 		return c
 	}
 	c := newClient(credentials, transport, 250*time.Millisecond)
+	c.pluginHTTP.factory = originalPluginProxyFactory(config)
 	// Rebuild only the new recognition session with the same immutable proxy configuration and recognition-only approved TLS policy.
 	c.recognition.factory = func() (http.RoundTripper, error) {
 		return networkproxy.Apply(sourceRecognitionTLSClone(nil), config.HTTPS)
@@ -76,6 +80,7 @@ func (c *Client) CloseIdleConnections() {
 	if c != nil && c.http != nil {
 		c.http.CloseIdleConnections()
 		c.recognition.closeIdle()
+		c.pluginHTTP.closeIdle()
 	}
 }
 
@@ -193,7 +198,11 @@ func (c *Client) get(ctx context.Context, path string, query url.Values, result 
 	if c.credentials.AccessToken != "" {
 		request.Header.Set("Authorization", "Bearer "+c.credentials.AccessToken)
 	}
-	response, err := c.http.Do(request)
+	client, err := c.pluginHTTP.forContext(ctx, c.http)
+	if err != nil {
+		return &Error{Code: "unavailable"}
+	}
+	response, err := client.Do(request)
 	if err != nil {
 		if ctx.Err() != nil || errors.Is(err, context.Canceled) || errors.Is(err, context.DeadlineExceeded) {
 			return &Error{Code: "canceled"}

@@ -60,10 +60,11 @@ func (a *App) consumeOriginalCoreDownloadFileDeleted(ctx context.Context, raw js
 				if !downloaderEnabled(d) || coreDownloaderKind(d.Kind) != kind {
 					continue
 				}
-				client, e := download.New(d.Config)
+				client, e := download.NewOriginalCorePlugin(d.Config)
 				if e != nil {
 					continue
 				}
+				defer client.CloseIdleConnections()
 				snapshots, e := client.SourceTorrentSnapshots(ctx, hash)
 				if e != nil {
 					continue
@@ -102,10 +103,11 @@ func (a *App) consumeOriginalCoreDownloadFileDeleted(ctx context.Context, raw js
 		if target.ID == "" || !downloaderEnabled(target) {
 			return &download.Error{Operation: "remove", Code: "default_unavailable"}
 		}
-		client, e := download.New(target.Config)
+		client, e := download.NewOriginalCorePlugin(target.Config)
 		if e != nil {
 			return e
 		}
+		defer client.CloseIdleConnections()
 		tasks, e := client.List(ctx)
 		if e != nil {
 			return e

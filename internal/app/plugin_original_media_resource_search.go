@@ -196,6 +196,7 @@ func (op *originalMediaResourceSearch) run() {
 			batch.method = "batch_search_torrents"
 		}
 		batch.native = func(ctx context.Context, site SiteConfig, page int) (sites.SearchResult, error) {
+			ctx = originalPluginSiteContext(ctx)
 			var result sites.SearchResult
 			err := op.app.withSite(ctx, site, op.auto, func(client *sites.Client) error {
 				var err error

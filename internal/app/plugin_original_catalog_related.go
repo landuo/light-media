@@ -41,20 +41,19 @@ func originalCatalogRelatedModule(source, kind, id, part string) (string, map[st
 func (a *App) originalCatalogRelatedNative(ctx context.Context, source, kind, id string) (catalog.Media, error) {
 	if source == "themoviedb" {
 		n, _ := strconv.ParseInt(id, 10, 64)
-		return a.media(ctx, kind, n)
+		return a.media(catalog.OriginalPluginContext(ctx), kind, n)
 	}
 	proxy, err := a.proxyConfig()
 	if err != nil {
 		return catalog.Media{}, err
 	}
-	transport, err := proxy.Transport(nil)
+	explorer, err := catalog.NewOriginalPluginExplorer(a.catalog(), proxy)
 	if err != nil {
 		return catalog.Media{}, err
 	}
-	explorer := catalog.NewExplorer(a.catalog(), transport)
 	defer explorer.CloseIdleConnections()
 	var view catalog.ExploreMedia
-	_, err = a.cached(ctx, "explore-detail:v1:"+source+":"+kind+":"+id, 12*time.Hour, &view, func() (any, error) { return explorer.Detail(ctx, source, kind, id) })
+	_, err = a.cached(ctx, "explore-detail:v1:"+source+":"+kind+":"+id, 12*time.Hour, &view, func() (any, error) { return explorer.Detail(catalog.OriginalPluginContext(ctx), source, kind, id) })
 	return view.Media, err
 }
 

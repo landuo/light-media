@@ -171,24 +171,27 @@ func (a *App) catalogRecommendAPI(r *http.Request) (any, error) {
 	if err != nil {
 		return nil, err
 	}
-	transport, err := proxy.Transport(nil)
+	explorer, err := catalog.NewOriginalPluginExplorer(a.catalog(), proxy)
 	if err != nil {
 		return nil, err
 	}
-	explorer := catalog.NewExplorer(a.catalog(), transport)
 	defer explorer.CloseIdleConnections()
 	ctx := r.Context()
 	var result catalog.ExplorePage
 	method, kwargs := originalCatalogRecommendModule(id, page)
 	cachedAt, err := a.cachedOriginalRecommendation(ctx, recommendCacheKey(id, page, time.Now()), &result, func() (catalog.ExplorePage, error) {
 		if id == "bangumi_calendar" {
-			full, err := a.originalCatalogFeed(ctx, method, kwargs, 1, func() (catalog.ExplorePage, error) { return explorer.BangumiCalendarModule(ctx) })
+			full, err := a.originalCatalogFeed(ctx, method, kwargs, 1, func() (catalog.ExplorePage, error) {
+				return explorer.BangumiCalendarModule(catalog.OriginalPluginContext(ctx))
+			})
 			if err != nil {
 				return full, err
 			}
 			return originalCatalogCalendarPage(full, page, 30), nil
 		}
-		return a.originalCatalogFeed(ctx, method, kwargs, page, func() (catalog.ExplorePage, error) { return explorer.Recommend(ctx, id, page) })
+		return a.originalCatalogFeed(ctx, method, kwargs, page, func() (catalog.ExplorePage, error) {
+			return explorer.Recommend(catalog.OriginalPluginContext(ctx), id, page)
+		})
 	})
 	if err != nil {
 		return nil, catalogExploreError(err)

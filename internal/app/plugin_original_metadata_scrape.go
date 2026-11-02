@@ -235,7 +235,7 @@ func (a *App) originalMetadataRecognizeNative(ctx context.Context, meta *release
 	}
 	query := catalog.ExploreMedia{Media: catalog.Media{Title: meta.Name(), MediaType: kind}, Source: "themoviedb"}
 	query.Year, _ = strconv.Atoi(sourceStringValue(meta.Get("year")))
-	resolved, err := a.catalog().ResolveExploreMedia(ctx, query)
+	resolved, err := a.catalog().ResolveExploreMedia(catalog.OriginalPluginContext(ctx), query)
 	if err != nil || resolved.Media == nil {
 		return nil, err
 	}
@@ -291,7 +291,7 @@ func (a *App) originalMetadataNativeNFO(ctx context.Context, raw json.RawMessage
 	}
 	// The pinned system scraper uses its TMDB helper directly. tmdb_episodes
 	// is a separate chain extension whose DTO deliberately omits episode IDs.
-	details, err := a.nativeSeason(ctx, id, seasonNumber)
+	details, err := a.nativeSeason(catalog.OriginalPluginContext(ctx), id, seasonNumber)
 	if err != nil {
 		return nil, err
 	}
@@ -329,7 +329,7 @@ func (a *App) scrapeOriginalMetadataImages(ctx context.Context, item, parent map
 			if info["type"] != "电影" {
 				kind = "tv"
 			}
-			if raw, err := a.catalog().SourceImages(ctx, kind, id, "zh", sourceText(info["original_language"])); err == nil {
+			if raw, err := a.catalog().SourceImages(catalog.OriginalPluginContext(ctx), kind, id, "zh", sourceText(info["original_language"])); err == nil {
 				value, err := decodeSourceJSON(raw)
 				if err == nil && sourceMap(value) != nil {
 					limited, _ := json.Marshal(map[string]any{"posters": sourceMap(value)["posters"], "backdrops": sourceMap(value)["backdrops"]})
@@ -366,7 +366,7 @@ func (a *App) scrapeOriginalMetadataImages(ctx context.Context, item, parent map
 	} else {
 		id, _ := strconv.ParseInt(sourceNumberString(info["tmdb_id"]), 10, 64)
 		seasonNumber, _ := strconv.Atoi(sourceStringValue(season))
-		details, err := a.nativeSeason(ctx, id, seasonNumber)
+		details, err := a.nativeSeason(catalog.OriginalPluginContext(ctx), id, seasonNumber)
 		if err == nil {
 			imagePath, name := details.PosterPath, fmt.Sprintf("season%02d-poster", seasonNumber)
 			if seasonNumber == 0 {
@@ -459,7 +459,7 @@ func (a *App) fetchOriginalMetadataImage(ctx context.Context, path, imageURL, ta
 	if err != nil {
 		return err
 	}
-	response, err := assetImageClient.Do(req)
+	response, err := originalMetadataImageClient.Do(req)
 	if err != nil {
 		return err
 	}

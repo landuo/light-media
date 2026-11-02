@@ -154,13 +154,20 @@ func (a *App) withSite(ctx context.Context, s SiteConfig, auto bool, fn func(*si
 	proxySnapshot := a.Settings().ProxyHost
 	siteConfig := s.Config
 	siteConfig.MessageToken = s.Token
-	client, e := sites.New(siteConfig)
+	newSite, newSiteWithProxy := sites.New, sites.NewWithProxy
+	if originalPluginSiteRequest(ctx) {
+		newSite, newSiteWithProxy = sites.NewOriginalPlugin, sites.NewOriginalPluginWithProxy
+	}
+	client, e := newSite(siteConfig)
 	if e == nil && s.Proxy {
 		proxy, proxyErr := resolveProxyConfig(proxySnapshot)
 		if proxyErr != nil {
 			return bad("SITE_PROXY", "全局代理配置无效")
 		}
-		client, e = sites.NewWithProxy(siteConfig, proxy)
+		if originalPluginSiteRequest(ctx) {
+			client.CloseIdleConnections()
+		}
+		client, e = newSiteWithProxy(siteConfig, proxy)
 	}
 	if e != nil {
 		return bad("SITE_CONFIG", e.Error())
