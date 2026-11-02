@@ -70,8 +70,8 @@ func TestOriginalPluginCenterInventoryAuthorityAndBudgets(t *testing.T) {
 			t.Fatal("cross origin management write accepted")
 		}
 		result = callTest(t, a.Handler(), "POST", path+"Ghost", `{"rating":4.5,"padding":"`+strings.Repeat("x", 2<<20)+`"}`, cookie, "")
-		if result.Code != 413 || calls.Load() != before {
-			t.Fatal("body budget changed or invalid write reached peer", result.Code)
+		if result.Code != 200 || calls.Load() != before+1 {
+			t.Fatal("complete valid rating body did not reach peer once", result.Code)
 		}
 	}
 	for _, raw := range []string{`"NaN"`, `"Infinity"`, `1e999`} {

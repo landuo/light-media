@@ -126,7 +126,7 @@ func originalCenterFloat(value any) (float64, string) {
 }
 
 func originalPluginRatingRequest(w http.ResponseWriter, r *http.Request) (float64, error) {
-	raw, e := io.ReadAll(http.MaxBytesReader(w, r.Body, 2<<20))
+	raw, e := readOriginalPluginCenterBody(r.Context(), r.Body)
 	if e != nil {
 		return 0, &APIError{"PLUGIN_RATING_BODY_LIMIT", "插件评分请求无效或过大", http.StatusRequestEntityTooLarge}
 	}

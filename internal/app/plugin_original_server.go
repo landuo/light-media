@@ -5,7 +5,6 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"io"
 	"math"
 	"net/http"
 	"net/url"
@@ -82,7 +81,7 @@ func (a *App) requestOriginalPluginServer(ctx context.Context, method, path stri
 	if payload != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}
-	client, err := a.originalPluginHTTPClient(timeout, false)
+	client, err := a.originalPluginHTTPClientWithBase(timeout, false, originalPluginSourceTLSBase())
 	if err != nil {
 		return nil, &APIError{"PLUGIN_SERVER_UNAVAILABLE", "插件统计与评分服务代理配置无效", http.StatusBadGateway}
 	}
@@ -110,8 +109,8 @@ func (a *App) requestOriginalPluginServer(ctx context.Context, method, path stri
 		return nil, &APIError{"PLUGIN_SERVER_UNAVAILABLE", "插件统计与评分服务连接失败", http.StatusBadGateway}
 	}
 	defer res.Body.Close()
-	body, err := io.ReadAll(io.LimitReader(res.Body, (2<<20)+1))
-	if err != nil || len(body) > 2<<20 || res.StatusCode != http.StatusOK {
+	body, err := readOriginalPluginCenterBody(ctx, res.Body)
+	if err != nil || res.StatusCode != http.StatusOK {
 		return nil, &APIError{"PLUGIN_SERVER_UNAVAILABLE", "插件统计与评分服务返回失败", http.StatusBadGateway}
 	}
 	return body, nil
