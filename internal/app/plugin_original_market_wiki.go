@@ -1,6 +1,7 @@
 package app
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -82,12 +83,30 @@ func fetchOriginalMarketWiki(ctx context.Context, source string, client *http.Cl
 	if res.StatusCode != http.StatusOK {
 		return nil, fmt.Errorf("访问 Wiki 插件仓库清单失败，状态码：%d", res.StatusCode)
 	}
-	const maxWikiBytes = 2 << 20
-	body, err := io.ReadAll(io.LimitReader(res.Body, maxWikiBytes+1))
-	if err != nil || len(body) > maxWikiBytes {
-		return nil, errors.New("Wiki 插件仓库清单读取失败或过大")
+	// Source consumes the complete fixed Wiki document, without an extra total
+	// byte ceiling. Read in finite chunks with the existing request cancellation;
+	// this is not an executable-artifact or generic HTTP budget change.
+	var body bytes.Buffer
+	chunk := make([]byte, 32*1024)
+	for {
+		if ctx.Err() != nil {
+			return nil, errors.New("Wiki 插件仓库清单读取失败")
+		}
+		n, readErr := res.Body.Read(chunk)
+		if n > 0 {
+			_, _ = body.Write(chunk[:n])
+		}
+		if readErr == io.EOF {
+			break
+		}
+		if readErr != nil {
+			return nil, errors.New("Wiki 插件仓库清单读取失败")
+		}
 	}
-	repos := extractOriginalWikiRepositories(string(body))
+	if ctx.Err() != nil {
+		return nil, errors.New("Wiki 插件仓库清单读取失败")
+	}
+	repos := extractOriginalWikiRepositories(body.String())
 	if len(repos) == 0 {
 		return nil, errors.New("未在 Wiki 中识别到插件仓库地址")
 	}
@@ -138,14 +157,15 @@ func (a *App) originalMarketWikiHTTP(w http.ResponseWriter, r *http.Request) (an
 			return nil, err
 		}
 	}
-	source := strings.TrimSpace(input.WikiURL)
+	source := input.WikiURL
 	if source == "" {
 		source = originalPluginMarketWikiURL
 	}
+	source = strings.TrimFunc(source, originalPluginVersionSpace)
 	if !allowedOriginalMarketWikiURL(source) {
 		return map[string]any{"success": false, "message": "不支持的 Wiki 同步地址"}, nil
 	}
-	client, err := a.originalPluginHTTPClient(30*time.Second, false)
+	client, err := a.originalPluginHTTPClientWithBase(30*time.Second, false, originalPluginSourceTLSBase())
 	if err != nil {
 		return map[string]any{"success": false, "message": "插件仓库代理配置无效"}, nil
 	}
