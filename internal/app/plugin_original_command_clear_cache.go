@@ -11,7 +11,7 @@ import (
 // dispatcher. Other presets remain explicitly unavailable at the Web ingress.
 func (a *App) dispatchOriginalPresetCommand(ctx context.Context, name string, input originalCommandEvent) (bool, error) {
 	if name != "/clear_cache" {
-		return false, nil
+		return a.dispatchOriginalSystemCommand(ctx, name, input)
 	}
 	// EventManager has already accepted this command. Disconnecting the Web
 	// request must not cancel the source's separately dispatched command. The

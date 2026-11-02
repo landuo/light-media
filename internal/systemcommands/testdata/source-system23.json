@@ -1,0 +1,4975 @@
+{
+  "schema": "command40-system-source/v1",
+  "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+  "input_bindings_sha256": "3f8cb2e4caca0e376a50aa086ce771cc18398fd662e7c1a950f6d986b435d719",
+  "input_count": 87,
+  "selected_node_count": 16,
+  "cases": [
+    {
+      "id": "version-equal-local-file-strip",
+      "input": {
+        "id": "version-equal-local-file-strip",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "version",
+            "channel": "Web",
+            "userid": "owned-user",
+            "source": "owned-source"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "version",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "owned-user",
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 17,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到后端最新版本：v2.15.7"
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到前端最新版本：v2.15.6"
+        },
+        {
+          "event": "SystemUtils.is_frozen",
+          "value": false
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/frontend/version.txt"
+        },
+        {
+          "event": "open",
+          "path": "/owned/frontend/version.txt",
+          "mode": "r",
+          "kwargs": {
+            "encoding": "utf-8",
+            "errors": "replace"
+          }
+        },
+        {
+          "event": "file.read"
+        },
+        {
+          "event": "file.close"
+        },
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        }
+      ],
+      "cache_after": {},
+      "notices": [
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "source": "owned-source",
+          "title": "当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+          "userid": "owned-user",
+          "save_history": false
+        }
+      ],
+      "recording_requests": 2,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "version-digit-list-sort-not-semver",
+      "input": {
+        "id": "version-digit-list-sort-not-semver",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v1.99"
+                },
+                {
+                  "tag_name": "v2.9.9"
+                },
+                {
+                  "tag_name": "v2.10.0"
+                },
+                {
+                  "tag_name": "v2.10.0-rc.2"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.8"
+                },
+                {
+                  "tag_name": "v2.11"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": false,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "version",
+            "channel": "Web",
+            "userid": "owned-user",
+            "source": "owned-source"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "version",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "owned-user",
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 14,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到后端最新版本：v2.10.0-rc.2"
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到前端最新版本：v2.11"
+        },
+        {
+          "event": "SystemUtils.is_frozen",
+          "value": false
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/frontend/version.txt"
+        },
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，远程版本：v2.10.0-rc.2\n当前前端版本：v2.15.6，远程版本：v2.11",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，远程版本：v2.10.0-rc.2\n当前前端版本：v2.15.6，远程版本：v2.11",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        }
+      ],
+      "cache_after": {},
+      "notices": [
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "source": "owned-source",
+          "title": "当前后端版本：v2.15.7，远程版本：v2.10.0-rc.2\n当前前端版本：v2.15.6，远程版本：v2.11",
+          "userid": "owned-user",
+          "save_history": false
+        }
+      ],
+      "recording_requests": 2,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "version-no-v2-and-empty-releases",
+      "input": {
+        "id": "version-no-v2-and-empty-releases",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v3.0"
+                },
+                {
+                  "tag_name": "xv2.1"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": false,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "version",
+            "channel": "Web",
+            "userid": "owned-user",
+            "source": "owned-source"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "version",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "owned-user",
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 14,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.warn",
+          "message": "获取v2后端最新版本版本出错！"
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.warn",
+          "message": "获取v2前端最新版本版本出错！"
+        },
+        {
+          "event": "SystemUtils.is_frozen",
+          "value": false
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/frontend/version.txt"
+        },
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，远程版本：None\n当前前端版本：v2.15.6，远程版本：None",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，远程版本：None\n当前前端版本：v2.15.6，远程版本：None",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        }
+      ],
+      "cache_after": {},
+      "notices": [
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "source": "owned-source",
+          "title": "当前后端版本：v2.15.7，远程版本：None\n当前前端版本：v2.15.6，远程版本：None",
+          "userid": "owned-user",
+          "save_history": false
+        }
+      ],
+      "recording_requests": 2,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "version-request-error-and-false-response",
+      "input": {
+        "id": "version-request-error-and-false-response",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": {
+                "class": "RuntimeError",
+                "message": "owned request failure"
+              },
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": false,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "version",
+            "channel": "Web",
+            "userid": 0,
+            "source": "owned-source"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "version",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            0,
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 14,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases"
+        },
+        {
+          "event": "logger.error",
+          "message": "获取后端最新版本失败：owned request failure"
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": false
+        },
+        {
+          "event": "logger.error",
+          "message": "无法获取前端版本信息，请检查网络连接或GitHub API请求。"
+        },
+        {
+          "event": "SystemUtils.is_frozen",
+          "value": false
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/frontend/version.txt"
+        },
+        {
+          "event": "open",
+          "path": "/owned/frontend/version.txt",
+          "mode": "r",
+          "kwargs": {
+            "encoding": "utf-8",
+            "errors": "replace"
+          }
+        },
+        {
+          "event": "file.read"
+        },
+        {
+          "event": "file.close"
+        },
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，远程版本：None\n当前前端版本：v2.15.6，远程版本：None",
+            "userid": 0,
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，远程版本：None\n当前前端版本：v2.15.6，远程版本：None",
+            "userid": 0,
+            "save_history": false
+          }
+        }
+      ],
+      "cache_after": {},
+      "notices": [
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "source": "owned-source",
+          "title": "当前后端版本：v2.15.7，远程版本：None\n当前前端版本：v2.15.6，远程版本：None",
+          "userid": 0,
+          "save_history": false
+        }
+      ],
+      "recording_requests": 2,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "version-bad-tag-and-json-error",
+      "input": {
+        "id": "version-bad-tag-and-json-error",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": 7
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": {
+                "class": "ValueError",
+                "message": "owned response json failure"
+              }
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "version",
+            "channel": "Web",
+            "userid": "owned-user",
+            "source": "owned-source"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "version",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "owned-user",
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 17,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.error",
+          "message": "获取后端最新版本失败：expected string or bytes-like object, got 'int'"
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.error",
+          "message": "获取前端最新版本失败：owned response json failure"
+        },
+        {
+          "event": "SystemUtils.is_frozen",
+          "value": false
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/frontend/version.txt"
+        },
+        {
+          "event": "open",
+          "path": "/owned/frontend/version.txt",
+          "mode": "r",
+          "kwargs": {
+            "encoding": "utf-8",
+            "errors": "replace"
+          }
+        },
+        {
+          "event": "file.read"
+        },
+        {
+          "event": "file.close"
+        },
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，远程版本：None\n当前前端版本：v2.15.6，远程版本：None",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，远程版本：None\n当前前端版本：v2.15.6，远程版本：None",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        }
+      ],
+      "cache_after": {},
+      "notices": [
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "source": "owned-source",
+          "title": "当前后端版本：v2.15.7，远程版本：None\n当前前端版本：v2.15.6，远程版本：None",
+          "userid": "owned-user",
+          "save_history": false
+        }
+      ],
+      "recording_requests": 2,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "version-frontend-read-error-fallback",
+      "input": {
+        "id": "version-frontend-read-error-fallback",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": {
+              "class": "OSError",
+              "message": "owned file read failure"
+            }
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "version",
+            "channel": "Web",
+            "userid": "owned-user",
+            "source": "owned-source"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "version",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "owned-user",
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 18,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到后端最新版本：v2.15.7"
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到前端最新版本：v2.15.6"
+        },
+        {
+          "event": "SystemUtils.is_frozen",
+          "value": false
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/frontend/version.txt"
+        },
+        {
+          "event": "open",
+          "path": "/owned/frontend/version.txt",
+          "mode": "r",
+          "kwargs": {
+            "encoding": "utf-8",
+            "errors": "replace"
+          }
+        },
+        {
+          "event": "file.read"
+        },
+        {
+          "event": "file.close"
+        },
+        {
+          "event": "logger.debug",
+          "message": "加载版本文件 /owned/frontend/version.txt 出错：owned file read failure"
+        },
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        }
+      ],
+      "cache_after": {},
+      "notices": [
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "source": "owned-source",
+          "title": "当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+          "userid": "owned-user",
+          "save_history": false
+        }
+      ],
+      "recording_requests": 2,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "version-empty-local-file-and-notification-error",
+      "input": {
+        "id": "version-empty-local-file-and-notification-error",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " \n\t",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 1,
+            "error": {
+              "class": "RuntimeError",
+              "message": "owned notice failure"
+            }
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "version",
+            "channel": "Web",
+            "userid": "owned-user",
+            "source": "owned-source"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "version",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "owned-user",
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "exception": {
+            "class": "RuntimeError",
+            "module": "builtins",
+            "message": "owned notice failure",
+            "args": {
+              "tuple": [
+                "owned notice failure"
+              ]
+            }
+          },
+          "trace_end": 17,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到后端最新版本：v2.15.7"
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到前端最新版本：v2.15.6"
+        },
+        {
+          "event": "SystemUtils.is_frozen",
+          "value": false
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/frontend/version.txt"
+        },
+        {
+          "event": "open",
+          "path": "/owned/frontend/version.txt",
+          "mode": "r",
+          "kwargs": {
+            "encoding": "utf-8",
+            "errors": "replace"
+          }
+        },
+        {
+          "event": "file.read"
+        },
+        {
+          "event": "file.close"
+        },
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，已是最新版本\n当前前端版本：，远程版本：v2.15.6",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "当前后端版本：v2.15.7，已是最新版本\n当前前端版本：，远程版本：v2.15.6",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        }
+      ],
+      "cache_after": {},
+      "notices": [],
+      "recording_requests": 2,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "restart-false-helper-then-finish-once",
+      "input": {
+        "id": "restart-false-helper-then-finish-once",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              false,
+              "owned not managed"
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart",
+            "channel": "Web",
+            "userid": "owned-user",
+            "source": "owned-source"
+          },
+          {
+            "method": "restart_finish"
+          },
+          {
+            "method": "restart_finish"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "restart",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "owned-user",
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 6,
+          "cache_after": {
+            "__system_restart__": {
+              "recording_serialized_value": {
+                "channel": "Web",
+                "userid": "owned-user"
+              },
+              "decode_error": null
+            }
+          }
+        },
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 6,
+          "return": null,
+          "trace_end": 26,
+          "cache_after": {}
+        },
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 26,
+          "return": null,
+          "trace_end": 27,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "系统正在重启，请耐心等候！",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "系统正在重启，请耐心等候！",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "recording_pickle.dumps",
+          "value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          }
+        },
+        {
+          "event": "FileCache.set",
+          "key": "__system_restart__",
+          "value": {
+            "recording_serialized_value": {
+              "channel": "Web",
+              "userid": "owned-user"
+            },
+            "decode_error": null
+          }
+        },
+        {
+          "event": "SystemUtils.is_docker",
+          "value": false
+        },
+        {
+          "event": "SystemHelper.restart",
+          "outcome": {
+            "return": [
+              false,
+              "owned not managed"
+            ],
+            "error": null
+          }
+        },
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        },
+        {
+          "event": "recording_pickle.loads",
+          "value": {
+            "recording_serialized_value": {
+              "channel": "Web",
+              "userid": "owned-user"
+            },
+            "decode_error": null
+          }
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到后端最新版本：v2.15.7"
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到前端最新版本：v2.15.6"
+        },
+        {
+          "event": "SystemUtils.is_frozen",
+          "value": false
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/frontend/version.txt"
+        },
+        {
+          "event": "open",
+          "path": "/owned/frontend/version.txt",
+          "mode": "r",
+          "kwargs": {
+            "encoding": "utf-8",
+            "errors": "replace"
+          }
+        },
+        {
+          "event": "file.read"
+        },
+        {
+          "event": "file.close"
+        },
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "FileCache.delete",
+          "key": "__system_restart__"
+        },
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        }
+      ],
+      "cache_after": {},
+      "notices": [
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "source": "owned-source",
+          "title": "系统正在重启，请耐心等候！",
+          "userid": "owned-user",
+          "save_history": false
+        },
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+          "userid": "owned-user",
+          "save_history": false
+        }
+      ],
+      "recording_requests": 2,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "restart-none-channel-no-marker",
+      "input": {
+        "id": "restart-none-channel-no-marker",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart",
+            "channel": null,
+            "userid": "owned-user",
+            "source": "owned-source"
+          },
+          {
+            "method": "restart_finish"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "restart",
+          "args": [
+            null,
+            "owned-user",
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 2,
+          "cache_after": {}
+        },
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 2,
+          "return": null,
+          "trace_end": 3,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "SystemUtils.is_docker",
+          "value": false
+        },
+        {
+          "event": "SystemHelper.restart",
+          "outcome": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        }
+      ],
+      "cache_after": {},
+      "notices": [],
+      "recording_requests": 0,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "restart-zero-user-no-marker",
+      "input": {
+        "id": "restart-zero-user-no-marker",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart",
+            "channel": "Web",
+            "userid": 0,
+            "source": "owned-source"
+          },
+          {
+            "method": "restart_finish"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "restart",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            0,
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 2,
+          "cache_after": {}
+        },
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 2,
+          "return": null,
+          "trace_end": 3,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "SystemUtils.is_docker",
+          "value": false
+        },
+        {
+          "event": "SystemHelper.restart",
+          "outcome": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        }
+      ],
+      "cache_after": {},
+      "notices": [],
+      "recording_requests": 0,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "restart-save-failure-caught-continues",
+      "input": {
+        "id": "restart-save-failure-caught-continues",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": {
+              "class": "RuntimeError",
+              "message": "owned cache write failure"
+            },
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart",
+            "channel": "Web",
+            "userid": "owned-user",
+            "source": "owned-source"
+          },
+          {
+            "method": "restart_finish"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "restart",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "owned-user",
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 7,
+          "cache_after": {}
+        },
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 7,
+          "return": null,
+          "trace_end": 8,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "系统正在重启，请耐心等候！",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "系统正在重启，请耐心等候！",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "recording_pickle.dumps",
+          "value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          }
+        },
+        {
+          "event": "FileCache.set",
+          "key": "__system_restart__",
+          "value": {
+            "recording_serialized_value": {
+              "channel": "Web",
+              "userid": "owned-user"
+            },
+            "decode_error": null
+          }
+        },
+        {
+          "event": "logger.error",
+          "message": "保存缓存 __system_restart__ 出错：owned cache write failure"
+        },
+        {
+          "event": "SystemUtils.is_docker",
+          "value": false
+        },
+        {
+          "event": "SystemHelper.restart",
+          "outcome": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        }
+      ],
+      "cache_after": {},
+      "notices": [
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "source": "owned-source",
+          "title": "系统正在重启，请耐心等候！",
+          "userid": "owned-user",
+          "save_history": false
+        }
+      ],
+      "recording_requests": 0,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "restart-backup-copy-failure-caught-continues",
+      "input": {
+        "id": "restart-backup-copy-failure-caught-continues",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": true,
+            "plugins_exist": true,
+            "items": [
+              [
+                "OwnedPlugin",
+                "dir"
+              ]
+            ],
+            "existing_targets": [],
+            "copy_error": {
+              "class": "OSError",
+              "message": "owned backup failure"
+            }
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart",
+            "channel": "Web",
+            "userid": "owned-user",
+            "source": "owned-source"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "restart",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "owned-user",
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 13,
+          "cache_after": {
+            "__system_restart__": {
+              "recording_serialized_value": {
+                "channel": "Web",
+                "userid": "owned-user"
+              },
+              "decode_error": null
+            }
+          }
+        }
+      ],
+      "trace": [
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "系统正在重启，请耐心等候！",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "系统正在重启，请耐心等候！",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "recording_pickle.dumps",
+          "value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          }
+        },
+        {
+          "event": "FileCache.set",
+          "key": "__system_restart__",
+          "value": {
+            "recording_serialized_value": {
+              "channel": "Web",
+              "userid": "owned-user"
+            },
+            "decode_error": null
+          }
+        },
+        {
+          "event": "SystemUtils.is_docker",
+          "value": true
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/root/app/plugins"
+        },
+        {
+          "event": "path.mkdir",
+          "path": "/owned/config/plugins_backup",
+          "kwargs": {
+            "parents": true,
+            "exist_ok": true
+          }
+        },
+        {
+          "event": "path.iterdir",
+          "path": "/owned/root/app/plugins"
+        },
+        {
+          "event": "path.is_dir",
+          "name": "OwnedPlugin"
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/config/plugins_backup/OwnedPlugin"
+        },
+        {
+          "event": "shutil.copytree",
+          "source": "/owned/root/app/plugins/OwnedPlugin",
+          "target": "/owned/config/plugins_backup/OwnedPlugin"
+        },
+        {
+          "event": "logger.error",
+          "message": "插件备份失败: owned backup failure"
+        },
+        {
+          "event": "SystemHelper.restart",
+          "outcome": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        }
+      ],
+      "cache_after": {
+        "__system_restart__": {
+          "recording_serialized_value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          },
+          "decode_error": null
+        }
+      },
+      "notices": [
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "source": "owned-source",
+          "title": "系统正在重启，请耐心等候！",
+          "userid": "owned-user",
+          "save_history": false
+        }
+      ],
+      "recording_requests": 0,
+      "existing_recording_targets": [
+        "/owned/config/plugins_backup"
+      ]
+    },
+    {
+      "id": "restart-initial-notice-failure-stops",
+      "input": {
+        "id": "restart-initial-notice-failure-stops",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 1,
+            "error": {
+              "class": "RuntimeError",
+              "message": "owned first notice failure"
+            }
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart",
+            "channel": "Web",
+            "userid": "owned-user",
+            "source": "owned-source"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "restart",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "owned-user",
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "exception": {
+            "class": "RuntimeError",
+            "module": "builtins",
+            "message": "owned first notice failure",
+            "args": {
+              "tuple": [
+                "owned first notice failure"
+              ]
+            }
+          },
+          "trace_end": 2,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "系统正在重启，请耐心等候！",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "系统正在重启，请耐心等候！",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        }
+      ],
+      "cache_after": {},
+      "notices": [],
+      "recording_requests": 0,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "restart-helper-exception-keeps-marker",
+      "input": {
+        "id": "restart-helper-exception-keeps-marker",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": {
+              "class": "RuntimeError",
+              "message": "owned lifecycle failure"
+            }
+          }
+        },
+        "calls": [
+          {
+            "method": "restart",
+            "channel": "Web",
+            "userid": "owned-user",
+            "source": "owned-source"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "restart",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "owned-user",
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "exception": {
+            "class": "RuntimeError",
+            "module": "builtins",
+            "message": "owned lifecycle failure",
+            "args": {
+              "tuple": [
+                "owned lifecycle failure"
+              ]
+            }
+          },
+          "trace_end": 6,
+          "cache_after": {
+            "__system_restart__": {
+              "recording_serialized_value": {
+                "channel": "Web",
+                "userid": "owned-user"
+              },
+              "decode_error": null
+            }
+          }
+        }
+      ],
+      "trace": [
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "系统正在重启，请耐心等候！",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "系统正在重启，请耐心等候！",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "recording_pickle.dumps",
+          "value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          }
+        },
+        {
+          "event": "FileCache.set",
+          "key": "__system_restart__",
+          "value": {
+            "recording_serialized_value": {
+              "channel": "Web",
+              "userid": "owned-user"
+            },
+            "decode_error": null
+          }
+        },
+        {
+          "event": "SystemUtils.is_docker",
+          "value": false
+        },
+        {
+          "event": "SystemHelper.restart",
+          "outcome": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": {
+              "class": "RuntimeError",
+              "message": "owned lifecycle failure"
+            }
+          }
+        }
+      ],
+      "cache_after": {
+        "__system_restart__": {
+          "recording_serialized_value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          },
+          "decode_error": null
+        }
+      },
+      "notices": [
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "source": "owned-source",
+          "title": "系统正在重启，请耐心等候！",
+          "userid": "owned-user",
+          "save_history": false
+        }
+      ],
+      "recording_requests": 0,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "finish-old-json-marker-once",
+      "input": {
+        "id": "finish-old-json-marker-once",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": true,
+            "seed": "{\"channel\": \"Web\", \"userid\": 7, \"source\": \"owned-ignored-source\"}",
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart_finish"
+          },
+          {
+            "method": "restart_finish"
+          }
+        ]
+      },
+      "cache_before": {
+        "__system_restart__": {
+          "recording_serialized_value": "{\"channel\": \"Web\", \"userid\": 7, \"source\": \"owned-ignored-source\"}",
+          "decode_error": null
+        }
+      },
+      "calls": [
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 20,
+          "cache_after": {}
+        },
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 20,
+          "return": null,
+          "trace_end": 21,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        },
+        {
+          "event": "recording_pickle.loads",
+          "value": {
+            "recording_serialized_value": "{\"channel\": \"Web\", \"userid\": 7, \"source\": \"owned-ignored-source\"}",
+            "decode_error": null
+          }
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到后端最新版本：v2.15.7"
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到前端最新版本：v2.15.6"
+        },
+        {
+          "event": "SystemUtils.is_frozen",
+          "value": false
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/frontend/version.txt"
+        },
+        {
+          "event": "open",
+          "path": "/owned/frontend/version.txt",
+          "mode": "r",
+          "kwargs": {
+            "encoding": "utf-8",
+            "errors": "replace"
+          }
+        },
+        {
+          "event": "file.read"
+        },
+        {
+          "event": "file.close"
+        },
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": 7,
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": 7,
+            "save_history": false
+          }
+        },
+        {
+          "event": "FileCache.delete",
+          "key": "__system_restart__"
+        },
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        }
+      ],
+      "cache_after": {},
+      "notices": [
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+          "userid": 7,
+          "save_history": false
+        }
+      ],
+      "recording_requests": 2,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "finish-invalid-json-keeps-marker",
+      "input": {
+        "id": "finish-invalid-json-keeps-marker",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": true,
+            "seed": "{owned-invalid",
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart_finish"
+          }
+        ]
+      },
+      "cache_before": {
+        "__system_restart__": {
+          "recording_serialized_value": "{owned-invalid",
+          "decode_error": null
+        }
+      },
+      "calls": [
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 0,
+          "exception": {
+            "class": "JSONDecodeError",
+            "module": "json.decoder",
+            "message": "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)",
+            "args": {
+              "tuple": [
+                "Expecting property name enclosed in double quotes: line 1 column 2 (char 1)"
+              ]
+            }
+          },
+          "trace_end": 2,
+          "cache_after": {
+            "__system_restart__": {
+              "recording_serialized_value": "{owned-invalid",
+              "decode_error": null
+            }
+          }
+        }
+      ],
+      "trace": [
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        },
+        {
+          "event": "recording_pickle.loads",
+          "value": {
+            "recording_serialized_value": "{owned-invalid",
+            "decode_error": null
+          }
+        }
+      ],
+      "cache_after": {
+        "__system_restart__": {
+          "recording_serialized_value": "{owned-invalid",
+          "decode_error": null
+        }
+      },
+      "notices": [],
+      "recording_requests": 0,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "finish-unknown-channel-missing-user",
+      "input": {
+        "id": "finish-unknown-channel-missing-user",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": true,
+            "seed": {
+              "channel": "owned-unknown-channel"
+            },
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart_finish"
+          }
+        ]
+      },
+      "cache_before": {
+        "__system_restart__": {
+          "recording_serialized_value": {
+            "channel": "owned-unknown-channel"
+          },
+          "decode_error": null
+        }
+      },
+      "calls": [
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 20,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        },
+        {
+          "event": "recording_pickle.loads",
+          "value": {
+            "recording_serialized_value": {
+              "channel": "owned-unknown-channel"
+            },
+            "decode_error": null
+          }
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到后端最新版本：v2.15.7"
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到前端最新版本：v2.15.6"
+        },
+        {
+          "event": "SystemUtils.is_frozen",
+          "value": false
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/frontend/version.txt"
+        },
+        {
+          "event": "open",
+          "path": "/owned/frontend/version.txt",
+          "mode": "r",
+          "kwargs": {
+            "encoding": "utf-8",
+            "errors": "replace"
+          }
+        },
+        {
+          "event": "file.read"
+        },
+        {
+          "event": "file.close"
+        },
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": null,
+            "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": null,
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": null,
+            "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": null,
+            "save_history": false
+          }
+        },
+        {
+          "event": "FileCache.delete",
+          "key": "__system_restart__"
+        }
+      ],
+      "cache_after": {},
+      "notices": [
+        {
+          "channel": null,
+          "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+          "userid": null,
+          "save_history": false
+        }
+      ],
+      "recording_requests": 2,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "finish-notice-failure-keeps-marker",
+      "input": {
+        "id": "finish-notice-failure-keeps-marker",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": true,
+            "seed": {
+              "channel": "Web",
+              "userid": "owned-user"
+            },
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 1,
+            "error": {
+              "class": "RuntimeError",
+              "message": "owned completion notice failure"
+            }
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart_finish"
+          }
+        ]
+      },
+      "cache_before": {
+        "__system_restart__": {
+          "recording_serialized_value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          },
+          "decode_error": null
+        }
+      },
+      "calls": [
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 0,
+          "exception": {
+            "class": "RuntimeError",
+            "module": "builtins",
+            "message": "owned completion notice failure",
+            "args": {
+              "tuple": [
+                "owned completion notice failure"
+              ]
+            }
+          },
+          "trace_end": 19,
+          "cache_after": {
+            "__system_restart__": {
+              "recording_serialized_value": {
+                "channel": "Web",
+                "userid": "owned-user"
+              },
+              "decode_error": null
+            }
+          }
+        }
+      ],
+      "trace": [
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        },
+        {
+          "event": "recording_pickle.loads",
+          "value": {
+            "recording_serialized_value": {
+              "channel": "Web",
+              "userid": "owned-user"
+            },
+            "decode_error": null
+          }
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到后端最新版本：v2.15.7"
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到前端最新版本：v2.15.6"
+        },
+        {
+          "event": "SystemUtils.is_frozen",
+          "value": false
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/frontend/version.txt"
+        },
+        {
+          "event": "open",
+          "path": "/owned/frontend/version.txt",
+          "mode": "r",
+          "kwargs": {
+            "encoding": "utf-8",
+            "errors": "replace"
+          }
+        },
+        {
+          "event": "file.read"
+        },
+        {
+          "event": "file.close"
+        },
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        }
+      ],
+      "cache_after": {
+        "__system_restart__": {
+          "recording_serialized_value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          },
+          "decode_error": null
+        }
+      },
+      "notices": [],
+      "recording_requests": 2,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "finish-cache-get-error-uncaught",
+      "input": {
+        "id": "finish-cache-get-error-uncaught",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": {
+              "class": "RuntimeError",
+              "message": "owned cache get failure"
+            },
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart_finish"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 0,
+          "exception": {
+            "class": "RuntimeError",
+            "module": "builtins",
+            "message": "owned cache get failure",
+            "args": {
+              "tuple": [
+                "owned cache get failure"
+              ]
+            }
+          },
+          "trace_end": 1,
+          "cache_after": {}
+        }
+      ],
+      "trace": [
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        }
+      ],
+      "cache_after": {},
+      "notices": [],
+      "recording_requests": 0,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "finish-delete-error-after-notice",
+      "input": {
+        "id": "finish-delete-error-after-notice",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": true,
+            "seed": {
+              "channel": "Web",
+              "userid": "owned-user"
+            },
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": {
+              "class": "RuntimeError",
+              "message": "owned cache delete failure"
+            }
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart_finish"
+          }
+        ]
+      },
+      "cache_before": {
+        "__system_restart__": {
+          "recording_serialized_value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          },
+          "decode_error": null
+        }
+      },
+      "calls": [
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 0,
+          "exception": {
+            "class": "RuntimeError",
+            "module": "builtins",
+            "message": "owned cache delete failure",
+            "args": {
+              "tuple": [
+                "owned cache delete failure"
+              ]
+            }
+          },
+          "trace_end": 20,
+          "cache_after": {
+            "__system_restart__": {
+              "recording_serialized_value": {
+                "channel": "Web",
+                "userid": "owned-user"
+              },
+              "decode_error": null
+            }
+          }
+        }
+      ],
+      "trace": [
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        },
+        {
+          "event": "recording_pickle.loads",
+          "value": {
+            "recording_serialized_value": {
+              "channel": "Web",
+              "userid": "owned-user"
+            },
+            "decode_error": null
+          }
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/landuo/MoviePilot/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到后端最新版本：v2.15.7"
+        },
+        {
+          "event": "RequestUtils.init",
+          "kwargs": {
+            "proxies": {
+              "https": "recording://owned-proxy"
+            },
+            "headers": {
+              "User-Agent": "owned-original-contract"
+            }
+          }
+        },
+        {
+          "event": "RequestUtils.get_res",
+          "url": "https://api.github.com/repos/jxxghp/MoviePilot-Frontend/releases"
+        },
+        {
+          "event": "Response.bool",
+          "value": true
+        },
+        {
+          "event": "Response.json"
+        },
+        {
+          "event": "logger.info",
+          "message": "获取到前端最新版本：v2.15.6"
+        },
+        {
+          "event": "SystemUtils.is_frozen",
+          "value": false
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/frontend/version.txt"
+        },
+        {
+          "event": "open",
+          "path": "/owned/frontend/version.txt",
+          "mode": "r",
+          "kwargs": {
+            "encoding": "utf-8",
+            "errors": "replace"
+          }
+        },
+        {
+          "event": "file.read"
+        },
+        {
+          "event": "file.close"
+        },
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "FileCache.delete",
+          "key": "__system_restart__"
+        }
+      ],
+      "cache_after": {
+        "__system_restart__": {
+          "recording_serialized_value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          },
+          "decode_error": null
+        }
+      },
+      "notices": [
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "title": "系统已重启完成！\n当前后端版本：v2.15.7，已是最新版本\n当前前端版本：v2.15.6，已是最新版本",
+          "userid": "owned-user",
+          "save_history": false
+        }
+      ],
+      "recording_requests": 2,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "finish-decode-error-caught-none",
+      "input": {
+        "id": "finish-decode-error-caught-none",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": true,
+            "seed": {
+              "channel": "Web",
+              "userid": "owned-user"
+            },
+            "decode_error": {
+              "class": "ValueError",
+              "message": "owned serialization failure"
+            },
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart_finish"
+          }
+        ]
+      },
+      "cache_before": {
+        "__system_restart__": {
+          "recording_serialized_value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          },
+          "decode_error": {
+            "class": "ValueError",
+            "message": "owned serialization failure"
+          }
+        }
+      },
+      "calls": [
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 3,
+          "cache_after": {
+            "__system_restart__": {
+              "recording_serialized_value": {
+                "channel": "Web",
+                "userid": "owned-user"
+              },
+              "decode_error": {
+                "class": "ValueError",
+                "message": "owned serialization failure"
+              }
+            }
+          }
+        }
+      ],
+      "trace": [
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        },
+        {
+          "event": "recording_pickle.loads",
+          "value": {
+            "recording_serialized_value": {
+              "channel": "Web",
+              "userid": "owned-user"
+            },
+            "decode_error": {
+              "class": "ValueError",
+              "message": "owned serialization failure"
+            }
+          }
+        },
+        {
+          "event": "logger.error",
+          "message": "加载缓存 __system_restart__ 出错：owned serialization failure"
+        }
+      ],
+      "cache_after": {
+        "__system_restart__": {
+          "recording_serialized_value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          },
+          "decode_error": {
+            "class": "ValueError",
+            "message": "owned serialization failure"
+          }
+        }
+      },
+      "notices": [],
+      "recording_requests": 0,
+      "existing_recording_targets": []
+    },
+    {
+      "id": "restart-recording-backup-excludes-and-no-overwrite",
+      "input": {
+        "id": "restart-recording-backup-excludes-and-no-overwrite",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": true,
+            "plugins_exist": true,
+            "items": [
+              [
+                "__init__.py",
+                "file"
+              ],
+              [
+                "__pycache__",
+                "dir"
+              ],
+              [
+                ".DS_Store",
+                "file"
+              ],
+              [
+                "Existing",
+                "dir"
+              ],
+              [
+                "OwnedPlugin",
+                "dir"
+              ],
+              [
+                "owned.py",
+                "file"
+              ]
+            ],
+            "existing_targets": [
+              "/owned/config/plugins_backup/Existing"
+            ],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": false,
+            "seed": null,
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart",
+            "channel": "Web",
+            "userid": "owned-user",
+            "source": "owned-source"
+          }
+        ]
+      },
+      "cache_before": {},
+      "calls": [
+        {
+          "method": "restart",
+          "args": [
+            {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "owned-user",
+            "owned-source"
+          ],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 21,
+          "cache_after": {
+            "__system_restart__": {
+              "recording_serialized_value": {
+                "channel": "Web",
+                "userid": "owned-user"
+              },
+              "decode_error": null
+            }
+          }
+        }
+      ],
+      "trace": [
+        {
+          "event": "Notification",
+          "kwargs": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "系统正在重启，请耐心等候！",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "post_message",
+          "notice": {
+            "channel": {
+              "enum": "MessageChannel",
+              "name": "Web",
+              "value": "Web"
+            },
+            "source": "owned-source",
+            "title": "系统正在重启，请耐心等候！",
+            "userid": "owned-user",
+            "save_history": false
+          }
+        },
+        {
+          "event": "recording_pickle.dumps",
+          "value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          }
+        },
+        {
+          "event": "FileCache.set",
+          "key": "__system_restart__",
+          "value": {
+            "recording_serialized_value": {
+              "channel": "Web",
+              "userid": "owned-user"
+            },
+            "decode_error": null
+          }
+        },
+        {
+          "event": "SystemUtils.is_docker",
+          "value": true
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/root/app/plugins"
+        },
+        {
+          "event": "path.mkdir",
+          "path": "/owned/config/plugins_backup",
+          "kwargs": {
+            "parents": true,
+            "exist_ok": true
+          }
+        },
+        {
+          "event": "path.iterdir",
+          "path": "/owned/root/app/plugins"
+        },
+        {
+          "event": "path.is_dir",
+          "name": "Existing"
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/config/plugins_backup/Existing"
+        },
+        {
+          "event": "path.is_dir",
+          "name": "OwnedPlugin"
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/config/plugins_backup/OwnedPlugin"
+        },
+        {
+          "event": "shutil.copytree",
+          "source": "/owned/root/app/plugins/OwnedPlugin",
+          "target": "/owned/config/plugins_backup/OwnedPlugin"
+        },
+        {
+          "event": "logger.debug",
+          "message": "已备份插件目录: OwnedPlugin"
+        },
+        {
+          "event": "path.is_dir",
+          "name": "owned.py"
+        },
+        {
+          "event": "path.is_file",
+          "name": "owned.py"
+        },
+        {
+          "event": "path.exists",
+          "path": "/owned/config/plugins_backup/owned.py"
+        },
+        {
+          "event": "shutil.copy2",
+          "source": "/owned/root/app/plugins/owned.py",
+          "target": "/owned/config/plugins_backup/owned.py"
+        },
+        {
+          "event": "logger.info",
+          "message": "已备份插件文件: owned.py"
+        },
+        {
+          "event": "logger.info",
+          "message": "插件备份完成，备份位置: /owned/config/plugins_backup"
+        },
+        {
+          "event": "SystemHelper.restart",
+          "outcome": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        }
+      ],
+      "cache_after": {
+        "__system_restart__": {
+          "recording_serialized_value": {
+            "channel": "Web",
+            "userid": "owned-user"
+          },
+          "decode_error": null
+        }
+      },
+      "notices": [
+        {
+          "channel": {
+            "enum": "MessageChannel",
+            "name": "Web",
+            "value": "Web"
+          },
+          "source": "owned-source",
+          "title": "系统正在重启，请耐心等候！",
+          "userid": "owned-user",
+          "save_history": false
+        }
+      ],
+      "recording_requests": 0,
+      "existing_recording_targets": [
+        "/owned/config/plugins_backup",
+        "/owned/config/plugins_backup/Existing",
+        "/owned/config/plugins_backup/OwnedPlugin",
+        "/owned/config/plugins_backup/owned.py"
+      ]
+    },
+    {
+      "id": "finish-empty-marker-no-notice",
+      "input": {
+        "id": "finish-empty-marker-no-notice",
+        "ports": {
+          "requests": [
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.7"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            },
+            {
+              "none": false,
+              "truthy": true,
+              "json": [
+                {
+                  "tag_name": "v2.15.6"
+                }
+              ],
+              "request_error": null,
+              "json_error": null
+            }
+          ],
+          "frontend": {
+            "exists": true,
+            "text": " v2.15.6\n",
+            "open_error": null,
+            "read_error": null
+          },
+          "backup": {
+            "docker": false,
+            "plugins_exist": true,
+            "items": [],
+            "existing_targets": [],
+            "copy_error": null
+          },
+          "cache": {
+            "seed_present": true,
+            "seed": {},
+            "decode_error": null,
+            "get_error": null,
+            "set_error": null,
+            "delete_error": null
+          },
+          "notice": {
+            "error_on": 0,
+            "error": null
+          },
+          "restart": {
+            "return": [
+              true,
+              ""
+            ],
+            "error": null
+          }
+        },
+        "calls": [
+          {
+            "method": "restart_finish"
+          }
+        ]
+      },
+      "cache_before": {
+        "__system_restart__": {
+          "recording_serialized_value": {},
+          "decode_error": null
+        }
+      },
+      "calls": [
+        {
+          "method": "restart_finish",
+          "args": [],
+          "trace_start": 0,
+          "return": null,
+          "trace_end": 2,
+          "cache_after": {
+            "__system_restart__": {
+              "recording_serialized_value": {},
+              "decode_error": null
+            }
+          }
+        }
+      ],
+      "trace": [
+        {
+          "event": "FileCache.get",
+          "key": "__system_restart__"
+        },
+        {
+          "event": "recording_pickle.loads",
+          "value": {
+            "recording_serialized_value": {},
+            "decode_error": null
+          }
+        }
+      ],
+      "cache_after": {
+        "__system_restart__": {
+          "recording_serialized_value": {},
+          "decode_error": null
+        }
+      },
+      "notices": [],
+      "recording_requests": 0,
+      "existing_recording_targets": []
+    }
+  ],
+  "modules_before": {
+    "_frozen_importlib_external": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap_external.py",
+      "sha256": "e6ad72f3f0f9b65c99ab52598cd02ab748511dcdce1dd51f18dace9be9a680c6"
+    },
+    "zipimport": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/zipimport.py",
+      "sha256": "a96f1d7a7b6aaf421a3cf382b94b1422f4f0ad452fdd0bb61d635b560d7a4e91"
+    },
+    "codecs": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/codecs.py",
+      "sha256": "7b7839e53a77961153240aecfe11edc8054d05b1dedd83894450dae21ec05785"
+    },
+    "encodings.aliases": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/aliases.py",
+      "sha256": "6fdcc49ba23a0203ae6cf28e608f8e6297d7c4d77d52e651db3cb49b9564c6d2"
+    },
+    "encodings": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__init__.py",
+      "sha256": "78c4744d407690f321565488710b5aaf6486b5afa8d185637aa1e7633ab59cd8"
+    },
+    "encodings.utf_8": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/utf_8.py",
+      "sha256": "ba0cac060269583523ca9506473a755203037c57d466a11aa89a30a5f6756f3d"
+    },
+    "abc": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/abc.py",
+      "sha256": "e558702a95cdce3febd289da021715d2b92bc43995b8a1bc58dfa1c3d8010287"
+    },
+    "io": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/io.py",
+      "sha256": "7cec3cb8ac004058dd0a5af246e6d950fb59c7ddd0058fda48bcb3fcb98d8822"
+    },
+    "__main__": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/command40-system01/capture_system_commands.py",
+      "sha256": "0e7528909acc12cc4aea8d166a69036b23592436f4ca1a9c129a937efb45e23f"
+    },
+    "types": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/types.py",
+      "sha256": "345474ef027a1273f353da9bdc1f7c18f65335e72e681bcc0376774cc51f2405"
+    },
+    "operator": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/operator.py",
+      "sha256": "b2af20f67667203c1730e686cc5d0427becc94db4c97f1d3efe3ed2158473f6a"
+    },
+    "_collections_abc": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_collections_abc.py",
+      "sha256": "d4945c8410c4bab351741b04bca3de066f7c27ed7e38df89e206a96617102ffb"
+    },
+    "keyword": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/keyword.py",
+      "sha256": "18c2be738c04ad20ad375f6a71db34b3823c7f40b0340f5294d0e89f3c9b093b"
+    },
+    "reprlib": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/reprlib.py",
+      "sha256": "e177bc70da83a7fbcde6fd261dc15da34e8a20873b1cccd4f9a1f8f27cca3779"
+    },
+    "collections": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/__init__.py",
+      "sha256": "7fdb04dd248ab37909f46d2085bfee56b32d7e91e49ad3a2fad99c453295659b"
+    },
+    "functools": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/functools.py",
+      "sha256": "de4a1d37c795e2a065124b5c49357893433bc6bb111b41277ccc9930ef08d4c9"
+    },
+    "enum": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/enum.py",
+      "sha256": "f35e542d8c4c1d2b5e910138d726fa48774925f3c4dc5462793ebcb66aa55501"
+    },
+    "re._constants": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_constants.py",
+      "sha256": "fa4fdb200f238f9e7817b63892b0d69833d8165134801e775e10cc113348a375"
+    },
+    "re._parser": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_parser.py",
+      "sha256": "a51a85b37cf3f44ba7ff25754da5f31306e4ccfa6eb3c017f9d37bdf4e770840"
+    },
+    "re._casefix": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_casefix.py",
+      "sha256": "1b12d9136f23db6c3f6f26053fefc15ca964b886838c7b9c1fabf8d2efc1e5c8"
+    },
+    "re._compiler": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_compiler.py",
+      "sha256": "c75620761098a70ed75b9accef63ef2881d8abb6d4e5cbfd10074bd165eefe4d"
+    },
+    "copyreg": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/copyreg.py",
+      "sha256": "c8eda41f05c6bf95a4da4726a530409d2485ae060b8d019b3a8034389a15d3e9"
+    },
+    "re": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__init__.py",
+      "sha256": "8ff3c37c63b917fcf8dc8d50993a502292a3dc159e41de4f4018c72a53d1c07b"
+    },
+    "stat": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/stat.py",
+      "sha256": "052af0327eae6941b69b05c088b3e748f79995635f80ac4cc7125eb333eb4c77"
+    },
+    "genericpath": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/genericpath.py",
+      "sha256": "2b0b35d2206778af4081cf81dd9b513876e72c35a55bec941402e1fa62b1f1aa"
+    },
+    "posixpath": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/posixpath.py",
+      "sha256": "03825681086638649a43480954f7f6a16b4da3bd41ece956864ae96e4f795cd9"
+    },
+    "os.path": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/posixpath.py",
+      "sha256": "03825681086638649a43480954f7f6a16b4da3bd41ece956864ae96e4f795cd9"
+    },
+    "os": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/os.py",
+      "sha256": "54c43a1fc69c979c70d8f7d097174cee163bfe59937723ee353043dd4a0211e1"
+    },
+    "contextlib": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py",
+      "sha256": "8b7a477f978a8532852fd81e241c78182516bc4975d672d580a5848a76e11eb6"
+    },
+    "ast": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ast.py",
+      "sha256": "b515c23dbbc459329d3b802a3aac742cc456d7472e66f7ed6e9dc97e40596d7d"
+    },
+    "hashlib": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/hashlib.py",
+      "sha256": "6dbdebf270868b391080e21dc9687eddfaf321c965ad979f68d3f5c423c613ab"
+    },
+    "json.scanner": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/scanner.py",
+      "sha256": "572958017eae8842eeddd0e3d18d3c56cc0a197348224915e1d87ce937841764"
+    },
+    "json.decoder": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py",
+      "sha256": "382cd02af6f7efede5a6d4abbcda1015e5c7a75794b0016022878f9cf32a24f6"
+    },
+    "json.encoder": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py",
+      "sha256": "52bfb1b66029cc70fa3bd7fe11df9f2e03922d413407a341b387a22c987f24f8"
+    },
+    "json": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py",
+      "sha256": "d5d41e2c29049515d295d81a6d40b4890fbec8d8482cfb401630f8ef2f77e4d5"
+    },
+    "__future__": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__future__.py",
+      "sha256": "981d4c398849f9ebcab72300d9c1fe288fd6d7f28957b3b3fa3a493a5836d95c"
+    },
+    "fnmatch": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/fnmatch.py",
+      "sha256": "6683da36e47af523f3f41e18ad244d837783e19e98911cc0b7415dea81494ebc"
+    },
+    "ntpath": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ntpath.py",
+      "sha256": "6c0d55ee892f98ef87b1ed3c50c9dfc7e267a98d2db47e08d3dc67529af56725"
+    },
+    "warnings": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/warnings.py",
+      "sha256": "6405e281882932205eae641b2d31fba7776f94517a206d289465a1caffbf310e"
+    },
+    "urllib": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ipaddress": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ipaddress.py",
+      "sha256": "ba8d3389ff084fcb232b48204ec04f2b3ea4bd0eadf7b18c814947d185de2c64"
+    },
+    "urllib.parse": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py",
+      "sha256": "e6af7f475262f1de335bb2e41e26adb94d6103977cf5fe1ddc430dc6a3b1623f"
+    },
+    "pathlib": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py",
+      "sha256": "10ba48ae8063cfe7589436041d0d4628c05f427c7709cf8e75e486f8930cc32c"
+    }
+  },
+  "modules_after": {
+    "_frozen_importlib_external": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap_external.py",
+      "sha256": "e6ad72f3f0f9b65c99ab52598cd02ab748511dcdce1dd51f18dace9be9a680c6"
+    },
+    "zipimport": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/zipimport.py",
+      "sha256": "a96f1d7a7b6aaf421a3cf382b94b1422f4f0ad452fdd0bb61d635b560d7a4e91"
+    },
+    "codecs": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/codecs.py",
+      "sha256": "7b7839e53a77961153240aecfe11edc8054d05b1dedd83894450dae21ec05785"
+    },
+    "encodings.aliases": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/aliases.py",
+      "sha256": "6fdcc49ba23a0203ae6cf28e608f8e6297d7c4d77d52e651db3cb49b9564c6d2"
+    },
+    "encodings": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__init__.py",
+      "sha256": "78c4744d407690f321565488710b5aaf6486b5afa8d185637aa1e7633ab59cd8"
+    },
+    "encodings.utf_8": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/utf_8.py",
+      "sha256": "ba0cac060269583523ca9506473a755203037c57d466a11aa89a30a5f6756f3d"
+    },
+    "abc": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/abc.py",
+      "sha256": "e558702a95cdce3febd289da021715d2b92bc43995b8a1bc58dfa1c3d8010287"
+    },
+    "io": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/io.py",
+      "sha256": "7cec3cb8ac004058dd0a5af246e6d950fb59c7ddd0058fda48bcb3fcb98d8822"
+    },
+    "__main__": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/command40-system01/capture_system_commands.py",
+      "sha256": "0e7528909acc12cc4aea8d166a69036b23592436f4ca1a9c129a937efb45e23f"
+    },
+    "types": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/types.py",
+      "sha256": "345474ef027a1273f353da9bdc1f7c18f65335e72e681bcc0376774cc51f2405"
+    },
+    "operator": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/operator.py",
+      "sha256": "b2af20f67667203c1730e686cc5d0427becc94db4c97f1d3efe3ed2158473f6a"
+    },
+    "_collections_abc": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_collections_abc.py",
+      "sha256": "d4945c8410c4bab351741b04bca3de066f7c27ed7e38df89e206a96617102ffb"
+    },
+    "keyword": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/keyword.py",
+      "sha256": "18c2be738c04ad20ad375f6a71db34b3823c7f40b0340f5294d0e89f3c9b093b"
+    },
+    "reprlib": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/reprlib.py",
+      "sha256": "e177bc70da83a7fbcde6fd261dc15da34e8a20873b1cccd4f9a1f8f27cca3779"
+    },
+    "collections": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/__init__.py",
+      "sha256": "7fdb04dd248ab37909f46d2085bfee56b32d7e91e49ad3a2fad99c453295659b"
+    },
+    "functools": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/functools.py",
+      "sha256": "de4a1d37c795e2a065124b5c49357893433bc6bb111b41277ccc9930ef08d4c9"
+    },
+    "enum": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/enum.py",
+      "sha256": "f35e542d8c4c1d2b5e910138d726fa48774925f3c4dc5462793ebcb66aa55501"
+    },
+    "re._constants": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_constants.py",
+      "sha256": "fa4fdb200f238f9e7817b63892b0d69833d8165134801e775e10cc113348a375"
+    },
+    "re._parser": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_parser.py",
+      "sha256": "a51a85b37cf3f44ba7ff25754da5f31306e4ccfa6eb3c017f9d37bdf4e770840"
+    },
+    "re._casefix": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_casefix.py",
+      "sha256": "1b12d9136f23db6c3f6f26053fefc15ca964b886838c7b9c1fabf8d2efc1e5c8"
+    },
+    "re._compiler": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_compiler.py",
+      "sha256": "c75620761098a70ed75b9accef63ef2881d8abb6d4e5cbfd10074bd165eefe4d"
+    },
+    "copyreg": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/copyreg.py",
+      "sha256": "c8eda41f05c6bf95a4da4726a530409d2485ae060b8d019b3a8034389a15d3e9"
+    },
+    "re": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__init__.py",
+      "sha256": "8ff3c37c63b917fcf8dc8d50993a502292a3dc159e41de4f4018c72a53d1c07b"
+    },
+    "stat": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/stat.py",
+      "sha256": "052af0327eae6941b69b05c088b3e748f79995635f80ac4cc7125eb333eb4c77"
+    },
+    "genericpath": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/genericpath.py",
+      "sha256": "2b0b35d2206778af4081cf81dd9b513876e72c35a55bec941402e1fa62b1f1aa"
+    },
+    "posixpath": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/posixpath.py",
+      "sha256": "03825681086638649a43480954f7f6a16b4da3bd41ece956864ae96e4f795cd9"
+    },
+    "os.path": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/posixpath.py",
+      "sha256": "03825681086638649a43480954f7f6a16b4da3bd41ece956864ae96e4f795cd9"
+    },
+    "os": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/os.py",
+      "sha256": "54c43a1fc69c979c70d8f7d097174cee163bfe59937723ee353043dd4a0211e1"
+    },
+    "contextlib": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py",
+      "sha256": "8b7a477f978a8532852fd81e241c78182516bc4975d672d580a5848a76e11eb6"
+    },
+    "ast": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ast.py",
+      "sha256": "b515c23dbbc459329d3b802a3aac742cc456d7472e66f7ed6e9dc97e40596d7d"
+    },
+    "hashlib": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/hashlib.py",
+      "sha256": "6dbdebf270868b391080e21dc9687eddfaf321c965ad979f68d3f5c423c613ab"
+    },
+    "json.scanner": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/scanner.py",
+      "sha256": "572958017eae8842eeddd0e3d18d3c56cc0a197348224915e1d87ce937841764"
+    },
+    "json.decoder": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py",
+      "sha256": "382cd02af6f7efede5a6d4abbcda1015e5c7a75794b0016022878f9cf32a24f6"
+    },
+    "json.encoder": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py",
+      "sha256": "52bfb1b66029cc70fa3bd7fe11df9f2e03922d413407a341b387a22c987f24f8"
+    },
+    "json": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py",
+      "sha256": "d5d41e2c29049515d295d81a6d40b4890fbec8d8482cfb401630f8ef2f77e4d5"
+    },
+    "__future__": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__future__.py",
+      "sha256": "981d4c398849f9ebcab72300d9c1fe288fd6d7f28957b3b3fa3a493a5836d95c"
+    },
+    "fnmatch": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/fnmatch.py",
+      "sha256": "6683da36e47af523f3f41e18ad244d837783e19e98911cc0b7415dea81494ebc"
+    },
+    "ntpath": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ntpath.py",
+      "sha256": "6c0d55ee892f98ef87b1ed3c50c9dfc7e267a98d2db47e08d3dc67529af56725"
+    },
+    "warnings": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/warnings.py",
+      "sha256": "6405e281882932205eae641b2d31fba7776f94517a206d289465a1caffbf310e"
+    },
+    "urllib": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "ipaddress": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ipaddress.py",
+      "sha256": "ba8d3389ff084fcb232b48204ec04f2b3ea4bd0eadf7b18c814947d185de2c64"
+    },
+    "urllib.parse": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py",
+      "sha256": "e6af7f475262f1de335bb2e41e26adb94d6103977cf5fe1ddc430dc6a3b1623f"
+    },
+    "pathlib": {
+      "path": "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py",
+      "sha256": "10ba48ae8063cfe7589436041d0d4628c05f427c7709cf8e75e486f8930cc32c"
+    }
+  },
+  "audit": {
+    "counts": {
+      "open": 149,
+      "compile": 17,
+      "exec": 1,
+      "builtins.id": 1259
+    },
+    "rejects": [],
+    "readonly_paths": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3.12",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__future__.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/__future__.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/ast.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/contextlib.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/copyreg.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/enum.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/fnmatch.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/functools.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/hashlib.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/ipaddress.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/keyword.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/operator.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/pathlib.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/reprlib.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/types.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/__pycache__/warnings.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/_collections_abc.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/abc.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ast.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/codecs.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/__init__.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/collections/__pycache__/__init__.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/contextlib.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/copyreg.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__init__.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__pycache__/__init__.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__pycache__/aliases.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/__pycache__/utf_8.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/aliases.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/utf_8.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/enum.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/fnmatch.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/functools.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/genericpath.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/hashlib.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/importlib/_bootstrap_external.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/io.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ipaddress.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__init__.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__pycache__/__init__.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__pycache__/decoder.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__pycache__/encoder.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/__pycache__/scanner.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/decoder.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/encoder.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/json/scanner.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/keyword.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/ntpath.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/operator.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/os.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/posixpath.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__init__.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/__init__.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/_casefix.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/_compiler.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/_constants.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/__pycache__/_parser.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_casefix.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_compiler.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_constants.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/re/_parser.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/reprlib.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/stat.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/types.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/__init__.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/__pycache__/__init__.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/__pycache__/parse.cpython-312.pyc",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/urllib/parse.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/warnings.py",
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/zipimport.py",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/command40-remaining-scope01/REPORT.md",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/command40-remaining-scope01/bindings.json",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/command40-system01/COMMAND.txt",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/command40-system01/CONTRACT.md",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/command40-system01/capture_system_commands.py",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/command40-system01/fixed-cases.json",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/command40-system01/input-bindings.json",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/command40-system01/prepare_metadata.py",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/command40-system01/source-nodes.json",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-collectors/command40-system01/stdlib-inputs.json",
+      "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/source-runtime/s10-venv/pyvenv.cfg",
+      "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/__init__.py",
+      "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/chain/system.py",
+      "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/helper/system.py",
+      "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/app/schemas/types.py",
+      "/workspace/scratch/a1d82674c6f8/plugins-cloud-20261028/source/MoviePilot/version.py"
+    ]
+  },
+  "boundaries": [
+    "Only16 complete original AST nodes: original MessageChannel,2literal version values,3 ChainBase cache methods,1 restart marker and9 SystemChain methods. Partial class envelopes retain source headers/mangling/staticmethod, no constructors or source module imports.",
+    "RequestUtils/Response truth-json are explicit owned recording inputs; original remote-version filtering/sorting/catches execute, no HTTP or provider compatibility claim.",
+    "Original backup algorithm executes only over in-memory path/copy ports. No real file open/write/copy/backup/Docker detection. Original frontend open receives owned text/error port; not filesystem decoding evidence.",
+    "FileCache and pickle are in-memory recording ports; no real pickle import, unpickle, cache backend or persistence. Marker content/order/error handling is original selected control flow, not cross-process persistence.",
+    "Notification/post_message are explicit recording boundary; source kwargs include original save_history/source differences. No real notification modules/history/transport.",
+    "SystemHelper.restart is nonexecuted source-bound dependency replaced by fixed tuple/error recording. No signal, child, Docker, OS lifecycle or actual restart evidence.",
+    "Original MoviePilot APP_VERSION/FRONTEND_VERSION preserved as source values. Target light-media versions and remote release provider are undecided adaptations, not selected by collector.",
+    "No full command dispatcher/menu/argument-splitting execution, no media/AI/DAO/new transport, no target expected outputs."
+  ],
+  "input_drift": []
+}

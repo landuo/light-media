@@ -47,6 +47,7 @@ type App struct {
 	pluginOriginalRegisteredCommands map[string]json.RawMessage
 	pluginOriginalServicesMu         sync.Mutex
 	pluginOriginalBackground         originalBackgroundAdmission
+	pluginOriginalSystemCommands     originalSystemCommandRuntime
 	pluginOriginalUserUID            atomic.Pointer[string]
 	pluginOriginalDirectJobs         originalDirectJobs
 	pluginRegisteredAPIs             sync.Map // *originalAPIRegistration; immutable exact object/routes, guarded by pluginOriginalAPIMu.
@@ -246,6 +247,7 @@ func (a *App) Start(parent context.Context) {
 	a.cancel = cancel
 	if a.safeMode {
 		a.log("INFO", "runtime", "safe_mode", "安全模式已启动：跳过插件加载、定时任务、监控和自动同步，管理接口仍可使用", "", "")
+		a.startOriginalSystemSafeFinish(ctx)
 		return
 	}
 	if err := a.restoreOriginalPluginCode(ctx); err != nil {
@@ -283,6 +285,7 @@ func (a *App) Start(parent context.Context) {
 }
 func (a *App) Close() error {
 	a.closeOriginalBackgroundAdmission()
+	a.closeOriginalSystemCommands()
 	if a.cancel != nil {
 		a.cancel()
 	}

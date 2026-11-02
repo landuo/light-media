@@ -1,0 +1,31 @@
+# Parent 40 — independent composition and pre-adoption conclusion
+
+**ACCEPT_LOCAL_PARENT40_ORIGINAL_SCOPE_COMPOSITION_PENDING_ADOPTION_PUBLICATION.** No identified behavior gate remains open within the ledger's agreed plugin-command scope and the specifically reopened ordinary `/version` / `/restart` chain. This is local scope acceptance, not adoption, commit/push, remote completion or global inventory acceptance. Reviewer check `e1a8b3` exited 0; no target/source/service was executed.
+
+## Exact proposed delivery
+
+Proposal02 `c859c9c3…` selects **30 paths: 18 products, 11 tests, one unchanged source23 raw**. All bytes/preimages match; every product is declared in the actually compiled ordinary server, and every selected test/raw has an actual compiler-declaration reference. Canonical compile82059 / 0cbffc→c77bdc exited0, with 6,522 equal before/after/current inputs; it closes final symbol/embed placement only, not a new test run. Its independent final is `97cced3b…`.
+
+The two HEAD clean-view Meta backings are correctly excluded, as are the injected provider and observer/worker fixture. Current protected Meta25 bytes remain unchanged. Runtime differs from clean HEAD by exactly the three approved insertions; this does **not** permit overwriting the physical dirty runtime file.
+
+## Original scope → current evidence
+
+| Scope | Composition finding |
+|---|---|
+| Preset/plugin/other aggregation, registration interception, plugin override, pending input, generic event/processing/failure/clone behavior | Original accepted `services40-result.json` retained. Six of eight indexed files match the historical report; the event queue instead exactly matches the actually delivered 974765 commit. The ingress change is the single named availability condition; registration/overlay priority remains before native dispatch. No claim that all historical dependency bytes or all old tests were rerun. |
+| Ordinary Web/UI contract | Two relevant current UI component source hashes still match the accepted report. Actual new Web commands retain trusted recipient/source and reject unauthenticated restart. This backend-only change does not erase the earlier browser credit or manufacture a new browser run. |
+| `/clear_cache` | Current accepted six-file baseline remains exact. Final candidate changes only the non-clear branch to named delegation; inverse substitution restores the original file byte-for-byte. Its actual clear-cache body and historical acceptance remain intact. |
+| System algorithm, errors and ordering | Original source23 and pure/adapter/dispatch/restart-assembly normal/race credit are retained at their stated recording or owned-DB layers. Current numeric release/native-identity policy follows the explicit user decisions; the current private TLS policy follows the later supersession, not the obsolete strict draft. Core RawMessage normalization and real call-site coverage remain separately accepted; no Cartesian product of all entrypoints is invented. |
+| Backup and lifecycle | The exact managed-code backup helper equals delivered974765 and the new adapter directly delegates to it; parent21's accepted native artifact scope is inherited, not a new full Docker-copy claim. Controller/close-order/cancel/bind-failure tests and safe-owned process results remain valid. New normal CLI02 adds actual installed workers and real old-child Wait→new PID, with same database/session, configuration and no artifact refetch. |
+| Startup, finish, notice/provider | Current App3 normal/race cover successful no-change sync, operation-lock release, listener latch, safe asynchronous submission, cancellation and once-per-generation behavior. CLI02 independently accepted `aaa55208…` supplies real installed event+sender delivery, cold marker persistence followed by finish and deletion, normal-mode child/service lifecycle and owned private TLS. Production fixed-GitHub naturally returned unknown; the authorized injected fixed-owned provider alone proves the synthetic positive result. Unknown is not a false latest/success assertion. |
+
+The old-generation immediate restart notice was not captured by CLI02 after that worker exited; exact order/fields remain supported by original/pure/App layers, while the new cold finish is directly captured through both installed event and sender. This is an explicit evidence-layer distinction, not a missing requirement to repeat the full chain. No exactly-once crash guarantee, Python pickle compatibility, external Telegram, media preset business, arbitrary provider, NAS or Docker daemon behavior is newly claimed.
+
+## Minimal remaining delivery checks
+
+1. Adopt the **29 non-runtime files as exact bytes**, and only the three runtime insertions over its saved dirty preimage. Removing those insertions must recover the original protected physical runtime. The indexed runtime must equal the clean tested candidate, not the unrelated dirty physical file. Preserve the other 24 protected files and exclude both HEAD-only Meta backings/all hidden Meta paths.
+2. Verify the tested Go input projection after virtual→physical relocation is byte-identical. Explicitly classify adopted old preimage/existence changes; do not claim all pre-adoption binding maps still match current files. No rerun of unchanged behavior merely because identical bytes were materialized is required by this review.
+3. Review the exact assembled evidence/ledger/index whitelist and blob hashes. CLI's safe original evidence list is the **24 public files** already sealed; hashes/paths mentioned inside maps do not authorize wholesale dependency/private-data export. No DB, key, secret, login body, private host log, executable or test-provider substitution enters the production payload.
+4. Coordinator may then perform the authorized normal commit/push and actual remote readback. Any changed source bytes, unexpected Meta/index delta or actual build/vet failure must be addressed explicitly; this acceptance does not pre-approve such a difference.
+
+The reviewer's first evidence-index assertion omitted the already-read ordinary-server declarations; its failed metadata check and correction are retained under `history/`. It was not a target/test failure. ACTIVE, ledger and index were not modified by this reviewer.

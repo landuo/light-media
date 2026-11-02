@@ -168,7 +168,7 @@ func (a *App) standardWebCommandHTTP(w http.ResponseWriter, r *http.Request, pat
 	}
 	name, _ := commandrouter.Split(text)
 	if _, preset := commandrouter.Lookup(name); preset {
-		if _, _, registered := a.lookupOriginalPluginCommand(name); !registered && name != "/clear_cache" {
+		if _, _, registered := a.lookupOriginalPluginCommand(name); !registered && !a.originalSystemCommandAvailable(name) {
 			a.writeError(w, r, &APIError{"MESSAGE_ROUTE_UNAVAILABLE", "本入口尚未接入内建命令", http.StatusNotImplemented})
 			return true
 		}

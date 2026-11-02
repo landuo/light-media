@@ -6,33 +6,34 @@ import (
 	"fmt"
 	"golang.org/x/sys/unix"
 	"light-media/internal/app"
-	"light-media/web"
-	"net/http"
 	"os"
 	"os/signal"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"syscall"
-	"time"
 	_ "time/tzdata"
 )
 
 func main() {
 	var addr, dir string
-	var bootstrap, safe bool
+	var bootstrap, safe, child bool
 	flag.StringVar(&addr, "listen", "127.0.0.1:3120", "HTTP listen address")
 	flag.StringVar(&dir, "data-dir", "./data", "local data directory")
 	flag.BoolVar(&bootstrap, "bootstrap-stdin", false, "one-time encrypted configuration and administrator bootstrap from stdin")
 	flag.BoolVar(&safe, "safe", false, "start management without plugins, schedulers, monitors or automatic synchronization")
+	flag.BoolVar(&child, "internal-service-child", false, "private service child; requires inherited supervisor pipes")
 	flag.Parse()
-	absolute, e := filepath.Abs(dir)
-	if e != nil {
+	absolute, err := filepath.Abs(dir)
+	if err != nil {
 		fatal("invalid_data_directory")
 	}
 	if bootstrap {
-		if e = app.Bootstrap(absolute, os.Stdin); e != nil {
-			fatal(e.Error())
+		if child {
+			fatal("bootstrap_is_not_service_child")
+		}
+		if err = app.Bootstrap(absolute, os.Stdin); err != nil {
+			fatal(err.Error())
 		}
 		fmt.Println("bootstrap_complete")
 		return
@@ -40,85 +41,22 @@ func main() {
 	if absolute == "/" {
 		fatal("use_specific_data_directory")
 	}
-	if e = os.MkdirAll(absolute, 0700); e != nil {
+	if err = os.MkdirAll(absolute, 0700); err != nil {
 		fatal("data_directory_unavailable")
 	}
-	large, e := bigMemoryMode(os.LookupEnv)
-	if e != nil {
-		fatal("invalid_big_memory_mode")
-	}
-	safeEnv, e := safeMode(os.LookupEnv)
-	if e != nil {
-		fatal("invalid_safe_mode")
-	}
-	developer, e := startupBoolean(os.LookupEnv, "DEV")
-	if e != nil {
-		fatal("invalid_plugin_developer_mode")
-	}
-	logRotation, e := app.PluginLogRotationEnvironment(os.LookupEnv)
-	if e != nil {
-		fatal("invalid_plugin_log_rotation")
-	}
-	searchPages, normalizedSearchPages := app.ResourceSearchPagesEnvironment(os.LookupEnv)
-	mediaSearch, normalizedMediaSearch := app.MediaSearchEnvironment(os.LookupEnv)
-	if normalizedMediaSearch {
-		fmt.Fprintln(os.Stderr, `{"level":"WARN","event":"media_search_environment_normalized"}`)
-	}
-	if normalizedSearchPages {
-		// Source Settings reports conversion/fallback. Keep the diagnostic while
-		// withholding raw environment values from this host's structured output.
-		fmt.Fprintln(os.Stderr, `{"level":"WARN","event":"resource_search_pages_normalized"}`)
-	}
-	safe = safe || safeEnv
-	markets := pluginMarketEnvironment(os.LookupEnv)
 	parent, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer stop()
-	for {
-		if e = applyRestore(absolute); e != nil {
-			fatal(e.Error())
-		}
-		a, e := app.New(app.Options{DataDir: absolute, Web: web.Handler(), BigMemoryMode: large, SafeMode: safe, PluginMarketsOverride: markets, PluginDeveloperMode: developer, PluginLogRotation: logRotation, ResourceSearchPages: searchPages, MediaSearch: mediaSearch})
-		if e != nil {
-			fatal(e.Error())
-		}
-		ctx, cancel := context.WithCancel(parent)
-		a.Start(ctx)
-		server := &http.Server{Addr: addr, Handler: a.Handler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 32 << 10}
-		errs := make(chan error, 1)
-		go func() { errs <- server.ListenAndServe() }()
-		fmt.Printf("light-media listening at %s\n", addr)
-		restart := false
-		select {
-		case <-parent.Done():
-		case <-a.RestartRequested:
-			restart = true
-		case err := <-errs:
-			if err != http.ErrServerClosed {
-				cancel()
-				_ = a.Close()
-				fatal("http_listener_failed")
-			}
-		}
-		if restart {
-			timer := time.NewTimer(300 * time.Millisecond)
-			select {
-			case <-timer.C:
-			case <-parent.Done():
-				restart = false
-			}
-			timer.Stop()
-		}
-		cancel()
-		shutdown, done := context.WithTimeout(context.Background(), 2*time.Second)
-		_ = server.Shutdown(shutdown)
-		done()
-		_ = server.Close()
-		_ = a.Close()
-		if !restart || parent.Err() != nil {
-			return
-		}
+	config := selfServiceConfiguration{Listen: addr, DataDir: absolute, Safe: safe}
+	if child {
+		err = runSelfServiceChild(parent, config)
+	} else {
+		err = runSelfServerSupervisor(parent, config)
+	}
+	if err != nil {
+		fatal(err.Error())
 	}
 }
+
 func applyRestore(dir string) error {
 	lock, e := os.OpenFile(filepath.Join(dir, "instance.lock"), os.O_CREATE|os.O_RDWR, 0600)
 	if e != nil {

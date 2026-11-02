@@ -104,25 +104,37 @@ func (a *App) syncOriginalPlugins(ctx context.Context) ([]string, error) {
 // or Python dependency installer is introduced.
 func (a *App) synchronizeOriginalPluginsAtStartup(ctx context.Context) {
 	defer a.reportOriginalPluginInstallations(ctx)
-	a.pluginOriginalOperationMu.Lock()
-	defer a.pluginOriginalOperationMu.Unlock()
-	closed := func() bool {
-		a.pluginOriginalBackground.mu.Lock()
-		defer a.pluginOriginalBackground.mu.Unlock()
-		return a.pluginOriginalBackground.closed
-	}
-	if ctx.Err() != nil || closed() {
-		return
-	}
-	synced, err := a.syncOriginalPlugins(ctx)
-	if err != nil {
-		a.log("ERROR", "plugins", "sync_failed", "启动时同步已安装插件失败", "", "")
-		return
-	}
-	if len(synced) == 0 || ctx.Err() != nil || closed() {
-		return
-	}
-	if err = a.initializeOriginalPlugins(ctx); err != nil {
-		a.log("ERROR", "plugins", "sync_initialize_failed", "同步后重新初始化插件失败", "", "")
+	completed := func() bool {
+		a.pluginOriginalOperationMu.Lock()
+		defer a.pluginOriginalOperationMu.Unlock()
+		closed := func() bool {
+			a.pluginOriginalBackground.mu.Lock()
+			defer a.pluginOriginalBackground.mu.Unlock()
+			return a.pluginOriginalBackground.closed
+		}
+		if ctx.Err() != nil || closed() {
+			return false
+		}
+		synced, err := a.syncOriginalPlugins(ctx)
+		if err != nil {
+			a.log("ERROR", "plugins", "sync_failed", "启动时同步已安装插件失败", "", "")
+			return false
+		}
+		if ctx.Err() != nil || closed() {
+			return false
+		}
+		if len(synced) != 0 {
+			if err = a.initializeOriginalPlugins(ctx); err != nil {
+				a.log("ERROR", "plugins", "sync_initialize_failed", "同步后重新初始化插件失败", "", "")
+				return false
+			}
+		}
+		return ctx.Err() == nil && !closed()
+	}()
+	// Source init_extra reaches restart_finish after successful sync even when
+	// no package changed. Never hold the package-operation lock while waiting
+	// for actual listener readiness or invoking the normal notice/provider path.
+	if completed {
+		a.finishOriginalSystemStartupAndReport(ctx)
 	}
 }

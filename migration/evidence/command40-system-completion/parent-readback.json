@@ -1,0 +1,435 @@
+{
+  "status": "ACCEPT_LOCAL_PARENT40_ORIGINAL_SCOPE_COMPOSITION_PENDING_ADOPTION_PUBLICATION",
+  "at": "2026-11-02T02:04:52.610072+00:00",
+  "baseline": "e6018fea016744cd3ffae20ac77a7b515330437c",
+  "proposal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/command40-system01/native-normal01/publication-proposal02/seal.json",
+    "bytes": 1159,
+    "sha256": "c859c9c33a2ff142b9e0d0b25d4b966b5a994e61e9c3bd3e8ba89d3d3b63dc55"
+  },
+  "manifest": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/command40-system01/native-normal01/publication-proposal02/source-manifest.json",
+    "bytes": 19121,
+    "sha256": "54988006d744c4c449fd9c0ac04917fb9f622199e98de46335f6d4e8e6bde48f"
+  },
+  "candidate_projection": [
+    {
+      "target": "internal/app/runtime.go",
+      "kind": "product",
+      "sha256": "6a154314d9f90f811f4cd89cc33ff67f4cff782ac39f18ed289a953a232d1db6",
+      "actual_declaration_evidence": [
+        "command40-native-host-normal01",
+        "command40-native-normal-server01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "internal/app/plugin_original_command_system_adapters.go",
+      "kind": "product",
+      "sha256": "90931e7d88868036c7ea2f3306ec2e8db82e4eff1ac52668ac328c1ecf882690",
+      "actual_declaration_evidence": [
+        "command40-dispatch-server-normal01",
+        "command40-native-host-normal01",
+        "command40-native-normal-server01",
+        "command40-self-controller-normal01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "internal/app/plugin_original_command_system_adapters_test.go",
+      "kind": "test",
+      "sha256": "e1c7e88c458bcd1ffdc9c6acf3aa73f1eeb596f19dda96e7df64afe69aa61900",
+      "actual_declaration_evidence": [
+        "command40-dispatch-server-normal01",
+        "command40-native-host-normal01",
+        "command40-self-controller-normal01"
+      ],
+      "ordinary_server_compiled": false
+    },
+    {
+      "target": "internal/systemcommands/system.go",
+      "kind": "product",
+      "sha256": "b3da981cf08ee719e1ec68b41e701b3e2f878bb469264ba93e4ab09fc6d4e24b",
+      "actual_declaration_evidence": [
+        "command40-dispatch-server-normal01",
+        "command40-final-layout-compile01",
+        "command40-native-host-normal01",
+        "command40-native-normal-server01",
+        "command40-self-controller-normal01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "cmd/server/generation_shutdown.go",
+      "kind": "product",
+      "sha256": "53178429336e16fe251e475ed194a94f9de31bad1a7e3775d8bc4430286aacfe",
+      "actual_declaration_evidence": [
+        "command40-dispatch-server-normal01",
+        "command40-native-normal-server01",
+        "command40-self-controller-normal01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "cmd/server/generation_shutdown_test.go",
+      "kind": "test",
+      "sha256": "5ae4a59ee28616ac0794ef5944aced383ddf30236ad747c46b23883a96f5d419",
+      "actual_declaration_evidence": [
+        "command40-dispatch-server-normal01",
+        "command40-self-controller-normal01"
+      ],
+      "ordinary_server_compiled": false
+    },
+    {
+      "target": "internal/app/plugin_original_command_system_dispatch.go",
+      "kind": "product",
+      "sha256": "71669e77237b591874b12c42838ce106d8daa6721212dbb692af9ba89ad37292",
+      "actual_declaration_evidence": [
+        "command40-native-host-normal01",
+        "command40-native-normal-server01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "internal/app/plugin_original_command_system_dispatch_test.go",
+      "kind": "test",
+      "sha256": "7b65945c668fb7c07613df1b67428b9eae0e62a4ba70c03261bb11d56f884781",
+      "actual_declaration_evidence": [
+        "command40-dispatch-server-normal01",
+        "command40-native-host-normal01",
+        "command40-self-controller-normal01"
+      ],
+      "ordinary_server_compiled": false
+    },
+    {
+      "target": "cmd/server/main.go",
+      "kind": "product",
+      "sha256": "37b83ccd0fe32f62800be9aea1d43ab219d0f7838fdc757ad2d915af44f91fb1",
+      "actual_declaration_evidence": [
+        "command40-native-normal-server01",
+        "command40-self-controller-normal01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "internal/app/plugin_original_command_clear_cache.go",
+      "kind": "product",
+      "sha256": "08d07a81b2b8ac986810f609f0e8415d684eadab903e14d94ff406c3d0099dc1",
+      "actual_declaration_evidence": [
+        "command40-dispatch-server-normal01",
+        "command40-native-host-normal01",
+        "command40-native-normal-server01",
+        "command40-self-controller-normal01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "internal/app/plugin_original_command_ingress.go",
+      "kind": "product",
+      "sha256": "8efb892b5826ed3bfc4ff31c633aeb070630736dde06204b0c40a6ba81459d10",
+      "actual_declaration_evidence": [
+        "command40-dispatch-server-normal01",
+        "command40-native-host-normal01",
+        "command40-native-normal-server01",
+        "command40-self-controller-normal01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "internal/app/plugin_original_command_system_restart.go",
+      "kind": "product",
+      "sha256": "3aaeeaad4ad505d901e62780c1399bc6d53cd2690a880ea314956527ec4fd7ad",
+      "actual_declaration_evidence": [
+        "command40-native-host-normal01",
+        "command40-native-normal-server01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "internal/app/plugin_original_command_system_restart_test.go",
+      "kind": "test",
+      "sha256": "55e911da515d5a6906221d5f661adab06a6d42ddf515adcfa1f92d78b6490ba9",
+      "actual_declaration_evidence": [
+        "command40-native-host-normal01",
+        "command40-self-controller-normal01"
+      ],
+      "ordinary_server_compiled": false
+    },
+    {
+      "target": "internal/systemcommands/native_restart.go",
+      "kind": "product",
+      "sha256": "e5ca638dfe7dc06cd7c98ea758278e718cd7bace169f39246dd82ae1e9dd5642",
+      "actual_declaration_evidence": [
+        "command40-final-layout-compile01",
+        "command40-native-host-normal01",
+        "command40-native-normal-server01",
+        "command40-self-controller-normal01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "cmd/server/self_service.go",
+      "kind": "product",
+      "sha256": "198c4449d597eecc7697b6708c448000227f243bdb5fd52bc0c0f40dd218ecec",
+      "actual_declaration_evidence": [
+        "command40-native-normal-server01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "cmd/server/self_supervisor.go",
+      "kind": "product",
+      "sha256": "4a218ee115c03501fd26d1b5715e271581d7fbdfb1f8fbd971f309d03a357883",
+      "actual_declaration_evidence": [
+        "command40-native-normal-server01",
+        "command40-self-controller-normal01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "cmd/server/self_supervisor_test.go",
+      "kind": "test",
+      "sha256": "0c1055d62b658efa4521862ce66a1b9492c83115b72684f23754a8a7866f5fd8",
+      "actual_declaration_evidence": [
+        "command40-self-controller-normal01"
+      ],
+      "ordinary_server_compiled": false
+    },
+    {
+      "target": "internal/app/plugin_original_self_restart_attachment.go",
+      "kind": "product",
+      "sha256": "1ea4d632472fa5786dae3a994055a686dd13b2853bd34e36bc2ae623589394ce",
+      "actual_declaration_evidence": [
+        "command40-native-host-normal01",
+        "command40-native-normal-server01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "internal/app/plugin_original_native_version.go",
+      "kind": "product",
+      "sha256": "2bfb3af08be75f0ed4dff923482164be4e3a8f818c3ddd6c9d878624a8843215",
+      "actual_declaration_evidence": [
+        "command40-native-host-normal01",
+        "command40-native-normal-server01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "internal/app/plugin_original_native_version_test.go",
+      "kind": "test",
+      "sha256": "e6e4e4868839c8e3c7930a8a2d757b83cc00fe01a43d94ccde9a5142b65e0fdd",
+      "actual_declaration_evidence": [
+        "command40-native-host-normal01"
+      ],
+      "ordinary_server_compiled": false
+    },
+    {
+      "target": "internal/systemcommands/native_version.go",
+      "kind": "product",
+      "sha256": "2a29261f3e520ab2c3bb16b6cae6fcb443083a624f9b4696b782462730b943cd",
+      "actual_declaration_evidence": [
+        "command40-final-layout-compile01",
+        "command40-native-host-normal01",
+        "command40-native-normal-server01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "internal/systemcommands/native_version_test.go",
+      "kind": "test",
+      "sha256": "784bd7a1a2bb3639fb2fe783c872d1c716c756c109cfaeb0b7acf5f3710cdeb8",
+      "actual_declaration_evidence": [
+        "command40-final-layout-compile01",
+        "command40-native-host-normal01"
+      ],
+      "ordinary_server_compiled": false
+    },
+    {
+      "target": "internal/systemversion/native.go",
+      "kind": "product",
+      "sha256": "764a40e97f277bcd1f6d04639b7b19e2fb50bd372546efc64f17299fe28f5eb8",
+      "actual_declaration_evidence": [
+        "command40-final-layout-compile01",
+        "command40-native-host-normal01",
+        "command40-native-normal-server01",
+        "command40-native-version-policy-normal01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "internal/systemversion/native_test.go",
+      "kind": "test",
+      "sha256": "909c7a21a8c3f3596948c3709eafe99195df8952cc8689f423787513dd9aeda8",
+      "actual_declaration_evidence": [
+        "command40-final-layout-compile01",
+        "command40-native-host-normal01",
+        "command40-native-version-policy-normal01"
+      ],
+      "ordinary_server_compiled": false
+    },
+    {
+      "target": "internal/app/plugin_original_command_system_native.go",
+      "kind": "product",
+      "sha256": "7797d8e4051b31fa71819defdcfa0c32f5f17e97b165bc5d20c4f924892f5df5",
+      "actual_declaration_evidence": [
+        "command40-native-host-normal01",
+        "command40-native-normal-server01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "internal/app/plugin_original_command_system_native_test.go",
+      "kind": "test",
+      "sha256": "775d547444b702106de1c2e247ed018742655ca55dc55e48edb0d585a4f8abf7",
+      "actual_declaration_evidence": [
+        "command40-native-host-normal01"
+      ],
+      "ordinary_server_compiled": false
+    },
+    {
+      "target": "internal/app/plugin_original_sync.go",
+      "kind": "product",
+      "sha256": "52c9dd1db29d670b01e9713b1a8caca3600c85d204119e93848a4c5d4142bf2e",
+      "actual_declaration_evidence": [
+        "command40-native-host-normal01",
+        "command40-native-normal-server01"
+      ],
+      "ordinary_server_compiled": true
+    },
+    {
+      "target": "internal/systemcommands/system_test.go",
+      "kind": "test",
+      "sha256": "2d4186c69ccf2f3a6bc10f5e2f1d48ab18795feb03b685abeb5af92b9faca47a",
+      "actual_declaration_evidence": [
+        "command40-final-layout-compile01"
+      ],
+      "ordinary_server_compiled": false
+    },
+    {
+      "target": "internal/systemcommands/native_restart_test.go",
+      "kind": "test",
+      "sha256": "fb58d738c46f79490b54808a5f922ed8122a78bc170d7e428ee1ba5a71f069d8",
+      "actual_declaration_evidence": [
+        "command40-final-layout-compile01"
+      ],
+      "ordinary_server_compiled": false
+    },
+    {
+      "target": "internal/systemcommands/testdata/source-system23.json",
+      "kind": "source_raw",
+      "sha256": "9804f571e83e2d78fbb897c34751b60f858d768f2638c9bf798ee6375df10d45",
+      "actual_declaration_evidence": [
+        "command40-final-layout-compile01"
+      ],
+      "ordinary_server_compiled": false
+    }
+  ],
+  "candidate_count": 30,
+  "counts": {
+    "product": 18,
+    "test": 11,
+    "source_raw": 1
+  },
+  "product18_actual_ordinary_server_compiled": true,
+  "canonical_three_paths_actual_compiled": true,
+  "test_only_provider_and_observer_excluded": true,
+  "meta25_preserved_before_adoption": true,
+  "runtime_only_three_insertions_inverse_to_HEAD": true,
+  "excluded_clean_view_backings": [
+    {
+      "target": "internal/app/plugin_original_modules.go",
+      "new_path": false,
+      "HEAD_preimage_sha256": "811e1ad367706e39c3eb52ecbb29b208697be8abc181d8d39ac662ec0b2c9c5f",
+      "source": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/command40-system01/host-adapters01/gates01/clean-view/plugin_original_modules.go.head.go.txt",
+        "bytes": 8654,
+        "sha256": "811e1ad367706e39c3eb52ecbb29b208697be8abc181d8d39ac662ec0b2c9c5f"
+      },
+      "adoption": "EXCLUDE_NO_DELTA_META_CLEAN_VIEW",
+      "reason": "Overlay-only original HEAD backing for protected dirty Meta; no parent40 delta. Never overwrite or stage as this feature."
+    },
+    {
+      "target": "internal/app/plugin_shared_media_recognition.go",
+      "new_path": false,
+      "HEAD_preimage_sha256": "3e27765135491cb5feff1ccd08d682b8237032393992158ab31d54b35318f907",
+      "source": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/command40-system01/host-adapters01/gates01/clean-view/plugin_shared_media_recognition.go.head.go.txt",
+        "bytes": 11951,
+        "sha256": "3e27765135491cb5feff1ccd08d682b8237032393992158ab31d54b35318f907"
+      },
+      "adoption": "EXCLUDE_NO_DELTA_META_CLEAN_VIEW",
+      "reason": "Overlay-only original HEAD backing for protected dirty Meta; no parent40 delta. Never overwrite or stage as this feature."
+    }
+  ],
+  "historical_report_projection": {
+    "same": 6,
+    "total": 8,
+    "event_queue_matches_delivered_commit": "97476582910dc4b696f7ccd5010f28d823812d40",
+    "ingress_only_current_named_condition": true,
+    "clear_cache_body_inverse_exact": true,
+    "ui_source_files_exact": [
+      {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/web/src/components/ShortcutMessageDialog.vue",
+        "bytes": 13537,
+        "sha256": "49d4c95dd76ce73be4e7466c49be3da4b35777544ad116218efb2780b4c33187"
+      },
+      {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/web/src/components/ShortcutTools.vue",
+        "bytes": 4736,
+        "sha256": "cceae24adff2052c74f2e26c164b26295a4307306d4af4b54a9a836e19b275e6"
+      }
+    ]
+  },
+  "backup_inheritance": {
+    "actual_helper": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/internal/app/plugin_original_backup.go",
+      "bytes": 3755,
+      "sha256": "2d18b81fda7dc672d09ca8536a4dd91ca2f81796fb9026586695e54fe9199432"
+    },
+    "matches_historical_delivered_commit": "97476582910dc4b696f7ccd5010f28d823812d40",
+    "reference": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/docs/validation/plugin-module-no-official-auth-20261026.json",
+      "bytes": 206865,
+      "sha256": "fd43c5b1dd9ae28ff7f78c71b7c169921c4821a180479a31da423a955598084e"
+    },
+    "new_adapter_direct_delegate": true,
+    "new_full_backup_execution_claimed": false
+  },
+  "original_feature_scope_snapshot": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/command40-parent-composition01/feature40-at-review.json",
+    "bytes": 7015,
+    "sha256": "bb5c9f91dd16f9e7bbbabaf6aeddbd296f1db61fe2a269eff8e8c57951e249b2"
+  },
+  "latest_actual_finals": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/command40-native-normal-independent/cli02-final/seal.json",
+      "bytes": 2364,
+      "sha256": "aaa552088960a56e50f5e9c99491812421ae155150848c9d19f3ce04f291f8b9"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/command40-native-normal-independent/final-layout-compile02-final/seal.json",
+      "bytes": 1122,
+      "sha256": "97cced3b38e37d9d1562f808808cd66f541abe9ed7d0e88d3291a6e0ce85614f"
+    }
+  ],
+  "existing_composition_references": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/command40-system01/native-normal01/publication-proposal02/composition-references.json",
+    "bytes": 5744,
+    "sha256": "b59798b48e852fe712bd6c274f8c96e16e79f74f7722b4f7fb8d964a834897cb"
+  },
+  "adoption_checks_required": [
+    "Exact 30-path tested projection; copy 29 exact candidate bytes, runtime only 3 approved insertions over preserved dirty Meta, inverse yields original protected physical runtime; index runtime must equal clean tested candidate, not dirty physical full file.",
+    "Do not copy/stage two excluded HEAD-only Meta backings or any hidden Meta file; other24 protected files stay exact.",
+    "Check virtual-to-physical same-byte compiler projection; prior old existence/preimage bindings may change only as explicitly adopted, not claim all old current maps still identical.",
+    "Exact finite public evidence whitelist plus sole authorized ledger update; index bytes equal candidate; no fixture provider injection, observer executable, DB/key/secret/login/private host logs.",
+    "Coordinator normal exact commit/push and actual remote verification after staging gate; no test rerun solely for same-byte materialization."
+  ],
+  "boundaries": [
+    "Old accepted plugin scope is retained, not newly run or all old dependencies declared byte-identical. No new Telegram/media preset/all-system API or UI run.",
+    "Source recording ports, native adapters, test-build positive TLS and ordinary unknown provider remain distinct layers.",
+    "Normal lifecycle evidence closes the new owned real-process result; no full Docker/NAS/Python-pickle or arbitrary provider guarantee.",
+    "Local whole-parent scope composition is not physical adoption, committed/remote completion, global inventory green or unrelated module TLS completion."
+  ],
+  "reviewer_execution": "Only own stdlib metadata/hash and readonly Git; no source/Go/service/network or ACTIVE/ledger modification."
+}
