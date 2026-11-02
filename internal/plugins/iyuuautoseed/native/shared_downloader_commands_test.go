@@ -508,13 +508,13 @@ func TestSharedDownloaderCommandQBTLSIsolation(t *testing.T) {
 		roots = global.TLSClientConfig.RootCAs
 	}
 	var originCalls, otherCalls atomic.Int32
-	other := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	other := completedOwnedTLSPeer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		otherCalls.Add(1)
 		t.Error("redirect reached a different owned origin")
 		w.WriteHeader(http.StatusNoContent)
 	}))
 	defer other.Close()
-	origin := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	origin := completedOwnedTLSPeer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		originCalls.Add(1)
 		if r.Header.Get("Authorization") != "Bearer owned-tls-key" {
 			t.Error("configured bearer missing at exact origin")
@@ -552,8 +552,8 @@ func TestSharedDownloaderCommandQBTLSIsolation(t *testing.T) {
 	if originCalls.Load() != 1 {
 		t.Fatal("actual HTTPS request count", originCalls.Load())
 	}
-	// The old IYUU constructor and the new TR command client remain verifying;
-	// both fail the same self-signed peer before any HTTP handler is entered.
+	// Both old generic IYUU constructors remain verifying. The newly approved
+	// private TR command/query policy is checked by the separate direct TLS root.
 	old, err := NewIYUUClient(Config{ID: "owned-tls-old", Kind: "qbittorrent", BaseURL: origin.URL}, IYUUOptions{Guard: guard})
 	if err != nil {
 		t.Fatal(err)
@@ -562,13 +562,13 @@ func TestSharedDownloaderCommandQBTLSIsolation(t *testing.T) {
 	if _, err = old.Recheck(context.Background(), []string{strings.Repeat("b", 40)}); err == nil {
 		t.Fatal("old IYUU TLS verification was relaxed")
 	}
-	_, tr, closeTR, err := NewSharedDownloaderCommands(Config{ID: "owned-tls-tr", Kind: "transmission", BaseURL: origin.URL}, "", guard)
+	tr, err := NewIYUUClient(Config{ID: "owned-tls-tr", Kind: "transmission", BaseURL: origin.URL}, IYUUOptions{Guard: guard})
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer closeTR()
-	if _, err = tr.Recheck(context.Background(), json.Number("0")); err == nil {
-		t.Fatal("TR TLS verification was relaxed")
+	defer tr.Close()
+	if _, err = tr.Recheck(context.Background(), []string{strings.Repeat("b", 40)}); err == nil {
+		t.Fatal("old generic TR TLS verification was relaxed")
 	}
 	if originCalls.Load() != 1 {
 		t.Fatal("a strict client entered the HTTPS handler", originCalls.Load())

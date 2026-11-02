@@ -95,7 +95,7 @@ go run ./cmd/sqlitebench --driver mattn
 
 三类真实文件名在 `testdata/media/real-filenames.json`。该输入只验证名称，没有伪造元数据身份；待确认样本使用非零退出码。配置契约见 `docs/integration-contract.md`、`docs/metainfo-contract.md`、`docs/metadata-contract.md`、`docs/media-contract.md`、`docs/logging-extension-contract.md`。
 
-实机凭据由本地密码库/现有授权配置提供，经内存和 stdin 传入。不要将实际输入放入命令行、环境变量、Git、普通配置或报告；`work/` 不纳入版本控制。测试失败时检查结构化原因码，不把接口错误当成空结果。飞牛影视可直接填写 NAS 根地址（如 `http://192.168.1.10:5666` 或 `https://192.168.1.10:5667`），自动补齐 `/v` 并兼容同主机 HTTPS 升级及本地 NAS 自签证书；公网 HTTPS 和其他服务继续正常校验证书。
+实机凭据由本地密码库/现有授权配置提供，经内存和 stdin 传入。不要将实际输入放入命令行、环境变量、Git、普通配置或报告；`work/` 不纳入版本控制。测试失败时检查结构化原因码，不把接口错误当成空结果。飞牛影视可直接填写 NAS 根地址（如 `http://192.168.1.10:5666` 或 `https://192.168.1.10:5667`），自动补齐 `/v` 并兼容同主机 HTTPS 升级及本地 NAS 自签证书；部分插件私有 HTTPS 客户端按原版兼容合同与明确授权关闭证书校验（例如 qBittorrent、Transmission 和 `/version`）；不修改系统 CA、Git 或浏览器证书设置，其他客户端行为以各私有适配及迁移清单为准。
 
 新 NFO 的隔离实验工具在 `experiments/fnos-nfo`，本地合成样本生成器在 `experiments/nfo-fixtures`，离线字段比较器在 `experiments/nfo-compare`；可用 `make experiments` 构建。前两者默认 dry-run，比较器无网络和写入。飞牛实验只认领新 UUID 库及创建前收据，允许显式操作自己的临时库；它不是生产写入接口，也不证明全局演员/图片缓存隔离。实测结果及未覆盖的字段见 `docs/nfo-verification-plan.md`；`docs/path-baseline.md` 保留 M0 当时的宿主、下载器路径取证和历史建议，当前路径布局以容器实际挂载为准。
 

@@ -22008,7 +22008,7 @@
         "remaining": [],
         "status": "complete_agreed_scope_reopened_operation_closed",
         "authoritative_as_of": "2026-11-02T02:14:33.197367+00:00",
-        "target_revision": "e6018fea016744cd3ffae20ac77a7b515330437c + exact parent40 staged30 source hashes",
+        "target_revision": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59",
         "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
         "legacy_schema_status_not_parent_progress": true,
         "new_test_execution_claimed": true,
@@ -22025,7 +22025,7 @@
           }
         ],
         "progress_updated_at": "2026-11-02T02:14:33.197367+00:00",
-        "delivery_state": "local_complete_pending_commit_push_readback",
+        "delivery_state": "remote_pushed_and_readback_verified",
         "current_acceptance_evidence": {
           "root": "migration/evidence/command40-system-completion",
           "parent_sha256": "9c04c52c1566740296f6123b0cb5854d960447758c946f67b1f894b4c2faa487",
@@ -27152,6 +27152,9 @@
       "dependencies": [],
       "target_paths": [
         "cmd/owned-transmission-query-fixture/main.go",
+        "internal/app/plugin_original_resources.go",
+        "internal/app/plugin_private_tls_installed_sdk_test.go",
+        "internal/app/plugin_private_tls_owned_artifact_test.go",
         "internal/app/plugin_shared_transmission_query.go",
         "internal/app/plugin_shared_transmission_query_boundary_test.go",
         "internal/app/plugin_shared_transmission_query_decode.go",
@@ -27159,22 +27162,31 @@
         "internal/app/plugin_shared_transmission_query_real_test.go",
         "internal/app/plugin_shared_transmission_query_slow_test.go",
         "internal/app/plugin_shared_transmission_query_ui_test.go",
+        "internal/plugins/iyuuautoseed/native/plugin_private_tls_direct_test.go",
+        "internal/plugins/iyuuautoseed/native/shared_downloader_commands.go",
+        "internal/plugins/iyuuautoseed/native/shared_downloader_commands_test.go",
         "internal/plugins/iyuuautoseed/native/shared_transmission_query.go",
         "internal/plugins/shared_transmission_query.go",
         "internal/plugins/shared_transmission_query_test.go",
         "testdata/shared-transmission-query/README.md",
+        "testdata/shared-transmission-query/reproduce-component.sh",
         "testdata/shared-transmission-query/reproduce.sh",
-        "testdata/shared-transmission-query/source_real.py",
-        "internal/app/plugin_original_resources.go",
         "testdata/shared-transmission-query/source_component.py",
-        "testdata/shared-transmission-query/reproduce-component.sh"
+        "testdata/shared-transmission-query/source_real.py"
       ],
       "owner": "coordinator",
       "scenarios": [],
-      "evidence_ids": [],
+      "evidence_ids": [
+        "plugin.private-tr-tls.whole-parent-review"
+      ],
       "review": {
-        "status": "pending",
-        "independent": false
+        "status": "passed",
+        "independent": true,
+        "reviewer": "Astra ultra exact current TR TLS and whole-parent combination review",
+        "evidence_ids": [
+          "plugin.private-tr-tls.whole-parent-review"
+        ],
+        "scope": "Closes only new TLS remaining suboperation of historically complete agreed parent, retaining original source/method/runtime/pressure limits"
       },
       "external_source_paths": [],
       "work_kind": "confirmed_delta",
@@ -27197,12 +27209,10 @@
         "historical_scope_reference": "2026-10-30 16:40 UTC coordinator relayed root formal Mac full-text read; this agent did not directly read Mac. Exact operation details recorded in mac-followup-provenance.txt.",
         "historical_evidence_reference": null,
         "existing_evidence_ids": [],
-        "remaining": [
-          "TR completed query client only; retain exact original qB/TR query algorithms and qB noverify actual credit. Legacy Tasks compatibility consumer is additional current entry, not expansion of old two-method parent scope."
-        ],
-        "status": "partial_specific_remaining",
-        "authoritative_as_of": "2026-11-02T01:33:47.070275+00:00",
-        "target_revision": "5f829f8d6dba7572e48b8bf3d261c99e8f2447da",
+        "remaining": [],
+        "status": "complete_agreed_scope_reopened_operation_closed",
+        "authoritative_as_of": "2026-11-02T02:44:57.089788+00:00",
+        "target_revision": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59 + exact isolated TR2 staged source hashes",
         "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
         "legacy_schema_status_not_parent_progress": true,
         "new_test_execution_claimed": true,
@@ -27236,11 +27246,19 @@
             "remaining": [],
             "status": "complete_agreed_scope_reopened_operation_closed",
             "preserved_scope_credit": "original parent scope plus delivered child evidence, not child count"
+          },
+          {
+            "at": "2026-11-02T02:44:57.089788+00:00",
+            "status": "partial_specific_remaining",
+            "remaining": [
+              "TR completed query client only; retain exact original qB/TR query algorithms and qB noverify actual credit. Legacy Tasks compatibility consumer is additional current entry, not expansion of old two-method parent scope."
+            ],
+            "note": "Only new user-requested private TR HTTPS delta reopened; historical wholeparent acceptance and its limits remain intact"
           }
         ],
-        "progress_updated_at": "2026-11-01T11:33:16.158893+00:00",
+        "progress_updated_at": "2026-11-02T02:44:57.089788+00:00",
         "current_candidate_base": "bd4ec4513e6ff9edc6eb4e0a357febf7d4ec30e0",
-        "delivery_state": "remote_confirmed",
+        "delivery_state": "local_complete_pending_commit_push_readback",
         "worktree_candidate": {
           "base_revision": "bd4ec4513e6ff9edc6eb4e0a357febf7d4ec30e0",
           "adopted_product_paths": 1,
@@ -27262,6 +27280,25 @@
           "inventory_seal": "a0b5c8f649de81694c38a27434b454877dc89224bc48141636138a857f90af0e",
           "independent_count_seal": "a27d49442802eb8fb79403cac6c4a43a6c141d94aa74fc45a735d774b1da1bb6",
           "historical_delivery_unchanged": true
+        },
+        "tls_requirement_completion": {
+          "parent_scope": "S01",
+          "current_delta_only": true,
+          "root": "migration/evidence/plugin-tr-private-tls-completion",
+          "parent_seal": "ce0f6576eb15b5815c0afe867db53a657854d29abb874832804e0a66ad8edf15",
+          "actual_seal": "c023213265907cf7daefdd36df3cd93b5a37fb9f26a3d14fde725692cb03133b",
+          "program_normal": "9a6169a81aa3ea5feca22331d38ee83e5c751cd178ebd06863635665f4e252ea",
+          "program_race": "751282d084a92efa50f4c35e2fe67ec8fed09b6e8d705a23d5e2a7b9ce43414b",
+          "scope": "new6d49 plus exact2TRproducts, three real original SDK workers, fixed owned HTTPS9 requests and exact2HTTP audits; allprocess-race only this128B newTLS gate",
+          "ordinary_host_inheritance": "Current parent40 true normal supervisor/start/restart/close plus old method-specific original host chains, not a claim oldCLI binaries equal newHEAD or new ordinary HTTPS execution",
+          "preserved_S03_large_pressure_limit": "Original large-material dual-race HTTP502 failures near the30s budget remain FAIL with exact cause unknown; old ordinary large normal and approved per-process race retained, not replaced by this128B TLS dualrace.",
+          "original_TR_contract_consumers": [
+            "get_completed_torrents"
+          ],
+          "new_TLS_run_methods": [
+            "get_completed_torrents"
+          ],
+          "coverage_label": "This run covers the named representative method per SDK. Other original same-constructor methods inherit exact earlier contract/behavior evidence; not all methods reexecuted."
         }
       }
     },
@@ -27427,6 +27464,8 @@
       ],
       "dependencies": [],
       "target_paths": [
+        "internal/app/plugin_private_tls_installed_sdk_test.go",
+        "internal/app/plugin_private_tls_owned_artifact_test.go",
         "internal/app/plugin_shared_downloader_command_uploads.go",
         "internal/app/plugin_shared_downloader_commands.go",
         "internal/app/plugin_shared_downloader_commands_native.go",
@@ -27438,9 +27477,12 @@
         "internal/plugins/downloadercommands/qb_cookie_values.go",
         "internal/plugins/downloadercommands/testdata/source-qb-cookie01.json",
         "internal/plugins/iyuuautoseed/native/iyuu_version.go",
+        "internal/plugins/iyuuautoseed/native/plugin_private_tls_direct_test.go",
         "internal/plugins/iyuuautoseed/native/shared_downloader_commands.go",
+        "internal/plugins/iyuuautoseed/native/shared_downloader_commands_test.go",
         "internal/plugins/iyuuautoseed/native/shared_qb_cookie_add.go",
         "internal/plugins/iyuuautoseed/native/shared_qb_cookie_add_test.go",
+        "internal/plugins/iyuuautoseed/native/shared_transmission_query.go",
         "internal/plugins/shared_downloader_commands.go"
       ],
       "owner": "coordinator",
@@ -27457,16 +27499,17 @@
         "s03-commands.source-target",
         "s03-commands.normal-cli",
         "s03-qb-cookie.source-target",
-        "s03-qb-cookie.normal-cli"
+        "s03-qb-cookie.normal-cli",
+        "plugin.private-tr-tls.whole-parent-review"
       ],
       "review": {
         "status": "passed",
         "independent": true,
-        "reviewer": "Astra ultra component-specific independent reviewers",
+        "reviewer": "Astra ultra exact current TR TLS and whole-parent combination review",
         "evidence_ids": [
-          "s03-qb-cookie.independent-review"
+          "plugin.private-tr-tls.whole-parent-review"
         ],
-        "scope": "finite URL/Cookie current slice only; prior eightoperation credit retained/fullparent remainsopen"
+        "scope": "Closes only new TLS remaining suboperation of historically complete agreed parent, retaining original source/method/runtime/pressure limits"
       },
       "external_source_paths": [],
       "work_kind": "confirmed_delta",
@@ -27546,12 +27589,10 @@
           "s03-qb-cookie.source-target",
           "s03-qb-cookie.normal-cli"
         ],
-        "remaining": [
-          "Shared TR fixed command client only; retain ordinary large-material deployment and per-process race evidence, source semantics and qB noverify."
-        ],
-        "status": "partial_specific_remaining",
-        "authoritative_as_of": "2026-11-02T01:33:47.070275+00:00",
-        "target_revision": "e6018fea016744cd3ffae20ac77a7b515330437c",
+        "remaining": [],
+        "status": "complete_agreed_scope_reopened_operation_closed",
+        "authoritative_as_of": "2026-11-02T02:44:57.089788+00:00",
+        "target_revision": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59 + exact isolated TR2 staged source hashes",
         "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
         "legacy_schema_status_not_parent_progress": true,
         "new_test_execution_claimed": true,
@@ -27578,6 +27619,14 @@
             "remaining": [],
             "status": "complete_agreed_scope_reopened_operation_closed",
             "preserved_scope_credit": "original parent scope plus delivered child evidence, not child count"
+          },
+          {
+            "at": "2026-11-02T02:44:57.089788+00:00",
+            "status": "partial_specific_remaining",
+            "remaining": [
+              "Shared TR fixed command client only; retain ordinary large-material deployment and per-process race evidence, source semantics and qB noverify."
+            ],
+            "note": "Only new user-requested private TR HTTPS delta reopened; historical wholeparent acceptance and its limits remain intact"
           }
         ],
         "remaining_contract_reconciliation": {
@@ -27588,8 +27637,8 @@
           "target_concurrent_S02_change_explicitly_recorded": true,
           "new_runtime_claimed": false
         },
-        "progress_updated_at": "2026-11-01T18:30:41.751969+00:00",
-        "delivery_state": "remote_pushed_and_readback_verified",
+        "progress_updated_at": "2026-11-02T02:44:57.089788+00:00",
+        "delivery_state": "local_complete_pending_commit_push_readback",
         "worktree_candidate": {
           "base_revision": "0461a07298996e77cdce56dc9a5e2dc6306e55f2",
           "adopted_product_paths": 11,
@@ -27620,6 +27669,28 @@
           "inventory_seal": "a0b5c8f649de81694c38a27434b454877dc89224bc48141636138a857f90af0e",
           "independent_count_seal": "a27d49442802eb8fb79403cac6c4a43a6c141d94aa74fc45a735d774b1da1bb6",
           "historical_delivery_unchanged": true
+        },
+        "tls_requirement_completion": {
+          "parent_scope": "S03",
+          "current_delta_only": true,
+          "root": "migration/evidence/plugin-tr-private-tls-completion",
+          "parent_seal": "ce0f6576eb15b5815c0afe867db53a657854d29abb874832804e0a66ad8edf15",
+          "actual_seal": "c023213265907cf7daefdd36df3cd93b5a37fb9f26a3d14fde725692cb03133b",
+          "program_normal": "9a6169a81aa3ea5feca22331d38ee83e5c751cd178ebd06863635665f4e252ea",
+          "program_race": "751282d084a92efa50f4c35e2fe67ec8fed09b6e8d705a23d5e2a7b9ce43414b",
+          "scope": "new6d49 plus exact2TRproducts, three real original SDK workers, fixed owned HTTPS9 requests and exact2HTTP audits; allprocess-race only this128B newTLS gate",
+          "ordinary_host_inheritance": "Current parent40 true normal supervisor/start/restart/close plus old method-specific original host chains, not a claim oldCLI binaries equal newHEAD or new ordinary HTTPS execution",
+          "preserved_S03_large_pressure_limit": "Original large-material dual-race HTTP502 failures near the30s budget remain FAIL with exact cause unknown; old ordinary large normal and approved per-process race retained, not replaced by this128B TLS dualrace.",
+          "original_TR_contract_consumers": [
+            "add_torrent",
+            "recheck_torrents",
+            "start_torrents",
+            "delete_torrents(delete_file=False)"
+          ],
+          "new_TLS_run_methods": [
+            "add_torrent"
+          ],
+          "coverage_label": "This run covers the named representative method per SDK. Other original same-constructor methods inherit exact earlier contract/behavior evidence; not all methods reexecuted."
         }
       }
     },
@@ -29116,6 +29187,8 @@
         "cmd/owned-tr-final-fixture/main_test.go",
         "internal/app/plugin_original_resources.go",
         "internal/app/plugin_original_session.go",
+        "internal/app/plugin_private_tls_installed_sdk_test.go",
+        "internal/app/plugin_private_tls_owned_artifact_test.go",
         "internal/app/plugin_shared_downloader_controls.go",
         "internal/app/plugin_shared_downloader_controls_test.go",
         "internal/app/plugin_shared_qbittorrent_tags.go",
@@ -29131,13 +29204,16 @@
         "internal/plugins/downloadercommands/testdata/source-tr-final.json",
         "internal/plugins/downloadercommands/tr_final.go",
         "internal/plugins/downloadercommands/tr_final_test.go",
+        "internal/plugins/iyuuautoseed/native/plugin_private_tls_direct_test.go",
         "internal/plugins/iyuuautoseed/native/shared_downloader_commands.go",
+        "internal/plugins/iyuuautoseed/native/shared_downloader_commands_test.go",
         "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands.go",
         "internal/plugins/iyuuautoseed/native/shared_downloader_four_commands_test.go",
         "internal/plugins/iyuuautoseed/native/shared_qb_tag_commands.go",
         "internal/plugins/iyuuautoseed/native/shared_qb_tag_commands_test.go",
         "internal/plugins/iyuuautoseed/native/shared_transmission_final.go",
         "internal/plugins/iyuuautoseed/native/shared_transmission_final_test.go",
+        "internal/plugins/iyuuautoseed/native/shared_transmission_query.go",
         "internal/plugins/pending_call.go",
         "internal/plugins/protocol.go",
         "internal/plugins/runner_budget.go",
@@ -29170,16 +29246,17 @@
         "s13-tags.source-target",
         "s13-tags.normal-cli",
         "s13-tr-final.source-target",
-        "s13-tr-final.normal-cli"
+        "s13-tr-final.normal-cli",
+        "plugin.private-tr-tls.whole-parent-review"
       ],
       "review": {
         "status": "passed",
         "independent": true,
-        "reviewer": "component-specific coordinator/tls_ab_independent/s01_release_owner Astra ultra",
+        "reviewer": "Astra ultra exact current TR TLS and whole-parent combination review",
         "evidence_ids": [
-          "s13-tr-final.independent-review"
+          "plugin.private-tr-tls.whole-parent-review"
         ],
-        "scope": "finite finalTRtwo only; previoussix inherit, no fullparent/vendor/daemon claim"
+        "scope": "Closes only new TLS remaining suboperation of historically complete agreed parent, retaining original source/method/runtime/pressure limits"
       },
       "external_source_paths": [],
       "work_kind": "shared_host_extension",
@@ -29250,12 +29327,10 @@
           "s13-tr-final.source-target",
           "s13-tr-final.normal-cli"
         ],
-        "remaining": [
-          "Same shared TR client used by original fixed pause/reannounce methods; retain qB controls and original operation contracts."
-        ],
-        "status": "partial_specific_remaining",
-        "authoritative_as_of": "2026-11-02T01:33:47.070275+00:00",
-        "target_revision": "bd4ec4513e6ff9edc6eb4e0a357febf7d4ec30e0",
+        "remaining": [],
+        "status": "complete_agreed_scope_reopened_operation_closed",
+        "authoritative_as_of": "2026-11-02T02:44:57.089788+00:00",
+        "target_revision": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59 + exact isolated TR2 staged source hashes",
         "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
         "legacy_schema_status_not_parent_progress": true,
         "new_test_execution_claimed": true,
@@ -29274,15 +29349,23 @@
             "remaining": [],
             "status": "complete_agreed_scope_reopened_operation_closed",
             "preserved_scope_credit": "original parent scope plus delivered child evidence, not child count"
+          },
+          {
+            "at": "2026-11-02T02:44:57.089788+00:00",
+            "status": "partial_specific_remaining",
+            "remaining": [
+              "Same shared TR client used by original fixed pause/reannounce methods; retain qB controls and original operation contracts."
+            ],
+            "note": "Only new user-requested private TR HTTPS delta reopened; historical wholeparent acceptance and its limits remain intact"
           }
         ],
-        "progress_updated_at": "2026-11-01T10:32:38.323890+00:00",
+        "progress_updated_at": "2026-11-02T02:44:57.089788+00:00",
         "closed_remaining_history": [
           "旧精确8方法source/SDK/leaf/native/App及普通CLI信用全保留，除已定位change_torrent普通numeric字符串支路，其余不重开也不扩reannounce。",
           "原14有限underscore/UnicodeNd/空白/指数及非法字符串已实际独立采集；新leaf4+SDK3 normal/race四门实际通过且独审032e47b8。当前待受影响native/真实App-worker/普通CLI参数链和整项继承绑定收口，未计完成/未push。",
           "已披露非任意Python/整数范围/未知外部效果/身份guard边界不变；真实daemon及Pythonhash分布不是新增旧操作。"
         ],
-        "delivery_state": "remote_confirmed",
+        "delivery_state": "local_complete_pending_commit_push_readback",
         "worktree_candidate": {
           "base_revision": "808148abfad0b7fe230c426387a3b7b49eeedb18",
           "adopted_product_paths": 2,
@@ -29307,6 +29390,36 @@
           "inventory_seal": "a0b5c8f649de81694c38a27434b454877dc89224bc48141636138a857f90af0e",
           "independent_count_seal": "a27d49442802eb8fb79403cac6c4a43a6c141d94aa74fc45a735d774b1da1bb6",
           "historical_delivery_unchanged": true
+        },
+        "tls_requirement_completion": {
+          "parent_scope": "S13",
+          "current_delta_only": true,
+          "root": "migration/evidence/plugin-tr-private-tls-completion",
+          "parent_seal": "ce0f6576eb15b5815c0afe867db53a657854d29abb874832804e0a66ad8edf15",
+          "actual_seal": "c023213265907cf7daefdd36df3cd93b5a37fb9f26a3d14fde725692cb03133b",
+          "program_normal": "9a6169a81aa3ea5feca22331d38ee83e5c751cd178ebd06863635665f4e252ea",
+          "program_race": "751282d084a92efa50f4c35e2fe67ec8fed09b6e8d705a23d5e2a7b9ce43414b",
+          "scope": "new6d49 plus exact2TRproducts, three real original SDK workers, fixed owned HTTPS9 requests and exact2HTTP audits; allprocess-race only this128B newTLS gate",
+          "ordinary_host_inheritance": "Current parent40 true normal supervisor/start/restart/close plus old method-specific original host chains, not a claim oldCLI binaries equal newHEAD or new ordinary HTTPS execution",
+          "preserved_S03_large_pressure_limit": "Original large-material dual-race HTTP502 failures near the30s budget remain FAIL with exact cause unknown; old ordinary large normal and approved per-process race retained, not replaced by this128B TLS dualrace.",
+          "original_TR_contract_consumers": [
+            "set_torrent_tag",
+            "stop_torrents",
+            "change_torrent"
+          ],
+          "new_TLS_run_methods": [
+            "change_torrent"
+          ],
+          "coverage_label": "This run covers the named representative method per SDK. Other original same-constructor methods inherit exact earlier contract/behavior evidence; not all methods reexecuted."
+        },
+        "tls_scope_text_correction": {
+          "old_remaining_text": "pause/reannounce",
+          "correct_original_TR_methods": [
+            "set_torrent_tag",
+            "stop_torrents",
+            "change_torrent"
+          ],
+          "basis": "independent original eight-operation parent seal and current code; no reannounce added to scope"
         }
       },
       "parent_acceptance_history": [
@@ -48821,6 +48934,53 @@
       "commands": {
         "actual": "Exact original source/target command arrays, ordinary CLI runner and launch/terminal actuals are in indexed original evidence; not inferred from prepared commands"
       }
+    },
+    {
+      "id": "plugin.private-tr-tls.whole-parent-review",
+      "kind": "review",
+      "status": "passed",
+      "feature_ids": [
+        "S01",
+        "S03",
+        "S13"
+      ],
+      "independent": true,
+      "reviewer": "Astra ultra component and three-parent delta closure independent review",
+      "observations": "Exact2privateTRproducts+4support new6d49 candidate actual normal1/race1 three real SDKs, plus precise original native/method proofs and current40 true ordinary lifecycle. No Wiki/B/Tasks/coreIO/shared adoption. Historical48 parent credit unchanged. S03 original large dualrace failure preserved.",
+      "binding": {
+        "source_commit": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "environment": {
+          "target": "Go1.26 offline on6d49 exact26overlays; actual App plus original3SDK workers/owned HTTPS; allprocess race for128B TLS gate",
+          "source": "Fixed original method contracts unchanged; user2026-11-02T00:59 all current private-plugin HTTPS noverify",
+          "limits": "Not real downloader daemon, new ordinary CLI TLS execution or old large dualrace PASS; no global/Git/browser/proxy/credential relaxation"
+        },
+        "target_files": {
+          "internal/plugins/iyuuautoseed/native/shared_transmission_query.go": "a788fb30392e5edb78b37e62c532782d31ba484d59d598eeb659ef810fd4f3d6",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_commands.go": "d119f898e52ebd32138ef723db231df0f66577d50bed267152f2ea95c741d3d6",
+          "internal/app/plugin_private_tls_installed_sdk_test.go": "0d6c811d886e6c0427f417d5b1c7b4a6f871c47c4c2c8101f2254d4c4952284b",
+          "internal/plugins/iyuuautoseed/native/plugin_private_tls_direct_test.go": "3e12460b3de567c4e893f0bcbdc82e43f028f8ccdd91017f37b46e17b87c052a",
+          "internal/plugins/iyuuautoseed/native/shared_downloader_commands_test.go": "19dc4f42ab2cb34838a112ae6bf992ac334f8a2c80edcd80c046b79fba2db1cb",
+          "internal/app/plugin_private_tls_owned_artifact_test.go": "4d2d0e9fdd1de2586284c7540715bec03d531985350cd5e7b5bcc8b8f709494f"
+        },
+        "fixture_files": {
+          "evidence/plugin-tr-private-tls-completion/full-recovery-index.json": "234effa4fe8c3a959e82c220c0780964789d72aa6743b0c60438fe67fd987624"
+        }
+      },
+      "artifacts": {
+        "evidence/plugin-tr-private-tls-completion/README.md": "8e66ea445b13b7501cce7918ac3afa68e4416ba159ec089e5266c91a358a50c7",
+        "evidence/plugin-tr-private-tls-completion/full-recovery-index.json": "234effa4fe8c3a959e82c220c0780964789d72aa6743b0c60438fe67fd987624",
+        "evidence/plugin-tr-private-tls-completion/parent-REVIEW.md": "f25705416e68776785328aab5db1be975d8d39b18396b9a102a845a437ccab21",
+        "evidence/plugin-tr-private-tls-completion/parent-readback.json": "637d1134357161982ff1b83c4fb6288f39203eed34c31fb26b1fe6a61d9ab65f",
+        "evidence/plugin-tr-private-tls-completion/parent-seal.json": "ce0f6576eb15b5815c0afe867db53a657854d29abb874832804e0a66ad8edf15",
+        "evidence/plugin-tr-private-tls-completion/public-originals.tar.gz": "13a3d00ee4de2e61d9fc6ba6142cbbacb29c34d1996e86191e59d9861f465a5f"
+      },
+      "inputs": {
+        "full_maps": "lossless SHA-object public-originals archive and exact full-recovery-index",
+        "current_app_programs": "actual6478normal/6479race; original3workers reused only after exact source/dependency/instrumentation proof"
+      },
+      "commands": {
+        "actual": "Original native and new normal/race command arrays plus actual execution tool receipts retained in public SHA-object recovery index; old failure and test-only audit fix explicit"
+      }
     }
   ],
   "execution_contract": {
@@ -57961,14 +58121,14 @@
       "CNsourceauthor": "s01_release_owner completed source preparation"
     },
     "parent_progress_current": {
-      "as_of": "2026-11-02T02:14:33.197367+00:00",
+      "as_of": "2026-11-02T02:44:57.089788+00:00",
       "authoritative_field": "features[].parent_acceptance_current",
-      "target_revision": "e6018fea016744cd3ffae20ac77a7b515330437c + exact parent40 staged30 source hashes",
+      "target_revision": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59 + exact TR2 staged source hashes",
       "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
       "denominator": 61,
       "counts": {
-        "complete": 43,
-        "partial": 16,
+        "complete": 46,
+        "partial": 13,
         "dependency_or_final": 2
       },
       "complete_ids": [
@@ -58010,10 +58170,13 @@
         "47",
         "48",
         "49",
+        "S01",
         "S02",
+        "S03",
         "S05",
         "S09",
         "S10",
+        "S13",
         "S15"
       ],
       "partial_ids": [
@@ -58024,21 +58187,18 @@
         "36",
         "38",
         "43",
-        "S01",
-        "S03",
         "S04",
         "S06",
         "S07",
         "S11",
         "S12",
-        "S13",
         "S14"
       ],
       "dependency_or_final_ids": [
         "50",
         "S08"
       ],
-      "basis": "Current43 complete/16 partial/2 dependency-final after local whole parent40 acceptance; remote publication pending. Historical47 delivered at e601 retained, five newly requested TLS children still open, no fullproject percentage/CI-green.",
+      "basis": "Current46 complete/13 partial/2 dependency-final after three precise newly requested TR TLS deltas close locally. Historical48 delivered wholeparent credit does not become51; remote update pending, no CIgreen/fullproject percentage.",
       "correction_from_prior37": "New exact shared TLS source/target discrepancy affects six previously inherited parents07/08/10/12/14/20; four previously reopened parents16/17/39/S15 now closed.37+4-6=35. Prior43/41 review drafts withdrawn, preserved.",
       "independent_review": "../audits/progress-61-parent-reconciliation01/final-seal.json",
       "independent_review_sha256": "fa4921cec1548e9db85d7f4307a706a383c26a0c0fe06b27e82dfbe683aad020",
@@ -58056,16 +58216,20 @@
         "scope": "CalendarApp02normal2/race1 accepted; authoritative61=35/24/2; CLI only prepared; notnewGitdelivery"
       },
       "newly_closed_local_parents": [
-        "40"
+        "S01",
+        "S03",
+        "S13"
       ],
       "newly_closed_local_delivery": "pending_commit_push_readback",
-      "latest_independent_parent_dependency": "migration/evidence/command40-system-completion/parent-seal.json",
+      "latest_independent_parent_dependency": "migration/evidence/plugin-tr-private-tls-completion/parent-seal.json",
       "previous_count_reference": "46/13/2 S02remote0461",
       "newly_closed_remote_parents": [
-        "S03"
+        "40"
       ],
       "pending_remote_parent": [
-        "40"
+        "S01",
+        "S03",
+        "S13"
       ],
       "reported_to_root_at": "2026-11-01T16:54:23.731395+00:00",
       "user_notification_before_S13": {
@@ -58134,6 +58298,24 @@
         "at": "2026-11-02T01:32:02Z",
         "id": "Sentinel_096658fcc1848191b43492a9d3c2e75d",
         "message": "Historical47, five narrow TLS children pending latest unified preference; no whole-parent redo or repudiation of original acceptance. No new numerical completion claim sent."
+      },
+      "historical_delivered_current_scope_credit": {
+        "complete_parent_count": 48,
+        "as_of_commit": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59",
+        "current_new_tls_delta_open": [
+          "S01",
+          "S03",
+          "S13",
+          "36",
+          "43"
+        ],
+        "note": "Historical47 at e601 plus wholeparent40; not48fully compliant with newTLS request."
+      },
+      "user_notification_command40": {
+        "message_id": "Sentinel_cbcca42974b48191b145b3568727817f",
+        "at": "2026-11-02T02:19:33Z",
+        "actual_notified_by_root": true,
+        "counts": "current43/16/2; historical48 with5 new TLS children open"
       }
     },
     "new_trigger_combining": {
@@ -60165,6 +60347,198 @@
           "at": "2026-11-02T01:32:02Z",
           "id": "Sentinel_096658fcc1848191b43492a9d3c2e75d",
           "message": "Historical47, five narrow TLS children pending latest unified preference; no whole-parent redo or repudiation of original acceptance. No new numerical completion claim sent."
+        }
+      },
+      {
+        "as_of": "2026-11-02T02:14:33.197367+00:00",
+        "authoritative_field": "features[].parent_acceptance_current",
+        "target_revision": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59",
+        "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
+        "denominator": 61,
+        "counts": {
+          "complete": 43,
+          "partial": 16,
+          "dependency_or_final": 2
+        },
+        "complete_ids": [
+          "01",
+          "02",
+          "03",
+          "04",
+          "05",
+          "06",
+          "08",
+          "09",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "16",
+          "17",
+          "18",
+          "19",
+          "20",
+          "21",
+          "25",
+          "26",
+          "27",
+          "28",
+          "29",
+          "30",
+          "31",
+          "32",
+          "33",
+          "34",
+          "35",
+          "37",
+          "39",
+          "40",
+          "41",
+          "42",
+          "47",
+          "48",
+          "49",
+          "S02",
+          "S05",
+          "S09",
+          "S10",
+          "S15"
+        ],
+        "partial_ids": [
+          "07",
+          "15",
+          "23",
+          "24",
+          "36",
+          "38",
+          "43",
+          "S01",
+          "S03",
+          "S04",
+          "S06",
+          "S07",
+          "S11",
+          "S12",
+          "S13",
+          "S14"
+        ],
+        "dependency_or_final_ids": [
+          "50",
+          "S08"
+        ],
+        "basis": "Current43 complete/16 partial/2 dependency-final: wholeparent40 remote6d4954f0. Historical48 delivered/inherited parent scope retained, including five reopened current TLS suboperations. Not wholeproject percentage or CIgreen.",
+        "correction_from_prior37": "New exact shared TLS source/target discrepancy affects six previously inherited parents07/08/10/12/14/20; four previously reopened parents16/17/39/S15 now closed.37+4-6=35. Prior43/41 review drafts withdrawn, preserved.",
+        "independent_review": "../audits/progress-61-parent-reconciliation01/final-seal.json",
+        "independent_review_sha256": "fa4921cec1548e9db85d7f4307a706a383c26a0c0fe06b27e82dfbe683aad020",
+        "current_product_wip_not_integrated": "Meta25/15/38/S14/S12IO/S08/5parentTLS and olddata pending remain outside parent40 adoption",
+        "global_final_checker": "Same source-only nonfinalstructure actual2026-11-01T23:58:34 now2issues; old664/16failuresretained. MissingOCR argv/review9 preciselypending; no target-repo/finalcheck, notgreen. Parent50open, oldacceptedcreditunchanged.",
+        "external_backup": {
+          "confirmed_at": "2026-11-01T08:56:12.829545+00:00",
+          "library_file_id": "libfile_451bb8657078819191eb21d718047358",
+          "version": 0,
+          "filename": "calendar-app-terminal-parent61-20261101T0855.tar.gz",
+          "bytes": 3661157,
+          "sha256": "e0e590a4295be4d0b339be27332b8477604027aa42ed555d8668339a77a51829",
+          "xattrs": "tool0",
+          "status": "actualSpaceSaveConfirmedByRoot",
+          "scope": "CalendarApp02normal2/race1 accepted; authoritative61=35/24/2; CLI only prepared; notnewGitdelivery"
+        },
+        "newly_closed_local_parents": [
+          "40"
+        ],
+        "newly_closed_local_delivery": "remote_pushed_and_readback_verified",
+        "latest_independent_parent_dependency": "migration/evidence/command40-system-completion/parent-seal.json",
+        "previous_count_reference": "46/13/2 S02remote0461",
+        "newly_closed_remote_parents": [
+          "40"
+        ],
+        "pending_remote_parent": [],
+        "reported_to_root_at": "2026-11-01T16:54:23.731395+00:00",
+        "user_notification_before_S13": {
+          "reported_by_root_at": "2026-11-01T10:17Z",
+          "message": "User informed fourwholeparents pushed808148 and authoritative39/20/2; memory worker threadlimit, retain ledger/backups",
+          "confirmed_at": "2026-11-01T10:20:08.069660+00:00"
+        },
+        "user_notification_before_S01": {
+          "confirmed_by_root_at": "2026-11-01T11:11:50Z",
+          "message": "User informed wholeS13 pushedbd4ec451 and40/19/2; 38notcompleted; memorythreadlimit donotrestart",
+          "actually_notified": true
+        },
+        "user_notification_before_market_four": {
+          "actually_notified": true,
+          "message": "User informed wholeS01 remote5f829f8d and41/18/2;38realnewpage stillpartial; memorythreadlimit no newworker",
+          "confirmation_recorded_at": "2026-11-01T11:38:28.320635+00:00",
+          "actual_user_message_time": "not provided in root relay; do not infer precise send time"
+        },
+        "user_notification_before_S02": {
+          "actually_notified": true,
+          "confirmation_recorded_at": "2026-11-01T12:39:25.493076+00:00",
+          "message": "Root confirms user informed whole08/09/10/12 remote1006d11, original2MiBextra limitremoved, authoritative45/14/2.",
+          "actual_user_message_time": "notprovided; confirmation time notassumed senttime"
+        },
+        "user_notification_ci": {
+          "actually_notified": true,
+          "message_id": "Sentinel_32aaf7f97528819183bc38ad0fc683ac",
+          "at": "2026-11-01T16:54:06Z",
+          "message": "ActualCI0checks/0runs/0statuses is notgreen; real localacceptance and pushsuccess distinct."
+        },
+        "user_notification_before_S03": {
+          "actually_notified": true,
+          "confirmed_by_root": true,
+          "message_id": "Sentinel_0c71d905f9c881919d780f435f6d101d",
+          "at": "2026-11-01T16:53:14Z",
+          "message": "Whole S02 remote0461a072,46/13/2,main unchanged; CI was pending then subsequently confirmed0checks/0runs/0statuses."
+        },
+        "user_notification": {
+          "actually_notified": true,
+          "by": "root",
+          "id": "Sentinel_97917bc28cec8191ac7f91d2720c8438",
+          "at": "2026-11-01T18:39:15Z",
+          "message": "S03whole e6018fea remote47/12/2 mainunchanged; dualracepressurenotpassed, approvedperprocessPASS,CIpendingnotgreen"
+        },
+        "historical_delivered_counts_preserved": {
+          "as_of": "2026-11-01T18:39:13.680392+00:00",
+          "counts": {
+            "complete": 47,
+            "partial": 12,
+            "dependency_or_final": 2
+          },
+          "target_revision": "e6018fea016744cd3ffae20ac77a7b515330437c",
+          "note": "47 historical whole-parent deliveries; no new push at this checkpoint"
+        },
+        "new_tls_affected_ids": [
+          "S01",
+          "S03",
+          "S13",
+          "36",
+          "43"
+        ],
+        "new_tls_independent_count_seal": "a27d49442802eb8fb79403cac6c4a43a6c141d94aa74fc45a735d774b1da1bb6",
+        "user_notification_latest_tls": {
+          "actually_notified": true,
+          "by": "root",
+          "at": "2026-11-02T01:32:02Z",
+          "id": "Sentinel_096658fcc1848191b43492a9d3c2e75d",
+          "message": "Historical47, five narrow TLS children pending latest unified preference; no whole-parent redo or repudiation of original acceptance. No new numerical completion claim sent."
+        },
+        "historical_delivered_current_scope_credit": {
+          "complete_parent_count": 48,
+          "as_of_commit": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59",
+          "current_new_tls_delta_open": [
+            "S01",
+            "S03",
+            "S13",
+            "36",
+            "43"
+          ],
+          "note": "Historical47 at e601 plus wholeparent40; not48fully compliant with newTLS request."
+        },
+        "user_notification_command40": {
+          "message_id": "Sentinel_cbcca42974b48191b145b3568727817f",
+          "at": "2026-11-02T02:19:33Z",
+          "actual_notified_by_root": true,
+          "counts": "current43/16/2; historical48 with5 new TLS children open"
         }
       }
     ],
@@ -65416,7 +65790,7 @@
       "current_same_parameter_issues": 2,
       "no_target_repo_no_final": true,
       "boundaries": "First648pathkeys176exactcopies retained; second22+1historicalmetadata fields+87exactcopies independentlyverified. Actualchecker664→16→2 remainsFAIL1 sameparameters; no --target-repo/--final, nohistoricalbusinesscreditreset or inventedargv/review.",
-      "actual_checker_latest": "../audits/command40-publication-coordinator01/structure01/receipt.json",
+      "actual_checker_latest": "../audits/plugin-tr-tls-publication-coordinator01/structure01/receipt.json",
       "second_application": {
         "path": "../audits/ledger-structure-reconciliation-2323/remaining16-proposal01/application01/receipt.json",
         "field_operations": 23,
@@ -65432,10 +65806,11 @@
         "OCR independentreviewfixturebinding 9specifickeys stillwithout exactoriginalreviewprovenance; sameemptySHA notproof, no inventedreview"
       ],
       "next": "Stop boundedmetadatarepair attrue2pending. Do not rerununaffectedbusiness justforcosmeticgreen; continueS08. Finaltarget/currentintegrationand50stillopen.",
-      "latest_at": "2026-11-02T02:15:01.670073Z",
+      "latest_at": "2026-11-02T02:47:20.901462Z",
       "latest_exit": 1,
       "latest_output_unchanged_sha256": "74d205084c1f8d8016e591b0e1c4f59c2cae24b79b7bab080022eda03dd29070",
-      "latest_new_parent40_issues": 0
+      "latest_new_parent40_issues": 0,
+      "latest_new_TR3_issues": 0
     },
     "external_checkpoint_2338": {
       "at": "2026-11-01T23:37:53.094024+00:00",
@@ -65556,6 +65931,29 @@
         "external_confirmed_by_root": true,
         "local_xattrs_applied_by_root": true,
         "recorded_at": "2026-11-02T02:02:17.336833+00:00"
+      },
+      "command40_bundle": {
+        "library_file_id": "libfile_a0c897e4319481918ff248ba74477c14",
+        "version": 0,
+        "filename": "light-media-command40-6d4954f06ecc.bundle",
+        "bytes": 10925546,
+        "sha256": "66e4a7fd73395813451e179f3429cd7cc13068a75870b2353f3a4e822fa63f9e",
+        "prerequisite": "e6018fea016744cd3ffae20ac77a7b515330437c",
+        "head": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59",
+        "external_confirmed_by_root": true,
+        "xattrs_applied_by_root": true,
+        "at": "2026-11-02T02:23:04.070218+00:00"
+      },
+      "tls_current_0226": {
+        "library_file_id": "libfile_612dbd9f5be88191871d0bc0ce5e6004",
+        "version": 0,
+        "filename": "tls-current-recovery-20261102T0226.tar.gz",
+        "bytes": 9596626,
+        "sha256": "c3417974bf0f0749b6ab701c78ff08094c2f5d82d94f139380829ffd1da0a84d",
+        "prerequisite": "0201 + 6d49bundle",
+        "external_confirmed_by_root": true,
+        "xattrs_applied_by_root": true,
+        "at": "2026-11-02T02:28:10.113363+00:00"
       }
     },
     "all_plugin_https_followthrough": {
@@ -65569,9 +65967,8 @@
     "backup_0103_timing_clarification": "0103 tar was assembled before terminal polling; in-flight in manifest means last-known/uncollected session, not actual process liveness at01:03:27. Later actual runner result ended01:03:08, polled01:03:45. No normal02 execution result was included in that tar; actual new results saved separately.",
     "active_execution": {
       "status": "NONE",
-      "last_session": 95749,
-      "terminal": "0c7edd",
-      "exit": 0
+      "last_session": 59996,
+      "terminal": "dddfaf"
     },
     "command40_native_version_current": {
       "at": "2026-11-02T01:13:06.679705+00:00",
@@ -65811,7 +66208,7 @@
       "final": "97cced3b38e37d9d1562f808808cd66f541abe9ed7d0e88d3291a6e0ce85614f"
     },
     "command40_parent_local": {
-      "status": "EXACT30_INDEPENDENT_ADOPTION_ACCEPT_PENDING_PUBLICATION",
+      "status": "REMOTE_PUSHED_READBACK_VERIFIED",
       "seal": "9c04c52c1566740296f6123b0cb5854d960447758c946f67b1f894b4c2faa487",
       "paths": 30,
       "scope": "18product11test1source raw; ordinaryfixedGitHubunknown versus testbuildownedTLSpositive preserved",
@@ -65823,7 +66220,84 @@
       "public_payload_paths": 7,
       "public_objects": 278,
       "public_logical_originals": 369,
-      "structural_check": "sameparameter FAIL2 unchanged originalOCR provenance, no new parent40 issues, no --final claim"
+      "structural_check": "sameparameter FAIL2 unchanged originalOCR provenance, no new parent40 issues, no --final claim",
+      "commit": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59",
+      "remote_readback": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59",
+      "main_readback": "97476582910dc4b696f7ccd5010f28d823812d40",
+      "actual_push_session": 93093,
+      "terminal": "b228a1",
+      "ci": {
+        "checks": 0,
+        "runs": 0,
+        "statuses": 0,
+        "combined_state": "pending",
+        "actual_session": 78256,
+        "terminal": "381501",
+        "green_claimed": false
+      },
+      "postcommit_independent": "2cca51f476f632c0f8357d4f6f1f081d819c3e3cbfb8aa13712571e7679393cf"
+    },
+    "plugin_private_tls_shared_current": {
+      "status": "FINITE_NORMAL5_RACE4_INDEPENDENT_ACCEPT",
+      "base": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59",
+      "normal_session": 70095,
+      "normal_terminal": "6af2d4",
+      "normal_end": "2026-11-02T02:21:25.856936Z",
+      "normal_packages": {
+        "catalog": "2369inputs/cdba9c47/2roots",
+        "sites": "2935inputs/d519779f/2roots",
+        "app": "6391inputs/51caea11/1root"
+      },
+      "scope": "pure/recording/ownedSQLite, no realTLS/HTTP/DNS/worker",
+      "race_session": 40451,
+      "race_terminal": "2b03e8",
+      "race_end": "2026-11-02T02:23:38.527585Z",
+      "race_packages": {
+        "catalog": "2377inputs/b2c0d628/2roots",
+        "sites": "2943inputs/326adecc/1root",
+        "app": "6400inputs/3c16e884/1root"
+      },
+      "final_seal": "a400220d7a3066c0853b1a17bab7eebba2f65667abacee2835662c58b002894e"
+    },
+    "plugin_tls_event_scope_current": {
+      "status": "STATIC_SCOPE_ACCEPT_NOT_RUNTIME",
+      "seal": "0819621252485dd85a94495901cdcd45c14b6051afd28a026ac17b2ca73ada56",
+      "parent": "36",
+      "consumers": [
+        "site.updated: userdata and icon; clear remains pure",
+        "downloadfile.deleted: list/remove_keep_data default handler",
+        "metadata.scrape: native image sidecar"
+      ],
+      "not_added_scope": "metadata.scrape was in original media.py1034 and old consumer table; previousremaining list was incomplete, no count change; transfer tag is43, imagehelper shared once",
+      "runtime": "pending owned actual worker event chain, no original native helper execution"
+    },
+    "plugin_tr_tls_closure_current": {
+      "status": "THREE_PARENT_LOCAL_ACCEPT_EXACT6_STAGED_PENDING_PUBLICATION",
+      "base": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59",
+      "products": 2,
+      "support": 4,
+      "preexec": "740a298a595222c009732b18c1dd3810a1d5afe370e22ab7c7f475d0516c187e",
+      "normal_session": 23196,
+      "normal_terminal": "3f5493",
+      "normal_end": "2026-11-02T02:32:17.080813Z",
+      "normal_inputs": 6478,
+      "normal_program": "9a6169a81aa3ea5feca22331d38ee83e5c751cd178ebd06863635665f4e252ea",
+      "scope": "three real original SDKs/owned9HTTPS; current narrowApp binary; old source/native contract and current40 ordinary lifecycle separate inherited layers",
+      "race_session": 59996,
+      "race_terminal": "dddfaf",
+      "race_end": "2026-11-02T02:35:20.205032Z",
+      "race_inputs": 6479,
+      "race_program": "751282d084a92efa50f4c35e2fe67ec8fed09b6e8d705a23d5e2a7b9ce43414b",
+      "parent_seal": "ce0f6576eb15b5815c0afe867db53a657854d29abb874832804e0a66ad8edf15",
+      "actual_seal": "c023213265907cf7daefdd36df3cd93b5a37fb9f26a3d14fde725692cb03133b",
+      "adoption": "df36969fb5dce208a464569b325eb8412018f51a5e9da0287b7ff8f01253b39e",
+      "publication_review": "43bf00fdba195f3b56924cc3a90d5c43c461b0ed853612b1cfb9071a70c34e47",
+      "public_object_count": 134,
+      "logical_originals": 176,
+      "public_archive_bytes": 4252990,
+      "old_pressure_failure_wording": "HTTP502 near30s budget; exactcauseunknown, not newly established timeout cause",
+      "structure_check": "Actualsameparameter source-only FAIL2 originalOCR provenance unchanged; no new TR3 issues and no final/CIgreen claim",
+      "consumer_metadata_correction": "Precommit independent review removed erroneously listed S01 get_downloading_torrents (not original completed-only contract); exact newrun methods separated from old shared-constructor contract consumers. No product/test/count change."
     }
   },
   "external_inventory": [

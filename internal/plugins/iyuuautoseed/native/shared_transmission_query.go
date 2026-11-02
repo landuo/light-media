@@ -5,6 +5,7 @@ package download
 // an old business-plugin owner. No caller can choose an RPC method or fields.
 import (
 	"context"
+	"crypto/tls"
 	"encoding/json"
 	"net"
 	"net/http"
@@ -32,7 +33,7 @@ func NewTransmissionQueryClient(config Config, guard func(context.Context) error
 	}
 	// requests' timeout=60 is connect/read-idle, not a 60-second total request.
 	// Do not change the timeout or environment-proxy policy of old consumers.
-	transport := &http.Transport{Proxy: nil, ForceAttemptHTTP2: false, TLSHandshakeTimeout: 60 * time.Second, IdleConnTimeout: 90 * time.Second,
+	transport := &http.Transport{Proxy: nil, TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, ForceAttemptHTTP2: false, TLSHandshakeTimeout: 60 * time.Second, IdleConnTimeout: 90 * time.Second,
 		DialContext: func(ctx context.Context, network, address string) (net.Conn, error) {
 			conn, err := (&net.Dialer{Timeout: 60 * time.Second, KeepAlive: 30 * time.Second}).DialContext(ctx, network, address)
 			if err != nil {

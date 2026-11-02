@@ -1,0 +1,165 @@
+{
+  "status": "ACCEPT_LOCAL_FIXED_S01_S03_S13_TLS_REOPENED_GAPS_CLOSED_PENDING_EXACT_PUBLICATION",
+  "at": "2026-11-02T02:39:01.162844+00:00",
+  "baseline": "6d4954f06ecc75c0b690c1156d2f92769c7ecb59",
+  "candidate": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/plugin-tr-tls-closure01/candidate02.json",
+    "bytes": 7579,
+    "sha256": "79f595ed1b3dfff4c1b8e72fdcf87b32ed348e71fefadad1baee42ecb780c6a0"
+  },
+  "current_actual": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/plugin-tr-tls-closure-independent/actual-final01/seal.json",
+    "bytes": 1190,
+    "sha256": "c023213265907cf7daefdd36df3cd93b5a37fb9f26a3d14fde725692cb03133b"
+  },
+  "preexec": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/plugin-tr-tls-closure-independent/preexec01/seal.json",
+    "bytes": 1200,
+    "sha256": "740a298a595222c009732b18c1dd3810a1d5afe370e22ab7c7f475d0516c187e"
+  },
+  "plan": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/plugin-tr-tls-closure-independent/plan01/seal.json",
+    "bytes": 885,
+    "sha256": "db9192a21de8ccbf4bc426e02ce6fbfbcf5f855f0848b9599bee7f4a1ddc6a32"
+  },
+  "historical_parent_seals": {
+    "S01": {
+      "seal": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s01-parent-publication01/PARENT-FINAL.json",
+        "bytes": 2281,
+        "sha256": "f71b381f4ae8667588f7d00a737357c57025b4dd0c24fd20ded055cd500fe232"
+      },
+      "status": "S01_EXACT_TWO_COMPLETED_OPERATIONS_BEHAVIOR_AND_HOST_CHAIN_ACCEPTED",
+      "scope": [
+        "qB get_completed_torrents(ids,tags), including no known hashes",
+        "Transmission get_completed_torrents(ids,tags), including no known hashes"
+      ]
+    },
+    "S03": {
+      "seal": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s03-material-parent-closure01/final-seal01.json",
+        "bytes": 7792,
+        "sha256": "e21eb91e063b0a79727e4207261796b6bd415e7f60312a5b7695264479a802dc"
+      },
+      "status": "ACCEPT_S03_FIXED_WHOLE_PARENT_WITH_APPROVED_PER_PROCESS_RACE_COVERAGE",
+      "scope": "Original qB/TR add,recheck,start,delete(delete_file=False), inherited URLCookie and current ordinary bytes material gap; no arbitrary vendor/DAO/Python object/NAS/real-daemon expansion"
+    },
+    "S13": {
+      "seal": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/s13-parent-closure-final01/final-seal.json",
+        "bytes": 2148,
+        "sha256": "4087a84402ccd10f2303c93881415a948bfd3cc1e10e107a7269290b2e572aab"
+      },
+      "status": "S13_EXACT_EIGHT_METHOD_BEHAVIOR_AND_HOST_CHAIN_ACCEPTED",
+      "scope": {
+        "qB": [
+          "delete_torrents_tag",
+          "set_torrents_tag",
+          "get_torrent_id_by_tag",
+          "stop_torrents",
+          "set_torrent_category"
+        ],
+        "TR": [
+          "set_torrent_tag",
+          "stop_torrents",
+          "change_torrent"
+        ]
+      }
+    }
+  },
+  "authoritative_parent_snapshot": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/plugin-tr-tls-closure-independent/parent-closure01/parent-current-snapshot.json",
+    "bytes": 16388,
+    "sha256": "163bd141569cad6868f2b8f614811a1de04104cf47c41d7937773cd46e14101b"
+  },
+  "source_of_snapshot": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/migration/ledger.json",
+    "bytes": 4663425,
+    "sha256": "db52105d98c62cb7cb1562f92b7576d8993f789550a2cf78d70d114944043ca1"
+  },
+  "new_authority": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/user-decisions-20261102T0059/https-supersession.json",
+    "bytes": 2190,
+    "sha256": "5bdf1b56dfe3e294b11929b4252c21cdd9d43e76a7ce95bfd3cf883e418cade7"
+  },
+  "dependency22_current_e601_6d49_equal": {
+    "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/target-drafts/plugin-tr-tls-closure01/dependency-readback02.json",
+    "bytes": 8461,
+    "sha256": "704738f9aaae5d4bd5561d1a391327ef5216a06e62ebafa3ccea64d3d06e3ac3"
+  },
+  "findings": [
+    {
+      "id": "S01",
+      "fixed_scope": "qB/TR get_completed_torrents(ids,tags), including unknown-id enumeration",
+      "new_gap": "TR completed-query private transport TLS verification",
+      "current_proof": "new exact App assembly+real installed query worker+owned self-signed endpoint normal and all-process race; exact completed result. Unchanged query algorithm and qB earlier private TLS credit inherited.",
+      "remaining_behavioral_blockers": [],
+      "not_added": "legacy Tasks/all/downloading/service discovery is not this fixed parent"
+    },
+    {
+      "id": "S03",
+      "fixed_scope": "qB/TR add,recheck,start,delete(delete_file=False), inherited ordinary URLCookie and bytes material contract",
+      "new_gap": "shared TR command factory private transport TLS verification",
+      "current_proof": "new exact App assembly+real commands worker typed128B Add→grant/claim/spool→TR HTTPS, normal/all-process race; shared constructor means control method semantics unchanged. Original complete large-material, Cookie, controls, selected-effect no-replay, recovery/cold and approved per-process race evidence retained.",
+      "remaining_behavioral_blockers": [],
+      "not_added": "small new dual-race success does not rewrite old large dual-race FAIL or broaden arbitrary file-like/vendor inputs"
+    },
+    {
+      "id": "S13",
+      "fixed_scope": "qB delete_torrents_tag/set_torrents_tag/get_torrent_id_by_tag/stop_torrents/set_torrent_category; TR set_torrent_tag/stop_torrents/change_torrent",
+      "new_gap": "same shared TR command factory private transport TLS verification",
+      "current_proof": "new exact App assembly+real final worker Change→TR HTTPS, normal/all-process race; same TR owner/transport for set-tag and stop, unchanged method/numeric source mappings inherited.",
+      "remaining_behavioral_blockers": [],
+      "metadata_correction": "Current remaining text says pause/reannounce: reannounce is not in the sealed exact eight-method contract and must not be introduced by this closure."
+    }
+  ],
+  "ordinary_current_lifecycle_refs": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/command40-parent-composition01/readback.json",
+      "bytes": 18493,
+      "sha256": "1ff114c6a375daac96b3316360cb65da01259549353d94a6a6d9e1147d6da3fc"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/command40-parent-composition01/REVIEW.md",
+      "bytes": 6276,
+      "sha256": "d82825fc8c91d182395798294642d330737ef36e03c786bed33608488d30e384"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/command40-native-normal-independent/cli02-final/seal.json",
+      "bytes": 2364,
+      "sha256": "aaa552088960a56e50f5e9c99491812421ae155150848c9d19f3ce04f291f8b9"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/audits/command40-native-normal-independent/final-layout-compile02-final/seal.json",
+      "bytes": 1122,
+      "sha256": "97cced3b38e37d9d1562f808808cd66f541abe9ed7d0e88d3291a6e0ce85614f"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261031T1305/release-light-media/migration/evidence/command40-system-completion/parent-seal.json",
+      "bytes": 1910,
+      "sha256": "9c04c52c1566740296f6123b0cb5854d960447758c946f67b1f894b4c2faa487"
+    }
+  ],
+  "ordinary_layer": "New6d49 parent40 supervisor/Start/Close/finish differs from old ordinary binaries. Accepted current40 actual CLI plus canonical build supplies outer lifecycle; actual new App/3SDK TLS supplies constructor consumer chain. Neither old entire CLI binary equality nor new TLS cmd/server execution asserted.",
+  "exact_adoption_paths": [
+    "internal/plugins/iyuuautoseed/native/shared_transmission_query.go",
+    "internal/plugins/iyuuautoseed/native/shared_downloader_commands.go",
+    "internal/app/plugin_private_tls_installed_sdk_test.go",
+    "internal/plugins/iyuuautoseed/native/plugin_private_tls_direct_test.go",
+    "internal/plugins/iyuuautoseed/native/shared_downloader_commands_test.go",
+    "internal/app/plugin_private_tls_owned_artifact_test.go"
+  ],
+  "publication_remaining": [
+    "Minimal original/actual/independent provenance whitelist, truthful current TLS docs and original FAIL preservation",
+    "Exact two production/four support adoption plus ordinary physical vet if coordinator selects, Meta25 preservation and evidence projection",
+    "Only coordinator updates the unique ledger once per fixed parent; existing historical credit unchanged",
+    "Exact staged/index/adoption review, authorized commit/push/remote readback/CI status"
+  ],
+  "excluded": [
+    "Six unrelated direct products and their legacyTasks/Wiki/B App roots",
+    "Shared/coreIO/S08/S12/Meta and other unfinished consumers",
+    "DB/key/credentials/private logs/binaries/dependency caches"
+  ],
+  "reviewer_tests_or_source_execution": false,
+  "ACTIVE_ledger_modified": false
+}

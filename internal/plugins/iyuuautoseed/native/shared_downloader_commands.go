@@ -31,9 +31,9 @@ type sharedQBCommands struct{ owner *sharedDownloaderCommands }
 type sharedTRCommands struct{ owner *sharedDownloaderCommands }
 
 // NewSharedDownloaderCommands creates one owned fixed native client. Only this
-// qB clone follows the separately approved source VERIFY=False constructor;
-// environment proxy policy is unchanged. TR retains its established strict TLS,
-// trust_env=False and connect+idle timeout policy.
+// plugin qB/TR clients follow the approved private no-verify policy. Their
+// distinct environment-proxy/trust_env policies and timeout/session behavior
+// are unchanged; no global or unrelated IYUU transport is modified.
 func NewSharedDownloaderCommands(config Config, apiKey string, guard func(context.Context) error) (downloadercommands.QBC, downloadercommands.TRC, func(), error) {
 	if guard == nil {
 		return nil, nil, nil, commandBoundary("missing trusted native guard")
@@ -50,7 +50,7 @@ func NewSharedDownloaderCommands(config Config, apiKey string, guard func(contex
 	}
 	var transport *http.Transport
 	if config.Kind == "transmission" {
-		transport = &http.Transport{Proxy: nil, ForceAttemptHTTP2: false, TLSHandshakeTimeout: 60 * time.Second, IdleConnTimeout: 90 * time.Second, DialContext: func(ctx context.Context, network, address string) (net.Conn, error) {
+		transport = &http.Transport{Proxy: nil, TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, ForceAttemptHTTP2: false, TLSHandshakeTimeout: 60 * time.Second, IdleConnTimeout: 90 * time.Second, DialContext: func(ctx context.Context, network, address string) (net.Conn, error) {
 			conn, err := (&net.Dialer{Timeout: 60 * time.Second, KeepAlive: 30 * time.Second}).DialContext(ctx, network, address)
 			if err != nil {
 				return nil, err
@@ -68,7 +68,7 @@ func NewSharedDownloaderCommands(config Config, apiKey string, guard func(contex
 			transport.TLSClientConfig = &tls.Config{}
 		}
 		// Transport.Clone owns this TLS config. Do not mutate the global
-		// transport, old IYUU clients, TR, CA stores or environment settings.
+		// transport, old IYUU clients, CA stores or environment settings.
 		transport.TLSClientConfig.InsecureSkipVerify = true
 	}
 	var rt http.RoundTripper = &mutationDispatchTransport{next: logging.Transport(transport)}
