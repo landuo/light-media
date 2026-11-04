@@ -1,0 +1,403 @@
+{
+  "status": "ACCEPT_CURRENT_PARENT23_NO_AUTOMATIC_INSTALLATION_REPORTING_PREPUBLICATION",
+  "at": "2026-11-04T04:04:05.769141+00:00",
+  "reviewer_executed_tests": false,
+  "reviewer_modified_product_or_ledger": false,
+  "reviewer_network_requests": false,
+  "whole_current_parent_scope_accepted": true,
+  "remote_publication_verified": false,
+  "supersedes": "Earlier query-retention route is historical only. User now requests no automatic installation statistics; source-equivalent report emission/receipt behavior is intentionally superseded.",
+  "results": {
+    "normal": {
+      "exit": 0,
+      "started": "2026-11-04T03:59:17.981257+00:00",
+      "ended": "2026-11-04T03:59:49.894718+00:00",
+      "command": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/normal-command.json",
+        "bytes": 1768,
+        "sha256": "408ce723f3ac3fc2996cdfaf36be7b4e71663dd8d26898444f7f877f6256ef98"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/normal-result.json",
+        "bytes": 455,
+        "sha256": "ffaf6bc117e39bd35f8772a39b3de8fc9e6f52db7f70b4009b671f44e14dfa60"
+      },
+      "logs": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/normal.stdout",
+          "bytes": 16360,
+          "sha256": "cb4a7eba00057c1bf97bb37667843e7554ce91d7b830ebf6ae65ca6134db403b"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/normal.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "root_passes": [
+        "TestOriginalPluginCenterActualInstallNeverReportsAndPreservesMaterialQueries",
+        "TestOriginalPluginCenterRestartNeverReportsOrChangesLegacyReceipt",
+        "TestOriginalPluginInstallationReportsHaveNoSideEffects",
+        "TestOriginalPluginReportedRepositoryLegacySanitization",
+        "TestOriginalPluginServerActualHTTPProtocolAndFailureSemantics",
+        "TestOriginalPluginServerReportingHasNoSideEffectsAndPreservesLegacyReceipt",
+        "TestOriginalPluginServerSettingsAndRedirectBoundary"
+      ],
+      "root_count": 7,
+      "root_fail_or_skip": 0,
+      "subcase_count": 8,
+      "project_input_count": 3234,
+      "project_input_drift": []
+    },
+    "race": {
+      "exit": 0,
+      "started": "2026-11-04T03:59:49.895249+00:00",
+      "ended": "2026-11-04T04:00:57.019687+00:00",
+      "command": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/race-command.json",
+        "bytes": 1777,
+        "sha256": "02cb41f95233697c59815e0bcf5a2c2a0e3d68a01d5824e5015a1890684346bd"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/race-result.json",
+        "bytes": 451,
+        "sha256": "665dc25aa84e3698339518818f2ae0eaa0ba261beb73407c3888dec76875d25d"
+      },
+      "logs": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/race.stdout",
+          "bytes": 16373,
+          "sha256": "2bb88cd32caff93af9683be930f93ba7d55c2e3a04ad40323f664250c998815a"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/race.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "root_passes": [
+        "TestOriginalPluginCenterActualInstallNeverReportsAndPreservesMaterialQueries",
+        "TestOriginalPluginCenterRestartNeverReportsOrChangesLegacyReceipt",
+        "TestOriginalPluginInstallationReportsHaveNoSideEffects",
+        "TestOriginalPluginReportedRepositoryLegacySanitization",
+        "TestOriginalPluginServerActualHTTPProtocolAndFailureSemantics",
+        "TestOriginalPluginServerReportingHasNoSideEffectsAndPreservesLegacyReceipt",
+        "TestOriginalPluginServerSettingsAndRedirectBoundary"
+      ],
+      "root_count": 7,
+      "root_fail_or_skip": 0,
+      "subcase_count": 8,
+      "project_input_count": 3234,
+      "project_input_drift": []
+    },
+    "vet": {
+      "exit": 0,
+      "started": "2026-11-04T04:00:57.020119+00:00",
+      "ended": "2026-11-04T04:01:01.412647+00:00",
+      "command": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/vet-command.json",
+        "bytes": 1312,
+        "sha256": "f2d1e0f50fea3198582e5fd9b5468d8b30f76ce273c0ff66f6b5eea72f8b4975"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/vet-result.json",
+        "bytes": 445,
+        "sha256": "eee45c0e5695370c7031ea1d37d9741789d16c72c3f5049310163dc13ea02aec"
+      },
+      "logs": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/vet.stdout",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/vet.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "frontend-tests": {
+      "exit": 0,
+      "started": "2026-11-04T03:54:50.024780+00:00",
+      "ended": "2026-11-04T03:54:50.932629+00:00",
+      "command": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/frontend-tests-command.json",
+        "bytes": 351,
+        "sha256": "70627e764565e04029092046125f1c85b1aa22d0ba2d139a3cda4c6dca96bf6e"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/frontend-tests-result.json",
+        "bytes": 410,
+        "sha256": "52f258b9cf575c375a10b729315b8efd945d2c5099e3ea75d09d1507bf228df2"
+      },
+      "logs": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/frontend-tests.stdout",
+          "bytes": 3892,
+          "sha256": "c2803ae5420da94f32aa6a749fd47dbb91803a7ccb2c5daffd5f15249d3bda60"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/frontend-tests.stderr",
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    },
+    "frontend-build": {
+      "exit": 0,
+      "started": "2026-11-04T03:54:50.933047+00:00",
+      "ended": "2026-11-04T03:55:06.584577+00:00",
+      "command": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/frontend-build-command.json",
+        "bytes": 276,
+        "sha256": "ea8c0c724d742b528903cd905e98712f7241a8b23b476ca75528fe7685f4ac6d"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/frontend-build-result.json",
+        "bytes": 413,
+        "sha256": "50b93f35e9c8496014da007af131e17e5322ea60fbcee45ead0fdcd73dcd0de0"
+      },
+      "logs": [
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/frontend-build.stdout",
+          "bytes": 9238,
+          "sha256": "3c16de5a485eb077f417e5d46609c89d724786112e97b0f065328e2384070965"
+        },
+        {
+          "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/frontend-build.stderr",
+          "bytes": 1007,
+          "sha256": "bdaa460a31979eef3d177af04e74863f181c22f3ceb8e79a4cf7693617b8142a"
+        }
+      ],
+      "nonfatal_warnings": "Recorded npm unknown http-proxy config, future Vite config loader JSON import, chunk size, and npm update notices. Not warning-free."
+    },
+    "worker-normal-v1": {
+      "exit": 0,
+      "started": "2026-11-04T03:57:24.774862+00:00",
+      "ended": "2026-11-04T03:57:25.150303+00:00",
+      "command": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/worker-normal-v1-command.json",
+        "bytes": 545,
+        "sha256": "bad7b9a4ec112d59a0596680d5138847119484030683e2296fe085821b819c59"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/worker-normal-v1-result.json",
+        "bytes": 403,
+        "sha256": "d84dad4eec7dfb0bf8091cf5fb3e44e2e1138c803d9bf27706801a8225c78bde"
+      },
+      "logs": [],
+      "current_worker_bytes": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/work/parent23-no-report/worker-normal-v1",
+        "bytes": 5408775,
+        "sha256": "18aba0187de2ce67e22ab9b7784e88952383959d23d1b55aef75457a0f8e7337"
+      },
+      "binary_binding_scope": "Current bytes match recorded successful build output before both selected executions."
+    },
+    "worker-normal-v2": {
+      "exit": 0,
+      "started": "2026-11-04T03:57:25.157572+00:00",
+      "ended": "2026-11-04T03:57:25.530090+00:00",
+      "command": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/worker-normal-v2-command.json",
+        "bytes": 545,
+        "sha256": "cb206db7c9830a8adb0ebf4faa5c1f84b6cbd35d55b8fccbcd218f4875158984"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/worker-normal-v2-result.json",
+        "bytes": 403,
+        "sha256": "f2c7ecaadc5908d5777d8b53dc5c69bed0a14e5228207e9950401219d1f3bc1d"
+      },
+      "logs": [],
+      "current_worker_bytes": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/work/parent23-no-report/worker-normal-v2",
+        "bytes": 5408775,
+        "sha256": "a3bdb2db7031312817ff3ad7241cc5b4b179a2c0798a2d7a841fb6bc02c7812c"
+      },
+      "binary_binding_scope": "Current bytes match recorded successful build output before both selected executions."
+    },
+    "worker-race-v1": {
+      "exit": 0,
+      "started": "2026-11-04T03:57:25.535929+00:00",
+      "ended": "2026-11-04T03:57:26.044804+00:00",
+      "command": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/worker-race-v1-command.json",
+        "bytes": 556,
+        "sha256": "e8880d5fb76fcf9b0b0f4a2ca416ec3d758b39bb86a9891d147ac660862cd928"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/worker-race-v1-result.json",
+        "bytes": 401,
+        "sha256": "17026d92d7f776f76892a2852eb09415550340719d0e9dc35f714564afa01dfa"
+      },
+      "logs": [],
+      "current_worker_bytes": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/work/parent23-no-report/worker-race-v1",
+        "bytes": 6808776,
+        "sha256": "3e6e04a35d86ee51038d9249c56f96c649aacf7f123b2293c6f3b8b224157263"
+      },
+      "binary_binding_scope": "Current bytes match recorded successful build output before both selected executions."
+    },
+    "worker-race-v2": {
+      "exit": 0,
+      "started": "2026-11-04T03:57:26.054841+00:00",
+      "ended": "2026-11-04T03:57:26.573948+00:00",
+      "command": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/worker-race-v2-command.json",
+        "bytes": 556,
+        "sha256": "50267c755944a2790e78633057cfe84fa71a2bdc63abff1fb414e533b6dc5b4d"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/worker-race-v2-result.json",
+        "bytes": 401,
+        "sha256": "57b3fef51118b680494681b5b6f3fc6ea51abda79b6d3d2acaf188f8e6108c37"
+      },
+      "logs": [],
+      "current_worker_bytes": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/work/parent23-no-report/worker-race-v2",
+        "bytes": 6808776,
+        "sha256": "6994e0d7fe239a4058178faaa9415a7224cbe453956bd90cac6c014cfe691e82"
+      },
+      "binary_binding_scope": "Current bytes match recorded successful build output before both selected executions."
+    },
+    "server-build": {
+      "exit": 0,
+      "command": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/server-build-command.json",
+        "bytes": 469,
+        "sha256": "1fc46fa5b87856dd5035231151b72e446737a45866838b01832e3c8ea67e6643"
+      },
+      "result": {
+        "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/server-build-result.json",
+        "bytes": 444,
+        "sha256": "496fe6c7e21486140ee22ea40ef652a1da27a3b54b102dc8f96fa4e4d198fba1"
+      },
+      "scope": "Successful ordinary cmd/server build only; not started or deployed."
+    }
+  },
+  "files": [
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/internal/app/plugin_original_server.go",
+      "bytes": 10951,
+      "sha256": "90442f70235e8683dce05b4dd3b6278503ccc7d4aeecf87d172247cf8bf11f96"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/internal/app/plugin_original_server_body.go",
+      "bytes": 911,
+      "sha256": "fef77f69a899dd7ec50c375d40e28267922173688d087684edeacedc3ec94fab"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/internal/app/plugin_original_server_validation.go",
+      "bytes": 7814,
+      "sha256": "0d18e69ad9a95eacfddf982e4104a436a738c1c44d21c349f5813407c562fd96"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/internal/app/plugin_original_install.go",
+      "bytes": 11580,
+      "sha256": "6f09fe14b17bb44eea86174606f0455420aea03fd58928ba137e60fdb6669b86"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/internal/app/plugin_original_sync.go",
+      "bytes": 4885,
+      "sha256": "52c9dd1db29d670b01e9713b1a8caca3600c85d204119e93848a4c5d4142bf2e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/internal/app/plugin_original_reported_repository_test.go",
+      "bytes": 1912,
+      "sha256": "c0937ae80a6373b407b5870eb27a63154351f7b15445501b547640608f9f15d8"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/internal/app/plugin_original_server_test.go",
+      "bytes": 11725,
+      "sha256": "69cb03f5db7cfd18daf9e71cee83931b0bb46afcaf2c8248abb7c6566400087d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/internal/app/plugin_original_server_lifecycle_test.go",
+      "bytes": 13848,
+      "sha256": "fa278b3d127c3f59a222374a24791f942da57fe8dfdaf7659142093da973631e"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/internal/app/plugin_module_process_center_test.go",
+      "bytes": 11160,
+      "sha256": "ea09fa40224e71f96fc6bbec5ae16b45207d0a6197f508133977caecd293d5ad"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/web/src/components/PluginSystemSettings.vue",
+      "bytes": 8310,
+      "sha256": "d65ee8b91574cbc6464b7c3519723bdc7241d56db1dfefc2185c701bfca358c6"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/web/tests/plugin-market-settings.test.mjs",
+      "bytes": 21289,
+      "sha256": "072a922167de16590b14139d546819ba6a9b3e90beb0b34e201f8141b1d48b3d"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/web/dist/index.html",
+      "bytes": 2302,
+      "sha256": "76365d61e499b4a67640185ec1723a87622da9a788d0cac1218f77af8ec2e3f6"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/docs/plugin-installation-reporting-disabled-20261104.md",
+      "bytes": 2747,
+      "sha256": "7b705fb43205da0bb1755f4e888398df3c55b187657c3a7b9a86de99743fc833"
+    },
+    {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/docs/plugin-usage-rating-20261030.md",
+      "bytes": 10239,
+      "sha256": "a73b9aa2597a72934fdff379e79447ac180a66731059d58cc4598a2b67b2a27d"
+    }
+  ],
+  "current_project_binding": {
+    "files": 3234,
+    "before_after_equal": true,
+    "current_drift": [],
+    "scope": "Recorded project Go/mod/sum and frontend distribution inputs, not all native/compiler/OS inputs.",
+    "before": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/project-inputs-before.json",
+      "bytes": 390823,
+      "sha256": "f52e80fb5c379802c33c4085dc4bbfdf7be93aee41ed303caee792284a006d7f"
+    },
+    "after": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/evidence/parent23-no-report-20261104/project-inputs-after.json",
+      "bytes": 390823,
+      "sha256": "f52e80fb5c379802c33c4085dc4bbfdf7be93aee41ed303caee792284a006d7f"
+    }
+  },
+  "code_findings": {
+    "request_statistics_rating_and_sanitizer_prefix_unchanged": true,
+    "both_reporting_functions_empty": true,
+    "no_installation_post_constructors_remain_in_product": true,
+    "full_repository_acquisition_paths_unchanged": true,
+    "persistent_true_cannot_reenable_reporting": true,
+    "legacy_receipts_not_deleted_or_written": true,
+    "no_claim_all_movie_pilot_org_traffic_disabled": true
+  },
+  "historical_inheritance": {
+    "TLS_body": "Existing parent24 actual owned app/pure evidence retained for unchanged statistics/rating shared paths; current body helper unchanged. Earlier upload-positive behavior intentionally superseded.",
+    "query": "Old original raw absent; 11-02 new source observation retained. Both prior query-only test and accepted keep-query decision superseded by no-upload request.",
+    "ui_and_cli": "Historical ordinary protocol/UI/whole CLI credit retained where unchanged. This run does not claim a new ordinary cmd/server full CLI or browser rerun."
+  },
+  "limits": [
+    "Current exact seven roots in real full App package, actual v1/v2 workers and seven subprocess restarts, not the whole Go test suite.",
+    "Changed module-process center expectation helper compiled with package but its complete ordinary production CLI parent root was not re-executed.",
+    "Component tests and frontend build plus narrow asset readback, not a browser run.",
+    "Owned HTTP fixture only; no real statistics-center install report sent.",
+    "Remote commit/push and final ledger progress snapshot remain parent-owned publication steps."
+  ],
+  "preacceptance_ledger_review": {
+    "snapshot": {
+      "path": "/workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/migration/ledger.json",
+      "bytes": 4872827,
+      "sha256": "92f3e94ee030dd0d26ffa264839b39a3c3e885cc02c30a2fd3829836636f8014"
+    },
+    "changed_top_keys": [
+      "features",
+      "resume"
+    ],
+    "changed_feature_ids": [
+      "23"
+    ],
+    "corrected_superseding_record": "features[id=23].parent_acceptance_current.latest_user_scope",
+    "scope": "Parent-owned postacceptance statuses/counters/publication receipts may change after this snapshot."
+  }
+}

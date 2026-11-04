@@ -20264,16 +20264,21 @@
         "testdata/plugin-server-20261030/source_http_wire_replay_v5.py",
         "testdata/plugin-server-20261030/source_http_wire_replay_v6.py",
         "web/src/features/plugin-remote-api.ts",
-        "web/tests/plugin-axios-source.test.mjs"
+        "web/tests/plugin-axios-source.test.mjs",
+        "docs/plugin-installation-reporting-disabled-20261104.md",
+        "internal/app/plugin_original_reported_repository_test.go",
+        "web/src/components/PluginSystemSettings.vue"
       ],
       "owner": "coordinator",
       "scenarios": [],
       "evidence_ids": [],
       "review": {
-        "status": "pending",
+        "status": "accepted_current_agreed_scope",
         "independent": true,
-        "reviewer": "rating_independent",
-        "note": "candidate03 finitebackend + source-derived statisticsUI component independently pass; current integratedmain runtime and officialUI still pending. Wholefeature notclosed."
+        "reviewer": "independent_no_reporting_review",
+        "note": "New no-upload scope independently accepted; query-only approval is superseded. No actual center reports; normal/race7, frontend25/build, vet and server build passed.",
+        "evidence": "migration/evidence/plugin-installation-reporting-disabled/NO-REPORTING-SEAL.json",
+        "sha256": "332bcf986a873dc95f569265e39cd724880b66b083235866fca671fca8a02d18"
       },
       "external_source_paths": [],
       "work_kind": "targeted_subbehavior_repair",
@@ -20308,30 +20313,62 @@
         "id": "23",
         "description": "23 · 2.18 安装统计：安装事件上报，列表查询汇总后展示",
         "scope": [
-          "安装事件上报与统计查询分离",
-          "开关/默认与显式空持久化",
-          "Linux UID/UA及代理/网络失败",
-          "统计展示、合成peer503恢复、全局回执及冷恢复",
-          "官方仅GET只读未向官方写入"
+          "按用户要求不主动上传单插件安装/更新或启动已安装列表，旧配置与旧回执不重启上报",
+          "安装/更新/仓库同步继续使用完整原始URL，保留真实SDK加载行为",
+          "保留统计查询开关、默认与显式空地址持久化",
+          "保留统计显示和失败回退；用户主动评分及自配中心不被禁用",
+          "本轮仅本地合成中心验证，无实际对外安装统计上报；历史原版证据按未变范围继承"
         ],
         "counts_once": true,
         "credit_basis": "original parent scope plus delivered child evidence, not child count",
         "historical_scope_reference": "97476582910dc4b696f7ccd5010f28d823812d40:docs/plugin-module-parity-matrix.md:35",
         "historical_evidence_reference": "docs/validation/plugin-module-no-official-auth-20261026.json",
         "existing_evidence_ids": [],
-        "remaining": [
-          "安装报告repository整体RawQuery清空会同时删非敏感query；不能由凭据保护推导此普通字段差异已获准。",
-          "中心响应2MiB预算与原无该总预算的响应行为尚有明确差异；保安全上限，按可安全对齐方案收口。公开wire/统计UI/冷恢复已实际通过，不再列未验。",
-          "requestOriginalPluginServer→originalPluginHTTPClient(timeout,false)当前仍strict TLS；用户已批准B类RequestUtils verifyFalse，但现实现未落。"
-        ],
-        "status": "partial_specific_remaining",
-        "authoritative_as_of": "2026-11-01T08:53:45.574601+00:00",
-        "target_revision": "90d214fc5ca861d327e71327488aa77ee7011e2b",
+        "remaining": [],
+        "status": "complete_agreed_scope_local_pending_delivery",
+        "authoritative_as_of": "2026-11-04T04:05:40.663440+00:00",
+        "target_revision": "f28508d08d62990793d23b0e2108ae39d5bac478 plus no-reporting candidate; commit pending",
         "independent_proposal_sha256": "aa90f44507aa07238bdc0605f411ab503f1c9bf8ce69b591c70549708d881a0f",
         "legacy_schema_status_not_parent_progress": true,
-        "new_test_execution_claimed": false,
-        "publication_unit": "whole_current61_parent_only"
-      }
+        "new_test_execution_claimed": true,
+        "publication_unit": "whole_current61_parent_only",
+        "remaining_history": [
+          {
+            "at": "2026-11-04T03:57:56.467370+00:00",
+            "previous": [
+              "安装报告repository整体RawQuery清空会同时删非敏感query；不能由凭据保护推导此普通字段差异已获准。",
+              "中心响应2MiB预算与原无该总预算的响应行为尚有明确差异；保安全上限，按可安全对齐方案收口。公开wire/统计UI/冷恢复已实际通过，不再列未验。",
+              "requestOriginalPluginServer→originalPluginHTTPClient(timeout,false)当前仍strict TLS；用户已批准B类RequestUtils verifyFalse，但现实现未落。"
+            ],
+            "reason": "User superseded repository-query decision by requesting no automatic installation reporting; shared TLS/body already inherited from parent24."
+          }
+        ],
+        "remaining_updated_at": "2026-11-04T04:05:40.663440+00:00",
+        "latest_user_scope": {
+          "at": "2026-11-04T03:57:56.467370+00:00",
+          "source": "User conversation relayed by parent; exact utterances below, time of user messages not inferred",
+          "user_messages": [
+            "不上报给这个地址",
+            "也可以不上报"
+          ],
+          "decision": "Disable all automatic installation-statistics uploads, including old enabled settings. Preserve installation/update, statistics lookup, and user-initiated custom-center ratings.",
+          "supersedes": "Earlier permission to keep stripping repository query only for statistics uploads.",
+          "no_claim_of_all_requests_to_movie_pilot_org_disabled": true
+        },
+        "current_acceptance_evidence": "migration/evidence/plugin-installation-reporting-disabled/accepted-parent.json",
+        "scope_before_no_reporting_request": [
+          "安装事件上报与统计查询分离",
+          "开关/默认与显式空持久化",
+          "Linux UID/UA及代理/网络失败",
+          "统计展示、合成peer503恢复、全局回执及冷恢复",
+          "官方仅GET只读未向官方写入"
+        ],
+        "independent_review": "migration/evidence/plugin-installation-reporting-disabled/NO-REPORTING-SEAL.json",
+        "independent_review_sha256": "332bcf986a873dc95f569265e39cd724880b66b083235866fca671fca8a02d18",
+        "publication_status": "LOCAL_ACCEPTED_PENDING_DELIVERY",
+        "approved_source_behavior_exception": "Automatic installation-statistics uploads were removed at the explicit request of the user on2026-11-04; query and user-initiated ratings retained."
+      },
+      "current_description": "23 · 安装统计：停止主动上报，保留查询汇总展示"
     },
     {
       "id": "24",
@@ -58605,14 +58642,14 @@
       "CNsourceauthor": "s01_release_owner completed source preparation"
     },
     "parent_progress_current": {
-      "as_of": "2026-11-04T03:31:17.277907+00:00",
+      "as_of": "2026-11-04T04:05:40.663440+00:00",
       "authoritative_field": "features[].parent_acceptance_current",
-      "target_revision": "c553f698 plus exact whole-parent 15/38 composition; commit pending",
+      "target_revision": "f28508d08d62990793d23b0e2108ae39d5bac478 plus accepted whole parent23 no-reporting; commit pending",
       "source_revision": "8a83efeacd3e26b82be495e17d50146e31c96a60",
       "denominator": 61,
       "counts": {
-        "complete": 53,
-        "partial": 7,
+        "complete": 54,
+        "partial": 6,
         "dependency_or_final": 1
       },
       "complete_ids": [
@@ -58637,6 +58674,7 @@
         "19",
         "20",
         "21",
+        "23",
         "24",
         "25",
         "26",
@@ -58671,7 +58709,6 @@
         "S15"
       ],
       "partial_ids": [
-        "23",
         "S04",
         "S06",
         "S07",
@@ -58682,11 +58719,11 @@
       "dependency_or_final_ids": [
         "50"
       ],
-      "basis": "Local accepted 53 complete + 7 partial + 1 final gate = 61. Remote c553f698 is verified at 51/9/1 until this exact commit is pushed and read back.",
+      "basis": "Local accepted54complete+6partial+1final=61. Remote verifiedf28508d0remains53/7/1 until this exact no-reporting commit is pushed and read back.",
       "correction_from_prior37": "New exact shared TLS source/target discrepancy affects six previously inherited parents07/08/10/12/14/20; four previously reopened parents16/17/39/S15 now closed.37+4-6=35. Prior43/41 review drafts withdrawn, preserved.",
-      "independent_review": "migration/evidence/plugin-clone-clock-completion/final-review.md",
-      "independent_review_sha256": "3ffd0b9dddac7bdc35b0e0e574cf40f605c8bfc48015c5085f5d6df17165f42f",
-      "current_product_wip_not_integrated": "Only accepted 15/38 plus HTTP generation shutdown fix and reviewed regression assets. Existing S08 preserved. Meta and every other partial parent remain excluded.",
+      "independent_review": "migration/evidence/plugin-installation-reporting-disabled/NO-REPORTING-SEAL.json",
+      "independent_review_sha256": "332bcf986a873dc95f569265e39cd724880b66b083235866fca671fca8a02d18",
+      "current_product_wip_not_integrated": "Only accepted parent23 no-reporting implementation, regression tests, UI text/build and evidence included; all other six partial parents remain protected and excluded.",
       "global_final_checker": "Same source-only nonfinalstructure actual2026-11-01T23:58:34 now2issues; old664/16failuresretained. MissingOCR argv/review9 preciselypending; no target-repo/finalcheck, notgreen. Parent50open, oldacceptedcreditunchanged.",
       "external_backup": {
         "confirmed_at": "2026-11-01T08:56:12.829545+00:00",
@@ -58700,8 +58737,7 @@
         "scope": "CalendarApp02normal2/race1 accepted; authoritative61=35/24/2; CLI only prepared; notnewGitdelivery"
       },
       "newly_closed_local_parents": [
-        "15",
-        "38"
+        "23"
       ],
       "newly_closed_local_delivery": "LOCAL_ACCEPTED_NOT_PUSHED",
       "latest_independent_parent_dependency": "migration/evidence/plugin-tr-private-tls-completion/parent-seal.json",
@@ -58710,8 +58746,7 @@
         "07"
       ],
       "pending_remote_parent": [
-        "15",
-        "38"
+        "23"
       ],
       "reported_to_root_at": "2026-11-01T16:54:23.731395+00:00",
       "user_notification_before_S13": {
@@ -58829,10 +58864,10 @@
         "statement": "46+13+2=61; remaining15;36notyetcounted"
       },
       "last_verified_remote_counts": {
-        "commit": "c553f6987875f39871a7de43b4f65115c25511c0",
+        "commit": "f28508d08d62990793d23b0e2108ae39d5bac478",
         "counts": {
-          "complete": 51,
-          "partial": 9,
+          "complete": 53,
+          "partial": 7,
           "dependency_or_final": 1
         }
       },
@@ -68684,11 +68719,14 @@
       }
     },
     "statistics23_query_decision_pending": {
-      "status": "WAIT_USER_REPLY_KEEP_QUERY_STRIPPED",
+      "status": "SUPERSEDED_BY_NO_INSTALLATION_REPORTING_REQUEST",
       "at": "2026-11-02T06:41:34Z",
       "message_id": "Sentinel_bd7d5a2a8aa08191b8a3c173a6370864",
       "question": "Keep query stripped only for statistics report to avoid forwarding possible access tokens/signatures; installation fullURL unchanged",
-      "not_approved": true
+      "not_approved": false,
+      "superseded_at": "2026-11-04T03:57:56.467370+00:00",
+      "superseding_record": "features[id=23].parent_acceptance_current.latest_user_scope",
+      "historical_question_preserved": true
     },
     "rating_parent24_current": {
       "at": "2026-11-02T06:43:39.653379+00:00",
@@ -69807,6 +69845,117 @@
       "evidence_root": "migration/evidence/plugin-clone-clock-completion",
       "actual_remote_updated": false,
       "live_ledger_policy": "This committed snapshot is prior delivered HEAD plus exact completed 15/38 only. The physically dirty recovery ledger is preserved and must be reconciled with targeted updates, never replaced wholesale."
+    },
+    "statistics23_no_reporting_current": {
+      "at": "2026-11-04T03:57:56.467370+00:00",
+      "status": "LOCAL_ACCEPTED_PENDING_DELIVERY",
+      "base": "f28508d08d62990793d23b0e2108ae39d5bac478",
+      "worktree": "target-drafts/s08-git-delivery-worktree01",
+      "evidence_root": "migration/evidence/plugin-installation-reporting-disabled",
+      "old_query_proof": "../../evidence/parent23-query-approved-20261104/normal-result.json",
+      "old_query_proof_scope": "Passed before superseding user request; not acceptance of no reporting.",
+      "frontend_tests": 25,
+      "frontend_build": "PASS_WITHOUT_DELETING_OLD_ASSETS",
+      "active_sessions": {},
+      "no_external_installation_reports": true,
+      "no_commit_or_push_yet": true,
+      "worker_build": "normal/race v1/v2 all exit0; actual binary hashes in evidence",
+      "last_verified_remote_base": "f28508d08d62990793d23b0e2108ae39d5bac478",
+      "main_before": "97476582910dc4b696f7ccd5010f28d823812d40",
+      "updated_at": "2026-11-04T04:05:40.663440+00:00",
+      "normal_roots": 7,
+      "race_roots": 7,
+      "race_worker_instrumentation": true,
+      "go_vet": "PASS",
+      "project_inputs": 3234,
+      "input_drift": [],
+      "proposed_parent_progress_after_acceptance": {
+        "complete": 54,
+        "partial": 6,
+        "dependency_or_final": 1,
+        "denominator": 61,
+        "pending_review": false,
+        "pending_delivery": true
+      },
+      "independent_review_seal_sha256": "332bcf986a873dc95f569265e39cd724880b66b083235866fca671fca8a02d18",
+      "ordinary_server_build": "PASS_NOT_STARTED"
+    },
+    "parent_progress_before_statistics23_no_reporting": {
+      "as_of": "2026-11-04T03:31:17.277907+00:00",
+      "target_revision": "c553f698 plus exact whole-parent 15/38 composition; commit pending",
+      "counts": {
+        "complete": 53,
+        "partial": 7,
+        "dependency_or_final": 1
+      },
+      "complete_ids": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "40",
+        "41",
+        "42",
+        "43",
+        "47",
+        "48",
+        "49",
+        "S01",
+        "S02",
+        "S03",
+        "S05",
+        "S08",
+        "S09",
+        "S10",
+        "S13",
+        "S15"
+      ],
+      "partial_ids": [
+        "23",
+        "S04",
+        "S06",
+        "S07",
+        "S11",
+        "S12",
+        "S14"
+      ],
+      "dependency_or_final_ids": [
+        "50"
+      ],
+      "basis": "Local accepted 53 complete + 7 partial + 1 final gate = 61. Remote c553f698 is verified at 51/9/1 until this exact commit is pushed and read back."
     }
   },
   "external_inventory": [

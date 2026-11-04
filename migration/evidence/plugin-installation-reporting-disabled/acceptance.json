@@ -1,0 +1,44 @@
+{
+  "status": "TARGETED_FUNCTIONAL_GATES_PASS_INDEPENDENT_REVIEW_PENDING",
+  "at": "2026-11-04T04:02:12.746990+00:00",
+  "base": "f28508d08d62990793d23b0e2108ae39d5bac478",
+  "parent": "23",
+  "user_scope": "No automatic installation statistics; keep installation/update, statistic lookup and user-initiated custom ratings.",
+  "results": {
+    "normal_roots": 7,
+    "race_roots": 7,
+    "failed": 0,
+    "skipped": 0,
+    "race_host_and_workers": true,
+    "cold_child_processes_each_mode": 7,
+    "frontend_tests": 25,
+    "frontend_build": true,
+    "go_vet": true,
+    "project_inputs": 3234,
+    "project_input_drift": [],
+    "ordinary_server_build": true
+  },
+  "behavior": [
+    "no single or bulk installation statistics HTTP request",
+    "no report-triggered UID collection or new receipt table",
+    "preserved all legacy receipt rows",
+    "real startup synchronization upgrades worker1.0 to2.0; malformed update preserves2.0",
+    "repository and artifact query bytes unchanged",
+    "owned statistics GET and rating GET/POST still succeed",
+    "UI label and new bundled hint agree with no-upload behavior"
+  ],
+  "preserved_history": [
+    "Prior query-only successful test was superseded, not the new acceptance.",
+    "Initial frontend run:24 passed and1 old-label assertion failed; explicit new requirement updated that assertion, final25 passed.",
+    "Historical source23 and parent24 evidence retained; automatic reporting is now an authorized source-parity exception."
+  ],
+  "limits": [
+    "No full platform suite or prior whole production CLI rerun.",
+    "No new real-browser run; actual rendered component tests and complete frontend build checked.",
+    "No actual statistics service contacted.",
+    "No deployment or main change; existing live versions are not altered.",
+    "Default statistics/rating requests may still use movie-pilot.org and existing UID/UA; this is not a domain-wide network block."
+  ],
+  "publication": "not yet committed or pushed",
+  "server_build": "server-build-result.json"
+}

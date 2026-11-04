@@ -1,0 +1,64 @@
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+[Vue warn]: withDirectives can only be used inside render functions.
+✔ all changed Vue templates compile, including market settings integration (77.97252ms)
+✔ parse newline/comma/Chinese comma, trim, stable exact dedupe and URL restrictions (2.489541ms)
+✔ environment-locked repositories reject every mutation and preserve exact sources without saving system settings (4.808016ms)
+✔ list add/edit/cancel/remove/reorder and duplicate rejection retain exact source strings (2.373769ms)
+✔ text switching keeps original ordered normalization and reports dropped invalid entries (1.225151ms)
+✔ empty list/text cannot save; unsubmitted row and add drafts are not mandatory save steps (0.628805ms)
+✔ statistics lookup can be disabled independently without enabling installation uploads (4.349905ms)
+✔ successful PUT sends ordered sources without unrelated system settings and emits saved once (0.852357ms)
+✔ Wiki sync writes through its own endpoint and updates draft without closing editor (0.677548ms)
+✔ failed or malformed Wiki response preserves local editor and does not claim success (1.209828ms)
+✔ local-only sources preserve source order/duplicates and explicitly opt into reload (0.529377ms)
+✔ local source failures preserve source draft and automatic reload choice (0.436469ms)
+✔ local-only configuration can remove its final trusted directory and disable reload (0.396619ms)
+✔ configured statistics service and explicit disabled sharing persist independently of repositories (0.560453ms)
+✔ failed PUT preserves draft and does not emit saved: {"result":{"success":false,"message":"不能保存"}} (0.495827ms)
+✔ failed PUT preserves draft and does not emit saved: {"result":{}} (0.468406ms)
+✔ failed PUT preserves draft and does not emit saved: {"writeError":"网络失败"} (0.57176ms)
+✔ read error or malformed read cannot overwrite unknown persisted settings (0.783104ms)
+✔ duplicate save while pending does not send twice and list actions remain locked (0.646091ms)
+✔ system settings preserve repository authority and reject malformed unknown fields (1.481501ms)
+✖ fixed-source system fields are outside the repository dialog (2.661406ms)
+✔ GitHub controls load only configured flags and untouched saves omit credential/network fields (1.072164ms)
+✔ GitHub credentials and mirror save through host settings and clear only after actual success (0.755413ms)
+✔ failed GitHub saves retain drafts; a newly typed token replaces a pending clear (0.542397ms)
+✔ local path fields preserve fixed source duplicates and only split English commas (1.502453ms)
+ℹ tests 25
+ℹ suites 0
+ℹ pass 24
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 845.540545
+
+✖ failing tests:
+
+test at web/tests/plugin-market-settings.test.mjs:443:1
+✖ fixed-source system fields are outside the repository dialog (2.661406ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/a1d82674c6f8/plugin-platform-recovery-20261102T1545/target-drafts/s08-git-delivery-worktree01/web/tests/plugin-market-settings.test.mjs:455:12)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

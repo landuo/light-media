@@ -11,7 +11,6 @@ import (
 	"sync"
 	"sync/atomic"
 	"testing"
-	"time"
 )
 
 // This owned peer implements only the pinned client's HTTP contract. Its
@@ -29,7 +28,7 @@ type ownedPluginCenter struct {
 
 func newOwnedPluginCenter(t *testing.T) *ownedPluginCenter {
 	t.Helper()
-	peer := &ownedPluginCenter{counts: map[string]int{}, ratings: map[string]float64{}}
+	peer := &ownedPluginCenter{counts: map[string]int{ownedStandardFixtureID: 23}, ratings: map[string]float64{}}
 	peer.server = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		peer.mu.Lock()
 		defer peer.mu.Unlock()
@@ -59,6 +58,9 @@ func newOwnedPluginCenter(t *testing.T) *ownedPluginCenter {
 		path := r.URL.Path[position:]
 		if r.Method == "POST" && path == "/plugin/install" {
 			peer.bulks++
+		}
+		if r.Method == "POST" && strings.HasPrefix(path, "/plugin/install/") {
+			peer.singles++
 		}
 		if peer.fail.Load() {
 			http.Error(w, "owned center unavailable", 503)
@@ -105,7 +107,6 @@ func newOwnedPluginCenter(t *testing.T) *ownedPluginCenter {
 				http.Error(w, "owned install shape invalid", 400)
 				return
 			}
-			peer.singles++
 			peer.counts[id]++
 			_ = json.NewEncoder(w).Encode(map[string]any{"success": true})
 		case path == "/plugin/rating" && r.Method == "GET":
@@ -156,15 +157,25 @@ func verifyOwnedProductionPluginCenter(t *testing.T, peer *ownedPluginCenter, re
 	}
 	configure(true, "/prefix")
 	success("POST", "/api/plugins/install", map[string]any{"plugin_id": id, "repo_url": repository + "/version-one/index", "force": true})
+	assertNoInstallReports := func(phase string) {
+		t.Helper()
+		peer.mu.Lock()
+		singles, bulks, successful := peer.singles, peer.bulks, peer.successfulBulks
+		peer.mu.Unlock()
+		if singles != 0 || bulks != 0 || successful != 0 {
+			t.Fatal("actual production client sent a disabled installation report", phase, singles, bulks, successful)
+		}
+	}
+	assertNoInstallReports("sharing enabled install")
 	peer.mu.Lock()
-	singles := peer.singles
+	requests = peer.requests
 	peer.mu.Unlock()
-	if singles != 1 {
-		t.Fatal("actual installation did not report exactly once")
+	if requests != 0 {
+		t.Fatal("sharing enabled installation contacted the statistics center")
 	}
 	var statistics struct{ Data map[string]int }
-	if json.Unmarshal(request("GET", "/api/plugins/statistic", nil, 200), &statistics) != nil || statistics.Data[id] != 1 {
-		t.Fatal("actual installation count was not delivered to host consumer")
+	if json.Unmarshal(request("GET", "/api/plugins/statistic", nil, 200), &statistics) != nil || statistics.Data[id] != 23 {
+		t.Fatal("independent synthetic center count was not delivered to host consumer")
 	}
 	read := func() map[string]json.RawMessage {
 		t.Helper()
@@ -215,43 +226,25 @@ func verifyOwnedProductionPluginCenter(t *testing.T, peer *ownedPluginCenter, re
 			t.Fatal("center reads/failure changed actual SDK", key)
 		}
 	}
-	waitBulk := func(attempts, successful int) {
-		t.Helper()
-		deadline := time.Now().Add(8 * time.Second)
-		for {
-			peer.mu.Lock()
-			a, s := peer.bulks, peer.successfulBulks
-			peer.mu.Unlock()
-			if a >= attempts && s >= successful {
-				return
-			}
-			if time.Now().After(deadline) {
-				t.Fatal("actual startup report did not reach owned peer")
-			}
-			time.Sleep(20 * time.Millisecond)
-		}
-	}
 	stop()
+	assertNoInstallReports("first production shutdown")
 	start()
-	waitBulk(1, 0)
-	peer.fail.Store(false)
-	stop()
-	start()
-	waitBulk(2, 1)
 	read()
-	// The source receipt is global, not keyed by server URL. Changing the
-	// configured prefix must not report the same initial installation again.
+	stop()
+	assertNoInstallReports("unavailable center cold startup")
+	peer.fail.Store(false)
+	start()
+	read()
+	if json.Unmarshal(request("GET", "/api/plugins/statistic", nil, 200), &statistics) != nil || statistics.Data[id] != 23 {
+		t.Fatal("explicit statistics query failed after cold startup")
+	}
+	// Changing the configured endpoint must not re-enable startup reports.
 	configure(true, "/other-prefix")
 	stop()
+	assertNoInstallReports("available center cold startup")
 	start()
 	read()
-	time.Sleep(250 * time.Millisecond)
-	peer.mu.Lock()
-	attempts, successful := peer.bulks, peer.successfulBulks
-	peer.mu.Unlock()
-	if attempts != 2 || successful != 1 {
-		t.Fatal("initial report receipt was lost or keyed by endpoint")
-	}
+	assertNoInstallReports("changed center cold startup")
 	configure(false, "/other-prefix")
 	peer.mu.Lock()
 	requests = peer.requests
@@ -264,7 +257,8 @@ func verifyOwnedProductionPluginCenter(t *testing.T, peer *ownedPluginCenter, re
 		t.Fatal("disabled statistics still queried center")
 	}
 	request("GET", "/api/plugins/rating/"+id, nil, 200)
+	assertNoInstallReports("explicit rating with statistics disabled")
 	success("DELETE", "/api/plugins/"+id, nil)
 	success("PUT", "/api/plugins/markets", map[string]any{"plugin_server_url": "", "plugin_statistic_share": true})
-	t.Log("actual production center client: install/share gate/count, rating read/write/defaults/coercion/fallbacks, no SDK mutation, startup retry/global receipt/stable UID across3 restarts; owned protocol peer only")
+	t.Log("actual production center client: zero installation/startup reports for either sharing setting, independent synthetic statistics, rating read/write/defaults/coercion/fallbacks, no SDK mutation, stable explicit-request UID across three restarts; owned protocol peer only")
 }

@@ -247,9 +247,13 @@ test('empty list/text cannot save; unsubmitted row and add drafts are not mandat
   await f.state.save();
   assert.deepEqual(f.requests[1].body, { plugin_markets: [first] });
 });
-test('statistics sharing can be disabled independently before any repository or service is configured', async () => {
+test('statistics lookup can be disabled independently without enabling installation uploads', async () => {
   const f = systemFixture({ markets: [] });
   await f.state.load();
+  const lookup = f.nodes().find((node) => node.props?.label === '读取插件安装统计');
+  assert.ok(lookup);
+  assert.equal(lookup.props.hint, '仅控制安装统计查询；本应用不主动上报插件安装数据');
+  assert.equal(f.nodes().find((node) => node.props?.label === '上报插件安装数据'), undefined);
   assert.equal(f.state.saveDisabled.value, false);
   f.state.statisticShare.value = false;
   assert.equal(f.state.saveDisabled.value, false);
@@ -441,9 +445,9 @@ test('fixed-source system fields are outside the repository dialog', async () =>
   const system = systemFixture();
   await market.state.load();
   await system.state.load();
-  // Fixed AccountSettingSystem.vue + zh-CN.ts labels, not generated from
-  // the target component's implementation.
-  for (const label of ['上报插件安装数据', '本地插件仓库路径', '插件热加载']) {
+  // The settings layout stays source-derived; the statistics label reflects
+  // the explicit product decision to disable installation uploads.
+  for (const label of ['读取插件安装统计', '本地插件仓库路径', '插件热加载']) {
     assert.equal(
       market.nodes().some((node) => node.props?.label === label),
       false,

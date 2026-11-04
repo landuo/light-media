@@ -113,9 +113,9 @@ onMounted(load);
       <VCombobox v-model="githubProxy" label="Github加速代理" :items="[]" clearable prepend-inner-icon="mdi-github" :disabled="loading || saving" placeholder="留空表示不使用代理" hint="使用代理加速Github访问速度" persistent-hint />
       <VSwitch
         v-model="statisticShare"
-        label="上报插件安装数据"
+        label="读取插件安装统计"
         :disabled="loading || saving"
-        hint="关闭后不发送也不读取插件安装统计"
+        hint="仅控制安装统计查询；本应用不主动上报插件安装数据"
         persistent-hint
       />
       <VTextField

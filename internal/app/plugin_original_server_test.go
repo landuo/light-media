@@ -15,6 +15,7 @@ import (
 func originalServerURLPointer(value string) *string { return &value }
 
 func TestOriginalPluginServerActualHTTPProtocolAndFailureSemantics(t *testing.T) {
+	originalCenterTestEnvironment(t)
 	a, err := New(Options{DataDir: t.TempDir()})
 	if err != nil {
 		t.Fatal(err)
@@ -106,12 +107,12 @@ func TestOriginalPluginServerActualHTTPProtocolAndFailureSemantics(t *testing.T)
 	}
 	mu.Unlock()
 	a.reportOriginalPluginInstallation(context.Background(), id, "local://"+id+"?path=%2Fprivate%2Fsource&version=v2")
+	a.reportOriginalPluginInstallations(context.Background())
 	mu.Lock()
-	report := calls[len(calls)-1]
-	mu.Unlock()
-	if report.Path != "/prefix/plugin/install/"+id || report.Body["repo_url"] != "local://"+id+"?version=v2" || report.UID != firstUID {
-		t.Fatalf("install report not sanitized/stable: %+v", report)
+	if len(calls) != before {
+		t.Fatal("installation reporting sent a request while sharing was enabled")
 	}
+	mu.Unlock()
 	disabled := false
 	settings.PluginStatisticShare = &disabled
 	if err = a.saveSettings(context.Background(), settings); err != nil {
@@ -149,7 +150,42 @@ func TestOriginalPluginServerActualHTTPProtocolAndFailureSemantics(t *testing.T)
 	}
 }
 
-func TestOriginalPluginServerFirstReportRetriesAndUIDSurvivesRestart(t *testing.T) {
+// Reading state must not create the legacy receipt table. A nil map means
+// that no installation-report state has ever been persisted in this database.
+func originalPluginReportState(t *testing.T, a *App) map[string]string {
+	t.Helper()
+	var tables int
+	if err := a.Store.DB.QueryRow(`SELECT count(*) FROM sqlite_master WHERE type='table' AND name='plugin_market_server_state'`).Scan(&tables); err != nil {
+		t.Fatal(err)
+	}
+	if tables == 0 {
+		return nil
+	}
+	rows, err := a.Store.DB.Query(`SELECT key,value FROM plugin_market_server_state`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer rows.Close()
+	state := map[string]string{}
+	for rows.Next() {
+		var key, value string
+		if err := rows.Scan(&key, &value); err != nil {
+			t.Fatal(err)
+		}
+		state[key] = value
+	}
+	if err := rows.Err(); err != nil {
+		t.Fatal(err)
+	}
+	return state
+}
+
+func TestOriginalPluginServerReportingHasNoSideEffectsAndPreservesLegacyReceipt(t *testing.T) {
+	originalCenterTestEnvironment(t)
+	// A reporting no-op must not inspect settings, identity or storage at all.
+	uninitialized := &App{}
+	uninitialized.reportOriginalPluginInstallation(context.Background(), "OwnedReportFixture", "local://OwnedReportFixture?path=%2Fowned")
+	uninitialized.reportOriginalPluginInstallations(context.Background())
 	dir := t.TempDir()
 	a, err := New(Options{DataDir: dir})
 	if err != nil {
@@ -160,69 +196,83 @@ func TestOriginalPluginServerFirstReportRetriesAndUIDSurvivesRestart(t *testing.
 			a.Close()
 		}
 	}()
-	var reports atomic.Int32
+	var requests atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/plugin/install" {
-			t.Error("wrong first-report endpoint")
-		}
-		var body struct {
-			Plugins []map[string]any `json:"plugins"`
-		}
-		if json.NewDecoder(r.Body).Decode(&body) != nil || len(body.Plugins) != 1 || body.Plugins[0]["plugin_id"] != "OwnedReportFixture" {
-			t.Error("wrong report shape")
-		}
-		if reports.Add(1) == 1 {
-			w.WriteHeader(http.StatusServiceUnavailable)
-			w.Write([]byte(`{"success":false}`))
-			return
-		}
-		if reports.Load() == 3 {
-			w.Write([]byte(`{"success":false}`))
-			return
-		}
-		w.Write([]byte(`{"success":true}`))
+		requests.Add(1)
+		http.Error(w, "owned center unavailable", http.StatusServiceUnavailable)
 	}))
 	defer server.Close()
 	settings := a.Settings()
 	settings.PluginServerURL = originalServerURLPointer(server.URL)
-	if err = a.saveSettings(context.Background(), settings); err != nil {
-		t.Fatal(err)
-	}
 	index := guideMarketIndex("OwnedReportFixture", "https://owned.invalid/binary")
 	raw, _ := json.Marshal(index.Releases[0].Manifest)
 	if err = a.pluginStore.Install(context.Background(), PluginInstallation{InstanceID: index.PluginID, PluginID: index.PluginID, Version: "2.0", ManifestSchemaVersion: 1, Manifest: raw}); err != nil {
 		t.Fatal(err)
 	}
-	a.reportOriginalPluginInstallations(context.Background())
-	a.reportOriginalPluginInstallations(context.Background())
-	a.reportOriginalPluginInstallations(context.Background())
-	if reports.Load() != 2 {
-		t.Fatal("failed report marked complete or completed report repeated")
+	originalCenterSetList(t, a, []string{index.PluginID})
+	assertNoReporting := func(want map[string]string) {
+		t.Helper()
+		for i := 0; i < 3; i++ {
+			a.reportOriginalPluginInstallation(context.Background(), index.PluginID, "https://owned.invalid/index?token=OWNED_NOT_A_SECRET")
+			a.reportOriginalPluginInstallations(context.Background())
+		}
+		cancelled, cancel := context.WithCancel(context.Background())
+		cancel()
+		a.reportOriginalPluginInstallation(cancelled, index.PluginID, "local://OwnedReportFixture?path=%2Fowned")
+		a.reportOriginalPluginInstallations(cancelled)
+		if requests.Load() != 0 {
+			t.Fatal("disabled reporting made an HTTP request")
+		}
+		if a.pluginOriginalUserUID.Load() != nil {
+			t.Fatal("disabled reporting collected the host identity")
+		}
+		if got := originalPluginReportState(t, a); !reflect.DeepEqual(got, want) {
+			t.Fatalf("disabled reporting changed legacy state: got %v want %v", got, want)
+		}
 	}
-	uid, _ := a.originalPluginServerUID(context.Background())
-	a.Close()
+	shared, disabled := true, false
+	for _, share := range []*bool{nil, &shared, &disabled} {
+		settings.PluginStatisticShare = share
+		if err = a.saveSettings(context.Background(), settings); err != nil {
+			t.Fatal(err)
+		}
+		assertNoReporting(nil)
+	}
+	settings.PluginStatisticShare = &shared
+	if err = a.saveSettings(context.Background(), settings); err != nil {
+		t.Fatal(err)
+	}
+	if err = a.originalPluginServerState(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	if _, err = a.Store.DB.Exec(`INSERT INTO plugin_market_server_state(key,value) VALUES('install_report','1'),('owned_legacy_state','preserve-me')`); err != nil {
+		t.Fatal(err)
+	}
+	legacy := map[string]string{"install_report": "1", "owned_legacy_state": "preserve-me"}
+	assertNoReporting(legacy)
+	// Identity remains independently available to explicit statistics/rating
+	// requests, but reporting itself must never initialize this cache.
+	uid, err := a.originalPluginServerUID(context.Background())
+	if err != nil || len(uid) != 64 {
+		t.Fatal("independent host identity unavailable", err)
+	}
+	if err = a.Close(); err != nil {
+		t.Fatal(err)
+	}
 	a = nil
 	a, err = New(Options{DataDir: dir})
 	if err != nil {
 		t.Fatal(err)
 	}
-	next, _ := a.originalPluginServerUID(context.Background())
-	a.reportOriginalPluginInstallations(context.Background())
-	if next != uid || reports.Load() != 2 {
-		t.Fatal("identity/receipt not persisted")
-	}
-	if _, err := a.Store.DB.Exec(`DELETE FROM plugin_market_server_state WHERE key='install_report'`); err != nil {
-		t.Fatal(err)
-	}
-	a.reportOriginalPluginInstallations(context.Background())
-	a.reportOriginalPluginInstallations(context.Background())
-	var reported string
-	if err := a.Store.DB.QueryRow(`SELECT value FROM plugin_market_server_state WHERE key='install_report'`).Scan(&reported); err != nil || reported != "1" || reports.Load() != 3 {
-		t.Fatal("source HTTP200-only receipt behavior differs", err)
+	assertNoReporting(legacy)
+	next, err := a.originalPluginServerUID(context.Background())
+	if err != nil || next != uid {
+		t.Fatal("independent identity changed after restart", err)
 	}
 }
 
 func TestOriginalPluginServerSettingsAndRedirectBoundary(t *testing.T) {
+	originalCenterTestEnvironment(t)
 	a, err := New(Options{DataDir: t.TempDir()})
 	if err != nil {
 		t.Fatal(err)

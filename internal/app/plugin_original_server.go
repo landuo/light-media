@@ -317,42 +317,10 @@ func originalPluginReportedRepository(raw string) any {
 	return u.String()
 }
 
-func (a *App) reportOriginalPluginInstallation(ctx context.Context, id, repository string) {
-	settings := a.Settings()
-	if *settings.PluginServerURL == "" || !originalPluginStatisticShared(settings) {
-		return
-	}
-	_, err := a.requestOriginalPluginServer(ctx, http.MethodPost, "/plugin/install/"+url.PathEscape(id), nil, map[string]any{"plugin_id": id, "repo_url": originalPluginReportedRepository(repository)}, 5*time.Second)
-	if err != nil {
-		a.log("WARN", "plugins", "install_report_failed", "插件安装完成，但安装统计上报失败", "", "")
-	}
-}
+// Installation statistics are deliberately not uploaded. Keep these lifecycle
+// hooks side-effect free even for existing settings with sharing enabled and a
+// saved center URL. Installing, updating, and querying statistics or ratings
+// remain independent; no UID is collected and no report receipt is created here.
+func (a *App) reportOriginalPluginInstallation(context.Context, string, string) {}
 
-func (a *App) reportOriginalPluginInstallations(ctx context.Context) {
-	settings := a.Settings()
-	if *settings.PluginServerURL == "" || !originalPluginStatisticShared(settings) {
-		return
-	}
-	if err := a.originalPluginServerState(ctx); err != nil {
-		return
-	}
-	key := "install_report"
-	var completed string
-	if err := a.Store.DB.QueryRowContext(ctx, `SELECT value FROM plugin_market_server_state WHERE key=?`, key).Scan(&completed); err == nil && completed == "1" {
-		return
-	}
-	ids, err := a.originalInstalledPluginIDs(ctx)
-	if err != nil || len(ids) == 0 {
-		return
-	}
-	values := make([]map[string]any, 0, len(ids))
-	for _, id := range ids {
-		values = append(values, map[string]any{"plugin_id": id, "repo_url": nil})
-	}
-	if _, err = a.requestOriginalPluginServer(ctx, http.MethodPost, "/plugin/install", nil, map[string]any{"plugins": values}, 5*time.Second); err != nil {
-		return
-	}
-	// This marks receipt by the configured endpoint, not proof of center-side
-	// deduplication or aggregation, which is outside the observable client API.
-	a.Store.DB.ExecContext(ctx, `INSERT OR REPLACE INTO plugin_market_server_state(key,value) VALUES(?, '1')`, key)
-}
+func (a *App) reportOriginalPluginInstallations(context.Context) {}

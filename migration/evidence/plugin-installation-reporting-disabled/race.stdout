@@ -1,0 +1,78 @@
+=== RUN   TestOriginalPluginReportedRepositoryLegacySanitization
+=== RUN   TestOriginalPluginReportedRepositoryLegacySanitization/plain_repository_unchanged
+=== RUN   TestOriginalPluginReportedRepositoryLegacySanitization/ordinary_query_omitted
+=== RUN   TestOriginalPluginReportedRepositoryLegacySanitization/all_query_fields_omitted
+=== RUN   TestOriginalPluginReportedRepositoryLegacySanitization/userinfo_and_fragment_omitted
+=== RUN   TestOriginalPluginReportedRepositoryLegacySanitization/escaped_path_preserved
+=== RUN   TestOriginalPluginReportedRepositoryLegacySanitization/empty_repository_preserved
+=== RUN   TestOriginalPluginReportedRepositoryLegacySanitization/invalid_URL_not_reported
+=== RUN   TestOriginalPluginReportedRepositoryLegacySanitization/local_identity_and_version_retained
+--- PASS: TestOriginalPluginReportedRepositoryLegacySanitization (0.00s)
+    --- PASS: TestOriginalPluginReportedRepositoryLegacySanitization/plain_repository_unchanged (0.00s)
+    --- PASS: TestOriginalPluginReportedRepositoryLegacySanitization/ordinary_query_omitted (0.00s)
+    --- PASS: TestOriginalPluginReportedRepositoryLegacySanitization/all_query_fields_omitted (0.00s)
+    --- PASS: TestOriginalPluginReportedRepositoryLegacySanitization/userinfo_and_fragment_omitted (0.00s)
+    --- PASS: TestOriginalPluginReportedRepositoryLegacySanitization/escaped_path_preserved (0.00s)
+    --- PASS: TestOriginalPluginReportedRepositoryLegacySanitization/empty_repository_preserved (0.00s)
+    --- PASS: TestOriginalPluginReportedRepositoryLegacySanitization/invalid_URL_not_reported (0.00s)
+    --- PASS: TestOriginalPluginReportedRepositoryLegacySanitization/local_identity_and_version_retained (0.00s)
+=== RUN   TestOriginalPluginInstallationReportsHaveNoSideEffects
+--- PASS: TestOriginalPluginInstallationReportsHaveNoSideEffects (0.00s)
+=== RUN   TestOriginalPluginCenterRestartNeverReportsOrChangesLegacyReceipt
+{"app_version":"0.4.19","event":"updated","id":"log_3xcyxbyziyKIIshUwZPKuVL-","instance_id":"instance_kdxp2x13Q9vif-UiFNFJ7Ssz","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:32.885159619Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_I-lI_P_bVvcRCd4Pnre3smqi","instance_id":"instance_kdxp2x13Q9vif-UiFNFJ7Ssz","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T04:00:32.886543106Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_o_zggQDzULBxiyEknWE3tdNp","instance_id":"instance_w_4L6J8LC3_A2VQzyhICEmZH","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:34.371658117Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_FKKuG2Biczv3Tao_Tsmopfr8","instance_id":"instance_w_4L6J8LC3_A2VQzyhICEmZH","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T04:00:34.372866433Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_ya9veBVkbSRLWHHSPAhj_geh","instance_id":"instance_8k2rAqMIBac-uA4loemMAyU-","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:35.869884102Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_PEx74Z_8kni0eDWYaqCHL3Uf","instance_id":"instance_8k2rAqMIBac-uA4loemMAyU-","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T04:00:35.871582477Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_eZXZ4K7fnPbHf8Jt6lj9147z","instance_id":"instance_SObH7xzedR8vUqEmg62PAu8H","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:40.255708271Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_SQ9cAkXvQpkRXk9ZzA64iWD0","instance_id":"instance_SObH7xzedR8vUqEmg62PAu8H","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T04:00:40.260591411Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_mhlRKurVTYTQjh58KSj3vMkW","instance_id":"instance_5ATSUlIEvfro_FUWdqUxIA0x","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:41.758290556Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_q7cIhk-UExWQAO36b6IjkHLD","instance_id":"instance_5ATSUlIEvfro_FUWdqUxIA0x","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T04:00:41.760210853Z","workflow_id":""}
+--- PASS: TestOriginalPluginCenterRestartNeverReportsOrChangesLegacyReceipt (10.53s)
+=== RUN   TestOriginalPluginCenterActualInstallNeverReportsAndPreservesMaterialQueries
+{"app_version":"0.4.19","event":"login","id":"log_emSjNQyXB1AZrLatJBSDyhej","instance_id":"instance_hlsROSLFDiEkF7YBIZSCekC5","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-11-04T04:00:46.339881496Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":754,"event":"request_completed","http_status":200,"id":"log_Qyu0FXYN3b1lrlyrH0AvXyLy","instance_id":"instance_hlsROSLFDiEkF7YBIZSCekC5","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_F1AyES0peUVMmzzLX7HgB6nA","time":"2026-11-04T04:00:46.340576026Z"}
+{"app_version":"0.4.19","event":"updated","id":"log_mKmnh8GilybKBQbrsPIZtkM4","instance_id":"instance_hlsROSLFDiEkF7YBIZSCekC5","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:46.342666075Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":457,"event":"request_completed","http_status":200,"id":"log_tWbIR2b1BWd4JoDEijS8o_ov","instance_id":"instance_hlsROSLFDiEkF7YBIZSCekC5","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_LoGSerYNR1zZbskeDtwehqg6","time":"2026-11-04T04:00:46.801061736Z"}
+{"app_version":"0.4.19","event":"command_registration_unavailable","id":"log_5QMB8Gtdesf6_ZM9l1M-MmpC","instance_id":"instance_hlsROSLFDiEkF7YBIZSCekC5","job_id":"","level":"WARN","message":"命令菜单元数据已准备，核心尚无菜单注册提供方","module":"plugins","time":"2026-11-04T04:00:46.805764538Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":1254,"event":"request_completed","http_status":200,"id":"log_HzZqeo-8pMsYxwJ83iryes28","instance_id":"instance_hlsROSLFDiEkF7YBIZSCekC5","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_xUqcvPVXwl-M8d2aACKp65-d","time":"2026-11-04T04:00:48.065438769Z"}
+{"app_version":"0.4.19","event":"updated","id":"log_8VQ4bJd5d237P9pXnmDlfCiv","instance_id":"instance_hlsROSLFDiEkF7YBIZSCekC5","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:48.069430018Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":1410,"event":"request_completed","http_status":200,"id":"log_AZlz8OpO3TuzSKpM_3DmqVxX","instance_id":"instance_hlsROSLFDiEkF7YBIZSCekC5","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_PGrbIduMooTcxczq8TsRHth4","time":"2026-11-04T04:00:49.481094749Z"}
+{"app_version":"0.4.19","event":"updated","id":"log_sONfXzogHjTUXG85JzKUpmVJ","instance_id":"instance_hlsROSLFDiEkF7YBIZSCekC5","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:49.492670139Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":1580,"event":"request_completed","http_status":200,"id":"log_i7h-SwtGjsLZKwjExsPvY4bx","instance_id":"instance_hlsROSLFDiEkF7YBIZSCekC5","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_hNfZyCaKPVgrv6ZqtPybCkh8","time":"2026-11-04T04:00:52.711354791Z"}
+{"app_version":"0.4.19","duration_ms":5,"event":"request_completed","http_status":200,"id":"log_sh5Ofg_S265-zlY4bAXbLRSy","instance_id":"instance_hlsROSLFDiEkF7YBIZSCekC5","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_t48EgKCA45snFiMbfrqByMFF","time":"2026-11-04T04:00:52.728582902Z"}
+{"app_version":"0.4.19","event":"stopped","id":"log_-ckZVisl_WgHr0tie_2dswH3","instance_id":"instance_hlsROSLFDiEkF7YBIZSCekC5","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T04:00:53.75179938Z","workflow_id":""}
+--- PASS: TestOriginalPluginCenterActualInstallNeverReportsAndPreservesMaterialQueries (10.54s)
+=== RUN   TestOriginalPluginServerActualHTTPProtocolAndFailureSemantics
+{"app_version":"0.4.19","event":"login","id":"log_NiwvlLP6tcsCbudY6zP7k7G7","instance_id":"instance_Da4pxxP5vEd6dLNU20uuSviV","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-11-04T04:00:54.702458483Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":738,"event":"request_completed","http_status":200,"id":"log_8jTHzOOrXjDL2Yk1HHLYg1Mo","instance_id":"instance_Da4pxxP5vEd6dLNU20uuSviV","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_R_5XLNia4tdcd7PIY4quaJHe","time":"2026-11-04T04:00:54.703423406Z"}
+{"app_version":"0.4.19","event":"updated","id":"log_FVP6Ms3mS8V7Yc8pzY4Z81G9","instance_id":"instance_Da4pxxP5vEd6dLNU20uuSviV","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:54.710248355Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":2,"event":"request_completed","http_status":200,"id":"log_q6B4sj_N-vVoSu_vFl1z5lOg","instance_id":"instance_Da4pxxP5vEd6dLNU20uuSviV","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_H3XHN8y-LDOxbSdZmQ4lN7UG","time":"2026-11-04T04:00:54.722742048Z"}
+{"app_version":"0.4.19","duration_ms":0,"event":"request_completed","http_status":422,"id":"log_xBv2WXa7zF-5nB1HG14ICf-b","instance_id":"instance_Da4pxxP5vEd6dLNU20uuSviV","level":"WARN","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_k_d9Icxnp_ooAf0kmtyUHvNl","time":"2026-11-04T04:00:54.724595842Z"}
+{"app_version":"0.4.19","duration_ms":0,"event":"request_completed","http_status":422,"id":"log_khiYzWuWpmXiHAgnuthJc71I","instance_id":"instance_Da4pxxP5vEd6dLNU20uuSviV","level":"WARN","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_UiNR51fTooeF_nsMWUm0Gnoz","time":"2026-11-04T04:00:54.726568702Z"}
+{"app_version":"0.4.19","duration_ms":0,"event":"request_completed","http_status":422,"id":"log_zZfBvhVnO93KZVNz7pLD68iT","instance_id":"instance_Da4pxxP5vEd6dLNU20uuSviV","level":"WARN","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_ptJv9i0x2VEwU7ZHMAfjdKl4","time":"2026-11-04T04:00:54.728477478Z"}
+{"app_version":"0.4.19","duration_ms":1,"event":"request_completed","http_status":400,"id":"log_JRtOHxzRz1-X5qdUHGQsHi-0","instance_id":"instance_Da4pxxP5vEd6dLNU20uuSviV","level":"WARN","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_w-JH2Kg1EOXwnC72Itp19FJn","time":"2026-11-04T04:00:54.731041887Z"}
+{"app_version":"0.4.19","event":"updated","id":"log_qS2L_AOasKPuY8usZQrnFicf","instance_id":"instance_Da4pxxP5vEd6dLNU20uuSviV","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:54.733220933Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":3,"event":"request_completed","http_status":200,"id":"log_kkowBMtFVEPwz63cQKjWioRs","instance_id":"instance_Da4pxxP5vEd6dLNU20uuSviV","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.plugins","request_id":"req_RECQxgwkKcS-HUdl_KHzAABG","time":"2026-11-04T04:00:54.74218571Z"}
+{"app_version":"0.4.19","event":"stopped","id":"log_hL6vxhV2eBAXjEkqOTkSe-AC","instance_id":"instance_Da4pxxP5vEd6dLNU20uuSviV","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T04:00:54.743165686Z","workflow_id":""}
+--- PASS: TestOriginalPluginServerActualHTTPProtocolAndFailureSemantics (0.99s)
+=== RUN   TestOriginalPluginServerReportingHasNoSideEffectsAndPreservesLegacyReceipt
+{"app_version":"0.4.19","event":"updated","id":"log_CWEFRZZoHjT57j0A4RwmT-JY","instance_id":"instance_DdVJ63_78Mfw5GEVltyy8f44","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:54.931738757Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_tOGX0H1O_8yL285uIxcDORNG","instance_id":"instance_DdVJ63_78Mfw5GEVltyy8f44","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:54.934430085Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_L6RYJgvRgNiOm0xK5ZXo1aNS","instance_id":"instance_DdVJ63_78Mfw5GEVltyy8f44","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:54.93730143Z","workflow_id":""}
+{"app_version":"0.4.19","event":"updated","id":"log_oczFr2Yb_UjRPqbHrRru6fVv","instance_id":"instance_DdVJ63_78Mfw5GEVltyy8f44","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:54.939951717Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_nrriLJ9FKNG7zk5X3uzYF6nP","instance_id":"instance_DdVJ63_78Mfw5GEVltyy8f44","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T04:00:54.944792888Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_sIItDsi5Sh_uEHRZY-K_Wk9E","instance_id":"instance_7TM6AazaUgjenXx6h29mLFTS","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T04:00:54.982942778Z","workflow_id":""}
+--- PASS: TestOriginalPluginServerReportingHasNoSideEffectsAndPreservesLegacyReceipt (0.24s)
+=== RUN   TestOriginalPluginServerSettingsAndRedirectBoundary
+{"app_version":"0.4.19","event":"login","id":"log_6_zTpMTsxwkA8-MU4PAuQkLx","instance_id":"instance_3-Cm-CMVbB5DvRH4O0iiUIPh","job_id":"","level":"INFO","message":"管理员已登录","module":"auth","time":"2026-11-04T04:00:55.893758114Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":723,"event":"request_completed","http_status":200,"id":"log_qnEmz4PfUO3MzE9FFzk2BeAN","instance_id":"instance_3-Cm-CMVbB5DvRH4O0iiUIPh","level":"INFO","message":"API 请求处理完成","method":"POST","module":"http.auth","request_id":"req_d0eb7gCRHO4zsiEGIN3GwzuD","time":"2026-11-04T04:00:55.894333589Z"}
+{"app_version":"0.4.19","duration_ms":0,"event":"request_completed","http_status":400,"id":"log_Emo_iDXKlzc9jrvqVg_-YVCI","instance_id":"instance_3-Cm-CMVbB5DvRH4O0iiUIPh","level":"WARN","message":"API 请求处理完成","method":"PUT","module":"http.plugins","request_id":"req_d_mLLjwZ2r2N4HqkwlPiTyCd","time":"2026-11-04T04:00:55.896190988Z"}
+{"app_version":"0.4.19","event":"updated","id":"log__K25HUKdnfpI_Uc1Tlu8ZdCm","instance_id":"instance_3-Cm-CMVbB5DvRH4O0iiUIPh","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:55.900512598Z","workflow_id":""}
+{"app_version":"0.4.19","duration_ms":3,"event":"request_completed","http_status":200,"id":"log_HZWhr7-m1e9PbkivrIP5FxM6","instance_id":"instance_3-Cm-CMVbB5DvRH4O0iiUIPh","level":"INFO","message":"API 请求处理完成","method":"PUT","module":"http.plugins","request_id":"req_QgDVjVr81IVAcNF1iPaY_TTp","time":"2026-11-04T04:00:55.901446595Z"}
+{"app_version":"0.4.19","event":"updated","id":"log_KdfqvKjD9-tIYrhwWyJ9rNfb","instance_id":"instance_3-Cm-CMVbB5DvRH4O0iiUIPh","job_id":"","level":"INFO","message":"连接和路径设置已更新","module":"settings","time":"2026-11-04T04:00:55.903700453Z","workflow_id":""}
+{"app_version":"0.4.19","event":"stopped","id":"log_2cDLPb8syw7wIUeneK1kmHIF","instance_id":"instance_3-Cm-CMVbB5DvRH4O0iiUIPh","job_id":"","level":"INFO","message":"服务已停止","module":"runtime","time":"2026-11-04T04:00:55.90755892Z","workflow_id":""}
+--- PASS: TestOriginalPluginServerSettingsAndRedirectBoundary (0.93s)
+PASS
+ok  	light-media/internal/app	24.621s
