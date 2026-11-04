@@ -15,6 +15,7 @@ import (
 // session and reads manager configuration before each direct initializer.
 // It is ephemeral and never inferred from installed/desired_enabled flags.
 type originalPluginInstance struct {
+	mediaReferences       originalMediaServerReferenceOwner
 	submitted             originalSubmittedState
 	app                   *App
 	installation          PluginInstallation

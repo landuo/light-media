@@ -223,6 +223,8 @@ func (a *App) api(w http.ResponseWriter, r *http.Request) {
 			e = a.setControl(ctx, in.Paused)
 		}
 		out = a.status(ctx)
+	case p == "system/setting/MediaServers" && method == http.MethodPost:
+		out, e = a.originalMediaServerConfigSettingAPI(w, r)
 	case p == "settings" && method == "GET":
 		out = a.publicSettings()
 	case p == "settings/rules" || strings.HasPrefix(p, "settings/rules/"):

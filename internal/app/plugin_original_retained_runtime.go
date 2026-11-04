@@ -135,6 +135,7 @@ func (p *originalPluginInstance) finishOriginalRetainedCall(lease *originalRetai
 func (p *originalPluginInstance) completeOriginalRetainedTermination(life *originalRetainedLifetime) {
 	// CloseTransport/StopWithHost have observed their actual child reaper before
 	// returning on the first termination claim, including their kill fallback.
+	p.mediaReferences.close()
 	p.app.pluginRetainedObjects.Delete(p)
 	_ = life.finishRetirement()
 }

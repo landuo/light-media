@@ -15,6 +15,8 @@ import (
 // entry so the same side effect cannot execute twice.
 func originalCoreBroadcastHandler(kind string) string {
 	switch kind {
+	case "config.updated":
+		return "go.core.MediaServer.handle_config_changed"
 	case "command.excute":
 		return "go.core.Command.command_event"
 	case "module.reload":
@@ -34,6 +36,10 @@ func originalCoreBroadcastHandler(kind string) string {
 }
 
 func (a *App) submitOriginalCoreBroadcast(ctx context.Context, kind string, raw json.RawMessage) {
+	if kind == "config.updated" {
+		a.submitOriginalMediaServerConfigChanged(ctx, raw)
+		return
+	}
 	if kind == "site.updated" {
 		for _, kind := range []string{"userdata", "clear", "icon"} {
 			if !a.admitOriginalBackground() {
@@ -135,5 +141,8 @@ func originalCoreEventHandlerInventory() []plugins.EventHandlerInfo {
 	}
 	items = append(items, plugins.EventHandlerInfo{EventType: "site.updated", HandlerIdentifier: "go.core.Site.clear_site_data", Status: "enabled"})
 	items = append(items, plugins.EventHandlerInfo{EventType: "site.updated", HandlerIdentifier: "go.core.Site.cache_site_icon", Status: "enabled"})
+	for _, moduleID := range []string{"EmbyModule", "JellyfinModule", "PlexModule", "TrimeMediaModule", "UgreenModule", "ZSpaceModule"} {
+		items = append(items, plugins.EventHandlerInfo{EventType: "config.updated", HandlerIdentifier: "go.core." + moduleID + ".handle_config_changed", Status: "enabled"})
+	}
 	return items
 }

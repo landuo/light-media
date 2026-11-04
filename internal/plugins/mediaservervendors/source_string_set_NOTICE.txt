@@ -1,0 +1,17 @@
+source_string_hash.go and source_string_set.go implement the necessary
+add-only string-set algorithms from CPython 3.12.14.
+
+The fixed license retains the Python Software Foundation copyright notice
+listing 2001 through 2023, and the historical notices contained in that file.
+The exact CPython v3.12.14 LICENSE is included, without modification, in
+source_string_set_LICENSE.txt. Its historical copyright notices are retained.
+
+Original source: https://github.com/python/cpython/tree/v3.12.14
+Objects/setobject.c, Objects/unicodeobject.c, Python/pyhash.c,
+Python/bootstrap_hash.c and corresponding installed headers.
+
+Changes: a Go implementation limited to exact string/codepoint hashes,
+successive add, resize and ascending slot iteration; no Python object
+dispatch, reference counting, deletion or native Python runtime dependency.
+Process entropy is obtained through Go's crypto/rand.Reader. Deterministic
+test profiles reproduce CPython's unsigned 32-bit seed expansion.

@@ -101,6 +101,12 @@ func runSelfServiceChild(parent context.Context, config selfServiceConfiguration
 	if err = applyRestore(config.DataDir); err != nil {
 		return err
 	}
+	if !options.SafeMode {
+		options.MediaServerFactories, err = app.NewOriginalMediaServerFactoryAssembly(lifetime, config.DataDir)
+		if err != nil {
+			return errors.New("media_server_runtime_unavailable")
+		}
+	}
 	a, err := app.New(options)
 	if err != nil {
 		return err

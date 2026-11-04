@@ -55,6 +55,13 @@ func (t *RequestsTransport) RoundTrip(req *http.Request) (*http.Response, error)
 	if err != nil {
 		return nil, err
 	}
+	return t.roundTripProxy(req, proxy)
+}
+
+// The session adapter supplies a per-logical-request proxy merge while reusing
+// this same private pool. Existing callers still select their proxy above.
+func (t *RequestsTransport) roundTripProxy(req *http.Request, proxy *url.URL) (*http.Response, error) {
+	var err error
 	key := ""
 	if proxy != nil {
 		key = proxy.String()

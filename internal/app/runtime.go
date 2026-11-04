@@ -30,6 +30,9 @@ type App struct {
 	originalOCRHost                  string
 	sharedSystemConfig               sharedSystemConfigRuntime
 	pluginOriginalBase               originalBaseState
+	originalMediaServerInstances     *originalMediaServerHost
+	originalMediaServerConfig        *originalMediaServerConfigStore
+	originalMediaServerAssembly      *originalMediaServerAssembly
 	pluginOriginalTorrentMaterial    originalTorrentMaterialCache
 	pluginOriginalMarkets            originalMarketCache
 	pluginOriginalInput              originalPluginInputRuntime
@@ -124,7 +127,8 @@ type App struct {
 }
 
 type Options struct {
-	OCRHost               *string // Trusted host-only override; nil preserves process OCR_HOST snapshot.
+	MediaServerFactories  MediaServerFactoryAssembly // Trusted native factory composition; nil is explicitly unassembled, never an empty ready registry.
+	OCRHost               *string                    // Trusted host-only override; nil preserves process OCR_HOST snapshot.
 	PluginLogRotation     *PluginLogRotation
 	ResourceSearchPages   *big.Int
 	MediaSearch           *MediaSearchConfiguration
@@ -200,6 +204,9 @@ func New(opts Options) (*App, error) {
 		e = a.prefetchOriginalPluginConfig(context.Background())
 	}
 	if e == nil {
+		a.originalMediaServerConfig, e = newOriginalMediaServerConfigStore(context.Background(), a.pluginStore)
+	}
+	if e == nil {
 		e = a.loadRecognitionWords(context.Background())
 	}
 	if e != nil {
@@ -237,6 +244,14 @@ func New(opts Options) (*App, error) {
 		s.Close()
 		return nil, e
 	}
+	if opts.MediaServerFactories != nil {
+		a.originalMediaServerAssembly, e = newOriginalMediaServerAssembly(a, opts.MediaServerFactories)
+		if e != nil {
+			a.logs.close()
+			s.Close()
+			return nil, e
+		}
+	}
 	// Match the original CategoryHelper process lifetime. Syntax failures start
 	// empty on a cold process; a later failed/empty reload retains these maps.
 	_, _ = a.currentMediaCategoryPolicy()
@@ -254,6 +269,7 @@ func (a *App) Start(parent context.Context) {
 		a.log("ERROR", "plugins", "code_restore_failed", "恢复插件代码备份失败，继续加载现有插件", "", "")
 	}
 	a.initializeOriginalCommonService(time.Now())
+	a.startOriginalMediaServerAssembly(ctx)
 	if err := a.initializeOriginalPlugins(ctx); err != nil {
 		a.log("ERROR", "plugins", "initialize_failed", "恢复插件初始化失败，请查看插件执行记录", "", "")
 	}
@@ -286,6 +302,7 @@ func (a *App) Start(parent context.Context) {
 func (a *App) Close() error {
 	a.closeOriginalBackgroundAdmission()
 	a.closeOriginalSystemCommands()
+	a.closeOriginalMediaServerAssembly()
 	if a.cancel != nil {
 		a.cancel()
 	}
