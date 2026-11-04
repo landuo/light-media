@@ -22,17 +22,29 @@ type originalDirectJobs struct {
 	nextRegistration uint64
 	clockInstances   map[string]int
 }
+
+// Retained legacy/common clocks use these operations. Newly decoded ordinary
+// plugin clocks use BuiltinTrigger optional results and a bounded turn instead.
+type originalJobTrigger interface {
+	FirstChecked(time.Time) (time.Time, error)
+	NextChecked(time.Time) (time.Time, error)
+}
+
 type originalDirectJob struct {
 	object                               *originalPluginInstance
 	retained                             *originalRetainedLease // exact registry owner; released only outside jobs.mu
 	commonModule                         bool
 	definition                           pluginScheduleDefinition
-	trigger                              *schedule.Trigger
+	trigger                              originalJobTrigger
+	builtinClock                         *schedule.BuiltinTrigger
+	boundedClock                         bool
+	duePresent                           bool
 	due                                  time.Time
 	running                              bool
 	provider                             string
 	lastStarted, lastFinished, lastError string
 	lastErrorSet                         bool
+	clockError                           string // trigger calculation only; callback completion must not clear it
 	registrationOrder                    uint64
 	coalesceDisabled, misfireUnlimited   bool
 	executorUnavailable, clockRegistered bool
@@ -68,6 +80,10 @@ func (a *App) dispatchOriginalPluginJobs(ctx context.Context, at time.Time) {
 	state := &a.pluginOriginalDirectJobs
 	state.mu.Lock()
 	for _, job := range state.jobs {
+		if job.boundedClock {
+			a.dispatchOriginalBuiltinJobLocked(ctx, job, at)
+			continue
+		}
 		if job.due.IsZero() || job.due.After(at) {
 			continue
 		}
@@ -77,6 +93,7 @@ func (a *App) dispatchOriginalPluginJobs(ctx context.Context, at time.Time) {
 			a.log("ERROR", "plugins", "service_executor_unavailable", "服务执行器不存在，已移除时钟", "", "")
 			continue
 		}
+		var calendarErr error
 		runTimes := []time.Time{}
 		for !job.due.IsZero() && !job.due.After(at) {
 			if job.coalesceDisabled {
@@ -86,15 +103,53 @@ func (a *App) dispatchOriginalPluginJobs(ctx context.Context, at time.Time) {
 			} else {
 				runTimes[0] = job.due
 			}
-			job.due = job.trigger.Next(job.due)
+			job.due, calendarErr = job.trigger.NextChecked(job.due)
+			if calendarErr != nil {
+				break
+			}
 		}
-		// APScheduler recomputes the next occurrence after collecting due run
-		// times (including a fresh jitter draw), then advances even on a miss.
-		job.due = job.trigger.Next(runTimes[len(runTimes)-1])
-		if job.due.IsZero() {
+		// Calendar collection errors precede submission, as in Job._get_run_times.
+		// Only the approved Calendar calculation fault isolation differs from
+		// source scheduler propagation; no collected callback was submitted yet.
+		if calendarErr != nil {
+			job.due = time.Time{}
 			job.clockRegistered = false
+			job.clockError = calendarErr.Error()
+			a.log("ERROR", "plugins", "calendar_trigger_error", job.clockError, "", originalServiceID(job))
+			continue
+		}
+		advanceCalendar := func() {
+			if job.definition.Trigger.Kind != "calendarinterval" {
+				return
+			}
+			job.due, calendarErr = job.trigger.NextChecked(runTimes[len(runTimes)-1])
+			if calendarErr != nil {
+				// Already submitted callbacks remain admitted. Retain the clock
+				// fault separately from their eventual success/error progress.
+				job.due = time.Time{}
+				job.clockError = calendarErr.Error()
+				a.log("ERROR", "plugins", "calendar_trigger_error", job.clockError, "", originalServiceID(job))
+			}
+			if job.due.IsZero() {
+				job.clockRegistered = false
+			}
+		}
+		if job.definition.Trigger.Kind != "calendarinterval" {
+			// Old families retain their original calculation position/results.
+			// Legacy adapters return the unchanged old result and nil error.
+			job.due, calendarErr = job.trigger.NextChecked(runTimes[len(runTimes)-1])
+			if calendarErr != nil {
+				job.due = time.Time{}
+				job.clockRegistered = false
+				a.log("ERROR", "plugins", "calendar_trigger_error", calendarErr.Error(), "", "")
+				continue
+			}
+			if job.due.IsZero() {
+				job.clockRegistered = false
+			}
 		}
 		if !originalServiceActive(job) {
+			advanceCalendar()
 			continue
 		}
 		maximum := job.maxInstances
@@ -103,9 +158,11 @@ func (a *App) dispatchOriginalPluginJobs(ctx context.Context, at time.Time) {
 		}
 		if big.NewInt(int64(state.clockInstances[job.timerID])).Cmp(maximum) >= 0 {
 			a.log("WARN", "plugins", "service_max_instances", "服务时钟已达到最大并发实例数", "", "")
+			advanceCalendar()
 			continue
 		}
 		if !a.admitOriginalBackground() {
+			advanceCalendar()
 			continue
 		}
 		if state.clockInstances == nil {
@@ -134,6 +191,8 @@ func (a *App) dispatchOriginalPluginJobs(ctx context.Context, at time.Time) {
 				_ = a.runOriginalService(ctx, key.instance, key.service, true)
 			}
 		}(job, key, runTimes, grace, job.misfireUnlimited)
+		// APS submits this batch before its second Next/fresh jitter call.
+		advanceCalendar()
 	}
 	state.mu.Unlock()
 }
@@ -217,9 +276,9 @@ func (a *App) originalPublicServicesResult(at time.Time) ([]PluginServiceInfo, e
 	// raises TypeError. Preserve this failure instead of inventing a paused UI.
 	registered, paused := 0, false
 	for _, job := range state.jobs {
-		if originalServiceActive(job) && (job.clockRegistered || !job.due.IsZero()) {
+		if originalServiceActive(job) && job.clockError == "" && (job.clockRegistered || originalJobHasDue(job)) {
 			registered++
-			paused = paused || job.due.IsZero()
+			paused = paused || !originalJobHasDue(job)
 		}
 	}
 	if registered > 1 && paused {
@@ -227,7 +286,7 @@ func (a *App) originalPublicServicesResult(at time.Time) ([]PluginServiceInfo, e
 	}
 	items := []PluginServiceInfo{}
 	for key, job := range state.jobs {
-		if !originalServiceActive(job) || !job.clockRegistered && job.due.IsZero() && !job.running {
+		if !originalServiceActive(job) || !job.clockRegistered && !originalJobHasDue(job) && !job.running && job.clockError == "" {
 			continue
 		}
 		item := PluginServiceInfo{ID: originalServiceID(job), InstanceID: key.instance, ServiceID: key.service, Name: job.definition.Name, Provider: originalServiceProvider(job), Status: "等待", CanRun: !job.running, due: job.due, busy: job.running, registrationOrder: job.registrationOrder}
@@ -244,8 +303,15 @@ func (a *App) originalPublicServicesResult(at time.Time) ([]PluginServiceInfo, e
 		}
 		if job.running {
 			item.Status = "正在运行"
+		} else if job.clockError != "" {
+			item.Status = "停止"
 		}
-		if !job.running || job.commonModule {
+		if job.clockError != "" {
+			// Keep the existing exact running status/button contract while a
+			// submitted callback drains; future-clock failure remains visible.
+			nextRun := "时钟已停止：" + job.clockError
+			item.NextRun = &nextRun
+		} else if !job.running || job.commonModule {
 			nextRun := pluginServiceTimeDifference(job.due, at)
 			item.NextRun = &nextRun
 		}

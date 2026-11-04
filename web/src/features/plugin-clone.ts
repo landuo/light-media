@@ -78,22 +78,8 @@ export function pluginCloneErrors(
     errors.suffix = '分身后缀须为 1 至 20 位字母或数字';
   else if (new TextEncoder().encode(pluginCloneInstanceId(source, value.suffix)).length > 255)
     errors.suffix = '完整分身编号不能超过 255 个 UTF-8 字节，请缩短后缀';
-  const encoder = new TextEncoder();
-  for (const [key, label, limit] of [
-    ['name', '名称', 256],
-    ['description', '描述', 4096],
-    ['version', '显示版本', 64],
-    ['icon', '图标', 2048],
-  ] as const) {
-    if (encoder.encode(value[key]).length > limit)
-      errors[key] = `${label}不能超过 ${limit} 个 UTF-8 字节`;
-    else if (/[\u0000-\u001f\u007f-\u009f]/u.test(value[key]))
-      errors[key] = `${label}不能包含控制字符`;
-  }
-  if (value.version && !/^[A-Za-z0-9][A-Za-z0-9_.+\-]{0,63}$/.test(value.version))
-    errors.version ||= '显示版本须以字母或数字开头，仅支持字母、数字、点、下划线、加号和短横线';
-  if (value.icon && !safePluginIcon(value.icon))
-    errors.icon ||= '图标须使用无凭据的 HTTP/HTTPS 地址或安全的相对资源路径';
+  // Four display fields are literal strings, not executable/version/URL syntax.
+  // Resource use remains independently guarded by safePluginIcon above.
   return errors;
 }
 

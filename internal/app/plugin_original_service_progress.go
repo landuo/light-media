@@ -263,6 +263,11 @@ func (a *App) originalServiceProgressSnapshotLocked(jobID string) map[string]any
 			}
 		}
 	}
+	if job != nil && job.clockError != "" {
+		// Additive clock state does not override callback status/success/error.
+		// Neither prepare nor completion owns or clears this field.
+		out["clock_error"] = job.clockError
+	}
 	return out
 }
 

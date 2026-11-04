@@ -54,7 +54,7 @@ test('clone identity uses the complete instance ID and lowercases only the suffi
   );
 });
 
-test('optional values remain empty for server inheritance and metadata uses UTF-8 byte limits', () => {
+test('optional values inherit and display text has no extra field caps or control rejection', () => {
   assert.deepEqual(validForm(), {
     suffix: 'CopyA',
     name: '',
@@ -73,28 +73,30 @@ test('optional values remain empty for server inheritance and metadata uses UTF-
       pluginCloneErrors(plugin(), validForm({ [field]: 'a'.repeat(limit) }))[field],
       undefined,
     );
-    assert.match(
+    assert.equal(
       pluginCloneErrors(plugin(), validForm({ [field]: 'a'.repeat(limit + 1) }))[field],
-      /UTF-8/,
+      undefined,
     );
-    assert.match(
+    assert.equal(
       pluginCloneErrors(plugin(), validForm({ [field]: '中'.repeat(Math.floor(limit / 3) + 1) }))[
         field
       ],
-      /UTF-8/,
+      undefined,
     );
-    for (const control of ['\n', '\t', '\u0000', '\u007f', '\u0085'])
-      assert.ok(pluginCloneErrors(plugin(), validForm({ [field]: 'x' + control }))[field]);
+    for (const control of ['\n', '\t', '\u0000', '\u007f', '\u0085', '\u009f'])
+      assert.equal(pluginCloneErrors(plugin(), validForm({ [field]: 'x' + control }))[field], undefined);
   }
   assert.equal(
     pluginCloneErrors(plugin(), validForm({ version: '9.1_rc+display-2' })).version,
     undefined,
   );
   for (const version of ['_first', '1 2', '版本', '9/2'])
-    assert.match(pluginCloneErrors(plugin(), validForm({ version })).version, /显示版本/);
+    assert.equal(pluginCloneErrors(plugin(), validForm({ version })).version, undefined);
+  for (const version of ['a"b', String.raw`a\b`])
+    assert.equal(pluginCloneErrors(plugin(), validForm({ version })).version, undefined);
 });
 
-test('icons allow real HTTP/HTTPS and mounted relative assets, never scripts, credentials or protocol-relative URLs', () => {
+test('icon metadata stays literal while resource rendering rejects unsafe URLs', () => {
   for (const value of [
     'javascript:alert(1)',
     'data:image/svg+xml,bad',
@@ -114,7 +116,7 @@ test('icons allow real HTTP/HTTPS and mounted relative assets, never scripts, cr
     'https://synthetic.invalid/bad%ZZ.png',
   ]) {
     assert.equal(safePluginIcon(value), '', value);
-    assert.ok(pluginCloneErrors(plugin(), validForm({ icon: value })).icon, value);
+    assert.equal(pluginCloneErrors(plugin(), validForm({ icon: value })).icon, undefined, value);
   }
   assert.equal(
     safePluginIcon('https://synthetic.invalid/icon.svg'),
@@ -329,18 +331,12 @@ test('cancel, close and outside/escape dismissal send no request; reopening star
   assert.equal(fresh.requests.length, 0);
 });
 
-test('invalid suffix, total ID length, version and icon never reach transport', async (t) => {
+test('invalid suffix and total ID length never reach transport', async (t) => {
   const dialog = await mount(t, 'PluginCloneDialog', { props: { plugin: plugin() } });
   await dialog.submit();
   assert.match(dialog.label('分身后缀').props['error-messages'], /1 至 20/);
   await dialog.set('分身后缀', '../bad');
   await dialog.submit();
-  await dialog.set('分身后缀', 'valid');
-  await dialog.set('分身版本', 'invalid version');
-  await dialog.set('分身图标', 'javascript:alert(1)');
-  await dialog.submit();
-  assert.ok(dialog.label('分身版本').props['error-messages']);
-  assert.ok(dialog.label('分身图标').props['error-messages']);
   assert.equal(dialog.requests.length, 0);
   const tooLong = await mount(t, 'PluginCloneDialog', {
     props: { plugin: plugin({ instance_id: 'x'.repeat(255) }) },
@@ -784,4 +780,53 @@ test('unavailable retained code disables ordinary install with actual code avail
   assert.equal(button.props.disabled, true);
   assert.equal(button.props.title, retained.unavailable_reason);
   assert.equal(card.nodes().find((n) => n.type?.name === 'VBtn' && card.text(n).includes('恢复')), undefined);
+});
+
+// Static fixed frontend executePluginClone calls trim only on these two fields
+// after the separately approved name/description literal-text adaptation.
+// This is an in-process target SFC/helper assertion, never a browser claim.
+test('ordinary clone display metadata trims only UI version/icon and preserves literal name/description', async (t) => {
+  for (const [version, icon, sentVersion, sentIcon] of [
+    [' 9.7 ', '   ', '9.7', ''],
+    ['版本 1', ' source.svg ', '版本 1', 'source.svg'],
+  ]) {
+    const name = '  Owned "literal" \\ name  ';
+    const description = '  description \\t "literal"  ';
+    const dialog = await mount(t, 'PluginCloneDialog', { props: { plugin: plugin() } });
+    await dialog.set('分身后缀', 'Ordinary');
+    await dialog.set('分身名称', name);
+    await dialog.set('分身描述', description);
+    await dialog.set('分身版本', version);
+    await dialog.set('分身图标', icon);
+    await dialog.submit();
+    assert.equal(dialog.requests.length, 1);
+    assert.deepEqual(dialog.requests[0].body, validForm({ suffix: 'Ordinary', name, description, version: sentVersion, icon: sentIcon }));
+  }
+});
+
+// Explicit user-approved literal display contract, not original Python code
+// generation. UI keeps its established version/icon edge trim only. Resource
+// use is still separately checked; storing text never authorizes a URL fetch.
+test('approved literal clone metadata crosses old caps and controls without becoming executable input', async (t) => {
+  const text = ' owned "literal" \\ <owned-tag>\u0000\u0001\t\n\r\u001f\u007f\u0085\u009f end ';
+  const value = validForm({
+    suffix: 'Literal',
+    name: 'n'.repeat(257) + text,
+    description: 'd'.repeat(4097) + text,
+    version: 'v'.repeat(65) + text,
+    icon: 'i'.repeat(2049) + text,
+  });
+  assert.deepEqual(pluginCloneErrors(plugin(), value), {});
+  const dialog = await mount(t, 'PluginCloneDialog', { props: { plugin: plugin() } });
+  for (const [label, key] of [['分身后缀', 'suffix'], ['分身名称', 'name'], ['分身描述', 'description'], ['分身版本', 'version'], ['分身图标', 'icon']])
+    await dialog.set(label, value[key]);
+  await dialog.submit();
+  assert.equal(dialog.requests.length, 1);
+  assert.deepEqual(dialog.requests[0].body, { ...value, version: value.version.trim(), icon: value.icon.trim() });
+  assert.equal(safePluginIcon(value.icon.trim()), '');
+  for (const icon of ['javascript:ownedLiteralOnly()', 'data:text/html,owned', 'https://user:synthetic@owned.invalid/icon', String.raw`owned\literal.svg`]) {
+    assert.equal(pluginCloneErrors(plugin(), validForm({ icon })).icon, undefined);
+    assert.equal(safePluginIcon(icon), '');
+  }
+  assert.equal(plugin().version, '1.2.3');
 });

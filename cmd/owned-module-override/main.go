@@ -499,7 +499,18 @@ func (f *fixture) handle(ctx context.Context, method string, input json.RawMessa
 				inputs[key] = value
 			}
 		}
-		body, err := json.Marshal(map[string]any{"pid": f.PID, "calls": f.Calls, "inputs": inputs, "last_feed": f.LastFeed, "search_keywords": f.SearchKeywords, "transfer_calls": f.TransferCalls, "transfer_events": f.TransferEvents, "transfer_trace": f.TransferTrace, "storage_calls": f.StorageCalls})
+		// Owned CLI observation only: use the real existing SDK current-caller
+		// metadata/name methods; no namespace override or new capability.
+		base := plugins.Base{Host: host}
+		metadata, err := base.GetInstanceMetadata(ctx)
+		if err != nil {
+			return nil, err
+		}
+		name, err := base.GetName(ctx)
+		if err != nil {
+			return nil, err
+		}
+		body, err := json.Marshal(map[string]any{"metadata": metadata, "name": name, "pid": f.PID, "calls": f.Calls, "inputs": inputs, "last_feed": f.LastFeed, "search_keywords": f.SearchKeywords, "transfer_calls": f.TransferCalls, "transfer_events": f.TransferEvents, "transfer_trace": f.TransferTrace, "storage_calls": f.StorageCalls})
 		if err != nil {
 			return nil, err
 		}

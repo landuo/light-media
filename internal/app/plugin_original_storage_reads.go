@@ -12,14 +12,17 @@ import (
 
 // Plain standard service declarations and encrypted metadata reads. No durable execution machinery.
 type pluginScheduleDefinition struct {
-	ID               string          `json:"id"`
-	Name             string          `json:"name"`
-	Handler          string          `json:"handler"`
-	Trigger          schedule.Spec   `json:"trigger"`
-	Input            json.RawMessage `json:"input,omitempty"`
-	MisfireGraceMS   int64           `json:"misfire_grace_ms,omitempty"`
-	SchedulerOptions json.RawMessage `json:"kwargs,omitempty"`
-	Async            bool            `json:"async,omitempty"`
+	builtinDecoded    bool
+	triggerMissing    bool
+	builtinDescriptor *schedule.BuiltinDescriptor
+	ID                string          `json:"id"`
+	Name              string          `json:"name"`
+	Handler           string          `json:"handler"`
+	Trigger           schedule.Spec   `json:"trigger"`
+	Input             json.RawMessage `json:"input,omitempty"`
+	MisfireGraceMS    int64           `json:"misfire_grace_ms,omitempty"`
+	SchedulerOptions  json.RawMessage `json:"kwargs,omitempty"`
+	Async             bool            `json:"async,omitempty"`
 }
 
 func (p *PluginStore) Installations(ctx context.Context) ([]PluginInstallation, error) {

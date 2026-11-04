@@ -10,15 +10,17 @@ import (
 // Spec is a trigger definition, not an execution grant. The host binds every
 // registration to the actual instance, revision, action and permitted inputs.
 type Spec struct {
-	Kind          string      `json:"kind"`
-	Timezone      string      `json:"timezone"`
-	Cron          string      `json:"cron,omitempty"`
-	Fields        *CronFields `json:"fields,omitempty"`
-	IntervalMS    int64       `json:"interval_ms,omitempty"`
-	RunAt         string      `json:"run_at,omitempty"`
-	StartAt       string      `json:"start_at,omitempty"`
-	EndAt         string      `json:"end_at,omitempty"`
-	JitterSeconds float64     `json:"jitter,omitempty"`
+	Children      []BuiltinDescriptor   `json:"children,omitempty"`
+	Calendar      *CalendarIntervalSpec `json:"calendar,omitempty"`
+	Kind          string                `json:"kind"`
+	Timezone      string                `json:"timezone"`
+	Cron          string                `json:"cron,omitempty"`
+	Fields        *CronFields           `json:"fields,omitempty"`
+	IntervalMS    int64                 `json:"interval_ms,omitempty"`
+	RunAt         string                `json:"run_at,omitempty"`
+	StartAt       string                `json:"start_at,omitempty"`
+	EndAt         string                `json:"end_at,omitempty"`
+	JitterSeconds float64               `json:"jitter,omitempty"`
 }
 
 type Trigger struct {
@@ -37,7 +39,15 @@ const CanonicalTime = "2006-01-02T15:04:05.000000000Z"
 
 func FormatTime(t time.Time) string { return t.UTC().Format(CanonicalTime) }
 
+// New constructs only the existing cron/interval/date family. Calendar
+// consumers use NewCalendar and its mandatory error-returning operations.
 func New(spec Spec, anchor time.Time) (*Trigger, error) {
+	if spec.Children != nil {
+		return nil, errTrigger
+	}
+	if spec.Calendar != nil {
+		return nil, errTrigger
+	}
 	if anchor.IsZero() || anchor.Year() < 1 || anchor.Year() > 9999 || spec.Timezone == "" || spec.Timezone == "Local" || len(spec.Timezone) > 128 {
 		return nil, errTrigger
 	}

@@ -2,6 +2,7 @@ package app
 
 import (
 	"context"
+	"encoding/json"
 	"light-media/internal/plugins/schedule"
 	"strings"
 	"time"
@@ -10,9 +11,11 @@ import (
 func (p *originalPluginInstance) getServices(ctx context.Context) ([]pluginScheduleDefinition, error) {
 	unlock := p.lockOriginalMethod()
 	defer unlock()
-	var defs []pluginScheduleDefinition
-	err := p.readSession(ctx, "get_service", &defs)
-	return defs, err
+	var raw json.RawMessage
+	if err := p.readSession(ctx, "get_service", &raw); err != nil {
+		return nil, err
+	}
+	return decodeOriginalBuiltinServices(raw)
 }
 func (a *App) updateOriginalPluginJobs(ctx context.Context, instance string) {
 	_ = a.updateOriginalPluginJobsScoped(ctx, instance, nil)
@@ -86,8 +89,20 @@ func (a *App) addOriginalBoundPluginJob(ctx context.Context, object *originalPlu
 		return err
 	}
 	at := time.Now()
-	trigger, triggerErr := schedule.New(definition.Trigger, at)
-	options, optionsErr := originalServiceOptions(&definition)
+	descriptor, triggerErr := originalServiceBuiltinDescriptor(definition)
+	var builtin *schedule.BuiltinTrigger
+	if triggerErr == nil {
+		if definition.builtinDecoded && descriptor == nil {
+			builtin, triggerErr = originalBuiltinDefaultDate(definition.SchedulerOptions, identifiersTimezone())
+		} else {
+			builtin, triggerErr = schedule.NewBuiltinWithDefaults(descriptor, identifiersTimezone(), originalBuiltinClockLimits())
+		}
+	}
+	optionsDefinition := definition
+	// APS uses scheduler.timezone for next_run_time constructor strings.
+	optionsDefinition.Trigger.Timezone = identifiersTimezone()
+	options, optionsErr := originalServiceOptions(&optionsDefinition)
+	definition.MisfireGraceMS = optionsDefinition.MisfireGraceMS
 	if optionsErr != nil {
 		triggerErr = optionsErr
 	}
@@ -117,11 +132,33 @@ func (a *App) addOriginalBoundPluginJob(ctx context.Context, object *originalPlu
 		state.jobs = make(map[originalServiceKey]*originalDirectJob)
 	}
 	state.nextRegistration++
-	job := &originalDirectJob{object: object, retained: owner, definition: definition, trigger: trigger, provider: provider, registrationOrder: state.nextRegistration, coalesceDisabled: options.coalesceDisabled, misfireUnlimited: options.unlimited, executorUnavailable: options.executorUnavailable, clockRegistered: triggerErr == nil, timerID: timerID, maxInstances: options.maxInstances}
+	job := &originalDirectJob{object: object, retained: owner, definition: definition, builtinClock: builtin, boundedClock: true, provider: provider, registrationOrder: state.nextRegistration, coalesceDisabled: options.coalesceDisabled, misfireUnlimited: options.unlimited, executorUnavailable: options.executorUnavailable, clockRegistered: triggerErr == nil, timerID: timerID, maxInstances: options.maxInstances}
 	if triggerErr == nil {
-		job.due = trigger.First(at)
 		if options.hasNextRun {
-			job.due = options.nextRun
+			if options.nextRunPresent {
+				originalSetBuiltinDue(job, &options.nextRun)
+			} else {
+				originalSetBuiltinDue(job, nil)
+			}
+		} else {
+			var turn *originalBuiltinClockTurn
+			turn, triggerErr = originalBeginBuiltinClock(ctx, builtin)
+			if triggerErr == nil {
+				var due *time.Time
+				due, triggerErr = turn.evaluation.Next(nil, at)
+				turn.close()
+				if triggerErr == nil {
+					originalSetBuiltinDue(job, due)
+				}
+			}
+		}
+	}
+	if triggerErr != nil {
+		job.clockRegistered = false
+		// Constructor/ordinary invalid registration retains the source method but
+		// not a timer. Approved boundary/cancellation/calculation faults stay visible.
+		if originalBuiltinVisibleFault(triggerErr) {
+			a.originalBuiltinClockFault(job, triggerErr)
 		}
 	}
 	removed := removeOriginalJobsLocked(state, "", originalServiceID(job))

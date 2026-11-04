@@ -11,14 +11,15 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
-	"unicode"
 
 	"light-media/internal/plugins"
 	"light-media/internal/plugins/artifacts"
+
+	"modernc.org/sqlite"
 )
 
 const pluginInstanceSchema = `CREATE TABLE IF NOT EXISTS plugin_instance_metadata(
@@ -94,23 +95,8 @@ func validatePluginCloneRequest(in PluginCloneRequest) error {
 	if !pluginCloneSuffix.MatchString(in.Suffix) {
 		return bad("INVALID_PLUGIN_CLONE", "分身后缀须非空且不能包含路径分隔符、控制符或不安全路径字符")
 	}
-	for _, field := range []struct {
-		value string
-		limit int
-	}{{in.Name, 256}, {in.Description, 4096}, {in.Version, 64}, {in.Icon, 2048}} {
-		if len(field.value) > field.limit || strings.ContainsFunc(field.value, unicode.IsControl) {
-			return bad("INVALID_PLUGIN_CLONE", "分身信息过长或包含控制字符")
-		}
-	}
-	if in.Version != "" && !pluginStorageVersion.MatchString(in.Version) {
-		return bad("INVALID_PLUGIN_CLONE", "分身显示版本无效")
-	}
-	if in.Icon != "" {
-		u, err := url.Parse(in.Icon)
-		if err != nil || u.User != nil || (u.Scheme != "" && u.Scheme != "https" && u.Scheme != "http") || (u.Scheme != "" && u.Host == "") || strings.HasPrefix(in.Icon, "//") || strings.Contains(in.Icon, "\\") {
-			return bad("INVALID_PLUGIN_CLONE", "分身图标须使用安全的相对资源或HTTP/HTTPS地址")
-		}
-	}
+	// Clone metadata is literal display text under the explicit field decision.
+	// Executable identity, artifact paths and manifest validation remain separate.
 	return nil
 }
 
@@ -189,14 +175,14 @@ func (p *PluginStore) cloneOriginalClass(ctx context.Context, source string, req
 		manifest.Icon = sourceMeta.Icon
 		manifest.Description = sourceMeta.Description
 	}
-	metadata := PluginInstanceMetadata{SourceInstanceID: source, Name: strings.TrimSpace(request.Name), Description: request.Description, DisplayVersion: request.Version, Icon: request.Icon}
+	metadata := PluginInstanceMetadata{SourceInstanceID: source, Name: request.Name, Description: request.Description, DisplayVersion: request.Version, Icon: request.Icon}
 	if metadata.Name == "" {
 		metadata.Name = manifest.Name
 	}
 	if metadata.Description == "" {
 		metadata.Description = manifest.Description
 	}
-	if metadata.Icon == "" {
+	if strings.TrimFunc(metadata.Icon, originalPluginVersionSpace) == "" {
 		metadata.Icon = manifest.Icon
 	}
 	if metadata.DisplayVersion == "" {
@@ -306,6 +292,12 @@ func (p *PluginStore) cloneOrganizationMemberTx(ctx context.Context, tx *sql.Tx,
 }
 
 func (p *PluginStore) cloneOrganizationMemberStateTx(ctx context.Context, tx *sql.Tx, source, target string) (*PluginOrganization, error) {
+	return p.cloneOrganizationMemberCacheTx(ctx, tx, source, target, false, nil)
+}
+
+// sourceCache is enabled only by the original HTTP clone folder phase. The
+// existing private native Tx helper retains its commit-owned cache behavior.
+func (p *PluginStore) cloneOrganizationMemberCacheTx(ctx context.Context, tx *sql.Tx, source, target string, sourceCache bool, info func(event, message string)) (*PluginOrganization, error) {
 	org, err := p.organization(ctx, tx)
 	if err != nil {
 		return nil, err
@@ -313,27 +305,61 @@ func (p *PluginStore) cloneOrganizationMemberStateTx(ctx context.Context, tx *sq
 	org = p.withOriginalFolders(org)
 	for _, name := range originalFolderKeys(org) {
 		value := org.Folders[name]
-		members, e := pluginFolderRawMembers(value)
-		if e != nil {
-			return nil, e
-		}
-		found := false
-		for _, member := range members {
-			if originalFolderMemberIs(member, source) {
-				found = true
-				break
+		var members []json.RawMessage
+		var e error
+		found, already, appendable := false, false, true
+		if sourceCache {
+			membership, err := readOriginalCloneFolderMembership(value, source, target)
+			if err != nil {
+				return nil, err
+			}
+			members = membership.members
+			found, already, appendable = membership.source, membership.target, membership.appendable
+		} else {
+			members, e = pluginFolderRawMembers(value)
+			if e != nil {
+				return nil, e
+			}
+			for _, member := range members {
+				found = found || originalFolderMemberIs(member, source)
+				already = already || originalFolderMemberIs(member, target)
 			}
 		}
 		if !found {
 			continue
 		}
 		if name == "" {
+			if sourceCache && info != nil {
+				info("clone_folder_independent", "原插件 "+source+" 不在任何文件夹中，分身插件 "+target+" 将保持独立")
+			}
 			return nil, nil
 		}
-		for _, member := range members {
-			if originalFolderMemberIs(member, target) {
-				return nil, nil
+		if already {
+			if sourceCache {
+				if err := ctx.Err(); err != nil {
+					return nil, err
+				}
+				var row int
+				lookupErr := tx.QueryRowContext(ctx, `SELECT 1 FROM plugin_organization WHERE owner_id=1`).Scan(&row)
+				if errors.Is(lookupErr, sql.ErrNoRows) {
+					// A missing host row needs write preflight first. Source
+					// set creates it even if the warm value is already equal.
+					return p.saveOriginalCloneFolderTx(ctx, tx, org)
+				}
+				if lookupErr != nil {
+					return nil, lookupErr
+				}
+				// Source still calls synchronous set for a predeclared ID:
+				// publish a deepcopy, but equal cached value does not write SQL.
+				p.publishOriginalFolders(org, false)
+				if _, err := originalCloneFolderRowPresent(ctx, tx); err != nil {
+					return nil, err
+				}
 			}
+			return nil, nil
+		}
+		if !appendable {
+			return nil, &originalCloneFolderValueError{cause: bad("INVALID_PLUGIN_FOLDER", "selected folder membership has no append operation")}
 		}
 		encodedTarget, _ := json.Marshal(target)
 		members = append(members, encodedTarget)
@@ -354,10 +380,133 @@ func (p *PluginStore) cloneOrganizationMemberStateTx(ctx context.Context, tx *sq
 				return nil, e
 			}
 		}
+		if sourceCache {
+			if info != nil {
+				info("clone_folder_added", "已将分身插件 "+target+" 添加到文件夹 '"+name+"' 中")
+			}
+			return p.saveOriginalCloneFolderTx(ctx, tx, org)
+		}
 		saved, err := p.saveOrganizationTx(ctx, tx, org)
 		return &saved, err
 	}
+	if sourceCache && info != nil {
+		info("clone_folder_independent", "原插件 "+source+" 不在任何文件夹中，分身插件 "+target+" 将保持独立")
+	}
 	return nil, nil
+}
+
+// This source-only projection handles the JSON values already accepted by the
+// ordinary folder API. It does not change the native parser or uninstall path.
+type originalCloneFolderMembership struct {
+	members    []json.RawMessage
+	source     bool
+	target     bool
+	appendable bool
+}
+
+func readOriginalCloneFolderMembership(raw json.RawMessage, source, target string) (originalCloneFolderMembership, error) {
+	var out originalCloneFolderMembership
+	value := bytes.TrimSpace(raw)
+	if len(value) == 0 {
+		return out, bad("INVALID_PLUGIN_FOLDER", "invalid stored folder JSON")
+	}
+	if value[0] == '{' {
+		var object map[string]json.RawMessage
+		if err := json.Unmarshal(value, &object); err != nil {
+			return out, err
+		}
+		var present bool
+		value, present = object["plugins"]
+		if !present {
+			return out, nil
+		}
+		value = bytes.TrimSpace(value)
+	} else if value[0] != '[' {
+		// Source ignores outer scalars; only dict-with-plugins or list enters
+		// membership. Invalid authenticated JSON is not a source shape error.
+		if !json.Valid(value) {
+			return out, bad("INVALID_PLUGIN_FOLDER", "invalid stored folder JSON")
+		}
+		return out, nil
+	}
+	if len(value) == 0 {
+		return out, bad("INVALID_PLUGIN_FOLDER", "invalid stored folder JSON")
+	}
+	switch value[0] {
+	case '[':
+		if err := json.Unmarshal(value, &out.members); err != nil {
+			return out, err
+		}
+		out.appendable = true
+		for _, member := range out.members {
+			out.source = out.source || originalFolderMemberIs(member, source)
+			out.target = out.target || originalFolderMemberIs(member, target)
+		}
+	case '"':
+		var text string
+		if err := json.Unmarshal(value, &text); err != nil {
+			return out, err
+		}
+		out.source, out.target = strings.Contains(text, source), strings.Contains(text, target)
+	case '{':
+		var object map[string]json.RawMessage
+		if err := json.Unmarshal(value, &object); err != nil {
+			return out, err
+		}
+		_, out.source = object[source]
+		_, out.target = object[target]
+	default:
+		if !json.Valid(value) {
+			return out, bad("INVALID_PLUGIN_FOLDER", "invalid stored folder JSON")
+		}
+		// null, boolean and number are not iterable in the original helper.
+		return out, &originalCloneFolderValueError{cause: bad("INVALID_PLUGIN_FOLDER", "folder membership is not iterable")}
+	}
+	return out, nil
+}
+
+// Keep native validation/CAS/encryption/context preflight before publication.
+// Only the final SQL write follows source synchronous cache-before-SQL ordering;
+// the shared saveOrganizationTx and unrelated native organization API are intact.
+func (p *PluginStore) saveOriginalCloneFolderTx(ctx context.Context, tx *sql.Tx, in PluginOrganization) (*PluginOrganization, error) {
+	if err := validatePluginOrganization(in); err != nil {
+		return nil, err
+	}
+	current, err := p.organization(ctx, tx)
+	if err != nil {
+		return nil, err
+	}
+	if current.Revision != in.Revision {
+		return nil, bad("PLUGIN_REVISION_CONFLICT", "插件文件夹或顺序已在其他页面更改，请刷新后重试")
+	}
+	in.Revision++
+	in.folderKeys = originalFolderKeys(in)
+	raw, err := pluginJSON(struct {
+		PluginOrganization
+		OrderPresent bool     `json:"order_present"`
+		FolderKeys   []string `json:"folder_keys"`
+	}{in, in.orderPresent, in.folderKeys}, true)
+	if err != nil {
+		return nil, err
+	}
+	sealed, err := p.seal("organization", "admin", "main", raw)
+	if err != nil {
+		return nil, err
+	}
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	p.publishOriginalFolders(in, false)
+	// This is the source set/get_by_key stage, distinct from the host's earlier
+	// CAS/authentication read. An existing unchanged value skips only the write.
+	if _, err = originalCloneFolderRowPresent(ctx, tx); err != nil {
+		return nil, err
+	}
+	_, err = tx.ExecContext(ctx, `INSERT INTO plugin_organization(owner_id,revision,sealed,updated_at) VALUES(1,?,?,?) ON CONFLICT(owner_id) DO UPDATE SET revision=excluded.revision,sealed=excluded.sealed,updated_at=excluded.updated_at`, in.Revision, sealed, now())
+	if err != nil {
+		return nil, &originalCloneFolderSQLError{cause: err}
+	}
+	return &in, nil
 }
 
 func (a *App) pluginCloneHTTP(w http.ResponseWriter, r *http.Request, source string) (any, error) {
@@ -443,24 +592,97 @@ func (a *App) pluginCloneHTTP(w http.ResponseWriter, r *http.Request, source str
 	if err = a.initializeOriginalCloneCalls(ctx, in.InstanceID); err != nil {
 		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
 	}
+	if err = a.addOriginalCloneToFolder(ctx, source, in.InstanceID); err != nil {
+		message, ordinary := originalCloneFolderFailure(ctx, err)
+		if !ordinary {
+			return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+		}
+		// The source catches only this folder stage after clone/reload succeeded.
+		// Diagnostics are classified and fixed; no SQL or private field values.
+		a.log("ERROR", "plugins", "clone_folder_failed", message, "", "")
+	}
+	return map[string]any{"success": true, "message": "插件分身创建成功", "created": true, "instance_id": in.InstanceID, "plugin_id": in.PluginID, "source_instance_id": source}, nil
+}
+
+// These markers are created only by the original clone folder operation.
+// An unrelated APIError/SQLite error must not turn an earlier failure into success.
+type originalCloneFolderValueError struct{ cause error }
+
+func (e *originalCloneFolderValueError) Error() string { return "invalid clone folder value" }
+func (e *originalCloneFolderValueError) Unwrap() error { return e.cause }
+
+type originalCloneFolderSQLError struct{ cause error }
+
+func (e *originalCloneFolderSQLError) Error() string { return "clone folder SQL operation failed" }
+func (e *originalCloneFolderSQLError) Unwrap() error { return e.cause }
+
+func originalCloneFolderRowPresent(ctx context.Context, tx *sql.Tx) (bool, error) {
+	var present int
+	err := tx.QueryRowContext(ctx, `SELECT 1 FROM plugin_organization WHERE owner_id=1`).Scan(&present)
+	if errors.Is(err, sql.ErrNoRows) {
+		return false, nil
+	}
+	if err != nil {
+		return false, &originalCloneFolderSQLError{cause: err}
+	}
+	return true, nil
+}
+
+func originalCloneFolderFailure(ctx context.Context, err error) (string, bool) {
+	if ctx.Err() != nil || err == nil {
+		return "", false
+	}
+	// Do not classify a joined ordinary/platform failure by finding just one
+	// matching descendant. Only the direct private stage marker is accepted.
+	switch failure := err.(type) {
+	case *originalCloneFolderValueError:
+		value, ok := failure.cause.(*APIError)
+		if ok && value.Code == "INVALID_PLUGIN_FOLDER" {
+			return "处理插件文件夹时出错：文件夹成员格式无效", true
+		}
+	case *originalCloneFolderSQLError:
+		// Only concrete errors returned by the owned SQLite source-stage
+		// lookup/write/commit are ordinary source storage exceptions. This is
+		// not a generic permission/IO/tool-policy or joined-error exemption.
+		value, ok := failure.cause.(*sqlite.Error)
+		if ok {
+			return "处理插件文件夹时出错：SQLite 错误（代码" + strconv.Itoa(value.Code()) + "）", true
+		}
+	}
+	return "", false
+}
+
+// Return only after rollback and operation-lock release, before the caller
+// classifies/logs an ordinary folder exception or reports the clone result.
+func (a *App) addOriginalCloneToFolder(ctx context.Context, source, target string) error {
+	if err := ctx.Err(); err != nil {
+		return err
+	}
 	a.pluginStore.folders.operation.Lock()
 	defer a.pluginStore.folders.operation.Unlock()
 	tx, err := a.Store.DB.BeginTx(ctx, nil)
 	if err != nil {
-		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+		return err
 	}
 	defer tx.Rollback()
-	folderState, err := a.pluginStore.cloneOrganizationMemberStateTx(ctx, tx, source, in.InstanceID)
+	folderState, err := a.pluginStore.cloneOrganizationMemberCacheTx(ctx, tx, source, target, true, func(event, message string) {
+		// a.log synchronously queues sanitized data only; it does not query
+		// Store.DB or wait for the asynchronous writer while this Tx is held.
+		a.log("INFO", "plugins", event, message, "", "")
+	})
 	if err != nil {
-		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+		return err
+	}
+	if err = ctx.Err(); err != nil {
+		return err
 	}
 	if err = tx.Commit(); err != nil {
-		return map[string]any{"success": false, "message": "创建插件分身失败：" + err.Error()}, nil
+		return &originalCloneFolderSQLError{cause: err}
 	}
 	if folderState != nil {
 		a.pluginStore.publishOriginalFolders(*folderState, true)
 	}
-	return map[string]any{"success": true, "message": "插件分身创建成功", "created": true, "instance_id": in.InstanceID, "plugin_id": in.PluginID, "source_instance_id": source}, nil
+	return nil
 }
 
 func (p *PluginStore) presentInstance(ctx context.Context, in PluginInstallation, manifest plugins.Manifest) (pluginCard, error) {

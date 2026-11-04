@@ -40,7 +40,7 @@ async function submit() {
   try {
     const result = await api<PluginCloneResult & { success?: boolean; message?: string }>(
       '/plugins/' + encodeURIComponent(props.plugin.instance_id) + '/clone',
-      { ...form },
+      { ...form, version: form.version.trim(), icon: form.icon.trim() },
     );
     if (result?.success === false)
       throw new APIError('PLUGIN_CLONE_FAILED', result.message || '插件分身创建失败', '');

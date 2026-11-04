@@ -125,7 +125,7 @@ func runSelfServiceChild(parent context.Context, config selfServiceConfiguration
 		return err
 	}
 	a.Start(ctx)
-	server := &http.Server{Addr: config.Listen, Handler: a.Handler(), ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 30 * time.Second, IdleTimeout: 60 * time.Second, MaxHeaderBytes: 32 << 10}
+	server := newGenerationHTTPServer(ctx, config.Listen, a.Handler())
 	errs := make(chan error, 1)
 	go func() { errs <- server.Serve(listener) }()
 	// A real bound listener and the Serve goroutine exist before opening the
@@ -167,4 +167,16 @@ func runSelfServiceChild(parent context.Context, config selfServiceConfiguration
 	}
 	_, statusErr := fmt.Fprintf(status, "closed %s\n", reason)
 	return errors.Join(closeErr, serveErr, readyErr, statusErr)
+}
+
+// Requests belong to this generation, including long-lived SSE streams. Cancel
+// them before HTTP drain; App.Close must still run after drain to keep the store
+// available to in-flight handlers while they finish.
+func newGenerationHTTPServer(ctx context.Context, addr string, handler http.Handler) *http.Server {
+	return &http.Server{
+		Addr: addr, Handler: handler,
+		BaseContext:       func(net.Listener) context.Context { return ctx },
+		ReadHeaderTimeout: 5 * time.Second, ReadTimeout: 30 * time.Second,
+		IdleTimeout: 60 * time.Second, MaxHeaderBytes: 32 << 10,
+	}
 }

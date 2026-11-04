@@ -13,6 +13,7 @@ import (
 type originalResolvedServiceOptions struct {
 	coalesceDisabled, unlimited bool
 	hasNextRun                  bool
+	nextRunPresent              bool
 	nextRun                     time.Time
 	executorUnavailable         bool
 	maxInstances                *big.Int
@@ -82,6 +83,7 @@ func originalServiceOptions(definition *pluginScheduleDefinition) (options origi
 				continue
 			}
 			options.nextRun, err = originalServiceNextRunTime(value, definition.Trigger.Timezone)
+			options.nextRunPresent = err == nil
 			if err != nil {
 				return invalid()
 			}
